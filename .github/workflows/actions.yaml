@@ -103,6 +103,7 @@ jobs:
         run: |
           curl -GO https://storage.googleapis.com/shaderc/artifacts/prod/graphics_shader_compiler/shaderc/linux/continuous_clang_release/357/20210315-190728/install.tgz
           tar -xzf install.tgz install/bin/glslc
+      # TODO validate WGSL
       - name: Validate GLSL
         run: |
           printf "#version 460\nvoid main() {}\n" > frame.glsl
