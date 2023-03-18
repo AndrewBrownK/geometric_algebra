@@ -180,7 +180,7 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
                 emit_indentation(collector, indentation + 1)?;
                 collector.write_fmt(format_args!(" g{}: ", i))?;
                 emit_data_type(collector, &DataType::SimdVector(group.len()))?;
-                collector.write(b",\n")
+                collector.write(b",\n");
             }
             emit_indentation(collector, indentation)?;
             collector.write_all(b"}\n\n")?;
