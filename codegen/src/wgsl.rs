@@ -249,7 +249,7 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
                 let parameter_name = if parameter.name == "self" { "self_" } else {
                     parameter.name
                 };
-                collector.write_fmt(format_args!("{}", parameterName))?;
+                collector.write_fmt(format_args!("{}", parameter_name))?;
                 collector.write_all(b": ")?;
                 emit_data_type(collector, &parameter.data_type)?;
             }
