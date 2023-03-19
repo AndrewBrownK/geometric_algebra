@@ -20,6 +20,7 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
     match &expression.content {
         ExpressionContent::None => unreachable!(),
         ExpressionContent::Variable(name) => {
+            let name = if name.to_string() == "self" { "self_" } else { name };
             collector.write_all(name.bytes().collect::<Vec<_>>().as_slice())?;
         }
         ExpressionContent::InvokeClassMethod(_, _, arguments) | ExpressionContent::InvokeInstanceMethod(_, _, _, arguments) => {
@@ -191,7 +192,9 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
             collector.write_all(b";\n")?;
         }
         AstNode::VariableAssignment { name, data_type, expression } => {
-            collector.write_fmt(format_args!("let {}", name))?;
+            collector.write_all(b"let ")?;
+            let name = if name.to_string() == "self" { "self_" } else { name };
+            collector.write_all(name.bytes().collect::<Vec<_>>().as_slice())?;
             if let Some(data_type) = data_type {
                 collector.write_all(b": ")?;
                 emit_data_type(collector, data_type)?;
@@ -243,7 +246,10 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
                 if i > 0 {
                     collector.write_all(b", ")?;
                 }
-                collector.write_fmt(format_args!("{}", parameter.name))?;
+                let parameter_name = if parameter.name == "self" { "self_" } else {
+                    parameter.name
+                };
+                collector.write_fmt(format_args!("{}", parameterName))?;
                 collector.write_all(b": ")?;
                 emit_data_type(collector, &parameter.data_type)?;
             }
