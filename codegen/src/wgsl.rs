@@ -217,7 +217,7 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
             collector.write_all(b"}\n")?;
         }
         AstNode::TraitImplementation { result, parameters, body } => {
-            collector.write_fmt(format_args!("{} ", result.multi_vector_class().class_name))?;
+            collector.write_all(b"fn ")?;
             match parameters.len() {
                 0 => camel_to_snake_case(collector, &result.multi_vector_class().class_name)?,
                 1 if result.name == "Into" => {
@@ -243,10 +243,13 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
                 if i > 0 {
                     collector.write_all(b", ")?;
                 }
+                collector.write_fmt(format_args!("{}", parameter.name))?;
+                collector.write_all(b": ")?;
                 emit_data_type(collector, &parameter.data_type)?;
-                collector.write_fmt(format_args!(" {}", parameter.name))?;
             }
-            collector.write_all(b") {\n")?;
+            collector.write_all(b") -> ")?;
+            collector.write_fmt(format_args!("{} ", result.multi_vector_class().class_name))?;
+            collector.write_all(b" {\n")?;
             for statement in body.iter() {
                 emit_indentation(collector, indentation + 1)?;
                 emit_code(collector, statement, indentation + 1)?;
