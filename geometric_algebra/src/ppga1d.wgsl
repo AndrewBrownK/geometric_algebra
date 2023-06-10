@@ -260,13 +260,13 @@ fn dual_number_inverse(self_: DualNumber) -> DualNumber  {
     return dual_number_scalar_geometric_product(dual_number_reversal(self_), Scalar(1.0 / dual_number_squared_magnitude(self_).g0));
 }
 
-fn dual_number_powi(self_: DualNumber, exponent: int) -> DualNumber  {
+fn dual_number_powi(self_: DualNumber, exponent: i32) -> DualNumber  {
     if (exponent == 0) {
         return dual_number_one();
     }
     let x: DualNumber = select(self_, dual_number_inverse(self_), exponent < 0);
     let y: DualNumber = dual_number_one();
-    let n: int = abs(exponent);
+    let n: i32 = abs(exponent);
     while (1 < n) {
         if ((n & 1) == 1) {
             let y = dual_number_dual_number_geometric_product(x, y);
@@ -301,13 +301,13 @@ fn scalar_dual_number_transformation(self_: Scalar, other: DualNumber) -> DualNu
     return dual_number_scalar_geometric_product(scalar_dual_number_geometric_product(self_, other), scalar_reversal(self_));
 }
 
-fn scalar_powi(self_: Scalar, exponent: int) -> Scalar  {
+fn scalar_powi(self_: Scalar, exponent: i32) -> Scalar  {
     if (exponent == 0) {
         return scalar_one();
     }
     let x: Scalar = select(self_, scalar_inverse(self_), exponent < 0);
     let y: Scalar = scalar_one();
-    let n: int = abs(exponent);
+    let n: i32 = abs(exponent);
     while (1 < n) {
         if ((n & 1) == 1) {
             let y = scalar_scalar_geometric_product(x, y);

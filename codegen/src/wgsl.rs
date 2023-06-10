@@ -9,7 +9,7 @@ const COMPONENT: &[&str] = &["x", "y", "z", "w"];
 
 fn emit_data_type<W: std::io::Write>(collector: &mut W, data_type: &DataType) -> std::io::Result<()> {
     match data_type {
-        DataType::Integer => collector.write_all(b"int"),
+        DataType::Integer => collector.write_all(b"i32"),
         DataType::SimdVector(size) if *size == 1 => collector.write_all(b"f32"),
         DataType::SimdVector(size) => collector.write_fmt(format_args!("vec{}<f32>", *size)),
         DataType::MultiVector(class) => collector.write_fmt(format_args!("{}", class.class_name)),

@@ -260,13 +260,13 @@ fn complex_number_inverse(self_: ComplexNumber) -> ComplexNumber  {
     return complex_number_scalar_geometric_product(complex_number_reversal(self_), Scalar(1.0 / complex_number_squared_magnitude(self_).g0));
 }
 
-fn complex_number_powi(self_: ComplexNumber, exponent: int) -> ComplexNumber  {
+fn complex_number_powi(self_: ComplexNumber, exponent: i32) -> ComplexNumber  {
     if (exponent == 0) {
         return complex_number_one();
     }
     let x: ComplexNumber = select(self_, complex_number_inverse(self_), exponent < 0);
     let y: ComplexNumber = complex_number_one();
-    let n: int = abs(exponent);
+    let n: i32 = abs(exponent);
     while (1 < n) {
         if ((n & 1) == 1) {
             let y = complex_number_complex_number_geometric_product(x, y);
@@ -301,13 +301,13 @@ fn scalar_complex_number_transformation(self_: Scalar, other: ComplexNumber) -> 
     return complex_number_scalar_geometric_product(scalar_complex_number_geometric_product(self_, other), scalar_reversal(self_));
 }
 
-fn scalar_powi(self_: Scalar, exponent: int) -> Scalar  {
+fn scalar_powi(self_: Scalar, exponent: i32) -> Scalar  {
     if (exponent == 0) {
         return scalar_one();
     }
     let x: Scalar = select(self_, scalar_inverse(self_), exponent < 0);
     let y: Scalar = scalar_one();
-    let n: int = abs(exponent);
+    let n: i32 = abs(exponent);
     while (1 < n) {
         if ((n & 1) == 1) {
             let y = scalar_scalar_geometric_product(x, y);

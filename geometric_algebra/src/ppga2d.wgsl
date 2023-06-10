@@ -2609,13 +2609,13 @@ fn motor_ideal_point_transformation(self_: Motor, other: IdealPoint) -> IdealPoi
     return ideal_point_motor_geometric_product(motor_ideal_point_geometric_product(self_, other), motor_reversal(self_));
 }
 
-fn motor_powi(self_: Motor, exponent: int) -> Motor  {
+fn motor_powi(self_: Motor, exponent: i32) -> Motor  {
     if (exponent == 0) {
         return motor_one();
     }
     let x: Motor = select(self_, motor_inverse(self_), exponent < 0);
     let y: Motor = motor_one();
-    let n: int = abs(exponent);
+    let n: i32 = abs(exponent);
     while (1 < n) {
         if ((n & 1) == 1) {
             let y = motor_motor_geometric_product(x, y);
@@ -2770,13 +2770,13 @@ fn multi_vector_motor_dual_transformation(self_: MultiVector, other: MotorDual) 
     return multi_vector_motor_dual_into(multi_vector_multi_vector_geometric_product(multi_vector_motor_dual_geometric_product(self_, other), multi_vector_reversal(self_)));
 }
 
-fn multi_vector_powi(self_: MultiVector, exponent: int) -> MultiVector  {
+fn multi_vector_powi(self_: MultiVector, exponent: i32) -> MultiVector  {
     if (exponent == 0) {
         return multi_vector_one();
     }
     let x: MultiVector = select(self_, multi_vector_inverse(self_), exponent < 0);
     let y: MultiVector = multi_vector_one();
-    let n: int = abs(exponent);
+    let n: i32 = abs(exponent);
     while (1 < n) {
         if ((n & 1) == 1) {
             let y = multi_vector_multi_vector_geometric_product(x, y);
@@ -3011,13 +3011,13 @@ fn rotor_point_transformation(self_: Rotor, other: Point) -> Point  {
     return motor_point_into(motor_rotor_geometric_product(rotor_point_geometric_product(self_, other), rotor_reversal(self_)));
 }
 
-fn rotor_powi(self_: Rotor, exponent: int) -> Rotor  {
+fn rotor_powi(self_: Rotor, exponent: i32) -> Rotor  {
     if (exponent == 0) {
         return rotor_one();
     }
     let x: Rotor = select(self_, rotor_inverse(self_), exponent < 0);
     let y: Rotor = rotor_one();
-    let n: int = abs(exponent);
+    let n: i32 = abs(exponent);
     while (1 < n) {
         if ((n & 1) == 1) {
             let y = rotor_rotor_geometric_product(x, y);
@@ -3104,13 +3104,13 @@ fn scalar_rotor_transformation(self_: Scalar, other: Rotor) -> Rotor  {
     return rotor_scalar_geometric_product(scalar_rotor_geometric_product(self_, other), scalar_reversal(self_));
 }
 
-fn scalar_powi(self_: Scalar, exponent: int) -> Scalar  {
+fn scalar_powi(self_: Scalar, exponent: i32) -> Scalar  {
     if (exponent == 0) {
         return scalar_one();
     }
     let x: Scalar = select(self_, scalar_inverse(self_), exponent < 0);
     let y: Scalar = scalar_one();
-    let n: int = abs(exponent);
+    let n: i32 = abs(exponent);
     while (1 < n) {
         if ((n & 1) == 1) {
             let y = scalar_scalar_geometric_product(x, y);
@@ -3197,13 +3197,13 @@ fn translator_scalar_transformation(self_: Translator, other: Scalar) -> Scalar 
     return translator_scalar_into(translator_translator_geometric_product(translator_scalar_geometric_product(self_, other), translator_reversal(self_)));
 }
 
-fn translator_powi(self_: Translator, exponent: int) -> Translator  {
+fn translator_powi(self_: Translator, exponent: i32) -> Translator  {
     if (exponent == 0) {
         return translator_one();
     }
     let x: Translator = select(self_, translator_inverse(self_), exponent < 0);
     let y: Translator = translator_one();
-    let n: int = abs(exponent);
+    let n: i32 = abs(exponent);
     while (1 < n) {
         if ((n & 1) == 1) {
             let y = translator_translator_geometric_product(x, y);
