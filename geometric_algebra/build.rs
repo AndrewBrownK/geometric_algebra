@@ -1,10 +1,16 @@
-
 use::codegen;
-
 
 fn main() {
 
     let algebras = [
+        // TODO
+        //  - The first thing you should take note of is that in "ppga3d:0,1,1,1" the projective
+        //    dimensions is e0, while I am accustomed to the projective dimension being e4.
+        //  - The second thing to notice then, is that this might actually be representing the
+        //    duals of geometric objects, instead of the objects themselves. See exposition here:
+        //    http://rigidgeometricalgebra.org/wiki/index.php?title=Duality
+        //    And the formula for the dual listed here:
+        //    https://conformalgeometricalgebra.org/wiki/index.php?title=Plane
         "epga1d:1,1;Scalar:1;ComplexNumber:1,e01",
         "ppga1d:0,1;Scalar:1;DualNumber:1,e01",
         "hpga1d:-1,1;Scalar:1;SplitComplexNumber:1,e01",
@@ -14,6 +20,34 @@ fn main() {
         "epga3d:1,1,1,1;Scalar:1;MultiVector:1,e23,-e13,e12|e0,-e023,e013,-e012|e123,e1,e2,e3|e0123,e01,e02,e03;Rotor:1,e23,-e13,e12;Point:e123,-e023,e013,-e012;IdealPoint:e01,e02,e03;Plane:e0,e1,e2,e3;Line:e01,e02,e03|e23,-e13,e12;Translator:1,e01,e02,e03;Motor:1,e23,-e13,e12|e0123,e01,e02,e03;PointAndPlane:e123,-e023,e013,-e012|e0,e1,e2,e3",
         "ppga3d:0,1,1,1;Scalar:1;MultiVector:1,e23,-e13,e12|e0,-e023,e013,-e012|e123,e1,e2,e3|e0123,e01,e02,e03;Rotor:1,e23,-e13,e12;Point:e123,-e023,e013,-e012;IdealPoint:e01,e02,e03;Plane:e0,e1,e2,e3;Line:e01,e02,e03|e23,-e13,e12;Translator:1,e01,e02,e03;Motor:1,e23,-e13,e12|e0123,e01,e02,e03;PointAndPlane:e123,-e023,e013,-e012|e0,e1,e2,e3",
         "hpga3d:-1,1,1,1;Scalar:1;MultiVector:1,e23,-e13,e12|e0,-e023,e013,-e012|e123,e1,e2,e3|e0123,e01,e02,e03;Rotor:1,e23,-e13,e12;Point:e123,-e023,e013,-e012;IdealPoint:e01,e02,e03;Plane:e0,e1,e2,e3;Line:e01,e02,e03|e23,-e13,e12;Translator:1,e01,e02,e03;Motor:1,e23,-e13,e12|e0123,e01,e02,e03;PointAndPlane:e123,-e023,e013,-e012|e0,e1,e2,e3",
+
+        // TODO implementing conformal might not be straightforward, but here is an idea
+        //  It might not work as raw [1,1,1,1,-1] since e+ and e- get treated weird to arrive at e4 and e5
+        //  However maybe we can do [1,1,1,0,0] and hack in the proper behaviors where applicable
+        //  Namely, the following traits (search "<MultiVector> for MultiVector"):
+        //   - OuterProduct
+        "cga3d:1,1,1,1,0,0;\
+            Scalar:1;\
+            AntiScalar:e12345;\
+            RadialPoint:e1,e2,e3|e4,e5;\
+            FlatPoint:e15,e25,e35,e45;\
+            Dipole:e41,e42,e43|e23,e31,e12|e15,e25,e35,e45;\
+            Line:e415,e425,e435|e235,e315,e125;\
+            Circle:e423,e431,e412,e321|e415,e425,e435|e235,e315,e125;\
+            Plane:e4235,e4315,e4125,e3215;\
+            Sphere:e1234|e4235,e4315,e4125,e3215;\
+            Motor:e415,e425,e435,e12345|e235,e315,e125,e5;\
+            Rotor:e415,e425,e435,e12345;\
+            Translator:e235,e315,e125,e12345;\
+            Flector:e15,e25,e35,e45|e4235,e4315,e4125,e3215;\
+            MultiVector:\
+                1,e1234,e12345|\
+                e1,e2,e3|e4,e5|\
+                e15,e25,e35,e45|\
+                e41,e42,e43|e23,e31,e12|\
+                e415,e425,e435|e235,e315,e125|\
+                e423,e431,e412,e321|\
+                e4235,e4315,e4125,e3215"
     ];
 
     for algebra in algebras {

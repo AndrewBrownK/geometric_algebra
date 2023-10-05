@@ -4,8 +4,13 @@ mod compile;
 mod emit;
 mod glsl;
 mod rust;
-mod wgsl;
 
+use std::io::{Read, Write};
+use naga;
+use naga::back::wgsl::WriterFlags;
+use naga::{Module, ShaderStage};
+use naga::front::glsl::Error;
+use naga::valid::{Capabilities, ModuleInfo, ValidationFlags};
 use crate::{
     algebra::{BasisElement, GeometricAlgebra, Involution, MultiVectorClass, MultiVectorClassRegistry, Product},
     ast::{AstNode, DataType, Parameter},
@@ -71,6 +76,7 @@ pub fn read_config_from_str(config: &str) -> AlgebraDescriptor {
     let mut multi_vectors = vec![];
     for multi_vector_descriptor in config_iter {
         let mut multi_vector_descriptor_iter = multi_vector_descriptor.split(':');
+        // TODO note the splits on '|' for the grouped_basis property
         multi_vectors.push(MultiVectorClass {
             class_name: multi_vector_descriptor_iter.next().unwrap().to_owned(),
             grouped_basis: multi_vector_descriptor_iter
@@ -95,6 +101,7 @@ pub fn read_config_from_str(config: &str) -> AlgebraDescriptor {
 }
 
 
+// TODO hack in cga stuff
 pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
     let algebra = GeometricAlgebra {
         generator_squares: desc.generator_squares.as_slice(),
@@ -112,7 +119,9 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
     for multi_vector_class in desc.multi_vectors {
         registry.register(multi_vector_class);
     }
-    let mut emitter = Emitter::new(&std::path::Path::new(&path).join(std::path::Path::new(desc.algebra_name.as_str())));
+    let algebra_name = desc.algebra_name.as_str();
+    let file_path = std::path::Path::new(&path).join(std::path::Path::new(algebra_name));
+    let mut emitter = Emitter::new(&file_path);
     emitter.emit(&AstNode::Preamble).unwrap();
     for class in registry.classes.iter() {
         emitter.emit(&AstNode::ClassDefinition { class }).unwrap();
@@ -281,4 +290,37 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
             }
         }
     }
+
+    // Let naga do wgsl:
+    // - Good because low maintenance here.
+    // - Bad because it erases useful comments.
+
+    // Prepare some of naga's clutter
+    let mut glsl_frontend = naga::front::glsl::Frontend::default();
+    let mut wgsl_backend = naga::back::wgsl::Writer::new(String::new(), WriterFlags::EXPLICIT_TYPES);
+    let options = naga::front::glsl::Options {
+        stage: ShaderStage::Compute,
+        defines: Default::default(),
+    };
+
+    // Read the glsl
+    let mut glsl_file = std::fs::File::open(file_path.with_extension("glsl")).unwrap();
+    let mut glsl_contents = String::new();
+    glsl_file.read_to_string(&mut glsl_contents).unwrap();
+    // Append a dummy entry point
+    glsl_contents.push_str("\nvoid main() {}");
+
+    // Parse and validate the naga module
+    let module = match glsl_frontend.parse(&options, glsl_contents.as_str()) {
+        Ok(m) => m,
+        Err(err) => panic!("Problem generating wgsl for {algebra_name}: {err:?}")
+    };
+    let mut validator = naga::valid::Validator::new(ValidationFlags::default(), Capabilities::default());
+    let module_info = validator.validate(&module).unwrap();
+
+    // Write the wgsl
+    wgsl_backend.write(&module, &module_info).unwrap();
+    let mut wgsl_contents = wgsl_backend.finish();
+    let mut wgsl_file = std::fs::File::create(file_path.with_extension("wgsl")).unwrap();
+    wgsl_file.write(wgsl_contents.as_bytes()).unwrap();
 }

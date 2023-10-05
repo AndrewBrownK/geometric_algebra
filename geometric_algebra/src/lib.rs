@@ -9,6 +9,7 @@ pub mod hpga2d;
 pub mod epga3d;
 pub mod ppga3d;
 pub mod hpga3d;
+pub mod cga3d;
 pub mod simd;
 pub mod polynomial;
 
@@ -170,6 +171,7 @@ impl Exp for ppga3d::Line {
         let s = a.sin() / a;
         let m = self[0] * self[3] + self[1] * self[4] + self[2] * self[5];
         let t = m / det * (c - s);
+        // TODO here is an example of the different groups (grouped bases) being used a certain way
         let g0 = simd::Simd32x3::from(s) * self.group1();
         let g1 = simd::Simd32x3::from(s) * self.group0() + simd::Simd32x3::from(t) * self.group1();
         ppga3d::Motor::new(c, g0[0], g0[1], g0[2], s * m, g1[0], g1[1], g1[2])
