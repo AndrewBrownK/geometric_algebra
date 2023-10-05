@@ -4,103 +4,103 @@ struct Scalar {
 };
 
 struct AntiScalar {
-    // e12345
+    // e01234
     float g0;
 };
 
 struct RadialPoint {
-    // e1, e2, e3
+    // e0, e1, e2
     vec3 g0;
-    // e4, e5
+    // e3, e4
     vec2 g1;
 };
 
 struct FlatPoint {
-    // e15, e25, e35, e45
+    // e04, e14, e24, e34
     vec4 g0;
 };
 
 struct Dipole {
-    // -e14, -e24, -e34
+    // -e03, -e13, -e23
     vec3 g0;
-    // e23, -e13, e12
+    // e12, -e02, e01
     vec3 g1;
-    // e15, e25, e35, e45
+    // e04, e14, e24, e34
     vec4 g2;
 };
 
 struct Line {
-    // -e145, -e245, -e345
+    // -e034, -e134, -e234
     vec3 g0;
-    // e235, -e135, e125
+    // e124, -e024, e014
     vec3 g1;
 };
 
 struct Circle {
-    // e234, -e134, e124, -e123
+    // e123, -e023, e013, -e012
     vec4 g0;
-    // -e145, -e245, -e345
+    // -e034, -e134, -e234
     vec3 g1;
-    // e235, -e135, e125
+    // e124, -e024, e014
     vec3 g2;
 };
 
 struct Plane {
-    // e2345, -e1345, e1245, -e1235
+    // e1234, -e0234, e0134, -e0124
     vec4 g0;
 };
 
 struct Sphere {
-    // e1234
-    float g0;
-    // e2345, -e1345, e1245, -e1235
-    vec4 g1;
+    // e0123, -e0124
+    vec2 g0;
+    // e1234, -e0234, e0134
+    vec3 g1;
 };
 
 struct Motor {
-    // -e145, -e245, -e345, e12345
+    // -e034, -e134, -e234, e01234
     vec4 g0;
-    // e235, -e135, e125, e5
+    // e124, -e024, e014, e4
     vec4 g1;
 };
 
 struct Rotor {
-    // -e145, -e245, -e345, e12345
+    // -e034, -e134, -e234, e01234
     vec4 g0;
 };
 
 struct Translator {
-    // e235, -e135, e125, e12345
+    // e124, -e024, e014, e01234
     vec4 g0;
 };
 
 struct Flector {
-    // e15, e25, e35, e45
+    // e04, e14, e24, e34
     vec4 g0;
-    // e2345, -e1345, e1245, -e1235
+    // e1234, -e0234, e0134, -e0124
     vec4 g1;
 };
 
 struct MultiVector {
-    // 1, e1234, e12345
+    // 1, e0123, e01234
     vec3 g0;
-    // e1, e2, e3
+    // e0, e1, e2
     vec3 g1;
-    // e4, e5
+    // e3, e4
     vec2 g2;
-    // e15, e25, e35, e45
+    // e04, e14, e24, e34
     vec4 g3;
-    // -e14, -e24, -e34
+    // -e03, -e13, -e23
     vec3 g4;
-    // e23, -e13, e12
+    // e12, -e02, e01
     vec3 g5;
-    // -e145, -e245, -e345
+    // -e034, -e134, -e234
     vec3 g6;
-    // e235, -e135, e125
+    // e124, -e024, e014
     vec3 g7;
-    // e234, -e134, e124, -e123
+    // e123, -e023, e013, -e012
     vec4 g8;
-    // e2345, -e1345, e1245, -e1235
+    // e1234, -e0234, e0134, -e0124
     vec4 g9;
 };
 
@@ -126,6 +126,10 @@ Scalar scalar_reversal(Scalar self) {
 
 Scalar scalar_conjugation(Scalar self) {
     return Scalar(self.g0);
+}
+
+AntiScalar scalar_dual(Scalar self) {
+    return AntiScalar(self.g0);
 }
 
 Scalar scalar_scalar_add(Scalar self, Scalar other) {
@@ -170,6 +174,10 @@ Scalar scalar_scalar_scalar_product(Scalar self, Scalar other) {
 
 AntiScalar scalar_anti_scalar_geometric_product(Scalar self, AntiScalar other) {
     return AntiScalar(self.g0 * other.g0);
+}
+
+Scalar scalar_anti_scalar_regressive_product(Scalar self, AntiScalar other) {
+    return Scalar(self.g0 * other.g0);
 }
 
 AntiScalar scalar_anti_scalar_outer_product(Scalar self, AntiScalar other) {
@@ -281,23 +289,27 @@ Plane scalar_plane_left_contraction(Scalar self, Plane other) {
 }
 
 Sphere scalar_sphere_geometric_product(Scalar self, Sphere other) {
-    return Sphere(self.g0 * other.g0, vec4(self.g0) * other.g1);
+    return Sphere(vec2(self.g0) * other.g0, vec3(self.g0) * other.g1);
 }
 
 Sphere scalar_sphere_outer_product(Scalar self, Sphere other) {
-    return Sphere(self.g0 * other.g0, vec4(self.g0) * other.g1);
+    return Sphere(vec2(self.g0) * other.g0, vec3(self.g0) * other.g1);
 }
 
 Sphere scalar_sphere_inner_product(Scalar self, Sphere other) {
-    return Sphere(self.g0 * other.g0, vec4(self.g0) * other.g1);
+    return Sphere(vec2(self.g0) * other.g0, vec3(self.g0) * other.g1);
 }
 
 Sphere scalar_sphere_left_contraction(Scalar self, Sphere other) {
-    return Sphere(self.g0 * other.g0, vec4(self.g0) * other.g1);
+    return Sphere(vec2(self.g0) * other.g0, vec3(self.g0) * other.g1);
 }
 
 Motor scalar_motor_geometric_product(Scalar self, Motor other) {
     return Motor(vec4(self.g0) * other.g0, vec4(self.g0) * other.g1);
+}
+
+Scalar scalar_motor_regressive_product(Scalar self, Motor other) {
+    return Scalar(self.g0 * other.g0.w);
 }
 
 Motor scalar_motor_outer_product(Scalar self, Motor other) {
@@ -316,6 +328,10 @@ Rotor scalar_rotor_geometric_product(Scalar self, Rotor other) {
     return Rotor(vec4(self.g0) * other.g0);
 }
 
+Scalar scalar_rotor_regressive_product(Scalar self, Rotor other) {
+    return Scalar(self.g0 * other.g0.w);
+}
+
 Rotor scalar_rotor_outer_product(Scalar self, Rotor other) {
     return Rotor(vec4(self.g0) * other.g0);
 }
@@ -330,6 +346,10 @@ Rotor scalar_rotor_left_contraction(Scalar self, Rotor other) {
 
 Translator scalar_translator_geometric_product(Scalar self, Translator other) {
     return Translator(vec4(self.g0) * other.g0);
+}
+
+Scalar scalar_translator_regressive_product(Scalar self, Translator other) {
+    return Scalar(self.g0 * other.g0.w);
 }
 
 Translator scalar_translator_outer_product(Scalar self, Translator other) {
@@ -370,6 +390,10 @@ MultiVector scalar_multi_vector_sub(Scalar self, MultiVector other) {
 
 MultiVector scalar_multi_vector_geometric_product(Scalar self, MultiVector other) {
     return MultiVector(vec3(self.g0) * other.g0, vec3(self.g0) * other.g1, vec2(self.g0) * other.g2, vec4(self.g0) * other.g3, vec3(self.g0) * other.g4, vec3(self.g0) * other.g5, vec3(self.g0) * other.g6, vec3(self.g0) * other.g7, vec4(self.g0) * other.g8, vec4(self.g0) * other.g9);
+}
+
+Scalar scalar_multi_vector_regressive_product(Scalar self, MultiVector other) {
+    return Scalar(self.g0 * other.g0.z);
 }
 
 MultiVector scalar_multi_vector_outer_product(Scalar self, MultiVector other) {
@@ -436,8 +460,16 @@ AntiScalar anti_scalar_conjugation(AntiScalar self) {
     return AntiScalar(self.g0 * -1.0);
 }
 
+Scalar anti_scalar_dual(AntiScalar self) {
+    return Scalar(self.g0);
+}
+
 AntiScalar anti_scalar_scalar_geometric_product(AntiScalar self, Scalar other) {
     return AntiScalar(self.g0 * other.g0);
+}
+
+Scalar anti_scalar_scalar_regressive_product(AntiScalar self, Scalar other) {
+    return Scalar(self.g0 * other.g0);
 }
 
 AntiScalar anti_scalar_scalar_outer_product(AntiScalar self, Scalar other) {
@@ -468,12 +500,48 @@ AntiScalar anti_scalar_anti_scalar_div(AntiScalar self, AntiScalar other) {
     return AntiScalar(self.g0 * 1.0 / other.g0 * 1.0);
 }
 
+AntiScalar anti_scalar_anti_scalar_regressive_product(AntiScalar self, AntiScalar other) {
+    return AntiScalar(self.g0 * other.g0);
+}
+
+RadialPoint anti_scalar_radial_point_regressive_product(AntiScalar self, RadialPoint other) {
+    return RadialPoint(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
+}
+
+FlatPoint anti_scalar_flat_point_regressive_product(AntiScalar self, FlatPoint other) {
+    return FlatPoint(vec4(self.g0) * other.g0);
+}
+
+Dipole anti_scalar_dipole_regressive_product(AntiScalar self, Dipole other) {
+    return Dipole(vec3(self.g0) * other.g0, vec3(self.g0) * other.g1, vec4(self.g0) * other.g2);
+}
+
+Line anti_scalar_line_regressive_product(AntiScalar self, Line other) {
+    return Line(vec3(self.g0) * other.g0, vec3(self.g0) * other.g1);
+}
+
+Circle anti_scalar_circle_regressive_product(AntiScalar self, Circle other) {
+    return Circle(vec4(self.g0) * other.g0, vec3(self.g0) * other.g1, vec3(self.g0) * other.g2);
+}
+
+Plane anti_scalar_plane_regressive_product(AntiScalar self, Plane other) {
+    return Plane(vec4(self.g0) * other.g0);
+}
+
+Sphere anti_scalar_sphere_regressive_product(AntiScalar self, Sphere other) {
+    return Sphere(vec2(self.g0) * other.g0, vec3(self.g0) * other.g1);
+}
+
 Motor anti_scalar_motor_add(AntiScalar self, Motor other) {
     return Motor(vec4(self.g0) * vec4(0.0, 0.0, 0.0, 1.0) + other.g0, other.g1);
 }
 
 Motor anti_scalar_motor_sub(AntiScalar self, Motor other) {
     return Motor(vec4(self.g0) * vec4(0.0, 0.0, 0.0, 1.0) - other.g0, vec4(0.0) - other.g1);
+}
+
+Motor anti_scalar_motor_regressive_product(AntiScalar self, Motor other) {
+    return Motor(vec4(self.g0) * other.g0, vec4(self.g0) * other.g1);
 }
 
 Rotor anti_scalar_rotor_add(AntiScalar self, Rotor other) {
@@ -484,6 +552,10 @@ Rotor anti_scalar_rotor_sub(AntiScalar self, Rotor other) {
     return Rotor(vec4(self.g0) * vec4(0.0, 0.0, 0.0, 1.0) - other.g0);
 }
 
+Rotor anti_scalar_rotor_regressive_product(AntiScalar self, Rotor other) {
+    return Rotor(vec4(self.g0) * other.g0);
+}
+
 Translator anti_scalar_translator_add(AntiScalar self, Translator other) {
     return Translator(vec4(self.g0) * vec4(0.0, 0.0, 0.0, 1.0) + other.g0);
 }
@@ -492,12 +564,24 @@ Translator anti_scalar_translator_sub(AntiScalar self, Translator other) {
     return Translator(vec4(self.g0) * vec4(0.0, 0.0, 0.0, 1.0) - other.g0);
 }
 
+Translator anti_scalar_translator_regressive_product(AntiScalar self, Translator other) {
+    return Translator(vec4(self.g0) * other.g0);
+}
+
+Flector anti_scalar_flector_regressive_product(AntiScalar self, Flector other) {
+    return Flector(vec4(self.g0) * other.g0, vec4(self.g0) * other.g1);
+}
+
 MultiVector anti_scalar_multi_vector_add(AntiScalar self, MultiVector other) {
     return MultiVector(vec3(self.g0) * vec3(0.0, 0.0, 1.0) + other.g0, other.g1, other.g2, other.g3, other.g4, other.g5, other.g6, other.g7, other.g8, other.g9);
 }
 
 MultiVector anti_scalar_multi_vector_sub(AntiScalar self, MultiVector other) {
     return MultiVector(vec3(self.g0) * vec3(0.0, 0.0, 1.0) - other.g0, vec3(0.0) - other.g1, vec2(0.0) - other.g2, vec4(0.0) - other.g3, vec3(0.0) - other.g4, vec3(0.0) - other.g5, vec3(0.0) - other.g6, vec3(0.0) - other.g7, vec4(0.0) - other.g8, vec4(0.0) - other.g9);
+}
+
+MultiVector anti_scalar_multi_vector_regressive_product(AntiScalar self, MultiVector other) {
+    return MultiVector(vec3(self.g0) * other.g0, vec3(self.g0) * other.g1, vec2(self.g0) * other.g2, vec4(self.g0) * other.g3, vec3(self.g0) * other.g4, vec3(self.g0) * other.g5, vec3(self.g0) * other.g6, vec3(self.g0) * other.g7, vec4(self.g0) * other.g8, vec4(self.g0) * other.g9);
 }
 
 AntiScalar anti_scalar_multi_vector_outer_product(AntiScalar self, MultiVector other) {
@@ -532,6 +616,10 @@ RadialPoint radial_point_conjugation(RadialPoint self) {
     return RadialPoint(self.g0 * vec3(-1.0), self.g1 * vec2(-1.0));
 }
 
+Sphere radial_point_dual(RadialPoint self) {
+    return Sphere(self.g1.yx, self.g0);
+}
+
 RadialPoint radial_point_scalar_geometric_product(RadialPoint self, Scalar other) {
     return RadialPoint(self.g0 * vec3(other.g0), self.g1 * vec2(other.g0));
 }
@@ -545,6 +633,10 @@ RadialPoint radial_point_scalar_inner_product(RadialPoint self, Scalar other) {
 }
 
 RadialPoint radial_point_scalar_right_contraction(RadialPoint self, Scalar other) {
+    return RadialPoint(self.g0 * vec3(other.g0), self.g1 * vec2(other.g0));
+}
+
+RadialPoint radial_point_anti_scalar_regressive_product(RadialPoint self, AntiScalar other) {
     return RadialPoint(self.g0 * vec3(other.g0), self.g1 * vec2(other.g0));
 }
 
@@ -617,7 +709,7 @@ FlatPoint radial_point_line_left_contraction(RadialPoint self, Line other) {
 }
 
 Sphere radial_point_circle_outer_product(RadialPoint self, Circle other) {
-    return Sphere(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g1.x * other.g0.w, vec4(self.g0.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g2.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g2.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g1.x) * vec4(other.g2.x, other.g2.y, other.g2.z, other.g2.x) * vec4(1.0, 1.0, 1.0, 0.0) - vec4(self.g1.y) * other.g0 + vec4(self.g0.x) * vec4(other.g1.x, other.g1.z, other.g1.y, other.g2.x) * vec4(0.0, 1.0, -1.0, -1.0));
+    return Sphere(vec2(self.g0.x) * vec2(other.g0.x, other.g2.x) * vec2(1.0, -1.0) + vec2(self.g0.y) * vec2(other.g0.y, other.g2.y) * vec2(1.0, -1.0) + vec2(self.g0.z) * vec2(other.g0.z, other.g2.z) * vec2(1.0, -1.0) + self.g1 * vec2(other.g0.w) * vec2(1.0, -1.0), vec3(self.g0.y) * other.g1.zzx * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * other.g1.yxy * vec3(1.0, -1.0, 0.0) + vec3(self.g1.x) * other.g2 - vec3(self.g1.y) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g0.x) * other.g1.xzy * vec3(0.0, 1.0, -1.0));
 }
 
 Dipole radial_point_circle_inner_product(RadialPoint self, Circle other) {
@@ -626,6 +718,10 @@ Dipole radial_point_circle_inner_product(RadialPoint self, Circle other) {
 
 Dipole radial_point_circle_left_contraction(RadialPoint self, Circle other) {
     return Dipole(vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0), self.g0 * vec3(other.g0.w) * vec3(-1.0), vec4(self.g0.y) * vec4(other.g2.z, other.g2.z, other.g2.x, other.g1.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g2.y, other.g2.x, other.g2.y, other.g1.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.x) * vec4(other.g2.x, other.g2.z, other.g2.y, other.g1.x) * vec4(0.0, 1.0, -1.0, -1.0));
+}
+
+Scalar radial_point_plane_regressive_product(RadialPoint self, Plane other) {
+    return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g1.x * other.g0.w);
 }
 
 AntiScalar radial_point_plane_outer_product(RadialPoint self, Plane other) {
@@ -640,16 +736,32 @@ Line radial_point_plane_left_contraction(RadialPoint self, Plane other) {
     return Line(vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0), self.g0 * vec3(other.g0.w) * vec3(-1.0));
 }
 
+Scalar radial_point_sphere_regressive_product(RadialPoint self, Sphere other) {
+    return Scalar(self.g0.x * other.g1.x + self.g0.y * other.g1.y + self.g0.z * other.g1.z + self.g1.x * other.g0.y + self.g1.y * other.g0.x);
+}
+
 AntiScalar radial_point_sphere_outer_product(RadialPoint self, Sphere other) {
-    return AntiScalar(self.g0.x * other.g1.x + self.g0.y * other.g1.y + self.g0.z * other.g1.z + self.g1.x * other.g1.w + self.g1.y * other.g0);
+    return AntiScalar(self.g0.x * other.g1.x + self.g0.y * other.g1.y + self.g0.z * other.g1.z + self.g1.x * other.g0.y + self.g1.y * other.g0.x);
 }
 
 Flector radial_point_motor_geometric_product(RadialPoint self, Motor other) {
     return Flector(vec4(self.g0.x) * vec4(other.g1.w, other.g1.z, other.g1.y, other.g0.x) * vec4(1.0, 1.0, -1.0, -1.0) + vec4(self.g0.y) * vec4(other.g1.z, other.g1.w, other.g1.x, other.g0.y) * vec4(-1.0, 1.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g1.y, other.g1.x, other.g1.w, other.g0.z) * vec4(1.0, -1.0, 1.0, -1.0) + vec4(self.g1.x) * other.g1.xxxw * vec4(0.0, 0.0, 0.0, 1.0), vec4(self.g0.x) * vec4(other.g0.w, other.g0.z, other.g0.y, other.g1.x) * vec4(1.0, 1.0, -1.0, -1.0) + vec4(self.g0.y) * vec4(other.g0.z, other.g0.w, other.g0.x, other.g1.y) * vec4(-1.0, 1.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.w, other.g1.z) * vec4(1.0, -1.0, 1.0, -1.0) + vec4(self.g1.x) * other.g1.xyzx * vec4(1.0, 1.0, 1.0, 0.0));
 }
 
+RadialPoint radial_point_motor_regressive_product(RadialPoint self, Motor other) {
+    return RadialPoint(self.g0 * vec3(other.g0.w), self.g1 * vec2(other.g0.w));
+}
+
 Flector radial_point_motor_outer_product(RadialPoint self, Motor other) {
     return Flector(vec4(self.g1.x) * vec4(other.g1.w) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * other.g1.wwwx * vec4(1.0, 1.0, 1.0, 0.0), vec4(self.g0.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g1.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g1.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g1.x) * other.g1.xyzx * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g1.x) * vec4(0.0, 1.0, -1.0, -1.0));
+}
+
+RadialPoint radial_point_rotor_regressive_product(RadialPoint self, Rotor other) {
+    return RadialPoint(self.g0 * vec3(other.g0.w), self.g1 * vec2(other.g0.w));
+}
+
+RadialPoint radial_point_translator_regressive_product(RadialPoint self, Translator other) {
+    return RadialPoint(self.g0 * vec3(other.g0.w), self.g1 * vec2(other.g0.w));
 }
 
 Plane radial_point_translator_outer_product(RadialPoint self, Translator other) {
@@ -658,6 +770,10 @@ Plane radial_point_translator_outer_product(RadialPoint self, Translator other) 
 
 Motor radial_point_flector_geometric_product(RadialPoint self, Flector other) {
     return Motor(vec4(self.g0.x) * vec4(other.g0.w, other.g1.z, other.g1.y, other.g1.x) * vec4(-1.0, -1.0, 1.0, 1.0) + vec4(self.g0.y) * vec4(other.g1.z, other.g0.w, other.g1.x, other.g1.y) * vec4(1.0, -1.0, -1.0, 1.0) + vec4(self.g0.z) * vec4(other.g1.y, other.g1.x, other.g0.w, other.g1.z) * vec4(-1.0, 1.0, -1.0, 1.0) + vec4(self.g1.x) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.w), vec4(self.g0.x) * vec4(other.g1.w, other.g0.z, other.g0.y, other.g0.x) * vec4(-1.0, -1.0, 1.0, 1.0) + vec4(self.g0.y) * vec4(other.g0.z, other.g1.w, other.g0.x, other.g0.y) * vec4(1.0, -1.0, -1.0, 1.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g1.w, other.g0.z) * vec4(-1.0, 1.0, -1.0, 1.0));
+}
+
+Scalar radial_point_flector_regressive_product(RadialPoint self, Flector other) {
+    return Scalar(self.g0.x * other.g1.x + self.g0.y * other.g1.y + self.g0.z * other.g1.z + self.g1.x * other.g1.w);
 }
 
 MultiVector radial_point_multi_vector_add(RadialPoint self, MultiVector other) {
@@ -736,6 +852,10 @@ FlatPoint flat_point_scalar_right_contraction(FlatPoint self, Scalar other) {
     return FlatPoint(self.g0 * vec4(other.g0));
 }
 
+FlatPoint flat_point_anti_scalar_regressive_product(FlatPoint self, AntiScalar other) {
+    return FlatPoint(self.g0 * vec4(other.g0));
+}
+
 Line flat_point_radial_point_outer_product(FlatPoint self, RadialPoint other) {
     return Line(vec3(0.0) - vec3(self.g0.w) * other.g0 + vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec3(self.g0.y) * other.g0.zzx * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * other.g0.yxy * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * other.g0.xzy * vec3(0.0, 1.0, -1.0));
 }
@@ -772,6 +892,10 @@ Plane flat_point_dipole_outer_product(FlatPoint self, Dipole other) {
     return Plane(vec4(self.g0.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g1.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g1.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.w) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g1.x) * vec4(0.0, 1.0, -1.0, -1.0));
 }
 
+Scalar flat_point_circle_regressive_product(FlatPoint self, Circle other) {
+    return Scalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z - self.g0.w * other.g0.w);
+}
+
 AntiScalar flat_point_circle_outer_product(FlatPoint self, Circle other) {
     return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z - self.g0.w * other.g0.w);
 }
@@ -782,6 +906,22 @@ Flector flat_point_plane_add(FlatPoint self, Plane other) {
 
 Flector flat_point_plane_sub(FlatPoint self, Plane other) {
     return Flector(self.g0, vec4(0.0) - other.g0);
+}
+
+RadialPoint flat_point_sphere_regressive_product(FlatPoint self, Sphere other) {
+    return RadialPoint(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.x) * vec3(-1.0), vec2(self.g0.y) * vec2(other.g1.y) * vec2(0.0, 1.0) + vec2(self.g0.z) * vec2(other.g1.z) * vec2(0.0, 1.0) + vec2(self.g0.w) * other.g0 * vec2(-1.0, 1.0) + vec2(self.g0.x) * vec2(other.g1.x) * vec2(0.0, 1.0));
+}
+
+FlatPoint flat_point_motor_regressive_product(FlatPoint self, Motor other) {
+    return FlatPoint(self.g0 * vec4(other.g0.w));
+}
+
+FlatPoint flat_point_rotor_regressive_product(FlatPoint self, Rotor other) {
+    return FlatPoint(self.g0 * vec4(other.g0.w));
+}
+
+FlatPoint flat_point_translator_regressive_product(FlatPoint self, Translator other) {
+    return FlatPoint(self.g0 * vec4(other.g0.w));
 }
 
 Flector flat_point_flector_add(FlatPoint self, Flector other) {
@@ -828,6 +968,10 @@ Dipole dipole_conjugation(Dipole self) {
     return Dipole(self.g0 * vec3(-1.0), self.g1 * vec3(-1.0), self.g2 * vec4(-1.0));
 }
 
+Circle dipole_dual(Dipole self) {
+    return Circle(self.g2 * vec4(-1.0), self.g1 * vec3(-1.0), self.g0 * vec3(-1.0));
+}
+
 Dipole dipole_scalar_geometric_product(Dipole self, Scalar other) {
     return Dipole(self.g0 * vec3(other.g0), self.g1 * vec3(other.g0), self.g2 * vec4(other.g0));
 }
@@ -841,6 +985,10 @@ Dipole dipole_scalar_inner_product(Dipole self, Scalar other) {
 }
 
 Dipole dipole_scalar_right_contraction(Dipole self, Scalar other) {
+    return Dipole(self.g0 * vec3(other.g0), self.g1 * vec3(other.g0), self.g2 * vec4(other.g0));
+}
+
+Dipole dipole_anti_scalar_regressive_product(Dipole self, AntiScalar other) {
     return Dipole(self.g0 * vec3(other.g0), self.g1 * vec3(other.g0), self.g2 * vec4(other.g0));
 }
 
@@ -893,7 +1041,7 @@ Dipole dipole_dipole_div(Dipole self, Dipole other) {
 }
 
 Sphere dipole_dipole_outer_product(Dipole self, Dipole other) {
-    return Sphere(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z, vec4(self.g0.y) * other.g2.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * other.g2.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g1.y) * other.g2.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g1.z) * other.g2.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g2.x) * vec4(other.g0.z, other.g0.z, other.g0.y, other.g1.x) * vec4(0.0, 1.0, -1.0, -1.0) + vec4(self.g2.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g1.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g2.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g1.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g2.w) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g1.x, self.g0.x, self.g0.x, self.g1.x) * other.g2.wzyx * vec4(1.0, -1.0, 1.0, -1.0));
+    return Sphere(vec2(self.g0.y) * vec2(other.g1.y) * vec2(-1.0, 0.0) + vec2(self.g0.z) * vec2(other.g1.z) * vec2(-1.0, 0.0) - vec2(self.g1.x) * vec2(other.g0.x, other.g2.x) - vec2(self.g1.y) * vec2(other.g0.y, other.g2.y) - vec2(self.g1.z) * vec2(other.g0.z, other.g2.z) + vec2(self.g2.x) * vec2(other.g1.x) * vec2(0.0, -1.0) + vec2(self.g2.y) * vec2(other.g1.y) * vec2(0.0, -1.0) + vec2(self.g2.z) * vec2(other.g1.z) * vec2(0.0, -1.0) + vec2(self.g0.x) * vec2(other.g1.x) * vec2(-1.0, 0.0), vec3(self.g0.y) * vec3(other.g2.z, other.g2.z, other.g2.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g2.y, other.g2.x, other.g2.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g1.y) * vec3(other.g2.w) * vec3(0.0, 1.0, 0.0) + vec3(self.g1.z) * vec3(other.g2.w) * vec3(0.0, 0.0, 1.0) + vec3(self.g2.x) * other.g0.zzy * vec3(0.0, 1.0, -1.0) + vec3(self.g2.y) * other.g0.zzx * vec3(-1.0, 0.0, 1.0) + vec3(self.g2.z) * other.g0.yxy * vec3(1.0, -1.0, 0.0) + vec3(self.g2.w) * other.g1 + vec3(self.g1.x, self.g0.x, self.g0.x) * vec3(other.g2.w, other.g2.z, other.g2.y) * vec3(1.0, -1.0, 1.0));
 }
 
 Scalar dipole_dipole_inner_product(Dipole self, Dipole other) {
@@ -916,8 +1064,16 @@ Motor dipole_line_geometric_product(Dipole self, Line other) {
     return Motor(vec4(self.g0.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g1.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g1.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g1.x) * vec4(other.g0.z, other.g0.z, other.g0.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0) + vec4(self.g1.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.x) * vec4(other.g1.x, other.g1.z, other.g1.y, other.g1.x) * vec4(0.0, 1.0, -1.0, -1.0), vec4(self.g1.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g1.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g1.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g1.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g1.x) * vec4(other.g1.x, other.g1.z, other.g1.y, other.g1.x) * vec4(0.0, 1.0, -1.0, -1.0));
 }
 
+Scalar dipole_line_regressive_product(Dipole self, Line other) {
+    return Scalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
+}
+
 AntiScalar dipole_line_outer_product(Dipole self, Line other) {
     return AntiScalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
+}
+
+Scalar dipole_circle_regressive_product(Dipole self, Circle other) {
+    return Scalar(0.0 - self.g0.x * other.g2.x - self.g0.y * other.g2.y - self.g0.z * other.g2.z - self.g1.x * other.g1.x - self.g1.y * other.g1.y - self.g1.z * other.g1.z - self.g2.x * other.g0.x - self.g2.y * other.g0.y - self.g2.z * other.g0.z - self.g2.w * other.g0.w);
 }
 
 AntiScalar dipole_circle_outer_product(Dipole self, Circle other) {
@@ -932,12 +1088,20 @@ RadialPoint dipole_circle_left_contraction(Dipole self, Circle other) {
     return RadialPoint(self.g1 * vec3(other.g0.w), vec2(0.0) - vec2(self.g1.x) * vec2(other.g0.x, other.g2.x) - vec2(self.g1.y) * vec2(other.g0.y, other.g2.y) - vec2(self.g1.z) * vec2(other.g0.z, other.g2.z));
 }
 
+RadialPoint dipole_plane_regressive_product(Dipole self, Plane other) {
+    return RadialPoint(vec3(self.g1.x) * vec3(other.g0.z, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0) + vec3(self.g1.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g1.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + self.g0 * vec3(other.g0.w), vec2(self.g0.y) * vec2(other.g0.y) * vec2(-1.0, 0.0) + vec2(self.g0.z) * vec2(other.g0.z) * vec2(-1.0, 0.0) + vec2(self.g2.x) * vec2(other.g0.x) * vec2(0.0, 1.0) + vec2(self.g2.y) * vec2(other.g0.y) * vec2(0.0, 1.0) + vec2(self.g2.z) * vec2(other.g0.z) * vec2(0.0, 1.0) + vec2(self.g2.w) * vec2(other.g0.w) * vec2(0.0, 1.0) + vec2(self.g0.x) * vec2(other.g0.x) * vec2(-1.0, 0.0));
+}
+
 FlatPoint dipole_plane_inner_product(Dipole self, Plane other) {
     return FlatPoint(vec4(self.g1.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g1.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
 }
 
 FlatPoint dipole_plane_left_contraction(Dipole self, Plane other) {
     return FlatPoint(vec4(self.g1.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g1.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+}
+
+RadialPoint dipole_sphere_regressive_product(Dipole self, Sphere other) {
+    return RadialPoint(vec3(self.g1.x) * other.g1.zzy * vec3(0.0, -1.0, 1.0) + vec3(self.g1.y) * other.g1.zzx * vec3(1.0, 0.0, -1.0) + vec3(self.g1.z) * other.g1.yxy * vec3(-1.0, 1.0, 0.0) + vec3(self.g2.x) * vec3(other.g0.x) * vec3(-1.0, 0.0, 0.0) + vec3(self.g2.y) * vec3(other.g0.x) * vec3(0.0, -1.0, 0.0) + vec3(self.g2.z) * vec3(other.g0.x) * vec3(0.0, 0.0, -1.0) + self.g0 * vec3(other.g0.y), vec2(self.g0.y) * vec2(other.g1.y) * vec2(-1.0, 0.0) + vec2(self.g0.z) * vec2(other.g1.z) * vec2(-1.0, 0.0) + vec2(self.g2.x) * vec2(other.g1.x) * vec2(0.0, 1.0) + vec2(self.g2.y) * vec2(other.g1.y) * vec2(0.0, 1.0) + vec2(self.g2.z) * vec2(other.g1.z) * vec2(0.0, 1.0) + vec2(self.g2.w) * other.g0 * vec2(-1.0, 1.0) + vec2(self.g0.x) * vec2(other.g1.x) * vec2(-1.0, 0.0));
 }
 
 Motor dipole_motor_geometric_product(Dipole self, Motor other) {
@@ -962,6 +1126,10 @@ AntiScalar dipole_translator_outer_product(Dipole self, Translator other) {
 
 Flector dipole_flector_geometric_product(Dipole self, Flector other) {
     return Flector(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g1.x) * vec4(other.g1.w, other.g0.z, other.g0.y, other.g1.x) * vec4(1.0, 1.0, -1.0, -1.0) + vec4(self.g1.y) * vec4(other.g0.z, other.g1.w, other.g0.x, other.g1.y) * vec4(-1.0, 1.0, 1.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.y, other.g0.x, other.g1.w, other.g1.z) * vec4(1.0, -1.0, 1.0, -1.0) + vec4(self.g0.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, 1.0), vec4(self.g0.y) * vec4(other.g0.z, other.g1.w, other.g0.x, other.g0.z) * vec4(1.0, -1.0, -1.0, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g1.w, other.g0.y) * vec4(-1.0, 1.0, -1.0, 0.0) + vec4(self.g1.x) * vec4(other.g0.w, other.g1.z, other.g1.y, other.g0.x) * vec4(1.0, 1.0, -1.0, -1.0) + vec4(self.g1.y) * vec4(other.g1.z, other.g0.w, other.g1.x, other.g0.y) * vec4(-1.0, 1.0, 1.0, -1.0) + vec4(self.g1.z) * vec4(other.g1.y, other.g1.x, other.g0.w, other.g0.z) * vec4(1.0, -1.0, 1.0, -1.0) + vec4(self.g0.x) * vec4(other.g1.w, other.g0.z, other.g0.y, other.g1.x) * vec4(-1.0, -1.0, 1.0, 0.0));
+}
+
+RadialPoint dipole_flector_regressive_product(Dipole self, Flector other) {
+    return RadialPoint(vec3(self.g1.x) * vec3(other.g1.z, other.g1.z, other.g1.y) * vec3(0.0, -1.0, 1.0) + vec3(self.g1.y) * vec3(other.g1.z, other.g1.z, other.g1.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g1.z) * vec3(other.g1.y, other.g1.x, other.g1.y) * vec3(-1.0, 1.0, 0.0) + self.g0 * vec3(other.g1.w), vec2(self.g0.y) * vec2(other.g1.y) * vec2(-1.0, 0.0) + vec2(self.g0.z) * vec2(other.g1.z) * vec2(-1.0, 0.0) + vec2(self.g2.x) * vec2(other.g1.x) * vec2(0.0, 1.0) + vec2(self.g2.y) * vec2(other.g1.y) * vec2(0.0, 1.0) + vec2(self.g2.z) * vec2(other.g1.z) * vec2(0.0, 1.0) + vec2(self.g2.w) * vec2(other.g1.w) * vec2(0.0, 1.0) + vec2(self.g0.x) * vec2(other.g1.x) * vec2(-1.0, 0.0));
 }
 
 Plane dipole_flector_outer_product(Dipole self, Flector other) {
@@ -1052,6 +1220,10 @@ Line line_scalar_right_contraction(Line self, Scalar other) {
     return Line(self.g0 * vec3(other.g0), self.g1 * vec3(other.g0));
 }
 
+Line line_anti_scalar_regressive_product(Line self, AntiScalar other) {
+    return Line(self.g0 * vec3(other.g0), self.g1 * vec3(other.g0));
+}
+
 Flector line_radial_point_geometric_product(Line self, RadialPoint other) {
     return Flector(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g0.z) * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g1.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g0.y) * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g0.x, self.g1.x, self.g1.x, self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g0.x) * vec4(0.0, -1.0, 1.0, -1.0), vec4(self.g0.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g0.z) * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g0.y) * vec4(1.0, -1.0, 0.0, 0.0) + vec4(self.g1.x) * vec4(other.g1.x, other.g1.x, other.g1.x, other.g0.x) * vec4(-1.0, 0.0, 0.0, 1.0) + vec4(self.g1.y) * vec4(other.g1.x, other.g1.x, other.g1.x, other.g0.y) * vec4(0.0, -1.0, 0.0, 1.0) + vec4(self.g1.z) * vec4(other.g1.x, other.g1.x, other.g1.x, other.g0.z) * vec4(0.0, 0.0, -1.0, 1.0) + vec4(self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g0.x) * vec4(0.0, 1.0, -1.0, 0.0));
 }
@@ -1070,6 +1242,10 @@ FlatPoint line_radial_point_right_contraction(Line self, RadialPoint other) {
 
 Motor line_dipole_geometric_product(Line self, Dipole other) {
     return Motor(vec4(self.g0.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g1.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g1.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g1.x) * vec4(other.g0.z, other.g0.z, other.g0.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0) + vec4(self.g1.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.x) * vec4(other.g1.x, other.g1.z, other.g1.y, other.g1.x) * vec4(0.0, 1.0, -1.0, -1.0), vec4(self.g1.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g1.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g1.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g1.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g1.x) * vec4(other.g1.x, other.g1.z, other.g1.y, other.g1.x) * vec4(0.0, 1.0, -1.0, -1.0));
+}
+
+Scalar line_dipole_regressive_product(Line self, Dipole other) {
+    return Scalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
 }
 
 AntiScalar line_dipole_outer_product(Line self, Dipole other) {
@@ -1100,12 +1276,28 @@ Circle line_circle_sub(Line self, Circle other) {
     return Circle(vec4(0.0) - other.g0, self.g0 - other.g1, self.g1 - other.g2);
 }
 
+RadialPoint line_circle_regressive_product(Line self, Circle other) {
+    return RadialPoint(vec3(self.g1.x) * vec3(other.g0.z, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0) + vec3(self.g1.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g1.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + self.g0 * vec3(other.g0.w), vec2(0.0) - vec2(self.g0.x) * vec2(other.g0.x, other.g2.x) - vec2(self.g0.y) * vec2(other.g0.y, other.g2.y) - vec2(self.g0.z) * vec2(other.g0.z, other.g2.z) + vec2(self.g1.y) * vec2(other.g1.y) * vec2(0.0, -1.0) + vec2(self.g1.z) * vec2(other.g1.z) * vec2(0.0, -1.0) + vec2(self.g1.x) * vec2(other.g1.x) * vec2(0.0, -1.0));
+}
+
+FlatPoint line_plane_regressive_product(Line self, Plane other) {
+    return FlatPoint(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.y) * other.g0.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g1.z) * other.g0.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g0.x, self.g1.x, self.g1.x, self.g0.x) * other.g0.wzyx * vec4(1.0, -1.0, 1.0, -1.0));
+}
+
+Dipole line_sphere_regressive_product(Line self, Sphere other) {
+    return Dipole(self.g0 * vec3(other.g0.x), self.g1 * vec3(other.g0.x), vec4(self.g0.y) * vec4(other.g0.y, other.g0.y, other.g0.y, other.g1.y) * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.y, other.g0.y, other.g1.z) * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.x) * vec4(other.g1.z, other.g1.z, other.g1.y, other.g1.z) * vec4(0.0, -1.0, 1.0, 0.0) + vec4(self.g1.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g1.z) * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g1.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g1.y) * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g0.x) * vec4(other.g0.y, other.g0.x, other.g0.x, other.g1.x) * vec4(1.0, 0.0, 0.0, -1.0));
+}
+
 Motor line_motor_add(Line self, Motor other) {
     return Motor(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(1.0, 1.0, 1.0, 0.0) + other.g0, vec4(self.g1.x, self.g1.y, self.g1.z, self.g0.x) * vec4(1.0, 1.0, 1.0, 0.0) + other.g1);
 }
 
 Motor line_motor_sub(Line self, Motor other) {
     return Motor(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(1.0, 1.0, 1.0, 0.0) - other.g0, vec4(self.g1.x, self.g1.y, self.g1.z, self.g0.x) * vec4(1.0, 1.0, 1.0, 0.0) - other.g1);
+}
+
+FlatPoint line_flector_regressive_product(Line self, Flector other) {
+    return FlatPoint(vec4(self.g0.y) * other.g1.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g1.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.y) * other.g1.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g1.z) * other.g1.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g0.x, self.g1.x, self.g1.x, self.g0.x) * other.g1.wzyx * vec4(1.0, -1.0, 1.0, -1.0));
 }
 
 MultiVector line_multi_vector_add(Line self, MultiVector other) {
@@ -1144,6 +1336,10 @@ Circle circle_conjugation(Circle self) {
     return Circle(self.g0, self.g1, self.g2);
 }
 
+Dipole circle_dual(Circle self) {
+    return Dipole(self.g2 * vec3(-1.0), self.g1 * vec3(-1.0), self.g0 * vec4(-1.0));
+}
+
 Circle circle_scalar_geometric_product(Circle self, Scalar other) {
     return Circle(self.g0 * vec4(other.g0), self.g1 * vec3(other.g0), self.g2 * vec3(other.g0));
 }
@@ -1160,8 +1356,12 @@ Circle circle_scalar_right_contraction(Circle self, Scalar other) {
     return Circle(self.g0 * vec4(other.g0), self.g1 * vec3(other.g0), self.g2 * vec3(other.g0));
 }
 
+Circle circle_anti_scalar_regressive_product(Circle self, AntiScalar other) {
+    return Circle(self.g0 * vec4(other.g0), self.g1 * vec3(other.g0), self.g2 * vec3(other.g0));
+}
+
 Sphere circle_radial_point_outer_product(Circle self, RadialPoint other) {
-    return Sphere(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z - self.g0.w * other.g1.x, vec4(self.g1.x) * vec4(other.g0.z, other.g0.z, other.g0.y, other.g0.z) * vec4(0.0, 1.0, -1.0, 0.0) + vec4(self.g1.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g0.z) * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g1.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g0.y) * vec4(1.0, -1.0, 0.0, 0.0) + vec4(self.g2.x) * vec4(other.g1.x, other.g1.x, other.g1.x, other.g0.x) * vec4(-1.0, 0.0, 0.0, 1.0) + vec4(self.g2.y) * vec4(other.g1.x, other.g1.x, other.g1.x, other.g0.y) * vec4(0.0, -1.0, 0.0, 1.0) + vec4(self.g2.z) * vec4(other.g1.x, other.g1.x, other.g1.x, other.g0.z) * vec4(0.0, 0.0, -1.0, 1.0) + self.g0 * vec4(other.g1.y));
+    return Sphere(vec2(self.g0.y) * vec2(other.g0.y) * vec2(-1.0, 0.0) + vec2(self.g0.z) * vec2(other.g0.z) * vec2(-1.0, 0.0) + vec2(self.g0.w) * other.g1 * vec2(-1.0, 1.0) + vec2(self.g2.x) * vec2(other.g0.x) * vec2(0.0, 1.0) + vec2(self.g2.y) * vec2(other.g0.y) * vec2(0.0, 1.0) + vec2(self.g2.z) * vec2(other.g0.z) * vec2(0.0, 1.0) + vec2(self.g0.x) * vec2(other.g0.x) * vec2(-1.0, 0.0), vec3(self.g1.x) * other.g0.zzy * vec3(0.0, 1.0, -1.0) + vec3(self.g1.y) * other.g0.zzx * vec3(-1.0, 0.0, 1.0) + vec3(self.g1.z) * other.g0.yxy * vec3(1.0, -1.0, 0.0) + vec3(self.g2.x) * vec3(other.g1.x) * vec3(-1.0, 0.0, 0.0) + vec3(self.g2.y) * vec3(other.g1.x) * vec3(0.0, -1.0, 0.0) + vec3(self.g2.z) * vec3(other.g1.x) * vec3(0.0, 0.0, -1.0) + vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y));
 }
 
 Dipole circle_radial_point_inner_product(Circle self, RadialPoint other) {
@@ -1172,8 +1372,16 @@ Dipole circle_radial_point_right_contraction(Circle self, RadialPoint other) {
     return Dipole(vec3(self.g0.y) * other.g0.zzx * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * other.g0.yxy * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * other.g0.xzy * vec3(0.0, 1.0, -1.0), vec3(0.0) - vec3(self.g0.w) * other.g0, vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g2.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g0.z) * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g2.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g0.y) * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g1.x, self.g2.x, self.g2.x, self.g1.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g0.x) * vec4(0.0, -1.0, 1.0, -1.0));
 }
 
+Scalar circle_flat_point_regressive_product(Circle self, FlatPoint other) {
+    return Scalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z - self.g0.w * other.g0.w);
+}
+
 AntiScalar circle_flat_point_outer_product(Circle self, FlatPoint other) {
     return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z - self.g0.w * other.g0.w);
+}
+
+Scalar circle_dipole_regressive_product(Circle self, Dipole other) {
+    return Scalar(0.0 - self.g0.x * other.g2.x - self.g0.y * other.g2.y - self.g0.z * other.g2.z - self.g0.w * other.g2.w - self.g1.x * other.g1.x - self.g1.y * other.g1.y - self.g1.z * other.g1.z - self.g2.x * other.g0.x - self.g2.y * other.g0.y - self.g2.z * other.g0.z);
 }
 
 AntiScalar circle_dipole_outer_product(Circle self, Dipole other) {
@@ -1200,6 +1408,10 @@ Circle circle_line_sub(Circle self, Line other) {
     return Circle(self.g0, self.g1 - other.g0, self.g2 - other.g1);
 }
 
+RadialPoint circle_line_regressive_product(Circle self, Line other) {
+    return RadialPoint(vec3(self.g0.y) * other.g1.zzx * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * other.g1.yxy * vec3(1.0, -1.0, 0.0) + vec3(self.g0.w) * other.g0 + vec3(self.g0.x) * other.g1.xzy * vec3(0.0, 1.0, -1.0), vec2(self.g0.y) * vec2(other.g0.y) * vec2(-1.0, 0.0) + vec2(self.g0.z) * vec2(other.g0.z) * vec2(-1.0, 0.0) + vec2(self.g1.x) * vec2(other.g1.x) * vec2(0.0, -1.0) + vec2(self.g1.y) * vec2(other.g1.y) * vec2(0.0, -1.0) + vec2(self.g1.z) * vec2(other.g1.z) * vec2(0.0, -1.0) + vec2(self.g2.x) * vec2(other.g0.x) * vec2(0.0, -1.0) + vec2(self.g2.y) * vec2(other.g0.y) * vec2(0.0, -1.0) + vec2(self.g2.z) * vec2(other.g0.z) * vec2(0.0, -1.0) + vec2(self.g0.x) * vec2(other.g0.x) * vec2(-1.0, 0.0));
+}
+
 Circle circle_circle_add(Circle self, Circle other) {
     return Circle(self.g0 + other.g0, self.g1 + other.g1, self.g2 + other.g2);
 }
@@ -1216,6 +1428,10 @@ Circle circle_circle_div(Circle self, Circle other) {
     return Circle(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.w) * vec4(1.0, 1.0, 1.0, 1.0) / vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.w) * vec4(1.0, 1.0, 1.0, 1.0), vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(1.0, 1.0, 1.0) / vec3(other.g1.x, other.g1.y, other.g1.z) * vec3(1.0, 1.0, 1.0), vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(1.0, 1.0, 1.0) / vec3(other.g2.x, other.g2.y, other.g2.z) * vec3(1.0, 1.0, 1.0));
 }
 
+RadialPoint circle_circle_regressive_product(Circle self, Circle other) {
+    return RadialPoint(vec3(self.g0.y) * other.g2.zzx * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * other.g2.yxy * vec3(1.0, -1.0, 0.0) + vec3(self.g0.w) * other.g1 + vec3(self.g1.x) * vec3(other.g0.w) * vec3(1.0, 0.0, 0.0) + vec3(self.g1.y) * vec3(other.g0.w) * vec3(0.0, 1.0, 0.0) + vec3(self.g1.z) * vec3(other.g0.w) * vec3(0.0, 0.0, 1.0) + vec3(self.g2.x) * vec3(other.g0.z, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0) + vec3(self.g2.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g2.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * other.g2.xzy * vec3(0.0, 1.0, -1.0), vec2(self.g0.y) * vec2(other.g1.y) * vec2(-1.0, 0.0) + vec2(self.g0.z) * vec2(other.g1.z) * vec2(-1.0, 0.0) - vec2(self.g1.x) * vec2(other.g0.x, other.g2.x) - vec2(self.g1.y) * vec2(other.g0.y, other.g2.y) - vec2(self.g1.z) * vec2(other.g0.z, other.g2.z) + vec2(self.g2.x) * vec2(other.g1.x) * vec2(0.0, -1.0) + vec2(self.g2.y) * vec2(other.g1.y) * vec2(0.0, -1.0) + vec2(self.g2.z) * vec2(other.g1.z) * vec2(0.0, -1.0) + vec2(self.g0.x) * vec2(other.g1.x) * vec2(-1.0, 0.0));
+}
+
 Scalar circle_circle_inner_product(Circle self, Circle other) {
     return Scalar(0.0 - self.g0.w * other.g0.w);
 }
@@ -1230,6 +1446,14 @@ Scalar circle_circle_right_contraction(Circle self, Circle other) {
 
 Scalar circle_circle_scalar_product(Circle self, Circle other) {
     return Scalar(0.0 - self.g0.w * other.g0.w);
+}
+
+Dipole circle_plane_regressive_product(Circle self, Plane other) {
+    return Dipole(vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, 1.0, -1.0), vec3(0.0) - vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w), vec4(self.g1.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g1.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g2.y) * other.g0.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g2.z) * other.g0.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g1.x, self.g2.x, self.g2.x, self.g1.x) * other.g0.wzyx * vec4(1.0, -1.0, 1.0, -1.0));
+}
+
+Dipole circle_sphere_regressive_product(Circle self, Sphere other) {
+    return Dipole(vec3(self.g0.y) * other.g1.zzx * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * other.g1.yxy * vec3(1.0, -1.0, 0.0) + vec3(self.g1.x) * vec3(other.g0.x) * vec3(1.0, 0.0, 0.0) + vec3(self.g1.y) * vec3(other.g0.x) * vec3(0.0, 1.0, 0.0) + vec3(self.g1.z) * vec3(other.g0.x) * vec3(0.0, 0.0, 1.0) + vec3(self.g0.x) * other.g1.xzy * vec3(0.0, 1.0, -1.0), vec3(0.0) - vec3(self.g0.w) * other.g1 + vec3(self.g2.x) * vec3(other.g0.x) * vec3(1.0, 0.0, 0.0) + vec3(self.g2.y) * vec3(other.g0.x) * vec3(0.0, 1.0, 0.0) + vec3(self.g2.z) * vec3(other.g0.x) * vec3(0.0, 0.0, 1.0) + vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.y), vec4(self.g1.y) * vec4(other.g0.y, other.g0.y, other.g0.y, other.g1.y) * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.y, other.g0.y, other.g0.y, other.g1.z) * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g2.x) * vec4(other.g1.z, other.g1.z, other.g1.y, other.g1.z) * vec4(0.0, -1.0, 1.0, 0.0) + vec4(self.g2.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g1.z) * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g2.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g1.y) * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g1.x) * vec4(other.g0.y, other.g0.x, other.g0.x, other.g1.x) * vec4(1.0, 0.0, 0.0, -1.0));
 }
 
 Flector circle_motor_geometric_product(Circle self, Motor other) {
@@ -1324,6 +1548,14 @@ Plane plane_scalar_right_contraction(Plane self, Scalar other) {
     return Plane(self.g0 * vec4(other.g0));
 }
 
+Plane plane_anti_scalar_regressive_product(Plane self, AntiScalar other) {
+    return Plane(self.g0 * vec4(other.g0));
+}
+
+Scalar plane_radial_point_regressive_product(Plane self, RadialPoint other) {
+    return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g0.w * other.g1.x);
+}
+
 AntiScalar plane_radial_point_outer_product(Plane self, RadialPoint other) {
     return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g0.w * other.g1.x);
 }
@@ -1344,12 +1576,24 @@ Flector plane_flat_point_sub(Plane self, FlatPoint other) {
     return Flector(vec4(0.0) - other.g0, self.g0);
 }
 
+RadialPoint plane_dipole_regressive_product(Plane self, Dipole other) {
+    return RadialPoint(vec3(self.g0.y) * other.g1.zzx * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * other.g1.yxy * vec3(-1.0, 1.0, 0.0) - vec3(self.g0.w) * other.g0 + vec3(self.g0.x) * other.g1.xzy * vec3(0.0, -1.0, 1.0), vec2(self.g0.x) * vec2(other.g0.x, other.g2.x) * vec2(1.0, -1.0) + vec2(self.g0.y) * vec2(other.g0.y, other.g2.y) * vec2(1.0, -1.0) + vec2(self.g0.z) * vec2(other.g0.z, other.g2.z) * vec2(1.0, -1.0) + vec2(self.g0.x, self.g0.w) * vec2(other.g2.x, other.g2.w) * vec2(0.0, -1.0));
+}
+
 FlatPoint plane_dipole_inner_product(Plane self, Dipole other) {
     return FlatPoint(vec4(self.g0.y) * vec4(other.g1.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g1.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, -1.0));
 }
 
 FlatPoint plane_dipole_right_contraction(Plane self, Dipole other) {
     return FlatPoint(vec4(self.g0.y) * vec4(other.g1.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g1.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, -1.0));
+}
+
+FlatPoint plane_line_regressive_product(Plane self, Line other) {
+    return FlatPoint(vec4(self.g0.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.w) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x) * vec4(other.g1.x, other.g1.z, other.g1.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0));
+}
+
+Dipole plane_circle_regressive_product(Plane self, Circle other) {
+    return Dipole(vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0), vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w) * vec3(-1.0), vec4(self.g0.y) * vec4(other.g2.z, other.g2.z, other.g2.x, other.g1.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g2.y, other.g2.x, other.g2.y, other.g1.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.w) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x) * vec4(other.g2.x, other.g2.z, other.g2.y, other.g1.x) * vec4(0.0, 1.0, -1.0, -1.0));
 }
 
 Plane plane_plane_add(Plane self, Plane other) {
@@ -1368,12 +1612,28 @@ Plane plane_plane_div(Plane self, Plane other) {
     return Plane(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.w) * vec4(1.0, 1.0, 1.0, 1.0) / vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.w) * vec4(1.0, 1.0, 1.0, 1.0));
 }
 
+Line plane_plane_regressive_product(Plane self, Plane other) {
+    return Line(vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, 1.0, -1.0), vec3(0.0) - vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w));
+}
+
 Sphere plane_sphere_add(Plane self, Sphere other) {
-    return Sphere(other.g0, self.g0 + other.g1);
+    return Sphere(vec2(self.g0.x, self.g0.w) * vec2(0.0, 1.0) + other.g0, vec3(self.g0.x, self.g0.y, self.g0.z) + other.g1);
 }
 
 Sphere plane_sphere_sub(Plane self, Sphere other) {
-    return Sphere(0.0 - other.g0, self.g0 - other.g1);
+    return Sphere(vec2(self.g0.x, self.g0.w) * vec2(0.0, 1.0) - other.g0, vec3(self.g0.x, self.g0.y, self.g0.z) - other.g1);
+}
+
+Circle plane_sphere_regressive_product(Plane self, Sphere other) {
+    return Circle(self.g0 * vec4(other.g0.x) * vec4(-1.0), vec3(self.g0.y) * other.g1.zzx * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * other.g1.yxy * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * other.g1.xzy * vec3(0.0, 1.0, -1.0), vec3(0.0) - vec3(self.g0.w) * other.g1 + vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.y));
+}
+
+Flector plane_motor_regressive_product(Plane self, Motor other) {
+    return Flector(vec4(self.g0.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.w) * other.g0.xyzx * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x) * vec4(other.g1.x, other.g1.z, other.g1.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0), self.g0 * vec4(other.g0.w));
+}
+
+Flector plane_rotor_regressive_product(Plane self, Rotor other) {
+    return Flector(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * other.g0.xyzx * vec4(1.0, 1.0, 1.0, -1.0), self.g0 * vec4(other.g0.w));
 }
 
 Flector plane_flector_add(Plane self, Flector other) {
@@ -1397,15 +1657,15 @@ Plane plane_scale(Plane self, float other) {
 }
 
 Sphere sphere_zero() {
-    return Sphere(0.0, vec4(0.0));
+    return Sphere(vec2(0.0), vec3(0.0));
 }
 
 Sphere sphere_one() {
-    return Sphere(0.0, vec4(0.0));
+    return Sphere(vec2(0.0), vec3(0.0));
 }
 
 Sphere sphere_neg(Sphere self) {
-    return Sphere(self.g0 * -1.0, self.g1 * vec4(-1.0));
+    return Sphere(self.g0 * vec2(-1.0), self.g1 * vec3(-1.0));
 }
 
 Sphere sphere_automorphism(Sphere self) {
@@ -1420,36 +1680,68 @@ Sphere sphere_conjugation(Sphere self) {
     return Sphere(self.g0, self.g1);
 }
 
+RadialPoint sphere_dual(Sphere self) {
+    return RadialPoint(self.g1, self.g0.yx);
+}
+
 Sphere sphere_scalar_geometric_product(Sphere self, Scalar other) {
-    return Sphere(self.g0 * other.g0, self.g1 * vec4(other.g0));
+    return Sphere(self.g0 * vec2(other.g0), self.g1 * vec3(other.g0));
 }
 
 Sphere sphere_scalar_outer_product(Sphere self, Scalar other) {
-    return Sphere(self.g0 * other.g0, self.g1 * vec4(other.g0));
+    return Sphere(self.g0 * vec2(other.g0), self.g1 * vec3(other.g0));
 }
 
 Sphere sphere_scalar_inner_product(Sphere self, Scalar other) {
-    return Sphere(self.g0 * other.g0, self.g1 * vec4(other.g0));
+    return Sphere(self.g0 * vec2(other.g0), self.g1 * vec3(other.g0));
 }
 
 Sphere sphere_scalar_right_contraction(Sphere self, Scalar other) {
-    return Sphere(self.g0 * other.g0, self.g1 * vec4(other.g0));
+    return Sphere(self.g0 * vec2(other.g0), self.g1 * vec3(other.g0));
+}
+
+Sphere sphere_anti_scalar_regressive_product(Sphere self, AntiScalar other) {
+    return Sphere(self.g0 * vec2(other.g0), self.g1 * vec3(other.g0));
+}
+
+Scalar sphere_radial_point_regressive_product(Sphere self, RadialPoint other) {
+    return Scalar(self.g0.x * other.g1.y + self.g0.y * other.g1.x + self.g1.x * other.g0.x + self.g1.y * other.g0.y + self.g1.z * other.g0.z);
 }
 
 AntiScalar sphere_radial_point_outer_product(Sphere self, RadialPoint other) {
-    return AntiScalar(self.g0 * other.g1.y + self.g1.x * other.g0.x + self.g1.y * other.g0.y + self.g1.z * other.g0.z + self.g1.w * other.g1.x);
+    return AntiScalar(self.g0.x * other.g1.y + self.g0.y * other.g1.x + self.g1.x * other.g0.x + self.g1.y * other.g0.y + self.g1.z * other.g0.z);
+}
+
+RadialPoint sphere_flat_point_regressive_product(Sphere self, FlatPoint other) {
+    return RadialPoint(vec3(self.g0.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g1.x) * vec2(other.g0.x) * vec2(0.0, -1.0) + vec2(self.g1.y) * vec2(other.g0.y) * vec2(0.0, -1.0) + vec2(self.g1.z) * vec2(other.g0.z) * vec2(0.0, -1.0) + self.g0 * vec2(other.g0.w) * vec2(1.0, -1.0));
+}
+
+RadialPoint sphere_dipole_regressive_product(Sphere self, Dipole other) {
+    return RadialPoint(vec3(self.g0.x) * vec3(other.g2.x, other.g2.y, other.g2.z) - vec3(self.g0.y) * other.g0 + vec3(self.g1.y) * other.g1.zzx * vec3(1.0, 0.0, -1.0) + vec3(self.g1.z) * other.g1.yxy * vec3(-1.0, 1.0, 0.0) + vec3(self.g1.x) * other.g1.xzy * vec3(0.0, -1.0, 1.0), vec2(self.g1.x) * vec2(other.g0.x, other.g2.x) * vec2(1.0, -1.0) + vec2(self.g1.y) * vec2(other.g0.y, other.g2.y) * vec2(1.0, -1.0) + vec2(self.g1.z) * vec2(other.g0.z, other.g2.z) * vec2(1.0, -1.0) + self.g0 * vec2(other.g2.w) * vec2(1.0, -1.0));
+}
+
+Dipole sphere_line_regressive_product(Sphere self, Line other) {
+    return Dipole(vec3(self.g0.x) * other.g0, vec3(self.g0.x) * other.g1, vec4(self.g1.x) * vec4(other.g1.z, other.g1.z, other.g1.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0) + vec4(self.g1.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g1.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.y, self.g0.y, self.g0.y, self.g0.x) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0));
+}
+
+Dipole sphere_circle_regressive_product(Sphere self, Circle other) {
+    return Dipole(vec3(self.g0.x) * other.g1 + vec3(self.g1.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g1.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g1.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0), vec3(self.g0.x) * other.g2 + vec3(self.g0.y) * vec3(other.g0.x, other.g0.y, other.g0.z) + self.g1 * vec3(other.g0.w) * vec3(-1.0), vec4(self.g1.x) * vec4(other.g2.z, other.g2.z, other.g2.y, other.g1.x) * vec4(0.0, 1.0, -1.0, -1.0) + vec4(self.g1.y) * vec4(other.g2.z, other.g2.z, other.g2.x, other.g1.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g1.z) * vec4(other.g2.y, other.g2.x, other.g2.y, other.g1.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.y, self.g0.y, self.g0.y, self.g0.x) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, 0.0));
 }
 
 Plane sphere_plane_into(Sphere self) {
-    return Plane(self.g1);
+    return Plane(vec4(self.g1.x, self.g1.y, self.g1.z, self.g0.y));
 }
 
 Sphere sphere_plane_add(Sphere self, Plane other) {
-    return Sphere(self.g0, self.g1 + other.g0);
+    return Sphere(self.g0 + vec2(other.g0.x, other.g0.w) * vec2(0.0, 1.0), self.g1 + vec3(other.g0.x, other.g0.y, other.g0.z));
 }
 
 Sphere sphere_plane_sub(Sphere self, Plane other) {
-    return Sphere(self.g0, self.g1 - other.g0);
+    return Sphere(self.g0 - vec2(other.g0.x, other.g0.w) * vec2(0.0, 1.0), self.g1 - vec3(other.g0.x, other.g0.y, other.g0.z));
+}
+
+Circle sphere_plane_regressive_product(Sphere self, Plane other) {
+    return Circle(vec4(self.g0.x) * other.g0, vec3(self.g1.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g1.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g1.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, 1.0, -1.0), vec3(0.0) - vec3(self.g0.y) * vec3(other.g0.x, other.g0.y, other.g0.z) + self.g1 * vec3(other.g0.w));
 }
 
 Sphere sphere_sphere_add(Sphere self, Sphere other) {
@@ -1465,23 +1757,27 @@ Sphere sphere_sphere_mul(Sphere self, Sphere other) {
 }
 
 Sphere sphere_sphere_div(Sphere self, Sphere other) {
-    return Sphere(self.g0 * 1.0 / other.g0 * 1.0, vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.w) * vec4(1.0, 1.0, 1.0, 1.0) / vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.w) * vec4(1.0, 1.0, 1.0, 1.0));
+    return Sphere(vec2(self.g0.x, self.g0.y) * vec2(1.0, 1.0) / vec2(other.g0.x, other.g0.y) * vec2(1.0, 1.0), vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(1.0, 1.0, 1.0) / vec3(other.g1.x, other.g1.y, other.g1.z) * vec3(1.0, 1.0, 1.0));
+}
+
+Circle sphere_sphere_regressive_product(Sphere self, Sphere other) {
+    return Circle(vec4(self.g0.x) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g0.y) + vec4(self.g1.x) * vec4(other.g0.x) * vec4(-1.0, 0.0, 0.0, 0.0) + vec4(self.g1.y) * vec4(other.g0.x) * vec4(0.0, -1.0, 0.0, 0.0) + vec4(self.g1.z) * vec4(other.g0.x) * vec4(0.0, 0.0, -1.0, 0.0) + vec4(self.g0.x, self.g0.x, self.g0.x, self.g0.y) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0), vec3(self.g1.y) * other.g1.zzx * vec3(-1.0, 0.0, 1.0) + vec3(self.g1.z) * other.g1.yxy * vec3(1.0, -1.0, 0.0) + vec3(self.g1.x) * other.g1.xzy * vec3(0.0, 1.0, -1.0), vec3(0.0) - vec3(self.g0.y) * other.g1 + self.g1 * vec3(other.g0.y));
 }
 
 Rotor sphere_motor_geometric_product(Sphere self, Motor other) {
-    return Rotor(vec4(self.g0) * other.g1);
+    return Rotor(vec4(self.g0.x) * other.g1);
 }
 
 AntiScalar sphere_motor_outer_product(Sphere self, Motor other) {
-    return AntiScalar(self.g0 * other.g1.w);
+    return AntiScalar(self.g0.x * other.g1.w);
 }
 
 MultiVector sphere_multi_vector_add(Sphere self, MultiVector other) {
-    return MultiVector(vec3(self.g0) * vec3(0.0, 1.0, 0.0) + other.g0, other.g1, other.g2, other.g3, other.g4, other.g5, other.g6, other.g7, other.g8, self.g1 + other.g9);
+    return MultiVector(vec3(self.g0.x) * vec3(0.0, 1.0, 0.0) + other.g0, other.g1, other.g2, other.g3, other.g4, other.g5, other.g6, other.g7, other.g8, vec4(self.g1.x, self.g1.y, self.g1.z, self.g0.y) + other.g9);
 }
 
 MultiVector sphere_multi_vector_sub(Sphere self, MultiVector other) {
-    return MultiVector(vec3(self.g0) * vec3(0.0, 1.0, 0.0) - other.g0, vec3(0.0) - other.g1, vec2(0.0) - other.g2, vec4(0.0) - other.g3, vec3(0.0) - other.g4, vec3(0.0) - other.g5, vec3(0.0) - other.g6, vec3(0.0) - other.g7, vec4(0.0) - other.g8, self.g1 - other.g9);
+    return MultiVector(vec3(self.g0.x) * vec3(0.0, 1.0, 0.0) - other.g0, vec3(0.0) - other.g1, vec2(0.0) - other.g2, vec4(0.0) - other.g3, vec3(0.0) - other.g4, vec3(0.0) - other.g5, vec3(0.0) - other.g6, vec3(0.0) - other.g7, vec4(0.0) - other.g8, vec4(self.g1.x, self.g1.y, self.g1.z, self.g0.y) - other.g9);
 }
 
 Sphere sphere_scale(Sphere self, float other) {
@@ -1516,6 +1812,10 @@ Motor motor_scalar_geometric_product(Motor self, Scalar other) {
     return Motor(self.g0 * vec4(other.g0), self.g1 * vec4(other.g0));
 }
 
+Scalar motor_scalar_regressive_product(Motor self, Scalar other) {
+    return Scalar(self.g0.w * other.g0);
+}
+
 Motor motor_scalar_outer_product(Motor self, Scalar other) {
     return Motor(self.g0 * vec4(other.g0), self.g1 * vec4(other.g0));
 }
@@ -1540,12 +1840,24 @@ Motor motor_anti_scalar_sub(Motor self, AntiScalar other) {
     return Motor(self.g0 - vec4(other.g0) * vec4(0.0, 0.0, 0.0, 1.0), self.g1);
 }
 
+Motor motor_anti_scalar_regressive_product(Motor self, AntiScalar other) {
+    return Motor(self.g0 * vec4(other.g0), self.g1 * vec4(other.g0));
+}
+
 Flector motor_radial_point_geometric_product(Motor self, RadialPoint other) {
     return Flector(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g0.z) * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g1.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g0.y) * vec4(-1.0, 1.0, 0.0, 0.0) - vec4(self.g1.w) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x) + vec4(self.g0.x, self.g1.x, self.g1.x, self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g0.x) * vec4(0.0, -1.0, 1.0, -1.0), vec4(self.g0.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g0.z) * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g0.y) * vec4(1.0, -1.0, 0.0, 0.0) + vec4(self.g0.w) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g1.x) * vec4(other.g1.x, other.g1.x, other.g1.x, other.g0.x) * vec4(-1.0, 0.0, 0.0, 1.0) + vec4(self.g1.y) * vec4(other.g1.x, other.g1.x, other.g1.x, other.g0.y) * vec4(0.0, -1.0, 0.0, 1.0) + vec4(self.g1.z) * vec4(other.g1.x, other.g1.x, other.g1.x, other.g0.z) * vec4(0.0, 0.0, -1.0, 1.0) + vec4(self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g0.x) * vec4(0.0, 1.0, -1.0, 0.0));
 }
 
+RadialPoint motor_radial_point_regressive_product(Motor self, RadialPoint other) {
+    return RadialPoint(vec3(self.g0.w) * other.g0, vec2(self.g0.w) * other.g1);
+}
+
 Flector motor_radial_point_outer_product(Motor self, RadialPoint other) {
     return Flector(vec4(0.0) - vec4(self.g1.w) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4(self.g0.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g0.z) * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g0.y) * vec4(1.0, -1.0, 0.0, 0.0) + vec4(self.g1.x) * vec4(other.g1.x, other.g1.x, other.g1.x, other.g0.x) * vec4(-1.0, 0.0, 0.0, 1.0) + vec4(self.g1.y) * vec4(other.g1.x, other.g1.x, other.g1.x, other.g0.y) * vec4(0.0, -1.0, 0.0, 1.0) + vec4(self.g1.z) * vec4(other.g1.x, other.g1.x, other.g1.x, other.g0.z) * vec4(0.0, 0.0, -1.0, 1.0) + vec4(self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g0.x) * vec4(0.0, 1.0, -1.0, 0.0));
+}
+
+FlatPoint motor_flat_point_regressive_product(Motor self, FlatPoint other) {
+    return FlatPoint(vec4(self.g0.w) * other.g0);
 }
 
 Motor motor_dipole_geometric_product(Motor self, Dipole other) {
@@ -1572,12 +1884,16 @@ Plane motor_circle_outer_product(Motor self, Circle other) {
     return Plane(vec4(0.0) - vec4(self.g1.w) * other.g0);
 }
 
+Flector motor_plane_regressive_product(Motor self, Plane other) {
+    return Flector(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.y) * other.g0.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g1.z) * other.g0.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g0.x, self.g1.x, self.g1.x, self.g0.x) * other.g0.wzyx * vec4(1.0, -1.0, 1.0, -1.0), vec4(self.g0.w) * other.g0);
+}
+
 Rotor motor_sphere_geometric_product(Motor self, Sphere other) {
-    return Rotor(self.g1 * vec4(other.g0));
+    return Rotor(self.g1 * vec4(other.g0.x));
 }
 
 AntiScalar motor_sphere_outer_product(Motor self, Sphere other) {
-    return AntiScalar(self.g1.w * other.g0);
+    return AntiScalar(self.g1.w * other.g0.x);
 }
 
 Motor motor_motor_add(Motor self, Motor other) {
@@ -1596,6 +1912,10 @@ Motor motor_motor_div(Motor self, Motor other) {
     return Motor(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.w) * vec4(1.0, 1.0, 1.0, 1.0) / vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.w) * vec4(1.0, 1.0, 1.0, 1.0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.w) * vec4(1.0, 1.0, 1.0, 1.0) / vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.w) * vec4(1.0, 1.0, 1.0, 1.0));
 }
 
+Motor motor_motor_regressive_product(Motor self, Motor other) {
+    return Motor(vec4(self.g0.w) * other.g0 + self.g0.xyzx * other.g0.wwwx * vec4(1.0, 1.0, 1.0, 0.0), vec4(self.g0.y) * vec4(other.g1.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g1.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.w) * other.g1 + vec4(self.g1.x) * other.g0.wwwx * vec4(1.0, 0.0, 0.0, -1.0) + vec4(self.g1.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g1.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.w) * vec4(other.g0.w) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.x) * vec4(other.g1.x) * vec4(0.0, 0.0, 0.0, -1.0));
+}
+
 Rotor motor_rotor_into(Motor self) {
     return Rotor(self.g0);
 }
@@ -1606,6 +1926,10 @@ Motor motor_rotor_add(Motor self, Rotor other) {
 
 Motor motor_rotor_sub(Motor self, Rotor other) {
     return Motor(self.g0 - other.g0, self.g1);
+}
+
+Motor motor_rotor_regressive_product(Motor self, Rotor other) {
+    return Motor(vec4(self.g0.w) * other.g0 + self.g0.xyzx * other.g0.wwwx * vec4(1.0, 1.0, 1.0, 0.0), vec4(self.g1.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g1.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.w) * vec4(other.g0.w) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g1.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
 }
 
 Translator motor_translator_into(Motor self) {
@@ -1620,12 +1944,24 @@ Motor motor_translator_sub(Motor self, Translator other) {
     return Motor(self.g0 - other.g0.xxxw * vec4(0.0, 0.0, 0.0, 1.0), self.g1 - other.g0.xyzx * vec4(1.0, 1.0, 1.0, 0.0));
 }
 
+Motor motor_translator_regressive_product(Motor self, Translator other) {
+    return Motor(self.g0 * vec4(other.g0.w), vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.x) * vec4(other.g0.w) * vec4(1.0, 0.0, 0.0, 0.0) + vec4(self.g1.y) * vec4(other.g0.w) * vec4(0.0, 1.0, 0.0, 0.0) + vec4(self.g1.z) * vec4(other.g0.w) * vec4(0.0, 0.0, 1.0, 0.0) + vec4(self.g1.w) * vec4(other.g0.w) * vec4(0.0, 0.0, 0.0, 1.0) + self.g0.wwwx * other.g0.xyzx * vec4(1.0, 1.0, 1.0, -1.0));
+}
+
+Flector motor_flector_regressive_product(Motor self, Flector other) {
+    return Flector(vec4(self.g0.y) * other.g1.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g1.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.w) * other.g0 + vec4(self.g1.y) * other.g1.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g1.z) * other.g1.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g0.x, self.g1.x, self.g1.x, self.g0.x) * other.g1.wzyx * vec4(1.0, -1.0, 1.0, -1.0), vec4(self.g0.w) * other.g1);
+}
+
 MultiVector motor_multi_vector_add(Motor self, MultiVector other) {
     return MultiVector(vec3(self.g0.x, self.g0.x, self.g0.w) * vec3(0.0, 0.0, 1.0) + other.g0, other.g1, vec2(self.g0.x, self.g1.w) * vec2(0.0, 1.0) + other.g2, other.g3, other.g4, other.g5, vec3(self.g0.x, self.g0.y, self.g0.z) + other.g6, vec3(self.g1.x, self.g1.y, self.g1.z) + other.g7, other.g8, other.g9);
 }
 
 MultiVector motor_multi_vector_sub(Motor self, MultiVector other) {
     return MultiVector(vec3(self.g0.x, self.g0.x, self.g0.w) * vec3(0.0, 0.0, 1.0) - other.g0, vec3(0.0) - other.g1, vec2(self.g0.x, self.g1.w) * vec2(0.0, 1.0) - other.g2, vec4(0.0) - other.g3, vec3(0.0) - other.g4, vec3(0.0) - other.g5, vec3(self.g0.x, self.g0.y, self.g0.z) - other.g6, vec3(self.g1.x, self.g1.y, self.g1.z) - other.g7, vec4(0.0) - other.g8, vec4(0.0) - other.g9);
+}
+
+MultiVector motor_multi_vector_regressive_product(Motor self, MultiVector other) {
+    return MultiVector(vec3(self.g0.y) * vec3(other.g5.y) * vec3(-1.0, 0.0, 0.0) + vec3(self.g0.z) * vec3(other.g5.z) * vec3(-1.0, 0.0, 0.0) + vec3(self.g0.w) * other.g0 + vec3(self.g1.x) * vec3(other.g4.x) * vec3(-1.0, 0.0, 0.0) + vec3(self.g1.y) * vec3(other.g4.y) * vec3(-1.0, 0.0, 0.0) + vec3(self.g1.z) * vec3(other.g4.z) * vec3(-1.0, 0.0, 0.0) + vec3(self.g1.w) * vec3(other.g0.y) * vec3(1.0, 0.0, 0.0) + vec3(self.g0.x) * vec3(other.g5.x) * vec3(-1.0, 0.0, 0.0), vec3(self.g0.w) * other.g1 + vec3(self.g1.x) * vec3(other.g8.z, other.g8.z, other.g8.y) * vec3(0.0, -1.0, 1.0) + vec3(self.g1.y) * vec3(other.g8.z, other.g8.z, other.g8.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g1.z) * vec3(other.g8.y, other.g8.x, other.g8.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g8.w), vec2(0.0) - vec2(self.g0.x) * vec2(other.g8.x, other.g7.x) - vec2(self.g0.y) * vec2(other.g8.y, other.g7.y) - vec2(self.g0.z) * vec2(other.g8.z, other.g7.z) + vec2(self.g0.w) * other.g2 + vec2(self.g1.y) * vec2(other.g6.y) * vec2(0.0, -1.0) + vec2(self.g1.z) * vec2(other.g6.z) * vec2(0.0, -1.0) + vec2(self.g1.w) * vec2(other.g0.z) * vec2(0.0, 1.0) + vec2(self.g1.x) * vec2(other.g6.x) * vec2(0.0, -1.0), vec4(self.g0.y) * other.g9.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g9.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.w) * other.g3 + vec4(self.g1.y) * other.g9.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g1.z) * other.g9.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g0.x, self.g1.x, self.g1.x, self.g0.x) * other.g9.wzyx * vec4(1.0, -1.0, 1.0, -1.0), vec3(self.g0.w) * other.g4 + vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.y), vec3(self.g0.w) * other.g5 + vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g0.y), vec3(self.g0.w) * other.g6 + vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.z), vec3(self.g0.w) * other.g7 + vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g0.z), vec4(self.g0.w) * other.g8, vec4(self.g0.w) * other.g9);
 }
 
 Motor motor_scale(Motor self, float other) {
@@ -1660,6 +1996,10 @@ Rotor rotor_scalar_geometric_product(Rotor self, Scalar other) {
     return Rotor(self.g0 * vec4(other.g0));
 }
 
+Scalar rotor_scalar_regressive_product(Rotor self, Scalar other) {
+    return Scalar(self.g0.w * other.g0);
+}
+
 Rotor rotor_scalar_outer_product(Rotor self, Scalar other) {
     return Rotor(self.g0 * vec4(other.g0));
 }
@@ -1684,6 +2024,18 @@ Rotor rotor_anti_scalar_sub(Rotor self, AntiScalar other) {
     return Rotor(self.g0 - vec4(other.g0) * vec4(0.0, 0.0, 0.0, 1.0));
 }
 
+Rotor rotor_anti_scalar_regressive_product(Rotor self, AntiScalar other) {
+    return Rotor(self.g0 * vec4(other.g0));
+}
+
+RadialPoint rotor_radial_point_regressive_product(Rotor self, RadialPoint other) {
+    return RadialPoint(vec3(self.g0.w) * other.g0, vec2(self.g0.w) * other.g1);
+}
+
+FlatPoint rotor_flat_point_regressive_product(Rotor self, FlatPoint other) {
+    return FlatPoint(vec4(self.g0.w) * other.g0);
+}
+
 Rotor rotor_dipole_geometric_product(Rotor self, Dipole other) {
     return Rotor(vec4(self.g0.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g1.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g1.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.w) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x) * vec4(other.g1.x, other.g1.z, other.g1.y, other.g1.x) * vec4(0.0, 1.0, -1.0, -1.0));
 }
@@ -1692,12 +2044,20 @@ AntiScalar rotor_dipole_outer_product(Rotor self, Dipole other) {
     return AntiScalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z);
 }
 
+Flector rotor_plane_regressive_product(Rotor self, Plane other) {
+    return Flector(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0), vec4(self.g0.w) * other.g0);
+}
+
 Motor rotor_motor_add(Rotor self, Motor other) {
     return Motor(self.g0 + other.g0, other.g1);
 }
 
 Motor rotor_motor_sub(Rotor self, Motor other) {
     return Motor(self.g0 - other.g0, vec4(0.0) - other.g1);
+}
+
+Motor rotor_motor_regressive_product(Rotor self, Motor other) {
+    return Motor(vec4(self.g0.w) * other.g0 + self.g0.xyzx * other.g0.wwwx * vec4(1.0, 1.0, 1.0, 0.0), vec4(self.g0.y) * vec4(other.g1.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g1.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.w) * other.g1 + vec4(self.g0.x) * vec4(other.g1.x) * vec4(0.0, 0.0, 0.0, -1.0));
 }
 
 Rotor rotor_rotor_add(Rotor self, Rotor other) {
@@ -1716,12 +2076,28 @@ Rotor rotor_rotor_div(Rotor self, Rotor other) {
     return Rotor(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.w) * vec4(1.0, 1.0, 1.0, 1.0) / vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.w) * vec4(1.0, 1.0, 1.0, 1.0));
 }
 
+Rotor rotor_rotor_regressive_product(Rotor self, Rotor other) {
+    return Rotor(vec4(self.g0.w) * other.g0 + self.g0.xyzx * other.g0.wwwx * vec4(1.0, 1.0, 1.0, 0.0));
+}
+
+Motor rotor_translator_regressive_product(Rotor self, Translator other) {
+    return Motor(self.g0 * vec4(other.g0.w), vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * other.g0.xyzx * vec4(1.0, 1.0, 1.0, -1.0));
+}
+
+Flector rotor_flector_regressive_product(Rotor self, Flector other) {
+    return Flector(vec4(self.g0.y) * other.g1.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g1.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.w) * other.g0 + vec4(self.g0.x) * other.g1.wxxx * vec4(1.0, 0.0, 0.0, -1.0), vec4(self.g0.w) * other.g1);
+}
+
 MultiVector rotor_multi_vector_add(Rotor self, MultiVector other) {
     return MultiVector(vec3(self.g0.x, self.g0.x, self.g0.w) * vec3(0.0, 0.0, 1.0) + other.g0, other.g1, other.g2, other.g3, other.g4, other.g5, vec3(self.g0.x, self.g0.y, self.g0.z) + other.g6, other.g7, other.g8, other.g9);
 }
 
 MultiVector rotor_multi_vector_sub(Rotor self, MultiVector other) {
     return MultiVector(vec3(self.g0.x, self.g0.x, self.g0.w) * vec3(0.0, 0.0, 1.0) - other.g0, vec3(0.0) - other.g1, vec2(0.0) - other.g2, vec4(0.0) - other.g3, vec3(0.0) - other.g4, vec3(0.0) - other.g5, vec3(self.g0.x, self.g0.y, self.g0.z) - other.g6, vec3(0.0) - other.g7, vec4(0.0) - other.g8, vec4(0.0) - other.g9);
+}
+
+MultiVector rotor_multi_vector_regressive_product(Rotor self, MultiVector other) {
+    return MultiVector(vec3(self.g0.y) * vec3(other.g5.y) * vec3(-1.0, 0.0, 0.0) + vec3(self.g0.z) * vec3(other.g5.z) * vec3(-1.0, 0.0, 0.0) + vec3(self.g0.w) * other.g0 + vec3(self.g0.x) * vec3(other.g5.x) * vec3(-1.0, 0.0, 0.0), vec3(self.g0.w) * other.g1 + vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g8.w), vec2(0.0) - vec2(self.g0.x) * vec2(other.g8.x, other.g7.x) - vec2(self.g0.y) * vec2(other.g8.y, other.g7.y) - vec2(self.g0.z) * vec2(other.g8.z, other.g7.z) + vec2(self.g0.w) * other.g2, vec4(self.g0.y) * other.g9.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g9.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.w) * other.g3 + vec4(self.g0.x) * other.g9.wxxx * vec4(1.0, 0.0, 0.0, -1.0), vec3(self.g0.w) * other.g4 + vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.y), vec3(self.g0.w) * other.g5, vec3(self.g0.w) * other.g6 + vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.z), vec3(self.g0.w) * other.g7, vec4(self.g0.w) * other.g8, vec4(self.g0.w) * other.g9);
 }
 
 Rotor rotor_scale(Rotor self, float other) {
@@ -1756,6 +2132,10 @@ Translator translator_scalar_geometric_product(Translator self, Scalar other) {
     return Translator(self.g0 * vec4(other.g0));
 }
 
+Scalar translator_scalar_regressive_product(Translator self, Scalar other) {
+    return Scalar(self.g0.w * other.g0);
+}
+
 Translator translator_scalar_outer_product(Translator self, Scalar other) {
     return Translator(self.g0 * vec4(other.g0));
 }
@@ -1780,8 +2160,20 @@ Translator translator_anti_scalar_sub(Translator self, AntiScalar other) {
     return Translator(self.g0 - vec4(other.g0) * vec4(0.0, 0.0, 0.0, 1.0));
 }
 
+Translator translator_anti_scalar_regressive_product(Translator self, AntiScalar other) {
+    return Translator(self.g0 * vec4(other.g0));
+}
+
+RadialPoint translator_radial_point_regressive_product(Translator self, RadialPoint other) {
+    return RadialPoint(vec3(self.g0.w) * other.g0, vec2(self.g0.w) * other.g1);
+}
+
 Plane translator_radial_point_outer_product(Translator self, RadialPoint other) {
     return Plane(vec4(self.g0.y) * vec4(other.g1.x, other.g1.x, other.g1.x, other.g0.y) * vec4(0.0, -1.0, 0.0, 1.0) + vec4(self.g0.z) * vec4(other.g1.x, other.g1.x, other.g1.x, other.g0.z) * vec4(0.0, 0.0, -1.0, 1.0) + vec4(self.g0.x) * vec4(other.g1.x, other.g1.x, other.g1.x, other.g0.x) * vec4(-1.0, 0.0, 0.0, 1.0));
+}
+
+FlatPoint translator_flat_point_regressive_product(Translator self, FlatPoint other) {
+    return FlatPoint(vec4(self.g0.w) * other.g0);
 }
 
 Motor translator_dipole_geometric_product(Translator self, Dipole other) {
@@ -1800,6 +2192,14 @@ Motor translator_motor_sub(Translator self, Motor other) {
     return Motor(self.g0.xxxw * vec4(0.0, 0.0, 0.0, 1.0) - other.g0, self.g0.xyzx * vec4(1.0, 1.0, 1.0, 0.0) - other.g1);
 }
 
+Motor translator_motor_regressive_product(Translator self, Motor other) {
+    return Motor(vec4(self.g0.w) * other.g0, vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.w) * other.g1 + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+}
+
+Motor translator_rotor_regressive_product(Translator self, Rotor other) {
+    return Motor(vec4(self.g0.w) * other.g0, vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+}
+
 Translator translator_translator_add(Translator self, Translator other) {
     return Translator(self.g0 + other.g0);
 }
@@ -1816,12 +2216,24 @@ Translator translator_translator_div(Translator self, Translator other) {
     return Translator(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.w) * vec4(1.0, 1.0, 1.0, 1.0) / vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.w) * vec4(1.0, 1.0, 1.0, 1.0));
 }
 
+Translator translator_translator_regressive_product(Translator self, Translator other) {
+    return Translator(vec4(self.g0.w) * other.g0 + self.g0.xyzx * other.g0.wwwx * vec4(1.0, 1.0, 1.0, 0.0));
+}
+
+Flector translator_flector_regressive_product(Translator self, Flector other) {
+    return Flector(vec4(self.g0.y) * other.g1.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * other.g1.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g0.w) * other.g0 + vec4(self.g0.x) * other.g1.xzyx * vec4(0.0, -1.0, 1.0, 0.0), vec4(self.g0.w) * other.g1);
+}
+
 MultiVector translator_multi_vector_add(Translator self, MultiVector other) {
     return MultiVector(vec3(self.g0.x, self.g0.x, self.g0.w) * vec3(0.0, 0.0, 1.0) + other.g0, other.g1, other.g2, other.g3, other.g4, other.g5, other.g6, vec3(self.g0.x, self.g0.y, self.g0.z) + other.g7, other.g8, other.g9);
 }
 
 MultiVector translator_multi_vector_sub(Translator self, MultiVector other) {
     return MultiVector(vec3(self.g0.x, self.g0.x, self.g0.w) * vec3(0.0, 0.0, 1.0) - other.g0, vec3(0.0) - other.g1, vec2(0.0) - other.g2, vec4(0.0) - other.g3, vec3(0.0) - other.g4, vec3(0.0) - other.g5, vec3(0.0) - other.g6, vec3(self.g0.x, self.g0.y, self.g0.z) - other.g7, vec4(0.0) - other.g8, vec4(0.0) - other.g9);
+}
+
+MultiVector translator_multi_vector_regressive_product(Translator self, MultiVector other) {
+    return MultiVector(vec3(self.g0.y) * vec3(other.g4.y) * vec3(-1.0, 0.0, 0.0) + vec3(self.g0.z) * vec3(other.g4.z) * vec3(-1.0, 0.0, 0.0) + vec3(self.g0.w) * other.g0 + vec3(self.g0.x) * vec3(other.g4.x) * vec3(-1.0, 0.0, 0.0), vec3(self.g0.y) * vec3(other.g8.z, other.g8.z, other.g8.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g8.y, other.g8.x, other.g8.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.w) * other.g1 + vec3(self.g0.x) * vec3(other.g8.x, other.g8.z, other.g8.y) * vec3(0.0, -1.0, 1.0), vec2(self.g0.y) * vec2(other.g6.y) * vec2(0.0, -1.0) + vec2(self.g0.z) * vec2(other.g6.z) * vec2(0.0, -1.0) + vec2(self.g0.w) * other.g2 + vec2(self.g0.x) * vec2(other.g6.x) * vec2(0.0, -1.0), vec4(self.g0.y) * other.g9.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * other.g9.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g0.w) * other.g3 + vec4(self.g0.x) * other.g9.xzyx * vec4(0.0, -1.0, 1.0, 0.0), vec3(self.g0.w) * other.g4, vec3(self.g0.w) * other.g5 + vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.y), vec3(self.g0.w) * other.g6, vec3(self.g0.w) * other.g7 + vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.z), vec4(self.g0.w) * other.g8, vec4(self.g0.w) * other.g9);
 }
 
 Translator translator_scale(Translator self, float other) {
@@ -1868,8 +2280,16 @@ Flector flector_scalar_right_contraction(Flector self, Scalar other) {
     return Flector(self.g0 * vec4(other.g0), self.g1 * vec4(other.g0));
 }
 
+Flector flector_anti_scalar_regressive_product(Flector self, AntiScalar other) {
+    return Flector(self.g0 * vec4(other.g0), self.g1 * vec4(other.g0));
+}
+
 Motor flector_radial_point_geometric_product(Flector self, RadialPoint other) {
     return Motor(vec4(self.g0.w) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(-1.0, -1.0, -1.0, 0.0) + vec4(self.g1.x) * vec4(other.g0.z, other.g0.z, other.g0.y, other.g0.x) * vec4(0.0, -1.0, 1.0, 1.0) + vec4(self.g1.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g0.y) * vec4(1.0, 0.0, -1.0, 1.0) + vec4(self.g1.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g0.z) * vec4(-1.0, 1.0, 0.0, 1.0) + vec4(self.g0.x, self.g0.y, self.g0.z, self.g1.w) * vec4(other.g1.x), vec4(self.g0.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g1.w) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0));
+}
+
+Scalar flector_radial_point_regressive_product(Flector self, RadialPoint other) {
+    return Scalar(self.g1.x * other.g0.x + self.g1.y * other.g0.y + self.g1.z * other.g0.z + self.g1.w * other.g1.x);
 }
 
 FlatPoint flector_flat_point_into(Flector self) {
@@ -1888,6 +2308,10 @@ Flector flector_dipole_geometric_product(Flector self, Dipole other) {
     return Flector(vec4(self.g0.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g1.x) * vec4(other.g1.x) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.y) * vec4(other.g1.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g1.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.w) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x) * vec4(other.g1.x, other.g1.z, other.g1.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0), vec4(self.g0.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g1.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g1.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.w) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g1.x) * vec4(other.g1.z, other.g1.z, other.g1.y, other.g1.z) * vec4(0.0, 1.0, -1.0, 0.0) + vec4(self.g1.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g1.z) * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g1.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g1.y) * vec4(1.0, -1.0, 0.0, 0.0) + vec4(self.g1.w) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g1.x) * vec4(0.0, 1.0, -1.0, -1.0));
 }
 
+RadialPoint flector_dipole_regressive_product(Flector self, Dipole other) {
+    return RadialPoint(vec3(self.g1.y) * other.g1.zzx * vec3(1.0, 0.0, -1.0) + vec3(self.g1.z) * other.g1.yxy * vec3(-1.0, 1.0, 0.0) - vec3(self.g1.w) * other.g0 + vec3(self.g1.x) * other.g1.xzy * vec3(0.0, -1.0, 1.0), vec2(self.g1.x) * vec2(other.g0.x, other.g2.x) * vec2(1.0, -1.0) + vec2(self.g1.y) * vec2(other.g0.y, other.g2.y) * vec2(1.0, -1.0) + vec2(self.g1.z) * vec2(other.g0.z, other.g2.z) * vec2(1.0, -1.0) + vec2(self.g1.x, self.g1.w) * vec2(other.g2.x, other.g2.w) * vec2(0.0, -1.0));
+}
+
 Plane flector_dipole_outer_product(Flector self, Dipole other) {
     return Plane(vec4(self.g0.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g1.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g1.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.w) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g1.x) * vec4(0.0, 1.0, -1.0, -1.0));
 }
@@ -1898,6 +2322,10 @@ FlatPoint flector_dipole_inner_product(Flector self, Dipole other) {
 
 FlatPoint flector_dipole_right_contraction(Flector self, Dipole other) {
     return FlatPoint(vec4(self.g1.y) * vec4(other.g1.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g1.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g1.wwwx * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, -1.0));
+}
+
+FlatPoint flector_line_regressive_product(Flector self, Line other) {
+    return FlatPoint(vec4(self.g1.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g1.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g1.w) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g1.x) * vec4(other.g1.x, other.g1.z, other.g1.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0));
 }
 
 Motor flector_circle_geometric_product(Flector self, Circle other) {
@@ -1918,6 +2346,18 @@ Flector flector_plane_add(Flector self, Plane other) {
 
 Flector flector_plane_sub(Flector self, Plane other) {
     return Flector(self.g0, self.g1 - other.g0);
+}
+
+Flector flector_motor_regressive_product(Flector self, Motor other) {
+    return Flector(vec4(self.g1.x) * vec4(other.g1.z, other.g1.z, other.g1.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0) + vec4(self.g1.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g1.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g1.w) * other.g0.xyzx * vec4(1.0, 1.0, 1.0, 0.0) + self.g0 * vec4(other.g0.w), self.g1 * vec4(other.g0.w));
+}
+
+Flector flector_rotor_regressive_product(Flector self, Rotor other) {
+    return Flector(vec4(self.g1.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.w) * other.g0.xyzx * vec4(1.0, 1.0, 1.0, 0.0) + self.g0 * vec4(other.g0.w), self.g1 * vec4(other.g0.w));
+}
+
+Flector flector_translator_regressive_product(Flector self, Translator other) {
+    return Flector(vec4(self.g1.x) * other.g0.zzyz * vec4(0.0, 1.0, -1.0, 0.0) + vec4(self.g1.y) * other.g0.zzxz * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g1.z) * other.g0.yxyy * vec4(1.0, -1.0, 0.0, 0.0) + self.g0 * vec4(other.g0.w), self.g1 * vec4(other.g0.w));
 }
 
 Flector flector_flector_add(Flector self, Flector other) {
@@ -1972,6 +2412,10 @@ MultiVector multi_vector_conjugation(MultiVector self) {
     return MultiVector(self.g0 * vec3(1.0, 1.0, -1.0), self.g1 * vec3(-1.0), self.g2 * vec2(-1.0), self.g3 * vec4(-1.0), self.g4 * vec3(-1.0), self.g5 * vec3(-1.0), self.g6, self.g7, self.g8, self.g9);
 }
 
+MultiVector multi_vector_dual(MultiVector self) {
+    return MultiVector(vec3(self.g0.z, self.g2.y, self.g0.x), vec3(self.g9.x, self.g9.y, self.g9.z), vec2(self.g9.w, self.g0.y), self.g8 * vec4(-1.0), self.g7 * vec3(-1.0), self.g6 * vec3(-1.0), self.g5 * vec3(-1.0), self.g4 * vec3(-1.0), self.g3 * vec4(-1.0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g2.x));
+}
+
 Scalar multi_vector_scalar_into(MultiVector self) {
     return Scalar(self.g0.x);
 }
@@ -1986,6 +2430,10 @@ MultiVector multi_vector_scalar_sub(MultiVector self, Scalar other) {
 
 MultiVector multi_vector_scalar_geometric_product(MultiVector self, Scalar other) {
     return MultiVector(self.g0 * vec3(other.g0), self.g1 * vec3(other.g0), self.g2 * vec2(other.g0), self.g3 * vec4(other.g0), self.g4 * vec3(other.g0), self.g5 * vec3(other.g0), self.g6 * vec3(other.g0), self.g7 * vec3(other.g0), self.g8 * vec4(other.g0), self.g9 * vec4(other.g0));
+}
+
+Scalar multi_vector_scalar_regressive_product(MultiVector self, Scalar other) {
+    return Scalar(self.g0.z * other.g0);
 }
 
 MultiVector multi_vector_scalar_outer_product(MultiVector self, Scalar other) {
@@ -2018,6 +2466,10 @@ MultiVector multi_vector_anti_scalar_add(MultiVector self, AntiScalar other) {
 
 MultiVector multi_vector_anti_scalar_sub(MultiVector self, AntiScalar other) {
     return MultiVector(self.g0 - vec3(other.g0) * vec3(0.0, 0.0, 1.0), self.g1, self.g2, self.g3, self.g4, self.g5, self.g6, self.g7, self.g8, self.g9);
+}
+
+MultiVector multi_vector_anti_scalar_regressive_product(MultiVector self, AntiScalar other) {
+    return MultiVector(self.g0 * vec3(other.g0), self.g1 * vec3(other.g0), self.g2 * vec2(other.g0), self.g3 * vec4(other.g0), self.g4 * vec3(other.g0), self.g5 * vec3(other.g0), self.g6 * vec3(other.g0), self.g7 * vec3(other.g0), self.g8 * vec4(other.g0), self.g9 * vec4(other.g0));
 }
 
 AntiScalar multi_vector_anti_scalar_outer_product(MultiVector self, AntiScalar other) {
@@ -2121,15 +2573,15 @@ MultiVector multi_vector_plane_sub(MultiVector self, Plane other) {
 }
 
 Sphere multi_vector_sphere_into(MultiVector self) {
-    return Sphere(self.g0.y, self.g9);
+    return Sphere(vec2(self.g0.y, self.g9.w), vec3(self.g9.x, self.g9.y, self.g9.z));
 }
 
 MultiVector multi_vector_sphere_add(MultiVector self, Sphere other) {
-    return MultiVector(self.g0 + vec3(other.g0) * vec3(0.0, 1.0, 0.0), self.g1, self.g2, self.g3, self.g4, self.g5, self.g6, self.g7, self.g8, self.g9 + other.g1);
+    return MultiVector(self.g0 + vec3(other.g0.x) * vec3(0.0, 1.0, 0.0), self.g1, self.g2, self.g3, self.g4, self.g5, self.g6, self.g7, self.g8, self.g9 + vec4(other.g1.x, other.g1.y, other.g1.z, other.g0.y));
 }
 
 MultiVector multi_vector_sphere_sub(MultiVector self, Sphere other) {
-    return MultiVector(self.g0 - vec3(other.g0) * vec3(0.0, 1.0, 0.0), self.g1, self.g2, self.g3, self.g4, self.g5, self.g6, self.g7, self.g8, self.g9 - other.g1);
+    return MultiVector(self.g0 - vec3(other.g0.x) * vec3(0.0, 1.0, 0.0), self.g1, self.g2, self.g3, self.g4, self.g5, self.g6, self.g7, self.g8, self.g9 - vec4(other.g1.x, other.g1.y, other.g1.z, other.g0.y));
 }
 
 Motor multi_vector_motor_into(MultiVector self) {
@@ -2144,6 +2596,10 @@ MultiVector multi_vector_motor_sub(MultiVector self, Motor other) {
     return MultiVector(self.g0 - vec3(other.g0.x, other.g0.x, other.g0.w) * vec3(0.0, 0.0, 1.0), self.g1, self.g2 - vec2(other.g0.x, other.g1.w) * vec2(0.0, 1.0), self.g3, self.g4, self.g5, self.g6 - vec3(other.g0.x, other.g0.y, other.g0.z), self.g7 - vec3(other.g1.x, other.g1.y, other.g1.z), self.g8, self.g9);
 }
 
+MultiVector multi_vector_motor_regressive_product(MultiVector self, Motor other) {
+    return MultiVector(vec3(self.g0.y) * vec3(other.g1.w, other.g0.w, other.g1.w) * vec3(1.0, 1.0, 0.0) + vec3(self.g4.x) * vec3(other.g1.x) * vec3(-1.0, 0.0, 0.0) + vec3(self.g4.y) * vec3(other.g1.y) * vec3(-1.0, 0.0, 0.0) + vec3(self.g4.z) * vec3(other.g1.z) * vec3(-1.0, 0.0, 0.0) + vec3(self.g5.x) * vec3(other.g0.x) * vec3(-1.0, 0.0, 0.0) + vec3(self.g5.y) * vec3(other.g0.y) * vec3(-1.0, 0.0, 0.0) + vec3(self.g5.z) * vec3(other.g0.z) * vec3(-1.0, 0.0, 0.0) + self.g0.xxz * vec3(other.g0.w, other.g0.x, other.g0.w) * vec3(1.0, 0.0, 1.0), vec3(self.g8.x) * vec3(other.g1.z, other.g1.z, other.g1.y) * vec3(0.0, 1.0, -1.0) + vec3(self.g8.y) * vec3(other.g1.z, other.g1.z, other.g1.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g8.z) * vec3(other.g1.y, other.g1.x, other.g1.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g8.w) * vec3(other.g0.x, other.g0.y, other.g0.z) + self.g1 * vec3(other.g0.w), vec2(self.g2.x) * vec2(other.g0.w) * vec2(1.0, 0.0) + vec2(self.g2.y) * vec2(other.g0.w) * vec2(0.0, 1.0) + vec2(self.g6.x) * vec2(other.g1.x) * vec2(0.0, -1.0) + vec2(self.g6.y) * vec2(other.g1.y) * vec2(0.0, -1.0) + vec2(self.g6.z) * vec2(other.g1.z) * vec2(0.0, -1.0) + vec2(self.g7.x) * vec2(other.g0.x) * vec2(0.0, -1.0) + vec2(self.g7.y) * vec2(other.g0.y) * vec2(0.0, -1.0) + vec2(self.g7.z) * vec2(other.g0.z) * vec2(0.0, -1.0) + vec2(self.g8.x) * vec2(other.g0.x) * vec2(-1.0, 0.0) + vec2(self.g8.y) * vec2(other.g0.y) * vec2(-1.0, 0.0) + vec2(self.g8.z) * vec2(other.g0.z) * vec2(-1.0, 0.0) + vec2(self.g0.x, self.g0.z) * vec2(other.g1.x, other.g1.w) * vec2(0.0, 1.0), vec4(self.g9.x) * vec4(other.g1.z, other.g1.z, other.g1.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0) + vec4(self.g9.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g9.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g9.w) * other.g0.xyzx * vec4(1.0, 1.0, 1.0, 0.0) + self.g3 * vec4(other.g0.w), vec3(self.g0.y) * vec3(other.g0.x, other.g0.y, other.g0.z) + self.g4 * vec3(other.g0.w), vec3(self.g0.y) * vec3(other.g1.x, other.g1.y, other.g1.z) + self.g5 * vec3(other.g0.w), vec3(self.g0.z) * vec3(other.g0.x, other.g0.y, other.g0.z) + self.g6 * vec3(other.g0.w), vec3(self.g0.z) * vec3(other.g1.x, other.g1.y, other.g1.z) + self.g7 * vec3(other.g0.w), self.g8 * vec4(other.g0.w), self.g9 * vec4(other.g0.w));
+}
+
 Rotor multi_vector_rotor_into(MultiVector self) {
     return Rotor(vec4(self.g6.x, self.g6.y, self.g6.z, self.g0.z));
 }
@@ -2156,6 +2612,10 @@ MultiVector multi_vector_rotor_sub(MultiVector self, Rotor other) {
     return MultiVector(self.g0 - vec3(other.g0.x, other.g0.x, other.g0.w) * vec3(0.0, 0.0, 1.0), self.g1, self.g2, self.g3, self.g4, self.g5, self.g6 - vec3(other.g0.x, other.g0.y, other.g0.z), self.g7, self.g8, self.g9);
 }
 
+MultiVector multi_vector_rotor_regressive_product(MultiVector self, Rotor other) {
+    return MultiVector(vec3(self.g5.x) * vec3(other.g0.x) * vec3(-1.0, 0.0, 0.0) + vec3(self.g5.y) * vec3(other.g0.y) * vec3(-1.0, 0.0, 0.0) + vec3(self.g5.z) * vec3(other.g0.z) * vec3(-1.0, 0.0, 0.0) + self.g0 * vec3(other.g0.w), vec3(self.g8.w) * vec3(other.g0.x, other.g0.y, other.g0.z) + self.g1 * vec3(other.g0.w), vec2(self.g7.x) * vec2(other.g0.x) * vec2(0.0, -1.0) + vec2(self.g7.y) * vec2(other.g0.y) * vec2(0.0, -1.0) + vec2(self.g7.z) * vec2(other.g0.z) * vec2(0.0, -1.0) + vec2(self.g8.x) * vec2(other.g0.x) * vec2(-1.0, 0.0) + vec2(self.g8.y) * vec2(other.g0.y) * vec2(-1.0, 0.0) + vec2(self.g8.z) * vec2(other.g0.z) * vec2(-1.0, 0.0) + self.g2 * vec2(other.g0.w), vec4(self.g9.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g9.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g9.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g9.w) * other.g0.xyzx * vec4(1.0, 1.0, 1.0, 0.0) + self.g3 * vec4(other.g0.w), vec3(self.g0.y) * vec3(other.g0.x, other.g0.y, other.g0.z) + self.g4 * vec3(other.g0.w), self.g5 * vec3(other.g0.w), vec3(self.g0.z) * vec3(other.g0.x, other.g0.y, other.g0.z) + self.g6 * vec3(other.g0.w), self.g7 * vec3(other.g0.w), self.g8 * vec4(other.g0.w), self.g9 * vec4(other.g0.w));
+}
+
 Translator multi_vector_translator_into(MultiVector self) {
     return Translator(vec4(self.g7.x, self.g7.y, self.g7.z, self.g0.z));
 }
@@ -2166,6 +2626,10 @@ MultiVector multi_vector_translator_add(MultiVector self, Translator other) {
 
 MultiVector multi_vector_translator_sub(MultiVector self, Translator other) {
     return MultiVector(self.g0 - vec3(other.g0.x, other.g0.x, other.g0.w) * vec3(0.0, 0.0, 1.0), self.g1, self.g2, self.g3, self.g4, self.g5, self.g6, self.g7 - vec3(other.g0.x, other.g0.y, other.g0.z), self.g8, self.g9);
+}
+
+MultiVector multi_vector_translator_regressive_product(MultiVector self, Translator other) {
+    return MultiVector(vec3(self.g4.x) * vec3(other.g0.x) * vec3(-1.0, 0.0, 0.0) + vec3(self.g4.y) * vec3(other.g0.y) * vec3(-1.0, 0.0, 0.0) + vec3(self.g4.z) * vec3(other.g0.z) * vec3(-1.0, 0.0, 0.0) + self.g0 * vec3(other.g0.w), vec3(self.g8.x) * vec3(other.g0.z, other.g0.z, other.g0.y) * vec3(0.0, 1.0, -1.0) + vec3(self.g8.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g8.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(1.0, -1.0, 0.0) + self.g1 * vec3(other.g0.w), vec2(self.g6.x) * vec2(other.g0.x) * vec2(0.0, -1.0) + vec2(self.g6.y) * vec2(other.g0.y) * vec2(0.0, -1.0) + vec2(self.g6.z) * vec2(other.g0.z) * vec2(0.0, -1.0) + self.g2 * vec2(other.g0.w), vec4(self.g9.x) * other.g0.zzyz * vec4(0.0, 1.0, -1.0, 0.0) + vec4(self.g9.y) * other.g0.zzxz * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g9.z) * other.g0.yxyy * vec4(1.0, -1.0, 0.0, 0.0) + self.g3 * vec4(other.g0.w), self.g4 * vec3(other.g0.w), vec3(self.g0.y) * vec3(other.g0.x, other.g0.y, other.g0.z) + self.g5 * vec3(other.g0.w), self.g6 * vec3(other.g0.w), vec3(self.g0.z) * vec3(other.g0.x, other.g0.y, other.g0.z) + self.g7 * vec3(other.g0.w), self.g8 * vec4(other.g0.w), self.g9 * vec4(other.g0.w));
 }
 
 Flector multi_vector_flector_into(MultiVector self) {
@@ -2198,6 +2662,10 @@ MultiVector multi_vector_multi_vector_div(MultiVector self, MultiVector other) {
 
 MultiVector multi_vector_multi_vector_geometric_product(MultiVector self, MultiVector other) {
     return MultiVector(vec3(self.g0.x) * other.g0 + vec3(self.g0.z) * vec3(other.g0.x) * vec3(0.0, 0.0, 1.0) + vec3(self.g1.x) * vec3(other.g1.x, other.g8.x, other.g9.x) + vec3(self.g1.y) * vec3(other.g1.y, other.g8.y, other.g9.y) + vec3(self.g1.z) * vec3(other.g1.z, other.g8.z, other.g9.z) + vec3(self.g2.x) * vec3(other.g8.w, other.g8.w, other.g9.w) * vec3(0.0, 1.0, 1.0) + vec3(self.g2.y) * vec3(other.g0.y) * vec3(0.0, 0.0, 1.0) + vec3(self.g3.x) * vec3(other.g8.x) * vec3(0.0, 0.0, -1.0) + vec3(self.g3.y) * vec3(other.g8.y) * vec3(0.0, 0.0, -1.0) + vec3(self.g3.z) * vec3(other.g8.z) * vec3(0.0, 0.0, -1.0) + vec3(self.g3.w) * vec3(other.g8.w) * vec3(0.0, 0.0, -1.0) + vec3(self.g4.x) * vec3(other.g5.x, other.g5.x, other.g7.x) * vec3(0.0, -1.0, -1.0) + vec3(self.g4.y) * vec3(other.g5.y, other.g5.y, other.g7.y) * vec3(0.0, -1.0, -1.0) + vec3(self.g4.z) * vec3(other.g5.z, other.g5.z, other.g7.z) * vec3(0.0, -1.0, -1.0) - vec3(self.g5.x) * vec3(other.g5.x, other.g4.x, other.g6.x) - vec3(self.g5.y) * vec3(other.g5.y, other.g4.y, other.g6.y) - vec3(self.g5.z) * vec3(other.g5.z, other.g4.z, other.g6.z) + vec3(self.g6.x) * vec3(other.g5.x) * vec3(0.0, 0.0, -1.0) + vec3(self.g6.y) * vec3(other.g5.y) * vec3(0.0, 0.0, -1.0) + vec3(self.g6.z) * vec3(other.g5.z) * vec3(0.0, 0.0, -1.0) + vec3(self.g7.x) * vec3(other.g4.x) * vec3(0.0, 0.0, -1.0) + vec3(self.g7.y) * vec3(other.g4.y) * vec3(0.0, 0.0, -1.0) + vec3(self.g7.z) * vec3(other.g4.z) * vec3(0.0, 0.0, -1.0) + vec3(self.g8.x) * vec3(other.g1.x, other.g1.x, other.g3.x) * vec3(0.0, -1.0, -1.0) + vec3(self.g8.y) * vec3(other.g1.y, other.g1.y, other.g3.y) * vec3(0.0, -1.0, -1.0) + vec3(self.g8.z) * vec3(other.g1.z, other.g1.z, other.g3.z) * vec3(0.0, -1.0, -1.0) - vec3(self.g8.w) * vec3(other.g8.w, other.g2.x, other.g3.w) + vec3(self.g9.x) * vec3(other.g1.x) * vec3(0.0, 0.0, 1.0) + vec3(self.g9.y) * vec3(other.g1.y) * vec3(0.0, 0.0, 1.0) + vec3(self.g9.z) * vec3(other.g1.z) * vec3(0.0, 0.0, 1.0) + vec3(self.g9.w) * vec3(other.g2.x) * vec3(0.0, 0.0, 1.0) + self.g0.xyy * vec3(other.g0.x, other.g0.x, other.g2.y) * vec3(0.0, 1.0, 1.0), vec3(self.g0.x) * other.g1 + vec3(self.g1.x) * vec3(other.g0.x, other.g5.z, other.g5.y) * vec3(1.0, 1.0, -1.0) + vec3(self.g1.y) * vec3(other.g5.z, other.g0.x, other.g5.x) * vec3(-1.0, 1.0, 1.0) + vec3(self.g1.z) * vec3(other.g5.y, other.g5.x, other.g0.x) * vec3(1.0, -1.0, 1.0) + vec3(self.g5.x) * vec3(other.g8.w, other.g1.z, other.g1.y) * vec3(1.0, 1.0, -1.0) + vec3(self.g5.y) * vec3(other.g1.z, other.g8.w, other.g1.x) * vec3(-1.0, 1.0, 1.0) + vec3(self.g5.z) * vec3(other.g1.y, other.g1.x, other.g8.w) * vec3(1.0, -1.0, 1.0) + vec3(self.g8.w) * other.g5, vec2(self.g0.x) * other.g2 + vec2(self.g1.x) * vec2(other.g4.x, other.g3.x) * vec2(-1.0, 1.0) + vec2(self.g1.y) * vec2(other.g4.y, other.g3.y) * vec2(-1.0, 1.0) + vec2(self.g1.z) * vec2(other.g4.z, other.g3.z) * vec2(-1.0, 1.0) + vec2(self.g2.x) * vec2(other.g0.x) * vec2(1.0, 0.0) + vec2(self.g2.y) * vec2(other.g0.x) * vec2(0.0, 1.0) + vec2(self.g3.x) * vec2(other.g1.x) * vec2(0.0, -1.0) + vec2(self.g3.y) * vec2(other.g1.y) * vec2(0.0, -1.0) + vec2(self.g3.z) * vec2(other.g1.z) * vec2(0.0, -1.0) + vec2(self.g4.x) * vec2(other.g1.x) * vec2(1.0, 0.0) + vec2(self.g4.y) * vec2(other.g1.y) * vec2(1.0, 0.0) + vec2(self.g4.z) * vec2(other.g1.z) * vec2(1.0, 0.0) - vec2(self.g5.x) * vec2(other.g8.x, other.g7.x) - vec2(self.g5.y) * vec2(other.g8.y, other.g7.y) - vec2(self.g5.z) * vec2(other.g8.z, other.g7.z) + vec2(self.g7.x) * vec2(other.g5.x) * vec2(0.0, -1.0) + vec2(self.g7.y) * vec2(other.g5.y) * vec2(0.0, -1.0) + vec2(self.g7.z) * vec2(other.g5.z) * vec2(0.0, -1.0) + vec2(self.g8.x) * vec2(other.g5.x) * vec2(-1.0, 0.0) + vec2(self.g8.y) * vec2(other.g5.y) * vec2(-1.0, 0.0) + vec2(self.g8.z) * vec2(other.g5.z) * vec2(-1.0, 0.0) + vec2(self.g8.w) * vec2(other.g0.y, other.g9.w) * vec2(1.0, -1.0) + vec2(self.g9.w) * vec2(other.g8.w) * vec2(0.0, 1.0) + vec2(self.g0.y, self.g0.x) * vec2(other.g8.w, other.g8.x) * vec2(-1.0, 0.0), vec4(self.g0.x) * other.g3 + vec4(self.g0.z) * vec4(other.g8.w) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g1.x) * vec4(other.g2.y, other.g7.z, other.g7.y, other.g6.x) * vec4(1.0, 1.0, -1.0, -1.0) + vec4(self.g1.y) * vec4(other.g7.z, other.g2.y, other.g7.x, other.g6.y) * vec4(-1.0, 1.0, 1.0, -1.0) + vec4(self.g1.z) * vec4(other.g7.y, other.g7.x, other.g2.y, other.g6.z) * vec4(1.0, -1.0, 1.0, -1.0) + vec4(self.g2.x) * vec4(other.g2.y) * vec4(0.0, 0.0, 0.0, 1.0) - vec4(self.g2.y) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g2.x) + vec4(self.g3.x) * vec4(other.g0.x, other.g5.z, other.g5.y, other.g4.x) * vec4(1.0, 1.0, -1.0, -1.0) + vec4(self.g3.y) * vec4(other.g5.z, other.g0.x, other.g5.x, other.g4.y) * vec4(-1.0, 1.0, 1.0, -1.0) + vec4(self.g3.z) * vec4(other.g5.y, other.g5.x, other.g0.x, other.g4.z) * vec4(1.0, -1.0, 1.0, -1.0) + vec4(self.g3.w) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g4.x) * vec4(other.g3.x) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g4.y) * vec4(other.g3.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g4.z) * vec4(other.g3.z) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g5.x) * vec4(other.g9.w, other.g3.z, other.g3.y, other.g9.x) * vec4(1.0, 1.0, -1.0, -1.0) + vec4(self.g5.y) * vec4(other.g3.z, other.g9.w, other.g3.x, other.g9.y) * vec4(-1.0, 1.0, 1.0, -1.0) + vec4(self.g5.z) * vec4(other.g3.y, other.g3.x, other.g9.w, other.g9.z) * vec4(1.0, -1.0, 1.0, -1.0) + vec4(self.g6.x) * vec4(other.g1.x) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g6.y) * vec4(other.g1.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g6.z) * vec4(other.g1.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g7.x) * vec4(other.g8.w, other.g1.z, other.g1.y, other.g8.x) * vec4(-1.0, -1.0, 1.0, 1.0) + vec4(self.g7.y) * vec4(other.g1.z, other.g8.w, other.g1.x, other.g8.y) * vec4(1.0, -1.0, -1.0, 1.0) + vec4(self.g7.z) * vec4(other.g1.y, other.g1.x, other.g8.w, other.g8.z) * vec4(-1.0, 1.0, -1.0, 1.0) + vec4(self.g8.x) * vec4(other.g7.x) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g8.y) * vec4(other.g7.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g8.z) * vec4(other.g7.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g8.w) * vec4(other.g7.x, other.g7.y, other.g7.z, other.g0.z) + vec4(self.g9.x) * vec4(other.g5.x) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g9.y) * vec4(other.g5.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g9.z) * vec4(other.g5.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g9.w) * vec4(other.g5.x, other.g5.y, other.g5.z, other.g0.y) + vec4(self.g0.x, self.g0.x, self.g0.x, self.g0.y) * other.g9.xxxw * vec4(0.0, 0.0, 0.0, -1.0), vec3(self.g0.x) * other.g4 + vec3(self.g0.y) * other.g5 + vec3(self.g1.x) * vec3(other.g2.x, other.g8.z, other.g8.y) * vec3(-1.0, -1.0, 1.0) + vec3(self.g1.y) * vec3(other.g8.z, other.g2.x, other.g8.x) * vec3(1.0, -1.0, -1.0) + vec3(self.g1.z) * vec3(other.g8.y, other.g8.x, other.g2.x) * vec3(-1.0, 1.0, -1.0) + vec3(self.g2.x) * other.g1 + vec3(self.g4.x) * vec3(other.g0.x, other.g5.z, other.g5.y) * vec3(1.0, 1.0, -1.0) + vec3(self.g4.y) * vec3(other.g5.z, other.g0.x, other.g5.x) * vec3(-1.0, 1.0, 1.0) + vec3(self.g4.z) * vec3(other.g5.y, other.g5.x, other.g0.x) * vec3(1.0, -1.0, 1.0) + vec3(self.g5.x) * vec3(other.g0.y, other.g4.z, other.g4.y) * vec3(1.0, 1.0, -1.0) + vec3(self.g5.y) * vec3(other.g4.z, other.g0.y, other.g4.x) * vec3(-1.0, 1.0, 1.0) + vec3(self.g5.z) * vec3(other.g4.y, other.g4.x, other.g0.y) * vec3(1.0, -1.0, 1.0) + vec3(self.g8.x) * vec3(other.g8.w, other.g1.z, other.g1.y) * vec3(1.0, 1.0, -1.0) + vec3(self.g8.y) * vec3(other.g1.z, other.g8.w, other.g1.x) * vec3(-1.0, 1.0, 1.0) + vec3(self.g8.z) * vec3(other.g1.y, other.g1.x, other.g8.w) * vec3(1.0, -1.0, 1.0) - vec3(self.g8.w) * vec3(other.g8.x, other.g8.y, other.g8.z), vec3(self.g0.x) * other.g5 + vec3(self.g1.x) * vec3(other.g8.w, other.g1.z, other.g1.y) * vec3(-1.0, -1.0, 1.0) + vec3(self.g1.y) * vec3(other.g1.z, other.g8.w, other.g1.x) * vec3(1.0, -1.0, -1.0) + vec3(self.g1.z) * vec3(other.g1.y, other.g1.x, other.g8.w) * vec3(-1.0, 1.0, -1.0) + vec3(self.g5.x) * vec3(other.g0.x, other.g5.z, other.g5.y) * vec3(1.0, 1.0, -1.0) + vec3(self.g5.y) * vec3(other.g5.z, other.g0.x, other.g5.x) * vec3(-1.0, 1.0, 1.0) + vec3(self.g5.z) * vec3(other.g5.y, other.g5.x, other.g0.x) * vec3(1.0, -1.0, 1.0) - vec3(self.g8.w) * other.g1, vec3(self.g0.x) * other.g6 + vec3(self.g0.y) * other.g7 + vec3(self.g0.z) * other.g5 + vec3(self.g1.x) * vec3(other.g3.w, other.g9.z, other.g9.y) * vec3(-1.0, -1.0, 1.0) + vec3(self.g1.y) * vec3(other.g9.z, other.g3.w, other.g9.x) * vec3(1.0, -1.0, -1.0) + vec3(self.g1.z) * vec3(other.g9.y, other.g9.x, other.g3.w) * vec3(-1.0, 1.0, -1.0) + vec3(self.g2.x) * vec3(other.g3.x, other.g3.y, other.g3.z) + vec3(self.g2.y) * other.g4 + vec3(self.g3.x) * vec3(other.g2.x, other.g8.z, other.g8.y) * vec3(1.0, 1.0, -1.0) + vec3(self.g3.y) * vec3(other.g8.z, other.g2.x, other.g8.x) * vec3(-1.0, 1.0, 1.0) + vec3(self.g3.z) * vec3(other.g8.y, other.g8.x, other.g2.x) * vec3(1.0, -1.0, 1.0) - vec3(self.g3.w) * other.g1 + vec3(self.g4.x) * vec3(other.g2.y, other.g7.z, other.g7.y) * vec3(1.0, 1.0, -1.0) + vec3(self.g4.y) * vec3(other.g7.z, other.g2.y, other.g7.x) * vec3(-1.0, 1.0, 1.0) + vec3(self.g4.z) * vec3(other.g7.y, other.g7.x, other.g2.y) * vec3(1.0, -1.0, 1.0) + vec3(self.g5.x) * vec3(other.g0.z, other.g6.z, other.g6.y) * vec3(1.0, 1.0, -1.0) + vec3(self.g5.y) * vec3(other.g6.z, other.g0.z, other.g6.x) * vec3(-1.0, 1.0, 1.0) + vec3(self.g5.z) * vec3(other.g6.y, other.g6.x, other.g0.z) * vec3(1.0, -1.0, 1.0) + vec3(self.g6.x) * vec3(other.g0.x, other.g5.z, other.g5.y) * vec3(1.0, 1.0, -1.0) + vec3(self.g6.y) * vec3(other.g5.z, other.g0.x, other.g5.x) * vec3(-1.0, 1.0, 1.0) + vec3(self.g6.z) * vec3(other.g5.y, other.g5.x, other.g0.x) * vec3(1.0, -1.0, 1.0) + vec3(self.g7.x) * vec3(other.g0.y, other.g4.z, other.g4.y) * vec3(1.0, 1.0, -1.0) + vec3(self.g7.y) * vec3(other.g4.z, other.g0.y, other.g4.x) * vec3(-1.0, 1.0, 1.0) + vec3(self.g7.z) * vec3(other.g4.y, other.g4.x, other.g0.y) * vec3(1.0, -1.0, 1.0) + vec3(self.g8.x) * vec3(other.g9.w, other.g3.z, other.g3.y) * vec3(1.0, 1.0, -1.0) + vec3(self.g8.y) * vec3(other.g3.z, other.g9.w, other.g3.x) * vec3(-1.0, 1.0, 1.0) + vec3(self.g8.z) * vec3(other.g3.y, other.g3.x, other.g9.w) * vec3(1.0, -1.0, 1.0) - vec3(self.g8.w) * vec3(other.g9.x, other.g9.y, other.g9.z) + vec3(self.g9.x) * vec3(other.g8.w, other.g1.z, other.g1.y) * vec3(-1.0, -1.0, 1.0) + vec3(self.g9.y) * vec3(other.g1.z, other.g8.w, other.g1.x) * vec3(1.0, -1.0, -1.0) + vec3(self.g9.z) * vec3(other.g1.y, other.g1.x, other.g8.w) * vec3(-1.0, 1.0, -1.0) + vec3(self.g9.w) * vec3(other.g8.x, other.g8.y, other.g8.z), vec3(self.g0.x) * other.g7 + vec3(self.g1.x) * vec3(other.g9.w, other.g3.z, other.g3.y) * vec3(-1.0, -1.0, 1.0) + vec3(self.g1.y) * vec3(other.g3.z, other.g9.w, other.g3.x) * vec3(1.0, -1.0, -1.0) + vec3(self.g1.z) * vec3(other.g3.y, other.g3.x, other.g9.w) * vec3(-1.0, 1.0, -1.0) + vec3(self.g2.y) * other.g5 + vec3(self.g3.x) * vec3(other.g8.w, other.g1.z, other.g1.y) * vec3(1.0, 1.0, -1.0) + vec3(self.g3.y) * vec3(other.g1.z, other.g8.w, other.g1.x) * vec3(-1.0, 1.0, 1.0) + vec3(self.g3.z) * vec3(other.g1.y, other.g1.x, other.g8.w) * vec3(1.0, -1.0, 1.0) + vec3(self.g5.x) * vec3(other.g2.y, other.g7.z, other.g7.y) * vec3(1.0, 1.0, -1.0) + vec3(self.g5.y) * vec3(other.g7.z, other.g2.y, other.g7.x) * vec3(-1.0, 1.0, 1.0) + vec3(self.g5.z) * vec3(other.g7.y, other.g7.x, other.g2.y) * vec3(1.0, -1.0, 1.0) + vec3(self.g7.x) * vec3(other.g0.x, other.g5.z, other.g5.y) * vec3(1.0, 1.0, -1.0) + vec3(self.g7.y) * vec3(other.g5.z, other.g0.x, other.g5.x) * vec3(-1.0, 1.0, 1.0) + vec3(self.g7.z) * vec3(other.g5.y, other.g5.x, other.g0.x) * vec3(1.0, -1.0, 1.0) - vec3(self.g8.w) * vec3(other.g3.x, other.g3.y, other.g3.z) + vec3(self.g9.w) * other.g1, vec4(self.g0.x) * other.g8 + vec4(self.g1.x) * vec4(other.g0.y, other.g4.z, other.g4.y, other.g5.x) * vec4(1.0, 1.0, -1.0, -1.0) + vec4(self.g1.y) * vec4(other.g4.z, other.g0.y, other.g4.x, other.g5.y) * vec4(-1.0, 1.0, 1.0, -1.0) + vec4(self.g1.z) * vec4(other.g4.y, other.g4.x, other.g0.y, other.g5.z) * vec4(1.0, -1.0, 1.0, -1.0) + vec4(self.g2.x) * vec4(other.g5.x, other.g5.y, other.g5.z, other.g5.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g4.x) * vec4(other.g8.w, other.g1.z, other.g1.y, other.g8.w) * vec4(-1.0, -1.0, 1.0, 0.0) + vec4(self.g4.y) * vec4(other.g1.z, other.g8.w, other.g1.x, other.g1.z) * vec4(1.0, -1.0, -1.0, 0.0) + vec4(self.g4.z) * vec4(other.g1.y, other.g1.x, other.g8.w, other.g1.y) * vec4(-1.0, 1.0, -1.0, 0.0) + vec4(self.g5.x) * vec4(other.g2.x, other.g8.z, other.g8.y, other.g1.x) * vec4(1.0, 1.0, -1.0, -1.0) + vec4(self.g5.y) * vec4(other.g8.z, other.g2.x, other.g8.x, other.g1.y) * vec4(-1.0, 1.0, 1.0, -1.0) + vec4(self.g5.z) * vec4(other.g8.y, other.g8.x, other.g2.x, other.g1.z) * vec4(1.0, -1.0, 1.0, -1.0) + vec4(self.g8.x) * vec4(other.g0.x, other.g5.z, other.g5.y, other.g0.x) * vec4(1.0, 1.0, -1.0, 0.0) + vec4(self.g8.y) * vec4(other.g5.z, other.g0.x, other.g5.x, other.g5.z) * vec4(-1.0, 1.0, 1.0, 0.0) + vec4(self.g8.z) * vec4(other.g5.y, other.g5.x, other.g0.x, other.g5.y) * vec4(1.0, -1.0, 1.0, 0.0) + vec4(self.g8.w) * vec4(other.g4.x, other.g4.y, other.g4.z, other.g0.x) + vec4(self.g0.y, self.g0.y, self.g0.y, self.g0.x) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(-1.0, -1.0, -1.0, 0.0), vec4(self.g0.x) * other.g9 + vec4(self.g0.z) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g1.x) * vec4(other.g0.z, other.g6.z, other.g6.y, other.g7.x) * vec4(1.0, 1.0, -1.0, -1.0) + vec4(self.g1.y) * vec4(other.g6.z, other.g0.z, other.g6.x, other.g7.y) * vec4(-1.0, 1.0, 1.0, -1.0) + vec4(self.g1.z) * vec4(other.g6.y, other.g6.x, other.g0.z, other.g7.z) * vec4(1.0, -1.0, 1.0, -1.0) + vec4(self.g2.x) * vec4(other.g7.x, other.g7.y, other.g7.z, other.g7.x) * vec4(1.0, 1.0, 1.0, 0.0) - vec4(self.g2.y) * other.g8 + vec4(self.g3.x) * vec4(other.g0.y, other.g4.z, other.g4.y, other.g5.x) * vec4(1.0, 1.0, -1.0, -1.0) + vec4(self.g3.y) * vec4(other.g4.z, other.g0.y, other.g4.x, other.g5.y) * vec4(-1.0, 1.0, 1.0, -1.0) + vec4(self.g3.z) * vec4(other.g4.y, other.g4.x, other.g0.y, other.g5.z) * vec4(1.0, -1.0, 1.0, -1.0) + vec4(self.g3.w) * vec4(other.g5.x, other.g5.y, other.g5.z, other.g5.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g4.x) * vec4(other.g9.w, other.g3.z, other.g3.y, other.g9.w) * vec4(-1.0, -1.0, 1.0, 0.0) + vec4(self.g4.y) * vec4(other.g3.z, other.g9.w, other.g3.x, other.g3.z) * vec4(1.0, -1.0, -1.0, 0.0) + vec4(self.g4.z) * vec4(other.g3.y, other.g3.x, other.g9.w, other.g3.y) * vec4(-1.0, 1.0, -1.0, 0.0) + vec4(self.g5.x) * vec4(other.g3.w, other.g9.z, other.g9.y, other.g3.x) * vec4(1.0, 1.0, -1.0, -1.0) + vec4(self.g5.y) * vec4(other.g9.z, other.g3.w, other.g9.x, other.g3.y) * vec4(-1.0, 1.0, 1.0, -1.0) + vec4(self.g5.z) * vec4(other.g9.y, other.g9.x, other.g3.w, other.g3.z) * vec4(1.0, -1.0, 1.0, -1.0) + vec4(self.g6.x) * vec4(other.g8.w, other.g1.z, other.g1.y, other.g8.w) * vec4(1.0, 1.0, -1.0, 0.0) + vec4(self.g6.y) * vec4(other.g1.z, other.g8.w, other.g1.x, other.g1.z) * vec4(-1.0, 1.0, 1.0, 0.0) + vec4(self.g6.z) * vec4(other.g1.y, other.g1.x, other.g8.w, other.g1.y) * vec4(1.0, -1.0, 1.0, 0.0) + vec4(self.g7.x) * vec4(other.g2.x, other.g8.z, other.g8.y, other.g1.x) * vec4(-1.0, -1.0, 1.0, 1.0) + vec4(self.g7.y) * vec4(other.g8.z, other.g2.x, other.g8.x, other.g1.y) * vec4(1.0, -1.0, -1.0, 1.0) + vec4(self.g7.z) * vec4(other.g8.y, other.g8.x, other.g2.x, other.g1.z) * vec4(-1.0, 1.0, -1.0, 1.0) + vec4(self.g8.x) * vec4(other.g2.y, other.g7.z, other.g7.y, other.g2.y) * vec4(1.0, 1.0, -1.0, 0.0) + vec4(self.g8.y) * vec4(other.g7.z, other.g2.y, other.g7.x, other.g7.z) * vec4(-1.0, 1.0, 1.0, 0.0) + vec4(self.g8.z) * vec4(other.g7.y, other.g7.x, other.g2.y, other.g7.y) * vec4(1.0, -1.0, 1.0, 0.0) + vec4(self.g8.w) * vec4(other.g6.x, other.g6.y, other.g6.z, other.g2.y) + vec4(self.g9.x) * vec4(other.g0.x, other.g5.z, other.g5.y, other.g0.x) * vec4(1.0, 1.0, -1.0, 0.0) + vec4(self.g9.y) * vec4(other.g5.z, other.g0.x, other.g5.x, other.g5.z) * vec4(-1.0, 1.0, 1.0, 0.0) + vec4(self.g9.z) * vec4(other.g5.y, other.g5.x, other.g0.x, other.g5.y) * vec4(1.0, -1.0, 1.0, 0.0) + vec4(self.g9.w) * vec4(other.g4.x, other.g4.y, other.g4.z, other.g0.x) + vec4(self.g0.y, self.g0.y, self.g0.y, self.g0.x) * other.g3.xyzx * vec4(-1.0, -1.0, -1.0, 0.0));
+}
+
+MultiVector multi_vector_multi_vector_regressive_product(MultiVector self, MultiVector other) {
+    return MultiVector(vec3(self.g0.y) * vec3(other.g2.y, other.g0.z, other.g2.y) * vec3(1.0, 1.0, 0.0) + vec3(self.g0.z) * other.g0 + vec3(self.g1.x) * vec3(other.g9.x) * vec3(1.0, 0.0, 0.0) + vec3(self.g1.y) * vec3(other.g9.y) * vec3(1.0, 0.0, 0.0) + vec3(self.g1.z) * vec3(other.g9.z) * vec3(1.0, 0.0, 0.0) + vec3(self.g2.x) * vec3(other.g9.w) * vec3(1.0, 0.0, 0.0) + vec3(self.g2.y) * vec3(other.g0.y) * vec3(1.0, 0.0, 0.0) + vec3(self.g3.x) * vec3(other.g8.x) * vec3(-1.0, 0.0, 0.0) + vec3(self.g3.y) * vec3(other.g8.y) * vec3(-1.0, 0.0, 0.0) + vec3(self.g3.z) * vec3(other.g8.z) * vec3(-1.0, 0.0, 0.0) + vec3(self.g3.w) * vec3(other.g8.w) * vec3(-1.0, 0.0, 0.0) + vec3(self.g4.x) * vec3(other.g7.x) * vec3(-1.0, 0.0, 0.0) + vec3(self.g4.y) * vec3(other.g7.y) * vec3(-1.0, 0.0, 0.0) + vec3(self.g4.z) * vec3(other.g7.z) * vec3(-1.0, 0.0, 0.0) + vec3(self.g5.x) * vec3(other.g6.x) * vec3(-1.0, 0.0, 0.0) + vec3(self.g5.y) * vec3(other.g6.y) * vec3(-1.0, 0.0, 0.0) + vec3(self.g5.z) * vec3(other.g6.z) * vec3(-1.0, 0.0, 0.0) + vec3(self.g6.x) * vec3(other.g5.x) * vec3(-1.0, 0.0, 0.0) + vec3(self.g6.y) * vec3(other.g5.y) * vec3(-1.0, 0.0, 0.0) + vec3(self.g6.z) * vec3(other.g5.z) * vec3(-1.0, 0.0, 0.0) + vec3(self.g7.x) * vec3(other.g4.x) * vec3(-1.0, 0.0, 0.0) + vec3(self.g7.y) * vec3(other.g4.y) * vec3(-1.0, 0.0, 0.0) + vec3(self.g7.z) * vec3(other.g4.z) * vec3(-1.0, 0.0, 0.0) + vec3(self.g8.x) * vec3(other.g3.x) * vec3(-1.0, 0.0, 0.0) + vec3(self.g8.y) * vec3(other.g3.y) * vec3(-1.0, 0.0, 0.0) + vec3(self.g8.z) * vec3(other.g3.z) * vec3(-1.0, 0.0, 0.0) + vec3(self.g8.w) * vec3(other.g3.w) * vec3(-1.0, 0.0, 0.0) + vec3(self.g9.x) * vec3(other.g1.x) * vec3(1.0, 0.0, 0.0) + vec3(self.g9.y) * vec3(other.g1.y) * vec3(1.0, 0.0, 0.0) + vec3(self.g9.z) * vec3(other.g1.z) * vec3(1.0, 0.0, 0.0) + vec3(self.g9.w) * vec3(other.g2.x) * vec3(1.0, 0.0, 0.0) + vec3(self.g0.x) * other.g0.zxx * vec3(1.0, 0.0, 0.0), vec3(self.g0.y) * vec3(other.g3.x, other.g3.y, other.g3.z) + vec3(self.g0.z) * other.g1 + vec3(self.g3.x) * vec3(other.g0.y) * vec3(-1.0, 0.0, 0.0) + vec3(self.g3.y) * vec3(other.g0.y) * vec3(0.0, -1.0, 0.0) + vec3(self.g3.z) * vec3(other.g0.y) * vec3(0.0, 0.0, -1.0) + vec3(self.g4.x) * vec3(other.g9.w) * vec3(1.0, 0.0, 0.0) + vec3(self.g4.y) * vec3(other.g9.w) * vec3(0.0, 1.0, 0.0) + vec3(self.g4.z) * vec3(other.g9.w) * vec3(0.0, 0.0, 1.0) + vec3(self.g5.x) * vec3(other.g9.z, other.g9.z, other.g9.y) * vec3(0.0, -1.0, 1.0) + vec3(self.g5.y) * vec3(other.g9.z, other.g9.z, other.g9.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g5.z) * vec3(other.g9.y, other.g9.x, other.g9.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g6.x) * vec3(other.g8.w) * vec3(1.0, 0.0, 0.0) + vec3(self.g6.y) * vec3(other.g8.w) * vec3(0.0, 1.0, 0.0) + vec3(self.g6.z) * vec3(other.g8.w) * vec3(0.0, 0.0, 1.0) + vec3(self.g7.x) * vec3(other.g8.z, other.g8.z, other.g8.y) * vec3(0.0, -1.0, 1.0) + vec3(self.g7.y) * vec3(other.g8.z, other.g8.z, other.g8.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g7.z) * vec3(other.g8.y, other.g8.x, other.g8.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g8.x) * other.g7.zzy * vec3(0.0, 1.0, -1.0) + vec3(self.g8.y) * other.g7.zzx * vec3(-1.0, 0.0, 1.0) + vec3(self.g8.z) * other.g7.yxy * vec3(1.0, -1.0, 0.0) + vec3(self.g8.w) * other.g6 + vec3(self.g9.x) * other.g5.zzy * vec3(0.0, -1.0, 1.0) + vec3(self.g9.y) * other.g5.zzx * vec3(1.0, 0.0, -1.0) + vec3(self.g9.z) * other.g5.yxy * vec3(-1.0, 1.0, 0.0) - vec3(self.g9.w) * other.g4 + self.g1 * vec3(other.g0.z), vec2(self.g0.z) * other.g2 + vec2(self.g2.x) * vec2(other.g0.z) * vec2(1.0, 0.0) + vec2(self.g2.y) * vec2(other.g0.z) * vec2(0.0, 1.0) + vec2(self.g3.x) * vec2(other.g9.x) * vec2(0.0, 1.0) + vec2(self.g3.y) * vec2(other.g9.y) * vec2(0.0, 1.0) + vec2(self.g3.z) * vec2(other.g9.z) * vec2(0.0, 1.0) + vec2(self.g3.w) * vec2(other.g0.y, other.g9.w) * vec2(-1.0, 1.0) + vec2(self.g4.x) * vec2(other.g9.x) * vec2(-1.0, 0.0) + vec2(self.g4.y) * vec2(other.g9.y) * vec2(-1.0, 0.0) + vec2(self.g4.z) * vec2(other.g9.z) * vec2(-1.0, 0.0) - vec2(self.g6.x) * vec2(other.g8.x, other.g7.x) - vec2(self.g6.y) * vec2(other.g8.y, other.g7.y) - vec2(self.g6.z) * vec2(other.g8.z, other.g7.z) + vec2(self.g7.x) * vec2(other.g6.x) * vec2(0.0, -1.0) + vec2(self.g7.y) * vec2(other.g6.y) * vec2(0.0, -1.0) + vec2(self.g7.z) * vec2(other.g6.z) * vec2(0.0, -1.0) + vec2(self.g8.x) * vec2(other.g6.x) * vec2(-1.0, 0.0) + vec2(self.g8.y) * vec2(other.g6.y) * vec2(-1.0, 0.0) + vec2(self.g8.z) * vec2(other.g6.z) * vec2(-1.0, 0.0) + vec2(self.g9.x) * vec2(other.g4.x, other.g3.x) * vec2(1.0, -1.0) + vec2(self.g9.y) * vec2(other.g4.y, other.g3.y) * vec2(1.0, -1.0) + vec2(self.g9.z) * vec2(other.g4.z, other.g3.z) * vec2(1.0, -1.0) + vec2(self.g9.w) * vec2(other.g3.w) * vec2(0.0, -1.0) + vec2(self.g0.y, self.g0.x) * vec2(other.g3.w, other.g3.x) * vec2(1.0, 0.0), vec4(self.g0.z) * other.g3 + vec4(self.g6.x) * other.g9.wwwx * vec4(1.0, 0.0, 0.0, -1.0) + vec4(self.g6.y) * other.g9.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g6.z) * other.g9.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g7.x) * other.g9.zzyz * vec4(0.0, -1.0, 1.0, 0.0) + vec4(self.g7.y) * other.g9.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g7.z) * other.g9.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g9.x) * vec4(other.g7.z, other.g7.z, other.g7.y, other.g6.x) * vec4(0.0, 1.0, -1.0, -1.0) + vec4(self.g9.y) * vec4(other.g7.z, other.g7.z, other.g7.x, other.g6.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g9.z) * vec4(other.g7.y, other.g7.x, other.g7.y, other.g6.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g9.w) * vec4(other.g6.x, other.g6.y, other.g6.z, other.g6.x) * vec4(1.0, 1.0, 1.0, 0.0) + self.g3 * vec4(other.g0.z), vec3(self.g0.y) * other.g6 + vec3(self.g0.z) * other.g4 + vec3(self.g6.x) * vec3(other.g0.y) * vec3(1.0, 0.0, 0.0) + vec3(self.g6.y) * vec3(other.g0.y) * vec3(0.0, 1.0, 0.0) + vec3(self.g6.z) * vec3(other.g0.y) * vec3(0.0, 0.0, 1.0) + vec3(self.g8.x) * vec3(other.g9.z, other.g9.z, other.g9.y) * vec3(0.0, 1.0, -1.0) + vec3(self.g8.y) * vec3(other.g9.z, other.g9.z, other.g9.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g8.z) * vec3(other.g9.y, other.g9.x, other.g9.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g9.x) * vec3(other.g8.z, other.g8.z, other.g8.y) * vec3(0.0, -1.0, 1.0) + vec3(self.g9.y) * vec3(other.g8.z, other.g8.z, other.g8.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g9.z) * vec3(other.g8.y, other.g8.x, other.g8.y) * vec3(-1.0, 1.0, 0.0) + self.g4 * vec3(other.g0.z), vec3(self.g0.y) * other.g7 + vec3(self.g0.z) * other.g5 + vec3(self.g7.x) * vec3(other.g0.y) * vec3(1.0, 0.0, 0.0) + vec3(self.g7.y) * vec3(other.g0.y) * vec3(0.0, 1.0, 0.0) + vec3(self.g7.z) * vec3(other.g0.y) * vec3(0.0, 0.0, 1.0) + vec3(self.g8.x) * vec3(other.g9.w) * vec3(1.0, 0.0, 0.0) + vec3(self.g8.y) * vec3(other.g9.w) * vec3(0.0, 1.0, 0.0) + vec3(self.g8.z) * vec3(other.g9.w) * vec3(0.0, 0.0, 1.0) - vec3(self.g8.w) * vec3(other.g9.x, other.g9.y, other.g9.z) + vec3(self.g9.x) * vec3(other.g8.w) * vec3(-1.0, 0.0, 0.0) + vec3(self.g9.y) * vec3(other.g8.w) * vec3(0.0, -1.0, 0.0) + vec3(self.g9.z) * vec3(other.g8.w) * vec3(0.0, 0.0, -1.0) + vec3(self.g9.w) * vec3(other.g8.x, other.g8.y, other.g8.z) + self.g5 * vec3(other.g0.z), vec3(self.g0.z) * other.g6 + vec3(self.g9.x) * vec3(other.g9.z, other.g9.z, other.g9.y) * vec3(0.0, 1.0, -1.0) + vec3(self.g9.y) * vec3(other.g9.z, other.g9.z, other.g9.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g9.z) * vec3(other.g9.y, other.g9.x, other.g9.y) * vec3(1.0, -1.0, 0.0) + self.g6 * vec3(other.g0.z), vec3(self.g0.z) * other.g7 + vec3(self.g9.x) * vec3(other.g9.w) * vec3(1.0, 0.0, 0.0) + vec3(self.g9.y) * vec3(other.g9.w) * vec3(0.0, 1.0, 0.0) + vec3(self.g9.z) * vec3(other.g9.w) * vec3(0.0, 0.0, 1.0) - vec3(self.g9.w) * vec3(other.g9.x, other.g9.y, other.g9.z) + self.g7 * vec3(other.g0.z), vec4(self.g0.y) * other.g9 + vec4(self.g0.z) * other.g8 + vec4(self.g9.x) * vec4(other.g0.y) * vec4(-1.0, 0.0, 0.0, 0.0) + vec4(self.g9.y) * vec4(other.g0.y) * vec4(0.0, -1.0, 0.0, 0.0) + vec4(self.g9.z) * vec4(other.g0.y) * vec4(0.0, 0.0, -1.0, 0.0) + vec4(self.g9.w) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + self.g8 * vec4(other.g0.z), vec4(self.g0.z) * other.g9 + self.g9 * vec4(other.g0.z));
 }
 
 MultiVector multi_vector_multi_vector_outer_product(MultiVector self, MultiVector other) {

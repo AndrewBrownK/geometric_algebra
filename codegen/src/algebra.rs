@@ -193,6 +193,7 @@ pub struct ProductTerm {
     pub factor_b: BasisElement,
 }
 
+// TODO actually CGA hack might be here
 #[derive(Clone)]
 pub struct Product {
     pub terms: Vec<ProductTerm>,

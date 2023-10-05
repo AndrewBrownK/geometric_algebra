@@ -127,6 +127,9 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
     for class in registry.classes.iter() {
         emitter.emit(&AstNode::ClassDefinition { class }).unwrap();
     }
+
+    // TODO CGA hacks are probably in one or both of the following for loops
+
     let mut trait_implementations = std::collections::BTreeMap::new();
     for class_a in registry.classes.iter() {
         let parameter_a = Parameter {
@@ -141,7 +144,12 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
                 single_trait_implementations.insert(name.to_string(), ast_node);
             }
         }
+        // TODO for some reason not all involutions are being output for CGA,
+        //  for example search "impl Dual" in cga3d.rs vs ppga3d.rs.
+        //  This is strange because some involutions are written, like Reversal.
+        //  I am wondering if this is because of the extra dimension e0. Sheesh.
         for (name, involution) in involutions.iter() {
+            // TODO there is a bug here (glsl) where Dual of Sphere tries to access a vector element on a raw (non-vector) float
             let ast_node = MultiVectorClass::involution(name, involution, &parameter_a, &registry, false);
             emitter.emit(&ast_node).unwrap();
             if ast_node != AstNode::None {
@@ -179,6 +187,13 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
                     }
                 }
             }
+
+            // TODO I think here is the critical spot for CGA
+            //  hmm.. I'm looking at "impl GeometricProduct<Motor>" as a sanity test
+            //  So far it only exists for round objects, and does not output the object its transforming
+            //  You can see from this source that multiplying by e5 is the correct idea
+            //  https://conformalgeometricalgebra.com/wiki/index.php?title=Translation
+            //  So I bet it is my extra e0 that is throwing things off
             for (name, product) in products.iter() {
                 let ast_node = MultiVectorClass::product(name, product, &parameter_a, &parameter_b, &registry);
                 emitter.emit(&ast_node).unwrap();
@@ -191,41 +206,62 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
                 (parameter_b.clone(), trait_implementations),
             );
         }
+
+        // Can implement more traits using existing traits
         for (parameter_b, pair_trait_implementations) in pair_trait_implementations.values() {
-            if let Some(scalar_product) = pair_trait_implementations.get("ScalarProduct") {
+
+            if parameter_a.multi_vector_class() != parameter_b.multi_vector_class() {
+                continue
+            }
+
+            // If this type has a ScalarProduct and Reversal, then we can implement SquaredMagnitude and Magnitude
+            let (scalar_product, reversal) = match (pair_trait_implementations.get("ScalarProduct"), single_trait_implementations.get("Reversal")) {
+                (Some(sp), Some(r)) => (sp, r),
+                (_, _) => continue,
+            };
+
+            let squared_magnitude = MultiVectorClass::derive_squared_magnitude("SquaredMagnitude", scalar_product, reversal, &parameter_a);
+            emitter.emit(&squared_magnitude).unwrap();
+            let magnitude = MultiVectorClass::derive_magnitude("Magnitude", &squared_magnitude, &parameter_a);
+            emitter.emit(&magnitude).unwrap();
+            single_trait_implementations.insert(result_of_trait!(squared_magnitude).name.to_string(), squared_magnitude);
+            single_trait_implementations.insert(result_of_trait!(magnitude).name.to_string(), magnitude);
+        }
+
+        // Can implement even more traits using existing traits
+        for (parameter_b, pair_trait_implementations) in pair_trait_implementations.values() {
+
+            if parameter_b.multi_vector_class().grouped_basis != vec![vec![BasisElement::from_index(0)]] {
+                continue;
+            }
+
+            // If this type has a GeometricProduct with e0, then we can implement some extra stuff
+            let geometric_product = match pair_trait_implementations.get("GeometricProduct") {
+                Some(gp) => gp,
+                None => continue,
+            };
+
+            // If this type has a GeometricProduct, then we can implement Scale
+            let scale = MultiVectorClass::derive_scale("Scale", geometric_product, &parameter_a, parameter_b);
+            emitter.emit(&scale).unwrap();
+
+            // If this type also has a Magnitude, then we can implement Signum
+            if let Some(magnitude) = single_trait_implementations.get("Magnitude") {
+                let signum = MultiVectorClass::derive_signum("Signum", geometric_product, magnitude, &parameter_a);
+                emitter.emit(&signum).unwrap();
+                single_trait_implementations.insert(result_of_trait!(signum).name.to_string(), signum);
+            }
+
+            // If this type also has a SquaredMagnitude and Reversal, then we can implement Inverse
+            if let Some(squared_magnitude) = single_trait_implementations.get("SquaredMagnitude") {
                 if let Some(reversal) = single_trait_implementations.get("Reversal") {
-                    if parameter_a.multi_vector_class() == parameter_b.multi_vector_class() {
-                        let squared_magnitude =
-                            MultiVectorClass::derive_squared_magnitude("SquaredMagnitude", scalar_product, reversal, &parameter_a);
-                        emitter.emit(&squared_magnitude).unwrap();
-                        let magnitude = MultiVectorClass::derive_magnitude("Magnitude", &squared_magnitude, &parameter_a);
-                        emitter.emit(&magnitude).unwrap();
-                        single_trait_implementations.insert(result_of_trait!(squared_magnitude).name.to_string(), squared_magnitude);
-                        single_trait_implementations.insert(result_of_trait!(magnitude).name.to_string(), magnitude);
-                    }
+                    let inverse = MultiVectorClass::derive_inverse("Inverse", geometric_product, squared_magnitude, reversal, &parameter_a);
+                    emitter.emit(&inverse).unwrap();
+                    single_trait_implementations.insert(result_of_trait!(inverse).name.to_string(), inverse);
                 }
             }
         }
-        for (parameter_b, pair_trait_implementations) in pair_trait_implementations.values() {
-            if let Some(geometric_product) = pair_trait_implementations.get("GeometricProduct") {
-                if parameter_b.multi_vector_class().grouped_basis == vec![vec![BasisElement::from_index(0)]] {
-                    let scale = MultiVectorClass::derive_scale("Scale", geometric_product, &parameter_a, parameter_b);
-                    emitter.emit(&scale).unwrap();
-                    if let Some(magnitude) = single_trait_implementations.get("Magnitude") {
-                        let signum = MultiVectorClass::derive_signum("Signum", geometric_product, magnitude, &parameter_a);
-                        emitter.emit(&signum).unwrap();
-                        single_trait_implementations.insert(result_of_trait!(signum).name.to_string(), signum);
-                    }
-                    if let Some(squared_magnitude) = single_trait_implementations.get("SquaredMagnitude") {
-                        if let Some(reversal) = single_trait_implementations.get("Reversal") {
-                            let inverse = MultiVectorClass::derive_inverse("Inverse", geometric_product, squared_magnitude, reversal, &parameter_a);
-                            emitter.emit(&inverse).unwrap();
-                            single_trait_implementations.insert(result_of_trait!(inverse).name.to_string(), inverse);
-                        }
-                    }
-                }
-            }
-        }
+
         trait_implementations.insert(
             parameter_a.multi_vector_class().class_name.clone(),
             (parameter_a.clone(), single_trait_implementations, pair_trait_implementations),
@@ -292,10 +328,10 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
         }
     }
 
-    do_wgsl(file_path);
+    do_wgsl(algebra_name, file_path);
 }
 
-fn do_wgsl(file_path: PathBuf) {
+fn do_wgsl(algebra_name: &str, file_path: PathBuf) {
     // Let naga do wgsl:
     // - Good because low maintenance here.
     // - Bad because it erases useful comments.
@@ -317,7 +353,16 @@ fn do_wgsl(file_path: PathBuf) {
     glsl_contents.push_str("\nvoid main() {}");
 
     // Parse, prune, and validate the naga module
-    let module = glsl_frontend.parse(&options, glsl_contents.as_str()).unwrap();
+    let module = match glsl_frontend.parse(&options, glsl_contents.as_str()) {
+        Ok(m) => m,
+        Err(err) => {
+            let mut line = "??".to_string();
+            if let Some(Error { meta, .. }) = err.first() {
+                line = meta.location(glsl_contents.as_str()).line_number.to_string();
+            }
+            panic!("Error generating {algebra_name} on line {line}: {err:?}")
+        }
+    };
     let mut pruner = naga_oil::prune::Pruner::new(&module);
     for (hf, _) in module.functions.iter() {
         pruner.add_function(hf, HashMap::new(), Some(PartReq::All));
