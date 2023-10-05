@@ -259,24 +259,20 @@ fn scalar_squared_magnitude(self_46: Scalar) -> Scalar {
     var self_47: Scalar;
 
     self_47 = self_46;
-    let _e4: Scalar = self_47;
-    let _e5: Scalar = scalar_reversal(_e4);
-    let _e6: Scalar = self_47;
-    let _e8: Scalar = self_47;
-    let _e9: Scalar = scalar_reversal(_e8);
-    let _e10: Scalar = scalar_scalar_scalar_product(_e6, _e9);
-    return _e10;
+    let _e2: Scalar = self_47;
+    let _e3: Scalar = self_47;
+    let _e4: Scalar = scalar_reversal(_e3);
+    let _e5: Scalar = scalar_scalar_scalar_product(_e2, _e4);
+    return _e5;
 }
 
 fn scalar_magnitude(self_48: Scalar) -> Scalar {
     var self_49: Scalar;
 
     self_49 = self_48;
-    let _e3: Scalar = self_49;
-    let _e4: Scalar = scalar_squared_magnitude(_e3);
-    let _e7: Scalar = self_49;
-    let _e8: Scalar = scalar_squared_magnitude(_e7);
-    return Scalar(sqrt(_e8.g0_));
+    let _e2: Scalar = self_49;
+    let _e3: Scalar = scalar_squared_magnitude(_e2);
+    return Scalar(sqrt(_e3.g0_));
 }
 
 fn scalar_scale(self_50: Scalar, other_38: f32) -> Scalar {
@@ -285,40 +281,33 @@ fn scalar_scale(self_50: Scalar, other_38: f32) -> Scalar {
 
     self_51 = self_50;
     other_39 = other_38;
+    let _e4: Scalar = self_51;
     let _e5: f32 = other_39;
-    let _e7: Scalar = self_51;
-    let _e8: f32 = other_39;
-    let _e10: Scalar = scalar_scalar_geometric_product(_e7, Scalar(_e8));
-    return _e10;
+    let _e7: Scalar = scalar_scalar_geometric_product(_e4, Scalar(_e5));
+    return _e7;
 }
 
 fn scalar_signum(self_52: Scalar) -> Scalar {
     var self_53: Scalar;
 
     self_53 = self_52;
-    let _e5: Scalar = self_53;
-    let _e6: Scalar = scalar_magnitude(_e5);
-    let _e10: Scalar = self_53;
-    let _e13: Scalar = self_53;
-    let _e14: Scalar = scalar_magnitude(_e13);
-    let _e18: Scalar = scalar_scalar_geometric_product(_e10, Scalar((1.0 / _e14.g0_)));
-    return _e18;
+    let _e2: Scalar = self_53;
+    let _e3: Scalar = self_53;
+    let _e4: Scalar = scalar_magnitude(_e3);
+    let _e9: Scalar = scalar_scalar_geometric_product(_e2, Scalar((1.0 / _e4.g0_)));
+    return _e9;
 }
 
 fn scalar_inverse(self_54: Scalar) -> Scalar {
     var self_55: Scalar;
 
     self_55 = self_54;
-    let _e3: Scalar = self_55;
-    let _e4: Scalar = scalar_reversal(_e3);
-    let _e7: Scalar = self_55;
-    let _e8: Scalar = scalar_squared_magnitude(_e7);
-    let _e13: Scalar = self_55;
-    let _e14: Scalar = scalar_reversal(_e13);
-    let _e17: Scalar = self_55;
-    let _e18: Scalar = scalar_squared_magnitude(_e17);
-    let _e22: Scalar = scalar_scalar_geometric_product(_e14, Scalar((1.0 / _e18.g0_)));
-    return _e22;
+    let _e2: Scalar = self_55;
+    let _e3: Scalar = scalar_reversal(_e2);
+    let _e4: Scalar = self_55;
+    let _e5: Scalar = scalar_squared_magnitude(_e4);
+    let _e10: Scalar = scalar_scalar_geometric_product(_e3, Scalar((1.0 / _e5.g0_)));
+    return _e10;
 }
 
 fn split_complex_number_zero() -> SplitComplexNumber {
@@ -617,24 +606,20 @@ fn split_complex_number_squared_magnitude(self_108: SplitComplexNumber) -> Scala
     var self_109: SplitComplexNumber;
 
     self_109 = self_108;
-    let _e4: SplitComplexNumber = self_109;
-    let _e5: SplitComplexNumber = split_complex_number_reversal(_e4);
-    let _e6: SplitComplexNumber = self_109;
-    let _e8: SplitComplexNumber = self_109;
-    let _e9: SplitComplexNumber = split_complex_number_reversal(_e8);
-    let _e10: Scalar = split_complex_number_split_complex_number_scalar_product(_e6, _e9);
-    return _e10;
+    let _e2: SplitComplexNumber = self_109;
+    let _e3: SplitComplexNumber = self_109;
+    let _e4: SplitComplexNumber = split_complex_number_reversal(_e3);
+    let _e5: Scalar = split_complex_number_split_complex_number_scalar_product(_e2, _e4);
+    return _e5;
 }
 
 fn split_complex_number_magnitude(self_110: SplitComplexNumber) -> Scalar {
     var self_111: SplitComplexNumber;
 
     self_111 = self_110;
-    let _e3: SplitComplexNumber = self_111;
-    let _e4: Scalar = split_complex_number_squared_magnitude(_e3);
-    let _e7: SplitComplexNumber = self_111;
-    let _e8: Scalar = split_complex_number_squared_magnitude(_e7);
-    return Scalar(sqrt(_e8.g0_));
+    let _e2: SplitComplexNumber = self_111;
+    let _e3: Scalar = split_complex_number_squared_magnitude(_e2);
+    return Scalar(sqrt(_e3.g0_));
 }
 
 fn split_complex_number_scale(self_112: SplitComplexNumber, other_80: f32) -> SplitComplexNumber {
@@ -643,40 +628,33 @@ fn split_complex_number_scale(self_112: SplitComplexNumber, other_80: f32) -> Sp
 
     self_113 = self_112;
     other_81 = other_80;
+    let _e4: SplitComplexNumber = self_113;
     let _e5: f32 = other_81;
-    let _e7: SplitComplexNumber = self_113;
-    let _e8: f32 = other_81;
-    let _e10: SplitComplexNumber = split_complex_number_scalar_geometric_product(_e7, Scalar(_e8));
-    return _e10;
+    let _e7: SplitComplexNumber = split_complex_number_scalar_geometric_product(_e4, Scalar(_e5));
+    return _e7;
 }
 
 fn split_complex_number_signum(self_114: SplitComplexNumber) -> SplitComplexNumber {
     var self_115: SplitComplexNumber;
 
     self_115 = self_114;
-    let _e5: SplitComplexNumber = self_115;
-    let _e6: Scalar = split_complex_number_magnitude(_e5);
-    let _e10: SplitComplexNumber = self_115;
-    let _e13: SplitComplexNumber = self_115;
-    let _e14: Scalar = split_complex_number_magnitude(_e13);
-    let _e18: SplitComplexNumber = split_complex_number_scalar_geometric_product(_e10, Scalar((1.0 / _e14.g0_)));
-    return _e18;
+    let _e2: SplitComplexNumber = self_115;
+    let _e3: SplitComplexNumber = self_115;
+    let _e4: Scalar = split_complex_number_magnitude(_e3);
+    let _e9: SplitComplexNumber = split_complex_number_scalar_geometric_product(_e2, Scalar((1.0 / _e4.g0_)));
+    return _e9;
 }
 
 fn split_complex_number_inverse(self_116: SplitComplexNumber) -> SplitComplexNumber {
     var self_117: SplitComplexNumber;
 
     self_117 = self_116;
-    let _e3: SplitComplexNumber = self_117;
-    let _e4: SplitComplexNumber = split_complex_number_reversal(_e3);
-    let _e7: SplitComplexNumber = self_117;
-    let _e8: Scalar = split_complex_number_squared_magnitude(_e7);
-    let _e13: SplitComplexNumber = self_117;
-    let _e14: SplitComplexNumber = split_complex_number_reversal(_e13);
-    let _e17: SplitComplexNumber = self_117;
-    let _e18: Scalar = split_complex_number_squared_magnitude(_e17);
-    let _e22: SplitComplexNumber = split_complex_number_scalar_geometric_product(_e14, Scalar((1.0 / _e18.g0_)));
-    return _e22;
+    let _e2: SplitComplexNumber = self_117;
+    let _e3: SplitComplexNumber = split_complex_number_reversal(_e2);
+    let _e4: SplitComplexNumber = self_117;
+    let _e5: Scalar = split_complex_number_squared_magnitude(_e4);
+    let _e10: SplitComplexNumber = split_complex_number_scalar_geometric_product(_e3, Scalar((1.0 / _e5.g0_)));
+    return _e10;
 }
 
 fn scalar_powi(self_118: Scalar, exponent: i32) -> Scalar {
@@ -698,46 +676,46 @@ fn scalar_powi(self_118: Scalar, exponent: i32) -> Scalar {
     }
     let _e8: i32 = exponent_1;
     if (_e8 < 0) {
-        let _e12: Scalar = self_119;
-        let _e13: Scalar = scalar_inverse(_e12);
-        local = _e13;
+        let _e11: Scalar = self_119;
+        let _e12: Scalar = scalar_inverse(_e11);
+        local = _e12;
     } else {
         let _e14: Scalar = self_119;
         local = _e14;
     }
-    let _e16: Scalar = local;
-    x = _e16;
-    let _e18: Scalar = scalar_one();
-    y = _e18;
-    let _e21: i32 = exponent_1;
-    n = abs(_e21);
+    let _e15: Scalar = local;
+    x = _e15;
+    let _e17: Scalar = scalar_one();
+    y = _e17;
+    let _e19: i32 = exponent_1;
+    n = abs(_e19);
     loop {
-        let _e25: i32 = n;
-        if !((1 < _e25)) {
+        let _e23: i32 = n;
+        if !((1 < _e23)) {
             break;
         }
         {
-            let _e28: i32 = n;
-            if ((_e28 & 1) == 1) {
+            let _e26: i32 = n;
+            if ((_e26 & 1) == 1) {
                 {
-                    let _e35: Scalar = x;
-                    let _e36: Scalar = y;
-                    let _e37: Scalar = scalar_scalar_geometric_product(_e35, _e36);
-                    y = _e37;
+                    let _e31: Scalar = x;
+                    let _e32: Scalar = y;
+                    let _e33: Scalar = scalar_scalar_geometric_product(_e31, _e32);
+                    y = _e33;
                 }
             }
-            let _e40: Scalar = x;
-            let _e41: Scalar = x;
-            let _e42: Scalar = scalar_scalar_geometric_product(_e40, _e41);
-            x = _e42;
-            let _e43: i32 = n;
-            n = (_e43 >> u32(1));
+            let _e34: Scalar = x;
+            let _e35: Scalar = x;
+            let _e36: Scalar = scalar_scalar_geometric_product(_e34, _e35);
+            x = _e36;
+            let _e37: i32 = n;
+            n = (_e37 >> u32(1));
         }
     }
-    let _e49: Scalar = x;
-    let _e50: Scalar = y;
-    let _e51: Scalar = scalar_scalar_geometric_product(_e49, _e50);
-    return _e51;
+    let _e41: Scalar = x;
+    let _e42: Scalar = y;
+    let _e43: Scalar = scalar_scalar_geometric_product(_e41, _e42);
+    return _e43;
 }
 
 fn scalar_scalar_geometric_quotient(self_120: Scalar, other_82: Scalar) -> Scalar {
@@ -746,13 +724,11 @@ fn scalar_scalar_geometric_quotient(self_120: Scalar, other_82: Scalar) -> Scala
 
     self_121 = self_120;
     other_83 = other_82;
-    let _e6: Scalar = other_83;
-    let _e7: Scalar = scalar_inverse(_e6);
-    let _e8: Scalar = self_121;
-    let _e10: Scalar = other_83;
-    let _e11: Scalar = scalar_inverse(_e10);
-    let _e12: Scalar = scalar_scalar_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Scalar = self_121;
+    let _e5: Scalar = other_83;
+    let _e6: Scalar = scalar_inverse(_e5);
+    let _e7: Scalar = scalar_scalar_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn scalar_scalar_transformation(self_122: Scalar, other_84: Scalar) -> Scalar {
@@ -761,18 +737,13 @@ fn scalar_scalar_transformation(self_122: Scalar, other_84: Scalar) -> Scalar {
 
     self_123 = self_122;
     other_85 = other_84;
-    let _e6: Scalar = self_123;
-    let _e7: Scalar = other_85;
-    let _e8: Scalar = scalar_scalar_geometric_product(_e6, _e7);
-    let _e10: Scalar = self_123;
-    let _e11: Scalar = scalar_reversal(_e10);
-    let _e14: Scalar = self_123;
-    let _e15: Scalar = other_85;
-    let _e16: Scalar = scalar_scalar_geometric_product(_e14, _e15);
-    let _e18: Scalar = self_123;
-    let _e19: Scalar = scalar_reversal(_e18);
-    let _e20: Scalar = scalar_scalar_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Scalar = self_123;
+    let _e5: Scalar = other_85;
+    let _e6: Scalar = scalar_scalar_geometric_product(_e4, _e5);
+    let _e7: Scalar = self_123;
+    let _e8: Scalar = scalar_reversal(_e7);
+    let _e9: Scalar = scalar_scalar_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn scalar_split_complex_number_geometric_quotient(self_124: Scalar, other_86: SplitComplexNumber) -> SplitComplexNumber {
@@ -781,13 +752,11 @@ fn scalar_split_complex_number_geometric_quotient(self_124: Scalar, other_86: Sp
 
     self_125 = self_124;
     other_87 = other_86;
-    let _e6: SplitComplexNumber = other_87;
-    let _e7: SplitComplexNumber = split_complex_number_inverse(_e6);
-    let _e8: Scalar = self_125;
-    let _e10: SplitComplexNumber = other_87;
-    let _e11: SplitComplexNumber = split_complex_number_inverse(_e10);
-    let _e12: SplitComplexNumber = scalar_split_complex_number_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Scalar = self_125;
+    let _e5: SplitComplexNumber = other_87;
+    let _e6: SplitComplexNumber = split_complex_number_inverse(_e5);
+    let _e7: SplitComplexNumber = scalar_split_complex_number_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn scalar_split_complex_number_transformation(self_126: Scalar, other_88: SplitComplexNumber) -> SplitComplexNumber {
@@ -796,18 +765,13 @@ fn scalar_split_complex_number_transformation(self_126: Scalar, other_88: SplitC
 
     self_127 = self_126;
     other_89 = other_88;
-    let _e6: Scalar = self_127;
-    let _e7: SplitComplexNumber = other_89;
-    let _e8: SplitComplexNumber = scalar_split_complex_number_geometric_product(_e6, _e7);
-    let _e10: Scalar = self_127;
-    let _e11: Scalar = scalar_reversal(_e10);
-    let _e14: Scalar = self_127;
-    let _e15: SplitComplexNumber = other_89;
-    let _e16: SplitComplexNumber = scalar_split_complex_number_geometric_product(_e14, _e15);
-    let _e18: Scalar = self_127;
-    let _e19: Scalar = scalar_reversal(_e18);
-    let _e20: SplitComplexNumber = split_complex_number_scalar_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Scalar = self_127;
+    let _e5: SplitComplexNumber = other_89;
+    let _e6: SplitComplexNumber = scalar_split_complex_number_geometric_product(_e4, _e5);
+    let _e7: Scalar = self_127;
+    let _e8: Scalar = scalar_reversal(_e7);
+    let _e9: SplitComplexNumber = split_complex_number_scalar_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn split_complex_number_scalar_geometric_quotient(self_128: SplitComplexNumber, other_90: Scalar) -> SplitComplexNumber {
@@ -816,13 +780,11 @@ fn split_complex_number_scalar_geometric_quotient(self_128: SplitComplexNumber, 
 
     self_129 = self_128;
     other_91 = other_90;
-    let _e6: Scalar = other_91;
-    let _e7: Scalar = scalar_inverse(_e6);
-    let _e8: SplitComplexNumber = self_129;
-    let _e10: Scalar = other_91;
-    let _e11: Scalar = scalar_inverse(_e10);
-    let _e12: SplitComplexNumber = split_complex_number_scalar_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: SplitComplexNumber = self_129;
+    let _e5: Scalar = other_91;
+    let _e6: Scalar = scalar_inverse(_e5);
+    let _e7: SplitComplexNumber = split_complex_number_scalar_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn split_complex_number_scalar_transformation(self_130: SplitComplexNumber, other_92: Scalar) -> Scalar {
@@ -831,30 +793,14 @@ fn split_complex_number_scalar_transformation(self_130: SplitComplexNumber, othe
 
     self_131 = self_130;
     other_93 = other_92;
-    let _e6: SplitComplexNumber = self_131;
-    let _e7: Scalar = other_93;
-    let _e8: SplitComplexNumber = split_complex_number_scalar_geometric_product(_e6, _e7);
-    let _e10: SplitComplexNumber = self_131;
-    let _e11: SplitComplexNumber = split_complex_number_reversal(_e10);
-    let _e14: SplitComplexNumber = self_131;
-    let _e15: Scalar = other_93;
-    let _e16: SplitComplexNumber = split_complex_number_scalar_geometric_product(_e14, _e15);
-    let _e18: SplitComplexNumber = self_131;
-    let _e19: SplitComplexNumber = split_complex_number_reversal(_e18);
-    let _e20: SplitComplexNumber = split_complex_number_split_complex_number_geometric_product(_e16, _e19);
-    let _e23: SplitComplexNumber = self_131;
-    let _e24: Scalar = other_93;
-    let _e25: SplitComplexNumber = split_complex_number_scalar_geometric_product(_e23, _e24);
-    let _e27: SplitComplexNumber = self_131;
-    let _e28: SplitComplexNumber = split_complex_number_reversal(_e27);
-    let _e31: SplitComplexNumber = self_131;
-    let _e32: Scalar = other_93;
-    let _e33: SplitComplexNumber = split_complex_number_scalar_geometric_product(_e31, _e32);
-    let _e35: SplitComplexNumber = self_131;
-    let _e36: SplitComplexNumber = split_complex_number_reversal(_e35);
-    let _e37: SplitComplexNumber = split_complex_number_split_complex_number_geometric_product(_e33, _e36);
-    let _e38: Scalar = split_complex_number_scalar_into(_e37);
-    return _e38;
+    let _e4: SplitComplexNumber = self_131;
+    let _e5: Scalar = other_93;
+    let _e6: SplitComplexNumber = split_complex_number_scalar_geometric_product(_e4, _e5);
+    let _e7: SplitComplexNumber = self_131;
+    let _e8: SplitComplexNumber = split_complex_number_reversal(_e7);
+    let _e9: SplitComplexNumber = split_complex_number_split_complex_number_geometric_product(_e6, _e8);
+    let _e10: Scalar = split_complex_number_scalar_into(_e9);
+    return _e10;
 }
 
 fn split_complex_number_powi(self_132: SplitComplexNumber, exponent_2: i32) -> SplitComplexNumber {
@@ -876,46 +822,46 @@ fn split_complex_number_powi(self_132: SplitComplexNumber, exponent_2: i32) -> S
     }
     let _e8: i32 = exponent_3;
     if (_e8 < 0) {
-        let _e12: SplitComplexNumber = self_133;
-        let _e13: SplitComplexNumber = split_complex_number_inverse(_e12);
-        local_1 = _e13;
+        let _e11: SplitComplexNumber = self_133;
+        let _e12: SplitComplexNumber = split_complex_number_inverse(_e11);
+        local_1 = _e12;
     } else {
         let _e14: SplitComplexNumber = self_133;
         local_1 = _e14;
     }
-    let _e16: SplitComplexNumber = local_1;
-    x_1 = _e16;
-    let _e18: SplitComplexNumber = split_complex_number_one();
-    y_1 = _e18;
-    let _e21: i32 = exponent_3;
-    n_1 = abs(_e21);
+    let _e15: SplitComplexNumber = local_1;
+    x_1 = _e15;
+    let _e17: SplitComplexNumber = split_complex_number_one();
+    y_1 = _e17;
+    let _e19: i32 = exponent_3;
+    n_1 = abs(_e19);
     loop {
-        let _e25: i32 = n_1;
-        if !((1 < _e25)) {
+        let _e23: i32 = n_1;
+        if !((1 < _e23)) {
             break;
         }
         {
-            let _e28: i32 = n_1;
-            if ((_e28 & 1) == 1) {
+            let _e26: i32 = n_1;
+            if ((_e26 & 1) == 1) {
                 {
-                    let _e35: SplitComplexNumber = x_1;
-                    let _e36: SplitComplexNumber = y_1;
-                    let _e37: SplitComplexNumber = split_complex_number_split_complex_number_geometric_product(_e35, _e36);
-                    y_1 = _e37;
+                    let _e31: SplitComplexNumber = x_1;
+                    let _e32: SplitComplexNumber = y_1;
+                    let _e33: SplitComplexNumber = split_complex_number_split_complex_number_geometric_product(_e31, _e32);
+                    y_1 = _e33;
                 }
             }
-            let _e40: SplitComplexNumber = x_1;
-            let _e41: SplitComplexNumber = x_1;
-            let _e42: SplitComplexNumber = split_complex_number_split_complex_number_geometric_product(_e40, _e41);
-            x_1 = _e42;
-            let _e43: i32 = n_1;
-            n_1 = (_e43 >> u32(1));
+            let _e34: SplitComplexNumber = x_1;
+            let _e35: SplitComplexNumber = x_1;
+            let _e36: SplitComplexNumber = split_complex_number_split_complex_number_geometric_product(_e34, _e35);
+            x_1 = _e36;
+            let _e37: i32 = n_1;
+            n_1 = (_e37 >> u32(1));
         }
     }
-    let _e49: SplitComplexNumber = x_1;
-    let _e50: SplitComplexNumber = y_1;
-    let _e51: SplitComplexNumber = split_complex_number_split_complex_number_geometric_product(_e49, _e50);
-    return _e51;
+    let _e41: SplitComplexNumber = x_1;
+    let _e42: SplitComplexNumber = y_1;
+    let _e43: SplitComplexNumber = split_complex_number_split_complex_number_geometric_product(_e41, _e42);
+    return _e43;
 }
 
 fn split_complex_number_split_complex_number_geometric_quotient(self_134: SplitComplexNumber, other_94: SplitComplexNumber) -> SplitComplexNumber {
@@ -924,13 +870,11 @@ fn split_complex_number_split_complex_number_geometric_quotient(self_134: SplitC
 
     self_135 = self_134;
     other_95 = other_94;
-    let _e6: SplitComplexNumber = other_95;
-    let _e7: SplitComplexNumber = split_complex_number_inverse(_e6);
-    let _e8: SplitComplexNumber = self_135;
-    let _e10: SplitComplexNumber = other_95;
-    let _e11: SplitComplexNumber = split_complex_number_inverse(_e10);
-    let _e12: SplitComplexNumber = split_complex_number_split_complex_number_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: SplitComplexNumber = self_135;
+    let _e5: SplitComplexNumber = other_95;
+    let _e6: SplitComplexNumber = split_complex_number_inverse(_e5);
+    let _e7: SplitComplexNumber = split_complex_number_split_complex_number_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn split_complex_number_split_complex_number_transformation(self_136: SplitComplexNumber, other_96: SplitComplexNumber) -> SplitComplexNumber {
@@ -939,26 +883,12 @@ fn split_complex_number_split_complex_number_transformation(self_136: SplitCompl
 
     self_137 = self_136;
     other_97 = other_96;
-    let _e6: SplitComplexNumber = self_137;
-    let _e7: SplitComplexNumber = other_97;
-    let _e8: SplitComplexNumber = split_complex_number_split_complex_number_geometric_product(_e6, _e7);
-    let _e10: SplitComplexNumber = self_137;
-    let _e11: SplitComplexNumber = split_complex_number_reversal(_e10);
-    let _e14: SplitComplexNumber = self_137;
-    let _e15: SplitComplexNumber = other_97;
-    let _e16: SplitComplexNumber = split_complex_number_split_complex_number_geometric_product(_e14, _e15);
-    let _e18: SplitComplexNumber = self_137;
-    let _e19: SplitComplexNumber = split_complex_number_reversal(_e18);
-    let _e20: SplitComplexNumber = split_complex_number_split_complex_number_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: SplitComplexNumber = self_137;
+    let _e5: SplitComplexNumber = other_97;
+    let _e6: SplitComplexNumber = split_complex_number_split_complex_number_geometric_product(_e4, _e5);
+    let _e7: SplitComplexNumber = self_137;
+    let _e8: SplitComplexNumber = split_complex_number_reversal(_e7);
+    let _e9: SplitComplexNumber = split_complex_number_split_complex_number_geometric_product(_e6, _e8);
+    return _e9;
 }
 
-fn main_1() {
-    return;
-}
-
-@compute @workgroup_size(1, 1, 1) 
-fn main() {
-    main_1();
-    return;
-}

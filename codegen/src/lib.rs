@@ -5,12 +5,15 @@ mod emit;
 mod glsl;
 mod rust;
 
+use std::collections::HashMap;
 use std::io::{Read, Write};
+use std::path::PathBuf;
 use naga;
 use naga::back::wgsl::WriterFlags;
 use naga::{Module, ShaderStage};
 use naga::front::glsl::Error;
 use naga::valid::{Capabilities, ModuleInfo, ValidationFlags};
+use naga_oil::prune::PartReq;
 use crate::{
     algebra::{BasisElement, GeometricAlgebra, Involution, MultiVectorClass, MultiVectorClassRegistry, Product},
     ast::{AstNode, DataType, Parameter},
@@ -291,6 +294,10 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
         }
     }
 
+    do_wgsl(file_path);
+}
+
+fn do_wgsl(file_path: PathBuf) {
     // Let naga do wgsl:
     // - Good because low maintenance here.
     // - Bad because it erases useful comments.
@@ -298,6 +305,7 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
     // Prepare some of naga's clutter
     let mut glsl_frontend = naga::front::glsl::Frontend::default();
     let mut wgsl_backend = naga::back::wgsl::Writer::new(String::new(), WriterFlags::EXPLICIT_TYPES);
+    let mut validator = naga::valid::Validator::new(ValidationFlags::default(), Capabilities::default());
     let options = naga::front::glsl::Options {
         stage: ShaderStage::Compute,
         defines: Default::default(),
@@ -310,12 +318,13 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
     // Append a dummy entry point
     glsl_contents.push_str("\nvoid main() {}");
 
-    // Parse and validate the naga module
-    let module = match glsl_frontend.parse(&options, glsl_contents.as_str()) {
-        Ok(m) => m,
-        Err(err) => panic!("Problem generating wgsl for {algebra_name}: {err:?}")
-    };
-    let mut validator = naga::valid::Validator::new(ValidationFlags::default(), Capabilities::default());
+    // Parse, prune, and validate the naga module
+    let module = glsl_frontend.parse(&options, glsl_contents.as_str()).unwrap();
+    let mut pruner = naga_oil::prune::Pruner::new(&module);
+    for (hf, _) in module.functions.iter() {
+        pruner.add_function(hf, HashMap::new(), Some(PartReq::All));
+    }
+    let module = pruner.rewrite();
     let module_info = validator.validate(&module).unwrap();
 
     // Write the wgsl

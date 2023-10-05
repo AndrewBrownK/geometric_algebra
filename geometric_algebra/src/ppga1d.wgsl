@@ -259,24 +259,20 @@ fn scalar_squared_magnitude(self_46: Scalar) -> Scalar {
     var self_47: Scalar;
 
     self_47 = self_46;
-    let _e4: Scalar = self_47;
-    let _e5: Scalar = scalar_reversal(_e4);
-    let _e6: Scalar = self_47;
-    let _e8: Scalar = self_47;
-    let _e9: Scalar = scalar_reversal(_e8);
-    let _e10: Scalar = scalar_scalar_scalar_product(_e6, _e9);
-    return _e10;
+    let _e2: Scalar = self_47;
+    let _e3: Scalar = self_47;
+    let _e4: Scalar = scalar_reversal(_e3);
+    let _e5: Scalar = scalar_scalar_scalar_product(_e2, _e4);
+    return _e5;
 }
 
 fn scalar_magnitude(self_48: Scalar) -> Scalar {
     var self_49: Scalar;
 
     self_49 = self_48;
-    let _e3: Scalar = self_49;
-    let _e4: Scalar = scalar_squared_magnitude(_e3);
-    let _e7: Scalar = self_49;
-    let _e8: Scalar = scalar_squared_magnitude(_e7);
-    return Scalar(sqrt(_e8.g0_));
+    let _e2: Scalar = self_49;
+    let _e3: Scalar = scalar_squared_magnitude(_e2);
+    return Scalar(sqrt(_e3.g0_));
 }
 
 fn scalar_scale(self_50: Scalar, other_38: f32) -> Scalar {
@@ -285,40 +281,33 @@ fn scalar_scale(self_50: Scalar, other_38: f32) -> Scalar {
 
     self_51 = self_50;
     other_39 = other_38;
+    let _e4: Scalar = self_51;
     let _e5: f32 = other_39;
-    let _e7: Scalar = self_51;
-    let _e8: f32 = other_39;
-    let _e10: Scalar = scalar_scalar_geometric_product(_e7, Scalar(_e8));
-    return _e10;
+    let _e7: Scalar = scalar_scalar_geometric_product(_e4, Scalar(_e5));
+    return _e7;
 }
 
 fn scalar_signum(self_52: Scalar) -> Scalar {
     var self_53: Scalar;
 
     self_53 = self_52;
-    let _e5: Scalar = self_53;
-    let _e6: Scalar = scalar_magnitude(_e5);
-    let _e10: Scalar = self_53;
-    let _e13: Scalar = self_53;
-    let _e14: Scalar = scalar_magnitude(_e13);
-    let _e18: Scalar = scalar_scalar_geometric_product(_e10, Scalar((1.0 / _e14.g0_)));
-    return _e18;
+    let _e2: Scalar = self_53;
+    let _e3: Scalar = self_53;
+    let _e4: Scalar = scalar_magnitude(_e3);
+    let _e9: Scalar = scalar_scalar_geometric_product(_e2, Scalar((1.0 / _e4.g0_)));
+    return _e9;
 }
 
 fn scalar_inverse(self_54: Scalar) -> Scalar {
     var self_55: Scalar;
 
     self_55 = self_54;
-    let _e3: Scalar = self_55;
-    let _e4: Scalar = scalar_reversal(_e3);
-    let _e7: Scalar = self_55;
-    let _e8: Scalar = scalar_squared_magnitude(_e7);
-    let _e13: Scalar = self_55;
-    let _e14: Scalar = scalar_reversal(_e13);
-    let _e17: Scalar = self_55;
-    let _e18: Scalar = scalar_squared_magnitude(_e17);
-    let _e22: Scalar = scalar_scalar_geometric_product(_e14, Scalar((1.0 / _e18.g0_)));
-    return _e22;
+    let _e2: Scalar = self_55;
+    let _e3: Scalar = scalar_reversal(_e2);
+    let _e4: Scalar = self_55;
+    let _e5: Scalar = scalar_squared_magnitude(_e4);
+    let _e10: Scalar = scalar_scalar_geometric_product(_e3, Scalar((1.0 / _e5.g0_)));
+    return _e10;
 }
 
 fn dual_number_zero() -> DualNumber {
@@ -611,24 +600,20 @@ fn dual_number_squared_magnitude(self_108: DualNumber) -> Scalar {
     var self_109: DualNumber;
 
     self_109 = self_108;
-    let _e4: DualNumber = self_109;
-    let _e5: DualNumber = dual_number_reversal(_e4);
-    let _e6: DualNumber = self_109;
-    let _e8: DualNumber = self_109;
-    let _e9: DualNumber = dual_number_reversal(_e8);
-    let _e10: Scalar = dual_number_dual_number_scalar_product(_e6, _e9);
-    return _e10;
+    let _e2: DualNumber = self_109;
+    let _e3: DualNumber = self_109;
+    let _e4: DualNumber = dual_number_reversal(_e3);
+    let _e5: Scalar = dual_number_dual_number_scalar_product(_e2, _e4);
+    return _e5;
 }
 
 fn dual_number_magnitude(self_110: DualNumber) -> Scalar {
     var self_111: DualNumber;
 
     self_111 = self_110;
-    let _e3: DualNumber = self_111;
-    let _e4: Scalar = dual_number_squared_magnitude(_e3);
-    let _e7: DualNumber = self_111;
-    let _e8: Scalar = dual_number_squared_magnitude(_e7);
-    return Scalar(sqrt(_e8.g0_));
+    let _e2: DualNumber = self_111;
+    let _e3: Scalar = dual_number_squared_magnitude(_e2);
+    return Scalar(sqrt(_e3.g0_));
 }
 
 fn dual_number_scale(self_112: DualNumber, other_80: f32) -> DualNumber {
@@ -637,40 +622,33 @@ fn dual_number_scale(self_112: DualNumber, other_80: f32) -> DualNumber {
 
     self_113 = self_112;
     other_81 = other_80;
+    let _e4: DualNumber = self_113;
     let _e5: f32 = other_81;
-    let _e7: DualNumber = self_113;
-    let _e8: f32 = other_81;
-    let _e10: DualNumber = dual_number_scalar_geometric_product(_e7, Scalar(_e8));
-    return _e10;
+    let _e7: DualNumber = dual_number_scalar_geometric_product(_e4, Scalar(_e5));
+    return _e7;
 }
 
 fn dual_number_signum(self_114: DualNumber) -> DualNumber {
     var self_115: DualNumber;
 
     self_115 = self_114;
-    let _e5: DualNumber = self_115;
-    let _e6: Scalar = dual_number_magnitude(_e5);
-    let _e10: DualNumber = self_115;
-    let _e13: DualNumber = self_115;
-    let _e14: Scalar = dual_number_magnitude(_e13);
-    let _e18: DualNumber = dual_number_scalar_geometric_product(_e10, Scalar((1.0 / _e14.g0_)));
-    return _e18;
+    let _e2: DualNumber = self_115;
+    let _e3: DualNumber = self_115;
+    let _e4: Scalar = dual_number_magnitude(_e3);
+    let _e9: DualNumber = dual_number_scalar_geometric_product(_e2, Scalar((1.0 / _e4.g0_)));
+    return _e9;
 }
 
 fn dual_number_inverse(self_116: DualNumber) -> DualNumber {
     var self_117: DualNumber;
 
     self_117 = self_116;
-    let _e3: DualNumber = self_117;
-    let _e4: DualNumber = dual_number_reversal(_e3);
-    let _e7: DualNumber = self_117;
-    let _e8: Scalar = dual_number_squared_magnitude(_e7);
-    let _e13: DualNumber = self_117;
-    let _e14: DualNumber = dual_number_reversal(_e13);
-    let _e17: DualNumber = self_117;
-    let _e18: Scalar = dual_number_squared_magnitude(_e17);
-    let _e22: DualNumber = dual_number_scalar_geometric_product(_e14, Scalar((1.0 / _e18.g0_)));
-    return _e22;
+    let _e2: DualNumber = self_117;
+    let _e3: DualNumber = dual_number_reversal(_e2);
+    let _e4: DualNumber = self_117;
+    let _e5: Scalar = dual_number_squared_magnitude(_e4);
+    let _e10: DualNumber = dual_number_scalar_geometric_product(_e3, Scalar((1.0 / _e5.g0_)));
+    return _e10;
 }
 
 fn dual_number_powi(self_118: DualNumber, exponent: i32) -> DualNumber {
@@ -692,46 +670,46 @@ fn dual_number_powi(self_118: DualNumber, exponent: i32) -> DualNumber {
     }
     let _e8: i32 = exponent_1;
     if (_e8 < 0) {
-        let _e12: DualNumber = self_119;
-        let _e13: DualNumber = dual_number_inverse(_e12);
-        local = _e13;
+        let _e11: DualNumber = self_119;
+        let _e12: DualNumber = dual_number_inverse(_e11);
+        local = _e12;
     } else {
         let _e14: DualNumber = self_119;
         local = _e14;
     }
-    let _e16: DualNumber = local;
-    x = _e16;
-    let _e18: DualNumber = dual_number_one();
-    y = _e18;
-    let _e21: i32 = exponent_1;
-    n = abs(_e21);
+    let _e15: DualNumber = local;
+    x = _e15;
+    let _e17: DualNumber = dual_number_one();
+    y = _e17;
+    let _e19: i32 = exponent_1;
+    n = abs(_e19);
     loop {
-        let _e25: i32 = n;
-        if !((1 < _e25)) {
+        let _e23: i32 = n;
+        if !((1 < _e23)) {
             break;
         }
         {
-            let _e28: i32 = n;
-            if ((_e28 & 1) == 1) {
+            let _e26: i32 = n;
+            if ((_e26 & 1) == 1) {
                 {
-                    let _e35: DualNumber = x;
-                    let _e36: DualNumber = y;
-                    let _e37: DualNumber = dual_number_dual_number_geometric_product(_e35, _e36);
-                    y = _e37;
+                    let _e31: DualNumber = x;
+                    let _e32: DualNumber = y;
+                    let _e33: DualNumber = dual_number_dual_number_geometric_product(_e31, _e32);
+                    y = _e33;
                 }
             }
-            let _e40: DualNumber = x;
-            let _e41: DualNumber = x;
-            let _e42: DualNumber = dual_number_dual_number_geometric_product(_e40, _e41);
-            x = _e42;
-            let _e43: i32 = n;
-            n = (_e43 >> u32(1));
+            let _e34: DualNumber = x;
+            let _e35: DualNumber = x;
+            let _e36: DualNumber = dual_number_dual_number_geometric_product(_e34, _e35);
+            x = _e36;
+            let _e37: i32 = n;
+            n = (_e37 >> u32(1));
         }
     }
-    let _e49: DualNumber = x;
-    let _e50: DualNumber = y;
-    let _e51: DualNumber = dual_number_dual_number_geometric_product(_e49, _e50);
-    return _e51;
+    let _e41: DualNumber = x;
+    let _e42: DualNumber = y;
+    let _e43: DualNumber = dual_number_dual_number_geometric_product(_e41, _e42);
+    return _e43;
 }
 
 fn dual_number_dual_number_geometric_quotient(self_120: DualNumber, other_82: DualNumber) -> DualNumber {
@@ -740,13 +718,11 @@ fn dual_number_dual_number_geometric_quotient(self_120: DualNumber, other_82: Du
 
     self_121 = self_120;
     other_83 = other_82;
-    let _e6: DualNumber = other_83;
-    let _e7: DualNumber = dual_number_inverse(_e6);
-    let _e8: DualNumber = self_121;
-    let _e10: DualNumber = other_83;
-    let _e11: DualNumber = dual_number_inverse(_e10);
-    let _e12: DualNumber = dual_number_dual_number_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: DualNumber = self_121;
+    let _e5: DualNumber = other_83;
+    let _e6: DualNumber = dual_number_inverse(_e5);
+    let _e7: DualNumber = dual_number_dual_number_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn dual_number_dual_number_transformation(self_122: DualNumber, other_84: DualNumber) -> DualNumber {
@@ -755,18 +731,13 @@ fn dual_number_dual_number_transformation(self_122: DualNumber, other_84: DualNu
 
     self_123 = self_122;
     other_85 = other_84;
-    let _e6: DualNumber = self_123;
-    let _e7: DualNumber = other_85;
-    let _e8: DualNumber = dual_number_dual_number_geometric_product(_e6, _e7);
-    let _e10: DualNumber = self_123;
-    let _e11: DualNumber = dual_number_reversal(_e10);
-    let _e14: DualNumber = self_123;
-    let _e15: DualNumber = other_85;
-    let _e16: DualNumber = dual_number_dual_number_geometric_product(_e14, _e15);
-    let _e18: DualNumber = self_123;
-    let _e19: DualNumber = dual_number_reversal(_e18);
-    let _e20: DualNumber = dual_number_dual_number_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: DualNumber = self_123;
+    let _e5: DualNumber = other_85;
+    let _e6: DualNumber = dual_number_dual_number_geometric_product(_e4, _e5);
+    let _e7: DualNumber = self_123;
+    let _e8: DualNumber = dual_number_reversal(_e7);
+    let _e9: DualNumber = dual_number_dual_number_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn dual_number_scalar_geometric_quotient(self_124: DualNumber, other_86: Scalar) -> DualNumber {
@@ -775,13 +746,11 @@ fn dual_number_scalar_geometric_quotient(self_124: DualNumber, other_86: Scalar)
 
     self_125 = self_124;
     other_87 = other_86;
-    let _e6: Scalar = other_87;
-    let _e7: Scalar = scalar_inverse(_e6);
-    let _e8: DualNumber = self_125;
-    let _e10: Scalar = other_87;
-    let _e11: Scalar = scalar_inverse(_e10);
-    let _e12: DualNumber = dual_number_scalar_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: DualNumber = self_125;
+    let _e5: Scalar = other_87;
+    let _e6: Scalar = scalar_inverse(_e5);
+    let _e7: DualNumber = dual_number_scalar_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn dual_number_scalar_transformation(self_126: DualNumber, other_88: Scalar) -> Scalar {
@@ -790,30 +759,14 @@ fn dual_number_scalar_transformation(self_126: DualNumber, other_88: Scalar) -> 
 
     self_127 = self_126;
     other_89 = other_88;
-    let _e6: DualNumber = self_127;
-    let _e7: Scalar = other_89;
-    let _e8: DualNumber = dual_number_scalar_geometric_product(_e6, _e7);
-    let _e10: DualNumber = self_127;
-    let _e11: DualNumber = dual_number_reversal(_e10);
-    let _e14: DualNumber = self_127;
-    let _e15: Scalar = other_89;
-    let _e16: DualNumber = dual_number_scalar_geometric_product(_e14, _e15);
-    let _e18: DualNumber = self_127;
-    let _e19: DualNumber = dual_number_reversal(_e18);
-    let _e20: DualNumber = dual_number_dual_number_geometric_product(_e16, _e19);
-    let _e23: DualNumber = self_127;
-    let _e24: Scalar = other_89;
-    let _e25: DualNumber = dual_number_scalar_geometric_product(_e23, _e24);
-    let _e27: DualNumber = self_127;
-    let _e28: DualNumber = dual_number_reversal(_e27);
-    let _e31: DualNumber = self_127;
-    let _e32: Scalar = other_89;
-    let _e33: DualNumber = dual_number_scalar_geometric_product(_e31, _e32);
-    let _e35: DualNumber = self_127;
-    let _e36: DualNumber = dual_number_reversal(_e35);
-    let _e37: DualNumber = dual_number_dual_number_geometric_product(_e33, _e36);
-    let _e38: Scalar = dual_number_scalar_into(_e37);
-    return _e38;
+    let _e4: DualNumber = self_127;
+    let _e5: Scalar = other_89;
+    let _e6: DualNumber = dual_number_scalar_geometric_product(_e4, _e5);
+    let _e7: DualNumber = self_127;
+    let _e8: DualNumber = dual_number_reversal(_e7);
+    let _e9: DualNumber = dual_number_dual_number_geometric_product(_e6, _e8);
+    let _e10: Scalar = dual_number_scalar_into(_e9);
+    return _e10;
 }
 
 fn scalar_dual_number_geometric_quotient(self_128: Scalar, other_90: DualNumber) -> DualNumber {
@@ -822,13 +775,11 @@ fn scalar_dual_number_geometric_quotient(self_128: Scalar, other_90: DualNumber)
 
     self_129 = self_128;
     other_91 = other_90;
-    let _e6: DualNumber = other_91;
-    let _e7: DualNumber = dual_number_inverse(_e6);
-    let _e8: Scalar = self_129;
-    let _e10: DualNumber = other_91;
-    let _e11: DualNumber = dual_number_inverse(_e10);
-    let _e12: DualNumber = scalar_dual_number_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Scalar = self_129;
+    let _e5: DualNumber = other_91;
+    let _e6: DualNumber = dual_number_inverse(_e5);
+    let _e7: DualNumber = scalar_dual_number_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn scalar_dual_number_transformation(self_130: Scalar, other_92: DualNumber) -> DualNumber {
@@ -837,18 +788,13 @@ fn scalar_dual_number_transformation(self_130: Scalar, other_92: DualNumber) -> 
 
     self_131 = self_130;
     other_93 = other_92;
-    let _e6: Scalar = self_131;
-    let _e7: DualNumber = other_93;
-    let _e8: DualNumber = scalar_dual_number_geometric_product(_e6, _e7);
-    let _e10: Scalar = self_131;
-    let _e11: Scalar = scalar_reversal(_e10);
-    let _e14: Scalar = self_131;
-    let _e15: DualNumber = other_93;
-    let _e16: DualNumber = scalar_dual_number_geometric_product(_e14, _e15);
-    let _e18: Scalar = self_131;
-    let _e19: Scalar = scalar_reversal(_e18);
-    let _e20: DualNumber = dual_number_scalar_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Scalar = self_131;
+    let _e5: DualNumber = other_93;
+    let _e6: DualNumber = scalar_dual_number_geometric_product(_e4, _e5);
+    let _e7: Scalar = self_131;
+    let _e8: Scalar = scalar_reversal(_e7);
+    let _e9: DualNumber = dual_number_scalar_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn scalar_powi(self_132: Scalar, exponent_2: i32) -> Scalar {
@@ -870,46 +816,46 @@ fn scalar_powi(self_132: Scalar, exponent_2: i32) -> Scalar {
     }
     let _e8: i32 = exponent_3;
     if (_e8 < 0) {
-        let _e12: Scalar = self_133;
-        let _e13: Scalar = scalar_inverse(_e12);
-        local_1 = _e13;
+        let _e11: Scalar = self_133;
+        let _e12: Scalar = scalar_inverse(_e11);
+        local_1 = _e12;
     } else {
         let _e14: Scalar = self_133;
         local_1 = _e14;
     }
-    let _e16: Scalar = local_1;
-    x_1 = _e16;
-    let _e18: Scalar = scalar_one();
-    y_1 = _e18;
-    let _e21: i32 = exponent_3;
-    n_1 = abs(_e21);
+    let _e15: Scalar = local_1;
+    x_1 = _e15;
+    let _e17: Scalar = scalar_one();
+    y_1 = _e17;
+    let _e19: i32 = exponent_3;
+    n_1 = abs(_e19);
     loop {
-        let _e25: i32 = n_1;
-        if !((1 < _e25)) {
+        let _e23: i32 = n_1;
+        if !((1 < _e23)) {
             break;
         }
         {
-            let _e28: i32 = n_1;
-            if ((_e28 & 1) == 1) {
+            let _e26: i32 = n_1;
+            if ((_e26 & 1) == 1) {
                 {
-                    let _e35: Scalar = x_1;
-                    let _e36: Scalar = y_1;
-                    let _e37: Scalar = scalar_scalar_geometric_product(_e35, _e36);
-                    y_1 = _e37;
+                    let _e31: Scalar = x_1;
+                    let _e32: Scalar = y_1;
+                    let _e33: Scalar = scalar_scalar_geometric_product(_e31, _e32);
+                    y_1 = _e33;
                 }
             }
-            let _e40: Scalar = x_1;
-            let _e41: Scalar = x_1;
-            let _e42: Scalar = scalar_scalar_geometric_product(_e40, _e41);
-            x_1 = _e42;
-            let _e43: i32 = n_1;
-            n_1 = (_e43 >> u32(1));
+            let _e34: Scalar = x_1;
+            let _e35: Scalar = x_1;
+            let _e36: Scalar = scalar_scalar_geometric_product(_e34, _e35);
+            x_1 = _e36;
+            let _e37: i32 = n_1;
+            n_1 = (_e37 >> u32(1));
         }
     }
-    let _e49: Scalar = x_1;
-    let _e50: Scalar = y_1;
-    let _e51: Scalar = scalar_scalar_geometric_product(_e49, _e50);
-    return _e51;
+    let _e41: Scalar = x_1;
+    let _e42: Scalar = y_1;
+    let _e43: Scalar = scalar_scalar_geometric_product(_e41, _e42);
+    return _e43;
 }
 
 fn scalar_scalar_geometric_quotient(self_134: Scalar, other_94: Scalar) -> Scalar {
@@ -918,13 +864,11 @@ fn scalar_scalar_geometric_quotient(self_134: Scalar, other_94: Scalar) -> Scala
 
     self_135 = self_134;
     other_95 = other_94;
-    let _e6: Scalar = other_95;
-    let _e7: Scalar = scalar_inverse(_e6);
-    let _e8: Scalar = self_135;
-    let _e10: Scalar = other_95;
-    let _e11: Scalar = scalar_inverse(_e10);
-    let _e12: Scalar = scalar_scalar_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Scalar = self_135;
+    let _e5: Scalar = other_95;
+    let _e6: Scalar = scalar_inverse(_e5);
+    let _e7: Scalar = scalar_scalar_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn scalar_scalar_transformation(self_136: Scalar, other_96: Scalar) -> Scalar {
@@ -933,26 +877,12 @@ fn scalar_scalar_transformation(self_136: Scalar, other_96: Scalar) -> Scalar {
 
     self_137 = self_136;
     other_97 = other_96;
-    let _e6: Scalar = self_137;
-    let _e7: Scalar = other_97;
-    let _e8: Scalar = scalar_scalar_geometric_product(_e6, _e7);
-    let _e10: Scalar = self_137;
-    let _e11: Scalar = scalar_reversal(_e10);
-    let _e14: Scalar = self_137;
-    let _e15: Scalar = other_97;
-    let _e16: Scalar = scalar_scalar_geometric_product(_e14, _e15);
-    let _e18: Scalar = self_137;
-    let _e19: Scalar = scalar_reversal(_e18);
-    let _e20: Scalar = scalar_scalar_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Scalar = self_137;
+    let _e5: Scalar = other_97;
+    let _e6: Scalar = scalar_scalar_geometric_product(_e4, _e5);
+    let _e7: Scalar = self_137;
+    let _e8: Scalar = scalar_reversal(_e7);
+    let _e9: Scalar = scalar_scalar_geometric_product(_e6, _e8);
+    return _e9;
 }
 
-fn main_1() {
-    return;
-}
-
-@compute @workgroup_size(1, 1, 1) 
-fn main() {
-    main_1();
-    return;
-}

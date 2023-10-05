@@ -15,20 +15,20 @@ struct Point {
     g0_: vec3<f32>,
 }
 
-struct IdealPoint {
-    g0_: vec2<f32>,
+struct Motor {
+    g0_: vec4<f32>,
 }
 
-struct Plane {
-    g0_: vec3<f32>,
+struct IdealPoint {
+    g0_: vec2<f32>,
 }
 
 struct Translator {
     g0_: vec3<f32>,
 }
 
-struct Motor {
-    g0_: vec4<f32>,
+struct Plane {
+    g0_: vec3<f32>,
 }
 
 struct MotorDual {
@@ -803,24 +803,20 @@ fn scalar_squared_magnitude(self_136: Scalar) -> Scalar {
     var self_137: Scalar;
 
     self_137 = self_136;
-    let _e4: Scalar = self_137;
-    let _e5: Scalar = scalar_reversal(_e4);
-    let _e6: Scalar = self_137;
-    let _e8: Scalar = self_137;
-    let _e9: Scalar = scalar_reversal(_e8);
-    let _e10: Scalar = scalar_scalar_scalar_product(_e6, _e9);
-    return _e10;
+    let _e2: Scalar = self_137;
+    let _e3: Scalar = self_137;
+    let _e4: Scalar = scalar_reversal(_e3);
+    let _e5: Scalar = scalar_scalar_scalar_product(_e2, _e4);
+    return _e5;
 }
 
 fn scalar_magnitude(self_138: Scalar) -> Scalar {
     var self_139: Scalar;
 
     self_139 = self_138;
-    let _e3: Scalar = self_139;
-    let _e4: Scalar = scalar_squared_magnitude(_e3);
-    let _e7: Scalar = self_139;
-    let _e8: Scalar = scalar_squared_magnitude(_e7);
-    return Scalar(sqrt(_e8.g0_));
+    let _e2: Scalar = self_139;
+    let _e3: Scalar = scalar_squared_magnitude(_e2);
+    return Scalar(sqrt(_e3.g0_));
 }
 
 fn scalar_scale(self_140: Scalar, other_128: f32) -> Scalar {
@@ -829,40 +825,33 @@ fn scalar_scale(self_140: Scalar, other_128: f32) -> Scalar {
 
     self_141 = self_140;
     other_129 = other_128;
+    let _e4: Scalar = self_141;
     let _e5: f32 = other_129;
-    let _e7: Scalar = self_141;
-    let _e8: f32 = other_129;
-    let _e10: Scalar = scalar_scalar_geometric_product(_e7, Scalar(_e8));
-    return _e10;
+    let _e7: Scalar = scalar_scalar_geometric_product(_e4, Scalar(_e5));
+    return _e7;
 }
 
 fn scalar_signum(self_142: Scalar) -> Scalar {
     var self_143: Scalar;
 
     self_143 = self_142;
-    let _e5: Scalar = self_143;
-    let _e6: Scalar = scalar_magnitude(_e5);
-    let _e10: Scalar = self_143;
-    let _e13: Scalar = self_143;
-    let _e14: Scalar = scalar_magnitude(_e13);
-    let _e18: Scalar = scalar_scalar_geometric_product(_e10, Scalar((1.0 / _e14.g0_)));
-    return _e18;
+    let _e2: Scalar = self_143;
+    let _e3: Scalar = self_143;
+    let _e4: Scalar = scalar_magnitude(_e3);
+    let _e9: Scalar = scalar_scalar_geometric_product(_e2, Scalar((1.0 / _e4.g0_)));
+    return _e9;
 }
 
 fn scalar_inverse(self_144: Scalar) -> Scalar {
     var self_145: Scalar;
 
     self_145 = self_144;
-    let _e3: Scalar = self_145;
-    let _e4: Scalar = scalar_reversal(_e3);
-    let _e7: Scalar = self_145;
-    let _e8: Scalar = scalar_squared_magnitude(_e7);
-    let _e13: Scalar = self_145;
-    let _e14: Scalar = scalar_reversal(_e13);
-    let _e17: Scalar = self_145;
-    let _e18: Scalar = scalar_squared_magnitude(_e17);
-    let _e22: Scalar = scalar_scalar_geometric_product(_e14, Scalar((1.0 / _e18.g0_)));
-    return _e22;
+    let _e2: Scalar = self_145;
+    let _e3: Scalar = scalar_reversal(_e2);
+    let _e4: Scalar = self_145;
+    let _e5: Scalar = scalar_squared_magnitude(_e4);
+    let _e10: Scalar = scalar_scalar_geometric_product(_e3, Scalar((1.0 / _e5.g0_)));
+    return _e10;
 }
 
 fn multi_vector_zero() -> MultiVector {
@@ -2370,24 +2359,20 @@ fn multi_vector_squared_magnitude(self_292: MultiVector) -> Scalar {
     var self_293: MultiVector;
 
     self_293 = self_292;
-    let _e4: MultiVector = self_293;
-    let _e5: MultiVector = multi_vector_reversal(_e4);
-    let _e6: MultiVector = self_293;
-    let _e8: MultiVector = self_293;
-    let _e9: MultiVector = multi_vector_reversal(_e8);
-    let _e10: Scalar = multi_vector_multi_vector_scalar_product(_e6, _e9);
-    return _e10;
+    let _e2: MultiVector = self_293;
+    let _e3: MultiVector = self_293;
+    let _e4: MultiVector = multi_vector_reversal(_e3);
+    let _e5: Scalar = multi_vector_multi_vector_scalar_product(_e2, _e4);
+    return _e5;
 }
 
 fn multi_vector_magnitude(self_294: MultiVector) -> Scalar {
     var self_295: MultiVector;
 
     self_295 = self_294;
-    let _e3: MultiVector = self_295;
-    let _e4: Scalar = multi_vector_squared_magnitude(_e3);
-    let _e7: MultiVector = self_295;
-    let _e8: Scalar = multi_vector_squared_magnitude(_e7);
-    return Scalar(sqrt(_e8.g0_));
+    let _e2: MultiVector = self_295;
+    let _e3: Scalar = multi_vector_squared_magnitude(_e2);
+    return Scalar(sqrt(_e3.g0_));
 }
 
 fn multi_vector_scale(self_296: MultiVector, other_250: f32) -> MultiVector {
@@ -2396,40 +2381,33 @@ fn multi_vector_scale(self_296: MultiVector, other_250: f32) -> MultiVector {
 
     self_297 = self_296;
     other_251 = other_250;
+    let _e4: MultiVector = self_297;
     let _e5: f32 = other_251;
-    let _e7: MultiVector = self_297;
-    let _e8: f32 = other_251;
-    let _e10: MultiVector = multi_vector_scalar_geometric_product(_e7, Scalar(_e8));
-    return _e10;
+    let _e7: MultiVector = multi_vector_scalar_geometric_product(_e4, Scalar(_e5));
+    return _e7;
 }
 
 fn multi_vector_signum(self_298: MultiVector) -> MultiVector {
     var self_299: MultiVector;
 
     self_299 = self_298;
-    let _e5: MultiVector = self_299;
-    let _e6: Scalar = multi_vector_magnitude(_e5);
-    let _e10: MultiVector = self_299;
-    let _e13: MultiVector = self_299;
-    let _e14: Scalar = multi_vector_magnitude(_e13);
-    let _e18: MultiVector = multi_vector_scalar_geometric_product(_e10, Scalar((1.0 / _e14.g0_)));
-    return _e18;
+    let _e2: MultiVector = self_299;
+    let _e3: MultiVector = self_299;
+    let _e4: Scalar = multi_vector_magnitude(_e3);
+    let _e9: MultiVector = multi_vector_scalar_geometric_product(_e2, Scalar((1.0 / _e4.g0_)));
+    return _e9;
 }
 
 fn multi_vector_inverse(self_300: MultiVector) -> MultiVector {
     var self_301: MultiVector;
 
     self_301 = self_300;
-    let _e3: MultiVector = self_301;
-    let _e4: MultiVector = multi_vector_reversal(_e3);
-    let _e7: MultiVector = self_301;
-    let _e8: Scalar = multi_vector_squared_magnitude(_e7);
-    let _e13: MultiVector = self_301;
-    let _e14: MultiVector = multi_vector_reversal(_e13);
-    let _e17: MultiVector = self_301;
-    let _e18: Scalar = multi_vector_squared_magnitude(_e17);
-    let _e22: MultiVector = multi_vector_scalar_geometric_product(_e14, Scalar((1.0 / _e18.g0_)));
-    return _e22;
+    let _e2: MultiVector = self_301;
+    let _e3: MultiVector = multi_vector_reversal(_e2);
+    let _e4: MultiVector = self_301;
+    let _e5: Scalar = multi_vector_squared_magnitude(_e4);
+    let _e10: MultiVector = multi_vector_scalar_geometric_product(_e3, Scalar((1.0 / _e5.g0_)));
+    return _e10;
 }
 
 fn rotor_zero() -> Rotor {
@@ -3406,24 +3384,20 @@ fn rotor_squared_magnitude(self_442: Rotor) -> Scalar {
     var self_443: Rotor;
 
     self_443 = self_442;
-    let _e4: Rotor = self_443;
-    let _e5: Rotor = rotor_reversal(_e4);
-    let _e6: Rotor = self_443;
-    let _e8: Rotor = self_443;
-    let _e9: Rotor = rotor_reversal(_e8);
-    let _e10: Scalar = rotor_rotor_scalar_product(_e6, _e9);
-    return _e10;
+    let _e2: Rotor = self_443;
+    let _e3: Rotor = self_443;
+    let _e4: Rotor = rotor_reversal(_e3);
+    let _e5: Scalar = rotor_rotor_scalar_product(_e2, _e4);
+    return _e5;
 }
 
 fn rotor_magnitude(self_444: Rotor) -> Scalar {
     var self_445: Rotor;
 
     self_445 = self_444;
-    let _e3: Rotor = self_445;
-    let _e4: Scalar = rotor_squared_magnitude(_e3);
-    let _e7: Rotor = self_445;
-    let _e8: Scalar = rotor_squared_magnitude(_e7);
-    return Scalar(sqrt(_e8.g0_));
+    let _e2: Rotor = self_445;
+    let _e3: Scalar = rotor_squared_magnitude(_e2);
+    return Scalar(sqrt(_e3.g0_));
 }
 
 fn rotor_scale(self_446: Rotor, other_382: f32) -> Rotor {
@@ -3432,40 +3406,33 @@ fn rotor_scale(self_446: Rotor, other_382: f32) -> Rotor {
 
     self_447 = self_446;
     other_383 = other_382;
+    let _e4: Rotor = self_447;
     let _e5: f32 = other_383;
-    let _e7: Rotor = self_447;
-    let _e8: f32 = other_383;
-    let _e10: Rotor = rotor_scalar_geometric_product(_e7, Scalar(_e8));
-    return _e10;
+    let _e7: Rotor = rotor_scalar_geometric_product(_e4, Scalar(_e5));
+    return _e7;
 }
 
 fn rotor_signum(self_448: Rotor) -> Rotor {
     var self_449: Rotor;
 
     self_449 = self_448;
-    let _e5: Rotor = self_449;
-    let _e6: Scalar = rotor_magnitude(_e5);
-    let _e10: Rotor = self_449;
-    let _e13: Rotor = self_449;
-    let _e14: Scalar = rotor_magnitude(_e13);
-    let _e18: Rotor = rotor_scalar_geometric_product(_e10, Scalar((1.0 / _e14.g0_)));
-    return _e18;
+    let _e2: Rotor = self_449;
+    let _e3: Rotor = self_449;
+    let _e4: Scalar = rotor_magnitude(_e3);
+    let _e9: Rotor = rotor_scalar_geometric_product(_e2, Scalar((1.0 / _e4.g0_)));
+    return _e9;
 }
 
 fn rotor_inverse(self_450: Rotor) -> Rotor {
     var self_451: Rotor;
 
     self_451 = self_450;
-    let _e3: Rotor = self_451;
-    let _e4: Rotor = rotor_reversal(_e3);
-    let _e7: Rotor = self_451;
-    let _e8: Scalar = rotor_squared_magnitude(_e7);
-    let _e13: Rotor = self_451;
-    let _e14: Rotor = rotor_reversal(_e13);
-    let _e17: Rotor = self_451;
-    let _e18: Scalar = rotor_squared_magnitude(_e17);
-    let _e22: Rotor = rotor_scalar_geometric_product(_e14, Scalar((1.0 / _e18.g0_)));
-    return _e22;
+    let _e2: Rotor = self_451;
+    let _e3: Rotor = rotor_reversal(_e2);
+    let _e4: Rotor = self_451;
+    let _e5: Scalar = rotor_squared_magnitude(_e4);
+    let _e10: Rotor = rotor_scalar_geometric_product(_e3, Scalar((1.0 / _e5.g0_)));
+    return _e10;
 }
 
 fn point_zero() -> Point {
@@ -4493,24 +4460,20 @@ fn point_squared_magnitude(self_590: Point) -> Scalar {
     var self_591: Point;
 
     self_591 = self_590;
-    let _e4: Point = self_591;
-    let _e5: Point = point_reversal(_e4);
-    let _e6: Point = self_591;
-    let _e8: Point = self_591;
-    let _e9: Point = point_reversal(_e8);
-    let _e10: Scalar = point_point_scalar_product(_e6, _e9);
-    return _e10;
+    let _e2: Point = self_591;
+    let _e3: Point = self_591;
+    let _e4: Point = point_reversal(_e3);
+    let _e5: Scalar = point_point_scalar_product(_e2, _e4);
+    return _e5;
 }
 
 fn point_magnitude(self_592: Point) -> Scalar {
     var self_593: Point;
 
     self_593 = self_592;
-    let _e3: Point = self_593;
-    let _e4: Scalar = point_squared_magnitude(_e3);
-    let _e7: Point = self_593;
-    let _e8: Scalar = point_squared_magnitude(_e7);
-    return Scalar(sqrt(_e8.g0_));
+    let _e2: Point = self_593;
+    let _e3: Scalar = point_squared_magnitude(_e2);
+    return Scalar(sqrt(_e3.g0_));
 }
 
 fn point_scale(self_594: Point, other_510: f32) -> Point {
@@ -4519,40 +4482,33 @@ fn point_scale(self_594: Point, other_510: f32) -> Point {
 
     self_595 = self_594;
     other_511 = other_510;
+    let _e4: Point = self_595;
     let _e5: f32 = other_511;
-    let _e7: Point = self_595;
-    let _e8: f32 = other_511;
-    let _e10: Point = point_scalar_geometric_product(_e7, Scalar(_e8));
-    return _e10;
+    let _e7: Point = point_scalar_geometric_product(_e4, Scalar(_e5));
+    return _e7;
 }
 
 fn point_signum(self_596: Point) -> Point {
     var self_597: Point;
 
     self_597 = self_596;
-    let _e5: Point = self_597;
-    let _e6: Scalar = point_magnitude(_e5);
-    let _e10: Point = self_597;
-    let _e13: Point = self_597;
-    let _e14: Scalar = point_magnitude(_e13);
-    let _e18: Point = point_scalar_geometric_product(_e10, Scalar((1.0 / _e14.g0_)));
-    return _e18;
+    let _e2: Point = self_597;
+    let _e3: Point = self_597;
+    let _e4: Scalar = point_magnitude(_e3);
+    let _e9: Point = point_scalar_geometric_product(_e2, Scalar((1.0 / _e4.g0_)));
+    return _e9;
 }
 
 fn point_inverse(self_598: Point) -> Point {
     var self_599: Point;
 
     self_599 = self_598;
-    let _e3: Point = self_599;
-    let _e4: Point = point_reversal(_e3);
-    let _e7: Point = self_599;
-    let _e8: Scalar = point_squared_magnitude(_e7);
-    let _e13: Point = self_599;
-    let _e14: Point = point_reversal(_e13);
-    let _e17: Point = self_599;
-    let _e18: Scalar = point_squared_magnitude(_e17);
-    let _e22: Point = point_scalar_geometric_product(_e14, Scalar((1.0 / _e18.g0_)));
-    return _e22;
+    let _e2: Point = self_599;
+    let _e3: Point = point_reversal(_e2);
+    let _e4: Point = self_599;
+    let _e5: Scalar = point_squared_magnitude(_e4);
+    let _e10: Point = point_scalar_geometric_product(_e3, Scalar((1.0 / _e5.g0_)));
+    return _e10;
 }
 
 fn ideal_point_zero() -> IdealPoint {
@@ -5389,24 +5345,20 @@ fn ideal_point_squared_magnitude(self_724: IdealPoint) -> Scalar {
     var self_725: IdealPoint;
 
     self_725 = self_724;
-    let _e4: IdealPoint = self_725;
-    let _e5: IdealPoint = ideal_point_reversal(_e4);
-    let _e6: IdealPoint = self_725;
-    let _e8: IdealPoint = self_725;
-    let _e9: IdealPoint = ideal_point_reversal(_e8);
-    let _e10: Scalar = ideal_point_ideal_point_scalar_product(_e6, _e9);
-    return _e10;
+    let _e2: IdealPoint = self_725;
+    let _e3: IdealPoint = self_725;
+    let _e4: IdealPoint = ideal_point_reversal(_e3);
+    let _e5: Scalar = ideal_point_ideal_point_scalar_product(_e2, _e4);
+    return _e5;
 }
 
 fn ideal_point_magnitude(self_726: IdealPoint) -> Scalar {
     var self_727: IdealPoint;
 
     self_727 = self_726;
-    let _e3: IdealPoint = self_727;
-    let _e4: Scalar = ideal_point_squared_magnitude(_e3);
-    let _e7: IdealPoint = self_727;
-    let _e8: Scalar = ideal_point_squared_magnitude(_e7);
-    return Scalar(sqrt(_e8.g0_));
+    let _e2: IdealPoint = self_727;
+    let _e3: Scalar = ideal_point_squared_magnitude(_e2);
+    return Scalar(sqrt(_e3.g0_));
 }
 
 fn ideal_point_scale(self_728: IdealPoint, other_628: f32) -> IdealPoint {
@@ -5415,40 +5367,33 @@ fn ideal_point_scale(self_728: IdealPoint, other_628: f32) -> IdealPoint {
 
     self_729 = self_728;
     other_629 = other_628;
+    let _e4: IdealPoint = self_729;
     let _e5: f32 = other_629;
-    let _e7: IdealPoint = self_729;
-    let _e8: f32 = other_629;
-    let _e10: IdealPoint = ideal_point_scalar_geometric_product(_e7, Scalar(_e8));
-    return _e10;
+    let _e7: IdealPoint = ideal_point_scalar_geometric_product(_e4, Scalar(_e5));
+    return _e7;
 }
 
 fn ideal_point_signum(self_730: IdealPoint) -> IdealPoint {
     var self_731: IdealPoint;
 
     self_731 = self_730;
-    let _e5: IdealPoint = self_731;
-    let _e6: Scalar = ideal_point_magnitude(_e5);
-    let _e10: IdealPoint = self_731;
-    let _e13: IdealPoint = self_731;
-    let _e14: Scalar = ideal_point_magnitude(_e13);
-    let _e18: IdealPoint = ideal_point_scalar_geometric_product(_e10, Scalar((1.0 / _e14.g0_)));
-    return _e18;
+    let _e2: IdealPoint = self_731;
+    let _e3: IdealPoint = self_731;
+    let _e4: Scalar = ideal_point_magnitude(_e3);
+    let _e9: IdealPoint = ideal_point_scalar_geometric_product(_e2, Scalar((1.0 / _e4.g0_)));
+    return _e9;
 }
 
 fn ideal_point_inverse(self_732: IdealPoint) -> IdealPoint {
     var self_733: IdealPoint;
 
     self_733 = self_732;
-    let _e3: IdealPoint = self_733;
-    let _e4: IdealPoint = ideal_point_reversal(_e3);
-    let _e7: IdealPoint = self_733;
-    let _e8: Scalar = ideal_point_squared_magnitude(_e7);
-    let _e13: IdealPoint = self_733;
-    let _e14: IdealPoint = ideal_point_reversal(_e13);
-    let _e17: IdealPoint = self_733;
-    let _e18: Scalar = ideal_point_squared_magnitude(_e17);
-    let _e22: IdealPoint = ideal_point_scalar_geometric_product(_e14, Scalar((1.0 / _e18.g0_)));
-    return _e22;
+    let _e2: IdealPoint = self_733;
+    let _e3: IdealPoint = ideal_point_reversal(_e2);
+    let _e4: IdealPoint = self_733;
+    let _e5: Scalar = ideal_point_squared_magnitude(_e4);
+    let _e10: IdealPoint = ideal_point_scalar_geometric_product(_e3, Scalar((1.0 / _e5.g0_)));
+    return _e10;
 }
 
 fn plane_zero() -> Plane {
@@ -6305,24 +6250,20 @@ fn plane_squared_magnitude(self_848: Plane) -> Scalar {
     var self_849: Plane;
 
     self_849 = self_848;
-    let _e4: Plane = self_849;
-    let _e5: Plane = plane_reversal(_e4);
-    let _e6: Plane = self_849;
-    let _e8: Plane = self_849;
-    let _e9: Plane = plane_reversal(_e8);
-    let _e10: Scalar = plane_plane_scalar_product(_e6, _e9);
-    return _e10;
+    let _e2: Plane = self_849;
+    let _e3: Plane = self_849;
+    let _e4: Plane = plane_reversal(_e3);
+    let _e5: Scalar = plane_plane_scalar_product(_e2, _e4);
+    return _e5;
 }
 
 fn plane_magnitude(self_850: Plane) -> Scalar {
     var self_851: Plane;
 
     self_851 = self_850;
-    let _e3: Plane = self_851;
-    let _e4: Scalar = plane_squared_magnitude(_e3);
-    let _e7: Plane = self_851;
-    let _e8: Scalar = plane_squared_magnitude(_e7);
-    return Scalar(sqrt(_e8.g0_));
+    let _e2: Plane = self_851;
+    let _e3: Scalar = plane_squared_magnitude(_e2);
+    return Scalar(sqrt(_e3.g0_));
 }
 
 fn plane_scale(self_852: Plane, other_734: f32) -> Plane {
@@ -6331,40 +6272,33 @@ fn plane_scale(self_852: Plane, other_734: f32) -> Plane {
 
     self_853 = self_852;
     other_735 = other_734;
+    let _e4: Plane = self_853;
     let _e5: f32 = other_735;
-    let _e7: Plane = self_853;
-    let _e8: f32 = other_735;
-    let _e10: Plane = plane_scalar_geometric_product(_e7, Scalar(_e8));
-    return _e10;
+    let _e7: Plane = plane_scalar_geometric_product(_e4, Scalar(_e5));
+    return _e7;
 }
 
 fn plane_signum(self_854: Plane) -> Plane {
     var self_855: Plane;
 
     self_855 = self_854;
-    let _e5: Plane = self_855;
-    let _e6: Scalar = plane_magnitude(_e5);
-    let _e10: Plane = self_855;
-    let _e13: Plane = self_855;
-    let _e14: Scalar = plane_magnitude(_e13);
-    let _e18: Plane = plane_scalar_geometric_product(_e10, Scalar((1.0 / _e14.g0_)));
-    return _e18;
+    let _e2: Plane = self_855;
+    let _e3: Plane = self_855;
+    let _e4: Scalar = plane_magnitude(_e3);
+    let _e9: Plane = plane_scalar_geometric_product(_e2, Scalar((1.0 / _e4.g0_)));
+    return _e9;
 }
 
 fn plane_inverse(self_856: Plane) -> Plane {
     var self_857: Plane;
 
     self_857 = self_856;
-    let _e3: Plane = self_857;
-    let _e4: Plane = plane_reversal(_e3);
-    let _e7: Plane = self_857;
-    let _e8: Scalar = plane_squared_magnitude(_e7);
-    let _e13: Plane = self_857;
-    let _e14: Plane = plane_reversal(_e13);
-    let _e17: Plane = self_857;
-    let _e18: Scalar = plane_squared_magnitude(_e17);
-    let _e22: Plane = plane_scalar_geometric_product(_e14, Scalar((1.0 / _e18.g0_)));
-    return _e22;
+    let _e2: Plane = self_857;
+    let _e3: Plane = plane_reversal(_e2);
+    let _e4: Plane = self_857;
+    let _e5: Scalar = plane_squared_magnitude(_e4);
+    let _e10: Plane = plane_scalar_geometric_product(_e3, Scalar((1.0 / _e5.g0_)));
+    return _e10;
 }
 
 fn translator_zero() -> Translator {
@@ -7524,24 +7458,20 @@ fn translator_squared_magnitude(self_1012: Translator) -> Scalar {
     var self_1013: Translator;
 
     self_1013 = self_1012;
-    let _e4: Translator = self_1013;
-    let _e5: Translator = translator_reversal(_e4);
-    let _e6: Translator = self_1013;
-    let _e8: Translator = self_1013;
-    let _e9: Translator = translator_reversal(_e8);
-    let _e10: Scalar = translator_translator_scalar_product(_e6, _e9);
-    return _e10;
+    let _e2: Translator = self_1013;
+    let _e3: Translator = self_1013;
+    let _e4: Translator = translator_reversal(_e3);
+    let _e5: Scalar = translator_translator_scalar_product(_e2, _e4);
+    return _e5;
 }
 
 fn translator_magnitude(self_1014: Translator) -> Scalar {
     var self_1015: Translator;
 
     self_1015 = self_1014;
-    let _e3: Translator = self_1015;
-    let _e4: Scalar = translator_squared_magnitude(_e3);
-    let _e7: Translator = self_1015;
-    let _e8: Scalar = translator_squared_magnitude(_e7);
-    return Scalar(sqrt(_e8.g0_));
+    let _e2: Translator = self_1015;
+    let _e3: Scalar = translator_squared_magnitude(_e2);
+    return Scalar(sqrt(_e3.g0_));
 }
 
 fn translator_scale(self_1016: Translator, other_878: f32) -> Translator {
@@ -7550,40 +7480,33 @@ fn translator_scale(self_1016: Translator, other_878: f32) -> Translator {
 
     self_1017 = self_1016;
     other_879 = other_878;
+    let _e4: Translator = self_1017;
     let _e5: f32 = other_879;
-    let _e7: Translator = self_1017;
-    let _e8: f32 = other_879;
-    let _e10: Translator = translator_scalar_geometric_product(_e7, Scalar(_e8));
-    return _e10;
+    let _e7: Translator = translator_scalar_geometric_product(_e4, Scalar(_e5));
+    return _e7;
 }
 
 fn translator_signum(self_1018: Translator) -> Translator {
     var self_1019: Translator;
 
     self_1019 = self_1018;
-    let _e5: Translator = self_1019;
-    let _e6: Scalar = translator_magnitude(_e5);
-    let _e10: Translator = self_1019;
-    let _e13: Translator = self_1019;
-    let _e14: Scalar = translator_magnitude(_e13);
-    let _e18: Translator = translator_scalar_geometric_product(_e10, Scalar((1.0 / _e14.g0_)));
-    return _e18;
+    let _e2: Translator = self_1019;
+    let _e3: Translator = self_1019;
+    let _e4: Scalar = translator_magnitude(_e3);
+    let _e9: Translator = translator_scalar_geometric_product(_e2, Scalar((1.0 / _e4.g0_)));
+    return _e9;
 }
 
 fn translator_inverse(self_1020: Translator) -> Translator {
     var self_1021: Translator;
 
     self_1021 = self_1020;
-    let _e3: Translator = self_1021;
-    let _e4: Translator = translator_reversal(_e3);
-    let _e7: Translator = self_1021;
-    let _e8: Scalar = translator_squared_magnitude(_e7);
-    let _e13: Translator = self_1021;
-    let _e14: Translator = translator_reversal(_e13);
-    let _e17: Translator = self_1021;
-    let _e18: Scalar = translator_squared_magnitude(_e17);
-    let _e22: Translator = translator_scalar_geometric_product(_e14, Scalar((1.0 / _e18.g0_)));
-    return _e22;
+    let _e2: Translator = self_1021;
+    let _e3: Translator = translator_reversal(_e2);
+    let _e4: Translator = self_1021;
+    let _e5: Scalar = translator_squared_magnitude(_e4);
+    let _e10: Translator = translator_scalar_geometric_product(_e3, Scalar((1.0 / _e5.g0_)));
+    return _e10;
 }
 
 fn motor_zero() -> Motor {
@@ -8905,24 +8828,20 @@ fn motor_squared_magnitude(self_1192: Motor) -> Scalar {
     var self_1193: Motor;
 
     self_1193 = self_1192;
-    let _e4: Motor = self_1193;
-    let _e5: Motor = motor_reversal(_e4);
-    let _e6: Motor = self_1193;
-    let _e8: Motor = self_1193;
-    let _e9: Motor = motor_reversal(_e8);
-    let _e10: Scalar = motor_motor_scalar_product(_e6, _e9);
-    return _e10;
+    let _e2: Motor = self_1193;
+    let _e3: Motor = self_1193;
+    let _e4: Motor = motor_reversal(_e3);
+    let _e5: Scalar = motor_motor_scalar_product(_e2, _e4);
+    return _e5;
 }
 
 fn motor_magnitude(self_1194: Motor) -> Scalar {
     var self_1195: Motor;
 
     self_1195 = self_1194;
-    let _e3: Motor = self_1195;
-    let _e4: Scalar = motor_squared_magnitude(_e3);
-    let _e7: Motor = self_1195;
-    let _e8: Scalar = motor_squared_magnitude(_e7);
-    return Scalar(sqrt(_e8.g0_));
+    let _e2: Motor = self_1195;
+    let _e3: Scalar = motor_squared_magnitude(_e2);
+    return Scalar(sqrt(_e3.g0_));
 }
 
 fn motor_scale(self_1196: Motor, other_1030: f32) -> Motor {
@@ -8931,40 +8850,33 @@ fn motor_scale(self_1196: Motor, other_1030: f32) -> Motor {
 
     self_1197 = self_1196;
     other_1031 = other_1030;
+    let _e4: Motor = self_1197;
     let _e5: f32 = other_1031;
-    let _e7: Motor = self_1197;
-    let _e8: f32 = other_1031;
-    let _e10: Motor = motor_scalar_geometric_product(_e7, Scalar(_e8));
-    return _e10;
+    let _e7: Motor = motor_scalar_geometric_product(_e4, Scalar(_e5));
+    return _e7;
 }
 
 fn motor_signum(self_1198: Motor) -> Motor {
     var self_1199: Motor;
 
     self_1199 = self_1198;
-    let _e5: Motor = self_1199;
-    let _e6: Scalar = motor_magnitude(_e5);
-    let _e10: Motor = self_1199;
-    let _e13: Motor = self_1199;
-    let _e14: Scalar = motor_magnitude(_e13);
-    let _e18: Motor = motor_scalar_geometric_product(_e10, Scalar((1.0 / _e14.g0_)));
-    return _e18;
+    let _e2: Motor = self_1199;
+    let _e3: Motor = self_1199;
+    let _e4: Scalar = motor_magnitude(_e3);
+    let _e9: Motor = motor_scalar_geometric_product(_e2, Scalar((1.0 / _e4.g0_)));
+    return _e9;
 }
 
 fn motor_inverse(self_1200: Motor) -> Motor {
     var self_1201: Motor;
 
     self_1201 = self_1200;
-    let _e3: Motor = self_1201;
-    let _e4: Motor = motor_reversal(_e3);
-    let _e7: Motor = self_1201;
-    let _e8: Scalar = motor_squared_magnitude(_e7);
-    let _e13: Motor = self_1201;
-    let _e14: Motor = motor_reversal(_e13);
-    let _e17: Motor = self_1201;
-    let _e18: Scalar = motor_squared_magnitude(_e17);
-    let _e22: Motor = motor_scalar_geometric_product(_e14, Scalar((1.0 / _e18.g0_)));
-    return _e22;
+    let _e2: Motor = self_1201;
+    let _e3: Motor = motor_reversal(_e2);
+    let _e4: Motor = self_1201;
+    let _e5: Scalar = motor_squared_magnitude(_e4);
+    let _e10: Motor = motor_scalar_geometric_product(_e3, Scalar((1.0 / _e5.g0_)));
+    return _e10;
 }
 
 fn motor_dual_zero() -> MotorDual {
@@ -10064,24 +9976,20 @@ fn motor_dual_squared_magnitude(self_1334: MotorDual) -> Scalar {
     var self_1335: MotorDual;
 
     self_1335 = self_1334;
-    let _e4: MotorDual = self_1335;
-    let _e5: MotorDual = motor_dual_reversal(_e4);
-    let _e6: MotorDual = self_1335;
-    let _e8: MotorDual = self_1335;
-    let _e9: MotorDual = motor_dual_reversal(_e8);
-    let _e10: Scalar = motor_dual_motor_dual_scalar_product(_e6, _e9);
-    return _e10;
+    let _e2: MotorDual = self_1335;
+    let _e3: MotorDual = self_1335;
+    let _e4: MotorDual = motor_dual_reversal(_e3);
+    let _e5: Scalar = motor_dual_motor_dual_scalar_product(_e2, _e4);
+    return _e5;
 }
 
 fn motor_dual_magnitude(self_1336: MotorDual) -> Scalar {
     var self_1337: MotorDual;
 
     self_1337 = self_1336;
-    let _e3: MotorDual = self_1337;
-    let _e4: Scalar = motor_dual_squared_magnitude(_e3);
-    let _e7: MotorDual = self_1337;
-    let _e8: Scalar = motor_dual_squared_magnitude(_e7);
-    return Scalar(sqrt(_e8.g0_));
+    let _e2: MotorDual = self_1337;
+    let _e3: Scalar = motor_dual_squared_magnitude(_e2);
+    return Scalar(sqrt(_e3.g0_));
 }
 
 fn motor_dual_scale(self_1338: MotorDual, other_1152: f32) -> MotorDual {
@@ -10090,40 +9998,33 @@ fn motor_dual_scale(self_1338: MotorDual, other_1152: f32) -> MotorDual {
 
     self_1339 = self_1338;
     other_1153 = other_1152;
+    let _e4: MotorDual = self_1339;
     let _e5: f32 = other_1153;
-    let _e7: MotorDual = self_1339;
-    let _e8: f32 = other_1153;
-    let _e10: MotorDual = motor_dual_scalar_geometric_product(_e7, Scalar(_e8));
-    return _e10;
+    let _e7: MotorDual = motor_dual_scalar_geometric_product(_e4, Scalar(_e5));
+    return _e7;
 }
 
 fn motor_dual_signum(self_1340: MotorDual) -> MotorDual {
     var self_1341: MotorDual;
 
     self_1341 = self_1340;
-    let _e5: MotorDual = self_1341;
-    let _e6: Scalar = motor_dual_magnitude(_e5);
-    let _e10: MotorDual = self_1341;
-    let _e13: MotorDual = self_1341;
-    let _e14: Scalar = motor_dual_magnitude(_e13);
-    let _e18: MotorDual = motor_dual_scalar_geometric_product(_e10, Scalar((1.0 / _e14.g0_)));
-    return _e18;
+    let _e2: MotorDual = self_1341;
+    let _e3: MotorDual = self_1341;
+    let _e4: Scalar = motor_dual_magnitude(_e3);
+    let _e9: MotorDual = motor_dual_scalar_geometric_product(_e2, Scalar((1.0 / _e4.g0_)));
+    return _e9;
 }
 
 fn motor_dual_inverse(self_1342: MotorDual) -> MotorDual {
     var self_1343: MotorDual;
 
     self_1343 = self_1342;
-    let _e3: MotorDual = self_1343;
-    let _e4: MotorDual = motor_dual_reversal(_e3);
-    let _e7: MotorDual = self_1343;
-    let _e8: Scalar = motor_dual_squared_magnitude(_e7);
-    let _e13: MotorDual = self_1343;
-    let _e14: MotorDual = motor_dual_reversal(_e13);
-    let _e17: MotorDual = self_1343;
-    let _e18: Scalar = motor_dual_squared_magnitude(_e17);
-    let _e22: MotorDual = motor_dual_scalar_geometric_product(_e14, Scalar((1.0 / _e18.g0_)));
-    return _e22;
+    let _e2: MotorDual = self_1343;
+    let _e3: MotorDual = motor_dual_reversal(_e2);
+    let _e4: MotorDual = self_1343;
+    let _e5: Scalar = motor_dual_squared_magnitude(_e4);
+    let _e10: MotorDual = motor_dual_scalar_geometric_product(_e3, Scalar((1.0 / _e5.g0_)));
+    return _e10;
 }
 
 fn ideal_point_ideal_point_geometric_quotient(self_1344: IdealPoint, other_1154: IdealPoint) -> Rotor {
@@ -10132,13 +10033,11 @@ fn ideal_point_ideal_point_geometric_quotient(self_1344: IdealPoint, other_1154:
 
     self_1345 = self_1344;
     other_1155 = other_1154;
-    let _e6: IdealPoint = other_1155;
-    let _e7: IdealPoint = ideal_point_inverse(_e6);
-    let _e8: IdealPoint = self_1345;
-    let _e10: IdealPoint = other_1155;
-    let _e11: IdealPoint = ideal_point_inverse(_e10);
-    let _e12: Rotor = ideal_point_ideal_point_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: IdealPoint = self_1345;
+    let _e5: IdealPoint = other_1155;
+    let _e6: IdealPoint = ideal_point_inverse(_e5);
+    let _e7: Rotor = ideal_point_ideal_point_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn ideal_point_ideal_point_transformation(self_1346: IdealPoint, other_1156: IdealPoint) -> IdealPoint {
@@ -10147,18 +10046,13 @@ fn ideal_point_ideal_point_transformation(self_1346: IdealPoint, other_1156: Ide
 
     self_1347 = self_1346;
     other_1157 = other_1156;
-    let _e6: IdealPoint = self_1347;
-    let _e7: IdealPoint = other_1157;
-    let _e8: Rotor = ideal_point_ideal_point_geometric_product(_e6, _e7);
-    let _e10: IdealPoint = self_1347;
-    let _e11: IdealPoint = ideal_point_reversal(_e10);
-    let _e14: IdealPoint = self_1347;
-    let _e15: IdealPoint = other_1157;
-    let _e16: Rotor = ideal_point_ideal_point_geometric_product(_e14, _e15);
-    let _e18: IdealPoint = self_1347;
-    let _e19: IdealPoint = ideal_point_reversal(_e18);
-    let _e20: IdealPoint = rotor_ideal_point_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: IdealPoint = self_1347;
+    let _e5: IdealPoint = other_1157;
+    let _e6: Rotor = ideal_point_ideal_point_geometric_product(_e4, _e5);
+    let _e7: IdealPoint = self_1347;
+    let _e8: IdealPoint = ideal_point_reversal(_e7);
+    let _e9: IdealPoint = rotor_ideal_point_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn ideal_point_motor_geometric_quotient(self_1348: IdealPoint, other_1158: Motor) -> Motor {
@@ -10167,13 +10061,11 @@ fn ideal_point_motor_geometric_quotient(self_1348: IdealPoint, other_1158: Motor
 
     self_1349 = self_1348;
     other_1159 = other_1158;
-    let _e6: Motor = other_1159;
-    let _e7: Motor = motor_inverse(_e6);
-    let _e8: IdealPoint = self_1349;
-    let _e10: Motor = other_1159;
-    let _e11: Motor = motor_inverse(_e10);
-    let _e12: Motor = ideal_point_motor_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: IdealPoint = self_1349;
+    let _e5: Motor = other_1159;
+    let _e6: Motor = motor_inverse(_e5);
+    let _e7: Motor = ideal_point_motor_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn ideal_point_motor_transformation(self_1350: IdealPoint, other_1160: Motor) -> Motor {
@@ -10182,18 +10074,13 @@ fn ideal_point_motor_transformation(self_1350: IdealPoint, other_1160: Motor) ->
 
     self_1351 = self_1350;
     other_1161 = other_1160;
-    let _e6: IdealPoint = self_1351;
-    let _e7: Motor = other_1161;
-    let _e8: Motor = ideal_point_motor_geometric_product(_e6, _e7);
-    let _e10: IdealPoint = self_1351;
-    let _e11: IdealPoint = ideal_point_reversal(_e10);
-    let _e14: IdealPoint = self_1351;
-    let _e15: Motor = other_1161;
-    let _e16: Motor = ideal_point_motor_geometric_product(_e14, _e15);
-    let _e18: IdealPoint = self_1351;
-    let _e19: IdealPoint = ideal_point_reversal(_e18);
-    let _e20: Motor = motor_ideal_point_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: IdealPoint = self_1351;
+    let _e5: Motor = other_1161;
+    let _e6: Motor = ideal_point_motor_geometric_product(_e4, _e5);
+    let _e7: IdealPoint = self_1351;
+    let _e8: IdealPoint = ideal_point_reversal(_e7);
+    let _e9: Motor = motor_ideal_point_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn ideal_point_motor_dual_geometric_quotient(self_1352: IdealPoint, other_1162: MotorDual) -> MotorDual {
@@ -10202,13 +10089,11 @@ fn ideal_point_motor_dual_geometric_quotient(self_1352: IdealPoint, other_1162: 
 
     self_1353 = self_1352;
     other_1163 = other_1162;
-    let _e6: MotorDual = other_1163;
-    let _e7: MotorDual = motor_dual_inverse(_e6);
-    let _e8: IdealPoint = self_1353;
-    let _e10: MotorDual = other_1163;
-    let _e11: MotorDual = motor_dual_inverse(_e10);
-    let _e12: MotorDual = ideal_point_motor_dual_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: IdealPoint = self_1353;
+    let _e5: MotorDual = other_1163;
+    let _e6: MotorDual = motor_dual_inverse(_e5);
+    let _e7: MotorDual = ideal_point_motor_dual_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn ideal_point_motor_dual_transformation(self_1354: IdealPoint, other_1164: MotorDual) -> MotorDual {
@@ -10217,18 +10102,13 @@ fn ideal_point_motor_dual_transformation(self_1354: IdealPoint, other_1164: Moto
 
     self_1355 = self_1354;
     other_1165 = other_1164;
-    let _e6: IdealPoint = self_1355;
-    let _e7: MotorDual = other_1165;
-    let _e8: MotorDual = ideal_point_motor_dual_geometric_product(_e6, _e7);
-    let _e10: IdealPoint = self_1355;
-    let _e11: IdealPoint = ideal_point_reversal(_e10);
-    let _e14: IdealPoint = self_1355;
-    let _e15: MotorDual = other_1165;
-    let _e16: MotorDual = ideal_point_motor_dual_geometric_product(_e14, _e15);
-    let _e18: IdealPoint = self_1355;
-    let _e19: IdealPoint = ideal_point_reversal(_e18);
-    let _e20: MotorDual = motor_dual_ideal_point_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: IdealPoint = self_1355;
+    let _e5: MotorDual = other_1165;
+    let _e6: MotorDual = ideal_point_motor_dual_geometric_product(_e4, _e5);
+    let _e7: IdealPoint = self_1355;
+    let _e8: IdealPoint = ideal_point_reversal(_e7);
+    let _e9: MotorDual = motor_dual_ideal_point_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn ideal_point_multi_vector_geometric_quotient(self_1356: IdealPoint, other_1166: MultiVector) -> MultiVector {
@@ -10237,13 +10117,11 @@ fn ideal_point_multi_vector_geometric_quotient(self_1356: IdealPoint, other_1166
 
     self_1357 = self_1356;
     other_1167 = other_1166;
-    let _e6: MultiVector = other_1167;
-    let _e7: MultiVector = multi_vector_inverse(_e6);
-    let _e8: IdealPoint = self_1357;
-    let _e10: MultiVector = other_1167;
-    let _e11: MultiVector = multi_vector_inverse(_e10);
-    let _e12: MultiVector = ideal_point_multi_vector_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: IdealPoint = self_1357;
+    let _e5: MultiVector = other_1167;
+    let _e6: MultiVector = multi_vector_inverse(_e5);
+    let _e7: MultiVector = ideal_point_multi_vector_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn ideal_point_multi_vector_transformation(self_1358: IdealPoint, other_1168: MultiVector) -> MultiVector {
@@ -10252,18 +10130,13 @@ fn ideal_point_multi_vector_transformation(self_1358: IdealPoint, other_1168: Mu
 
     self_1359 = self_1358;
     other_1169 = other_1168;
-    let _e6: IdealPoint = self_1359;
-    let _e7: MultiVector = other_1169;
-    let _e8: MultiVector = ideal_point_multi_vector_geometric_product(_e6, _e7);
-    let _e10: IdealPoint = self_1359;
-    let _e11: IdealPoint = ideal_point_reversal(_e10);
-    let _e14: IdealPoint = self_1359;
-    let _e15: MultiVector = other_1169;
-    let _e16: MultiVector = ideal_point_multi_vector_geometric_product(_e14, _e15);
-    let _e18: IdealPoint = self_1359;
-    let _e19: IdealPoint = ideal_point_reversal(_e18);
-    let _e20: MultiVector = multi_vector_ideal_point_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: IdealPoint = self_1359;
+    let _e5: MultiVector = other_1169;
+    let _e6: MultiVector = ideal_point_multi_vector_geometric_product(_e4, _e5);
+    let _e7: IdealPoint = self_1359;
+    let _e8: IdealPoint = ideal_point_reversal(_e7);
+    let _e9: MultiVector = multi_vector_ideal_point_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn ideal_point_plane_geometric_quotient(self_1360: IdealPoint, other_1170: Plane) -> MotorDual {
@@ -10272,13 +10145,11 @@ fn ideal_point_plane_geometric_quotient(self_1360: IdealPoint, other_1170: Plane
 
     self_1361 = self_1360;
     other_1171 = other_1170;
-    let _e6: Plane = other_1171;
-    let _e7: Plane = plane_inverse(_e6);
-    let _e8: IdealPoint = self_1361;
-    let _e10: Plane = other_1171;
-    let _e11: Plane = plane_inverse(_e10);
-    let _e12: MotorDual = ideal_point_plane_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: IdealPoint = self_1361;
+    let _e5: Plane = other_1171;
+    let _e6: Plane = plane_inverse(_e5);
+    let _e7: MotorDual = ideal_point_plane_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn ideal_point_plane_transformation(self_1362: IdealPoint, other_1172: Plane) -> Plane {
@@ -10287,30 +10158,14 @@ fn ideal_point_plane_transformation(self_1362: IdealPoint, other_1172: Plane) ->
 
     self_1363 = self_1362;
     other_1173 = other_1172;
-    let _e6: IdealPoint = self_1363;
-    let _e7: Plane = other_1173;
-    let _e8: MotorDual = ideal_point_plane_geometric_product(_e6, _e7);
-    let _e10: IdealPoint = self_1363;
-    let _e11: IdealPoint = ideal_point_reversal(_e10);
-    let _e14: IdealPoint = self_1363;
-    let _e15: Plane = other_1173;
-    let _e16: MotorDual = ideal_point_plane_geometric_product(_e14, _e15);
-    let _e18: IdealPoint = self_1363;
-    let _e19: IdealPoint = ideal_point_reversal(_e18);
-    let _e20: MotorDual = motor_dual_ideal_point_geometric_product(_e16, _e19);
-    let _e23: IdealPoint = self_1363;
-    let _e24: Plane = other_1173;
-    let _e25: MotorDual = ideal_point_plane_geometric_product(_e23, _e24);
-    let _e27: IdealPoint = self_1363;
-    let _e28: IdealPoint = ideal_point_reversal(_e27);
-    let _e31: IdealPoint = self_1363;
-    let _e32: Plane = other_1173;
-    let _e33: MotorDual = ideal_point_plane_geometric_product(_e31, _e32);
-    let _e35: IdealPoint = self_1363;
-    let _e36: IdealPoint = ideal_point_reversal(_e35);
-    let _e37: MotorDual = motor_dual_ideal_point_geometric_product(_e33, _e36);
-    let _e38: Plane = motor_dual_plane_into(_e37);
-    return _e38;
+    let _e4: IdealPoint = self_1363;
+    let _e5: Plane = other_1173;
+    let _e6: MotorDual = ideal_point_plane_geometric_product(_e4, _e5);
+    let _e7: IdealPoint = self_1363;
+    let _e8: IdealPoint = ideal_point_reversal(_e7);
+    let _e9: MotorDual = motor_dual_ideal_point_geometric_product(_e6, _e8);
+    let _e10: Plane = motor_dual_plane_into(_e9);
+    return _e10;
 }
 
 fn ideal_point_point_geometric_quotient(self_1364: IdealPoint, other_1174: Point) -> Motor {
@@ -10319,13 +10174,11 @@ fn ideal_point_point_geometric_quotient(self_1364: IdealPoint, other_1174: Point
 
     self_1365 = self_1364;
     other_1175 = other_1174;
-    let _e6: Point = other_1175;
-    let _e7: Point = point_inverse(_e6);
-    let _e8: IdealPoint = self_1365;
-    let _e10: Point = other_1175;
-    let _e11: Point = point_inverse(_e10);
-    let _e12: Motor = ideal_point_point_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: IdealPoint = self_1365;
+    let _e5: Point = other_1175;
+    let _e6: Point = point_inverse(_e5);
+    let _e7: Motor = ideal_point_point_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn ideal_point_point_transformation(self_1366: IdealPoint, other_1176: Point) -> Point {
@@ -10334,30 +10187,14 @@ fn ideal_point_point_transformation(self_1366: IdealPoint, other_1176: Point) ->
 
     self_1367 = self_1366;
     other_1177 = other_1176;
-    let _e6: IdealPoint = self_1367;
-    let _e7: Point = other_1177;
-    let _e8: Motor = ideal_point_point_geometric_product(_e6, _e7);
-    let _e10: IdealPoint = self_1367;
-    let _e11: IdealPoint = ideal_point_reversal(_e10);
-    let _e14: IdealPoint = self_1367;
-    let _e15: Point = other_1177;
-    let _e16: Motor = ideal_point_point_geometric_product(_e14, _e15);
-    let _e18: IdealPoint = self_1367;
-    let _e19: IdealPoint = ideal_point_reversal(_e18);
-    let _e20: Motor = motor_ideal_point_geometric_product(_e16, _e19);
-    let _e23: IdealPoint = self_1367;
-    let _e24: Point = other_1177;
-    let _e25: Motor = ideal_point_point_geometric_product(_e23, _e24);
-    let _e27: IdealPoint = self_1367;
-    let _e28: IdealPoint = ideal_point_reversal(_e27);
-    let _e31: IdealPoint = self_1367;
-    let _e32: Point = other_1177;
-    let _e33: Motor = ideal_point_point_geometric_product(_e31, _e32);
-    let _e35: IdealPoint = self_1367;
-    let _e36: IdealPoint = ideal_point_reversal(_e35);
-    let _e37: Motor = motor_ideal_point_geometric_product(_e33, _e36);
-    let _e38: Point = motor_point_into(_e37);
-    return _e38;
+    let _e4: IdealPoint = self_1367;
+    let _e5: Point = other_1177;
+    let _e6: Motor = ideal_point_point_geometric_product(_e4, _e5);
+    let _e7: IdealPoint = self_1367;
+    let _e8: IdealPoint = ideal_point_reversal(_e7);
+    let _e9: Motor = motor_ideal_point_geometric_product(_e6, _e8);
+    let _e10: Point = motor_point_into(_e9);
+    return _e10;
 }
 
 fn ideal_point_rotor_geometric_quotient(self_1368: IdealPoint, other_1178: Rotor) -> IdealPoint {
@@ -10366,13 +10203,11 @@ fn ideal_point_rotor_geometric_quotient(self_1368: IdealPoint, other_1178: Rotor
 
     self_1369 = self_1368;
     other_1179 = other_1178;
-    let _e6: Rotor = other_1179;
-    let _e7: Rotor = rotor_inverse(_e6);
-    let _e8: IdealPoint = self_1369;
-    let _e10: Rotor = other_1179;
-    let _e11: Rotor = rotor_inverse(_e10);
-    let _e12: IdealPoint = ideal_point_rotor_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: IdealPoint = self_1369;
+    let _e5: Rotor = other_1179;
+    let _e6: Rotor = rotor_inverse(_e5);
+    let _e7: IdealPoint = ideal_point_rotor_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn ideal_point_rotor_transformation(self_1370: IdealPoint, other_1180: Rotor) -> Rotor {
@@ -10381,18 +10216,13 @@ fn ideal_point_rotor_transformation(self_1370: IdealPoint, other_1180: Rotor) ->
 
     self_1371 = self_1370;
     other_1181 = other_1180;
-    let _e6: IdealPoint = self_1371;
-    let _e7: Rotor = other_1181;
-    let _e8: IdealPoint = ideal_point_rotor_geometric_product(_e6, _e7);
-    let _e10: IdealPoint = self_1371;
-    let _e11: IdealPoint = ideal_point_reversal(_e10);
-    let _e14: IdealPoint = self_1371;
-    let _e15: Rotor = other_1181;
-    let _e16: IdealPoint = ideal_point_rotor_geometric_product(_e14, _e15);
-    let _e18: IdealPoint = self_1371;
-    let _e19: IdealPoint = ideal_point_reversal(_e18);
-    let _e20: Rotor = ideal_point_ideal_point_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: IdealPoint = self_1371;
+    let _e5: Rotor = other_1181;
+    let _e6: IdealPoint = ideal_point_rotor_geometric_product(_e4, _e5);
+    let _e7: IdealPoint = self_1371;
+    let _e8: IdealPoint = ideal_point_reversal(_e7);
+    let _e9: Rotor = ideal_point_ideal_point_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn ideal_point_scalar_geometric_quotient(self_1372: IdealPoint, other_1182: Scalar) -> IdealPoint {
@@ -10401,13 +10231,11 @@ fn ideal_point_scalar_geometric_quotient(self_1372: IdealPoint, other_1182: Scal
 
     self_1373 = self_1372;
     other_1183 = other_1182;
-    let _e6: Scalar = other_1183;
-    let _e7: Scalar = scalar_inverse(_e6);
-    let _e8: IdealPoint = self_1373;
-    let _e10: Scalar = other_1183;
-    let _e11: Scalar = scalar_inverse(_e10);
-    let _e12: IdealPoint = ideal_point_scalar_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: IdealPoint = self_1373;
+    let _e5: Scalar = other_1183;
+    let _e6: Scalar = scalar_inverse(_e5);
+    let _e7: IdealPoint = ideal_point_scalar_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn ideal_point_scalar_transformation(self_1374: IdealPoint, other_1184: Scalar) -> Scalar {
@@ -10416,30 +10244,14 @@ fn ideal_point_scalar_transformation(self_1374: IdealPoint, other_1184: Scalar) 
 
     self_1375 = self_1374;
     other_1185 = other_1184;
-    let _e6: IdealPoint = self_1375;
-    let _e7: Scalar = other_1185;
-    let _e8: IdealPoint = ideal_point_scalar_geometric_product(_e6, _e7);
-    let _e10: IdealPoint = self_1375;
-    let _e11: IdealPoint = ideal_point_reversal(_e10);
-    let _e14: IdealPoint = self_1375;
-    let _e15: Scalar = other_1185;
-    let _e16: IdealPoint = ideal_point_scalar_geometric_product(_e14, _e15);
-    let _e18: IdealPoint = self_1375;
-    let _e19: IdealPoint = ideal_point_reversal(_e18);
-    let _e20: Rotor = ideal_point_ideal_point_geometric_product(_e16, _e19);
-    let _e23: IdealPoint = self_1375;
-    let _e24: Scalar = other_1185;
-    let _e25: IdealPoint = ideal_point_scalar_geometric_product(_e23, _e24);
-    let _e27: IdealPoint = self_1375;
-    let _e28: IdealPoint = ideal_point_reversal(_e27);
-    let _e31: IdealPoint = self_1375;
-    let _e32: Scalar = other_1185;
-    let _e33: IdealPoint = ideal_point_scalar_geometric_product(_e31, _e32);
-    let _e35: IdealPoint = self_1375;
-    let _e36: IdealPoint = ideal_point_reversal(_e35);
-    let _e37: Rotor = ideal_point_ideal_point_geometric_product(_e33, _e36);
-    let _e38: Scalar = rotor_scalar_into(_e37);
-    return _e38;
+    let _e4: IdealPoint = self_1375;
+    let _e5: Scalar = other_1185;
+    let _e6: IdealPoint = ideal_point_scalar_geometric_product(_e4, _e5);
+    let _e7: IdealPoint = self_1375;
+    let _e8: IdealPoint = ideal_point_reversal(_e7);
+    let _e9: Rotor = ideal_point_ideal_point_geometric_product(_e6, _e8);
+    let _e10: Scalar = rotor_scalar_into(_e9);
+    return _e10;
 }
 
 fn ideal_point_translator_geometric_quotient(self_1376: IdealPoint, other_1186: Translator) -> Motor {
@@ -10448,13 +10260,11 @@ fn ideal_point_translator_geometric_quotient(self_1376: IdealPoint, other_1186: 
 
     self_1377 = self_1376;
     other_1187 = other_1186;
-    let _e6: Translator = other_1187;
-    let _e7: Translator = translator_inverse(_e6);
-    let _e8: IdealPoint = self_1377;
-    let _e10: Translator = other_1187;
-    let _e11: Translator = translator_inverse(_e10);
-    let _e12: Motor = ideal_point_translator_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: IdealPoint = self_1377;
+    let _e5: Translator = other_1187;
+    let _e6: Translator = translator_inverse(_e5);
+    let _e7: Motor = ideal_point_translator_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn ideal_point_translator_transformation(self_1378: IdealPoint, other_1188: Translator) -> Translator {
@@ -10463,30 +10273,14 @@ fn ideal_point_translator_transformation(self_1378: IdealPoint, other_1188: Tran
 
     self_1379 = self_1378;
     other_1189 = other_1188;
-    let _e6: IdealPoint = self_1379;
-    let _e7: Translator = other_1189;
-    let _e8: Motor = ideal_point_translator_geometric_product(_e6, _e7);
-    let _e10: IdealPoint = self_1379;
-    let _e11: IdealPoint = ideal_point_reversal(_e10);
-    let _e14: IdealPoint = self_1379;
-    let _e15: Translator = other_1189;
-    let _e16: Motor = ideal_point_translator_geometric_product(_e14, _e15);
-    let _e18: IdealPoint = self_1379;
-    let _e19: IdealPoint = ideal_point_reversal(_e18);
-    let _e20: Motor = motor_ideal_point_geometric_product(_e16, _e19);
-    let _e23: IdealPoint = self_1379;
-    let _e24: Translator = other_1189;
-    let _e25: Motor = ideal_point_translator_geometric_product(_e23, _e24);
-    let _e27: IdealPoint = self_1379;
-    let _e28: IdealPoint = ideal_point_reversal(_e27);
-    let _e31: IdealPoint = self_1379;
-    let _e32: Translator = other_1189;
-    let _e33: Motor = ideal_point_translator_geometric_product(_e31, _e32);
-    let _e35: IdealPoint = self_1379;
-    let _e36: IdealPoint = ideal_point_reversal(_e35);
-    let _e37: Motor = motor_ideal_point_geometric_product(_e33, _e36);
-    let _e38: Translator = motor_translator_into(_e37);
-    return _e38;
+    let _e4: IdealPoint = self_1379;
+    let _e5: Translator = other_1189;
+    let _e6: Motor = ideal_point_translator_geometric_product(_e4, _e5);
+    let _e7: IdealPoint = self_1379;
+    let _e8: IdealPoint = ideal_point_reversal(_e7);
+    let _e9: Motor = motor_ideal_point_geometric_product(_e6, _e8);
+    let _e10: Translator = motor_translator_into(_e9);
+    return _e10;
 }
 
 fn motor_ideal_point_geometric_quotient(self_1380: Motor, other_1190: IdealPoint) -> Motor {
@@ -10495,13 +10289,11 @@ fn motor_ideal_point_geometric_quotient(self_1380: Motor, other_1190: IdealPoint
 
     self_1381 = self_1380;
     other_1191 = other_1190;
-    let _e6: IdealPoint = other_1191;
-    let _e7: IdealPoint = ideal_point_inverse(_e6);
-    let _e8: Motor = self_1381;
-    let _e10: IdealPoint = other_1191;
-    let _e11: IdealPoint = ideal_point_inverse(_e10);
-    let _e12: Motor = motor_ideal_point_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Motor = self_1381;
+    let _e5: IdealPoint = other_1191;
+    let _e6: IdealPoint = ideal_point_inverse(_e5);
+    let _e7: Motor = motor_ideal_point_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn motor_ideal_point_transformation(self_1382: Motor, other_1192: IdealPoint) -> IdealPoint {
@@ -10510,30 +10302,14 @@ fn motor_ideal_point_transformation(self_1382: Motor, other_1192: IdealPoint) ->
 
     self_1383 = self_1382;
     other_1193 = other_1192;
-    let _e6: Motor = self_1383;
-    let _e7: IdealPoint = other_1193;
-    let _e8: Motor = motor_ideal_point_geometric_product(_e6, _e7);
-    let _e10: Motor = self_1383;
-    let _e11: Motor = motor_reversal(_e10);
-    let _e14: Motor = self_1383;
-    let _e15: IdealPoint = other_1193;
-    let _e16: Motor = motor_ideal_point_geometric_product(_e14, _e15);
-    let _e18: Motor = self_1383;
-    let _e19: Motor = motor_reversal(_e18);
-    let _e20: Motor = motor_motor_geometric_product(_e16, _e19);
-    let _e23: Motor = self_1383;
-    let _e24: IdealPoint = other_1193;
-    let _e25: Motor = motor_ideal_point_geometric_product(_e23, _e24);
-    let _e27: Motor = self_1383;
-    let _e28: Motor = motor_reversal(_e27);
-    let _e31: Motor = self_1383;
-    let _e32: IdealPoint = other_1193;
-    let _e33: Motor = motor_ideal_point_geometric_product(_e31, _e32);
-    let _e35: Motor = self_1383;
-    let _e36: Motor = motor_reversal(_e35);
-    let _e37: Motor = motor_motor_geometric_product(_e33, _e36);
-    let _e38: IdealPoint = motor_ideal_point_into(_e37);
-    return _e38;
+    let _e4: Motor = self_1383;
+    let _e5: IdealPoint = other_1193;
+    let _e6: Motor = motor_ideal_point_geometric_product(_e4, _e5);
+    let _e7: Motor = self_1383;
+    let _e8: Motor = motor_reversal(_e7);
+    let _e9: Motor = motor_motor_geometric_product(_e6, _e8);
+    let _e10: IdealPoint = motor_ideal_point_into(_e9);
+    return _e10;
 }
 
 fn motor_powi(self_1384: Motor, exponent: i32) -> Motor {
@@ -10555,46 +10331,46 @@ fn motor_powi(self_1384: Motor, exponent: i32) -> Motor {
     }
     let _e8: i32 = exponent_1;
     if (_e8 < 0) {
-        let _e12: Motor = self_1385;
-        let _e13: Motor = motor_inverse(_e12);
-        local = _e13;
+        let _e11: Motor = self_1385;
+        let _e12: Motor = motor_inverse(_e11);
+        local = _e12;
     } else {
         let _e14: Motor = self_1385;
         local = _e14;
     }
-    let _e16: Motor = local;
-    x = _e16;
-    let _e18: Motor = motor_one();
-    y = _e18;
-    let _e21: i32 = exponent_1;
-    n = abs(_e21);
+    let _e15: Motor = local;
+    x = _e15;
+    let _e17: Motor = motor_one();
+    y = _e17;
+    let _e19: i32 = exponent_1;
+    n = abs(_e19);
     loop {
-        let _e25: i32 = n;
-        if !((1 < _e25)) {
+        let _e23: i32 = n;
+        if !((1 < _e23)) {
             break;
         }
         {
-            let _e28: i32 = n;
-            if ((_e28 & 1) == 1) {
+            let _e26: i32 = n;
+            if ((_e26 & 1) == 1) {
                 {
-                    let _e35: Motor = x;
-                    let _e36: Motor = y;
-                    let _e37: Motor = motor_motor_geometric_product(_e35, _e36);
-                    y = _e37;
+                    let _e31: Motor = x;
+                    let _e32: Motor = y;
+                    let _e33: Motor = motor_motor_geometric_product(_e31, _e32);
+                    y = _e33;
                 }
             }
-            let _e40: Motor = x;
-            let _e41: Motor = x;
-            let _e42: Motor = motor_motor_geometric_product(_e40, _e41);
-            x = _e42;
-            let _e43: i32 = n;
-            n = (_e43 >> u32(1));
+            let _e34: Motor = x;
+            let _e35: Motor = x;
+            let _e36: Motor = motor_motor_geometric_product(_e34, _e35);
+            x = _e36;
+            let _e37: i32 = n;
+            n = (_e37 >> u32(1));
         }
     }
-    let _e49: Motor = x;
-    let _e50: Motor = y;
-    let _e51: Motor = motor_motor_geometric_product(_e49, _e50);
-    return _e51;
+    let _e41: Motor = x;
+    let _e42: Motor = y;
+    let _e43: Motor = motor_motor_geometric_product(_e41, _e42);
+    return _e43;
 }
 
 fn motor_motor_geometric_quotient(self_1386: Motor, other_1194: Motor) -> Motor {
@@ -10603,13 +10379,11 @@ fn motor_motor_geometric_quotient(self_1386: Motor, other_1194: Motor) -> Motor 
 
     self_1387 = self_1386;
     other_1195 = other_1194;
-    let _e6: Motor = other_1195;
-    let _e7: Motor = motor_inverse(_e6);
-    let _e8: Motor = self_1387;
-    let _e10: Motor = other_1195;
-    let _e11: Motor = motor_inverse(_e10);
-    let _e12: Motor = motor_motor_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Motor = self_1387;
+    let _e5: Motor = other_1195;
+    let _e6: Motor = motor_inverse(_e5);
+    let _e7: Motor = motor_motor_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn motor_motor_transformation(self_1388: Motor, other_1196: Motor) -> Motor {
@@ -10618,18 +10392,13 @@ fn motor_motor_transformation(self_1388: Motor, other_1196: Motor) -> Motor {
 
     self_1389 = self_1388;
     other_1197 = other_1196;
-    let _e6: Motor = self_1389;
-    let _e7: Motor = other_1197;
-    let _e8: Motor = motor_motor_geometric_product(_e6, _e7);
-    let _e10: Motor = self_1389;
-    let _e11: Motor = motor_reversal(_e10);
-    let _e14: Motor = self_1389;
-    let _e15: Motor = other_1197;
-    let _e16: Motor = motor_motor_geometric_product(_e14, _e15);
-    let _e18: Motor = self_1389;
-    let _e19: Motor = motor_reversal(_e18);
-    let _e20: Motor = motor_motor_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Motor = self_1389;
+    let _e5: Motor = other_1197;
+    let _e6: Motor = motor_motor_geometric_product(_e4, _e5);
+    let _e7: Motor = self_1389;
+    let _e8: Motor = motor_reversal(_e7);
+    let _e9: Motor = motor_motor_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn motor_motor_dual_geometric_quotient(self_1390: Motor, other_1198: MotorDual) -> MotorDual {
@@ -10638,13 +10407,11 @@ fn motor_motor_dual_geometric_quotient(self_1390: Motor, other_1198: MotorDual) 
 
     self_1391 = self_1390;
     other_1199 = other_1198;
-    let _e6: MotorDual = other_1199;
-    let _e7: MotorDual = motor_dual_inverse(_e6);
-    let _e8: Motor = self_1391;
-    let _e10: MotorDual = other_1199;
-    let _e11: MotorDual = motor_dual_inverse(_e10);
-    let _e12: MotorDual = motor_motor_dual_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Motor = self_1391;
+    let _e5: MotorDual = other_1199;
+    let _e6: MotorDual = motor_dual_inverse(_e5);
+    let _e7: MotorDual = motor_motor_dual_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn motor_motor_dual_transformation(self_1392: Motor, other_1200: MotorDual) -> MotorDual {
@@ -10653,18 +10420,13 @@ fn motor_motor_dual_transformation(self_1392: Motor, other_1200: MotorDual) -> M
 
     self_1393 = self_1392;
     other_1201 = other_1200;
-    let _e6: Motor = self_1393;
-    let _e7: MotorDual = other_1201;
-    let _e8: MotorDual = motor_motor_dual_geometric_product(_e6, _e7);
-    let _e10: Motor = self_1393;
-    let _e11: Motor = motor_reversal(_e10);
-    let _e14: Motor = self_1393;
-    let _e15: MotorDual = other_1201;
-    let _e16: MotorDual = motor_motor_dual_geometric_product(_e14, _e15);
-    let _e18: Motor = self_1393;
-    let _e19: Motor = motor_reversal(_e18);
-    let _e20: MotorDual = motor_dual_motor_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Motor = self_1393;
+    let _e5: MotorDual = other_1201;
+    let _e6: MotorDual = motor_motor_dual_geometric_product(_e4, _e5);
+    let _e7: Motor = self_1393;
+    let _e8: Motor = motor_reversal(_e7);
+    let _e9: MotorDual = motor_dual_motor_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn motor_multi_vector_geometric_quotient(self_1394: Motor, other_1202: MultiVector) -> MultiVector {
@@ -10673,13 +10435,11 @@ fn motor_multi_vector_geometric_quotient(self_1394: Motor, other_1202: MultiVect
 
     self_1395 = self_1394;
     other_1203 = other_1202;
-    let _e6: MultiVector = other_1203;
-    let _e7: MultiVector = multi_vector_inverse(_e6);
-    let _e8: Motor = self_1395;
-    let _e10: MultiVector = other_1203;
-    let _e11: MultiVector = multi_vector_inverse(_e10);
-    let _e12: MultiVector = motor_multi_vector_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Motor = self_1395;
+    let _e5: MultiVector = other_1203;
+    let _e6: MultiVector = multi_vector_inverse(_e5);
+    let _e7: MultiVector = motor_multi_vector_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn motor_multi_vector_transformation(self_1396: Motor, other_1204: MultiVector) -> MultiVector {
@@ -10688,18 +10448,13 @@ fn motor_multi_vector_transformation(self_1396: Motor, other_1204: MultiVector) 
 
     self_1397 = self_1396;
     other_1205 = other_1204;
-    let _e6: Motor = self_1397;
-    let _e7: MultiVector = other_1205;
-    let _e8: MultiVector = motor_multi_vector_geometric_product(_e6, _e7);
-    let _e10: Motor = self_1397;
-    let _e11: Motor = motor_reversal(_e10);
-    let _e14: Motor = self_1397;
-    let _e15: MultiVector = other_1205;
-    let _e16: MultiVector = motor_multi_vector_geometric_product(_e14, _e15);
-    let _e18: Motor = self_1397;
-    let _e19: Motor = motor_reversal(_e18);
-    let _e20: MultiVector = multi_vector_motor_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Motor = self_1397;
+    let _e5: MultiVector = other_1205;
+    let _e6: MultiVector = motor_multi_vector_geometric_product(_e4, _e5);
+    let _e7: Motor = self_1397;
+    let _e8: Motor = motor_reversal(_e7);
+    let _e9: MultiVector = multi_vector_motor_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn motor_plane_geometric_quotient(self_1398: Motor, other_1206: Plane) -> MotorDual {
@@ -10708,13 +10463,11 @@ fn motor_plane_geometric_quotient(self_1398: Motor, other_1206: Plane) -> MotorD
 
     self_1399 = self_1398;
     other_1207 = other_1206;
-    let _e6: Plane = other_1207;
-    let _e7: Plane = plane_inverse(_e6);
-    let _e8: Motor = self_1399;
-    let _e10: Plane = other_1207;
-    let _e11: Plane = plane_inverse(_e10);
-    let _e12: MotorDual = motor_plane_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Motor = self_1399;
+    let _e5: Plane = other_1207;
+    let _e6: Plane = plane_inverse(_e5);
+    let _e7: MotorDual = motor_plane_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn motor_plane_transformation(self_1400: Motor, other_1208: Plane) -> Plane {
@@ -10723,30 +10476,14 @@ fn motor_plane_transformation(self_1400: Motor, other_1208: Plane) -> Plane {
 
     self_1401 = self_1400;
     other_1209 = other_1208;
-    let _e6: Motor = self_1401;
-    let _e7: Plane = other_1209;
-    let _e8: MotorDual = motor_plane_geometric_product(_e6, _e7);
-    let _e10: Motor = self_1401;
-    let _e11: Motor = motor_reversal(_e10);
-    let _e14: Motor = self_1401;
-    let _e15: Plane = other_1209;
-    let _e16: MotorDual = motor_plane_geometric_product(_e14, _e15);
-    let _e18: Motor = self_1401;
-    let _e19: Motor = motor_reversal(_e18);
-    let _e20: MotorDual = motor_dual_motor_geometric_product(_e16, _e19);
-    let _e23: Motor = self_1401;
-    let _e24: Plane = other_1209;
-    let _e25: MotorDual = motor_plane_geometric_product(_e23, _e24);
-    let _e27: Motor = self_1401;
-    let _e28: Motor = motor_reversal(_e27);
-    let _e31: Motor = self_1401;
-    let _e32: Plane = other_1209;
-    let _e33: MotorDual = motor_plane_geometric_product(_e31, _e32);
-    let _e35: Motor = self_1401;
-    let _e36: Motor = motor_reversal(_e35);
-    let _e37: MotorDual = motor_dual_motor_geometric_product(_e33, _e36);
-    let _e38: Plane = motor_dual_plane_into(_e37);
-    return _e38;
+    let _e4: Motor = self_1401;
+    let _e5: Plane = other_1209;
+    let _e6: MotorDual = motor_plane_geometric_product(_e4, _e5);
+    let _e7: Motor = self_1401;
+    let _e8: Motor = motor_reversal(_e7);
+    let _e9: MotorDual = motor_dual_motor_geometric_product(_e6, _e8);
+    let _e10: Plane = motor_dual_plane_into(_e9);
+    return _e10;
 }
 
 fn motor_point_geometric_quotient(self_1402: Motor, other_1210: Point) -> Motor {
@@ -10755,13 +10492,11 @@ fn motor_point_geometric_quotient(self_1402: Motor, other_1210: Point) -> Motor 
 
     self_1403 = self_1402;
     other_1211 = other_1210;
-    let _e6: Point = other_1211;
-    let _e7: Point = point_inverse(_e6);
-    let _e8: Motor = self_1403;
-    let _e10: Point = other_1211;
-    let _e11: Point = point_inverse(_e10);
-    let _e12: Motor = motor_point_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Motor = self_1403;
+    let _e5: Point = other_1211;
+    let _e6: Point = point_inverse(_e5);
+    let _e7: Motor = motor_point_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn motor_point_transformation(self_1404: Motor, other_1212: Point) -> Point {
@@ -10770,30 +10505,14 @@ fn motor_point_transformation(self_1404: Motor, other_1212: Point) -> Point {
 
     self_1405 = self_1404;
     other_1213 = other_1212;
-    let _e6: Motor = self_1405;
-    let _e7: Point = other_1213;
-    let _e8: Motor = motor_point_geometric_product(_e6, _e7);
-    let _e10: Motor = self_1405;
-    let _e11: Motor = motor_reversal(_e10);
-    let _e14: Motor = self_1405;
-    let _e15: Point = other_1213;
-    let _e16: Motor = motor_point_geometric_product(_e14, _e15);
-    let _e18: Motor = self_1405;
-    let _e19: Motor = motor_reversal(_e18);
-    let _e20: Motor = motor_motor_geometric_product(_e16, _e19);
-    let _e23: Motor = self_1405;
-    let _e24: Point = other_1213;
-    let _e25: Motor = motor_point_geometric_product(_e23, _e24);
-    let _e27: Motor = self_1405;
-    let _e28: Motor = motor_reversal(_e27);
-    let _e31: Motor = self_1405;
-    let _e32: Point = other_1213;
-    let _e33: Motor = motor_point_geometric_product(_e31, _e32);
-    let _e35: Motor = self_1405;
-    let _e36: Motor = motor_reversal(_e35);
-    let _e37: Motor = motor_motor_geometric_product(_e33, _e36);
-    let _e38: Point = motor_point_into(_e37);
-    return _e38;
+    let _e4: Motor = self_1405;
+    let _e5: Point = other_1213;
+    let _e6: Motor = motor_point_geometric_product(_e4, _e5);
+    let _e7: Motor = self_1405;
+    let _e8: Motor = motor_reversal(_e7);
+    let _e9: Motor = motor_motor_geometric_product(_e6, _e8);
+    let _e10: Point = motor_point_into(_e9);
+    return _e10;
 }
 
 fn motor_rotor_geometric_quotient(self_1406: Motor, other_1214: Rotor) -> Motor {
@@ -10802,13 +10521,11 @@ fn motor_rotor_geometric_quotient(self_1406: Motor, other_1214: Rotor) -> Motor 
 
     self_1407 = self_1406;
     other_1215 = other_1214;
-    let _e6: Rotor = other_1215;
-    let _e7: Rotor = rotor_inverse(_e6);
-    let _e8: Motor = self_1407;
-    let _e10: Rotor = other_1215;
-    let _e11: Rotor = rotor_inverse(_e10);
-    let _e12: Motor = motor_rotor_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Motor = self_1407;
+    let _e5: Rotor = other_1215;
+    let _e6: Rotor = rotor_inverse(_e5);
+    let _e7: Motor = motor_rotor_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn motor_rotor_transformation(self_1408: Motor, other_1216: Rotor) -> Rotor {
@@ -10817,30 +10534,14 @@ fn motor_rotor_transformation(self_1408: Motor, other_1216: Rotor) -> Rotor {
 
     self_1409 = self_1408;
     other_1217 = other_1216;
-    let _e6: Motor = self_1409;
-    let _e7: Rotor = other_1217;
-    let _e8: Motor = motor_rotor_geometric_product(_e6, _e7);
-    let _e10: Motor = self_1409;
-    let _e11: Motor = motor_reversal(_e10);
-    let _e14: Motor = self_1409;
-    let _e15: Rotor = other_1217;
-    let _e16: Motor = motor_rotor_geometric_product(_e14, _e15);
-    let _e18: Motor = self_1409;
-    let _e19: Motor = motor_reversal(_e18);
-    let _e20: Motor = motor_motor_geometric_product(_e16, _e19);
-    let _e23: Motor = self_1409;
-    let _e24: Rotor = other_1217;
-    let _e25: Motor = motor_rotor_geometric_product(_e23, _e24);
-    let _e27: Motor = self_1409;
-    let _e28: Motor = motor_reversal(_e27);
-    let _e31: Motor = self_1409;
-    let _e32: Rotor = other_1217;
-    let _e33: Motor = motor_rotor_geometric_product(_e31, _e32);
-    let _e35: Motor = self_1409;
-    let _e36: Motor = motor_reversal(_e35);
-    let _e37: Motor = motor_motor_geometric_product(_e33, _e36);
-    let _e38: Rotor = motor_rotor_into(_e37);
-    return _e38;
+    let _e4: Motor = self_1409;
+    let _e5: Rotor = other_1217;
+    let _e6: Motor = motor_rotor_geometric_product(_e4, _e5);
+    let _e7: Motor = self_1409;
+    let _e8: Motor = motor_reversal(_e7);
+    let _e9: Motor = motor_motor_geometric_product(_e6, _e8);
+    let _e10: Rotor = motor_rotor_into(_e9);
+    return _e10;
 }
 
 fn motor_scalar_geometric_quotient(self_1410: Motor, other_1218: Scalar) -> Motor {
@@ -10849,13 +10550,11 @@ fn motor_scalar_geometric_quotient(self_1410: Motor, other_1218: Scalar) -> Moto
 
     self_1411 = self_1410;
     other_1219 = other_1218;
-    let _e6: Scalar = other_1219;
-    let _e7: Scalar = scalar_inverse(_e6);
-    let _e8: Motor = self_1411;
-    let _e10: Scalar = other_1219;
-    let _e11: Scalar = scalar_inverse(_e10);
-    let _e12: Motor = motor_scalar_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Motor = self_1411;
+    let _e5: Scalar = other_1219;
+    let _e6: Scalar = scalar_inverse(_e5);
+    let _e7: Motor = motor_scalar_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn motor_scalar_transformation(self_1412: Motor, other_1220: Scalar) -> Scalar {
@@ -10864,30 +10563,14 @@ fn motor_scalar_transformation(self_1412: Motor, other_1220: Scalar) -> Scalar {
 
     self_1413 = self_1412;
     other_1221 = other_1220;
-    let _e6: Motor = self_1413;
-    let _e7: Scalar = other_1221;
-    let _e8: Motor = motor_scalar_geometric_product(_e6, _e7);
-    let _e10: Motor = self_1413;
-    let _e11: Motor = motor_reversal(_e10);
-    let _e14: Motor = self_1413;
-    let _e15: Scalar = other_1221;
-    let _e16: Motor = motor_scalar_geometric_product(_e14, _e15);
-    let _e18: Motor = self_1413;
-    let _e19: Motor = motor_reversal(_e18);
-    let _e20: Motor = motor_motor_geometric_product(_e16, _e19);
-    let _e23: Motor = self_1413;
-    let _e24: Scalar = other_1221;
-    let _e25: Motor = motor_scalar_geometric_product(_e23, _e24);
-    let _e27: Motor = self_1413;
-    let _e28: Motor = motor_reversal(_e27);
-    let _e31: Motor = self_1413;
-    let _e32: Scalar = other_1221;
-    let _e33: Motor = motor_scalar_geometric_product(_e31, _e32);
-    let _e35: Motor = self_1413;
-    let _e36: Motor = motor_reversal(_e35);
-    let _e37: Motor = motor_motor_geometric_product(_e33, _e36);
-    let _e38: Scalar = motor_scalar_into(_e37);
-    return _e38;
+    let _e4: Motor = self_1413;
+    let _e5: Scalar = other_1221;
+    let _e6: Motor = motor_scalar_geometric_product(_e4, _e5);
+    let _e7: Motor = self_1413;
+    let _e8: Motor = motor_reversal(_e7);
+    let _e9: Motor = motor_motor_geometric_product(_e6, _e8);
+    let _e10: Scalar = motor_scalar_into(_e9);
+    return _e10;
 }
 
 fn motor_translator_geometric_quotient(self_1414: Motor, other_1222: Translator) -> Motor {
@@ -10896,13 +10579,11 @@ fn motor_translator_geometric_quotient(self_1414: Motor, other_1222: Translator)
 
     self_1415 = self_1414;
     other_1223 = other_1222;
-    let _e6: Translator = other_1223;
-    let _e7: Translator = translator_inverse(_e6);
-    let _e8: Motor = self_1415;
-    let _e10: Translator = other_1223;
-    let _e11: Translator = translator_inverse(_e10);
-    let _e12: Motor = motor_translator_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Motor = self_1415;
+    let _e5: Translator = other_1223;
+    let _e6: Translator = translator_inverse(_e5);
+    let _e7: Motor = motor_translator_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn motor_translator_transformation(self_1416: Motor, other_1224: Translator) -> Translator {
@@ -10911,30 +10592,14 @@ fn motor_translator_transformation(self_1416: Motor, other_1224: Translator) -> 
 
     self_1417 = self_1416;
     other_1225 = other_1224;
-    let _e6: Motor = self_1417;
-    let _e7: Translator = other_1225;
-    let _e8: Motor = motor_translator_geometric_product(_e6, _e7);
-    let _e10: Motor = self_1417;
-    let _e11: Motor = motor_reversal(_e10);
-    let _e14: Motor = self_1417;
-    let _e15: Translator = other_1225;
-    let _e16: Motor = motor_translator_geometric_product(_e14, _e15);
-    let _e18: Motor = self_1417;
-    let _e19: Motor = motor_reversal(_e18);
-    let _e20: Motor = motor_motor_geometric_product(_e16, _e19);
-    let _e23: Motor = self_1417;
-    let _e24: Translator = other_1225;
-    let _e25: Motor = motor_translator_geometric_product(_e23, _e24);
-    let _e27: Motor = self_1417;
-    let _e28: Motor = motor_reversal(_e27);
-    let _e31: Motor = self_1417;
-    let _e32: Translator = other_1225;
-    let _e33: Motor = motor_translator_geometric_product(_e31, _e32);
-    let _e35: Motor = self_1417;
-    let _e36: Motor = motor_reversal(_e35);
-    let _e37: Motor = motor_motor_geometric_product(_e33, _e36);
-    let _e38: Translator = motor_translator_into(_e37);
-    return _e38;
+    let _e4: Motor = self_1417;
+    let _e5: Translator = other_1225;
+    let _e6: Motor = motor_translator_geometric_product(_e4, _e5);
+    let _e7: Motor = self_1417;
+    let _e8: Motor = motor_reversal(_e7);
+    let _e9: Motor = motor_motor_geometric_product(_e6, _e8);
+    let _e10: Translator = motor_translator_into(_e9);
+    return _e10;
 }
 
 fn motor_dual_ideal_point_geometric_quotient(self_1418: MotorDual, other_1226: IdealPoint) -> MotorDual {
@@ -10943,13 +10608,11 @@ fn motor_dual_ideal_point_geometric_quotient(self_1418: MotorDual, other_1226: I
 
     self_1419 = self_1418;
     other_1227 = other_1226;
-    let _e6: IdealPoint = other_1227;
-    let _e7: IdealPoint = ideal_point_inverse(_e6);
-    let _e8: MotorDual = self_1419;
-    let _e10: IdealPoint = other_1227;
-    let _e11: IdealPoint = ideal_point_inverse(_e10);
-    let _e12: MotorDual = motor_dual_ideal_point_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: MotorDual = self_1419;
+    let _e5: IdealPoint = other_1227;
+    let _e6: IdealPoint = ideal_point_inverse(_e5);
+    let _e7: MotorDual = motor_dual_ideal_point_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn motor_dual_ideal_point_transformation(self_1420: MotorDual, other_1228: IdealPoint) -> IdealPoint {
@@ -10958,30 +10621,14 @@ fn motor_dual_ideal_point_transformation(self_1420: MotorDual, other_1228: Ideal
 
     self_1421 = self_1420;
     other_1229 = other_1228;
-    let _e6: MotorDual = self_1421;
-    let _e7: IdealPoint = other_1229;
-    let _e8: MotorDual = motor_dual_ideal_point_geometric_product(_e6, _e7);
-    let _e10: MotorDual = self_1421;
-    let _e11: MotorDual = motor_dual_reversal(_e10);
-    let _e14: MotorDual = self_1421;
-    let _e15: IdealPoint = other_1229;
-    let _e16: MotorDual = motor_dual_ideal_point_geometric_product(_e14, _e15);
-    let _e18: MotorDual = self_1421;
-    let _e19: MotorDual = motor_dual_reversal(_e18);
-    let _e20: Motor = motor_dual_motor_dual_geometric_product(_e16, _e19);
-    let _e23: MotorDual = self_1421;
-    let _e24: IdealPoint = other_1229;
-    let _e25: MotorDual = motor_dual_ideal_point_geometric_product(_e23, _e24);
-    let _e27: MotorDual = self_1421;
-    let _e28: MotorDual = motor_dual_reversal(_e27);
-    let _e31: MotorDual = self_1421;
-    let _e32: IdealPoint = other_1229;
-    let _e33: MotorDual = motor_dual_ideal_point_geometric_product(_e31, _e32);
-    let _e35: MotorDual = self_1421;
-    let _e36: MotorDual = motor_dual_reversal(_e35);
-    let _e37: Motor = motor_dual_motor_dual_geometric_product(_e33, _e36);
-    let _e38: IdealPoint = motor_ideal_point_into(_e37);
-    return _e38;
+    let _e4: MotorDual = self_1421;
+    let _e5: IdealPoint = other_1229;
+    let _e6: MotorDual = motor_dual_ideal_point_geometric_product(_e4, _e5);
+    let _e7: MotorDual = self_1421;
+    let _e8: MotorDual = motor_dual_reversal(_e7);
+    let _e9: Motor = motor_dual_motor_dual_geometric_product(_e6, _e8);
+    let _e10: IdealPoint = motor_ideal_point_into(_e9);
+    return _e10;
 }
 
 fn motor_dual_motor_geometric_quotient(self_1422: MotorDual, other_1230: Motor) -> MotorDual {
@@ -10990,13 +10637,11 @@ fn motor_dual_motor_geometric_quotient(self_1422: MotorDual, other_1230: Motor) 
 
     self_1423 = self_1422;
     other_1231 = other_1230;
-    let _e6: Motor = other_1231;
-    let _e7: Motor = motor_inverse(_e6);
-    let _e8: MotorDual = self_1423;
-    let _e10: Motor = other_1231;
-    let _e11: Motor = motor_inverse(_e10);
-    let _e12: MotorDual = motor_dual_motor_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: MotorDual = self_1423;
+    let _e5: Motor = other_1231;
+    let _e6: Motor = motor_inverse(_e5);
+    let _e7: MotorDual = motor_dual_motor_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn motor_dual_motor_transformation(self_1424: MotorDual, other_1232: Motor) -> Motor {
@@ -11005,18 +10650,13 @@ fn motor_dual_motor_transformation(self_1424: MotorDual, other_1232: Motor) -> M
 
     self_1425 = self_1424;
     other_1233 = other_1232;
-    let _e6: MotorDual = self_1425;
-    let _e7: Motor = other_1233;
-    let _e8: MotorDual = motor_dual_motor_geometric_product(_e6, _e7);
-    let _e10: MotorDual = self_1425;
-    let _e11: MotorDual = motor_dual_reversal(_e10);
-    let _e14: MotorDual = self_1425;
-    let _e15: Motor = other_1233;
-    let _e16: MotorDual = motor_dual_motor_geometric_product(_e14, _e15);
-    let _e18: MotorDual = self_1425;
-    let _e19: MotorDual = motor_dual_reversal(_e18);
-    let _e20: Motor = motor_dual_motor_dual_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: MotorDual = self_1425;
+    let _e5: Motor = other_1233;
+    let _e6: MotorDual = motor_dual_motor_geometric_product(_e4, _e5);
+    let _e7: MotorDual = self_1425;
+    let _e8: MotorDual = motor_dual_reversal(_e7);
+    let _e9: Motor = motor_dual_motor_dual_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn motor_dual_motor_dual_geometric_quotient(self_1426: MotorDual, other_1234: MotorDual) -> Motor {
@@ -11025,13 +10665,11 @@ fn motor_dual_motor_dual_geometric_quotient(self_1426: MotorDual, other_1234: Mo
 
     self_1427 = self_1426;
     other_1235 = other_1234;
-    let _e6: MotorDual = other_1235;
-    let _e7: MotorDual = motor_dual_inverse(_e6);
-    let _e8: MotorDual = self_1427;
-    let _e10: MotorDual = other_1235;
-    let _e11: MotorDual = motor_dual_inverse(_e10);
-    let _e12: Motor = motor_dual_motor_dual_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: MotorDual = self_1427;
+    let _e5: MotorDual = other_1235;
+    let _e6: MotorDual = motor_dual_inverse(_e5);
+    let _e7: Motor = motor_dual_motor_dual_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn motor_dual_motor_dual_transformation(self_1428: MotorDual, other_1236: MotorDual) -> MotorDual {
@@ -11040,18 +10678,13 @@ fn motor_dual_motor_dual_transformation(self_1428: MotorDual, other_1236: MotorD
 
     self_1429 = self_1428;
     other_1237 = other_1236;
-    let _e6: MotorDual = self_1429;
-    let _e7: MotorDual = other_1237;
-    let _e8: Motor = motor_dual_motor_dual_geometric_product(_e6, _e7);
-    let _e10: MotorDual = self_1429;
-    let _e11: MotorDual = motor_dual_reversal(_e10);
-    let _e14: MotorDual = self_1429;
-    let _e15: MotorDual = other_1237;
-    let _e16: Motor = motor_dual_motor_dual_geometric_product(_e14, _e15);
-    let _e18: MotorDual = self_1429;
-    let _e19: MotorDual = motor_dual_reversal(_e18);
-    let _e20: MotorDual = motor_motor_dual_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: MotorDual = self_1429;
+    let _e5: MotorDual = other_1237;
+    let _e6: Motor = motor_dual_motor_dual_geometric_product(_e4, _e5);
+    let _e7: MotorDual = self_1429;
+    let _e8: MotorDual = motor_dual_reversal(_e7);
+    let _e9: MotorDual = motor_motor_dual_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn motor_dual_multi_vector_geometric_quotient(self_1430: MotorDual, other_1238: MultiVector) -> MultiVector {
@@ -11060,13 +10693,11 @@ fn motor_dual_multi_vector_geometric_quotient(self_1430: MotorDual, other_1238: 
 
     self_1431 = self_1430;
     other_1239 = other_1238;
-    let _e6: MultiVector = other_1239;
-    let _e7: MultiVector = multi_vector_inverse(_e6);
-    let _e8: MotorDual = self_1431;
-    let _e10: MultiVector = other_1239;
-    let _e11: MultiVector = multi_vector_inverse(_e10);
-    let _e12: MultiVector = motor_dual_multi_vector_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: MotorDual = self_1431;
+    let _e5: MultiVector = other_1239;
+    let _e6: MultiVector = multi_vector_inverse(_e5);
+    let _e7: MultiVector = motor_dual_multi_vector_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn motor_dual_multi_vector_transformation(self_1432: MotorDual, other_1240: MultiVector) -> MultiVector {
@@ -11075,18 +10706,13 @@ fn motor_dual_multi_vector_transformation(self_1432: MotorDual, other_1240: Mult
 
     self_1433 = self_1432;
     other_1241 = other_1240;
-    let _e6: MotorDual = self_1433;
-    let _e7: MultiVector = other_1241;
-    let _e8: MultiVector = motor_dual_multi_vector_geometric_product(_e6, _e7);
-    let _e10: MotorDual = self_1433;
-    let _e11: MotorDual = motor_dual_reversal(_e10);
-    let _e14: MotorDual = self_1433;
-    let _e15: MultiVector = other_1241;
-    let _e16: MultiVector = motor_dual_multi_vector_geometric_product(_e14, _e15);
-    let _e18: MotorDual = self_1433;
-    let _e19: MotorDual = motor_dual_reversal(_e18);
-    let _e20: MultiVector = multi_vector_motor_dual_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: MotorDual = self_1433;
+    let _e5: MultiVector = other_1241;
+    let _e6: MultiVector = motor_dual_multi_vector_geometric_product(_e4, _e5);
+    let _e7: MotorDual = self_1433;
+    let _e8: MotorDual = motor_dual_reversal(_e7);
+    let _e9: MultiVector = multi_vector_motor_dual_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn motor_dual_plane_geometric_quotient(self_1434: MotorDual, other_1242: Plane) -> Motor {
@@ -11095,13 +10721,11 @@ fn motor_dual_plane_geometric_quotient(self_1434: MotorDual, other_1242: Plane) 
 
     self_1435 = self_1434;
     other_1243 = other_1242;
-    let _e6: Plane = other_1243;
-    let _e7: Plane = plane_inverse(_e6);
-    let _e8: MotorDual = self_1435;
-    let _e10: Plane = other_1243;
-    let _e11: Plane = plane_inverse(_e10);
-    let _e12: Motor = motor_dual_plane_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: MotorDual = self_1435;
+    let _e5: Plane = other_1243;
+    let _e6: Plane = plane_inverse(_e5);
+    let _e7: Motor = motor_dual_plane_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn motor_dual_plane_transformation(self_1436: MotorDual, other_1244: Plane) -> Plane {
@@ -11110,30 +10734,14 @@ fn motor_dual_plane_transformation(self_1436: MotorDual, other_1244: Plane) -> P
 
     self_1437 = self_1436;
     other_1245 = other_1244;
-    let _e6: MotorDual = self_1437;
-    let _e7: Plane = other_1245;
-    let _e8: Motor = motor_dual_plane_geometric_product(_e6, _e7);
-    let _e10: MotorDual = self_1437;
-    let _e11: MotorDual = motor_dual_reversal(_e10);
-    let _e14: MotorDual = self_1437;
-    let _e15: Plane = other_1245;
-    let _e16: Motor = motor_dual_plane_geometric_product(_e14, _e15);
-    let _e18: MotorDual = self_1437;
-    let _e19: MotorDual = motor_dual_reversal(_e18);
-    let _e20: MotorDual = motor_motor_dual_geometric_product(_e16, _e19);
-    let _e23: MotorDual = self_1437;
-    let _e24: Plane = other_1245;
-    let _e25: Motor = motor_dual_plane_geometric_product(_e23, _e24);
-    let _e27: MotorDual = self_1437;
-    let _e28: MotorDual = motor_dual_reversal(_e27);
-    let _e31: MotorDual = self_1437;
-    let _e32: Plane = other_1245;
-    let _e33: Motor = motor_dual_plane_geometric_product(_e31, _e32);
-    let _e35: MotorDual = self_1437;
-    let _e36: MotorDual = motor_dual_reversal(_e35);
-    let _e37: MotorDual = motor_motor_dual_geometric_product(_e33, _e36);
-    let _e38: Plane = motor_dual_plane_into(_e37);
-    return _e38;
+    let _e4: MotorDual = self_1437;
+    let _e5: Plane = other_1245;
+    let _e6: Motor = motor_dual_plane_geometric_product(_e4, _e5);
+    let _e7: MotorDual = self_1437;
+    let _e8: MotorDual = motor_dual_reversal(_e7);
+    let _e9: MotorDual = motor_motor_dual_geometric_product(_e6, _e8);
+    let _e10: Plane = motor_dual_plane_into(_e9);
+    return _e10;
 }
 
 fn motor_dual_point_geometric_quotient(self_1438: MotorDual, other_1246: Point) -> MotorDual {
@@ -11142,13 +10750,11 @@ fn motor_dual_point_geometric_quotient(self_1438: MotorDual, other_1246: Point) 
 
     self_1439 = self_1438;
     other_1247 = other_1246;
-    let _e6: Point = other_1247;
-    let _e7: Point = point_inverse(_e6);
-    let _e8: MotorDual = self_1439;
-    let _e10: Point = other_1247;
-    let _e11: Point = point_inverse(_e10);
-    let _e12: MotorDual = motor_dual_point_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: MotorDual = self_1439;
+    let _e5: Point = other_1247;
+    let _e6: Point = point_inverse(_e5);
+    let _e7: MotorDual = motor_dual_point_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn motor_dual_point_transformation(self_1440: MotorDual, other_1248: Point) -> Point {
@@ -11157,30 +10763,14 @@ fn motor_dual_point_transformation(self_1440: MotorDual, other_1248: Point) -> P
 
     self_1441 = self_1440;
     other_1249 = other_1248;
-    let _e6: MotorDual = self_1441;
-    let _e7: Point = other_1249;
-    let _e8: MotorDual = motor_dual_point_geometric_product(_e6, _e7);
-    let _e10: MotorDual = self_1441;
-    let _e11: MotorDual = motor_dual_reversal(_e10);
-    let _e14: MotorDual = self_1441;
-    let _e15: Point = other_1249;
-    let _e16: MotorDual = motor_dual_point_geometric_product(_e14, _e15);
-    let _e18: MotorDual = self_1441;
-    let _e19: MotorDual = motor_dual_reversal(_e18);
-    let _e20: Motor = motor_dual_motor_dual_geometric_product(_e16, _e19);
-    let _e23: MotorDual = self_1441;
-    let _e24: Point = other_1249;
-    let _e25: MotorDual = motor_dual_point_geometric_product(_e23, _e24);
-    let _e27: MotorDual = self_1441;
-    let _e28: MotorDual = motor_dual_reversal(_e27);
-    let _e31: MotorDual = self_1441;
-    let _e32: Point = other_1249;
-    let _e33: MotorDual = motor_dual_point_geometric_product(_e31, _e32);
-    let _e35: MotorDual = self_1441;
-    let _e36: MotorDual = motor_dual_reversal(_e35);
-    let _e37: Motor = motor_dual_motor_dual_geometric_product(_e33, _e36);
-    let _e38: Point = motor_point_into(_e37);
-    return _e38;
+    let _e4: MotorDual = self_1441;
+    let _e5: Point = other_1249;
+    let _e6: MotorDual = motor_dual_point_geometric_product(_e4, _e5);
+    let _e7: MotorDual = self_1441;
+    let _e8: MotorDual = motor_dual_reversal(_e7);
+    let _e9: Motor = motor_dual_motor_dual_geometric_product(_e6, _e8);
+    let _e10: Point = motor_point_into(_e9);
+    return _e10;
 }
 
 fn motor_dual_rotor_geometric_quotient(self_1442: MotorDual, other_1250: Rotor) -> MotorDual {
@@ -11189,13 +10779,11 @@ fn motor_dual_rotor_geometric_quotient(self_1442: MotorDual, other_1250: Rotor) 
 
     self_1443 = self_1442;
     other_1251 = other_1250;
-    let _e6: Rotor = other_1251;
-    let _e7: Rotor = rotor_inverse(_e6);
-    let _e8: MotorDual = self_1443;
-    let _e10: Rotor = other_1251;
-    let _e11: Rotor = rotor_inverse(_e10);
-    let _e12: MotorDual = motor_dual_rotor_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: MotorDual = self_1443;
+    let _e5: Rotor = other_1251;
+    let _e6: Rotor = rotor_inverse(_e5);
+    let _e7: MotorDual = motor_dual_rotor_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn motor_dual_rotor_transformation(self_1444: MotorDual, other_1252: Rotor) -> Rotor {
@@ -11204,30 +10792,14 @@ fn motor_dual_rotor_transformation(self_1444: MotorDual, other_1252: Rotor) -> R
 
     self_1445 = self_1444;
     other_1253 = other_1252;
-    let _e6: MotorDual = self_1445;
-    let _e7: Rotor = other_1253;
-    let _e8: MotorDual = motor_dual_rotor_geometric_product(_e6, _e7);
-    let _e10: MotorDual = self_1445;
-    let _e11: MotorDual = motor_dual_reversal(_e10);
-    let _e14: MotorDual = self_1445;
-    let _e15: Rotor = other_1253;
-    let _e16: MotorDual = motor_dual_rotor_geometric_product(_e14, _e15);
-    let _e18: MotorDual = self_1445;
-    let _e19: MotorDual = motor_dual_reversal(_e18);
-    let _e20: Motor = motor_dual_motor_dual_geometric_product(_e16, _e19);
-    let _e23: MotorDual = self_1445;
-    let _e24: Rotor = other_1253;
-    let _e25: MotorDual = motor_dual_rotor_geometric_product(_e23, _e24);
-    let _e27: MotorDual = self_1445;
-    let _e28: MotorDual = motor_dual_reversal(_e27);
-    let _e31: MotorDual = self_1445;
-    let _e32: Rotor = other_1253;
-    let _e33: MotorDual = motor_dual_rotor_geometric_product(_e31, _e32);
-    let _e35: MotorDual = self_1445;
-    let _e36: MotorDual = motor_dual_reversal(_e35);
-    let _e37: Motor = motor_dual_motor_dual_geometric_product(_e33, _e36);
-    let _e38: Rotor = motor_rotor_into(_e37);
-    return _e38;
+    let _e4: MotorDual = self_1445;
+    let _e5: Rotor = other_1253;
+    let _e6: MotorDual = motor_dual_rotor_geometric_product(_e4, _e5);
+    let _e7: MotorDual = self_1445;
+    let _e8: MotorDual = motor_dual_reversal(_e7);
+    let _e9: Motor = motor_dual_motor_dual_geometric_product(_e6, _e8);
+    let _e10: Rotor = motor_rotor_into(_e9);
+    return _e10;
 }
 
 fn motor_dual_scalar_geometric_quotient(self_1446: MotorDual, other_1254: Scalar) -> MotorDual {
@@ -11236,13 +10808,11 @@ fn motor_dual_scalar_geometric_quotient(self_1446: MotorDual, other_1254: Scalar
 
     self_1447 = self_1446;
     other_1255 = other_1254;
-    let _e6: Scalar = other_1255;
-    let _e7: Scalar = scalar_inverse(_e6);
-    let _e8: MotorDual = self_1447;
-    let _e10: Scalar = other_1255;
-    let _e11: Scalar = scalar_inverse(_e10);
-    let _e12: MotorDual = motor_dual_scalar_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: MotorDual = self_1447;
+    let _e5: Scalar = other_1255;
+    let _e6: Scalar = scalar_inverse(_e5);
+    let _e7: MotorDual = motor_dual_scalar_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn motor_dual_scalar_transformation(self_1448: MotorDual, other_1256: Scalar) -> Scalar {
@@ -11251,30 +10821,14 @@ fn motor_dual_scalar_transformation(self_1448: MotorDual, other_1256: Scalar) ->
 
     self_1449 = self_1448;
     other_1257 = other_1256;
-    let _e6: MotorDual = self_1449;
-    let _e7: Scalar = other_1257;
-    let _e8: MotorDual = motor_dual_scalar_geometric_product(_e6, _e7);
-    let _e10: MotorDual = self_1449;
-    let _e11: MotorDual = motor_dual_reversal(_e10);
-    let _e14: MotorDual = self_1449;
-    let _e15: Scalar = other_1257;
-    let _e16: MotorDual = motor_dual_scalar_geometric_product(_e14, _e15);
-    let _e18: MotorDual = self_1449;
-    let _e19: MotorDual = motor_dual_reversal(_e18);
-    let _e20: Motor = motor_dual_motor_dual_geometric_product(_e16, _e19);
-    let _e23: MotorDual = self_1449;
-    let _e24: Scalar = other_1257;
-    let _e25: MotorDual = motor_dual_scalar_geometric_product(_e23, _e24);
-    let _e27: MotorDual = self_1449;
-    let _e28: MotorDual = motor_dual_reversal(_e27);
-    let _e31: MotorDual = self_1449;
-    let _e32: Scalar = other_1257;
-    let _e33: MotorDual = motor_dual_scalar_geometric_product(_e31, _e32);
-    let _e35: MotorDual = self_1449;
-    let _e36: MotorDual = motor_dual_reversal(_e35);
-    let _e37: Motor = motor_dual_motor_dual_geometric_product(_e33, _e36);
-    let _e38: Scalar = motor_scalar_into(_e37);
-    return _e38;
+    let _e4: MotorDual = self_1449;
+    let _e5: Scalar = other_1257;
+    let _e6: MotorDual = motor_dual_scalar_geometric_product(_e4, _e5);
+    let _e7: MotorDual = self_1449;
+    let _e8: MotorDual = motor_dual_reversal(_e7);
+    let _e9: Motor = motor_dual_motor_dual_geometric_product(_e6, _e8);
+    let _e10: Scalar = motor_scalar_into(_e9);
+    return _e10;
 }
 
 fn motor_dual_translator_geometric_quotient(self_1450: MotorDual, other_1258: Translator) -> MotorDual {
@@ -11283,13 +10837,11 @@ fn motor_dual_translator_geometric_quotient(self_1450: MotorDual, other_1258: Tr
 
     self_1451 = self_1450;
     other_1259 = other_1258;
-    let _e6: Translator = other_1259;
-    let _e7: Translator = translator_inverse(_e6);
-    let _e8: MotorDual = self_1451;
-    let _e10: Translator = other_1259;
-    let _e11: Translator = translator_inverse(_e10);
-    let _e12: MotorDual = motor_dual_translator_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: MotorDual = self_1451;
+    let _e5: Translator = other_1259;
+    let _e6: Translator = translator_inverse(_e5);
+    let _e7: MotorDual = motor_dual_translator_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn motor_dual_translator_transformation(self_1452: MotorDual, other_1260: Translator) -> Translator {
@@ -11298,30 +10850,14 @@ fn motor_dual_translator_transformation(self_1452: MotorDual, other_1260: Transl
 
     self_1453 = self_1452;
     other_1261 = other_1260;
-    let _e6: MotorDual = self_1453;
-    let _e7: Translator = other_1261;
-    let _e8: MotorDual = motor_dual_translator_geometric_product(_e6, _e7);
-    let _e10: MotorDual = self_1453;
-    let _e11: MotorDual = motor_dual_reversal(_e10);
-    let _e14: MotorDual = self_1453;
-    let _e15: Translator = other_1261;
-    let _e16: MotorDual = motor_dual_translator_geometric_product(_e14, _e15);
-    let _e18: MotorDual = self_1453;
-    let _e19: MotorDual = motor_dual_reversal(_e18);
-    let _e20: Motor = motor_dual_motor_dual_geometric_product(_e16, _e19);
-    let _e23: MotorDual = self_1453;
-    let _e24: Translator = other_1261;
-    let _e25: MotorDual = motor_dual_translator_geometric_product(_e23, _e24);
-    let _e27: MotorDual = self_1453;
-    let _e28: MotorDual = motor_dual_reversal(_e27);
-    let _e31: MotorDual = self_1453;
-    let _e32: Translator = other_1261;
-    let _e33: MotorDual = motor_dual_translator_geometric_product(_e31, _e32);
-    let _e35: MotorDual = self_1453;
-    let _e36: MotorDual = motor_dual_reversal(_e35);
-    let _e37: Motor = motor_dual_motor_dual_geometric_product(_e33, _e36);
-    let _e38: Translator = motor_translator_into(_e37);
-    return _e38;
+    let _e4: MotorDual = self_1453;
+    let _e5: Translator = other_1261;
+    let _e6: MotorDual = motor_dual_translator_geometric_product(_e4, _e5);
+    let _e7: MotorDual = self_1453;
+    let _e8: MotorDual = motor_dual_reversal(_e7);
+    let _e9: Motor = motor_dual_motor_dual_geometric_product(_e6, _e8);
+    let _e10: Translator = motor_translator_into(_e9);
+    return _e10;
 }
 
 fn multi_vector_ideal_point_geometric_quotient(self_1454: MultiVector, other_1262: IdealPoint) -> MultiVector {
@@ -11330,13 +10866,11 @@ fn multi_vector_ideal_point_geometric_quotient(self_1454: MultiVector, other_126
 
     self_1455 = self_1454;
     other_1263 = other_1262;
-    let _e6: IdealPoint = other_1263;
-    let _e7: IdealPoint = ideal_point_inverse(_e6);
-    let _e8: MultiVector = self_1455;
-    let _e10: IdealPoint = other_1263;
-    let _e11: IdealPoint = ideal_point_inverse(_e10);
-    let _e12: MultiVector = multi_vector_ideal_point_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: MultiVector = self_1455;
+    let _e5: IdealPoint = other_1263;
+    let _e6: IdealPoint = ideal_point_inverse(_e5);
+    let _e7: MultiVector = multi_vector_ideal_point_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn multi_vector_ideal_point_transformation(self_1456: MultiVector, other_1264: IdealPoint) -> IdealPoint {
@@ -11345,30 +10879,14 @@ fn multi_vector_ideal_point_transformation(self_1456: MultiVector, other_1264: I
 
     self_1457 = self_1456;
     other_1265 = other_1264;
-    let _e6: MultiVector = self_1457;
-    let _e7: IdealPoint = other_1265;
-    let _e8: MultiVector = multi_vector_ideal_point_geometric_product(_e6, _e7);
-    let _e10: MultiVector = self_1457;
-    let _e11: MultiVector = multi_vector_reversal(_e10);
-    let _e14: MultiVector = self_1457;
-    let _e15: IdealPoint = other_1265;
-    let _e16: MultiVector = multi_vector_ideal_point_geometric_product(_e14, _e15);
-    let _e18: MultiVector = self_1457;
-    let _e19: MultiVector = multi_vector_reversal(_e18);
-    let _e20: MultiVector = multi_vector_multi_vector_geometric_product(_e16, _e19);
-    let _e23: MultiVector = self_1457;
-    let _e24: IdealPoint = other_1265;
-    let _e25: MultiVector = multi_vector_ideal_point_geometric_product(_e23, _e24);
-    let _e27: MultiVector = self_1457;
-    let _e28: MultiVector = multi_vector_reversal(_e27);
-    let _e31: MultiVector = self_1457;
-    let _e32: IdealPoint = other_1265;
-    let _e33: MultiVector = multi_vector_ideal_point_geometric_product(_e31, _e32);
-    let _e35: MultiVector = self_1457;
-    let _e36: MultiVector = multi_vector_reversal(_e35);
-    let _e37: MultiVector = multi_vector_multi_vector_geometric_product(_e33, _e36);
-    let _e38: IdealPoint = multi_vector_ideal_point_into(_e37);
-    return _e38;
+    let _e4: MultiVector = self_1457;
+    let _e5: IdealPoint = other_1265;
+    let _e6: MultiVector = multi_vector_ideal_point_geometric_product(_e4, _e5);
+    let _e7: MultiVector = self_1457;
+    let _e8: MultiVector = multi_vector_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
+    let _e10: IdealPoint = multi_vector_ideal_point_into(_e9);
+    return _e10;
 }
 
 fn multi_vector_motor_geometric_quotient(self_1458: MultiVector, other_1266: Motor) -> MultiVector {
@@ -11377,13 +10895,11 @@ fn multi_vector_motor_geometric_quotient(self_1458: MultiVector, other_1266: Mot
 
     self_1459 = self_1458;
     other_1267 = other_1266;
-    let _e6: Motor = other_1267;
-    let _e7: Motor = motor_inverse(_e6);
-    let _e8: MultiVector = self_1459;
-    let _e10: Motor = other_1267;
-    let _e11: Motor = motor_inverse(_e10);
-    let _e12: MultiVector = multi_vector_motor_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: MultiVector = self_1459;
+    let _e5: Motor = other_1267;
+    let _e6: Motor = motor_inverse(_e5);
+    let _e7: MultiVector = multi_vector_motor_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn multi_vector_motor_transformation(self_1460: MultiVector, other_1268: Motor) -> Motor {
@@ -11392,30 +10908,14 @@ fn multi_vector_motor_transformation(self_1460: MultiVector, other_1268: Motor) 
 
     self_1461 = self_1460;
     other_1269 = other_1268;
-    let _e6: MultiVector = self_1461;
-    let _e7: Motor = other_1269;
-    let _e8: MultiVector = multi_vector_motor_geometric_product(_e6, _e7);
-    let _e10: MultiVector = self_1461;
-    let _e11: MultiVector = multi_vector_reversal(_e10);
-    let _e14: MultiVector = self_1461;
-    let _e15: Motor = other_1269;
-    let _e16: MultiVector = multi_vector_motor_geometric_product(_e14, _e15);
-    let _e18: MultiVector = self_1461;
-    let _e19: MultiVector = multi_vector_reversal(_e18);
-    let _e20: MultiVector = multi_vector_multi_vector_geometric_product(_e16, _e19);
-    let _e23: MultiVector = self_1461;
-    let _e24: Motor = other_1269;
-    let _e25: MultiVector = multi_vector_motor_geometric_product(_e23, _e24);
-    let _e27: MultiVector = self_1461;
-    let _e28: MultiVector = multi_vector_reversal(_e27);
-    let _e31: MultiVector = self_1461;
-    let _e32: Motor = other_1269;
-    let _e33: MultiVector = multi_vector_motor_geometric_product(_e31, _e32);
-    let _e35: MultiVector = self_1461;
-    let _e36: MultiVector = multi_vector_reversal(_e35);
-    let _e37: MultiVector = multi_vector_multi_vector_geometric_product(_e33, _e36);
-    let _e38: Motor = multi_vector_motor_into(_e37);
-    return _e38;
+    let _e4: MultiVector = self_1461;
+    let _e5: Motor = other_1269;
+    let _e6: MultiVector = multi_vector_motor_geometric_product(_e4, _e5);
+    let _e7: MultiVector = self_1461;
+    let _e8: MultiVector = multi_vector_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
+    let _e10: Motor = multi_vector_motor_into(_e9);
+    return _e10;
 }
 
 fn multi_vector_motor_dual_geometric_quotient(self_1462: MultiVector, other_1270: MotorDual) -> MultiVector {
@@ -11424,13 +10924,11 @@ fn multi_vector_motor_dual_geometric_quotient(self_1462: MultiVector, other_1270
 
     self_1463 = self_1462;
     other_1271 = other_1270;
-    let _e6: MotorDual = other_1271;
-    let _e7: MotorDual = motor_dual_inverse(_e6);
-    let _e8: MultiVector = self_1463;
-    let _e10: MotorDual = other_1271;
-    let _e11: MotorDual = motor_dual_inverse(_e10);
-    let _e12: MultiVector = multi_vector_motor_dual_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: MultiVector = self_1463;
+    let _e5: MotorDual = other_1271;
+    let _e6: MotorDual = motor_dual_inverse(_e5);
+    let _e7: MultiVector = multi_vector_motor_dual_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn multi_vector_motor_dual_transformation(self_1464: MultiVector, other_1272: MotorDual) -> MotorDual {
@@ -11439,30 +10937,14 @@ fn multi_vector_motor_dual_transformation(self_1464: MultiVector, other_1272: Mo
 
     self_1465 = self_1464;
     other_1273 = other_1272;
-    let _e6: MultiVector = self_1465;
-    let _e7: MotorDual = other_1273;
-    let _e8: MultiVector = multi_vector_motor_dual_geometric_product(_e6, _e7);
-    let _e10: MultiVector = self_1465;
-    let _e11: MultiVector = multi_vector_reversal(_e10);
-    let _e14: MultiVector = self_1465;
-    let _e15: MotorDual = other_1273;
-    let _e16: MultiVector = multi_vector_motor_dual_geometric_product(_e14, _e15);
-    let _e18: MultiVector = self_1465;
-    let _e19: MultiVector = multi_vector_reversal(_e18);
-    let _e20: MultiVector = multi_vector_multi_vector_geometric_product(_e16, _e19);
-    let _e23: MultiVector = self_1465;
-    let _e24: MotorDual = other_1273;
-    let _e25: MultiVector = multi_vector_motor_dual_geometric_product(_e23, _e24);
-    let _e27: MultiVector = self_1465;
-    let _e28: MultiVector = multi_vector_reversal(_e27);
-    let _e31: MultiVector = self_1465;
-    let _e32: MotorDual = other_1273;
-    let _e33: MultiVector = multi_vector_motor_dual_geometric_product(_e31, _e32);
-    let _e35: MultiVector = self_1465;
-    let _e36: MultiVector = multi_vector_reversal(_e35);
-    let _e37: MultiVector = multi_vector_multi_vector_geometric_product(_e33, _e36);
-    let _e38: MotorDual = multi_vector_motor_dual_into(_e37);
-    return _e38;
+    let _e4: MultiVector = self_1465;
+    let _e5: MotorDual = other_1273;
+    let _e6: MultiVector = multi_vector_motor_dual_geometric_product(_e4, _e5);
+    let _e7: MultiVector = self_1465;
+    let _e8: MultiVector = multi_vector_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
+    let _e10: MotorDual = multi_vector_motor_dual_into(_e9);
+    return _e10;
 }
 
 fn multi_vector_powi(self_1466: MultiVector, exponent_2: i32) -> MultiVector {
@@ -11484,46 +10966,46 @@ fn multi_vector_powi(self_1466: MultiVector, exponent_2: i32) -> MultiVector {
     }
     let _e8: i32 = exponent_3;
     if (_e8 < 0) {
-        let _e12: MultiVector = self_1467;
-        let _e13: MultiVector = multi_vector_inverse(_e12);
-        local_1 = _e13;
+        let _e11: MultiVector = self_1467;
+        let _e12: MultiVector = multi_vector_inverse(_e11);
+        local_1 = _e12;
     } else {
         let _e14: MultiVector = self_1467;
         local_1 = _e14;
     }
-    let _e16: MultiVector = local_1;
-    x_1 = _e16;
-    let _e18: MultiVector = multi_vector_one();
-    y_1 = _e18;
-    let _e21: i32 = exponent_3;
-    n_1 = abs(_e21);
+    let _e15: MultiVector = local_1;
+    x_1 = _e15;
+    let _e17: MultiVector = multi_vector_one();
+    y_1 = _e17;
+    let _e19: i32 = exponent_3;
+    n_1 = abs(_e19);
     loop {
-        let _e25: i32 = n_1;
-        if !((1 < _e25)) {
+        let _e23: i32 = n_1;
+        if !((1 < _e23)) {
             break;
         }
         {
-            let _e28: i32 = n_1;
-            if ((_e28 & 1) == 1) {
+            let _e26: i32 = n_1;
+            if ((_e26 & 1) == 1) {
                 {
-                    let _e35: MultiVector = x_1;
-                    let _e36: MultiVector = y_1;
-                    let _e37: MultiVector = multi_vector_multi_vector_geometric_product(_e35, _e36);
-                    y_1 = _e37;
+                    let _e31: MultiVector = x_1;
+                    let _e32: MultiVector = y_1;
+                    let _e33: MultiVector = multi_vector_multi_vector_geometric_product(_e31, _e32);
+                    y_1 = _e33;
                 }
             }
-            let _e40: MultiVector = x_1;
-            let _e41: MultiVector = x_1;
-            let _e42: MultiVector = multi_vector_multi_vector_geometric_product(_e40, _e41);
-            x_1 = _e42;
-            let _e43: i32 = n_1;
-            n_1 = (_e43 >> u32(1));
+            let _e34: MultiVector = x_1;
+            let _e35: MultiVector = x_1;
+            let _e36: MultiVector = multi_vector_multi_vector_geometric_product(_e34, _e35);
+            x_1 = _e36;
+            let _e37: i32 = n_1;
+            n_1 = (_e37 >> u32(1));
         }
     }
-    let _e49: MultiVector = x_1;
-    let _e50: MultiVector = y_1;
-    let _e51: MultiVector = multi_vector_multi_vector_geometric_product(_e49, _e50);
-    return _e51;
+    let _e41: MultiVector = x_1;
+    let _e42: MultiVector = y_1;
+    let _e43: MultiVector = multi_vector_multi_vector_geometric_product(_e41, _e42);
+    return _e43;
 }
 
 fn multi_vector_multi_vector_geometric_quotient(self_1468: MultiVector, other_1274: MultiVector) -> MultiVector {
@@ -11532,13 +11014,11 @@ fn multi_vector_multi_vector_geometric_quotient(self_1468: MultiVector, other_12
 
     self_1469 = self_1468;
     other_1275 = other_1274;
-    let _e6: MultiVector = other_1275;
-    let _e7: MultiVector = multi_vector_inverse(_e6);
-    let _e8: MultiVector = self_1469;
-    let _e10: MultiVector = other_1275;
-    let _e11: MultiVector = multi_vector_inverse(_e10);
-    let _e12: MultiVector = multi_vector_multi_vector_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: MultiVector = self_1469;
+    let _e5: MultiVector = other_1275;
+    let _e6: MultiVector = multi_vector_inverse(_e5);
+    let _e7: MultiVector = multi_vector_multi_vector_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn multi_vector_multi_vector_transformation(self_1470: MultiVector, other_1276: MultiVector) -> MultiVector {
@@ -11547,18 +11027,13 @@ fn multi_vector_multi_vector_transformation(self_1470: MultiVector, other_1276: 
 
     self_1471 = self_1470;
     other_1277 = other_1276;
-    let _e6: MultiVector = self_1471;
-    let _e7: MultiVector = other_1277;
-    let _e8: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e7);
-    let _e10: MultiVector = self_1471;
-    let _e11: MultiVector = multi_vector_reversal(_e10);
-    let _e14: MultiVector = self_1471;
-    let _e15: MultiVector = other_1277;
-    let _e16: MultiVector = multi_vector_multi_vector_geometric_product(_e14, _e15);
-    let _e18: MultiVector = self_1471;
-    let _e19: MultiVector = multi_vector_reversal(_e18);
-    let _e20: MultiVector = multi_vector_multi_vector_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: MultiVector = self_1471;
+    let _e5: MultiVector = other_1277;
+    let _e6: MultiVector = multi_vector_multi_vector_geometric_product(_e4, _e5);
+    let _e7: MultiVector = self_1471;
+    let _e8: MultiVector = multi_vector_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn multi_vector_plane_geometric_quotient(self_1472: MultiVector, other_1278: Plane) -> MultiVector {
@@ -11567,13 +11042,11 @@ fn multi_vector_plane_geometric_quotient(self_1472: MultiVector, other_1278: Pla
 
     self_1473 = self_1472;
     other_1279 = other_1278;
-    let _e6: Plane = other_1279;
-    let _e7: Plane = plane_inverse(_e6);
-    let _e8: MultiVector = self_1473;
-    let _e10: Plane = other_1279;
-    let _e11: Plane = plane_inverse(_e10);
-    let _e12: MultiVector = multi_vector_plane_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: MultiVector = self_1473;
+    let _e5: Plane = other_1279;
+    let _e6: Plane = plane_inverse(_e5);
+    let _e7: MultiVector = multi_vector_plane_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn multi_vector_plane_transformation(self_1474: MultiVector, other_1280: Plane) -> Plane {
@@ -11582,30 +11055,14 @@ fn multi_vector_plane_transformation(self_1474: MultiVector, other_1280: Plane) 
 
     self_1475 = self_1474;
     other_1281 = other_1280;
-    let _e6: MultiVector = self_1475;
-    let _e7: Plane = other_1281;
-    let _e8: MultiVector = multi_vector_plane_geometric_product(_e6, _e7);
-    let _e10: MultiVector = self_1475;
-    let _e11: MultiVector = multi_vector_reversal(_e10);
-    let _e14: MultiVector = self_1475;
-    let _e15: Plane = other_1281;
-    let _e16: MultiVector = multi_vector_plane_geometric_product(_e14, _e15);
-    let _e18: MultiVector = self_1475;
-    let _e19: MultiVector = multi_vector_reversal(_e18);
-    let _e20: MultiVector = multi_vector_multi_vector_geometric_product(_e16, _e19);
-    let _e23: MultiVector = self_1475;
-    let _e24: Plane = other_1281;
-    let _e25: MultiVector = multi_vector_plane_geometric_product(_e23, _e24);
-    let _e27: MultiVector = self_1475;
-    let _e28: MultiVector = multi_vector_reversal(_e27);
-    let _e31: MultiVector = self_1475;
-    let _e32: Plane = other_1281;
-    let _e33: MultiVector = multi_vector_plane_geometric_product(_e31, _e32);
-    let _e35: MultiVector = self_1475;
-    let _e36: MultiVector = multi_vector_reversal(_e35);
-    let _e37: MultiVector = multi_vector_multi_vector_geometric_product(_e33, _e36);
-    let _e38: Plane = multi_vector_plane_into(_e37);
-    return _e38;
+    let _e4: MultiVector = self_1475;
+    let _e5: Plane = other_1281;
+    let _e6: MultiVector = multi_vector_plane_geometric_product(_e4, _e5);
+    let _e7: MultiVector = self_1475;
+    let _e8: MultiVector = multi_vector_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
+    let _e10: Plane = multi_vector_plane_into(_e9);
+    return _e10;
 }
 
 fn multi_vector_point_geometric_quotient(self_1476: MultiVector, other_1282: Point) -> MultiVector {
@@ -11614,13 +11071,11 @@ fn multi_vector_point_geometric_quotient(self_1476: MultiVector, other_1282: Poi
 
     self_1477 = self_1476;
     other_1283 = other_1282;
-    let _e6: Point = other_1283;
-    let _e7: Point = point_inverse(_e6);
-    let _e8: MultiVector = self_1477;
-    let _e10: Point = other_1283;
-    let _e11: Point = point_inverse(_e10);
-    let _e12: MultiVector = multi_vector_point_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: MultiVector = self_1477;
+    let _e5: Point = other_1283;
+    let _e6: Point = point_inverse(_e5);
+    let _e7: MultiVector = multi_vector_point_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn multi_vector_point_transformation(self_1478: MultiVector, other_1284: Point) -> Point {
@@ -11629,30 +11084,14 @@ fn multi_vector_point_transformation(self_1478: MultiVector, other_1284: Point) 
 
     self_1479 = self_1478;
     other_1285 = other_1284;
-    let _e6: MultiVector = self_1479;
-    let _e7: Point = other_1285;
-    let _e8: MultiVector = multi_vector_point_geometric_product(_e6, _e7);
-    let _e10: MultiVector = self_1479;
-    let _e11: MultiVector = multi_vector_reversal(_e10);
-    let _e14: MultiVector = self_1479;
-    let _e15: Point = other_1285;
-    let _e16: MultiVector = multi_vector_point_geometric_product(_e14, _e15);
-    let _e18: MultiVector = self_1479;
-    let _e19: MultiVector = multi_vector_reversal(_e18);
-    let _e20: MultiVector = multi_vector_multi_vector_geometric_product(_e16, _e19);
-    let _e23: MultiVector = self_1479;
-    let _e24: Point = other_1285;
-    let _e25: MultiVector = multi_vector_point_geometric_product(_e23, _e24);
-    let _e27: MultiVector = self_1479;
-    let _e28: MultiVector = multi_vector_reversal(_e27);
-    let _e31: MultiVector = self_1479;
-    let _e32: Point = other_1285;
-    let _e33: MultiVector = multi_vector_point_geometric_product(_e31, _e32);
-    let _e35: MultiVector = self_1479;
-    let _e36: MultiVector = multi_vector_reversal(_e35);
-    let _e37: MultiVector = multi_vector_multi_vector_geometric_product(_e33, _e36);
-    let _e38: Point = multi_vector_point_into(_e37);
-    return _e38;
+    let _e4: MultiVector = self_1479;
+    let _e5: Point = other_1285;
+    let _e6: MultiVector = multi_vector_point_geometric_product(_e4, _e5);
+    let _e7: MultiVector = self_1479;
+    let _e8: MultiVector = multi_vector_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
+    let _e10: Point = multi_vector_point_into(_e9);
+    return _e10;
 }
 
 fn multi_vector_rotor_geometric_quotient(self_1480: MultiVector, other_1286: Rotor) -> MultiVector {
@@ -11661,13 +11100,11 @@ fn multi_vector_rotor_geometric_quotient(self_1480: MultiVector, other_1286: Rot
 
     self_1481 = self_1480;
     other_1287 = other_1286;
-    let _e6: Rotor = other_1287;
-    let _e7: Rotor = rotor_inverse(_e6);
-    let _e8: MultiVector = self_1481;
-    let _e10: Rotor = other_1287;
-    let _e11: Rotor = rotor_inverse(_e10);
-    let _e12: MultiVector = multi_vector_rotor_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: MultiVector = self_1481;
+    let _e5: Rotor = other_1287;
+    let _e6: Rotor = rotor_inverse(_e5);
+    let _e7: MultiVector = multi_vector_rotor_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn multi_vector_rotor_transformation(self_1482: MultiVector, other_1288: Rotor) -> Rotor {
@@ -11676,30 +11113,14 @@ fn multi_vector_rotor_transformation(self_1482: MultiVector, other_1288: Rotor) 
 
     self_1483 = self_1482;
     other_1289 = other_1288;
-    let _e6: MultiVector = self_1483;
-    let _e7: Rotor = other_1289;
-    let _e8: MultiVector = multi_vector_rotor_geometric_product(_e6, _e7);
-    let _e10: MultiVector = self_1483;
-    let _e11: MultiVector = multi_vector_reversal(_e10);
-    let _e14: MultiVector = self_1483;
-    let _e15: Rotor = other_1289;
-    let _e16: MultiVector = multi_vector_rotor_geometric_product(_e14, _e15);
-    let _e18: MultiVector = self_1483;
-    let _e19: MultiVector = multi_vector_reversal(_e18);
-    let _e20: MultiVector = multi_vector_multi_vector_geometric_product(_e16, _e19);
-    let _e23: MultiVector = self_1483;
-    let _e24: Rotor = other_1289;
-    let _e25: MultiVector = multi_vector_rotor_geometric_product(_e23, _e24);
-    let _e27: MultiVector = self_1483;
-    let _e28: MultiVector = multi_vector_reversal(_e27);
-    let _e31: MultiVector = self_1483;
-    let _e32: Rotor = other_1289;
-    let _e33: MultiVector = multi_vector_rotor_geometric_product(_e31, _e32);
-    let _e35: MultiVector = self_1483;
-    let _e36: MultiVector = multi_vector_reversal(_e35);
-    let _e37: MultiVector = multi_vector_multi_vector_geometric_product(_e33, _e36);
-    let _e38: Rotor = multi_vector_rotor_into(_e37);
-    return _e38;
+    let _e4: MultiVector = self_1483;
+    let _e5: Rotor = other_1289;
+    let _e6: MultiVector = multi_vector_rotor_geometric_product(_e4, _e5);
+    let _e7: MultiVector = self_1483;
+    let _e8: MultiVector = multi_vector_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
+    let _e10: Rotor = multi_vector_rotor_into(_e9);
+    return _e10;
 }
 
 fn multi_vector_scalar_geometric_quotient(self_1484: MultiVector, other_1290: Scalar) -> MultiVector {
@@ -11708,13 +11129,11 @@ fn multi_vector_scalar_geometric_quotient(self_1484: MultiVector, other_1290: Sc
 
     self_1485 = self_1484;
     other_1291 = other_1290;
-    let _e6: Scalar = other_1291;
-    let _e7: Scalar = scalar_inverse(_e6);
-    let _e8: MultiVector = self_1485;
-    let _e10: Scalar = other_1291;
-    let _e11: Scalar = scalar_inverse(_e10);
-    let _e12: MultiVector = multi_vector_scalar_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: MultiVector = self_1485;
+    let _e5: Scalar = other_1291;
+    let _e6: Scalar = scalar_inverse(_e5);
+    let _e7: MultiVector = multi_vector_scalar_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn multi_vector_scalar_transformation(self_1486: MultiVector, other_1292: Scalar) -> Scalar {
@@ -11723,30 +11142,14 @@ fn multi_vector_scalar_transformation(self_1486: MultiVector, other_1292: Scalar
 
     self_1487 = self_1486;
     other_1293 = other_1292;
-    let _e6: MultiVector = self_1487;
-    let _e7: Scalar = other_1293;
-    let _e8: MultiVector = multi_vector_scalar_geometric_product(_e6, _e7);
-    let _e10: MultiVector = self_1487;
-    let _e11: MultiVector = multi_vector_reversal(_e10);
-    let _e14: MultiVector = self_1487;
-    let _e15: Scalar = other_1293;
-    let _e16: MultiVector = multi_vector_scalar_geometric_product(_e14, _e15);
-    let _e18: MultiVector = self_1487;
-    let _e19: MultiVector = multi_vector_reversal(_e18);
-    let _e20: MultiVector = multi_vector_multi_vector_geometric_product(_e16, _e19);
-    let _e23: MultiVector = self_1487;
-    let _e24: Scalar = other_1293;
-    let _e25: MultiVector = multi_vector_scalar_geometric_product(_e23, _e24);
-    let _e27: MultiVector = self_1487;
-    let _e28: MultiVector = multi_vector_reversal(_e27);
-    let _e31: MultiVector = self_1487;
-    let _e32: Scalar = other_1293;
-    let _e33: MultiVector = multi_vector_scalar_geometric_product(_e31, _e32);
-    let _e35: MultiVector = self_1487;
-    let _e36: MultiVector = multi_vector_reversal(_e35);
-    let _e37: MultiVector = multi_vector_multi_vector_geometric_product(_e33, _e36);
-    let _e38: Scalar = multi_vector_scalar_into(_e37);
-    return _e38;
+    let _e4: MultiVector = self_1487;
+    let _e5: Scalar = other_1293;
+    let _e6: MultiVector = multi_vector_scalar_geometric_product(_e4, _e5);
+    let _e7: MultiVector = self_1487;
+    let _e8: MultiVector = multi_vector_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
+    let _e10: Scalar = multi_vector_scalar_into(_e9);
+    return _e10;
 }
 
 fn multi_vector_translator_geometric_quotient(self_1488: MultiVector, other_1294: Translator) -> MultiVector {
@@ -11755,13 +11158,11 @@ fn multi_vector_translator_geometric_quotient(self_1488: MultiVector, other_1294
 
     self_1489 = self_1488;
     other_1295 = other_1294;
-    let _e6: Translator = other_1295;
-    let _e7: Translator = translator_inverse(_e6);
-    let _e8: MultiVector = self_1489;
-    let _e10: Translator = other_1295;
-    let _e11: Translator = translator_inverse(_e10);
-    let _e12: MultiVector = multi_vector_translator_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: MultiVector = self_1489;
+    let _e5: Translator = other_1295;
+    let _e6: Translator = translator_inverse(_e5);
+    let _e7: MultiVector = multi_vector_translator_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn multi_vector_translator_transformation(self_1490: MultiVector, other_1296: Translator) -> Translator {
@@ -11770,30 +11171,14 @@ fn multi_vector_translator_transformation(self_1490: MultiVector, other_1296: Tr
 
     self_1491 = self_1490;
     other_1297 = other_1296;
-    let _e6: MultiVector = self_1491;
-    let _e7: Translator = other_1297;
-    let _e8: MultiVector = multi_vector_translator_geometric_product(_e6, _e7);
-    let _e10: MultiVector = self_1491;
-    let _e11: MultiVector = multi_vector_reversal(_e10);
-    let _e14: MultiVector = self_1491;
-    let _e15: Translator = other_1297;
-    let _e16: MultiVector = multi_vector_translator_geometric_product(_e14, _e15);
-    let _e18: MultiVector = self_1491;
-    let _e19: MultiVector = multi_vector_reversal(_e18);
-    let _e20: MultiVector = multi_vector_multi_vector_geometric_product(_e16, _e19);
-    let _e23: MultiVector = self_1491;
-    let _e24: Translator = other_1297;
-    let _e25: MultiVector = multi_vector_translator_geometric_product(_e23, _e24);
-    let _e27: MultiVector = self_1491;
-    let _e28: MultiVector = multi_vector_reversal(_e27);
-    let _e31: MultiVector = self_1491;
-    let _e32: Translator = other_1297;
-    let _e33: MultiVector = multi_vector_translator_geometric_product(_e31, _e32);
-    let _e35: MultiVector = self_1491;
-    let _e36: MultiVector = multi_vector_reversal(_e35);
-    let _e37: MultiVector = multi_vector_multi_vector_geometric_product(_e33, _e36);
-    let _e38: Translator = multi_vector_translator_into(_e37);
-    return _e38;
+    let _e4: MultiVector = self_1491;
+    let _e5: Translator = other_1297;
+    let _e6: MultiVector = multi_vector_translator_geometric_product(_e4, _e5);
+    let _e7: MultiVector = self_1491;
+    let _e8: MultiVector = multi_vector_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
+    let _e10: Translator = multi_vector_translator_into(_e9);
+    return _e10;
 }
 
 fn plane_ideal_point_geometric_quotient(self_1492: Plane, other_1298: IdealPoint) -> MotorDual {
@@ -11802,13 +11187,11 @@ fn plane_ideal_point_geometric_quotient(self_1492: Plane, other_1298: IdealPoint
 
     self_1493 = self_1492;
     other_1299 = other_1298;
-    let _e6: IdealPoint = other_1299;
-    let _e7: IdealPoint = ideal_point_inverse(_e6);
-    let _e8: Plane = self_1493;
-    let _e10: IdealPoint = other_1299;
-    let _e11: IdealPoint = ideal_point_inverse(_e10);
-    let _e12: MotorDual = plane_ideal_point_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Plane = self_1493;
+    let _e5: IdealPoint = other_1299;
+    let _e6: IdealPoint = ideal_point_inverse(_e5);
+    let _e7: MotorDual = plane_ideal_point_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn plane_ideal_point_transformation(self_1494: Plane, other_1300: IdealPoint) -> IdealPoint {
@@ -11817,30 +11200,14 @@ fn plane_ideal_point_transformation(self_1494: Plane, other_1300: IdealPoint) ->
 
     self_1495 = self_1494;
     other_1301 = other_1300;
-    let _e6: Plane = self_1495;
-    let _e7: IdealPoint = other_1301;
-    let _e8: MotorDual = plane_ideal_point_geometric_product(_e6, _e7);
-    let _e10: Plane = self_1495;
-    let _e11: Plane = plane_reversal(_e10);
-    let _e14: Plane = self_1495;
-    let _e15: IdealPoint = other_1301;
-    let _e16: MotorDual = plane_ideal_point_geometric_product(_e14, _e15);
-    let _e18: Plane = self_1495;
-    let _e19: Plane = plane_reversal(_e18);
-    let _e20: Motor = motor_dual_plane_geometric_product(_e16, _e19);
-    let _e23: Plane = self_1495;
-    let _e24: IdealPoint = other_1301;
-    let _e25: MotorDual = plane_ideal_point_geometric_product(_e23, _e24);
-    let _e27: Plane = self_1495;
-    let _e28: Plane = plane_reversal(_e27);
-    let _e31: Plane = self_1495;
-    let _e32: IdealPoint = other_1301;
-    let _e33: MotorDual = plane_ideal_point_geometric_product(_e31, _e32);
-    let _e35: Plane = self_1495;
-    let _e36: Plane = plane_reversal(_e35);
-    let _e37: Motor = motor_dual_plane_geometric_product(_e33, _e36);
-    let _e38: IdealPoint = motor_ideal_point_into(_e37);
-    return _e38;
+    let _e4: Plane = self_1495;
+    let _e5: IdealPoint = other_1301;
+    let _e6: MotorDual = plane_ideal_point_geometric_product(_e4, _e5);
+    let _e7: Plane = self_1495;
+    let _e8: Plane = plane_reversal(_e7);
+    let _e9: Motor = motor_dual_plane_geometric_product(_e6, _e8);
+    let _e10: IdealPoint = motor_ideal_point_into(_e9);
+    return _e10;
 }
 
 fn plane_motor_geometric_quotient(self_1496: Plane, other_1302: Motor) -> MotorDual {
@@ -11849,13 +11216,11 @@ fn plane_motor_geometric_quotient(self_1496: Plane, other_1302: Motor) -> MotorD
 
     self_1497 = self_1496;
     other_1303 = other_1302;
-    let _e6: Motor = other_1303;
-    let _e7: Motor = motor_inverse(_e6);
-    let _e8: Plane = self_1497;
-    let _e10: Motor = other_1303;
-    let _e11: Motor = motor_inverse(_e10);
-    let _e12: MotorDual = plane_motor_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Plane = self_1497;
+    let _e5: Motor = other_1303;
+    let _e6: Motor = motor_inverse(_e5);
+    let _e7: MotorDual = plane_motor_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn plane_motor_transformation(self_1498: Plane, other_1304: Motor) -> Motor {
@@ -11864,18 +11229,13 @@ fn plane_motor_transformation(self_1498: Plane, other_1304: Motor) -> Motor {
 
     self_1499 = self_1498;
     other_1305 = other_1304;
-    let _e6: Plane = self_1499;
-    let _e7: Motor = other_1305;
-    let _e8: MotorDual = plane_motor_geometric_product(_e6, _e7);
-    let _e10: Plane = self_1499;
-    let _e11: Plane = plane_reversal(_e10);
-    let _e14: Plane = self_1499;
-    let _e15: Motor = other_1305;
-    let _e16: MotorDual = plane_motor_geometric_product(_e14, _e15);
-    let _e18: Plane = self_1499;
-    let _e19: Plane = plane_reversal(_e18);
-    let _e20: Motor = motor_dual_plane_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Plane = self_1499;
+    let _e5: Motor = other_1305;
+    let _e6: MotorDual = plane_motor_geometric_product(_e4, _e5);
+    let _e7: Plane = self_1499;
+    let _e8: Plane = plane_reversal(_e7);
+    let _e9: Motor = motor_dual_plane_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn plane_motor_dual_geometric_quotient(self_1500: Plane, other_1306: MotorDual) -> Motor {
@@ -11884,13 +11244,11 @@ fn plane_motor_dual_geometric_quotient(self_1500: Plane, other_1306: MotorDual) 
 
     self_1501 = self_1500;
     other_1307 = other_1306;
-    let _e6: MotorDual = other_1307;
-    let _e7: MotorDual = motor_dual_inverse(_e6);
-    let _e8: Plane = self_1501;
-    let _e10: MotorDual = other_1307;
-    let _e11: MotorDual = motor_dual_inverse(_e10);
-    let _e12: Motor = plane_motor_dual_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Plane = self_1501;
+    let _e5: MotorDual = other_1307;
+    let _e6: MotorDual = motor_dual_inverse(_e5);
+    let _e7: Motor = plane_motor_dual_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn plane_motor_dual_transformation(self_1502: Plane, other_1308: MotorDual) -> MotorDual {
@@ -11899,18 +11257,13 @@ fn plane_motor_dual_transformation(self_1502: Plane, other_1308: MotorDual) -> M
 
     self_1503 = self_1502;
     other_1309 = other_1308;
-    let _e6: Plane = self_1503;
-    let _e7: MotorDual = other_1309;
-    let _e8: Motor = plane_motor_dual_geometric_product(_e6, _e7);
-    let _e10: Plane = self_1503;
-    let _e11: Plane = plane_reversal(_e10);
-    let _e14: Plane = self_1503;
-    let _e15: MotorDual = other_1309;
-    let _e16: Motor = plane_motor_dual_geometric_product(_e14, _e15);
-    let _e18: Plane = self_1503;
-    let _e19: Plane = plane_reversal(_e18);
-    let _e20: MotorDual = motor_plane_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Plane = self_1503;
+    let _e5: MotorDual = other_1309;
+    let _e6: Motor = plane_motor_dual_geometric_product(_e4, _e5);
+    let _e7: Plane = self_1503;
+    let _e8: Plane = plane_reversal(_e7);
+    let _e9: MotorDual = motor_plane_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn plane_multi_vector_geometric_quotient(self_1504: Plane, other_1310: MultiVector) -> MultiVector {
@@ -11919,13 +11272,11 @@ fn plane_multi_vector_geometric_quotient(self_1504: Plane, other_1310: MultiVect
 
     self_1505 = self_1504;
     other_1311 = other_1310;
-    let _e6: MultiVector = other_1311;
-    let _e7: MultiVector = multi_vector_inverse(_e6);
-    let _e8: Plane = self_1505;
-    let _e10: MultiVector = other_1311;
-    let _e11: MultiVector = multi_vector_inverse(_e10);
-    let _e12: MultiVector = plane_multi_vector_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Plane = self_1505;
+    let _e5: MultiVector = other_1311;
+    let _e6: MultiVector = multi_vector_inverse(_e5);
+    let _e7: MultiVector = plane_multi_vector_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn plane_multi_vector_transformation(self_1506: Plane, other_1312: MultiVector) -> MultiVector {
@@ -11934,18 +11285,13 @@ fn plane_multi_vector_transformation(self_1506: Plane, other_1312: MultiVector) 
 
     self_1507 = self_1506;
     other_1313 = other_1312;
-    let _e6: Plane = self_1507;
-    let _e7: MultiVector = other_1313;
-    let _e8: MultiVector = plane_multi_vector_geometric_product(_e6, _e7);
-    let _e10: Plane = self_1507;
-    let _e11: Plane = plane_reversal(_e10);
-    let _e14: Plane = self_1507;
-    let _e15: MultiVector = other_1313;
-    let _e16: MultiVector = plane_multi_vector_geometric_product(_e14, _e15);
-    let _e18: Plane = self_1507;
-    let _e19: Plane = plane_reversal(_e18);
-    let _e20: MultiVector = multi_vector_plane_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Plane = self_1507;
+    let _e5: MultiVector = other_1313;
+    let _e6: MultiVector = plane_multi_vector_geometric_product(_e4, _e5);
+    let _e7: Plane = self_1507;
+    let _e8: Plane = plane_reversal(_e7);
+    let _e9: MultiVector = multi_vector_plane_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn plane_plane_geometric_quotient(self_1508: Plane, other_1314: Plane) -> Motor {
@@ -11954,13 +11300,11 @@ fn plane_plane_geometric_quotient(self_1508: Plane, other_1314: Plane) -> Motor 
 
     self_1509 = self_1508;
     other_1315 = other_1314;
-    let _e6: Plane = other_1315;
-    let _e7: Plane = plane_inverse(_e6);
-    let _e8: Plane = self_1509;
-    let _e10: Plane = other_1315;
-    let _e11: Plane = plane_inverse(_e10);
-    let _e12: Motor = plane_plane_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Plane = self_1509;
+    let _e5: Plane = other_1315;
+    let _e6: Plane = plane_inverse(_e5);
+    let _e7: Motor = plane_plane_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn plane_plane_transformation(self_1510: Plane, other_1316: Plane) -> Plane {
@@ -11969,30 +11313,14 @@ fn plane_plane_transformation(self_1510: Plane, other_1316: Plane) -> Plane {
 
     self_1511 = self_1510;
     other_1317 = other_1316;
-    let _e6: Plane = self_1511;
-    let _e7: Plane = other_1317;
-    let _e8: Motor = plane_plane_geometric_product(_e6, _e7);
-    let _e10: Plane = self_1511;
-    let _e11: Plane = plane_reversal(_e10);
-    let _e14: Plane = self_1511;
-    let _e15: Plane = other_1317;
-    let _e16: Motor = plane_plane_geometric_product(_e14, _e15);
-    let _e18: Plane = self_1511;
-    let _e19: Plane = plane_reversal(_e18);
-    let _e20: MotorDual = motor_plane_geometric_product(_e16, _e19);
-    let _e23: Plane = self_1511;
-    let _e24: Plane = other_1317;
-    let _e25: Motor = plane_plane_geometric_product(_e23, _e24);
-    let _e27: Plane = self_1511;
-    let _e28: Plane = plane_reversal(_e27);
-    let _e31: Plane = self_1511;
-    let _e32: Plane = other_1317;
-    let _e33: Motor = plane_plane_geometric_product(_e31, _e32);
-    let _e35: Plane = self_1511;
-    let _e36: Plane = plane_reversal(_e35);
-    let _e37: MotorDual = motor_plane_geometric_product(_e33, _e36);
-    let _e38: Plane = motor_dual_plane_into(_e37);
-    return _e38;
+    let _e4: Plane = self_1511;
+    let _e5: Plane = other_1317;
+    let _e6: Motor = plane_plane_geometric_product(_e4, _e5);
+    let _e7: Plane = self_1511;
+    let _e8: Plane = plane_reversal(_e7);
+    let _e9: MotorDual = motor_plane_geometric_product(_e6, _e8);
+    let _e10: Plane = motor_dual_plane_into(_e9);
+    return _e10;
 }
 
 fn plane_point_geometric_quotient(self_1512: Plane, other_1318: Point) -> MotorDual {
@@ -12001,13 +11329,11 @@ fn plane_point_geometric_quotient(self_1512: Plane, other_1318: Point) -> MotorD
 
     self_1513 = self_1512;
     other_1319 = other_1318;
-    let _e6: Point = other_1319;
-    let _e7: Point = point_inverse(_e6);
-    let _e8: Plane = self_1513;
-    let _e10: Point = other_1319;
-    let _e11: Point = point_inverse(_e10);
-    let _e12: MotorDual = plane_point_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Plane = self_1513;
+    let _e5: Point = other_1319;
+    let _e6: Point = point_inverse(_e5);
+    let _e7: MotorDual = plane_point_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn plane_point_transformation(self_1514: Plane, other_1320: Point) -> Point {
@@ -12016,30 +11342,14 @@ fn plane_point_transformation(self_1514: Plane, other_1320: Point) -> Point {
 
     self_1515 = self_1514;
     other_1321 = other_1320;
-    let _e6: Plane = self_1515;
-    let _e7: Point = other_1321;
-    let _e8: MotorDual = plane_point_geometric_product(_e6, _e7);
-    let _e10: Plane = self_1515;
-    let _e11: Plane = plane_reversal(_e10);
-    let _e14: Plane = self_1515;
-    let _e15: Point = other_1321;
-    let _e16: MotorDual = plane_point_geometric_product(_e14, _e15);
-    let _e18: Plane = self_1515;
-    let _e19: Plane = plane_reversal(_e18);
-    let _e20: Motor = motor_dual_plane_geometric_product(_e16, _e19);
-    let _e23: Plane = self_1515;
-    let _e24: Point = other_1321;
-    let _e25: MotorDual = plane_point_geometric_product(_e23, _e24);
-    let _e27: Plane = self_1515;
-    let _e28: Plane = plane_reversal(_e27);
-    let _e31: Plane = self_1515;
-    let _e32: Point = other_1321;
-    let _e33: MotorDual = plane_point_geometric_product(_e31, _e32);
-    let _e35: Plane = self_1515;
-    let _e36: Plane = plane_reversal(_e35);
-    let _e37: Motor = motor_dual_plane_geometric_product(_e33, _e36);
-    let _e38: Point = motor_point_into(_e37);
-    return _e38;
+    let _e4: Plane = self_1515;
+    let _e5: Point = other_1321;
+    let _e6: MotorDual = plane_point_geometric_product(_e4, _e5);
+    let _e7: Plane = self_1515;
+    let _e8: Plane = plane_reversal(_e7);
+    let _e9: Motor = motor_dual_plane_geometric_product(_e6, _e8);
+    let _e10: Point = motor_point_into(_e9);
+    return _e10;
 }
 
 fn plane_rotor_geometric_quotient(self_1516: Plane, other_1322: Rotor) -> MotorDual {
@@ -12048,13 +11358,11 @@ fn plane_rotor_geometric_quotient(self_1516: Plane, other_1322: Rotor) -> MotorD
 
     self_1517 = self_1516;
     other_1323 = other_1322;
-    let _e6: Rotor = other_1323;
-    let _e7: Rotor = rotor_inverse(_e6);
-    let _e8: Plane = self_1517;
-    let _e10: Rotor = other_1323;
-    let _e11: Rotor = rotor_inverse(_e10);
-    let _e12: MotorDual = plane_rotor_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Plane = self_1517;
+    let _e5: Rotor = other_1323;
+    let _e6: Rotor = rotor_inverse(_e5);
+    let _e7: MotorDual = plane_rotor_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn plane_rotor_transformation(self_1518: Plane, other_1324: Rotor) -> Rotor {
@@ -12063,30 +11371,14 @@ fn plane_rotor_transformation(self_1518: Plane, other_1324: Rotor) -> Rotor {
 
     self_1519 = self_1518;
     other_1325 = other_1324;
-    let _e6: Plane = self_1519;
-    let _e7: Rotor = other_1325;
-    let _e8: MotorDual = plane_rotor_geometric_product(_e6, _e7);
-    let _e10: Plane = self_1519;
-    let _e11: Plane = plane_reversal(_e10);
-    let _e14: Plane = self_1519;
-    let _e15: Rotor = other_1325;
-    let _e16: MotorDual = plane_rotor_geometric_product(_e14, _e15);
-    let _e18: Plane = self_1519;
-    let _e19: Plane = plane_reversal(_e18);
-    let _e20: Motor = motor_dual_plane_geometric_product(_e16, _e19);
-    let _e23: Plane = self_1519;
-    let _e24: Rotor = other_1325;
-    let _e25: MotorDual = plane_rotor_geometric_product(_e23, _e24);
-    let _e27: Plane = self_1519;
-    let _e28: Plane = plane_reversal(_e27);
-    let _e31: Plane = self_1519;
-    let _e32: Rotor = other_1325;
-    let _e33: MotorDual = plane_rotor_geometric_product(_e31, _e32);
-    let _e35: Plane = self_1519;
-    let _e36: Plane = plane_reversal(_e35);
-    let _e37: Motor = motor_dual_plane_geometric_product(_e33, _e36);
-    let _e38: Rotor = motor_rotor_into(_e37);
-    return _e38;
+    let _e4: Plane = self_1519;
+    let _e5: Rotor = other_1325;
+    let _e6: MotorDual = plane_rotor_geometric_product(_e4, _e5);
+    let _e7: Plane = self_1519;
+    let _e8: Plane = plane_reversal(_e7);
+    let _e9: Motor = motor_dual_plane_geometric_product(_e6, _e8);
+    let _e10: Rotor = motor_rotor_into(_e9);
+    return _e10;
 }
 
 fn plane_scalar_geometric_quotient(self_1520: Plane, other_1326: Scalar) -> Plane {
@@ -12095,13 +11387,11 @@ fn plane_scalar_geometric_quotient(self_1520: Plane, other_1326: Scalar) -> Plan
 
     self_1521 = self_1520;
     other_1327 = other_1326;
-    let _e6: Scalar = other_1327;
-    let _e7: Scalar = scalar_inverse(_e6);
-    let _e8: Plane = self_1521;
-    let _e10: Scalar = other_1327;
-    let _e11: Scalar = scalar_inverse(_e10);
-    let _e12: Plane = plane_scalar_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Plane = self_1521;
+    let _e5: Scalar = other_1327;
+    let _e6: Scalar = scalar_inverse(_e5);
+    let _e7: Plane = plane_scalar_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn plane_scalar_transformation(self_1522: Plane, other_1328: Scalar) -> Scalar {
@@ -12110,30 +11400,14 @@ fn plane_scalar_transformation(self_1522: Plane, other_1328: Scalar) -> Scalar {
 
     self_1523 = self_1522;
     other_1329 = other_1328;
-    let _e6: Plane = self_1523;
-    let _e7: Scalar = other_1329;
-    let _e8: Plane = plane_scalar_geometric_product(_e6, _e7);
-    let _e10: Plane = self_1523;
-    let _e11: Plane = plane_reversal(_e10);
-    let _e14: Plane = self_1523;
-    let _e15: Scalar = other_1329;
-    let _e16: Plane = plane_scalar_geometric_product(_e14, _e15);
-    let _e18: Plane = self_1523;
-    let _e19: Plane = plane_reversal(_e18);
-    let _e20: Motor = plane_plane_geometric_product(_e16, _e19);
-    let _e23: Plane = self_1523;
-    let _e24: Scalar = other_1329;
-    let _e25: Plane = plane_scalar_geometric_product(_e23, _e24);
-    let _e27: Plane = self_1523;
-    let _e28: Plane = plane_reversal(_e27);
-    let _e31: Plane = self_1523;
-    let _e32: Scalar = other_1329;
-    let _e33: Plane = plane_scalar_geometric_product(_e31, _e32);
-    let _e35: Plane = self_1523;
-    let _e36: Plane = plane_reversal(_e35);
-    let _e37: Motor = plane_plane_geometric_product(_e33, _e36);
-    let _e38: Scalar = motor_scalar_into(_e37);
-    return _e38;
+    let _e4: Plane = self_1523;
+    let _e5: Scalar = other_1329;
+    let _e6: Plane = plane_scalar_geometric_product(_e4, _e5);
+    let _e7: Plane = self_1523;
+    let _e8: Plane = plane_reversal(_e7);
+    let _e9: Motor = plane_plane_geometric_product(_e6, _e8);
+    let _e10: Scalar = motor_scalar_into(_e9);
+    return _e10;
 }
 
 fn plane_translator_geometric_quotient(self_1524: Plane, other_1330: Translator) -> MotorDual {
@@ -12142,13 +11416,11 @@ fn plane_translator_geometric_quotient(self_1524: Plane, other_1330: Translator)
 
     self_1525 = self_1524;
     other_1331 = other_1330;
-    let _e6: Translator = other_1331;
-    let _e7: Translator = translator_inverse(_e6);
-    let _e8: Plane = self_1525;
-    let _e10: Translator = other_1331;
-    let _e11: Translator = translator_inverse(_e10);
-    let _e12: MotorDual = plane_translator_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Plane = self_1525;
+    let _e5: Translator = other_1331;
+    let _e6: Translator = translator_inverse(_e5);
+    let _e7: MotorDual = plane_translator_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn plane_translator_transformation(self_1526: Plane, other_1332: Translator) -> Translator {
@@ -12157,30 +11429,14 @@ fn plane_translator_transformation(self_1526: Plane, other_1332: Translator) -> 
 
     self_1527 = self_1526;
     other_1333 = other_1332;
-    let _e6: Plane = self_1527;
-    let _e7: Translator = other_1333;
-    let _e8: MotorDual = plane_translator_geometric_product(_e6, _e7);
-    let _e10: Plane = self_1527;
-    let _e11: Plane = plane_reversal(_e10);
-    let _e14: Plane = self_1527;
-    let _e15: Translator = other_1333;
-    let _e16: MotorDual = plane_translator_geometric_product(_e14, _e15);
-    let _e18: Plane = self_1527;
-    let _e19: Plane = plane_reversal(_e18);
-    let _e20: Motor = motor_dual_plane_geometric_product(_e16, _e19);
-    let _e23: Plane = self_1527;
-    let _e24: Translator = other_1333;
-    let _e25: MotorDual = plane_translator_geometric_product(_e23, _e24);
-    let _e27: Plane = self_1527;
-    let _e28: Plane = plane_reversal(_e27);
-    let _e31: Plane = self_1527;
-    let _e32: Translator = other_1333;
-    let _e33: MotorDual = plane_translator_geometric_product(_e31, _e32);
-    let _e35: Plane = self_1527;
-    let _e36: Plane = plane_reversal(_e35);
-    let _e37: Motor = motor_dual_plane_geometric_product(_e33, _e36);
-    let _e38: Translator = motor_translator_into(_e37);
-    return _e38;
+    let _e4: Plane = self_1527;
+    let _e5: Translator = other_1333;
+    let _e6: MotorDual = plane_translator_geometric_product(_e4, _e5);
+    let _e7: Plane = self_1527;
+    let _e8: Plane = plane_reversal(_e7);
+    let _e9: Motor = motor_dual_plane_geometric_product(_e6, _e8);
+    let _e10: Translator = motor_translator_into(_e9);
+    return _e10;
 }
 
 fn point_ideal_point_geometric_quotient(self_1528: Point, other_1334: IdealPoint) -> Motor {
@@ -12189,13 +11445,11 @@ fn point_ideal_point_geometric_quotient(self_1528: Point, other_1334: IdealPoint
 
     self_1529 = self_1528;
     other_1335 = other_1334;
-    let _e6: IdealPoint = other_1335;
-    let _e7: IdealPoint = ideal_point_inverse(_e6);
-    let _e8: Point = self_1529;
-    let _e10: IdealPoint = other_1335;
-    let _e11: IdealPoint = ideal_point_inverse(_e10);
-    let _e12: Motor = point_ideal_point_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Point = self_1529;
+    let _e5: IdealPoint = other_1335;
+    let _e6: IdealPoint = ideal_point_inverse(_e5);
+    let _e7: Motor = point_ideal_point_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn point_ideal_point_transformation(self_1530: Point, other_1336: IdealPoint) -> IdealPoint {
@@ -12204,30 +11458,14 @@ fn point_ideal_point_transformation(self_1530: Point, other_1336: IdealPoint) ->
 
     self_1531 = self_1530;
     other_1337 = other_1336;
-    let _e6: Point = self_1531;
-    let _e7: IdealPoint = other_1337;
-    let _e8: Motor = point_ideal_point_geometric_product(_e6, _e7);
-    let _e10: Point = self_1531;
-    let _e11: Point = point_reversal(_e10);
-    let _e14: Point = self_1531;
-    let _e15: IdealPoint = other_1337;
-    let _e16: Motor = point_ideal_point_geometric_product(_e14, _e15);
-    let _e18: Point = self_1531;
-    let _e19: Point = point_reversal(_e18);
-    let _e20: Motor = motor_point_geometric_product(_e16, _e19);
-    let _e23: Point = self_1531;
-    let _e24: IdealPoint = other_1337;
-    let _e25: Motor = point_ideal_point_geometric_product(_e23, _e24);
-    let _e27: Point = self_1531;
-    let _e28: Point = point_reversal(_e27);
-    let _e31: Point = self_1531;
-    let _e32: IdealPoint = other_1337;
-    let _e33: Motor = point_ideal_point_geometric_product(_e31, _e32);
-    let _e35: Point = self_1531;
-    let _e36: Point = point_reversal(_e35);
-    let _e37: Motor = motor_point_geometric_product(_e33, _e36);
-    let _e38: IdealPoint = motor_ideal_point_into(_e37);
-    return _e38;
+    let _e4: Point = self_1531;
+    let _e5: IdealPoint = other_1337;
+    let _e6: Motor = point_ideal_point_geometric_product(_e4, _e5);
+    let _e7: Point = self_1531;
+    let _e8: Point = point_reversal(_e7);
+    let _e9: Motor = motor_point_geometric_product(_e6, _e8);
+    let _e10: IdealPoint = motor_ideal_point_into(_e9);
+    return _e10;
 }
 
 fn point_motor_geometric_quotient(self_1532: Point, other_1338: Motor) -> Motor {
@@ -12236,13 +11474,11 @@ fn point_motor_geometric_quotient(self_1532: Point, other_1338: Motor) -> Motor 
 
     self_1533 = self_1532;
     other_1339 = other_1338;
-    let _e6: Motor = other_1339;
-    let _e7: Motor = motor_inverse(_e6);
-    let _e8: Point = self_1533;
-    let _e10: Motor = other_1339;
-    let _e11: Motor = motor_inverse(_e10);
-    let _e12: Motor = point_motor_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Point = self_1533;
+    let _e5: Motor = other_1339;
+    let _e6: Motor = motor_inverse(_e5);
+    let _e7: Motor = point_motor_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn point_motor_transformation(self_1534: Point, other_1340: Motor) -> Motor {
@@ -12251,18 +11487,13 @@ fn point_motor_transformation(self_1534: Point, other_1340: Motor) -> Motor {
 
     self_1535 = self_1534;
     other_1341 = other_1340;
-    let _e6: Point = self_1535;
-    let _e7: Motor = other_1341;
-    let _e8: Motor = point_motor_geometric_product(_e6, _e7);
-    let _e10: Point = self_1535;
-    let _e11: Point = point_reversal(_e10);
-    let _e14: Point = self_1535;
-    let _e15: Motor = other_1341;
-    let _e16: Motor = point_motor_geometric_product(_e14, _e15);
-    let _e18: Point = self_1535;
-    let _e19: Point = point_reversal(_e18);
-    let _e20: Motor = motor_point_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Point = self_1535;
+    let _e5: Motor = other_1341;
+    let _e6: Motor = point_motor_geometric_product(_e4, _e5);
+    let _e7: Point = self_1535;
+    let _e8: Point = point_reversal(_e7);
+    let _e9: Motor = motor_point_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn point_motor_dual_geometric_quotient(self_1536: Point, other_1342: MotorDual) -> MotorDual {
@@ -12271,13 +11502,11 @@ fn point_motor_dual_geometric_quotient(self_1536: Point, other_1342: MotorDual) 
 
     self_1537 = self_1536;
     other_1343 = other_1342;
-    let _e6: MotorDual = other_1343;
-    let _e7: MotorDual = motor_dual_inverse(_e6);
-    let _e8: Point = self_1537;
-    let _e10: MotorDual = other_1343;
-    let _e11: MotorDual = motor_dual_inverse(_e10);
-    let _e12: MotorDual = point_motor_dual_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Point = self_1537;
+    let _e5: MotorDual = other_1343;
+    let _e6: MotorDual = motor_dual_inverse(_e5);
+    let _e7: MotorDual = point_motor_dual_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn point_motor_dual_transformation(self_1538: Point, other_1344: MotorDual) -> MotorDual {
@@ -12286,18 +11515,13 @@ fn point_motor_dual_transformation(self_1538: Point, other_1344: MotorDual) -> M
 
     self_1539 = self_1538;
     other_1345 = other_1344;
-    let _e6: Point = self_1539;
-    let _e7: MotorDual = other_1345;
-    let _e8: MotorDual = point_motor_dual_geometric_product(_e6, _e7);
-    let _e10: Point = self_1539;
-    let _e11: Point = point_reversal(_e10);
-    let _e14: Point = self_1539;
-    let _e15: MotorDual = other_1345;
-    let _e16: MotorDual = point_motor_dual_geometric_product(_e14, _e15);
-    let _e18: Point = self_1539;
-    let _e19: Point = point_reversal(_e18);
-    let _e20: MotorDual = motor_dual_point_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Point = self_1539;
+    let _e5: MotorDual = other_1345;
+    let _e6: MotorDual = point_motor_dual_geometric_product(_e4, _e5);
+    let _e7: Point = self_1539;
+    let _e8: Point = point_reversal(_e7);
+    let _e9: MotorDual = motor_dual_point_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn point_multi_vector_geometric_quotient(self_1540: Point, other_1346: MultiVector) -> MultiVector {
@@ -12306,13 +11530,11 @@ fn point_multi_vector_geometric_quotient(self_1540: Point, other_1346: MultiVect
 
     self_1541 = self_1540;
     other_1347 = other_1346;
-    let _e6: MultiVector = other_1347;
-    let _e7: MultiVector = multi_vector_inverse(_e6);
-    let _e8: Point = self_1541;
-    let _e10: MultiVector = other_1347;
-    let _e11: MultiVector = multi_vector_inverse(_e10);
-    let _e12: MultiVector = point_multi_vector_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Point = self_1541;
+    let _e5: MultiVector = other_1347;
+    let _e6: MultiVector = multi_vector_inverse(_e5);
+    let _e7: MultiVector = point_multi_vector_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn point_multi_vector_transformation(self_1542: Point, other_1348: MultiVector) -> MultiVector {
@@ -12321,18 +11543,13 @@ fn point_multi_vector_transformation(self_1542: Point, other_1348: MultiVector) 
 
     self_1543 = self_1542;
     other_1349 = other_1348;
-    let _e6: Point = self_1543;
-    let _e7: MultiVector = other_1349;
-    let _e8: MultiVector = point_multi_vector_geometric_product(_e6, _e7);
-    let _e10: Point = self_1543;
-    let _e11: Point = point_reversal(_e10);
-    let _e14: Point = self_1543;
-    let _e15: MultiVector = other_1349;
-    let _e16: MultiVector = point_multi_vector_geometric_product(_e14, _e15);
-    let _e18: Point = self_1543;
-    let _e19: Point = point_reversal(_e18);
-    let _e20: MultiVector = multi_vector_point_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Point = self_1543;
+    let _e5: MultiVector = other_1349;
+    let _e6: MultiVector = point_multi_vector_geometric_product(_e4, _e5);
+    let _e7: Point = self_1543;
+    let _e8: Point = point_reversal(_e7);
+    let _e9: MultiVector = multi_vector_point_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn point_plane_geometric_quotient(self_1544: Point, other_1350: Plane) -> MotorDual {
@@ -12341,13 +11558,11 @@ fn point_plane_geometric_quotient(self_1544: Point, other_1350: Plane) -> MotorD
 
     self_1545 = self_1544;
     other_1351 = other_1350;
-    let _e6: Plane = other_1351;
-    let _e7: Plane = plane_inverse(_e6);
-    let _e8: Point = self_1545;
-    let _e10: Plane = other_1351;
-    let _e11: Plane = plane_inverse(_e10);
-    let _e12: MotorDual = point_plane_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Point = self_1545;
+    let _e5: Plane = other_1351;
+    let _e6: Plane = plane_inverse(_e5);
+    let _e7: MotorDual = point_plane_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn point_plane_transformation(self_1546: Point, other_1352: Plane) -> Plane {
@@ -12356,30 +11571,14 @@ fn point_plane_transformation(self_1546: Point, other_1352: Plane) -> Plane {
 
     self_1547 = self_1546;
     other_1353 = other_1352;
-    let _e6: Point = self_1547;
-    let _e7: Plane = other_1353;
-    let _e8: MotorDual = point_plane_geometric_product(_e6, _e7);
-    let _e10: Point = self_1547;
-    let _e11: Point = point_reversal(_e10);
-    let _e14: Point = self_1547;
-    let _e15: Plane = other_1353;
-    let _e16: MotorDual = point_plane_geometric_product(_e14, _e15);
-    let _e18: Point = self_1547;
-    let _e19: Point = point_reversal(_e18);
-    let _e20: MotorDual = motor_dual_point_geometric_product(_e16, _e19);
-    let _e23: Point = self_1547;
-    let _e24: Plane = other_1353;
-    let _e25: MotorDual = point_plane_geometric_product(_e23, _e24);
-    let _e27: Point = self_1547;
-    let _e28: Point = point_reversal(_e27);
-    let _e31: Point = self_1547;
-    let _e32: Plane = other_1353;
-    let _e33: MotorDual = point_plane_geometric_product(_e31, _e32);
-    let _e35: Point = self_1547;
-    let _e36: Point = point_reversal(_e35);
-    let _e37: MotorDual = motor_dual_point_geometric_product(_e33, _e36);
-    let _e38: Plane = motor_dual_plane_into(_e37);
-    return _e38;
+    let _e4: Point = self_1547;
+    let _e5: Plane = other_1353;
+    let _e6: MotorDual = point_plane_geometric_product(_e4, _e5);
+    let _e7: Point = self_1547;
+    let _e8: Point = point_reversal(_e7);
+    let _e9: MotorDual = motor_dual_point_geometric_product(_e6, _e8);
+    let _e10: Plane = motor_dual_plane_into(_e9);
+    return _e10;
 }
 
 fn point_point_geometric_quotient(self_1548: Point, other_1354: Point) -> Motor {
@@ -12388,13 +11587,11 @@ fn point_point_geometric_quotient(self_1548: Point, other_1354: Point) -> Motor 
 
     self_1549 = self_1548;
     other_1355 = other_1354;
-    let _e6: Point = other_1355;
-    let _e7: Point = point_inverse(_e6);
-    let _e8: Point = self_1549;
-    let _e10: Point = other_1355;
-    let _e11: Point = point_inverse(_e10);
-    let _e12: Motor = point_point_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Point = self_1549;
+    let _e5: Point = other_1355;
+    let _e6: Point = point_inverse(_e5);
+    let _e7: Motor = point_point_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn point_point_transformation(self_1550: Point, other_1356: Point) -> Point {
@@ -12403,30 +11600,14 @@ fn point_point_transformation(self_1550: Point, other_1356: Point) -> Point {
 
     self_1551 = self_1550;
     other_1357 = other_1356;
-    let _e6: Point = self_1551;
-    let _e7: Point = other_1357;
-    let _e8: Motor = point_point_geometric_product(_e6, _e7);
-    let _e10: Point = self_1551;
-    let _e11: Point = point_reversal(_e10);
-    let _e14: Point = self_1551;
-    let _e15: Point = other_1357;
-    let _e16: Motor = point_point_geometric_product(_e14, _e15);
-    let _e18: Point = self_1551;
-    let _e19: Point = point_reversal(_e18);
-    let _e20: Motor = motor_point_geometric_product(_e16, _e19);
-    let _e23: Point = self_1551;
-    let _e24: Point = other_1357;
-    let _e25: Motor = point_point_geometric_product(_e23, _e24);
-    let _e27: Point = self_1551;
-    let _e28: Point = point_reversal(_e27);
-    let _e31: Point = self_1551;
-    let _e32: Point = other_1357;
-    let _e33: Motor = point_point_geometric_product(_e31, _e32);
-    let _e35: Point = self_1551;
-    let _e36: Point = point_reversal(_e35);
-    let _e37: Motor = motor_point_geometric_product(_e33, _e36);
-    let _e38: Point = motor_point_into(_e37);
-    return _e38;
+    let _e4: Point = self_1551;
+    let _e5: Point = other_1357;
+    let _e6: Motor = point_point_geometric_product(_e4, _e5);
+    let _e7: Point = self_1551;
+    let _e8: Point = point_reversal(_e7);
+    let _e9: Motor = motor_point_geometric_product(_e6, _e8);
+    let _e10: Point = motor_point_into(_e9);
+    return _e10;
 }
 
 fn point_rotor_geometric_quotient(self_1552: Point, other_1358: Rotor) -> Motor {
@@ -12435,13 +11616,11 @@ fn point_rotor_geometric_quotient(self_1552: Point, other_1358: Rotor) -> Motor 
 
     self_1553 = self_1552;
     other_1359 = other_1358;
-    let _e6: Rotor = other_1359;
-    let _e7: Rotor = rotor_inverse(_e6);
-    let _e8: Point = self_1553;
-    let _e10: Rotor = other_1359;
-    let _e11: Rotor = rotor_inverse(_e10);
-    let _e12: Motor = point_rotor_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Point = self_1553;
+    let _e5: Rotor = other_1359;
+    let _e6: Rotor = rotor_inverse(_e5);
+    let _e7: Motor = point_rotor_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn point_rotor_transformation(self_1554: Point, other_1360: Rotor) -> Rotor {
@@ -12450,30 +11629,14 @@ fn point_rotor_transformation(self_1554: Point, other_1360: Rotor) -> Rotor {
 
     self_1555 = self_1554;
     other_1361 = other_1360;
-    let _e6: Point = self_1555;
-    let _e7: Rotor = other_1361;
-    let _e8: Motor = point_rotor_geometric_product(_e6, _e7);
-    let _e10: Point = self_1555;
-    let _e11: Point = point_reversal(_e10);
-    let _e14: Point = self_1555;
-    let _e15: Rotor = other_1361;
-    let _e16: Motor = point_rotor_geometric_product(_e14, _e15);
-    let _e18: Point = self_1555;
-    let _e19: Point = point_reversal(_e18);
-    let _e20: Motor = motor_point_geometric_product(_e16, _e19);
-    let _e23: Point = self_1555;
-    let _e24: Rotor = other_1361;
-    let _e25: Motor = point_rotor_geometric_product(_e23, _e24);
-    let _e27: Point = self_1555;
-    let _e28: Point = point_reversal(_e27);
-    let _e31: Point = self_1555;
-    let _e32: Rotor = other_1361;
-    let _e33: Motor = point_rotor_geometric_product(_e31, _e32);
-    let _e35: Point = self_1555;
-    let _e36: Point = point_reversal(_e35);
-    let _e37: Motor = motor_point_geometric_product(_e33, _e36);
-    let _e38: Rotor = motor_rotor_into(_e37);
-    return _e38;
+    let _e4: Point = self_1555;
+    let _e5: Rotor = other_1361;
+    let _e6: Motor = point_rotor_geometric_product(_e4, _e5);
+    let _e7: Point = self_1555;
+    let _e8: Point = point_reversal(_e7);
+    let _e9: Motor = motor_point_geometric_product(_e6, _e8);
+    let _e10: Rotor = motor_rotor_into(_e9);
+    return _e10;
 }
 
 fn point_scalar_geometric_quotient(self_1556: Point, other_1362: Scalar) -> Point {
@@ -12482,13 +11645,11 @@ fn point_scalar_geometric_quotient(self_1556: Point, other_1362: Scalar) -> Poin
 
     self_1557 = self_1556;
     other_1363 = other_1362;
-    let _e6: Scalar = other_1363;
-    let _e7: Scalar = scalar_inverse(_e6);
-    let _e8: Point = self_1557;
-    let _e10: Scalar = other_1363;
-    let _e11: Scalar = scalar_inverse(_e10);
-    let _e12: Point = point_scalar_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Point = self_1557;
+    let _e5: Scalar = other_1363;
+    let _e6: Scalar = scalar_inverse(_e5);
+    let _e7: Point = point_scalar_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn point_scalar_transformation(self_1558: Point, other_1364: Scalar) -> Scalar {
@@ -12497,30 +11658,14 @@ fn point_scalar_transformation(self_1558: Point, other_1364: Scalar) -> Scalar {
 
     self_1559 = self_1558;
     other_1365 = other_1364;
-    let _e6: Point = self_1559;
-    let _e7: Scalar = other_1365;
-    let _e8: Point = point_scalar_geometric_product(_e6, _e7);
-    let _e10: Point = self_1559;
-    let _e11: Point = point_reversal(_e10);
-    let _e14: Point = self_1559;
-    let _e15: Scalar = other_1365;
-    let _e16: Point = point_scalar_geometric_product(_e14, _e15);
-    let _e18: Point = self_1559;
-    let _e19: Point = point_reversal(_e18);
-    let _e20: Motor = point_point_geometric_product(_e16, _e19);
-    let _e23: Point = self_1559;
-    let _e24: Scalar = other_1365;
-    let _e25: Point = point_scalar_geometric_product(_e23, _e24);
-    let _e27: Point = self_1559;
-    let _e28: Point = point_reversal(_e27);
-    let _e31: Point = self_1559;
-    let _e32: Scalar = other_1365;
-    let _e33: Point = point_scalar_geometric_product(_e31, _e32);
-    let _e35: Point = self_1559;
-    let _e36: Point = point_reversal(_e35);
-    let _e37: Motor = point_point_geometric_product(_e33, _e36);
-    let _e38: Scalar = motor_scalar_into(_e37);
-    return _e38;
+    let _e4: Point = self_1559;
+    let _e5: Scalar = other_1365;
+    let _e6: Point = point_scalar_geometric_product(_e4, _e5);
+    let _e7: Point = self_1559;
+    let _e8: Point = point_reversal(_e7);
+    let _e9: Motor = point_point_geometric_product(_e6, _e8);
+    let _e10: Scalar = motor_scalar_into(_e9);
+    return _e10;
 }
 
 fn point_translator_geometric_quotient(self_1560: Point, other_1366: Translator) -> Motor {
@@ -12529,13 +11674,11 @@ fn point_translator_geometric_quotient(self_1560: Point, other_1366: Translator)
 
     self_1561 = self_1560;
     other_1367 = other_1366;
-    let _e6: Translator = other_1367;
-    let _e7: Translator = translator_inverse(_e6);
-    let _e8: Point = self_1561;
-    let _e10: Translator = other_1367;
-    let _e11: Translator = translator_inverse(_e10);
-    let _e12: Motor = point_translator_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Point = self_1561;
+    let _e5: Translator = other_1367;
+    let _e6: Translator = translator_inverse(_e5);
+    let _e7: Motor = point_translator_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn point_translator_transformation(self_1562: Point, other_1368: Translator) -> Translator {
@@ -12544,30 +11687,14 @@ fn point_translator_transformation(self_1562: Point, other_1368: Translator) -> 
 
     self_1563 = self_1562;
     other_1369 = other_1368;
-    let _e6: Point = self_1563;
-    let _e7: Translator = other_1369;
-    let _e8: Motor = point_translator_geometric_product(_e6, _e7);
-    let _e10: Point = self_1563;
-    let _e11: Point = point_reversal(_e10);
-    let _e14: Point = self_1563;
-    let _e15: Translator = other_1369;
-    let _e16: Motor = point_translator_geometric_product(_e14, _e15);
-    let _e18: Point = self_1563;
-    let _e19: Point = point_reversal(_e18);
-    let _e20: Motor = motor_point_geometric_product(_e16, _e19);
-    let _e23: Point = self_1563;
-    let _e24: Translator = other_1369;
-    let _e25: Motor = point_translator_geometric_product(_e23, _e24);
-    let _e27: Point = self_1563;
-    let _e28: Point = point_reversal(_e27);
-    let _e31: Point = self_1563;
-    let _e32: Translator = other_1369;
-    let _e33: Motor = point_translator_geometric_product(_e31, _e32);
-    let _e35: Point = self_1563;
-    let _e36: Point = point_reversal(_e35);
-    let _e37: Motor = motor_point_geometric_product(_e33, _e36);
-    let _e38: Translator = motor_translator_into(_e37);
-    return _e38;
+    let _e4: Point = self_1563;
+    let _e5: Translator = other_1369;
+    let _e6: Motor = point_translator_geometric_product(_e4, _e5);
+    let _e7: Point = self_1563;
+    let _e8: Point = point_reversal(_e7);
+    let _e9: Motor = motor_point_geometric_product(_e6, _e8);
+    let _e10: Translator = motor_translator_into(_e9);
+    return _e10;
 }
 
 fn rotor_ideal_point_geometric_quotient(self_1564: Rotor, other_1370: IdealPoint) -> IdealPoint {
@@ -12576,13 +11703,11 @@ fn rotor_ideal_point_geometric_quotient(self_1564: Rotor, other_1370: IdealPoint
 
     self_1565 = self_1564;
     other_1371 = other_1370;
-    let _e6: IdealPoint = other_1371;
-    let _e7: IdealPoint = ideal_point_inverse(_e6);
-    let _e8: Rotor = self_1565;
-    let _e10: IdealPoint = other_1371;
-    let _e11: IdealPoint = ideal_point_inverse(_e10);
-    let _e12: IdealPoint = rotor_ideal_point_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Rotor = self_1565;
+    let _e5: IdealPoint = other_1371;
+    let _e6: IdealPoint = ideal_point_inverse(_e5);
+    let _e7: IdealPoint = rotor_ideal_point_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn rotor_ideal_point_transformation(self_1566: Rotor, other_1372: IdealPoint) -> IdealPoint {
@@ -12591,18 +11716,13 @@ fn rotor_ideal_point_transformation(self_1566: Rotor, other_1372: IdealPoint) ->
 
     self_1567 = self_1566;
     other_1373 = other_1372;
-    let _e6: Rotor = self_1567;
-    let _e7: IdealPoint = other_1373;
-    let _e8: IdealPoint = rotor_ideal_point_geometric_product(_e6, _e7);
-    let _e10: Rotor = self_1567;
-    let _e11: Rotor = rotor_reversal(_e10);
-    let _e14: Rotor = self_1567;
-    let _e15: IdealPoint = other_1373;
-    let _e16: IdealPoint = rotor_ideal_point_geometric_product(_e14, _e15);
-    let _e18: Rotor = self_1567;
-    let _e19: Rotor = rotor_reversal(_e18);
-    let _e20: IdealPoint = ideal_point_rotor_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Rotor = self_1567;
+    let _e5: IdealPoint = other_1373;
+    let _e6: IdealPoint = rotor_ideal_point_geometric_product(_e4, _e5);
+    let _e7: Rotor = self_1567;
+    let _e8: Rotor = rotor_reversal(_e7);
+    let _e9: IdealPoint = ideal_point_rotor_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn rotor_motor_geometric_quotient(self_1568: Rotor, other_1374: Motor) -> Motor {
@@ -12611,13 +11731,11 @@ fn rotor_motor_geometric_quotient(self_1568: Rotor, other_1374: Motor) -> Motor 
 
     self_1569 = self_1568;
     other_1375 = other_1374;
-    let _e6: Motor = other_1375;
-    let _e7: Motor = motor_inverse(_e6);
-    let _e8: Rotor = self_1569;
-    let _e10: Motor = other_1375;
-    let _e11: Motor = motor_inverse(_e10);
-    let _e12: Motor = rotor_motor_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Rotor = self_1569;
+    let _e5: Motor = other_1375;
+    let _e6: Motor = motor_inverse(_e5);
+    let _e7: Motor = rotor_motor_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn rotor_motor_transformation(self_1570: Rotor, other_1376: Motor) -> Motor {
@@ -12626,18 +11744,13 @@ fn rotor_motor_transformation(self_1570: Rotor, other_1376: Motor) -> Motor {
 
     self_1571 = self_1570;
     other_1377 = other_1376;
-    let _e6: Rotor = self_1571;
-    let _e7: Motor = other_1377;
-    let _e8: Motor = rotor_motor_geometric_product(_e6, _e7);
-    let _e10: Rotor = self_1571;
-    let _e11: Rotor = rotor_reversal(_e10);
-    let _e14: Rotor = self_1571;
-    let _e15: Motor = other_1377;
-    let _e16: Motor = rotor_motor_geometric_product(_e14, _e15);
-    let _e18: Rotor = self_1571;
-    let _e19: Rotor = rotor_reversal(_e18);
-    let _e20: Motor = motor_rotor_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Rotor = self_1571;
+    let _e5: Motor = other_1377;
+    let _e6: Motor = rotor_motor_geometric_product(_e4, _e5);
+    let _e7: Rotor = self_1571;
+    let _e8: Rotor = rotor_reversal(_e7);
+    let _e9: Motor = motor_rotor_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn rotor_motor_dual_geometric_quotient(self_1572: Rotor, other_1378: MotorDual) -> MotorDual {
@@ -12646,13 +11759,11 @@ fn rotor_motor_dual_geometric_quotient(self_1572: Rotor, other_1378: MotorDual) 
 
     self_1573 = self_1572;
     other_1379 = other_1378;
-    let _e6: MotorDual = other_1379;
-    let _e7: MotorDual = motor_dual_inverse(_e6);
-    let _e8: Rotor = self_1573;
-    let _e10: MotorDual = other_1379;
-    let _e11: MotorDual = motor_dual_inverse(_e10);
-    let _e12: MotorDual = rotor_motor_dual_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Rotor = self_1573;
+    let _e5: MotorDual = other_1379;
+    let _e6: MotorDual = motor_dual_inverse(_e5);
+    let _e7: MotorDual = rotor_motor_dual_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn rotor_motor_dual_transformation(self_1574: Rotor, other_1380: MotorDual) -> MotorDual {
@@ -12661,18 +11772,13 @@ fn rotor_motor_dual_transformation(self_1574: Rotor, other_1380: MotorDual) -> M
 
     self_1575 = self_1574;
     other_1381 = other_1380;
-    let _e6: Rotor = self_1575;
-    let _e7: MotorDual = other_1381;
-    let _e8: MotorDual = rotor_motor_dual_geometric_product(_e6, _e7);
-    let _e10: Rotor = self_1575;
-    let _e11: Rotor = rotor_reversal(_e10);
-    let _e14: Rotor = self_1575;
-    let _e15: MotorDual = other_1381;
-    let _e16: MotorDual = rotor_motor_dual_geometric_product(_e14, _e15);
-    let _e18: Rotor = self_1575;
-    let _e19: Rotor = rotor_reversal(_e18);
-    let _e20: MotorDual = motor_dual_rotor_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Rotor = self_1575;
+    let _e5: MotorDual = other_1381;
+    let _e6: MotorDual = rotor_motor_dual_geometric_product(_e4, _e5);
+    let _e7: Rotor = self_1575;
+    let _e8: Rotor = rotor_reversal(_e7);
+    let _e9: MotorDual = motor_dual_rotor_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn rotor_multi_vector_geometric_quotient(self_1576: Rotor, other_1382: MultiVector) -> MultiVector {
@@ -12681,13 +11787,11 @@ fn rotor_multi_vector_geometric_quotient(self_1576: Rotor, other_1382: MultiVect
 
     self_1577 = self_1576;
     other_1383 = other_1382;
-    let _e6: MultiVector = other_1383;
-    let _e7: MultiVector = multi_vector_inverse(_e6);
-    let _e8: Rotor = self_1577;
-    let _e10: MultiVector = other_1383;
-    let _e11: MultiVector = multi_vector_inverse(_e10);
-    let _e12: MultiVector = rotor_multi_vector_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Rotor = self_1577;
+    let _e5: MultiVector = other_1383;
+    let _e6: MultiVector = multi_vector_inverse(_e5);
+    let _e7: MultiVector = rotor_multi_vector_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn rotor_multi_vector_transformation(self_1578: Rotor, other_1384: MultiVector) -> MultiVector {
@@ -12696,18 +11800,13 @@ fn rotor_multi_vector_transformation(self_1578: Rotor, other_1384: MultiVector) 
 
     self_1579 = self_1578;
     other_1385 = other_1384;
-    let _e6: Rotor = self_1579;
-    let _e7: MultiVector = other_1385;
-    let _e8: MultiVector = rotor_multi_vector_geometric_product(_e6, _e7);
-    let _e10: Rotor = self_1579;
-    let _e11: Rotor = rotor_reversal(_e10);
-    let _e14: Rotor = self_1579;
-    let _e15: MultiVector = other_1385;
-    let _e16: MultiVector = rotor_multi_vector_geometric_product(_e14, _e15);
-    let _e18: Rotor = self_1579;
-    let _e19: Rotor = rotor_reversal(_e18);
-    let _e20: MultiVector = multi_vector_rotor_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Rotor = self_1579;
+    let _e5: MultiVector = other_1385;
+    let _e6: MultiVector = rotor_multi_vector_geometric_product(_e4, _e5);
+    let _e7: Rotor = self_1579;
+    let _e8: Rotor = rotor_reversal(_e7);
+    let _e9: MultiVector = multi_vector_rotor_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn rotor_plane_geometric_quotient(self_1580: Rotor, other_1386: Plane) -> MotorDual {
@@ -12716,13 +11815,11 @@ fn rotor_plane_geometric_quotient(self_1580: Rotor, other_1386: Plane) -> MotorD
 
     self_1581 = self_1580;
     other_1387 = other_1386;
-    let _e6: Plane = other_1387;
-    let _e7: Plane = plane_inverse(_e6);
-    let _e8: Rotor = self_1581;
-    let _e10: Plane = other_1387;
-    let _e11: Plane = plane_inverse(_e10);
-    let _e12: MotorDual = rotor_plane_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Rotor = self_1581;
+    let _e5: Plane = other_1387;
+    let _e6: Plane = plane_inverse(_e5);
+    let _e7: MotorDual = rotor_plane_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn rotor_plane_transformation(self_1582: Rotor, other_1388: Plane) -> Plane {
@@ -12731,30 +11828,14 @@ fn rotor_plane_transformation(self_1582: Rotor, other_1388: Plane) -> Plane {
 
     self_1583 = self_1582;
     other_1389 = other_1388;
-    let _e6: Rotor = self_1583;
-    let _e7: Plane = other_1389;
-    let _e8: MotorDual = rotor_plane_geometric_product(_e6, _e7);
-    let _e10: Rotor = self_1583;
-    let _e11: Rotor = rotor_reversal(_e10);
-    let _e14: Rotor = self_1583;
-    let _e15: Plane = other_1389;
-    let _e16: MotorDual = rotor_plane_geometric_product(_e14, _e15);
-    let _e18: Rotor = self_1583;
-    let _e19: Rotor = rotor_reversal(_e18);
-    let _e20: MotorDual = motor_dual_rotor_geometric_product(_e16, _e19);
-    let _e23: Rotor = self_1583;
-    let _e24: Plane = other_1389;
-    let _e25: MotorDual = rotor_plane_geometric_product(_e23, _e24);
-    let _e27: Rotor = self_1583;
-    let _e28: Rotor = rotor_reversal(_e27);
-    let _e31: Rotor = self_1583;
-    let _e32: Plane = other_1389;
-    let _e33: MotorDual = rotor_plane_geometric_product(_e31, _e32);
-    let _e35: Rotor = self_1583;
-    let _e36: Rotor = rotor_reversal(_e35);
-    let _e37: MotorDual = motor_dual_rotor_geometric_product(_e33, _e36);
-    let _e38: Plane = motor_dual_plane_into(_e37);
-    return _e38;
+    let _e4: Rotor = self_1583;
+    let _e5: Plane = other_1389;
+    let _e6: MotorDual = rotor_plane_geometric_product(_e4, _e5);
+    let _e7: Rotor = self_1583;
+    let _e8: Rotor = rotor_reversal(_e7);
+    let _e9: MotorDual = motor_dual_rotor_geometric_product(_e6, _e8);
+    let _e10: Plane = motor_dual_plane_into(_e9);
+    return _e10;
 }
 
 fn rotor_point_geometric_quotient(self_1584: Rotor, other_1390: Point) -> Motor {
@@ -12763,13 +11844,11 @@ fn rotor_point_geometric_quotient(self_1584: Rotor, other_1390: Point) -> Motor 
 
     self_1585 = self_1584;
     other_1391 = other_1390;
-    let _e6: Point = other_1391;
-    let _e7: Point = point_inverse(_e6);
-    let _e8: Rotor = self_1585;
-    let _e10: Point = other_1391;
-    let _e11: Point = point_inverse(_e10);
-    let _e12: Motor = rotor_point_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Rotor = self_1585;
+    let _e5: Point = other_1391;
+    let _e6: Point = point_inverse(_e5);
+    let _e7: Motor = rotor_point_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn rotor_point_transformation(self_1586: Rotor, other_1392: Point) -> Point {
@@ -12778,30 +11857,14 @@ fn rotor_point_transformation(self_1586: Rotor, other_1392: Point) -> Point {
 
     self_1587 = self_1586;
     other_1393 = other_1392;
-    let _e6: Rotor = self_1587;
-    let _e7: Point = other_1393;
-    let _e8: Motor = rotor_point_geometric_product(_e6, _e7);
-    let _e10: Rotor = self_1587;
-    let _e11: Rotor = rotor_reversal(_e10);
-    let _e14: Rotor = self_1587;
-    let _e15: Point = other_1393;
-    let _e16: Motor = rotor_point_geometric_product(_e14, _e15);
-    let _e18: Rotor = self_1587;
-    let _e19: Rotor = rotor_reversal(_e18);
-    let _e20: Motor = motor_rotor_geometric_product(_e16, _e19);
-    let _e23: Rotor = self_1587;
-    let _e24: Point = other_1393;
-    let _e25: Motor = rotor_point_geometric_product(_e23, _e24);
-    let _e27: Rotor = self_1587;
-    let _e28: Rotor = rotor_reversal(_e27);
-    let _e31: Rotor = self_1587;
-    let _e32: Point = other_1393;
-    let _e33: Motor = rotor_point_geometric_product(_e31, _e32);
-    let _e35: Rotor = self_1587;
-    let _e36: Rotor = rotor_reversal(_e35);
-    let _e37: Motor = motor_rotor_geometric_product(_e33, _e36);
-    let _e38: Point = motor_point_into(_e37);
-    return _e38;
+    let _e4: Rotor = self_1587;
+    let _e5: Point = other_1393;
+    let _e6: Motor = rotor_point_geometric_product(_e4, _e5);
+    let _e7: Rotor = self_1587;
+    let _e8: Rotor = rotor_reversal(_e7);
+    let _e9: Motor = motor_rotor_geometric_product(_e6, _e8);
+    let _e10: Point = motor_point_into(_e9);
+    return _e10;
 }
 
 fn rotor_powi(self_1588: Rotor, exponent_4: i32) -> Rotor {
@@ -12823,46 +11886,46 @@ fn rotor_powi(self_1588: Rotor, exponent_4: i32) -> Rotor {
     }
     let _e8: i32 = exponent_5;
     if (_e8 < 0) {
-        let _e12: Rotor = self_1589;
-        let _e13: Rotor = rotor_inverse(_e12);
-        local_2 = _e13;
+        let _e11: Rotor = self_1589;
+        let _e12: Rotor = rotor_inverse(_e11);
+        local_2 = _e12;
     } else {
         let _e14: Rotor = self_1589;
         local_2 = _e14;
     }
-    let _e16: Rotor = local_2;
-    x_2 = _e16;
-    let _e18: Rotor = rotor_one();
-    y_2 = _e18;
-    let _e21: i32 = exponent_5;
-    n_2 = abs(_e21);
+    let _e15: Rotor = local_2;
+    x_2 = _e15;
+    let _e17: Rotor = rotor_one();
+    y_2 = _e17;
+    let _e19: i32 = exponent_5;
+    n_2 = abs(_e19);
     loop {
-        let _e25: i32 = n_2;
-        if !((1 < _e25)) {
+        let _e23: i32 = n_2;
+        if !((1 < _e23)) {
             break;
         }
         {
-            let _e28: i32 = n_2;
-            if ((_e28 & 1) == 1) {
+            let _e26: i32 = n_2;
+            if ((_e26 & 1) == 1) {
                 {
-                    let _e35: Rotor = x_2;
-                    let _e36: Rotor = y_2;
-                    let _e37: Rotor = rotor_rotor_geometric_product(_e35, _e36);
-                    y_2 = _e37;
+                    let _e31: Rotor = x_2;
+                    let _e32: Rotor = y_2;
+                    let _e33: Rotor = rotor_rotor_geometric_product(_e31, _e32);
+                    y_2 = _e33;
                 }
             }
-            let _e40: Rotor = x_2;
-            let _e41: Rotor = x_2;
-            let _e42: Rotor = rotor_rotor_geometric_product(_e40, _e41);
-            x_2 = _e42;
-            let _e43: i32 = n_2;
-            n_2 = (_e43 >> u32(1));
+            let _e34: Rotor = x_2;
+            let _e35: Rotor = x_2;
+            let _e36: Rotor = rotor_rotor_geometric_product(_e34, _e35);
+            x_2 = _e36;
+            let _e37: i32 = n_2;
+            n_2 = (_e37 >> u32(1));
         }
     }
-    let _e49: Rotor = x_2;
-    let _e50: Rotor = y_2;
-    let _e51: Rotor = rotor_rotor_geometric_product(_e49, _e50);
-    return _e51;
+    let _e41: Rotor = x_2;
+    let _e42: Rotor = y_2;
+    let _e43: Rotor = rotor_rotor_geometric_product(_e41, _e42);
+    return _e43;
 }
 
 fn rotor_rotor_geometric_quotient(self_1590: Rotor, other_1394: Rotor) -> Rotor {
@@ -12871,13 +11934,11 @@ fn rotor_rotor_geometric_quotient(self_1590: Rotor, other_1394: Rotor) -> Rotor 
 
     self_1591 = self_1590;
     other_1395 = other_1394;
-    let _e6: Rotor = other_1395;
-    let _e7: Rotor = rotor_inverse(_e6);
-    let _e8: Rotor = self_1591;
-    let _e10: Rotor = other_1395;
-    let _e11: Rotor = rotor_inverse(_e10);
-    let _e12: Rotor = rotor_rotor_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Rotor = self_1591;
+    let _e5: Rotor = other_1395;
+    let _e6: Rotor = rotor_inverse(_e5);
+    let _e7: Rotor = rotor_rotor_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn rotor_rotor_transformation(self_1592: Rotor, other_1396: Rotor) -> Rotor {
@@ -12886,18 +11947,13 @@ fn rotor_rotor_transformation(self_1592: Rotor, other_1396: Rotor) -> Rotor {
 
     self_1593 = self_1592;
     other_1397 = other_1396;
-    let _e6: Rotor = self_1593;
-    let _e7: Rotor = other_1397;
-    let _e8: Rotor = rotor_rotor_geometric_product(_e6, _e7);
-    let _e10: Rotor = self_1593;
-    let _e11: Rotor = rotor_reversal(_e10);
-    let _e14: Rotor = self_1593;
-    let _e15: Rotor = other_1397;
-    let _e16: Rotor = rotor_rotor_geometric_product(_e14, _e15);
-    let _e18: Rotor = self_1593;
-    let _e19: Rotor = rotor_reversal(_e18);
-    let _e20: Rotor = rotor_rotor_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Rotor = self_1593;
+    let _e5: Rotor = other_1397;
+    let _e6: Rotor = rotor_rotor_geometric_product(_e4, _e5);
+    let _e7: Rotor = self_1593;
+    let _e8: Rotor = rotor_reversal(_e7);
+    let _e9: Rotor = rotor_rotor_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn rotor_scalar_geometric_quotient(self_1594: Rotor, other_1398: Scalar) -> Rotor {
@@ -12906,13 +11962,11 @@ fn rotor_scalar_geometric_quotient(self_1594: Rotor, other_1398: Scalar) -> Roto
 
     self_1595 = self_1594;
     other_1399 = other_1398;
-    let _e6: Scalar = other_1399;
-    let _e7: Scalar = scalar_inverse(_e6);
-    let _e8: Rotor = self_1595;
-    let _e10: Scalar = other_1399;
-    let _e11: Scalar = scalar_inverse(_e10);
-    let _e12: Rotor = rotor_scalar_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Rotor = self_1595;
+    let _e5: Scalar = other_1399;
+    let _e6: Scalar = scalar_inverse(_e5);
+    let _e7: Rotor = rotor_scalar_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn rotor_scalar_transformation(self_1596: Rotor, other_1400: Scalar) -> Scalar {
@@ -12921,30 +11975,14 @@ fn rotor_scalar_transformation(self_1596: Rotor, other_1400: Scalar) -> Scalar {
 
     self_1597 = self_1596;
     other_1401 = other_1400;
-    let _e6: Rotor = self_1597;
-    let _e7: Scalar = other_1401;
-    let _e8: Rotor = rotor_scalar_geometric_product(_e6, _e7);
-    let _e10: Rotor = self_1597;
-    let _e11: Rotor = rotor_reversal(_e10);
-    let _e14: Rotor = self_1597;
-    let _e15: Scalar = other_1401;
-    let _e16: Rotor = rotor_scalar_geometric_product(_e14, _e15);
-    let _e18: Rotor = self_1597;
-    let _e19: Rotor = rotor_reversal(_e18);
-    let _e20: Rotor = rotor_rotor_geometric_product(_e16, _e19);
-    let _e23: Rotor = self_1597;
-    let _e24: Scalar = other_1401;
-    let _e25: Rotor = rotor_scalar_geometric_product(_e23, _e24);
-    let _e27: Rotor = self_1597;
-    let _e28: Rotor = rotor_reversal(_e27);
-    let _e31: Rotor = self_1597;
-    let _e32: Scalar = other_1401;
-    let _e33: Rotor = rotor_scalar_geometric_product(_e31, _e32);
-    let _e35: Rotor = self_1597;
-    let _e36: Rotor = rotor_reversal(_e35);
-    let _e37: Rotor = rotor_rotor_geometric_product(_e33, _e36);
-    let _e38: Scalar = rotor_scalar_into(_e37);
-    return _e38;
+    let _e4: Rotor = self_1597;
+    let _e5: Scalar = other_1401;
+    let _e6: Rotor = rotor_scalar_geometric_product(_e4, _e5);
+    let _e7: Rotor = self_1597;
+    let _e8: Rotor = rotor_reversal(_e7);
+    let _e9: Rotor = rotor_rotor_geometric_product(_e6, _e8);
+    let _e10: Scalar = rotor_scalar_into(_e9);
+    return _e10;
 }
 
 fn rotor_translator_geometric_quotient(self_1598: Rotor, other_1402: Translator) -> Motor {
@@ -12953,13 +11991,11 @@ fn rotor_translator_geometric_quotient(self_1598: Rotor, other_1402: Translator)
 
     self_1599 = self_1598;
     other_1403 = other_1402;
-    let _e6: Translator = other_1403;
-    let _e7: Translator = translator_inverse(_e6);
-    let _e8: Rotor = self_1599;
-    let _e10: Translator = other_1403;
-    let _e11: Translator = translator_inverse(_e10);
-    let _e12: Motor = rotor_translator_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Rotor = self_1599;
+    let _e5: Translator = other_1403;
+    let _e6: Translator = translator_inverse(_e5);
+    let _e7: Motor = rotor_translator_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn rotor_translator_transformation(self_1600: Rotor, other_1404: Translator) -> Translator {
@@ -12968,30 +12004,14 @@ fn rotor_translator_transformation(self_1600: Rotor, other_1404: Translator) -> 
 
     self_1601 = self_1600;
     other_1405 = other_1404;
-    let _e6: Rotor = self_1601;
-    let _e7: Translator = other_1405;
-    let _e8: Motor = rotor_translator_geometric_product(_e6, _e7);
-    let _e10: Rotor = self_1601;
-    let _e11: Rotor = rotor_reversal(_e10);
-    let _e14: Rotor = self_1601;
-    let _e15: Translator = other_1405;
-    let _e16: Motor = rotor_translator_geometric_product(_e14, _e15);
-    let _e18: Rotor = self_1601;
-    let _e19: Rotor = rotor_reversal(_e18);
-    let _e20: Motor = motor_rotor_geometric_product(_e16, _e19);
-    let _e23: Rotor = self_1601;
-    let _e24: Translator = other_1405;
-    let _e25: Motor = rotor_translator_geometric_product(_e23, _e24);
-    let _e27: Rotor = self_1601;
-    let _e28: Rotor = rotor_reversal(_e27);
-    let _e31: Rotor = self_1601;
-    let _e32: Translator = other_1405;
-    let _e33: Motor = rotor_translator_geometric_product(_e31, _e32);
-    let _e35: Rotor = self_1601;
-    let _e36: Rotor = rotor_reversal(_e35);
-    let _e37: Motor = motor_rotor_geometric_product(_e33, _e36);
-    let _e38: Translator = motor_translator_into(_e37);
-    return _e38;
+    let _e4: Rotor = self_1601;
+    let _e5: Translator = other_1405;
+    let _e6: Motor = rotor_translator_geometric_product(_e4, _e5);
+    let _e7: Rotor = self_1601;
+    let _e8: Rotor = rotor_reversal(_e7);
+    let _e9: Motor = motor_rotor_geometric_product(_e6, _e8);
+    let _e10: Translator = motor_translator_into(_e9);
+    return _e10;
 }
 
 fn scalar_ideal_point_geometric_quotient(self_1602: Scalar, other_1406: IdealPoint) -> IdealPoint {
@@ -13000,13 +12020,11 @@ fn scalar_ideal_point_geometric_quotient(self_1602: Scalar, other_1406: IdealPoi
 
     self_1603 = self_1602;
     other_1407 = other_1406;
-    let _e6: IdealPoint = other_1407;
-    let _e7: IdealPoint = ideal_point_inverse(_e6);
-    let _e8: Scalar = self_1603;
-    let _e10: IdealPoint = other_1407;
-    let _e11: IdealPoint = ideal_point_inverse(_e10);
-    let _e12: IdealPoint = scalar_ideal_point_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Scalar = self_1603;
+    let _e5: IdealPoint = other_1407;
+    let _e6: IdealPoint = ideal_point_inverse(_e5);
+    let _e7: IdealPoint = scalar_ideal_point_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn scalar_ideal_point_transformation(self_1604: Scalar, other_1408: IdealPoint) -> IdealPoint {
@@ -13015,18 +12033,13 @@ fn scalar_ideal_point_transformation(self_1604: Scalar, other_1408: IdealPoint) 
 
     self_1605 = self_1604;
     other_1409 = other_1408;
-    let _e6: Scalar = self_1605;
-    let _e7: IdealPoint = other_1409;
-    let _e8: IdealPoint = scalar_ideal_point_geometric_product(_e6, _e7);
-    let _e10: Scalar = self_1605;
-    let _e11: Scalar = scalar_reversal(_e10);
-    let _e14: Scalar = self_1605;
-    let _e15: IdealPoint = other_1409;
-    let _e16: IdealPoint = scalar_ideal_point_geometric_product(_e14, _e15);
-    let _e18: Scalar = self_1605;
-    let _e19: Scalar = scalar_reversal(_e18);
-    let _e20: IdealPoint = ideal_point_scalar_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Scalar = self_1605;
+    let _e5: IdealPoint = other_1409;
+    let _e6: IdealPoint = scalar_ideal_point_geometric_product(_e4, _e5);
+    let _e7: Scalar = self_1605;
+    let _e8: Scalar = scalar_reversal(_e7);
+    let _e9: IdealPoint = ideal_point_scalar_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn scalar_motor_geometric_quotient(self_1606: Scalar, other_1410: Motor) -> Motor {
@@ -13035,13 +12048,11 @@ fn scalar_motor_geometric_quotient(self_1606: Scalar, other_1410: Motor) -> Moto
 
     self_1607 = self_1606;
     other_1411 = other_1410;
-    let _e6: Motor = other_1411;
-    let _e7: Motor = motor_inverse(_e6);
-    let _e8: Scalar = self_1607;
-    let _e10: Motor = other_1411;
-    let _e11: Motor = motor_inverse(_e10);
-    let _e12: Motor = scalar_motor_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Scalar = self_1607;
+    let _e5: Motor = other_1411;
+    let _e6: Motor = motor_inverse(_e5);
+    let _e7: Motor = scalar_motor_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn scalar_motor_transformation(self_1608: Scalar, other_1412: Motor) -> Motor {
@@ -13050,18 +12061,13 @@ fn scalar_motor_transformation(self_1608: Scalar, other_1412: Motor) -> Motor {
 
     self_1609 = self_1608;
     other_1413 = other_1412;
-    let _e6: Scalar = self_1609;
-    let _e7: Motor = other_1413;
-    let _e8: Motor = scalar_motor_geometric_product(_e6, _e7);
-    let _e10: Scalar = self_1609;
-    let _e11: Scalar = scalar_reversal(_e10);
-    let _e14: Scalar = self_1609;
-    let _e15: Motor = other_1413;
-    let _e16: Motor = scalar_motor_geometric_product(_e14, _e15);
-    let _e18: Scalar = self_1609;
-    let _e19: Scalar = scalar_reversal(_e18);
-    let _e20: Motor = motor_scalar_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Scalar = self_1609;
+    let _e5: Motor = other_1413;
+    let _e6: Motor = scalar_motor_geometric_product(_e4, _e5);
+    let _e7: Scalar = self_1609;
+    let _e8: Scalar = scalar_reversal(_e7);
+    let _e9: Motor = motor_scalar_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn scalar_motor_dual_geometric_quotient(self_1610: Scalar, other_1414: MotorDual) -> MotorDual {
@@ -13070,13 +12076,11 @@ fn scalar_motor_dual_geometric_quotient(self_1610: Scalar, other_1414: MotorDual
 
     self_1611 = self_1610;
     other_1415 = other_1414;
-    let _e6: MotorDual = other_1415;
-    let _e7: MotorDual = motor_dual_inverse(_e6);
-    let _e8: Scalar = self_1611;
-    let _e10: MotorDual = other_1415;
-    let _e11: MotorDual = motor_dual_inverse(_e10);
-    let _e12: MotorDual = scalar_motor_dual_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Scalar = self_1611;
+    let _e5: MotorDual = other_1415;
+    let _e6: MotorDual = motor_dual_inverse(_e5);
+    let _e7: MotorDual = scalar_motor_dual_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn scalar_motor_dual_transformation(self_1612: Scalar, other_1416: MotorDual) -> MotorDual {
@@ -13085,18 +12089,13 @@ fn scalar_motor_dual_transformation(self_1612: Scalar, other_1416: MotorDual) ->
 
     self_1613 = self_1612;
     other_1417 = other_1416;
-    let _e6: Scalar = self_1613;
-    let _e7: MotorDual = other_1417;
-    let _e8: MotorDual = scalar_motor_dual_geometric_product(_e6, _e7);
-    let _e10: Scalar = self_1613;
-    let _e11: Scalar = scalar_reversal(_e10);
-    let _e14: Scalar = self_1613;
-    let _e15: MotorDual = other_1417;
-    let _e16: MotorDual = scalar_motor_dual_geometric_product(_e14, _e15);
-    let _e18: Scalar = self_1613;
-    let _e19: Scalar = scalar_reversal(_e18);
-    let _e20: MotorDual = motor_dual_scalar_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Scalar = self_1613;
+    let _e5: MotorDual = other_1417;
+    let _e6: MotorDual = scalar_motor_dual_geometric_product(_e4, _e5);
+    let _e7: Scalar = self_1613;
+    let _e8: Scalar = scalar_reversal(_e7);
+    let _e9: MotorDual = motor_dual_scalar_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn scalar_multi_vector_geometric_quotient(self_1614: Scalar, other_1418: MultiVector) -> MultiVector {
@@ -13105,13 +12104,11 @@ fn scalar_multi_vector_geometric_quotient(self_1614: Scalar, other_1418: MultiVe
 
     self_1615 = self_1614;
     other_1419 = other_1418;
-    let _e6: MultiVector = other_1419;
-    let _e7: MultiVector = multi_vector_inverse(_e6);
-    let _e8: Scalar = self_1615;
-    let _e10: MultiVector = other_1419;
-    let _e11: MultiVector = multi_vector_inverse(_e10);
-    let _e12: MultiVector = scalar_multi_vector_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Scalar = self_1615;
+    let _e5: MultiVector = other_1419;
+    let _e6: MultiVector = multi_vector_inverse(_e5);
+    let _e7: MultiVector = scalar_multi_vector_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn scalar_multi_vector_transformation(self_1616: Scalar, other_1420: MultiVector) -> MultiVector {
@@ -13120,18 +12117,13 @@ fn scalar_multi_vector_transformation(self_1616: Scalar, other_1420: MultiVector
 
     self_1617 = self_1616;
     other_1421 = other_1420;
-    let _e6: Scalar = self_1617;
-    let _e7: MultiVector = other_1421;
-    let _e8: MultiVector = scalar_multi_vector_geometric_product(_e6, _e7);
-    let _e10: Scalar = self_1617;
-    let _e11: Scalar = scalar_reversal(_e10);
-    let _e14: Scalar = self_1617;
-    let _e15: MultiVector = other_1421;
-    let _e16: MultiVector = scalar_multi_vector_geometric_product(_e14, _e15);
-    let _e18: Scalar = self_1617;
-    let _e19: Scalar = scalar_reversal(_e18);
-    let _e20: MultiVector = multi_vector_scalar_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Scalar = self_1617;
+    let _e5: MultiVector = other_1421;
+    let _e6: MultiVector = scalar_multi_vector_geometric_product(_e4, _e5);
+    let _e7: Scalar = self_1617;
+    let _e8: Scalar = scalar_reversal(_e7);
+    let _e9: MultiVector = multi_vector_scalar_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn scalar_plane_geometric_quotient(self_1618: Scalar, other_1422: Plane) -> Plane {
@@ -13140,13 +12132,11 @@ fn scalar_plane_geometric_quotient(self_1618: Scalar, other_1422: Plane) -> Plan
 
     self_1619 = self_1618;
     other_1423 = other_1422;
-    let _e6: Plane = other_1423;
-    let _e7: Plane = plane_inverse(_e6);
-    let _e8: Scalar = self_1619;
-    let _e10: Plane = other_1423;
-    let _e11: Plane = plane_inverse(_e10);
-    let _e12: Plane = scalar_plane_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Scalar = self_1619;
+    let _e5: Plane = other_1423;
+    let _e6: Plane = plane_inverse(_e5);
+    let _e7: Plane = scalar_plane_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn scalar_plane_transformation(self_1620: Scalar, other_1424: Plane) -> Plane {
@@ -13155,18 +12145,13 @@ fn scalar_plane_transformation(self_1620: Scalar, other_1424: Plane) -> Plane {
 
     self_1621 = self_1620;
     other_1425 = other_1424;
-    let _e6: Scalar = self_1621;
-    let _e7: Plane = other_1425;
-    let _e8: Plane = scalar_plane_geometric_product(_e6, _e7);
-    let _e10: Scalar = self_1621;
-    let _e11: Scalar = scalar_reversal(_e10);
-    let _e14: Scalar = self_1621;
-    let _e15: Plane = other_1425;
-    let _e16: Plane = scalar_plane_geometric_product(_e14, _e15);
-    let _e18: Scalar = self_1621;
-    let _e19: Scalar = scalar_reversal(_e18);
-    let _e20: Plane = plane_scalar_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Scalar = self_1621;
+    let _e5: Plane = other_1425;
+    let _e6: Plane = scalar_plane_geometric_product(_e4, _e5);
+    let _e7: Scalar = self_1621;
+    let _e8: Scalar = scalar_reversal(_e7);
+    let _e9: Plane = plane_scalar_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn scalar_point_geometric_quotient(self_1622: Scalar, other_1426: Point) -> Point {
@@ -13175,13 +12160,11 @@ fn scalar_point_geometric_quotient(self_1622: Scalar, other_1426: Point) -> Poin
 
     self_1623 = self_1622;
     other_1427 = other_1426;
-    let _e6: Point = other_1427;
-    let _e7: Point = point_inverse(_e6);
-    let _e8: Scalar = self_1623;
-    let _e10: Point = other_1427;
-    let _e11: Point = point_inverse(_e10);
-    let _e12: Point = scalar_point_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Scalar = self_1623;
+    let _e5: Point = other_1427;
+    let _e6: Point = point_inverse(_e5);
+    let _e7: Point = scalar_point_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn scalar_point_transformation(self_1624: Scalar, other_1428: Point) -> Point {
@@ -13190,18 +12173,13 @@ fn scalar_point_transformation(self_1624: Scalar, other_1428: Point) -> Point {
 
     self_1625 = self_1624;
     other_1429 = other_1428;
-    let _e6: Scalar = self_1625;
-    let _e7: Point = other_1429;
-    let _e8: Point = scalar_point_geometric_product(_e6, _e7);
-    let _e10: Scalar = self_1625;
-    let _e11: Scalar = scalar_reversal(_e10);
-    let _e14: Scalar = self_1625;
-    let _e15: Point = other_1429;
-    let _e16: Point = scalar_point_geometric_product(_e14, _e15);
-    let _e18: Scalar = self_1625;
-    let _e19: Scalar = scalar_reversal(_e18);
-    let _e20: Point = point_scalar_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Scalar = self_1625;
+    let _e5: Point = other_1429;
+    let _e6: Point = scalar_point_geometric_product(_e4, _e5);
+    let _e7: Scalar = self_1625;
+    let _e8: Scalar = scalar_reversal(_e7);
+    let _e9: Point = point_scalar_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn scalar_rotor_geometric_quotient(self_1626: Scalar, other_1430: Rotor) -> Rotor {
@@ -13210,13 +12188,11 @@ fn scalar_rotor_geometric_quotient(self_1626: Scalar, other_1430: Rotor) -> Roto
 
     self_1627 = self_1626;
     other_1431 = other_1430;
-    let _e6: Rotor = other_1431;
-    let _e7: Rotor = rotor_inverse(_e6);
-    let _e8: Scalar = self_1627;
-    let _e10: Rotor = other_1431;
-    let _e11: Rotor = rotor_inverse(_e10);
-    let _e12: Rotor = scalar_rotor_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Scalar = self_1627;
+    let _e5: Rotor = other_1431;
+    let _e6: Rotor = rotor_inverse(_e5);
+    let _e7: Rotor = scalar_rotor_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn scalar_rotor_transformation(self_1628: Scalar, other_1432: Rotor) -> Rotor {
@@ -13225,18 +12201,13 @@ fn scalar_rotor_transformation(self_1628: Scalar, other_1432: Rotor) -> Rotor {
 
     self_1629 = self_1628;
     other_1433 = other_1432;
-    let _e6: Scalar = self_1629;
-    let _e7: Rotor = other_1433;
-    let _e8: Rotor = scalar_rotor_geometric_product(_e6, _e7);
-    let _e10: Scalar = self_1629;
-    let _e11: Scalar = scalar_reversal(_e10);
-    let _e14: Scalar = self_1629;
-    let _e15: Rotor = other_1433;
-    let _e16: Rotor = scalar_rotor_geometric_product(_e14, _e15);
-    let _e18: Scalar = self_1629;
-    let _e19: Scalar = scalar_reversal(_e18);
-    let _e20: Rotor = rotor_scalar_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Scalar = self_1629;
+    let _e5: Rotor = other_1433;
+    let _e6: Rotor = scalar_rotor_geometric_product(_e4, _e5);
+    let _e7: Scalar = self_1629;
+    let _e8: Scalar = scalar_reversal(_e7);
+    let _e9: Rotor = rotor_scalar_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn scalar_powi(self_1630: Scalar, exponent_6: i32) -> Scalar {
@@ -13258,46 +12229,46 @@ fn scalar_powi(self_1630: Scalar, exponent_6: i32) -> Scalar {
     }
     let _e8: i32 = exponent_7;
     if (_e8 < 0) {
-        let _e12: Scalar = self_1631;
-        let _e13: Scalar = scalar_inverse(_e12);
-        local_3 = _e13;
+        let _e11: Scalar = self_1631;
+        let _e12: Scalar = scalar_inverse(_e11);
+        local_3 = _e12;
     } else {
         let _e14: Scalar = self_1631;
         local_3 = _e14;
     }
-    let _e16: Scalar = local_3;
-    x_3 = _e16;
-    let _e18: Scalar = scalar_one();
-    y_3 = _e18;
-    let _e21: i32 = exponent_7;
-    n_3 = abs(_e21);
+    let _e15: Scalar = local_3;
+    x_3 = _e15;
+    let _e17: Scalar = scalar_one();
+    y_3 = _e17;
+    let _e19: i32 = exponent_7;
+    n_3 = abs(_e19);
     loop {
-        let _e25: i32 = n_3;
-        if !((1 < _e25)) {
+        let _e23: i32 = n_3;
+        if !((1 < _e23)) {
             break;
         }
         {
-            let _e28: i32 = n_3;
-            if ((_e28 & 1) == 1) {
+            let _e26: i32 = n_3;
+            if ((_e26 & 1) == 1) {
                 {
-                    let _e35: Scalar = x_3;
-                    let _e36: Scalar = y_3;
-                    let _e37: Scalar = scalar_scalar_geometric_product(_e35, _e36);
-                    y_3 = _e37;
+                    let _e31: Scalar = x_3;
+                    let _e32: Scalar = y_3;
+                    let _e33: Scalar = scalar_scalar_geometric_product(_e31, _e32);
+                    y_3 = _e33;
                 }
             }
-            let _e40: Scalar = x_3;
-            let _e41: Scalar = x_3;
-            let _e42: Scalar = scalar_scalar_geometric_product(_e40, _e41);
-            x_3 = _e42;
-            let _e43: i32 = n_3;
-            n_3 = (_e43 >> u32(1));
+            let _e34: Scalar = x_3;
+            let _e35: Scalar = x_3;
+            let _e36: Scalar = scalar_scalar_geometric_product(_e34, _e35);
+            x_3 = _e36;
+            let _e37: i32 = n_3;
+            n_3 = (_e37 >> u32(1));
         }
     }
-    let _e49: Scalar = x_3;
-    let _e50: Scalar = y_3;
-    let _e51: Scalar = scalar_scalar_geometric_product(_e49, _e50);
-    return _e51;
+    let _e41: Scalar = x_3;
+    let _e42: Scalar = y_3;
+    let _e43: Scalar = scalar_scalar_geometric_product(_e41, _e42);
+    return _e43;
 }
 
 fn scalar_scalar_geometric_quotient(self_1632: Scalar, other_1434: Scalar) -> Scalar {
@@ -13306,13 +12277,11 @@ fn scalar_scalar_geometric_quotient(self_1632: Scalar, other_1434: Scalar) -> Sc
 
     self_1633 = self_1632;
     other_1435 = other_1434;
-    let _e6: Scalar = other_1435;
-    let _e7: Scalar = scalar_inverse(_e6);
-    let _e8: Scalar = self_1633;
-    let _e10: Scalar = other_1435;
-    let _e11: Scalar = scalar_inverse(_e10);
-    let _e12: Scalar = scalar_scalar_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Scalar = self_1633;
+    let _e5: Scalar = other_1435;
+    let _e6: Scalar = scalar_inverse(_e5);
+    let _e7: Scalar = scalar_scalar_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn scalar_scalar_transformation(self_1634: Scalar, other_1436: Scalar) -> Scalar {
@@ -13321,18 +12290,13 @@ fn scalar_scalar_transformation(self_1634: Scalar, other_1436: Scalar) -> Scalar
 
     self_1635 = self_1634;
     other_1437 = other_1436;
-    let _e6: Scalar = self_1635;
-    let _e7: Scalar = other_1437;
-    let _e8: Scalar = scalar_scalar_geometric_product(_e6, _e7);
-    let _e10: Scalar = self_1635;
-    let _e11: Scalar = scalar_reversal(_e10);
-    let _e14: Scalar = self_1635;
-    let _e15: Scalar = other_1437;
-    let _e16: Scalar = scalar_scalar_geometric_product(_e14, _e15);
-    let _e18: Scalar = self_1635;
-    let _e19: Scalar = scalar_reversal(_e18);
-    let _e20: Scalar = scalar_scalar_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Scalar = self_1635;
+    let _e5: Scalar = other_1437;
+    let _e6: Scalar = scalar_scalar_geometric_product(_e4, _e5);
+    let _e7: Scalar = self_1635;
+    let _e8: Scalar = scalar_reversal(_e7);
+    let _e9: Scalar = scalar_scalar_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn scalar_translator_geometric_quotient(self_1636: Scalar, other_1438: Translator) -> Translator {
@@ -13341,13 +12305,11 @@ fn scalar_translator_geometric_quotient(self_1636: Scalar, other_1438: Translato
 
     self_1637 = self_1636;
     other_1439 = other_1438;
-    let _e6: Translator = other_1439;
-    let _e7: Translator = translator_inverse(_e6);
-    let _e8: Scalar = self_1637;
-    let _e10: Translator = other_1439;
-    let _e11: Translator = translator_inverse(_e10);
-    let _e12: Translator = scalar_translator_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Scalar = self_1637;
+    let _e5: Translator = other_1439;
+    let _e6: Translator = translator_inverse(_e5);
+    let _e7: Translator = scalar_translator_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn scalar_translator_transformation(self_1638: Scalar, other_1440: Translator) -> Translator {
@@ -13356,18 +12318,13 @@ fn scalar_translator_transformation(self_1638: Scalar, other_1440: Translator) -
 
     self_1639 = self_1638;
     other_1441 = other_1440;
-    let _e6: Scalar = self_1639;
-    let _e7: Translator = other_1441;
-    let _e8: Translator = scalar_translator_geometric_product(_e6, _e7);
-    let _e10: Scalar = self_1639;
-    let _e11: Scalar = scalar_reversal(_e10);
-    let _e14: Scalar = self_1639;
-    let _e15: Translator = other_1441;
-    let _e16: Translator = scalar_translator_geometric_product(_e14, _e15);
-    let _e18: Scalar = self_1639;
-    let _e19: Scalar = scalar_reversal(_e18);
-    let _e20: Translator = translator_scalar_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Scalar = self_1639;
+    let _e5: Translator = other_1441;
+    let _e6: Translator = scalar_translator_geometric_product(_e4, _e5);
+    let _e7: Scalar = self_1639;
+    let _e8: Scalar = scalar_reversal(_e7);
+    let _e9: Translator = translator_scalar_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn translator_ideal_point_geometric_quotient(self_1640: Translator, other_1442: IdealPoint) -> Motor {
@@ -13376,13 +12333,11 @@ fn translator_ideal_point_geometric_quotient(self_1640: Translator, other_1442: 
 
     self_1641 = self_1640;
     other_1443 = other_1442;
-    let _e6: IdealPoint = other_1443;
-    let _e7: IdealPoint = ideal_point_inverse(_e6);
-    let _e8: Translator = self_1641;
-    let _e10: IdealPoint = other_1443;
-    let _e11: IdealPoint = ideal_point_inverse(_e10);
-    let _e12: Motor = translator_ideal_point_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Translator = self_1641;
+    let _e5: IdealPoint = other_1443;
+    let _e6: IdealPoint = ideal_point_inverse(_e5);
+    let _e7: Motor = translator_ideal_point_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn translator_ideal_point_transformation(self_1642: Translator, other_1444: IdealPoint) -> IdealPoint {
@@ -13391,30 +12346,14 @@ fn translator_ideal_point_transformation(self_1642: Translator, other_1444: Idea
 
     self_1643 = self_1642;
     other_1445 = other_1444;
-    let _e6: Translator = self_1643;
-    let _e7: IdealPoint = other_1445;
-    let _e8: Motor = translator_ideal_point_geometric_product(_e6, _e7);
-    let _e10: Translator = self_1643;
-    let _e11: Translator = translator_reversal(_e10);
-    let _e14: Translator = self_1643;
-    let _e15: IdealPoint = other_1445;
-    let _e16: Motor = translator_ideal_point_geometric_product(_e14, _e15);
-    let _e18: Translator = self_1643;
-    let _e19: Translator = translator_reversal(_e18);
-    let _e20: Motor = motor_translator_geometric_product(_e16, _e19);
-    let _e23: Translator = self_1643;
-    let _e24: IdealPoint = other_1445;
-    let _e25: Motor = translator_ideal_point_geometric_product(_e23, _e24);
-    let _e27: Translator = self_1643;
-    let _e28: Translator = translator_reversal(_e27);
-    let _e31: Translator = self_1643;
-    let _e32: IdealPoint = other_1445;
-    let _e33: Motor = translator_ideal_point_geometric_product(_e31, _e32);
-    let _e35: Translator = self_1643;
-    let _e36: Translator = translator_reversal(_e35);
-    let _e37: Motor = motor_translator_geometric_product(_e33, _e36);
-    let _e38: IdealPoint = motor_ideal_point_into(_e37);
-    return _e38;
+    let _e4: Translator = self_1643;
+    let _e5: IdealPoint = other_1445;
+    let _e6: Motor = translator_ideal_point_geometric_product(_e4, _e5);
+    let _e7: Translator = self_1643;
+    let _e8: Translator = translator_reversal(_e7);
+    let _e9: Motor = motor_translator_geometric_product(_e6, _e8);
+    let _e10: IdealPoint = motor_ideal_point_into(_e9);
+    return _e10;
 }
 
 fn translator_motor_geometric_quotient(self_1644: Translator, other_1446: Motor) -> Motor {
@@ -13423,13 +12362,11 @@ fn translator_motor_geometric_quotient(self_1644: Translator, other_1446: Motor)
 
     self_1645 = self_1644;
     other_1447 = other_1446;
-    let _e6: Motor = other_1447;
-    let _e7: Motor = motor_inverse(_e6);
-    let _e8: Translator = self_1645;
-    let _e10: Motor = other_1447;
-    let _e11: Motor = motor_inverse(_e10);
-    let _e12: Motor = translator_motor_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Translator = self_1645;
+    let _e5: Motor = other_1447;
+    let _e6: Motor = motor_inverse(_e5);
+    let _e7: Motor = translator_motor_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn translator_motor_transformation(self_1646: Translator, other_1448: Motor) -> Motor {
@@ -13438,18 +12375,13 @@ fn translator_motor_transformation(self_1646: Translator, other_1448: Motor) -> 
 
     self_1647 = self_1646;
     other_1449 = other_1448;
-    let _e6: Translator = self_1647;
-    let _e7: Motor = other_1449;
-    let _e8: Motor = translator_motor_geometric_product(_e6, _e7);
-    let _e10: Translator = self_1647;
-    let _e11: Translator = translator_reversal(_e10);
-    let _e14: Translator = self_1647;
-    let _e15: Motor = other_1449;
-    let _e16: Motor = translator_motor_geometric_product(_e14, _e15);
-    let _e18: Translator = self_1647;
-    let _e19: Translator = translator_reversal(_e18);
-    let _e20: Motor = motor_translator_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Translator = self_1647;
+    let _e5: Motor = other_1449;
+    let _e6: Motor = translator_motor_geometric_product(_e4, _e5);
+    let _e7: Translator = self_1647;
+    let _e8: Translator = translator_reversal(_e7);
+    let _e9: Motor = motor_translator_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn translator_motor_dual_geometric_quotient(self_1648: Translator, other_1450: MotorDual) -> MotorDual {
@@ -13458,13 +12390,11 @@ fn translator_motor_dual_geometric_quotient(self_1648: Translator, other_1450: M
 
     self_1649 = self_1648;
     other_1451 = other_1450;
-    let _e6: MotorDual = other_1451;
-    let _e7: MotorDual = motor_dual_inverse(_e6);
-    let _e8: Translator = self_1649;
-    let _e10: MotorDual = other_1451;
-    let _e11: MotorDual = motor_dual_inverse(_e10);
-    let _e12: MotorDual = translator_motor_dual_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Translator = self_1649;
+    let _e5: MotorDual = other_1451;
+    let _e6: MotorDual = motor_dual_inverse(_e5);
+    let _e7: MotorDual = translator_motor_dual_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn translator_motor_dual_transformation(self_1650: Translator, other_1452: MotorDual) -> MotorDual {
@@ -13473,18 +12403,13 @@ fn translator_motor_dual_transformation(self_1650: Translator, other_1452: Motor
 
     self_1651 = self_1650;
     other_1453 = other_1452;
-    let _e6: Translator = self_1651;
-    let _e7: MotorDual = other_1453;
-    let _e8: MotorDual = translator_motor_dual_geometric_product(_e6, _e7);
-    let _e10: Translator = self_1651;
-    let _e11: Translator = translator_reversal(_e10);
-    let _e14: Translator = self_1651;
-    let _e15: MotorDual = other_1453;
-    let _e16: MotorDual = translator_motor_dual_geometric_product(_e14, _e15);
-    let _e18: Translator = self_1651;
-    let _e19: Translator = translator_reversal(_e18);
-    let _e20: MotorDual = motor_dual_translator_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Translator = self_1651;
+    let _e5: MotorDual = other_1453;
+    let _e6: MotorDual = translator_motor_dual_geometric_product(_e4, _e5);
+    let _e7: Translator = self_1651;
+    let _e8: Translator = translator_reversal(_e7);
+    let _e9: MotorDual = motor_dual_translator_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn translator_multi_vector_geometric_quotient(self_1652: Translator, other_1454: MultiVector) -> MultiVector {
@@ -13493,13 +12418,11 @@ fn translator_multi_vector_geometric_quotient(self_1652: Translator, other_1454:
 
     self_1653 = self_1652;
     other_1455 = other_1454;
-    let _e6: MultiVector = other_1455;
-    let _e7: MultiVector = multi_vector_inverse(_e6);
-    let _e8: Translator = self_1653;
-    let _e10: MultiVector = other_1455;
-    let _e11: MultiVector = multi_vector_inverse(_e10);
-    let _e12: MultiVector = translator_multi_vector_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Translator = self_1653;
+    let _e5: MultiVector = other_1455;
+    let _e6: MultiVector = multi_vector_inverse(_e5);
+    let _e7: MultiVector = translator_multi_vector_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn translator_multi_vector_transformation(self_1654: Translator, other_1456: MultiVector) -> MultiVector {
@@ -13508,18 +12431,13 @@ fn translator_multi_vector_transformation(self_1654: Translator, other_1456: Mul
 
     self_1655 = self_1654;
     other_1457 = other_1456;
-    let _e6: Translator = self_1655;
-    let _e7: MultiVector = other_1457;
-    let _e8: MultiVector = translator_multi_vector_geometric_product(_e6, _e7);
-    let _e10: Translator = self_1655;
-    let _e11: Translator = translator_reversal(_e10);
-    let _e14: Translator = self_1655;
-    let _e15: MultiVector = other_1457;
-    let _e16: MultiVector = translator_multi_vector_geometric_product(_e14, _e15);
-    let _e18: Translator = self_1655;
-    let _e19: Translator = translator_reversal(_e18);
-    let _e20: MultiVector = multi_vector_translator_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Translator = self_1655;
+    let _e5: MultiVector = other_1457;
+    let _e6: MultiVector = translator_multi_vector_geometric_product(_e4, _e5);
+    let _e7: Translator = self_1655;
+    let _e8: Translator = translator_reversal(_e7);
+    let _e9: MultiVector = multi_vector_translator_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn translator_plane_geometric_quotient(self_1656: Translator, other_1458: Plane) -> MotorDual {
@@ -13528,13 +12446,11 @@ fn translator_plane_geometric_quotient(self_1656: Translator, other_1458: Plane)
 
     self_1657 = self_1656;
     other_1459 = other_1458;
-    let _e6: Plane = other_1459;
-    let _e7: Plane = plane_inverse(_e6);
-    let _e8: Translator = self_1657;
-    let _e10: Plane = other_1459;
-    let _e11: Plane = plane_inverse(_e10);
-    let _e12: MotorDual = translator_plane_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Translator = self_1657;
+    let _e5: Plane = other_1459;
+    let _e6: Plane = plane_inverse(_e5);
+    let _e7: MotorDual = translator_plane_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn translator_plane_transformation(self_1658: Translator, other_1460: Plane) -> Plane {
@@ -13543,30 +12459,14 @@ fn translator_plane_transformation(self_1658: Translator, other_1460: Plane) -> 
 
     self_1659 = self_1658;
     other_1461 = other_1460;
-    let _e6: Translator = self_1659;
-    let _e7: Plane = other_1461;
-    let _e8: MotorDual = translator_plane_geometric_product(_e6, _e7);
-    let _e10: Translator = self_1659;
-    let _e11: Translator = translator_reversal(_e10);
-    let _e14: Translator = self_1659;
-    let _e15: Plane = other_1461;
-    let _e16: MotorDual = translator_plane_geometric_product(_e14, _e15);
-    let _e18: Translator = self_1659;
-    let _e19: Translator = translator_reversal(_e18);
-    let _e20: MotorDual = motor_dual_translator_geometric_product(_e16, _e19);
-    let _e23: Translator = self_1659;
-    let _e24: Plane = other_1461;
-    let _e25: MotorDual = translator_plane_geometric_product(_e23, _e24);
-    let _e27: Translator = self_1659;
-    let _e28: Translator = translator_reversal(_e27);
-    let _e31: Translator = self_1659;
-    let _e32: Plane = other_1461;
-    let _e33: MotorDual = translator_plane_geometric_product(_e31, _e32);
-    let _e35: Translator = self_1659;
-    let _e36: Translator = translator_reversal(_e35);
-    let _e37: MotorDual = motor_dual_translator_geometric_product(_e33, _e36);
-    let _e38: Plane = motor_dual_plane_into(_e37);
-    return _e38;
+    let _e4: Translator = self_1659;
+    let _e5: Plane = other_1461;
+    let _e6: MotorDual = translator_plane_geometric_product(_e4, _e5);
+    let _e7: Translator = self_1659;
+    let _e8: Translator = translator_reversal(_e7);
+    let _e9: MotorDual = motor_dual_translator_geometric_product(_e6, _e8);
+    let _e10: Plane = motor_dual_plane_into(_e9);
+    return _e10;
 }
 
 fn translator_point_geometric_quotient(self_1660: Translator, other_1462: Point) -> Motor {
@@ -13575,13 +12475,11 @@ fn translator_point_geometric_quotient(self_1660: Translator, other_1462: Point)
 
     self_1661 = self_1660;
     other_1463 = other_1462;
-    let _e6: Point = other_1463;
-    let _e7: Point = point_inverse(_e6);
-    let _e8: Translator = self_1661;
-    let _e10: Point = other_1463;
-    let _e11: Point = point_inverse(_e10);
-    let _e12: Motor = translator_point_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Translator = self_1661;
+    let _e5: Point = other_1463;
+    let _e6: Point = point_inverse(_e5);
+    let _e7: Motor = translator_point_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn translator_point_transformation(self_1662: Translator, other_1464: Point) -> Point {
@@ -13590,30 +12488,14 @@ fn translator_point_transformation(self_1662: Translator, other_1464: Point) -> 
 
     self_1663 = self_1662;
     other_1465 = other_1464;
-    let _e6: Translator = self_1663;
-    let _e7: Point = other_1465;
-    let _e8: Motor = translator_point_geometric_product(_e6, _e7);
-    let _e10: Translator = self_1663;
-    let _e11: Translator = translator_reversal(_e10);
-    let _e14: Translator = self_1663;
-    let _e15: Point = other_1465;
-    let _e16: Motor = translator_point_geometric_product(_e14, _e15);
-    let _e18: Translator = self_1663;
-    let _e19: Translator = translator_reversal(_e18);
-    let _e20: Motor = motor_translator_geometric_product(_e16, _e19);
-    let _e23: Translator = self_1663;
-    let _e24: Point = other_1465;
-    let _e25: Motor = translator_point_geometric_product(_e23, _e24);
-    let _e27: Translator = self_1663;
-    let _e28: Translator = translator_reversal(_e27);
-    let _e31: Translator = self_1663;
-    let _e32: Point = other_1465;
-    let _e33: Motor = translator_point_geometric_product(_e31, _e32);
-    let _e35: Translator = self_1663;
-    let _e36: Translator = translator_reversal(_e35);
-    let _e37: Motor = motor_translator_geometric_product(_e33, _e36);
-    let _e38: Point = motor_point_into(_e37);
-    return _e38;
+    let _e4: Translator = self_1663;
+    let _e5: Point = other_1465;
+    let _e6: Motor = translator_point_geometric_product(_e4, _e5);
+    let _e7: Translator = self_1663;
+    let _e8: Translator = translator_reversal(_e7);
+    let _e9: Motor = motor_translator_geometric_product(_e6, _e8);
+    let _e10: Point = motor_point_into(_e9);
+    return _e10;
 }
 
 fn translator_rotor_geometric_quotient(self_1664: Translator, other_1466: Rotor) -> Motor {
@@ -13622,13 +12504,11 @@ fn translator_rotor_geometric_quotient(self_1664: Translator, other_1466: Rotor)
 
     self_1665 = self_1664;
     other_1467 = other_1466;
-    let _e6: Rotor = other_1467;
-    let _e7: Rotor = rotor_inverse(_e6);
-    let _e8: Translator = self_1665;
-    let _e10: Rotor = other_1467;
-    let _e11: Rotor = rotor_inverse(_e10);
-    let _e12: Motor = translator_rotor_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Translator = self_1665;
+    let _e5: Rotor = other_1467;
+    let _e6: Rotor = rotor_inverse(_e5);
+    let _e7: Motor = translator_rotor_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn translator_rotor_transformation(self_1666: Translator, other_1468: Rotor) -> Rotor {
@@ -13637,30 +12517,14 @@ fn translator_rotor_transformation(self_1666: Translator, other_1468: Rotor) -> 
 
     self_1667 = self_1666;
     other_1469 = other_1468;
-    let _e6: Translator = self_1667;
-    let _e7: Rotor = other_1469;
-    let _e8: Motor = translator_rotor_geometric_product(_e6, _e7);
-    let _e10: Translator = self_1667;
-    let _e11: Translator = translator_reversal(_e10);
-    let _e14: Translator = self_1667;
-    let _e15: Rotor = other_1469;
-    let _e16: Motor = translator_rotor_geometric_product(_e14, _e15);
-    let _e18: Translator = self_1667;
-    let _e19: Translator = translator_reversal(_e18);
-    let _e20: Motor = motor_translator_geometric_product(_e16, _e19);
-    let _e23: Translator = self_1667;
-    let _e24: Rotor = other_1469;
-    let _e25: Motor = translator_rotor_geometric_product(_e23, _e24);
-    let _e27: Translator = self_1667;
-    let _e28: Translator = translator_reversal(_e27);
-    let _e31: Translator = self_1667;
-    let _e32: Rotor = other_1469;
-    let _e33: Motor = translator_rotor_geometric_product(_e31, _e32);
-    let _e35: Translator = self_1667;
-    let _e36: Translator = translator_reversal(_e35);
-    let _e37: Motor = motor_translator_geometric_product(_e33, _e36);
-    let _e38: Rotor = motor_rotor_into(_e37);
-    return _e38;
+    let _e4: Translator = self_1667;
+    let _e5: Rotor = other_1469;
+    let _e6: Motor = translator_rotor_geometric_product(_e4, _e5);
+    let _e7: Translator = self_1667;
+    let _e8: Translator = translator_reversal(_e7);
+    let _e9: Motor = motor_translator_geometric_product(_e6, _e8);
+    let _e10: Rotor = motor_rotor_into(_e9);
+    return _e10;
 }
 
 fn translator_scalar_geometric_quotient(self_1668: Translator, other_1470: Scalar) -> Translator {
@@ -13669,13 +12533,11 @@ fn translator_scalar_geometric_quotient(self_1668: Translator, other_1470: Scala
 
     self_1669 = self_1668;
     other_1471 = other_1470;
-    let _e6: Scalar = other_1471;
-    let _e7: Scalar = scalar_inverse(_e6);
-    let _e8: Translator = self_1669;
-    let _e10: Scalar = other_1471;
-    let _e11: Scalar = scalar_inverse(_e10);
-    let _e12: Translator = translator_scalar_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Translator = self_1669;
+    let _e5: Scalar = other_1471;
+    let _e6: Scalar = scalar_inverse(_e5);
+    let _e7: Translator = translator_scalar_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn translator_scalar_transformation(self_1670: Translator, other_1472: Scalar) -> Scalar {
@@ -13684,30 +12546,14 @@ fn translator_scalar_transformation(self_1670: Translator, other_1472: Scalar) -
 
     self_1671 = self_1670;
     other_1473 = other_1472;
-    let _e6: Translator = self_1671;
-    let _e7: Scalar = other_1473;
-    let _e8: Translator = translator_scalar_geometric_product(_e6, _e7);
-    let _e10: Translator = self_1671;
-    let _e11: Translator = translator_reversal(_e10);
-    let _e14: Translator = self_1671;
-    let _e15: Scalar = other_1473;
-    let _e16: Translator = translator_scalar_geometric_product(_e14, _e15);
-    let _e18: Translator = self_1671;
-    let _e19: Translator = translator_reversal(_e18);
-    let _e20: Motor = translator_translator_geometric_product(_e16, _e19);
-    let _e23: Translator = self_1671;
-    let _e24: Scalar = other_1473;
-    let _e25: Translator = translator_scalar_geometric_product(_e23, _e24);
-    let _e27: Translator = self_1671;
-    let _e28: Translator = translator_reversal(_e27);
-    let _e31: Translator = self_1671;
-    let _e32: Scalar = other_1473;
-    let _e33: Translator = translator_scalar_geometric_product(_e31, _e32);
-    let _e35: Translator = self_1671;
-    let _e36: Translator = translator_reversal(_e35);
-    let _e37: Motor = translator_translator_geometric_product(_e33, _e36);
-    let _e38: Scalar = motor_scalar_into(_e37);
-    return _e38;
+    let _e4: Translator = self_1671;
+    let _e5: Scalar = other_1473;
+    let _e6: Translator = translator_scalar_geometric_product(_e4, _e5);
+    let _e7: Translator = self_1671;
+    let _e8: Translator = translator_reversal(_e7);
+    let _e9: Motor = translator_translator_geometric_product(_e6, _e8);
+    let _e10: Scalar = motor_scalar_into(_e9);
+    return _e10;
 }
 
 fn translator_translator_geometric_quotient(self_1672: Translator, other_1474: Translator) -> Motor {
@@ -13716,13 +12562,11 @@ fn translator_translator_geometric_quotient(self_1672: Translator, other_1474: T
 
     self_1673 = self_1672;
     other_1475 = other_1474;
-    let _e6: Translator = other_1475;
-    let _e7: Translator = translator_inverse(_e6);
-    let _e8: Translator = self_1673;
-    let _e10: Translator = other_1475;
-    let _e11: Translator = translator_inverse(_e10);
-    let _e12: Motor = translator_translator_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Translator = self_1673;
+    let _e5: Translator = other_1475;
+    let _e6: Translator = translator_inverse(_e5);
+    let _e7: Motor = translator_translator_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn translator_translator_transformation(self_1674: Translator, other_1476: Translator) -> Translator {
@@ -13731,38 +12575,13 @@ fn translator_translator_transformation(self_1674: Translator, other_1476: Trans
 
     self_1675 = self_1674;
     other_1477 = other_1476;
-    let _e6: Translator = self_1675;
-    let _e7: Translator = other_1477;
-    let _e8: Motor = translator_translator_geometric_product(_e6, _e7);
-    let _e10: Translator = self_1675;
-    let _e11: Translator = translator_reversal(_e10);
-    let _e14: Translator = self_1675;
-    let _e15: Translator = other_1477;
-    let _e16: Motor = translator_translator_geometric_product(_e14, _e15);
-    let _e18: Translator = self_1675;
-    let _e19: Translator = translator_reversal(_e18);
-    let _e20: Motor = motor_translator_geometric_product(_e16, _e19);
-    let _e23: Translator = self_1675;
-    let _e24: Translator = other_1477;
-    let _e25: Motor = translator_translator_geometric_product(_e23, _e24);
-    let _e27: Translator = self_1675;
-    let _e28: Translator = translator_reversal(_e27);
-    let _e31: Translator = self_1675;
-    let _e32: Translator = other_1477;
-    let _e33: Motor = translator_translator_geometric_product(_e31, _e32);
-    let _e35: Translator = self_1675;
-    let _e36: Translator = translator_reversal(_e35);
-    let _e37: Motor = motor_translator_geometric_product(_e33, _e36);
-    let _e38: Translator = motor_translator_into(_e37);
-    return _e38;
+    let _e4: Translator = self_1675;
+    let _e5: Translator = other_1477;
+    let _e6: Motor = translator_translator_geometric_product(_e4, _e5);
+    let _e7: Translator = self_1675;
+    let _e8: Translator = translator_reversal(_e7);
+    let _e9: Motor = motor_translator_geometric_product(_e6, _e8);
+    let _e10: Translator = motor_translator_into(_e9);
+    return _e10;
 }
 
-fn main_1() {
-    return;
-}
-
-@compute @workgroup_size(1, 1, 1) 
-fn main() {
-    main_1();
-    return;
-}

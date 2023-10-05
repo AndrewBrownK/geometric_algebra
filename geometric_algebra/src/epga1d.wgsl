@@ -259,24 +259,20 @@ fn scalar_squared_magnitude(self_46: Scalar) -> Scalar {
     var self_47: Scalar;
 
     self_47 = self_46;
-    let _e4: Scalar = self_47;
-    let _e5: Scalar = scalar_reversal(_e4);
-    let _e6: Scalar = self_47;
-    let _e8: Scalar = self_47;
-    let _e9: Scalar = scalar_reversal(_e8);
-    let _e10: Scalar = scalar_scalar_scalar_product(_e6, _e9);
-    return _e10;
+    let _e2: Scalar = self_47;
+    let _e3: Scalar = self_47;
+    let _e4: Scalar = scalar_reversal(_e3);
+    let _e5: Scalar = scalar_scalar_scalar_product(_e2, _e4);
+    return _e5;
 }
 
 fn scalar_magnitude(self_48: Scalar) -> Scalar {
     var self_49: Scalar;
 
     self_49 = self_48;
-    let _e3: Scalar = self_49;
-    let _e4: Scalar = scalar_squared_magnitude(_e3);
-    let _e7: Scalar = self_49;
-    let _e8: Scalar = scalar_squared_magnitude(_e7);
-    return Scalar(sqrt(_e8.g0_));
+    let _e2: Scalar = self_49;
+    let _e3: Scalar = scalar_squared_magnitude(_e2);
+    return Scalar(sqrt(_e3.g0_));
 }
 
 fn scalar_scale(self_50: Scalar, other_38: f32) -> Scalar {
@@ -285,40 +281,33 @@ fn scalar_scale(self_50: Scalar, other_38: f32) -> Scalar {
 
     self_51 = self_50;
     other_39 = other_38;
+    let _e4: Scalar = self_51;
     let _e5: f32 = other_39;
-    let _e7: Scalar = self_51;
-    let _e8: f32 = other_39;
-    let _e10: Scalar = scalar_scalar_geometric_product(_e7, Scalar(_e8));
-    return _e10;
+    let _e7: Scalar = scalar_scalar_geometric_product(_e4, Scalar(_e5));
+    return _e7;
 }
 
 fn scalar_signum(self_52: Scalar) -> Scalar {
     var self_53: Scalar;
 
     self_53 = self_52;
-    let _e5: Scalar = self_53;
-    let _e6: Scalar = scalar_magnitude(_e5);
-    let _e10: Scalar = self_53;
-    let _e13: Scalar = self_53;
-    let _e14: Scalar = scalar_magnitude(_e13);
-    let _e18: Scalar = scalar_scalar_geometric_product(_e10, Scalar((1.0 / _e14.g0_)));
-    return _e18;
+    let _e2: Scalar = self_53;
+    let _e3: Scalar = self_53;
+    let _e4: Scalar = scalar_magnitude(_e3);
+    let _e9: Scalar = scalar_scalar_geometric_product(_e2, Scalar((1.0 / _e4.g0_)));
+    return _e9;
 }
 
 fn scalar_inverse(self_54: Scalar) -> Scalar {
     var self_55: Scalar;
 
     self_55 = self_54;
-    let _e3: Scalar = self_55;
-    let _e4: Scalar = scalar_reversal(_e3);
-    let _e7: Scalar = self_55;
-    let _e8: Scalar = scalar_squared_magnitude(_e7);
-    let _e13: Scalar = self_55;
-    let _e14: Scalar = scalar_reversal(_e13);
-    let _e17: Scalar = self_55;
-    let _e18: Scalar = scalar_squared_magnitude(_e17);
-    let _e22: Scalar = scalar_scalar_geometric_product(_e14, Scalar((1.0 / _e18.g0_)));
-    return _e22;
+    let _e2: Scalar = self_55;
+    let _e3: Scalar = scalar_reversal(_e2);
+    let _e4: Scalar = self_55;
+    let _e5: Scalar = scalar_squared_magnitude(_e4);
+    let _e10: Scalar = scalar_scalar_geometric_product(_e3, Scalar((1.0 / _e5.g0_)));
+    return _e10;
 }
 
 fn complex_number_zero() -> ComplexNumber {
@@ -617,24 +606,20 @@ fn complex_number_squared_magnitude(self_108: ComplexNumber) -> Scalar {
     var self_109: ComplexNumber;
 
     self_109 = self_108;
-    let _e4: ComplexNumber = self_109;
-    let _e5: ComplexNumber = complex_number_reversal(_e4);
-    let _e6: ComplexNumber = self_109;
-    let _e8: ComplexNumber = self_109;
-    let _e9: ComplexNumber = complex_number_reversal(_e8);
-    let _e10: Scalar = complex_number_complex_number_scalar_product(_e6, _e9);
-    return _e10;
+    let _e2: ComplexNumber = self_109;
+    let _e3: ComplexNumber = self_109;
+    let _e4: ComplexNumber = complex_number_reversal(_e3);
+    let _e5: Scalar = complex_number_complex_number_scalar_product(_e2, _e4);
+    return _e5;
 }
 
 fn complex_number_magnitude(self_110: ComplexNumber) -> Scalar {
     var self_111: ComplexNumber;
 
     self_111 = self_110;
-    let _e3: ComplexNumber = self_111;
-    let _e4: Scalar = complex_number_squared_magnitude(_e3);
-    let _e7: ComplexNumber = self_111;
-    let _e8: Scalar = complex_number_squared_magnitude(_e7);
-    return Scalar(sqrt(_e8.g0_));
+    let _e2: ComplexNumber = self_111;
+    let _e3: Scalar = complex_number_squared_magnitude(_e2);
+    return Scalar(sqrt(_e3.g0_));
 }
 
 fn complex_number_scale(self_112: ComplexNumber, other_80: f32) -> ComplexNumber {
@@ -643,40 +628,33 @@ fn complex_number_scale(self_112: ComplexNumber, other_80: f32) -> ComplexNumber
 
     self_113 = self_112;
     other_81 = other_80;
+    let _e4: ComplexNumber = self_113;
     let _e5: f32 = other_81;
-    let _e7: ComplexNumber = self_113;
-    let _e8: f32 = other_81;
-    let _e10: ComplexNumber = complex_number_scalar_geometric_product(_e7, Scalar(_e8));
-    return _e10;
+    let _e7: ComplexNumber = complex_number_scalar_geometric_product(_e4, Scalar(_e5));
+    return _e7;
 }
 
 fn complex_number_signum(self_114: ComplexNumber) -> ComplexNumber {
     var self_115: ComplexNumber;
 
     self_115 = self_114;
-    let _e5: ComplexNumber = self_115;
-    let _e6: Scalar = complex_number_magnitude(_e5);
-    let _e10: ComplexNumber = self_115;
-    let _e13: ComplexNumber = self_115;
-    let _e14: Scalar = complex_number_magnitude(_e13);
-    let _e18: ComplexNumber = complex_number_scalar_geometric_product(_e10, Scalar((1.0 / _e14.g0_)));
-    return _e18;
+    let _e2: ComplexNumber = self_115;
+    let _e3: ComplexNumber = self_115;
+    let _e4: Scalar = complex_number_magnitude(_e3);
+    let _e9: ComplexNumber = complex_number_scalar_geometric_product(_e2, Scalar((1.0 / _e4.g0_)));
+    return _e9;
 }
 
 fn complex_number_inverse(self_116: ComplexNumber) -> ComplexNumber {
     var self_117: ComplexNumber;
 
     self_117 = self_116;
-    let _e3: ComplexNumber = self_117;
-    let _e4: ComplexNumber = complex_number_reversal(_e3);
-    let _e7: ComplexNumber = self_117;
-    let _e8: Scalar = complex_number_squared_magnitude(_e7);
-    let _e13: ComplexNumber = self_117;
-    let _e14: ComplexNumber = complex_number_reversal(_e13);
-    let _e17: ComplexNumber = self_117;
-    let _e18: Scalar = complex_number_squared_magnitude(_e17);
-    let _e22: ComplexNumber = complex_number_scalar_geometric_product(_e14, Scalar((1.0 / _e18.g0_)));
-    return _e22;
+    let _e2: ComplexNumber = self_117;
+    let _e3: ComplexNumber = complex_number_reversal(_e2);
+    let _e4: ComplexNumber = self_117;
+    let _e5: Scalar = complex_number_squared_magnitude(_e4);
+    let _e10: ComplexNumber = complex_number_scalar_geometric_product(_e3, Scalar((1.0 / _e5.g0_)));
+    return _e10;
 }
 
 fn complex_number_powi(self_118: ComplexNumber, exponent: i32) -> ComplexNumber {
@@ -698,46 +676,46 @@ fn complex_number_powi(self_118: ComplexNumber, exponent: i32) -> ComplexNumber 
     }
     let _e8: i32 = exponent_1;
     if (_e8 < 0) {
-        let _e12: ComplexNumber = self_119;
-        let _e13: ComplexNumber = complex_number_inverse(_e12);
-        local = _e13;
+        let _e11: ComplexNumber = self_119;
+        let _e12: ComplexNumber = complex_number_inverse(_e11);
+        local = _e12;
     } else {
         let _e14: ComplexNumber = self_119;
         local = _e14;
     }
-    let _e16: ComplexNumber = local;
-    x = _e16;
-    let _e18: ComplexNumber = complex_number_one();
-    y = _e18;
-    let _e21: i32 = exponent_1;
-    n = abs(_e21);
+    let _e15: ComplexNumber = local;
+    x = _e15;
+    let _e17: ComplexNumber = complex_number_one();
+    y = _e17;
+    let _e19: i32 = exponent_1;
+    n = abs(_e19);
     loop {
-        let _e25: i32 = n;
-        if !((1 < _e25)) {
+        let _e23: i32 = n;
+        if !((1 < _e23)) {
             break;
         }
         {
-            let _e28: i32 = n;
-            if ((_e28 & 1) == 1) {
+            let _e26: i32 = n;
+            if ((_e26 & 1) == 1) {
                 {
-                    let _e35: ComplexNumber = x;
-                    let _e36: ComplexNumber = y;
-                    let _e37: ComplexNumber = complex_number_complex_number_geometric_product(_e35, _e36);
-                    y = _e37;
+                    let _e31: ComplexNumber = x;
+                    let _e32: ComplexNumber = y;
+                    let _e33: ComplexNumber = complex_number_complex_number_geometric_product(_e31, _e32);
+                    y = _e33;
                 }
             }
-            let _e40: ComplexNumber = x;
-            let _e41: ComplexNumber = x;
-            let _e42: ComplexNumber = complex_number_complex_number_geometric_product(_e40, _e41);
-            x = _e42;
-            let _e43: i32 = n;
-            n = (_e43 >> u32(1));
+            let _e34: ComplexNumber = x;
+            let _e35: ComplexNumber = x;
+            let _e36: ComplexNumber = complex_number_complex_number_geometric_product(_e34, _e35);
+            x = _e36;
+            let _e37: i32 = n;
+            n = (_e37 >> u32(1));
         }
     }
-    let _e49: ComplexNumber = x;
-    let _e50: ComplexNumber = y;
-    let _e51: ComplexNumber = complex_number_complex_number_geometric_product(_e49, _e50);
-    return _e51;
+    let _e41: ComplexNumber = x;
+    let _e42: ComplexNumber = y;
+    let _e43: ComplexNumber = complex_number_complex_number_geometric_product(_e41, _e42);
+    return _e43;
 }
 
 fn complex_number_complex_number_geometric_quotient(self_120: ComplexNumber, other_82: ComplexNumber) -> ComplexNumber {
@@ -746,13 +724,11 @@ fn complex_number_complex_number_geometric_quotient(self_120: ComplexNumber, oth
 
     self_121 = self_120;
     other_83 = other_82;
-    let _e6: ComplexNumber = other_83;
-    let _e7: ComplexNumber = complex_number_inverse(_e6);
-    let _e8: ComplexNumber = self_121;
-    let _e10: ComplexNumber = other_83;
-    let _e11: ComplexNumber = complex_number_inverse(_e10);
-    let _e12: ComplexNumber = complex_number_complex_number_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: ComplexNumber = self_121;
+    let _e5: ComplexNumber = other_83;
+    let _e6: ComplexNumber = complex_number_inverse(_e5);
+    let _e7: ComplexNumber = complex_number_complex_number_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn complex_number_complex_number_transformation(self_122: ComplexNumber, other_84: ComplexNumber) -> ComplexNumber {
@@ -761,18 +737,13 @@ fn complex_number_complex_number_transformation(self_122: ComplexNumber, other_8
 
     self_123 = self_122;
     other_85 = other_84;
-    let _e6: ComplexNumber = self_123;
-    let _e7: ComplexNumber = other_85;
-    let _e8: ComplexNumber = complex_number_complex_number_geometric_product(_e6, _e7);
-    let _e10: ComplexNumber = self_123;
-    let _e11: ComplexNumber = complex_number_reversal(_e10);
-    let _e14: ComplexNumber = self_123;
-    let _e15: ComplexNumber = other_85;
-    let _e16: ComplexNumber = complex_number_complex_number_geometric_product(_e14, _e15);
-    let _e18: ComplexNumber = self_123;
-    let _e19: ComplexNumber = complex_number_reversal(_e18);
-    let _e20: ComplexNumber = complex_number_complex_number_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: ComplexNumber = self_123;
+    let _e5: ComplexNumber = other_85;
+    let _e6: ComplexNumber = complex_number_complex_number_geometric_product(_e4, _e5);
+    let _e7: ComplexNumber = self_123;
+    let _e8: ComplexNumber = complex_number_reversal(_e7);
+    let _e9: ComplexNumber = complex_number_complex_number_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn complex_number_scalar_geometric_quotient(self_124: ComplexNumber, other_86: Scalar) -> ComplexNumber {
@@ -781,13 +752,11 @@ fn complex_number_scalar_geometric_quotient(self_124: ComplexNumber, other_86: S
 
     self_125 = self_124;
     other_87 = other_86;
-    let _e6: Scalar = other_87;
-    let _e7: Scalar = scalar_inverse(_e6);
-    let _e8: ComplexNumber = self_125;
-    let _e10: Scalar = other_87;
-    let _e11: Scalar = scalar_inverse(_e10);
-    let _e12: ComplexNumber = complex_number_scalar_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: ComplexNumber = self_125;
+    let _e5: Scalar = other_87;
+    let _e6: Scalar = scalar_inverse(_e5);
+    let _e7: ComplexNumber = complex_number_scalar_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn complex_number_scalar_transformation(self_126: ComplexNumber, other_88: Scalar) -> Scalar {
@@ -796,30 +765,14 @@ fn complex_number_scalar_transformation(self_126: ComplexNumber, other_88: Scala
 
     self_127 = self_126;
     other_89 = other_88;
-    let _e6: ComplexNumber = self_127;
-    let _e7: Scalar = other_89;
-    let _e8: ComplexNumber = complex_number_scalar_geometric_product(_e6, _e7);
-    let _e10: ComplexNumber = self_127;
-    let _e11: ComplexNumber = complex_number_reversal(_e10);
-    let _e14: ComplexNumber = self_127;
-    let _e15: Scalar = other_89;
-    let _e16: ComplexNumber = complex_number_scalar_geometric_product(_e14, _e15);
-    let _e18: ComplexNumber = self_127;
-    let _e19: ComplexNumber = complex_number_reversal(_e18);
-    let _e20: ComplexNumber = complex_number_complex_number_geometric_product(_e16, _e19);
-    let _e23: ComplexNumber = self_127;
-    let _e24: Scalar = other_89;
-    let _e25: ComplexNumber = complex_number_scalar_geometric_product(_e23, _e24);
-    let _e27: ComplexNumber = self_127;
-    let _e28: ComplexNumber = complex_number_reversal(_e27);
-    let _e31: ComplexNumber = self_127;
-    let _e32: Scalar = other_89;
-    let _e33: ComplexNumber = complex_number_scalar_geometric_product(_e31, _e32);
-    let _e35: ComplexNumber = self_127;
-    let _e36: ComplexNumber = complex_number_reversal(_e35);
-    let _e37: ComplexNumber = complex_number_complex_number_geometric_product(_e33, _e36);
-    let _e38: Scalar = complex_number_scalar_into(_e37);
-    return _e38;
+    let _e4: ComplexNumber = self_127;
+    let _e5: Scalar = other_89;
+    let _e6: ComplexNumber = complex_number_scalar_geometric_product(_e4, _e5);
+    let _e7: ComplexNumber = self_127;
+    let _e8: ComplexNumber = complex_number_reversal(_e7);
+    let _e9: ComplexNumber = complex_number_complex_number_geometric_product(_e6, _e8);
+    let _e10: Scalar = complex_number_scalar_into(_e9);
+    return _e10;
 }
 
 fn scalar_complex_number_geometric_quotient(self_128: Scalar, other_90: ComplexNumber) -> ComplexNumber {
@@ -828,13 +781,11 @@ fn scalar_complex_number_geometric_quotient(self_128: Scalar, other_90: ComplexN
 
     self_129 = self_128;
     other_91 = other_90;
-    let _e6: ComplexNumber = other_91;
-    let _e7: ComplexNumber = complex_number_inverse(_e6);
-    let _e8: Scalar = self_129;
-    let _e10: ComplexNumber = other_91;
-    let _e11: ComplexNumber = complex_number_inverse(_e10);
-    let _e12: ComplexNumber = scalar_complex_number_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Scalar = self_129;
+    let _e5: ComplexNumber = other_91;
+    let _e6: ComplexNumber = complex_number_inverse(_e5);
+    let _e7: ComplexNumber = scalar_complex_number_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn scalar_complex_number_transformation(self_130: Scalar, other_92: ComplexNumber) -> ComplexNumber {
@@ -843,18 +794,13 @@ fn scalar_complex_number_transformation(self_130: Scalar, other_92: ComplexNumbe
 
     self_131 = self_130;
     other_93 = other_92;
-    let _e6: Scalar = self_131;
-    let _e7: ComplexNumber = other_93;
-    let _e8: ComplexNumber = scalar_complex_number_geometric_product(_e6, _e7);
-    let _e10: Scalar = self_131;
-    let _e11: Scalar = scalar_reversal(_e10);
-    let _e14: Scalar = self_131;
-    let _e15: ComplexNumber = other_93;
-    let _e16: ComplexNumber = scalar_complex_number_geometric_product(_e14, _e15);
-    let _e18: Scalar = self_131;
-    let _e19: Scalar = scalar_reversal(_e18);
-    let _e20: ComplexNumber = complex_number_scalar_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Scalar = self_131;
+    let _e5: ComplexNumber = other_93;
+    let _e6: ComplexNumber = scalar_complex_number_geometric_product(_e4, _e5);
+    let _e7: Scalar = self_131;
+    let _e8: Scalar = scalar_reversal(_e7);
+    let _e9: ComplexNumber = complex_number_scalar_geometric_product(_e6, _e8);
+    return _e9;
 }
 
 fn scalar_powi(self_132: Scalar, exponent_2: i32) -> Scalar {
@@ -876,46 +822,46 @@ fn scalar_powi(self_132: Scalar, exponent_2: i32) -> Scalar {
     }
     let _e8: i32 = exponent_3;
     if (_e8 < 0) {
-        let _e12: Scalar = self_133;
-        let _e13: Scalar = scalar_inverse(_e12);
-        local_1 = _e13;
+        let _e11: Scalar = self_133;
+        let _e12: Scalar = scalar_inverse(_e11);
+        local_1 = _e12;
     } else {
         let _e14: Scalar = self_133;
         local_1 = _e14;
     }
-    let _e16: Scalar = local_1;
-    x_1 = _e16;
-    let _e18: Scalar = scalar_one();
-    y_1 = _e18;
-    let _e21: i32 = exponent_3;
-    n_1 = abs(_e21);
+    let _e15: Scalar = local_1;
+    x_1 = _e15;
+    let _e17: Scalar = scalar_one();
+    y_1 = _e17;
+    let _e19: i32 = exponent_3;
+    n_1 = abs(_e19);
     loop {
-        let _e25: i32 = n_1;
-        if !((1 < _e25)) {
+        let _e23: i32 = n_1;
+        if !((1 < _e23)) {
             break;
         }
         {
-            let _e28: i32 = n_1;
-            if ((_e28 & 1) == 1) {
+            let _e26: i32 = n_1;
+            if ((_e26 & 1) == 1) {
                 {
-                    let _e35: Scalar = x_1;
-                    let _e36: Scalar = y_1;
-                    let _e37: Scalar = scalar_scalar_geometric_product(_e35, _e36);
-                    y_1 = _e37;
+                    let _e31: Scalar = x_1;
+                    let _e32: Scalar = y_1;
+                    let _e33: Scalar = scalar_scalar_geometric_product(_e31, _e32);
+                    y_1 = _e33;
                 }
             }
-            let _e40: Scalar = x_1;
-            let _e41: Scalar = x_1;
-            let _e42: Scalar = scalar_scalar_geometric_product(_e40, _e41);
-            x_1 = _e42;
-            let _e43: i32 = n_1;
-            n_1 = (_e43 >> u32(1));
+            let _e34: Scalar = x_1;
+            let _e35: Scalar = x_1;
+            let _e36: Scalar = scalar_scalar_geometric_product(_e34, _e35);
+            x_1 = _e36;
+            let _e37: i32 = n_1;
+            n_1 = (_e37 >> u32(1));
         }
     }
-    let _e49: Scalar = x_1;
-    let _e50: Scalar = y_1;
-    let _e51: Scalar = scalar_scalar_geometric_product(_e49, _e50);
-    return _e51;
+    let _e41: Scalar = x_1;
+    let _e42: Scalar = y_1;
+    let _e43: Scalar = scalar_scalar_geometric_product(_e41, _e42);
+    return _e43;
 }
 
 fn scalar_scalar_geometric_quotient(self_134: Scalar, other_94: Scalar) -> Scalar {
@@ -924,13 +870,11 @@ fn scalar_scalar_geometric_quotient(self_134: Scalar, other_94: Scalar) -> Scala
 
     self_135 = self_134;
     other_95 = other_94;
-    let _e6: Scalar = other_95;
-    let _e7: Scalar = scalar_inverse(_e6);
-    let _e8: Scalar = self_135;
-    let _e10: Scalar = other_95;
-    let _e11: Scalar = scalar_inverse(_e10);
-    let _e12: Scalar = scalar_scalar_geometric_product(_e8, _e11);
-    return _e12;
+    let _e4: Scalar = self_135;
+    let _e5: Scalar = other_95;
+    let _e6: Scalar = scalar_inverse(_e5);
+    let _e7: Scalar = scalar_scalar_geometric_product(_e4, _e6);
+    return _e7;
 }
 
 fn scalar_scalar_transformation(self_136: Scalar, other_96: Scalar) -> Scalar {
@@ -939,26 +883,12 @@ fn scalar_scalar_transformation(self_136: Scalar, other_96: Scalar) -> Scalar {
 
     self_137 = self_136;
     other_97 = other_96;
-    let _e6: Scalar = self_137;
-    let _e7: Scalar = other_97;
-    let _e8: Scalar = scalar_scalar_geometric_product(_e6, _e7);
-    let _e10: Scalar = self_137;
-    let _e11: Scalar = scalar_reversal(_e10);
-    let _e14: Scalar = self_137;
-    let _e15: Scalar = other_97;
-    let _e16: Scalar = scalar_scalar_geometric_product(_e14, _e15);
-    let _e18: Scalar = self_137;
-    let _e19: Scalar = scalar_reversal(_e18);
-    let _e20: Scalar = scalar_scalar_geometric_product(_e16, _e19);
-    return _e20;
+    let _e4: Scalar = self_137;
+    let _e5: Scalar = other_97;
+    let _e6: Scalar = scalar_scalar_geometric_product(_e4, _e5);
+    let _e7: Scalar = self_137;
+    let _e8: Scalar = scalar_reversal(_e7);
+    let _e9: Scalar = scalar_scalar_geometric_product(_e6, _e8);
+    return _e9;
 }
 
-fn main_1() {
-    return;
-}
-
-@compute @workgroup_size(1, 1, 1) 
-fn main() {
-    main_1();
-    return;
-}
