@@ -8,7 +8,6 @@ const COMPONENT: &[&str] = &["x", "y", "z", "w"];
 fn emit_data_type<W: std::io::Write>(collector: &mut W, data_type: &DataType) -> std::io::Result<()> {
     match data_type {
         DataType::Integer => collector.write_all(b"int"),
-        // TODO this is a real use end point of SimdVector.size, derived from the size of groupedBasis parts
         DataType::SimdVector(size) if *size == 1 => collector.write_all(b"float"),
         DataType::SimdVector(size) => collector.write_fmt(format_args!("vec{}", *size)),
         DataType::MultiVector(class) => collector.write_fmt(format_args!("{}", class.class_name)),
@@ -113,7 +112,6 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
                 if expression.size == 1 {
                     collector.write_fmt(format_args!("{:.1}", values[0] as f32))?
                 } else {
-                    // TODO this is a real use end point of SimdVector.size, derived from the size of groupedBasis parts
                     emit_data_type(collector, &DataType::SimdVector(expression.size))?;
                     collector.write_fmt(format_args!(
                         "({})",
@@ -177,7 +175,6 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
                 }
                 collector.write_all(b"\n")?;
                 emit_indentation(collector, indentation + 1)?;
-                // TODO this is a real use end point of SimdVector.size, derived from the size of groupedBasis parts
                 emit_data_type(collector, &DataType::SimdVector(group.len()))?;
                 collector.write_fmt(format_args!(" g{};\n", i))?;
             }

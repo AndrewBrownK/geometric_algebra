@@ -20,7 +20,6 @@ use crate::{
     emit::Emitter,
 };
 
-// TODO see also the already existing "GeometricAlgebra" that is just the generator squares
 pub struct AlgebraDescriptor {
     pub algebra_name: String,
     pub generator_squares: Vec<isize>,
@@ -79,7 +78,6 @@ pub fn read_config_from_str(config: &str) -> AlgebraDescriptor {
     let mut multi_vectors = vec![];
     for multi_vector_descriptor in config_iter {
         let mut multi_vector_descriptor_iter = multi_vector_descriptor.split(':');
-        // TODO note the splits on '|' for the grouped_basis property
         multi_vectors.push(MultiVectorClass {
             class_name: multi_vector_descriptor_iter.next().unwrap().to_owned(),
             grouped_basis: multi_vector_descriptor_iter

@@ -146,9 +146,6 @@ impl MultiVectorClass {
         self.grouped_basis.iter().flatten().cloned().collect()
     }
 
-    // TODO this is something key to discerning what type of object you have
-    //  In particular I want to know if the "|" in the stringy definitions imparts any important
-    //  changes here... hmmm... "grouped_basis" and a call to "flatten()".... seems favorable...
     pub fn signature(&self) -> Vec<BasisElementIndex> {
         let mut signature: Vec<BasisElementIndex> = self.grouped_basis.iter().flatten().map(|element| element.index).collect();
         signature.sort_unstable();
@@ -173,10 +170,8 @@ impl MultiVectorClass {
             _ => unreachable!(),
         };
         let mut body = Vec::new();
-        // TODO this seems like an important non-flattened use of grouped_basis
         for result_group in self.grouped_basis.iter() {
             let size = result_group.len();
-            // TODO It's used for Expression.size and SimdVector.size?
             let expression = Expression {
                 size,
                 content: ExpressionContent::Constant(
@@ -259,7 +254,6 @@ impl MultiVectorClass {
                             size,
                             content: ExpressionContent::Gather(
                                 Box::new(Expression {
-                                    // TODO this seems like an important use of grouped_basis
                                     size: parameter_a.multi_vector_class().grouped_basis[a_group_index].len(),
                                     content: ExpressionContent::Variable(parameter_a.name),
                                 }),
@@ -312,7 +306,6 @@ impl MultiVectorClass {
             let parameters = [(parameter_a, &a_flat_basis), (parameter_b, &b_flat_basis)];
             let mut body = Vec::new();
             for result_group in result_class.grouped_basis.iter() {
-                // TODO hmm... see how the size of a grouped_basis is used here, including in a simd.
                 let size = result_group.len();
                 let mut expressions = parameters.iter().map(|(parameter, flat_basis)| {
                     let mut parameter_group_index = None;

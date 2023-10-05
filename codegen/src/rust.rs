@@ -6,10 +6,6 @@ use crate::{
 fn emit_data_type<W: std::io::Write>(collector: &mut W, data_type: &DataType) -> std::io::Result<()> {
     match data_type {
         DataType::Integer => collector.write_all(b"isize"),
-        // TODO this is a real use end point of SimdVector.size, derived from the size of groupedBasis parts
-        // TODO YES THIS IN PARTICULAR.... It is writing a data type, just look at the string formatting,
-        //  and then notice that in the simd.rs module we have Simd32x4, Simd32x4, etc etc.
-        //  So the number can't be COMPLETELY arbitrary. It seems the only real options are 4, 3, and 2
         DataType::SimdVector(size) if *size == 1 => collector.write_all(b"f32"),
         DataType::SimdVector(size) => collector.write_fmt(format_args!("Simd32x{}", *size)),
         DataType::MultiVector(class) => collector.write_fmt(format_args!("{}", class.class_name)),
@@ -94,7 +90,6 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
         }
         ExpressionContent::Gather(inner_expression, indices) => {
             if expression.size > 1 {
-                // TODO this is a real use end point of SimdVector.size, derived from the size of groupedBasis parts
                 emit_data_type(collector, &DataType::SimdVector(expression.size))?;
                 collector.write_all(b"::from(")?;
             }
@@ -124,7 +119,6 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
                 if expression.size == 1 {
                     collector.write_fmt(format_args!("{:.1}", values[0] as f32))?;
                 } else {
-                    // TODO this is a real use end point of SimdVector.size, derived from the size of groupedBasis parts
                     emit_data_type(collector, &DataType::SimdVector(expression.size))?;
                     collector.write_all(b"::from(")?;
                     if values.len() > 1 {
@@ -218,7 +212,6 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
                 collector.write_all(b"\n")?;
                 emit_indentation(collector, indentation + 1)?;
                 collector.write_fmt(format_args!("g{}: ", j))?;
-                // TODO this is a real use end point of SimdVector.size, derived from the size of groupedBasis parts
                 emit_data_type(collector, &DataType::SimdVector(group.len()))?;
                 collector.write_all(b",\n")?;
                 simd_widths.push(if group.len() == 1 { 1 } else { 4 });
@@ -284,7 +277,6 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
                     collector.write_all(b", ")?;
                 }
                 collector.write_fmt(format_args!("g{}: ", j))?;
-                // TODO this is a real use end point of SimdVector.size, derived from the size of groupedBasis parts
                 emit_data_type(collector, &DataType::SimdVector(group.len()))?;
             }
             collector.write_all(b") -> Self {\n")?;
@@ -304,7 +296,6 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
                 collector.write_all(b"#[inline(always)]\n")?;
                 emit_indentation(collector, indentation + 1)?;
                 collector.write_fmt(format_args!("pub fn group{}(&self) -> ", j))?;
-                // TODO this is a real use end point of SimdVector.size, derived from the size of groupedBasis parts
                 emit_data_type(collector, &DataType::SimdVector(group.len()))?;
                 collector.write_all(b" {\n")?;
                 emit_indentation(collector, indentation + 2)?;
@@ -315,7 +306,6 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
                 collector.write_all(b"#[inline(always)]\n")?;
                 emit_indentation(collector, indentation + 1)?;
                 collector.write_fmt(format_args!("pub fn group{}_mut(&mut self) -> &mut ", j))?;
-                // TODO this is a real use end point of SimdVector.size, derived from the size of groupedBasis parts
                 emit_data_type(collector, &DataType::SimdVector(group.len()))?;
                 collector.write_all(b" {\n")?;
                 emit_indentation(collector, indentation + 2)?;
