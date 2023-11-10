@@ -32,6 +32,10 @@ Scalar scalar_conjugation(Scalar self) {
     return Scalar(self.g0);
 }
 
+Scalar scalar_anti_reversal(Scalar self) {
+    return Scalar(self.g0);
+}
+
 Scalar scalar_scalar_add(Scalar self, Scalar other) {
     return Scalar(self.g0 + other.g0);
 }
@@ -96,12 +100,24 @@ ComplexNumber scalar_complex_number_inner_product(Scalar self, ComplexNumber oth
     return ComplexNumber(vec2(self.g0) * other.g0);
 }
 
+ComplexNumber scalar_complex_number_geometric_anti_product(Scalar self, ComplexNumber other) {
+    return ComplexNumber(vec2(self.g0) * other.g0.yx * vec2(1.0, -1.0));
+}
+
+ComplexNumber scalar_complex_number_inner_anti_product(Scalar self, ComplexNumber other) {
+    return ComplexNumber(vec2(self.g0) * other.g0.yx * vec2(1.0, -1.0));
+}
+
 ComplexNumber scalar_complex_number_left_contraction(Scalar self, ComplexNumber other) {
     return ComplexNumber(vec2(self.g0) * other.g0);
 }
 
 Scalar scalar_complex_number_right_contraction(Scalar self, ComplexNumber other) {
     return Scalar(self.g0 * other.g0.x);
+}
+
+ComplexNumber scalar_complex_number_right_anti_contraction(Scalar self, ComplexNumber other) {
+    return ComplexNumber(vec2(self.g0) * other.g0.yx * vec2(1.0, -1.0));
 }
 
 Scalar scalar_complex_number_scalar_product(Scalar self, ComplexNumber other) {
@@ -156,6 +172,10 @@ ComplexNumber complex_number_dual(ComplexNumber self) {
     return ComplexNumber(self.g0.yx);
 }
 
+ComplexNumber complex_number_anti_reversal(ComplexNumber self) {
+    return ComplexNumber(self.g0 * vec2(1.0, -1.0));
+}
+
 Scalar complex_number_scalar_into(ComplexNumber self) {
     return Scalar(self.g0.x);
 }
@@ -184,12 +204,24 @@ ComplexNumber complex_number_scalar_inner_product(ComplexNumber self, Scalar oth
     return ComplexNumber(self.g0 * vec2(other.g0));
 }
 
+ComplexNumber complex_number_scalar_geometric_anti_product(ComplexNumber self, Scalar other) {
+    return ComplexNumber(self.g0.yx * vec2(other.g0) * vec2(1.0, -1.0));
+}
+
+ComplexNumber complex_number_scalar_inner_anti_product(ComplexNumber self, Scalar other) {
+    return ComplexNumber(self.g0.yx * vec2(other.g0) * vec2(1.0, -1.0));
+}
+
 Scalar complex_number_scalar_left_contraction(ComplexNumber self, Scalar other) {
     return Scalar(self.g0.x * other.g0);
 }
 
 ComplexNumber complex_number_scalar_right_contraction(ComplexNumber self, Scalar other) {
     return ComplexNumber(self.g0 * vec2(other.g0));
+}
+
+ComplexNumber complex_number_scalar_left_anti_contraction(ComplexNumber self, Scalar other) {
+    return ComplexNumber(self.g0.yx * vec2(other.g0) * vec2(1.0, -1.0));
 }
 
 Scalar complex_number_scalar_scalar_product(ComplexNumber self, Scalar other) {
@@ -228,12 +260,28 @@ ComplexNumber complex_number_complex_number_inner_product(ComplexNumber self, Co
     return ComplexNumber(vec2(self.g0.x) * other.g0 + vec2(self.g0.y) * other.g0.yx * vec2(-1.0, 1.0));
 }
 
+ComplexNumber complex_number_complex_number_geometric_anti_product(ComplexNumber self, ComplexNumber other) {
+    return ComplexNumber(vec2(self.g0.x) * other.g0.yx * vec2(1.0, -1.0) + vec2(self.g0.y) * other.g0);
+}
+
+ComplexNumber complex_number_complex_number_inner_anti_product(ComplexNumber self, ComplexNumber other) {
+    return ComplexNumber(vec2(self.g0.x) * other.g0.yx * vec2(1.0, -1.0) + vec2(self.g0.y) * other.g0);
+}
+
 ComplexNumber complex_number_complex_number_left_contraction(ComplexNumber self, ComplexNumber other) {
     return ComplexNumber(vec2(self.g0.x) * other.g0 + self.g0.yx * other.g0.yx * vec2(-1.0, 0.0));
 }
 
 ComplexNumber complex_number_complex_number_right_contraction(ComplexNumber self, ComplexNumber other) {
     return ComplexNumber(vec2(self.g0.y) * other.g0.yx * vec2(-1.0, 1.0) + vec2(self.g0.x) * vec2(other.g0.x) * vec2(1.0, 0.0));
+}
+
+ComplexNumber complex_number_complex_number_left_anti_contraction(ComplexNumber self, ComplexNumber other) {
+    return ComplexNumber(vec2(self.g0.y) * other.g0 + vec2(self.g0.x) * vec2(other.g0.x) * vec2(0.0, -1.0));
+}
+
+ComplexNumber complex_number_complex_number_right_anti_contraction(ComplexNumber self, ComplexNumber other) {
+    return ComplexNumber(vec2(self.g0.x) * other.g0.yx * vec2(1.0, -1.0) + self.g0 * other.g0 * vec2(0.0, 1.0));
 }
 
 Scalar complex_number_complex_number_scalar_product(ComplexNumber self, ComplexNumber other) {

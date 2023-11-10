@@ -183,6 +183,14 @@ impl Conjugation for Scalar {
     }
 }
 
+impl AntiReversal for Scalar {
+    type Output = Scalar;
+
+    fn anti_reversal(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() } }
+    }
+}
+
 impl Add<Scalar> for Scalar {
     type Output = Scalar;
 
@@ -335,6 +343,22 @@ impl InnerProduct<ComplexNumber> for Scalar {
     }
 }
 
+impl GeometricAntiProduct<ComplexNumber> for Scalar {
+    type Output = ComplexNumber;
+
+    fn geometric_anti_product(self, other: ComplexNumber) -> ComplexNumber {
+        ComplexNumber { groups: ComplexNumberGroups { g0: Simd32x2::from(self.group0()) * swizzle!(other.group0(), 1, 0) * Simd32x2::from([1.0, -1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<ComplexNumber> for Scalar {
+    type Output = ComplexNumber;
+
+    fn inner_anti_product(self, other: ComplexNumber) -> ComplexNumber {
+        ComplexNumber { groups: ComplexNumberGroups { g0: Simd32x2::from(self.group0()) * swizzle!(other.group0(), 1, 0) * Simd32x2::from([1.0, -1.0]) } }
+    }
+}
+
 impl LeftContraction<ComplexNumber> for Scalar {
     type Output = ComplexNumber;
 
@@ -348,6 +372,14 @@ impl RightContraction<ComplexNumber> for Scalar {
 
     fn right_contraction(self, other: ComplexNumber) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0() * other.group0()[0] } }
+    }
+}
+
+impl RightAntiContraction<ComplexNumber> for Scalar {
+    type Output = ComplexNumber;
+
+    fn right_anti_contraction(self, other: ComplexNumber) -> ComplexNumber {
+        ComplexNumber { groups: ComplexNumberGroups { g0: Simd32x2::from(self.group0()) * swizzle!(other.group0(), 1, 0) * Simd32x2::from([1.0, -1.0]) } }
     }
 }
 
@@ -451,6 +483,14 @@ impl Dual for ComplexNumber {
     }
 }
 
+impl AntiReversal for ComplexNumber {
+    type Output = ComplexNumber;
+
+    fn anti_reversal(self) -> ComplexNumber {
+        ComplexNumber { groups: ComplexNumberGroups { g0: self.group0() * Simd32x2::from([1.0, -1.0]) } }
+    }
+}
+
 impl Into<Scalar> for ComplexNumber {
     fn into(self) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] } }
@@ -517,6 +557,22 @@ impl InnerProduct<Scalar> for ComplexNumber {
     }
 }
 
+impl GeometricAntiProduct<Scalar> for ComplexNumber {
+    type Output = ComplexNumber;
+
+    fn geometric_anti_product(self, other: Scalar) -> ComplexNumber {
+        ComplexNumber { groups: ComplexNumberGroups { g0: swizzle!(self.group0(), 1, 0) * Simd32x2::from(other.group0()) * Simd32x2::from([1.0, -1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Scalar> for ComplexNumber {
+    type Output = ComplexNumber;
+
+    fn inner_anti_product(self, other: Scalar) -> ComplexNumber {
+        ComplexNumber { groups: ComplexNumberGroups { g0: swizzle!(self.group0(), 1, 0) * Simd32x2::from(other.group0()) * Simd32x2::from([1.0, -1.0]) } }
+    }
+}
+
 impl LeftContraction<Scalar> for ComplexNumber {
     type Output = Scalar;
 
@@ -530,6 +586,14 @@ impl RightContraction<Scalar> for ComplexNumber {
 
     fn right_contraction(self, other: Scalar) -> ComplexNumber {
         ComplexNumber { groups: ComplexNumberGroups { g0: self.group0() * Simd32x2::from(other.group0()) } }
+    }
+}
+
+impl LeftAntiContraction<Scalar> for ComplexNumber {
+    type Output = ComplexNumber;
+
+    fn left_anti_contraction(self, other: Scalar) -> ComplexNumber {
+        ComplexNumber { groups: ComplexNumberGroups { g0: swizzle!(self.group0(), 1, 0) * Simd32x2::from(other.group0()) * Simd32x2::from([1.0, -1.0]) } }
     }
 }
 
@@ -629,6 +693,22 @@ impl InnerProduct<ComplexNumber> for ComplexNumber {
     }
 }
 
+impl GeometricAntiProduct<ComplexNumber> for ComplexNumber {
+    type Output = ComplexNumber;
+
+    fn geometric_anti_product(self, other: ComplexNumber) -> ComplexNumber {
+        ComplexNumber { groups: ComplexNumberGroups { g0: Simd32x2::from(self.group0()[0]) * swizzle!(other.group0(), 1, 0) * Simd32x2::from([1.0, -1.0]) + Simd32x2::from(self.group0()[1]) * other.group0() } }
+    }
+}
+
+impl InnerAntiProduct<ComplexNumber> for ComplexNumber {
+    type Output = ComplexNumber;
+
+    fn inner_anti_product(self, other: ComplexNumber) -> ComplexNumber {
+        ComplexNumber { groups: ComplexNumberGroups { g0: Simd32x2::from(self.group0()[0]) * swizzle!(other.group0(), 1, 0) * Simd32x2::from([1.0, -1.0]) + Simd32x2::from(self.group0()[1]) * other.group0() } }
+    }
+}
+
 impl LeftContraction<ComplexNumber> for ComplexNumber {
     type Output = ComplexNumber;
 
@@ -642,6 +722,22 @@ impl RightContraction<ComplexNumber> for ComplexNumber {
 
     fn right_contraction(self, other: ComplexNumber) -> ComplexNumber {
         ComplexNumber { groups: ComplexNumberGroups { g0: Simd32x2::from(self.group0()[1]) * swizzle!(other.group0(), 1, 0) * Simd32x2::from([-1.0, 1.0]) + Simd32x2::from(self.group0()[0]) * Simd32x2::from(other.group0()[0]) * Simd32x2::from([1.0, 0.0]) } }
+    }
+}
+
+impl LeftAntiContraction<ComplexNumber> for ComplexNumber {
+    type Output = ComplexNumber;
+
+    fn left_anti_contraction(self, other: ComplexNumber) -> ComplexNumber {
+        ComplexNumber { groups: ComplexNumberGroups { g0: Simd32x2::from(self.group0()[1]) * other.group0() + Simd32x2::from(self.group0()[0]) * Simd32x2::from(other.group0()[0]) * Simd32x2::from([0.0, -1.0]) } }
+    }
+}
+
+impl RightAntiContraction<ComplexNumber> for ComplexNumber {
+    type Output = ComplexNumber;
+
+    fn right_anti_contraction(self, other: ComplexNumber) -> ComplexNumber {
+        ComplexNumber { groups: ComplexNumberGroups { g0: Simd32x2::from(self.group0()[0]) * swizzle!(other.group0(), 1, 0) * Simd32x2::from([1.0, -1.0]) + self.group0() * other.group0() * Simd32x2::from([0.0, 1.0]) } }
     }
 }
 

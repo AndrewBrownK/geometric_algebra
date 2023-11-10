@@ -71,6 +71,74 @@ impl std::fmt::Debug for Scalar {
 }
 
 #[derive(Clone, Copy)]
+struct AntiScalarGroups {
+    /// e0123
+    g0: f32,
+}
+
+#[derive(Clone, Copy)]
+pub union AntiScalar {
+    groups: AntiScalarGroups,
+    /// e0123
+    elements: [f32; 1],
+}
+
+impl AntiScalar {
+    #[allow(clippy::too_many_arguments)]
+    pub const fn new(element0: f32) -> Self {
+        Self { elements: [element0] }
+    }
+    pub const fn from_groups(g0: f32) -> Self {
+        Self { groups: AntiScalarGroups { g0 } }
+    }
+    #[inline(always)]
+    pub fn group0(&self) -> f32 {
+        unsafe { self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group0_mut(&mut self) -> &mut f32 {
+        unsafe { &mut self.groups.g0 }
+    }
+}
+
+const ANTISCALAR_INDEX_REMAP: [usize; 1] = [0];
+
+impl std::ops::Index<usize> for AntiScalar {
+    type Output = f32;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        unsafe { &self.elements[ANTISCALAR_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::ops::IndexMut<usize> for AntiScalar {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        unsafe { &mut self.elements[ANTISCALAR_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::convert::From<AntiScalar> for [f32; 1] {
+    fn from(vector: AntiScalar) -> Self {
+        unsafe { [vector.elements[0]] }
+    }
+}
+
+impl std::convert::From<[f32; 1]> for AntiScalar {
+    fn from(array: [f32; 1]) -> Self {
+        Self { elements: [array[0]] }
+    }
+}
+
+impl std::fmt::Debug for AntiScalar {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter
+            .debug_struct("AntiScalar")
+            .field("e0123", &self[0])
+            .finish()
+    }
+}
+
+#[derive(Clone, Copy)]
 struct MultiVectorGroups {
     /// 1, e23, -e13, e12
     g0: Simd32x4,
@@ -834,6 +902,22 @@ impl Conjugation for Scalar {
     }
 }
 
+impl Dual for Scalar {
+    type Output = AntiScalar;
+
+    fn dual(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() } }
+    }
+}
+
+impl AntiReversal for Scalar {
+    type Output = Scalar;
+
+    fn anti_reversal(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() } }
+    }
+}
+
 impl Add<Scalar> for Scalar {
     type Output = Scalar;
 
@@ -914,6 +998,22 @@ impl InnerProduct<Scalar> for Scalar {
     }
 }
 
+impl GeometricAntiProduct<Scalar> for Scalar {
+    type Output = AntiScalar;
+
+    fn geometric_anti_product(self, other: Scalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0() * other.group0() } }
+    }
+}
+
+impl InnerAntiProduct<Scalar> for Scalar {
+    type Output = AntiScalar;
+
+    fn inner_anti_product(self, other: Scalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0() * other.group0() } }
+    }
+}
+
 impl LeftContraction<Scalar> for Scalar {
     type Output = Scalar;
 
@@ -930,10 +1030,98 @@ impl RightContraction<Scalar> for Scalar {
     }
 }
 
+impl LeftAntiContraction<Scalar> for Scalar {
+    type Output = AntiScalar;
+
+    fn left_anti_contraction(self, other: Scalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0() * other.group0() } }
+    }
+}
+
+impl RightAntiContraction<Scalar> for Scalar {
+    type Output = AntiScalar;
+
+    fn right_anti_contraction(self, other: Scalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0() * other.group0() } }
+    }
+}
+
 impl ScalarProduct<Scalar> for Scalar {
     type Output = Scalar;
 
     fn scalar_product(self, other: Scalar) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() * other.group0() } }
+    }
+}
+
+impl AntiScalarProduct<Scalar> for Scalar {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Scalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0() * other.group0() } }
+    }
+}
+
+impl GeometricProduct<AntiScalar> for Scalar {
+    type Output = AntiScalar;
+
+    fn geometric_product(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0() } }
+    }
+}
+
+impl RegressiveProduct<AntiScalar> for Scalar {
+    type Output = Scalar;
+
+    fn regressive_product(self, other: AntiScalar) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() * other.group0() } }
+    }
+}
+
+impl OuterProduct<AntiScalar> for Scalar {
+    type Output = AntiScalar;
+
+    fn outer_product(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0() } }
+    }
+}
+
+impl InnerProduct<AntiScalar> for Scalar {
+    type Output = AntiScalar;
+
+    fn inner_product(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0() } }
+    }
+}
+
+impl GeometricAntiProduct<AntiScalar> for Scalar {
+    type Output = Scalar;
+
+    fn geometric_anti_product(self, other: AntiScalar) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() * other.group0() } }
+    }
+}
+
+impl InnerAntiProduct<AntiScalar> for Scalar {
+    type Output = Scalar;
+
+    fn inner_anti_product(self, other: AntiScalar) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() * other.group0() } }
+    }
+}
+
+impl LeftContraction<AntiScalar> for Scalar {
+    type Output = AntiScalar;
+
+    fn left_contraction(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0() } }
+    }
+}
+
+impl RightAntiContraction<AntiScalar> for Scalar {
+    type Output = Scalar;
+
+    fn right_anti_contraction(self, other: AntiScalar) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0() * other.group0() } }
     }
 }
@@ -986,6 +1174,22 @@ impl InnerProduct<MultiVector> for Scalar {
     }
 }
 
+impl GeometricAntiProduct<MultiVector> for Scalar {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()) * other.group3() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(0.0) - Simd32x4::from(self.group0()) * other.group2(), g2: Simd32x4::from(self.group0()) * other.group1(), g3: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<MultiVector> for Scalar {
+    type Output = MultiVector;
+
+    fn inner_anti_product(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()) * other.group3() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(0.0) - Simd32x4::from(self.group0()) * other.group2(), g2: Simd32x4::from(self.group0()) * other.group1(), g3: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl LeftContraction<MultiVector> for Scalar {
     type Output = MultiVector;
 
@@ -1002,11 +1206,35 @@ impl RightContraction<MultiVector> for Scalar {
     }
 }
 
+impl LeftAntiContraction<MultiVector> for Scalar {
+    type Output = AntiScalar;
+
+    fn left_anti_contraction(self, other: MultiVector) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0() * other.group0()[0] } }
+    }
+}
+
+impl RightAntiContraction<MultiVector> for Scalar {
+    type Output = MultiVector;
+
+    fn right_anti_contraction(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()) * other.group3() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(0.0) - Simd32x4::from(self.group0()) * other.group2(), g2: Simd32x4::from(self.group0()) * other.group1(), g3: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl ScalarProduct<MultiVector> for Scalar {
     type Output = Scalar;
 
     fn scalar_product(self, other: MultiVector) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0() * other.group0()[0] } }
+    }
+}
+
+impl AntiScalarProduct<MultiVector> for Scalar {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: MultiVector) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0() * other.group0()[0] } }
     }
 }
 
@@ -1066,11 +1294,27 @@ impl RightContraction<Rotor> for Scalar {
     }
 }
 
+impl LeftAntiContraction<Rotor> for Scalar {
+    type Output = AntiScalar;
+
+    fn left_anti_contraction(self, other: Rotor) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0() * other.group0()[0] } }
+    }
+}
+
 impl ScalarProduct<Rotor> for Scalar {
     type Output = Scalar;
 
     fn scalar_product(self, other: Rotor) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0() * other.group0()[0] } }
+    }
+}
+
+impl AntiScalarProduct<Rotor> for Scalar {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Rotor) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0() * other.group0()[0] } }
     }
 }
 
@@ -1098,11 +1342,35 @@ impl InnerProduct<Point> for Scalar {
     }
 }
 
+impl GeometricAntiProduct<Point> for Scalar {
+    type Output = Plane;
+
+    fn geometric_anti_product(self, other: Point) -> Plane {
+        Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Point> for Scalar {
+    type Output = Plane;
+
+    fn inner_anti_product(self, other: Point) -> Plane {
+        Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl LeftContraction<Point> for Scalar {
     type Output = Point;
 
     fn left_contraction(self, other: Point) -> Point {
         Point { groups: PointGroups { g0: Simd32x4::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl RightAntiContraction<Point> for Scalar {
+    type Output = Plane;
+
+    fn right_anti_contraction(self, other: Point) -> Plane {
+        Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
     }
 }
 
@@ -1178,11 +1446,35 @@ impl InnerProduct<Plane> for Scalar {
     }
 }
 
+impl GeometricAntiProduct<Plane> for Scalar {
+    type Output = Point;
+
+    fn geometric_anti_product(self, other: Plane) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Plane> for Scalar {
+    type Output = Point;
+
+    fn inner_anti_product(self, other: Plane) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
 impl LeftContraction<Plane> for Scalar {
     type Output = Plane;
 
     fn left_contraction(self, other: Plane) -> Plane {
         Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl RightAntiContraction<Plane> for Scalar {
+    type Output = Point;
+
+    fn right_anti_contraction(self, other: Plane) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
     }
 }
 
@@ -1210,11 +1502,35 @@ impl InnerProduct<Line> for Scalar {
     }
 }
 
+impl GeometricAntiProduct<Line> for Scalar {
+    type Output = Line;
+
+    fn geometric_anti_product(self, other: Line) -> Line {
+        Line { groups: LineGroups { g0: Simd32x3::from(self.group0()) * other.group1(), g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl InnerAntiProduct<Line> for Scalar {
+    type Output = Line;
+
+    fn inner_anti_product(self, other: Line) -> Line {
+        Line { groups: LineGroups { g0: Simd32x3::from(self.group0()) * other.group1(), g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0() } }
+    }
+}
+
 impl LeftContraction<Line> for Scalar {
     type Output = Line;
 
     fn left_contraction(self, other: Line) -> Line {
         Line { groups: LineGroups { g0: Simd32x3::from(self.group0()) * other.group0(), g1: Simd32x3::from(self.group0()) * other.group1() } }
+    }
+}
+
+impl RightAntiContraction<Line> for Scalar {
+    type Output = Line;
+
+    fn right_anti_contraction(self, other: Line) -> Line {
+        Line { groups: LineGroups { g0: Simd32x3::from(self.group0()) * other.group1(), g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0() } }
     }
 }
 
@@ -1274,11 +1590,27 @@ impl RightContraction<Translator> for Scalar {
     }
 }
 
+impl LeftAntiContraction<Translator> for Scalar {
+    type Output = AntiScalar;
+
+    fn left_anti_contraction(self, other: Translator) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0() * other.group0()[0] } }
+    }
+}
+
 impl ScalarProduct<Translator> for Scalar {
     type Output = Scalar;
 
     fn scalar_product(self, other: Translator) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0() * other.group0()[0] } }
+    }
+}
+
+impl AntiScalarProduct<Translator> for Scalar {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Translator) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0() * other.group0()[0] } }
     }
 }
 
@@ -1330,6 +1662,22 @@ impl InnerProduct<Motor> for Scalar {
     }
 }
 
+impl GeometricAntiProduct<Motor> for Scalar {
+    type Output = Motor;
+
+    fn geometric_anti_product(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Motor> for Scalar {
+    type Output = Motor;
+
+    fn inner_anti_product(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl LeftContraction<Motor> for Scalar {
     type Output = Motor;
 
@@ -1346,11 +1694,35 @@ impl RightContraction<Motor> for Scalar {
     }
 }
 
+impl LeftAntiContraction<Motor> for Scalar {
+    type Output = AntiScalar;
+
+    fn left_anti_contraction(self, other: Motor) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0() * other.group0()[0] } }
+    }
+}
+
+impl RightAntiContraction<Motor> for Scalar {
+    type Output = Motor;
+
+    fn right_anti_contraction(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl ScalarProduct<Motor> for Scalar {
     type Output = Scalar;
 
     fn scalar_product(self, other: Motor) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0() * other.group0()[0] } }
+    }
+}
+
+impl AntiScalarProduct<Motor> for Scalar {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Motor) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0() * other.group0()[0] } }
     }
 }
 
@@ -1378,11 +1750,35 @@ impl InnerProduct<PointAndPlane> for Scalar {
     }
 }
 
+impl GeometricAntiProduct<PointAndPlane> for Scalar {
+    type Output = PointAndPlane;
+
+    fn geometric_anti_product(self, other: PointAndPlane) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<PointAndPlane> for Scalar {
+    type Output = PointAndPlane;
+
+    fn inner_anti_product(self, other: PointAndPlane) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl LeftContraction<PointAndPlane> for Scalar {
     type Output = PointAndPlane;
 
     fn left_contraction(self, other: PointAndPlane) -> PointAndPlane {
         PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()) * other.group0(), g1: Simd32x4::from(self.group0()) * other.group1() } }
+    }
+}
+
+impl RightAntiContraction<PointAndPlane> for Scalar {
+    type Output = PointAndPlane;
+
+    fn right_anti_contraction(self, other: PointAndPlane) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
     }
 }
 
@@ -1422,6 +1818,874 @@ impl Inverse for Scalar {
     type Output = Scalar;
 
     fn inverse(self) -> Scalar {
+        self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
+impl Zero for AntiScalar {
+    fn zero() -> Self {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 } }
+    }
+}
+
+impl One for AntiScalar {
+    fn one() -> Self {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 } }
+    }
+}
+
+impl Neg for AntiScalar {
+    type Output = AntiScalar;
+
+    fn neg(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * -1.0 } }
+    }
+}
+
+impl Automorphism for AntiScalar {
+    type Output = AntiScalar;
+
+    fn automorphism(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() } }
+    }
+}
+
+impl Reversal for AntiScalar {
+    type Output = AntiScalar;
+
+    fn reversal(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() } }
+    }
+}
+
+impl Conjugation for AntiScalar {
+    type Output = AntiScalar;
+
+    fn conjugation(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() } }
+    }
+}
+
+impl Dual for AntiScalar {
+    type Output = Scalar;
+
+    fn dual(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() } }
+    }
+}
+
+impl AntiReversal for AntiScalar {
+    type Output = AntiScalar;
+
+    fn anti_reversal(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() } }
+    }
+}
+
+impl GeometricProduct<Scalar> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn geometric_product(self, other: Scalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0() } }
+    }
+}
+
+impl RegressiveProduct<Scalar> for AntiScalar {
+    type Output = Scalar;
+
+    fn regressive_product(self, other: Scalar) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() * other.group0() } }
+    }
+}
+
+impl OuterProduct<Scalar> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn outer_product(self, other: Scalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0() } }
+    }
+}
+
+impl InnerProduct<Scalar> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn inner_product(self, other: Scalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0() } }
+    }
+}
+
+impl GeometricAntiProduct<Scalar> for AntiScalar {
+    type Output = Scalar;
+
+    fn geometric_anti_product(self, other: Scalar) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() * other.group0() } }
+    }
+}
+
+impl InnerAntiProduct<Scalar> for AntiScalar {
+    type Output = Scalar;
+
+    fn inner_anti_product(self, other: Scalar) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() * other.group0() } }
+    }
+}
+
+impl RightContraction<Scalar> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn right_contraction(self, other: Scalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0() } }
+    }
+}
+
+impl LeftAntiContraction<Scalar> for AntiScalar {
+    type Output = Scalar;
+
+    fn left_anti_contraction(self, other: Scalar) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() * other.group0() } }
+    }
+}
+
+impl Add<AntiScalar> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn add(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() + other.group0() } }
+    }
+}
+
+impl AddAssign<AntiScalar> for AntiScalar {
+    fn add_assign(&mut self, other: AntiScalar) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Sub<AntiScalar> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn sub(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() - other.group0() } }
+    }
+}
+
+impl SubAssign<AntiScalar> for AntiScalar {
+    fn sub_assign(&mut self, other: AntiScalar) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Mul<AntiScalar> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn mul(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0() } }
+    }
+}
+
+impl MulAssign<AntiScalar> for AntiScalar {
+    fn mul_assign(&mut self, other: AntiScalar) {
+        *self = (*self).mul(other);
+    }
+}
+
+impl Div<AntiScalar> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn div(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * 1.0 / other.group0() * 1.0 } }
+    }
+}
+
+impl DivAssign<AntiScalar> for AntiScalar {
+    fn div_assign(&mut self, other: AntiScalar) {
+        *self = (*self).div(other);
+    }
+}
+
+impl GeometricProduct<AntiScalar> for AntiScalar {
+    type Output = Scalar;
+
+    fn geometric_product(self, other: AntiScalar) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: 0.0 - self.group0() * other.group0() } }
+    }
+}
+
+impl RegressiveProduct<AntiScalar> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn regressive_product(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0() } }
+    }
+}
+
+impl InnerProduct<AntiScalar> for AntiScalar {
+    type Output = Scalar;
+
+    fn inner_product(self, other: AntiScalar) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: 0.0 - self.group0() * other.group0() } }
+    }
+}
+
+impl GeometricAntiProduct<AntiScalar> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn geometric_anti_product(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0() } }
+    }
+}
+
+impl InnerAntiProduct<AntiScalar> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn inner_anti_product(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0() } }
+    }
+}
+
+impl LeftContraction<AntiScalar> for AntiScalar {
+    type Output = Scalar;
+
+    fn left_contraction(self, other: AntiScalar) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: 0.0 - self.group0() * other.group0() } }
+    }
+}
+
+impl RightContraction<AntiScalar> for AntiScalar {
+    type Output = Scalar;
+
+    fn right_contraction(self, other: AntiScalar) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: 0.0 - self.group0() * other.group0() } }
+    }
+}
+
+impl LeftAntiContraction<AntiScalar> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn left_anti_contraction(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0() } }
+    }
+}
+
+impl RightAntiContraction<AntiScalar> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn right_anti_contraction(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0() } }
+    }
+}
+
+impl ScalarProduct<AntiScalar> for AntiScalar {
+    type Output = Scalar;
+
+    fn scalar_product(self, other: AntiScalar) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: 0.0 - self.group0() * other.group0() } }
+    }
+}
+
+impl AntiScalarProduct<AntiScalar> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0() } }
+    }
+}
+
+impl Add<MultiVector> for AntiScalar {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: other.group0(), g1: other.group1(), g2: other.group2(), g3: Simd32x4::from(self.group0()) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + other.group3() } }
+    }
+}
+
+impl Sub<MultiVector> for AntiScalar {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(0.0) - other.group0(), g1: Simd32x4::from(0.0) - other.group1(), g2: Simd32x4::from(0.0) - other.group2(), g3: Simd32x4::from(self.group0()) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) - other.group3() } }
+    }
+}
+
+impl GeometricProduct<MultiVector> for AntiScalar {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()) * other.group3() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]), g1: Simd32x4::from(0.0) - Simd32x4::from(self.group0()) * other.group2(), g2: Simd32x4::from(self.group0()) * other.group1(), g3: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl RegressiveProduct<MultiVector> for AntiScalar {
+    type Output = MultiVector;
+
+    fn regressive_product(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()) * other.group0(), g1: Simd32x4::from(self.group0()) * other.group1(), g2: Simd32x4::from(self.group0()) * other.group2(), g3: Simd32x4::from(self.group0()) * other.group3() } }
+    }
+}
+
+impl OuterProduct<MultiVector> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn outer_product(self, other: MultiVector) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0()[0] } }
+    }
+}
+
+impl InnerProduct<MultiVector> for AntiScalar {
+    type Output = MultiVector;
+
+    fn inner_product(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()) * other.group3() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]), g1: Simd32x4::from(0.0) - Simd32x4::from(self.group0()) * other.group2(), g2: Simd32x4::from(self.group0()) * other.group1(), g3: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl GeometricAntiProduct<MultiVector> for AntiScalar {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()) * other.group0(), g1: Simd32x4::from(self.group0()) * other.group1(), g2: Simd32x4::from(self.group0()) * other.group2(), g3: Simd32x4::from(self.group0()) * other.group3() } }
+    }
+}
+
+impl InnerAntiProduct<MultiVector> for AntiScalar {
+    type Output = MultiVector;
+
+    fn inner_anti_product(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()) * other.group0(), g1: Simd32x4::from(self.group0()) * other.group1(), g2: Simd32x4::from(self.group0()) * other.group2(), g3: Simd32x4::from(self.group0()) * other.group3() } }
+    }
+}
+
+impl LeftContraction<MultiVector> for AntiScalar {
+    type Output = Scalar;
+
+    fn left_contraction(self, other: MultiVector) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: 0.0 - self.group0() * other.group3()[0] } }
+    }
+}
+
+impl RightContraction<MultiVector> for AntiScalar {
+    type Output = MultiVector;
+
+    fn right_contraction(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()) * other.group3() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]), g1: Simd32x4::from(0.0) - Simd32x4::from(self.group0()) * other.group2(), g2: Simd32x4::from(self.group0()) * other.group1(), g3: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl LeftAntiContraction<MultiVector> for AntiScalar {
+    type Output = MultiVector;
+
+    fn left_anti_contraction(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()) * other.group0(), g1: Simd32x4::from(self.group0()) * other.group1(), g2: Simd32x4::from(self.group0()) * other.group2(), g3: Simd32x4::from(self.group0()) * other.group3() } }
+    }
+}
+
+impl RightAntiContraction<MultiVector> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn right_anti_contraction(self, other: MultiVector) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group3()[0] } }
+    }
+}
+
+impl ScalarProduct<MultiVector> for AntiScalar {
+    type Output = Scalar;
+
+    fn scalar_product(self, other: MultiVector) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: 0.0 - self.group0() * other.group3()[0] } }
+    }
+}
+
+impl AntiScalarProduct<MultiVector> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: MultiVector) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group3()[0] } }
+    }
+}
+
+impl RegressiveProduct<Rotor> for AntiScalar {
+    type Output = Rotor;
+
+    fn regressive_product(self, other: Rotor) -> Rotor {
+        Rotor { groups: RotorGroups { g0: Simd32x4::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl OuterProduct<Rotor> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn outer_product(self, other: Rotor) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0()[0] } }
+    }
+}
+
+impl GeometricAntiProduct<Rotor> for AntiScalar {
+    type Output = Rotor;
+
+    fn geometric_anti_product(self, other: Rotor) -> Rotor {
+        Rotor { groups: RotorGroups { g0: Simd32x4::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl InnerAntiProduct<Rotor> for AntiScalar {
+    type Output = Rotor;
+
+    fn inner_anti_product(self, other: Rotor) -> Rotor {
+        Rotor { groups: RotorGroups { g0: Simd32x4::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl LeftAntiContraction<Rotor> for AntiScalar {
+    type Output = Rotor;
+
+    fn left_anti_contraction(self, other: Rotor) -> Rotor {
+        Rotor { groups: RotorGroups { g0: Simd32x4::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl GeometricProduct<Point> for AntiScalar {
+    type Output = Plane;
+
+    fn geometric_product(self, other: Point) -> Plane {
+        Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl RegressiveProduct<Point> for AntiScalar {
+    type Output = Point;
+
+    fn regressive_product(self, other: Point) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl InnerProduct<Point> for AntiScalar {
+    type Output = Plane;
+
+    fn inner_product(self, other: Point) -> Plane {
+        Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl GeometricAntiProduct<Point> for AntiScalar {
+    type Output = Point;
+
+    fn geometric_anti_product(self, other: Point) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl InnerAntiProduct<Point> for AntiScalar {
+    type Output = Point;
+
+    fn inner_anti_product(self, other: Point) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl RightContraction<Point> for AntiScalar {
+    type Output = Plane;
+
+    fn right_contraction(self, other: Point) -> Plane {
+        Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl LeftAntiContraction<Point> for AntiScalar {
+    type Output = Point;
+
+    fn left_anti_contraction(self, other: Point) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl RegressiveProduct<IdealPoint> for AntiScalar {
+    type Output = IdealPoint;
+
+    fn regressive_product(self, other: IdealPoint) -> IdealPoint {
+        IdealPoint { groups: IdealPointGroups { g0: Simd32x3::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl GeometricAntiProduct<IdealPoint> for AntiScalar {
+    type Output = IdealPoint;
+
+    fn geometric_anti_product(self, other: IdealPoint) -> IdealPoint {
+        IdealPoint { groups: IdealPointGroups { g0: Simd32x3::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl InnerAntiProduct<IdealPoint> for AntiScalar {
+    type Output = IdealPoint;
+
+    fn inner_anti_product(self, other: IdealPoint) -> IdealPoint {
+        IdealPoint { groups: IdealPointGroups { g0: Simd32x3::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl LeftAntiContraction<IdealPoint> for AntiScalar {
+    type Output = IdealPoint;
+
+    fn left_anti_contraction(self, other: IdealPoint) -> IdealPoint {
+        IdealPoint { groups: IdealPointGroups { g0: Simd32x3::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl GeometricProduct<Plane> for AntiScalar {
+    type Output = Point;
+
+    fn geometric_product(self, other: Plane) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl RegressiveProduct<Plane> for AntiScalar {
+    type Output = Plane;
+
+    fn regressive_product(self, other: Plane) -> Plane {
+        Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl InnerProduct<Plane> for AntiScalar {
+    type Output = Point;
+
+    fn inner_product(self, other: Plane) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl GeometricAntiProduct<Plane> for AntiScalar {
+    type Output = Plane;
+
+    fn geometric_anti_product(self, other: Plane) -> Plane {
+        Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl InnerAntiProduct<Plane> for AntiScalar {
+    type Output = Plane;
+
+    fn inner_anti_product(self, other: Plane) -> Plane {
+        Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl RightContraction<Plane> for AntiScalar {
+    type Output = Point;
+
+    fn right_contraction(self, other: Plane) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl LeftAntiContraction<Plane> for AntiScalar {
+    type Output = Plane;
+
+    fn left_anti_contraction(self, other: Plane) -> Plane {
+        Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl GeometricProduct<Line> for AntiScalar {
+    type Output = Line;
+
+    fn geometric_product(self, other: Line) -> Line {
+        Line { groups: LineGroups { g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group1(), g1: Simd32x3::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl RegressiveProduct<Line> for AntiScalar {
+    type Output = Line;
+
+    fn regressive_product(self, other: Line) -> Line {
+        Line { groups: LineGroups { g0: Simd32x3::from(self.group0()) * other.group0(), g1: Simd32x3::from(self.group0()) * other.group1() } }
+    }
+}
+
+impl InnerProduct<Line> for AntiScalar {
+    type Output = Line;
+
+    fn inner_product(self, other: Line) -> Line {
+        Line { groups: LineGroups { g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group1(), g1: Simd32x3::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl GeometricAntiProduct<Line> for AntiScalar {
+    type Output = Line;
+
+    fn geometric_anti_product(self, other: Line) -> Line {
+        Line { groups: LineGroups { g0: Simd32x3::from(self.group0()) * other.group0(), g1: Simd32x3::from(self.group0()) * other.group1() } }
+    }
+}
+
+impl InnerAntiProduct<Line> for AntiScalar {
+    type Output = Line;
+
+    fn inner_anti_product(self, other: Line) -> Line {
+        Line { groups: LineGroups { g0: Simd32x3::from(self.group0()) * other.group0(), g1: Simd32x3::from(self.group0()) * other.group1() } }
+    }
+}
+
+impl RightContraction<Line> for AntiScalar {
+    type Output = Line;
+
+    fn right_contraction(self, other: Line) -> Line {
+        Line { groups: LineGroups { g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group1(), g1: Simd32x3::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl LeftAntiContraction<Line> for AntiScalar {
+    type Output = Line;
+
+    fn left_anti_contraction(self, other: Line) -> Line {
+        Line { groups: LineGroups { g0: Simd32x3::from(self.group0()) * other.group0(), g1: Simd32x3::from(self.group0()) * other.group1() } }
+    }
+}
+
+impl RegressiveProduct<Translator> for AntiScalar {
+    type Output = Translator;
+
+    fn regressive_product(self, other: Translator) -> Translator {
+        Translator { groups: TranslatorGroups { g0: Simd32x4::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl OuterProduct<Translator> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn outer_product(self, other: Translator) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0()[0] } }
+    }
+}
+
+impl GeometricAntiProduct<Translator> for AntiScalar {
+    type Output = Translator;
+
+    fn geometric_anti_product(self, other: Translator) -> Translator {
+        Translator { groups: TranslatorGroups { g0: Simd32x4::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl InnerAntiProduct<Translator> for AntiScalar {
+    type Output = Translator;
+
+    fn inner_anti_product(self, other: Translator) -> Translator {
+        Translator { groups: TranslatorGroups { g0: Simd32x4::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl LeftAntiContraction<Translator> for AntiScalar {
+    type Output = Translator;
+
+    fn left_anti_contraction(self, other: Translator) -> Translator {
+        Translator { groups: TranslatorGroups { g0: Simd32x4::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl Add<Motor> for AntiScalar {
+    type Output = Motor;
+
+    fn add(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: other.group0(), g1: Simd32x4::from(self.group0()) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + other.group1() } }
+    }
+}
+
+impl Sub<Motor> for AntiScalar {
+    type Output = Motor;
+
+    fn sub(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(0.0) - other.group0(), g1: Simd32x4::from(self.group0()) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) - other.group1() } }
+    }
+}
+
+impl GeometricProduct<Motor> for AntiScalar {
+    type Output = Motor;
+
+    fn geometric_product(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()) * other.group1() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]), g1: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl RegressiveProduct<Motor> for AntiScalar {
+    type Output = Motor;
+
+    fn regressive_product(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()) * other.group0(), g1: Simd32x4::from(self.group0()) * other.group1() } }
+    }
+}
+
+impl OuterProduct<Motor> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn outer_product(self, other: Motor) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0()[0] } }
+    }
+}
+
+impl InnerProduct<Motor> for AntiScalar {
+    type Output = Motor;
+
+    fn inner_product(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()) * other.group1() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]), g1: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl GeometricAntiProduct<Motor> for AntiScalar {
+    type Output = Motor;
+
+    fn geometric_anti_product(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()) * other.group0(), g1: Simd32x4::from(self.group0()) * other.group1() } }
+    }
+}
+
+impl InnerAntiProduct<Motor> for AntiScalar {
+    type Output = Motor;
+
+    fn inner_anti_product(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()) * other.group0(), g1: Simd32x4::from(self.group0()) * other.group1() } }
+    }
+}
+
+impl LeftContraction<Motor> for AntiScalar {
+    type Output = Scalar;
+
+    fn left_contraction(self, other: Motor) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: 0.0 - self.group0() * other.group1()[0] } }
+    }
+}
+
+impl RightContraction<Motor> for AntiScalar {
+    type Output = Motor;
+
+    fn right_contraction(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()) * other.group1() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]), g1: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl LeftAntiContraction<Motor> for AntiScalar {
+    type Output = Motor;
+
+    fn left_anti_contraction(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()) * other.group0(), g1: Simd32x4::from(self.group0()) * other.group1() } }
+    }
+}
+
+impl RightAntiContraction<Motor> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn right_anti_contraction(self, other: Motor) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group1()[0] } }
+    }
+}
+
+impl ScalarProduct<Motor> for AntiScalar {
+    type Output = Scalar;
+
+    fn scalar_product(self, other: Motor) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: 0.0 - self.group0() * other.group1()[0] } }
+    }
+}
+
+impl AntiScalarProduct<Motor> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Motor) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group1()[0] } }
+    }
+}
+
+impl GeometricProduct<PointAndPlane> for AntiScalar {
+    type Output = PointAndPlane;
+
+    fn geometric_product(self, other: PointAndPlane) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl RegressiveProduct<PointAndPlane> for AntiScalar {
+    type Output = PointAndPlane;
+
+    fn regressive_product(self, other: PointAndPlane) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()) * other.group0(), g1: Simd32x4::from(self.group0()) * other.group1() } }
+    }
+}
+
+impl InnerProduct<PointAndPlane> for AntiScalar {
+    type Output = PointAndPlane;
+
+    fn inner_product(self, other: PointAndPlane) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl GeometricAntiProduct<PointAndPlane> for AntiScalar {
+    type Output = PointAndPlane;
+
+    fn geometric_anti_product(self, other: PointAndPlane) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()) * other.group0(), g1: Simd32x4::from(self.group0()) * other.group1() } }
+    }
+}
+
+impl InnerAntiProduct<PointAndPlane> for AntiScalar {
+    type Output = PointAndPlane;
+
+    fn inner_anti_product(self, other: PointAndPlane) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()) * other.group0(), g1: Simd32x4::from(self.group0()) * other.group1() } }
+    }
+}
+
+impl RightContraction<PointAndPlane> for AntiScalar {
+    type Output = PointAndPlane;
+
+    fn right_contraction(self, other: PointAndPlane) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl LeftAntiContraction<PointAndPlane> for AntiScalar {
+    type Output = PointAndPlane;
+
+    fn left_anti_contraction(self, other: PointAndPlane) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()) * other.group0(), g1: Simd32x4::from(self.group0()) * other.group1() } }
+    }
+}
+
+impl SquaredMagnitude for AntiScalar {
+    type Output = Scalar;
+
+    fn squared_magnitude(self) -> Scalar {
+        self.scalar_product(self.reversal())
+    }
+}
+
+impl Magnitude for AntiScalar {
+    type Output = Scalar;
+
+    fn magnitude(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl Scale for AntiScalar {
+    type Output = AntiScalar;
+
+    fn scale(self, other: f32) -> AntiScalar {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: other } })
+    }
+}
+
+impl Signum for AntiScalar {
+    type Output = AntiScalar;
+
+    fn signum(self) -> AntiScalar {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.magnitude().group0() } })
+    }
+}
+
+impl Inverse for AntiScalar {
+    type Output = AntiScalar;
+
+    fn inverse(self) -> AntiScalar {
         self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
     }
 }
@@ -1475,6 +2739,14 @@ impl Dual for MultiVector {
 
     fn dual(self) -> MultiVector {
         MultiVector { groups: MultiVectorGroups { g0: self.group3(), g1: self.group2() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]), g2: self.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g3: self.group0() } }
+    }
+}
+
+impl AntiReversal for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_reversal(self) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: self.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: self.group1() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]), g2: self.group2() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g3: self.group3() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
     }
 }
 
@@ -1544,6 +2816,22 @@ impl InnerProduct<Scalar> for MultiVector {
     }
 }
 
+impl GeometricAntiProduct<Scalar> for MultiVector {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Scalar) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: self.group3() * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: self.group2() * Simd32x4::from(other.group0()), g2: self.group1() * Simd32x4::from(other.group0()) * Simd32x4::from(-1.0), g3: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Scalar> for MultiVector {
+    type Output = MultiVector;
+
+    fn inner_anti_product(self, other: Scalar) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: self.group3() * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: self.group2() * Simd32x4::from(other.group0()), g2: self.group1() * Simd32x4::from(other.group0()) * Simd32x4::from(-1.0), g3: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl LeftContraction<Scalar> for MultiVector {
     type Output = Scalar;
 
@@ -1560,11 +2848,165 @@ impl RightContraction<Scalar> for MultiVector {
     }
 }
 
+impl LeftAntiContraction<Scalar> for MultiVector {
+    type Output = MultiVector;
+
+    fn left_anti_contraction(self, other: Scalar) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: self.group3() * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: self.group2() * Simd32x4::from(other.group0()), g2: self.group1() * Simd32x4::from(other.group0()) * Simd32x4::from(-1.0), g3: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl RightAntiContraction<Scalar> for MultiVector {
+    type Output = AntiScalar;
+
+    fn right_anti_contraction(self, other: Scalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0() } }
+    }
+}
+
 impl ScalarProduct<Scalar> for MultiVector {
     type Output = Scalar;
 
     fn scalar_product(self, other: Scalar) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0() } }
+    }
+}
+
+impl AntiScalarProduct<Scalar> for MultiVector {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Scalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0() } }
+    }
+}
+
+impl Into<AntiScalar> for MultiVector {
+    fn into(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group3()[0] } }
+    }
+}
+
+impl Add<AntiScalar> for MultiVector {
+    type Output = MultiVector;
+
+    fn add(self, other: AntiScalar) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: self.group0(), g1: self.group1(), g2: self.group2(), g3: self.group3() + Simd32x4::from(other.group0()) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) } }
+    }
+}
+
+impl AddAssign<AntiScalar> for MultiVector {
+    fn add_assign(&mut self, other: AntiScalar) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Sub<AntiScalar> for MultiVector {
+    type Output = MultiVector;
+
+    fn sub(self, other: AntiScalar) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: self.group0(), g1: self.group1(), g2: self.group2(), g3: self.group3() - Simd32x4::from(other.group0()) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) } }
+    }
+}
+
+impl SubAssign<AntiScalar> for MultiVector {
+    fn sub_assign(&mut self, other: AntiScalar) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl GeometricProduct<AntiScalar> for MultiVector {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: AntiScalar) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: self.group3() * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]), g1: self.group2() * Simd32x4::from(other.group0()), g2: self.group1() * Simd32x4::from(other.group0()) * Simd32x4::from(-1.0), g3: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl RegressiveProduct<AntiScalar> for MultiVector {
+    type Output = MultiVector;
+
+    fn regressive_product(self, other: AntiScalar) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: self.group0() * Simd32x4::from(other.group0()), g1: self.group1() * Simd32x4::from(other.group0()), g2: self.group2() * Simd32x4::from(other.group0()), g3: self.group3() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl OuterProduct<AntiScalar> for MultiVector {
+    type Output = AntiScalar;
+
+    fn outer_product(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[0] * other.group0() } }
+    }
+}
+
+impl InnerProduct<AntiScalar> for MultiVector {
+    type Output = MultiVector;
+
+    fn inner_product(self, other: AntiScalar) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: self.group3() * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]), g1: self.group2() * Simd32x4::from(other.group0()), g2: self.group1() * Simd32x4::from(other.group0()) * Simd32x4::from(-1.0), g3: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl GeometricAntiProduct<AntiScalar> for MultiVector {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: AntiScalar) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: self.group0() * Simd32x4::from(other.group0()), g1: self.group1() * Simd32x4::from(other.group0()), g2: self.group2() * Simd32x4::from(other.group0()), g3: self.group3() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl InnerAntiProduct<AntiScalar> for MultiVector {
+    type Output = MultiVector;
+
+    fn inner_anti_product(self, other: AntiScalar) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: self.group0() * Simd32x4::from(other.group0()), g1: self.group1() * Simd32x4::from(other.group0()), g2: self.group2() * Simd32x4::from(other.group0()), g3: self.group3() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl LeftContraction<AntiScalar> for MultiVector {
+    type Output = MultiVector;
+
+    fn left_contraction(self, other: AntiScalar) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: self.group3() * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]), g1: self.group2() * Simd32x4::from(other.group0()), g2: self.group1() * Simd32x4::from(other.group0()) * Simd32x4::from(-1.0), g3: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl RightContraction<AntiScalar> for MultiVector {
+    type Output = Scalar;
+
+    fn right_contraction(self, other: AntiScalar) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: 0.0 - self.group3()[0] * other.group0() } }
+    }
+}
+
+impl LeftAntiContraction<AntiScalar> for MultiVector {
+    type Output = AntiScalar;
+
+    fn left_anti_contraction(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group3()[0] * other.group0() } }
+    }
+}
+
+impl RightAntiContraction<AntiScalar> for MultiVector {
+    type Output = MultiVector;
+
+    fn right_anti_contraction(self, other: AntiScalar) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: self.group0() * Simd32x4::from(other.group0()), g1: self.group1() * Simd32x4::from(other.group0()), g2: self.group2() * Simd32x4::from(other.group0()), g3: self.group3() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl ScalarProduct<AntiScalar> for MultiVector {
+    type Output = Scalar;
+
+    fn scalar_product(self, other: AntiScalar) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: 0.0 - self.group3()[0] * other.group0() } }
+    }
+}
+
+impl AntiScalarProduct<AntiScalar> for MultiVector {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group3()[0] * other.group0() } }
     }
 }
 
@@ -1656,6 +3098,22 @@ impl InnerProduct<MultiVector> for MultiVector {
     }
 }
 
+impl GeometricAntiProduct<MultiVector> for MultiVector {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group3() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group3(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group3(), 2, 3, 0, 1) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group3(), 3, 2, 1, 0) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[0]) * other.group2() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group2(), 1, 0, 3, 2) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group2(), 2, 3, 0, 1) * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group2(), 3, 2, 1, 0) * Simd32x4::from([-1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group2()[0]) * other.group1() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group2()[1]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group2()[2]) * swizzle!(other.group1(), 2, 3, 0, 1) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group2()[3]) * swizzle!(other.group1(), 3, 2, 1, 0) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group3()[0]) * other.group0() + Simd32x4::from(self.group3()[1]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group3()[2]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group3()[3]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]), g1: Simd32x4::from(0.0) - Simd32x4::from(self.group0()[0]) * other.group2() + Simd32x4::from(self.group0()[1]) * swizzle!(other.group2(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group2(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group2(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[0]) * other.group3() + Simd32x4::from(self.group1()[1]) * swizzle!(other.group3(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group3(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group3(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group2()[0]) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group2()[1]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group2()[2]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group2()[3]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group3()[0]) * other.group1() + Simd32x4::from(self.group3()[1]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group3()[2]) * swizzle!(other.group1(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group3()[3]) * swizzle!(other.group1(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]), g2: Simd32x4::from(self.group0()[0]) * other.group1() + Simd32x4::from(self.group0()[1]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group1(), 2, 3, 0, 1) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group1(), 3, 2, 1, 0) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([-1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group2()[0]) * other.group3() + Simd32x4::from(self.group2()[1]) * swizzle!(other.group3(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group2()[2]) * swizzle!(other.group3(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group2()[3]) * swizzle!(other.group3(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group3()[0]) * other.group2() + Simd32x4::from(self.group3()[1]) * swizzle!(other.group2(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group3()[2]) * swizzle!(other.group2(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group3()[3]) * swizzle!(other.group2(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]), g3: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) - Simd32x4::from(self.group1()[0]) * other.group1() + Simd32x4::from(self.group1()[1]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group1(), 2, 3, 0, 1) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group1(), 3, 2, 1, 0) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) - Simd32x4::from(self.group2()[0]) * other.group2() + Simd32x4::from(self.group2()[1]) * swizzle!(other.group2(), 1, 0, 3, 2) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group2()[2]) * swizzle!(other.group2(), 2, 3, 0, 1) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group2()[3]) * swizzle!(other.group2(), 3, 2, 1, 0) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group3()[0]) * other.group3() + Simd32x4::from(self.group3()[1]) * swizzle!(other.group3(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group3()[2]) * swizzle!(other.group3(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group3()[3]) * swizzle!(other.group3(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<MultiVector> for MultiVector {
+    type Output = MultiVector;
+
+    fn inner_anti_product(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group3() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group2(), 3, 3, 3, 2) * Simd32x4::from([0.0, 0.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group2(), 3, 3, 3, 1) * Simd32x4::from([0.0, 1.0, 0.0, -1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group2(), 2, 2, 1, 2) * Simd32x4::from([0.0, -1.0, 1.0, 0.0]) + Simd32x4::from(self.group2()[1]) * swizzle!(other.group1(), 3, 3, 3, 2) * Simd32x4::from([0.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group2()[2]) * swizzle!(other.group1(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group2()[3]) * swizzle!(other.group1(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group3()[0]) * other.group0() + Simd32x4::from(self.group3()[1]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, -1.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group3()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]) + self.group0() * Simd32x4::from(other.group3()[0]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]), g1: Simd32x4::from(0.0) - Simd32x4::from(self.group0()[0]) * other.group2() + Simd32x4::from(self.group0()[2]) * swizzle!(other.group2(), 3, 3, 0, 1) * Simd32x4::from([0.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group2(), 2, 2, 1, 0) * Simd32x4::from([0.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[0]) * other.group3() + Simd32x4::from(self.group1()[1]) * swizzle!(other.group3(), 0, 0, 3, 2) * Simd32x4::from([0.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group3(), 3, 3, 0, 1) * Simd32x4::from([0.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group3(), 2, 2, 1, 0) * Simd32x4::from([0.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group2()[0]) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group2()[1]) * swizzle!(other.group0(), 0, 0, 3, 2) * Simd32x4::from([0.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group2()[2]) * swizzle!(other.group0(), 3, 3, 0, 1) * Simd32x4::from([0.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group2()[3]) * swizzle!(other.group0(), 2, 2, 1, 0) * Simd32x4::from([0.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group3()[0]) * other.group1() + Simd32x4::from(self.group3()[1]) * swizzle!(other.group1(), 0, 0, 3, 2) * Simd32x4::from([0.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group3()[2]) * swizzle!(other.group1(), 3, 3, 0, 1) * Simd32x4::from([0.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group3()[3]) * swizzle!(other.group1(), 2, 2, 1, 0) * Simd32x4::from([0.0, 1.0, -1.0, 1.0]) + swizzle!(self.group0(), 0, 1, 1, 1) * swizzle!(other.group2(), 0, 0, 3, 2) * Simd32x4::from([0.0, 1.0, 1.0, -1.0]), g2: Simd32x4::from(self.group0()[0]) * other.group1() + Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group1()[2]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group1()[3]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 1, 0, 1, 1) * Simd32x4::from([-1.0, -1.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, -1.0]) + Simd32x4::from(self.group2()[0]) * Simd32x4::from(other.group3()[0]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group2()[1]) * swizzle!(other.group3(), 1, 0, 1, 1) * Simd32x4::from([-1.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group2()[2]) * swizzle!(other.group3(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group2()[3]) * swizzle!(other.group3(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group3()[0]) * other.group2() + Simd32x4::from(self.group3()[1]) * Simd32x4::from(other.group2()[1]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[2]) * Simd32x4::from(other.group2()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[3]) * Simd32x4::from(other.group2()[3]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + swizzle!(self.group0(), 1, 0, 0, 0) * swizzle!(other.group1(), 1, 0, 0, 0) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]), g3: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) - Simd32x4::from(self.group1()[0]) * other.group1() + Simd32x4::from(self.group1()[1]) * swizzle!(other.group1(), 1, 0, 1, 1) * Simd32x4::from([1.0, -1.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group1(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group1(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, -1.0]) - Simd32x4::from(self.group2()[0]) * other.group2() + Simd32x4::from(self.group2()[1]) * swizzle!(other.group2(), 1, 0, 1, 1) * Simd32x4::from([1.0, -1.0, 0.0, 0.0]) + Simd32x4::from(self.group2()[2]) * swizzle!(other.group2(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group2()[3]) * swizzle!(other.group2(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, -1.0]) + Simd32x4::from(self.group3()[0]) * other.group3() + Simd32x4::from(self.group3()[1]) * swizzle!(other.group3(), 1, 0, 1, 1) * Simd32x4::from([-1.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[2]) * swizzle!(other.group3(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group3()[3]) * swizzle!(other.group3(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 1, 0, 0) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([1.0, 1.0, 0.0, 0.0]) } }
+    }
+}
+
 impl LeftContraction<MultiVector> for MultiVector {
     type Output = MultiVector;
 
@@ -1672,11 +3130,35 @@ impl RightContraction<MultiVector> for MultiVector {
     }
 }
 
+impl LeftAntiContraction<MultiVector> for MultiVector {
+    type Output = MultiVector;
+
+    fn left_anti_contraction(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group1()[2]) * swizzle!(other.group2(), 3, 3, 3, 1) * Simd32x4::from([0.0, 1.0, 0.0, -1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group2(), 2, 2, 1, 2) * Simd32x4::from([0.0, -1.0, 1.0, 0.0]) + Simd32x4::from(self.group3()[0]) * other.group0() + Simd32x4::from(self.group3()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group3()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]) + Simd32x4::from([self.group1()[0], self.group3()[1], self.group1()[1], self.group1()[1]]) * Simd32x4::from([other.group2()[0], other.group0()[0], other.group2()[3], other.group2()[2]]) * Simd32x4::from([0.0, -1.0, -1.0, 1.0]), g1: Simd32x4::from(self.group0()[2]) * swizzle!(other.group2(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group2(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group3(), 3, 3, 3, 2) * Simd32x4::from([0.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group3(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group3(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group2()[0]) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group2()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group2()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group3()[0]) * other.group1() + Simd32x4::from(self.group3()[1]) * Simd32x4::from(other.group1()[0]) * Simd32x4::from([0.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[2]) * Simd32x4::from(other.group1()[0]) * Simd32x4::from([0.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group3()[3]) * Simd32x4::from(other.group1()[0]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group0()[0], self.group2()[1], self.group0()[1], self.group0()[1]]) * Simd32x4::from([other.group2()[0], other.group0()[0], other.group2()[3], other.group2()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, -1.0]), g2: Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 1, 0, 1, 1) * Simd32x4::from([-1.0, -1.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, -1.0]) + Simd32x4::from(self.group3()[0]) * other.group2() + Simd32x4::from(self.group3()[1]) * Simd32x4::from(other.group2()[1]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[2]) * Simd32x4::from(other.group2()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[3]) * Simd32x4::from(other.group2()[3]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]), g3: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 1, 0, 1, 1) * Simd32x4::from([1.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from(other.group1()[0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group1(), 1, 0, 1, 1) * Simd32x4::from([1.0, -1.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group1(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group1(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, -1.0]) - Simd32x4::from(self.group2()[0]) * other.group2() + Simd32x4::from(self.group2()[1]) * Simd32x4::from(other.group2()[1]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group2()[2]) * Simd32x4::from(other.group2()[2]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group2()[3]) * Simd32x4::from(other.group2()[3]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[0]) * other.group3() + Simd32x4::from(self.group3()[1]) * Simd32x4::from(other.group3()[1]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[2]) * Simd32x4::from(other.group3()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[3]) * Simd32x4::from(other.group3()[3]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) } }
+    }
+}
+
+impl RightAntiContraction<MultiVector> for MultiVector {
+    type Output = MultiVector;
+
+    fn right_anti_contraction(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group3() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group2()[1]) * swizzle!(other.group1(), 3, 3, 3, 2) * Simd32x4::from([0.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group2()[2]) * swizzle!(other.group1(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group2()[3]) * swizzle!(other.group1(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + self.group0() * Simd32x4::from(other.group3()[0]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]), g1: Simd32x4::from(0.0) - Simd32x4::from(self.group0()[0]) * other.group2() + Simd32x4::from(self.group1()[0]) * other.group3() + Simd32x4::from(self.group1()[1]) * Simd32x4::from(other.group3()[0]) * Simd32x4::from([0.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group3()[0]) * Simd32x4::from([0.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group3()[0]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group2()[1]) * swizzle!(other.group0(), 3, 3, 3, 2) * Simd32x4::from([0.0, 0.0, -1.0, 1.0]) + Simd32x4::from(self.group2()[2]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, 1.0, 0.0, -1.0]) + Simd32x4::from(self.group2()[3]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, -1.0, 1.0, 0.0]) + Simd32x4::from(self.group3()[1]) * swizzle!(other.group1(), 3, 3, 3, 2) * Simd32x4::from([0.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group3()[2]) * swizzle!(other.group1(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group3()[3]) * swizzle!(other.group1(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + self.group0() * Simd32x4::from(other.group2()[0]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]), g2: Simd32x4::from(self.group0()[0]) * other.group1() + Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group1()[2]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group1()[3]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group2()[0]) * Simd32x4::from(other.group3()[0]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group2()[1]) * swizzle!(other.group3(), 1, 0, 1, 1) * Simd32x4::from([-1.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group2()[2]) * swizzle!(other.group3(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group2()[3]) * swizzle!(other.group3(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 0, 0, 0) * swizzle!(other.group1(), 1, 0, 0, 0) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]), g3: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group0()[3]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) - Simd32x4::from(self.group1()[0]) * other.group1() + Simd32x4::from(self.group1()[1]) * Simd32x4::from(other.group1()[1]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group1()[2]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group1()[3]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group2()[0]) * Simd32x4::from(other.group2()[0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group2()[1]) * swizzle!(other.group2(), 1, 0, 1, 1) * Simd32x4::from([1.0, -1.0, 0.0, 0.0]) + Simd32x4::from(self.group2()[2]) * swizzle!(other.group2(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group2()[3]) * swizzle!(other.group2(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, -1.0]) + Simd32x4::from(self.group3()[0]) * Simd32x4::from(other.group3()[0]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[1]) * swizzle!(other.group3(), 1, 0, 1, 1) * Simd32x4::from([-1.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[2]) * swizzle!(other.group3(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group3()[3]) * swizzle!(other.group3(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 0, 0, 0) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) } }
+    }
+}
+
 impl ScalarProduct<MultiVector> for MultiVector {
     type Output = Scalar;
 
     fn scalar_product(self, other: MultiVector) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] - self.group0()[3] * other.group0()[3] - self.group1()[0] * other.group1()[0] + self.group1()[1] * other.group1()[1] + self.group1()[2] * other.group1()[2] + self.group1()[3] * other.group1()[3] - self.group2()[0] * other.group2()[0] + self.group2()[1] * other.group2()[1] + self.group2()[2] * other.group2()[2] + self.group2()[3] * other.group2()[3] - self.group3()[0] * other.group3()[0] + self.group3()[1] * other.group3()[1] + self.group3()[2] * other.group3()[2] + self.group3()[3] * other.group3()[3] } }
+    }
+}
+
+impl AntiScalarProduct<MultiVector> for MultiVector {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: MultiVector) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3] - self.group1()[0] * other.group1()[0] + self.group1()[1] * other.group1()[1] + self.group1()[2] * other.group1()[2] + self.group1()[3] * other.group1()[3] - self.group2()[0] * other.group2()[0] + self.group2()[1] * other.group2()[1] + self.group2()[2] * other.group2()[2] + self.group2()[3] * other.group2()[3] + self.group3()[0] * other.group3()[0] - self.group3()[1] * other.group3()[1] - self.group3()[2] * other.group3()[2] - self.group3()[3] * other.group3()[3] } }
     }
 }
 
@@ -1738,6 +3220,22 @@ impl InnerProduct<Rotor> for MultiVector {
     }
 }
 
+impl GeometricAntiProduct<Rotor> for MultiVector {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Rotor) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group3()[0]) * other.group0() + Simd32x4::from(self.group3()[1]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group3()[2]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group3()[3]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group2()[0]) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group2()[1]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group2()[2]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group2()[3]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]), g2: Simd32x4::from(self.group1()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([-1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]), g3: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Rotor> for MultiVector {
+    type Output = MultiVector;
+
+    fn inner_anti_product(self, other: Rotor) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group3()[0]) * other.group0() + self.group3() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group2()[0]) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group2()[2]) * swizzle!(other.group0(), 3, 3, 0, 1) * Simd32x4::from([0.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group2()[3]) * swizzle!(other.group0(), 2, 2, 1, 0) * Simd32x4::from([0.0, -1.0, 1.0, 1.0]) + swizzle!(self.group2(), 0, 1, 1, 1) * swizzle!(other.group0(), 0, 0, 3, 2) * Simd32x4::from([0.0, 1.0, -1.0, 1.0]), g2: Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 1, 0, 1, 1) * Simd32x4::from([-1.0, -1.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, -1.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]), g3: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 1, 0, 0) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([1.0, 1.0, 0.0, 0.0]) } }
+    }
+}
+
 impl RightContraction<Rotor> for MultiVector {
     type Output = MultiVector;
 
@@ -1746,11 +3244,27 @@ impl RightContraction<Rotor> for MultiVector {
     }
 }
 
+impl LeftAntiContraction<Rotor> for MultiVector {
+    type Output = MultiVector;
+
+    fn left_anti_contraction(self, other: Rotor) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group3()[0]) * other.group0() + self.group3() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group2()[0]) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + self.group2() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]), g2: Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 1, 0, 1, 1) * Simd32x4::from([-1.0, -1.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, -1.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]), g3: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 1, 0, 1, 1) * Simd32x4::from([1.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) } }
+    }
+}
+
 impl ScalarProduct<Rotor> for MultiVector {
     type Output = Scalar;
 
     fn scalar_product(self, other: Rotor) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] - self.group0()[3] * other.group0()[3] } }
+    }
+}
+
+impl AntiScalarProduct<Rotor> for MultiVector {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Rotor) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3] } }
     }
 }
 
@@ -1796,11 +3310,27 @@ impl GeometricProduct<Point> for MultiVector {
     }
 }
 
+impl GeometricAntiProduct<Point> for MultiVector {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Point) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group2()[0]) * swizzle!(other.group0(), 1, 1, 2, 3) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group2()[1]) * swizzle!(other.group0(), 1, 1, 3, 2) * Simd32x4::from([1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group2()[2]) * swizzle!(other.group0(), 2, 3, 2, 1) * Simd32x4::from([1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group2()[3]) * swizzle!(other.group0(), 3, 2, 1, 3) * Simd32x4::from([1.0, 1.0, -1.0, 0.0]) + self.group1() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group3()[0]) * swizzle!(other.group0(), 1, 1, 2, 3) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group3()[1]) * swizzle!(other.group0(), 1, 1, 3, 2) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group3()[2]) * swizzle!(other.group0(), 2, 3, 2, 1) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group3()[3]) * swizzle!(other.group0(), 3, 2, 1, 3) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + self.group0() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]), g2: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 1, 1, 3, 2) * Simd32x4::from([1.0, 0.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 3, 2, 1) * Simd32x4::from([1.0, 1.0, 0.0, -1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 2, 1, 3) * Simd32x4::from([1.0, -1.0, 1.0, 0.0]) + Simd32x4::from(self.group3()[1]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group3()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group3()[0], self.group0()[0], self.group0()[0], self.group0()[0]]) * other.group0(), g3: Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 1, 1, 3, 2) * Simd32x4::from([1.0, 0.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 3, 2, 1) * Simd32x4::from([1.0, 1.0, 0.0, -1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 3, 2, 1, 3) * Simd32x4::from([1.0, -1.0, 1.0, 0.0]) + Simd32x4::from(self.group2()[1]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, -1.0, 0.0, 0.0]) + Simd32x4::from(self.group2()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group2()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]) + Simd32x4::from([self.group2()[0], self.group1()[0], self.group1()[0], self.group1()[0]]) * other.group0() * Simd32x4::from(-1.0) } }
+    }
+}
+
 impl ScalarProduct<Point> for MultiVector {
     type Output = Scalar;
 
     fn scalar_product(self, other: Point) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2] + self.group1()[3] * other.group0()[3] - self.group2()[0] * other.group0()[0] } }
+    }
+}
+
+impl AntiScalarProduct<Point> for MultiVector {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Point) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2] + self.group1()[3] * other.group0()[3] - self.group2()[0] * other.group0()[0] } }
     }
 }
 
@@ -1846,11 +3376,27 @@ impl GeometricProduct<IdealPoint> for MultiVector {
     }
 }
 
+impl GeometricAntiProduct<IdealPoint> for MultiVector {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: IdealPoint) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[1], other.group0()[0]]) * Simd32x4::from([1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[2], other.group0()[1], other.group0()[0], other.group0()[2]]) * Simd32x4::from([1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[1], other.group0()[0]]) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group0()[2], other.group0()[1], other.group0()[0], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]), g2: Simd32x4::from(self.group2()[1]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group2()[2]) * Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[1], other.group0()[0]]) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group2()[3]) * Simd32x4::from([other.group0()[2], other.group0()[1], other.group0()[0], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group2()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]), g3: Simd32x4::from(self.group3()[1]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group3()[2]) * Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[1], other.group0()[0]]) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group3()[3]) * Simd32x4::from([other.group0()[2], other.group0()[1], other.group0()[0], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group3()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl ScalarProduct<IdealPoint> for MultiVector {
     type Output = Scalar;
 
     fn scalar_product(self, other: IdealPoint) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group3()[1] * other.group0()[0] + self.group3()[2] * other.group0()[1] + self.group3()[3] * other.group0()[2] } }
+    }
+}
+
+impl AntiScalarProduct<IdealPoint> for MultiVector {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: IdealPoint) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group3()[1] * other.group0()[0] - self.group3()[2] * other.group0()[1] - self.group3()[3] * other.group0()[2] } }
     }
 }
 
@@ -1896,11 +3442,27 @@ impl GeometricProduct<Plane> for MultiVector {
     }
 }
 
+impl GeometricAntiProduct<Plane> for MultiVector {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Plane) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 1, 1, 3, 2) * Simd32x4::from([-1.0, 0.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 3, 2, 1) * Simd32x4::from([-1.0, 1.0, 0.0, -1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 3, 2, 1, 3) * Simd32x4::from([-1.0, -1.0, 1.0, 0.0]) + Simd32x4::from(self.group2()[1]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group2()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group2()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group2()[0], self.group1()[0], self.group1()[0], self.group1()[0]]) * other.group0() * Simd32x4::from(-1.0), g1: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 1, 1, 3, 2) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 3, 2, 1) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 2, 1, 3) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group3()[1]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group3()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group3()[0], self.group0()[0], self.group0()[0], self.group0()[0]]) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g2: Simd32x4::from(self.group3()[0]) * swizzle!(other.group0(), 1, 1, 2, 3) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group3()[1]) * swizzle!(other.group0(), 1, 1, 3, 2) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group3()[2]) * swizzle!(other.group0(), 2, 3, 2, 1) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group3()[3]) * swizzle!(other.group0(), 3, 2, 1, 3) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + self.group0() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g3: Simd32x4::from(self.group2()[0]) * swizzle!(other.group0(), 1, 1, 2, 3) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group2()[1]) * swizzle!(other.group0(), 1, 1, 3, 2) * Simd32x4::from([1.0, 0.0, -1.0, 1.0]) + Simd32x4::from(self.group2()[2]) * swizzle!(other.group0(), 2, 3, 2, 1) * Simd32x4::from([1.0, 1.0, 0.0, -1.0]) + Simd32x4::from(self.group2()[3]) * swizzle!(other.group0(), 3, 2, 1, 3) * Simd32x4::from([1.0, -1.0, 1.0, 0.0]) + self.group1() * Simd32x4::from(other.group0()[0]) * Simd32x4::from(-1.0) } }
+    }
+}
+
 impl ScalarProduct<Plane> for MultiVector {
     type Output = Scalar;
 
     fn scalar_product(self, other: Plane) -> Scalar {
         Scalar { groups: ScalarGroups { g0: 0.0 - self.group1()[0] * other.group0()[0] + self.group2()[1] * other.group0()[1] + self.group2()[2] * other.group0()[2] + self.group2()[3] * other.group0()[3] } }
+    }
+}
+
+impl AntiScalarProduct<Plane> for MultiVector {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Plane) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group1()[0] * other.group0()[0] + self.group2()[1] * other.group0()[1] + self.group2()[2] * other.group0()[2] + self.group2()[3] * other.group0()[3] } }
     }
 }
 
@@ -1946,11 +3508,27 @@ impl GeometricProduct<Line> for MultiVector {
     }
 }
 
+impl GeometricAntiProduct<Line> for MultiVector {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Line) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[1], other.group0()[0]]) * Simd32x4::from([1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[2], other.group0()[1], other.group0()[0], other.group0()[2]]) * Simd32x4::from([1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group3()[0]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group3()[1]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[2], other.group1()[1]]) * Simd32x4::from([1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group3()[2]) * Simd32x4::from([other.group1()[1], other.group1()[2], other.group1()[1], other.group1()[0]]) * Simd32x4::from([1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group3()[3]) * Simd32x4::from([other.group1()[2], other.group1()[1], other.group1()[0], other.group1()[2]]) * Simd32x4::from([1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[1], other.group0()[0]]) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group0()[2], other.group0()[1], other.group0()[0], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group2()[0]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group2()[1]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[2], other.group1()[1]]) * Simd32x4::from([1.0, 0.0, -1.0, 1.0]) + Simd32x4::from(self.group2()[2]) * Simd32x4::from([other.group1()[1], other.group1()[2], other.group1()[1], other.group1()[0]]) * Simd32x4::from([1.0, 1.0, 0.0, -1.0]) + Simd32x4::from(self.group2()[3]) * Simd32x4::from([other.group1()[2], other.group1()[1], other.group1()[0], other.group1()[2]]) * Simd32x4::from([1.0, -1.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]), g2: Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[2], other.group1()[1]]) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group1()[1], other.group1()[2], other.group1()[1], other.group1()[0]]) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group1()[2], other.group1()[1], other.group1()[0], other.group1()[2]]) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group2()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group2()[1]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group2()[2]) * Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[1], other.group0()[0]]) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group2()[3]) * Simd32x4::from([other.group0()[2], other.group0()[1], other.group0()[0], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]), g3: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[2], other.group1()[1]]) * Simd32x4::from([1.0, 0.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[1], other.group1()[2], other.group1()[1], other.group1()[0]]) * Simd32x4::from([1.0, 1.0, 0.0, -1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[2], other.group1()[1], other.group1()[0], other.group1()[2]]) * Simd32x4::from([1.0, -1.0, 1.0, 0.0]) + Simd32x4::from(self.group3()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group3()[1]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group3()[2]) * Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[1], other.group0()[0]]) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group3()[3]) * Simd32x4::from([other.group0()[2], other.group0()[1], other.group0()[0], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl ScalarProduct<Line> for MultiVector {
     type Output = Scalar;
 
     fn scalar_product(self, other: Line) -> Scalar {
         Scalar { groups: ScalarGroups { g0: 0.0 - self.group0()[1] * other.group1()[0] - self.group0()[2] * other.group1()[1] - self.group0()[3] * other.group1()[2] + self.group3()[1] * other.group0()[0] + self.group3()[2] * other.group0()[1] + self.group3()[3] * other.group0()[2] } }
+    }
+}
+
+impl AntiScalarProduct<Line> for MultiVector {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Line) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[1] * other.group1()[0] + self.group0()[2] * other.group1()[1] + self.group0()[3] * other.group1()[2] - self.group3()[1] * other.group0()[0] - self.group3()[2] * other.group0()[1] - self.group3()[3] * other.group0()[2] } }
     }
 }
 
@@ -2012,6 +3590,22 @@ impl InnerProduct<Translator> for MultiVector {
     }
 }
 
+impl GeometricAntiProduct<Translator> for MultiVector {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Translator) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 1, 1, 3, 2) * Simd32x4::from([1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 3, 2, 1) * Simd32x4::from([1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 2, 1, 3) * Simd32x4::from([1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group3()[1]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, -1.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group3()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]) + Simd32x4::from([self.group3()[0], self.group0()[0], self.group0()[0], self.group0()[0]]) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 1, 1, 3, 2) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 3, 2, 1) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 3, 2, 1, 3) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group2()[1]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group2()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group2()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group2()[0], self.group1()[0], self.group1()[0], self.group1()[0]]) * other.group0(), g2: Simd32x4::from(self.group2()[0]) * swizzle!(other.group0(), 1, 1, 2, 3) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group2()[1]) * swizzle!(other.group0(), 1, 1, 3, 2) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group2()[2]) * swizzle!(other.group0(), 2, 3, 2, 1) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group2()[3]) * swizzle!(other.group0(), 3, 2, 1, 3) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + self.group1() * Simd32x4::from(other.group0()[0]) * Simd32x4::from(-1.0), g3: Simd32x4::from(self.group3()[0]) * swizzle!(other.group0(), 1, 1, 2, 3) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group3()[1]) * swizzle!(other.group0(), 1, 1, 3, 2) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group3()[2]) * swizzle!(other.group0(), 2, 3, 2, 1) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group3()[3]) * swizzle!(other.group0(), 3, 2, 1, 3) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + self.group0() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Translator> for MultiVector {
+    type Output = MultiVector;
+
+    fn inner_anti_product(self, other: Translator) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group3()[1]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, -1.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group3()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]) + Simd32x4::from([self.group3()[0], self.group0()[0], self.group0()[0], self.group0()[0]]) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 3, 3, 3, 2) * Simd32x4::from([0.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group2()[1]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group2()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group2()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group2()[0], self.group1()[0], self.group1()[0], self.group1()[0]]) * other.group0(), g2: Simd32x4::from(self.group2()[1]) * Simd32x4::from(other.group0()[1]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group2()[2]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group2()[3]) * Simd32x4::from(other.group0()[3]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + self.group1() * Simd32x4::from(other.group0()[0]) * Simd32x4::from(-1.0), g3: Simd32x4::from(self.group3()[0]) * swizzle!(other.group0(), 1, 1, 2, 3) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group3()[1]) * Simd32x4::from(other.group0()[1]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[2]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[3]) * Simd32x4::from(other.group0()[3]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + self.group0() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl RightContraction<Translator> for MultiVector {
     type Output = MultiVector;
 
@@ -2020,11 +3614,27 @@ impl RightContraction<Translator> for MultiVector {
     }
 }
 
+impl LeftAntiContraction<Translator> for MultiVector {
+    type Output = MultiVector;
+
+    fn left_anti_contraction(self, other: Translator) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: self.group3() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group2()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group2()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group2()[0], self.group2()[1], self.group1()[1], self.group1()[1]]) * swizzle!(other.group0(), 0, 0, 3, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]), g2: self.group1() * Simd32x4::from(other.group0()[0]) * Simd32x4::from(-1.0), g3: Simd32x4::from(self.group3()[0]) * swizzle!(other.group0(), 1, 1, 2, 3) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group3()[1]) * Simd32x4::from(other.group0()[1]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[2]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[3]) * Simd32x4::from(other.group0()[3]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + self.group0() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl ScalarProduct<Translator> for MultiVector {
     type Output = Scalar;
 
     fn scalar_product(self, other: Translator) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0()[0] + self.group3()[1] * other.group0()[1] + self.group3()[2] * other.group0()[2] + self.group3()[3] * other.group0()[3] } }
+    }
+}
+
+impl AntiScalarProduct<Translator> for MultiVector {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Translator) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group3()[1] * other.group0()[1] - self.group3()[2] * other.group0()[2] - self.group3()[3] * other.group0()[3] } }
     }
 }
 
@@ -2094,6 +3704,22 @@ impl InnerProduct<Motor> for MultiVector {
     }
 }
 
+impl GeometricAntiProduct<Motor> for MultiVector {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Motor) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group1(), 2, 3, 0, 1) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group1(), 3, 2, 1, 0) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group3()[0]) * other.group0() + Simd32x4::from(self.group3()[1]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group3()[2]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group3()[3]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group1()[0]) * other.group1() + Simd32x4::from(self.group1()[1]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group1(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group1(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group2()[0]) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group2()[1]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group2()[2]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group2()[3]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]), g2: Simd32x4::from(self.group1()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([-1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group2()[0]) * other.group1() + Simd32x4::from(self.group2()[1]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group2()[2]) * swizzle!(other.group1(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group2()[3]) * swizzle!(other.group1(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]), g3: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group3()[0]) * other.group1() + Simd32x4::from(self.group3()[1]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group3()[2]) * swizzle!(other.group1(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group3()[3]) * swizzle!(other.group1(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Motor> for MultiVector {
+    type Output = MultiVector;
+
+    fn inner_anti_product(self, other: Motor) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group3()[0]) * other.group0() + Simd32x4::from(self.group3()[1]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, -1.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group3()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]) + self.group0() * Simd32x4::from(other.group1()[0]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]), g1: Simd32x4::from(self.group1()[0]) * other.group1() + Simd32x4::from(self.group1()[2]) * swizzle!(other.group1(), 3, 3, 0, 1) * Simd32x4::from([0.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group1(), 2, 2, 1, 0) * Simd32x4::from([0.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group2()[0]) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group2()[1]) * swizzle!(other.group0(), 0, 0, 3, 2) * Simd32x4::from([0.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group2()[2]) * swizzle!(other.group0(), 3, 3, 0, 1) * Simd32x4::from([0.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group2()[3]) * swizzle!(other.group0(), 2, 2, 1, 0) * Simd32x4::from([0.0, -1.0, 1.0, 1.0]) + swizzle!(self.group1(), 0, 1, 1, 1) * swizzle!(other.group1(), 0, 0, 3, 2) * Simd32x4::from([0.0, 1.0, 1.0, -1.0]), g2: Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 1, 0, 1, 1) * Simd32x4::from([-1.0, -1.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, -1.0]) + Simd32x4::from(self.group2()[0]) * Simd32x4::from(other.group1()[0]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group2()[1]) * swizzle!(other.group1(), 1, 0, 1, 1) * Simd32x4::from([-1.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group2()[2]) * swizzle!(other.group1(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group2()[3]) * swizzle!(other.group1(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]), g3: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group3()[0]) * other.group1() + Simd32x4::from(self.group3()[1]) * swizzle!(other.group1(), 1, 0, 1, 1) * Simd32x4::from([-1.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[2]) * swizzle!(other.group1(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group3()[3]) * swizzle!(other.group1(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 1, 0, 0) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([1.0, 1.0, 0.0, 0.0]) } }
+    }
+}
+
 impl LeftContraction<Motor> for MultiVector {
     type Output = MultiVector;
 
@@ -2110,11 +3736,35 @@ impl RightContraction<Motor> for MultiVector {
     }
 }
 
+impl LeftAntiContraction<Motor> for MultiVector {
+    type Output = MultiVector;
+
+    fn left_anti_contraction(self, other: Motor) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group3()[0]) * other.group0() + self.group3() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group1()[2]) * swizzle!(other.group1(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group1(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group2()[0]) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group2()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group2()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group1()[0], self.group2()[1], self.group1()[1], self.group1()[1]]) * Simd32x4::from([other.group1()[0], other.group0()[0], other.group1()[3], other.group1()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, -1.0]), g2: Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 1, 0, 1, 1) * Simd32x4::from([-1.0, -1.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, -1.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]), g3: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 1, 0, 1, 1) * Simd32x4::from([1.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group3()[0]) * other.group1() + Simd32x4::from(self.group3()[1]) * Simd32x4::from(other.group1()[1]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[2]) * Simd32x4::from(other.group1()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[3]) * Simd32x4::from(other.group1()[3]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) } }
+    }
+}
+
+impl RightAntiContraction<Motor> for MultiVector {
+    type Output = MultiVector;
+
+    fn right_anti_contraction(self, other: Motor) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + self.group0() * Simd32x4::from(other.group1()[0]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]), g1: Simd32x4::from(self.group1()[0]) * other.group1() + Simd32x4::from(self.group2()[1]) * swizzle!(other.group0(), 3, 3, 3, 2) * Simd32x4::from([0.0, 0.0, -1.0, 1.0]) + Simd32x4::from(self.group2()[2]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, 1.0, 0.0, -1.0]) + Simd32x4::from(self.group2()[3]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, -1.0, 1.0, 0.0]) + self.group1() * Simd32x4::from(other.group1()[0]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]), g2: Simd32x4::from(self.group2()[1]) * swizzle!(other.group1(), 1, 0, 1, 1) * Simd32x4::from([-1.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group2()[2]) * swizzle!(other.group1(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group2()[3]) * swizzle!(other.group1(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group2()[0]) * Simd32x4::from(other.group1()[0]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]), g3: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group0()[3]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[0]) * Simd32x4::from(other.group1()[0]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[1]) * swizzle!(other.group1(), 1, 0, 1, 1) * Simd32x4::from([-1.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[2]) * swizzle!(other.group1(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group3()[3]) * swizzle!(other.group1(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 0, 0, 0) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) } }
+    }
+}
+
 impl ScalarProduct<Motor> for MultiVector {
     type Output = Scalar;
 
     fn scalar_product(self, other: Motor) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] - self.group0()[3] * other.group0()[3] - self.group3()[0] * other.group1()[0] + self.group3()[1] * other.group1()[1] + self.group3()[2] * other.group1()[2] + self.group3()[3] * other.group1()[3] } }
+    }
+}
+
+impl AntiScalarProduct<Motor> for MultiVector {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Motor) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3] + self.group3()[0] * other.group1()[0] - self.group3()[1] * other.group1()[1] - self.group3()[2] * other.group1()[2] - self.group3()[3] * other.group1()[3] } }
     }
 }
 
@@ -2160,11 +3810,27 @@ impl GeometricProduct<PointAndPlane> for MultiVector {
     }
 }
 
+impl GeometricAntiProduct<PointAndPlane> for MultiVector {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: PointAndPlane) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[0], other.group1()[1], other.group1()[2], other.group1()[3]]) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group1()[1], other.group0()[0], other.group1()[3], other.group1()[2]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group1()[2], other.group1()[3], other.group0()[0], other.group1()[1]]) * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group1()[3], other.group1()[2], other.group1()[1], other.group0()[0]]) * Simd32x4::from([-1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group2()[0]) * Simd32x4::from([other.group1()[0], other.group0()[1], other.group0()[2], other.group0()[3]]) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group2()[1]) * Simd32x4::from([other.group0()[1], other.group1()[0], other.group0()[3], other.group0()[2]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group2()[2]) * Simd32x4::from([other.group0()[2], other.group0()[3], other.group1()[0], other.group0()[1]]) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group2()[3]) * Simd32x4::from([other.group0()[3], other.group0()[2], other.group0()[1], other.group1()[0]]) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]), g1: Simd32x4::from(0.0) - Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group1()[1], other.group1()[2], other.group1()[3]]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[1], other.group0()[0], other.group1()[3], other.group1()[2]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[2], other.group1()[3], other.group0()[0], other.group1()[1]]) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[3], other.group1()[2], other.group1()[1], other.group0()[0]]) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group3()[0]) * Simd32x4::from([other.group1()[0], other.group0()[1], other.group0()[2], other.group0()[3]]) + Simd32x4::from(self.group3()[1]) * Simd32x4::from([other.group0()[1], other.group1()[0], other.group0()[3], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group3()[2]) * Simd32x4::from([other.group0()[2], other.group0()[3], other.group1()[0], other.group0()[1]]) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group3()[3]) * Simd32x4::from([other.group0()[3], other.group0()[2], other.group0()[1], other.group1()[0]]) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]), g2: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[0], other.group0()[1], other.group0()[2], other.group0()[3]]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[1], other.group1()[0], other.group0()[3], other.group0()[2]]) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[2], other.group0()[3], other.group1()[0], other.group0()[1]]) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[3], other.group0()[2], other.group0()[1], other.group1()[0]]) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group3()[0]) * Simd32x4::from([other.group0()[0], other.group1()[1], other.group1()[2], other.group1()[3]]) + Simd32x4::from(self.group3()[1]) * Simd32x4::from([other.group1()[1], other.group0()[0], other.group1()[3], other.group1()[2]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group3()[2]) * Simd32x4::from([other.group1()[2], other.group1()[3], other.group0()[0], other.group1()[1]]) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group3()[3]) * Simd32x4::from([other.group1()[3], other.group1()[2], other.group1()[1], other.group0()[0]]) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]), g3: Simd32x4::from(0.0) - Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group1()[0], other.group0()[1], other.group0()[2], other.group0()[3]]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[1], other.group1()[0], other.group0()[3], other.group0()[2]]) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group0()[2], other.group0()[3], other.group1()[0], other.group0()[1]]) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group0()[3], other.group0()[2], other.group0()[1], other.group1()[0]]) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) - Simd32x4::from(self.group2()[0]) * Simd32x4::from([other.group0()[0], other.group1()[1], other.group1()[2], other.group1()[3]]) + Simd32x4::from(self.group2()[1]) * Simd32x4::from([other.group1()[1], other.group0()[0], other.group1()[3], other.group1()[2]]) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group2()[2]) * Simd32x4::from([other.group1()[2], other.group1()[3], other.group0()[0], other.group1()[1]]) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group2()[3]) * Simd32x4::from([other.group1()[3], other.group1()[2], other.group1()[1], other.group0()[0]]) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) } }
+    }
+}
+
 impl ScalarProduct<PointAndPlane> for MultiVector {
     type Output = Scalar;
 
     fn scalar_product(self, other: PointAndPlane) -> Scalar {
         Scalar { groups: ScalarGroups { g0: 0.0 - self.group1()[0] * other.group1()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2] + self.group1()[3] * other.group0()[3] - self.group2()[0] * other.group0()[0] + self.group2()[1] * other.group1()[1] + self.group2()[2] * other.group1()[2] + self.group2()[3] * other.group1()[3] } }
+    }
+}
+
+impl AntiScalarProduct<PointAndPlane> for MultiVector {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: PointAndPlane) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group1()[0] * other.group1()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2] + self.group1()[3] * other.group0()[3] - self.group2()[0] * other.group0()[0] + self.group2()[1] * other.group1()[1] + self.group2()[2] * other.group1()[2] + self.group2()[3] * other.group1()[3] } }
     }
 }
 
@@ -2252,6 +3918,14 @@ impl Conjugation for Rotor {
     }
 }
 
+impl AntiReversal for Rotor {
+    type Output = Rotor;
+
+    fn anti_reversal(self) -> Rotor {
+        Rotor { groups: RotorGroups { g0: self.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
 impl Into<Scalar> for Rotor {
     fn into(self) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] } }
@@ -2326,11 +4000,67 @@ impl RightContraction<Scalar> for Rotor {
     }
 }
 
+impl RightAntiContraction<Scalar> for Rotor {
+    type Output = AntiScalar;
+
+    fn right_anti_contraction(self, other: Scalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0() } }
+    }
+}
+
 impl ScalarProduct<Scalar> for Rotor {
     type Output = Scalar;
 
     fn scalar_product(self, other: Scalar) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0() } }
+    }
+}
+
+impl AntiScalarProduct<Scalar> for Rotor {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Scalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0() } }
+    }
+}
+
+impl RegressiveProduct<AntiScalar> for Rotor {
+    type Output = Rotor;
+
+    fn regressive_product(self, other: AntiScalar) -> Rotor {
+        Rotor { groups: RotorGroups { g0: self.group0() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl OuterProduct<AntiScalar> for Rotor {
+    type Output = AntiScalar;
+
+    fn outer_product(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[0] * other.group0() } }
+    }
+}
+
+impl GeometricAntiProduct<AntiScalar> for Rotor {
+    type Output = Rotor;
+
+    fn geometric_anti_product(self, other: AntiScalar) -> Rotor {
+        Rotor { groups: RotorGroups { g0: self.group0() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl InnerAntiProduct<AntiScalar> for Rotor {
+    type Output = Rotor;
+
+    fn inner_anti_product(self, other: AntiScalar) -> Rotor {
+        Rotor { groups: RotorGroups { g0: self.group0() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl RightAntiContraction<AntiScalar> for Rotor {
+    type Output = Rotor;
+
+    fn right_anti_contraction(self, other: AntiScalar) -> Rotor {
+        Rotor { groups: RotorGroups { g0: self.group0() * Simd32x4::from(other.group0()) } }
     }
 }
 
@@ -2374,6 +4104,22 @@ impl InnerProduct<MultiVector> for Rotor {
     }
 }
 
+impl GeometricAntiProduct<MultiVector> for Rotor {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group3() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group3(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group3(), 2, 3, 0, 1) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group3(), 3, 2, 1, 0) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]), g1: Simd32x4::from(0.0) - Simd32x4::from(self.group0()[0]) * other.group2() + Simd32x4::from(self.group0()[1]) * swizzle!(other.group2(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group2(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group2(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]), g2: Simd32x4::from(self.group0()[0]) * other.group1() + Simd32x4::from(self.group0()[1]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group1(), 2, 3, 0, 1) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group1(), 3, 2, 1, 0) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]), g3: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<MultiVector> for Rotor {
+    type Output = MultiVector;
+
+    fn inner_anti_product(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group3() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + self.group0() * Simd32x4::from(other.group3()[0]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]), g1: Simd32x4::from(0.0) - Simd32x4::from(self.group0()[0]) * other.group2() + Simd32x4::from(self.group0()[2]) * swizzle!(other.group2(), 3, 3, 0, 1) * Simd32x4::from([0.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group2(), 2, 2, 1, 0) * Simd32x4::from([0.0, 1.0, -1.0, 1.0]) + swizzle!(self.group0(), 0, 1, 1, 1) * swizzle!(other.group2(), 0, 0, 3, 2) * Simd32x4::from([0.0, 1.0, 1.0, -1.0]), g2: Simd32x4::from(self.group0()[0]) * other.group1() + Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group1()[2]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group1()[3]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + swizzle!(self.group0(), 1, 0, 0, 0) * swizzle!(other.group1(), 1, 0, 0, 0) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]), g3: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 1, 0, 0) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([1.0, 1.0, 0.0, 0.0]) } }
+    }
+}
+
 impl LeftContraction<MultiVector> for Rotor {
     type Output = MultiVector;
 
@@ -2382,11 +4128,27 @@ impl LeftContraction<MultiVector> for Rotor {
     }
 }
 
+impl RightAntiContraction<MultiVector> for Rotor {
+    type Output = MultiVector;
+
+    fn right_anti_contraction(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group3() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + self.group0() * Simd32x4::from(other.group3()[0]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]), g1: Simd32x4::from(0.0) - Simd32x4::from(self.group0()[0]) * other.group2() + self.group0() * Simd32x4::from(other.group2()[0]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]), g2: Simd32x4::from(self.group0()[0]) * other.group1() + Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group1()[2]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group1()[3]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + swizzle!(self.group0(), 1, 0, 0, 0) * swizzle!(other.group1(), 1, 0, 0, 0) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]), g3: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group0()[3]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + swizzle!(self.group0(), 1, 0, 0, 0) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) } }
+    }
+}
+
 impl ScalarProduct<MultiVector> for Rotor {
     type Output = Scalar;
 
     fn scalar_product(self, other: MultiVector) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] - self.group0()[3] * other.group0()[3] } }
+    }
+}
+
+impl AntiScalarProduct<MultiVector> for Rotor {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: MultiVector) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3] } }
     }
 }
 
@@ -2494,6 +4256,14 @@ impl ScalarProduct<Rotor> for Rotor {
     }
 }
 
+impl AntiScalarProduct<Rotor> for Rotor {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Rotor) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3] } }
+    }
+}
+
 impl GeometricProduct<Point> for Rotor {
     type Output = PointAndPlane;
 
@@ -2518,11 +4288,35 @@ impl InnerProduct<Point> for Rotor {
     }
 }
 
+impl GeometricAntiProduct<Point> for Rotor {
+    type Output = PointAndPlane;
+
+    fn geometric_anti_product(self, other: Point) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 1, 0, 0) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([1.0, 1.0, 0.0, 0.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, 1.0, 0.0, -1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, -1.0, 1.0, 0.0]) + swizzle!(self.group0(), 0, 0, 1, 1) * swizzle!(other.group0(), 0, 0, 3, 2) * Simd32x4::from([0.0, 0.0, -1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Point> for Rotor {
+    type Output = PointAndPlane;
+
+    fn inner_anti_product(self, other: Point) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 1, 0, 0) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([1.0, 1.0, 0.0, 0.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl LeftContraction<Point> for Rotor {
     type Output = PointAndPlane;
 
     fn left_contraction(self, other: Point) -> PointAndPlane {
         PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0(), g1: Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, -1.0]) + swizzle!(self.group0(), 1, 1, 0, 0) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([1.0, -1.0, 0.0, 0.0]) } }
+    }
+}
+
+impl RightAntiContraction<Point> for Rotor {
+    type Output = PointAndPlane;
+
+    fn right_anti_contraction(self, other: Point) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 1, 0, 0) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([1.0, 1.0, 0.0, 0.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
     }
 }
 
@@ -2539,6 +4333,14 @@ impl InnerProduct<IdealPoint> for Rotor {
 
     fn inner_product(self, other: IdealPoint) -> IdealPoint {
         IdealPoint { groups: IdealPointGroups { g0: Simd32x3::from(self.group0()[0]) * other.group0() } }
+    }
+}
+
+impl GeometricAntiProduct<IdealPoint> for Rotor {
+    type Output = Rotor;
+
+    fn geometric_anti_product(self, other: IdealPoint) -> Rotor {
+        Rotor { groups: RotorGroups { g0: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[1], other.group0()[0]]) * Simd32x4::from([1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[2], other.group0()[1], other.group0()[0], other.group0()[2]]) * Simd32x4::from([1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]) } }
     }
 }
 
@@ -2574,11 +4376,35 @@ impl InnerProduct<Plane> for Rotor {
     }
 }
 
+impl GeometricAntiProduct<Plane> for Rotor {
+    type Output = PointAndPlane;
+
+    fn geometric_anti_product(self, other: Plane) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + swizzle!(self.group0(), 0, 0, 1, 1) * swizzle!(other.group0(), 0, 0, 3, 2) * Simd32x4::from([0.0, 0.0, 1.0, -1.0]), g1: Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, -1.0]) + swizzle!(self.group0(), 1, 1, 0, 0) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([-1.0, -1.0, 0.0, 0.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Plane> for Rotor {
+    type Output = Point;
+
+    fn inner_anti_product(self, other: Plane) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + swizzle!(self.group0(), 0, 0, 1, 1) * swizzle!(other.group0(), 0, 0, 3, 2) * Simd32x4::from([0.0, 0.0, 1.0, -1.0]) } }
+    }
+}
+
 impl LeftContraction<Plane> for Rotor {
     type Output = Plane;
 
     fn left_contraction(self, other: Plane) -> Plane {
         Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0() } }
+    }
+}
+
+impl RightAntiContraction<Plane> for Rotor {
+    type Output = Point;
+
+    fn right_anti_contraction(self, other: Plane) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
     }
 }
 
@@ -2598,6 +4424,14 @@ impl RegressiveProduct<Line> for Rotor {
     }
 }
 
+impl GeometricAntiProduct<Line> for Rotor {
+    type Output = Motor;
+
+    fn geometric_anti_product(self, other: Line) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[1], other.group0()[0]]) * Simd32x4::from([1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[2], other.group0()[1], other.group0()[0], other.group0()[2]]) * Simd32x4::from([1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[2], other.group1()[1]]) * Simd32x4::from([1.0, 0.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[1], other.group1()[2], other.group1()[1], other.group1()[0]]) * Simd32x4::from([1.0, 1.0, 0.0, -1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[2], other.group1()[1], other.group1()[0], other.group1()[2]]) * Simd32x4::from([1.0, -1.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl RightContraction<Line> for Rotor {
     type Output = Scalar;
 
@@ -2606,11 +4440,27 @@ impl RightContraction<Line> for Rotor {
     }
 }
 
+impl LeftAntiContraction<Line> for Rotor {
+    type Output = AntiScalar;
+
+    fn left_anti_contraction(self, other: Line) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[1] * other.group1()[0] + self.group0()[2] * other.group1()[1] + self.group0()[3] * other.group1()[2] } }
+    }
+}
+
 impl ScalarProduct<Line> for Rotor {
     type Output = Scalar;
 
     fn scalar_product(self, other: Line) -> Scalar {
         Scalar { groups: ScalarGroups { g0: 0.0 - self.group0()[1] * other.group1()[0] - self.group0()[2] * other.group1()[1] - self.group0()[3] * other.group1()[2] } }
+    }
+}
+
+impl AntiScalarProduct<Line> for Rotor {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Line) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[1] * other.group1()[0] + self.group0()[2] * other.group1()[1] + self.group0()[3] * other.group1()[2] } }
     }
 }
 
@@ -2638,6 +4488,14 @@ impl OuterProduct<Translator> for Rotor {
     }
 }
 
+impl GeometricAntiProduct<Translator> for Rotor {
+    type Output = Motor;
+
+    fn geometric_anti_product(self, other: Translator) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 1, 1, 3, 2) * Simd32x4::from([1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 3, 2, 1) * Simd32x4::from([1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 2, 1, 3) * Simd32x4::from([1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([0.0, -1.0, -1.0, -1.0]), g1: self.group0() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl LeftContraction<Translator> for Rotor {
     type Output = Translator;
 
@@ -2659,6 +4517,14 @@ impl ScalarProduct<Translator> for Rotor {
 
     fn scalar_product(self, other: Translator) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0()[0] } }
+    }
+}
+
+impl AntiScalarProduct<Translator> for Rotor {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Translator) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] } }
     }
 }
 
@@ -2710,6 +4576,22 @@ impl InnerProduct<Motor> for Rotor {
     }
 }
 
+impl GeometricAntiProduct<Motor> for Rotor {
+    type Output = Motor;
+
+    fn geometric_anti_product(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group1(), 2, 3, 0, 1) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group1(), 3, 2, 1, 0) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Motor> for Rotor {
+    type Output = Motor;
+
+    fn inner_anti_product(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + self.group0() * Simd32x4::from(other.group1()[0]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 1, 0, 0) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([1.0, 1.0, 0.0, 0.0]) } }
+    }
+}
+
 impl LeftContraction<Motor> for Rotor {
     type Output = Motor;
 
@@ -2726,11 +4608,27 @@ impl RightContraction<Motor> for Rotor {
     }
 }
 
+impl RightAntiContraction<Motor> for Rotor {
+    type Output = Motor;
+
+    fn right_anti_contraction(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + self.group0() * Simd32x4::from(other.group1()[0]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group0()[3]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + swizzle!(self.group0(), 1, 0, 0, 0) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) } }
+    }
+}
+
 impl ScalarProduct<Motor> for Rotor {
     type Output = Scalar;
 
     fn scalar_product(self, other: Motor) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] - self.group0()[3] * other.group0()[3] } }
+    }
+}
+
+impl AntiScalarProduct<Motor> for Rotor {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Motor) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3] } }
     }
 }
 
@@ -2758,11 +4656,35 @@ impl InnerProduct<PointAndPlane> for Rotor {
     }
 }
 
+impl GeometricAntiProduct<PointAndPlane> for Rotor {
+    type Output = PointAndPlane;
+
+    fn geometric_anti_product(self, other: PointAndPlane) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[0]) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[1], other.group0()[0], other.group1()[3], other.group1()[2]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[2], other.group1()[3], other.group0()[0], other.group1()[1]]) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[3], other.group1()[2], other.group1()[1], other.group0()[0]]) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[1], other.group1()[0], other.group0()[3], other.group0()[2]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[2], other.group0()[3], other.group1()[0], other.group0()[1]]) * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[3], other.group0()[2], other.group0()[1], other.group1()[0]]) * Simd32x4::from([-1.0, -1.0, 1.0, -1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<PointAndPlane> for Rotor {
+    type Output = PointAndPlane;
+
+    fn inner_anti_product(self, other: PointAndPlane) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[0]) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[1], other.group0()[0], other.group1()[3], other.group1()[2]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[2], other.group1()[3], other.group0()[0], other.group1()[1]]) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[3], other.group1()[2], other.group1()[1], other.group0()[0]]) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl LeftContraction<PointAndPlane> for Rotor {
     type Output = PointAndPlane;
 
     fn left_contraction(self, other: PointAndPlane) -> PointAndPlane {
         PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0(), g1: Simd32x4::from(self.group0()[0]) * other.group1() + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, -1.0]) + swizzle!(self.group0(), 1, 1, 0, 0) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([1.0, -1.0, 0.0, 0.0]) } }
+    }
+}
+
+impl RightAntiContraction<PointAndPlane> for Rotor {
+    type Output = PointAndPlane;
+
+    fn right_anti_contraction(self, other: PointAndPlane) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[0]) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 1, 0, 0) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([1.0, 1.0, 0.0, 0.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
     }
 }
 
@@ -2858,6 +4780,14 @@ impl Dual for Point {
     }
 }
 
+impl AntiReversal for Point {
+    type Output = Point;
+
+    fn anti_reversal(self) -> Point {
+        Point { groups: PointGroups { g0: self.group0() } }
+    }
+}
+
 impl GeometricProduct<Scalar> for Point {
     type Output = Point;
 
@@ -2882,10 +4812,90 @@ impl InnerProduct<Scalar> for Point {
     }
 }
 
+impl GeometricAntiProduct<Scalar> for Point {
+    type Output = Plane;
+
+    fn geometric_anti_product(self, other: Scalar) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Scalar> for Point {
+    type Output = Plane;
+
+    fn inner_anti_product(self, other: Scalar) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
 impl RightContraction<Scalar> for Point {
     type Output = Point;
 
     fn right_contraction(self, other: Scalar) -> Point {
+        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl LeftAntiContraction<Scalar> for Point {
+    type Output = Plane;
+
+    fn left_anti_contraction(self, other: Scalar) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl GeometricProduct<AntiScalar> for Point {
+    type Output = Plane;
+
+    fn geometric_product(self, other: AntiScalar) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl RegressiveProduct<AntiScalar> for Point {
+    type Output = Point;
+
+    fn regressive_product(self, other: AntiScalar) -> Point {
+        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl InnerProduct<AntiScalar> for Point {
+    type Output = Plane;
+
+    fn inner_product(self, other: AntiScalar) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl GeometricAntiProduct<AntiScalar> for Point {
+    type Output = Point;
+
+    fn geometric_anti_product(self, other: AntiScalar) -> Point {
+        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl InnerAntiProduct<AntiScalar> for Point {
+    type Output = Point;
+
+    fn inner_anti_product(self, other: AntiScalar) -> Point {
+        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl LeftContraction<AntiScalar> for Point {
+    type Output = Plane;
+
+    fn left_contraction(self, other: AntiScalar) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl RightAntiContraction<AntiScalar> for Point {
+    type Output = Point;
+
+    fn right_anti_contraction(self, other: AntiScalar) -> Point {
         Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(other.group0()) } }
     }
 }
@@ -2914,11 +4924,27 @@ impl GeometricProduct<MultiVector> for Point {
     }
 }
 
+impl GeometricAntiProduct<MultiVector> for Point {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group1() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group2(), 1, 0, 3, 2) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group2(), 2, 3, 0, 1) * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group2(), 3, 2, 1, 0) * Simd32x4::from([-1.0, -1.0, 1.0, -1.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group3(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group3(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group3(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]), g2: Simd32x4::from(self.group0()[0]) * other.group3() + Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([-1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]), g3: Simd32x4::from(0.0) - Simd32x4::from(self.group0()[0]) * other.group2() + Simd32x4::from(self.group0()[1]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group1(), 2, 3, 0, 1) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group1(), 3, 2, 1, 0) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) } }
+    }
+}
+
 impl ScalarProduct<MultiVector> for Point {
     type Output = Scalar;
 
     fn scalar_product(self, other: MultiVector) -> Scalar {
         Scalar { groups: ScalarGroups { g0: 0.0 - self.group0()[0] * other.group2()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2] + self.group0()[3] * other.group1()[3] } }
+    }
+}
+
+impl AntiScalarProduct<MultiVector> for Point {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: MultiVector) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group2()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2] + self.group0()[3] * other.group1()[3] } }
     }
 }
 
@@ -2946,11 +4972,35 @@ impl InnerProduct<Rotor> for Point {
     }
 }
 
+impl GeometricAntiProduct<Rotor> for Point {
+    type Output = PointAndPlane;
+
+    fn geometric_anti_product(self, other: Rotor) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group0()[3]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + swizzle!(self.group0(), 1, 0, 0, 0) * swizzle!(other.group0(), 1, 1, 2, 3) * Simd32x4::from(-1.0), g1: Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 3, 0, 1) * Simd32x4::from([0.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 2, 2, 1, 0) * Simd32x4::from([0.0, 1.0, -1.0, -1.0]) + swizzle!(self.group0(), 0, 1, 1, 1) * swizzle!(other.group0(), 0, 0, 3, 2) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Rotor> for Point {
+    type Output = PointAndPlane;
+
+    fn inner_anti_product(self, other: Rotor) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group0()[3]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + swizzle!(self.group0(), 1, 0, 0, 0) * swizzle!(other.group0(), 1, 1, 2, 3) * Simd32x4::from(-1.0), g1: self.group0() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
 impl RightContraction<Rotor> for Point {
     type Output = PointAndPlane;
 
     fn right_contraction(self, other: Rotor) -> PointAndPlane {
         PointAndPlane { groups: PointAndPlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]), g1: Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group0()[3]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + swizzle!(self.group0(), 1, 0, 0, 0) * swizzle!(other.group0(), 1, 1, 2, 3) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl LeftAntiContraction<Rotor> for Point {
+    type Output = PointAndPlane;
+
+    fn left_anti_contraction(self, other: Rotor) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group0()[3]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + swizzle!(self.group0(), 1, 0, 0, 0) * swizzle!(other.group0(), 1, 1, 2, 3) * Simd32x4::from(-1.0), g1: self.group0() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
     }
 }
 
@@ -3026,6 +5076,14 @@ impl InnerProduct<Point> for Point {
     }
 }
 
+impl InnerAntiProduct<Point> for Point {
+    type Output = AntiScalar;
+
+    fn inner_anti_product(self, other: Point) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3] } }
+    }
+}
+
 impl LeftContraction<Point> for Point {
     type Output = Scalar;
 
@@ -3042,11 +5100,35 @@ impl RightContraction<Point> for Point {
     }
 }
 
+impl LeftAntiContraction<Point> for Point {
+    type Output = AntiScalar;
+
+    fn left_anti_contraction(self, other: Point) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3] } }
+    }
+}
+
+impl RightAntiContraction<Point> for Point {
+    type Output = AntiScalar;
+
+    fn right_anti_contraction(self, other: Point) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3] } }
+    }
+}
+
 impl ScalarProduct<Point> for Point {
     type Output = Scalar;
 
     fn scalar_product(self, other: Point) -> Scalar {
         Scalar { groups: ScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3] } }
+    }
+}
+
+impl AntiScalarProduct<Point> for Point {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Point) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3] } }
     }
 }
 
@@ -3082,6 +5164,14 @@ impl RegressiveProduct<Plane> for Point {
     }
 }
 
+impl OuterProduct<Plane> for Point {
+    type Output = AntiScalar;
+
+    fn outer_product(self, other: Plane) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] - self.group0()[3] * other.group0()[3] } }
+    }
+}
+
 impl InnerProduct<Plane> for Point {
     type Output = Line;
 
@@ -3090,11 +5180,27 @@ impl InnerProduct<Plane> for Point {
     }
 }
 
+impl InnerAntiProduct<Plane> for Point {
+    type Output = Line;
+
+    fn inner_anti_product(self, other: Plane) -> Line {
+        Line { groups: LineGroups { g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]) + Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x3::from(other.group0()[0]) * Simd32x3::from(-1.0), g1: Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[3], other.group0()[3], other.group0()[1]]) * Simd32x3::from([1.0, 0.0, -1.0]) + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[2], other.group0()[1], other.group0()[2]]) * Simd32x3::from([-1.0, 1.0, 0.0]) + Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[1]]) * Simd32x3::from([other.group0()[0], other.group0()[3], other.group0()[2]]) * Simd32x3::from([0.0, -1.0, 1.0]) } }
+    }
+}
+
 impl RightContraction<Plane> for Point {
     type Output = Line;
 
     fn right_contraction(self, other: Plane) -> Line {
         Line { groups: LineGroups { g0: Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[3], other.group0()[3], other.group0()[1]]) * Simd32x3::from([1.0, 0.0, -1.0]) + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[2], other.group0()[1], other.group0()[2]]) * Simd32x3::from([-1.0, 1.0, 0.0]) + Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[1]]) * Simd32x3::from([other.group0()[0], other.group0()[3], other.group0()[2]]) * Simd32x3::from([0.0, -1.0, 1.0]), g1: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]) + Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x3::from(other.group0()[0]) } }
+    }
+}
+
+impl LeftAntiContraction<Plane> for Point {
+    type Output = Line;
+
+    fn left_anti_contraction(self, other: Plane) -> Line {
+        Line { groups: LineGroups { g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]) + Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x3::from(other.group0()[0]) * Simd32x3::from(-1.0), g1: Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[3], other.group0()[3], other.group0()[1]]) * Simd32x3::from([1.0, 0.0, -1.0]) + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[2], other.group0()[1], other.group0()[2]]) * Simd32x3::from([-1.0, 1.0, 0.0]) + Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[1]]) * Simd32x3::from([other.group0()[0], other.group0()[3], other.group0()[2]]) * Simd32x3::from([0.0, -1.0, 1.0]) } }
     }
 }
 
@@ -3122,11 +5228,35 @@ impl InnerProduct<Line> for Point {
     }
 }
 
+impl GeometricAntiProduct<Line> for Point {
+    type Output = PointAndPlane;
+
+    fn geometric_anti_product(self, other: Line) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[1], other.group0()[2], other.group1()[1], other.group0()[0]]) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[2], other.group0()[1], other.group0()[0], other.group1()[2]]) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group1()[2], other.group1()[1]]) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[1], other.group1()[2], other.group0()[1], other.group1()[0]]) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[2], other.group1()[1], other.group1()[0], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Line> for Point {
+    type Output = Point;
+
+    fn inner_anti_product(self, other: Line) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[1], other.group0()[2], other.group1()[1], other.group0()[0]]) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[2], other.group0()[1], other.group0()[0], other.group1()[2]]) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
 impl RightContraction<Line> for Point {
     type Output = Plane;
 
     fn right_contraction(self, other: Line) -> Plane {
         Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[1], other.group0()[2], other.group1()[1], other.group0()[0]]) * Simd32x4::from([1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[2], other.group0()[1], other.group0()[0], other.group1()[2]]) * Simd32x4::from([1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl LeftAntiContraction<Line> for Point {
+    type Output = Point;
+
+    fn left_anti_contraction(self, other: Line) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[1], other.group0()[2], other.group1()[1], other.group0()[0]]) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[2], other.group0()[1], other.group0()[0], other.group1()[2]]) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]) } }
     }
 }
 
@@ -3178,6 +5308,22 @@ impl InnerProduct<Motor> for Point {
     }
 }
 
+impl GeometricAntiProduct<Motor> for Point {
+    type Output = PointAndPlane;
+
+    fn geometric_anti_product(self, other: Motor) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[0], other.group0()[1], other.group0()[2], other.group0()[3]]) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[1], other.group1()[0], other.group1()[3], other.group1()[2]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[2], other.group1()[3], other.group1()[0], other.group1()[1]]) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[3], other.group1()[2], other.group1()[1], other.group1()[0]]) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]), g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group1()[1], other.group1()[2], other.group1()[3]]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[1], other.group0()[0], other.group0()[3], other.group0()[2]]) * Simd32x4::from([-1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[2], other.group0()[3], other.group0()[0], other.group0()[1]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[3], other.group0()[2], other.group0()[1], other.group0()[0]]) * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Motor> for Point {
+    type Output = PointAndPlane;
+
+    fn inner_anti_product(self, other: Motor) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[0], other.group0()[1], other.group0()[2], other.group0()[3]]) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[1], other.group1()[0], other.group1()[3], other.group1()[2]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[2], other.group1()[3], other.group1()[0], other.group1()[1]]) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[3], other.group1()[2], other.group1()[1], other.group1()[0]]) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]), g1: self.group0() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
 impl LeftContraction<Motor> for Point {
     type Output = Plane;
 
@@ -3191,6 +5337,22 @@ impl RightContraction<Motor> for Point {
 
     fn right_contraction(self, other: Motor) -> PointAndPlane {
         PointAndPlane { groups: PointAndPlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]), g1: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[1], other.group0()[1], other.group1()[3], other.group1()[2]]) * Simd32x4::from([1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[2], other.group1()[3], other.group0()[2], other.group1()[1]]) * Simd32x4::from([1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[3], other.group1()[2], other.group1()[1], other.group0()[3]]) * Simd32x4::from([1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([0.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl LeftAntiContraction<Motor> for Point {
+    type Output = PointAndPlane;
+
+    fn left_anti_contraction(self, other: Motor) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[1], other.group0()[1], other.group1()[3], other.group1()[2]]) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[2], other.group1()[3], other.group0()[2], other.group1()[1]]) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[3], other.group1()[2], other.group1()[1], other.group0()[3]]) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([0.0, -1.0, -1.0, -1.0]), g1: self.group0() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl RightAntiContraction<Motor> for Point {
+    type Output = Point;
+
+    fn right_anti_contraction(self, other: Motor) -> Point {
+        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(other.group1()[0]) } }
     }
 }
 
@@ -3218,6 +5380,22 @@ impl GeometricProduct<PointAndPlane> for Point {
     }
 }
 
+impl OuterProduct<PointAndPlane> for Point {
+    type Output = AntiScalar;
+
+    fn outer_product(self, other: PointAndPlane) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2] - self.group0()[3] * other.group1()[3] } }
+    }
+}
+
+impl GeometricAntiProduct<PointAndPlane> for Point {
+    type Output = Motor;
+
+    fn geometric_anti_product(self, other: PointAndPlane) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[0], other.group0()[1], other.group0()[2], other.group0()[3]]) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[1], other.group0()[0], other.group1()[3], other.group1()[2]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[2], other.group1()[3], other.group0()[0], other.group1()[1]]) * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[3], other.group1()[2], other.group1()[1], other.group0()[0]]) * Simd32x4::from([-1.0, -1.0, 1.0, -1.0]), g1: Simd32x4::from(0.0) - Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group1()[1], other.group1()[2], other.group1()[3]]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[1], other.group1()[0], other.group0()[3], other.group0()[2]]) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[2], other.group0()[3], other.group1()[0], other.group0()[1]]) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[3], other.group0()[2], other.group0()[1], other.group1()[0]]) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) } }
+    }
+}
+
 impl LeftContraction<PointAndPlane> for Point {
     type Output = Scalar;
 
@@ -3226,11 +5404,27 @@ impl LeftContraction<PointAndPlane> for Point {
     }
 }
 
+impl RightAntiContraction<PointAndPlane> for Point {
+    type Output = AntiScalar;
+
+    fn right_anti_contraction(self, other: PointAndPlane) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3] } }
+    }
+}
+
 impl ScalarProduct<PointAndPlane> for Point {
     type Output = Scalar;
 
     fn scalar_product(self, other: PointAndPlane) -> Scalar {
         Scalar { groups: ScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3] } }
+    }
+}
+
+impl AntiScalarProduct<PointAndPlane> for Point {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: PointAndPlane) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3] } }
     }
 }
 
@@ -3318,6 +5512,14 @@ impl Conjugation for IdealPoint {
     }
 }
 
+impl AntiReversal for IdealPoint {
+    type Output = IdealPoint;
+
+    fn anti_reversal(self) -> IdealPoint {
+        IdealPoint { groups: IdealPointGroups { g0: self.group0() * Simd32x3::from(-1.0) } }
+    }
+}
+
 impl Add<Scalar> for IdealPoint {
     type Output = Translator;
 
@@ -3366,6 +5568,38 @@ impl RightContraction<Scalar> for IdealPoint {
     }
 }
 
+impl RegressiveProduct<AntiScalar> for IdealPoint {
+    type Output = IdealPoint;
+
+    fn regressive_product(self, other: AntiScalar) -> IdealPoint {
+        IdealPoint { groups: IdealPointGroups { g0: self.group0() * Simd32x3::from(other.group0()) } }
+    }
+}
+
+impl GeometricAntiProduct<AntiScalar> for IdealPoint {
+    type Output = IdealPoint;
+
+    fn geometric_anti_product(self, other: AntiScalar) -> IdealPoint {
+        IdealPoint { groups: IdealPointGroups { g0: self.group0() * Simd32x3::from(other.group0()) } }
+    }
+}
+
+impl InnerAntiProduct<AntiScalar> for IdealPoint {
+    type Output = IdealPoint;
+
+    fn inner_anti_product(self, other: AntiScalar) -> IdealPoint {
+        IdealPoint { groups: IdealPointGroups { g0: self.group0() * Simd32x3::from(other.group0()) } }
+    }
+}
+
+impl RightAntiContraction<AntiScalar> for IdealPoint {
+    type Output = IdealPoint;
+
+    fn right_anti_contraction(self, other: AntiScalar) -> IdealPoint {
+        IdealPoint { groups: IdealPointGroups { g0: self.group0() * Simd32x3::from(other.group0()) } }
+    }
+}
+
 impl Add<MultiVector> for IdealPoint {
     type Output = MultiVector;
 
@@ -3390,11 +5624,27 @@ impl GeometricProduct<MultiVector> for IdealPoint {
     }
 }
 
+impl GeometricAntiProduct<MultiVector> for IdealPoint {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()[0]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()[0]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group1(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group1(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]), g2: Simd32x4::from(self.group0()[0]) * swizzle!(other.group2(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group2(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group2(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]), g3: Simd32x4::from(self.group0()[0]) * swizzle!(other.group3(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group3(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group3(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) } }
+    }
+}
+
 impl ScalarProduct<MultiVector> for IdealPoint {
     type Output = Scalar;
 
     fn scalar_product(self, other: MultiVector) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group3()[1] + self.group0()[1] * other.group3()[2] + self.group0()[2] * other.group3()[3] } }
+    }
+}
+
+impl AntiScalarProduct<MultiVector> for IdealPoint {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: MultiVector) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group3()[1] - self.group0()[1] * other.group3()[2] - self.group0()[2] * other.group3()[3] } }
     }
 }
 
@@ -3411,6 +5661,14 @@ impl InnerProduct<Rotor> for IdealPoint {
 
     fn inner_product(self, other: Rotor) -> IdealPoint {
         IdealPoint { groups: IdealPointGroups { g0: self.group0() * Simd32x3::from(other.group0()[0]) } }
+    }
+}
+
+impl GeometricAntiProduct<Rotor> for IdealPoint {
+    type Output = Rotor;
+
+    fn geometric_anti_product(self, other: Rotor) -> Rotor {
+        Rotor { groups: RotorGroups { g0: Simd32x4::from(self.group0()[0]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]) } }
     }
 }
 
@@ -3502,6 +5760,14 @@ impl InnerProduct<IdealPoint> for IdealPoint {
     }
 }
 
+impl InnerAntiProduct<IdealPoint> for IdealPoint {
+    type Output = AntiScalar;
+
+    fn inner_anti_product(self, other: IdealPoint) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
+    }
+}
+
 impl LeftContraction<IdealPoint> for IdealPoint {
     type Output = Scalar;
 
@@ -3518,11 +5784,35 @@ impl RightContraction<IdealPoint> for IdealPoint {
     }
 }
 
+impl LeftAntiContraction<IdealPoint> for IdealPoint {
+    type Output = AntiScalar;
+
+    fn left_anti_contraction(self, other: IdealPoint) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
+    }
+}
+
+impl RightAntiContraction<IdealPoint> for IdealPoint {
+    type Output = AntiScalar;
+
+    fn right_anti_contraction(self, other: IdealPoint) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
+    }
+}
+
 impl ScalarProduct<IdealPoint> for IdealPoint {
     type Output = Scalar;
 
     fn scalar_product(self, other: IdealPoint) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] } }
+    }
+}
+
+impl AntiScalarProduct<IdealPoint> for IdealPoint {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: IdealPoint) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
     }
 }
 
@@ -3534,11 +5824,27 @@ impl InnerProduct<Plane> for IdealPoint {
     }
 }
 
+impl InnerAntiProduct<Plane> for IdealPoint {
+    type Output = Point;
+
+    fn inner_anti_product(self, other: Plane) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[0]) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([-1.0, 1.0, 0.0, 0.0]) } }
+    }
+}
+
 impl RightContraction<Plane> for IdealPoint {
     type Output = Plane;
 
     fn right_contraction(self, other: Plane) -> Plane {
         Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[0]) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([1.0, 1.0, 0.0, 0.0]) } }
+    }
+}
+
+impl LeftAntiContraction<Plane> for IdealPoint {
+    type Output = Point;
+
+    fn left_anti_contraction(self, other: Plane) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[0]) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([-1.0, 1.0, 0.0, 0.0]) } }
     }
 }
 
@@ -3574,11 +5880,35 @@ impl RegressiveProduct<Line> for IdealPoint {
     }
 }
 
+impl OuterProduct<Line> for IdealPoint {
+    type Output = AntiScalar;
+
+    fn outer_product(self, other: Line) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2] } }
+    }
+}
+
 impl InnerProduct<Line> for IdealPoint {
     type Output = Scalar;
 
     fn inner_product(self, other: Line) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] } }
+    }
+}
+
+impl GeometricAntiProduct<Line> for IdealPoint {
+    type Output = Motor;
+
+    fn geometric_anti_product(self, other: Line) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[1], other.group1()[2], other.group1()[1], other.group1()[0]]) * Simd32x4::from([1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[2], other.group1()[1], other.group1()[0], other.group1()[2]]) * Simd32x4::from([1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[2], other.group1()[1]]) * Simd32x4::from([1.0, 0.0, 1.0, -1.0]), g1: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[1], other.group0()[0]]) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[2], other.group0()[1], other.group0()[0], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Line> for IdealPoint {
+    type Output = AntiScalar;
+
+    fn inner_anti_product(self, other: Line) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
     }
 }
 
@@ -3598,11 +5928,35 @@ impl RightContraction<Line> for IdealPoint {
     }
 }
 
+impl LeftAntiContraction<Line> for IdealPoint {
+    type Output = AntiScalar;
+
+    fn left_anti_contraction(self, other: Line) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
+    }
+}
+
+impl RightAntiContraction<Line> for IdealPoint {
+    type Output = AntiScalar;
+
+    fn right_anti_contraction(self, other: Line) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
+    }
+}
+
 impl ScalarProduct<Line> for IdealPoint {
     type Output = Scalar;
 
     fn scalar_product(self, other: Line) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] } }
+    }
+}
+
+impl AntiScalarProduct<Line> for IdealPoint {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Line) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
     }
 }
 
@@ -3654,11 +6008,27 @@ impl RightContraction<Translator> for IdealPoint {
     }
 }
 
+impl RightAntiContraction<Translator> for IdealPoint {
+    type Output = AntiScalar;
+
+    fn right_anti_contraction(self, other: Translator) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[1] - self.group0()[1] * other.group0()[2] - self.group0()[2] * other.group0()[3] } }
+    }
+}
+
 impl ScalarProduct<Translator> for IdealPoint {
     type Output = Scalar;
 
     fn scalar_product(self, other: Translator) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0()[1] + self.group0()[1] * other.group0()[2] + self.group0()[2] * other.group0()[3] } }
+    }
+}
+
+impl AntiScalarProduct<Translator> for IdealPoint {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Translator) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[1] - self.group0()[1] * other.group0()[2] - self.group0()[2] * other.group0()[3] } }
     }
 }
 
@@ -3694,6 +6064,14 @@ impl RegressiveProduct<Motor> for IdealPoint {
     }
 }
 
+impl GeometricAntiProduct<Motor> for IdealPoint {
+    type Output = Motor;
+
+    fn geometric_anti_product(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[0]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()[0]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group1(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group1(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) } }
+    }
+}
+
 impl LeftContraction<Motor> for IdealPoint {
     type Output = Rotor;
 
@@ -3715,6 +6093,14 @@ impl ScalarProduct<Motor> for IdealPoint {
 
     fn scalar_product(self, other: Motor) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group1()[1] + self.group0()[1] * other.group1()[2] + self.group0()[2] * other.group1()[3] } }
+    }
+}
+
+impl AntiScalarProduct<Motor> for IdealPoint {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Motor) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group1()[1] - self.group0()[1] * other.group1()[2] - self.group0()[2] * other.group1()[3] } }
     }
 }
 
@@ -3742,11 +6128,35 @@ impl InnerProduct<PointAndPlane> for IdealPoint {
     }
 }
 
+impl GeometricAntiProduct<PointAndPlane> for IdealPoint {
+    type Output = PointAndPlane;
+
+    fn geometric_anti_product(self, other: PointAndPlane) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[1], other.group1()[0], other.group0()[3], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[2], other.group0()[3], other.group1()[0], other.group0()[1]]) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[3], other.group0()[2], other.group0()[1], other.group1()[0]]) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]), g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[1], other.group0()[0], other.group1()[3], other.group1()[2]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], other.group1()[3], other.group0()[0], other.group1()[1]]) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[3], other.group1()[2], other.group1()[1], other.group0()[0]]) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<PointAndPlane> for IdealPoint {
+    type Output = Point;
+
+    fn inner_anti_product(self, other: PointAndPlane) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[1], other.group1()[0], other.group0()[3], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[2], other.group0()[3], other.group1()[0], other.group0()[1]]) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[3], other.group0()[2], other.group0()[1], other.group1()[0]]) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) } }
+    }
+}
+
 impl RightContraction<PointAndPlane> for IdealPoint {
     type Output = Plane;
 
     fn right_contraction(self, other: PointAndPlane) -> Plane {
         Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()[1]) * swizzle!(other.group1(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group1(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[0]) * swizzle!(other.group1(), 1, 0, 0, 0) * Simd32x4::from([1.0, 1.0, 0.0, 0.0]) } }
+    }
+}
+
+impl LeftAntiContraction<PointAndPlane> for IdealPoint {
+    type Output = Point;
+
+    fn left_anti_contraction(self, other: PointAndPlane) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[1]) * swizzle!(other.group1(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group1(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[0]) * swizzle!(other.group1(), 1, 0, 0, 0) * Simd32x4::from([-1.0, 1.0, 0.0, 0.0]) } }
     }
 }
 
@@ -3842,6 +6252,14 @@ impl Dual for Plane {
     }
 }
 
+impl AntiReversal for Plane {
+    type Output = Plane;
+
+    fn anti_reversal(self) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
+    }
+}
+
 impl GeometricProduct<Scalar> for Plane {
     type Output = Plane;
 
@@ -3866,10 +6284,90 @@ impl InnerProduct<Scalar> for Plane {
     }
 }
 
+impl GeometricAntiProduct<Scalar> for Plane {
+    type Output = Point;
+
+    fn geometric_anti_product(self, other: Scalar) -> Point {
+        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Scalar> for Plane {
+    type Output = Point;
+
+    fn inner_anti_product(self, other: Scalar) -> Point {
+        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl RightContraction<Scalar> for Plane {
     type Output = Plane;
 
     fn right_contraction(self, other: Scalar) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl LeftAntiContraction<Scalar> for Plane {
+    type Output = Point;
+
+    fn left_anti_contraction(self, other: Scalar) -> Point {
+        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl GeometricProduct<AntiScalar> for Plane {
+    type Output = Point;
+
+    fn geometric_product(self, other: AntiScalar) -> Point {
+        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl RegressiveProduct<AntiScalar> for Plane {
+    type Output = Plane;
+
+    fn regressive_product(self, other: AntiScalar) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl InnerProduct<AntiScalar> for Plane {
+    type Output = Point;
+
+    fn inner_product(self, other: AntiScalar) -> Point {
+        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl GeometricAntiProduct<AntiScalar> for Plane {
+    type Output = Plane;
+
+    fn geometric_anti_product(self, other: AntiScalar) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl InnerAntiProduct<AntiScalar> for Plane {
+    type Output = Plane;
+
+    fn inner_anti_product(self, other: AntiScalar) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl LeftContraction<AntiScalar> for Plane {
+    type Output = Point;
+
+    fn left_contraction(self, other: AntiScalar) -> Point {
+        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl RightAntiContraction<AntiScalar> for Plane {
+    type Output = Plane;
+
+    fn right_anti_contraction(self, other: AntiScalar) -> Plane {
         Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()) } }
     }
 }
@@ -3898,11 +6396,27 @@ impl GeometricProduct<MultiVector> for Plane {
     }
 }
 
+impl GeometricAntiProduct<MultiVector> for Plane {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group2() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group1(), 2, 3, 0, 1) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group1(), 3, 2, 1, 0) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]), g1: Simd32x4::from(self.group0()[0]) * other.group3() + Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]), g2: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group3(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group3(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group3(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]), g3: Simd32x4::from(0.0) - Simd32x4::from(self.group0()[0]) * other.group1() + Simd32x4::from(self.group0()[1]) * swizzle!(other.group2(), 1, 0, 3, 2) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group2(), 2, 3, 0, 1) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group2(), 3, 2, 1, 0) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) } }
+    }
+}
+
 impl ScalarProduct<MultiVector> for Plane {
     type Output = Scalar;
 
     fn scalar_product(self, other: MultiVector) -> Scalar {
         Scalar { groups: ScalarGroups { g0: 0.0 - self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group2()[1] + self.group0()[2] * other.group2()[2] + self.group0()[3] * other.group2()[3] } }
+    }
+}
+
+impl AntiScalarProduct<MultiVector> for Plane {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: MultiVector) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group2()[1] + self.group0()[2] * other.group2()[2] + self.group0()[3] * other.group2()[3] } }
     }
 }
 
@@ -3930,11 +6444,35 @@ impl InnerProduct<Rotor> for Plane {
     }
 }
 
+impl GeometricAntiProduct<Rotor> for Plane {
+    type Output = PointAndPlane;
+
+    fn geometric_anti_product(self, other: Rotor) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 3, 0, 1) * Simd32x4::from([0.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 2, 2, 1, 0) * Simd32x4::from([0.0, -1.0, 1.0, 1.0]) + swizzle!(self.group0(), 0, 1, 1, 1) * swizzle!(other.group0(), 0, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]), g1: Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group0()[3]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + swizzle!(self.group0(), 1, 0, 0, 0) * swizzle!(other.group0(), 1, 1, 2, 3) } }
+    }
+}
+
+impl InnerAntiProduct<Rotor> for Plane {
+    type Output = Point;
+
+    fn inner_anti_product(self, other: Rotor) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 3, 0, 1) * Simd32x4::from([0.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 2, 2, 1, 0) * Simd32x4::from([0.0, -1.0, 1.0, 1.0]) + swizzle!(self.group0(), 0, 1, 1, 1) * swizzle!(other.group0(), 0, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) } }
+    }
+}
+
 impl RightContraction<Rotor> for Plane {
     type Output = Plane;
 
     fn right_contraction(self, other: Rotor) -> Plane {
         Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl LeftAntiContraction<Rotor> for Plane {
+    type Output = Point;
+
+    fn left_anti_contraction(self, other: Rotor) -> Point {
+        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
     }
 }
 
@@ -3962,11 +6500,27 @@ impl RegressiveProduct<Point> for Plane {
     }
 }
 
+impl OuterProduct<Point> for Plane {
+    type Output = AntiScalar;
+
+    fn outer_product(self, other: Point) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3] } }
+    }
+}
+
 impl InnerProduct<Point> for Plane {
     type Output = Line;
 
     fn inner_product(self, other: Point) -> Line {
         Line { groups: LineGroups { g0: Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[3], other.group0()[3], other.group0()[1]]) * Simd32x3::from([-1.0, 0.0, 1.0]) + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[2], other.group0()[1], other.group0()[2]]) * Simd32x3::from([1.0, -1.0, 0.0]) + Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[1]]) * Simd32x3::from([other.group0()[0], other.group0()[3], other.group0()[2]]) * Simd32x3::from([0.0, 1.0, -1.0]), g1: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]) + Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x3::from(other.group0()[0]) } }
+    }
+}
+
+impl InnerAntiProduct<Point> for Plane {
+    type Output = Line;
+
+    fn inner_anti_product(self, other: Point) -> Line {
+        Line { groups: LineGroups { g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]) + Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x3::from(other.group0()[0]) * Simd32x3::from(-1.0), g1: Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[3], other.group0()[3], other.group0()[1]]) * Simd32x3::from([-1.0, 0.0, 1.0]) + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[2], other.group0()[1], other.group0()[2]]) * Simd32x3::from([1.0, -1.0, 0.0]) + Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[1]]) * Simd32x3::from([other.group0()[0], other.group0()[3], other.group0()[2]]) * Simd32x3::from([0.0, 1.0, -1.0]) } }
     }
 }
 
@@ -3978,6 +6532,14 @@ impl LeftContraction<Point> for Plane {
     }
 }
 
+impl RightAntiContraction<Point> for Plane {
+    type Output = Line;
+
+    fn right_anti_contraction(self, other: Point) -> Line {
+        Line { groups: LineGroups { g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]) + Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x3::from(other.group0()[0]) * Simd32x3::from(-1.0), g1: Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[3], other.group0()[3], other.group0()[1]]) * Simd32x3::from([-1.0, 0.0, 1.0]) + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[2], other.group0()[1], other.group0()[2]]) * Simd32x3::from([1.0, -1.0, 0.0]) + Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[1]]) * Simd32x3::from([other.group0()[0], other.group0()[3], other.group0()[2]]) * Simd32x3::from([0.0, 1.0, -1.0]) } }
+    }
+}
+
 impl InnerProduct<IdealPoint> for Plane {
     type Output = Plane;
 
@@ -3986,11 +6548,27 @@ impl InnerProduct<IdealPoint> for Plane {
     }
 }
 
+impl InnerAntiProduct<IdealPoint> for Plane {
+    type Output = Point;
+
+    fn inner_anti_product(self, other: IdealPoint) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group0()[1]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + swizzle!(self.group0(), 1, 0, 0, 0) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl LeftContraction<IdealPoint> for Plane {
     type Output = Plane;
 
     fn left_contraction(self, other: IdealPoint) -> Plane {
         Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group0()[1]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + swizzle!(self.group0(), 1, 0, 0, 0) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl RightAntiContraction<IdealPoint> for Plane {
+    type Output = Point;
+
+    fn right_anti_contraction(self, other: IdealPoint) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group0()[1]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + swizzle!(self.group0(), 1, 0, 0, 0) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
     }
 }
 
@@ -4066,6 +6644,14 @@ impl InnerProduct<Plane> for Plane {
     }
 }
 
+impl InnerAntiProduct<Plane> for Plane {
+    type Output = AntiScalar;
+
+    fn inner_anti_product(self, other: Plane) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3] } }
+    }
+}
+
 impl LeftContraction<Plane> for Plane {
     type Output = Scalar;
 
@@ -4082,11 +6668,35 @@ impl RightContraction<Plane> for Plane {
     }
 }
 
+impl LeftAntiContraction<Plane> for Plane {
+    type Output = AntiScalar;
+
+    fn left_anti_contraction(self, other: Plane) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3] } }
+    }
+}
+
+impl RightAntiContraction<Plane> for Plane {
+    type Output = AntiScalar;
+
+    fn right_anti_contraction(self, other: Plane) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3] } }
+    }
+}
+
 impl ScalarProduct<Plane> for Plane {
     type Output = Scalar;
 
     fn scalar_product(self, other: Plane) -> Scalar {
         Scalar { groups: ScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3] } }
+    }
+}
+
+impl AntiScalarProduct<Plane> for Plane {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Plane) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3] } }
     }
 }
 
@@ -4114,6 +6724,22 @@ impl InnerProduct<Line> for Plane {
     }
 }
 
+impl GeometricAntiProduct<Line> for Plane {
+    type Output = PointAndPlane;
+
+    fn geometric_anti_product(self, other: Line) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group1()[2], other.group1()[1]]) * Simd32x4::from([-1.0, 0.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[1], other.group1()[2], other.group0()[1], other.group1()[0]]) * Simd32x4::from([-1.0, 1.0, 0.0, -1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[2], other.group1()[1], other.group1()[0], other.group0()[2]]) * Simd32x4::from([-1.0, -1.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]), g1: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[1], other.group0()[2], other.group1()[1], other.group0()[0]]) * Simd32x4::from([1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[2], other.group0()[1], other.group0()[0], other.group1()[2]]) * Simd32x4::from([1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Line> for Plane {
+    type Output = Point;
+
+    fn inner_anti_product(self, other: Line) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group1()[2], other.group1()[1]]) * Simd32x4::from([-1.0, 0.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[1], other.group1()[2], other.group0()[1], other.group1()[0]]) * Simd32x4::from([-1.0, 1.0, 0.0, -1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[2], other.group1()[1], other.group1()[0], other.group0()[2]]) * Simd32x4::from([-1.0, -1.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl LeftContraction<Line> for Plane {
     type Output = Plane;
 
@@ -4122,11 +6748,27 @@ impl LeftContraction<Line> for Plane {
     }
 }
 
+impl RightAntiContraction<Line> for Plane {
+    type Output = Point;
+
+    fn right_anti_contraction(self, other: Line) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group1()[2], other.group1()[1]]) * Simd32x4::from([-1.0, 0.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[1], other.group1()[2], other.group0()[1], other.group1()[0]]) * Simd32x4::from([-1.0, 1.0, 0.0, -1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[2], other.group1()[1], other.group1()[0], other.group0()[2]]) * Simd32x4::from([-1.0, -1.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl InnerProduct<Translator> for Plane {
     type Output = Plane;
 
     fn inner_product(self, other: Translator) -> Plane {
         Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 1, 0, 0) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([-1.0, 1.0, 0.0, 0.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Translator> for Plane {
+    type Output = Point;
+
+    fn inner_anti_product(self, other: Translator) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 1, 0, 0) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([-1.0, 1.0, 0.0, 0.0]) } }
     }
 }
 
@@ -4143,6 +6785,22 @@ impl RightContraction<Translator> for Plane {
 
     fn right_contraction(self, other: Translator) -> Plane {
         Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl LeftAntiContraction<Translator> for Plane {
+    type Output = Point;
+
+    fn left_anti_contraction(self, other: Translator) -> Point {
+        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl RightAntiContraction<Translator> for Plane {
+    type Output = Point;
+
+    fn right_anti_contraction(self, other: Translator) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group0()[3]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + swizzle!(self.group0(), 1, 0, 0, 0) * swizzle!(other.group0(), 1, 1, 2, 3) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
     }
 }
 
@@ -4178,6 +6836,22 @@ impl InnerProduct<Motor> for Plane {
     }
 }
 
+impl GeometricAntiProduct<Motor> for Plane {
+    type Output = PointAndPlane;
+
+    fn geometric_anti_product(self, other: Motor) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group1()[1], other.group1()[2], other.group1()[3]]) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[1], other.group0()[0], other.group0()[3], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[2], other.group0()[3], other.group0()[0], other.group0()[1]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[3], other.group0()[2], other.group0()[1], other.group0()[0]]) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]), g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[0], other.group0()[1], other.group0()[2], other.group0()[3]]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[1], other.group1()[0], other.group1()[3], other.group1()[2]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[2], other.group1()[3], other.group1()[0], other.group1()[1]]) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[3], other.group1()[2], other.group1()[1], other.group1()[0]]) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Motor> for Plane {
+    type Output = PointAndPlane;
+
+    fn inner_anti_product(self, other: Motor) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group1()[1], other.group1()[2], other.group1()[3]]) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[1], other.group0()[0], other.group0()[3], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[2], other.group0()[3], other.group0()[0], other.group0()[1]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[3], other.group0()[2], other.group0()[1], other.group0()[0]]) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]), g1: self.group0() * Simd32x4::from(other.group1()[0]) } }
+    }
+}
+
 impl LeftContraction<Motor> for Plane {
     type Output = PointAndPlane;
 
@@ -4191,6 +6865,22 @@ impl RightContraction<Motor> for Plane {
 
     fn right_contraction(self, other: Motor) -> Plane {
         Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl LeftAntiContraction<Motor> for Plane {
+    type Output = Point;
+
+    fn left_anti_contraction(self, other: Motor) -> Point {
+        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl RightAntiContraction<Motor> for Plane {
+    type Output = PointAndPlane;
+
+    fn right_anti_contraction(self, other: Motor) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[1], other.group1()[1], other.group0()[3], other.group0()[2]]) * Simd32x4::from([-1.0, 0.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[2], other.group0()[3], other.group1()[2], other.group0()[1]]) * Simd32x4::from([-1.0, 1.0, 0.0, -1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[3], other.group0()[2], other.group0()[1], other.group1()[3]]) * Simd32x4::from([-1.0, -1.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * other.group1() * Simd32x4::from([0.0, 1.0, 1.0, 1.0]), g1: self.group0() * Simd32x4::from(other.group1()[0]) } }
     }
 }
 
@@ -4226,6 +6916,14 @@ impl RegressiveProduct<PointAndPlane> for Plane {
     }
 }
 
+impl GeometricAntiProduct<PointAndPlane> for Plane {
+    type Output = Motor;
+
+    fn geometric_anti_product(self, other: PointAndPlane) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group1()[1], other.group1()[2], other.group1()[3]]) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[1], other.group1()[0], other.group0()[3], other.group0()[2]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[2], other.group0()[3], other.group1()[0], other.group0()[1]]) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[3], other.group0()[2], other.group0()[1], other.group1()[0]]) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]), g1: Simd32x4::from(0.0) - Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[0], other.group0()[1], other.group0()[2], other.group0()[3]]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[1], other.group0()[0], other.group1()[3], other.group1()[2]]) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[2], other.group1()[3], other.group0()[0], other.group1()[1]]) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[3], other.group1()[2], other.group1()[1], other.group0()[0]]) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) } }
+    }
+}
+
 impl RightContraction<PointAndPlane> for Plane {
     type Output = Scalar;
 
@@ -4234,11 +6932,27 @@ impl RightContraction<PointAndPlane> for Plane {
     }
 }
 
+impl LeftAntiContraction<PointAndPlane> for Plane {
+    type Output = AntiScalar;
+
+    fn left_anti_contraction(self, other: PointAndPlane) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2] + self.group0()[3] * other.group1()[3] } }
+    }
+}
+
 impl ScalarProduct<PointAndPlane> for Plane {
     type Output = Scalar;
 
     fn scalar_product(self, other: PointAndPlane) -> Scalar {
         Scalar { groups: ScalarGroups { g0: 0.0 - self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2] + self.group0()[3] * other.group1()[3] } }
+    }
+}
+
+impl AntiScalarProduct<PointAndPlane> for Plane {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: PointAndPlane) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2] + self.group0()[3] * other.group1()[3] } }
     }
 }
 
@@ -4334,6 +7048,14 @@ impl Dual for Line {
     }
 }
 
+impl AntiReversal for Line {
+    type Output = Line;
+
+    fn anti_reversal(self) -> Line {
+        Line { groups: LineGroups { g0: self.group0() * Simd32x3::from(-1.0), g1: self.group1() * Simd32x3::from(-1.0) } }
+    }
+}
+
 impl GeometricProduct<Scalar> for Line {
     type Output = Line;
 
@@ -4358,10 +7080,90 @@ impl InnerProduct<Scalar> for Line {
     }
 }
 
+impl GeometricAntiProduct<Scalar> for Line {
+    type Output = Line;
+
+    fn geometric_anti_product(self, other: Scalar) -> Line {
+        Line { groups: LineGroups { g0: self.group1() * Simd32x3::from(other.group0()), g1: self.group0() * Simd32x3::from(other.group0()) * Simd32x3::from(-1.0) } }
+    }
+}
+
+impl InnerAntiProduct<Scalar> for Line {
+    type Output = Line;
+
+    fn inner_anti_product(self, other: Scalar) -> Line {
+        Line { groups: LineGroups { g0: self.group1() * Simd32x3::from(other.group0()), g1: self.group0() * Simd32x3::from(other.group0()) * Simd32x3::from(-1.0) } }
+    }
+}
+
 impl RightContraction<Scalar> for Line {
     type Output = Line;
 
     fn right_contraction(self, other: Scalar) -> Line {
+        Line { groups: LineGroups { g0: self.group0() * Simd32x3::from(other.group0()), g1: self.group1() * Simd32x3::from(other.group0()) } }
+    }
+}
+
+impl LeftAntiContraction<Scalar> for Line {
+    type Output = Line;
+
+    fn left_anti_contraction(self, other: Scalar) -> Line {
+        Line { groups: LineGroups { g0: self.group1() * Simd32x3::from(other.group0()), g1: self.group0() * Simd32x3::from(other.group0()) * Simd32x3::from(-1.0) } }
+    }
+}
+
+impl GeometricProduct<AntiScalar> for Line {
+    type Output = Line;
+
+    fn geometric_product(self, other: AntiScalar) -> Line {
+        Line { groups: LineGroups { g0: self.group1() * Simd32x3::from(other.group0()) * Simd32x3::from(-1.0), g1: self.group0() * Simd32x3::from(other.group0()) } }
+    }
+}
+
+impl RegressiveProduct<AntiScalar> for Line {
+    type Output = Line;
+
+    fn regressive_product(self, other: AntiScalar) -> Line {
+        Line { groups: LineGroups { g0: self.group0() * Simd32x3::from(other.group0()), g1: self.group1() * Simd32x3::from(other.group0()) } }
+    }
+}
+
+impl InnerProduct<AntiScalar> for Line {
+    type Output = Line;
+
+    fn inner_product(self, other: AntiScalar) -> Line {
+        Line { groups: LineGroups { g0: self.group1() * Simd32x3::from(other.group0()) * Simd32x3::from(-1.0), g1: self.group0() * Simd32x3::from(other.group0()) } }
+    }
+}
+
+impl GeometricAntiProduct<AntiScalar> for Line {
+    type Output = Line;
+
+    fn geometric_anti_product(self, other: AntiScalar) -> Line {
+        Line { groups: LineGroups { g0: self.group0() * Simd32x3::from(other.group0()), g1: self.group1() * Simd32x3::from(other.group0()) } }
+    }
+}
+
+impl InnerAntiProduct<AntiScalar> for Line {
+    type Output = Line;
+
+    fn inner_anti_product(self, other: AntiScalar) -> Line {
+        Line { groups: LineGroups { g0: self.group0() * Simd32x3::from(other.group0()), g1: self.group1() * Simd32x3::from(other.group0()) } }
+    }
+}
+
+impl LeftContraction<AntiScalar> for Line {
+    type Output = Line;
+
+    fn left_contraction(self, other: AntiScalar) -> Line {
+        Line { groups: LineGroups { g0: self.group1() * Simd32x3::from(other.group0()) * Simd32x3::from(-1.0), g1: self.group0() * Simd32x3::from(other.group0()) } }
+    }
+}
+
+impl RightAntiContraction<AntiScalar> for Line {
+    type Output = Line;
+
+    fn right_anti_contraction(self, other: AntiScalar) -> Line {
         Line { groups: LineGroups { g0: self.group0() * Simd32x3::from(other.group0()), g1: self.group1() * Simd32x3::from(other.group0()) } }
     }
 }
@@ -4390,11 +7192,27 @@ impl GeometricProduct<MultiVector> for Line {
     }
 }
 
+impl GeometricAntiProduct<MultiVector> for Line {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()[0]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group1()[0]) * swizzle!(other.group3(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group3(), 2, 3, 0, 1) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group3(), 3, 2, 1, 0) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]), g1: Simd32x4::from(self.group0()[0]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group1(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group1(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[0]) * swizzle!(other.group2(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group2(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group2(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]), g2: Simd32x4::from(self.group0()[0]) * swizzle!(other.group2(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group2(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group2(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[0]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group1(), 2, 3, 0, 1) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group1(), 3, 2, 1, 0) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]), g3: Simd32x4::from(self.group0()[0]) * swizzle!(other.group3(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group3(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group3(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[0]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl ScalarProduct<MultiVector> for Line {
     type Output = Scalar;
 
     fn scalar_product(self, other: MultiVector) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group3()[1] + self.group0()[1] * other.group3()[2] + self.group0()[2] * other.group3()[3] - self.group1()[0] * other.group0()[1] - self.group1()[1] * other.group0()[2] - self.group1()[2] * other.group0()[3] } }
+    }
+}
+
+impl AntiScalarProduct<MultiVector> for Line {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: MultiVector) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group3()[1] - self.group0()[1] * other.group3()[2] - self.group0()[2] * other.group3()[3] + self.group1()[0] * other.group0()[1] + self.group1()[1] * other.group0()[2] + self.group1()[2] * other.group0()[3] } }
     }
 }
 
@@ -4414,6 +7232,14 @@ impl RegressiveProduct<Rotor> for Line {
     }
 }
 
+impl GeometricAntiProduct<Rotor> for Line {
+    type Output = Motor;
+
+    fn geometric_anti_product(self, other: Rotor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[0]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group1()[0]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl LeftContraction<Rotor> for Line {
     type Output = Scalar;
 
@@ -4422,11 +7248,27 @@ impl LeftContraction<Rotor> for Line {
     }
 }
 
+impl RightAntiContraction<Rotor> for Line {
+    type Output = AntiScalar;
+
+    fn right_anti_contraction(self, other: Rotor) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group1()[0] * other.group0()[1] + self.group1()[1] * other.group0()[2] + self.group1()[2] * other.group0()[3] } }
+    }
+}
+
 impl ScalarProduct<Rotor> for Line {
     type Output = Scalar;
 
     fn scalar_product(self, other: Rotor) -> Scalar {
         Scalar { groups: ScalarGroups { g0: 0.0 - self.group1()[0] * other.group0()[1] - self.group1()[1] * other.group0()[2] - self.group1()[2] * other.group0()[3] } }
+    }
+}
+
+impl AntiScalarProduct<Rotor> for Line {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Rotor) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group1()[0] * other.group0()[1] + self.group1()[1] * other.group0()[2] + self.group1()[2] * other.group0()[3] } }
     }
 }
 
@@ -4454,11 +7296,35 @@ impl InnerProduct<Point> for Line {
     }
 }
 
+impl GeometricAntiProduct<Point> for Line {
+    type Output = PointAndPlane;
+
+    fn geometric_anti_product(self, other: Point) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group1()[0], self.group1()[0], self.group0()[0], self.group0()[0]]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]), g1: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, 1.0, 0.0, -1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, -1.0, 1.0, 0.0]) + Simd32x4::from([self.group0()[0], self.group0()[0], self.group1()[0], self.group1()[0]]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Point> for Line {
+    type Output = Point;
+
+    fn inner_anti_product(self, other: Point) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group1()[0], self.group1()[0], self.group0()[0], self.group0()[0]]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) } }
+    }
+}
+
 impl LeftContraction<Point> for Line {
     type Output = Plane;
 
     fn left_contraction(self, other: Point) -> Plane {
         Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, 1.0, 0.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, -1.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, -1.0]) + Simd32x4::from([self.group1()[0], self.group1()[0], self.group0()[0], self.group0()[0]]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) } }
+    }
+}
+
+impl RightAntiContraction<Point> for Line {
+    type Output = Point;
+
+    fn right_anti_contraction(self, other: Point) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group1()[0], self.group1()[0], self.group0()[0], self.group0()[0]]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) } }
     }
 }
 
@@ -4512,11 +7378,35 @@ impl RegressiveProduct<IdealPoint> for Line {
     }
 }
 
+impl OuterProduct<IdealPoint> for Line {
+    type Output = AntiScalar;
+
+    fn outer_product(self, other: IdealPoint) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2] } }
+    }
+}
+
 impl InnerProduct<IdealPoint> for Line {
     type Output = Scalar;
 
     fn inner_product(self, other: IdealPoint) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] } }
+    }
+}
+
+impl GeometricAntiProduct<IdealPoint> for Line {
+    type Output = Motor;
+
+    fn geometric_anti_product(self, other: IdealPoint) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[1], other.group0()[0]]) * Simd32x4::from([1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group0()[2], other.group0()[1], other.group0()[0], other.group0()[2]]) * Simd32x4::from([1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([1.0, 0.0, 1.0, -1.0]), g1: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[1], other.group0()[0]]) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[2], other.group0()[1], other.group0()[0], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<IdealPoint> for Line {
+    type Output = AntiScalar;
+
+    fn inner_anti_product(self, other: IdealPoint) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
     }
 }
 
@@ -4536,11 +7426,35 @@ impl RightContraction<IdealPoint> for Line {
     }
 }
 
+impl LeftAntiContraction<IdealPoint> for Line {
+    type Output = AntiScalar;
+
+    fn left_anti_contraction(self, other: IdealPoint) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
+    }
+}
+
+impl RightAntiContraction<IdealPoint> for Line {
+    type Output = AntiScalar;
+
+    fn right_anti_contraction(self, other: IdealPoint) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
+    }
+}
+
 impl ScalarProduct<IdealPoint> for Line {
     type Output = Scalar;
 
     fn scalar_product(self, other: IdealPoint) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] } }
+    }
+}
+
+impl AntiScalarProduct<IdealPoint> for Line {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: IdealPoint) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
     }
 }
 
@@ -4568,11 +7482,35 @@ impl InnerProduct<Plane> for Line {
     }
 }
 
+impl GeometricAntiProduct<Plane> for Line {
+    type Output = PointAndPlane;
+
+    fn geometric_anti_product(self, other: Plane) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from([self.group0()[0], self.group0()[0], self.group1()[0], self.group1()[0]]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]), g1: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, -1.0]) + Simd32x4::from([self.group1()[0], self.group1()[0], self.group0()[0], self.group0()[0]]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([-1.0, -1.0, 1.0, -1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Plane> for Line {
+    type Output = Point;
+
+    fn inner_anti_product(self, other: Plane) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from([self.group0()[0], self.group0()[0], self.group1()[0], self.group1()[0]]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) } }
+    }
+}
+
 impl RightContraction<Plane> for Line {
     type Output = Plane;
 
     fn right_contraction(self, other: Plane) -> Plane {
         Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from([self.group0()[0], self.group0()[0], self.group1()[0], self.group1()[0]]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) } }
+    }
+}
+
+impl LeftAntiContraction<Plane> for Line {
+    type Output = Point;
+
+    fn left_anti_contraction(self, other: Plane) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from([self.group0()[0], self.group0()[0], self.group1()[0], self.group1()[0]]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) } }
     }
 }
 
@@ -4648,11 +7586,35 @@ impl RegressiveProduct<Line> for Line {
     }
 }
 
+impl OuterProduct<Line> for Line {
+    type Output = AntiScalar;
+
+    fn outer_product(self, other: Line) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2] + self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2] } }
+    }
+}
+
 impl InnerProduct<Line> for Line {
     type Output = Scalar;
 
     fn inner_product(self, other: Line) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] - self.group1()[0] * other.group1()[0] - self.group1()[1] * other.group1()[1] - self.group1()[2] * other.group1()[2] } }
+    }
+}
+
+impl GeometricAntiProduct<Line> for Line {
+    type Output = Motor;
+
+    fn geometric_anti_product(self, other: Line) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[1], other.group1()[2], other.group1()[1], other.group1()[0]]) * Simd32x4::from([1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[2], other.group1()[1], other.group1()[0], other.group1()[2]]) * Simd32x4::from([1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[1], other.group0()[0]]) * Simd32x4::from([1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group0()[2], other.group0()[1], other.group0()[0], other.group0()[2]]) * Simd32x4::from([1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[2], other.group1()[1]]) * Simd32x4::from([1.0, 0.0, 1.0, -1.0]), g1: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[1], other.group0()[0]]) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[2], other.group0()[1], other.group0()[0], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[2], other.group1()[1]]) * Simd32x4::from([1.0, 0.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group1()[1], other.group1()[2], other.group1()[1], other.group1()[0]]) * Simd32x4::from([1.0, 1.0, 0.0, -1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group1()[2], other.group1()[1], other.group1()[0], other.group1()[2]]) * Simd32x4::from([1.0, -1.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Line> for Line {
+    type Output = AntiScalar;
+
+    fn inner_anti_product(self, other: Line) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] + self.group1()[0] * other.group1()[0] + self.group1()[1] * other.group1()[1] + self.group1()[2] * other.group1()[2] } }
     }
 }
 
@@ -4672,11 +7634,35 @@ impl RightContraction<Line> for Line {
     }
 }
 
+impl LeftAntiContraction<Line> for Line {
+    type Output = AntiScalar;
+
+    fn left_anti_contraction(self, other: Line) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] + self.group1()[0] * other.group1()[0] + self.group1()[1] * other.group1()[1] + self.group1()[2] * other.group1()[2] } }
+    }
+}
+
+impl RightAntiContraction<Line> for Line {
+    type Output = AntiScalar;
+
+    fn right_anti_contraction(self, other: Line) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] + self.group1()[0] * other.group1()[0] + self.group1()[1] * other.group1()[1] + self.group1()[2] * other.group1()[2] } }
+    }
+}
+
 impl ScalarProduct<Line> for Line {
     type Output = Scalar;
 
     fn scalar_product(self, other: Line) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] - self.group1()[0] * other.group1()[0] - self.group1()[1] * other.group1()[1] - self.group1()[2] * other.group1()[2] } }
+    }
+}
+
+impl AntiScalarProduct<Line> for Line {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Line) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] + self.group1()[0] * other.group1()[0] + self.group1()[1] * other.group1()[1] + self.group1()[2] * other.group1()[2] } }
     }
 }
 
@@ -4696,6 +7682,14 @@ impl RegressiveProduct<Translator> for Line {
     }
 }
 
+impl GeometricAntiProduct<Translator> for Line {
+    type Output = Motor;
+
+    fn geometric_anti_product(self, other: Translator) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group1()[0]) * swizzle!(other.group0(), 1, 1, 3, 2) * Simd32x4::from([1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 2, 3, 2, 1) * Simd32x4::from([1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 3, 2, 1, 3) * Simd32x4::from([1.0, 1.0, -1.0, 0.0]) + Simd32x4::from([self.group0()[0], self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 2, 3, 2, 1) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 2, 1, 3) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group0()[0], self.group1()[0], self.group0()[0], self.group0()[0]]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) } }
+    }
+}
+
 impl LeftContraction<Translator> for Line {
     type Output = Scalar;
 
@@ -4704,11 +7698,27 @@ impl LeftContraction<Translator> for Line {
     }
 }
 
+impl RightAntiContraction<Translator> for Line {
+    type Output = AntiScalar;
+
+    fn right_anti_contraction(self, other: Translator) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[1] - self.group0()[1] * other.group0()[2] - self.group0()[2] * other.group0()[3] } }
+    }
+}
+
 impl ScalarProduct<Translator> for Line {
     type Output = Scalar;
 
     fn scalar_product(self, other: Translator) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0()[1] + self.group0()[1] * other.group0()[2] + self.group0()[2] * other.group0()[3] } }
+    }
+}
+
+impl AntiScalarProduct<Translator> for Line {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Translator) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[1] - self.group0()[1] * other.group0()[2] - self.group0()[2] * other.group0()[3] } }
     }
 }
 
@@ -4736,11 +7746,27 @@ impl GeometricProduct<Motor> for Line {
     }
 }
 
+impl GeometricAntiProduct<Motor> for Line {
+    type Output = Motor;
+
+    fn geometric_anti_product(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[0]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group1()[0]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group1(), 2, 3, 0, 1) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group1(), 3, 2, 1, 0) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]), g1: Simd32x4::from(self.group0()[0]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group1(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group1(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[0]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl ScalarProduct<Motor> for Line {
     type Output = Scalar;
 
     fn scalar_product(self, other: Motor) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group1()[1] + self.group0()[1] * other.group1()[2] + self.group0()[2] * other.group1()[3] - self.group1()[0] * other.group0()[1] - self.group1()[1] * other.group0()[2] - self.group1()[2] * other.group0()[3] } }
+    }
+}
+
+impl AntiScalarProduct<Motor> for Line {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Motor) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group1()[1] - self.group0()[1] * other.group1()[2] - self.group0()[2] * other.group1()[3] + self.group1()[0] * other.group0()[1] + self.group1()[1] * other.group0()[2] + self.group1()[2] * other.group0()[3] } }
     }
 }
 
@@ -4776,6 +7802,22 @@ impl InnerProduct<PointAndPlane> for Line {
     }
 }
 
+impl GeometricAntiProduct<PointAndPlane> for Line {
+    type Output = PointAndPlane;
+
+    fn geometric_anti_product(self, other: PointAndPlane) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[1], other.group1()[0], other.group0()[3], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[2], other.group0()[3], other.group1()[0], other.group0()[1]]) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[3], other.group0()[2], other.group0()[1], other.group1()[0]]) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[1], other.group0()[0], other.group1()[3], other.group1()[2]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[2], other.group1()[3], other.group0()[0], other.group1()[1]]) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group0()[3], other.group1()[2], other.group1()[1], other.group0()[0]]) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]), g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[1], other.group0()[0], other.group1()[3], other.group1()[2]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], other.group1()[3], other.group0()[0], other.group1()[1]]) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[3], other.group1()[2], other.group1()[1], other.group0()[0]]) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group1()[1], other.group1()[0], other.group0()[3], other.group0()[2]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group1()[2], other.group0()[3], other.group1()[0], other.group0()[1]]) * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group1()[3], other.group0()[2], other.group0()[1], other.group1()[0]]) * Simd32x4::from([-1.0, -1.0, 1.0, -1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<PointAndPlane> for Line {
+    type Output = Point;
+
+    fn inner_anti_product(self, other: PointAndPlane) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[1], other.group1()[0], other.group0()[3], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[2], other.group0()[3], other.group1()[0], other.group0()[1]]) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[3], other.group0()[2], other.group0()[1], other.group1()[0]]) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[1], other.group0()[0], other.group1()[3], other.group1()[2]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[2], other.group1()[3], other.group0()[0], other.group1()[1]]) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group0()[3], other.group1()[2], other.group1()[1], other.group0()[0]]) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]) } }
+    }
+}
+
 impl LeftContraction<PointAndPlane> for Line {
     type Output = Plane;
 
@@ -4789,6 +7831,22 @@ impl RightContraction<PointAndPlane> for Line {
 
     fn right_contraction(self, other: PointAndPlane) -> Plane {
         Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()[1]) * swizzle!(other.group1(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group1(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group1(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group1(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from([self.group0()[0], self.group0()[0], self.group1()[0], self.group1()[0]]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) } }
+    }
+}
+
+impl LeftAntiContraction<PointAndPlane> for Line {
+    type Output = Point;
+
+    fn left_anti_contraction(self, other: PointAndPlane) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[1]) * swizzle!(other.group1(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group1(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group1(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group1(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from([self.group0()[0], self.group0()[0], self.group1()[0], self.group1()[0]]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) } }
+    }
+}
+
+impl RightAntiContraction<PointAndPlane> for Line {
+    type Output = Point;
+
+    fn right_anti_contraction(self, other: PointAndPlane) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group1()[0], self.group1()[0], self.group0()[0], self.group0()[0]]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) } }
     }
 }
 
@@ -4876,6 +7934,14 @@ impl Conjugation for Translator {
     }
 }
 
+impl AntiReversal for Translator {
+    type Output = Translator;
+
+    fn anti_reversal(self) -> Translator {
+        Translator { groups: TranslatorGroups { g0: self.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
 impl Into<Scalar> for Translator {
     fn into(self) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] } }
@@ -4950,11 +8016,67 @@ impl RightContraction<Scalar> for Translator {
     }
 }
 
+impl RightAntiContraction<Scalar> for Translator {
+    type Output = AntiScalar;
+
+    fn right_anti_contraction(self, other: Scalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0() } }
+    }
+}
+
 impl ScalarProduct<Scalar> for Translator {
     type Output = Scalar;
 
     fn scalar_product(self, other: Scalar) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0() } }
+    }
+}
+
+impl AntiScalarProduct<Scalar> for Translator {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Scalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0() } }
+    }
+}
+
+impl RegressiveProduct<AntiScalar> for Translator {
+    type Output = Translator;
+
+    fn regressive_product(self, other: AntiScalar) -> Translator {
+        Translator { groups: TranslatorGroups { g0: self.group0() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl OuterProduct<AntiScalar> for Translator {
+    type Output = AntiScalar;
+
+    fn outer_product(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[0] * other.group0() } }
+    }
+}
+
+impl GeometricAntiProduct<AntiScalar> for Translator {
+    type Output = Translator;
+
+    fn geometric_anti_product(self, other: AntiScalar) -> Translator {
+        Translator { groups: TranslatorGroups { g0: self.group0() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl InnerAntiProduct<AntiScalar> for Translator {
+    type Output = Translator;
+
+    fn inner_anti_product(self, other: AntiScalar) -> Translator {
+        Translator { groups: TranslatorGroups { g0: self.group0() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl RightAntiContraction<AntiScalar> for Translator {
+    type Output = Translator;
+
+    fn right_anti_contraction(self, other: AntiScalar) -> Translator {
+        Translator { groups: TranslatorGroups { g0: self.group0() * Simd32x4::from(other.group0()) } }
     }
 }
 
@@ -4998,6 +8120,22 @@ impl InnerProduct<MultiVector> for Translator {
     }
 }
 
+impl GeometricAntiProduct<MultiVector> for Translator {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group3() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]), g1: Simd32x4::from(0.0) - Simd32x4::from(self.group0()[0]) * other.group2() + Simd32x4::from(self.group0()[1]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group1(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group1(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]), g2: Simd32x4::from(self.group0()[0]) * other.group1() + Simd32x4::from(self.group0()[1]) * swizzle!(other.group2(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group2(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group2(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]), g3: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group3(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group3(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group3(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<MultiVector> for Translator {
+    type Output = MultiVector;
+
+    fn inner_anti_product(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group3() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + self.group0() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(0.0) - Simd32x4::from(self.group0()[0]) * other.group2() + Simd32x4::from(self.group0()[2]) * swizzle!(other.group1(), 3, 3, 0, 1) * Simd32x4::from([0.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group1(), 2, 2, 1, 0) * Simd32x4::from([0.0, 1.0, -1.0, 1.0]) + swizzle!(self.group0(), 0, 1, 1, 1) * swizzle!(other.group1(), 0, 0, 3, 2) * Simd32x4::from([0.0, 1.0, 1.0, -1.0]), g2: Simd32x4::from(self.group0()[0]) * other.group1() + Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group2()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group2()[3]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + swizzle!(self.group0(), 1, 0, 0, 0) * swizzle!(other.group2(), 1, 0, 0, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]), g3: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group3(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group3(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 1, 0, 0) * swizzle!(other.group3(), 1, 0, 0, 0) * Simd32x4::from([-1.0, 1.0, 0.0, 0.0]) } }
+    }
+}
+
 impl LeftContraction<MultiVector> for Translator {
     type Output = MultiVector;
 
@@ -5006,11 +8144,27 @@ impl LeftContraction<MultiVector> for Translator {
     }
 }
 
+impl RightAntiContraction<MultiVector> for Translator {
+    type Output = MultiVector;
+
+    fn right_anti_contraction(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group3() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(0.0) - Simd32x4::from(self.group0()[0]) * other.group2() + Simd32x4::from(self.group0()[2]) * swizzle!(other.group1(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group1(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + swizzle!(self.group0(), 0, 0, 1, 1) * swizzle!(other.group1(), 0, 0, 3, 2) * Simd32x4::from([0.0, 0.0, 1.0, -1.0]), g2: Simd32x4::from(self.group0()[0]) * other.group1(), g3: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group3(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group3(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 1, 0, 0) * swizzle!(other.group3(), 1, 0, 0, 0) * Simd32x4::from([-1.0, 1.0, 0.0, 0.0]) } }
+    }
+}
+
 impl ScalarProduct<MultiVector> for Translator {
     type Output = Scalar;
 
     fn scalar_product(self, other: MultiVector) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group3()[1] + self.group0()[2] * other.group3()[2] + self.group0()[3] * other.group3()[3] } }
+    }
+}
+
+impl AntiScalarProduct<MultiVector> for Translator {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: MultiVector) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group3()[1] - self.group0()[2] * other.group3()[2] - self.group0()[3] * other.group3()[3] } }
     }
 }
 
@@ -5038,6 +8192,14 @@ impl OuterProduct<Rotor> for Translator {
     }
 }
 
+impl GeometricAntiProduct<Rotor> for Translator {
+    type Output = Motor;
+
+    fn geometric_anti_product(self, other: Rotor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl LeftContraction<Rotor> for Translator {
     type Output = Rotor;
 
@@ -5059,6 +8221,14 @@ impl ScalarProduct<Rotor> for Translator {
 
     fn scalar_product(self, other: Rotor) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0()[0] } }
+    }
+}
+
+impl AntiScalarProduct<Rotor> for Translator {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Rotor) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] } }
     }
 }
 
@@ -5144,6 +8314,14 @@ impl RightContraction<IdealPoint> for Translator {
     }
 }
 
+impl LeftAntiContraction<IdealPoint> for Translator {
+    type Output = AntiScalar;
+
+    fn left_anti_contraction(self, other: IdealPoint) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[1] * other.group0()[0] - self.group0()[2] * other.group0()[1] - self.group0()[3] * other.group0()[2] } }
+    }
+}
+
 impl ScalarProduct<IdealPoint> for Translator {
     type Output = Scalar;
 
@@ -5152,11 +8330,27 @@ impl ScalarProduct<IdealPoint> for Translator {
     }
 }
 
+impl AntiScalarProduct<IdealPoint> for Translator {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: IdealPoint) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[1] * other.group0()[0] - self.group0()[2] * other.group0()[1] - self.group0()[3] * other.group0()[2] } }
+    }
+}
+
 impl InnerProduct<Plane> for Translator {
     type Output = Plane;
 
     fn inner_product(self, other: Plane) -> Plane {
         Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0() + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 1, 0, 0) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([1.0, 1.0, 0.0, 0.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Plane> for Translator {
+    type Output = Point;
+
+    fn inner_anti_product(self, other: Plane) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 1, 0, 0) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([-1.0, 1.0, 0.0, 0.0]) } }
     }
 }
 
@@ -5176,6 +8370,22 @@ impl RightContraction<Plane> for Translator {
     }
 }
 
+impl LeftAntiContraction<Plane> for Translator {
+    type Output = Point;
+
+    fn left_anti_contraction(self, other: Plane) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 1, 0, 0) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([-1.0, 1.0, 0.0, 0.0]) } }
+    }
+}
+
+impl RightAntiContraction<Plane> for Translator {
+    type Output = Point;
+
+    fn right_anti_contraction(self, other: Plane) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
 impl GeometricProduct<Line> for Translator {
     type Output = Motor;
 
@@ -5192,6 +8402,14 @@ impl RegressiveProduct<Line> for Translator {
     }
 }
 
+impl GeometricAntiProduct<Line> for Translator {
+    type Output = Motor;
+
+    fn geometric_anti_product(self, other: Line) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[2], other.group1()[1]]) * Simd32x4::from([1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[1], other.group1()[2], other.group1()[1], other.group1()[0]]) * Simd32x4::from([1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[2], other.group1()[1], other.group1()[0], other.group1()[2]]) * Simd32x4::from([1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[1], other.group0()[0]]) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[2], other.group0()[1], other.group0()[0], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl RightContraction<Line> for Translator {
     type Output = Scalar;
 
@@ -5200,11 +8418,27 @@ impl RightContraction<Line> for Translator {
     }
 }
 
+impl LeftAntiContraction<Line> for Translator {
+    type Output = AntiScalar;
+
+    fn left_anti_contraction(self, other: Line) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[1] * other.group0()[0] - self.group0()[2] * other.group0()[1] - self.group0()[3] * other.group0()[2] } }
+    }
+}
+
 impl ScalarProduct<Line> for Translator {
     type Output = Scalar;
 
     fn scalar_product(self, other: Line) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[1] * other.group0()[0] + self.group0()[2] * other.group0()[1] + self.group0()[3] * other.group0()[2] } }
+    }
+}
+
+impl AntiScalarProduct<Line> for Translator {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Line) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[1] * other.group0()[0] - self.group0()[2] * other.group0()[1] - self.group0()[3] * other.group0()[2] } }
     }
 }
 
@@ -5304,6 +8538,14 @@ impl ScalarProduct<Translator> for Translator {
     }
 }
 
+impl AntiScalarProduct<Translator> for Translator {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Translator) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] - self.group0()[3] * other.group0()[3] } }
+    }
+}
+
 impl Add<Motor> for Translator {
     type Output = Motor;
 
@@ -5352,6 +8594,22 @@ impl InnerProduct<Motor> for Translator {
     }
 }
 
+impl GeometricAntiProduct<Motor> for Translator {
+    type Output = Motor;
+
+    fn geometric_anti_product(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group1(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group1(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Motor> for Translator {
+    type Output = Motor;
+
+    fn inner_anti_product(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + self.group0() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group1(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group1(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 1, 0, 0) * swizzle!(other.group1(), 1, 0, 0, 0) * Simd32x4::from([-1.0, 1.0, 0.0, 0.0]) } }
+    }
+}
+
 impl LeftContraction<Motor> for Translator {
     type Output = Motor;
 
@@ -5368,11 +8626,27 @@ impl RightContraction<Motor> for Translator {
     }
 }
 
+impl RightAntiContraction<Motor> for Translator {
+    type Output = Motor;
+
+    fn right_anti_contraction(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group1(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group1(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 1, 0, 0) * swizzle!(other.group1(), 1, 0, 0, 0) * Simd32x4::from([-1.0, 1.0, 0.0, 0.0]) } }
+    }
+}
+
 impl ScalarProduct<Motor> for Translator {
     type Output = Scalar;
 
     fn scalar_product(self, other: Motor) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2] + self.group0()[3] * other.group1()[3] } }
+    }
+}
+
+impl AntiScalarProduct<Motor> for Translator {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Motor) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2] - self.group0()[3] * other.group1()[3] } }
     }
 }
 
@@ -5408,6 +8682,22 @@ impl InnerProduct<PointAndPlane> for Translator {
     }
 }
 
+impl GeometricAntiProduct<PointAndPlane> for Translator {
+    type Output = PointAndPlane;
+
+    fn geometric_anti_product(self, other: PointAndPlane) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[0]) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[1], other.group1()[0], other.group0()[3], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[2], other.group0()[3], other.group1()[0], other.group0()[1]]) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[3], other.group0()[2], other.group0()[1], other.group1()[0]]) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[1], other.group0()[0], other.group1()[3], other.group1()[2]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[2], other.group1()[3], other.group0()[0], other.group1()[1]]) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[3], other.group1()[2], other.group1()[1], other.group0()[0]]) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<PointAndPlane> for Translator {
+    type Output = PointAndPlane;
+
+    fn inner_anti_product(self, other: PointAndPlane) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[0]) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[1], other.group1()[0], other.group0()[3], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[2], other.group0()[3], other.group1()[0], other.group0()[1]]) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[3], other.group0()[2], other.group0()[1], other.group1()[0]]) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl LeftContraction<PointAndPlane> for Translator {
     type Output = PointAndPlane;
 
@@ -5421,6 +8711,22 @@ impl RightContraction<PointAndPlane> for Translator {
 
     fn right_contraction(self, other: PointAndPlane) -> Plane {
         Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()[2]) * swizzle!(other.group1(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group1(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 1, 0, 0) * swizzle!(other.group1(), 1, 0, 0, 0) * Simd32x4::from([1.0, 1.0, 0.0, 0.0]) } }
+    }
+}
+
+impl LeftAntiContraction<PointAndPlane> for Translator {
+    type Output = Point;
+
+    fn left_anti_contraction(self, other: PointAndPlane) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[2]) * swizzle!(other.group1(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group1(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 1, 0, 0) * swizzle!(other.group1(), 1, 0, 0, 0) * Simd32x4::from([-1.0, 1.0, 0.0, 0.0]) } }
+    }
+}
+
+impl RightAntiContraction<PointAndPlane> for Translator {
+    type Output = PointAndPlane;
+
+    fn right_anti_contraction(self, other: PointAndPlane) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[0]) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + swizzle!(self.group0(), 0, 0, 1, 1) * swizzle!(other.group0(), 0, 0, 3, 2) * Simd32x4::from([0.0, 0.0, 1.0, -1.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
     }
 }
 
@@ -5516,6 +8822,14 @@ impl Dual for Motor {
     }
 }
 
+impl AntiReversal for Motor {
+    type Output = Motor;
+
+    fn anti_reversal(self) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: self.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
 impl Into<Scalar> for Motor {
     fn into(self) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] } }
@@ -5582,6 +8896,22 @@ impl InnerProduct<Scalar> for Motor {
     }
 }
 
+impl GeometricAntiProduct<Scalar> for Motor {
+    type Output = Motor;
+
+    fn geometric_anti_product(self, other: Scalar) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group1() * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Scalar> for Motor {
+    type Output = Motor;
+
+    fn inner_anti_product(self, other: Scalar) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group1() * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl LeftContraction<Scalar> for Motor {
     type Output = Scalar;
 
@@ -5598,11 +8928,165 @@ impl RightContraction<Scalar> for Motor {
     }
 }
 
+impl LeftAntiContraction<Scalar> for Motor {
+    type Output = Motor;
+
+    fn left_anti_contraction(self, other: Scalar) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group1() * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl RightAntiContraction<Scalar> for Motor {
+    type Output = AntiScalar;
+
+    fn right_anti_contraction(self, other: Scalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0() } }
+    }
+}
+
 impl ScalarProduct<Scalar> for Motor {
     type Output = Scalar;
 
     fn scalar_product(self, other: Scalar) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0() } }
+    }
+}
+
+impl AntiScalarProduct<Scalar> for Motor {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Scalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0() } }
+    }
+}
+
+impl Into<AntiScalar> for Motor {
+    fn into(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group1()[0] } }
+    }
+}
+
+impl Add<AntiScalar> for Motor {
+    type Output = Motor;
+
+    fn add(self, other: AntiScalar) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group0(), g1: self.group1() + Simd32x4::from(other.group0()) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) } }
+    }
+}
+
+impl AddAssign<AntiScalar> for Motor {
+    fn add_assign(&mut self, other: AntiScalar) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Sub<AntiScalar> for Motor {
+    type Output = Motor;
+
+    fn sub(self, other: AntiScalar) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group0(), g1: self.group1() - Simd32x4::from(other.group0()) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) } }
+    }
+}
+
+impl SubAssign<AntiScalar> for Motor {
+    fn sub_assign(&mut self, other: AntiScalar) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl GeometricProduct<AntiScalar> for Motor {
+    type Output = Motor;
+
+    fn geometric_product(self, other: AntiScalar) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group1() * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]), g1: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl RegressiveProduct<AntiScalar> for Motor {
+    type Output = Motor;
+
+    fn regressive_product(self, other: AntiScalar) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group0() * Simd32x4::from(other.group0()), g1: self.group1() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl OuterProduct<AntiScalar> for Motor {
+    type Output = AntiScalar;
+
+    fn outer_product(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[0] * other.group0() } }
+    }
+}
+
+impl InnerProduct<AntiScalar> for Motor {
+    type Output = Motor;
+
+    fn inner_product(self, other: AntiScalar) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group1() * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]), g1: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl GeometricAntiProduct<AntiScalar> for Motor {
+    type Output = Motor;
+
+    fn geometric_anti_product(self, other: AntiScalar) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group0() * Simd32x4::from(other.group0()), g1: self.group1() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl InnerAntiProduct<AntiScalar> for Motor {
+    type Output = Motor;
+
+    fn inner_anti_product(self, other: AntiScalar) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group0() * Simd32x4::from(other.group0()), g1: self.group1() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl LeftContraction<AntiScalar> for Motor {
+    type Output = Motor;
+
+    fn left_contraction(self, other: AntiScalar) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group1() * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]), g1: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl RightContraction<AntiScalar> for Motor {
+    type Output = Scalar;
+
+    fn right_contraction(self, other: AntiScalar) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: 0.0 - self.group1()[0] * other.group0() } }
+    }
+}
+
+impl LeftAntiContraction<AntiScalar> for Motor {
+    type Output = AntiScalar;
+
+    fn left_anti_contraction(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group1()[0] * other.group0() } }
+    }
+}
+
+impl RightAntiContraction<AntiScalar> for Motor {
+    type Output = Motor;
+
+    fn right_anti_contraction(self, other: AntiScalar) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group0() * Simd32x4::from(other.group0()), g1: self.group1() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl ScalarProduct<AntiScalar> for Motor {
+    type Output = Scalar;
+
+    fn scalar_product(self, other: AntiScalar) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: 0.0 - self.group1()[0] * other.group0() } }
+    }
+}
+
+impl AntiScalarProduct<AntiScalar> for Motor {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group1()[0] * other.group0() } }
     }
 }
 
@@ -5654,6 +9138,22 @@ impl InnerProduct<MultiVector> for Motor {
     }
 }
 
+impl GeometricAntiProduct<MultiVector> for Motor {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group3() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group3(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group3(), 2, 3, 0, 1) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group3(), 3, 2, 1, 0) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[0]) * other.group0() + Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]), g1: Simd32x4::from(0.0) - Simd32x4::from(self.group0()[0]) * other.group2() + Simd32x4::from(self.group0()[1]) * swizzle!(other.group2(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group2(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group2(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[0]) * other.group1() + Simd32x4::from(self.group1()[1]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group1(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group1(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]), g2: Simd32x4::from(self.group0()[0]) * other.group1() + Simd32x4::from(self.group0()[1]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group1(), 2, 3, 0, 1) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group1(), 3, 2, 1, 0) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[0]) * other.group2() + Simd32x4::from(self.group1()[1]) * swizzle!(other.group2(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group2(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group2(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]), g3: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[0]) * other.group3() + Simd32x4::from(self.group1()[1]) * swizzle!(other.group3(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group3(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group3(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<MultiVector> for Motor {
+    type Output = MultiVector;
+
+    fn inner_anti_product(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group3() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group1()[0]) * other.group0() + Simd32x4::from(self.group1()[1]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, -1.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]) + self.group0() * Simd32x4::from(other.group3()[0]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]), g1: Simd32x4::from(0.0) - Simd32x4::from(self.group0()[0]) * other.group2() + Simd32x4::from(self.group0()[2]) * swizzle!(other.group2(), 3, 3, 0, 1) * Simd32x4::from([0.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group2(), 2, 2, 1, 0) * Simd32x4::from([0.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[0]) * other.group1() + Simd32x4::from(self.group1()[1]) * swizzle!(other.group1(), 0, 0, 3, 2) * Simd32x4::from([0.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group1(), 3, 3, 0, 1) * Simd32x4::from([0.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group1(), 2, 2, 1, 0) * Simd32x4::from([0.0, 1.0, -1.0, 1.0]) + swizzle!(self.group0(), 0, 1, 1, 1) * swizzle!(other.group2(), 0, 0, 3, 2) * Simd32x4::from([0.0, 1.0, 1.0, -1.0]), g2: Simd32x4::from(self.group0()[0]) * other.group1() + Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group1()[2]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group1()[3]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[0]) * other.group2() + Simd32x4::from(self.group1()[1]) * Simd32x4::from(other.group2()[1]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group2()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group2()[3]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + swizzle!(self.group0(), 1, 0, 0, 0) * swizzle!(other.group1(), 1, 0, 0, 0) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]), g3: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[0]) * other.group3() + Simd32x4::from(self.group1()[1]) * swizzle!(other.group3(), 1, 0, 1, 1) * Simd32x4::from([-1.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group3(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group3(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 1, 0, 0) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([1.0, 1.0, 0.0, 0.0]) } }
+    }
+}
+
 impl LeftContraction<MultiVector> for Motor {
     type Output = MultiVector;
 
@@ -5670,11 +9170,35 @@ impl RightContraction<MultiVector> for Motor {
     }
 }
 
+impl LeftAntiContraction<MultiVector> for Motor {
+    type Output = MultiVector;
+
+    fn left_anti_contraction(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group1()[0]) * other.group0() + self.group1() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()[2]) * swizzle!(other.group2(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group2(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[0]) * other.group1() + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group1()[0]) * Simd32x4::from([0.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group1()[0]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group0()[0], self.group1()[1], self.group0()[1], self.group0()[1]]) * Simd32x4::from([other.group2()[0], other.group1()[0], other.group2()[3], other.group2()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, -1.0]), g2: Simd32x4::from(self.group1()[0]) * other.group2() + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group2()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group2()[3]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + swizzle!(self.group1(), 1, 0, 0, 0) * swizzle!(other.group2(), 1, 0, 0, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]), g3: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 1, 0, 1, 1) * Simd32x4::from([1.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[0]) * other.group3() + Simd32x4::from(self.group1()[1]) * Simd32x4::from(other.group3()[1]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group3()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group3()[3]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) } }
+    }
+}
+
+impl RightAntiContraction<MultiVector> for Motor {
+    type Output = MultiVector;
+
+    fn right_anti_contraction(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group3() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + self.group0() * Simd32x4::from(other.group3()[0]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]), g1: Simd32x4::from(0.0) - Simd32x4::from(self.group0()[0]) * other.group2() + Simd32x4::from(self.group1()[1]) * swizzle!(other.group1(), 3, 3, 3, 2) * Simd32x4::from([0.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group1(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group1(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + self.group0() * Simd32x4::from(other.group2()[0]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]), g2: Simd32x4::from(self.group0()[0]) * other.group1() + Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group1()[2]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group1()[3]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + swizzle!(self.group0(), 1, 0, 0, 0) * swizzle!(other.group1(), 1, 0, 0, 0) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]), g3: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group0()[3]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from(other.group3()[0]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group3(), 1, 0, 1, 1) * Simd32x4::from([-1.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group3(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group3(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 0, 0, 0) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) } }
+    }
+}
+
 impl ScalarProduct<MultiVector> for Motor {
     type Output = Scalar;
 
     fn scalar_product(self, other: MultiVector) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] - self.group0()[3] * other.group0()[3] - self.group1()[0] * other.group3()[0] + self.group1()[1] * other.group3()[1] + self.group1()[2] * other.group3()[2] + self.group1()[3] * other.group3()[3] } }
+    }
+}
+
+impl AntiScalarProduct<MultiVector> for Motor {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: MultiVector) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3] + self.group1()[0] * other.group3()[0] - self.group1()[1] * other.group3()[1] - self.group1()[2] * other.group3()[2] - self.group1()[3] * other.group3()[3] } }
     }
 }
 
@@ -5744,6 +9268,22 @@ impl InnerProduct<Rotor> for Motor {
     }
 }
 
+impl GeometricAntiProduct<Rotor> for Motor {
+    type Output = Motor;
+
+    fn geometric_anti_product(self, other: Rotor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group1()[0]) * other.group0() + Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Rotor> for Motor {
+    type Output = Motor;
+
+    fn inner_anti_product(self, other: Rotor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group1()[0]) * other.group0() + self.group1() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 1, 0, 0) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([1.0, 1.0, 0.0, 0.0]) } }
+    }
+}
+
 impl LeftContraction<Rotor> for Motor {
     type Output = Rotor;
 
@@ -5760,11 +9300,27 @@ impl RightContraction<Rotor> for Motor {
     }
 }
 
+impl LeftAntiContraction<Rotor> for Motor {
+    type Output = Motor;
+
+    fn left_anti_contraction(self, other: Rotor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group1()[0]) * other.group0() + self.group1() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 1, 0, 1, 1) * Simd32x4::from([1.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) } }
+    }
+}
+
 impl ScalarProduct<Rotor> for Motor {
     type Output = Scalar;
 
     fn scalar_product(self, other: Rotor) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] - self.group0()[3] * other.group0()[3] } }
+    }
+}
+
+impl AntiScalarProduct<Rotor> for Motor {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Rotor) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3] } }
     }
 }
 
@@ -5800,6 +9356,22 @@ impl InnerProduct<Point> for Motor {
     }
 }
 
+impl GeometricAntiProduct<Point> for Motor {
+    type Output = PointAndPlane;
+
+    fn geometric_anti_product(self, other: Point) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[0]) * other.group0() + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from([self.group0()[1], self.group0()[1], self.group1()[1], self.group1()[1]]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, 1.0, 0.0, -1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, -1.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group1()[1], self.group1()[1], self.group0()[1], self.group0()[1]]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Point> for Motor {
+    type Output = PointAndPlane;
+
+    fn inner_anti_product(self, other: Point) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[0]) * other.group0() + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from([self.group0()[1], self.group0()[1], self.group1()[1], self.group1()[1]]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl LeftContraction<Point> for Motor {
     type Output = PointAndPlane;
 
@@ -5813,6 +9385,22 @@ impl RightContraction<Point> for Motor {
 
     fn right_contraction(self, other: Point) -> Plane {
         Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group1()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl LeftAntiContraction<Point> for Motor {
+    type Output = Point;
+
+    fn left_anti_contraction(self, other: Point) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group1()[0]) * other.group0() } }
+    }
+}
+
+impl RightAntiContraction<Point> for Motor {
+    type Output = PointAndPlane;
+
+    fn right_anti_contraction(self, other: Point) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from([self.group0()[1], self.group0()[1], self.group1()[1], self.group1()[1]]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
     }
 }
 
@@ -5866,6 +9454,14 @@ impl RegressiveProduct<IdealPoint> for Motor {
     }
 }
 
+impl GeometricAntiProduct<IdealPoint> for Motor {
+    type Output = Motor;
+
+    fn geometric_anti_product(self, other: IdealPoint) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[1], other.group0()[0]]) * Simd32x4::from([1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[2], other.group0()[1], other.group0()[0], other.group0()[2]]) * Simd32x4::from([1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[1], other.group0()[0]]) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group0()[2], other.group0()[1], other.group0()[0], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl LeftContraction<IdealPoint> for Motor {
     type Output = Translator;
 
@@ -5887,6 +9483,14 @@ impl ScalarProduct<IdealPoint> for Motor {
 
     fn scalar_product(self, other: IdealPoint) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group1()[1] * other.group0()[0] + self.group1()[2] * other.group0()[1] + self.group1()[3] * other.group0()[2] } }
+    }
+}
+
+impl AntiScalarProduct<IdealPoint> for Motor {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: IdealPoint) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group1()[1] * other.group0()[0] - self.group1()[2] * other.group0()[1] - self.group1()[3] * other.group0()[2] } }
     }
 }
 
@@ -5922,6 +9526,22 @@ impl InnerProduct<Plane> for Motor {
     }
 }
 
+impl GeometricAntiProduct<Plane> for Motor {
+    type Output = PointAndPlane;
+
+    fn geometric_anti_product(self, other: Plane) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group1()[1], self.group1()[1], self.group0()[1], self.group0()[1]]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]), g1: Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, -1.0]) + Simd32x4::from(self.group1()[0]) * other.group0() + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from([self.group0()[1], self.group0()[1], self.group1()[1], self.group1()[1]]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([-1.0, -1.0, 1.0, -1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Plane> for Motor {
+    type Output = PointAndPlane;
+
+    fn inner_anti_product(self, other: Plane) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group1()[1], self.group1()[1], self.group0()[1], self.group0()[1]]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]), g1: Simd32x4::from(self.group1()[0]) * other.group0() } }
+    }
+}
+
 impl LeftContraction<Plane> for Motor {
     type Output = Plane;
 
@@ -5935,6 +9555,22 @@ impl RightContraction<Plane> for Motor {
 
     fn right_contraction(self, other: Plane) -> PointAndPlane {
         PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group1()[0]) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group1()[1], self.group1()[1], self.group0()[1], self.group0()[1]]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) } }
+    }
+}
+
+impl LeftAntiContraction<Plane> for Motor {
+    type Output = PointAndPlane;
+
+    fn left_anti_contraction(self, other: Plane) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group1()[1], self.group1()[1], self.group0()[1], self.group0()[1]]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]), g1: Simd32x4::from(self.group1()[0]) * other.group0() } }
+    }
+}
+
+impl RightAntiContraction<Plane> for Motor {
+    type Output = Point;
+
+    fn right_anti_contraction(self, other: Plane) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
     }
 }
 
@@ -5980,11 +9616,27 @@ impl GeometricProduct<Line> for Motor {
     }
 }
 
+impl GeometricAntiProduct<Line> for Motor {
+    type Output = Motor;
+
+    fn geometric_anti_product(self, other: Line) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[1], other.group0()[0]]) * Simd32x4::from([1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[2], other.group0()[1], other.group0()[0], other.group0()[2]]) * Simd32x4::from([1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[2], other.group1()[1]]) * Simd32x4::from([1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group1()[1], other.group1()[2], other.group1()[1], other.group1()[0]]) * Simd32x4::from([1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group1()[2], other.group1()[1], other.group1()[0], other.group1()[2]]) * Simd32x4::from([1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[2], other.group1()[1]]) * Simd32x4::from([1.0, 0.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[1], other.group1()[2], other.group1()[1], other.group1()[0]]) * Simd32x4::from([1.0, 1.0, 0.0, -1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[2], other.group1()[1], other.group1()[0], other.group1()[2]]) * Simd32x4::from([1.0, -1.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group0()[1], other.group0()[2], other.group0()[1], other.group0()[0]]) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group0()[2], other.group0()[1], other.group0()[0], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl ScalarProduct<Line> for Motor {
     type Output = Scalar;
 
     fn scalar_product(self, other: Line) -> Scalar {
         Scalar { groups: ScalarGroups { g0: 0.0 - self.group0()[1] * other.group1()[0] - self.group0()[2] * other.group1()[1] - self.group0()[3] * other.group1()[2] + self.group1()[1] * other.group0()[0] + self.group1()[2] * other.group0()[1] + self.group1()[3] * other.group0()[2] } }
+    }
+}
+
+impl AntiScalarProduct<Line> for Motor {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Line) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[1] * other.group1()[0] + self.group0()[2] * other.group1()[1] + self.group0()[3] * other.group1()[2] - self.group1()[1] * other.group0()[0] - self.group1()[2] * other.group0()[1] - self.group1()[3] * other.group0()[2] } }
     }
 }
 
@@ -6054,6 +9706,22 @@ impl InnerProduct<Translator> for Motor {
     }
 }
 
+impl GeometricAntiProduct<Translator> for Motor {
+    type Output = Motor;
+
+    fn geometric_anti_product(self, other: Translator) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 1, 1, 3, 2) * Simd32x4::from([1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 3, 2, 1) * Simd32x4::from([1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 2, 1, 3) * Simd32x4::from([1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, -1.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]) + Simd32x4::from([self.group1()[0], self.group0()[0], self.group0()[0], self.group0()[0]]) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group1()[0]) * swizzle!(other.group0(), 1, 1, 2, 3) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 1, 1, 3, 2) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 3, 2, 1) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 3, 2, 1, 3) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + self.group0() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Translator> for Motor {
+    type Output = Motor;
+
+    fn inner_anti_product(self, other: Translator) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group1()[1]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, -1.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]) + Simd32x4::from([self.group1()[0], self.group0()[0], self.group0()[0], self.group0()[0]]) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group1()[0]) * swizzle!(other.group0(), 1, 1, 2, 3) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from(other.group0()[1]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group0()[3]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + self.group0() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl LeftContraction<Translator> for Motor {
     type Output = Translator;
 
@@ -6070,11 +9738,27 @@ impl RightContraction<Translator> for Motor {
     }
 }
 
+impl LeftAntiContraction<Translator> for Motor {
+    type Output = Motor;
+
+    fn left_anti_contraction(self, other: Translator) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group1() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group1()[0]) * swizzle!(other.group0(), 1, 1, 2, 3) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from(other.group0()[1]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group0()[3]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + self.group0() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
 impl ScalarProduct<Translator> for Motor {
     type Output = Scalar;
 
     fn scalar_product(self, other: Translator) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2] + self.group1()[3] * other.group0()[3] } }
+    }
+}
+
+impl AntiScalarProduct<Translator> for Motor {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Translator) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2] - self.group1()[3] * other.group0()[3] } }
     }
 }
 
@@ -6166,6 +9850,22 @@ impl InnerProduct<Motor> for Motor {
     }
 }
 
+impl GeometricAntiProduct<Motor> for Motor {
+    type Output = Motor;
+
+    fn geometric_anti_product(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group1(), 2, 3, 0, 1) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group1(), 3, 2, 1, 0) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[0]) * other.group0() + Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[0]) * other.group1() + Simd32x4::from(self.group1()[1]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group1(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group1(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Motor> for Motor {
+    type Output = Motor;
+
+    fn inner_anti_product(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group1()[0]) * other.group0() + Simd32x4::from(self.group1()[1]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, -1.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]) + self.group0() * Simd32x4::from(other.group1()[0]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[0]) * other.group1() + Simd32x4::from(self.group1()[1]) * swizzle!(other.group1(), 1, 0, 1, 1) * Simd32x4::from([-1.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group1(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group1(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 1, 0, 0) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([1.0, 1.0, 0.0, 0.0]) } }
+    }
+}
+
 impl LeftContraction<Motor> for Motor {
     type Output = Motor;
 
@@ -6182,11 +9882,35 @@ impl RightContraction<Motor> for Motor {
     }
 }
 
+impl LeftAntiContraction<Motor> for Motor {
+    type Output = Motor;
+
+    fn left_anti_contraction(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group1()[0]) * other.group0() + self.group1() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 1, 0, 1, 1) * Simd32x4::from([1.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[0]) * other.group1() + Simd32x4::from(self.group1()[1]) * Simd32x4::from(other.group1()[1]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group1()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group1()[3]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) } }
+    }
+}
+
+impl RightAntiContraction<Motor> for Motor {
+    type Output = Motor;
+
+    fn right_anti_contraction(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + self.group0() * Simd32x4::from(other.group1()[0]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group0()[3]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from(other.group1()[0]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group1(), 1, 0, 1, 1) * Simd32x4::from([-1.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group1(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group1(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 0, 0, 0) * swizzle!(other.group0(), 1, 0, 0, 0) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) } }
+    }
+}
+
 impl ScalarProduct<Motor> for Motor {
     type Output = Scalar;
 
     fn scalar_product(self, other: Motor) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] - self.group0()[3] * other.group0()[3] - self.group1()[0] * other.group1()[0] + self.group1()[1] * other.group1()[1] + self.group1()[2] * other.group1()[2] + self.group1()[3] * other.group1()[3] } }
+    }
+}
+
+impl AntiScalarProduct<Motor> for Motor {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Motor) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3] + self.group1()[0] * other.group1()[0] - self.group1()[1] * other.group1()[1] - self.group1()[2] * other.group1()[2] - self.group1()[3] * other.group1()[3] } }
     }
 }
 
@@ -6238,6 +9962,22 @@ impl InnerProduct<PointAndPlane> for Motor {
     }
 }
 
+impl GeometricAntiProduct<PointAndPlane> for Motor {
+    type Output = PointAndPlane;
+
+    fn geometric_anti_product(self, other: PointAndPlane) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[0]) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[1], other.group0()[0], other.group1()[3], other.group1()[2]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[2], other.group1()[3], other.group0()[0], other.group1()[1]]) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[3], other.group1()[2], other.group1()[1], other.group0()[0]]) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[0]) * other.group0() + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group1()[1], other.group1()[0], other.group0()[3], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group1()[2], other.group0()[3], other.group1()[0], other.group0()[1]]) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group1()[3], other.group0()[2], other.group0()[1], other.group1()[0]]) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[1], other.group1()[0], other.group0()[3], other.group0()[2]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[2], other.group0()[3], other.group1()[0], other.group0()[1]]) * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[3], other.group0()[2], other.group0()[1], other.group1()[0]]) * Simd32x4::from([-1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[0]) * other.group1() + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[1], other.group0()[0], other.group1()[3], other.group1()[2]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group0()[2], other.group1()[3], other.group0()[0], other.group1()[1]]) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group0()[3], other.group1()[2], other.group1()[1], other.group0()[0]]) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<PointAndPlane> for Motor {
+    type Output = PointAndPlane;
+
+    fn inner_anti_product(self, other: PointAndPlane) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[0]) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[1], other.group0()[0], other.group1()[3], other.group1()[2]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[2], other.group1()[3], other.group0()[0], other.group1()[1]]) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[3], other.group1()[2], other.group1()[1], other.group0()[0]]) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[0]) * other.group0() + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group1()[1], other.group1()[0], other.group0()[3], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group1()[2], other.group0()[3], other.group1()[0], other.group0()[1]]) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group1()[3], other.group0()[2], other.group0()[1], other.group1()[0]]) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[0]) * other.group1() } }
+    }
+}
+
 impl LeftContraction<PointAndPlane> for Motor {
     type Output = PointAndPlane;
 
@@ -6251,6 +9991,22 @@ impl RightContraction<PointAndPlane> for Motor {
 
     fn right_contraction(self, other: PointAndPlane) -> PointAndPlane {
         PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group1()[0]) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()[2]) * swizzle!(other.group1(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group1(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group1(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group1(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group1()[1], self.group1()[1], self.group0()[1], self.group0()[1]]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) } }
+    }
+}
+
+impl LeftAntiContraction<PointAndPlane> for Motor {
+    type Output = PointAndPlane;
+
+    fn left_anti_contraction(self, other: PointAndPlane) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[2]) * swizzle!(other.group1(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group1(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[0]) * other.group0() + Simd32x4::from(self.group1()[2]) * swizzle!(other.group1(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group1(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group1()[1], self.group1()[1], self.group0()[1], self.group0()[1]]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]), g1: Simd32x4::from(self.group1()[0]) * other.group1() } }
+    }
+}
+
+impl RightAntiContraction<PointAndPlane> for Motor {
+    type Output = PointAndPlane;
+
+    fn right_anti_contraction(self, other: PointAndPlane) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[0]) * other.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([1.0, 0.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from([self.group0()[1], self.group0()[1], self.group1()[1], self.group1()[1]]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
     }
 }
 
@@ -6346,6 +10102,14 @@ impl Dual for PointAndPlane {
     }
 }
 
+impl AntiReversal for PointAndPlane {
+    type Output = PointAndPlane;
+
+    fn anti_reversal(self) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: self.group0(), g1: self.group1() * Simd32x4::from(-1.0) } }
+    }
+}
+
 impl GeometricProduct<Scalar> for PointAndPlane {
     type Output = PointAndPlane;
 
@@ -6370,10 +10134,90 @@ impl InnerProduct<Scalar> for PointAndPlane {
     }
 }
 
+impl GeometricAntiProduct<Scalar> for PointAndPlane {
+    type Output = PointAndPlane;
+
+    fn geometric_anti_product(self, other: Scalar) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: self.group1() * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]), g1: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Scalar> for PointAndPlane {
+    type Output = PointAndPlane;
+
+    fn inner_anti_product(self, other: Scalar) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: self.group1() * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]), g1: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
 impl RightContraction<Scalar> for PointAndPlane {
     type Output = PointAndPlane;
 
     fn right_contraction(self, other: Scalar) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()), g1: self.group1() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl LeftAntiContraction<Scalar> for PointAndPlane {
+    type Output = PointAndPlane;
+
+    fn left_anti_contraction(self, other: Scalar) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: self.group1() * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]), g1: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl GeometricProduct<AntiScalar> for PointAndPlane {
+    type Output = PointAndPlane;
+
+    fn geometric_product(self, other: AntiScalar) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: self.group1() * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]), g1: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl RegressiveProduct<AntiScalar> for PointAndPlane {
+    type Output = PointAndPlane;
+
+    fn regressive_product(self, other: AntiScalar) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()), g1: self.group1() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl InnerProduct<AntiScalar> for PointAndPlane {
+    type Output = PointAndPlane;
+
+    fn inner_product(self, other: AntiScalar) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: self.group1() * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]), g1: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl GeometricAntiProduct<AntiScalar> for PointAndPlane {
+    type Output = PointAndPlane;
+
+    fn geometric_anti_product(self, other: AntiScalar) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()), g1: self.group1() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl InnerAntiProduct<AntiScalar> for PointAndPlane {
+    type Output = PointAndPlane;
+
+    fn inner_anti_product(self, other: AntiScalar) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()), g1: self.group1() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl LeftContraction<AntiScalar> for PointAndPlane {
+    type Output = PointAndPlane;
+
+    fn left_contraction(self, other: AntiScalar) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: self.group1() * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]), g1: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl RightAntiContraction<AntiScalar> for PointAndPlane {
+    type Output = PointAndPlane;
+
+    fn right_anti_contraction(self, other: AntiScalar) -> PointAndPlane {
         PointAndPlane { groups: PointAndPlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()), g1: self.group1() * Simd32x4::from(other.group0()) } }
     }
 }
@@ -6402,11 +10246,27 @@ impl GeometricProduct<MultiVector> for PointAndPlane {
     }
 }
 
+impl GeometricAntiProduct<MultiVector> for PointAndPlane {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group1() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group2(), 1, 0, 3, 2) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group2(), 2, 3, 0, 1) * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group2(), 3, 2, 1, 0) * Simd32x4::from([-1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[0]) * other.group2() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group1(), 2, 3, 0, 1) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group1(), 3, 2, 1, 0) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * swizzle!(other.group3(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group3(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group3(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[0]) * other.group3() + Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]), g2: Simd32x4::from(self.group0()[0]) * other.group3() + Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([-1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group1()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group3(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group3(), 2, 3, 0, 1) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group3(), 3, 2, 1, 0) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]), g3: Simd32x4::from(0.0) - Simd32x4::from(self.group0()[0]) * other.group2() + Simd32x4::from(self.group0()[1]) * swizzle!(other.group1(), 1, 0, 3, 2) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group1(), 2, 3, 0, 1) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group1(), 3, 2, 1, 0) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) - Simd32x4::from(self.group1()[0]) * other.group1() + Simd32x4::from(self.group1()[1]) * swizzle!(other.group2(), 1, 0, 3, 2) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group2(), 2, 3, 0, 1) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group2(), 3, 2, 1, 0) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) } }
+    }
+}
+
 impl ScalarProduct<MultiVector> for PointAndPlane {
     type Output = Scalar;
 
     fn scalar_product(self, other: MultiVector) -> Scalar {
         Scalar { groups: ScalarGroups { g0: 0.0 - self.group0()[0] * other.group2()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2] + self.group0()[3] * other.group1()[3] - self.group1()[0] * other.group1()[0] + self.group1()[1] * other.group2()[1] + self.group1()[2] * other.group2()[2] + self.group1()[3] * other.group2()[3] } }
+    }
+}
+
+impl AntiScalarProduct<MultiVector> for PointAndPlane {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: MultiVector) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group2()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2] + self.group0()[3] * other.group1()[3] - self.group1()[0] * other.group1()[0] + self.group1()[1] * other.group2()[1] + self.group1()[2] * other.group2()[2] + self.group1()[3] * other.group2()[3] } }
     }
 }
 
@@ -6434,11 +10294,35 @@ impl InnerProduct<Rotor> for PointAndPlane {
     }
 }
 
+impl GeometricAntiProduct<Rotor> for PointAndPlane {
+    type Output = PointAndPlane;
+
+    fn geometric_anti_product(self, other: Rotor) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group0()[3]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 0, 0, 3, 2) * Simd32x4::from([0.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 3, 3, 0, 1) * Simd32x4::from([0.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 2, 2, 1, 0) * Simd32x4::from([0.0, -1.0, 1.0, 1.0]) + swizzle!(self.group0(), 1, 0, 0, 0) * swizzle!(other.group0(), 1, 1, 2, 3) * Simd32x4::from(-1.0), g1: Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 3, 0, 1) * Simd32x4::from([0.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 2, 2, 1, 0) * Simd32x4::from([0.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group1()[0]) * swizzle!(other.group0(), 1, 1, 2, 3) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from(other.group0()[1]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group0()[3]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + swizzle!(self.group0(), 0, 1, 1, 1) * swizzle!(other.group0(), 0, 0, 3, 2) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Rotor> for PointAndPlane {
+    type Output = PointAndPlane;
+
+    fn inner_anti_product(self, other: Rotor) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group0()[3]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 0, 0, 3, 2) * Simd32x4::from([0.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 3, 3, 0, 1) * Simd32x4::from([0.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 2, 2, 1, 0) * Simd32x4::from([0.0, -1.0, 1.0, 1.0]) + swizzle!(self.group0(), 1, 0, 0, 0) * swizzle!(other.group0(), 1, 1, 2, 3) * Simd32x4::from(-1.0), g1: self.group0() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
 impl RightContraction<Rotor> for PointAndPlane {
     type Output = PointAndPlane;
 
     fn right_contraction(self, other: Rotor) -> PointAndPlane {
         PointAndPlane { groups: PointAndPlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]), g1: Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group0()[3]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 0, 0, 0) * swizzle!(other.group0(), 1, 1, 2, 3) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl LeftAntiContraction<Rotor> for PointAndPlane {
+    type Output = PointAndPlane;
+
+    fn left_anti_contraction(self, other: Rotor) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group0()[3]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) + swizzle!(self.group0(), 1, 0, 0, 0) * swizzle!(other.group0(), 1, 1, 2, 3) * Simd32x4::from(-1.0), g1: self.group0() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
     }
 }
 
@@ -6484,6 +10368,22 @@ impl GeometricProduct<Point> for PointAndPlane {
     }
 }
 
+impl OuterProduct<Point> for PointAndPlane {
+    type Output = AntiScalar;
+
+    fn outer_product(self, other: Point) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2] + self.group1()[3] * other.group0()[3] } }
+    }
+}
+
+impl GeometricAntiProduct<Point> for PointAndPlane {
+    type Output = Motor;
+
+    fn geometric_anti_product(self, other: Point) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[1]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, -1.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 1, 1, 3, 2) * Simd32x4::from([1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 3, 2, 1) * Simd32x4::from([1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 3, 2, 1, 3) * Simd32x4::from([1.0, 1.0, -1.0, 0.0]) + Simd32x4::from([self.group1()[0], self.group0()[0], self.group0()[0], self.group0()[0]]) * other.group0(), g1: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 1, 1, 3, 2) * Simd32x4::from([1.0, 0.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 3, 2, 1) * Simd32x4::from([1.0, 1.0, 0.0, -1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 2, 1, 3) * Simd32x4::from([1.0, -1.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, -1.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]) + Simd32x4::from([self.group0()[0], self.group1()[0], self.group1()[0], self.group1()[0]]) * other.group0() * Simd32x4::from(-1.0) } }
+    }
+}
+
 impl RightContraction<Point> for PointAndPlane {
     type Output = Scalar;
 
@@ -6492,11 +10392,27 @@ impl RightContraction<Point> for PointAndPlane {
     }
 }
 
+impl LeftAntiContraction<Point> for PointAndPlane {
+    type Output = AntiScalar;
+
+    fn left_anti_contraction(self, other: Point) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3] } }
+    }
+}
+
 impl ScalarProduct<Point> for PointAndPlane {
     type Output = Scalar;
 
     fn scalar_product(self, other: Point) -> Scalar {
         Scalar { groups: ScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3] } }
+    }
+}
+
+impl AntiScalarProduct<Point> for PointAndPlane {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Point) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3] } }
     }
 }
 
@@ -6524,11 +10440,35 @@ impl InnerProduct<IdealPoint> for PointAndPlane {
     }
 }
 
+impl GeometricAntiProduct<IdealPoint> for PointAndPlane {
+    type Output = PointAndPlane;
+
+    fn geometric_anti_product(self, other: IdealPoint) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[2], other.group0()[2], other.group0()[2], other.group0()[0]]) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[1], other.group0()[1], other.group0()[0], other.group0()[1]]) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group0()[1]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from([self.group1()[1], self.group0()[0], self.group0()[1], self.group0()[1]]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]), g1: Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group0()[1]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[2], other.group0()[2], other.group0()[2], other.group0()[1]]) * Simd32x4::from([0.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group0()[2], other.group0()[2], other.group0()[2], other.group0()[0]]) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group0()[1], other.group0()[1], other.group0()[0], other.group0()[1]]) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + swizzle!(self.group0(), 1, 0, 0, 0) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<IdealPoint> for PointAndPlane {
+    type Output = Point;
+
+    fn inner_anti_product(self, other: IdealPoint) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[2], other.group0()[2], other.group0()[2], other.group0()[0]]) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[1], other.group0()[1], other.group0()[0], other.group0()[1]]) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group0()[1]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from([self.group1()[1], self.group0()[0], self.group0()[1], self.group0()[1]]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) } }
+    }
+}
+
 impl LeftContraction<IdealPoint> for PointAndPlane {
     type Output = Plane;
 
     fn left_contraction(self, other: IdealPoint) -> Plane {
         Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group0()[1]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + swizzle!(self.group1(), 1, 0, 0, 0) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl RightAntiContraction<IdealPoint> for PointAndPlane {
+    type Output = Point;
+
+    fn right_anti_contraction(self, other: IdealPoint) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group0()[1]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + swizzle!(self.group1(), 1, 0, 0, 0) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
     }
 }
 
@@ -6582,6 +10522,14 @@ impl RegressiveProduct<Plane> for PointAndPlane {
     }
 }
 
+impl GeometricAntiProduct<Plane> for PointAndPlane {
+    type Output = Motor;
+
+    fn geometric_anti_product(self, other: Plane) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[1]) * swizzle!(other.group0(), 1, 1, 3, 2) * Simd32x4::from([-1.0, 0.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 3, 2, 1) * Simd32x4::from([-1.0, 1.0, 0.0, -1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 2, 1, 3) * Simd32x4::from([-1.0, -1.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group0()[0], self.group1()[0], self.group1()[0], self.group1()[0]]) * other.group0() * Simd32x4::from(-1.0), g1: Simd32x4::from(self.group0()[1]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, -1.0, 0.0, 0.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]) + Simd32x4::from(self.group1()[1]) * swizzle!(other.group0(), 1, 1, 3, 2) * Simd32x4::from([1.0, 0.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 3, 2, 1) * Simd32x4::from([1.0, 1.0, 0.0, -1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 3, 2, 1, 3) * Simd32x4::from([1.0, -1.0, 1.0, 0.0]) + Simd32x4::from([self.group1()[0], self.group0()[0], self.group0()[0], self.group0()[0]]) * other.group0() * Simd32x4::from(-1.0) } }
+    }
+}
+
 impl LeftContraction<Plane> for PointAndPlane {
     type Output = Scalar;
 
@@ -6590,11 +10538,27 @@ impl LeftContraction<Plane> for PointAndPlane {
     }
 }
 
+impl RightAntiContraction<Plane> for PointAndPlane {
+    type Output = AntiScalar;
+
+    fn right_anti_contraction(self, other: Plane) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2] + self.group1()[3] * other.group0()[3] } }
+    }
+}
+
 impl ScalarProduct<Plane> for PointAndPlane {
     type Output = Scalar;
 
     fn scalar_product(self, other: Plane) -> Scalar {
         Scalar { groups: ScalarGroups { g0: 0.0 - self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2] + self.group1()[3] * other.group0()[3] } }
+    }
+}
+
+impl AntiScalarProduct<Plane> for PointAndPlane {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Plane) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2] + self.group1()[3] * other.group0()[3] } }
     }
 }
 
@@ -6630,6 +10594,22 @@ impl InnerProduct<Line> for PointAndPlane {
     }
 }
 
+impl GeometricAntiProduct<Line> for PointAndPlane {
+    type Output = PointAndPlane;
+
+    fn geometric_anti_product(self, other: Line) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[1], other.group0()[2], other.group1()[1], other.group0()[0]]) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[2], other.group0()[1], other.group0()[0], other.group1()[2]]) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group1()[2], other.group1()[1]]) * Simd32x4::from([-1.0, 0.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group0()[1], other.group1()[2], other.group0()[1], other.group1()[0]]) * Simd32x4::from([-1.0, 1.0, 0.0, -1.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group0()[2], other.group1()[1], other.group1()[0], other.group0()[2]]) * Simd32x4::from([-1.0, -1.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]), g1: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group1()[2], other.group1()[1]]) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[1], other.group1()[2], other.group0()[1], other.group1()[0]]) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[2], other.group1()[1], other.group1()[0], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group1()[1], other.group0()[2], other.group1()[1], other.group0()[0]]) * Simd32x4::from([1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group1()[2], other.group0()[1], other.group0()[0], other.group1()[2]]) * Simd32x4::from([1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Line> for PointAndPlane {
+    type Output = Point;
+
+    fn inner_anti_product(self, other: Line) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[1], other.group0()[2], other.group1()[1], other.group0()[0]]) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[2], other.group0()[1], other.group0()[0], other.group1()[2]]) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group1()[2], other.group1()[1]]) * Simd32x4::from([-1.0, 0.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group0()[1], other.group1()[2], other.group0()[1], other.group1()[0]]) * Simd32x4::from([-1.0, 1.0, 0.0, -1.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group0()[2], other.group1()[1], other.group1()[0], other.group0()[2]]) * Simd32x4::from([-1.0, -1.0, 1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
 impl LeftContraction<Line> for PointAndPlane {
     type Output = Plane;
 
@@ -6643,6 +10623,22 @@ impl RightContraction<Line> for PointAndPlane {
 
     fn right_contraction(self, other: Line) -> Plane {
         Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[1], other.group0()[2], other.group1()[1], other.group0()[0]]) * Simd32x4::from([1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[2], other.group0()[1], other.group0()[0], other.group1()[2]]) * Simd32x4::from([1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl LeftAntiContraction<Line> for PointAndPlane {
+    type Output = Point;
+
+    fn left_anti_contraction(self, other: Line) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group0()[2], other.group0()[1]]) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[1], other.group0()[2], other.group1()[1], other.group0()[0]]) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[2], other.group0()[1], other.group0()[0], other.group1()[2]]) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[0], other.group1()[0], other.group1()[1], other.group1()[2]]) * Simd32x4::from([0.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl RightAntiContraction<Line> for PointAndPlane {
+    type Output = Point;
+
+    fn right_anti_contraction(self, other: Line) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group1()[2], other.group1()[1]]) * Simd32x4::from([-1.0, 0.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group0()[1], other.group1()[2], other.group0()[1], other.group1()[0]]) * Simd32x4::from([-1.0, 1.0, 0.0, -1.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group0()[2], other.group1()[1], other.group1()[0], other.group0()[2]]) * Simd32x4::from([-1.0, -1.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[0], other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) } }
     }
 }
 
@@ -6678,6 +10674,22 @@ impl InnerProduct<Translator> for PointAndPlane {
     }
 }
 
+impl GeometricAntiProduct<Translator> for PointAndPlane {
+    type Output = PointAndPlane;
+
+    fn geometric_anti_product(self, other: Translator) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group1()[1], self.group1()[1], self.group0()[1], self.group0()[1]]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]), g1: Simd32x4::from(self.group0()[0]) * other.group0() + Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, -1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from([self.group0()[1], self.group0()[1], self.group1()[1], self.group1()[1]]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([-1.0, -1.0, 1.0, -1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Translator> for PointAndPlane {
+    type Output = PointAndPlane;
+
+    fn inner_anti_product(self, other: Translator) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[0]) * other.group0() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * swizzle!(other.group0(), 2, 2, 0, 2) * Simd32x4::from([-1.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * swizzle!(other.group0(), 3, 3, 3, 0) * Simd32x4::from([-1.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group1()[1], self.group1()[1], self.group0()[1], self.group0()[1]]) * swizzle!(other.group0(), 1, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]), g1: self.group0() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
 impl LeftContraction<Translator> for PointAndPlane {
     type Output = Plane;
 
@@ -6691,6 +10703,22 @@ impl RightContraction<Translator> for PointAndPlane {
 
     fn right_contraction(self, other: Translator) -> PointAndPlane {
         PointAndPlane { groups: PointAndPlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]), g1: Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group1()[0], self.group1()[1], self.group0()[1], self.group0()[1]]) * swizzle!(other.group0(), 0, 0, 3, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) } }
+    }
+}
+
+impl LeftAntiContraction<Translator> for PointAndPlane {
+    type Output = PointAndPlane;
+
+    fn left_anti_contraction(self, other: Translator) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[2]) * swizzle!(other.group0(), 3, 3, 3, 1) * Simd32x4::from([0.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * swizzle!(other.group0(), 2, 2, 1, 2) * Simd32x4::from([0.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group1()[0], self.group1()[1], self.group0()[1], self.group0()[1]]) * swizzle!(other.group0(), 0, 0, 3, 2) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]), g1: self.group0() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl RightAntiContraction<Translator> for PointAndPlane {
+    type Output = Point;
+
+    fn right_anti_contraction(self, other: Translator) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group0()[2]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group0()[3]) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + swizzle!(self.group1(), 1, 0, 0, 0) * swizzle!(other.group0(), 1, 1, 2, 3) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) } }
     }
 }
 
@@ -6742,6 +10770,22 @@ impl InnerProduct<Motor> for PointAndPlane {
     }
 }
 
+impl GeometricAntiProduct<Motor> for PointAndPlane {
+    type Output = PointAndPlane;
+
+    fn geometric_anti_product(self, other: Motor) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[0], other.group0()[1], other.group0()[2], other.group0()[3]]) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[1], other.group1()[0], other.group1()[3], other.group1()[2]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[2], other.group1()[3], other.group1()[0], other.group1()[1]]) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[3], other.group1()[2], other.group1()[1], other.group1()[0]]) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[0], other.group1()[1], other.group1()[2], other.group1()[3]]) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group1()[1], other.group0()[0], other.group0()[3], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group1()[2], other.group0()[3], other.group0()[0], other.group0()[1]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group1()[3], other.group0()[2], other.group0()[1], other.group0()[0]]) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]), g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group1()[1], other.group1()[2], other.group1()[3]]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[1], other.group0()[0], other.group0()[3], other.group0()[2]]) * Simd32x4::from([-1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[2], other.group0()[3], other.group0()[0], other.group0()[1]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[3], other.group0()[2], other.group0()[1], other.group0()[0]]) * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group1()[0], other.group0()[1], other.group0()[2], other.group0()[3]]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[1], other.group1()[0], other.group1()[3], other.group1()[2]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group0()[2], other.group1()[3], other.group1()[0], other.group1()[1]]) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group0()[3], other.group1()[2], other.group1()[1], other.group1()[0]]) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]) } }
+    }
+}
+
+impl InnerAntiProduct<Motor> for PointAndPlane {
+    type Output = PointAndPlane;
+
+    fn inner_anti_product(self, other: Motor) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[0], other.group0()[1], other.group0()[2], other.group0()[3]]) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[1], other.group1()[0], other.group1()[3], other.group1()[2]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[2], other.group1()[3], other.group1()[0], other.group1()[1]]) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[3], other.group1()[2], other.group1()[1], other.group1()[0]]) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[0], other.group1()[1], other.group1()[2], other.group1()[3]]) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group1()[1], other.group0()[0], other.group0()[3], other.group0()[2]]) * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group1()[2], other.group0()[3], other.group0()[0], other.group0()[1]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group1()[3], other.group0()[2], other.group0()[1], other.group0()[0]]) * Simd32x4::from([-1.0, -1.0, 1.0, 1.0]), g1: Simd32x4::from(self.group1()[0]) * Simd32x4::from(other.group1()[0]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from(other.group1()[0]) * Simd32x4::from([0.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group1()[0]) * Simd32x4::from([0.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group1()[0]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) + self.group0() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
 impl LeftContraction<Motor> for PointAndPlane {
     type Output = PointAndPlane;
 
@@ -6755,6 +10799,22 @@ impl RightContraction<Motor> for PointAndPlane {
 
     fn right_contraction(self, other: Motor) -> PointAndPlane {
         PointAndPlane { groups: PointAndPlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]), g1: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[1], other.group0()[1], other.group1()[3], other.group1()[2]]) * Simd32x4::from([1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[2], other.group1()[3], other.group0()[2], other.group1()[1]]) * Simd32x4::from([1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[3], other.group1()[2], other.group1()[1], other.group0()[3]]) * Simd32x4::from([1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group1()[0], self.group0()[0], self.group0()[0], self.group0()[0]]) * other.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl LeftAntiContraction<Motor> for PointAndPlane {
+    type Output = PointAndPlane;
+
+    fn left_anti_contraction(self, other: Motor) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[1], other.group0()[1], other.group1()[3], other.group1()[2]]) * Simd32x4::from([-1.0, 0.0, 1.0, -1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[2], other.group1()[3], other.group0()[2], other.group1()[1]]) * Simd32x4::from([-1.0, -1.0, 0.0, 1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[3], other.group1()[2], other.group1()[1], other.group0()[3]]) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group1()[0], self.group0()[0], self.group0()[0], self.group0()[0]]) * other.group0() * Simd32x4::from(-1.0), g1: self.group0() * Simd32x4::from(other.group0()[0]) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl RightAntiContraction<Motor> for PointAndPlane {
+    type Output = PointAndPlane;
+
+    fn right_anti_contraction(self, other: Motor) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(self.group1()[0]) * swizzle!(other.group1(), 1, 1, 2, 3) * Simd32x4::from([0.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group1()[1], other.group1()[1], other.group0()[3], other.group0()[2]]) * Simd32x4::from([-1.0, 0.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group1()[2], other.group0()[3], other.group1()[2], other.group0()[1]]) * Simd32x4::from([-1.0, 1.0, 0.0, -1.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group1()[3], other.group0()[2], other.group0()[1], other.group1()[3]]) * Simd32x4::from([-1.0, -1.0, 1.0, 0.0]) + self.group0() * Simd32x4::from(other.group1()[0]), g1: self.group1() * Simd32x4::from(other.group1()[0]) } }
     }
 }
 
@@ -6822,11 +10882,27 @@ impl GeometricProduct<PointAndPlane> for PointAndPlane {
     }
 }
 
+impl GeometricAntiProduct<PointAndPlane> for PointAndPlane {
+    type Output = Motor;
+
+    fn geometric_anti_product(self, other: PointAndPlane) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[0], other.group0()[1], other.group0()[2], other.group0()[3]]) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[1], other.group0()[0], other.group1()[3], other.group1()[2]]) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[2], other.group1()[3], other.group0()[0], other.group1()[1]]) * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group1()[3], other.group1()[2], other.group1()[1], other.group0()[0]]) * Simd32x4::from([-1.0, -1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[0], other.group1()[1], other.group1()[2], other.group1()[3]]) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[1], other.group1()[0], other.group0()[3], other.group0()[2]]) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group0()[2], other.group0()[3], other.group1()[0], other.group0()[1]]) * Simd32x4::from([1.0, -1.0, 1.0, 1.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group0()[3], other.group0()[2], other.group0()[1], other.group1()[0]]) * Simd32x4::from([1.0, 1.0, -1.0, 1.0]), g1: Simd32x4::from(0.0) - Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group1()[1], other.group1()[2], other.group1()[3]]) + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[1], other.group1()[0], other.group0()[3], other.group0()[2]]) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[2], other.group0()[3], other.group1()[0], other.group0()[1]]) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[3], other.group0()[2], other.group0()[1], other.group1()[0]]) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) - Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group1()[0], other.group0()[1], other.group0()[2], other.group0()[3]]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group1()[1], other.group0()[0], other.group1()[3], other.group1()[2]]) * Simd32x4::from([1.0, -1.0, -1.0, 1.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group1()[2], other.group1()[3], other.group0()[0], other.group1()[1]]) * Simd32x4::from([1.0, 1.0, -1.0, -1.0]) + Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group1()[3], other.group1()[2], other.group1()[1], other.group0()[0]]) * Simd32x4::from([1.0, -1.0, 1.0, -1.0]) } }
+    }
+}
+
 impl ScalarProduct<PointAndPlane> for PointAndPlane {
     type Output = Scalar;
 
     fn scalar_product(self, other: PointAndPlane) -> Scalar {
         Scalar { groups: ScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3] - self.group1()[0] * other.group1()[0] + self.group1()[1] * other.group1()[1] + self.group1()[2] * other.group1()[2] + self.group1()[3] * other.group1()[3] } }
+    }
+}
+
+impl AntiScalarProduct<PointAndPlane> for PointAndPlane {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: PointAndPlane) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3] - self.group1()[0] * other.group1()[0] + self.group1()[1] * other.group1()[1] + self.group1()[2] * other.group1()[2] + self.group1()[3] * other.group1()[3] } }
     }
 }
 
@@ -6867,6 +10943,134 @@ impl Inverse for PointAndPlane {
 
     fn inverse(self) -> PointAndPlane {
         self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
+impl GeometricQuotient<AntiScalar> for AntiScalar {
+    type Output = Scalar;
+
+    fn geometric_quotient(self, other: AntiScalar) -> Scalar {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl Transformation<AntiScalar> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn transformation(self, other: AntiScalar) -> AntiScalar {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl GeometricQuotient<Line> for AntiScalar {
+    type Output = Line;
+
+    fn geometric_quotient(self, other: Line) -> Line {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl Transformation<Line> for AntiScalar {
+    type Output = Line;
+
+    fn transformation(self, other: Line) -> Line {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl GeometricQuotient<Motor> for AntiScalar {
+    type Output = Motor;
+
+    fn geometric_quotient(self, other: Motor) -> Motor {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl Transformation<Motor> for AntiScalar {
+    type Output = Motor;
+
+    fn transformation(self, other: Motor) -> Motor {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl GeometricQuotient<MultiVector> for AntiScalar {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: MultiVector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl Transformation<MultiVector> for AntiScalar {
+    type Output = MultiVector;
+
+    fn transformation(self, other: MultiVector) -> MultiVector {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl GeometricQuotient<Plane> for AntiScalar {
+    type Output = Point;
+
+    fn geometric_quotient(self, other: Plane) -> Point {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl Transformation<Plane> for AntiScalar {
+    type Output = Plane;
+
+    fn transformation(self, other: Plane) -> Plane {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl GeometricQuotient<Point> for AntiScalar {
+    type Output = Plane;
+
+    fn geometric_quotient(self, other: Point) -> Plane {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl Transformation<Point> for AntiScalar {
+    type Output = Point;
+
+    fn transformation(self, other: Point) -> Point {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl GeometricQuotient<PointAndPlane> for AntiScalar {
+    type Output = PointAndPlane;
+
+    fn geometric_quotient(self, other: PointAndPlane) -> PointAndPlane {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl Transformation<PointAndPlane> for AntiScalar {
+    type Output = PointAndPlane;
+
+    fn transformation(self, other: PointAndPlane) -> PointAndPlane {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl GeometricQuotient<Scalar> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn geometric_quotient(self, other: Scalar) -> AntiScalar {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl Transformation<Scalar> for AntiScalar {
+    type Output = Scalar;
+
+    fn transformation(self, other: Scalar) -> Scalar {
+        self.geometric_product(other).geometric_product(self.reversal())
     }
 }
 
@@ -6954,6 +11158,22 @@ impl Transformation<Scalar> for IdealPoint {
     type Output = Scalar;
 
     fn transformation(self, other: Scalar) -> Scalar {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl GeometricQuotient<AntiScalar> for Line {
+    type Output = Line;
+
+    fn geometric_quotient(self, other: AntiScalar) -> Line {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl Transformation<AntiScalar> for Line {
+    type Output = AntiScalar;
+
+    fn transformation(self, other: AntiScalar) -> AntiScalar {
         self.geometric_product(other).geometric_product(self.reversal()).into()
     }
 }
@@ -7114,6 +11334,22 @@ impl Transformation<Translator> for Line {
     type Output = Translator;
 
     fn transformation(self, other: Translator) -> Translator {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl GeometricQuotient<AntiScalar> for Motor {
+    type Output = Motor;
+
+    fn geometric_quotient(self, other: AntiScalar) -> Motor {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl Transformation<AntiScalar> for Motor {
+    type Output = AntiScalar;
+
+    fn transformation(self, other: AntiScalar) -> AntiScalar {
         self.geometric_product(other).geometric_product(self.reversal()).into()
     }
 }
@@ -7299,6 +11535,22 @@ impl Transformation<Translator> for Motor {
     }
 }
 
+impl GeometricQuotient<AntiScalar> for MultiVector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: AntiScalar) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl Transformation<AntiScalar> for MultiVector {
+    type Output = AntiScalar;
+
+    fn transformation(self, other: AntiScalar) -> AntiScalar {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
 impl GeometricQuotient<IdealPoint> for MultiVector {
     type Output = MultiVector;
 
@@ -7480,6 +11732,14 @@ impl Transformation<Translator> for MultiVector {
     }
 }
 
+impl GeometricQuotient<AntiScalar> for Plane {
+    type Output = Point;
+
+    fn geometric_quotient(self, other: AntiScalar) -> Point {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Line> for Plane {
     type Output = PointAndPlane;
 
@@ -7564,6 +11824,14 @@ impl GeometricQuotient<Scalar> for Plane {
     type Output = Plane;
 
     fn geometric_quotient(self, other: Scalar) -> Plane {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<AntiScalar> for Point {
+    type Output = Plane;
+
+    fn geometric_quotient(self, other: AntiScalar) -> Plane {
         self.geometric_product(other.inverse())
     }
 }
@@ -7653,6 +11921,22 @@ impl GeometricQuotient<Scalar> for Point {
 
     fn geometric_quotient(self, other: Scalar) -> Point {
         self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<AntiScalar> for PointAndPlane {
+    type Output = PointAndPlane;
+
+    fn geometric_quotient(self, other: AntiScalar) -> PointAndPlane {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl Transformation<AntiScalar> for PointAndPlane {
+    type Output = AntiScalar;
+
+    fn transformation(self, other: AntiScalar) -> AntiScalar {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
     }
 }
 
@@ -7978,6 +12262,22 @@ impl Transformation<Translator> for Rotor {
 
     fn transformation(self, other: Translator) -> Translator {
         self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl GeometricQuotient<AntiScalar> for Scalar {
+    type Output = AntiScalar;
+
+    fn geometric_quotient(self, other: AntiScalar) -> AntiScalar {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl Transformation<AntiScalar> for Scalar {
+    type Output = AntiScalar;
+
+    fn transformation(self, other: AntiScalar) -> AntiScalar {
+        self.geometric_product(other).geometric_product(self.reversal())
     }
 }
 

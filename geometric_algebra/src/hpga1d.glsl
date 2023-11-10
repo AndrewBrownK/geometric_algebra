@@ -32,6 +32,10 @@ Scalar scalar_conjugation(Scalar self) {
     return Scalar(self.g0);
 }
 
+Scalar scalar_anti_reversal(Scalar self) {
+    return Scalar(self.g0);
+}
+
 Scalar scalar_scalar_add(Scalar self, Scalar other) {
     return Scalar(self.g0 + other.g0);
 }
@@ -96,12 +100,24 @@ SplitComplexNumber scalar_split_complex_number_inner_product(Scalar self, SplitC
     return SplitComplexNumber(vec2(self.g0) * other.g0);
 }
 
+SplitComplexNumber scalar_split_complex_number_geometric_anti_product(Scalar self, SplitComplexNumber other) {
+    return SplitComplexNumber(vec2(self.g0) * other.g0.yx);
+}
+
+SplitComplexNumber scalar_split_complex_number_inner_anti_product(Scalar self, SplitComplexNumber other) {
+    return SplitComplexNumber(vec2(self.g0) * other.g0.yx);
+}
+
 SplitComplexNumber scalar_split_complex_number_left_contraction(Scalar self, SplitComplexNumber other) {
     return SplitComplexNumber(vec2(self.g0) * other.g0);
 }
 
 Scalar scalar_split_complex_number_right_contraction(Scalar self, SplitComplexNumber other) {
     return Scalar(self.g0 * other.g0.x);
+}
+
+SplitComplexNumber scalar_split_complex_number_right_anti_contraction(Scalar self, SplitComplexNumber other) {
+    return SplitComplexNumber(vec2(self.g0) * other.g0.yx);
 }
 
 Scalar scalar_split_complex_number_scalar_product(Scalar self, SplitComplexNumber other) {
@@ -156,6 +172,10 @@ SplitComplexNumber split_complex_number_dual(SplitComplexNumber self) {
     return SplitComplexNumber(self.g0.yx);
 }
 
+SplitComplexNumber split_complex_number_anti_reversal(SplitComplexNumber self) {
+    return SplitComplexNumber(self.g0 * vec2(1.0, -1.0));
+}
+
 Scalar split_complex_number_scalar_into(SplitComplexNumber self) {
     return Scalar(self.g0.x);
 }
@@ -184,12 +204,24 @@ SplitComplexNumber split_complex_number_scalar_inner_product(SplitComplexNumber 
     return SplitComplexNumber(self.g0 * vec2(other.g0));
 }
 
+SplitComplexNumber split_complex_number_scalar_geometric_anti_product(SplitComplexNumber self, Scalar other) {
+    return SplitComplexNumber(self.g0.yx * vec2(other.g0));
+}
+
+SplitComplexNumber split_complex_number_scalar_inner_anti_product(SplitComplexNumber self, Scalar other) {
+    return SplitComplexNumber(self.g0.yx * vec2(other.g0));
+}
+
 Scalar split_complex_number_scalar_left_contraction(SplitComplexNumber self, Scalar other) {
     return Scalar(self.g0.x * other.g0);
 }
 
 SplitComplexNumber split_complex_number_scalar_right_contraction(SplitComplexNumber self, Scalar other) {
     return SplitComplexNumber(self.g0 * vec2(other.g0));
+}
+
+SplitComplexNumber split_complex_number_scalar_left_anti_contraction(SplitComplexNumber self, Scalar other) {
+    return SplitComplexNumber(self.g0.yx * vec2(other.g0));
 }
 
 Scalar split_complex_number_scalar_scalar_product(SplitComplexNumber self, Scalar other) {
@@ -228,12 +260,28 @@ SplitComplexNumber split_complex_number_split_complex_number_inner_product(Split
     return SplitComplexNumber(vec2(self.g0.x) * other.g0 + vec2(self.g0.y) * other.g0.yx);
 }
 
+SplitComplexNumber split_complex_number_split_complex_number_geometric_anti_product(SplitComplexNumber self, SplitComplexNumber other) {
+    return SplitComplexNumber(vec2(self.g0.x) * other.g0.yx + vec2(self.g0.y) * other.g0);
+}
+
+SplitComplexNumber split_complex_number_split_complex_number_inner_anti_product(SplitComplexNumber self, SplitComplexNumber other) {
+    return SplitComplexNumber(vec2(self.g0.x) * other.g0.yx + vec2(self.g0.y) * other.g0);
+}
+
 SplitComplexNumber split_complex_number_split_complex_number_left_contraction(SplitComplexNumber self, SplitComplexNumber other) {
     return SplitComplexNumber(vec2(self.g0.x) * other.g0 + self.g0.yx * other.g0.yx * vec2(1.0, 0.0));
 }
 
 SplitComplexNumber split_complex_number_split_complex_number_right_contraction(SplitComplexNumber self, SplitComplexNumber other) {
     return SplitComplexNumber(vec2(self.g0.y) * other.g0.yx + vec2(self.g0.x) * vec2(other.g0.x) * vec2(1.0, 0.0));
+}
+
+SplitComplexNumber split_complex_number_split_complex_number_left_anti_contraction(SplitComplexNumber self, SplitComplexNumber other) {
+    return SplitComplexNumber(vec2(self.g0.y) * other.g0 + vec2(self.g0.x) * vec2(other.g0.x) * vec2(0.0, 1.0));
+}
+
+SplitComplexNumber split_complex_number_split_complex_number_right_anti_contraction(SplitComplexNumber self, SplitComplexNumber other) {
+    return SplitComplexNumber(vec2(self.g0.x) * other.g0.yx + self.g0 * other.g0 * vec2(0.0, 1.0));
 }
 
 Scalar split_complex_number_split_complex_number_scalar_product(SplitComplexNumber self, SplitComplexNumber other) {

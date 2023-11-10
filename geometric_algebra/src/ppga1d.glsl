@@ -32,6 +32,10 @@ Scalar scalar_conjugation(Scalar self) {
     return Scalar(self.g0);
 }
 
+Scalar scalar_anti_reversal(Scalar self) {
+    return Scalar(self.g0);
+}
+
 Scalar scalar_scalar_add(Scalar self, Scalar other) {
     return Scalar(self.g0 + other.g0);
 }
@@ -96,12 +100,24 @@ DualNumber scalar_dual_number_inner_product(Scalar self, DualNumber other) {
     return DualNumber(vec2(self.g0) * other.g0);
 }
 
+Scalar scalar_dual_number_geometric_anti_product(Scalar self, DualNumber other) {
+    return Scalar(self.g0 * other.g0.y);
+}
+
+Scalar scalar_dual_number_inner_anti_product(Scalar self, DualNumber other) {
+    return Scalar(self.g0 * other.g0.y);
+}
+
 DualNumber scalar_dual_number_left_contraction(Scalar self, DualNumber other) {
     return DualNumber(vec2(self.g0) * other.g0);
 }
 
 Scalar scalar_dual_number_right_contraction(Scalar self, DualNumber other) {
     return Scalar(self.g0 * other.g0.x);
+}
+
+Scalar scalar_dual_number_right_anti_contraction(Scalar self, DualNumber other) {
+    return Scalar(self.g0 * other.g0.y);
 }
 
 Scalar scalar_dual_number_scalar_product(Scalar self, DualNumber other) {
@@ -156,6 +172,10 @@ DualNumber dual_number_dual(DualNumber self) {
     return DualNumber(self.g0.yx);
 }
 
+DualNumber dual_number_anti_reversal(DualNumber self) {
+    return DualNumber(self.g0 * vec2(1.0, -1.0));
+}
+
 Scalar dual_number_scalar_into(DualNumber self) {
     return Scalar(self.g0.x);
 }
@@ -184,12 +204,24 @@ DualNumber dual_number_scalar_inner_product(DualNumber self, Scalar other) {
     return DualNumber(self.g0 * vec2(other.g0));
 }
 
+Scalar dual_number_scalar_geometric_anti_product(DualNumber self, Scalar other) {
+    return Scalar(self.g0.y * other.g0);
+}
+
+Scalar dual_number_scalar_inner_anti_product(DualNumber self, Scalar other) {
+    return Scalar(self.g0.y * other.g0);
+}
+
 Scalar dual_number_scalar_left_contraction(DualNumber self, Scalar other) {
     return Scalar(self.g0.x * other.g0);
 }
 
 DualNumber dual_number_scalar_right_contraction(DualNumber self, Scalar other) {
     return DualNumber(self.g0 * vec2(other.g0));
+}
+
+Scalar dual_number_scalar_left_anti_contraction(DualNumber self, Scalar other) {
+    return Scalar(self.g0.y * other.g0);
 }
 
 Scalar dual_number_scalar_scalar_product(DualNumber self, Scalar other) {
@@ -228,12 +260,28 @@ DualNumber dual_number_dual_number_inner_product(DualNumber self, DualNumber oth
     return DualNumber(vec2(self.g0.x) * other.g0 + self.g0 * vec2(other.g0.x) * vec2(0.0, 1.0));
 }
 
+DualNumber dual_number_dual_number_geometric_anti_product(DualNumber self, DualNumber other) {
+    return DualNumber(vec2(self.g0.y) * other.g0 + vec2(self.g0.x) * other.g0.yx * vec2(1.0, 0.0));
+}
+
+DualNumber dual_number_dual_number_inner_anti_product(DualNumber self, DualNumber other) {
+    return DualNumber(vec2(self.g0.y) * other.g0 + vec2(self.g0.x) * other.g0.yx * vec2(1.0, 0.0));
+}
+
 DualNumber dual_number_dual_number_left_contraction(DualNumber self, DualNumber other) {
     return DualNumber(vec2(self.g0.x) * other.g0);
 }
 
 DualNumber dual_number_dual_number_right_contraction(DualNumber self, DualNumber other) {
     return DualNumber(self.g0 * vec2(other.g0.x));
+}
+
+DualNumber dual_number_dual_number_left_anti_contraction(DualNumber self, DualNumber other) {
+    return DualNumber(vec2(self.g0.y) * other.g0);
+}
+
+DualNumber dual_number_dual_number_right_anti_contraction(DualNumber self, DualNumber other) {
+    return DualNumber(self.g0 * vec2(other.g0.y));
 }
 
 Scalar dual_number_dual_number_scalar_product(DualNumber self, DualNumber other) {

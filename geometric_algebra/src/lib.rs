@@ -13,6 +13,9 @@ pub mod cga3d;
 pub mod simd;
 pub mod polynomial;
 
+#[cfg(test)]
+mod tests;
+
 impl epga1d::Scalar {
     pub fn real(self) -> f32 {
         self[0]
@@ -229,9 +232,20 @@ pub trait Automorphism {
 /// Negates elements with `grade % 4 >= 2`
 ///
 /// Also called transpose
+/// http://rigidgeometricalgebra.org/wiki/index.php?title=Reverses
 pub trait Reversal {
     type Output;
     fn reversal(self) -> Self::Output;
+}
+
+// (Implementation done!)
+/// Negates elements with `grade % 4 >= 2`
+///
+/// Also called transpose
+/// http://rigidgeometricalgebra.org/wiki/index.php?title=Reverses
+pub trait AntiReversal {
+    type Output;
+    fn anti_reversal(self) -> Self::Output;
 }
 
 /// Negates elements with `(grade + 3) % 4 < 2`
@@ -246,6 +260,12 @@ pub trait GeometricProduct<T> {
     fn geometric_product(self, other: T) -> Self::Output;
 }
 
+/// General multi vector multiplication
+pub trait GeometricAntiProduct<T> {
+    type Output;
+    fn geometric_anti_product(self, other: T) -> Self::Output;
+}
+
 /// General multi vector division
 pub trait GeometricQuotient<T> {
     type Output;
@@ -254,44 +274,117 @@ pub trait GeometricQuotient<T> {
 
 /// Dual of the geometric product grade filtered by `t == r + s`
 ///
-/// Also called join
+/// TODO sort out if the following line is accurate:
+/// Also called meet, anti-wedge, or exterior anti-product
 pub trait RegressiveProduct<T> {
     type Output;
     fn regressive_product(self, other: T) -> Self::Output;
 }
 
+pub trait AntiWedge<T>: RegressiveProduct<T> {
+    fn anti_wedge(self, other: T) -> Self::Output;
+}
+impl<I, T> AntiWedge<T> for I where I: RegressiveProduct<T> {
+    fn anti_wedge(self, other: T) -> Self::Output { self.regressive_product(other) }
+}
+pub trait Meet<T>: RegressiveProduct<T> {
+    fn meet(self, other: T) -> Self::Output;
+}
+impl<I, T> Meet<T> for I where I: RegressiveProduct<T> {
+    fn meet(self, other: T) -> Self::Output { self.regressive_product(other) }
+}
+
 /// Geometric product grade filtered by `t == r + s`
 ///
-/// Also called meet or exterior product
+/// TODO sort out if the following line is accurate:
+/// Also called join, wedge, or exterior product
 pub trait OuterProduct<T> {
     type Output;
     fn outer_product(self, other: T) -> Self::Output;
+}
+pub trait Wedge<T>: OuterProduct<T> {
+    fn wedge(self, other: T) -> Self::Output;
+}
+impl<I, T> Wedge<T> for I where I: OuterProduct<T> {
+    fn wedge(self, other: T) -> Self::Output { self.outer_product(other) }
+}
+pub trait Join<T>: OuterProduct<T> {
+    fn join(self, other: T) -> Self::Output;
+}
+impl<I, T> Join<T> for I where I: OuterProduct<T> {
+    fn join(self, other: T) -> Self::Output { self.outer_product(other) }
 }
 
 /// Geometric product grade filtered by `t == (r - s).abs()`
 ///
 /// Also called fat dot product
+/// http://rigidgeometricalgebra.org/wiki/index.php?title=Dot_products
 pub trait InnerProduct<T> {
     type Output;
     fn inner_product(self, other: T) -> Self::Output;
 }
+pub trait DotProduct<T>: InnerProduct<T> {
+    fn dot(self, other: T) -> Self::Output;
+}
+impl<I, T> DotProduct<T> for I where I: InnerProduct<T> {
+    fn dot(self, other: T) -> Self::Output { self.inner_product(other) }
+}
+// TODO generate implementations
+/// Geometric product grade filtered by `t == (r - s).abs()`
+///
+/// Also called fat anti-dot product
+/// http://rigidgeometricalgebra.org/wiki/index.php?title=Dot_products
+pub trait InnerAntiProduct<T> {
+    type Output;
+    fn inner_anti_product(self, other: T) -> Self::Output;
+}
+pub trait AntiDot<T>: InnerAntiProduct<T> {
+    fn anti_dot(self, other: T) -> Self::Output;
+}
+impl<I, T> AntiDot<T> for I where I: InnerAntiProduct<T> {
+    fn anti_dot(self, other: T) -> Self::Output { self.inner_anti_product(other) }
+}
 
 /// Geometric product grade filtered by `t == s - r`
+/// http://rigidgeometricalgebra.org/wiki/index.php?title=Interior_products
 pub trait LeftContraction<T> {
     type Output;
     fn left_contraction(self, other: T) -> Self::Output;
 }
 
 /// Geometric product grade filtered by `t == r - s`
+/// http://rigidgeometricalgebra.org/wiki/index.php?title=Interior_products
 pub trait RightContraction<T> {
     type Output;
     fn right_contraction(self, other: T) -> Self::Output;
+}
+
+// TODO generate implementations
+/// Geometric product grade filtered by `t == s - r`
+/// http://rigidgeometricalgebra.org/wiki/index.php?title=Interior_products
+pub trait LeftAntiContraction<T> {
+    type Output;
+    fn left_anti_contraction(self, other: T) -> Self::Output;
+}
+
+// TODO generate implementations
+/// Geometric product grade filtered by `t == r - s`
+/// http://rigidgeometricalgebra.org/wiki/index.php?title=Interior_products
+pub trait RightAntiContraction<T> {
+    type Output;
+    fn right_anti_contraction(self, other: T) -> Self::Output;
 }
 
 /// Geometric product grade filtered by `t == 0`
 pub trait ScalarProduct<T> {
     type Output;
     fn scalar_product(self, other: T) -> Self::Output;
+}
+
+/// Geometric product grade filtered by `t == 0`
+pub trait AntiScalarProduct<T> {
+    type Output;
+    fn anti_scalar_product(self, other: T) -> Self::Output;
 }
 
 /// `self * other * self.reversion()`
@@ -359,3 +452,81 @@ pub trait Powf {
     type Output;
     fn powf(self, exponent: f32) -> Self::Output;
 }
+
+// TODO generate implementations
+/// Grade and Anti-Grade
+/// http://rigidgeometricalgebra.org/wiki/index.php?title=Grade_and_antigrade
+pub trait Grade {
+    type Output;
+    fn grade(self) -> Self::Output;
+    fn anti_grade(self) -> Self::Output;
+}
+
+// TODO generate implementations
+/// Right Complement and Left Complement
+/// http://rigidgeometricalgebra.org/wiki/index.php?title=Complements
+pub trait Complement {
+    type Output;
+    fn right_complement(self) -> Self::Output;
+    fn left_complement(self) -> Self::Output;
+}
+
+
+// TODO generate implementations
+/// The Bulk of an object usually describes the object's relationship with the origin.
+/// An object with a Bulk of zero contains the origin.
+/// http://rigidgeometricalgebra.org/wiki/index.php?title=Bulk_and_weight
+pub trait Bulk {
+    type Output;
+    fn bulk(self) -> Self::Output;
+}
+
+// TODO generate implementations
+/// The Weight of an object usually describes the object's attitude and orientation.
+/// An object with zero weight is contained by the horizon.
+///
+/// Also known as the attitude operator.
+/// http://rigidgeometricalgebra.org/wiki/index.php?title=Bulk_and_weight
+pub trait Weight {
+    type Output;
+    fn weight(self) -> Self::Output;
+}
+
+// TODO generate implementations
+/// Round Bulk is a special type of bulk in CGA
+/// https://conformalgeometricalgebra.com/wiki/index.php?title=Main_Page
+pub trait RoundBulk {
+    type Output;
+    fn round_bulk(self) -> Self::Output;
+}
+
+// TODO generate implementations
+/// Round Weight is a special type of weight in CGA
+/// https://conformalgeometricalgebra.com/wiki/index.php?title=Main_Page
+pub trait RoundWeight {
+    type Output;
+    fn round_weight(self) -> Self::Output;
+}
+
+// TODO generate implementations
+/// Euclidean distance between objects
+/// http://rigidgeometricalgebra.org/wiki/index.php?title=Euclidean_distance
+pub trait Distance<T> {
+    type Output;
+    fn distance(self, other: T) -> Self::Output;
+}
+
+// TODO generate implementations
+/// Unitization
+/// http://rigidgeometricalgebra.org/wiki/index.php?title=Unitization
+pub trait Unitize {
+    fn unitize(self) -> Self;
+}
+
+
+// TODO generate implementations
+// /// Dilation is a conformal transformation
+// /// https://conformalgeometricalgebra.com/wiki/index.php?title=Dilation
+// pub trait Dilate {
+//     fn dilate(factor: f32) -> Self;
+// }

@@ -176,12 +176,18 @@ impl Involution {
 
     pub fn involutions(algebra: &GeometricAlgebra) -> Vec<(&'static str, Self)> {
         let involution = Self::identity(algebra);
+        let dimensions = algebra.basis_size();
         vec![
             ("Neg", involution.negated(|_grade| true)),
             ("Automorphism", involution.negated(|grade| grade % 2 == 1)),
             ("Reversal", involution.negated(|grade| grade % 4 >= 2)),
             ("Conjugation", involution.negated(|grade| (grade + 3) % 4 < 2)),
             ("Dual", involution.dual(algebra)),
+            // Confirmed accurate: epga3d MultiVector
+            ("AntiReversal", involution.negated(|grade| {
+                let anti_grade = dimensions - grade;
+                anti_grade % 4 >= 2
+            })),
         ]
     }
 }
@@ -252,9 +258,22 @@ impl Product {
             ("RegressiveProduct", product.projected(|r, s, t| t == r + s).dual(algebra)),
             ("OuterProduct", product.projected(|r, s, t| t == r + s)),
             ("InnerProduct", product.projected(|r, s, t| t == (r as isize - s as isize).unsigned_abs())),
+
+            ("GeometricAntiProduct", product.clone().dual(algebra)),
+            ("InnerAntiProduct", product.projected(|r, s, t| t == (r as isize - s as isize).unsigned_abs()).dual(algebra)),
+
+            // Regressive/Outer are already duals, also known as anti-wedge and wedge.
+            // ("RegressiveAntiProduct", product.projected(|r, s, t| t == r + s).dual(algebra)),
+            // ("OuterAntiProduct", product.projected(|r, s, t| t == r + s)),
+
+
             ("LeftContraction", product.projected(|r, s, t| t as isize == s as isize - r as isize)),
             ("RightContraction", product.projected(|r, s, t| t as isize == r as isize - s as isize)),
+            ("LeftAntiContraction", product.projected(|r, s, t| t as isize == s as isize - r as isize).dual(algebra)),
+            ("RightAntiContraction", product.projected(|r, s, t| t as isize == r as isize - s as isize).dual(algebra)),
+
             ("ScalarProduct", product.projected(|_r, _s, t| t == 0)),
+            ("AntiScalarProduct", product.projected(|_r, _s, t| t == 0).dual(algebra)),
         ]
     }
 }

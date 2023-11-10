@@ -2,6 +2,10 @@ struct Scalar {
     g0_: f32,
 }
 
+struct AntiScalar {
+    g0_: f32,
+}
+
 struct MultiVector {
     g0_: vec4<f32>,
     g1_: vec4<f32>,
@@ -75,783 +79,1816 @@ fn scalar_conjugation(self_6: Scalar) -> Scalar {
     return Scalar(_e2.g0_);
 }
 
-fn scalar_scalar_add(self_8: Scalar, other: Scalar) -> Scalar {
+fn scalar_dual(self_8: Scalar) -> AntiScalar {
     var self_9: Scalar;
-    var other_1: Scalar;
 
     self_9 = self_8;
+    let _e2: Scalar = self_9;
+    return AntiScalar(_e2.g0_);
+}
+
+fn scalar_anti_reversal(self_10: Scalar) -> Scalar {
+    var self_11: Scalar;
+
+    self_11 = self_10;
+    let _e2: Scalar = self_11;
+    return Scalar(_e2.g0_);
+}
+
+fn scalar_scalar_add(self_12: Scalar, other: Scalar) -> Scalar {
+    var self_13: Scalar;
+    var other_1: Scalar;
+
+    self_13 = self_12;
     other_1 = other;
-    let _e4: Scalar = self_9;
+    let _e4: Scalar = self_13;
     let _e6: Scalar = other_1;
     return Scalar((_e4.g0_ + _e6.g0_));
 }
 
-fn scalar_scalar_sub(self_10: Scalar, other_2: Scalar) -> Scalar {
-    var self_11: Scalar;
+fn scalar_scalar_sub(self_14: Scalar, other_2: Scalar) -> Scalar {
+    var self_15: Scalar;
     var other_3: Scalar;
 
-    self_11 = self_10;
+    self_15 = self_14;
     other_3 = other_2;
-    let _e4: Scalar = self_11;
+    let _e4: Scalar = self_15;
     let _e6: Scalar = other_3;
     return Scalar((_e4.g0_ - _e6.g0_));
 }
 
-fn scalar_scalar_mul(self_12: Scalar, other_4: Scalar) -> Scalar {
-    var self_13: Scalar;
+fn scalar_scalar_mul(self_16: Scalar, other_4: Scalar) -> Scalar {
+    var self_17: Scalar;
     var other_5: Scalar;
 
-    self_13 = self_12;
+    self_17 = self_16;
     other_5 = other_4;
-    let _e4: Scalar = self_13;
+    let _e4: Scalar = self_17;
     let _e6: Scalar = other_5;
     return Scalar((_e4.g0_ * _e6.g0_));
 }
 
-fn scalar_scalar_div(self_14: Scalar, other_6: Scalar) -> Scalar {
-    var self_15: Scalar;
+fn scalar_scalar_div(self_18: Scalar, other_6: Scalar) -> Scalar {
+    var self_19: Scalar;
     var other_7: Scalar;
 
-    self_15 = self_14;
+    self_19 = self_18;
     other_7 = other_6;
-    let _e4: Scalar = self_15;
+    let _e4: Scalar = self_19;
     let _e8: Scalar = other_7;
     return Scalar((((_e4.g0_ * 1.0) / _e8.g0_) * 1.0));
 }
 
-fn scalar_scalar_geometric_product(self_16: Scalar, other_8: Scalar) -> Scalar {
-    var self_17: Scalar;
+fn scalar_scalar_geometric_product(self_20: Scalar, other_8: Scalar) -> Scalar {
+    var self_21: Scalar;
     var other_9: Scalar;
 
-    self_17 = self_16;
+    self_21 = self_20;
     other_9 = other_8;
-    let _e4: Scalar = self_17;
+    let _e4: Scalar = self_21;
     let _e6: Scalar = other_9;
     return Scalar((_e4.g0_ * _e6.g0_));
 }
 
-fn scalar_scalar_outer_product(self_18: Scalar, other_10: Scalar) -> Scalar {
-    var self_19: Scalar;
+fn scalar_scalar_outer_product(self_22: Scalar, other_10: Scalar) -> Scalar {
+    var self_23: Scalar;
     var other_11: Scalar;
 
-    self_19 = self_18;
+    self_23 = self_22;
     other_11 = other_10;
-    let _e4: Scalar = self_19;
+    let _e4: Scalar = self_23;
     let _e6: Scalar = other_11;
     return Scalar((_e4.g0_ * _e6.g0_));
 }
 
-fn scalar_scalar_inner_product(self_20: Scalar, other_12: Scalar) -> Scalar {
-    var self_21: Scalar;
+fn scalar_scalar_inner_product(self_24: Scalar, other_12: Scalar) -> Scalar {
+    var self_25: Scalar;
     var other_13: Scalar;
 
-    self_21 = self_20;
+    self_25 = self_24;
     other_13 = other_12;
-    let _e4: Scalar = self_21;
+    let _e4: Scalar = self_25;
     let _e6: Scalar = other_13;
     return Scalar((_e4.g0_ * _e6.g0_));
 }
 
-fn scalar_scalar_left_contraction(self_22: Scalar, other_14: Scalar) -> Scalar {
-    var self_23: Scalar;
+fn scalar_scalar_left_contraction(self_26: Scalar, other_14: Scalar) -> Scalar {
+    var self_27: Scalar;
     var other_15: Scalar;
 
-    self_23 = self_22;
+    self_27 = self_26;
     other_15 = other_14;
-    let _e4: Scalar = self_23;
+    let _e4: Scalar = self_27;
     let _e6: Scalar = other_15;
     return Scalar((_e4.g0_ * _e6.g0_));
 }
 
-fn scalar_scalar_right_contraction(self_24: Scalar, other_16: Scalar) -> Scalar {
-    var self_25: Scalar;
+fn scalar_scalar_right_contraction(self_28: Scalar, other_16: Scalar) -> Scalar {
+    var self_29: Scalar;
     var other_17: Scalar;
 
-    self_25 = self_24;
+    self_29 = self_28;
     other_17 = other_16;
-    let _e4: Scalar = self_25;
+    let _e4: Scalar = self_29;
     let _e6: Scalar = other_17;
     return Scalar((_e4.g0_ * _e6.g0_));
 }
 
-fn scalar_scalar_scalar_product(self_26: Scalar, other_18: Scalar) -> Scalar {
-    var self_27: Scalar;
+fn scalar_scalar_scalar_product(self_30: Scalar, other_18: Scalar) -> Scalar {
+    var self_31: Scalar;
     var other_19: Scalar;
 
-    self_27 = self_26;
+    self_31 = self_30;
     other_19 = other_18;
-    let _e4: Scalar = self_27;
+    let _e4: Scalar = self_31;
     let _e6: Scalar = other_19;
     return Scalar((_e4.g0_ * _e6.g0_));
 }
 
-fn scalar_multi_vector_add(self_28: Scalar, other_20: MultiVector) -> MultiVector {
-    var self_29: Scalar;
-    var other_21: MultiVector;
+fn scalar_anti_scalar_geometric_product(self_32: Scalar, other_20: AntiScalar) -> AntiScalar {
+    var self_33: Scalar;
+    var other_21: AntiScalar;
 
-    self_29 = self_28;
+    self_33 = self_32;
     other_21 = other_20;
-    let _e4: Scalar = self_29;
-    let _e13: MultiVector = other_21;
-    let _e16: MultiVector = other_21;
+    let _e4: Scalar = self_33;
+    let _e6: AntiScalar = other_21;
+    return AntiScalar((_e4.g0_ * _e6.g0_));
+}
+
+fn scalar_anti_scalar_regressive_product(self_34: Scalar, other_22: AntiScalar) -> Scalar {
+    var self_35: Scalar;
+    var other_23: AntiScalar;
+
+    self_35 = self_34;
+    other_23 = other_22;
+    let _e4: Scalar = self_35;
+    let _e6: AntiScalar = other_23;
+    return Scalar((_e4.g0_ * _e6.g0_));
+}
+
+fn scalar_anti_scalar_outer_product(self_36: Scalar, other_24: AntiScalar) -> AntiScalar {
+    var self_37: Scalar;
+    var other_25: AntiScalar;
+
+    self_37 = self_36;
+    other_25 = other_24;
+    let _e4: Scalar = self_37;
+    let _e6: AntiScalar = other_25;
+    return AntiScalar((_e4.g0_ * _e6.g0_));
+}
+
+fn scalar_anti_scalar_inner_product(self_38: Scalar, other_26: AntiScalar) -> AntiScalar {
+    var self_39: Scalar;
+    var other_27: AntiScalar;
+
+    self_39 = self_38;
+    other_27 = other_26;
+    let _e4: Scalar = self_39;
+    let _e6: AntiScalar = other_27;
+    return AntiScalar((_e4.g0_ * _e6.g0_));
+}
+
+fn scalar_anti_scalar_geometric_anti_product(self_40: Scalar, other_28: AntiScalar) -> Scalar {
+    var self_41: Scalar;
+    var other_29: AntiScalar;
+
+    self_41 = self_40;
+    other_29 = other_28;
+    let _e4: Scalar = self_41;
+    let _e6: AntiScalar = other_29;
+    return Scalar((_e4.g0_ * _e6.g0_));
+}
+
+fn scalar_anti_scalar_inner_anti_product(self_42: Scalar, other_30: AntiScalar) -> Scalar {
+    var self_43: Scalar;
+    var other_31: AntiScalar;
+
+    self_43 = self_42;
+    other_31 = other_30;
+    let _e4: Scalar = self_43;
+    let _e6: AntiScalar = other_31;
+    return Scalar((_e4.g0_ * _e6.g0_));
+}
+
+fn scalar_anti_scalar_left_contraction(self_44: Scalar, other_32: AntiScalar) -> AntiScalar {
+    var self_45: Scalar;
+    var other_33: AntiScalar;
+
+    self_45 = self_44;
+    other_33 = other_32;
+    let _e4: Scalar = self_45;
+    let _e6: AntiScalar = other_33;
+    return AntiScalar((_e4.g0_ * _e6.g0_));
+}
+
+fn scalar_anti_scalar_right_anti_contraction(self_46: Scalar, other_34: AntiScalar) -> Scalar {
+    var self_47: Scalar;
+    var other_35: AntiScalar;
+
+    self_47 = self_46;
+    other_35 = other_34;
+    let _e4: Scalar = self_47;
+    let _e6: AntiScalar = other_35;
+    return Scalar((_e4.g0_ * _e6.g0_));
+}
+
+fn scalar_multi_vector_add(self_48: Scalar, other_36: MultiVector) -> MultiVector {
+    var self_49: Scalar;
+    var other_37: MultiVector;
+
+    self_49 = self_48;
+    other_37 = other_36;
+    let _e4: Scalar = self_49;
+    let _e13: MultiVector = other_37;
+    let _e16: MultiVector = other_37;
     return MultiVector(((vec4<f32>(_e4.g0_) * vec4<f32>(1.0, 0.0, 0.0, 0.0)) + _e13.g0_), _e16.g1_);
 }
 
-fn scalar_multi_vector_sub(self_30: Scalar, other_22: MultiVector) -> MultiVector {
-    var self_31: Scalar;
-    var other_23: MultiVector;
+fn scalar_multi_vector_sub(self_50: Scalar, other_38: MultiVector) -> MultiVector {
+    var self_51: Scalar;
+    var other_39: MultiVector;
 
-    self_31 = self_30;
-    other_23 = other_22;
-    let _e4: Scalar = self_31;
-    let _e13: MultiVector = other_23;
-    let _e18: MultiVector = other_23;
+    self_51 = self_50;
+    other_39 = other_38;
+    let _e4: Scalar = self_51;
+    let _e13: MultiVector = other_39;
+    let _e18: MultiVector = other_39;
     return MultiVector(((vec4<f32>(_e4.g0_) * vec4<f32>(1.0, 0.0, 0.0, 0.0)) - _e13.g0_), (vec4<f32>(0.0) - _e18.g1_));
 }
 
-fn scalar_multi_vector_geometric_product(self_32: Scalar, other_24: MultiVector) -> MultiVector {
-    var self_33: Scalar;
-    var other_25: MultiVector;
+fn scalar_multi_vector_geometric_product(self_52: Scalar, other_40: MultiVector) -> MultiVector {
+    var self_53: Scalar;
+    var other_41: MultiVector;
 
-    self_33 = self_32;
-    other_25 = other_24;
-    let _e4: Scalar = self_33;
-    let _e7: MultiVector = other_25;
-    let _e10: Scalar = self_33;
-    let _e13: MultiVector = other_25;
+    self_53 = self_52;
+    other_41 = other_40;
+    let _e4: Scalar = self_53;
+    let _e7: MultiVector = other_41;
+    let _e10: Scalar = self_53;
+    let _e13: MultiVector = other_41;
     return MultiVector((vec4<f32>(_e4.g0_) * _e7.g0_), (vec4<f32>(_e10.g0_) * _e13.g1_));
 }
 
-fn scalar_multi_vector_regressive_product(self_34: Scalar, other_26: MultiVector) -> Scalar {
-    var self_35: Scalar;
-    var other_27: MultiVector;
+fn scalar_multi_vector_regressive_product(self_54: Scalar, other_42: MultiVector) -> Scalar {
+    var self_55: Scalar;
+    var other_43: MultiVector;
 
-    self_35 = self_34;
-    other_27 = other_26;
-    let _e4: Scalar = self_35;
-    let _e6: MultiVector = other_27;
+    self_55 = self_54;
+    other_43 = other_42;
+    let _e4: Scalar = self_55;
+    let _e6: MultiVector = other_43;
     return Scalar((_e4.g0_ * _e6.g1_.y));
 }
 
-fn scalar_multi_vector_outer_product(self_36: Scalar, other_28: MultiVector) -> MultiVector {
-    var self_37: Scalar;
-    var other_29: MultiVector;
+fn scalar_multi_vector_outer_product(self_56: Scalar, other_44: MultiVector) -> MultiVector {
+    var self_57: Scalar;
+    var other_45: MultiVector;
 
-    self_37 = self_36;
-    other_29 = other_28;
-    let _e4: Scalar = self_37;
-    let _e7: MultiVector = other_29;
-    let _e10: Scalar = self_37;
-    let _e13: MultiVector = other_29;
+    self_57 = self_56;
+    other_45 = other_44;
+    let _e4: Scalar = self_57;
+    let _e7: MultiVector = other_45;
+    let _e10: Scalar = self_57;
+    let _e13: MultiVector = other_45;
     return MultiVector((vec4<f32>(_e4.g0_) * _e7.g0_), (vec4<f32>(_e10.g0_) * _e13.g1_));
 }
 
-fn scalar_multi_vector_inner_product(self_38: Scalar, other_30: MultiVector) -> MultiVector {
-    var self_39: Scalar;
-    var other_31: MultiVector;
+fn scalar_multi_vector_inner_product(self_58: Scalar, other_46: MultiVector) -> MultiVector {
+    var self_59: Scalar;
+    var other_47: MultiVector;
 
-    self_39 = self_38;
-    other_31 = other_30;
-    let _e4: Scalar = self_39;
-    let _e7: MultiVector = other_31;
-    let _e10: Scalar = self_39;
-    let _e13: MultiVector = other_31;
+    self_59 = self_58;
+    other_47 = other_46;
+    let _e4: Scalar = self_59;
+    let _e7: MultiVector = other_47;
+    let _e10: Scalar = self_59;
+    let _e13: MultiVector = other_47;
     return MultiVector((vec4<f32>(_e4.g0_) * _e7.g0_), (vec4<f32>(_e10.g0_) * _e13.g1_));
 }
 
-fn scalar_multi_vector_left_contraction(self_40: Scalar, other_32: MultiVector) -> MultiVector {
-    var self_41: Scalar;
-    var other_33: MultiVector;
+fn scalar_multi_vector_left_contraction(self_60: Scalar, other_48: MultiVector) -> MultiVector {
+    var self_61: Scalar;
+    var other_49: MultiVector;
 
-    self_41 = self_40;
-    other_33 = other_32;
-    let _e4: Scalar = self_41;
-    let _e7: MultiVector = other_33;
-    let _e10: Scalar = self_41;
-    let _e13: MultiVector = other_33;
+    self_61 = self_60;
+    other_49 = other_48;
+    let _e4: Scalar = self_61;
+    let _e7: MultiVector = other_49;
+    let _e10: Scalar = self_61;
+    let _e13: MultiVector = other_49;
     return MultiVector((vec4<f32>(_e4.g0_) * _e7.g0_), (vec4<f32>(_e10.g0_) * _e13.g1_));
 }
 
-fn scalar_multi_vector_right_contraction(self_42: Scalar, other_34: MultiVector) -> Scalar {
-    var self_43: Scalar;
-    var other_35: MultiVector;
+fn scalar_multi_vector_right_contraction(self_62: Scalar, other_50: MultiVector) -> Scalar {
+    var self_63: Scalar;
+    var other_51: MultiVector;
 
-    self_43 = self_42;
-    other_35 = other_34;
-    let _e4: Scalar = self_43;
-    let _e6: MultiVector = other_35;
+    self_63 = self_62;
+    other_51 = other_50;
+    let _e4: Scalar = self_63;
+    let _e6: MultiVector = other_51;
     return Scalar((_e4.g0_ * _e6.g0_.x));
 }
 
-fn scalar_multi_vector_scalar_product(self_44: Scalar, other_36: MultiVector) -> Scalar {
-    var self_45: Scalar;
-    var other_37: MultiVector;
+fn scalar_multi_vector_scalar_product(self_64: Scalar, other_52: MultiVector) -> Scalar {
+    var self_65: Scalar;
+    var other_53: MultiVector;
 
-    self_45 = self_44;
-    other_37 = other_36;
-    let _e4: Scalar = self_45;
-    let _e6: MultiVector = other_37;
+    self_65 = self_64;
+    other_53 = other_52;
+    let _e4: Scalar = self_65;
+    let _e6: MultiVector = other_53;
     return Scalar((_e4.g0_ * _e6.g0_.x));
 }
 
-fn scalar_rotor_add(self_46: Scalar, other_38: Rotor) -> Rotor {
-    var self_47: Scalar;
-    var other_39: Rotor;
+fn scalar_rotor_add(self_66: Scalar, other_54: Rotor) -> Rotor {
+    var self_67: Scalar;
+    var other_55: Rotor;
 
-    self_47 = self_46;
-    other_39 = other_38;
-    let _e4: Scalar = self_47;
-    let _e11: Rotor = other_39;
+    self_67 = self_66;
+    other_55 = other_54;
+    let _e4: Scalar = self_67;
+    let _e11: Rotor = other_55;
     return Rotor(((vec2<f32>(_e4.g0_) * vec2<f32>(1.0, 0.0)) + _e11.g0_));
 }
 
-fn scalar_rotor_sub(self_48: Scalar, other_40: Rotor) -> Rotor {
-    var self_49: Scalar;
-    var other_41: Rotor;
+fn scalar_rotor_sub(self_68: Scalar, other_56: Rotor) -> Rotor {
+    var self_69: Scalar;
+    var other_57: Rotor;
 
-    self_49 = self_48;
-    other_41 = other_40;
-    let _e4: Scalar = self_49;
-    let _e11: Rotor = other_41;
+    self_69 = self_68;
+    other_57 = other_56;
+    let _e4: Scalar = self_69;
+    let _e11: Rotor = other_57;
     return Rotor(((vec2<f32>(_e4.g0_) * vec2<f32>(1.0, 0.0)) - _e11.g0_));
 }
 
-fn scalar_rotor_geometric_product(self_50: Scalar, other_42: Rotor) -> Rotor {
-    var self_51: Scalar;
-    var other_43: Rotor;
+fn scalar_rotor_geometric_product(self_70: Scalar, other_58: Rotor) -> Rotor {
+    var self_71: Scalar;
+    var other_59: Rotor;
 
-    self_51 = self_50;
-    other_43 = other_42;
-    let _e4: Scalar = self_51;
-    let _e7: Rotor = other_43;
+    self_71 = self_70;
+    other_59 = other_58;
+    let _e4: Scalar = self_71;
+    let _e7: Rotor = other_59;
     return Rotor((vec2<f32>(_e4.g0_) * _e7.g0_));
 }
 
-fn scalar_rotor_outer_product(self_52: Scalar, other_44: Rotor) -> Rotor {
-    var self_53: Scalar;
-    var other_45: Rotor;
+fn scalar_rotor_outer_product(self_72: Scalar, other_60: Rotor) -> Rotor {
+    var self_73: Scalar;
+    var other_61: Rotor;
 
-    self_53 = self_52;
-    other_45 = other_44;
-    let _e4: Scalar = self_53;
-    let _e7: Rotor = other_45;
+    self_73 = self_72;
+    other_61 = other_60;
+    let _e4: Scalar = self_73;
+    let _e7: Rotor = other_61;
     return Rotor((vec2<f32>(_e4.g0_) * _e7.g0_));
 }
 
-fn scalar_rotor_inner_product(self_54: Scalar, other_46: Rotor) -> Rotor {
-    var self_55: Scalar;
-    var other_47: Rotor;
+fn scalar_rotor_inner_product(self_74: Scalar, other_62: Rotor) -> Rotor {
+    var self_75: Scalar;
+    var other_63: Rotor;
 
-    self_55 = self_54;
-    other_47 = other_46;
-    let _e4: Scalar = self_55;
-    let _e7: Rotor = other_47;
+    self_75 = self_74;
+    other_63 = other_62;
+    let _e4: Scalar = self_75;
+    let _e7: Rotor = other_63;
     return Rotor((vec2<f32>(_e4.g0_) * _e7.g0_));
 }
 
-fn scalar_rotor_left_contraction(self_56: Scalar, other_48: Rotor) -> Rotor {
-    var self_57: Scalar;
-    var other_49: Rotor;
+fn scalar_rotor_left_contraction(self_76: Scalar, other_64: Rotor) -> Rotor {
+    var self_77: Scalar;
+    var other_65: Rotor;
 
-    self_57 = self_56;
-    other_49 = other_48;
-    let _e4: Scalar = self_57;
-    let _e7: Rotor = other_49;
+    self_77 = self_76;
+    other_65 = other_64;
+    let _e4: Scalar = self_77;
+    let _e7: Rotor = other_65;
     return Rotor((vec2<f32>(_e4.g0_) * _e7.g0_));
 }
 
-fn scalar_rotor_right_contraction(self_58: Scalar, other_50: Rotor) -> Scalar {
-    var self_59: Scalar;
-    var other_51: Rotor;
+fn scalar_rotor_right_contraction(self_78: Scalar, other_66: Rotor) -> Scalar {
+    var self_79: Scalar;
+    var other_67: Rotor;
 
-    self_59 = self_58;
-    other_51 = other_50;
-    let _e4: Scalar = self_59;
-    let _e6: Rotor = other_51;
+    self_79 = self_78;
+    other_67 = other_66;
+    let _e4: Scalar = self_79;
+    let _e6: Rotor = other_67;
     return Scalar((_e4.g0_ * _e6.g0_.x));
 }
 
-fn scalar_rotor_scalar_product(self_60: Scalar, other_52: Rotor) -> Scalar {
-    var self_61: Scalar;
-    var other_53: Rotor;
+fn scalar_rotor_scalar_product(self_80: Scalar, other_68: Rotor) -> Scalar {
+    var self_81: Scalar;
+    var other_69: Rotor;
 
-    self_61 = self_60;
-    other_53 = other_52;
-    let _e4: Scalar = self_61;
-    let _e6: Rotor = other_53;
+    self_81 = self_80;
+    other_69 = other_68;
+    let _e4: Scalar = self_81;
+    let _e6: Rotor = other_69;
     return Scalar((_e4.g0_ * _e6.g0_.x));
 }
 
-fn scalar_point_add(self_62: Scalar, other_54: Point) -> Motor {
-    var self_63: Scalar;
-    var other_55: Point;
+fn scalar_point_add(self_82: Scalar, other_70: Point) -> Motor {
+    var self_83: Scalar;
+    var other_71: Point;
 
-    self_63 = self_62;
-    other_55 = other_54;
-    let _e4: Scalar = self_63;
-    let _e13: Point = other_55;
-    let _e16: Point = other_55;
-    let _e19: Point = other_55;
-    let _e22: Point = other_55;
+    self_83 = self_82;
+    other_71 = other_70;
+    let _e4: Scalar = self_83;
+    let _e13: Point = other_71;
+    let _e16: Point = other_71;
+    let _e19: Point = other_71;
+    let _e22: Point = other_71;
     return Motor(((vec4<f32>(_e4.g0_) * vec4<f32>(1.0, 0.0, 0.0, 0.0)) + (vec4<f32>(_e13.g0_.x, _e16.g0_.x, _e19.g0_.y, _e22.g0_.z) * vec4<f32>(0.0, 1.0, 1.0, 1.0))));
 }
 
-fn scalar_point_sub(self_64: Scalar, other_56: Point) -> Motor {
-    var self_65: Scalar;
-    var other_57: Point;
+fn scalar_point_sub(self_84: Scalar, other_72: Point) -> Motor {
+    var self_85: Scalar;
+    var other_73: Point;
 
-    self_65 = self_64;
-    other_57 = other_56;
-    let _e4: Scalar = self_65;
-    let _e13: Point = other_57;
-    let _e16: Point = other_57;
-    let _e19: Point = other_57;
-    let _e22: Point = other_57;
+    self_85 = self_84;
+    other_73 = other_72;
+    let _e4: Scalar = self_85;
+    let _e13: Point = other_73;
+    let _e16: Point = other_73;
+    let _e19: Point = other_73;
+    let _e22: Point = other_73;
     return Motor(((vec4<f32>(_e4.g0_) * vec4<f32>(1.0, 0.0, 0.0, 0.0)) - (vec4<f32>(_e13.g0_.x, _e16.g0_.x, _e19.g0_.y, _e22.g0_.z) * vec4<f32>(0.0, 1.0, 1.0, 1.0))));
 }
 
-fn scalar_point_geometric_product(self_66: Scalar, other_58: Point) -> Point {
-    var self_67: Scalar;
-    var other_59: Point;
+fn scalar_point_geometric_product(self_86: Scalar, other_74: Point) -> Point {
+    var self_87: Scalar;
+    var other_75: Point;
 
-    self_67 = self_66;
-    other_59 = other_58;
-    let _e4: Scalar = self_67;
-    let _e7: Point = other_59;
+    self_87 = self_86;
+    other_75 = other_74;
+    let _e4: Scalar = self_87;
+    let _e7: Point = other_75;
     return Point((vec3<f32>(_e4.g0_) * _e7.g0_));
 }
 
-fn scalar_point_outer_product(self_68: Scalar, other_60: Point) -> Point {
-    var self_69: Scalar;
-    var other_61: Point;
+fn scalar_point_outer_product(self_88: Scalar, other_76: Point) -> Point {
+    var self_89: Scalar;
+    var other_77: Point;
 
-    self_69 = self_68;
-    other_61 = other_60;
-    let _e4: Scalar = self_69;
-    let _e7: Point = other_61;
+    self_89 = self_88;
+    other_77 = other_76;
+    let _e4: Scalar = self_89;
+    let _e7: Point = other_77;
     return Point((vec3<f32>(_e4.g0_) * _e7.g0_));
 }
 
-fn scalar_point_inner_product(self_70: Scalar, other_62: Point) -> Point {
-    var self_71: Scalar;
-    var other_63: Point;
+fn scalar_point_inner_product(self_90: Scalar, other_78: Point) -> Point {
+    var self_91: Scalar;
+    var other_79: Point;
 
-    self_71 = self_70;
-    other_63 = other_62;
-    let _e4: Scalar = self_71;
-    let _e7: Point = other_63;
+    self_91 = self_90;
+    other_79 = other_78;
+    let _e4: Scalar = self_91;
+    let _e7: Point = other_79;
     return Point((vec3<f32>(_e4.g0_) * _e7.g0_));
 }
 
-fn scalar_point_left_contraction(self_72: Scalar, other_64: Point) -> Point {
-    var self_73: Scalar;
-    var other_65: Point;
+fn scalar_point_left_contraction(self_92: Scalar, other_80: Point) -> Point {
+    var self_93: Scalar;
+    var other_81: Point;
 
-    self_73 = self_72;
-    other_65 = other_64;
-    let _e4: Scalar = self_73;
-    let _e7: Point = other_65;
+    self_93 = self_92;
+    other_81 = other_80;
+    let _e4: Scalar = self_93;
+    let _e7: Point = other_81;
     return Point((vec3<f32>(_e4.g0_) * _e7.g0_));
 }
 
-fn scalar_ideal_point_add(self_74: Scalar, other_66: IdealPoint) -> Translator {
-    var self_75: Scalar;
-    var other_67: IdealPoint;
+fn scalar_ideal_point_add(self_94: Scalar, other_82: IdealPoint) -> Translator {
+    var self_95: Scalar;
+    var other_83: IdealPoint;
 
-    self_75 = self_74;
-    other_67 = other_66;
-    let _e4: Scalar = self_75;
-    let _e12: IdealPoint = other_67;
-    let _e15: IdealPoint = other_67;
-    let _e18: IdealPoint = other_67;
+    self_95 = self_94;
+    other_83 = other_82;
+    let _e4: Scalar = self_95;
+    let _e12: IdealPoint = other_83;
+    let _e15: IdealPoint = other_83;
+    let _e18: IdealPoint = other_83;
     return Translator(((vec3<f32>(_e4.g0_) * vec3<f32>(1.0, 0.0, 0.0)) + (vec3<f32>(_e12.g0_.x, _e15.g0_.x, _e18.g0_.y) * vec3<f32>(0.0, 1.0, 1.0))));
 }
 
-fn scalar_ideal_point_sub(self_76: Scalar, other_68: IdealPoint) -> Translator {
-    var self_77: Scalar;
-    var other_69: IdealPoint;
+fn scalar_ideal_point_sub(self_96: Scalar, other_84: IdealPoint) -> Translator {
+    var self_97: Scalar;
+    var other_85: IdealPoint;
 
-    self_77 = self_76;
-    other_69 = other_68;
-    let _e4: Scalar = self_77;
-    let _e12: IdealPoint = other_69;
-    let _e15: IdealPoint = other_69;
-    let _e18: IdealPoint = other_69;
+    self_97 = self_96;
+    other_85 = other_84;
+    let _e4: Scalar = self_97;
+    let _e12: IdealPoint = other_85;
+    let _e15: IdealPoint = other_85;
+    let _e18: IdealPoint = other_85;
     return Translator(((vec3<f32>(_e4.g0_) * vec3<f32>(1.0, 0.0, 0.0)) - (vec3<f32>(_e12.g0_.x, _e15.g0_.x, _e18.g0_.y) * vec3<f32>(0.0, 1.0, 1.0))));
 }
 
-fn scalar_ideal_point_geometric_product(self_78: Scalar, other_70: IdealPoint) -> IdealPoint {
-    var self_79: Scalar;
-    var other_71: IdealPoint;
+fn scalar_ideal_point_geometric_product(self_98: Scalar, other_86: IdealPoint) -> IdealPoint {
+    var self_99: Scalar;
+    var other_87: IdealPoint;
 
-    self_79 = self_78;
-    other_71 = other_70;
-    let _e4: Scalar = self_79;
-    let _e7: IdealPoint = other_71;
-    return IdealPoint((vec2<f32>(_e4.g0_) * _e7.g0_));
-}
-
-fn scalar_ideal_point_outer_product(self_80: Scalar, other_72: IdealPoint) -> IdealPoint {
-    var self_81: Scalar;
-    var other_73: IdealPoint;
-
-    self_81 = self_80;
-    other_73 = other_72;
-    let _e4: Scalar = self_81;
-    let _e7: IdealPoint = other_73;
-    return IdealPoint((vec2<f32>(_e4.g0_) * _e7.g0_));
-}
-
-fn scalar_ideal_point_inner_product(self_82: Scalar, other_74: IdealPoint) -> IdealPoint {
-    var self_83: Scalar;
-    var other_75: IdealPoint;
-
-    self_83 = self_82;
-    other_75 = other_74;
-    let _e4: Scalar = self_83;
-    let _e7: IdealPoint = other_75;
-    return IdealPoint((vec2<f32>(_e4.g0_) * _e7.g0_));
-}
-
-fn scalar_ideal_point_left_contraction(self_84: Scalar, other_76: IdealPoint) -> IdealPoint {
-    var self_85: Scalar;
-    var other_77: IdealPoint;
-
-    self_85 = self_84;
-    other_77 = other_76;
-    let _e4: Scalar = self_85;
-    let _e7: IdealPoint = other_77;
-    return IdealPoint((vec2<f32>(_e4.g0_) * _e7.g0_));
-}
-
-fn scalar_plane_geometric_product(self_86: Scalar, other_78: Plane) -> Plane {
-    var self_87: Scalar;
-    var other_79: Plane;
-
-    self_87 = self_86;
-    other_79 = other_78;
-    let _e4: Scalar = self_87;
-    let _e7: Plane = other_79;
-    return Plane((vec3<f32>(_e4.g0_) * _e7.g0_));
-}
-
-fn scalar_plane_outer_product(self_88: Scalar, other_80: Plane) -> Plane {
-    var self_89: Scalar;
-    var other_81: Plane;
-
-    self_89 = self_88;
-    other_81 = other_80;
-    let _e4: Scalar = self_89;
-    let _e7: Plane = other_81;
-    return Plane((vec3<f32>(_e4.g0_) * _e7.g0_));
-}
-
-fn scalar_plane_inner_product(self_90: Scalar, other_82: Plane) -> Plane {
-    var self_91: Scalar;
-    var other_83: Plane;
-
-    self_91 = self_90;
-    other_83 = other_82;
-    let _e4: Scalar = self_91;
-    let _e7: Plane = other_83;
-    return Plane((vec3<f32>(_e4.g0_) * _e7.g0_));
-}
-
-fn scalar_plane_left_contraction(self_92: Scalar, other_84: Plane) -> Plane {
-    var self_93: Scalar;
-    var other_85: Plane;
-
-    self_93 = self_92;
-    other_85 = other_84;
-    let _e4: Scalar = self_93;
-    let _e7: Plane = other_85;
-    return Plane((vec3<f32>(_e4.g0_) * _e7.g0_));
-}
-
-fn scalar_translator_add(self_94: Scalar, other_86: Translator) -> Translator {
-    var self_95: Scalar;
-    var other_87: Translator;
-
-    self_95 = self_94;
+    self_99 = self_98;
     other_87 = other_86;
-    let _e4: Scalar = self_95;
-    let _e12: Translator = other_87;
+    let _e4: Scalar = self_99;
+    let _e7: IdealPoint = other_87;
+    return IdealPoint((vec2<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn scalar_ideal_point_outer_product(self_100: Scalar, other_88: IdealPoint) -> IdealPoint {
+    var self_101: Scalar;
+    var other_89: IdealPoint;
+
+    self_101 = self_100;
+    other_89 = other_88;
+    let _e4: Scalar = self_101;
+    let _e7: IdealPoint = other_89;
+    return IdealPoint((vec2<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn scalar_ideal_point_inner_product(self_102: Scalar, other_90: IdealPoint) -> IdealPoint {
+    var self_103: Scalar;
+    var other_91: IdealPoint;
+
+    self_103 = self_102;
+    other_91 = other_90;
+    let _e4: Scalar = self_103;
+    let _e7: IdealPoint = other_91;
+    return IdealPoint((vec2<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn scalar_ideal_point_left_contraction(self_104: Scalar, other_92: IdealPoint) -> IdealPoint {
+    var self_105: Scalar;
+    var other_93: IdealPoint;
+
+    self_105 = self_104;
+    other_93 = other_92;
+    let _e4: Scalar = self_105;
+    let _e7: IdealPoint = other_93;
+    return IdealPoint((vec2<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn scalar_plane_geometric_product(self_106: Scalar, other_94: Plane) -> Plane {
+    var self_107: Scalar;
+    var other_95: Plane;
+
+    self_107 = self_106;
+    other_95 = other_94;
+    let _e4: Scalar = self_107;
+    let _e7: Plane = other_95;
+    return Plane((vec3<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn scalar_plane_outer_product(self_108: Scalar, other_96: Plane) -> Plane {
+    var self_109: Scalar;
+    var other_97: Plane;
+
+    self_109 = self_108;
+    other_97 = other_96;
+    let _e4: Scalar = self_109;
+    let _e7: Plane = other_97;
+    return Plane((vec3<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn scalar_plane_inner_product(self_110: Scalar, other_98: Plane) -> Plane {
+    var self_111: Scalar;
+    var other_99: Plane;
+
+    self_111 = self_110;
+    other_99 = other_98;
+    let _e4: Scalar = self_111;
+    let _e7: Plane = other_99;
+    return Plane((vec3<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn scalar_plane_left_contraction(self_112: Scalar, other_100: Plane) -> Plane {
+    var self_113: Scalar;
+    var other_101: Plane;
+
+    self_113 = self_112;
+    other_101 = other_100;
+    let _e4: Scalar = self_113;
+    let _e7: Plane = other_101;
+    return Plane((vec3<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn scalar_translator_add(self_114: Scalar, other_102: Translator) -> Translator {
+    var self_115: Scalar;
+    var other_103: Translator;
+
+    self_115 = self_114;
+    other_103 = other_102;
+    let _e4: Scalar = self_115;
+    let _e12: Translator = other_103;
     return Translator(((vec3<f32>(_e4.g0_) * vec3<f32>(1.0, 0.0, 0.0)) + _e12.g0_));
 }
 
-fn scalar_translator_sub(self_96: Scalar, other_88: Translator) -> Translator {
-    var self_97: Scalar;
-    var other_89: Translator;
+fn scalar_translator_sub(self_116: Scalar, other_104: Translator) -> Translator {
+    var self_117: Scalar;
+    var other_105: Translator;
 
-    self_97 = self_96;
-    other_89 = other_88;
-    let _e4: Scalar = self_97;
-    let _e12: Translator = other_89;
+    self_117 = self_116;
+    other_105 = other_104;
+    let _e4: Scalar = self_117;
+    let _e12: Translator = other_105;
     return Translator(((vec3<f32>(_e4.g0_) * vec3<f32>(1.0, 0.0, 0.0)) - _e12.g0_));
 }
 
-fn scalar_translator_geometric_product(self_98: Scalar, other_90: Translator) -> Translator {
-    var self_99: Scalar;
-    var other_91: Translator;
+fn scalar_translator_geometric_product(self_118: Scalar, other_106: Translator) -> Translator {
+    var self_119: Scalar;
+    var other_107: Translator;
 
-    self_99 = self_98;
-    other_91 = other_90;
-    let _e4: Scalar = self_99;
-    let _e7: Translator = other_91;
+    self_119 = self_118;
+    other_107 = other_106;
+    let _e4: Scalar = self_119;
+    let _e7: Translator = other_107;
     return Translator((vec3<f32>(_e4.g0_) * _e7.g0_));
 }
 
-fn scalar_translator_outer_product(self_100: Scalar, other_92: Translator) -> Translator {
-    var self_101: Scalar;
-    var other_93: Translator;
+fn scalar_translator_outer_product(self_120: Scalar, other_108: Translator) -> Translator {
+    var self_121: Scalar;
+    var other_109: Translator;
 
-    self_101 = self_100;
-    other_93 = other_92;
-    let _e4: Scalar = self_101;
-    let _e7: Translator = other_93;
+    self_121 = self_120;
+    other_109 = other_108;
+    let _e4: Scalar = self_121;
+    let _e7: Translator = other_109;
     return Translator((vec3<f32>(_e4.g0_) * _e7.g0_));
 }
 
-fn scalar_translator_inner_product(self_102: Scalar, other_94: Translator) -> Translator {
-    var self_103: Scalar;
-    var other_95: Translator;
+fn scalar_translator_inner_product(self_122: Scalar, other_110: Translator) -> Translator {
+    var self_123: Scalar;
+    var other_111: Translator;
 
-    self_103 = self_102;
-    other_95 = other_94;
-    let _e4: Scalar = self_103;
-    let _e7: Translator = other_95;
+    self_123 = self_122;
+    other_111 = other_110;
+    let _e4: Scalar = self_123;
+    let _e7: Translator = other_111;
     return Translator((vec3<f32>(_e4.g0_) * _e7.g0_));
 }
 
-fn scalar_translator_left_contraction(self_104: Scalar, other_96: Translator) -> Translator {
-    var self_105: Scalar;
-    var other_97: Translator;
+fn scalar_translator_left_contraction(self_124: Scalar, other_112: Translator) -> Translator {
+    var self_125: Scalar;
+    var other_113: Translator;
 
-    self_105 = self_104;
-    other_97 = other_96;
-    let _e4: Scalar = self_105;
-    let _e7: Translator = other_97;
+    self_125 = self_124;
+    other_113 = other_112;
+    let _e4: Scalar = self_125;
+    let _e7: Translator = other_113;
     return Translator((vec3<f32>(_e4.g0_) * _e7.g0_));
 }
 
-fn scalar_translator_right_contraction(self_106: Scalar, other_98: Translator) -> Scalar {
-    var self_107: Scalar;
-    var other_99: Translator;
+fn scalar_translator_right_contraction(self_126: Scalar, other_114: Translator) -> Scalar {
+    var self_127: Scalar;
+    var other_115: Translator;
 
-    self_107 = self_106;
-    other_99 = other_98;
-    let _e4: Scalar = self_107;
-    let _e6: Translator = other_99;
+    self_127 = self_126;
+    other_115 = other_114;
+    let _e4: Scalar = self_127;
+    let _e6: Translator = other_115;
     return Scalar((_e4.g0_ * _e6.g0_.x));
 }
 
-fn scalar_translator_scalar_product(self_108: Scalar, other_100: Translator) -> Scalar {
-    var self_109: Scalar;
-    var other_101: Translator;
+fn scalar_translator_scalar_product(self_128: Scalar, other_116: Translator) -> Scalar {
+    var self_129: Scalar;
+    var other_117: Translator;
 
-    self_109 = self_108;
-    other_101 = other_100;
-    let _e4: Scalar = self_109;
-    let _e6: Translator = other_101;
+    self_129 = self_128;
+    other_117 = other_116;
+    let _e4: Scalar = self_129;
+    let _e6: Translator = other_117;
     return Scalar((_e4.g0_ * _e6.g0_.x));
 }
 
-fn scalar_motor_add(self_110: Scalar, other_102: Motor) -> Motor {
-    var self_111: Scalar;
-    var other_103: Motor;
+fn scalar_motor_add(self_130: Scalar, other_118: Motor) -> Motor {
+    var self_131: Scalar;
+    var other_119: Motor;
 
-    self_111 = self_110;
-    other_103 = other_102;
-    let _e4: Scalar = self_111;
-    let _e13: Motor = other_103;
+    self_131 = self_130;
+    other_119 = other_118;
+    let _e4: Scalar = self_131;
+    let _e13: Motor = other_119;
     return Motor(((vec4<f32>(_e4.g0_) * vec4<f32>(1.0, 0.0, 0.0, 0.0)) + _e13.g0_));
 }
 
-fn scalar_motor_sub(self_112: Scalar, other_104: Motor) -> Motor {
-    var self_113: Scalar;
-    var other_105: Motor;
+fn scalar_motor_sub(self_132: Scalar, other_120: Motor) -> Motor {
+    var self_133: Scalar;
+    var other_121: Motor;
 
-    self_113 = self_112;
-    other_105 = other_104;
-    let _e4: Scalar = self_113;
-    let _e13: Motor = other_105;
+    self_133 = self_132;
+    other_121 = other_120;
+    let _e4: Scalar = self_133;
+    let _e13: Motor = other_121;
     return Motor(((vec4<f32>(_e4.g0_) * vec4<f32>(1.0, 0.0, 0.0, 0.0)) - _e13.g0_));
 }
 
-fn scalar_motor_geometric_product(self_114: Scalar, other_106: Motor) -> Motor {
-    var self_115: Scalar;
-    var other_107: Motor;
-
-    self_115 = self_114;
-    other_107 = other_106;
-    let _e4: Scalar = self_115;
-    let _e7: Motor = other_107;
-    return Motor((vec4<f32>(_e4.g0_) * _e7.g0_));
-}
-
-fn scalar_motor_outer_product(self_116: Scalar, other_108: Motor) -> Motor {
-    var self_117: Scalar;
-    var other_109: Motor;
-
-    self_117 = self_116;
-    other_109 = other_108;
-    let _e4: Scalar = self_117;
-    let _e7: Motor = other_109;
-    return Motor((vec4<f32>(_e4.g0_) * _e7.g0_));
-}
-
-fn scalar_motor_inner_product(self_118: Scalar, other_110: Motor) -> Motor {
-    var self_119: Scalar;
-    var other_111: Motor;
-
-    self_119 = self_118;
-    other_111 = other_110;
-    let _e4: Scalar = self_119;
-    let _e7: Motor = other_111;
-    return Motor((vec4<f32>(_e4.g0_) * _e7.g0_));
-}
-
-fn scalar_motor_left_contraction(self_120: Scalar, other_112: Motor) -> Motor {
-    var self_121: Scalar;
-    var other_113: Motor;
-
-    self_121 = self_120;
-    other_113 = other_112;
-    let _e4: Scalar = self_121;
-    let _e7: Motor = other_113;
-    return Motor((vec4<f32>(_e4.g0_) * _e7.g0_));
-}
-
-fn scalar_motor_right_contraction(self_122: Scalar, other_114: Motor) -> Scalar {
-    var self_123: Scalar;
-    var other_115: Motor;
-
-    self_123 = self_122;
-    other_115 = other_114;
-    let _e4: Scalar = self_123;
-    let _e6: Motor = other_115;
-    return Scalar((_e4.g0_ * _e6.g0_.x));
-}
-
-fn scalar_motor_scalar_product(self_124: Scalar, other_116: Motor) -> Scalar {
-    var self_125: Scalar;
-    var other_117: Motor;
-
-    self_125 = self_124;
-    other_117 = other_116;
-    let _e4: Scalar = self_125;
-    let _e6: Motor = other_117;
-    return Scalar((_e4.g0_ * _e6.g0_.x));
-}
-
-fn scalar_motor_dual_geometric_product(self_126: Scalar, other_118: MotorDual) -> MotorDual {
-    var self_127: Scalar;
-    var other_119: MotorDual;
-
-    self_127 = self_126;
-    other_119 = other_118;
-    let _e4: Scalar = self_127;
-    let _e7: MotorDual = other_119;
-    return MotorDual((vec4<f32>(_e4.g0_) * _e7.g0_));
-}
-
-fn scalar_motor_dual_regressive_product(self_128: Scalar, other_120: MotorDual) -> Scalar {
-    var self_129: Scalar;
-    var other_121: MotorDual;
-
-    self_129 = self_128;
-    other_121 = other_120;
-    let _e4: Scalar = self_129;
-    let _e6: MotorDual = other_121;
-    return Scalar((_e4.g0_ * _e6.g0_.x));
-}
-
-fn scalar_motor_dual_outer_product(self_130: Scalar, other_122: MotorDual) -> MotorDual {
-    var self_131: Scalar;
-    var other_123: MotorDual;
-
-    self_131 = self_130;
-    other_123 = other_122;
-    let _e4: Scalar = self_131;
-    let _e7: MotorDual = other_123;
-    return MotorDual((vec4<f32>(_e4.g0_) * _e7.g0_));
-}
-
-fn scalar_motor_dual_inner_product(self_132: Scalar, other_124: MotorDual) -> MotorDual {
-    var self_133: Scalar;
-    var other_125: MotorDual;
-
-    self_133 = self_132;
-    other_125 = other_124;
-    let _e4: Scalar = self_133;
-    let _e7: MotorDual = other_125;
-    return MotorDual((vec4<f32>(_e4.g0_) * _e7.g0_));
-}
-
-fn scalar_motor_dual_left_contraction(self_134: Scalar, other_126: MotorDual) -> MotorDual {
+fn scalar_motor_geometric_product(self_134: Scalar, other_122: Motor) -> Motor {
     var self_135: Scalar;
-    var other_127: MotorDual;
+    var other_123: Motor;
 
     self_135 = self_134;
-    other_127 = other_126;
+    other_123 = other_122;
     let _e4: Scalar = self_135;
-    let _e7: MotorDual = other_127;
+    let _e7: Motor = other_123;
+    return Motor((vec4<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn scalar_motor_outer_product(self_136: Scalar, other_124: Motor) -> Motor {
+    var self_137: Scalar;
+    var other_125: Motor;
+
+    self_137 = self_136;
+    other_125 = other_124;
+    let _e4: Scalar = self_137;
+    let _e7: Motor = other_125;
+    return Motor((vec4<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn scalar_motor_inner_product(self_138: Scalar, other_126: Motor) -> Motor {
+    var self_139: Scalar;
+    var other_127: Motor;
+
+    self_139 = self_138;
+    other_127 = other_126;
+    let _e4: Scalar = self_139;
+    let _e7: Motor = other_127;
+    return Motor((vec4<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn scalar_motor_left_contraction(self_140: Scalar, other_128: Motor) -> Motor {
+    var self_141: Scalar;
+    var other_129: Motor;
+
+    self_141 = self_140;
+    other_129 = other_128;
+    let _e4: Scalar = self_141;
+    let _e7: Motor = other_129;
+    return Motor((vec4<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn scalar_motor_right_contraction(self_142: Scalar, other_130: Motor) -> Scalar {
+    var self_143: Scalar;
+    var other_131: Motor;
+
+    self_143 = self_142;
+    other_131 = other_130;
+    let _e4: Scalar = self_143;
+    let _e6: Motor = other_131;
+    return Scalar((_e4.g0_ * _e6.g0_.x));
+}
+
+fn scalar_motor_scalar_product(self_144: Scalar, other_132: Motor) -> Scalar {
+    var self_145: Scalar;
+    var other_133: Motor;
+
+    self_145 = self_144;
+    other_133 = other_132;
+    let _e4: Scalar = self_145;
+    let _e6: Motor = other_133;
+    return Scalar((_e4.g0_ * _e6.g0_.x));
+}
+
+fn scalar_motor_dual_geometric_product(self_146: Scalar, other_134: MotorDual) -> MotorDual {
+    var self_147: Scalar;
+    var other_135: MotorDual;
+
+    self_147 = self_146;
+    other_135 = other_134;
+    let _e4: Scalar = self_147;
+    let _e7: MotorDual = other_135;
     return MotorDual((vec4<f32>(_e4.g0_) * _e7.g0_));
 }
 
-fn scalar_squared_magnitude(self_136: Scalar) -> Scalar {
-    var self_137: Scalar;
+fn scalar_motor_dual_regressive_product(self_148: Scalar, other_136: MotorDual) -> Scalar {
+    var self_149: Scalar;
+    var other_137: MotorDual;
 
-    self_137 = self_136;
-    let _e2: Scalar = self_137;
-    let _e3: Scalar = self_137;
+    self_149 = self_148;
+    other_137 = other_136;
+    let _e4: Scalar = self_149;
+    let _e6: MotorDual = other_137;
+    return Scalar((_e4.g0_ * _e6.g0_.x));
+}
+
+fn scalar_motor_dual_outer_product(self_150: Scalar, other_138: MotorDual) -> MotorDual {
+    var self_151: Scalar;
+    var other_139: MotorDual;
+
+    self_151 = self_150;
+    other_139 = other_138;
+    let _e4: Scalar = self_151;
+    let _e7: MotorDual = other_139;
+    return MotorDual((vec4<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn scalar_motor_dual_inner_product(self_152: Scalar, other_140: MotorDual) -> MotorDual {
+    var self_153: Scalar;
+    var other_141: MotorDual;
+
+    self_153 = self_152;
+    other_141 = other_140;
+    let _e4: Scalar = self_153;
+    let _e7: MotorDual = other_141;
+    return MotorDual((vec4<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn scalar_motor_dual_geometric_anti_product(self_154: Scalar, other_142: MotorDual) -> Rotor {
+    var self_155: Scalar;
+    var other_143: MotorDual;
+
+    self_155 = self_154;
+    other_143 = other_142;
+    let _e4: Scalar = self_155;
+    let _e7: MotorDual = other_143;
+    let _e10: MotorDual = other_143;
+    return Rotor(((vec2<f32>(_e4.g0_) * vec2<f32>(_e7.g0_.x, _e10.g0_.y)) * vec2<f32>(1.0, -(1.0))));
+}
+
+fn scalar_motor_dual_inner_anti_product(self_156: Scalar, other_144: MotorDual) -> Rotor {
+    var self_157: Scalar;
+    var other_145: MotorDual;
+
+    self_157 = self_156;
+    other_145 = other_144;
+    let _e4: Scalar = self_157;
+    let _e7: MotorDual = other_145;
+    let _e10: MotorDual = other_145;
+    return Rotor(((vec2<f32>(_e4.g0_) * vec2<f32>(_e7.g0_.x, _e10.g0_.y)) * vec2<f32>(1.0, -(1.0))));
+}
+
+fn scalar_motor_dual_left_contraction(self_158: Scalar, other_146: MotorDual) -> MotorDual {
+    var self_159: Scalar;
+    var other_147: MotorDual;
+
+    self_159 = self_158;
+    other_147 = other_146;
+    let _e4: Scalar = self_159;
+    let _e7: MotorDual = other_147;
+    return MotorDual((vec4<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn scalar_motor_dual_right_anti_contraction(self_160: Scalar, other_148: MotorDual) -> Rotor {
+    var self_161: Scalar;
+    var other_149: MotorDual;
+
+    self_161 = self_160;
+    other_149 = other_148;
+    let _e4: Scalar = self_161;
+    let _e7: MotorDual = other_149;
+    let _e10: MotorDual = other_149;
+    return Rotor(((vec2<f32>(_e4.g0_) * vec2<f32>(_e7.g0_.x, _e10.g0_.y)) * vec2<f32>(1.0, -(1.0))));
+}
+
+fn scalar_squared_magnitude(self_162: Scalar) -> Scalar {
+    var self_163: Scalar;
+
+    self_163 = self_162;
+    let _e2: Scalar = self_163;
+    let _e3: Scalar = self_163;
     let _e4: Scalar = scalar_reversal(_e3);
     let _e5: Scalar = scalar_scalar_scalar_product(_e2, _e4);
     return _e5;
 }
 
-fn scalar_magnitude(self_138: Scalar) -> Scalar {
-    var self_139: Scalar;
+fn scalar_magnitude(self_164: Scalar) -> Scalar {
+    var self_165: Scalar;
 
-    self_139 = self_138;
-    let _e2: Scalar = self_139;
+    self_165 = self_164;
+    let _e2: Scalar = self_165;
     let _e3: Scalar = scalar_squared_magnitude(_e2);
     return Scalar(sqrt(_e3.g0_));
 }
 
-fn scalar_scale(self_140: Scalar, other_128: f32) -> Scalar {
-    var self_141: Scalar;
-    var other_129: f32;
+fn scalar_scale(self_166: Scalar, other_150: f32) -> Scalar {
+    var self_167: Scalar;
+    var other_151: f32;
 
-    self_141 = self_140;
-    other_129 = other_128;
-    let _e4: Scalar = self_141;
-    let _e5: f32 = other_129;
+    self_167 = self_166;
+    other_151 = other_150;
+    let _e4: Scalar = self_167;
+    let _e5: f32 = other_151;
     let _e7: Scalar = scalar_scalar_geometric_product(_e4, Scalar(_e5));
     return _e7;
 }
 
-fn scalar_signum(self_142: Scalar) -> Scalar {
-    var self_143: Scalar;
+fn scalar_signum(self_168: Scalar) -> Scalar {
+    var self_169: Scalar;
 
-    self_143 = self_142;
-    let _e2: Scalar = self_143;
-    let _e3: Scalar = self_143;
+    self_169 = self_168;
+    let _e2: Scalar = self_169;
+    let _e3: Scalar = self_169;
     let _e4: Scalar = scalar_magnitude(_e3);
     let _e9: Scalar = scalar_scalar_geometric_product(_e2, Scalar((1.0 / _e4.g0_)));
     return _e9;
 }
 
-fn scalar_inverse(self_144: Scalar) -> Scalar {
-    var self_145: Scalar;
+fn scalar_inverse(self_170: Scalar) -> Scalar {
+    var self_171: Scalar;
 
-    self_145 = self_144;
-    let _e2: Scalar = self_145;
+    self_171 = self_170;
+    let _e2: Scalar = self_171;
     let _e3: Scalar = scalar_reversal(_e2);
-    let _e4: Scalar = self_145;
+    let _e4: Scalar = self_171;
     let _e5: Scalar = scalar_squared_magnitude(_e4);
     let _e10: Scalar = scalar_scalar_geometric_product(_e3, Scalar((1.0 / _e5.g0_)));
     return _e10;
+}
+
+fn anti_scalar_zero() -> AntiScalar {
+    return AntiScalar(0.0);
+}
+
+fn anti_scalar_one() -> AntiScalar {
+    return AntiScalar(0.0);
+}
+
+fn anti_scalar_neg(self_172: AntiScalar) -> AntiScalar {
+    var self_173: AntiScalar;
+
+    self_173 = self_172;
+    let _e2: AntiScalar = self_173;
+    return AntiScalar((_e2.g0_ * -(1.0)));
+}
+
+fn anti_scalar_automorphism(self_174: AntiScalar) -> AntiScalar {
+    var self_175: AntiScalar;
+
+    self_175 = self_174;
+    let _e2: AntiScalar = self_175;
+    return AntiScalar((_e2.g0_ * -(1.0)));
+}
+
+fn anti_scalar_reversal(self_176: AntiScalar) -> AntiScalar {
+    var self_177: AntiScalar;
+
+    self_177 = self_176;
+    let _e2: AntiScalar = self_177;
+    return AntiScalar((_e2.g0_ * -(1.0)));
+}
+
+fn anti_scalar_conjugation(self_178: AntiScalar) -> AntiScalar {
+    var self_179: AntiScalar;
+
+    self_179 = self_178;
+    let _e2: AntiScalar = self_179;
+    return AntiScalar(_e2.g0_);
+}
+
+fn anti_scalar_dual(self_180: AntiScalar) -> Scalar {
+    var self_181: AntiScalar;
+
+    self_181 = self_180;
+    let _e2: AntiScalar = self_181;
+    return Scalar(_e2.g0_);
+}
+
+fn anti_scalar_anti_reversal(self_182: AntiScalar) -> AntiScalar {
+    var self_183: AntiScalar;
+
+    self_183 = self_182;
+    let _e2: AntiScalar = self_183;
+    return AntiScalar(_e2.g0_);
+}
+
+fn anti_scalar_scalar_geometric_product(self_184: AntiScalar, other_152: Scalar) -> AntiScalar {
+    var self_185: AntiScalar;
+    var other_153: Scalar;
+
+    self_185 = self_184;
+    other_153 = other_152;
+    let _e4: AntiScalar = self_185;
+    let _e6: Scalar = other_153;
+    return AntiScalar((_e4.g0_ * _e6.g0_));
+}
+
+fn anti_scalar_scalar_regressive_product(self_186: AntiScalar, other_154: Scalar) -> Scalar {
+    var self_187: AntiScalar;
+    var other_155: Scalar;
+
+    self_187 = self_186;
+    other_155 = other_154;
+    let _e4: AntiScalar = self_187;
+    let _e6: Scalar = other_155;
+    return Scalar((_e4.g0_ * _e6.g0_));
+}
+
+fn anti_scalar_scalar_outer_product(self_188: AntiScalar, other_156: Scalar) -> AntiScalar {
+    var self_189: AntiScalar;
+    var other_157: Scalar;
+
+    self_189 = self_188;
+    other_157 = other_156;
+    let _e4: AntiScalar = self_189;
+    let _e6: Scalar = other_157;
+    return AntiScalar((_e4.g0_ * _e6.g0_));
+}
+
+fn anti_scalar_scalar_inner_product(self_190: AntiScalar, other_158: Scalar) -> AntiScalar {
+    var self_191: AntiScalar;
+    var other_159: Scalar;
+
+    self_191 = self_190;
+    other_159 = other_158;
+    let _e4: AntiScalar = self_191;
+    let _e6: Scalar = other_159;
+    return AntiScalar((_e4.g0_ * _e6.g0_));
+}
+
+fn anti_scalar_scalar_geometric_anti_product(self_192: AntiScalar, other_160: Scalar) -> Scalar {
+    var self_193: AntiScalar;
+    var other_161: Scalar;
+
+    self_193 = self_192;
+    other_161 = other_160;
+    let _e4: AntiScalar = self_193;
+    let _e6: Scalar = other_161;
+    return Scalar((_e4.g0_ * _e6.g0_));
+}
+
+fn anti_scalar_scalar_inner_anti_product(self_194: AntiScalar, other_162: Scalar) -> Scalar {
+    var self_195: AntiScalar;
+    var other_163: Scalar;
+
+    self_195 = self_194;
+    other_163 = other_162;
+    let _e4: AntiScalar = self_195;
+    let _e6: Scalar = other_163;
+    return Scalar((_e4.g0_ * _e6.g0_));
+}
+
+fn anti_scalar_scalar_right_contraction(self_196: AntiScalar, other_164: Scalar) -> AntiScalar {
+    var self_197: AntiScalar;
+    var other_165: Scalar;
+
+    self_197 = self_196;
+    other_165 = other_164;
+    let _e4: AntiScalar = self_197;
+    let _e6: Scalar = other_165;
+    return AntiScalar((_e4.g0_ * _e6.g0_));
+}
+
+fn anti_scalar_scalar_left_anti_contraction(self_198: AntiScalar, other_166: Scalar) -> Scalar {
+    var self_199: AntiScalar;
+    var other_167: Scalar;
+
+    self_199 = self_198;
+    other_167 = other_166;
+    let _e4: AntiScalar = self_199;
+    let _e6: Scalar = other_167;
+    return Scalar((_e4.g0_ * _e6.g0_));
+}
+
+fn anti_scalar_anti_scalar_add(self_200: AntiScalar, other_168: AntiScalar) -> AntiScalar {
+    var self_201: AntiScalar;
+    var other_169: AntiScalar;
+
+    self_201 = self_200;
+    other_169 = other_168;
+    let _e4: AntiScalar = self_201;
+    let _e6: AntiScalar = other_169;
+    return AntiScalar((_e4.g0_ + _e6.g0_));
+}
+
+fn anti_scalar_anti_scalar_sub(self_202: AntiScalar, other_170: AntiScalar) -> AntiScalar {
+    var self_203: AntiScalar;
+    var other_171: AntiScalar;
+
+    self_203 = self_202;
+    other_171 = other_170;
+    let _e4: AntiScalar = self_203;
+    let _e6: AntiScalar = other_171;
+    return AntiScalar((_e4.g0_ - _e6.g0_));
+}
+
+fn anti_scalar_anti_scalar_mul(self_204: AntiScalar, other_172: AntiScalar) -> AntiScalar {
+    var self_205: AntiScalar;
+    var other_173: AntiScalar;
+
+    self_205 = self_204;
+    other_173 = other_172;
+    let _e4: AntiScalar = self_205;
+    let _e6: AntiScalar = other_173;
+    return AntiScalar((_e4.g0_ * _e6.g0_));
+}
+
+fn anti_scalar_anti_scalar_div(self_206: AntiScalar, other_174: AntiScalar) -> AntiScalar {
+    var self_207: AntiScalar;
+    var other_175: AntiScalar;
+
+    self_207 = self_206;
+    other_175 = other_174;
+    let _e4: AntiScalar = self_207;
+    let _e8: AntiScalar = other_175;
+    return AntiScalar((((_e4.g0_ * 1.0) / _e8.g0_) * 1.0));
+}
+
+fn anti_scalar_anti_scalar_regressive_product(self_208: AntiScalar, other_176: AntiScalar) -> AntiScalar {
+    var self_209: AntiScalar;
+    var other_177: AntiScalar;
+
+    self_209 = self_208;
+    other_177 = other_176;
+    let _e4: AntiScalar = self_209;
+    let _e6: AntiScalar = other_177;
+    return AntiScalar((_e4.g0_ * _e6.g0_));
+}
+
+fn anti_scalar_anti_scalar_geometric_anti_product(self_210: AntiScalar, other_178: AntiScalar) -> AntiScalar {
+    var self_211: AntiScalar;
+    var other_179: AntiScalar;
+
+    self_211 = self_210;
+    other_179 = other_178;
+    let _e4: AntiScalar = self_211;
+    let _e6: AntiScalar = other_179;
+    return AntiScalar((_e4.g0_ * _e6.g0_));
+}
+
+fn anti_scalar_anti_scalar_inner_anti_product(self_212: AntiScalar, other_180: AntiScalar) -> AntiScalar {
+    var self_213: AntiScalar;
+    var other_181: AntiScalar;
+
+    self_213 = self_212;
+    other_181 = other_180;
+    let _e4: AntiScalar = self_213;
+    let _e6: AntiScalar = other_181;
+    return AntiScalar((_e4.g0_ * _e6.g0_));
+}
+
+fn anti_scalar_anti_scalar_left_anti_contraction(self_214: AntiScalar, other_182: AntiScalar) -> AntiScalar {
+    var self_215: AntiScalar;
+    var other_183: AntiScalar;
+
+    self_215 = self_214;
+    other_183 = other_182;
+    let _e4: AntiScalar = self_215;
+    let _e6: AntiScalar = other_183;
+    return AntiScalar((_e4.g0_ * _e6.g0_));
+}
+
+fn anti_scalar_anti_scalar_right_anti_contraction(self_216: AntiScalar, other_184: AntiScalar) -> AntiScalar {
+    var self_217: AntiScalar;
+    var other_185: AntiScalar;
+
+    self_217 = self_216;
+    other_185 = other_184;
+    let _e4: AntiScalar = self_217;
+    let _e6: AntiScalar = other_185;
+    return AntiScalar((_e4.g0_ * _e6.g0_));
+}
+
+fn anti_scalar_anti_scalar_anti_scalar_product(self_218: AntiScalar, other_186: AntiScalar) -> AntiScalar {
+    var self_219: AntiScalar;
+    var other_187: AntiScalar;
+
+    self_219 = self_218;
+    other_187 = other_186;
+    let _e4: AntiScalar = self_219;
+    let _e6: AntiScalar = other_187;
+    return AntiScalar((_e4.g0_ * _e6.g0_));
+}
+
+fn anti_scalar_multi_vector_add(self_220: AntiScalar, other_188: MultiVector) -> MultiVector {
+    var self_221: AntiScalar;
+    var other_189: MultiVector;
+
+    self_221 = self_220;
+    other_189 = other_188;
+    let _e4: MultiVector = other_189;
+    let _e6: AntiScalar = self_221;
+    let _e15: MultiVector = other_189;
+    return MultiVector(_e4.g0_, ((vec4<f32>(_e6.g0_) * vec4<f32>(0.0, 1.0, 0.0, 0.0)) + _e15.g1_));
+}
+
+fn anti_scalar_multi_vector_sub(self_222: AntiScalar, other_190: MultiVector) -> MultiVector {
+    var self_223: AntiScalar;
+    var other_191: MultiVector;
+
+    self_223 = self_222;
+    other_191 = other_190;
+    let _e6: MultiVector = other_191;
+    let _e9: AntiScalar = self_223;
+    let _e18: MultiVector = other_191;
+    return MultiVector((vec4<f32>(0.0) - _e6.g0_), ((vec4<f32>(_e9.g0_) * vec4<f32>(0.0, 1.0, 0.0, 0.0)) - _e18.g1_));
+}
+
+fn anti_scalar_multi_vector_regressive_product(self_224: AntiScalar, other_192: MultiVector) -> MultiVector {
+    var self_225: AntiScalar;
+    var other_193: MultiVector;
+
+    self_225 = self_224;
+    other_193 = other_192;
+    let _e4: AntiScalar = self_225;
+    let _e7: MultiVector = other_193;
+    let _e10: AntiScalar = self_225;
+    let _e13: MultiVector = other_193;
+    return MultiVector((vec4<f32>(_e4.g0_) * _e7.g0_), (vec4<f32>(_e10.g0_) * _e13.g1_));
+}
+
+fn anti_scalar_multi_vector_outer_product(self_226: AntiScalar, other_194: MultiVector) -> AntiScalar {
+    var self_227: AntiScalar;
+    var other_195: MultiVector;
+
+    self_227 = self_226;
+    other_195 = other_194;
+    let _e4: AntiScalar = self_227;
+    let _e6: MultiVector = other_195;
+    return AntiScalar((_e4.g0_ * _e6.g0_.x));
+}
+
+fn anti_scalar_multi_vector_geometric_anti_product(self_228: AntiScalar, other_196: MultiVector) -> MultiVector {
+    var self_229: AntiScalar;
+    var other_197: MultiVector;
+
+    self_229 = self_228;
+    other_197 = other_196;
+    let _e4: AntiScalar = self_229;
+    let _e7: MultiVector = other_197;
+    let _e10: AntiScalar = self_229;
+    let _e13: MultiVector = other_197;
+    return MultiVector((vec4<f32>(_e4.g0_) * _e7.g0_), (vec4<f32>(_e10.g0_) * _e13.g1_));
+}
+
+fn anti_scalar_multi_vector_inner_anti_product(self_230: AntiScalar, other_198: MultiVector) -> MultiVector {
+    var self_231: AntiScalar;
+    var other_199: MultiVector;
+
+    self_231 = self_230;
+    other_199 = other_198;
+    let _e4: AntiScalar = self_231;
+    let _e7: MultiVector = other_199;
+    let _e10: AntiScalar = self_231;
+    let _e13: MultiVector = other_199;
+    return MultiVector((vec4<f32>(_e4.g0_) * _e7.g0_), (vec4<f32>(_e10.g0_) * _e13.g1_));
+}
+
+fn anti_scalar_multi_vector_left_anti_contraction(self_232: AntiScalar, other_200: MultiVector) -> MultiVector {
+    var self_233: AntiScalar;
+    var other_201: MultiVector;
+
+    self_233 = self_232;
+    other_201 = other_200;
+    let _e4: AntiScalar = self_233;
+    let _e7: MultiVector = other_201;
+    let _e10: AntiScalar = self_233;
+    let _e13: MultiVector = other_201;
+    return MultiVector((vec4<f32>(_e4.g0_) * _e7.g0_), (vec4<f32>(_e10.g0_) * _e13.g1_));
+}
+
+fn anti_scalar_multi_vector_right_anti_contraction(self_234: AntiScalar, other_202: MultiVector) -> AntiScalar {
+    var self_235: AntiScalar;
+    var other_203: MultiVector;
+
+    self_235 = self_234;
+    other_203 = other_202;
+    let _e4: AntiScalar = self_235;
+    let _e6: MultiVector = other_203;
+    return AntiScalar((_e4.g0_ * _e6.g1_.y));
+}
+
+fn anti_scalar_multi_vector_anti_scalar_product(self_236: AntiScalar, other_204: MultiVector) -> AntiScalar {
+    var self_237: AntiScalar;
+    var other_205: MultiVector;
+
+    self_237 = self_236;
+    other_205 = other_204;
+    let _e4: AntiScalar = self_237;
+    let _e6: MultiVector = other_205;
+    return AntiScalar((_e4.g0_ * _e6.g1_.y));
+}
+
+fn anti_scalar_rotor_regressive_product(self_238: AntiScalar, other_206: Rotor) -> Rotor {
+    var self_239: AntiScalar;
+    var other_207: Rotor;
+
+    self_239 = self_238;
+    other_207 = other_206;
+    let _e4: AntiScalar = self_239;
+    let _e7: Rotor = other_207;
+    return Rotor((vec2<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn anti_scalar_rotor_outer_product(self_240: AntiScalar, other_208: Rotor) -> AntiScalar {
+    var self_241: AntiScalar;
+    var other_209: Rotor;
+
+    self_241 = self_240;
+    other_209 = other_208;
+    let _e4: AntiScalar = self_241;
+    let _e6: Rotor = other_209;
+    return AntiScalar((_e4.g0_ * _e6.g0_.x));
+}
+
+fn anti_scalar_rotor_geometric_anti_product(self_242: AntiScalar, other_210: Rotor) -> Rotor {
+    var self_243: AntiScalar;
+    var other_211: Rotor;
+
+    self_243 = self_242;
+    other_211 = other_210;
+    let _e4: AntiScalar = self_243;
+    let _e7: Rotor = other_211;
+    return Rotor((vec2<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn anti_scalar_rotor_inner_anti_product(self_244: AntiScalar, other_212: Rotor) -> Rotor {
+    var self_245: AntiScalar;
+    var other_213: Rotor;
+
+    self_245 = self_244;
+    other_213 = other_212;
+    let _e4: AntiScalar = self_245;
+    let _e7: Rotor = other_213;
+    return Rotor((vec2<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn anti_scalar_rotor_left_anti_contraction(self_246: AntiScalar, other_214: Rotor) -> Rotor {
+    var self_247: AntiScalar;
+    var other_215: Rotor;
+
+    self_247 = self_246;
+    other_215 = other_214;
+    let _e4: AntiScalar = self_247;
+    let _e7: Rotor = other_215;
+    return Rotor((vec2<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn anti_scalar_point_regressive_product(self_248: AntiScalar, other_216: Point) -> Point {
+    var self_249: AntiScalar;
+    var other_217: Point;
+
+    self_249 = self_248;
+    other_217 = other_216;
+    let _e4: AntiScalar = self_249;
+    let _e7: Point = other_217;
+    return Point((vec3<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn anti_scalar_point_geometric_anti_product(self_250: AntiScalar, other_218: Point) -> Point {
+    var self_251: AntiScalar;
+    var other_219: Point;
+
+    self_251 = self_250;
+    other_219 = other_218;
+    let _e4: AntiScalar = self_251;
+    let _e7: Point = other_219;
+    return Point((vec3<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn anti_scalar_point_inner_anti_product(self_252: AntiScalar, other_220: Point) -> Point {
+    var self_253: AntiScalar;
+    var other_221: Point;
+
+    self_253 = self_252;
+    other_221 = other_220;
+    let _e4: AntiScalar = self_253;
+    let _e7: Point = other_221;
+    return Point((vec3<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn anti_scalar_point_left_anti_contraction(self_254: AntiScalar, other_222: Point) -> Point {
+    var self_255: AntiScalar;
+    var other_223: Point;
+
+    self_255 = self_254;
+    other_223 = other_222;
+    let _e4: AntiScalar = self_255;
+    let _e7: Point = other_223;
+    return Point((vec3<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn anti_scalar_ideal_point_regressive_product(self_256: AntiScalar, other_224: IdealPoint) -> IdealPoint {
+    var self_257: AntiScalar;
+    var other_225: IdealPoint;
+
+    self_257 = self_256;
+    other_225 = other_224;
+    let _e4: AntiScalar = self_257;
+    let _e7: IdealPoint = other_225;
+    return IdealPoint((vec2<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn anti_scalar_ideal_point_geometric_anti_product(self_258: AntiScalar, other_226: IdealPoint) -> IdealPoint {
+    var self_259: AntiScalar;
+    var other_227: IdealPoint;
+
+    self_259 = self_258;
+    other_227 = other_226;
+    let _e4: AntiScalar = self_259;
+    let _e7: IdealPoint = other_227;
+    return IdealPoint((vec2<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn anti_scalar_ideal_point_inner_anti_product(self_260: AntiScalar, other_228: IdealPoint) -> IdealPoint {
+    var self_261: AntiScalar;
+    var other_229: IdealPoint;
+
+    self_261 = self_260;
+    other_229 = other_228;
+    let _e4: AntiScalar = self_261;
+    let _e7: IdealPoint = other_229;
+    return IdealPoint((vec2<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn anti_scalar_ideal_point_left_anti_contraction(self_262: AntiScalar, other_230: IdealPoint) -> IdealPoint {
+    var self_263: AntiScalar;
+    var other_231: IdealPoint;
+
+    self_263 = self_262;
+    other_231 = other_230;
+    let _e4: AntiScalar = self_263;
+    let _e7: IdealPoint = other_231;
+    return IdealPoint((vec2<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn anti_scalar_plane_add(self_264: AntiScalar, other_232: Plane) -> MotorDual {
+    var self_265: AntiScalar;
+    var other_233: Plane;
+
+    self_265 = self_264;
+    other_233 = other_232;
+    let _e4: AntiScalar = self_265;
+    let _e13: Plane = other_233;
+    let _e16: Plane = other_233;
+    let _e19: Plane = other_233;
+    let _e22: Plane = other_233;
+    return MotorDual(((vec4<f32>(_e4.g0_) * vec4<f32>(1.0, 0.0, 0.0, 0.0)) + (vec4<f32>(_e13.g0_.x, _e16.g0_.x, _e19.g0_.y, _e22.g0_.z) * vec4<f32>(0.0, 1.0, 1.0, 1.0))));
+}
+
+fn anti_scalar_plane_sub(self_266: AntiScalar, other_234: Plane) -> MotorDual {
+    var self_267: AntiScalar;
+    var other_235: Plane;
+
+    self_267 = self_266;
+    other_235 = other_234;
+    let _e4: AntiScalar = self_267;
+    let _e13: Plane = other_235;
+    let _e16: Plane = other_235;
+    let _e19: Plane = other_235;
+    let _e22: Plane = other_235;
+    return MotorDual(((vec4<f32>(_e4.g0_) * vec4<f32>(1.0, 0.0, 0.0, 0.0)) - (vec4<f32>(_e13.g0_.x, _e16.g0_.x, _e19.g0_.y, _e22.g0_.z) * vec4<f32>(0.0, 1.0, 1.0, 1.0))));
+}
+
+fn anti_scalar_plane_geometric_product(self_268: AntiScalar, other_236: Plane) -> IdealPoint {
+    var self_269: AntiScalar;
+    var other_237: Plane;
+
+    self_269 = self_268;
+    other_237 = other_236;
+    let _e4: AntiScalar = self_269;
+    let _e7: Plane = other_237;
+    let _e10: Plane = other_237;
+    return IdealPoint((vec2<f32>(_e4.g0_) * vec2<f32>(_e7.g0_.y, _e10.g0_.z)));
+}
+
+fn anti_scalar_plane_regressive_product(self_270: AntiScalar, other_238: Plane) -> Plane {
+    var self_271: AntiScalar;
+    var other_239: Plane;
+
+    self_271 = self_270;
+    other_239 = other_238;
+    let _e4: AntiScalar = self_271;
+    let _e7: Plane = other_239;
+    return Plane((vec3<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn anti_scalar_plane_inner_product(self_272: AntiScalar, other_240: Plane) -> IdealPoint {
+    var self_273: AntiScalar;
+    var other_241: Plane;
+
+    self_273 = self_272;
+    other_241 = other_240;
+    let _e4: AntiScalar = self_273;
+    let _e7: Plane = other_241;
+    let _e10: Plane = other_241;
+    return IdealPoint((vec2<f32>(_e4.g0_) * vec2<f32>(_e7.g0_.y, _e10.g0_.z)));
+}
+
+fn anti_scalar_plane_geometric_anti_product(self_274: AntiScalar, other_242: Plane) -> Plane {
+    var self_275: AntiScalar;
+    var other_243: Plane;
+
+    self_275 = self_274;
+    other_243 = other_242;
+    let _e4: AntiScalar = self_275;
+    let _e7: Plane = other_243;
+    return Plane((vec3<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn anti_scalar_plane_inner_anti_product(self_276: AntiScalar, other_244: Plane) -> Plane {
+    var self_277: AntiScalar;
+    var other_245: Plane;
+
+    self_277 = self_276;
+    other_245 = other_244;
+    let _e4: AntiScalar = self_277;
+    let _e7: Plane = other_245;
+    return Plane((vec3<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn anti_scalar_plane_right_contraction(self_278: AntiScalar, other_246: Plane) -> IdealPoint {
+    var self_279: AntiScalar;
+    var other_247: Plane;
+
+    self_279 = self_278;
+    other_247 = other_246;
+    let _e4: AntiScalar = self_279;
+    let _e7: Plane = other_247;
+    let _e10: Plane = other_247;
+    return IdealPoint((vec2<f32>(_e4.g0_) * vec2<f32>(_e7.g0_.y, _e10.g0_.z)));
+}
+
+fn anti_scalar_plane_left_anti_contraction(self_280: AntiScalar, other_248: Plane) -> Plane {
+    var self_281: AntiScalar;
+    var other_249: Plane;
+
+    self_281 = self_280;
+    other_249 = other_248;
+    let _e4: AntiScalar = self_281;
+    let _e7: Plane = other_249;
+    return Plane((vec3<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn anti_scalar_translator_geometric_product(self_282: AntiScalar, other_250: Translator) -> AntiScalar {
+    var self_283: AntiScalar;
+    var other_251: Translator;
+
+    self_283 = self_282;
+    other_251 = other_250;
+    let _e4: AntiScalar = self_283;
+    let _e6: Translator = other_251;
+    return AntiScalar((_e4.g0_ * _e6.g0_.x));
+}
+
+fn anti_scalar_translator_regressive_product(self_284: AntiScalar, other_252: Translator) -> Translator {
+    var self_285: AntiScalar;
+    var other_253: Translator;
+
+    self_285 = self_284;
+    other_253 = other_252;
+    let _e4: AntiScalar = self_285;
+    let _e7: Translator = other_253;
+    return Translator((vec3<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn anti_scalar_translator_outer_product(self_286: AntiScalar, other_254: Translator) -> AntiScalar {
+    var self_287: AntiScalar;
+    var other_255: Translator;
+
+    self_287 = self_286;
+    other_255 = other_254;
+    let _e4: AntiScalar = self_287;
+    let _e6: Translator = other_255;
+    return AntiScalar((_e4.g0_ * _e6.g0_.x));
+}
+
+fn anti_scalar_translator_inner_product(self_288: AntiScalar, other_256: Translator) -> AntiScalar {
+    var self_289: AntiScalar;
+    var other_257: Translator;
+
+    self_289 = self_288;
+    other_257 = other_256;
+    let _e4: AntiScalar = self_289;
+    let _e6: Translator = other_257;
+    return AntiScalar((_e4.g0_ * _e6.g0_.x));
+}
+
+fn anti_scalar_translator_geometric_anti_product(self_290: AntiScalar, other_258: Translator) -> Translator {
+    var self_291: AntiScalar;
+    var other_259: Translator;
+
+    self_291 = self_290;
+    other_259 = other_258;
+    let _e4: AntiScalar = self_291;
+    let _e7: Translator = other_259;
+    return Translator((vec3<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn anti_scalar_translator_inner_anti_product(self_292: AntiScalar, other_260: Translator) -> Translator {
+    var self_293: AntiScalar;
+    var other_261: Translator;
+
+    self_293 = self_292;
+    other_261 = other_260;
+    let _e4: AntiScalar = self_293;
+    let _e7: Translator = other_261;
+    return Translator((vec3<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn anti_scalar_translator_right_contraction(self_294: AntiScalar, other_262: Translator) -> AntiScalar {
+    var self_295: AntiScalar;
+    var other_263: Translator;
+
+    self_295 = self_294;
+    other_263 = other_262;
+    let _e4: AntiScalar = self_295;
+    let _e6: Translator = other_263;
+    return AntiScalar((_e4.g0_ * _e6.g0_.x));
+}
+
+fn anti_scalar_translator_left_anti_contraction(self_296: AntiScalar, other_264: Translator) -> Translator {
+    var self_297: AntiScalar;
+    var other_265: Translator;
+
+    self_297 = self_296;
+    other_265 = other_264;
+    let _e4: AntiScalar = self_297;
+    let _e7: Translator = other_265;
+    return Translator((vec3<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn anti_scalar_motor_regressive_product(self_298: AntiScalar, other_266: Motor) -> Motor {
+    var self_299: AntiScalar;
+    var other_267: Motor;
+
+    self_299 = self_298;
+    other_267 = other_266;
+    let _e4: AntiScalar = self_299;
+    let _e7: Motor = other_267;
+    return Motor((vec4<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn anti_scalar_motor_outer_product(self_300: AntiScalar, other_268: Motor) -> AntiScalar {
+    var self_301: AntiScalar;
+    var other_269: Motor;
+
+    self_301 = self_300;
+    other_269 = other_268;
+    let _e4: AntiScalar = self_301;
+    let _e6: Motor = other_269;
+    return AntiScalar((_e4.g0_ * _e6.g0_.x));
+}
+
+fn anti_scalar_motor_geometric_anti_product(self_302: AntiScalar, other_270: Motor) -> Motor {
+    var self_303: AntiScalar;
+    var other_271: Motor;
+
+    self_303 = self_302;
+    other_271 = other_270;
+    let _e4: AntiScalar = self_303;
+    let _e7: Motor = other_271;
+    return Motor((vec4<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn anti_scalar_motor_inner_anti_product(self_304: AntiScalar, other_272: Motor) -> Motor {
+    var self_305: AntiScalar;
+    var other_273: Motor;
+
+    self_305 = self_304;
+    other_273 = other_272;
+    let _e4: AntiScalar = self_305;
+    let _e7: Motor = other_273;
+    return Motor((vec4<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn anti_scalar_motor_left_anti_contraction(self_306: AntiScalar, other_274: Motor) -> Motor {
+    var self_307: AntiScalar;
+    var other_275: Motor;
+
+    self_307 = self_306;
+    other_275 = other_274;
+    let _e4: AntiScalar = self_307;
+    let _e7: Motor = other_275;
+    return Motor((vec4<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn anti_scalar_motor_dual_add(self_308: AntiScalar, other_276: MotorDual) -> MotorDual {
+    var self_309: AntiScalar;
+    var other_277: MotorDual;
+
+    self_309 = self_308;
+    other_277 = other_276;
+    let _e4: AntiScalar = self_309;
+    let _e13: MotorDual = other_277;
+    return MotorDual(((vec4<f32>(_e4.g0_) * vec4<f32>(1.0, 0.0, 0.0, 0.0)) + _e13.g0_));
+}
+
+fn anti_scalar_motor_dual_sub(self_310: AntiScalar, other_278: MotorDual) -> MotorDual {
+    var self_311: AntiScalar;
+    var other_279: MotorDual;
+
+    self_311 = self_310;
+    other_279 = other_278;
+    let _e4: AntiScalar = self_311;
+    let _e13: MotorDual = other_279;
+    return MotorDual(((vec4<f32>(_e4.g0_) * vec4<f32>(1.0, 0.0, 0.0, 0.0)) - _e13.g0_));
+}
+
+fn anti_scalar_motor_dual_geometric_product(self_312: AntiScalar, other_280: MotorDual) -> IdealPoint {
+    var self_313: AntiScalar;
+    var other_281: MotorDual;
+
+    self_313 = self_312;
+    other_281 = other_280;
+    let _e4: AntiScalar = self_313;
+    let _e7: MotorDual = other_281;
+    let _e10: MotorDual = other_281;
+    return IdealPoint((vec2<f32>(_e4.g0_) * vec2<f32>(_e7.g0_.z, _e10.g0_.w)));
+}
+
+fn anti_scalar_motor_dual_regressive_product(self_314: AntiScalar, other_282: MotorDual) -> MotorDual {
+    var self_315: AntiScalar;
+    var other_283: MotorDual;
+
+    self_315 = self_314;
+    other_283 = other_282;
+    let _e4: AntiScalar = self_315;
+    let _e7: MotorDual = other_283;
+    return MotorDual((vec4<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn anti_scalar_motor_dual_inner_product(self_316: AntiScalar, other_284: MotorDual) -> IdealPoint {
+    var self_317: AntiScalar;
+    var other_285: MotorDual;
+
+    self_317 = self_316;
+    other_285 = other_284;
+    let _e4: AntiScalar = self_317;
+    let _e7: MotorDual = other_285;
+    let _e10: MotorDual = other_285;
+    return IdealPoint((vec2<f32>(_e4.g0_) * vec2<f32>(_e7.g0_.z, _e10.g0_.w)));
+}
+
+fn anti_scalar_motor_dual_geometric_anti_product(self_318: AntiScalar, other_286: MotorDual) -> MotorDual {
+    var self_319: AntiScalar;
+    var other_287: MotorDual;
+
+    self_319 = self_318;
+    other_287 = other_286;
+    let _e4: AntiScalar = self_319;
+    let _e7: MotorDual = other_287;
+    return MotorDual((vec4<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn anti_scalar_motor_dual_inner_anti_product(self_320: AntiScalar, other_288: MotorDual) -> MotorDual {
+    var self_321: AntiScalar;
+    var other_289: MotorDual;
+
+    self_321 = self_320;
+    other_289 = other_288;
+    let _e4: AntiScalar = self_321;
+    let _e7: MotorDual = other_289;
+    return MotorDual((vec4<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn anti_scalar_motor_dual_right_contraction(self_322: AntiScalar, other_290: MotorDual) -> IdealPoint {
+    var self_323: AntiScalar;
+    var other_291: MotorDual;
+
+    self_323 = self_322;
+    other_291 = other_290;
+    let _e4: AntiScalar = self_323;
+    let _e7: MotorDual = other_291;
+    let _e10: MotorDual = other_291;
+    return IdealPoint((vec2<f32>(_e4.g0_) * vec2<f32>(_e7.g0_.z, _e10.g0_.w)));
+}
+
+fn anti_scalar_motor_dual_left_anti_contraction(self_324: AntiScalar, other_292: MotorDual) -> MotorDual {
+    var self_325: AntiScalar;
+    var other_293: MotorDual;
+
+    self_325 = self_324;
+    other_293 = other_292;
+    let _e4: AntiScalar = self_325;
+    let _e7: MotorDual = other_293;
+    return MotorDual((vec4<f32>(_e4.g0_) * _e7.g0_));
+}
+
+fn anti_scalar_motor_dual_right_anti_contraction(self_326: AntiScalar, other_294: MotorDual) -> AntiScalar {
+    var self_327: AntiScalar;
+    var other_295: MotorDual;
+
+    self_327 = self_326;
+    other_295 = other_294;
+    let _e4: AntiScalar = self_327;
+    let _e6: MotorDual = other_295;
+    return AntiScalar((_e4.g0_ * _e6.g0_.x));
+}
+
+fn anti_scalar_motor_dual_anti_scalar_product(self_328: AntiScalar, other_296: MotorDual) -> AntiScalar {
+    var self_329: AntiScalar;
+    var other_297: MotorDual;
+
+    self_329 = self_328;
+    other_297 = other_296;
+    let _e4: AntiScalar = self_329;
+    let _e6: MotorDual = other_297;
+    return AntiScalar((_e4.g0_ * _e6.g0_.x));
+}
+
+fn anti_scalar_scale(self_330: AntiScalar, other_298: f32) -> AntiScalar {
+    var self_331: AntiScalar;
+    var other_299: f32;
+
+    self_331 = self_330;
+    other_299 = other_298;
+    let _e4: AntiScalar = self_331;
+    let _e5: f32 = other_299;
+    let _e7: AntiScalar = anti_scalar_scalar_geometric_product(_e4, Scalar(_e5));
+    return _e7;
 }
 
 fn multi_vector_zero() -> MultiVector {
@@ -862,1280 +1899,1881 @@ fn multi_vector_one() -> MultiVector {
     return MultiVector(vec4<f32>(1.0, 0.0, 0.0, 0.0), vec4<f32>(0.0));
 }
 
-fn multi_vector_neg(self_146: MultiVector) -> MultiVector {
-    var self_147: MultiVector;
+fn multi_vector_neg(self_332: MultiVector) -> MultiVector {
+    var self_333: MultiVector;
 
-    self_147 = self_146;
-    let _e2: MultiVector = self_147;
-    let _e8: MultiVector = self_147;
+    self_333 = self_332;
+    let _e2: MultiVector = self_333;
+    let _e8: MultiVector = self_333;
     return MultiVector((_e2.g0_ * vec4<f32>(-(1.0))), (_e8.g1_ * vec4<f32>(-(1.0))));
 }
 
-fn multi_vector_automorphism(self_148: MultiVector) -> MultiVector {
-    var self_149: MultiVector;
+fn multi_vector_automorphism(self_334: MultiVector) -> MultiVector {
+    var self_335: MultiVector;
 
-    self_149 = self_148;
-    let _e2: MultiVector = self_149;
-    let _e12: MultiVector = self_149;
+    self_335 = self_334;
+    let _e2: MultiVector = self_335;
+    let _e12: MultiVector = self_335;
     return MultiVector((_e2.g0_ * vec4<f32>(1.0, 1.0, -(1.0), -(1.0))), (_e12.g1_ * vec4<f32>(-(1.0), -(1.0), 1.0, 1.0)));
 }
 
-fn multi_vector_reversal(self_150: MultiVector) -> MultiVector {
-    var self_151: MultiVector;
+fn multi_vector_reversal(self_336: MultiVector) -> MultiVector {
+    var self_337: MultiVector;
 
-    self_151 = self_150;
-    let _e2: MultiVector = self_151;
-    let _e11: MultiVector = self_151;
+    self_337 = self_336;
+    let _e2: MultiVector = self_337;
+    let _e11: MultiVector = self_337;
     return MultiVector((_e2.g0_ * vec4<f32>(1.0, -(1.0), 1.0, 1.0)), (_e11.g1_ * vec4<f32>(1.0, -(1.0), -(1.0), -(1.0))));
 }
 
-fn multi_vector_conjugation(self_152: MultiVector) -> MultiVector {
-    var self_153: MultiVector;
+fn multi_vector_conjugation(self_338: MultiVector) -> MultiVector {
+    var self_339: MultiVector;
 
-    self_153 = self_152;
-    let _e2: MultiVector = self_153;
-    let _e13: MultiVector = self_153;
+    self_339 = self_338;
+    let _e2: MultiVector = self_339;
+    let _e13: MultiVector = self_339;
     return MultiVector((_e2.g0_ * vec4<f32>(1.0, -(1.0), -(1.0), -(1.0))), (_e13.g1_ * vec4<f32>(-(1.0), 1.0, -(1.0), -(1.0))));
 }
 
-fn multi_vector_dual(self_154: MultiVector) -> MultiVector {
-    var self_155: MultiVector;
+fn multi_vector_dual(self_340: MultiVector) -> MultiVector {
+    var self_341: MultiVector;
 
-    self_155 = self_154;
-    let _e2: MultiVector = self_155;
-    let _e5: MultiVector = self_155;
+    self_341 = self_340;
+    let _e2: MultiVector = self_341;
+    let _e5: MultiVector = self_341;
     return MultiVector(_e2.g1_.yxwz, _e5.g0_.yxwz);
 }
 
-fn multi_vector_scalar_into(self_156: MultiVector) -> Scalar {
-    var self_157: MultiVector;
+fn multi_vector_anti_reversal(self_342: MultiVector) -> MultiVector {
+    var self_343: MultiVector;
 
-    self_157 = self_156;
-    let _e2: MultiVector = self_157;
+    self_343 = self_342;
+    let _e2: MultiVector = self_343;
+    let _e13: MultiVector = self_343;
+    return MultiVector((_e2.g0_ * vec4<f32>(1.0, -(1.0), -(1.0), -(1.0))), (_e13.g1_ * vec4<f32>(-(1.0), 1.0, -(1.0), -(1.0))));
+}
+
+fn multi_vector_scalar_into(self_344: MultiVector) -> Scalar {
+    var self_345: MultiVector;
+
+    self_345 = self_344;
+    let _e2: MultiVector = self_345;
     return Scalar(_e2.g0_.x);
 }
 
-fn multi_vector_scalar_add(self_158: MultiVector, other_130: Scalar) -> MultiVector {
-    var self_159: MultiVector;
-    var other_131: Scalar;
+fn multi_vector_scalar_add(self_346: MultiVector, other_300: Scalar) -> MultiVector {
+    var self_347: MultiVector;
+    var other_301: Scalar;
 
-    self_159 = self_158;
-    other_131 = other_130;
-    let _e4: MultiVector = self_159;
-    let _e6: Scalar = other_131;
-    let _e16: MultiVector = self_159;
+    self_347 = self_346;
+    other_301 = other_300;
+    let _e4: MultiVector = self_347;
+    let _e6: Scalar = other_301;
+    let _e16: MultiVector = self_347;
     return MultiVector((_e4.g0_ + (vec4<f32>(_e6.g0_) * vec4<f32>(1.0, 0.0, 0.0, 0.0))), _e16.g1_);
 }
 
-fn multi_vector_scalar_sub(self_160: MultiVector, other_132: Scalar) -> MultiVector {
-    var self_161: MultiVector;
-    var other_133: Scalar;
+fn multi_vector_scalar_sub(self_348: MultiVector, other_302: Scalar) -> MultiVector {
+    var self_349: MultiVector;
+    var other_303: Scalar;
 
-    self_161 = self_160;
-    other_133 = other_132;
-    let _e4: MultiVector = self_161;
-    let _e6: Scalar = other_133;
-    let _e16: MultiVector = self_161;
+    self_349 = self_348;
+    other_303 = other_302;
+    let _e4: MultiVector = self_349;
+    let _e6: Scalar = other_303;
+    let _e16: MultiVector = self_349;
     return MultiVector((_e4.g0_ - (vec4<f32>(_e6.g0_) * vec4<f32>(1.0, 0.0, 0.0, 0.0))), _e16.g1_);
 }
 
-fn multi_vector_scalar_geometric_product(self_162: MultiVector, other_134: Scalar) -> MultiVector {
-    var self_163: MultiVector;
-    var other_135: Scalar;
+fn multi_vector_scalar_geometric_product(self_350: MultiVector, other_304: Scalar) -> MultiVector {
+    var self_351: MultiVector;
+    var other_305: Scalar;
 
-    self_163 = self_162;
-    other_135 = other_134;
-    let _e4: MultiVector = self_163;
-    let _e6: Scalar = other_135;
-    let _e10: MultiVector = self_163;
-    let _e12: Scalar = other_135;
+    self_351 = self_350;
+    other_305 = other_304;
+    let _e4: MultiVector = self_351;
+    let _e6: Scalar = other_305;
+    let _e10: MultiVector = self_351;
+    let _e12: Scalar = other_305;
     return MultiVector((_e4.g0_ * vec4<f32>(_e6.g0_)), (_e10.g1_ * vec4<f32>(_e12.g0_)));
 }
 
-fn multi_vector_scalar_regressive_product(self_164: MultiVector, other_136: Scalar) -> Scalar {
-    var self_165: MultiVector;
-    var other_137: Scalar;
+fn multi_vector_scalar_regressive_product(self_352: MultiVector, other_306: Scalar) -> Scalar {
+    var self_353: MultiVector;
+    var other_307: Scalar;
 
-    self_165 = self_164;
-    other_137 = other_136;
-    let _e4: MultiVector = self_165;
-    let _e7: Scalar = other_137;
+    self_353 = self_352;
+    other_307 = other_306;
+    let _e4: MultiVector = self_353;
+    let _e7: Scalar = other_307;
     return Scalar((_e4.g1_.y * _e7.g0_));
 }
 
-fn multi_vector_scalar_outer_product(self_166: MultiVector, other_138: Scalar) -> MultiVector {
-    var self_167: MultiVector;
-    var other_139: Scalar;
+fn multi_vector_scalar_outer_product(self_354: MultiVector, other_308: Scalar) -> MultiVector {
+    var self_355: MultiVector;
+    var other_309: Scalar;
 
-    self_167 = self_166;
-    other_139 = other_138;
-    let _e4: MultiVector = self_167;
-    let _e6: Scalar = other_139;
-    let _e10: MultiVector = self_167;
-    let _e12: Scalar = other_139;
+    self_355 = self_354;
+    other_309 = other_308;
+    let _e4: MultiVector = self_355;
+    let _e6: Scalar = other_309;
+    let _e10: MultiVector = self_355;
+    let _e12: Scalar = other_309;
     return MultiVector((_e4.g0_ * vec4<f32>(_e6.g0_)), (_e10.g1_ * vec4<f32>(_e12.g0_)));
 }
 
-fn multi_vector_scalar_inner_product(self_168: MultiVector, other_140: Scalar) -> MultiVector {
-    var self_169: MultiVector;
-    var other_141: Scalar;
+fn multi_vector_scalar_inner_product(self_356: MultiVector, other_310: Scalar) -> MultiVector {
+    var self_357: MultiVector;
+    var other_311: Scalar;
 
-    self_169 = self_168;
-    other_141 = other_140;
-    let _e4: MultiVector = self_169;
-    let _e6: Scalar = other_141;
-    let _e10: MultiVector = self_169;
-    let _e12: Scalar = other_141;
+    self_357 = self_356;
+    other_311 = other_310;
+    let _e4: MultiVector = self_357;
+    let _e6: Scalar = other_311;
+    let _e10: MultiVector = self_357;
+    let _e12: Scalar = other_311;
     return MultiVector((_e4.g0_ * vec4<f32>(_e6.g0_)), (_e10.g1_ * vec4<f32>(_e12.g0_)));
 }
 
-fn multi_vector_scalar_left_contraction(self_170: MultiVector, other_142: Scalar) -> Scalar {
-    var self_171: MultiVector;
-    var other_143: Scalar;
+fn multi_vector_scalar_left_contraction(self_358: MultiVector, other_312: Scalar) -> Scalar {
+    var self_359: MultiVector;
+    var other_313: Scalar;
 
-    self_171 = self_170;
-    other_143 = other_142;
-    let _e4: MultiVector = self_171;
-    let _e7: Scalar = other_143;
+    self_359 = self_358;
+    other_313 = other_312;
+    let _e4: MultiVector = self_359;
+    let _e7: Scalar = other_313;
     return Scalar((_e4.g0_.x * _e7.g0_));
 }
 
-fn multi_vector_scalar_right_contraction(self_172: MultiVector, other_144: Scalar) -> MultiVector {
-    var self_173: MultiVector;
-    var other_145: Scalar;
+fn multi_vector_scalar_right_contraction(self_360: MultiVector, other_314: Scalar) -> MultiVector {
+    var self_361: MultiVector;
+    var other_315: Scalar;
 
-    self_173 = self_172;
-    other_145 = other_144;
-    let _e4: MultiVector = self_173;
-    let _e6: Scalar = other_145;
-    let _e10: MultiVector = self_173;
-    let _e12: Scalar = other_145;
+    self_361 = self_360;
+    other_315 = other_314;
+    let _e4: MultiVector = self_361;
+    let _e6: Scalar = other_315;
+    let _e10: MultiVector = self_361;
+    let _e12: Scalar = other_315;
     return MultiVector((_e4.g0_ * vec4<f32>(_e6.g0_)), (_e10.g1_ * vec4<f32>(_e12.g0_)));
 }
 
-fn multi_vector_scalar_scalar_product(self_174: MultiVector, other_146: Scalar) -> Scalar {
-    var self_175: MultiVector;
-    var other_147: Scalar;
+fn multi_vector_scalar_scalar_product(self_362: MultiVector, other_316: Scalar) -> Scalar {
+    var self_363: MultiVector;
+    var other_317: Scalar;
 
-    self_175 = self_174;
-    other_147 = other_146;
-    let _e4: MultiVector = self_175;
-    let _e7: Scalar = other_147;
+    self_363 = self_362;
+    other_317 = other_316;
+    let _e4: MultiVector = self_363;
+    let _e7: Scalar = other_317;
     return Scalar((_e4.g0_.x * _e7.g0_));
 }
 
-fn multi_vector_multi_vector_add(self_176: MultiVector, other_148: MultiVector) -> MultiVector {
-    var self_177: MultiVector;
-    var other_149: MultiVector;
+fn multi_vector_anti_scalar_into(self_364: MultiVector) -> AntiScalar {
+    var self_365: MultiVector;
 
-    self_177 = self_176;
-    other_149 = other_148;
-    let _e4: MultiVector = self_177;
-    let _e6: MultiVector = other_149;
-    let _e9: MultiVector = self_177;
-    let _e11: MultiVector = other_149;
+    self_365 = self_364;
+    let _e2: MultiVector = self_365;
+    return AntiScalar(_e2.g1_.y);
+}
+
+fn multi_vector_anti_scalar_add(self_366: MultiVector, other_318: AntiScalar) -> MultiVector {
+    var self_367: MultiVector;
+    var other_319: AntiScalar;
+
+    self_367 = self_366;
+    other_319 = other_318;
+    let _e4: MultiVector = self_367;
+    let _e6: MultiVector = self_367;
+    let _e8: AntiScalar = other_319;
+    return MultiVector(_e4.g0_, (_e6.g1_ + (vec4<f32>(_e8.g0_) * vec4<f32>(0.0, 1.0, 0.0, 0.0))));
+}
+
+fn multi_vector_anti_scalar_sub(self_368: MultiVector, other_320: AntiScalar) -> MultiVector {
+    var self_369: MultiVector;
+    var other_321: AntiScalar;
+
+    self_369 = self_368;
+    other_321 = other_320;
+    let _e4: MultiVector = self_369;
+    let _e6: MultiVector = self_369;
+    let _e8: AntiScalar = other_321;
+    return MultiVector(_e4.g0_, (_e6.g1_ - (vec4<f32>(_e8.g0_) * vec4<f32>(0.0, 1.0, 0.0, 0.0))));
+}
+
+fn multi_vector_anti_scalar_regressive_product(self_370: MultiVector, other_322: AntiScalar) -> MultiVector {
+    var self_371: MultiVector;
+    var other_323: AntiScalar;
+
+    self_371 = self_370;
+    other_323 = other_322;
+    let _e4: MultiVector = self_371;
+    let _e6: AntiScalar = other_323;
+    let _e10: MultiVector = self_371;
+    let _e12: AntiScalar = other_323;
+    return MultiVector((_e4.g0_ * vec4<f32>(_e6.g0_)), (_e10.g1_ * vec4<f32>(_e12.g0_)));
+}
+
+fn multi_vector_anti_scalar_outer_product(self_372: MultiVector, other_324: AntiScalar) -> AntiScalar {
+    var self_373: MultiVector;
+    var other_325: AntiScalar;
+
+    self_373 = self_372;
+    other_325 = other_324;
+    let _e4: MultiVector = self_373;
+    let _e7: AntiScalar = other_325;
+    return AntiScalar((_e4.g0_.x * _e7.g0_));
+}
+
+fn multi_vector_anti_scalar_geometric_anti_product(self_374: MultiVector, other_326: AntiScalar) -> MultiVector {
+    var self_375: MultiVector;
+    var other_327: AntiScalar;
+
+    self_375 = self_374;
+    other_327 = other_326;
+    let _e4: MultiVector = self_375;
+    let _e6: AntiScalar = other_327;
+    let _e10: MultiVector = self_375;
+    let _e12: AntiScalar = other_327;
+    return MultiVector((_e4.g0_ * vec4<f32>(_e6.g0_)), (_e10.g1_ * vec4<f32>(_e12.g0_)));
+}
+
+fn multi_vector_anti_scalar_inner_anti_product(self_376: MultiVector, other_328: AntiScalar) -> MultiVector {
+    var self_377: MultiVector;
+    var other_329: AntiScalar;
+
+    self_377 = self_376;
+    other_329 = other_328;
+    let _e4: MultiVector = self_377;
+    let _e6: AntiScalar = other_329;
+    let _e10: MultiVector = self_377;
+    let _e12: AntiScalar = other_329;
+    return MultiVector((_e4.g0_ * vec4<f32>(_e6.g0_)), (_e10.g1_ * vec4<f32>(_e12.g0_)));
+}
+
+fn multi_vector_anti_scalar_left_anti_contraction(self_378: MultiVector, other_330: AntiScalar) -> AntiScalar {
+    var self_379: MultiVector;
+    var other_331: AntiScalar;
+
+    self_379 = self_378;
+    other_331 = other_330;
+    let _e4: MultiVector = self_379;
+    let _e7: AntiScalar = other_331;
+    return AntiScalar((_e4.g1_.y * _e7.g0_));
+}
+
+fn multi_vector_anti_scalar_right_anti_contraction(self_380: MultiVector, other_332: AntiScalar) -> MultiVector {
+    var self_381: MultiVector;
+    var other_333: AntiScalar;
+
+    self_381 = self_380;
+    other_333 = other_332;
+    let _e4: MultiVector = self_381;
+    let _e6: AntiScalar = other_333;
+    let _e10: MultiVector = self_381;
+    let _e12: AntiScalar = other_333;
+    return MultiVector((_e4.g0_ * vec4<f32>(_e6.g0_)), (_e10.g1_ * vec4<f32>(_e12.g0_)));
+}
+
+fn multi_vector_anti_scalar_anti_scalar_product(self_382: MultiVector, other_334: AntiScalar) -> AntiScalar {
+    var self_383: MultiVector;
+    var other_335: AntiScalar;
+
+    self_383 = self_382;
+    other_335 = other_334;
+    let _e4: MultiVector = self_383;
+    let _e7: AntiScalar = other_335;
+    return AntiScalar((_e4.g1_.y * _e7.g0_));
+}
+
+fn multi_vector_multi_vector_add(self_384: MultiVector, other_336: MultiVector) -> MultiVector {
+    var self_385: MultiVector;
+    var other_337: MultiVector;
+
+    self_385 = self_384;
+    other_337 = other_336;
+    let _e4: MultiVector = self_385;
+    let _e6: MultiVector = other_337;
+    let _e9: MultiVector = self_385;
+    let _e11: MultiVector = other_337;
     return MultiVector((_e4.g0_ + _e6.g0_), (_e9.g1_ + _e11.g1_));
 }
 
-fn multi_vector_multi_vector_sub(self_178: MultiVector, other_150: MultiVector) -> MultiVector {
-    var self_179: MultiVector;
-    var other_151: MultiVector;
+fn multi_vector_multi_vector_sub(self_386: MultiVector, other_338: MultiVector) -> MultiVector {
+    var self_387: MultiVector;
+    var other_339: MultiVector;
 
-    self_179 = self_178;
-    other_151 = other_150;
-    let _e4: MultiVector = self_179;
-    let _e6: MultiVector = other_151;
-    let _e9: MultiVector = self_179;
-    let _e11: MultiVector = other_151;
+    self_387 = self_386;
+    other_339 = other_338;
+    let _e4: MultiVector = self_387;
+    let _e6: MultiVector = other_339;
+    let _e9: MultiVector = self_387;
+    let _e11: MultiVector = other_339;
     return MultiVector((_e4.g0_ - _e6.g0_), (_e9.g1_ - _e11.g1_));
 }
 
-fn multi_vector_multi_vector_mul(self_180: MultiVector, other_152: MultiVector) -> MultiVector {
-    var self_181: MultiVector;
-    var other_153: MultiVector;
+fn multi_vector_multi_vector_mul(self_388: MultiVector, other_340: MultiVector) -> MultiVector {
+    var self_389: MultiVector;
+    var other_341: MultiVector;
 
-    self_181 = self_180;
-    other_153 = other_152;
-    let _e4: MultiVector = self_181;
-    let _e6: MultiVector = other_153;
-    let _e9: MultiVector = self_181;
-    let _e11: MultiVector = other_153;
+    self_389 = self_388;
+    other_341 = other_340;
+    let _e4: MultiVector = self_389;
+    let _e6: MultiVector = other_341;
+    let _e9: MultiVector = self_389;
+    let _e11: MultiVector = other_341;
     return MultiVector((_e4.g0_ * _e6.g0_), (_e9.g1_ * _e11.g1_));
 }
 
-fn multi_vector_multi_vector_div(self_182: MultiVector, other_154: MultiVector) -> MultiVector {
-    var self_183: MultiVector;
-    var other_155: MultiVector;
+fn multi_vector_multi_vector_div(self_390: MultiVector, other_342: MultiVector) -> MultiVector {
+    var self_391: MultiVector;
+    var other_343: MultiVector;
 
-    self_183 = self_182;
-    other_155 = other_154;
-    let _e4: MultiVector = self_183;
-    let _e7: MultiVector = self_183;
-    let _e10: MultiVector = self_183;
-    let _e13: MultiVector = self_183;
-    let _e23: MultiVector = other_155;
-    let _e26: MultiVector = other_155;
-    let _e29: MultiVector = other_155;
-    let _e32: MultiVector = other_155;
-    let _e43: MultiVector = self_183;
-    let _e46: MultiVector = self_183;
-    let _e49: MultiVector = self_183;
-    let _e52: MultiVector = self_183;
-    let _e62: MultiVector = other_155;
-    let _e65: MultiVector = other_155;
-    let _e68: MultiVector = other_155;
-    let _e71: MultiVector = other_155;
+    self_391 = self_390;
+    other_343 = other_342;
+    let _e4: MultiVector = self_391;
+    let _e7: MultiVector = self_391;
+    let _e10: MultiVector = self_391;
+    let _e13: MultiVector = self_391;
+    let _e23: MultiVector = other_343;
+    let _e26: MultiVector = other_343;
+    let _e29: MultiVector = other_343;
+    let _e32: MultiVector = other_343;
+    let _e43: MultiVector = self_391;
+    let _e46: MultiVector = self_391;
+    let _e49: MultiVector = self_391;
+    let _e52: MultiVector = self_391;
+    let _e62: MultiVector = other_343;
+    let _e65: MultiVector = other_343;
+    let _e68: MultiVector = other_343;
+    let _e71: MultiVector = other_343;
     return MultiVector((((vec4<f32>(_e4.g0_.x, _e7.g0_.y, _e10.g0_.z, _e13.g0_.w) * vec4<f32>(1.0, 1.0, 1.0, 1.0)) / vec4<f32>(_e23.g0_.x, _e26.g0_.y, _e29.g0_.z, _e32.g0_.w)) * vec4<f32>(1.0, 1.0, 1.0, 1.0)), (((vec4<f32>(_e43.g1_.x, _e46.g1_.y, _e49.g1_.z, _e52.g1_.w) * vec4<f32>(1.0, 1.0, 1.0, 1.0)) / vec4<f32>(_e62.g1_.x, _e65.g1_.y, _e68.g1_.z, _e71.g1_.w)) * vec4<f32>(1.0, 1.0, 1.0, 1.0)));
 }
 
-fn multi_vector_multi_vector_geometric_product(self_184: MultiVector, other_156: MultiVector) -> MultiVector {
-    var self_185: MultiVector;
-    var other_157: MultiVector;
+fn multi_vector_multi_vector_geometric_product(self_392: MultiVector, other_344: MultiVector) -> MultiVector {
+    var self_393: MultiVector;
+    var other_345: MultiVector;
 
-    self_185 = self_184;
-    other_157 = other_156;
-    let _e4: MultiVector = self_185;
-    let _e8: MultiVector = other_157;
-    let _e11: MultiVector = self_185;
-    let _e15: MultiVector = other_157;
-    let _e28: MultiVector = self_185;
-    let _e32: MultiVector = other_157;
-    let _e37: MultiVector = self_185;
-    let _e41: MultiVector = other_157;
-    let _e54: MultiVector = self_185;
-    let _e58: MultiVector = other_157;
-    let _e61: MultiVector = self_185;
-    let _e65: MultiVector = other_157;
-    let _e78: MultiVector = self_185;
-    let _e82: MultiVector = other_157;
-    let _e95: MultiVector = self_185;
-    let _e99: MultiVector = other_157;
-    let _e104: MultiVector = self_185;
-    let _e108: MultiVector = other_157;
-    let _e119: MultiVector = self_185;
-    let _e123: MultiVector = other_157;
-    let _e135: MultiVector = self_185;
-    let _e139: MultiVector = other_157;
-    let _e151: MultiVector = self_185;
-    let _e155: MultiVector = other_157;
+    self_393 = self_392;
+    other_345 = other_344;
+    let _e4: MultiVector = self_393;
+    let _e8: MultiVector = other_345;
+    let _e11: MultiVector = self_393;
+    let _e15: MultiVector = other_345;
+    let _e28: MultiVector = self_393;
+    let _e32: MultiVector = other_345;
+    let _e37: MultiVector = self_393;
+    let _e41: MultiVector = other_345;
+    let _e54: MultiVector = self_393;
+    let _e58: MultiVector = other_345;
+    let _e61: MultiVector = self_393;
+    let _e65: MultiVector = other_345;
+    let _e78: MultiVector = self_393;
+    let _e82: MultiVector = other_345;
+    let _e95: MultiVector = self_393;
+    let _e99: MultiVector = other_345;
+    let _e104: MultiVector = self_393;
+    let _e108: MultiVector = other_345;
+    let _e119: MultiVector = self_393;
+    let _e123: MultiVector = other_345;
+    let _e135: MultiVector = self_393;
+    let _e139: MultiVector = other_345;
+    let _e151: MultiVector = self_393;
+    let _e155: MultiVector = other_345;
     return MultiVector(((((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.y) * _e15.g0_.yxwz) * vec4<f32>(-(1.0), 1.0, 1.0, -(1.0)))) + (vec4<f32>(_e28.g0_.z) * _e32.g0_.zwxy)) + ((vec4<f32>(_e37.g0_.w) * _e41.g0_.wzyx) * vec4<f32>(1.0, -(1.0), -(1.0), 1.0))), ((((((((vec4<f32>(_e54.g0_.x) * _e58.g1_) + ((vec4<f32>(_e61.g0_.y) * _e65.g1_.yxwz) * vec4<f32>(-(1.0), 1.0, -(1.0), 1.0))) + ((vec4<f32>(_e78.g0_.z) * _e82.g1_.zwxy) * vec4<f32>(-(1.0), 1.0, -(1.0), 1.0))) + (vec4<f32>(_e95.g0_.w) * _e99.g1_.wzyx)) + ((vec4<f32>(_e104.g1_.x) * _e108.g0_) * vec4<f32>(1.0, 1.0, 1.0, -(1.0)))) + ((vec4<f32>(_e119.g1_.y) * _e123.g0_.yxwz) * vec4<f32>(-(1.0), 1.0, 1.0, 1.0))) + ((vec4<f32>(_e135.g1_.z) * _e139.g0_.zwxy) * vec4<f32>(1.0, 1.0, 1.0, -(1.0)))) + ((vec4<f32>(_e151.g1_.w) * _e155.g0_.wzyx) * vec4<f32>(-(1.0), 1.0, 1.0, 1.0))));
 }
 
-fn multi_vector_multi_vector_regressive_product(self_186: MultiVector, other_158: MultiVector) -> MultiVector {
-    var self_187: MultiVector;
-    var other_159: MultiVector;
+fn multi_vector_multi_vector_regressive_product(self_394: MultiVector, other_346: MultiVector) -> MultiVector {
+    var self_395: MultiVector;
+    var other_347: MultiVector;
 
-    self_187 = self_186;
-    other_159 = other_158;
-    let _e4: MultiVector = self_187;
-    let _e8: MultiVector = other_159;
-    let _e18: MultiVector = self_187;
-    let _e22: MultiVector = other_159;
-    let _e33: MultiVector = self_187;
-    let _e37: MultiVector = other_159;
-    let _e48: MultiVector = self_187;
-    let _e52: MultiVector = other_159;
-    let _e64: MultiVector = self_187;
-    let _e68: MultiVector = other_159;
-    let _e72: MultiVector = self_187;
-    let _e76: MultiVector = other_159;
-    let _e87: MultiVector = self_187;
-    let _e91: MultiVector = other_159;
-    let _e103: MultiVector = self_187;
-    let _e107: MultiVector = other_159;
-    let _e118: MultiVector = self_187;
-    let _e122: MultiVector = other_159;
-    let _e125: MultiVector = self_187;
-    let _e129: MultiVector = other_159;
-    let _e141: MultiVector = self_187;
-    let _e145: MultiVector = other_159;
-    let _e156: MultiVector = self_187;
-    let _e160: MultiVector = other_159;
+    self_395 = self_394;
+    other_347 = other_346;
+    let _e4: MultiVector = self_395;
+    let _e8: MultiVector = other_347;
+    let _e18: MultiVector = self_395;
+    let _e22: MultiVector = other_347;
+    let _e33: MultiVector = self_395;
+    let _e37: MultiVector = other_347;
+    let _e48: MultiVector = self_395;
+    let _e52: MultiVector = other_347;
+    let _e64: MultiVector = self_395;
+    let _e68: MultiVector = other_347;
+    let _e72: MultiVector = self_395;
+    let _e76: MultiVector = other_347;
+    let _e87: MultiVector = self_395;
+    let _e91: MultiVector = other_347;
+    let _e103: MultiVector = self_395;
+    let _e107: MultiVector = other_347;
+    let _e118: MultiVector = self_395;
+    let _e122: MultiVector = other_347;
+    let _e125: MultiVector = self_395;
+    let _e129: MultiVector = other_347;
+    let _e141: MultiVector = self_395;
+    let _e145: MultiVector = other_347;
+    let _e156: MultiVector = self_395;
+    let _e160: MultiVector = other_347;
     return MultiVector((((((((((vec4<f32>(_e4.g0_.y) * _e8.g1_) * vec4<f32>(1.0, 1.0, -(1.0), 1.0)) + ((vec4<f32>(_e18.g0_.z) * _e22.g1_.wwyw) * vec4<f32>(1.0, 0.0, 1.0, 0.0))) + ((vec4<f32>(_e33.g0_.w) * _e37.g1_.zzzy) * vec4<f32>(1.0, 0.0, 0.0, 1.0))) + ((vec4<f32>(_e48.g1_.x) * vec4<f32>(_e52.g0_.y)) * vec4<f32>(1.0, 0.0, 0.0, 0.0))) + (vec4<f32>(_e64.g1_.y) * _e68.g0_)) + ((vec4<f32>(_e72.g1_.z) * _e76.g0_.wwyw) * vec4<f32>(1.0, 0.0, 1.0, 0.0))) + ((vec4<f32>(_e87.g1_.w) * _e91.g0_.zzzy) * vec4<f32>(1.0, 0.0, 0.0, -(1.0)))) + ((vec4<f32>(_e103.g0_.x) * _e107.g1_.yxxx) * vec4<f32>(1.0, 0.0, 0.0, 0.0))), ((((vec4<f32>(_e118.g1_.y) * _e122.g1_) + ((vec4<f32>(_e125.g1_.z) * _e129.g1_.wwyw) * vec4<f32>(-(1.0), 0.0, 1.0, 0.0))) + ((vec4<f32>(_e141.g1_.w) * _e145.g1_.zzzy) * vec4<f32>(1.0, 0.0, 0.0, 1.0))) + ((vec4<f32>(_e156.g1_.x) * _e160.g1_.yxxx) * vec4<f32>(1.0, 0.0, 0.0, 0.0))));
 }
 
-fn multi_vector_multi_vector_outer_product(self_188: MultiVector, other_160: MultiVector) -> MultiVector {
-    var self_189: MultiVector;
-    var other_161: MultiVector;
+fn multi_vector_multi_vector_outer_product(self_396: MultiVector, other_348: MultiVector) -> MultiVector {
+    var self_397: MultiVector;
+    var other_349: MultiVector;
 
-    self_189 = self_188;
-    other_161 = other_160;
-    let _e4: MultiVector = self_189;
-    let _e8: MultiVector = other_161;
-    let _e11: MultiVector = self_189;
-    let _e15: MultiVector = other_161;
-    let _e26: MultiVector = self_189;
-    let _e30: MultiVector = other_161;
-    let _e42: MultiVector = self_189;
-    let _e45: MultiVector = other_161;
-    let _e57: MultiVector = self_189;
-    let _e61: MultiVector = other_161;
-    let _e64: MultiVector = self_189;
-    let _e68: MultiVector = other_161;
-    let _e80: MultiVector = self_189;
-    let _e84: MultiVector = other_161;
-    let _e95: MultiVector = self_189;
-    let _e99: MultiVector = other_161;
-    let _e110: MultiVector = self_189;
-    let _e114: MultiVector = other_161;
-    let _e126: MultiVector = self_189;
-    let _e130: MultiVector = other_161;
-    let _e141: MultiVector = self_189;
-    let _e145: MultiVector = other_161;
-    let _e156: MultiVector = self_189;
-    let _e159: MultiVector = other_161;
+    self_397 = self_396;
+    other_349 = other_348;
+    let _e4: MultiVector = self_397;
+    let _e8: MultiVector = other_349;
+    let _e11: MultiVector = self_397;
+    let _e15: MultiVector = other_349;
+    let _e26: MultiVector = self_397;
+    let _e30: MultiVector = other_349;
+    let _e42: MultiVector = self_397;
+    let _e45: MultiVector = other_349;
+    let _e57: MultiVector = self_397;
+    let _e61: MultiVector = other_349;
+    let _e64: MultiVector = self_397;
+    let _e68: MultiVector = other_349;
+    let _e80: MultiVector = self_397;
+    let _e84: MultiVector = other_349;
+    let _e95: MultiVector = self_397;
+    let _e99: MultiVector = other_349;
+    let _e110: MultiVector = self_397;
+    let _e114: MultiVector = other_349;
+    let _e126: MultiVector = self_397;
+    let _e130: MultiVector = other_349;
+    let _e141: MultiVector = self_397;
+    let _e145: MultiVector = other_349;
+    let _e156: MultiVector = self_397;
+    let _e159: MultiVector = other_349;
     return MultiVector(((((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.z) * _e15.g0_.wwxw) * vec4<f32>(0.0, 1.0, 1.0, 0.0))) + ((vec4<f32>(_e26.g0_.w) * _e30.g0_.zzzx) * vec4<f32>(0.0, -(1.0), 0.0, 1.0))) + ((_e42.g0_.xyxx * vec4<f32>(_e45.g0_.x)) * vec4<f32>(0.0, 1.0, 0.0, 0.0))), ((((((((vec4<f32>(_e57.g0_.x) * _e61.g1_) + ((vec4<f32>(_e64.g0_.z) * _e68.g1_.wwxw) * vec4<f32>(0.0, 1.0, -(1.0), 0.0))) + ((vec4<f32>(_e80.g0_.w) * _e84.g1_.zzzx) * vec4<f32>(0.0, 1.0, 0.0, 1.0))) + ((vec4<f32>(_e95.g1_.x) * _e99.g0_) * vec4<f32>(1.0, 1.0, 1.0, -(1.0)))) + ((vec4<f32>(_e110.g1_.y) * vec4<f32>(_e114.g0_.x)) * vec4<f32>(0.0, 1.0, 0.0, 0.0))) + ((vec4<f32>(_e126.g1_.z) * _e130.g0_.wwxw) * vec4<f32>(0.0, 1.0, 1.0, 0.0))) + ((vec4<f32>(_e141.g1_.w) * _e145.g0_.zzzx) * vec4<f32>(0.0, 1.0, 0.0, 1.0))) + ((_e156.g0_.xyxx * vec4<f32>(_e159.g1_.x)) * vec4<f32>(0.0, 1.0, 0.0, 0.0))));
 }
 
-fn multi_vector_multi_vector_inner_product(self_190: MultiVector, other_162: MultiVector) -> MultiVector {
-    var self_191: MultiVector;
-    var other_163: MultiVector;
+fn multi_vector_multi_vector_inner_product(self_398: MultiVector, other_350: MultiVector) -> MultiVector {
+    var self_399: MultiVector;
+    var other_351: MultiVector;
 
-    self_191 = self_190;
-    other_163 = other_162;
-    let _e4: MultiVector = self_191;
-    let _e8: MultiVector = other_163;
-    let _e11: MultiVector = self_191;
-    let _e15: MultiVector = other_163;
-    let _e28: MultiVector = self_191;
-    let _e32: MultiVector = other_163;
-    let _e44: MultiVector = self_191;
-    let _e47: MultiVector = other_163;
-    let _e58: MultiVector = self_191;
-    let _e62: MultiVector = other_163;
-    let _e65: MultiVector = self_191;
-    let _e69: MultiVector = other_163;
-    let _e81: MultiVector = self_191;
-    let _e85: MultiVector = other_163;
-    let _e96: MultiVector = self_191;
-    let _e100: MultiVector = other_163;
-    let _e112: MultiVector = self_191;
-    let _e116: MultiVector = other_163;
-    let _e128: MultiVector = self_191;
-    let _e132: MultiVector = other_163;
-    let _e143: MultiVector = self_191;
-    let _e147: MultiVector = other_163;
-    let _e159: MultiVector = self_191;
-    let _e162: MultiVector = other_163;
+    self_399 = self_398;
+    other_351 = other_350;
+    let _e4: MultiVector = self_399;
+    let _e8: MultiVector = other_351;
+    let _e11: MultiVector = self_399;
+    let _e15: MultiVector = other_351;
+    let _e28: MultiVector = self_399;
+    let _e32: MultiVector = other_351;
+    let _e44: MultiVector = self_399;
+    let _e47: MultiVector = other_351;
+    let _e58: MultiVector = self_399;
+    let _e62: MultiVector = other_351;
+    let _e65: MultiVector = self_399;
+    let _e69: MultiVector = other_351;
+    let _e81: MultiVector = self_399;
+    let _e85: MultiVector = other_351;
+    let _e96: MultiVector = self_399;
+    let _e100: MultiVector = other_351;
+    let _e112: MultiVector = self_399;
+    let _e116: MultiVector = other_351;
+    let _e128: MultiVector = self_399;
+    let _e132: MultiVector = other_351;
+    let _e143: MultiVector = self_399;
+    let _e147: MultiVector = other_351;
+    let _e159: MultiVector = self_399;
+    let _e162: MultiVector = other_351;
     return MultiVector(((((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.y) * _e15.g0_.yxwz) * vec4<f32>(-(1.0), 1.0, 1.0, -(1.0)))) + ((vec4<f32>(_e28.g0_.w) * _e32.g0_.wwyx) * vec4<f32>(1.0, 0.0, -(1.0), 1.0))) + ((_e44.g0_.zxzz * _e47.g0_.zxxy) * vec4<f32>(1.0, 0.0, 1.0, 1.0))), ((((((((vec4<f32>(_e58.g0_.x) * _e62.g1_) + ((vec4<f32>(_e65.g0_.z) * _e69.g1_.zzzy) * vec4<f32>(-(1.0), 0.0, 0.0, 1.0))) + ((vec4<f32>(_e81.g0_.w) * _e85.g1_.wwyw) * vec4<f32>(1.0, 0.0, 1.0, 0.0))) + ((vec4<f32>(_e96.g1_.x) * vec4<f32>(_e100.g0_.x)) * vec4<f32>(1.0, 0.0, 0.0, 0.0))) + ((vec4<f32>(_e112.g1_.y) * _e116.g0_.yxwz) * vec4<f32>(-(1.0), 1.0, 1.0, 1.0))) + ((vec4<f32>(_e128.g1_.z) * _e132.g0_.zzxz) * vec4<f32>(1.0, 0.0, 1.0, 0.0))) + ((vec4<f32>(_e143.g1_.w) * _e147.g0_.wwwx) * vec4<f32>(-(1.0), 0.0, 0.0, 1.0))) + ((_e159.g0_.yxxx * _e162.g1_.yxxx) * vec4<f32>(-(1.0), 0.0, 0.0, 0.0))));
 }
 
-fn multi_vector_multi_vector_left_contraction(self_192: MultiVector, other_164: MultiVector) -> MultiVector {
-    var self_193: MultiVector;
-    var other_165: MultiVector;
+fn multi_vector_multi_vector_geometric_anti_product(self_400: MultiVector, other_352: MultiVector) -> MultiVector {
+    var self_401: MultiVector;
+    var other_353: MultiVector;
 
-    self_193 = self_192;
-    other_165 = other_164;
-    let _e4: MultiVector = self_193;
-    let _e8: MultiVector = other_165;
-    let _e11: MultiVector = self_193;
-    let _e15: MultiVector = other_165;
-    let _e26: MultiVector = self_193;
-    let _e30: MultiVector = other_165;
-    let _e42: MultiVector = self_193;
-    let _e45: MultiVector = other_165;
-    let _e57: MultiVector = self_193;
-    let _e61: MultiVector = other_165;
-    let _e64: MultiVector = self_193;
-    let _e68: MultiVector = other_165;
-    let _e80: MultiVector = self_193;
-    let _e84: MultiVector = other_165;
-    let _e95: MultiVector = self_193;
-    let _e98: MultiVector = other_165;
+    self_401 = self_400;
+    other_353 = other_352;
+    let _e4: MultiVector = self_401;
+    let _e8: MultiVector = other_353;
+    let _e19: MultiVector = self_401;
+    let _e23: MultiVector = other_353;
+    let _e34: MultiVector = self_401;
+    let _e38: MultiVector = other_353;
+    let _e50: MultiVector = self_401;
+    let _e54: MultiVector = other_353;
+    let _e66: MultiVector = self_401;
+    let _e70: MultiVector = other_353;
+    let _e83: MultiVector = self_401;
+    let _e87: MultiVector = other_353;
+    let _e91: MultiVector = self_401;
+    let _e95: MultiVector = other_353;
+    let _e100: MultiVector = self_401;
+    let _e104: MultiVector = other_353;
+    let _e117: MultiVector = self_401;
+    let _e121: MultiVector = other_353;
+    let _e133: MultiVector = self_401;
+    let _e137: MultiVector = other_353;
+    let _e141: MultiVector = self_401;
+    let _e145: MultiVector = other_353;
+    let _e158: MultiVector = self_401;
+    let _e162: MultiVector = other_353;
+    return MultiVector((((((((((vec4<f32>(_e4.g0_.x) * _e8.g1_.yxwz) * vec4<f32>(1.0, -(1.0), 1.0, 1.0)) + ((vec4<f32>(_e19.g0_.y) * _e23.g1_) * vec4<f32>(1.0, 1.0, -(1.0), 1.0))) + ((vec4<f32>(_e34.g0_.z) * _e38.g1_.wzyx) * vec4<f32>(1.0, -(1.0), 1.0, 1.0))) + ((vec4<f32>(_e50.g0_.w) * _e54.g1_.zwxy) * vec4<f32>(1.0, 1.0, -(1.0), 1.0))) + ((vec4<f32>(_e66.g1_.x) * _e70.g0_.yxwz) * vec4<f32>(1.0, -(1.0), 1.0, -(1.0)))) + (vec4<f32>(_e83.g1_.y) * _e87.g0_)) + (vec4<f32>(_e91.g1_.z) * _e95.g0_.wzyx)) + ((vec4<f32>(_e100.g1_.w) * _e104.g0_.zwxy) * vec4<f32>(1.0, -(1.0), 1.0, -(1.0)))), (((((vec4<f32>(_e117.g1_.x) * _e121.g1_.yxwz) * vec4<f32>(1.0, -(1.0), -(1.0), 1.0)) + (vec4<f32>(_e133.g1_.y) * _e137.g1_)) + ((vec4<f32>(_e141.g1_.z) * _e145.g1_.wzyx) * vec4<f32>(-(1.0), 1.0, 1.0, -(1.0)))) + (vec4<f32>(_e158.g1_.w) * _e162.g1_.zwxy)));
+}
+
+fn multi_vector_multi_vector_inner_anti_product(self_402: MultiVector, other_354: MultiVector) -> MultiVector {
+    var self_403: MultiVector;
+    var other_355: MultiVector;
+
+    self_403 = self_402;
+    other_355 = other_354;
+    let _e4: MultiVector = self_403;
+    let _e8: MultiVector = other_355;
+    let _e19: MultiVector = self_403;
+    let _e23: MultiVector = other_355;
+    let _e35: MultiVector = self_403;
+    let _e39: MultiVector = other_355;
+    let _e50: MultiVector = self_403;
+    let _e54: MultiVector = other_355;
+    let _e67: MultiVector = self_403;
+    let _e71: MultiVector = other_355;
+    let _e75: MultiVector = self_403;
+    let _e79: MultiVector = other_355;
+    let _e90: MultiVector = self_403;
+    let _e94: MultiVector = other_355;
+    let _e106: MultiVector = self_403;
+    let _e109: MultiVector = other_355;
+    let _e120: MultiVector = self_403;
+    let _e124: MultiVector = other_355;
+    let _e136: MultiVector = self_403;
+    let _e140: MultiVector = other_355;
+    let _e144: MultiVector = self_403;
+    let _e148: MultiVector = other_355;
+    let _e159: MultiVector = self_403;
+    let _e162: MultiVector = other_355;
+    return MultiVector((((((((((vec4<f32>(_e4.g0_.x) * _e8.g1_.yxwz) * vec4<f32>(1.0, -(1.0), 1.0, 1.0)) + ((vec4<f32>(_e19.g0_.z) * _e23.g1_.zzyz) * vec4<f32>(0.0, -(1.0), 1.0, 0.0))) + ((vec4<f32>(_e35.g0_.w) * _e39.g1_.wwwy) * vec4<f32>(0.0, 1.0, 0.0, 1.0))) + ((vec4<f32>(_e50.g1_.x) * vec4<f32>(_e54.g0_.x)) * vec4<f32>(0.0, -(1.0), 0.0, 0.0))) + (vec4<f32>(_e67.g1_.y) * _e71.g0_)) + ((vec4<f32>(_e75.g1_.z) * _e79.g0_.zzzx) * vec4<f32>(0.0, 1.0, 0.0, 1.0))) + ((vec4<f32>(_e90.g1_.w) * _e94.g0_.wwxw) * vec4<f32>(0.0, -(1.0), 1.0, 0.0))) + ((_e106.g0_.xyxx * _e109.g1_.xyxx) * vec4<f32>(0.0, 1.0, 0.0, 0.0))), (((((vec4<f32>(_e120.g1_.x) * _e124.g1_.yxwz) * vec4<f32>(1.0, -(1.0), -(1.0), 1.0)) + (vec4<f32>(_e136.g1_.y) * _e140.g1_)) + ((vec4<f32>(_e144.g1_.w) * _e148.g1_.wwxy) * vec4<f32>(0.0, 1.0, 1.0, 1.0))) + ((_e159.g1_.xzzz * _e162.g1_.xzyx) * vec4<f32>(0.0, 1.0, 1.0, -(1.0)))));
+}
+
+fn multi_vector_multi_vector_left_contraction(self_404: MultiVector, other_356: MultiVector) -> MultiVector {
+    var self_405: MultiVector;
+    var other_357: MultiVector;
+
+    self_405 = self_404;
+    other_357 = other_356;
+    let _e4: MultiVector = self_405;
+    let _e8: MultiVector = other_357;
+    let _e11: MultiVector = self_405;
+    let _e15: MultiVector = other_357;
+    let _e26: MultiVector = self_405;
+    let _e30: MultiVector = other_357;
+    let _e42: MultiVector = self_405;
+    let _e45: MultiVector = other_357;
+    let _e57: MultiVector = self_405;
+    let _e61: MultiVector = other_357;
+    let _e64: MultiVector = self_405;
+    let _e68: MultiVector = other_357;
+    let _e80: MultiVector = self_405;
+    let _e84: MultiVector = other_357;
+    let _e95: MultiVector = self_405;
+    let _e98: MultiVector = other_357;
     return MultiVector(((((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.z) * _e15.g0_.zzzy) * vec4<f32>(1.0, 0.0, 0.0, 1.0))) + ((vec4<f32>(_e26.g0_.w) * _e30.g0_.wwyw) * vec4<f32>(1.0, 0.0, -(1.0), 0.0))) + ((_e42.g0_.yxxx * _e45.g0_.yxxx) * vec4<f32>(-(1.0), 0.0, 0.0, 0.0))), ((((vec4<f32>(_e57.g0_.x) * _e61.g1_) + ((vec4<f32>(_e64.g0_.z) * _e68.g1_.zzzy) * vec4<f32>(-(1.0), 0.0, 0.0, 1.0))) + ((vec4<f32>(_e80.g0_.w) * _e84.g1_.wwyw) * vec4<f32>(1.0, 0.0, 1.0, 0.0))) + ((_e95.g0_.yxxx * _e98.g1_.yxxx) * vec4<f32>(-(1.0), 0.0, 0.0, 0.0))));
 }
 
-fn multi_vector_multi_vector_right_contraction(self_194: MultiVector, other_166: MultiVector) -> MultiVector {
-    var self_195: MultiVector;
-    var other_167: MultiVector;
+fn multi_vector_multi_vector_right_contraction(self_406: MultiVector, other_358: MultiVector) -> MultiVector {
+    var self_407: MultiVector;
+    var other_359: MultiVector;
 
-    self_195 = self_194;
-    other_167 = other_166;
-    let _e4: MultiVector = self_195;
-    let _e8: MultiVector = other_167;
-    let _e20: MultiVector = self_195;
-    let _e24: MultiVector = other_167;
-    let _e35: MultiVector = self_195;
-    let _e39: MultiVector = other_167;
-    let _e50: MultiVector = self_195;
-    let _e54: MultiVector = other_167;
-    let _e66: MultiVector = self_195;
-    let _e70: MultiVector = other_167;
-    let _e81: MultiVector = self_195;
-    let _e85: MultiVector = other_167;
-    let _e96: MultiVector = self_195;
-    let _e100: MultiVector = other_167;
-    let _e112: MultiVector = self_195;
-    let _e116: MultiVector = other_167;
+    self_407 = self_406;
+    other_359 = other_358;
+    let _e4: MultiVector = self_407;
+    let _e8: MultiVector = other_359;
+    let _e20: MultiVector = self_407;
+    let _e24: MultiVector = other_359;
+    let _e35: MultiVector = self_407;
+    let _e39: MultiVector = other_359;
+    let _e50: MultiVector = self_407;
+    let _e54: MultiVector = other_359;
+    let _e66: MultiVector = self_407;
+    let _e70: MultiVector = other_359;
+    let _e81: MultiVector = self_407;
+    let _e85: MultiVector = other_359;
+    let _e96: MultiVector = self_407;
+    let _e100: MultiVector = other_359;
+    let _e112: MultiVector = self_407;
+    let _e116: MultiVector = other_359;
     return MultiVector((((((vec4<f32>(_e4.g0_.y) * _e8.g0_.yxwz) * vec4<f32>(-(1.0), 1.0, 1.0, -(1.0))) + ((vec4<f32>(_e20.g0_.z) * _e24.g0_.zzxz) * vec4<f32>(1.0, 0.0, 1.0, 0.0))) + ((vec4<f32>(_e35.g0_.w) * _e39.g0_.wwwx) * vec4<f32>(1.0, 0.0, 0.0, 1.0))) + ((vec4<f32>(_e50.g0_.x) * vec4<f32>(_e54.g0_.x)) * vec4<f32>(1.0, 0.0, 0.0, 0.0))), (((((vec4<f32>(_e66.g1_.y) * _e70.g0_.yxwz) * vec4<f32>(-(1.0), 1.0, 1.0, 1.0)) + ((vec4<f32>(_e81.g1_.z) * _e85.g0_.zzxz) * vec4<f32>(1.0, 0.0, 1.0, 0.0))) + ((vec4<f32>(_e96.g1_.w) * _e100.g0_.wwwx) * vec4<f32>(-(1.0), 0.0, 0.0, 1.0))) + ((vec4<f32>(_e112.g1_.x) * vec4<f32>(_e116.g0_.x)) * vec4<f32>(1.0, 0.0, 0.0, 0.0))));
 }
 
-fn multi_vector_multi_vector_scalar_product(self_196: MultiVector, other_168: MultiVector) -> Scalar {
-    var self_197: MultiVector;
-    var other_169: MultiVector;
+fn multi_vector_multi_vector_left_anti_contraction(self_408: MultiVector, other_360: MultiVector) -> MultiVector {
+    var self_409: MultiVector;
+    var other_361: MultiVector;
 
-    self_197 = self_196;
-    other_169 = other_168;
-    let _e4: MultiVector = self_197;
-    let _e7: MultiVector = other_169;
-    let _e11: MultiVector = self_197;
-    let _e14: MultiVector = other_169;
-    let _e19: MultiVector = self_197;
-    let _e22: MultiVector = other_169;
-    let _e27: MultiVector = self_197;
-    let _e30: MultiVector = other_169;
+    self_409 = self_408;
+    other_361 = other_360;
+    let _e4: MultiVector = self_409;
+    let _e8: MultiVector = other_361;
+    let _e11: MultiVector = self_409;
+    let _e15: MultiVector = other_361;
+    let _e26: MultiVector = self_409;
+    let _e30: MultiVector = other_361;
+    let _e42: MultiVector = self_409;
+    let _e46: MultiVector = other_361;
+    let _e59: MultiVector = self_409;
+    let _e63: MultiVector = other_361;
+    let _e66: MultiVector = self_409;
+    let _e70: MultiVector = other_361;
+    let _e82: MultiVector = self_409;
+    let _e86: MultiVector = other_361;
+    let _e97: MultiVector = self_409;
+    let _e101: MultiVector = other_361;
+    return MultiVector(((((vec4<f32>(_e4.g1_.y) * _e8.g0_) + ((vec4<f32>(_e11.g1_.z) * _e15.g0_.zzzx) * vec4<f32>(0.0, 1.0, 0.0, 1.0))) + ((vec4<f32>(_e26.g1_.w) * _e30.g0_.wwxw) * vec4<f32>(0.0, -(1.0), 1.0, 0.0))) + ((vec4<f32>(_e42.g1_.x) * vec4<f32>(_e46.g0_.x)) * vec4<f32>(0.0, -(1.0), 0.0, 0.0))), ((((vec4<f32>(_e59.g1_.y) * _e63.g1_) + ((vec4<f32>(_e66.g1_.z) * _e70.g1_.zzzx) * vec4<f32>(0.0, 1.0, 0.0, -(1.0)))) + ((vec4<f32>(_e82.g1_.w) * _e86.g1_.wwxw) * vec4<f32>(0.0, 1.0, 1.0, 0.0))) + ((vec4<f32>(_e97.g1_.x) * vec4<f32>(_e101.g1_.x)) * vec4<f32>(0.0, -(1.0), 0.0, 0.0))));
+}
+
+fn multi_vector_multi_vector_right_anti_contraction(self_410: MultiVector, other_362: MultiVector) -> MultiVector {
+    var self_411: MultiVector;
+    var other_363: MultiVector;
+
+    self_411 = self_410;
+    other_363 = other_362;
+    let _e4: MultiVector = self_411;
+    let _e8: MultiVector = other_363;
+    let _e19: MultiVector = self_411;
+    let _e23: MultiVector = other_363;
+    let _e35: MultiVector = self_411;
+    let _e39: MultiVector = other_363;
+    let _e50: MultiVector = self_411;
+    let _e53: MultiVector = other_363;
+    let _e64: MultiVector = self_411;
+    let _e68: MultiVector = other_363;
+    let _e80: MultiVector = self_411;
+    let _e84: MultiVector = other_363;
+    let _e95: MultiVector = self_411;
+    let _e99: MultiVector = other_363;
+    let _e110: MultiVector = self_411;
+    let _e113: MultiVector = other_363;
+    return MultiVector((((((vec4<f32>(_e4.g0_.x) * _e8.g1_.yxwz) * vec4<f32>(1.0, -(1.0), 1.0, 1.0)) + ((vec4<f32>(_e19.g0_.z) * _e23.g1_.zzyz) * vec4<f32>(0.0, -(1.0), 1.0, 0.0))) + ((vec4<f32>(_e35.g0_.w) * _e39.g1_.wwwy) * vec4<f32>(0.0, 1.0, 0.0, 1.0))) + ((_e50.g0_.xyxx * _e53.g1_.xyxx) * vec4<f32>(0.0, 1.0, 0.0, 0.0))), (((((vec4<f32>(_e64.g1_.x) * _e68.g1_.yxwz) * vec4<f32>(1.0, -(1.0), -(1.0), 1.0)) + ((vec4<f32>(_e80.g1_.z) * _e84.g1_.zzyz) * vec4<f32>(0.0, 1.0, 1.0, 0.0))) + ((vec4<f32>(_e95.g1_.w) * _e99.g1_.wwwy) * vec4<f32>(0.0, 1.0, 0.0, 1.0))) + ((_e110.g1_.xyxx * _e113.g1_.xyxx) * vec4<f32>(0.0, 1.0, 0.0, 0.0))));
+}
+
+fn multi_vector_multi_vector_scalar_product(self_412: MultiVector, other_364: MultiVector) -> Scalar {
+    var self_413: MultiVector;
+    var other_365: MultiVector;
+
+    self_413 = self_412;
+    other_365 = other_364;
+    let _e4: MultiVector = self_413;
+    let _e7: MultiVector = other_365;
+    let _e11: MultiVector = self_413;
+    let _e14: MultiVector = other_365;
+    let _e19: MultiVector = self_413;
+    let _e22: MultiVector = other_365;
+    let _e27: MultiVector = self_413;
+    let _e30: MultiVector = other_365;
     return Scalar(((((_e4.g0_.x * _e7.g0_.x) - (_e11.g0_.y * _e14.g0_.y)) + (_e19.g0_.z * _e22.g0_.z)) + (_e27.g0_.w * _e30.g0_.w)));
 }
 
-fn multi_vector_rotor_into(self_198: MultiVector) -> Rotor {
-    var self_199: MultiVector;
+fn multi_vector_multi_vector_anti_scalar_product(self_414: MultiVector, other_366: MultiVector) -> AntiScalar {
+    var self_415: MultiVector;
+    var other_367: MultiVector;
 
-    self_199 = self_198;
-    let _e2: MultiVector = self_199;
-    let _e5: MultiVector = self_199;
+    self_415 = self_414;
+    other_367 = other_366;
+    let _e5: MultiVector = self_415;
+    let _e8: MultiVector = other_367;
+    let _e13: MultiVector = self_415;
+    let _e16: MultiVector = other_367;
+    let _e21: MultiVector = self_415;
+    let _e24: MultiVector = other_367;
+    let _e29: MultiVector = self_415;
+    let _e32: MultiVector = other_367;
+    return AntiScalar(((((0.0 - (_e5.g1_.x * _e8.g1_.x)) + (_e13.g1_.y * _e16.g1_.y)) + (_e21.g1_.z * _e24.g1_.z)) + (_e29.g1_.w * _e32.g1_.w)));
+}
+
+fn multi_vector_rotor_into(self_416: MultiVector) -> Rotor {
+    var self_417: MultiVector;
+
+    self_417 = self_416;
+    let _e2: MultiVector = self_417;
+    let _e5: MultiVector = self_417;
     return Rotor(vec2<f32>(_e2.g0_.x, _e5.g0_.y));
 }
 
-fn multi_vector_rotor_add(self_200: MultiVector, other_170: Rotor) -> MultiVector {
-    var self_201: MultiVector;
-    var other_171: Rotor;
+fn multi_vector_rotor_add(self_418: MultiVector, other_368: Rotor) -> MultiVector {
+    var self_419: MultiVector;
+    var other_369: Rotor;
 
-    self_201 = self_200;
-    other_171 = other_170;
-    let _e4: MultiVector = self_201;
-    let _e6: Rotor = other_171;
-    let _e9: Rotor = other_171;
-    let _e12: Rotor = other_171;
-    let _e15: Rotor = other_171;
-    let _e26: MultiVector = self_201;
+    self_419 = self_418;
+    other_369 = other_368;
+    let _e4: MultiVector = self_419;
+    let _e6: Rotor = other_369;
+    let _e9: Rotor = other_369;
+    let _e12: Rotor = other_369;
+    let _e15: Rotor = other_369;
+    let _e26: MultiVector = self_419;
     return MultiVector((_e4.g0_ + (vec4<f32>(_e6.g0_.x, _e9.g0_.y, _e12.g0_.x, _e15.g0_.x) * vec4<f32>(1.0, 1.0, 0.0, 0.0))), _e26.g1_);
 }
 
-fn multi_vector_rotor_sub(self_202: MultiVector, other_172: Rotor) -> MultiVector {
-    var self_203: MultiVector;
-    var other_173: Rotor;
+fn multi_vector_rotor_sub(self_420: MultiVector, other_370: Rotor) -> MultiVector {
+    var self_421: MultiVector;
+    var other_371: Rotor;
 
-    self_203 = self_202;
-    other_173 = other_172;
-    let _e4: MultiVector = self_203;
-    let _e6: Rotor = other_173;
-    let _e9: Rotor = other_173;
-    let _e12: Rotor = other_173;
-    let _e15: Rotor = other_173;
-    let _e26: MultiVector = self_203;
+    self_421 = self_420;
+    other_371 = other_370;
+    let _e4: MultiVector = self_421;
+    let _e6: Rotor = other_371;
+    let _e9: Rotor = other_371;
+    let _e12: Rotor = other_371;
+    let _e15: Rotor = other_371;
+    let _e26: MultiVector = self_421;
     return MultiVector((_e4.g0_ - (vec4<f32>(_e6.g0_.x, _e9.g0_.y, _e12.g0_.x, _e15.g0_.x) * vec4<f32>(1.0, 1.0, 0.0, 0.0))), _e26.g1_);
 }
 
-fn multi_vector_rotor_geometric_product(self_204: MultiVector, other_174: Rotor) -> MultiVector {
-    var self_205: MultiVector;
-    var other_175: Rotor;
+fn multi_vector_rotor_geometric_product(self_422: MultiVector, other_372: Rotor) -> MultiVector {
+    var self_423: MultiVector;
+    var other_373: Rotor;
 
-    self_205 = self_204;
-    other_175 = other_174;
-    let _e4: MultiVector = self_205;
-    let _e8: Rotor = other_175;
-    let _e11: Rotor = other_175;
-    let _e14: Rotor = other_175;
-    let _e17: Rotor = other_175;
-    let _e29: MultiVector = self_205;
-    let _e33: Rotor = other_175;
-    let _e36: Rotor = other_175;
-    let _e39: Rotor = other_175;
-    let _e42: Rotor = other_175;
-    let _e55: MultiVector = self_205;
-    let _e58: Rotor = other_175;
-    let _e61: Rotor = other_175;
-    let _e64: Rotor = other_175;
-    let _e67: Rotor = other_175;
-    let _e73: MultiVector = self_205;
-    let _e77: Rotor = other_175;
-    let _e80: Rotor = other_175;
-    let _e83: Rotor = other_175;
-    let _e86: Rotor = other_175;
-    let _e98: MultiVector = self_205;
-    let _e102: Rotor = other_175;
-    let _e105: Rotor = other_175;
-    let _e108: Rotor = other_175;
-    let _e111: Rotor = other_175;
-    let _e123: MultiVector = self_205;
-    let _e126: Rotor = other_175;
-    let _e129: Rotor = other_175;
-    let _e132: Rotor = other_175;
-    let _e135: Rotor = other_175;
+    self_423 = self_422;
+    other_373 = other_372;
+    let _e4: MultiVector = self_423;
+    let _e8: Rotor = other_373;
+    let _e11: Rotor = other_373;
+    let _e14: Rotor = other_373;
+    let _e17: Rotor = other_373;
+    let _e29: MultiVector = self_423;
+    let _e33: Rotor = other_373;
+    let _e36: Rotor = other_373;
+    let _e39: Rotor = other_373;
+    let _e42: Rotor = other_373;
+    let _e55: MultiVector = self_423;
+    let _e58: Rotor = other_373;
+    let _e61: Rotor = other_373;
+    let _e64: Rotor = other_373;
+    let _e67: Rotor = other_373;
+    let _e73: MultiVector = self_423;
+    let _e77: Rotor = other_373;
+    let _e80: Rotor = other_373;
+    let _e83: Rotor = other_373;
+    let _e86: Rotor = other_373;
+    let _e98: MultiVector = self_423;
+    let _e102: Rotor = other_373;
+    let _e105: Rotor = other_373;
+    let _e108: Rotor = other_373;
+    let _e111: Rotor = other_373;
+    let _e123: MultiVector = self_423;
+    let _e126: Rotor = other_373;
+    let _e129: Rotor = other_373;
+    let _e132: Rotor = other_373;
+    let _e135: Rotor = other_373;
     return MultiVector(((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.y, _e11.g0_.x, _e14.g0_.y, _e17.g0_.y)) * vec4<f32>(-(1.0), 1.0, 0.0, 0.0)) + ((vec4<f32>(_e29.g0_.w) * vec4<f32>(_e33.g0_.y, _e36.g0_.y, _e39.g0_.y, _e42.g0_.x)) * vec4<f32>(0.0, 0.0, -(1.0), 1.0))) + (_e55.g0_.xxzz * vec4<f32>(_e58.g0_.x, _e61.g0_.y, _e64.g0_.x, _e67.g0_.y))), ((((vec4<f32>(_e73.g1_.y) * vec4<f32>(_e77.g0_.y, _e80.g0_.x, _e83.g0_.y, _e86.g0_.y)) * vec4<f32>(-(1.0), 1.0, 0.0, 0.0)) + ((vec4<f32>(_e98.g1_.w) * vec4<f32>(_e102.g0_.y, _e105.g0_.y, _e108.g0_.y, _e111.g0_.x)) * vec4<f32>(0.0, 0.0, 1.0, 1.0))) + ((_e123.g1_.xxzz * vec4<f32>(_e126.g0_.x, _e129.g0_.y, _e132.g0_.x, _e135.g0_.y)) * vec4<f32>(1.0, 1.0, 1.0, -(1.0)))));
 }
 
-fn multi_vector_rotor_outer_product(self_206: MultiVector, other_176: Rotor) -> MultiVector {
-    var self_207: MultiVector;
-    var other_177: Rotor;
+fn multi_vector_rotor_outer_product(self_424: MultiVector, other_374: Rotor) -> MultiVector {
+    var self_425: MultiVector;
+    var other_375: Rotor;
 
-    self_207 = self_206;
-    other_177 = other_176;
-    let _e4: MultiVector = self_207;
-    let _e8: Rotor = other_177;
-    let _e19: MultiVector = self_207;
-    let _e22: Rotor = other_177;
-    let _e25: Rotor = other_177;
-    let _e28: Rotor = other_177;
-    let _e31: Rotor = other_177;
-    let _e37: MultiVector = self_207;
-    let _e41: Rotor = other_177;
-    let _e52: MultiVector = self_207;
-    let _e55: Rotor = other_177;
-    let _e58: Rotor = other_177;
-    let _e61: Rotor = other_177;
-    let _e64: Rotor = other_177;
+    self_425 = self_424;
+    other_375 = other_374;
+    let _e4: MultiVector = self_425;
+    let _e8: Rotor = other_375;
+    let _e19: MultiVector = self_425;
+    let _e22: Rotor = other_375;
+    let _e25: Rotor = other_375;
+    let _e28: Rotor = other_375;
+    let _e31: Rotor = other_375;
+    let _e37: MultiVector = self_425;
+    let _e41: Rotor = other_375;
+    let _e52: MultiVector = self_425;
+    let _e55: Rotor = other_375;
+    let _e58: Rotor = other_375;
+    let _e61: Rotor = other_375;
+    let _e64: Rotor = other_375;
     return MultiVector((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.x)) * vec4<f32>(0.0, 1.0, 0.0, 0.0)) + (_e19.g0_.xxzw * vec4<f32>(_e22.g0_.x, _e25.g0_.y, _e28.g0_.x, _e31.g0_.x))), (((vec4<f32>(_e37.g1_.y) * vec4<f32>(_e41.g0_.x)) * vec4<f32>(0.0, 1.0, 0.0, 0.0)) + (_e52.g1_.xxzw * vec4<f32>(_e55.g0_.x, _e58.g0_.y, _e61.g0_.x, _e64.g0_.x))));
 }
 
-fn multi_vector_rotor_inner_product(self_208: MultiVector, other_178: Rotor) -> MultiVector {
-    var self_209: MultiVector;
-    var other_179: Rotor;
+fn multi_vector_rotor_inner_product(self_426: MultiVector, other_376: Rotor) -> MultiVector {
+    var self_427: MultiVector;
+    var other_377: Rotor;
 
-    self_209 = self_208;
-    other_179 = other_178;
-    let _e4: MultiVector = self_209;
-    let _e8: Rotor = other_179;
-    let _e11: Rotor = other_179;
-    let _e14: Rotor = other_179;
-    let _e17: Rotor = other_179;
-    let _e29: MultiVector = self_209;
-    let _e33: Rotor = other_179;
-    let _e36: Rotor = other_179;
-    let _e39: Rotor = other_179;
-    let _e42: Rotor = other_179;
-    let _e55: MultiVector = self_209;
-    let _e58: Rotor = other_179;
-    let _e61: Rotor = other_179;
-    let _e64: Rotor = other_179;
-    let _e67: Rotor = other_179;
-    let _e73: MultiVector = self_209;
-    let _e77: Rotor = other_179;
-    let _e80: Rotor = other_179;
-    let _e83: Rotor = other_179;
-    let _e86: Rotor = other_179;
-    let _e98: MultiVector = self_209;
-    let _e101: Rotor = other_179;
+    self_427 = self_426;
+    other_377 = other_376;
+    let _e4: MultiVector = self_427;
+    let _e8: Rotor = other_377;
+    let _e11: Rotor = other_377;
+    let _e14: Rotor = other_377;
+    let _e17: Rotor = other_377;
+    let _e29: MultiVector = self_427;
+    let _e33: Rotor = other_377;
+    let _e36: Rotor = other_377;
+    let _e39: Rotor = other_377;
+    let _e42: Rotor = other_377;
+    let _e55: MultiVector = self_427;
+    let _e58: Rotor = other_377;
+    let _e61: Rotor = other_377;
+    let _e64: Rotor = other_377;
+    let _e67: Rotor = other_377;
+    let _e73: MultiVector = self_427;
+    let _e77: Rotor = other_377;
+    let _e80: Rotor = other_377;
+    let _e83: Rotor = other_377;
+    let _e86: Rotor = other_377;
+    let _e98: MultiVector = self_427;
+    let _e101: Rotor = other_377;
     return MultiVector(((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.y, _e11.g0_.x, _e14.g0_.y, _e17.g0_.y)) * vec4<f32>(-(1.0), 1.0, 0.0, 0.0)) + ((vec4<f32>(_e29.g0_.w) * vec4<f32>(_e33.g0_.y, _e36.g0_.y, _e39.g0_.y, _e42.g0_.x)) * vec4<f32>(0.0, 0.0, -(1.0), 1.0))) + (_e55.g0_.xxzz * vec4<f32>(_e58.g0_.x, _e61.g0_.y, _e64.g0_.x, _e67.g0_.y))), (((vec4<f32>(_e73.g1_.y) * vec4<f32>(_e77.g0_.y, _e80.g0_.x, _e83.g0_.y, _e86.g0_.y)) * vec4<f32>(-(1.0), 1.0, 0.0, 0.0)) + ((_e98.g1_.xxzw * vec4<f32>(_e101.g0_.x)) * vec4<f32>(1.0, 0.0, 1.0, 1.0))));
 }
 
-fn multi_vector_rotor_right_contraction(self_210: MultiVector, other_180: Rotor) -> MultiVector {
-    var self_211: MultiVector;
-    var other_181: Rotor;
+fn multi_vector_rotor_right_contraction(self_428: MultiVector, other_378: Rotor) -> MultiVector {
+    var self_429: MultiVector;
+    var other_379: Rotor;
 
-    self_211 = self_210;
-    other_181 = other_180;
-    let _e4: MultiVector = self_211;
-    let _e8: Rotor = other_181;
-    let _e11: Rotor = other_181;
-    let _e14: Rotor = other_181;
-    let _e17: Rotor = other_181;
-    let _e29: MultiVector = self_211;
-    let _e32: Rotor = other_181;
-    let _e44: MultiVector = self_211;
-    let _e48: Rotor = other_181;
-    let _e51: Rotor = other_181;
-    let _e54: Rotor = other_181;
-    let _e57: Rotor = other_181;
-    let _e69: MultiVector = self_211;
-    let _e72: Rotor = other_181;
+    self_429 = self_428;
+    other_379 = other_378;
+    let _e4: MultiVector = self_429;
+    let _e8: Rotor = other_379;
+    let _e11: Rotor = other_379;
+    let _e14: Rotor = other_379;
+    let _e17: Rotor = other_379;
+    let _e29: MultiVector = self_429;
+    let _e32: Rotor = other_379;
+    let _e44: MultiVector = self_429;
+    let _e48: Rotor = other_379;
+    let _e51: Rotor = other_379;
+    let _e54: Rotor = other_379;
+    let _e57: Rotor = other_379;
+    let _e69: MultiVector = self_429;
+    let _e72: Rotor = other_379;
     return MultiVector((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.y, _e11.g0_.x, _e14.g0_.y, _e17.g0_.y)) * vec4<f32>(-(1.0), 1.0, 0.0, 0.0)) + ((_e29.g0_.xxzw * vec4<f32>(_e32.g0_.x)) * vec4<f32>(1.0, 0.0, 1.0, 1.0))), (((vec4<f32>(_e44.g1_.y) * vec4<f32>(_e48.g0_.y, _e51.g0_.x, _e54.g0_.y, _e57.g0_.y)) * vec4<f32>(-(1.0), 1.0, 0.0, 0.0)) + ((_e69.g1_.xxzw * vec4<f32>(_e72.g0_.x)) * vec4<f32>(1.0, 0.0, 1.0, 1.0))));
 }
 
-fn multi_vector_rotor_scalar_product(self_212: MultiVector, other_182: Rotor) -> Scalar {
-    var self_213: MultiVector;
-    var other_183: Rotor;
+fn multi_vector_rotor_scalar_product(self_430: MultiVector, other_380: Rotor) -> Scalar {
+    var self_431: MultiVector;
+    var other_381: Rotor;
 
-    self_213 = self_212;
-    other_183 = other_182;
-    let _e4: MultiVector = self_213;
-    let _e7: Rotor = other_183;
-    let _e11: MultiVector = self_213;
-    let _e14: Rotor = other_183;
+    self_431 = self_430;
+    other_381 = other_380;
+    let _e4: MultiVector = self_431;
+    let _e7: Rotor = other_381;
+    let _e11: MultiVector = self_431;
+    let _e14: Rotor = other_381;
     return Scalar(((_e4.g0_.x * _e7.g0_.x) - (_e11.g0_.y * _e14.g0_.y)));
 }
 
-fn multi_vector_point_into(self_214: MultiVector) -> Point {
-    var self_215: MultiVector;
+fn multi_vector_point_into(self_432: MultiVector) -> Point {
+    var self_433: MultiVector;
 
-    self_215 = self_214;
-    let _e2: MultiVector = self_215;
-    let _e5: MultiVector = self_215;
-    let _e8: MultiVector = self_215;
+    self_433 = self_432;
+    let _e2: MultiVector = self_433;
+    let _e5: MultiVector = self_433;
+    let _e8: MultiVector = self_433;
     return Point(vec3<f32>(_e2.g0_.y, _e5.g1_.z, _e8.g1_.w));
 }
 
-fn multi_vector_point_add(self_216: MultiVector, other_184: Point) -> MultiVector {
-    var self_217: MultiVector;
-    var other_185: Point;
+fn multi_vector_point_add(self_434: MultiVector, other_382: Point) -> MultiVector {
+    var self_435: MultiVector;
+    var other_383: Point;
 
-    self_217 = self_216;
-    other_185 = other_184;
-    let _e4: MultiVector = self_217;
-    let _e6: Point = other_185;
-    let _e17: MultiVector = self_217;
-    let _e19: Point = other_185;
-    let _e22: Point = other_185;
-    let _e25: Point = other_185;
-    let _e28: Point = other_185;
+    self_435 = self_434;
+    other_383 = other_382;
+    let _e4: MultiVector = self_435;
+    let _e6: Point = other_383;
+    let _e17: MultiVector = self_435;
+    let _e19: Point = other_383;
+    let _e22: Point = other_383;
+    let _e25: Point = other_383;
+    let _e28: Point = other_383;
     return MultiVector((_e4.g0_ + (vec4<f32>(_e6.g0_.x) * vec4<f32>(0.0, 1.0, 0.0, 0.0))), (_e17.g1_ + (vec4<f32>(_e19.g0_.x, _e22.g0_.x, _e25.g0_.y, _e28.g0_.z) * vec4<f32>(0.0, 0.0, 1.0, 1.0))));
 }
 
-fn multi_vector_point_sub(self_218: MultiVector, other_186: Point) -> MultiVector {
-    var self_219: MultiVector;
-    var other_187: Point;
+fn multi_vector_point_sub(self_436: MultiVector, other_384: Point) -> MultiVector {
+    var self_437: MultiVector;
+    var other_385: Point;
 
-    self_219 = self_218;
-    other_187 = other_186;
-    let _e4: MultiVector = self_219;
-    let _e6: Point = other_187;
-    let _e17: MultiVector = self_219;
-    let _e19: Point = other_187;
-    let _e22: Point = other_187;
-    let _e25: Point = other_187;
-    let _e28: Point = other_187;
+    self_437 = self_436;
+    other_385 = other_384;
+    let _e4: MultiVector = self_437;
+    let _e6: Point = other_385;
+    let _e17: MultiVector = self_437;
+    let _e19: Point = other_385;
+    let _e22: Point = other_385;
+    let _e25: Point = other_385;
+    let _e28: Point = other_385;
     return MultiVector((_e4.g0_ - (vec4<f32>(_e6.g0_.x) * vec4<f32>(0.0, 1.0, 0.0, 0.0))), (_e17.g1_ - (vec4<f32>(_e19.g0_.x, _e22.g0_.x, _e25.g0_.y, _e28.g0_.z) * vec4<f32>(0.0, 0.0, 1.0, 1.0))));
 }
 
-fn multi_vector_point_geometric_product(self_220: MultiVector, other_188: Point) -> MultiVector {
-    var self_221: MultiVector;
-    var other_189: Point;
+fn multi_vector_point_geometric_product(self_438: MultiVector, other_386: Point) -> MultiVector {
+    var self_439: MultiVector;
+    var other_387: Point;
 
-    self_221 = self_220;
-    other_189 = other_188;
-    let _e4: MultiVector = self_221;
-    let _e7: Point = other_189;
-    let _e20: MultiVector = self_221;
-    let _e24: Point = other_189;
-    let _e27: Point = other_189;
-    let _e30: Point = other_189;
-    let _e33: Point = other_189;
-    let _e45: MultiVector = self_221;
-    let _e49: Point = other_189;
-    let _e52: Point = other_189;
-    let _e55: Point = other_189;
-    let _e58: Point = other_189;
-    let _e70: MultiVector = self_221;
-    let _e74: Point = other_189;
-    let _e86: MultiVector = self_221;
-    let _e90: Point = other_189;
-    let _e103: MultiVector = self_221;
-    let _e107: Point = other_189;
-    let _e120: MultiVector = self_221;
-    let _e124: Point = other_189;
-    let _e136: MultiVector = self_221;
-    let _e139: Point = other_189;
-    let _e142: Point = other_189;
-    let _e145: Point = other_189;
-    let _e148: Point = other_189;
+    self_439 = self_438;
+    other_387 = other_386;
+    let _e4: MultiVector = self_439;
+    let _e7: Point = other_387;
+    let _e20: MultiVector = self_439;
+    let _e24: Point = other_387;
+    let _e27: Point = other_387;
+    let _e30: Point = other_387;
+    let _e33: Point = other_387;
+    let _e45: MultiVector = self_439;
+    let _e49: Point = other_387;
+    let _e52: Point = other_387;
+    let _e55: Point = other_387;
+    let _e58: Point = other_387;
+    let _e70: MultiVector = self_439;
+    let _e74: Point = other_387;
+    let _e86: MultiVector = self_439;
+    let _e90: Point = other_387;
+    let _e103: MultiVector = self_439;
+    let _e107: Point = other_387;
+    let _e120: MultiVector = self_439;
+    let _e124: Point = other_387;
+    let _e136: MultiVector = self_439;
+    let _e139: Point = other_387;
+    let _e142: Point = other_387;
+    let _e145: Point = other_387;
+    let _e148: Point = other_387;
     return MultiVector(((_e4.g0_.yxwz * vec4<f32>(_e7.g0_.x)) * vec4<f32>(-(1.0), 1.0, -(1.0), 1.0)), ((((((((vec4<f32>(_e20.g0_.y) * vec4<f32>(_e24.g0_.z, _e27.g0_.z, _e30.g0_.z, _e33.g0_.y)) * vec4<f32>(0.0, 0.0, -(1.0), 1.0)) + ((vec4<f32>(_e45.g0_.w) * vec4<f32>(_e49.g0_.z, _e52.g0_.y, _e55.g0_.z, _e58.g0_.z)) * vec4<f32>(1.0, 1.0, 0.0, 0.0))) + ((vec4<f32>(_e70.g1_.x) * vec4<f32>(_e74.g0_.x)) * vec4<f32>(0.0, 1.0, 0.0, 0.0))) + ((vec4<f32>(_e86.g1_.y) * vec4<f32>(_e90.g0_.x)) * vec4<f32>(-(1.0), 0.0, 0.0, 0.0))) + ((vec4<f32>(_e103.g1_.z) * vec4<f32>(_e107.g0_.x)) * vec4<f32>(0.0, 0.0, 0.0, -(1.0)))) + ((vec4<f32>(_e120.g1_.w) * vec4<f32>(_e124.g0_.x)) * vec4<f32>(0.0, 0.0, 1.0, 0.0))) + ((_e136.g0_.zzxx * vec4<f32>(_e139.g0_.y, _e142.g0_.z, _e145.g0_.y, _e148.g0_.z)) * vec4<f32>(-(1.0), 1.0, 1.0, 1.0))));
 }
 
-fn multi_vector_point_scalar_product(self_222: MultiVector, other_190: Point) -> Scalar {
-    var self_223: MultiVector;
-    var other_191: Point;
+fn multi_vector_point_geometric_anti_product(self_440: MultiVector, other_388: Point) -> MultiVector {
+    var self_441: MultiVector;
+    var other_389: Point;
 
-    self_223 = self_222;
-    other_191 = other_190;
-    let _e5: MultiVector = self_223;
-    let _e8: Point = other_191;
+    self_441 = self_440;
+    other_389 = other_388;
+    let _e4: MultiVector = self_441;
+    let _e8: Point = other_389;
+    let _e11: Point = other_389;
+    let _e14: Point = other_389;
+    let _e17: Point = other_389;
+    let _e29: MultiVector = self_441;
+    let _e33: Point = other_389;
+    let _e36: Point = other_389;
+    let _e39: Point = other_389;
+    let _e42: Point = other_389;
+    let _e54: MultiVector = self_441;
+    let _e58: Point = other_389;
+    let _e70: MultiVector = self_441;
+    let _e74: Point = other_389;
+    let _e86: MultiVector = self_441;
+    let _e90: Point = other_389;
+    let _e102: MultiVector = self_441;
+    let _e106: Point = other_389;
+    let _e119: MultiVector = self_441;
+    let _e122: Point = other_389;
+    let _e125: Point = other_389;
+    let _e128: Point = other_389;
+    let _e131: Point = other_389;
+    let _e144: MultiVector = self_441;
+    let _e148: Point = other_389;
+    let _e151: Point = other_389;
+    let _e154: Point = other_389;
+    let _e157: Point = other_389;
+    let _e168: MultiVector = self_441;
+    let _e172: Point = other_389;
+    let _e175: Point = other_389;
+    let _e178: Point = other_389;
+    let _e181: Point = other_389;
+    let _e193: MultiVector = self_441;
+    let _e196: Point = other_389;
+    let _e199: Point = other_389;
+    let _e202: Point = other_389;
+    let _e205: Point = other_389;
+    return MultiVector(((((((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.y, _e11.g0_.y, _e14.g0_.y, _e17.g0_.z)) * vec4<f32>(0.0, 0.0, -(1.0), 1.0)) + ((vec4<f32>(_e29.g0_.w) * vec4<f32>(_e33.g0_.y, _e36.g0_.z, _e39.g0_.y, _e42.g0_.y)) * vec4<f32>(1.0, 1.0, 0.0, 0.0))) + ((vec4<f32>(_e54.g1_.x) * vec4<f32>(_e58.g0_.x)) * vec4<f32>(1.0, 0.0, 0.0, 0.0))) + ((vec4<f32>(_e70.g1_.y) * vec4<f32>(_e74.g0_.x)) * vec4<f32>(0.0, 1.0, 0.0, 0.0))) + ((vec4<f32>(_e86.g1_.z) * vec4<f32>(_e90.g0_.x)) * vec4<f32>(0.0, 0.0, 1.0, 0.0))) + ((vec4<f32>(_e102.g1_.w) * vec4<f32>(_e106.g0_.x)) * vec4<f32>(0.0, 0.0, 0.0, -(1.0)))) + ((_e119.g0_.zzxx * vec4<f32>(_e122.g0_.z, _e125.g0_.y, _e128.g0_.z, _e131.g0_.y)) * vec4<f32>(1.0, -(1.0), 1.0, 1.0))), ((((vec4<f32>(_e144.g1_.y) * vec4<f32>(_e148.g0_.y, _e151.g0_.y, _e154.g0_.y, _e157.g0_.z)) * vec4<f32>(0.0, 0.0, 1.0, 1.0)) + ((vec4<f32>(_e168.g1_.w) * vec4<f32>(_e172.g0_.y, _e175.g0_.z, _e178.g0_.y, _e181.g0_.y)) * vec4<f32>(1.0, 1.0, 0.0, 0.0))) + ((_e193.g1_.zzxx * vec4<f32>(_e196.g0_.z, _e199.g0_.y, _e202.g0_.z, _e205.g0_.y)) * vec4<f32>(-(1.0), 1.0, -(1.0), 1.0))));
+}
+
+fn multi_vector_point_scalar_product(self_442: MultiVector, other_390: Point) -> Scalar {
+    var self_443: MultiVector;
+    var other_391: Point;
+
+    self_443 = self_442;
+    other_391 = other_390;
+    let _e5: MultiVector = self_443;
+    let _e8: Point = other_391;
     return Scalar((0.0 - (_e5.g0_.y * _e8.g0_.x)));
 }
 
-fn multi_vector_ideal_point_into(self_224: MultiVector) -> IdealPoint {
-    var self_225: MultiVector;
+fn multi_vector_point_anti_scalar_product(self_444: MultiVector, other_392: Point) -> AntiScalar {
+    var self_445: MultiVector;
+    var other_393: Point;
 
-    self_225 = self_224;
-    let _e2: MultiVector = self_225;
-    let _e5: MultiVector = self_225;
+    self_445 = self_444;
+    other_393 = other_392;
+    let _e4: MultiVector = self_445;
+    let _e7: Point = other_393;
+    let _e11: MultiVector = self_445;
+    let _e14: Point = other_393;
+    return AntiScalar(((_e4.g1_.z * _e7.g0_.y) + (_e11.g1_.w * _e14.g0_.z)));
+}
+
+fn multi_vector_ideal_point_into(self_446: MultiVector) -> IdealPoint {
+    var self_447: MultiVector;
+
+    self_447 = self_446;
+    let _e2: MultiVector = self_447;
+    let _e5: MultiVector = self_447;
     return IdealPoint(vec2<f32>(_e2.g1_.z, _e5.g1_.w));
 }
 
-fn multi_vector_ideal_point_add(self_226: MultiVector, other_192: IdealPoint) -> MultiVector {
-    var self_227: MultiVector;
-    var other_193: IdealPoint;
+fn multi_vector_ideal_point_add(self_448: MultiVector, other_394: IdealPoint) -> MultiVector {
+    var self_449: MultiVector;
+    var other_395: IdealPoint;
 
-    self_227 = self_226;
-    other_193 = other_192;
-    let _e4: MultiVector = self_227;
-    let _e6: MultiVector = self_227;
-    let _e8: IdealPoint = other_193;
-    let _e11: IdealPoint = other_193;
-    let _e14: IdealPoint = other_193;
-    let _e17: IdealPoint = other_193;
+    self_449 = self_448;
+    other_395 = other_394;
+    let _e4: MultiVector = self_449;
+    let _e6: MultiVector = self_449;
+    let _e8: IdealPoint = other_395;
+    let _e11: IdealPoint = other_395;
+    let _e14: IdealPoint = other_395;
+    let _e17: IdealPoint = other_395;
     return MultiVector(_e4.g0_, (_e6.g1_ + (vec4<f32>(_e8.g0_.x, _e11.g0_.x, _e14.g0_.x, _e17.g0_.y) * vec4<f32>(0.0, 0.0, 1.0, 1.0))));
 }
 
-fn multi_vector_ideal_point_sub(self_228: MultiVector, other_194: IdealPoint) -> MultiVector {
-    var self_229: MultiVector;
-    var other_195: IdealPoint;
+fn multi_vector_ideal_point_sub(self_450: MultiVector, other_396: IdealPoint) -> MultiVector {
+    var self_451: MultiVector;
+    var other_397: IdealPoint;
 
-    self_229 = self_228;
-    other_195 = other_194;
-    let _e4: MultiVector = self_229;
-    let _e6: MultiVector = self_229;
-    let _e8: IdealPoint = other_195;
-    let _e11: IdealPoint = other_195;
-    let _e14: IdealPoint = other_195;
-    let _e17: IdealPoint = other_195;
+    self_451 = self_450;
+    other_397 = other_396;
+    let _e4: MultiVector = self_451;
+    let _e6: MultiVector = self_451;
+    let _e8: IdealPoint = other_397;
+    let _e11: IdealPoint = other_397;
+    let _e14: IdealPoint = other_397;
+    let _e17: IdealPoint = other_397;
     return MultiVector(_e4.g0_, (_e6.g1_ - (vec4<f32>(_e8.g0_.x, _e11.g0_.x, _e14.g0_.x, _e17.g0_.y) * vec4<f32>(0.0, 0.0, 1.0, 1.0))));
 }
 
-fn multi_vector_plane_into(self_230: MultiVector) -> Plane {
-    var self_231: MultiVector;
+fn multi_vector_ideal_point_geometric_anti_product(self_452: MultiVector, other_398: IdealPoint) -> MultiVector {
+    var self_453: MultiVector;
+    var other_399: IdealPoint;
 
-    self_231 = self_230;
-    let _e2: MultiVector = self_231;
-    let _e5: MultiVector = self_231;
-    let _e8: MultiVector = self_231;
+    self_453 = self_452;
+    other_399 = other_398;
+    let _e4: MultiVector = self_453;
+    let _e8: IdealPoint = other_399;
+    let _e11: IdealPoint = other_399;
+    let _e14: IdealPoint = other_399;
+    let _e17: IdealPoint = other_399;
+    let _e29: MultiVector = self_453;
+    let _e33: IdealPoint = other_399;
+    let _e36: IdealPoint = other_399;
+    let _e39: IdealPoint = other_399;
+    let _e42: IdealPoint = other_399;
+    let _e54: MultiVector = self_453;
+    let _e57: IdealPoint = other_399;
+    let _e60: IdealPoint = other_399;
+    let _e63: IdealPoint = other_399;
+    let _e66: IdealPoint = other_399;
+    let _e79: MultiVector = self_453;
+    let _e83: IdealPoint = other_399;
+    let _e86: IdealPoint = other_399;
+    let _e89: IdealPoint = other_399;
+    let _e92: IdealPoint = other_399;
+    let _e103: MultiVector = self_453;
+    let _e107: IdealPoint = other_399;
+    let _e110: IdealPoint = other_399;
+    let _e113: IdealPoint = other_399;
+    let _e116: IdealPoint = other_399;
+    let _e128: MultiVector = self_453;
+    let _e131: IdealPoint = other_399;
+    let _e134: IdealPoint = other_399;
+    let _e137: IdealPoint = other_399;
+    let _e140: IdealPoint = other_399;
+    return MultiVector(((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.x, _e11.g0_.x, _e14.g0_.x, _e17.g0_.y)) * vec4<f32>(0.0, 0.0, -(1.0), 1.0)) + ((vec4<f32>(_e29.g0_.w) * vec4<f32>(_e33.g0_.x, _e36.g0_.y, _e39.g0_.x, _e42.g0_.x)) * vec4<f32>(1.0, 1.0, 0.0, 0.0))) + ((_e54.g0_.zzxx * vec4<f32>(_e57.g0_.y, _e60.g0_.x, _e63.g0_.y, _e66.g0_.x)) * vec4<f32>(1.0, -(1.0), 1.0, 1.0))), ((((vec4<f32>(_e79.g1_.y) * vec4<f32>(_e83.g0_.x, _e86.g0_.x, _e89.g0_.x, _e92.g0_.y)) * vec4<f32>(0.0, 0.0, 1.0, 1.0)) + ((vec4<f32>(_e103.g1_.w) * vec4<f32>(_e107.g0_.x, _e110.g0_.y, _e113.g0_.x, _e116.g0_.x)) * vec4<f32>(1.0, 1.0, 0.0, 0.0))) + ((_e128.g1_.zzxx * vec4<f32>(_e131.g0_.y, _e134.g0_.x, _e137.g0_.y, _e140.g0_.x)) * vec4<f32>(-(1.0), 1.0, -(1.0), 1.0))));
+}
+
+fn multi_vector_ideal_point_anti_scalar_product(self_454: MultiVector, other_400: IdealPoint) -> AntiScalar {
+    var self_455: MultiVector;
+    var other_401: IdealPoint;
+
+    self_455 = self_454;
+    other_401 = other_400;
+    let _e4: MultiVector = self_455;
+    let _e7: IdealPoint = other_401;
+    let _e11: MultiVector = self_455;
+    let _e14: IdealPoint = other_401;
+    return AntiScalar(((_e4.g1_.z * _e7.g0_.x) + (_e11.g1_.w * _e14.g0_.y)));
+}
+
+fn multi_vector_plane_into(self_456: MultiVector) -> Plane {
+    var self_457: MultiVector;
+
+    self_457 = self_456;
+    let _e2: MultiVector = self_457;
+    let _e5: MultiVector = self_457;
+    let _e8: MultiVector = self_457;
     return Plane(vec3<f32>(_e2.g1_.x, _e5.g0_.w, _e8.g0_.z));
 }
 
-fn multi_vector_plane_add(self_232: MultiVector, other_196: Plane) -> MultiVector {
-    var self_233: MultiVector;
-    var other_197: Plane;
+fn multi_vector_plane_add(self_458: MultiVector, other_402: Plane) -> MultiVector {
+    var self_459: MultiVector;
+    var other_403: Plane;
 
-    self_233 = self_232;
-    other_197 = other_196;
-    let _e4: MultiVector = self_233;
-    let _e6: Plane = other_197;
-    let _e9: Plane = other_197;
-    let _e12: Plane = other_197;
-    let _e15: Plane = other_197;
-    let _e26: MultiVector = self_233;
-    let _e28: Plane = other_197;
+    self_459 = self_458;
+    other_403 = other_402;
+    let _e4: MultiVector = self_459;
+    let _e6: Plane = other_403;
+    let _e9: Plane = other_403;
+    let _e12: Plane = other_403;
+    let _e15: Plane = other_403;
+    let _e26: MultiVector = self_459;
+    let _e28: Plane = other_403;
     return MultiVector((_e4.g0_ + (vec4<f32>(_e6.g0_.x, _e9.g0_.x, _e12.g0_.z, _e15.g0_.y) * vec4<f32>(0.0, 0.0, 1.0, 1.0))), (_e26.g1_ + (vec4<f32>(_e28.g0_.x) * vec4<f32>(1.0, 0.0, 0.0, 0.0))));
 }
 
-fn multi_vector_plane_sub(self_234: MultiVector, other_198: Plane) -> MultiVector {
-    var self_235: MultiVector;
-    var other_199: Plane;
+fn multi_vector_plane_sub(self_460: MultiVector, other_404: Plane) -> MultiVector {
+    var self_461: MultiVector;
+    var other_405: Plane;
 
-    self_235 = self_234;
-    other_199 = other_198;
-    let _e4: MultiVector = self_235;
-    let _e6: Plane = other_199;
-    let _e9: Plane = other_199;
-    let _e12: Plane = other_199;
-    let _e15: Plane = other_199;
-    let _e26: MultiVector = self_235;
-    let _e28: Plane = other_199;
+    self_461 = self_460;
+    other_405 = other_404;
+    let _e4: MultiVector = self_461;
+    let _e6: Plane = other_405;
+    let _e9: Plane = other_405;
+    let _e12: Plane = other_405;
+    let _e15: Plane = other_405;
+    let _e26: MultiVector = self_461;
+    let _e28: Plane = other_405;
     return MultiVector((_e4.g0_ - (vec4<f32>(_e6.g0_.x, _e9.g0_.x, _e12.g0_.z, _e15.g0_.y) * vec4<f32>(0.0, 0.0, 1.0, 1.0))), (_e26.g1_ - (vec4<f32>(_e28.g0_.x) * vec4<f32>(1.0, 0.0, 0.0, 0.0))));
 }
 
-fn multi_vector_plane_geometric_product(self_236: MultiVector, other_200: Plane) -> MultiVector {
-    var self_237: MultiVector;
-    var other_201: Plane;
+fn multi_vector_plane_geometric_product(self_462: MultiVector, other_406: Plane) -> MultiVector {
+    var self_463: MultiVector;
+    var other_407: Plane;
 
-    self_237 = self_236;
-    other_201 = other_200;
-    let _e4: MultiVector = self_237;
-    let _e8: Plane = other_201;
-    let _e11: Plane = other_201;
-    let _e14: Plane = other_201;
-    let _e17: Plane = other_201;
-    let _e29: MultiVector = self_237;
-    let _e33: Plane = other_201;
-    let _e36: Plane = other_201;
-    let _e39: Plane = other_201;
-    let _e42: Plane = other_201;
-    let _e55: MultiVector = self_237;
-    let _e58: Plane = other_201;
-    let _e61: Plane = other_201;
-    let _e64: Plane = other_201;
-    let _e67: Plane = other_201;
-    let _e73: MultiVector = self_237;
-    let _e77: Plane = other_201;
-    let _e80: Plane = other_201;
-    let _e83: Plane = other_201;
-    let _e86: Plane = other_201;
-    let _e98: MultiVector = self_237;
-    let _e102: Plane = other_201;
-    let _e105: Plane = other_201;
-    let _e108: Plane = other_201;
-    let _e111: Plane = other_201;
-    let _e123: MultiVector = self_237;
-    let _e127: Plane = other_201;
-    let _e130: Plane = other_201;
-    let _e133: Plane = other_201;
-    let _e136: Plane = other_201;
-    let _e148: MultiVector = self_237;
-    let _e152: Plane = other_201;
-    let _e155: Plane = other_201;
-    let _e158: Plane = other_201;
-    let _e161: Plane = other_201;
-    let _e174: MultiVector = self_237;
-    let _e176: Plane = other_201;
+    self_463 = self_462;
+    other_407 = other_406;
+    let _e4: MultiVector = self_463;
+    let _e8: Plane = other_407;
+    let _e11: Plane = other_407;
+    let _e14: Plane = other_407;
+    let _e17: Plane = other_407;
+    let _e29: MultiVector = self_463;
+    let _e33: Plane = other_407;
+    let _e36: Plane = other_407;
+    let _e39: Plane = other_407;
+    let _e42: Plane = other_407;
+    let _e55: MultiVector = self_463;
+    let _e58: Plane = other_407;
+    let _e61: Plane = other_407;
+    let _e64: Plane = other_407;
+    let _e67: Plane = other_407;
+    let _e73: MultiVector = self_463;
+    let _e77: Plane = other_407;
+    let _e80: Plane = other_407;
+    let _e83: Plane = other_407;
+    let _e86: Plane = other_407;
+    let _e98: MultiVector = self_463;
+    let _e102: Plane = other_407;
+    let _e105: Plane = other_407;
+    let _e108: Plane = other_407;
+    let _e111: Plane = other_407;
+    let _e123: MultiVector = self_463;
+    let _e127: Plane = other_407;
+    let _e130: Plane = other_407;
+    let _e133: Plane = other_407;
+    let _e136: Plane = other_407;
+    let _e148: MultiVector = self_463;
+    let _e152: Plane = other_407;
+    let _e155: Plane = other_407;
+    let _e158: Plane = other_407;
+    let _e161: Plane = other_407;
+    let _e174: MultiVector = self_463;
+    let _e176: Plane = other_407;
     return MultiVector(((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.y, _e11.g0_.y, _e14.g0_.y, _e17.g0_.z)) * vec4<f32>(0.0, 0.0, 1.0, -(1.0))) + ((vec4<f32>(_e29.g0_.w) * vec4<f32>(_e33.g0_.y, _e36.g0_.z, _e39.g0_.y, _e42.g0_.y)) * vec4<f32>(1.0, -(1.0), 0.0, 0.0))) + (_e55.g0_.zzxx * vec4<f32>(_e58.g0_.z, _e61.g0_.y, _e64.g0_.z, _e67.g0_.y))), ((((((vec4<f32>(_e73.g1_.x) * vec4<f32>(_e77.g0_.z, _e80.g0_.z, _e83.g0_.z, _e86.g0_.y)) * vec4<f32>(0.0, 0.0, 1.0, -(1.0))) + ((vec4<f32>(_e98.g1_.y) * vec4<f32>(_e102.g0_.y, _e105.g0_.y, _e108.g0_.y, _e111.g0_.z)) * vec4<f32>(0.0, 0.0, 1.0, 1.0))) + ((vec4<f32>(_e123.g1_.z) * vec4<f32>(_e127.g0_.z, _e130.g0_.y, _e133.g0_.z, _e136.g0_.z)) * vec4<f32>(1.0, 1.0, 0.0, 0.0))) + ((vec4<f32>(_e148.g1_.w) * vec4<f32>(_e152.g0_.y, _e155.g0_.z, _e158.g0_.y, _e161.g0_.y)) * vec4<f32>(-(1.0), 1.0, 0.0, 0.0))) + ((_e174.g0_ * vec4<f32>(_e176.g0_.x)) * vec4<f32>(1.0, 1.0, -(1.0), 1.0))));
 }
 
-fn multi_vector_plane_scalar_product(self_238: MultiVector, other_202: Plane) -> Scalar {
-    var self_239: MultiVector;
-    var other_203: Plane;
+fn multi_vector_plane_geometric_anti_product(self_464: MultiVector, other_408: Plane) -> MultiVector {
+    var self_465: MultiVector;
+    var other_409: Plane;
 
-    self_239 = self_238;
-    other_203 = other_202;
-    let _e4: MultiVector = self_239;
-    let _e7: Plane = other_203;
-    let _e11: MultiVector = self_239;
-    let _e14: Plane = other_203;
+    self_465 = self_464;
+    other_409 = other_408;
+    let _e4: MultiVector = self_465;
+    let _e8: Plane = other_409;
+    let _e11: Plane = other_409;
+    let _e14: Plane = other_409;
+    let _e17: Plane = other_409;
+    let _e29: MultiVector = self_465;
+    let _e33: Plane = other_409;
+    let _e36: Plane = other_409;
+    let _e39: Plane = other_409;
+    let _e42: Plane = other_409;
+    let _e54: MultiVector = self_465;
+    let _e58: Plane = other_409;
+    let _e61: Plane = other_409;
+    let _e64: Plane = other_409;
+    let _e67: Plane = other_409;
+    let _e79: MultiVector = self_465;
+    let _e83: Plane = other_409;
+    let _e86: Plane = other_409;
+    let _e89: Plane = other_409;
+    let _e92: Plane = other_409;
+    let _e105: MultiVector = self_465;
+    let _e108: Plane = other_409;
+    let _e122: MultiVector = self_465;
+    let _e125: Plane = other_409;
+    return MultiVector(((((((vec4<f32>(_e4.g1_.x) * vec4<f32>(_e8.g0_.y, _e11.g0_.y, _e14.g0_.y, _e17.g0_.z)) * vec4<f32>(0.0, 0.0, 1.0, -(1.0))) + ((vec4<f32>(_e29.g1_.y) * vec4<f32>(_e33.g0_.z, _e36.g0_.z, _e39.g0_.z, _e42.g0_.y)) * vec4<f32>(0.0, 0.0, 1.0, 1.0))) + ((vec4<f32>(_e54.g1_.z) * vec4<f32>(_e58.g0_.y, _e61.g0_.z, _e64.g0_.y, _e67.g0_.y)) * vec4<f32>(1.0, 1.0, 0.0, 0.0))) + ((vec4<f32>(_e79.g1_.w) * vec4<f32>(_e83.g0_.z, _e86.g0_.y, _e89.g0_.z, _e92.g0_.z)) * vec4<f32>(1.0, -(1.0), 0.0, 0.0))) + ((_e105.g0_.yxwz * vec4<f32>(_e108.g0_.x)) * vec4<f32>(1.0, -(1.0), -(1.0), 1.0))), ((_e122.g1_.yxwz * vec4<f32>(_e125.g0_.x)) * vec4<f32>(1.0, -(1.0), 1.0, -(1.0))));
+}
+
+fn multi_vector_plane_scalar_product(self_466: MultiVector, other_410: Plane) -> Scalar {
+    var self_467: MultiVector;
+    var other_411: Plane;
+
+    self_467 = self_466;
+    other_411 = other_410;
+    let _e4: MultiVector = self_467;
+    let _e7: Plane = other_411;
+    let _e11: MultiVector = self_467;
+    let _e14: Plane = other_411;
     return Scalar(((_e4.g0_.z * _e7.g0_.z) + (_e11.g0_.w * _e14.g0_.y)));
 }
 
-fn multi_vector_translator_into(self_240: MultiVector) -> Translator {
-    var self_241: MultiVector;
+fn multi_vector_plane_anti_scalar_product(self_468: MultiVector, other_412: Plane) -> AntiScalar {
+    var self_469: MultiVector;
+    var other_413: Plane;
 
-    self_241 = self_240;
-    let _e2: MultiVector = self_241;
-    let _e5: MultiVector = self_241;
-    let _e8: MultiVector = self_241;
+    self_469 = self_468;
+    other_413 = other_412;
+    let _e5: MultiVector = self_469;
+    let _e8: Plane = other_413;
+    return AntiScalar((0.0 - (_e5.g1_.x * _e8.g0_.x)));
+}
+
+fn multi_vector_translator_into(self_470: MultiVector) -> Translator {
+    var self_471: MultiVector;
+
+    self_471 = self_470;
+    let _e2: MultiVector = self_471;
+    let _e5: MultiVector = self_471;
+    let _e8: MultiVector = self_471;
     return Translator(vec3<f32>(_e2.g0_.x, _e5.g1_.z, _e8.g1_.w));
 }
 
-fn multi_vector_translator_add(self_242: MultiVector, other_204: Translator) -> MultiVector {
-    var self_243: MultiVector;
-    var other_205: Translator;
+fn multi_vector_translator_add(self_472: MultiVector, other_414: Translator) -> MultiVector {
+    var self_473: MultiVector;
+    var other_415: Translator;
 
-    self_243 = self_242;
-    other_205 = other_204;
-    let _e4: MultiVector = self_243;
-    let _e6: Translator = other_205;
-    let _e17: MultiVector = self_243;
-    let _e19: Translator = other_205;
-    let _e22: Translator = other_205;
-    let _e25: Translator = other_205;
-    let _e28: Translator = other_205;
+    self_473 = self_472;
+    other_415 = other_414;
+    let _e4: MultiVector = self_473;
+    let _e6: Translator = other_415;
+    let _e17: MultiVector = self_473;
+    let _e19: Translator = other_415;
+    let _e22: Translator = other_415;
+    let _e25: Translator = other_415;
+    let _e28: Translator = other_415;
     return MultiVector((_e4.g0_ + (vec4<f32>(_e6.g0_.x) * vec4<f32>(1.0, 0.0, 0.0, 0.0))), (_e17.g1_ + (vec4<f32>(_e19.g0_.x, _e22.g0_.x, _e25.g0_.y, _e28.g0_.z) * vec4<f32>(0.0, 0.0, 1.0, 1.0))));
 }
 
-fn multi_vector_translator_sub(self_244: MultiVector, other_206: Translator) -> MultiVector {
-    var self_245: MultiVector;
-    var other_207: Translator;
+fn multi_vector_translator_sub(self_474: MultiVector, other_416: Translator) -> MultiVector {
+    var self_475: MultiVector;
+    var other_417: Translator;
 
-    self_245 = self_244;
-    other_207 = other_206;
-    let _e4: MultiVector = self_245;
-    let _e6: Translator = other_207;
-    let _e17: MultiVector = self_245;
-    let _e19: Translator = other_207;
-    let _e22: Translator = other_207;
-    let _e25: Translator = other_207;
-    let _e28: Translator = other_207;
+    self_475 = self_474;
+    other_417 = other_416;
+    let _e4: MultiVector = self_475;
+    let _e6: Translator = other_417;
+    let _e17: MultiVector = self_475;
+    let _e19: Translator = other_417;
+    let _e22: Translator = other_417;
+    let _e25: Translator = other_417;
+    let _e28: Translator = other_417;
     return MultiVector((_e4.g0_ - (vec4<f32>(_e6.g0_.x) * vec4<f32>(1.0, 0.0, 0.0, 0.0))), (_e17.g1_ - (vec4<f32>(_e19.g0_.x, _e22.g0_.x, _e25.g0_.y, _e28.g0_.z) * vec4<f32>(0.0, 0.0, 1.0, 1.0))));
 }
 
-fn multi_vector_translator_geometric_product(self_246: MultiVector, other_208: Translator) -> MultiVector {
-    var self_247: MultiVector;
-    var other_209: Translator;
+fn multi_vector_translator_geometric_product(self_476: MultiVector, other_418: Translator) -> MultiVector {
+    var self_477: MultiVector;
+    var other_419: Translator;
 
-    self_247 = self_246;
-    other_209 = other_208;
-    let _e4: MultiVector = self_247;
-    let _e6: Translator = other_209;
-    let _e11: MultiVector = self_247;
-    let _e15: Translator = other_209;
-    let _e18: Translator = other_209;
-    let _e21: Translator = other_209;
-    let _e24: Translator = other_209;
-    let _e36: MultiVector = self_247;
-    let _e40: Translator = other_209;
-    let _e43: Translator = other_209;
-    let _e46: Translator = other_209;
-    let _e49: Translator = other_209;
-    let _e61: MultiVector = self_247;
-    let _e65: Translator = other_209;
-    let _e77: MultiVector = self_247;
-    let _e81: Translator = other_209;
-    let _e93: MultiVector = self_247;
-    let _e97: Translator = other_209;
-    let _e109: MultiVector = self_247;
-    let _e113: Translator = other_209;
-    let _e125: MultiVector = self_247;
-    let _e128: Translator = other_209;
-    let _e131: Translator = other_209;
-    let _e134: Translator = other_209;
-    let _e137: Translator = other_209;
+    self_477 = self_476;
+    other_419 = other_418;
+    let _e4: MultiVector = self_477;
+    let _e6: Translator = other_419;
+    let _e11: MultiVector = self_477;
+    let _e15: Translator = other_419;
+    let _e18: Translator = other_419;
+    let _e21: Translator = other_419;
+    let _e24: Translator = other_419;
+    let _e36: MultiVector = self_477;
+    let _e40: Translator = other_419;
+    let _e43: Translator = other_419;
+    let _e46: Translator = other_419;
+    let _e49: Translator = other_419;
+    let _e61: MultiVector = self_477;
+    let _e65: Translator = other_419;
+    let _e77: MultiVector = self_477;
+    let _e81: Translator = other_419;
+    let _e93: MultiVector = self_477;
+    let _e97: Translator = other_419;
+    let _e109: MultiVector = self_477;
+    let _e113: Translator = other_419;
+    let _e125: MultiVector = self_477;
+    let _e128: Translator = other_419;
+    let _e131: Translator = other_419;
+    let _e134: Translator = other_419;
+    let _e137: Translator = other_419;
     return MultiVector((_e4.g0_ * vec4<f32>(_e6.g0_.x)), ((((((((vec4<f32>(_e11.g0_.y) * vec4<f32>(_e15.g0_.z, _e18.g0_.z, _e21.g0_.z, _e24.g0_.y)) * vec4<f32>(0.0, 0.0, -(1.0), 1.0)) + ((vec4<f32>(_e36.g0_.w) * vec4<f32>(_e40.g0_.z, _e43.g0_.y, _e46.g0_.z, _e49.g0_.z)) * vec4<f32>(1.0, 1.0, 0.0, 0.0))) + ((vec4<f32>(_e61.g1_.x) * vec4<f32>(_e65.g0_.x)) * vec4<f32>(1.0, 0.0, 0.0, 0.0))) + ((vec4<f32>(_e77.g1_.y) * vec4<f32>(_e81.g0_.x)) * vec4<f32>(0.0, 1.0, 0.0, 0.0))) + ((vec4<f32>(_e93.g1_.z) * vec4<f32>(_e97.g0_.x)) * vec4<f32>(0.0, 0.0, 1.0, 0.0))) + ((vec4<f32>(_e109.g1_.w) * vec4<f32>(_e113.g0_.x)) * vec4<f32>(0.0, 0.0, 0.0, 1.0))) + ((_e125.g0_.zzxx * vec4<f32>(_e128.g0_.y, _e131.g0_.z, _e134.g0_.y, _e137.g0_.z)) * vec4<f32>(-(1.0), 1.0, 1.0, 1.0))));
 }
 
-fn multi_vector_translator_outer_product(self_248: MultiVector, other_210: Translator) -> MultiVector {
-    var self_249: MultiVector;
-    var other_211: Translator;
+fn multi_vector_translator_outer_product(self_478: MultiVector, other_420: Translator) -> MultiVector {
+    var self_479: MultiVector;
+    var other_421: Translator;
 
-    self_249 = self_248;
-    other_211 = other_210;
-    let _e4: MultiVector = self_249;
-    let _e6: Translator = other_211;
-    let _e11: MultiVector = self_249;
-    let _e15: Translator = other_211;
-    let _e26: MultiVector = self_249;
-    let _e30: Translator = other_211;
-    let _e42: MultiVector = self_249;
-    let _e46: Translator = other_211;
-    let _e58: MultiVector = self_249;
-    let _e62: Translator = other_211;
-    let _e74: MultiVector = self_249;
-    let _e77: MultiVector = self_249;
-    let _e80: MultiVector = self_249;
-    let _e83: MultiVector = self_249;
-    let _e87: Translator = other_211;
-    let _e90: Translator = other_211;
-    let _e93: Translator = other_211;
-    let _e96: Translator = other_211;
+    self_479 = self_478;
+    other_421 = other_420;
+    let _e4: MultiVector = self_479;
+    let _e6: Translator = other_421;
+    let _e11: MultiVector = self_479;
+    let _e15: Translator = other_421;
+    let _e26: MultiVector = self_479;
+    let _e30: Translator = other_421;
+    let _e42: MultiVector = self_479;
+    let _e46: Translator = other_421;
+    let _e58: MultiVector = self_479;
+    let _e62: Translator = other_421;
+    let _e74: MultiVector = self_479;
+    let _e77: MultiVector = self_479;
+    let _e80: MultiVector = self_479;
+    let _e83: MultiVector = self_479;
+    let _e87: Translator = other_421;
+    let _e90: Translator = other_421;
+    let _e93: Translator = other_421;
+    let _e96: Translator = other_421;
     return MultiVector((_e4.g0_ * vec4<f32>(_e6.g0_.x)), ((((((vec4<f32>(_e11.g0_.w) * vec4<f32>(_e15.g0_.y)) * vec4<f32>(0.0, 1.0, 0.0, 0.0)) + ((vec4<f32>(_e26.g1_.y) * vec4<f32>(_e30.g0_.x)) * vec4<f32>(0.0, 1.0, 0.0, 0.0))) + ((vec4<f32>(_e42.g1_.z) * vec4<f32>(_e46.g0_.x)) * vec4<f32>(0.0, 0.0, 1.0, 0.0))) + ((vec4<f32>(_e58.g1_.w) * vec4<f32>(_e62.g0_.x)) * vec4<f32>(0.0, 0.0, 0.0, 1.0))) + (vec4<f32>(_e74.g1_.x, _e77.g0_.z, _e80.g0_.x, _e83.g0_.x) * vec4<f32>(_e87.g0_.x, _e90.g0_.z, _e93.g0_.y, _e96.g0_.z))));
 }
 
-fn multi_vector_translator_inner_product(self_250: MultiVector, other_212: Translator) -> MultiVector {
-    var self_251: MultiVector;
-    var other_213: Translator;
+fn multi_vector_translator_inner_product(self_480: MultiVector, other_422: Translator) -> MultiVector {
+    var self_481: MultiVector;
+    var other_423: Translator;
 
-    self_251 = self_250;
-    other_213 = other_212;
-    let _e4: MultiVector = self_251;
-    let _e6: Translator = other_213;
-    let _e11: MultiVector = self_251;
-    let _e15: Translator = other_213;
-    let _e26: MultiVector = self_251;
-    let _e30: Translator = other_213;
-    let _e42: MultiVector = self_251;
-    let _e46: Translator = other_213;
-    let _e58: MultiVector = self_251;
-    let _e62: Translator = other_213;
-    let _e74: MultiVector = self_251;
-    let _e77: MultiVector = self_251;
-    let _e80: MultiVector = self_251;
-    let _e83: MultiVector = self_251;
-    let _e87: Translator = other_213;
-    let _e90: Translator = other_213;
-    let _e93: Translator = other_213;
-    let _e96: Translator = other_213;
+    self_481 = self_480;
+    other_423 = other_422;
+    let _e4: MultiVector = self_481;
+    let _e6: Translator = other_423;
+    let _e11: MultiVector = self_481;
+    let _e15: Translator = other_423;
+    let _e26: MultiVector = self_481;
+    let _e30: Translator = other_423;
+    let _e42: MultiVector = self_481;
+    let _e46: Translator = other_423;
+    let _e58: MultiVector = self_481;
+    let _e62: Translator = other_423;
+    let _e74: MultiVector = self_481;
+    let _e77: MultiVector = self_481;
+    let _e80: MultiVector = self_481;
+    let _e83: MultiVector = self_481;
+    let _e87: Translator = other_423;
+    let _e90: Translator = other_423;
+    let _e93: Translator = other_423;
+    let _e96: Translator = other_423;
     return MultiVector((_e4.g0_ * vec4<f32>(_e6.g0_.x)), ((((((vec4<f32>(_e11.g0_.w) * vec4<f32>(_e15.g0_.z)) * vec4<f32>(1.0, 0.0, 0.0, 0.0)) + ((vec4<f32>(_e26.g1_.x) * vec4<f32>(_e30.g0_.x)) * vec4<f32>(1.0, 0.0, 0.0, 0.0))) + ((vec4<f32>(_e42.g1_.z) * vec4<f32>(_e46.g0_.x)) * vec4<f32>(0.0, 0.0, 1.0, 0.0))) + ((vec4<f32>(_e58.g1_.w) * vec4<f32>(_e62.g0_.x)) * vec4<f32>(0.0, 0.0, 0.0, 1.0))) + ((vec4<f32>(_e74.g0_.z, _e77.g1_.y, _e80.g0_.x, _e83.g0_.x) * vec4<f32>(_e87.g0_.y, _e90.g0_.x, _e93.g0_.y, _e96.g0_.z)) * vec4<f32>(-(1.0), 1.0, 1.0, 1.0))));
 }
 
-fn multi_vector_translator_right_contraction(self_252: MultiVector, other_214: Translator) -> MultiVector {
-    var self_253: MultiVector;
-    var other_215: Translator;
+fn multi_vector_translator_geometric_anti_product(self_482: MultiVector, other_424: Translator) -> MultiVector {
+    var self_483: MultiVector;
+    var other_425: Translator;
 
-    self_253 = self_252;
-    other_215 = other_214;
-    let _e4: MultiVector = self_253;
-    let _e6: Translator = other_215;
-    let _e11: MultiVector = self_253;
-    let _e13: Translator = other_215;
+    self_483 = self_482;
+    other_425 = other_424;
+    let _e4: MultiVector = self_483;
+    let _e8: Translator = other_425;
+    let _e11: Translator = other_425;
+    let _e14: Translator = other_425;
+    let _e17: Translator = other_425;
+    let _e29: MultiVector = self_483;
+    let _e33: Translator = other_425;
+    let _e36: Translator = other_425;
+    let _e39: Translator = other_425;
+    let _e42: Translator = other_425;
+    let _e54: MultiVector = self_483;
+    let _e58: Translator = other_425;
+    let _e71: MultiVector = self_483;
+    let _e75: Translator = other_425;
+    let _e87: MultiVector = self_483;
+    let _e91: Translator = other_425;
+    let _e103: MultiVector = self_483;
+    let _e107: Translator = other_425;
+    let _e119: MultiVector = self_483;
+    let _e122: Translator = other_425;
+    let _e125: Translator = other_425;
+    let _e128: Translator = other_425;
+    let _e131: Translator = other_425;
+    let _e144: MultiVector = self_483;
+    let _e148: Translator = other_425;
+    let _e151: Translator = other_425;
+    let _e154: Translator = other_425;
+    let _e157: Translator = other_425;
+    let _e168: MultiVector = self_483;
+    let _e172: Translator = other_425;
+    let _e175: Translator = other_425;
+    let _e178: Translator = other_425;
+    let _e181: Translator = other_425;
+    let _e193: MultiVector = self_483;
+    let _e196: Translator = other_425;
+    let _e199: Translator = other_425;
+    let _e202: Translator = other_425;
+    let _e205: Translator = other_425;
+    return MultiVector(((((((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.y, _e11.g0_.y, _e14.g0_.y, _e17.g0_.z)) * vec4<f32>(0.0, 0.0, -(1.0), 1.0)) + ((vec4<f32>(_e29.g0_.w) * vec4<f32>(_e33.g0_.y, _e36.g0_.z, _e39.g0_.y, _e42.g0_.y)) * vec4<f32>(1.0, 1.0, 0.0, 0.0))) + ((vec4<f32>(_e54.g1_.x) * vec4<f32>(_e58.g0_.x)) * vec4<f32>(0.0, -(1.0), 0.0, 0.0))) + ((vec4<f32>(_e71.g1_.y) * vec4<f32>(_e75.g0_.x)) * vec4<f32>(1.0, 0.0, 0.0, 0.0))) + ((vec4<f32>(_e87.g1_.z) * vec4<f32>(_e91.g0_.x)) * vec4<f32>(0.0, 0.0, 0.0, 1.0))) + ((vec4<f32>(_e103.g1_.w) * vec4<f32>(_e107.g0_.x)) * vec4<f32>(0.0, 0.0, 1.0, 0.0))) + ((_e119.g0_.zzxx * vec4<f32>(_e122.g0_.z, _e125.g0_.y, _e128.g0_.z, _e131.g0_.y)) * vec4<f32>(1.0, -(1.0), 1.0, 1.0))), ((((vec4<f32>(_e144.g1_.y) * vec4<f32>(_e148.g0_.y, _e151.g0_.y, _e154.g0_.y, _e157.g0_.z)) * vec4<f32>(0.0, 0.0, 1.0, 1.0)) + ((vec4<f32>(_e168.g1_.w) * vec4<f32>(_e172.g0_.y, _e175.g0_.z, _e178.g0_.y, _e181.g0_.y)) * vec4<f32>(1.0, 1.0, 0.0, 0.0))) + ((_e193.g1_.zzxx * vec4<f32>(_e196.g0_.z, _e199.g0_.y, _e202.g0_.z, _e205.g0_.y)) * vec4<f32>(-(1.0), 1.0, -(1.0), 1.0))));
+}
+
+fn multi_vector_translator_right_contraction(self_484: MultiVector, other_426: Translator) -> MultiVector {
+    var self_485: MultiVector;
+    var other_427: Translator;
+
+    self_485 = self_484;
+    other_427 = other_426;
+    let _e4: MultiVector = self_485;
+    let _e6: Translator = other_427;
+    let _e11: MultiVector = self_485;
+    let _e13: Translator = other_427;
     return MultiVector((_e4.g0_ * vec4<f32>(_e6.g0_.x)), (_e11.g1_ * vec4<f32>(_e13.g0_.x)));
 }
 
-fn multi_vector_translator_scalar_product(self_254: MultiVector, other_216: Translator) -> Scalar {
-    var self_255: MultiVector;
-    var other_217: Translator;
+fn multi_vector_translator_scalar_product(self_486: MultiVector, other_428: Translator) -> Scalar {
+    var self_487: MultiVector;
+    var other_429: Translator;
 
-    self_255 = self_254;
-    other_217 = other_216;
-    let _e4: MultiVector = self_255;
-    let _e7: Translator = other_217;
+    self_487 = self_486;
+    other_429 = other_428;
+    let _e4: MultiVector = self_487;
+    let _e7: Translator = other_429;
     return Scalar((_e4.g0_.x * _e7.g0_.x));
 }
 
-fn multi_vector_motor_into(self_256: MultiVector) -> Motor {
-    var self_257: MultiVector;
+fn multi_vector_translator_anti_scalar_product(self_488: MultiVector, other_430: Translator) -> AntiScalar {
+    var self_489: MultiVector;
+    var other_431: Translator;
 
-    self_257 = self_256;
-    let _e2: MultiVector = self_257;
-    let _e5: MultiVector = self_257;
-    let _e8: MultiVector = self_257;
-    let _e11: MultiVector = self_257;
+    self_489 = self_488;
+    other_431 = other_430;
+    let _e4: MultiVector = self_489;
+    let _e7: Translator = other_431;
+    let _e11: MultiVector = self_489;
+    let _e14: Translator = other_431;
+    return AntiScalar(((_e4.g1_.z * _e7.g0_.y) + (_e11.g1_.w * _e14.g0_.z)));
+}
+
+fn multi_vector_motor_into(self_490: MultiVector) -> Motor {
+    var self_491: MultiVector;
+
+    self_491 = self_490;
+    let _e2: MultiVector = self_491;
+    let _e5: MultiVector = self_491;
+    let _e8: MultiVector = self_491;
+    let _e11: MultiVector = self_491;
     return Motor(vec4<f32>(_e2.g0_.x, _e5.g0_.y, _e8.g1_.z, _e11.g1_.w));
 }
 
-fn multi_vector_motor_add(self_258: MultiVector, other_218: Motor) -> MultiVector {
-    var self_259: MultiVector;
-    var other_219: Motor;
+fn multi_vector_motor_add(self_492: MultiVector, other_432: Motor) -> MultiVector {
+    var self_493: MultiVector;
+    var other_433: Motor;
 
-    self_259 = self_258;
-    other_219 = other_218;
-    let _e4: MultiVector = self_259;
-    let _e6: Motor = other_219;
-    let _e16: MultiVector = self_259;
-    let _e18: Motor = other_219;
+    self_493 = self_492;
+    other_433 = other_432;
+    let _e4: MultiVector = self_493;
+    let _e6: Motor = other_433;
+    let _e16: MultiVector = self_493;
+    let _e18: Motor = other_433;
     return MultiVector((_e4.g0_ + (_e6.g0_.xyxx * vec4<f32>(1.0, 1.0, 0.0, 0.0))), (_e16.g1_ + (_e18.g0_.xxzw * vec4<f32>(0.0, 0.0, 1.0, 1.0))));
 }
 
-fn multi_vector_motor_sub(self_260: MultiVector, other_220: Motor) -> MultiVector {
-    var self_261: MultiVector;
-    var other_221: Motor;
+fn multi_vector_motor_sub(self_494: MultiVector, other_434: Motor) -> MultiVector {
+    var self_495: MultiVector;
+    var other_435: Motor;
 
-    self_261 = self_260;
-    other_221 = other_220;
-    let _e4: MultiVector = self_261;
-    let _e6: Motor = other_221;
-    let _e16: MultiVector = self_261;
-    let _e18: Motor = other_221;
+    self_495 = self_494;
+    other_435 = other_434;
+    let _e4: MultiVector = self_495;
+    let _e6: Motor = other_435;
+    let _e16: MultiVector = self_495;
+    let _e18: Motor = other_435;
     return MultiVector((_e4.g0_ - (_e6.g0_.xyxx * vec4<f32>(1.0, 1.0, 0.0, 0.0))), (_e16.g1_ - (_e18.g0_.xxzw * vec4<f32>(0.0, 0.0, 1.0, 1.0))));
 }
 
-fn multi_vector_motor_geometric_product(self_262: MultiVector, other_222: Motor) -> MultiVector {
-    var self_263: MultiVector;
-    var other_223: Motor;
+fn multi_vector_motor_geometric_product(self_496: MultiVector, other_436: Motor) -> MultiVector {
+    var self_497: MultiVector;
+    var other_437: Motor;
 
-    self_263 = self_262;
-    other_223 = other_222;
-    let _e4: MultiVector = self_263;
-    let _e8: Motor = other_223;
-    let _e19: MultiVector = self_263;
-    let _e23: Motor = other_223;
-    let _e35: MultiVector = self_263;
-    let _e38: Motor = other_223;
-    let _e43: MultiVector = self_263;
-    let _e47: Motor = other_223;
-    let _e58: MultiVector = self_263;
-    let _e62: Motor = other_223;
-    let _e73: MultiVector = self_263;
-    let _e77: Motor = other_223;
-    let _e88: MultiVector = self_263;
-    let _e92: Motor = other_223;
-    let _e104: MultiVector = self_263;
-    let _e108: Motor = other_223;
-    let _e120: MultiVector = self_263;
-    let _e124: Motor = other_223;
-    let _e135: MultiVector = self_263;
-    let _e138: Motor = other_223;
+    self_497 = self_496;
+    other_437 = other_436;
+    let _e4: MultiVector = self_497;
+    let _e8: Motor = other_437;
+    let _e19: MultiVector = self_497;
+    let _e23: Motor = other_437;
+    let _e35: MultiVector = self_497;
+    let _e38: Motor = other_437;
+    let _e43: MultiVector = self_497;
+    let _e47: Motor = other_437;
+    let _e58: MultiVector = self_497;
+    let _e62: Motor = other_437;
+    let _e73: MultiVector = self_497;
+    let _e77: Motor = other_437;
+    let _e88: MultiVector = self_497;
+    let _e92: Motor = other_437;
+    let _e104: MultiVector = self_497;
+    let _e108: Motor = other_437;
+    let _e120: MultiVector = self_497;
+    let _e124: Motor = other_437;
+    let _e135: MultiVector = self_497;
+    let _e138: Motor = other_437;
     return MultiVector(((((vec4<f32>(_e4.g0_.y) * _e8.g0_.yxyy) * vec4<f32>(-(1.0), 1.0, 0.0, 0.0)) + ((vec4<f32>(_e19.g0_.w) * _e23.g0_.yyyx) * vec4<f32>(0.0, 0.0, -(1.0), 1.0))) + (_e35.g0_.xxzz * _e38.g0_.xyxy)), ((((((((vec4<f32>(_e43.g0_.y) * _e47.g0_.wwwz) * vec4<f32>(0.0, 0.0, -(1.0), 1.0)) + ((vec4<f32>(_e58.g0_.w) * _e62.g0_.wzww) * vec4<f32>(1.0, 1.0, 0.0, 0.0))) + ((vec4<f32>(_e73.g1_.x) * _e77.g0_.xyxx) * vec4<f32>(1.0, 1.0, 0.0, 0.0))) + ((vec4<f32>(_e88.g1_.y) * _e92.g0_.yxyy) * vec4<f32>(-(1.0), 1.0, 0.0, 0.0))) + ((vec4<f32>(_e104.g1_.z) * _e108.g0_.xxxy) * vec4<f32>(0.0, 0.0, 1.0, -(1.0)))) + ((vec4<f32>(_e120.g1_.w) * _e124.g0_.yyyx) * vec4<f32>(0.0, 0.0, 1.0, 1.0))) + ((_e135.g0_.zzxx * _e138.g0_.zwzw) * vec4<f32>(-(1.0), 1.0, 1.0, 1.0))));
 }
 
-fn multi_vector_motor_outer_product(self_264: MultiVector, other_224: Motor) -> MultiVector {
-    var self_265: MultiVector;
-    var other_225: Motor;
+fn multi_vector_motor_outer_product(self_498: MultiVector, other_438: Motor) -> MultiVector {
+    var self_499: MultiVector;
+    var other_439: Motor;
 
-    self_265 = self_264;
-    other_225 = other_224;
-    let _e4: MultiVector = self_265;
-    let _e8: Motor = other_225;
-    let _e19: MultiVector = self_265;
-    let _e22: Motor = other_225;
-    let _e27: MultiVector = self_265;
-    let _e31: Motor = other_225;
-    let _e42: MultiVector = self_265;
-    let _e46: Motor = other_225;
-    let _e57: MultiVector = self_265;
-    let _e61: Motor = other_225;
-    let _e73: MultiVector = self_265;
-    let _e77: Motor = other_225;
-    let _e89: MultiVector = self_265;
-    let _e93: Motor = other_225;
-    let _e105: MultiVector = self_265;
-    let _e108: Motor = other_225;
+    self_499 = self_498;
+    other_439 = other_438;
+    let _e4: MultiVector = self_499;
+    let _e8: Motor = other_439;
+    let _e19: MultiVector = self_499;
+    let _e22: Motor = other_439;
+    let _e27: MultiVector = self_499;
+    let _e31: Motor = other_439;
+    let _e42: MultiVector = self_499;
+    let _e46: Motor = other_439;
+    let _e57: MultiVector = self_499;
+    let _e61: Motor = other_439;
+    let _e73: MultiVector = self_499;
+    let _e77: Motor = other_439;
+    let _e89: MultiVector = self_499;
+    let _e93: Motor = other_439;
+    let _e105: MultiVector = self_499;
+    let _e108: Motor = other_439;
     return MultiVector((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.x)) * vec4<f32>(0.0, 1.0, 0.0, 0.0)) + (_e19.g0_.xxzw * _e22.g0_.xyxx)), (((((((vec4<f32>(_e27.g0_.w) * vec4<f32>(_e31.g0_.z)) * vec4<f32>(0.0, 1.0, 0.0, 0.0)) + ((vec4<f32>(_e42.g1_.x) * _e46.g0_.xyxx) * vec4<f32>(1.0, 1.0, 0.0, 0.0))) + ((vec4<f32>(_e57.g1_.y) * vec4<f32>(_e61.g0_.x)) * vec4<f32>(0.0, 1.0, 0.0, 0.0))) + ((vec4<f32>(_e73.g1_.z) * vec4<f32>(_e77.g0_.x)) * vec4<f32>(0.0, 0.0, 1.0, 0.0))) + ((vec4<f32>(_e89.g1_.w) * vec4<f32>(_e93.g0_.x)) * vec4<f32>(0.0, 0.0, 0.0, 1.0))) + ((_e105.g0_.xzxx * _e108.g0_.xwzw) * vec4<f32>(0.0, 1.0, 1.0, 1.0))));
 }
 
-fn multi_vector_motor_inner_product(self_266: MultiVector, other_226: Motor) -> MultiVector {
-    var self_267: MultiVector;
-    var other_227: Motor;
+fn multi_vector_motor_inner_product(self_500: MultiVector, other_440: Motor) -> MultiVector {
+    var self_501: MultiVector;
+    var other_441: Motor;
 
-    self_267 = self_266;
-    other_227 = other_226;
-    let _e4: MultiVector = self_267;
-    let _e8: Motor = other_227;
-    let _e19: MultiVector = self_267;
-    let _e23: Motor = other_227;
-    let _e35: MultiVector = self_267;
-    let _e38: Motor = other_227;
-    let _e43: MultiVector = self_267;
-    let _e47: Motor = other_227;
-    let _e58: MultiVector = self_267;
-    let _e62: Motor = other_227;
-    let _e74: MultiVector = self_267;
-    let _e78: Motor = other_227;
-    let _e90: MultiVector = self_267;
-    let _e94: Motor = other_227;
-    let _e106: MultiVector = self_267;
-    let _e110: Motor = other_227;
-    let _e122: MultiVector = self_267;
-    let _e125: Motor = other_227;
+    self_501 = self_500;
+    other_441 = other_440;
+    let _e4: MultiVector = self_501;
+    let _e8: Motor = other_441;
+    let _e19: MultiVector = self_501;
+    let _e23: Motor = other_441;
+    let _e35: MultiVector = self_501;
+    let _e38: Motor = other_441;
+    let _e43: MultiVector = self_501;
+    let _e47: Motor = other_441;
+    let _e58: MultiVector = self_501;
+    let _e62: Motor = other_441;
+    let _e74: MultiVector = self_501;
+    let _e78: Motor = other_441;
+    let _e90: MultiVector = self_501;
+    let _e94: Motor = other_441;
+    let _e106: MultiVector = self_501;
+    let _e110: Motor = other_441;
+    let _e122: MultiVector = self_501;
+    let _e125: Motor = other_441;
     return MultiVector(((((vec4<f32>(_e4.g0_.y) * _e8.g0_.yxyy) * vec4<f32>(-(1.0), 1.0, 0.0, 0.0)) + ((vec4<f32>(_e19.g0_.w) * _e23.g0_.yyyx) * vec4<f32>(0.0, 0.0, -(1.0), 1.0))) + (_e35.g0_.xxzz * _e38.g0_.xyxy)), (((((((vec4<f32>(_e43.g0_.w) * vec4<f32>(_e47.g0_.w)) * vec4<f32>(1.0, 0.0, 0.0, 0.0)) + ((vec4<f32>(_e58.g1_.x) * vec4<f32>(_e62.g0_.x)) * vec4<f32>(1.0, 0.0, 0.0, 0.0))) + ((vec4<f32>(_e74.g1_.y) * _e78.g0_.yxyy) * vec4<f32>(-(1.0), 1.0, 0.0, 0.0))) + ((vec4<f32>(_e90.g1_.z) * vec4<f32>(_e94.g0_.x)) * vec4<f32>(0.0, 0.0, 1.0, 0.0))) + ((vec4<f32>(_e106.g1_.w) * vec4<f32>(_e110.g0_.x)) * vec4<f32>(0.0, 0.0, 0.0, 1.0))) + ((_e122.g0_.zxxx * _e125.g0_.zxzw) * vec4<f32>(-(1.0), 0.0, 1.0, 1.0))));
 }
 
-fn multi_vector_motor_right_contraction(self_268: MultiVector, other_228: Motor) -> MultiVector {
-    var self_269: MultiVector;
-    var other_229: Motor;
+fn multi_vector_motor_geometric_anti_product(self_502: MultiVector, other_442: Motor) -> MultiVector {
+    var self_503: MultiVector;
+    var other_443: Motor;
 
-    self_269 = self_268;
-    other_229 = other_228;
-    let _e4: MultiVector = self_269;
-    let _e8: Motor = other_229;
-    let _e19: MultiVector = self_269;
-    let _e22: Motor = other_229;
-    let _e34: MultiVector = self_269;
-    let _e38: Motor = other_229;
-    let _e49: MultiVector = self_269;
-    let _e52: Motor = other_229;
+    self_503 = self_502;
+    other_443 = other_442;
+    let _e4: MultiVector = self_503;
+    let _e8: Motor = other_443;
+    let _e19: MultiVector = self_503;
+    let _e23: Motor = other_443;
+    let _e34: MultiVector = self_503;
+    let _e38: Motor = other_443;
+    let _e50: MultiVector = self_503;
+    let _e54: Motor = other_443;
+    let _e65: MultiVector = self_503;
+    let _e69: Motor = other_443;
+    let _e80: MultiVector = self_503;
+    let _e84: Motor = other_443;
+    let _e96: MultiVector = self_503;
+    let _e99: Motor = other_443;
+    let _e111: MultiVector = self_503;
+    let _e115: Motor = other_443;
+    let _e125: MultiVector = self_503;
+    let _e129: Motor = other_443;
+    let _e140: MultiVector = self_503;
+    let _e143: Motor = other_443;
+    return MultiVector(((((((((vec4<f32>(_e4.g0_.y) * _e8.g0_.zzzw) * vec4<f32>(0.0, 0.0, -(1.0), 1.0)) + ((vec4<f32>(_e19.g0_.w) * _e23.g0_.zwzz) * vec4<f32>(1.0, 1.0, 0.0, 0.0))) + ((vec4<f32>(_e34.g1_.x) * _e38.g0_.yxyy) * vec4<f32>(1.0, -(1.0), 0.0, 0.0))) + ((vec4<f32>(_e50.g1_.y) * _e54.g0_.xyxx) * vec4<f32>(1.0, 1.0, 0.0, 0.0))) + ((vec4<f32>(_e65.g1_.z) * _e69.g0_.yyyx) * vec4<f32>(0.0, 0.0, 1.0, 1.0))) + ((vec4<f32>(_e80.g1_.w) * _e84.g0_.xxxy) * vec4<f32>(0.0, 0.0, 1.0, -(1.0)))) + ((_e96.g0_.zzxx * _e99.g0_.wzwz) * vec4<f32>(1.0, -(1.0), 1.0, 1.0))), ((((vec4<f32>(_e111.g1_.y) * _e115.g0_.zzzw) * vec4<f32>(0.0, 0.0, 1.0, 1.0)) + ((vec4<f32>(_e125.g1_.w) * _e129.g0_.zwzz) * vec4<f32>(1.0, 1.0, 0.0, 0.0))) + ((_e140.g1_.zzxx * _e143.g0_.wzwz) * vec4<f32>(-(1.0), 1.0, -(1.0), 1.0))));
+}
+
+fn multi_vector_motor_right_contraction(self_504: MultiVector, other_444: Motor) -> MultiVector {
+    var self_505: MultiVector;
+    var other_445: Motor;
+
+    self_505 = self_504;
+    other_445 = other_444;
+    let _e4: MultiVector = self_505;
+    let _e8: Motor = other_445;
+    let _e19: MultiVector = self_505;
+    let _e22: Motor = other_445;
+    let _e34: MultiVector = self_505;
+    let _e38: Motor = other_445;
+    let _e49: MultiVector = self_505;
+    let _e52: Motor = other_445;
     return MultiVector((((vec4<f32>(_e4.g0_.y) * _e8.g0_.yxyy) * vec4<f32>(-(1.0), 1.0, 0.0, 0.0)) + ((_e19.g0_.xxzw * vec4<f32>(_e22.g0_.x)) * vec4<f32>(1.0, 0.0, 1.0, 1.0))), (((vec4<f32>(_e34.g1_.y) * _e38.g0_.yxyy) * vec4<f32>(-(1.0), 1.0, 0.0, 0.0)) + ((_e49.g1_.xxzw * vec4<f32>(_e52.g0_.x)) * vec4<f32>(1.0, 0.0, 1.0, 1.0))));
 }
 
-fn multi_vector_motor_scalar_product(self_270: MultiVector, other_230: Motor) -> Scalar {
-    var self_271: MultiVector;
-    var other_231: Motor;
+fn multi_vector_motor_scalar_product(self_506: MultiVector, other_446: Motor) -> Scalar {
+    var self_507: MultiVector;
+    var other_447: Motor;
 
-    self_271 = self_270;
-    other_231 = other_230;
-    let _e4: MultiVector = self_271;
-    let _e7: Motor = other_231;
-    let _e11: MultiVector = self_271;
-    let _e14: Motor = other_231;
+    self_507 = self_506;
+    other_447 = other_446;
+    let _e4: MultiVector = self_507;
+    let _e7: Motor = other_447;
+    let _e11: MultiVector = self_507;
+    let _e14: Motor = other_447;
     return Scalar(((_e4.g0_.x * _e7.g0_.x) - (_e11.g0_.y * _e14.g0_.y)));
 }
 
-fn multi_vector_motor_dual_into(self_272: MultiVector) -> MotorDual {
-    var self_273: MultiVector;
+fn multi_vector_motor_anti_scalar_product(self_508: MultiVector, other_448: Motor) -> AntiScalar {
+    var self_509: MultiVector;
+    var other_449: Motor;
 
-    self_273 = self_272;
-    let _e2: MultiVector = self_273;
-    let _e5: MultiVector = self_273;
-    let _e8: MultiVector = self_273;
-    let _e11: MultiVector = self_273;
+    self_509 = self_508;
+    other_449 = other_448;
+    let _e4: MultiVector = self_509;
+    let _e7: Motor = other_449;
+    let _e11: MultiVector = self_509;
+    let _e14: Motor = other_449;
+    return AntiScalar(((_e4.g1_.z * _e7.g0_.z) + (_e11.g1_.w * _e14.g0_.w)));
+}
+
+fn multi_vector_motor_dual_into(self_510: MultiVector) -> MotorDual {
+    var self_511: MultiVector;
+
+    self_511 = self_510;
+    let _e2: MultiVector = self_511;
+    let _e5: MultiVector = self_511;
+    let _e8: MultiVector = self_511;
+    let _e11: MultiVector = self_511;
     return MotorDual(vec4<f32>(_e2.g1_.y, _e5.g1_.x, _e8.g0_.w, _e11.g0_.z));
 }
 
-fn multi_vector_motor_dual_add(self_274: MultiVector, other_232: MotorDual) -> MultiVector {
-    var self_275: MultiVector;
-    var other_233: MotorDual;
+fn multi_vector_motor_dual_add(self_512: MultiVector, other_450: MotorDual) -> MultiVector {
+    var self_513: MultiVector;
+    var other_451: MotorDual;
 
-    self_275 = self_274;
-    other_233 = other_232;
-    let _e4: MultiVector = self_275;
-    let _e6: MotorDual = other_233;
-    let _e16: MultiVector = self_275;
-    let _e18: MotorDual = other_233;
+    self_513 = self_512;
+    other_451 = other_450;
+    let _e4: MultiVector = self_513;
+    let _e6: MotorDual = other_451;
+    let _e16: MultiVector = self_513;
+    let _e18: MotorDual = other_451;
     return MultiVector((_e4.g0_ + (_e6.g0_.xxwz * vec4<f32>(0.0, 0.0, 1.0, 1.0))), (_e16.g1_ + (_e18.g0_.yxxx * vec4<f32>(1.0, 1.0, 0.0, 0.0))));
 }
 
-fn multi_vector_motor_dual_sub(self_276: MultiVector, other_234: MotorDual) -> MultiVector {
-    var self_277: MultiVector;
-    var other_235: MotorDual;
+fn multi_vector_motor_dual_sub(self_514: MultiVector, other_452: MotorDual) -> MultiVector {
+    var self_515: MultiVector;
+    var other_453: MotorDual;
 
-    self_277 = self_276;
-    other_235 = other_234;
-    let _e4: MultiVector = self_277;
-    let _e6: MotorDual = other_235;
-    let _e16: MultiVector = self_277;
-    let _e18: MotorDual = other_235;
+    self_515 = self_514;
+    other_453 = other_452;
+    let _e4: MultiVector = self_515;
+    let _e6: MotorDual = other_453;
+    let _e16: MultiVector = self_515;
+    let _e18: MotorDual = other_453;
     return MultiVector((_e4.g0_ - (_e6.g0_.xxwz * vec4<f32>(0.0, 0.0, 1.0, 1.0))), (_e16.g1_ - (_e18.g0_.yxxx * vec4<f32>(1.0, 1.0, 0.0, 0.0))));
 }
 
-fn multi_vector_motor_dual_geometric_product(self_278: MultiVector, other_236: MotorDual) -> MultiVector {
-    var self_279: MultiVector;
-    var other_237: MotorDual;
+fn multi_vector_motor_dual_geometric_product(self_516: MultiVector, other_454: MotorDual) -> MultiVector {
+    var self_517: MultiVector;
+    var other_455: MotorDual;
 
-    self_279 = self_278;
-    other_237 = other_236;
-    let _e4: MultiVector = self_279;
-    let _e8: MotorDual = other_237;
-    let _e19: MultiVector = self_279;
-    let _e23: MotorDual = other_237;
-    let _e35: MultiVector = self_279;
-    let _e38: MotorDual = other_237;
-    let _e43: MultiVector = self_279;
-    let _e47: MotorDual = other_237;
-    let _e58: MultiVector = self_279;
-    let _e62: MotorDual = other_237;
-    let _e73: MultiVector = self_279;
-    let _e77: MotorDual = other_237;
-    let _e89: MultiVector = self_279;
-    let _e93: MotorDual = other_237;
-    let _e104: MultiVector = self_279;
-    let _e108: MotorDual = other_237;
-    let _e119: MultiVector = self_279;
-    let _e123: MotorDual = other_237;
-    let _e135: MultiVector = self_279;
-    let _e138: MotorDual = other_237;
+    self_517 = self_516;
+    other_455 = other_454;
+    let _e4: MultiVector = self_517;
+    let _e8: MotorDual = other_455;
+    let _e19: MultiVector = self_517;
+    let _e23: MotorDual = other_455;
+    let _e35: MultiVector = self_517;
+    let _e38: MotorDual = other_455;
+    let _e43: MultiVector = self_517;
+    let _e47: MotorDual = other_455;
+    let _e58: MultiVector = self_517;
+    let _e62: MotorDual = other_455;
+    let _e73: MultiVector = self_517;
+    let _e77: MotorDual = other_455;
+    let _e89: MultiVector = self_517;
+    let _e93: MotorDual = other_455;
+    let _e104: MultiVector = self_517;
+    let _e108: MotorDual = other_455;
+    let _e119: MultiVector = self_517;
+    let _e123: MotorDual = other_455;
+    let _e135: MultiVector = self_517;
+    let _e138: MotorDual = other_455;
     return MultiVector(((((vec4<f32>(_e4.g0_.y) * _e8.g0_.zzzw) * vec4<f32>(0.0, 0.0, 1.0, -(1.0))) + ((vec4<f32>(_e19.g0_.w) * _e23.g0_.zwzz) * vec4<f32>(1.0, -(1.0), 0.0, 0.0))) + (_e35.g0_.zzxx * _e38.g0_.wzwz)), ((((((((vec4<f32>(_e43.g0_.y) * _e47.g0_.xyxx) * vec4<f32>(-(1.0), 1.0, 0.0, 0.0)) + ((vec4<f32>(_e58.g0_.w) * _e62.g0_.xxxy) * vec4<f32>(0.0, 0.0, 1.0, 1.0))) + ((vec4<f32>(_e73.g1_.x) * _e77.g0_.wwwz) * vec4<f32>(0.0, 0.0, 1.0, -(1.0)))) + ((vec4<f32>(_e89.g1_.y) * _e93.g0_.zzzw) * vec4<f32>(0.0, 0.0, 1.0, 1.0))) + ((vec4<f32>(_e104.g1_.z) * _e108.g0_.wzww) * vec4<f32>(1.0, 1.0, 0.0, 0.0))) + ((vec4<f32>(_e119.g1_.w) * _e123.g0_.zwzz) * vec4<f32>(-(1.0), 1.0, 0.0, 0.0))) + ((_e135.g0_.xxzz * _e138.g0_.yxyx) * vec4<f32>(1.0, 1.0, -(1.0), 1.0))));
 }
 
-fn multi_vector_motor_dual_regressive_product(self_280: MultiVector, other_238: MotorDual) -> MultiVector {
-    var self_281: MultiVector;
-    var other_239: MotorDual;
+fn multi_vector_motor_dual_regressive_product(self_518: MultiVector, other_456: MotorDual) -> MultiVector {
+    var self_519: MultiVector;
+    var other_457: MotorDual;
 
-    self_281 = self_280;
-    other_239 = other_238;
-    let _e4: MultiVector = self_281;
-    let _e8: MotorDual = other_239;
-    let _e18: MultiVector = self_281;
-    let _e22: MotorDual = other_239;
-    let _e33: MultiVector = self_281;
-    let _e37: MotorDual = other_239;
-    let _e49: MultiVector = self_281;
-    let _e53: MotorDual = other_239;
-    let _e65: MultiVector = self_281;
-    let _e68: MotorDual = other_239;
-    let _e80: MultiVector = self_281;
-    let _e84: MotorDual = other_239;
-    let _e94: MultiVector = self_281;
-    let _e97: MotorDual = other_239;
+    self_519 = self_518;
+    other_457 = other_456;
+    let _e4: MultiVector = self_519;
+    let _e8: MotorDual = other_457;
+    let _e18: MultiVector = self_519;
+    let _e22: MotorDual = other_457;
+    let _e33: MultiVector = self_519;
+    let _e37: MotorDual = other_457;
+    let _e49: MultiVector = self_519;
+    let _e53: MotorDual = other_457;
+    let _e65: MultiVector = self_519;
+    let _e68: MotorDual = other_457;
+    let _e80: MultiVector = self_519;
+    let _e84: MotorDual = other_457;
+    let _e94: MultiVector = self_519;
+    let _e97: MotorDual = other_457;
     return MultiVector(((((((vec4<f32>(_e4.g0_.y) * _e8.g0_.yxyy) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) + ((vec4<f32>(_e18.g1_.y) * _e22.g0_.wwwz) * vec4<f32>(0.0, 0.0, 1.0, 1.0))) + ((vec4<f32>(_e33.g1_.z) * vec4<f32>(_e37.g0_.z)) * vec4<f32>(1.0, 0.0, 0.0, 0.0))) + ((vec4<f32>(_e49.g1_.w) * vec4<f32>(_e53.g0_.w)) * vec4<f32>(1.0, 0.0, 0.0, 0.0))) + ((_e65.g0_.xxzw * vec4<f32>(_e68.g0_.x)) * vec4<f32>(1.0, 0.0, 1.0, 1.0))), (((vec4<f32>(_e80.g1_.y) * _e84.g0_.yxyy) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) + ((_e94.g1_.xxzw * vec4<f32>(_e97.g0_.x)) * vec4<f32>(1.0, 0.0, 1.0, 1.0))));
 }
 
-fn multi_vector_motor_dual_scalar_product(self_282: MultiVector, other_240: MotorDual) -> Scalar {
-    var self_283: MultiVector;
-    var other_241: MotorDual;
+fn multi_vector_motor_dual_geometric_anti_product(self_520: MultiVector, other_458: MotorDual) -> MultiVector {
+    var self_521: MultiVector;
+    var other_459: MotorDual;
 
-    self_283 = self_282;
-    other_241 = other_240;
-    let _e4: MultiVector = self_283;
-    let _e7: MotorDual = other_241;
-    let _e11: MultiVector = self_283;
-    let _e14: MotorDual = other_241;
+    self_521 = self_520;
+    other_459 = other_458;
+    let _e4: MultiVector = self_521;
+    let _e8: MotorDual = other_459;
+    let _e18: MultiVector = self_521;
+    let _e22: MotorDual = other_459;
+    let _e34: MultiVector = self_521;
+    let _e38: MotorDual = other_459;
+    let _e50: MultiVector = self_521;
+    let _e54: MotorDual = other_459;
+    let _e65: MultiVector = self_521;
+    let _e69: MotorDual = other_459;
+    let _e80: MultiVector = self_521;
+    let _e84: MotorDual = other_459;
+    let _e96: MultiVector = self_521;
+    let _e99: MotorDual = other_459;
+    let _e111: MultiVector = self_521;
+    let _e115: MotorDual = other_459;
+    let _e125: MultiVector = self_521;
+    let _e129: MotorDual = other_459;
+    let _e140: MultiVector = self_521;
+    let _e143: MotorDual = other_459;
+    return MultiVector(((((((((vec4<f32>(_e4.g0_.y) * _e8.g0_.yxyy) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) + ((vec4<f32>(_e18.g0_.w) * _e22.g0_.yyyx) * vec4<f32>(0.0, 0.0, -(1.0), 1.0))) + ((vec4<f32>(_e34.g1_.x) * _e38.g0_.zzzw) * vec4<f32>(0.0, 0.0, 1.0, -(1.0)))) + ((vec4<f32>(_e50.g1_.y) * _e54.g0_.wwwz) * vec4<f32>(0.0, 0.0, 1.0, 1.0))) + ((vec4<f32>(_e65.g1_.z) * _e69.g0_.zwzz) * vec4<f32>(1.0, 1.0, 0.0, 0.0))) + ((vec4<f32>(_e80.g1_.w) * _e84.g0_.wzww) * vec4<f32>(1.0, -(1.0), 0.0, 0.0))) + ((_e96.g0_.xxzz * _e99.g0_.xyxy) * vec4<f32>(1.0, -(1.0), 1.0, 1.0))), ((((vec4<f32>(_e111.g1_.y) * _e115.g0_.yxyy) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) + ((vec4<f32>(_e125.g1_.w) * _e129.g0_.yyyx) * vec4<f32>(0.0, 0.0, 1.0, 1.0))) + ((_e140.g1_.xxzz * _e143.g0_.xyxy) * vec4<f32>(1.0, -(1.0), 1.0, -(1.0)))));
+}
+
+fn multi_vector_motor_dual_inner_anti_product(self_522: MultiVector, other_460: MotorDual) -> MultiVector {
+    var self_523: MultiVector;
+    var other_461: MotorDual;
+
+    self_523 = self_522;
+    other_461 = other_460;
+    let _e4: MultiVector = self_523;
+    let _e8: MotorDual = other_461;
+    let _e19: MultiVector = self_523;
+    let _e23: MotorDual = other_461;
+    let _e34: MultiVector = self_523;
+    let _e38: MotorDual = other_461;
+    let _e50: MultiVector = self_523;
+    let _e54: MotorDual = other_461;
+    let _e67: MultiVector = self_523;
+    let _e70: MotorDual = other_461;
+    let _e82: MultiVector = self_523;
+    let _e86: MotorDual = other_461;
+    let _e96: MultiVector = self_523;
+    let _e100: MotorDual = other_461;
+    let _e111: MultiVector = self_523;
+    let _e114: MotorDual = other_461;
+    return MultiVector(((((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.x)) * vec4<f32>(0.0, 1.0, 0.0, 0.0)) + ((vec4<f32>(_e19.g1_.y) * _e23.g0_.wwwz) * vec4<f32>(0.0, 0.0, 1.0, 1.0))) + ((vec4<f32>(_e34.g1_.z) * vec4<f32>(_e38.g0_.w)) * vec4<f32>(0.0, 1.0, 0.0, 0.0))) + ((vec4<f32>(_e50.g1_.w) * vec4<f32>(_e54.g0_.z)) * vec4<f32>(0.0, -(1.0), 0.0, 0.0))) + ((_e67.g0_.xxzw * _e70.g0_.xyxx) * vec4<f32>(1.0, -(1.0), 1.0, 1.0))), ((((vec4<f32>(_e82.g1_.y) * _e86.g0_.yxyy) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) + ((vec4<f32>(_e96.g1_.w) * _e100.g0_.yyyx) * vec4<f32>(0.0, 0.0, 1.0, 1.0))) + ((_e111.g1_.xxzz * _e114.g0_.xyxy) * vec4<f32>(1.0, -(1.0), 1.0, -(1.0)))));
+}
+
+fn multi_vector_motor_dual_right_anti_contraction(self_524: MultiVector, other_462: MotorDual) -> MultiVector {
+    var self_525: MultiVector;
+    var other_463: MotorDual;
+
+    self_525 = self_524;
+    other_463 = other_462;
+    let _e4: MultiVector = self_525;
+    let _e8: MotorDual = other_463;
+    let _e19: MultiVector = self_525;
+    let _e22: MotorDual = other_463;
+    let _e34: MultiVector = self_525;
+    let _e38: MotorDual = other_463;
+    let _e49: MultiVector = self_525;
+    let _e52: MotorDual = other_463;
+    return MultiVector((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.x)) * vec4<f32>(0.0, 1.0, 0.0, 0.0)) + ((_e19.g0_.xxzw * _e22.g0_.xyxx) * vec4<f32>(1.0, -(1.0), 1.0, 1.0))), (((vec4<f32>(_e34.g1_.y) * vec4<f32>(_e38.g0_.x)) * vec4<f32>(0.0, 1.0, 0.0, 0.0)) + ((_e49.g1_.xxzw * _e52.g0_.xyxx) * vec4<f32>(1.0, -(1.0), 1.0, 1.0))));
+}
+
+fn multi_vector_motor_dual_scalar_product(self_526: MultiVector, other_464: MotorDual) -> Scalar {
+    var self_527: MultiVector;
+    var other_465: MotorDual;
+
+    self_527 = self_526;
+    other_465 = other_464;
+    let _e4: MultiVector = self_527;
+    let _e7: MotorDual = other_465;
+    let _e11: MultiVector = self_527;
+    let _e14: MotorDual = other_465;
     return Scalar(((_e4.g0_.z * _e7.g0_.w) + (_e11.g0_.w * _e14.g0_.z)));
 }
 
-fn multi_vector_squared_magnitude(self_284: MultiVector) -> Scalar {
-    var self_285: MultiVector;
+fn multi_vector_motor_dual_anti_scalar_product(self_528: MultiVector, other_466: MotorDual) -> AntiScalar {
+    var self_529: MultiVector;
+    var other_467: MotorDual;
 
-    self_285 = self_284;
-    let _e2: MultiVector = self_285;
-    let _e3: MultiVector = self_285;
+    self_529 = self_528;
+    other_467 = other_466;
+    let _e5: MultiVector = self_529;
+    let _e8: MotorDual = other_467;
+    let _e13: MultiVector = self_529;
+    let _e16: MotorDual = other_467;
+    return AntiScalar(((0.0 - (_e5.g1_.x * _e8.g0_.y)) + (_e13.g1_.y * _e16.g0_.x)));
+}
+
+fn multi_vector_squared_magnitude(self_530: MultiVector) -> Scalar {
+    var self_531: MultiVector;
+
+    self_531 = self_530;
+    let _e2: MultiVector = self_531;
+    let _e3: MultiVector = self_531;
     let _e4: MultiVector = multi_vector_reversal(_e3);
     let _e5: Scalar = multi_vector_multi_vector_scalar_product(_e2, _e4);
     return _e5;
 }
 
-fn multi_vector_magnitude(self_286: MultiVector) -> Scalar {
-    var self_287: MultiVector;
+fn multi_vector_magnitude(self_532: MultiVector) -> Scalar {
+    var self_533: MultiVector;
 
-    self_287 = self_286;
-    let _e2: MultiVector = self_287;
+    self_533 = self_532;
+    let _e2: MultiVector = self_533;
     let _e3: Scalar = multi_vector_squared_magnitude(_e2);
     return Scalar(sqrt(_e3.g0_));
 }
 
-fn multi_vector_scale(self_288: MultiVector, other_242: f32) -> MultiVector {
-    var self_289: MultiVector;
-    var other_243: f32;
+fn multi_vector_scale(self_534: MultiVector, other_468: f32) -> MultiVector {
+    var self_535: MultiVector;
+    var other_469: f32;
 
-    self_289 = self_288;
-    other_243 = other_242;
-    let _e4: MultiVector = self_289;
-    let _e5: f32 = other_243;
+    self_535 = self_534;
+    other_469 = other_468;
+    let _e4: MultiVector = self_535;
+    let _e5: f32 = other_469;
     let _e7: MultiVector = multi_vector_scalar_geometric_product(_e4, Scalar(_e5));
     return _e7;
 }
 
-fn multi_vector_signum(self_290: MultiVector) -> MultiVector {
-    var self_291: MultiVector;
+fn multi_vector_signum(self_536: MultiVector) -> MultiVector {
+    var self_537: MultiVector;
 
-    self_291 = self_290;
-    let _e2: MultiVector = self_291;
-    let _e3: MultiVector = self_291;
+    self_537 = self_536;
+    let _e2: MultiVector = self_537;
+    let _e3: MultiVector = self_537;
     let _e4: Scalar = multi_vector_magnitude(_e3);
     let _e9: MultiVector = multi_vector_scalar_geometric_product(_e2, Scalar((1.0 / _e4.g0_)));
     return _e9;
 }
 
-fn multi_vector_inverse(self_292: MultiVector) -> MultiVector {
-    var self_293: MultiVector;
+fn multi_vector_inverse(self_538: MultiVector) -> MultiVector {
+    var self_539: MultiVector;
 
-    self_293 = self_292;
-    let _e2: MultiVector = self_293;
+    self_539 = self_538;
+    let _e2: MultiVector = self_539;
     let _e3: MultiVector = multi_vector_reversal(_e2);
-    let _e4: MultiVector = self_293;
+    let _e4: MultiVector = self_539;
     let _e5: Scalar = multi_vector_squared_magnitude(_e4);
     let _e10: MultiVector = multi_vector_scalar_geometric_product(_e3, Scalar((1.0 / _e5.g0_)));
     return _e10;
@@ -2149,1018 +3787,1135 @@ fn rotor_one() -> Rotor {
     return Rotor(vec2<f32>(1.0, 0.0));
 }
 
-fn rotor_neg(self_294: Rotor) -> Rotor {
-    var self_295: Rotor;
+fn rotor_neg(self_540: Rotor) -> Rotor {
+    var self_541: Rotor;
 
-    self_295 = self_294;
-    let _e2: Rotor = self_295;
+    self_541 = self_540;
+    let _e2: Rotor = self_541;
     return Rotor((_e2.g0_ * vec2<f32>(-(1.0))));
 }
 
-fn rotor_automorphism(self_296: Rotor) -> Rotor {
-    var self_297: Rotor;
+fn rotor_automorphism(self_542: Rotor) -> Rotor {
+    var self_543: Rotor;
 
-    self_297 = self_296;
-    let _e2: Rotor = self_297;
+    self_543 = self_542;
+    let _e2: Rotor = self_543;
     return Rotor(_e2.g0_);
 }
 
-fn rotor_reversal(self_298: Rotor) -> Rotor {
-    var self_299: Rotor;
+fn rotor_reversal(self_544: Rotor) -> Rotor {
+    var self_545: Rotor;
 
-    self_299 = self_298;
-    let _e2: Rotor = self_299;
+    self_545 = self_544;
+    let _e2: Rotor = self_545;
     return Rotor((_e2.g0_ * vec2<f32>(1.0, -(1.0))));
 }
 
-fn rotor_conjugation(self_300: Rotor) -> Rotor {
-    var self_301: Rotor;
+fn rotor_conjugation(self_546: Rotor) -> Rotor {
+    var self_547: Rotor;
 
-    self_301 = self_300;
-    let _e2: Rotor = self_301;
+    self_547 = self_546;
+    let _e2: Rotor = self_547;
     return Rotor((_e2.g0_ * vec2<f32>(1.0, -(1.0))));
 }
 
-fn rotor_scalar_into(self_302: Rotor) -> Scalar {
-    var self_303: Rotor;
+fn rotor_anti_reversal(self_548: Rotor) -> Rotor {
+    var self_549: Rotor;
 
-    self_303 = self_302;
-    let _e2: Rotor = self_303;
+    self_549 = self_548;
+    let _e2: Rotor = self_549;
+    return Rotor((_e2.g0_ * vec2<f32>(1.0, -(1.0))));
+}
+
+fn rotor_scalar_into(self_550: Rotor) -> Scalar {
+    var self_551: Rotor;
+
+    self_551 = self_550;
+    let _e2: Rotor = self_551;
     return Scalar(_e2.g0_.x);
 }
 
-fn rotor_scalar_add(self_304: Rotor, other_244: Scalar) -> Rotor {
-    var self_305: Rotor;
-    var other_245: Scalar;
+fn rotor_scalar_add(self_552: Rotor, other_470: Scalar) -> Rotor {
+    var self_553: Rotor;
+    var other_471: Scalar;
 
-    self_305 = self_304;
-    other_245 = other_244;
-    let _e4: Rotor = self_305;
-    let _e6: Scalar = other_245;
+    self_553 = self_552;
+    other_471 = other_470;
+    let _e4: Rotor = self_553;
+    let _e6: Scalar = other_471;
     return Rotor((_e4.g0_ + (vec2<f32>(_e6.g0_) * vec2<f32>(1.0, 0.0))));
 }
 
-fn rotor_scalar_sub(self_306: Rotor, other_246: Scalar) -> Rotor {
-    var self_307: Rotor;
-    var other_247: Scalar;
+fn rotor_scalar_sub(self_554: Rotor, other_472: Scalar) -> Rotor {
+    var self_555: Rotor;
+    var other_473: Scalar;
 
-    self_307 = self_306;
-    other_247 = other_246;
-    let _e4: Rotor = self_307;
-    let _e6: Scalar = other_247;
+    self_555 = self_554;
+    other_473 = other_472;
+    let _e4: Rotor = self_555;
+    let _e6: Scalar = other_473;
     return Rotor((_e4.g0_ - (vec2<f32>(_e6.g0_) * vec2<f32>(1.0, 0.0))));
 }
 
-fn rotor_scalar_geometric_product(self_308: Rotor, other_248: Scalar) -> Rotor {
-    var self_309: Rotor;
-    var other_249: Scalar;
+fn rotor_scalar_geometric_product(self_556: Rotor, other_474: Scalar) -> Rotor {
+    var self_557: Rotor;
+    var other_475: Scalar;
 
-    self_309 = self_308;
-    other_249 = other_248;
-    let _e4: Rotor = self_309;
-    let _e6: Scalar = other_249;
+    self_557 = self_556;
+    other_475 = other_474;
+    let _e4: Rotor = self_557;
+    let _e6: Scalar = other_475;
     return Rotor((_e4.g0_ * vec2<f32>(_e6.g0_)));
 }
 
-fn rotor_scalar_outer_product(self_310: Rotor, other_250: Scalar) -> Rotor {
-    var self_311: Rotor;
-    var other_251: Scalar;
+fn rotor_scalar_outer_product(self_558: Rotor, other_476: Scalar) -> Rotor {
+    var self_559: Rotor;
+    var other_477: Scalar;
 
-    self_311 = self_310;
-    other_251 = other_250;
-    let _e4: Rotor = self_311;
-    let _e6: Scalar = other_251;
+    self_559 = self_558;
+    other_477 = other_476;
+    let _e4: Rotor = self_559;
+    let _e6: Scalar = other_477;
     return Rotor((_e4.g0_ * vec2<f32>(_e6.g0_)));
 }
 
-fn rotor_scalar_inner_product(self_312: Rotor, other_252: Scalar) -> Rotor {
-    var self_313: Rotor;
-    var other_253: Scalar;
+fn rotor_scalar_inner_product(self_560: Rotor, other_478: Scalar) -> Rotor {
+    var self_561: Rotor;
+    var other_479: Scalar;
 
-    self_313 = self_312;
-    other_253 = other_252;
-    let _e4: Rotor = self_313;
-    let _e6: Scalar = other_253;
+    self_561 = self_560;
+    other_479 = other_478;
+    let _e4: Rotor = self_561;
+    let _e6: Scalar = other_479;
     return Rotor((_e4.g0_ * vec2<f32>(_e6.g0_)));
 }
 
-fn rotor_scalar_left_contraction(self_314: Rotor, other_254: Scalar) -> Scalar {
-    var self_315: Rotor;
-    var other_255: Scalar;
+fn rotor_scalar_left_contraction(self_562: Rotor, other_480: Scalar) -> Scalar {
+    var self_563: Rotor;
+    var other_481: Scalar;
 
-    self_315 = self_314;
-    other_255 = other_254;
-    let _e4: Rotor = self_315;
-    let _e7: Scalar = other_255;
+    self_563 = self_562;
+    other_481 = other_480;
+    let _e4: Rotor = self_563;
+    let _e7: Scalar = other_481;
     return Scalar((_e4.g0_.x * _e7.g0_));
 }
 
-fn rotor_scalar_right_contraction(self_316: Rotor, other_256: Scalar) -> Rotor {
-    var self_317: Rotor;
-    var other_257: Scalar;
+fn rotor_scalar_right_contraction(self_564: Rotor, other_482: Scalar) -> Rotor {
+    var self_565: Rotor;
+    var other_483: Scalar;
 
-    self_317 = self_316;
-    other_257 = other_256;
-    let _e4: Rotor = self_317;
-    let _e6: Scalar = other_257;
+    self_565 = self_564;
+    other_483 = other_482;
+    let _e4: Rotor = self_565;
+    let _e6: Scalar = other_483;
     return Rotor((_e4.g0_ * vec2<f32>(_e6.g0_)));
 }
 
-fn rotor_scalar_scalar_product(self_318: Rotor, other_258: Scalar) -> Scalar {
-    var self_319: Rotor;
-    var other_259: Scalar;
+fn rotor_scalar_scalar_product(self_566: Rotor, other_484: Scalar) -> Scalar {
+    var self_567: Rotor;
+    var other_485: Scalar;
 
-    self_319 = self_318;
-    other_259 = other_258;
-    let _e4: Rotor = self_319;
-    let _e7: Scalar = other_259;
+    self_567 = self_566;
+    other_485 = other_484;
+    let _e4: Rotor = self_567;
+    let _e7: Scalar = other_485;
     return Scalar((_e4.g0_.x * _e7.g0_));
 }
 
-fn rotor_multi_vector_add(self_320: Rotor, other_260: MultiVector) -> MultiVector {
-    var self_321: Rotor;
-    var other_261: MultiVector;
+fn rotor_anti_scalar_regressive_product(self_568: Rotor, other_486: AntiScalar) -> Rotor {
+    var self_569: Rotor;
+    var other_487: AntiScalar;
 
-    self_321 = self_320;
-    other_261 = other_260;
-    let _e4: Rotor = self_321;
-    let _e7: Rotor = self_321;
-    let _e10: Rotor = self_321;
-    let _e13: Rotor = self_321;
-    let _e23: MultiVector = other_261;
-    let _e26: MultiVector = other_261;
+    self_569 = self_568;
+    other_487 = other_486;
+    let _e4: Rotor = self_569;
+    let _e6: AntiScalar = other_487;
+    return Rotor((_e4.g0_ * vec2<f32>(_e6.g0_)));
+}
+
+fn rotor_anti_scalar_outer_product(self_570: Rotor, other_488: AntiScalar) -> AntiScalar {
+    var self_571: Rotor;
+    var other_489: AntiScalar;
+
+    self_571 = self_570;
+    other_489 = other_488;
+    let _e4: Rotor = self_571;
+    let _e7: AntiScalar = other_489;
+    return AntiScalar((_e4.g0_.x * _e7.g0_));
+}
+
+fn rotor_anti_scalar_geometric_anti_product(self_572: Rotor, other_490: AntiScalar) -> Rotor {
+    var self_573: Rotor;
+    var other_491: AntiScalar;
+
+    self_573 = self_572;
+    other_491 = other_490;
+    let _e4: Rotor = self_573;
+    let _e6: AntiScalar = other_491;
+    return Rotor((_e4.g0_ * vec2<f32>(_e6.g0_)));
+}
+
+fn rotor_anti_scalar_inner_anti_product(self_574: Rotor, other_492: AntiScalar) -> Rotor {
+    var self_575: Rotor;
+    var other_493: AntiScalar;
+
+    self_575 = self_574;
+    other_493 = other_492;
+    let _e4: Rotor = self_575;
+    let _e6: AntiScalar = other_493;
+    return Rotor((_e4.g0_ * vec2<f32>(_e6.g0_)));
+}
+
+fn rotor_anti_scalar_right_anti_contraction(self_576: Rotor, other_494: AntiScalar) -> Rotor {
+    var self_577: Rotor;
+    var other_495: AntiScalar;
+
+    self_577 = self_576;
+    other_495 = other_494;
+    let _e4: Rotor = self_577;
+    let _e6: AntiScalar = other_495;
+    return Rotor((_e4.g0_ * vec2<f32>(_e6.g0_)));
+}
+
+fn rotor_multi_vector_add(self_578: Rotor, other_496: MultiVector) -> MultiVector {
+    var self_579: Rotor;
+    var other_497: MultiVector;
+
+    self_579 = self_578;
+    other_497 = other_496;
+    let _e4: Rotor = self_579;
+    let _e7: Rotor = self_579;
+    let _e10: Rotor = self_579;
+    let _e13: Rotor = self_579;
+    let _e23: MultiVector = other_497;
+    let _e26: MultiVector = other_497;
     return MultiVector(((vec4<f32>(_e4.g0_.x, _e7.g0_.y, _e10.g0_.x, _e13.g0_.x) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) + _e23.g0_), _e26.g1_);
 }
 
-fn rotor_multi_vector_sub(self_322: Rotor, other_262: MultiVector) -> MultiVector {
-    var self_323: Rotor;
-    var other_263: MultiVector;
+fn rotor_multi_vector_sub(self_580: Rotor, other_498: MultiVector) -> MultiVector {
+    var self_581: Rotor;
+    var other_499: MultiVector;
 
-    self_323 = self_322;
-    other_263 = other_262;
-    let _e4: Rotor = self_323;
-    let _e7: Rotor = self_323;
-    let _e10: Rotor = self_323;
-    let _e13: Rotor = self_323;
-    let _e23: MultiVector = other_263;
-    let _e28: MultiVector = other_263;
+    self_581 = self_580;
+    other_499 = other_498;
+    let _e4: Rotor = self_581;
+    let _e7: Rotor = self_581;
+    let _e10: Rotor = self_581;
+    let _e13: Rotor = self_581;
+    let _e23: MultiVector = other_499;
+    let _e28: MultiVector = other_499;
     return MultiVector(((vec4<f32>(_e4.g0_.x, _e7.g0_.y, _e10.g0_.x, _e13.g0_.x) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) - _e23.g0_), (vec4<f32>(0.0) - _e28.g1_));
 }
 
-fn rotor_multi_vector_geometric_product(self_324: Rotor, other_264: MultiVector) -> MultiVector {
-    var self_325: Rotor;
-    var other_265: MultiVector;
+fn rotor_multi_vector_geometric_product(self_582: Rotor, other_500: MultiVector) -> MultiVector {
+    var self_583: Rotor;
+    var other_501: MultiVector;
 
-    self_325 = self_324;
-    other_265 = other_264;
-    let _e4: Rotor = self_325;
-    let _e8: MultiVector = other_265;
-    let _e11: Rotor = self_325;
-    let _e15: MultiVector = other_265;
-    let _e28: Rotor = self_325;
-    let _e32: MultiVector = other_265;
-    let _e35: Rotor = self_325;
-    let _e39: MultiVector = other_265;
+    self_583 = self_582;
+    other_501 = other_500;
+    let _e4: Rotor = self_583;
+    let _e8: MultiVector = other_501;
+    let _e11: Rotor = self_583;
+    let _e15: MultiVector = other_501;
+    let _e28: Rotor = self_583;
+    let _e32: MultiVector = other_501;
+    let _e35: Rotor = self_583;
+    let _e39: MultiVector = other_501;
     return MultiVector(((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.y) * _e15.g0_.yxwz) * vec4<f32>(-(1.0), 1.0, 1.0, -(1.0)))), ((vec4<f32>(_e28.g0_.x) * _e32.g1_) + ((vec4<f32>(_e35.g0_.y) * _e39.g1_.yxwz) * vec4<f32>(-(1.0), 1.0, -(1.0), 1.0))));
 }
 
-fn rotor_multi_vector_outer_product(self_326: Rotor, other_266: MultiVector) -> MultiVector {
-    var self_327: Rotor;
-    var other_267: MultiVector;
+fn rotor_multi_vector_outer_product(self_584: Rotor, other_502: MultiVector) -> MultiVector {
+    var self_585: Rotor;
+    var other_503: MultiVector;
 
-    self_327 = self_326;
-    other_267 = other_266;
-    let _e4: Rotor = self_327;
-    let _e8: MultiVector = other_267;
-    let _e11: Rotor = self_327;
-    let _e14: Rotor = self_327;
-    let _e17: Rotor = self_327;
-    let _e20: Rotor = self_327;
-    let _e24: MultiVector = other_267;
-    let _e36: Rotor = self_327;
-    let _e40: MultiVector = other_267;
-    let _e43: Rotor = self_327;
-    let _e46: Rotor = self_327;
-    let _e49: Rotor = self_327;
-    let _e52: Rotor = self_327;
-    let _e56: MultiVector = other_267;
+    self_585 = self_584;
+    other_503 = other_502;
+    let _e4: Rotor = self_585;
+    let _e8: MultiVector = other_503;
+    let _e11: Rotor = self_585;
+    let _e14: Rotor = self_585;
+    let _e17: Rotor = self_585;
+    let _e20: Rotor = self_585;
+    let _e24: MultiVector = other_503;
+    let _e36: Rotor = self_585;
+    let _e40: MultiVector = other_503;
+    let _e43: Rotor = self_585;
+    let _e46: Rotor = self_585;
+    let _e49: Rotor = self_585;
+    let _e52: Rotor = self_585;
+    let _e56: MultiVector = other_503;
     return MultiVector(((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.x, _e14.g0_.y, _e17.g0_.x, _e20.g0_.x) * vec4<f32>(_e24.g0_.x)) * vec4<f32>(0.0, 1.0, 0.0, 0.0))), ((vec4<f32>(_e36.g0_.x) * _e40.g1_) + ((vec4<f32>(_e43.g0_.x, _e46.g0_.y, _e49.g0_.x, _e52.g0_.x) * vec4<f32>(_e56.g1_.x)) * vec4<f32>(0.0, 1.0, 0.0, 0.0))));
 }
 
-fn rotor_multi_vector_inner_product(self_328: Rotor, other_268: MultiVector) -> MultiVector {
-    var self_329: Rotor;
-    var other_269: MultiVector;
+fn rotor_multi_vector_inner_product(self_586: Rotor, other_504: MultiVector) -> MultiVector {
+    var self_587: Rotor;
+    var other_505: MultiVector;
 
-    self_329 = self_328;
-    other_269 = other_268;
-    let _e4: Rotor = self_329;
-    let _e8: MultiVector = other_269;
-    let _e11: Rotor = self_329;
-    let _e15: MultiVector = other_269;
-    let _e28: Rotor = self_329;
-    let _e32: MultiVector = other_269;
-    let _e35: Rotor = self_329;
-    let _e38: Rotor = self_329;
-    let _e41: Rotor = self_329;
-    let _e44: Rotor = self_329;
-    let _e48: MultiVector = other_269;
+    self_587 = self_586;
+    other_505 = other_504;
+    let _e4: Rotor = self_587;
+    let _e8: MultiVector = other_505;
+    let _e11: Rotor = self_587;
+    let _e15: MultiVector = other_505;
+    let _e28: Rotor = self_587;
+    let _e32: MultiVector = other_505;
+    let _e35: Rotor = self_587;
+    let _e38: Rotor = self_587;
+    let _e41: Rotor = self_587;
+    let _e44: Rotor = self_587;
+    let _e48: MultiVector = other_505;
     return MultiVector(((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.y) * _e15.g0_.yxwz) * vec4<f32>(-(1.0), 1.0, 1.0, -(1.0)))), ((vec4<f32>(_e28.g0_.x) * _e32.g1_) + ((vec4<f32>(_e35.g0_.y, _e38.g0_.x, _e41.g0_.x, _e44.g0_.x) * _e48.g1_.yxxx) * vec4<f32>(-(1.0), 0.0, 0.0, 0.0))));
 }
 
-fn rotor_multi_vector_left_contraction(self_330: Rotor, other_270: MultiVector) -> MultiVector {
-    var self_331: Rotor;
-    var other_271: MultiVector;
+fn rotor_multi_vector_left_contraction(self_588: Rotor, other_506: MultiVector) -> MultiVector {
+    var self_589: Rotor;
+    var other_507: MultiVector;
 
-    self_331 = self_330;
-    other_271 = other_270;
-    let _e4: Rotor = self_331;
-    let _e8: MultiVector = other_271;
-    let _e11: Rotor = self_331;
-    let _e14: Rotor = self_331;
-    let _e17: Rotor = self_331;
-    let _e20: Rotor = self_331;
-    let _e24: MultiVector = other_271;
-    let _e36: Rotor = self_331;
-    let _e40: MultiVector = other_271;
-    let _e43: Rotor = self_331;
-    let _e46: Rotor = self_331;
-    let _e49: Rotor = self_331;
-    let _e52: Rotor = self_331;
-    let _e56: MultiVector = other_271;
+    self_589 = self_588;
+    other_507 = other_506;
+    let _e4: Rotor = self_589;
+    let _e8: MultiVector = other_507;
+    let _e11: Rotor = self_589;
+    let _e14: Rotor = self_589;
+    let _e17: Rotor = self_589;
+    let _e20: Rotor = self_589;
+    let _e24: MultiVector = other_507;
+    let _e36: Rotor = self_589;
+    let _e40: MultiVector = other_507;
+    let _e43: Rotor = self_589;
+    let _e46: Rotor = self_589;
+    let _e49: Rotor = self_589;
+    let _e52: Rotor = self_589;
+    let _e56: MultiVector = other_507;
     return MultiVector(((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.y, _e14.g0_.x, _e17.g0_.x, _e20.g0_.x) * _e24.g0_.yxxx) * vec4<f32>(-(1.0), 0.0, 0.0, 0.0))), ((vec4<f32>(_e36.g0_.x) * _e40.g1_) + ((vec4<f32>(_e43.g0_.y, _e46.g0_.x, _e49.g0_.x, _e52.g0_.x) * _e56.g1_.yxxx) * vec4<f32>(-(1.0), 0.0, 0.0, 0.0))));
 }
 
-fn rotor_multi_vector_scalar_product(self_332: Rotor, other_272: MultiVector) -> Scalar {
-    var self_333: Rotor;
-    var other_273: MultiVector;
+fn rotor_multi_vector_scalar_product(self_590: Rotor, other_508: MultiVector) -> Scalar {
+    var self_591: Rotor;
+    var other_509: MultiVector;
 
-    self_333 = self_332;
-    other_273 = other_272;
-    let _e4: Rotor = self_333;
-    let _e7: MultiVector = other_273;
-    let _e11: Rotor = self_333;
-    let _e14: MultiVector = other_273;
+    self_591 = self_590;
+    other_509 = other_508;
+    let _e4: Rotor = self_591;
+    let _e7: MultiVector = other_509;
+    let _e11: Rotor = self_591;
+    let _e14: MultiVector = other_509;
     return Scalar(((_e4.g0_.x * _e7.g0_.x) - (_e11.g0_.y * _e14.g0_.y)));
 }
 
-fn rotor_rotor_add(self_334: Rotor, other_274: Rotor) -> Rotor {
-    var self_335: Rotor;
-    var other_275: Rotor;
+fn rotor_rotor_add(self_592: Rotor, other_510: Rotor) -> Rotor {
+    var self_593: Rotor;
+    var other_511: Rotor;
 
-    self_335 = self_334;
-    other_275 = other_274;
-    let _e4: Rotor = self_335;
-    let _e6: Rotor = other_275;
+    self_593 = self_592;
+    other_511 = other_510;
+    let _e4: Rotor = self_593;
+    let _e6: Rotor = other_511;
     return Rotor((_e4.g0_ + _e6.g0_));
 }
 
-fn rotor_rotor_sub(self_336: Rotor, other_276: Rotor) -> Rotor {
-    var self_337: Rotor;
-    var other_277: Rotor;
+fn rotor_rotor_sub(self_594: Rotor, other_512: Rotor) -> Rotor {
+    var self_595: Rotor;
+    var other_513: Rotor;
 
-    self_337 = self_336;
-    other_277 = other_276;
-    let _e4: Rotor = self_337;
-    let _e6: Rotor = other_277;
+    self_595 = self_594;
+    other_513 = other_512;
+    let _e4: Rotor = self_595;
+    let _e6: Rotor = other_513;
     return Rotor((_e4.g0_ - _e6.g0_));
 }
 
-fn rotor_rotor_mul(self_338: Rotor, other_278: Rotor) -> Rotor {
-    var self_339: Rotor;
-    var other_279: Rotor;
+fn rotor_rotor_mul(self_596: Rotor, other_514: Rotor) -> Rotor {
+    var self_597: Rotor;
+    var other_515: Rotor;
 
-    self_339 = self_338;
-    other_279 = other_278;
-    let _e4: Rotor = self_339;
-    let _e6: Rotor = other_279;
+    self_597 = self_596;
+    other_515 = other_514;
+    let _e4: Rotor = self_597;
+    let _e6: Rotor = other_515;
     return Rotor((_e4.g0_ * _e6.g0_));
 }
 
-fn rotor_rotor_div(self_340: Rotor, other_280: Rotor) -> Rotor {
-    var self_341: Rotor;
-    var other_281: Rotor;
+fn rotor_rotor_div(self_598: Rotor, other_516: Rotor) -> Rotor {
+    var self_599: Rotor;
+    var other_517: Rotor;
 
-    self_341 = self_340;
-    other_281 = other_280;
-    let _e4: Rotor = self_341;
-    let _e7: Rotor = self_341;
-    let _e15: Rotor = other_281;
-    let _e18: Rotor = other_281;
+    self_599 = self_598;
+    other_517 = other_516;
+    let _e4: Rotor = self_599;
+    let _e7: Rotor = self_599;
+    let _e15: Rotor = other_517;
+    let _e18: Rotor = other_517;
     return Rotor((((vec2<f32>(_e4.g0_.x, _e7.g0_.y) * vec2<f32>(1.0, 1.0)) / vec2<f32>(_e15.g0_.x, _e18.g0_.y)) * vec2<f32>(1.0, 1.0)));
 }
 
-fn rotor_rotor_geometric_product(self_342: Rotor, other_282: Rotor) -> Rotor {
-    var self_343: Rotor;
-    var other_283: Rotor;
+fn rotor_rotor_geometric_product(self_600: Rotor, other_518: Rotor) -> Rotor {
+    var self_601: Rotor;
+    var other_519: Rotor;
 
-    self_343 = self_342;
-    other_283 = other_282;
-    let _e4: Rotor = self_343;
-    let _e8: Rotor = other_283;
-    let _e11: Rotor = self_343;
-    let _e15: Rotor = other_283;
+    self_601 = self_600;
+    other_519 = other_518;
+    let _e4: Rotor = self_601;
+    let _e8: Rotor = other_519;
+    let _e11: Rotor = self_601;
+    let _e15: Rotor = other_519;
     return Rotor(((vec2<f32>(_e4.g0_.x) * _e8.g0_) + ((vec2<f32>(_e11.g0_.y) * _e15.g0_.yx) * vec2<f32>(-(1.0), 1.0))));
 }
 
-fn rotor_rotor_outer_product(self_344: Rotor, other_284: Rotor) -> Rotor {
-    var self_345: Rotor;
-    var other_285: Rotor;
+fn rotor_rotor_outer_product(self_602: Rotor, other_520: Rotor) -> Rotor {
+    var self_603: Rotor;
+    var other_521: Rotor;
 
-    self_345 = self_344;
-    other_285 = other_284;
-    let _e4: Rotor = self_345;
-    let _e8: Rotor = other_285;
-    let _e11: Rotor = self_345;
-    let _e13: Rotor = other_285;
+    self_603 = self_602;
+    other_521 = other_520;
+    let _e4: Rotor = self_603;
+    let _e8: Rotor = other_521;
+    let _e11: Rotor = self_603;
+    let _e13: Rotor = other_521;
     return Rotor(((vec2<f32>(_e4.g0_.x) * _e8.g0_) + ((_e11.g0_ * vec2<f32>(_e13.g0_.x)) * vec2<f32>(0.0, 1.0))));
 }
 
-fn rotor_rotor_inner_product(self_346: Rotor, other_286: Rotor) -> Rotor {
-    var self_347: Rotor;
-    var other_287: Rotor;
+fn rotor_rotor_inner_product(self_604: Rotor, other_522: Rotor) -> Rotor {
+    var self_605: Rotor;
+    var other_523: Rotor;
 
-    self_347 = self_346;
-    other_287 = other_286;
-    let _e4: Rotor = self_347;
-    let _e8: Rotor = other_287;
-    let _e11: Rotor = self_347;
-    let _e15: Rotor = other_287;
+    self_605 = self_604;
+    other_523 = other_522;
+    let _e4: Rotor = self_605;
+    let _e8: Rotor = other_523;
+    let _e11: Rotor = self_605;
+    let _e15: Rotor = other_523;
     return Rotor(((vec2<f32>(_e4.g0_.x) * _e8.g0_) + ((vec2<f32>(_e11.g0_.y) * _e15.g0_.yx) * vec2<f32>(-(1.0), 1.0))));
 }
 
-fn rotor_rotor_left_contraction(self_348: Rotor, other_288: Rotor) -> Rotor {
-    var self_349: Rotor;
-    var other_289: Rotor;
+fn rotor_rotor_left_contraction(self_606: Rotor, other_524: Rotor) -> Rotor {
+    var self_607: Rotor;
+    var other_525: Rotor;
 
-    self_349 = self_348;
-    other_289 = other_288;
-    let _e4: Rotor = self_349;
-    let _e8: Rotor = other_289;
-    let _e11: Rotor = self_349;
-    let _e14: Rotor = other_289;
+    self_607 = self_606;
+    other_525 = other_524;
+    let _e4: Rotor = self_607;
+    let _e8: Rotor = other_525;
+    let _e11: Rotor = self_607;
+    let _e14: Rotor = other_525;
     return Rotor(((vec2<f32>(_e4.g0_.x) * _e8.g0_) + ((_e11.g0_.yx * _e14.g0_.yx) * vec2<f32>(-(1.0), 0.0))));
 }
 
-fn rotor_rotor_right_contraction(self_350: Rotor, other_290: Rotor) -> Rotor {
-    var self_351: Rotor;
-    var other_291: Rotor;
+fn rotor_rotor_right_contraction(self_608: Rotor, other_526: Rotor) -> Rotor {
+    var self_609: Rotor;
+    var other_527: Rotor;
 
-    self_351 = self_350;
-    other_291 = other_290;
-    let _e4: Rotor = self_351;
-    let _e8: Rotor = other_291;
-    let _e17: Rotor = self_351;
-    let _e21: Rotor = other_291;
+    self_609 = self_608;
+    other_527 = other_526;
+    let _e4: Rotor = self_609;
+    let _e8: Rotor = other_527;
+    let _e17: Rotor = self_609;
+    let _e21: Rotor = other_527;
     return Rotor((((vec2<f32>(_e4.g0_.y) * _e8.g0_.yx) * vec2<f32>(-(1.0), 1.0)) + ((vec2<f32>(_e17.g0_.x) * vec2<f32>(_e21.g0_.x)) * vec2<f32>(1.0, 0.0))));
 }
 
-fn rotor_rotor_scalar_product(self_352: Rotor, other_292: Rotor) -> Scalar {
-    var self_353: Rotor;
-    var other_293: Rotor;
+fn rotor_rotor_scalar_product(self_610: Rotor, other_528: Rotor) -> Scalar {
+    var self_611: Rotor;
+    var other_529: Rotor;
 
-    self_353 = self_352;
-    other_293 = other_292;
-    let _e4: Rotor = self_353;
-    let _e7: Rotor = other_293;
-    let _e11: Rotor = self_353;
-    let _e14: Rotor = other_293;
+    self_611 = self_610;
+    other_529 = other_528;
+    let _e4: Rotor = self_611;
+    let _e7: Rotor = other_529;
+    let _e11: Rotor = self_611;
+    let _e14: Rotor = other_529;
     return Scalar(((_e4.g0_.x * _e7.g0_.x) - (_e11.g0_.y * _e14.g0_.y)));
 }
 
-fn rotor_point_add(self_354: Rotor, other_294: Point) -> Motor {
-    var self_355: Rotor;
-    var other_295: Point;
+fn rotor_point_add(self_612: Rotor, other_530: Point) -> Motor {
+    var self_613: Rotor;
+    var other_531: Point;
 
-    self_355 = self_354;
-    other_295 = other_294;
-    let _e4: Rotor = self_355;
-    let _e7: Rotor = self_355;
-    let _e10: Rotor = self_355;
-    let _e13: Rotor = self_355;
-    let _e23: Point = other_295;
-    let _e26: Point = other_295;
-    let _e29: Point = other_295;
-    let _e32: Point = other_295;
+    self_613 = self_612;
+    other_531 = other_530;
+    let _e4: Rotor = self_613;
+    let _e7: Rotor = self_613;
+    let _e10: Rotor = self_613;
+    let _e13: Rotor = self_613;
+    let _e23: Point = other_531;
+    let _e26: Point = other_531;
+    let _e29: Point = other_531;
+    let _e32: Point = other_531;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.y, _e10.g0_.x, _e13.g0_.x) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) + (vec4<f32>(_e23.g0_.x, _e26.g0_.x, _e29.g0_.y, _e32.g0_.z) * vec4<f32>(0.0, 1.0, 1.0, 1.0))));
 }
 
-fn rotor_point_sub(self_356: Rotor, other_296: Point) -> Motor {
-    var self_357: Rotor;
-    var other_297: Point;
+fn rotor_point_sub(self_614: Rotor, other_532: Point) -> Motor {
+    var self_615: Rotor;
+    var other_533: Point;
 
-    self_357 = self_356;
-    other_297 = other_296;
-    let _e4: Rotor = self_357;
-    let _e7: Rotor = self_357;
-    let _e10: Rotor = self_357;
-    let _e13: Rotor = self_357;
-    let _e23: Point = other_297;
-    let _e26: Point = other_297;
-    let _e29: Point = other_297;
-    let _e32: Point = other_297;
+    self_615 = self_614;
+    other_533 = other_532;
+    let _e4: Rotor = self_615;
+    let _e7: Rotor = self_615;
+    let _e10: Rotor = self_615;
+    let _e13: Rotor = self_615;
+    let _e23: Point = other_533;
+    let _e26: Point = other_533;
+    let _e29: Point = other_533;
+    let _e32: Point = other_533;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.y, _e10.g0_.x, _e13.g0_.x) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) - (vec4<f32>(_e23.g0_.x, _e26.g0_.x, _e29.g0_.y, _e32.g0_.z) * vec4<f32>(0.0, 1.0, 1.0, 1.0))));
 }
 
-fn rotor_point_geometric_product(self_358: Rotor, other_298: Point) -> Motor {
-    var self_359: Rotor;
-    var other_299: Point;
+fn rotor_point_geometric_product(self_616: Rotor, other_534: Point) -> Motor {
+    var self_617: Rotor;
+    var other_535: Point;
 
-    self_359 = self_358;
-    other_299 = other_298;
-    let _e4: Rotor = self_359;
-    let _e8: Point = other_299;
-    let _e11: Point = other_299;
-    let _e14: Point = other_299;
-    let _e17: Point = other_299;
-    let _e30: Rotor = self_359;
-    let _e34: Point = other_299;
-    let _e37: Point = other_299;
-    let _e40: Point = other_299;
-    let _e43: Point = other_299;
+    self_617 = self_616;
+    other_535 = other_534;
+    let _e4: Rotor = self_617;
+    let _e8: Point = other_535;
+    let _e11: Point = other_535;
+    let _e14: Point = other_535;
+    let _e17: Point = other_535;
+    let _e30: Rotor = self_617;
+    let _e34: Point = other_535;
+    let _e37: Point = other_535;
+    let _e40: Point = other_535;
+    let _e43: Point = other_535;
     return Motor((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.x, _e11.g0_.x, _e14.g0_.z, _e17.g0_.y)) * vec4<f32>(-(1.0), 0.0, -(1.0), 1.0)) + ((vec4<f32>(_e30.g0_.x) * vec4<f32>(_e34.g0_.x, _e37.g0_.x, _e40.g0_.y, _e43.g0_.z)) * vec4<f32>(0.0, 1.0, 1.0, 1.0))));
 }
 
-fn rotor_point_outer_product(self_360: Rotor, other_300: Point) -> Point {
-    var self_361: Rotor;
-    var other_301: Point;
+fn rotor_point_outer_product(self_618: Rotor, other_536: Point) -> Point {
+    var self_619: Rotor;
+    var other_537: Point;
 
-    self_361 = self_360;
-    other_301 = other_300;
-    let _e4: Rotor = self_361;
-    let _e8: Point = other_301;
+    self_619 = self_618;
+    other_537 = other_536;
+    let _e4: Rotor = self_619;
+    let _e8: Point = other_537;
     return Point((vec3<f32>(_e4.g0_.x) * _e8.g0_));
 }
 
-fn rotor_point_inner_product(self_362: Rotor, other_302: Point) -> Motor {
-    var self_363: Rotor;
-    var other_303: Point;
+fn rotor_point_inner_product(self_620: Rotor, other_538: Point) -> Motor {
+    var self_621: Rotor;
+    var other_539: Point;
 
-    self_363 = self_362;
-    other_303 = other_302;
-    let _e4: Rotor = self_363;
-    let _e7: Rotor = self_363;
-    let _e10: Rotor = self_363;
-    let _e13: Rotor = self_363;
-    let _e17: Point = other_303;
-    let _e20: Point = other_303;
-    let _e23: Point = other_303;
-    let _e26: Point = other_303;
+    self_621 = self_620;
+    other_539 = other_538;
+    let _e4: Rotor = self_621;
+    let _e7: Rotor = self_621;
+    let _e10: Rotor = self_621;
+    let _e13: Rotor = self_621;
+    let _e17: Point = other_539;
+    let _e20: Point = other_539;
+    let _e23: Point = other_539;
+    let _e26: Point = other_539;
     return Motor(((vec4<f32>(_e4.g0_.y, _e7.g0_.x, _e10.g0_.x, _e13.g0_.x) * vec4<f32>(_e17.g0_.x, _e20.g0_.x, _e23.g0_.y, _e26.g0_.z)) * vec4<f32>(-(1.0), 1.0, 1.0, 1.0)));
 }
 
-fn rotor_point_left_contraction(self_364: Rotor, other_304: Point) -> Motor {
-    var self_365: Rotor;
-    var other_305: Point;
+fn rotor_point_left_contraction(self_622: Rotor, other_540: Point) -> Motor {
+    var self_623: Rotor;
+    var other_541: Point;
 
-    self_365 = self_364;
-    other_305 = other_304;
-    let _e4: Rotor = self_365;
-    let _e7: Rotor = self_365;
-    let _e10: Rotor = self_365;
-    let _e13: Rotor = self_365;
-    let _e17: Point = other_305;
-    let _e20: Point = other_305;
-    let _e23: Point = other_305;
-    let _e26: Point = other_305;
+    self_623 = self_622;
+    other_541 = other_540;
+    let _e4: Rotor = self_623;
+    let _e7: Rotor = self_623;
+    let _e10: Rotor = self_623;
+    let _e13: Rotor = self_623;
+    let _e17: Point = other_541;
+    let _e20: Point = other_541;
+    let _e23: Point = other_541;
+    let _e26: Point = other_541;
     return Motor(((vec4<f32>(_e4.g0_.y, _e7.g0_.x, _e10.g0_.x, _e13.g0_.x) * vec4<f32>(_e17.g0_.x, _e20.g0_.x, _e23.g0_.y, _e26.g0_.z)) * vec4<f32>(-(1.0), 1.0, 1.0, 1.0)));
 }
 
-fn rotor_point_right_contraction(self_366: Rotor, other_306: Point) -> Scalar {
-    var self_367: Rotor;
-    var other_307: Point;
+fn rotor_point_right_contraction(self_624: Rotor, other_542: Point) -> Scalar {
+    var self_625: Rotor;
+    var other_543: Point;
 
-    self_367 = self_366;
-    other_307 = other_306;
-    let _e5: Rotor = self_367;
-    let _e8: Point = other_307;
+    self_625 = self_624;
+    other_543 = other_542;
+    let _e5: Rotor = self_625;
+    let _e8: Point = other_543;
     return Scalar((0.0 - (_e5.g0_.y * _e8.g0_.x)));
 }
 
-fn rotor_point_scalar_product(self_368: Rotor, other_308: Point) -> Scalar {
-    var self_369: Rotor;
-    var other_309: Point;
+fn rotor_point_scalar_product(self_626: Rotor, other_544: Point) -> Scalar {
+    var self_627: Rotor;
+    var other_545: Point;
 
-    self_369 = self_368;
-    other_309 = other_308;
-    let _e5: Rotor = self_369;
-    let _e8: Point = other_309;
+    self_627 = self_626;
+    other_545 = other_544;
+    let _e5: Rotor = self_627;
+    let _e8: Point = other_545;
     return Scalar((0.0 - (_e5.g0_.y * _e8.g0_.x)));
 }
 
-fn rotor_ideal_point_add(self_370: Rotor, other_310: IdealPoint) -> Motor {
-    var self_371: Rotor;
-    var other_311: IdealPoint;
+fn rotor_ideal_point_add(self_628: Rotor, other_546: IdealPoint) -> Motor {
+    var self_629: Rotor;
+    var other_547: IdealPoint;
 
-    self_371 = self_370;
-    other_311 = other_310;
-    let _e4: Rotor = self_371;
-    let _e7: Rotor = self_371;
-    let _e10: Rotor = self_371;
-    let _e13: Rotor = self_371;
-    let _e23: IdealPoint = other_311;
-    let _e26: IdealPoint = other_311;
-    let _e29: IdealPoint = other_311;
-    let _e32: IdealPoint = other_311;
+    self_629 = self_628;
+    other_547 = other_546;
+    let _e4: Rotor = self_629;
+    let _e7: Rotor = self_629;
+    let _e10: Rotor = self_629;
+    let _e13: Rotor = self_629;
+    let _e23: IdealPoint = other_547;
+    let _e26: IdealPoint = other_547;
+    let _e29: IdealPoint = other_547;
+    let _e32: IdealPoint = other_547;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.y, _e10.g0_.x, _e13.g0_.x) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) + (vec4<f32>(_e23.g0_.x, _e26.g0_.x, _e29.g0_.x, _e32.g0_.y) * vec4<f32>(0.0, 0.0, 1.0, 1.0))));
 }
 
-fn rotor_ideal_point_sub(self_372: Rotor, other_312: IdealPoint) -> Motor {
-    var self_373: Rotor;
-    var other_313: IdealPoint;
+fn rotor_ideal_point_sub(self_630: Rotor, other_548: IdealPoint) -> Motor {
+    var self_631: Rotor;
+    var other_549: IdealPoint;
 
-    self_373 = self_372;
-    other_313 = other_312;
-    let _e4: Rotor = self_373;
-    let _e7: Rotor = self_373;
-    let _e10: Rotor = self_373;
-    let _e13: Rotor = self_373;
-    let _e23: IdealPoint = other_313;
-    let _e26: IdealPoint = other_313;
-    let _e29: IdealPoint = other_313;
-    let _e32: IdealPoint = other_313;
+    self_631 = self_630;
+    other_549 = other_548;
+    let _e4: Rotor = self_631;
+    let _e7: Rotor = self_631;
+    let _e10: Rotor = self_631;
+    let _e13: Rotor = self_631;
+    let _e23: IdealPoint = other_549;
+    let _e26: IdealPoint = other_549;
+    let _e29: IdealPoint = other_549;
+    let _e32: IdealPoint = other_549;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.y, _e10.g0_.x, _e13.g0_.x) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) - (vec4<f32>(_e23.g0_.x, _e26.g0_.x, _e29.g0_.x, _e32.g0_.y) * vec4<f32>(0.0, 0.0, 1.0, 1.0))));
 }
 
-fn rotor_ideal_point_geometric_product(self_374: Rotor, other_314: IdealPoint) -> IdealPoint {
-    var self_375: Rotor;
-    var other_315: IdealPoint;
+fn rotor_ideal_point_geometric_product(self_632: Rotor, other_550: IdealPoint) -> IdealPoint {
+    var self_633: Rotor;
+    var other_551: IdealPoint;
 
-    self_375 = self_374;
-    other_315 = other_314;
-    let _e4: Rotor = self_375;
-    let _e8: IdealPoint = other_315;
-    let _e11: Rotor = self_375;
-    let _e15: IdealPoint = other_315;
+    self_633 = self_632;
+    other_551 = other_550;
+    let _e4: Rotor = self_633;
+    let _e8: IdealPoint = other_551;
+    let _e11: Rotor = self_633;
+    let _e15: IdealPoint = other_551;
     return IdealPoint(((vec2<f32>(_e4.g0_.x) * _e8.g0_) + ((vec2<f32>(_e11.g0_.y) * _e15.g0_.yx) * vec2<f32>(-(1.0), 1.0))));
 }
 
-fn rotor_ideal_point_outer_product(self_376: Rotor, other_316: IdealPoint) -> IdealPoint {
-    var self_377: Rotor;
-    var other_317: IdealPoint;
+fn rotor_ideal_point_outer_product(self_634: Rotor, other_552: IdealPoint) -> IdealPoint {
+    var self_635: Rotor;
+    var other_553: IdealPoint;
 
-    self_377 = self_376;
-    other_317 = other_316;
-    let _e4: Rotor = self_377;
-    let _e8: IdealPoint = other_317;
+    self_635 = self_634;
+    other_553 = other_552;
+    let _e4: Rotor = self_635;
+    let _e8: IdealPoint = other_553;
     return IdealPoint((vec2<f32>(_e4.g0_.x) * _e8.g0_));
 }
 
-fn rotor_ideal_point_inner_product(self_378: Rotor, other_318: IdealPoint) -> IdealPoint {
-    var self_379: Rotor;
-    var other_319: IdealPoint;
+fn rotor_ideal_point_inner_product(self_636: Rotor, other_554: IdealPoint) -> IdealPoint {
+    var self_637: Rotor;
+    var other_555: IdealPoint;
 
-    self_379 = self_378;
-    other_319 = other_318;
-    let _e4: Rotor = self_379;
-    let _e8: IdealPoint = other_319;
+    self_637 = self_636;
+    other_555 = other_554;
+    let _e4: Rotor = self_637;
+    let _e8: IdealPoint = other_555;
     return IdealPoint((vec2<f32>(_e4.g0_.x) * _e8.g0_));
 }
 
-fn rotor_ideal_point_left_contraction(self_380: Rotor, other_320: IdealPoint) -> IdealPoint {
-    var self_381: Rotor;
-    var other_321: IdealPoint;
+fn rotor_ideal_point_left_contraction(self_638: Rotor, other_556: IdealPoint) -> IdealPoint {
+    var self_639: Rotor;
+    var other_557: IdealPoint;
 
-    self_381 = self_380;
-    other_321 = other_320;
-    let _e4: Rotor = self_381;
-    let _e8: IdealPoint = other_321;
+    self_639 = self_638;
+    other_557 = other_556;
+    let _e4: Rotor = self_639;
+    let _e8: IdealPoint = other_557;
     return IdealPoint((vec2<f32>(_e4.g0_.x) * _e8.g0_));
 }
 
-fn rotor_plane_geometric_product(self_382: Rotor, other_322: Plane) -> MotorDual {
-    var self_383: Rotor;
-    var other_323: Plane;
+fn rotor_plane_geometric_product(self_640: Rotor, other_558: Plane) -> MotorDual {
+    var self_641: Rotor;
+    var other_559: Plane;
 
-    self_383 = self_382;
-    other_323 = other_322;
-    let _e4: Rotor = self_383;
-    let _e8: Plane = other_323;
-    let _e11: Plane = other_323;
-    let _e14: Plane = other_323;
-    let _e17: Plane = other_323;
-    let _e29: Rotor = self_383;
-    let _e33: Plane = other_323;
-    let _e36: Plane = other_323;
-    let _e39: Plane = other_323;
-    let _e42: Plane = other_323;
+    self_641 = self_640;
+    other_559 = other_558;
+    let _e4: Rotor = self_641;
+    let _e8: Plane = other_559;
+    let _e11: Plane = other_559;
+    let _e14: Plane = other_559;
+    let _e17: Plane = other_559;
+    let _e29: Rotor = self_641;
+    let _e33: Plane = other_559;
+    let _e36: Plane = other_559;
+    let _e39: Plane = other_559;
+    let _e42: Plane = other_559;
     return MotorDual((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.x, _e11.g0_.x, _e14.g0_.z, _e17.g0_.y)) * vec4<f32>(1.0, 0.0, -(1.0), 1.0)) + ((vec4<f32>(_e29.g0_.x) * vec4<f32>(_e33.g0_.x, _e36.g0_.x, _e39.g0_.y, _e42.g0_.z)) * vec4<f32>(0.0, 1.0, 1.0, 1.0))));
 }
 
-fn rotor_plane_regressive_product(self_384: Rotor, other_324: Plane) -> Scalar {
-    var self_385: Rotor;
-    var other_325: Plane;
+fn rotor_plane_regressive_product(self_642: Rotor, other_560: Plane) -> Scalar {
+    var self_643: Rotor;
+    var other_561: Plane;
 
-    self_385 = self_384;
-    other_325 = other_324;
-    let _e4: Rotor = self_385;
-    let _e7: Plane = other_325;
+    self_643 = self_642;
+    other_561 = other_560;
+    let _e4: Rotor = self_643;
+    let _e7: Plane = other_561;
     return Scalar((_e4.g0_.y * _e7.g0_.x));
 }
 
-fn rotor_plane_outer_product(self_386: Rotor, other_326: Plane) -> MotorDual {
-    var self_387: Rotor;
-    var other_327: Plane;
+fn rotor_plane_outer_product(self_644: Rotor, other_562: Plane) -> MotorDual {
+    var self_645: Rotor;
+    var other_563: Plane;
 
-    self_387 = self_386;
-    other_327 = other_326;
-    let _e4: Rotor = self_387;
-    let _e7: Rotor = self_387;
-    let _e10: Rotor = self_387;
-    let _e13: Rotor = self_387;
-    let _e17: Plane = other_327;
-    let _e20: Plane = other_327;
-    let _e23: Plane = other_327;
-    let _e26: Plane = other_327;
+    self_645 = self_644;
+    other_563 = other_562;
+    let _e4: Rotor = self_645;
+    let _e7: Rotor = self_645;
+    let _e10: Rotor = self_645;
+    let _e13: Rotor = self_645;
+    let _e17: Plane = other_563;
+    let _e20: Plane = other_563;
+    let _e23: Plane = other_563;
+    let _e26: Plane = other_563;
     return MotorDual((vec4<f32>(_e4.g0_.y, _e7.g0_.x, _e10.g0_.x, _e13.g0_.x) * vec4<f32>(_e17.g0_.x, _e20.g0_.x, _e23.g0_.y, _e26.g0_.z)));
 }
 
-fn rotor_plane_inner_product(self_388: Rotor, other_328: Plane) -> Plane {
-    var self_389: Rotor;
-    var other_329: Plane;
+fn rotor_plane_inner_product(self_646: Rotor, other_564: Plane) -> Plane {
+    var self_647: Rotor;
+    var other_565: Plane;
 
-    self_389 = self_388;
-    other_329 = other_328;
-    let _e4: Rotor = self_389;
-    let _e8: Plane = other_329;
-    let _e11: Rotor = self_389;
-    let _e14: Rotor = self_389;
-    let _e17: Rotor = self_389;
-    let _e21: Plane = other_329;
+    self_647 = self_646;
+    other_565 = other_564;
+    let _e4: Rotor = self_647;
+    let _e8: Plane = other_565;
+    let _e11: Rotor = self_647;
+    let _e14: Rotor = self_647;
+    let _e17: Rotor = self_647;
+    let _e21: Plane = other_565;
     return Plane(((vec3<f32>(_e4.g0_.x) * _e8.g0_) + ((vec3<f32>(_e11.g0_.x, _e14.g0_.y, _e17.g0_.y) * _e21.g0_.xzy) * vec3<f32>(0.0, -(1.0), 1.0))));
 }
 
-fn rotor_plane_left_contraction(self_390: Rotor, other_330: Plane) -> Plane {
-    var self_391: Rotor;
-    var other_331: Plane;
+fn rotor_plane_geometric_anti_product(self_648: Rotor, other_566: Plane) -> Rotor {
+    var self_649: Rotor;
+    var other_567: Plane;
 
-    self_391 = self_390;
-    other_331 = other_330;
-    let _e4: Rotor = self_391;
-    let _e8: Plane = other_331;
+    self_649 = self_648;
+    other_567 = other_566;
+    let _e4: Rotor = self_649;
+    let _e7: Plane = other_567;
+    return Rotor(((_e4.g0_.yx * vec2<f32>(_e7.g0_.x)) * vec2<f32>(1.0, -(1.0))));
+}
+
+fn rotor_plane_left_contraction(self_650: Rotor, other_568: Plane) -> Plane {
+    var self_651: Rotor;
+    var other_569: Plane;
+
+    self_651 = self_650;
+    other_569 = other_568;
+    let _e4: Rotor = self_651;
+    let _e8: Plane = other_569;
     return Plane((vec3<f32>(_e4.g0_.x) * _e8.g0_));
 }
 
-fn rotor_translator_add(self_392: Rotor, other_332: Translator) -> Motor {
-    var self_393: Rotor;
-    var other_333: Translator;
+fn rotor_translator_add(self_652: Rotor, other_570: Translator) -> Motor {
+    var self_653: Rotor;
+    var other_571: Translator;
 
-    self_393 = self_392;
-    other_333 = other_332;
-    let _e4: Rotor = self_393;
-    let _e7: Rotor = self_393;
-    let _e10: Rotor = self_393;
-    let _e13: Rotor = self_393;
-    let _e23: Translator = other_333;
-    let _e26: Translator = other_333;
-    let _e29: Translator = other_333;
-    let _e32: Translator = other_333;
+    self_653 = self_652;
+    other_571 = other_570;
+    let _e4: Rotor = self_653;
+    let _e7: Rotor = self_653;
+    let _e10: Rotor = self_653;
+    let _e13: Rotor = self_653;
+    let _e23: Translator = other_571;
+    let _e26: Translator = other_571;
+    let _e29: Translator = other_571;
+    let _e32: Translator = other_571;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.y, _e10.g0_.x, _e13.g0_.x) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) + (vec4<f32>(_e23.g0_.x, _e26.g0_.x, _e29.g0_.y, _e32.g0_.z) * vec4<f32>(1.0, 0.0, 1.0, 1.0))));
 }
 
-fn rotor_translator_sub(self_394: Rotor, other_334: Translator) -> Motor {
-    var self_395: Rotor;
-    var other_335: Translator;
+fn rotor_translator_sub(self_654: Rotor, other_572: Translator) -> Motor {
+    var self_655: Rotor;
+    var other_573: Translator;
 
-    self_395 = self_394;
-    other_335 = other_334;
-    let _e4: Rotor = self_395;
-    let _e7: Rotor = self_395;
-    let _e10: Rotor = self_395;
-    let _e13: Rotor = self_395;
-    let _e23: Translator = other_335;
-    let _e26: Translator = other_335;
-    let _e29: Translator = other_335;
-    let _e32: Translator = other_335;
+    self_655 = self_654;
+    other_573 = other_572;
+    let _e4: Rotor = self_655;
+    let _e7: Rotor = self_655;
+    let _e10: Rotor = self_655;
+    let _e13: Rotor = self_655;
+    let _e23: Translator = other_573;
+    let _e26: Translator = other_573;
+    let _e29: Translator = other_573;
+    let _e32: Translator = other_573;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.y, _e10.g0_.x, _e13.g0_.x) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) - (vec4<f32>(_e23.g0_.x, _e26.g0_.x, _e29.g0_.y, _e32.g0_.z) * vec4<f32>(1.0, 0.0, 1.0, 1.0))));
 }
 
-fn rotor_translator_geometric_product(self_396: Rotor, other_336: Translator) -> Motor {
-    var self_397: Rotor;
-    var other_337: Translator;
+fn rotor_translator_geometric_product(self_656: Rotor, other_574: Translator) -> Motor {
+    var self_657: Rotor;
+    var other_575: Translator;
 
-    self_397 = self_396;
-    other_337 = other_336;
-    let _e4: Rotor = self_397;
-    let _e8: Translator = other_337;
-    let _e11: Translator = other_337;
-    let _e14: Translator = other_337;
-    let _e17: Translator = other_337;
-    let _e29: Rotor = self_397;
-    let _e33: Translator = other_337;
-    let _e36: Translator = other_337;
-    let _e39: Translator = other_337;
-    let _e42: Translator = other_337;
+    self_657 = self_656;
+    other_575 = other_574;
+    let _e4: Rotor = self_657;
+    let _e8: Translator = other_575;
+    let _e11: Translator = other_575;
+    let _e14: Translator = other_575;
+    let _e17: Translator = other_575;
+    let _e29: Rotor = self_657;
+    let _e33: Translator = other_575;
+    let _e36: Translator = other_575;
+    let _e39: Translator = other_575;
+    let _e42: Translator = other_575;
     return Motor((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.x, _e11.g0_.x, _e14.g0_.z, _e17.g0_.y)) * vec4<f32>(0.0, 1.0, -(1.0), 1.0)) + ((vec4<f32>(_e29.g0_.x) * vec4<f32>(_e33.g0_.x, _e36.g0_.x, _e39.g0_.y, _e42.g0_.z)) * vec4<f32>(1.0, 0.0, 1.0, 1.0))));
 }
 
-fn rotor_translator_outer_product(self_398: Rotor, other_338: Translator) -> Motor {
-    var self_399: Rotor;
-    var other_339: Translator;
+fn rotor_translator_outer_product(self_658: Rotor, other_576: Translator) -> Motor {
+    var self_659: Rotor;
+    var other_577: Translator;
 
-    self_399 = self_398;
-    other_339 = other_338;
-    let _e4: Rotor = self_399;
-    let _e7: Rotor = self_399;
-    let _e10: Rotor = self_399;
-    let _e13: Rotor = self_399;
-    let _e17: Translator = other_339;
-    let _e20: Translator = other_339;
-    let _e23: Translator = other_339;
-    let _e26: Translator = other_339;
+    self_659 = self_658;
+    other_577 = other_576;
+    let _e4: Rotor = self_659;
+    let _e7: Rotor = self_659;
+    let _e10: Rotor = self_659;
+    let _e13: Rotor = self_659;
+    let _e17: Translator = other_577;
+    let _e20: Translator = other_577;
+    let _e23: Translator = other_577;
+    let _e26: Translator = other_577;
     return Motor((vec4<f32>(_e4.g0_.x, _e7.g0_.y, _e10.g0_.x, _e13.g0_.x) * vec4<f32>(_e17.g0_.x, _e20.g0_.x, _e23.g0_.y, _e26.g0_.z)));
 }
 
-fn rotor_translator_inner_product(self_400: Rotor, other_340: Translator) -> Motor {
-    var self_401: Rotor;
-    var other_341: Translator;
+fn rotor_translator_inner_product(self_660: Rotor, other_578: Translator) -> Motor {
+    var self_661: Rotor;
+    var other_579: Translator;
 
-    self_401 = self_400;
-    other_341 = other_340;
-    let _e4: Rotor = self_401;
-    let _e7: Rotor = self_401;
-    let _e10: Rotor = self_401;
-    let _e13: Rotor = self_401;
-    let _e17: Translator = other_341;
-    let _e20: Translator = other_341;
-    let _e23: Translator = other_341;
-    let _e26: Translator = other_341;
+    self_661 = self_660;
+    other_579 = other_578;
+    let _e4: Rotor = self_661;
+    let _e7: Rotor = self_661;
+    let _e10: Rotor = self_661;
+    let _e13: Rotor = self_661;
+    let _e17: Translator = other_579;
+    let _e20: Translator = other_579;
+    let _e23: Translator = other_579;
+    let _e26: Translator = other_579;
     return Motor((vec4<f32>(_e4.g0_.x, _e7.g0_.y, _e10.g0_.x, _e13.g0_.x) * vec4<f32>(_e17.g0_.x, _e20.g0_.x, _e23.g0_.y, _e26.g0_.z)));
 }
 
-fn rotor_translator_left_contraction(self_402: Rotor, other_342: Translator) -> Translator {
-    var self_403: Rotor;
-    var other_343: Translator;
+fn rotor_translator_left_contraction(self_662: Rotor, other_580: Translator) -> Translator {
+    var self_663: Rotor;
+    var other_581: Translator;
 
-    self_403 = self_402;
-    other_343 = other_342;
-    let _e4: Rotor = self_403;
-    let _e8: Translator = other_343;
+    self_663 = self_662;
+    other_581 = other_580;
+    let _e4: Rotor = self_663;
+    let _e8: Translator = other_581;
     return Translator((vec3<f32>(_e4.g0_.x) * _e8.g0_));
 }
 
-fn rotor_translator_right_contraction(self_404: Rotor, other_344: Translator) -> Rotor {
-    var self_405: Rotor;
-    var other_345: Translator;
+fn rotor_translator_right_contraction(self_664: Rotor, other_582: Translator) -> Rotor {
+    var self_665: Rotor;
+    var other_583: Translator;
 
-    self_405 = self_404;
-    other_345 = other_344;
-    let _e4: Rotor = self_405;
-    let _e6: Translator = other_345;
+    self_665 = self_664;
+    other_583 = other_582;
+    let _e4: Rotor = self_665;
+    let _e6: Translator = other_583;
     return Rotor((_e4.g0_ * vec2<f32>(_e6.g0_.x)));
 }
 
-fn rotor_translator_scalar_product(self_406: Rotor, other_346: Translator) -> Scalar {
-    var self_407: Rotor;
-    var other_347: Translator;
+fn rotor_translator_scalar_product(self_666: Rotor, other_584: Translator) -> Scalar {
+    var self_667: Rotor;
+    var other_585: Translator;
 
-    self_407 = self_406;
-    other_347 = other_346;
-    let _e4: Rotor = self_407;
-    let _e7: Translator = other_347;
+    self_667 = self_666;
+    other_585 = other_584;
+    let _e4: Rotor = self_667;
+    let _e7: Translator = other_585;
     return Scalar((_e4.g0_.x * _e7.g0_.x));
 }
 
-fn rotor_motor_add(self_408: Rotor, other_348: Motor) -> Motor {
-    var self_409: Rotor;
-    var other_349: Motor;
+fn rotor_motor_add(self_668: Rotor, other_586: Motor) -> Motor {
+    var self_669: Rotor;
+    var other_587: Motor;
 
-    self_409 = self_408;
-    other_349 = other_348;
-    let _e4: Rotor = self_409;
-    let _e7: Rotor = self_409;
-    let _e10: Rotor = self_409;
-    let _e13: Rotor = self_409;
-    let _e23: Motor = other_349;
+    self_669 = self_668;
+    other_587 = other_586;
+    let _e4: Rotor = self_669;
+    let _e7: Rotor = self_669;
+    let _e10: Rotor = self_669;
+    let _e13: Rotor = self_669;
+    let _e23: Motor = other_587;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.y, _e10.g0_.x, _e13.g0_.x) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) + _e23.g0_));
 }
 
-fn rotor_motor_sub(self_410: Rotor, other_350: Motor) -> Motor {
-    var self_411: Rotor;
-    var other_351: Motor;
+fn rotor_motor_sub(self_670: Rotor, other_588: Motor) -> Motor {
+    var self_671: Rotor;
+    var other_589: Motor;
 
-    self_411 = self_410;
-    other_351 = other_350;
-    let _e4: Rotor = self_411;
-    let _e7: Rotor = self_411;
-    let _e10: Rotor = self_411;
-    let _e13: Rotor = self_411;
-    let _e23: Motor = other_351;
+    self_671 = self_670;
+    other_589 = other_588;
+    let _e4: Rotor = self_671;
+    let _e7: Rotor = self_671;
+    let _e10: Rotor = self_671;
+    let _e13: Rotor = self_671;
+    let _e23: Motor = other_589;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.y, _e10.g0_.x, _e13.g0_.x) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) - _e23.g0_));
 }
 
-fn rotor_motor_geometric_product(self_412: Rotor, other_352: Motor) -> Motor {
-    var self_413: Rotor;
-    var other_353: Motor;
+fn rotor_motor_geometric_product(self_672: Rotor, other_590: Motor) -> Motor {
+    var self_673: Rotor;
+    var other_591: Motor;
 
-    self_413 = self_412;
-    other_353 = other_352;
-    let _e4: Rotor = self_413;
-    let _e8: Motor = other_353;
-    let _e11: Rotor = self_413;
-    let _e15: Motor = other_353;
+    self_673 = self_672;
+    other_591 = other_590;
+    let _e4: Rotor = self_673;
+    let _e8: Motor = other_591;
+    let _e11: Rotor = self_673;
+    let _e15: Motor = other_591;
     return Motor(((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.y) * _e15.g0_.yxwz) * vec4<f32>(-(1.0), 1.0, -(1.0), 1.0))));
 }
 
-fn rotor_motor_outer_product(self_414: Rotor, other_354: Motor) -> Motor {
-    var self_415: Rotor;
-    var other_355: Motor;
+fn rotor_motor_outer_product(self_674: Rotor, other_592: Motor) -> Motor {
+    var self_675: Rotor;
+    var other_593: Motor;
 
-    self_415 = self_414;
-    other_355 = other_354;
-    let _e4: Rotor = self_415;
-    let _e8: Motor = other_355;
-    let _e11: Rotor = self_415;
-    let _e14: Rotor = self_415;
-    let _e17: Rotor = self_415;
-    let _e20: Rotor = self_415;
-    let _e24: Motor = other_355;
+    self_675 = self_674;
+    other_593 = other_592;
+    let _e4: Rotor = self_675;
+    let _e8: Motor = other_593;
+    let _e11: Rotor = self_675;
+    let _e14: Rotor = self_675;
+    let _e17: Rotor = self_675;
+    let _e20: Rotor = self_675;
+    let _e24: Motor = other_593;
     return Motor(((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.x, _e14.g0_.y, _e17.g0_.x, _e20.g0_.x) * vec4<f32>(_e24.g0_.x)) * vec4<f32>(0.0, 1.0, 0.0, 0.0))));
 }
 
-fn rotor_motor_inner_product(self_416: Rotor, other_356: Motor) -> Motor {
-    var self_417: Rotor;
-    var other_357: Motor;
+fn rotor_motor_inner_product(self_676: Rotor, other_594: Motor) -> Motor {
+    var self_677: Rotor;
+    var other_595: Motor;
 
-    self_417 = self_416;
-    other_357 = other_356;
-    let _e4: Rotor = self_417;
-    let _e8: Motor = other_357;
-    let _e11: Rotor = self_417;
-    let _e14: Rotor = self_417;
-    let _e17: Rotor = self_417;
-    let _e20: Rotor = self_417;
-    let _e24: Motor = other_357;
+    self_677 = self_676;
+    other_595 = other_594;
+    let _e4: Rotor = self_677;
+    let _e8: Motor = other_595;
+    let _e11: Rotor = self_677;
+    let _e14: Rotor = self_677;
+    let _e17: Rotor = self_677;
+    let _e20: Rotor = self_677;
+    let _e24: Motor = other_595;
     return Motor(((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.y, _e14.g0_.y, _e17.g0_.x, _e20.g0_.x) * _e24.g0_.yxxx) * vec4<f32>(-(1.0), 1.0, 0.0, 0.0))));
 }
 
-fn rotor_motor_left_contraction(self_418: Rotor, other_358: Motor) -> Motor {
-    var self_419: Rotor;
-    var other_359: Motor;
+fn rotor_motor_left_contraction(self_678: Rotor, other_596: Motor) -> Motor {
+    var self_679: Rotor;
+    var other_597: Motor;
 
-    self_419 = self_418;
-    other_359 = other_358;
-    let _e4: Rotor = self_419;
-    let _e8: Motor = other_359;
-    let _e11: Rotor = self_419;
-    let _e14: Rotor = self_419;
-    let _e17: Rotor = self_419;
-    let _e20: Rotor = self_419;
-    let _e24: Motor = other_359;
+    self_679 = self_678;
+    other_597 = other_596;
+    let _e4: Rotor = self_679;
+    let _e8: Motor = other_597;
+    let _e11: Rotor = self_679;
+    let _e14: Rotor = self_679;
+    let _e17: Rotor = self_679;
+    let _e20: Rotor = self_679;
+    let _e24: Motor = other_597;
     return Motor(((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.y, _e14.g0_.x, _e17.g0_.x, _e20.g0_.x) * _e24.g0_.yxxx) * vec4<f32>(-(1.0), 0.0, 0.0, 0.0))));
 }
 
-fn rotor_motor_right_contraction(self_420: Rotor, other_360: Motor) -> Rotor {
-    var self_421: Rotor;
-    var other_361: Motor;
+fn rotor_motor_right_contraction(self_680: Rotor, other_598: Motor) -> Rotor {
+    var self_681: Rotor;
+    var other_599: Motor;
 
-    self_421 = self_420;
-    other_361 = other_360;
-    let _e4: Rotor = self_421;
-    let _e8: Motor = other_361;
-    let _e11: Motor = other_361;
-    let _e21: Rotor = self_421;
-    let _e25: Motor = other_361;
+    self_681 = self_680;
+    other_599 = other_598;
+    let _e4: Rotor = self_681;
+    let _e8: Motor = other_599;
+    let _e11: Motor = other_599;
+    let _e21: Rotor = self_681;
+    let _e25: Motor = other_599;
     return Rotor((((vec2<f32>(_e4.g0_.y) * vec2<f32>(_e8.g0_.y, _e11.g0_.x)) * vec2<f32>(-(1.0), 1.0)) + ((vec2<f32>(_e21.g0_.x) * vec2<f32>(_e25.g0_.x)) * vec2<f32>(1.0, 0.0))));
 }
 
-fn rotor_motor_scalar_product(self_422: Rotor, other_362: Motor) -> Scalar {
-    var self_423: Rotor;
-    var other_363: Motor;
+fn rotor_motor_scalar_product(self_682: Rotor, other_600: Motor) -> Scalar {
+    var self_683: Rotor;
+    var other_601: Motor;
 
-    self_423 = self_422;
-    other_363 = other_362;
-    let _e4: Rotor = self_423;
-    let _e7: Motor = other_363;
-    let _e11: Rotor = self_423;
-    let _e14: Motor = other_363;
+    self_683 = self_682;
+    other_601 = other_600;
+    let _e4: Rotor = self_683;
+    let _e7: Motor = other_601;
+    let _e11: Rotor = self_683;
+    let _e14: Motor = other_601;
     return Scalar(((_e4.g0_.x * _e7.g0_.x) - (_e11.g0_.y * _e14.g0_.y)));
 }
 
-fn rotor_motor_dual_geometric_product(self_424: Rotor, other_364: MotorDual) -> MotorDual {
-    var self_425: Rotor;
-    var other_365: MotorDual;
+fn rotor_motor_dual_geometric_product(self_684: Rotor, other_602: MotorDual) -> MotorDual {
+    var self_685: Rotor;
+    var other_603: MotorDual;
 
-    self_425 = self_424;
-    other_365 = other_364;
-    let _e4: Rotor = self_425;
-    let _e8: MotorDual = other_365;
-    let _e11: Rotor = self_425;
-    let _e15: MotorDual = other_365;
+    self_685 = self_684;
+    other_603 = other_602;
+    let _e4: Rotor = self_685;
+    let _e8: MotorDual = other_603;
+    let _e11: Rotor = self_685;
+    let _e15: MotorDual = other_603;
     return MotorDual(((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.y) * _e15.g0_.yxwz) * vec4<f32>(1.0, -(1.0), -(1.0), 1.0))));
 }
 
-fn rotor_motor_dual_regressive_product(self_426: Rotor, other_366: MotorDual) -> Rotor {
-    var self_427: Rotor;
-    var other_367: MotorDual;
+fn rotor_motor_dual_regressive_product(self_686: Rotor, other_604: MotorDual) -> Rotor {
+    var self_687: Rotor;
+    var other_605: MotorDual;
 
-    self_427 = self_426;
-    other_367 = other_366;
-    let _e4: Rotor = self_427;
-    let _e8: MotorDual = other_367;
-    let _e11: MotorDual = other_367;
-    let _e16: Rotor = self_427;
-    let _e20: MotorDual = other_367;
+    self_687 = self_686;
+    other_605 = other_604;
+    let _e4: Rotor = self_687;
+    let _e8: MotorDual = other_605;
+    let _e11: MotorDual = other_605;
+    let _e16: Rotor = self_687;
+    let _e20: MotorDual = other_605;
     return Rotor(((vec2<f32>(_e4.g0_.y) * vec2<f32>(_e8.g0_.y, _e11.g0_.x)) + ((vec2<f32>(_e16.g0_.x) * vec2<f32>(_e20.g0_.x)) * vec2<f32>(1.0, 0.0))));
 }
 
-fn rotor_motor_dual_outer_product(self_428: Rotor, other_368: MotorDual) -> MotorDual {
-    var self_429: Rotor;
-    var other_369: MotorDual;
+fn rotor_motor_dual_outer_product(self_688: Rotor, other_606: MotorDual) -> MotorDual {
+    var self_689: Rotor;
+    var other_607: MotorDual;
 
-    self_429 = self_428;
-    other_369 = other_368;
-    let _e4: Rotor = self_429;
-    let _e8: MotorDual = other_369;
-    let _e11: Rotor = self_429;
-    let _e14: Rotor = self_429;
-    let _e17: Rotor = self_429;
-    let _e20: Rotor = self_429;
-    let _e24: MotorDual = other_369;
+    self_689 = self_688;
+    other_607 = other_606;
+    let _e4: Rotor = self_689;
+    let _e8: MotorDual = other_607;
+    let _e11: Rotor = self_689;
+    let _e14: Rotor = self_689;
+    let _e17: Rotor = self_689;
+    let _e20: Rotor = self_689;
+    let _e24: MotorDual = other_607;
     return MotorDual(((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.y, _e14.g0_.x, _e17.g0_.x, _e20.g0_.x) * _e24.g0_.yxxx) * vec4<f32>(1.0, 0.0, 0.0, 0.0))));
 }
 
-fn rotor_motor_dual_inner_product(self_430: Rotor, other_370: MotorDual) -> MotorDual {
-    var self_431: Rotor;
-    var other_371: MotorDual;
+fn rotor_motor_dual_inner_product(self_690: Rotor, other_608: MotorDual) -> MotorDual {
+    var self_691: Rotor;
+    var other_609: MotorDual;
 
-    self_431 = self_430;
-    other_371 = other_370;
-    let _e4: Rotor = self_431;
-    let _e8: MotorDual = other_371;
-    let _e11: Rotor = self_431;
-    let _e14: Rotor = self_431;
-    let _e17: Rotor = self_431;
-    let _e20: Rotor = self_431;
-    let _e24: MotorDual = other_371;
+    self_691 = self_690;
+    other_609 = other_608;
+    let _e4: Rotor = self_691;
+    let _e8: MotorDual = other_609;
+    let _e11: Rotor = self_691;
+    let _e14: Rotor = self_691;
+    let _e17: Rotor = self_691;
+    let _e20: Rotor = self_691;
+    let _e24: MotorDual = other_609;
     return MotorDual(((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.x, _e14.g0_.y, _e17.g0_.y, _e20.g0_.y) * _e24.g0_.xxwz) * vec4<f32>(0.0, -(1.0), -(1.0), 1.0))));
 }
 
-fn rotor_motor_dual_left_contraction(self_432: Rotor, other_372: MotorDual) -> MotorDual {
-    var self_433: Rotor;
-    var other_373: MotorDual;
+fn rotor_motor_dual_geometric_anti_product(self_692: Rotor, other_610: MotorDual) -> Rotor {
+    var self_693: Rotor;
+    var other_611: MotorDual;
 
-    self_433 = self_432;
-    other_373 = other_372;
-    let _e4: Rotor = self_433;
-    let _e8: MotorDual = other_373;
-    let _e11: Rotor = self_433;
-    let _e14: Rotor = self_433;
-    let _e17: Rotor = self_433;
-    let _e20: Rotor = self_433;
-    let _e24: MotorDual = other_373;
+    self_693 = self_692;
+    other_611 = other_610;
+    let _e4: Rotor = self_693;
+    let _e8: MotorDual = other_611;
+    let _e11: MotorDual = other_611;
+    let _e21: Rotor = self_693;
+    let _e25: MotorDual = other_611;
+    let _e28: MotorDual = other_611;
+    return Rotor((((vec2<f32>(_e4.g0_.x) * vec2<f32>(_e8.g0_.x, _e11.g0_.y)) * vec2<f32>(1.0, -(1.0))) + (vec2<f32>(_e21.g0_.y) * vec2<f32>(_e25.g0_.y, _e28.g0_.x))));
+}
+
+fn rotor_motor_dual_inner_anti_product(self_694: Rotor, other_612: MotorDual) -> Rotor {
+    var self_695: Rotor;
+    var other_613: MotorDual;
+
+    self_695 = self_694;
+    other_613 = other_612;
+    let _e4: Rotor = self_695;
+    let _e8: MotorDual = other_613;
+    let _e11: MotorDual = other_613;
+    let _e21: Rotor = self_695;
+    let _e23: MotorDual = other_613;
+    return Rotor((((vec2<f32>(_e4.g0_.x) * vec2<f32>(_e8.g0_.x, _e11.g0_.y)) * vec2<f32>(1.0, -(1.0))) + ((_e21.g0_ * vec2<f32>(_e23.g0_.x)) * vec2<f32>(0.0, 1.0))));
+}
+
+fn rotor_motor_dual_left_contraction(self_696: Rotor, other_614: MotorDual) -> MotorDual {
+    var self_697: Rotor;
+    var other_615: MotorDual;
+
+    self_697 = self_696;
+    other_615 = other_614;
+    let _e4: Rotor = self_697;
+    let _e8: MotorDual = other_615;
+    let _e11: Rotor = self_697;
+    let _e14: Rotor = self_697;
+    let _e17: Rotor = self_697;
+    let _e20: Rotor = self_697;
+    let _e24: MotorDual = other_615;
     return MotorDual(((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.x, _e14.g0_.y, _e17.g0_.x, _e20.g0_.x) * vec4<f32>(_e24.g0_.x)) * vec4<f32>(0.0, -(1.0), 0.0, 0.0))));
 }
 
-fn rotor_squared_magnitude(self_434: Rotor) -> Scalar {
-    var self_435: Rotor;
+fn rotor_motor_dual_right_anti_contraction(self_698: Rotor, other_616: MotorDual) -> Rotor {
+    var self_699: Rotor;
+    var other_617: MotorDual;
 
-    self_435 = self_434;
-    let _e2: Rotor = self_435;
-    let _e3: Rotor = self_435;
+    self_699 = self_698;
+    other_617 = other_616;
+    let _e4: Rotor = self_699;
+    let _e8: MotorDual = other_617;
+    let _e11: MotorDual = other_617;
+    let _e21: Rotor = self_699;
+    let _e23: MotorDual = other_617;
+    return Rotor((((vec2<f32>(_e4.g0_.x) * vec2<f32>(_e8.g0_.x, _e11.g0_.y)) * vec2<f32>(1.0, -(1.0))) + ((_e21.g0_ * vec2<f32>(_e23.g0_.x)) * vec2<f32>(0.0, 1.0))));
+}
+
+fn rotor_squared_magnitude(self_700: Rotor) -> Scalar {
+    var self_701: Rotor;
+
+    self_701 = self_700;
+    let _e2: Rotor = self_701;
+    let _e3: Rotor = self_701;
     let _e4: Rotor = rotor_reversal(_e3);
     let _e5: Scalar = rotor_rotor_scalar_product(_e2, _e4);
     return _e5;
 }
 
-fn rotor_magnitude(self_436: Rotor) -> Scalar {
-    var self_437: Rotor;
+fn rotor_magnitude(self_702: Rotor) -> Scalar {
+    var self_703: Rotor;
 
-    self_437 = self_436;
-    let _e2: Rotor = self_437;
+    self_703 = self_702;
+    let _e2: Rotor = self_703;
     let _e3: Scalar = rotor_squared_magnitude(_e2);
     return Scalar(sqrt(_e3.g0_));
 }
 
-fn rotor_scale(self_438: Rotor, other_374: f32) -> Rotor {
-    var self_439: Rotor;
-    var other_375: f32;
+fn rotor_scale(self_704: Rotor, other_618: f32) -> Rotor {
+    var self_705: Rotor;
+    var other_619: f32;
 
-    self_439 = self_438;
-    other_375 = other_374;
-    let _e4: Rotor = self_439;
-    let _e5: f32 = other_375;
+    self_705 = self_704;
+    other_619 = other_618;
+    let _e4: Rotor = self_705;
+    let _e5: f32 = other_619;
     let _e7: Rotor = rotor_scalar_geometric_product(_e4, Scalar(_e5));
     return _e7;
 }
 
-fn rotor_signum(self_440: Rotor) -> Rotor {
-    var self_441: Rotor;
+fn rotor_signum(self_706: Rotor) -> Rotor {
+    var self_707: Rotor;
 
-    self_441 = self_440;
-    let _e2: Rotor = self_441;
-    let _e3: Rotor = self_441;
+    self_707 = self_706;
+    let _e2: Rotor = self_707;
+    let _e3: Rotor = self_707;
     let _e4: Scalar = rotor_magnitude(_e3);
     let _e9: Rotor = rotor_scalar_geometric_product(_e2, Scalar((1.0 / _e4.g0_)));
     return _e9;
 }
 
-fn rotor_inverse(self_442: Rotor) -> Rotor {
-    var self_443: Rotor;
+fn rotor_inverse(self_708: Rotor) -> Rotor {
+    var self_709: Rotor;
 
-    self_443 = self_442;
-    let _e2: Rotor = self_443;
+    self_709 = self_708;
+    let _e2: Rotor = self_709;
     let _e3: Rotor = rotor_reversal(_e2);
-    let _e4: Rotor = self_443;
+    let _e4: Rotor = self_709;
     let _e5: Scalar = rotor_squared_magnitude(_e4);
     let _e10: Rotor = rotor_scalar_geometric_product(_e3, Scalar((1.0 / _e5.g0_)));
     return _e10;
@@ -3174,885 +4929,1349 @@ fn point_one() -> Point {
     return Point(vec3<f32>(0.0));
 }
 
-fn point_neg(self_444: Point) -> Point {
-    var self_445: Point;
+fn point_neg(self_710: Point) -> Point {
+    var self_711: Point;
 
-    self_445 = self_444;
-    let _e2: Point = self_445;
+    self_711 = self_710;
+    let _e2: Point = self_711;
     return Point((_e2.g0_ * vec3<f32>(-(1.0))));
 }
 
-fn point_automorphism(self_446: Point) -> Point {
-    var self_447: Point;
+fn point_automorphism(self_712: Point) -> Point {
+    var self_713: Point;
 
-    self_447 = self_446;
-    let _e2: Point = self_447;
+    self_713 = self_712;
+    let _e2: Point = self_713;
     return Point(_e2.g0_);
 }
 
-fn point_reversal(self_448: Point) -> Point {
-    var self_449: Point;
+fn point_reversal(self_714: Point) -> Point {
+    var self_715: Point;
 
-    self_449 = self_448;
-    let _e2: Point = self_449;
+    self_715 = self_714;
+    let _e2: Point = self_715;
     return Point((_e2.g0_ * vec3<f32>(-(1.0))));
 }
 
-fn point_conjugation(self_450: Point) -> Point {
-    var self_451: Point;
+fn point_conjugation(self_716: Point) -> Point {
+    var self_717: Point;
 
-    self_451 = self_450;
-    let _e2: Point = self_451;
+    self_717 = self_716;
+    let _e2: Point = self_717;
     return Point((_e2.g0_ * vec3<f32>(-(1.0))));
 }
 
-fn point_dual(self_452: Point) -> Plane {
-    var self_453: Point;
+fn point_dual(self_718: Point) -> Plane {
+    var self_719: Point;
 
-    self_453 = self_452;
-    let _e2: Point = self_453;
+    self_719 = self_718;
+    let _e2: Point = self_719;
     return Plane(_e2.g0_);
 }
 
-fn point_scalar_add(self_454: Point, other_376: Scalar) -> Motor {
-    var self_455: Point;
-    var other_377: Scalar;
+fn point_anti_reversal(self_720: Point) -> Point {
+    var self_721: Point;
 
-    self_455 = self_454;
-    other_377 = other_376;
-    let _e4: Point = self_455;
-    let _e7: Point = self_455;
-    let _e10: Point = self_455;
-    let _e13: Point = self_455;
-    let _e23: Scalar = other_377;
+    self_721 = self_720;
+    let _e2: Point = self_721;
+    return Point((_e2.g0_ * vec3<f32>(-(1.0))));
+}
+
+fn point_scalar_add(self_722: Point, other_620: Scalar) -> Motor {
+    var self_723: Point;
+    var other_621: Scalar;
+
+    self_723 = self_722;
+    other_621 = other_620;
+    let _e4: Point = self_723;
+    let _e7: Point = self_723;
+    let _e10: Point = self_723;
+    let _e13: Point = self_723;
+    let _e23: Scalar = other_621;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y, _e13.g0_.z) * vec4<f32>(0.0, 1.0, 1.0, 1.0)) + (vec4<f32>(_e23.g0_) * vec4<f32>(1.0, 0.0, 0.0, 0.0))));
 }
 
-fn point_scalar_sub(self_456: Point, other_378: Scalar) -> Motor {
-    var self_457: Point;
-    var other_379: Scalar;
+fn point_scalar_sub(self_724: Point, other_622: Scalar) -> Motor {
+    var self_725: Point;
+    var other_623: Scalar;
 
-    self_457 = self_456;
-    other_379 = other_378;
-    let _e4: Point = self_457;
-    let _e7: Point = self_457;
-    let _e10: Point = self_457;
-    let _e13: Point = self_457;
-    let _e23: Scalar = other_379;
+    self_725 = self_724;
+    other_623 = other_622;
+    let _e4: Point = self_725;
+    let _e7: Point = self_725;
+    let _e10: Point = self_725;
+    let _e13: Point = self_725;
+    let _e23: Scalar = other_623;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y, _e13.g0_.z) * vec4<f32>(0.0, 1.0, 1.0, 1.0)) - (vec4<f32>(_e23.g0_) * vec4<f32>(1.0, 0.0, 0.0, 0.0))));
 }
 
-fn point_scalar_geometric_product(self_458: Point, other_380: Scalar) -> Point {
-    var self_459: Point;
-    var other_381: Scalar;
+fn point_scalar_geometric_product(self_726: Point, other_624: Scalar) -> Point {
+    var self_727: Point;
+    var other_625: Scalar;
 
-    self_459 = self_458;
-    other_381 = other_380;
-    let _e4: Point = self_459;
-    let _e6: Scalar = other_381;
+    self_727 = self_726;
+    other_625 = other_624;
+    let _e4: Point = self_727;
+    let _e6: Scalar = other_625;
     return Point((_e4.g0_ * vec3<f32>(_e6.g0_)));
 }
 
-fn point_scalar_outer_product(self_460: Point, other_382: Scalar) -> Point {
-    var self_461: Point;
-    var other_383: Scalar;
+fn point_scalar_outer_product(self_728: Point, other_626: Scalar) -> Point {
+    var self_729: Point;
+    var other_627: Scalar;
 
-    self_461 = self_460;
-    other_383 = other_382;
-    let _e4: Point = self_461;
-    let _e6: Scalar = other_383;
+    self_729 = self_728;
+    other_627 = other_626;
+    let _e4: Point = self_729;
+    let _e6: Scalar = other_627;
     return Point((_e4.g0_ * vec3<f32>(_e6.g0_)));
 }
 
-fn point_scalar_inner_product(self_462: Point, other_384: Scalar) -> Point {
-    var self_463: Point;
-    var other_385: Scalar;
+fn point_scalar_inner_product(self_730: Point, other_628: Scalar) -> Point {
+    var self_731: Point;
+    var other_629: Scalar;
 
-    self_463 = self_462;
-    other_385 = other_384;
-    let _e4: Point = self_463;
-    let _e6: Scalar = other_385;
+    self_731 = self_730;
+    other_629 = other_628;
+    let _e4: Point = self_731;
+    let _e6: Scalar = other_629;
     return Point((_e4.g0_ * vec3<f32>(_e6.g0_)));
 }
 
-fn point_scalar_right_contraction(self_464: Point, other_386: Scalar) -> Point {
-    var self_465: Point;
-    var other_387: Scalar;
+fn point_scalar_right_contraction(self_732: Point, other_630: Scalar) -> Point {
+    var self_733: Point;
+    var other_631: Scalar;
 
-    self_465 = self_464;
-    other_387 = other_386;
-    let _e4: Point = self_465;
-    let _e6: Scalar = other_387;
+    self_733 = self_732;
+    other_631 = other_630;
+    let _e4: Point = self_733;
+    let _e6: Scalar = other_631;
     return Point((_e4.g0_ * vec3<f32>(_e6.g0_)));
 }
 
-fn point_multi_vector_add(self_466: Point, other_388: MultiVector) -> MultiVector {
-    var self_467: Point;
-    var other_389: MultiVector;
+fn point_anti_scalar_regressive_product(self_734: Point, other_632: AntiScalar) -> Point {
+    var self_735: Point;
+    var other_633: AntiScalar;
 
-    self_467 = self_466;
-    other_389 = other_388;
-    let _e4: Point = self_467;
-    let _e14: MultiVector = other_389;
-    let _e17: Point = self_467;
-    let _e20: Point = self_467;
-    let _e23: Point = self_467;
-    let _e26: Point = self_467;
-    let _e36: MultiVector = other_389;
+    self_735 = self_734;
+    other_633 = other_632;
+    let _e4: Point = self_735;
+    let _e6: AntiScalar = other_633;
+    return Point((_e4.g0_ * vec3<f32>(_e6.g0_)));
+}
+
+fn point_anti_scalar_geometric_anti_product(self_736: Point, other_634: AntiScalar) -> Point {
+    var self_737: Point;
+    var other_635: AntiScalar;
+
+    self_737 = self_736;
+    other_635 = other_634;
+    let _e4: Point = self_737;
+    let _e6: AntiScalar = other_635;
+    return Point((_e4.g0_ * vec3<f32>(_e6.g0_)));
+}
+
+fn point_anti_scalar_inner_anti_product(self_738: Point, other_636: AntiScalar) -> Point {
+    var self_739: Point;
+    var other_637: AntiScalar;
+
+    self_739 = self_738;
+    other_637 = other_636;
+    let _e4: Point = self_739;
+    let _e6: AntiScalar = other_637;
+    return Point((_e4.g0_ * vec3<f32>(_e6.g0_)));
+}
+
+fn point_anti_scalar_right_anti_contraction(self_740: Point, other_638: AntiScalar) -> Point {
+    var self_741: Point;
+    var other_639: AntiScalar;
+
+    self_741 = self_740;
+    other_639 = other_638;
+    let _e4: Point = self_741;
+    let _e6: AntiScalar = other_639;
+    return Point((_e4.g0_ * vec3<f32>(_e6.g0_)));
+}
+
+fn point_multi_vector_add(self_742: Point, other_640: MultiVector) -> MultiVector {
+    var self_743: Point;
+    var other_641: MultiVector;
+
+    self_743 = self_742;
+    other_641 = other_640;
+    let _e4: Point = self_743;
+    let _e14: MultiVector = other_641;
+    let _e17: Point = self_743;
+    let _e20: Point = self_743;
+    let _e23: Point = self_743;
+    let _e26: Point = self_743;
+    let _e36: MultiVector = other_641;
     return MultiVector(((vec4<f32>(_e4.g0_.x) * vec4<f32>(0.0, 1.0, 0.0, 0.0)) + _e14.g0_), ((vec4<f32>(_e17.g0_.x, _e20.g0_.x, _e23.g0_.y, _e26.g0_.z) * vec4<f32>(0.0, 0.0, 1.0, 1.0)) + _e36.g1_));
 }
 
-fn point_multi_vector_sub(self_468: Point, other_390: MultiVector) -> MultiVector {
-    var self_469: Point;
-    var other_391: MultiVector;
+fn point_multi_vector_sub(self_744: Point, other_642: MultiVector) -> MultiVector {
+    var self_745: Point;
+    var other_643: MultiVector;
 
-    self_469 = self_468;
-    other_391 = other_390;
-    let _e4: Point = self_469;
-    let _e14: MultiVector = other_391;
-    let _e17: Point = self_469;
-    let _e20: Point = self_469;
-    let _e23: Point = self_469;
-    let _e26: Point = self_469;
-    let _e36: MultiVector = other_391;
+    self_745 = self_744;
+    other_643 = other_642;
+    let _e4: Point = self_745;
+    let _e14: MultiVector = other_643;
+    let _e17: Point = self_745;
+    let _e20: Point = self_745;
+    let _e23: Point = self_745;
+    let _e26: Point = self_745;
+    let _e36: MultiVector = other_643;
     return MultiVector(((vec4<f32>(_e4.g0_.x) * vec4<f32>(0.0, 1.0, 0.0, 0.0)) - _e14.g0_), ((vec4<f32>(_e17.g0_.x, _e20.g0_.x, _e23.g0_.y, _e26.g0_.z) * vec4<f32>(0.0, 0.0, 1.0, 1.0)) - _e36.g1_));
 }
 
-fn point_multi_vector_geometric_product(self_470: Point, other_392: MultiVector) -> MultiVector {
-    var self_471: Point;
-    var other_393: MultiVector;
+fn point_multi_vector_geometric_product(self_746: Point, other_644: MultiVector) -> MultiVector {
+    var self_747: Point;
+    var other_645: MultiVector;
 
-    self_471 = self_470;
-    other_393 = other_392;
-    let _e4: Point = self_471;
-    let _e8: MultiVector = other_393;
-    let _e20: Point = self_471;
-    let _e24: MultiVector = other_393;
-    let _e36: Point = self_471;
-    let _e40: MultiVector = other_393;
-    let _e52: Point = self_471;
-    let _e56: MultiVector = other_393;
+    self_747 = self_746;
+    other_645 = other_644;
+    let _e4: Point = self_747;
+    let _e8: MultiVector = other_645;
+    let _e20: Point = self_747;
+    let _e24: MultiVector = other_645;
+    let _e36: Point = self_747;
+    let _e40: MultiVector = other_645;
+    let _e52: Point = self_747;
+    let _e56: MultiVector = other_645;
     return MultiVector(((vec4<f32>(_e4.g0_.x) * _e8.g0_.yxwz) * vec4<f32>(-(1.0), 1.0, 1.0, -(1.0))), ((((vec4<f32>(_e20.g0_.x) * _e24.g1_.yxwz) * vec4<f32>(-(1.0), 1.0, -(1.0), 1.0)) + ((vec4<f32>(_e36.g0_.y) * _e40.g0_.zwxy) * vec4<f32>(1.0, 1.0, 1.0, -(1.0)))) + ((vec4<f32>(_e52.g0_.z) * _e56.g0_.wzyx) * vec4<f32>(-(1.0), 1.0, 1.0, 1.0))));
 }
 
-fn point_multi_vector_scalar_product(self_472: Point, other_394: MultiVector) -> Scalar {
-    var self_473: Point;
-    var other_395: MultiVector;
+fn point_multi_vector_geometric_anti_product(self_748: Point, other_646: MultiVector) -> MultiVector {
+    var self_749: Point;
+    var other_647: MultiVector;
 
-    self_473 = self_472;
-    other_395 = other_394;
-    let _e5: Point = self_473;
-    let _e8: MultiVector = other_395;
+    self_749 = self_748;
+    other_647 = other_646;
+    let _e4: Point = self_749;
+    let _e8: MultiVector = other_647;
+    let _e18: Point = self_749;
+    let _e22: MultiVector = other_647;
+    let _e27: Point = self_749;
+    let _e31: MultiVector = other_647;
+    let _e44: Point = self_749;
+    let _e48: MultiVector = other_647;
+    let _e60: Point = self_749;
+    let _e64: MultiVector = other_647;
+    return MultiVector(((((vec4<f32>(_e4.g0_.x) * _e8.g1_) * vec4<f32>(1.0, 1.0, -(1.0), 1.0)) + (vec4<f32>(_e18.g0_.y) * _e22.g0_.wzyx)) + ((vec4<f32>(_e27.g0_.z) * _e31.g0_.zwxy) * vec4<f32>(1.0, -(1.0), 1.0, -(1.0)))), (((vec4<f32>(_e44.g0_.y) * _e48.g1_.wzyx) * vec4<f32>(-(1.0), 1.0, 1.0, -(1.0))) + (vec4<f32>(_e60.g0_.z) * _e64.g1_.zwxy)));
+}
+
+fn point_multi_vector_scalar_product(self_750: Point, other_648: MultiVector) -> Scalar {
+    var self_751: Point;
+    var other_649: MultiVector;
+
+    self_751 = self_750;
+    other_649 = other_648;
+    let _e5: Point = self_751;
+    let _e8: MultiVector = other_649;
     return Scalar((0.0 - (_e5.g0_.x * _e8.g0_.y)));
 }
 
-fn point_rotor_add(self_474: Point, other_396: Rotor) -> Motor {
-    var self_475: Point;
-    var other_397: Rotor;
+fn point_multi_vector_anti_scalar_product(self_752: Point, other_650: MultiVector) -> AntiScalar {
+    var self_753: Point;
+    var other_651: MultiVector;
 
-    self_475 = self_474;
-    other_397 = other_396;
-    let _e4: Point = self_475;
-    let _e7: Point = self_475;
-    let _e10: Point = self_475;
-    let _e13: Point = self_475;
-    let _e23: Rotor = other_397;
-    let _e26: Rotor = other_397;
-    let _e29: Rotor = other_397;
-    let _e32: Rotor = other_397;
+    self_753 = self_752;
+    other_651 = other_650;
+    let _e4: Point = self_753;
+    let _e7: MultiVector = other_651;
+    let _e11: Point = self_753;
+    let _e14: MultiVector = other_651;
+    return AntiScalar(((_e4.g0_.y * _e7.g1_.z) + (_e11.g0_.z * _e14.g1_.w)));
+}
+
+fn point_rotor_add(self_754: Point, other_652: Rotor) -> Motor {
+    var self_755: Point;
+    var other_653: Rotor;
+
+    self_755 = self_754;
+    other_653 = other_652;
+    let _e4: Point = self_755;
+    let _e7: Point = self_755;
+    let _e10: Point = self_755;
+    let _e13: Point = self_755;
+    let _e23: Rotor = other_653;
+    let _e26: Rotor = other_653;
+    let _e29: Rotor = other_653;
+    let _e32: Rotor = other_653;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y, _e13.g0_.z) * vec4<f32>(0.0, 1.0, 1.0, 1.0)) + (vec4<f32>(_e23.g0_.x, _e26.g0_.y, _e29.g0_.x, _e32.g0_.x) * vec4<f32>(1.0, 1.0, 0.0, 0.0))));
 }
 
-fn point_rotor_sub(self_476: Point, other_398: Rotor) -> Motor {
-    var self_477: Point;
-    var other_399: Rotor;
+fn point_rotor_sub(self_756: Point, other_654: Rotor) -> Motor {
+    var self_757: Point;
+    var other_655: Rotor;
 
-    self_477 = self_476;
-    other_399 = other_398;
-    let _e4: Point = self_477;
-    let _e7: Point = self_477;
-    let _e10: Point = self_477;
-    let _e13: Point = self_477;
-    let _e23: Rotor = other_399;
-    let _e26: Rotor = other_399;
-    let _e29: Rotor = other_399;
-    let _e32: Rotor = other_399;
+    self_757 = self_756;
+    other_655 = other_654;
+    let _e4: Point = self_757;
+    let _e7: Point = self_757;
+    let _e10: Point = self_757;
+    let _e13: Point = self_757;
+    let _e23: Rotor = other_655;
+    let _e26: Rotor = other_655;
+    let _e29: Rotor = other_655;
+    let _e32: Rotor = other_655;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y, _e13.g0_.z) * vec4<f32>(0.0, 1.0, 1.0, 1.0)) - (vec4<f32>(_e23.g0_.x, _e26.g0_.y, _e29.g0_.x, _e32.g0_.x) * vec4<f32>(1.0, 1.0, 0.0, 0.0))));
 }
 
-fn point_rotor_geometric_product(self_478: Point, other_400: Rotor) -> Motor {
-    var self_479: Point;
-    var other_401: Rotor;
+fn point_rotor_geometric_product(self_758: Point, other_656: Rotor) -> Motor {
+    var self_759: Point;
+    var other_657: Rotor;
 
-    self_479 = self_478;
-    other_401 = other_400;
-    let _e4: Point = self_479;
-    let _e8: Rotor = other_401;
-    let _e11: Rotor = other_401;
-    let _e14: Rotor = other_401;
-    let _e17: Rotor = other_401;
-    let _e28: Point = self_479;
-    let _e31: Point = self_479;
-    let _e34: Point = self_479;
-    let _e37: Point = self_479;
-    let _e41: Rotor = other_401;
-    let _e44: Rotor = other_401;
-    let _e47: Rotor = other_401;
-    let _e50: Rotor = other_401;
+    self_759 = self_758;
+    other_657 = other_656;
+    let _e4: Point = self_759;
+    let _e8: Rotor = other_657;
+    let _e11: Rotor = other_657;
+    let _e14: Rotor = other_657;
+    let _e17: Rotor = other_657;
+    let _e28: Point = self_759;
+    let _e31: Point = self_759;
+    let _e34: Point = self_759;
+    let _e37: Point = self_759;
+    let _e41: Rotor = other_657;
+    let _e44: Rotor = other_657;
+    let _e47: Rotor = other_657;
+    let _e50: Rotor = other_657;
     return Motor((((vec4<f32>(_e4.g0_.z) * vec4<f32>(_e8.g0_.y, _e11.g0_.y, _e14.g0_.y, _e17.g0_.x)) * vec4<f32>(0.0, 0.0, 1.0, 1.0)) + ((vec4<f32>(_e28.g0_.x, _e31.g0_.x, _e34.g0_.y, _e37.g0_.y) * vec4<f32>(_e41.g0_.y, _e44.g0_.x, _e47.g0_.x, _e50.g0_.y)) * vec4<f32>(-(1.0), 1.0, 1.0, -(1.0)))));
 }
 
-fn point_rotor_outer_product(self_480: Point, other_402: Rotor) -> Point {
-    var self_481: Point;
-    var other_403: Rotor;
+fn point_rotor_outer_product(self_760: Point, other_658: Rotor) -> Point {
+    var self_761: Point;
+    var other_659: Rotor;
 
-    self_481 = self_480;
-    other_403 = other_402;
-    let _e4: Point = self_481;
-    let _e6: Rotor = other_403;
+    self_761 = self_760;
+    other_659 = other_658;
+    let _e4: Point = self_761;
+    let _e6: Rotor = other_659;
     return Point((_e4.g0_ * vec3<f32>(_e6.g0_.x)));
 }
 
-fn point_rotor_inner_product(self_482: Point, other_404: Rotor) -> Motor {
-    var self_483: Point;
-    var other_405: Rotor;
+fn point_rotor_inner_product(self_762: Point, other_660: Rotor) -> Motor {
+    var self_763: Point;
+    var other_661: Rotor;
 
-    self_483 = self_482;
-    other_405 = other_404;
-    let _e4: Point = self_483;
-    let _e7: Point = self_483;
-    let _e10: Point = self_483;
-    let _e13: Point = self_483;
-    let _e17: Rotor = other_405;
-    let _e20: Rotor = other_405;
-    let _e23: Rotor = other_405;
-    let _e26: Rotor = other_405;
+    self_763 = self_762;
+    other_661 = other_660;
+    let _e4: Point = self_763;
+    let _e7: Point = self_763;
+    let _e10: Point = self_763;
+    let _e13: Point = self_763;
+    let _e17: Rotor = other_661;
+    let _e20: Rotor = other_661;
+    let _e23: Rotor = other_661;
+    let _e26: Rotor = other_661;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y, _e13.g0_.z) * vec4<f32>(_e17.g0_.y, _e20.g0_.x, _e23.g0_.x, _e26.g0_.x)) * vec4<f32>(-(1.0), 1.0, 1.0, 1.0)));
 }
 
-fn point_rotor_left_contraction(self_484: Point, other_406: Rotor) -> Scalar {
-    var self_485: Point;
-    var other_407: Rotor;
+fn point_rotor_left_contraction(self_764: Point, other_662: Rotor) -> Scalar {
+    var self_765: Point;
+    var other_663: Rotor;
 
-    self_485 = self_484;
-    other_407 = other_406;
-    let _e5: Point = self_485;
-    let _e8: Rotor = other_407;
+    self_765 = self_764;
+    other_663 = other_662;
+    let _e5: Point = self_765;
+    let _e8: Rotor = other_663;
     return Scalar((0.0 - (_e5.g0_.x * _e8.g0_.y)));
 }
 
-fn point_rotor_right_contraction(self_486: Point, other_408: Rotor) -> Motor {
-    var self_487: Point;
-    var other_409: Rotor;
+fn point_rotor_right_contraction(self_766: Point, other_664: Rotor) -> Motor {
+    var self_767: Point;
+    var other_665: Rotor;
 
-    self_487 = self_486;
-    other_409 = other_408;
-    let _e4: Point = self_487;
-    let _e7: Point = self_487;
-    let _e10: Point = self_487;
-    let _e13: Point = self_487;
-    let _e17: Rotor = other_409;
-    let _e20: Rotor = other_409;
-    let _e23: Rotor = other_409;
-    let _e26: Rotor = other_409;
+    self_767 = self_766;
+    other_665 = other_664;
+    let _e4: Point = self_767;
+    let _e7: Point = self_767;
+    let _e10: Point = self_767;
+    let _e13: Point = self_767;
+    let _e17: Rotor = other_665;
+    let _e20: Rotor = other_665;
+    let _e23: Rotor = other_665;
+    let _e26: Rotor = other_665;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y, _e13.g0_.z) * vec4<f32>(_e17.g0_.y, _e20.g0_.x, _e23.g0_.x, _e26.g0_.x)) * vec4<f32>(-(1.0), 1.0, 1.0, 1.0)));
 }
 
-fn point_rotor_scalar_product(self_488: Point, other_410: Rotor) -> Scalar {
-    var self_489: Point;
-    var other_411: Rotor;
+fn point_rotor_scalar_product(self_768: Point, other_666: Rotor) -> Scalar {
+    var self_769: Point;
+    var other_667: Rotor;
 
-    self_489 = self_488;
-    other_411 = other_410;
-    let _e5: Point = self_489;
-    let _e8: Rotor = other_411;
+    self_769 = self_768;
+    other_667 = other_666;
+    let _e5: Point = self_769;
+    let _e8: Rotor = other_667;
     return Scalar((0.0 - (_e5.g0_.x * _e8.g0_.y)));
 }
 
-fn point_point_add(self_490: Point, other_412: Point) -> Point {
-    var self_491: Point;
-    var other_413: Point;
+fn point_point_add(self_770: Point, other_668: Point) -> Point {
+    var self_771: Point;
+    var other_669: Point;
 
-    self_491 = self_490;
-    other_413 = other_412;
-    let _e4: Point = self_491;
-    let _e6: Point = other_413;
+    self_771 = self_770;
+    other_669 = other_668;
+    let _e4: Point = self_771;
+    let _e6: Point = other_669;
     return Point((_e4.g0_ + _e6.g0_));
 }
 
-fn point_point_sub(self_492: Point, other_414: Point) -> Point {
-    var self_493: Point;
-    var other_415: Point;
+fn point_point_sub(self_772: Point, other_670: Point) -> Point {
+    var self_773: Point;
+    var other_671: Point;
 
-    self_493 = self_492;
-    other_415 = other_414;
-    let _e4: Point = self_493;
-    let _e6: Point = other_415;
+    self_773 = self_772;
+    other_671 = other_670;
+    let _e4: Point = self_773;
+    let _e6: Point = other_671;
     return Point((_e4.g0_ - _e6.g0_));
 }
 
-fn point_point_mul(self_494: Point, other_416: Point) -> Point {
-    var self_495: Point;
-    var other_417: Point;
+fn point_point_mul(self_774: Point, other_672: Point) -> Point {
+    var self_775: Point;
+    var other_673: Point;
 
-    self_495 = self_494;
-    other_417 = other_416;
-    let _e4: Point = self_495;
-    let _e6: Point = other_417;
+    self_775 = self_774;
+    other_673 = other_672;
+    let _e4: Point = self_775;
+    let _e6: Point = other_673;
     return Point((_e4.g0_ * _e6.g0_));
 }
 
-fn point_point_div(self_496: Point, other_418: Point) -> Point {
-    var self_497: Point;
-    var other_419: Point;
+fn point_point_div(self_776: Point, other_674: Point) -> Point {
+    var self_777: Point;
+    var other_675: Point;
 
-    self_497 = self_496;
-    other_419 = other_418;
-    let _e4: Point = self_497;
-    let _e7: Point = self_497;
-    let _e10: Point = self_497;
-    let _e19: Point = other_419;
-    let _e22: Point = other_419;
-    let _e25: Point = other_419;
+    self_777 = self_776;
+    other_675 = other_674;
+    let _e4: Point = self_777;
+    let _e7: Point = self_777;
+    let _e10: Point = self_777;
+    let _e19: Point = other_675;
+    let _e22: Point = other_675;
+    let _e25: Point = other_675;
     return Point((((vec3<f32>(_e4.g0_.x, _e7.g0_.y, _e10.g0_.z) * vec3<f32>(1.0, 1.0, 1.0)) / vec3<f32>(_e19.g0_.x, _e22.g0_.y, _e25.g0_.z)) * vec3<f32>(1.0, 1.0, 1.0)));
 }
 
-fn point_point_geometric_product(self_498: Point, other_420: Point) -> Translator {
-    var self_499: Point;
-    var other_421: Point;
+fn point_point_geometric_product(self_778: Point, other_676: Point) -> Translator {
+    var self_779: Point;
+    var other_677: Point;
 
-    self_499 = self_498;
-    other_421 = other_420;
-    let _e4: Point = self_499;
-    let _e8: Point = other_421;
-    let _e19: Point = self_499;
-    let _e22: Point = other_421;
+    self_779 = self_778;
+    other_677 = other_676;
+    let _e4: Point = self_779;
+    let _e8: Point = other_677;
+    let _e19: Point = self_779;
+    let _e22: Point = other_677;
     return Translator((((vec3<f32>(_e4.g0_.x) * _e8.g0_.xzy) * vec3<f32>(-(1.0), -(1.0), 1.0)) + ((_e19.g0_.xzy * vec3<f32>(_e22.g0_.x)) * vec3<f32>(0.0, 1.0, -(1.0)))));
 }
 
-fn point_point_regressive_product(self_500: Point, other_422: Point) -> Plane {
-    var self_501: Point;
-    var other_423: Point;
+fn point_point_regressive_product(self_780: Point, other_678: Point) -> Plane {
+    var self_781: Point;
+    var other_679: Point;
 
-    self_501 = self_500;
-    other_423 = other_422;
-    let _e4: Point = self_501;
-    let _e8: Point = other_423;
-    let _e18: Point = self_501;
-    let _e22: Point = other_423;
-    let _e33: Point = self_501;
-    let _e37: Point = other_423;
+    self_781 = self_780;
+    other_679 = other_678;
+    let _e4: Point = self_781;
+    let _e8: Point = other_679;
+    let _e18: Point = self_781;
+    let _e22: Point = other_679;
+    let _e33: Point = self_781;
+    let _e37: Point = other_679;
     return Plane(((((vec3<f32>(_e4.g0_.y) * _e8.g0_.zzx) * vec3<f32>(-(1.0), 0.0, 1.0)) + ((vec3<f32>(_e18.g0_.z) * _e22.g0_.yxy) * vec3<f32>(1.0, -(1.0), 0.0))) + ((vec3<f32>(_e33.g0_.x) * _e37.g0_.xzy) * vec3<f32>(0.0, 1.0, -(1.0)))));
 }
 
-fn point_point_inner_product(self_502: Point, other_424: Point) -> Scalar {
-    var self_503: Point;
-    var other_425: Point;
+fn point_point_inner_product(self_782: Point, other_680: Point) -> Scalar {
+    var self_783: Point;
+    var other_681: Point;
 
-    self_503 = self_502;
-    other_425 = other_424;
-    let _e5: Point = self_503;
-    let _e8: Point = other_425;
+    self_783 = self_782;
+    other_681 = other_680;
+    let _e5: Point = self_783;
+    let _e8: Point = other_681;
     return Scalar((0.0 - (_e5.g0_.x * _e8.g0_.x)));
 }
 
-fn point_point_left_contraction(self_504: Point, other_426: Point) -> Scalar {
-    var self_505: Point;
-    var other_427: Point;
+fn point_point_geometric_anti_product(self_784: Point, other_682: Point) -> MotorDual {
+    var self_785: Point;
+    var other_683: Point;
 
-    self_505 = self_504;
-    other_427 = other_426;
-    let _e5: Point = self_505;
-    let _e8: Point = other_427;
+    self_785 = self_784;
+    other_683 = other_682;
+    let _e4: Point = self_785;
+    let _e8: Point = other_683;
+    let _e11: Point = other_683;
+    let _e14: Point = other_683;
+    let _e17: Point = other_683;
+    let _e29: Point = self_785;
+    let _e33: Point = other_683;
+    let _e36: Point = other_683;
+    let _e39: Point = other_683;
+    let _e42: Point = other_683;
+    let _e55: Point = self_785;
+    let _e59: Point = other_683;
+    let _e62: Point = other_683;
+    let _e65: Point = other_683;
+    let _e68: Point = other_683;
+    return MotorDual(((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.y, _e11.g0_.z, _e14.g0_.y, _e17.g0_.x)) * vec4<f32>(1.0, -(1.0), 0.0, 1.0)) + ((vec4<f32>(_e29.g0_.z) * vec4<f32>(_e33.g0_.z, _e36.g0_.y, _e39.g0_.x, _e42.g0_.z)) * vec4<f32>(1.0, 1.0, -(1.0), 0.0))) + ((vec4<f32>(_e55.g0_.x) * vec4<f32>(_e59.g0_.x, _e62.g0_.x, _e65.g0_.z, _e68.g0_.y)) * vec4<f32>(0.0, 0.0, 1.0, -(1.0)))));
+}
+
+fn point_point_inner_anti_product(self_786: Point, other_684: Point) -> AntiScalar {
+    var self_787: Point;
+    var other_685: Point;
+
+    self_787 = self_786;
+    other_685 = other_684;
+    let _e4: Point = self_787;
+    let _e7: Point = other_685;
+    let _e11: Point = self_787;
+    let _e14: Point = other_685;
+    return AntiScalar(((_e4.g0_.y * _e7.g0_.y) + (_e11.g0_.z * _e14.g0_.z)));
+}
+
+fn point_point_left_contraction(self_788: Point, other_686: Point) -> Scalar {
+    var self_789: Point;
+    var other_687: Point;
+
+    self_789 = self_788;
+    other_687 = other_686;
+    let _e5: Point = self_789;
+    let _e8: Point = other_687;
     return Scalar((0.0 - (_e5.g0_.x * _e8.g0_.x)));
 }
 
-fn point_point_right_contraction(self_506: Point, other_428: Point) -> Scalar {
-    var self_507: Point;
-    var other_429: Point;
+fn point_point_right_contraction(self_790: Point, other_688: Point) -> Scalar {
+    var self_791: Point;
+    var other_689: Point;
 
-    self_507 = self_506;
-    other_429 = other_428;
-    let _e5: Point = self_507;
-    let _e8: Point = other_429;
+    self_791 = self_790;
+    other_689 = other_688;
+    let _e5: Point = self_791;
+    let _e8: Point = other_689;
     return Scalar((0.0 - (_e5.g0_.x * _e8.g0_.x)));
 }
 
-fn point_point_scalar_product(self_508: Point, other_430: Point) -> Scalar {
-    var self_509: Point;
-    var other_431: Point;
+fn point_point_left_anti_contraction(self_792: Point, other_690: Point) -> AntiScalar {
+    var self_793: Point;
+    var other_691: Point;
 
-    self_509 = self_508;
-    other_431 = other_430;
-    let _e5: Point = self_509;
-    let _e8: Point = other_431;
+    self_793 = self_792;
+    other_691 = other_690;
+    let _e4: Point = self_793;
+    let _e7: Point = other_691;
+    let _e11: Point = self_793;
+    let _e14: Point = other_691;
+    return AntiScalar(((_e4.g0_.y * _e7.g0_.y) + (_e11.g0_.z * _e14.g0_.z)));
+}
+
+fn point_point_right_anti_contraction(self_794: Point, other_692: Point) -> AntiScalar {
+    var self_795: Point;
+    var other_693: Point;
+
+    self_795 = self_794;
+    other_693 = other_692;
+    let _e4: Point = self_795;
+    let _e7: Point = other_693;
+    let _e11: Point = self_795;
+    let _e14: Point = other_693;
+    return AntiScalar(((_e4.g0_.y * _e7.g0_.y) + (_e11.g0_.z * _e14.g0_.z)));
+}
+
+fn point_point_scalar_product(self_796: Point, other_694: Point) -> Scalar {
+    var self_797: Point;
+    var other_695: Point;
+
+    self_797 = self_796;
+    other_695 = other_694;
+    let _e5: Point = self_797;
+    let _e8: Point = other_695;
     return Scalar((0.0 - (_e5.g0_.x * _e8.g0_.x)));
 }
 
-fn point_ideal_point_into(self_510: Point) -> IdealPoint {
-    var self_511: Point;
+fn point_point_anti_scalar_product(self_798: Point, other_696: Point) -> AntiScalar {
+    var self_799: Point;
+    var other_697: Point;
 
-    self_511 = self_510;
-    let _e2: Point = self_511;
-    let _e5: Point = self_511;
+    self_799 = self_798;
+    other_697 = other_696;
+    let _e4: Point = self_799;
+    let _e7: Point = other_697;
+    let _e11: Point = self_799;
+    let _e14: Point = other_697;
+    return AntiScalar(((_e4.g0_.y * _e7.g0_.y) + (_e11.g0_.z * _e14.g0_.z)));
+}
+
+fn point_ideal_point_into(self_800: Point) -> IdealPoint {
+    var self_801: Point;
+
+    self_801 = self_800;
+    let _e2: Point = self_801;
+    let _e5: Point = self_801;
     return IdealPoint(vec2<f32>(_e2.g0_.y, _e5.g0_.z));
 }
 
-fn point_ideal_point_add(self_512: Point, other_432: IdealPoint) -> Point {
-    var self_513: Point;
-    var other_433: IdealPoint;
+fn point_ideal_point_add(self_802: Point, other_698: IdealPoint) -> Point {
+    var self_803: Point;
+    var other_699: IdealPoint;
 
-    self_513 = self_512;
-    other_433 = other_432;
-    let _e4: Point = self_513;
-    let _e6: IdealPoint = other_433;
-    let _e9: IdealPoint = other_433;
-    let _e12: IdealPoint = other_433;
+    self_803 = self_802;
+    other_699 = other_698;
+    let _e4: Point = self_803;
+    let _e6: IdealPoint = other_699;
+    let _e9: IdealPoint = other_699;
+    let _e12: IdealPoint = other_699;
     return Point((_e4.g0_ + (vec3<f32>(_e6.g0_.x, _e9.g0_.x, _e12.g0_.y) * vec3<f32>(0.0, 1.0, 1.0))));
 }
 
-fn point_ideal_point_sub(self_514: Point, other_434: IdealPoint) -> Point {
-    var self_515: Point;
-    var other_435: IdealPoint;
+fn point_ideal_point_sub(self_804: Point, other_700: IdealPoint) -> Point {
+    var self_805: Point;
+    var other_701: IdealPoint;
 
-    self_515 = self_514;
-    other_435 = other_434;
-    let _e4: Point = self_515;
-    let _e6: IdealPoint = other_435;
-    let _e9: IdealPoint = other_435;
-    let _e12: IdealPoint = other_435;
+    self_805 = self_804;
+    other_701 = other_700;
+    let _e4: Point = self_805;
+    let _e6: IdealPoint = other_701;
+    let _e9: IdealPoint = other_701;
+    let _e12: IdealPoint = other_701;
     return Point((_e4.g0_ - (vec3<f32>(_e6.g0_.x, _e9.g0_.x, _e12.g0_.y) * vec3<f32>(0.0, 1.0, 1.0))));
 }
 
-fn point_ideal_point_geometric_product(self_516: Point, other_436: IdealPoint) -> IdealPoint {
-    var self_517: Point;
-    var other_437: IdealPoint;
+fn point_ideal_point_geometric_product(self_806: Point, other_702: IdealPoint) -> IdealPoint {
+    var self_807: Point;
+    var other_703: IdealPoint;
 
-    self_517 = self_516;
-    other_437 = other_436;
-    let _e4: Point = self_517;
-    let _e8: IdealPoint = other_437;
+    self_807 = self_806;
+    other_703 = other_702;
+    let _e4: Point = self_807;
+    let _e8: IdealPoint = other_703;
     return IdealPoint(((vec2<f32>(_e4.g0_.x) * _e8.g0_.yx) * vec2<f32>(-(1.0), 1.0)));
 }
 
-fn point_ideal_point_regressive_product(self_518: Point, other_438: IdealPoint) -> Plane {
-    var self_519: Point;
-    var other_439: IdealPoint;
+fn point_ideal_point_regressive_product(self_808: Point, other_704: IdealPoint) -> Plane {
+    var self_809: Point;
+    var other_705: IdealPoint;
 
-    self_519 = self_518;
-    other_439 = other_438;
-    let _e4: Point = self_519;
-    let _e8: IdealPoint = other_439;
-    let _e18: Point = self_519;
-    let _e21: IdealPoint = other_439;
-    let _e24: IdealPoint = other_439;
-    let _e27: IdealPoint = other_439;
+    self_809 = self_808;
+    other_705 = other_704;
+    let _e4: Point = self_809;
+    let _e8: IdealPoint = other_705;
+    let _e18: Point = self_809;
+    let _e21: IdealPoint = other_705;
+    let _e24: IdealPoint = other_705;
+    let _e27: IdealPoint = other_705;
     return Plane((((vec3<f32>(_e4.g0_.z) * vec3<f32>(_e8.g0_.x)) * vec3<f32>(1.0, 0.0, 0.0)) + ((_e18.g0_.yxx * vec3<f32>(_e21.g0_.y, _e24.g0_.y, _e27.g0_.x)) * vec3<f32>(-(1.0), 1.0, -(1.0)))));
 }
 
-fn point_plane_geometric_product(self_520: Point, other_440: Plane) -> MotorDual {
-    var self_521: Point;
-    var other_441: Plane;
+fn point_ideal_point_geometric_anti_product(self_810: Point, other_706: IdealPoint) -> MotorDual {
+    var self_811: Point;
+    var other_707: IdealPoint;
 
-    self_521 = self_520;
-    other_441 = other_440;
-    let _e4: Point = self_521;
-    let _e8: Plane = other_441;
-    let _e11: Plane = other_441;
-    let _e14: Plane = other_441;
-    let _e17: Plane = other_441;
-    let _e28: Point = self_521;
-    let _e32: Plane = other_441;
-    let _e35: Plane = other_441;
-    let _e38: Plane = other_441;
-    let _e41: Plane = other_441;
-    let _e54: Point = self_521;
-    let _e58: Plane = other_441;
-    let _e61: Plane = other_441;
-    let _e64: Plane = other_441;
-    let _e67: Plane = other_441;
+    self_811 = self_810;
+    other_707 = other_706;
+    let _e4: Point = self_811;
+    let _e8: IdealPoint = other_707;
+    let _e11: IdealPoint = other_707;
+    let _e14: IdealPoint = other_707;
+    let _e17: IdealPoint = other_707;
+    let _e28: Point = self_811;
+    let _e31: Point = self_811;
+    let _e34: Point = self_811;
+    let _e37: Point = self_811;
+    let _e41: IdealPoint = other_707;
+    let _e44: IdealPoint = other_707;
+    let _e47: IdealPoint = other_707;
+    let _e50: IdealPoint = other_707;
+    return MotorDual((((vec4<f32>(_e4.g0_.z) * vec4<f32>(_e8.g0_.y, _e11.g0_.x, _e14.g0_.y, _e17.g0_.y)) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) + ((vec4<f32>(_e28.g0_.y, _e31.g0_.y, _e34.g0_.x, _e37.g0_.x) * vec4<f32>(_e41.g0_.x, _e44.g0_.y, _e47.g0_.y, _e50.g0_.x)) * vec4<f32>(1.0, -(1.0), 1.0, -(1.0)))));
+}
+
+fn point_ideal_point_inner_anti_product(self_812: Point, other_708: IdealPoint) -> AntiScalar {
+    var self_813: Point;
+    var other_709: IdealPoint;
+
+    self_813 = self_812;
+    other_709 = other_708;
+    let _e4: Point = self_813;
+    let _e7: IdealPoint = other_709;
+    let _e11: Point = self_813;
+    let _e14: IdealPoint = other_709;
+    return AntiScalar(((_e4.g0_.y * _e7.g0_.x) + (_e11.g0_.z * _e14.g0_.y)));
+}
+
+fn point_ideal_point_left_anti_contraction(self_814: Point, other_710: IdealPoint) -> AntiScalar {
+    var self_815: Point;
+    var other_711: IdealPoint;
+
+    self_815 = self_814;
+    other_711 = other_710;
+    let _e4: Point = self_815;
+    let _e7: IdealPoint = other_711;
+    let _e11: Point = self_815;
+    let _e14: IdealPoint = other_711;
+    return AntiScalar(((_e4.g0_.y * _e7.g0_.x) + (_e11.g0_.z * _e14.g0_.y)));
+}
+
+fn point_ideal_point_right_anti_contraction(self_816: Point, other_712: IdealPoint) -> AntiScalar {
+    var self_817: Point;
+    var other_713: IdealPoint;
+
+    self_817 = self_816;
+    other_713 = other_712;
+    let _e4: Point = self_817;
+    let _e7: IdealPoint = other_713;
+    let _e11: Point = self_817;
+    let _e14: IdealPoint = other_713;
+    return AntiScalar(((_e4.g0_.y * _e7.g0_.x) + (_e11.g0_.z * _e14.g0_.y)));
+}
+
+fn point_ideal_point_anti_scalar_product(self_818: Point, other_714: IdealPoint) -> AntiScalar {
+    var self_819: Point;
+    var other_715: IdealPoint;
+
+    self_819 = self_818;
+    other_715 = other_714;
+    let _e4: Point = self_819;
+    let _e7: IdealPoint = other_715;
+    let _e11: Point = self_819;
+    let _e14: IdealPoint = other_715;
+    return AntiScalar(((_e4.g0_.y * _e7.g0_.x) + (_e11.g0_.z * _e14.g0_.y)));
+}
+
+fn point_plane_geometric_product(self_820: Point, other_716: Plane) -> MotorDual {
+    var self_821: Point;
+    var other_717: Plane;
+
+    self_821 = self_820;
+    other_717 = other_716;
+    let _e4: Point = self_821;
+    let _e8: Plane = other_717;
+    let _e11: Plane = other_717;
+    let _e14: Plane = other_717;
+    let _e17: Plane = other_717;
+    let _e28: Point = self_821;
+    let _e32: Plane = other_717;
+    let _e35: Plane = other_717;
+    let _e38: Plane = other_717;
+    let _e41: Plane = other_717;
+    let _e54: Point = self_821;
+    let _e58: Plane = other_717;
+    let _e61: Plane = other_717;
+    let _e64: Plane = other_717;
+    let _e67: Plane = other_717;
     return MotorDual(((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.y, _e11.g0_.z, _e14.g0_.y, _e17.g0_.y)) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) + ((vec4<f32>(_e28.g0_.z) * vec4<f32>(_e32.g0_.z, _e35.g0_.y, _e38.g0_.z, _e41.g0_.z)) * vec4<f32>(1.0, -(1.0), 0.0, 0.0))) + ((vec4<f32>(_e54.g0_.x) * vec4<f32>(_e58.g0_.x, _e61.g0_.x, _e64.g0_.z, _e67.g0_.y)) * vec4<f32>(1.0, 0.0, -(1.0), 1.0))));
 }
 
-fn point_plane_regressive_product(self_522: Point, other_442: Plane) -> Scalar {
-    var self_523: Point;
-    var other_443: Plane;
+fn point_plane_regressive_product(self_822: Point, other_718: Plane) -> Scalar {
+    var self_823: Point;
+    var other_719: Plane;
 
-    self_523 = self_522;
-    other_443 = other_442;
-    let _e4: Point = self_523;
-    let _e7: Plane = other_443;
-    let _e11: Point = self_523;
-    let _e14: Plane = other_443;
-    let _e19: Point = self_523;
-    let _e22: Plane = other_443;
+    self_823 = self_822;
+    other_719 = other_718;
+    let _e4: Point = self_823;
+    let _e7: Plane = other_719;
+    let _e11: Point = self_823;
+    let _e14: Plane = other_719;
+    let _e19: Point = self_823;
+    let _e22: Plane = other_719;
     return Scalar((((_e4.g0_.x * _e7.g0_.x) + (_e11.g0_.y * _e14.g0_.y)) + (_e19.g0_.z * _e22.g0_.z)));
 }
 
-fn point_plane_inner_product(self_524: Point, other_444: Plane) -> Plane {
-    var self_525: Point;
-    var other_445: Plane;
+fn point_plane_outer_product(self_824: Point, other_720: Plane) -> AntiScalar {
+    var self_825: Point;
+    var other_721: Plane;
 
-    self_525 = self_524;
-    other_445 = other_444;
-    let _e4: Point = self_525;
-    let _e8: Plane = other_445;
-    let _e19: Point = self_525;
-    let _e22: Plane = other_445;
+    self_825 = self_824;
+    other_721 = other_720;
+    let _e4: Point = self_825;
+    let _e7: Plane = other_721;
+    let _e11: Point = self_825;
+    let _e14: Plane = other_721;
+    let _e19: Point = self_825;
+    let _e22: Plane = other_721;
+    return AntiScalar((((_e4.g0_.x * _e7.g0_.x) + (_e11.g0_.y * _e14.g0_.y)) + (_e19.g0_.z * _e22.g0_.z)));
+}
+
+fn point_plane_inner_product(self_826: Point, other_722: Plane) -> Plane {
+    var self_827: Point;
+    var other_723: Plane;
+
+    self_827 = self_826;
+    other_723 = other_722;
+    let _e4: Point = self_827;
+    let _e8: Plane = other_723;
+    let _e19: Point = self_827;
+    let _e22: Plane = other_723;
     return Plane((((vec3<f32>(_e4.g0_.z) * vec3<f32>(_e8.g0_.y)) * vec3<f32>(-(1.0), 0.0, 0.0)) + ((_e19.g0_.yxx * _e22.g0_.zzy) * vec3<f32>(1.0, -(1.0), 1.0))));
 }
 
-fn point_plane_right_contraction(self_526: Point, other_446: Plane) -> Plane {
-    var self_527: Point;
-    var other_447: Plane;
+fn point_plane_geometric_anti_product(self_828: Point, other_724: Plane) -> Motor {
+    var self_829: Point;
+    var other_725: Plane;
 
-    self_527 = self_526;
-    other_447 = other_446;
-    let _e4: Point = self_527;
-    let _e8: Plane = other_447;
-    let _e19: Point = self_527;
-    let _e22: Plane = other_447;
+    self_829 = self_828;
+    other_725 = other_724;
+    let _e4: Point = self_829;
+    let _e8: Plane = other_725;
+    let _e11: Plane = other_725;
+    let _e14: Plane = other_725;
+    let _e17: Plane = other_725;
+    let _e29: Point = self_829;
+    let _e33: Plane = other_725;
+    let _e36: Plane = other_725;
+    let _e39: Plane = other_725;
+    let _e42: Plane = other_725;
+    let _e55: Point = self_829;
+    let _e59: Plane = other_725;
+    return Motor(((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.y, _e11.g0_.z, _e14.g0_.y, _e17.g0_.x)) * vec4<f32>(1.0, 1.0, 0.0, -(1.0))) + ((vec4<f32>(_e29.g0_.z) * vec4<f32>(_e33.g0_.z, _e36.g0_.y, _e39.g0_.x, _e42.g0_.z)) * vec4<f32>(1.0, -(1.0), 1.0, 0.0))) + ((vec4<f32>(_e55.g0_.x) * vec4<f32>(_e59.g0_.x)) * vec4<f32>(1.0, 0.0, 0.0, 0.0))));
+}
+
+fn point_plane_inner_anti_product(self_830: Point, other_726: Plane) -> Point {
+    var self_831: Point;
+    var other_727: Plane;
+
+    self_831 = self_830;
+    other_727 = other_726;
+    let _e4: Point = self_831;
+    let _e8: Plane = other_727;
+    let _e18: Point = self_831;
+    let _e21: Plane = other_727;
+    return Point((((vec3<f32>(_e4.g0_.z) * _e8.g0_.yxy) * vec3<f32>(-(1.0), 1.0, 0.0)) + ((_e18.g0_.yxy * _e21.g0_.zxx) * vec3<f32>(1.0, 0.0, -(1.0)))));
+}
+
+fn point_plane_right_contraction(self_832: Point, other_728: Plane) -> Plane {
+    var self_833: Point;
+    var other_729: Plane;
+
+    self_833 = self_832;
+    other_729 = other_728;
+    let _e4: Point = self_833;
+    let _e8: Plane = other_729;
+    let _e19: Point = self_833;
+    let _e22: Plane = other_729;
     return Plane((((vec3<f32>(_e4.g0_.z) * vec3<f32>(_e8.g0_.y)) * vec3<f32>(-(1.0), 0.0, 0.0)) + ((_e19.g0_.yxx * _e22.g0_.zzy) * vec3<f32>(1.0, -(1.0), 1.0))));
 }
 
-fn point_translator_add(self_528: Point, other_448: Translator) -> Motor {
-    var self_529: Point;
-    var other_449: Translator;
+fn point_plane_left_anti_contraction(self_834: Point, other_730: Plane) -> Point {
+    var self_835: Point;
+    var other_731: Plane;
 
-    self_529 = self_528;
-    other_449 = other_448;
-    let _e4: Point = self_529;
-    let _e7: Point = self_529;
-    let _e10: Point = self_529;
-    let _e13: Point = self_529;
-    let _e23: Translator = other_449;
-    let _e26: Translator = other_449;
-    let _e29: Translator = other_449;
-    let _e32: Translator = other_449;
+    self_835 = self_834;
+    other_731 = other_730;
+    let _e4: Point = self_835;
+    let _e8: Plane = other_731;
+    let _e18: Point = self_835;
+    let _e21: Plane = other_731;
+    return Point((((vec3<f32>(_e4.g0_.z) * _e8.g0_.yxy) * vec3<f32>(-(1.0), 1.0, 0.0)) + ((_e18.g0_.yxy * _e21.g0_.zxx) * vec3<f32>(1.0, 0.0, -(1.0)))));
+}
+
+fn point_translator_add(self_836: Point, other_732: Translator) -> Motor {
+    var self_837: Point;
+    var other_733: Translator;
+
+    self_837 = self_836;
+    other_733 = other_732;
+    let _e4: Point = self_837;
+    let _e7: Point = self_837;
+    let _e10: Point = self_837;
+    let _e13: Point = self_837;
+    let _e23: Translator = other_733;
+    let _e26: Translator = other_733;
+    let _e29: Translator = other_733;
+    let _e32: Translator = other_733;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y, _e13.g0_.z) * vec4<f32>(0.0, 1.0, 1.0, 1.0)) + (vec4<f32>(_e23.g0_.x, _e26.g0_.x, _e29.g0_.y, _e32.g0_.z) * vec4<f32>(1.0, 0.0, 1.0, 1.0))));
 }
 
-fn point_translator_sub(self_530: Point, other_450: Translator) -> Motor {
-    var self_531: Point;
-    var other_451: Translator;
+fn point_translator_sub(self_838: Point, other_734: Translator) -> Motor {
+    var self_839: Point;
+    var other_735: Translator;
 
-    self_531 = self_530;
-    other_451 = other_450;
-    let _e4: Point = self_531;
-    let _e7: Point = self_531;
-    let _e10: Point = self_531;
-    let _e13: Point = self_531;
-    let _e23: Translator = other_451;
-    let _e26: Translator = other_451;
-    let _e29: Translator = other_451;
-    let _e32: Translator = other_451;
+    self_839 = self_838;
+    other_735 = other_734;
+    let _e4: Point = self_839;
+    let _e7: Point = self_839;
+    let _e10: Point = self_839;
+    let _e13: Point = self_839;
+    let _e23: Translator = other_735;
+    let _e26: Translator = other_735;
+    let _e29: Translator = other_735;
+    let _e32: Translator = other_735;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y, _e13.g0_.z) * vec4<f32>(0.0, 1.0, 1.0, 1.0)) - (vec4<f32>(_e23.g0_.x, _e26.g0_.x, _e29.g0_.y, _e32.g0_.z) * vec4<f32>(1.0, 0.0, 1.0, 1.0))));
 }
 
-fn point_translator_geometric_product(self_532: Point, other_452: Translator) -> Point {
-    var self_533: Point;
-    var other_453: Translator;
+fn point_translator_geometric_product(self_840: Point, other_736: Translator) -> Point {
+    var self_841: Point;
+    var other_737: Translator;
 
-    self_533 = self_532;
-    other_453 = other_452;
-    let _e4: Point = self_533;
-    let _e8: Translator = other_453;
-    let _e18: Point = self_533;
-    let _e20: Translator = other_453;
+    self_841 = self_840;
+    other_737 = other_736;
+    let _e4: Point = self_841;
+    let _e8: Translator = other_737;
+    let _e18: Point = self_841;
+    let _e20: Translator = other_737;
     return Point((((vec3<f32>(_e4.g0_.x) * _e8.g0_.xzy) * vec3<f32>(1.0, -(1.0), 1.0)) + ((_e18.g0_ * vec3<f32>(_e20.g0_.x)) * vec3<f32>(0.0, 1.0, 1.0))));
 }
 
-fn point_translator_regressive_product(self_534: Point, other_454: Translator) -> Plane {
-    var self_535: Point;
-    var other_455: Translator;
+fn point_translator_regressive_product(self_842: Point, other_738: Translator) -> Plane {
+    var self_843: Point;
+    var other_739: Translator;
 
-    self_535 = self_534;
-    other_455 = other_454;
-    let _e4: Point = self_535;
-    let _e8: Translator = other_455;
-    let _e18: Point = self_535;
-    let _e21: Translator = other_455;
+    self_843 = self_842;
+    other_739 = other_738;
+    let _e4: Point = self_843;
+    let _e8: Translator = other_739;
+    let _e18: Point = self_843;
+    let _e21: Translator = other_739;
     return Plane((((vec3<f32>(_e4.g0_.z) * vec3<f32>(_e8.g0_.y)) * vec3<f32>(1.0, 0.0, 0.0)) + ((_e18.g0_.yxx * _e21.g0_.zzy) * vec3<f32>(-(1.0), 1.0, -(1.0)))));
 }
 
-fn point_translator_outer_product(self_536: Point, other_456: Translator) -> Point {
-    var self_537: Point;
-    var other_457: Translator;
+fn point_translator_outer_product(self_844: Point, other_740: Translator) -> Point {
+    var self_845: Point;
+    var other_741: Translator;
 
-    self_537 = self_536;
-    other_457 = other_456;
-    let _e4: Point = self_537;
-    let _e6: Translator = other_457;
+    self_845 = self_844;
+    other_741 = other_740;
+    let _e4: Point = self_845;
+    let _e6: Translator = other_741;
     return Point((_e4.g0_ * vec3<f32>(_e6.g0_.x)));
 }
 
-fn point_translator_inner_product(self_538: Point, other_458: Translator) -> Point {
-    var self_539: Point;
-    var other_459: Translator;
+fn point_translator_inner_product(self_846: Point, other_742: Translator) -> Point {
+    var self_847: Point;
+    var other_743: Translator;
 
-    self_539 = self_538;
-    other_459 = other_458;
-    let _e4: Point = self_539;
-    let _e6: Translator = other_459;
+    self_847 = self_846;
+    other_743 = other_742;
+    let _e4: Point = self_847;
+    let _e6: Translator = other_743;
     return Point((_e4.g0_ * vec3<f32>(_e6.g0_.x)));
 }
 
-fn point_translator_right_contraction(self_540: Point, other_460: Translator) -> Point {
-    var self_541: Point;
-    var other_461: Translator;
+fn point_translator_geometric_anti_product(self_848: Point, other_744: Translator) -> MotorDual {
+    var self_849: Point;
+    var other_745: Translator;
 
-    self_541 = self_540;
-    other_461 = other_460;
-    let _e4: Point = self_541;
-    let _e6: Translator = other_461;
+    self_849 = self_848;
+    other_745 = other_744;
+    let _e4: Point = self_849;
+    let _e8: Translator = other_745;
+    let _e11: Translator = other_745;
+    let _e14: Translator = other_745;
+    let _e17: Translator = other_745;
+    let _e29: Point = self_849;
+    let _e33: Translator = other_745;
+    let _e36: Translator = other_745;
+    let _e39: Translator = other_745;
+    let _e42: Translator = other_745;
+    let _e54: Point = self_849;
+    let _e58: Translator = other_745;
+    let _e61: Translator = other_745;
+    let _e64: Translator = other_745;
+    let _e67: Translator = other_745;
+    return MotorDual(((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.y, _e11.g0_.z, _e14.g0_.x, _e17.g0_.y)) * vec4<f32>(1.0, -(1.0), 1.0, 0.0)) + ((vec4<f32>(_e29.g0_.z) * vec4<f32>(_e33.g0_.z, _e36.g0_.y, _e39.g0_.z, _e42.g0_.x)) * vec4<f32>(1.0, 1.0, 0.0, 1.0))) + ((vec4<f32>(_e54.g0_.x) * vec4<f32>(_e58.g0_.x, _e61.g0_.x, _e64.g0_.z, _e67.g0_.y)) * vec4<f32>(0.0, 0.0, 1.0, -(1.0)))));
+}
+
+fn point_translator_right_contraction(self_850: Point, other_746: Translator) -> Point {
+    var self_851: Point;
+    var other_747: Translator;
+
+    self_851 = self_850;
+    other_747 = other_746;
+    let _e4: Point = self_851;
+    let _e6: Translator = other_747;
     return Point((_e4.g0_ * vec3<f32>(_e6.g0_.x)));
 }
 
-fn point_motor_add(self_542: Point, other_462: Motor) -> Motor {
-    var self_543: Point;
-    var other_463: Motor;
+fn point_translator_right_anti_contraction(self_852: Point, other_748: Translator) -> AntiScalar {
+    var self_853: Point;
+    var other_749: Translator;
 
-    self_543 = self_542;
-    other_463 = other_462;
-    let _e4: Point = self_543;
-    let _e7: Point = self_543;
-    let _e10: Point = self_543;
-    let _e13: Point = self_543;
-    let _e23: Motor = other_463;
+    self_853 = self_852;
+    other_749 = other_748;
+    let _e4: Point = self_853;
+    let _e7: Translator = other_749;
+    let _e11: Point = self_853;
+    let _e14: Translator = other_749;
+    return AntiScalar(((_e4.g0_.y * _e7.g0_.y) + (_e11.g0_.z * _e14.g0_.z)));
+}
+
+fn point_translator_anti_scalar_product(self_854: Point, other_750: Translator) -> AntiScalar {
+    var self_855: Point;
+    var other_751: Translator;
+
+    self_855 = self_854;
+    other_751 = other_750;
+    let _e4: Point = self_855;
+    let _e7: Translator = other_751;
+    let _e11: Point = self_855;
+    let _e14: Translator = other_751;
+    return AntiScalar(((_e4.g0_.y * _e7.g0_.y) + (_e11.g0_.z * _e14.g0_.z)));
+}
+
+fn point_motor_add(self_856: Point, other_752: Motor) -> Motor {
+    var self_857: Point;
+    var other_753: Motor;
+
+    self_857 = self_856;
+    other_753 = other_752;
+    let _e4: Point = self_857;
+    let _e7: Point = self_857;
+    let _e10: Point = self_857;
+    let _e13: Point = self_857;
+    let _e23: Motor = other_753;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y, _e13.g0_.z) * vec4<f32>(0.0, 1.0, 1.0, 1.0)) + _e23.g0_));
 }
 
-fn point_motor_sub(self_544: Point, other_464: Motor) -> Motor {
-    var self_545: Point;
-    var other_465: Motor;
+fn point_motor_sub(self_858: Point, other_754: Motor) -> Motor {
+    var self_859: Point;
+    var other_755: Motor;
 
-    self_545 = self_544;
-    other_465 = other_464;
-    let _e4: Point = self_545;
-    let _e7: Point = self_545;
-    let _e10: Point = self_545;
-    let _e13: Point = self_545;
-    let _e23: Motor = other_465;
+    self_859 = self_858;
+    other_755 = other_754;
+    let _e4: Point = self_859;
+    let _e7: Point = self_859;
+    let _e10: Point = self_859;
+    let _e13: Point = self_859;
+    let _e23: Motor = other_755;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y, _e13.g0_.z) * vec4<f32>(0.0, 1.0, 1.0, 1.0)) - _e23.g0_));
 }
 
-fn point_motor_geometric_product(self_546: Point, other_466: Motor) -> Motor {
-    var self_547: Point;
-    var other_467: Motor;
+fn point_motor_geometric_product(self_860: Point, other_756: Motor) -> Motor {
+    var self_861: Point;
+    var other_757: Motor;
 
-    self_547 = self_546;
-    other_467 = other_466;
-    let _e4: Point = self_547;
-    let _e8: Motor = other_467;
-    let _e20: Point = self_547;
-    let _e24: Motor = other_467;
-    let _e35: Point = self_547;
-    let _e38: Point = self_547;
-    let _e41: Point = self_547;
-    let _e44: Point = self_547;
-    let _e48: Motor = other_467;
+    self_861 = self_860;
+    other_757 = other_756;
+    let _e4: Point = self_861;
+    let _e8: Motor = other_757;
+    let _e20: Point = self_861;
+    let _e24: Motor = other_757;
+    let _e35: Point = self_861;
+    let _e38: Point = self_861;
+    let _e41: Point = self_861;
+    let _e44: Point = self_861;
+    let _e48: Motor = other_757;
     return Motor(((((vec4<f32>(_e4.g0_.x) * _e8.g0_.yxwz) * vec4<f32>(-(1.0), 1.0, -(1.0), 1.0)) + ((vec4<f32>(_e20.g0_.z) * _e24.g0_.yyyx) * vec4<f32>(0.0, 0.0, 1.0, 1.0))) + ((vec4<f32>(_e35.g0_.x, _e38.g0_.x, _e41.g0_.y, _e44.g0_.y) * _e48.g0_.xxxy) * vec4<f32>(0.0, 0.0, 1.0, -(1.0)))));
 }
 
-fn point_motor_regressive_product(self_548: Point, other_468: Motor) -> Plane {
-    var self_549: Point;
-    var other_469: Motor;
+fn point_motor_regressive_product(self_862: Point, other_758: Motor) -> Plane {
+    var self_863: Point;
+    var other_759: Motor;
 
-    self_549 = self_548;
-    other_469 = other_468;
-    let _e4: Point = self_549;
-    let _e8: Motor = other_469;
-    let _e11: Motor = other_469;
-    let _e14: Motor = other_469;
-    let _e25: Point = self_549;
-    let _e29: Motor = other_469;
-    let _e32: Motor = other_469;
-    let _e35: Motor = other_469;
-    let _e47: Point = self_549;
-    let _e51: Motor = other_469;
-    let _e54: Motor = other_469;
-    let _e57: Motor = other_469;
+    self_863 = self_862;
+    other_759 = other_758;
+    let _e4: Point = self_863;
+    let _e8: Motor = other_759;
+    let _e11: Motor = other_759;
+    let _e14: Motor = other_759;
+    let _e25: Point = self_863;
+    let _e29: Motor = other_759;
+    let _e32: Motor = other_759;
+    let _e35: Motor = other_759;
+    let _e47: Point = self_863;
+    let _e51: Motor = other_759;
+    let _e54: Motor = other_759;
+    let _e57: Motor = other_759;
     return Plane(((((vec3<f32>(_e4.g0_.y) * vec3<f32>(_e8.g0_.w, _e11.g0_.w, _e14.g0_.y)) * vec3<f32>(-(1.0), 0.0, 1.0)) + ((vec3<f32>(_e25.g0_.z) * vec3<f32>(_e29.g0_.z, _e32.g0_.y, _e35.g0_.z)) * vec3<f32>(1.0, -(1.0), 0.0))) + ((vec3<f32>(_e47.g0_.x) * vec3<f32>(_e51.g0_.x, _e54.g0_.w, _e57.g0_.z)) * vec3<f32>(0.0, 1.0, -(1.0)))));
 }
 
-fn point_motor_outer_product(self_550: Point, other_470: Motor) -> Point {
-    var self_551: Point;
-    var other_471: Motor;
+fn point_motor_outer_product(self_864: Point, other_760: Motor) -> Point {
+    var self_865: Point;
+    var other_761: Motor;
 
-    self_551 = self_550;
-    other_471 = other_470;
-    let _e4: Point = self_551;
-    let _e6: Motor = other_471;
+    self_865 = self_864;
+    other_761 = other_760;
+    let _e4: Point = self_865;
+    let _e6: Motor = other_761;
     return Point((_e4.g0_ * vec3<f32>(_e6.g0_.x)));
 }
 
-fn point_motor_inner_product(self_552: Point, other_472: Motor) -> Motor {
-    var self_553: Point;
-    var other_473: Motor;
+fn point_motor_inner_product(self_866: Point, other_762: Motor) -> Motor {
+    var self_867: Point;
+    var other_763: Motor;
 
-    self_553 = self_552;
-    other_473 = other_472;
-    let _e4: Point = self_553;
-    let _e7: Point = self_553;
-    let _e10: Point = self_553;
-    let _e13: Point = self_553;
-    let _e17: Motor = other_473;
+    self_867 = self_866;
+    other_763 = other_762;
+    let _e4: Point = self_867;
+    let _e7: Point = self_867;
+    let _e10: Point = self_867;
+    let _e13: Point = self_867;
+    let _e17: Motor = other_763;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y, _e13.g0_.z) * _e17.g0_.yxxx) * vec4<f32>(-(1.0), 1.0, 1.0, 1.0)));
 }
 
-fn point_motor_left_contraction(self_554: Point, other_474: Motor) -> Scalar {
-    var self_555: Point;
-    var other_475: Motor;
+fn point_motor_geometric_anti_product(self_868: Point, other_764: Motor) -> MotorDual {
+    var self_869: Point;
+    var other_765: Motor;
 
-    self_555 = self_554;
-    other_475 = other_474;
-    let _e5: Point = self_555;
-    let _e8: Motor = other_475;
+    self_869 = self_868;
+    other_765 = other_764;
+    let _e4: Point = self_869;
+    let _e8: Motor = other_765;
+    let _e19: Point = self_869;
+    let _e23: Motor = other_765;
+    let _e35: Point = self_869;
+    let _e39: Motor = other_765;
+    return MotorDual(((((vec4<f32>(_e4.g0_.y) * _e8.g0_.zwxy) * vec4<f32>(1.0, -(1.0), 1.0, 1.0)) + ((vec4<f32>(_e19.g0_.z) * _e23.g0_.wzyx) * vec4<f32>(1.0, 1.0, -(1.0), 1.0))) + ((vec4<f32>(_e35.g0_.x) * _e39.g0_.xxwz) * vec4<f32>(0.0, 0.0, 1.0, -(1.0)))));
+}
+
+fn point_motor_left_contraction(self_870: Point, other_766: Motor) -> Scalar {
+    var self_871: Point;
+    var other_767: Motor;
+
+    self_871 = self_870;
+    other_767 = other_766;
+    let _e5: Point = self_871;
+    let _e8: Motor = other_767;
     return Scalar((0.0 - (_e5.g0_.x * _e8.g0_.y)));
 }
 
-fn point_motor_right_contraction(self_556: Point, other_476: Motor) -> Motor {
-    var self_557: Point;
-    var other_477: Motor;
+fn point_motor_right_contraction(self_872: Point, other_768: Motor) -> Motor {
+    var self_873: Point;
+    var other_769: Motor;
 
-    self_557 = self_556;
-    other_477 = other_476;
-    let _e4: Point = self_557;
-    let _e7: Point = self_557;
-    let _e10: Point = self_557;
-    let _e13: Point = self_557;
-    let _e17: Motor = other_477;
+    self_873 = self_872;
+    other_769 = other_768;
+    let _e4: Point = self_873;
+    let _e7: Point = self_873;
+    let _e10: Point = self_873;
+    let _e13: Point = self_873;
+    let _e17: Motor = other_769;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y, _e13.g0_.z) * _e17.g0_.yxxx) * vec4<f32>(-(1.0), 1.0, 1.0, 1.0)));
 }
 
-fn point_motor_scalar_product(self_558: Point, other_478: Motor) -> Scalar {
-    var self_559: Point;
-    var other_479: Motor;
+fn point_motor_right_anti_contraction(self_874: Point, other_770: Motor) -> AntiScalar {
+    var self_875: Point;
+    var other_771: Motor;
 
-    self_559 = self_558;
-    other_479 = other_478;
-    let _e5: Point = self_559;
-    let _e8: Motor = other_479;
+    self_875 = self_874;
+    other_771 = other_770;
+    let _e4: Point = self_875;
+    let _e7: Motor = other_771;
+    let _e11: Point = self_875;
+    let _e14: Motor = other_771;
+    return AntiScalar(((_e4.g0_.y * _e7.g0_.z) + (_e11.g0_.z * _e14.g0_.w)));
+}
+
+fn point_motor_scalar_product(self_876: Point, other_772: Motor) -> Scalar {
+    var self_877: Point;
+    var other_773: Motor;
+
+    self_877 = self_876;
+    other_773 = other_772;
+    let _e5: Point = self_877;
+    let _e8: Motor = other_773;
     return Scalar((0.0 - (_e5.g0_.x * _e8.g0_.y)));
 }
 
-fn point_motor_dual_geometric_product(self_560: Point, other_480: MotorDual) -> MotorDual {
-    var self_561: Point;
-    var other_481: MotorDual;
+fn point_motor_anti_scalar_product(self_878: Point, other_774: Motor) -> AntiScalar {
+    var self_879: Point;
+    var other_775: Motor;
 
-    self_561 = self_560;
-    other_481 = other_480;
-    let _e4: Point = self_561;
-    let _e8: MotorDual = other_481;
-    let _e20: Point = self_561;
-    let _e24: MotorDual = other_481;
-    let _e36: Point = self_561;
-    let _e39: Point = self_561;
-    let _e42: Point = self_561;
-    let _e45: Point = self_561;
-    let _e49: MotorDual = other_481;
+    self_879 = self_878;
+    other_775 = other_774;
+    let _e4: Point = self_879;
+    let _e7: Motor = other_775;
+    let _e11: Point = self_879;
+    let _e14: Motor = other_775;
+    return AntiScalar(((_e4.g0_.y * _e7.g0_.z) + (_e11.g0_.z * _e14.g0_.w)));
+}
+
+fn point_motor_dual_geometric_product(self_880: Point, other_776: MotorDual) -> MotorDual {
+    var self_881: Point;
+    var other_777: MotorDual;
+
+    self_881 = self_880;
+    other_777 = other_776;
+    let _e4: Point = self_881;
+    let _e8: MotorDual = other_777;
+    let _e20: Point = self_881;
+    let _e24: MotorDual = other_777;
+    let _e36: Point = self_881;
+    let _e39: Point = self_881;
+    let _e42: Point = self_881;
+    let _e45: Point = self_881;
+    let _e49: MotorDual = other_777;
     return MotorDual(((((vec4<f32>(_e4.g0_.x) * _e8.g0_.yxwz) * vec4<f32>(1.0, -(1.0), -(1.0), 1.0)) + ((vec4<f32>(_e20.g0_.z) * _e24.g0_.wzww) * vec4<f32>(1.0, -(1.0), 0.0, 0.0))) + ((vec4<f32>(_e36.g0_.y, _e39.g0_.y, _e42.g0_.x, _e45.g0_.x) * _e49.g0_.zwxx) * vec4<f32>(1.0, 1.0, 0.0, 0.0))));
 }
 
-fn point_motor_dual_regressive_product(self_562: Point, other_482: MotorDual) -> Motor {
-    var self_563: Point;
-    var other_483: MotorDual;
+fn point_motor_dual_regressive_product(self_882: Point, other_778: MotorDual) -> Motor {
+    var self_883: Point;
+    var other_779: MotorDual;
 
-    self_563 = self_562;
-    other_483 = other_482;
-    let _e4: Point = self_563;
-    let _e8: MotorDual = other_483;
-    let _e18: Point = self_563;
-    let _e22: MotorDual = other_483;
-    let _e33: Point = self_563;
-    let _e37: MotorDual = other_483;
+    self_883 = self_882;
+    other_779 = other_778;
+    let _e4: Point = self_883;
+    let _e8: MotorDual = other_779;
+    let _e18: Point = self_883;
+    let _e22: MotorDual = other_779;
+    let _e33: Point = self_883;
+    let _e37: MotorDual = other_779;
     return Motor(((((vec4<f32>(_e4.g0_.y) * _e8.g0_.zzxz) * vec4<f32>(1.0, 0.0, 1.0, 0.0)) + ((vec4<f32>(_e18.g0_.z) * _e22.g0_.wwwx) * vec4<f32>(1.0, 0.0, 0.0, 1.0))) + ((vec4<f32>(_e33.g0_.x) * _e37.g0_.yxxx) * vec4<f32>(1.0, 1.0, 0.0, 0.0))));
 }
 
-fn point_motor_dual_inner_product(self_564: Point, other_484: MotorDual) -> Plane {
-    var self_565: Point;
-    var other_485: MotorDual;
+fn point_motor_dual_outer_product(self_884: Point, other_780: MotorDual) -> AntiScalar {
+    var self_885: Point;
+    var other_781: MotorDual;
 
-    self_565 = self_564;
-    other_485 = other_484;
-    let _e4: Point = self_565;
-    let _e8: MotorDual = other_485;
-    let _e11: MotorDual = other_485;
-    let _e14: MotorDual = other_485;
-    let _e26: Point = self_565;
-    let _e30: MotorDual = other_485;
-    let _e42: Point = self_565;
-    let _e45: MotorDual = other_485;
-    let _e48: MotorDual = other_485;
-    let _e51: MotorDual = other_485;
+    self_885 = self_884;
+    other_781 = other_780;
+    let _e4: Point = self_885;
+    let _e7: MotorDual = other_781;
+    let _e11: Point = self_885;
+    let _e14: MotorDual = other_781;
+    let _e19: Point = self_885;
+    let _e22: MotorDual = other_781;
+    return AntiScalar((((_e4.g0_.x * _e7.g0_.y) + (_e11.g0_.y * _e14.g0_.z)) + (_e19.g0_.z * _e22.g0_.w)));
+}
+
+fn point_motor_dual_inner_product(self_886: Point, other_782: MotorDual) -> Plane {
+    var self_887: Point;
+    var other_783: MotorDual;
+
+    self_887 = self_886;
+    other_783 = other_782;
+    let _e4: Point = self_887;
+    let _e8: MotorDual = other_783;
+    let _e11: MotorDual = other_783;
+    let _e14: MotorDual = other_783;
+    let _e26: Point = self_887;
+    let _e30: MotorDual = other_783;
+    let _e42: Point = self_887;
+    let _e45: MotorDual = other_783;
+    let _e48: MotorDual = other_783;
+    let _e51: MotorDual = other_783;
     return Plane(((((vec3<f32>(_e4.g0_.x) * vec3<f32>(_e8.g0_.x, _e11.g0_.w, _e14.g0_.z)) * vec3<f32>(-(1.0), -(1.0), 1.0)) + ((vec3<f32>(_e26.g0_.z) * vec3<f32>(_e30.g0_.z)) * vec3<f32>(-(1.0), 0.0, 0.0))) + ((_e42.g0_.yxx * vec3<f32>(_e45.g0_.w, _e48.g0_.x, _e51.g0_.x)) * vec3<f32>(1.0, 0.0, 0.0))));
 }
 
-fn point_motor_dual_right_contraction(self_566: Point, other_486: MotorDual) -> Plane {
-    var self_567: Point;
-    var other_487: MotorDual;
+fn point_motor_dual_geometric_anti_product(self_888: Point, other_784: MotorDual) -> Motor {
+    var self_889: Point;
+    var other_785: MotorDual;
 
-    self_567 = self_566;
-    other_487 = other_486;
-    let _e4: Point = self_567;
-    let _e8: MotorDual = other_487;
-    let _e19: Point = self_567;
-    let _e22: MotorDual = other_487;
-    let _e25: MotorDual = other_487;
-    let _e28: MotorDual = other_487;
+    self_889 = self_888;
+    other_785 = other_784;
+    let _e4: Point = self_889;
+    let _e8: MotorDual = other_785;
+    let _e19: Point = self_889;
+    let _e23: MotorDual = other_785;
+    let _e35: Point = self_889;
+    let _e39: MotorDual = other_785;
+    return Motor(((((vec4<f32>(_e4.g0_.y) * _e8.g0_.zwxy) * vec4<f32>(1.0, 1.0, 1.0, -(1.0))) + ((vec4<f32>(_e19.g0_.z) * _e23.g0_.wzyx) * vec4<f32>(1.0, -(1.0), 1.0, 1.0))) + ((vec4<f32>(_e35.g0_.x) * _e39.g0_.yxxx) * vec4<f32>(1.0, 1.0, 0.0, 0.0))));
+}
+
+fn point_motor_dual_inner_anti_product(self_890: Point, other_786: MotorDual) -> Point {
+    var self_891: Point;
+    var other_787: MotorDual;
+
+    self_891 = self_890;
+    other_787 = other_786;
+    let _e4: Point = self_891;
+    let _e8: MotorDual = other_787;
+    let _e11: MotorDual = other_787;
+    let _e14: MotorDual = other_787;
+    let _e25: Point = self_891;
+    let _e29: MotorDual = other_787;
+    let _e32: MotorDual = other_787;
+    let _e35: MotorDual = other_787;
+    let _e47: Point = self_891;
+    let _e51: MotorDual = other_787;
+    return Point(((((vec3<f32>(_e4.g0_.y) * vec3<f32>(_e8.g0_.w, _e11.g0_.x, _e14.g0_.y)) * vec3<f32>(1.0, 1.0, -(1.0))) + ((vec3<f32>(_e25.g0_.z) * vec3<f32>(_e29.g0_.z, _e32.g0_.y, _e35.g0_.x)) * vec3<f32>(-(1.0), 1.0, 1.0))) + ((vec3<f32>(_e47.g0_.x) * vec3<f32>(_e51.g0_.x)) * vec3<f32>(1.0, 0.0, 0.0))));
+}
+
+fn point_motor_dual_right_contraction(self_892: Point, other_788: MotorDual) -> Plane {
+    var self_893: Point;
+    var other_789: MotorDual;
+
+    self_893 = self_892;
+    other_789 = other_788;
+    let _e4: Point = self_893;
+    let _e8: MotorDual = other_789;
+    let _e19: Point = self_893;
+    let _e22: MotorDual = other_789;
+    let _e25: MotorDual = other_789;
+    let _e28: MotorDual = other_789;
     return Plane((((vec3<f32>(_e4.g0_.z) * vec3<f32>(_e8.g0_.z)) * vec3<f32>(-(1.0), 0.0, 0.0)) + ((_e19.g0_.yxx * vec3<f32>(_e22.g0_.w, _e25.g0_.w, _e28.g0_.z)) * vec3<f32>(1.0, -(1.0), 1.0))));
 }
 
-fn point_squared_magnitude(self_568: Point) -> Scalar {
-    var self_569: Point;
+fn point_motor_dual_left_anti_contraction(self_894: Point, other_790: MotorDual) -> Point {
+    var self_895: Point;
+    var other_791: MotorDual;
 
-    self_569 = self_568;
-    let _e2: Point = self_569;
-    let _e3: Point = self_569;
+    self_895 = self_894;
+    other_791 = other_790;
+    let _e4: Point = self_895;
+    let _e8: MotorDual = other_791;
+    let _e11: MotorDual = other_791;
+    let _e14: MotorDual = other_791;
+    let _e25: Point = self_895;
+    let _e28: MotorDual = other_791;
+    let _e31: MotorDual = other_791;
+    let _e34: MotorDual = other_791;
+    return Point((((vec3<f32>(_e4.g0_.z) * vec3<f32>(_e8.g0_.z, _e11.g0_.y, _e14.g0_.z)) * vec3<f32>(-(1.0), 1.0, 0.0)) + ((_e25.g0_.yxy * vec3<f32>(_e28.g0_.w, _e31.g0_.x, _e34.g0_.y)) * vec3<f32>(1.0, 0.0, -(1.0)))));
+}
+
+fn point_motor_dual_right_anti_contraction(self_896: Point, other_792: MotorDual) -> Point {
+    var self_897: Point;
+    var other_793: MotorDual;
+
+    self_897 = self_896;
+    other_793 = other_792;
+    let _e4: Point = self_897;
+    let _e6: MotorDual = other_793;
+    return Point((_e4.g0_ * vec3<f32>(_e6.g0_.x)));
+}
+
+fn point_squared_magnitude(self_898: Point) -> Scalar {
+    var self_899: Point;
+
+    self_899 = self_898;
+    let _e2: Point = self_899;
+    let _e3: Point = self_899;
     let _e4: Point = point_reversal(_e3);
     let _e5: Scalar = point_point_scalar_product(_e2, _e4);
     return _e5;
 }
 
-fn point_magnitude(self_570: Point) -> Scalar {
-    var self_571: Point;
+fn point_magnitude(self_900: Point) -> Scalar {
+    var self_901: Point;
 
-    self_571 = self_570;
-    let _e2: Point = self_571;
+    self_901 = self_900;
+    let _e2: Point = self_901;
     let _e3: Scalar = point_squared_magnitude(_e2);
     return Scalar(sqrt(_e3.g0_));
 }
 
-fn point_scale(self_572: Point, other_488: f32) -> Point {
-    var self_573: Point;
-    var other_489: f32;
+fn point_scale(self_902: Point, other_794: f32) -> Point {
+    var self_903: Point;
+    var other_795: f32;
 
-    self_573 = self_572;
-    other_489 = other_488;
-    let _e4: Point = self_573;
-    let _e5: f32 = other_489;
+    self_903 = self_902;
+    other_795 = other_794;
+    let _e4: Point = self_903;
+    let _e5: f32 = other_795;
     let _e7: Point = point_scalar_geometric_product(_e4, Scalar(_e5));
     return _e7;
 }
 
-fn point_signum(self_574: Point) -> Point {
-    var self_575: Point;
+fn point_signum(self_904: Point) -> Point {
+    var self_905: Point;
 
-    self_575 = self_574;
-    let _e2: Point = self_575;
-    let _e3: Point = self_575;
+    self_905 = self_904;
+    let _e2: Point = self_905;
+    let _e3: Point = self_905;
     let _e4: Scalar = point_magnitude(_e3);
     let _e9: Point = point_scalar_geometric_product(_e2, Scalar((1.0 / _e4.g0_)));
     return _e9;
 }
 
-fn point_inverse(self_576: Point) -> Point {
-    var self_577: Point;
+fn point_inverse(self_906: Point) -> Point {
+    var self_907: Point;
 
-    self_577 = self_576;
-    let _e2: Point = self_577;
+    self_907 = self_906;
+    let _e2: Point = self_907;
     let _e3: Point = point_reversal(_e2);
-    let _e4: Point = self_577;
+    let _e4: Point = self_907;
     let _e5: Scalar = point_squared_magnitude(_e4);
     let _e10: Point = point_scalar_geometric_product(_e3, Scalar((1.0 / _e5.g0_)));
     return _e10;
@@ -4066,515 +6285,933 @@ fn ideal_point_one() -> IdealPoint {
     return IdealPoint(vec2<f32>(0.0));
 }
 
-fn ideal_point_neg(self_578: IdealPoint) -> IdealPoint {
-    var self_579: IdealPoint;
+fn ideal_point_neg(self_908: IdealPoint) -> IdealPoint {
+    var self_909: IdealPoint;
 
-    self_579 = self_578;
-    let _e2: IdealPoint = self_579;
+    self_909 = self_908;
+    let _e2: IdealPoint = self_909;
     return IdealPoint((_e2.g0_ * vec2<f32>(-(1.0))));
 }
 
-fn ideal_point_automorphism(self_580: IdealPoint) -> IdealPoint {
-    var self_581: IdealPoint;
+fn ideal_point_automorphism(self_910: IdealPoint) -> IdealPoint {
+    var self_911: IdealPoint;
 
-    self_581 = self_580;
-    let _e2: IdealPoint = self_581;
+    self_911 = self_910;
+    let _e2: IdealPoint = self_911;
     return IdealPoint(_e2.g0_);
 }
 
-fn ideal_point_reversal(self_582: IdealPoint) -> IdealPoint {
-    var self_583: IdealPoint;
+fn ideal_point_reversal(self_912: IdealPoint) -> IdealPoint {
+    var self_913: IdealPoint;
 
-    self_583 = self_582;
-    let _e2: IdealPoint = self_583;
+    self_913 = self_912;
+    let _e2: IdealPoint = self_913;
     return IdealPoint((_e2.g0_ * vec2<f32>(-(1.0))));
 }
 
-fn ideal_point_conjugation(self_584: IdealPoint) -> IdealPoint {
-    var self_585: IdealPoint;
+fn ideal_point_conjugation(self_914: IdealPoint) -> IdealPoint {
+    var self_915: IdealPoint;
 
-    self_585 = self_584;
-    let _e2: IdealPoint = self_585;
+    self_915 = self_914;
+    let _e2: IdealPoint = self_915;
     return IdealPoint((_e2.g0_ * vec2<f32>(-(1.0))));
 }
 
-fn ideal_point_scalar_add(self_586: IdealPoint, other_490: Scalar) -> Translator {
-    var self_587: IdealPoint;
-    var other_491: Scalar;
+fn ideal_point_anti_reversal(self_916: IdealPoint) -> IdealPoint {
+    var self_917: IdealPoint;
 
-    self_587 = self_586;
-    other_491 = other_490;
-    let _e4: IdealPoint = self_587;
-    let _e7: IdealPoint = self_587;
-    let _e10: IdealPoint = self_587;
-    let _e19: Scalar = other_491;
+    self_917 = self_916;
+    let _e2: IdealPoint = self_917;
+    return IdealPoint((_e2.g0_ * vec2<f32>(-(1.0))));
+}
+
+fn ideal_point_scalar_add(self_918: IdealPoint, other_796: Scalar) -> Translator {
+    var self_919: IdealPoint;
+    var other_797: Scalar;
+
+    self_919 = self_918;
+    other_797 = other_796;
+    let _e4: IdealPoint = self_919;
+    let _e7: IdealPoint = self_919;
+    let _e10: IdealPoint = self_919;
+    let _e19: Scalar = other_797;
     return Translator(((vec3<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y) * vec3<f32>(0.0, 1.0, 1.0)) + (vec3<f32>(_e19.g0_) * vec3<f32>(1.0, 0.0, 0.0))));
 }
 
-fn ideal_point_scalar_sub(self_588: IdealPoint, other_492: Scalar) -> Translator {
-    var self_589: IdealPoint;
-    var other_493: Scalar;
+fn ideal_point_scalar_sub(self_920: IdealPoint, other_798: Scalar) -> Translator {
+    var self_921: IdealPoint;
+    var other_799: Scalar;
 
-    self_589 = self_588;
-    other_493 = other_492;
-    let _e4: IdealPoint = self_589;
-    let _e7: IdealPoint = self_589;
-    let _e10: IdealPoint = self_589;
-    let _e19: Scalar = other_493;
+    self_921 = self_920;
+    other_799 = other_798;
+    let _e4: IdealPoint = self_921;
+    let _e7: IdealPoint = self_921;
+    let _e10: IdealPoint = self_921;
+    let _e19: Scalar = other_799;
     return Translator(((vec3<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y) * vec3<f32>(0.0, 1.0, 1.0)) - (vec3<f32>(_e19.g0_) * vec3<f32>(1.0, 0.0, 0.0))));
 }
 
-fn ideal_point_scalar_geometric_product(self_590: IdealPoint, other_494: Scalar) -> IdealPoint {
-    var self_591: IdealPoint;
-    var other_495: Scalar;
+fn ideal_point_scalar_geometric_product(self_922: IdealPoint, other_800: Scalar) -> IdealPoint {
+    var self_923: IdealPoint;
+    var other_801: Scalar;
 
-    self_591 = self_590;
-    other_495 = other_494;
-    let _e4: IdealPoint = self_591;
-    let _e6: Scalar = other_495;
+    self_923 = self_922;
+    other_801 = other_800;
+    let _e4: IdealPoint = self_923;
+    let _e6: Scalar = other_801;
     return IdealPoint((_e4.g0_ * vec2<f32>(_e6.g0_)));
 }
 
-fn ideal_point_scalar_outer_product(self_592: IdealPoint, other_496: Scalar) -> IdealPoint {
-    var self_593: IdealPoint;
-    var other_497: Scalar;
+fn ideal_point_scalar_outer_product(self_924: IdealPoint, other_802: Scalar) -> IdealPoint {
+    var self_925: IdealPoint;
+    var other_803: Scalar;
 
-    self_593 = self_592;
-    other_497 = other_496;
-    let _e4: IdealPoint = self_593;
-    let _e6: Scalar = other_497;
+    self_925 = self_924;
+    other_803 = other_802;
+    let _e4: IdealPoint = self_925;
+    let _e6: Scalar = other_803;
     return IdealPoint((_e4.g0_ * vec2<f32>(_e6.g0_)));
 }
 
-fn ideal_point_scalar_inner_product(self_594: IdealPoint, other_498: Scalar) -> IdealPoint {
-    var self_595: IdealPoint;
-    var other_499: Scalar;
+fn ideal_point_scalar_inner_product(self_926: IdealPoint, other_804: Scalar) -> IdealPoint {
+    var self_927: IdealPoint;
+    var other_805: Scalar;
 
-    self_595 = self_594;
-    other_499 = other_498;
-    let _e4: IdealPoint = self_595;
-    let _e6: Scalar = other_499;
+    self_927 = self_926;
+    other_805 = other_804;
+    let _e4: IdealPoint = self_927;
+    let _e6: Scalar = other_805;
     return IdealPoint((_e4.g0_ * vec2<f32>(_e6.g0_)));
 }
 
-fn ideal_point_scalar_right_contraction(self_596: IdealPoint, other_500: Scalar) -> IdealPoint {
-    var self_597: IdealPoint;
-    var other_501: Scalar;
+fn ideal_point_scalar_right_contraction(self_928: IdealPoint, other_806: Scalar) -> IdealPoint {
+    var self_929: IdealPoint;
+    var other_807: Scalar;
 
-    self_597 = self_596;
-    other_501 = other_500;
-    let _e4: IdealPoint = self_597;
-    let _e6: Scalar = other_501;
+    self_929 = self_928;
+    other_807 = other_806;
+    let _e4: IdealPoint = self_929;
+    let _e6: Scalar = other_807;
     return IdealPoint((_e4.g0_ * vec2<f32>(_e6.g0_)));
 }
 
-fn ideal_point_multi_vector_add(self_598: IdealPoint, other_502: MultiVector) -> MultiVector {
-    var self_599: IdealPoint;
-    var other_503: MultiVector;
+fn ideal_point_anti_scalar_regressive_product(self_930: IdealPoint, other_808: AntiScalar) -> IdealPoint {
+    var self_931: IdealPoint;
+    var other_809: AntiScalar;
 
-    self_599 = self_598;
-    other_503 = other_502;
-    let _e4: MultiVector = other_503;
-    let _e6: IdealPoint = self_599;
-    let _e9: IdealPoint = self_599;
-    let _e12: IdealPoint = self_599;
-    let _e15: IdealPoint = self_599;
-    let _e25: MultiVector = other_503;
+    self_931 = self_930;
+    other_809 = other_808;
+    let _e4: IdealPoint = self_931;
+    let _e6: AntiScalar = other_809;
+    return IdealPoint((_e4.g0_ * vec2<f32>(_e6.g0_)));
+}
+
+fn ideal_point_anti_scalar_geometric_anti_product(self_932: IdealPoint, other_810: AntiScalar) -> IdealPoint {
+    var self_933: IdealPoint;
+    var other_811: AntiScalar;
+
+    self_933 = self_932;
+    other_811 = other_810;
+    let _e4: IdealPoint = self_933;
+    let _e6: AntiScalar = other_811;
+    return IdealPoint((_e4.g0_ * vec2<f32>(_e6.g0_)));
+}
+
+fn ideal_point_anti_scalar_inner_anti_product(self_934: IdealPoint, other_812: AntiScalar) -> IdealPoint {
+    var self_935: IdealPoint;
+    var other_813: AntiScalar;
+
+    self_935 = self_934;
+    other_813 = other_812;
+    let _e4: IdealPoint = self_935;
+    let _e6: AntiScalar = other_813;
+    return IdealPoint((_e4.g0_ * vec2<f32>(_e6.g0_)));
+}
+
+fn ideal_point_anti_scalar_right_anti_contraction(self_936: IdealPoint, other_814: AntiScalar) -> IdealPoint {
+    var self_937: IdealPoint;
+    var other_815: AntiScalar;
+
+    self_937 = self_936;
+    other_815 = other_814;
+    let _e4: IdealPoint = self_937;
+    let _e6: AntiScalar = other_815;
+    return IdealPoint((_e4.g0_ * vec2<f32>(_e6.g0_)));
+}
+
+fn ideal_point_multi_vector_add(self_938: IdealPoint, other_816: MultiVector) -> MultiVector {
+    var self_939: IdealPoint;
+    var other_817: MultiVector;
+
+    self_939 = self_938;
+    other_817 = other_816;
+    let _e4: MultiVector = other_817;
+    let _e6: IdealPoint = self_939;
+    let _e9: IdealPoint = self_939;
+    let _e12: IdealPoint = self_939;
+    let _e15: IdealPoint = self_939;
+    let _e25: MultiVector = other_817;
     return MultiVector(_e4.g0_, ((vec4<f32>(_e6.g0_.x, _e9.g0_.x, _e12.g0_.x, _e15.g0_.y) * vec4<f32>(0.0, 0.0, 1.0, 1.0)) + _e25.g1_));
 }
 
-fn ideal_point_multi_vector_sub(self_600: IdealPoint, other_504: MultiVector) -> MultiVector {
-    var self_601: IdealPoint;
-    var other_505: MultiVector;
+fn ideal_point_multi_vector_sub(self_940: IdealPoint, other_818: MultiVector) -> MultiVector {
+    var self_941: IdealPoint;
+    var other_819: MultiVector;
 
-    self_601 = self_600;
-    other_505 = other_504;
-    let _e6: MultiVector = other_505;
-    let _e9: IdealPoint = self_601;
-    let _e12: IdealPoint = self_601;
-    let _e15: IdealPoint = self_601;
-    let _e18: IdealPoint = self_601;
-    let _e28: MultiVector = other_505;
+    self_941 = self_940;
+    other_819 = other_818;
+    let _e6: MultiVector = other_819;
+    let _e9: IdealPoint = self_941;
+    let _e12: IdealPoint = self_941;
+    let _e15: IdealPoint = self_941;
+    let _e18: IdealPoint = self_941;
+    let _e28: MultiVector = other_819;
     return MultiVector((vec4<f32>(0.0) - _e6.g0_), ((vec4<f32>(_e9.g0_.x, _e12.g0_.x, _e15.g0_.x, _e18.g0_.y) * vec4<f32>(0.0, 0.0, 1.0, 1.0)) - _e28.g1_));
 }
 
-fn ideal_point_rotor_add(self_602: IdealPoint, other_506: Rotor) -> Motor {
-    var self_603: IdealPoint;
-    var other_507: Rotor;
+fn ideal_point_multi_vector_geometric_anti_product(self_942: IdealPoint, other_820: MultiVector) -> MultiVector {
+    var self_943: IdealPoint;
+    var other_821: MultiVector;
 
-    self_603 = self_602;
-    other_507 = other_506;
-    let _e4: IdealPoint = self_603;
-    let _e7: IdealPoint = self_603;
-    let _e10: IdealPoint = self_603;
-    let _e13: IdealPoint = self_603;
-    let _e23: Rotor = other_507;
-    let _e26: Rotor = other_507;
-    let _e29: Rotor = other_507;
-    let _e32: Rotor = other_507;
+    self_943 = self_942;
+    other_821 = other_820;
+    let _e4: IdealPoint = self_943;
+    let _e8: MultiVector = other_821;
+    let _e12: IdealPoint = self_943;
+    let _e16: MultiVector = other_821;
+    let _e29: IdealPoint = self_943;
+    let _e33: MultiVector = other_821;
+    let _e45: IdealPoint = self_943;
+    let _e49: MultiVector = other_821;
+    return MultiVector(((vec4<f32>(_e4.g0_.x) * _e8.g0_.wzyx) + ((vec4<f32>(_e12.g0_.y) * _e16.g0_.zwxy) * vec4<f32>(1.0, -(1.0), 1.0, -(1.0)))), (((vec4<f32>(_e29.g0_.x) * _e33.g1_.wzyx) * vec4<f32>(-(1.0), 1.0, 1.0, -(1.0))) + (vec4<f32>(_e45.g0_.y) * _e49.g1_.zwxy)));
+}
+
+fn ideal_point_multi_vector_anti_scalar_product(self_944: IdealPoint, other_822: MultiVector) -> AntiScalar {
+    var self_945: IdealPoint;
+    var other_823: MultiVector;
+
+    self_945 = self_944;
+    other_823 = other_822;
+    let _e4: IdealPoint = self_945;
+    let _e7: MultiVector = other_823;
+    let _e11: IdealPoint = self_945;
+    let _e14: MultiVector = other_823;
+    return AntiScalar(((_e4.g0_.x * _e7.g1_.z) + (_e11.g0_.y * _e14.g1_.w)));
+}
+
+fn ideal_point_rotor_add(self_946: IdealPoint, other_824: Rotor) -> Motor {
+    var self_947: IdealPoint;
+    var other_825: Rotor;
+
+    self_947 = self_946;
+    other_825 = other_824;
+    let _e4: IdealPoint = self_947;
+    let _e7: IdealPoint = self_947;
+    let _e10: IdealPoint = self_947;
+    let _e13: IdealPoint = self_947;
+    let _e23: Rotor = other_825;
+    let _e26: Rotor = other_825;
+    let _e29: Rotor = other_825;
+    let _e32: Rotor = other_825;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.x, _e13.g0_.y) * vec4<f32>(0.0, 0.0, 1.0, 1.0)) + (vec4<f32>(_e23.g0_.x, _e26.g0_.y, _e29.g0_.x, _e32.g0_.x) * vec4<f32>(1.0, 1.0, 0.0, 0.0))));
 }
 
-fn ideal_point_rotor_sub(self_604: IdealPoint, other_508: Rotor) -> Motor {
-    var self_605: IdealPoint;
-    var other_509: Rotor;
+fn ideal_point_rotor_sub(self_948: IdealPoint, other_826: Rotor) -> Motor {
+    var self_949: IdealPoint;
+    var other_827: Rotor;
 
-    self_605 = self_604;
-    other_509 = other_508;
-    let _e4: IdealPoint = self_605;
-    let _e7: IdealPoint = self_605;
-    let _e10: IdealPoint = self_605;
-    let _e13: IdealPoint = self_605;
-    let _e23: Rotor = other_509;
-    let _e26: Rotor = other_509;
-    let _e29: Rotor = other_509;
-    let _e32: Rotor = other_509;
+    self_949 = self_948;
+    other_827 = other_826;
+    let _e4: IdealPoint = self_949;
+    let _e7: IdealPoint = self_949;
+    let _e10: IdealPoint = self_949;
+    let _e13: IdealPoint = self_949;
+    let _e23: Rotor = other_827;
+    let _e26: Rotor = other_827;
+    let _e29: Rotor = other_827;
+    let _e32: Rotor = other_827;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.x, _e13.g0_.y) * vec4<f32>(0.0, 0.0, 1.0, 1.0)) - (vec4<f32>(_e23.g0_.x, _e26.g0_.y, _e29.g0_.x, _e32.g0_.x) * vec4<f32>(1.0, 1.0, 0.0, 0.0))));
 }
 
-fn ideal_point_rotor_geometric_product(self_606: IdealPoint, other_510: Rotor) -> IdealPoint {
-    var self_607: IdealPoint;
-    var other_511: Rotor;
+fn ideal_point_rotor_geometric_product(self_950: IdealPoint, other_828: Rotor) -> IdealPoint {
+    var self_951: IdealPoint;
+    var other_829: Rotor;
 
-    self_607 = self_606;
-    other_511 = other_510;
-    let _e4: IdealPoint = self_607;
-    let _e8: Rotor = other_511;
-    let _e16: IdealPoint = self_607;
-    let _e20: Rotor = other_511;
+    self_951 = self_950;
+    other_829 = other_828;
+    let _e4: IdealPoint = self_951;
+    let _e8: Rotor = other_829;
+    let _e16: IdealPoint = self_951;
+    let _e20: Rotor = other_829;
     return IdealPoint((((vec2<f32>(_e4.g0_.x) * _e8.g0_) * vec2<f32>(1.0, -(1.0))) + (vec2<f32>(_e16.g0_.y) * _e20.g0_.yx)));
 }
 
-fn ideal_point_rotor_outer_product(self_608: IdealPoint, other_512: Rotor) -> IdealPoint {
-    var self_609: IdealPoint;
-    var other_513: Rotor;
+fn ideal_point_rotor_outer_product(self_952: IdealPoint, other_830: Rotor) -> IdealPoint {
+    var self_953: IdealPoint;
+    var other_831: Rotor;
 
-    self_609 = self_608;
-    other_513 = other_512;
-    let _e4: IdealPoint = self_609;
-    let _e6: Rotor = other_513;
+    self_953 = self_952;
+    other_831 = other_830;
+    let _e4: IdealPoint = self_953;
+    let _e6: Rotor = other_831;
     return IdealPoint((_e4.g0_ * vec2<f32>(_e6.g0_.x)));
 }
 
-fn ideal_point_rotor_inner_product(self_610: IdealPoint, other_514: Rotor) -> IdealPoint {
-    var self_611: IdealPoint;
-    var other_515: Rotor;
+fn ideal_point_rotor_inner_product(self_954: IdealPoint, other_832: Rotor) -> IdealPoint {
+    var self_955: IdealPoint;
+    var other_833: Rotor;
 
-    self_611 = self_610;
-    other_515 = other_514;
-    let _e4: IdealPoint = self_611;
-    let _e6: Rotor = other_515;
+    self_955 = self_954;
+    other_833 = other_832;
+    let _e4: IdealPoint = self_955;
+    let _e6: Rotor = other_833;
     return IdealPoint((_e4.g0_ * vec2<f32>(_e6.g0_.x)));
 }
 
-fn ideal_point_rotor_right_contraction(self_612: IdealPoint, other_516: Rotor) -> IdealPoint {
-    var self_613: IdealPoint;
-    var other_517: Rotor;
+fn ideal_point_rotor_right_contraction(self_956: IdealPoint, other_834: Rotor) -> IdealPoint {
+    var self_957: IdealPoint;
+    var other_835: Rotor;
 
-    self_613 = self_612;
-    other_517 = other_516;
-    let _e4: IdealPoint = self_613;
-    let _e6: Rotor = other_517;
+    self_957 = self_956;
+    other_835 = other_834;
+    let _e4: IdealPoint = self_957;
+    let _e6: Rotor = other_835;
     return IdealPoint((_e4.g0_ * vec2<f32>(_e6.g0_.x)));
 }
 
-fn ideal_point_point_add(self_614: IdealPoint, other_518: Point) -> Point {
-    var self_615: IdealPoint;
-    var other_519: Point;
+fn ideal_point_point_add(self_958: IdealPoint, other_836: Point) -> Point {
+    var self_959: IdealPoint;
+    var other_837: Point;
 
-    self_615 = self_614;
-    other_519 = other_518;
-    let _e4: IdealPoint = self_615;
-    let _e7: IdealPoint = self_615;
-    let _e10: IdealPoint = self_615;
-    let _e19: Point = other_519;
+    self_959 = self_958;
+    other_837 = other_836;
+    let _e4: IdealPoint = self_959;
+    let _e7: IdealPoint = self_959;
+    let _e10: IdealPoint = self_959;
+    let _e19: Point = other_837;
     return Point(((vec3<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y) * vec3<f32>(0.0, 1.0, 1.0)) + _e19.g0_));
 }
 
-fn ideal_point_point_sub(self_616: IdealPoint, other_520: Point) -> Point {
-    var self_617: IdealPoint;
-    var other_521: Point;
+fn ideal_point_point_sub(self_960: IdealPoint, other_838: Point) -> Point {
+    var self_961: IdealPoint;
+    var other_839: Point;
 
-    self_617 = self_616;
-    other_521 = other_520;
-    let _e4: IdealPoint = self_617;
-    let _e7: IdealPoint = self_617;
-    let _e10: IdealPoint = self_617;
-    let _e19: Point = other_521;
+    self_961 = self_960;
+    other_839 = other_838;
+    let _e4: IdealPoint = self_961;
+    let _e7: IdealPoint = self_961;
+    let _e10: IdealPoint = self_961;
+    let _e19: Point = other_839;
     return Point(((vec3<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y) * vec3<f32>(0.0, 1.0, 1.0)) - _e19.g0_));
 }
 
-fn ideal_point_point_geometric_product(self_618: IdealPoint, other_522: Point) -> IdealPoint {
-    var self_619: IdealPoint;
-    var other_523: Point;
+fn ideal_point_point_geometric_product(self_962: IdealPoint, other_840: Point) -> IdealPoint {
+    var self_963: IdealPoint;
+    var other_841: Point;
 
-    self_619 = self_618;
-    other_523 = other_522;
-    let _e4: IdealPoint = self_619;
-    let _e7: Point = other_523;
+    self_963 = self_962;
+    other_841 = other_840;
+    let _e4: IdealPoint = self_963;
+    let _e7: Point = other_841;
     return IdealPoint(((_e4.g0_.yx * vec2<f32>(_e7.g0_.x)) * vec2<f32>(1.0, -(1.0))));
 }
 
-fn ideal_point_point_regressive_product(self_620: IdealPoint, other_524: Point) -> Plane {
-    var self_621: IdealPoint;
-    var other_525: Point;
+fn ideal_point_point_regressive_product(self_964: IdealPoint, other_842: Point) -> Plane {
+    var self_965: IdealPoint;
+    var other_843: Point;
 
-    self_621 = self_620;
-    other_525 = other_524;
-    let _e4: IdealPoint = self_621;
-    let _e8: Point = other_525;
-    let _e18: IdealPoint = self_621;
-    let _e22: Point = other_525;
+    self_965 = self_964;
+    other_843 = other_842;
+    let _e4: IdealPoint = self_965;
+    let _e8: Point = other_843;
+    let _e18: IdealPoint = self_965;
+    let _e22: Point = other_843;
     return Plane((((vec3<f32>(_e4.g0_.y) * _e8.g0_.yxy) * vec3<f32>(1.0, -(1.0), 0.0)) + ((vec3<f32>(_e18.g0_.x) * _e22.g0_.zxx) * vec3<f32>(-(1.0), 0.0, 1.0))));
 }
 
-fn ideal_point_ideal_point_add(self_622: IdealPoint, other_526: IdealPoint) -> IdealPoint {
-    var self_623: IdealPoint;
-    var other_527: IdealPoint;
+fn ideal_point_point_geometric_anti_product(self_966: IdealPoint, other_844: Point) -> MotorDual {
+    var self_967: IdealPoint;
+    var other_845: Point;
 
-    self_623 = self_622;
-    other_527 = other_526;
-    let _e4: IdealPoint = self_623;
-    let _e6: IdealPoint = other_527;
+    self_967 = self_966;
+    other_845 = other_844;
+    let _e4: IdealPoint = self_967;
+    let _e8: Point = other_845;
+    let _e11: Point = other_845;
+    let _e14: Point = other_845;
+    let _e17: Point = other_845;
+    let _e29: IdealPoint = self_967;
+    let _e33: Point = other_845;
+    let _e36: Point = other_845;
+    let _e39: Point = other_845;
+    let _e42: Point = other_845;
+    return MotorDual((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.z, _e11.g0_.y, _e14.g0_.x, _e17.g0_.z)) * vec4<f32>(1.0, 1.0, -(1.0), 0.0)) + ((vec4<f32>(_e29.g0_.x) * vec4<f32>(_e33.g0_.y, _e36.g0_.z, _e39.g0_.x, _e42.g0_.x)) * vec4<f32>(1.0, -(1.0), 0.0, 1.0))));
+}
+
+fn ideal_point_point_inner_anti_product(self_968: IdealPoint, other_846: Point) -> AntiScalar {
+    var self_969: IdealPoint;
+    var other_847: Point;
+
+    self_969 = self_968;
+    other_847 = other_846;
+    let _e4: IdealPoint = self_969;
+    let _e7: Point = other_847;
+    let _e11: IdealPoint = self_969;
+    let _e14: Point = other_847;
+    return AntiScalar(((_e4.g0_.x * _e7.g0_.y) + (_e11.g0_.y * _e14.g0_.z)));
+}
+
+fn ideal_point_point_left_anti_contraction(self_970: IdealPoint, other_848: Point) -> AntiScalar {
+    var self_971: IdealPoint;
+    var other_849: Point;
+
+    self_971 = self_970;
+    other_849 = other_848;
+    let _e4: IdealPoint = self_971;
+    let _e7: Point = other_849;
+    let _e11: IdealPoint = self_971;
+    let _e14: Point = other_849;
+    return AntiScalar(((_e4.g0_.x * _e7.g0_.y) + (_e11.g0_.y * _e14.g0_.z)));
+}
+
+fn ideal_point_point_right_anti_contraction(self_972: IdealPoint, other_850: Point) -> AntiScalar {
+    var self_973: IdealPoint;
+    var other_851: Point;
+
+    self_973 = self_972;
+    other_851 = other_850;
+    let _e4: IdealPoint = self_973;
+    let _e7: Point = other_851;
+    let _e11: IdealPoint = self_973;
+    let _e14: Point = other_851;
+    return AntiScalar(((_e4.g0_.x * _e7.g0_.y) + (_e11.g0_.y * _e14.g0_.z)));
+}
+
+fn ideal_point_point_anti_scalar_product(self_974: IdealPoint, other_852: Point) -> AntiScalar {
+    var self_975: IdealPoint;
+    var other_853: Point;
+
+    self_975 = self_974;
+    other_853 = other_852;
+    let _e4: IdealPoint = self_975;
+    let _e7: Point = other_853;
+    let _e11: IdealPoint = self_975;
+    let _e14: Point = other_853;
+    return AntiScalar(((_e4.g0_.x * _e7.g0_.y) + (_e11.g0_.y * _e14.g0_.z)));
+}
+
+fn ideal_point_ideal_point_add(self_976: IdealPoint, other_854: IdealPoint) -> IdealPoint {
+    var self_977: IdealPoint;
+    var other_855: IdealPoint;
+
+    self_977 = self_976;
+    other_855 = other_854;
+    let _e4: IdealPoint = self_977;
+    let _e6: IdealPoint = other_855;
     return IdealPoint((_e4.g0_ + _e6.g0_));
 }
 
-fn ideal_point_ideal_point_sub(self_624: IdealPoint, other_528: IdealPoint) -> IdealPoint {
-    var self_625: IdealPoint;
-    var other_529: IdealPoint;
+fn ideal_point_ideal_point_sub(self_978: IdealPoint, other_856: IdealPoint) -> IdealPoint {
+    var self_979: IdealPoint;
+    var other_857: IdealPoint;
 
-    self_625 = self_624;
-    other_529 = other_528;
-    let _e4: IdealPoint = self_625;
-    let _e6: IdealPoint = other_529;
+    self_979 = self_978;
+    other_857 = other_856;
+    let _e4: IdealPoint = self_979;
+    let _e6: IdealPoint = other_857;
     return IdealPoint((_e4.g0_ - _e6.g0_));
 }
 
-fn ideal_point_ideal_point_mul(self_626: IdealPoint, other_530: IdealPoint) -> IdealPoint {
-    var self_627: IdealPoint;
-    var other_531: IdealPoint;
+fn ideal_point_ideal_point_mul(self_980: IdealPoint, other_858: IdealPoint) -> IdealPoint {
+    var self_981: IdealPoint;
+    var other_859: IdealPoint;
 
-    self_627 = self_626;
-    other_531 = other_530;
-    let _e4: IdealPoint = self_627;
-    let _e6: IdealPoint = other_531;
+    self_981 = self_980;
+    other_859 = other_858;
+    let _e4: IdealPoint = self_981;
+    let _e6: IdealPoint = other_859;
     return IdealPoint((_e4.g0_ * _e6.g0_));
 }
 
-fn ideal_point_ideal_point_div(self_628: IdealPoint, other_532: IdealPoint) -> IdealPoint {
-    var self_629: IdealPoint;
-    var other_533: IdealPoint;
+fn ideal_point_ideal_point_div(self_982: IdealPoint, other_860: IdealPoint) -> IdealPoint {
+    var self_983: IdealPoint;
+    var other_861: IdealPoint;
 
-    self_629 = self_628;
-    other_533 = other_532;
-    let _e4: IdealPoint = self_629;
-    let _e7: IdealPoint = self_629;
-    let _e15: IdealPoint = other_533;
-    let _e18: IdealPoint = other_533;
+    self_983 = self_982;
+    other_861 = other_860;
+    let _e4: IdealPoint = self_983;
+    let _e7: IdealPoint = self_983;
+    let _e15: IdealPoint = other_861;
+    let _e18: IdealPoint = other_861;
     return IdealPoint((((vec2<f32>(_e4.g0_.x, _e7.g0_.y) * vec2<f32>(1.0, 1.0)) / vec2<f32>(_e15.g0_.x, _e18.g0_.y)) * vec2<f32>(1.0, 1.0)));
 }
 
-fn ideal_point_plane_regressive_product(self_630: IdealPoint, other_534: Plane) -> Scalar {
-    var self_631: IdealPoint;
-    var other_535: Plane;
+fn ideal_point_ideal_point_inner_anti_product(self_984: IdealPoint, other_862: IdealPoint) -> AntiScalar {
+    var self_985: IdealPoint;
+    var other_863: IdealPoint;
 
-    self_631 = self_630;
-    other_535 = other_534;
-    let _e4: IdealPoint = self_631;
-    let _e7: Plane = other_535;
-    let _e11: IdealPoint = self_631;
-    let _e14: Plane = other_535;
+    self_985 = self_984;
+    other_863 = other_862;
+    let _e4: IdealPoint = self_985;
+    let _e7: IdealPoint = other_863;
+    let _e11: IdealPoint = self_985;
+    let _e14: IdealPoint = other_863;
+    return AntiScalar(((_e4.g0_.x * _e7.g0_.x) + (_e11.g0_.y * _e14.g0_.y)));
+}
+
+fn ideal_point_ideal_point_left_anti_contraction(self_986: IdealPoint, other_864: IdealPoint) -> AntiScalar {
+    var self_987: IdealPoint;
+    var other_865: IdealPoint;
+
+    self_987 = self_986;
+    other_865 = other_864;
+    let _e4: IdealPoint = self_987;
+    let _e7: IdealPoint = other_865;
+    let _e11: IdealPoint = self_987;
+    let _e14: IdealPoint = other_865;
+    return AntiScalar(((_e4.g0_.x * _e7.g0_.x) + (_e11.g0_.y * _e14.g0_.y)));
+}
+
+fn ideal_point_ideal_point_right_anti_contraction(self_988: IdealPoint, other_866: IdealPoint) -> AntiScalar {
+    var self_989: IdealPoint;
+    var other_867: IdealPoint;
+
+    self_989 = self_988;
+    other_867 = other_866;
+    let _e4: IdealPoint = self_989;
+    let _e7: IdealPoint = other_867;
+    let _e11: IdealPoint = self_989;
+    let _e14: IdealPoint = other_867;
+    return AntiScalar(((_e4.g0_.x * _e7.g0_.x) + (_e11.g0_.y * _e14.g0_.y)));
+}
+
+fn ideal_point_ideal_point_anti_scalar_product(self_990: IdealPoint, other_868: IdealPoint) -> AntiScalar {
+    var self_991: IdealPoint;
+    var other_869: IdealPoint;
+
+    self_991 = self_990;
+    other_869 = other_868;
+    let _e4: IdealPoint = self_991;
+    let _e7: IdealPoint = other_869;
+    let _e11: IdealPoint = self_991;
+    let _e14: IdealPoint = other_869;
+    return AntiScalar(((_e4.g0_.x * _e7.g0_.x) + (_e11.g0_.y * _e14.g0_.y)));
+}
+
+fn ideal_point_plane_regressive_product(self_992: IdealPoint, other_870: Plane) -> Scalar {
+    var self_993: IdealPoint;
+    var other_871: Plane;
+
+    self_993 = self_992;
+    other_871 = other_870;
+    let _e4: IdealPoint = self_993;
+    let _e7: Plane = other_871;
+    let _e11: IdealPoint = self_993;
+    let _e14: Plane = other_871;
     return Scalar(((_e4.g0_.x * _e7.g0_.y) + (_e11.g0_.y * _e14.g0_.z)));
 }
 
-fn ideal_point_translator_add(self_632: IdealPoint, other_536: Translator) -> Translator {
-    var self_633: IdealPoint;
-    var other_537: Translator;
+fn ideal_point_plane_outer_product(self_994: IdealPoint, other_872: Plane) -> AntiScalar {
+    var self_995: IdealPoint;
+    var other_873: Plane;
 
-    self_633 = self_632;
-    other_537 = other_536;
-    let _e4: IdealPoint = self_633;
-    let _e7: IdealPoint = self_633;
-    let _e10: IdealPoint = self_633;
-    let _e19: Translator = other_537;
+    self_995 = self_994;
+    other_873 = other_872;
+    let _e4: IdealPoint = self_995;
+    let _e7: Plane = other_873;
+    let _e11: IdealPoint = self_995;
+    let _e14: Plane = other_873;
+    return AntiScalar(((_e4.g0_.x * _e7.g0_.y) + (_e11.g0_.y * _e14.g0_.z)));
+}
+
+fn ideal_point_plane_geometric_anti_product(self_996: IdealPoint, other_874: Plane) -> Motor {
+    var self_997: IdealPoint;
+    var other_875: Plane;
+
+    self_997 = self_996;
+    other_875 = other_874;
+    let _e4: IdealPoint = self_997;
+    let _e8: Plane = other_875;
+    let _e11: Plane = other_875;
+    let _e14: Plane = other_875;
+    let _e17: Plane = other_875;
+    let _e29: IdealPoint = self_997;
+    let _e33: Plane = other_875;
+    let _e36: Plane = other_875;
+    let _e39: Plane = other_875;
+    let _e42: Plane = other_875;
+    return Motor((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.z, _e11.g0_.y, _e14.g0_.x, _e17.g0_.z)) * vec4<f32>(1.0, -(1.0), 1.0, 0.0)) + ((vec4<f32>(_e29.g0_.x) * vec4<f32>(_e33.g0_.y, _e36.g0_.z, _e39.g0_.x, _e42.g0_.x)) * vec4<f32>(1.0, 1.0, 0.0, -(1.0)))));
+}
+
+fn ideal_point_plane_inner_anti_product(self_998: IdealPoint, other_876: Plane) -> Point {
+    var self_999: IdealPoint;
+    var other_877: Plane;
+
+    self_999 = self_998;
+    other_877 = other_876;
+    let _e4: IdealPoint = self_999;
+    let _e8: Plane = other_877;
+    let _e18: IdealPoint = self_999;
+    let _e22: Plane = other_877;
+    return Point((((vec3<f32>(_e4.g0_.y) * _e8.g0_.yxy) * vec3<f32>(-(1.0), 1.0, 0.0)) + ((vec3<f32>(_e18.g0_.x) * _e22.g0_.zxx) * vec3<f32>(1.0, 0.0, -(1.0)))));
+}
+
+fn ideal_point_plane_left_anti_contraction(self_1000: IdealPoint, other_878: Plane) -> Point {
+    var self_1001: IdealPoint;
+    var other_879: Plane;
+
+    self_1001 = self_1000;
+    other_879 = other_878;
+    let _e4: IdealPoint = self_1001;
+    let _e8: Plane = other_879;
+    let _e18: IdealPoint = self_1001;
+    let _e22: Plane = other_879;
+    return Point((((vec3<f32>(_e4.g0_.y) * _e8.g0_.yxy) * vec3<f32>(-(1.0), 1.0, 0.0)) + ((vec3<f32>(_e18.g0_.x) * _e22.g0_.zxx) * vec3<f32>(1.0, 0.0, -(1.0)))));
+}
+
+fn ideal_point_translator_add(self_1002: IdealPoint, other_880: Translator) -> Translator {
+    var self_1003: IdealPoint;
+    var other_881: Translator;
+
+    self_1003 = self_1002;
+    other_881 = other_880;
+    let _e4: IdealPoint = self_1003;
+    let _e7: IdealPoint = self_1003;
+    let _e10: IdealPoint = self_1003;
+    let _e19: Translator = other_881;
     return Translator(((vec3<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y) * vec3<f32>(0.0, 1.0, 1.0)) + _e19.g0_));
 }
 
-fn ideal_point_translator_sub(self_634: IdealPoint, other_538: Translator) -> Translator {
-    var self_635: IdealPoint;
-    var other_539: Translator;
+fn ideal_point_translator_sub(self_1004: IdealPoint, other_882: Translator) -> Translator {
+    var self_1005: IdealPoint;
+    var other_883: Translator;
 
-    self_635 = self_634;
-    other_539 = other_538;
-    let _e4: IdealPoint = self_635;
-    let _e7: IdealPoint = self_635;
-    let _e10: IdealPoint = self_635;
-    let _e19: Translator = other_539;
+    self_1005 = self_1004;
+    other_883 = other_882;
+    let _e4: IdealPoint = self_1005;
+    let _e7: IdealPoint = self_1005;
+    let _e10: IdealPoint = self_1005;
+    let _e19: Translator = other_883;
     return Translator(((vec3<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y) * vec3<f32>(0.0, 1.0, 1.0)) - _e19.g0_));
 }
 
-fn ideal_point_translator_geometric_product(self_636: IdealPoint, other_540: Translator) -> IdealPoint {
-    var self_637: IdealPoint;
-    var other_541: Translator;
+fn ideal_point_translator_geometric_product(self_1006: IdealPoint, other_884: Translator) -> IdealPoint {
+    var self_1007: IdealPoint;
+    var other_885: Translator;
 
-    self_637 = self_636;
-    other_541 = other_540;
-    let _e4: IdealPoint = self_637;
-    let _e6: Translator = other_541;
+    self_1007 = self_1006;
+    other_885 = other_884;
+    let _e4: IdealPoint = self_1007;
+    let _e6: Translator = other_885;
     return IdealPoint((_e4.g0_ * vec2<f32>(_e6.g0_.x)));
 }
 
-fn ideal_point_translator_outer_product(self_638: IdealPoint, other_542: Translator) -> IdealPoint {
-    var self_639: IdealPoint;
-    var other_543: Translator;
+fn ideal_point_translator_outer_product(self_1008: IdealPoint, other_886: Translator) -> IdealPoint {
+    var self_1009: IdealPoint;
+    var other_887: Translator;
 
-    self_639 = self_638;
-    other_543 = other_542;
-    let _e4: IdealPoint = self_639;
-    let _e6: Translator = other_543;
+    self_1009 = self_1008;
+    other_887 = other_886;
+    let _e4: IdealPoint = self_1009;
+    let _e6: Translator = other_887;
     return IdealPoint((_e4.g0_ * vec2<f32>(_e6.g0_.x)));
 }
 
-fn ideal_point_translator_inner_product(self_640: IdealPoint, other_544: Translator) -> IdealPoint {
-    var self_641: IdealPoint;
-    var other_545: Translator;
+fn ideal_point_translator_inner_product(self_1010: IdealPoint, other_888: Translator) -> IdealPoint {
+    var self_1011: IdealPoint;
+    var other_889: Translator;
 
-    self_641 = self_640;
-    other_545 = other_544;
-    let _e4: IdealPoint = self_641;
-    let _e6: Translator = other_545;
+    self_1011 = self_1010;
+    other_889 = other_888;
+    let _e4: IdealPoint = self_1011;
+    let _e6: Translator = other_889;
     return IdealPoint((_e4.g0_ * vec2<f32>(_e6.g0_.x)));
 }
 
-fn ideal_point_translator_right_contraction(self_642: IdealPoint, other_546: Translator) -> IdealPoint {
-    var self_643: IdealPoint;
-    var other_547: Translator;
+fn ideal_point_translator_geometric_anti_product(self_1012: IdealPoint, other_890: Translator) -> MotorDual {
+    var self_1013: IdealPoint;
+    var other_891: Translator;
 
-    self_643 = self_642;
-    other_547 = other_546;
-    let _e4: IdealPoint = self_643;
-    let _e6: Translator = other_547;
+    self_1013 = self_1012;
+    other_891 = other_890;
+    let _e4: IdealPoint = self_1013;
+    let _e8: Translator = other_891;
+    let _e11: Translator = other_891;
+    let _e14: Translator = other_891;
+    let _e17: Translator = other_891;
+    let _e28: IdealPoint = self_1013;
+    let _e32: Translator = other_891;
+    let _e35: Translator = other_891;
+    let _e38: Translator = other_891;
+    let _e41: Translator = other_891;
+    return MotorDual((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.z, _e11.g0_.y, _e14.g0_.z, _e17.g0_.x)) * vec4<f32>(1.0, 1.0, 0.0, 1.0)) + ((vec4<f32>(_e28.g0_.x) * vec4<f32>(_e32.g0_.y, _e35.g0_.z, _e38.g0_.x, _e41.g0_.x)) * vec4<f32>(1.0, -(1.0), 1.0, 0.0))));
+}
+
+fn ideal_point_translator_right_contraction(self_1014: IdealPoint, other_892: Translator) -> IdealPoint {
+    var self_1015: IdealPoint;
+    var other_893: Translator;
+
+    self_1015 = self_1014;
+    other_893 = other_892;
+    let _e4: IdealPoint = self_1015;
+    let _e6: Translator = other_893;
     return IdealPoint((_e4.g0_ * vec2<f32>(_e6.g0_.x)));
 }
 
-fn ideal_point_motor_add(self_644: IdealPoint, other_548: Motor) -> Motor {
-    var self_645: IdealPoint;
-    var other_549: Motor;
+fn ideal_point_translator_right_anti_contraction(self_1016: IdealPoint, other_894: Translator) -> AntiScalar {
+    var self_1017: IdealPoint;
+    var other_895: Translator;
 
-    self_645 = self_644;
-    other_549 = other_548;
-    let _e4: IdealPoint = self_645;
-    let _e7: IdealPoint = self_645;
-    let _e10: IdealPoint = self_645;
-    let _e13: IdealPoint = self_645;
-    let _e23: Motor = other_549;
+    self_1017 = self_1016;
+    other_895 = other_894;
+    let _e4: IdealPoint = self_1017;
+    let _e7: Translator = other_895;
+    let _e11: IdealPoint = self_1017;
+    let _e14: Translator = other_895;
+    return AntiScalar(((_e4.g0_.x * _e7.g0_.y) + (_e11.g0_.y * _e14.g0_.z)));
+}
+
+fn ideal_point_translator_anti_scalar_product(self_1018: IdealPoint, other_896: Translator) -> AntiScalar {
+    var self_1019: IdealPoint;
+    var other_897: Translator;
+
+    self_1019 = self_1018;
+    other_897 = other_896;
+    let _e4: IdealPoint = self_1019;
+    let _e7: Translator = other_897;
+    let _e11: IdealPoint = self_1019;
+    let _e14: Translator = other_897;
+    return AntiScalar(((_e4.g0_.x * _e7.g0_.y) + (_e11.g0_.y * _e14.g0_.z)));
+}
+
+fn ideal_point_motor_add(self_1020: IdealPoint, other_898: Motor) -> Motor {
+    var self_1021: IdealPoint;
+    var other_899: Motor;
+
+    self_1021 = self_1020;
+    other_899 = other_898;
+    let _e4: IdealPoint = self_1021;
+    let _e7: IdealPoint = self_1021;
+    let _e10: IdealPoint = self_1021;
+    let _e13: IdealPoint = self_1021;
+    let _e23: Motor = other_899;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.x, _e13.g0_.y) * vec4<f32>(0.0, 0.0, 1.0, 1.0)) + _e23.g0_));
 }
 
-fn ideal_point_motor_sub(self_646: IdealPoint, other_550: Motor) -> Motor {
-    var self_647: IdealPoint;
-    var other_551: Motor;
+fn ideal_point_motor_sub(self_1022: IdealPoint, other_900: Motor) -> Motor {
+    var self_1023: IdealPoint;
+    var other_901: Motor;
 
-    self_647 = self_646;
-    other_551 = other_550;
-    let _e4: IdealPoint = self_647;
-    let _e7: IdealPoint = self_647;
-    let _e10: IdealPoint = self_647;
-    let _e13: IdealPoint = self_647;
-    let _e23: Motor = other_551;
+    self_1023 = self_1022;
+    other_901 = other_900;
+    let _e4: IdealPoint = self_1023;
+    let _e7: IdealPoint = self_1023;
+    let _e10: IdealPoint = self_1023;
+    let _e13: IdealPoint = self_1023;
+    let _e23: Motor = other_901;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.x, _e13.g0_.y) * vec4<f32>(0.0, 0.0, 1.0, 1.0)) - _e23.g0_));
 }
 
-fn ideal_point_motor_geometric_product(self_648: IdealPoint, other_552: Motor) -> IdealPoint {
-    var self_649: IdealPoint;
-    var other_553: Motor;
+fn ideal_point_motor_geometric_product(self_1024: IdealPoint, other_902: Motor) -> IdealPoint {
+    var self_1025: IdealPoint;
+    var other_903: Motor;
 
-    self_649 = self_648;
-    other_553 = other_552;
-    let _e4: IdealPoint = self_649;
-    let _e8: Motor = other_553;
-    let _e11: Motor = other_553;
-    let _e21: IdealPoint = self_649;
-    let _e25: Motor = other_553;
-    let _e28: Motor = other_553;
+    self_1025 = self_1024;
+    other_903 = other_902;
+    let _e4: IdealPoint = self_1025;
+    let _e8: Motor = other_903;
+    let _e11: Motor = other_903;
+    let _e21: IdealPoint = self_1025;
+    let _e25: Motor = other_903;
+    let _e28: Motor = other_903;
     return IdealPoint((((vec2<f32>(_e4.g0_.x) * vec2<f32>(_e8.g0_.x, _e11.g0_.y)) * vec2<f32>(1.0, -(1.0))) + (vec2<f32>(_e21.g0_.y) * vec2<f32>(_e25.g0_.y, _e28.g0_.x))));
 }
 
-fn ideal_point_motor_regressive_product(self_650: IdealPoint, other_554: Motor) -> Plane {
-    var self_651: IdealPoint;
-    var other_555: Motor;
+fn ideal_point_motor_regressive_product(self_1026: IdealPoint, other_904: Motor) -> Plane {
+    var self_1027: IdealPoint;
+    var other_905: Motor;
 
-    self_651 = self_650;
-    other_555 = other_554;
-    let _e4: IdealPoint = self_651;
-    let _e8: Motor = other_555;
-    let _e11: Motor = other_555;
-    let _e14: Motor = other_555;
-    let _e25: IdealPoint = self_651;
-    let _e29: Motor = other_555;
-    let _e32: Motor = other_555;
-    let _e35: Motor = other_555;
+    self_1027 = self_1026;
+    other_905 = other_904;
+    let _e4: IdealPoint = self_1027;
+    let _e8: Motor = other_905;
+    let _e11: Motor = other_905;
+    let _e14: Motor = other_905;
+    let _e25: IdealPoint = self_1027;
+    let _e29: Motor = other_905;
+    let _e32: Motor = other_905;
+    let _e35: Motor = other_905;
     return Plane((((vec3<f32>(_e4.g0_.y) * vec3<f32>(_e8.g0_.z, _e11.g0_.y, _e14.g0_.z)) * vec3<f32>(1.0, -(1.0), 0.0)) + ((vec3<f32>(_e25.g0_.x) * vec3<f32>(_e29.g0_.w, _e32.g0_.x, _e35.g0_.y)) * vec3<f32>(-(1.0), 0.0, 1.0))));
 }
 
-fn ideal_point_motor_outer_product(self_652: IdealPoint, other_556: Motor) -> IdealPoint {
-    var self_653: IdealPoint;
-    var other_557: Motor;
+fn ideal_point_motor_outer_product(self_1028: IdealPoint, other_906: Motor) -> IdealPoint {
+    var self_1029: IdealPoint;
+    var other_907: Motor;
 
-    self_653 = self_652;
-    other_557 = other_556;
-    let _e4: IdealPoint = self_653;
-    let _e6: Motor = other_557;
+    self_1029 = self_1028;
+    other_907 = other_906;
+    let _e4: IdealPoint = self_1029;
+    let _e6: Motor = other_907;
     return IdealPoint((_e4.g0_ * vec2<f32>(_e6.g0_.x)));
 }
 
-fn ideal_point_motor_inner_product(self_654: IdealPoint, other_558: Motor) -> IdealPoint {
-    var self_655: IdealPoint;
-    var other_559: Motor;
+fn ideal_point_motor_inner_product(self_1030: IdealPoint, other_908: Motor) -> IdealPoint {
+    var self_1031: IdealPoint;
+    var other_909: Motor;
 
-    self_655 = self_654;
-    other_559 = other_558;
-    let _e4: IdealPoint = self_655;
-    let _e6: Motor = other_559;
+    self_1031 = self_1030;
+    other_909 = other_908;
+    let _e4: IdealPoint = self_1031;
+    let _e6: Motor = other_909;
     return IdealPoint((_e4.g0_ * vec2<f32>(_e6.g0_.x)));
 }
 
-fn ideal_point_motor_right_contraction(self_656: IdealPoint, other_560: Motor) -> IdealPoint {
-    var self_657: IdealPoint;
-    var other_561: Motor;
+fn ideal_point_motor_geometric_anti_product(self_1032: IdealPoint, other_910: Motor) -> MotorDual {
+    var self_1033: IdealPoint;
+    var other_911: Motor;
 
-    self_657 = self_656;
-    other_561 = other_560;
-    let _e4: IdealPoint = self_657;
-    let _e6: Motor = other_561;
+    self_1033 = self_1032;
+    other_911 = other_910;
+    let _e4: IdealPoint = self_1033;
+    let _e8: Motor = other_911;
+    let _e19: IdealPoint = self_1033;
+    let _e23: Motor = other_911;
+    return MotorDual((((vec4<f32>(_e4.g0_.x) * _e8.g0_.zwxy) * vec4<f32>(1.0, -(1.0), 1.0, 1.0)) + ((vec4<f32>(_e19.g0_.y) * _e23.g0_.wzyx) * vec4<f32>(1.0, 1.0, -(1.0), 1.0))));
+}
+
+fn ideal_point_motor_right_contraction(self_1034: IdealPoint, other_912: Motor) -> IdealPoint {
+    var self_1035: IdealPoint;
+    var other_913: Motor;
+
+    self_1035 = self_1034;
+    other_913 = other_912;
+    let _e4: IdealPoint = self_1035;
+    let _e6: Motor = other_913;
     return IdealPoint((_e4.g0_ * vec2<f32>(_e6.g0_.x)));
 }
 
-fn ideal_point_motor_dual_regressive_product(self_658: IdealPoint, other_562: MotorDual) -> Translator {
-    var self_659: IdealPoint;
-    var other_563: MotorDual;
+fn ideal_point_motor_right_anti_contraction(self_1036: IdealPoint, other_914: Motor) -> AntiScalar {
+    var self_1037: IdealPoint;
+    var other_915: Motor;
 
-    self_659 = self_658;
-    other_563 = other_562;
-    let _e4: IdealPoint = self_659;
-    let _e8: MotorDual = other_563;
-    let _e11: MotorDual = other_563;
-    let _e14: MotorDual = other_563;
-    let _e24: IdealPoint = self_659;
-    let _e28: MotorDual = other_563;
-    let _e31: MotorDual = other_563;
-    let _e34: MotorDual = other_563;
+    self_1037 = self_1036;
+    other_915 = other_914;
+    let _e4: IdealPoint = self_1037;
+    let _e7: Motor = other_915;
+    let _e11: IdealPoint = self_1037;
+    let _e14: Motor = other_915;
+    return AntiScalar(((_e4.g0_.x * _e7.g0_.z) + (_e11.g0_.y * _e14.g0_.w)));
+}
+
+fn ideal_point_motor_anti_scalar_product(self_1038: IdealPoint, other_916: Motor) -> AntiScalar {
+    var self_1039: IdealPoint;
+    var other_917: Motor;
+
+    self_1039 = self_1038;
+    other_917 = other_916;
+    let _e4: IdealPoint = self_1039;
+    let _e7: Motor = other_917;
+    let _e11: IdealPoint = self_1039;
+    let _e14: Motor = other_917;
+    return AntiScalar(((_e4.g0_.x * _e7.g0_.z) + (_e11.g0_.y * _e14.g0_.w)));
+}
+
+fn ideal_point_motor_dual_regressive_product(self_1040: IdealPoint, other_918: MotorDual) -> Translator {
+    var self_1041: IdealPoint;
+    var other_919: MotorDual;
+
+    self_1041 = self_1040;
+    other_919 = other_918;
+    let _e4: IdealPoint = self_1041;
+    let _e8: MotorDual = other_919;
+    let _e11: MotorDual = other_919;
+    let _e14: MotorDual = other_919;
+    let _e24: IdealPoint = self_1041;
+    let _e28: MotorDual = other_919;
+    let _e31: MotorDual = other_919;
+    let _e34: MotorDual = other_919;
     return Translator((((vec3<f32>(_e4.g0_.y) * vec3<f32>(_e8.g0_.w, _e11.g0_.w, _e14.g0_.x)) * vec3<f32>(1.0, 0.0, 1.0)) + ((vec3<f32>(_e24.g0_.x) * vec3<f32>(_e28.g0_.z, _e31.g0_.x, _e34.g0_.x)) * vec3<f32>(1.0, 1.0, 0.0))));
 }
 
-fn ideal_point_scale(self_660: IdealPoint, other_564: f32) -> IdealPoint {
-    var self_661: IdealPoint;
-    var other_565: f32;
+fn ideal_point_motor_dual_outer_product(self_1042: IdealPoint, other_920: MotorDual) -> AntiScalar {
+    var self_1043: IdealPoint;
+    var other_921: MotorDual;
 
-    self_661 = self_660;
-    other_565 = other_564;
-    let _e4: IdealPoint = self_661;
-    let _e5: f32 = other_565;
+    self_1043 = self_1042;
+    other_921 = other_920;
+    let _e4: IdealPoint = self_1043;
+    let _e7: MotorDual = other_921;
+    let _e11: IdealPoint = self_1043;
+    let _e14: MotorDual = other_921;
+    return AntiScalar(((_e4.g0_.x * _e7.g0_.z) + (_e11.g0_.y * _e14.g0_.w)));
+}
+
+fn ideal_point_motor_dual_geometric_anti_product(self_1044: IdealPoint, other_922: MotorDual) -> Motor {
+    var self_1045: IdealPoint;
+    var other_923: MotorDual;
+
+    self_1045 = self_1044;
+    other_923 = other_922;
+    let _e4: IdealPoint = self_1045;
+    let _e8: MotorDual = other_923;
+    let _e19: IdealPoint = self_1045;
+    let _e23: MotorDual = other_923;
+    return Motor((((vec4<f32>(_e4.g0_.x) * _e8.g0_.zwxy) * vec4<f32>(1.0, 1.0, 1.0, -(1.0))) + ((vec4<f32>(_e19.g0_.y) * _e23.g0_.wzyx) * vec4<f32>(1.0, -(1.0), 1.0, 1.0))));
+}
+
+fn ideal_point_motor_dual_inner_anti_product(self_1046: IdealPoint, other_924: MotorDual) -> Point {
+    var self_1047: IdealPoint;
+    var other_925: MotorDual;
+
+    self_1047 = self_1046;
+    other_925 = other_924;
+    let _e4: IdealPoint = self_1047;
+    let _e8: MotorDual = other_925;
+    let _e11: MotorDual = other_925;
+    let _e14: MotorDual = other_925;
+    let _e25: IdealPoint = self_1047;
+    let _e29: MotorDual = other_925;
+    let _e32: MotorDual = other_925;
+    let _e35: MotorDual = other_925;
+    return Point((((vec3<f32>(_e4.g0_.x) * vec3<f32>(_e8.g0_.w, _e11.g0_.x, _e14.g0_.y)) * vec3<f32>(1.0, 1.0, -(1.0))) + ((vec3<f32>(_e25.g0_.y) * vec3<f32>(_e29.g0_.z, _e32.g0_.y, _e35.g0_.x)) * vec3<f32>(-(1.0), 1.0, 1.0))));
+}
+
+fn ideal_point_motor_dual_left_anti_contraction(self_1048: IdealPoint, other_926: MotorDual) -> Point {
+    var self_1049: IdealPoint;
+    var other_927: MotorDual;
+
+    self_1049 = self_1048;
+    other_927 = other_926;
+    let _e4: IdealPoint = self_1049;
+    let _e8: MotorDual = other_927;
+    let _e11: MotorDual = other_927;
+    let _e14: MotorDual = other_927;
+    let _e25: IdealPoint = self_1049;
+    let _e29: MotorDual = other_927;
+    let _e32: MotorDual = other_927;
+    let _e35: MotorDual = other_927;
+    return Point((((vec3<f32>(_e4.g0_.y) * vec3<f32>(_e8.g0_.z, _e11.g0_.y, _e14.g0_.z)) * vec3<f32>(-(1.0), 1.0, 0.0)) + ((vec3<f32>(_e25.g0_.x) * vec3<f32>(_e29.g0_.w, _e32.g0_.x, _e35.g0_.y)) * vec3<f32>(1.0, 0.0, -(1.0)))));
+}
+
+fn ideal_point_motor_dual_right_anti_contraction(self_1050: IdealPoint, other_928: MotorDual) -> IdealPoint {
+    var self_1051: IdealPoint;
+    var other_929: MotorDual;
+
+    self_1051 = self_1050;
+    other_929 = other_928;
+    let _e4: IdealPoint = self_1051;
+    let _e6: MotorDual = other_929;
+    return IdealPoint((_e4.g0_ * vec2<f32>(_e6.g0_.x)));
+}
+
+fn ideal_point_scale(self_1052: IdealPoint, other_930: f32) -> IdealPoint {
+    var self_1053: IdealPoint;
+    var other_931: f32;
+
+    self_1053 = self_1052;
+    other_931 = other_930;
+    let _e4: IdealPoint = self_1053;
+    let _e5: f32 = other_931;
     let _e7: IdealPoint = ideal_point_scalar_geometric_product(_e4, Scalar(_e5));
     return _e7;
 }
@@ -4587,805 +7224,1306 @@ fn plane_one() -> Plane {
     return Plane(vec3<f32>(0.0));
 }
 
-fn plane_neg(self_662: Plane) -> Plane {
-    var self_663: Plane;
+fn plane_neg(self_1054: Plane) -> Plane {
+    var self_1055: Plane;
 
-    self_663 = self_662;
-    let _e2: Plane = self_663;
+    self_1055 = self_1054;
+    let _e2: Plane = self_1055;
     return Plane((_e2.g0_ * vec3<f32>(-(1.0))));
 }
 
-fn plane_automorphism(self_664: Plane) -> Plane {
-    var self_665: Plane;
+fn plane_automorphism(self_1056: Plane) -> Plane {
+    var self_1057: Plane;
 
-    self_665 = self_664;
-    let _e2: Plane = self_665;
+    self_1057 = self_1056;
+    let _e2: Plane = self_1057;
     return Plane((_e2.g0_ * vec3<f32>(-(1.0))));
 }
 
-fn plane_reversal(self_666: Plane) -> Plane {
-    var self_667: Plane;
+fn plane_reversal(self_1058: Plane) -> Plane {
+    var self_1059: Plane;
 
-    self_667 = self_666;
-    let _e2: Plane = self_667;
+    self_1059 = self_1058;
+    let _e2: Plane = self_1059;
     return Plane(_e2.g0_);
 }
 
-fn plane_conjugation(self_668: Plane) -> Plane {
-    var self_669: Plane;
+fn plane_conjugation(self_1060: Plane) -> Plane {
+    var self_1061: Plane;
 
-    self_669 = self_668;
-    let _e2: Plane = self_669;
+    self_1061 = self_1060;
+    let _e2: Plane = self_1061;
     return Plane((_e2.g0_ * vec3<f32>(-(1.0))));
 }
 
-fn plane_dual(self_670: Plane) -> Point {
-    var self_671: Plane;
+fn plane_dual(self_1062: Plane) -> Point {
+    var self_1063: Plane;
 
-    self_671 = self_670;
-    let _e2: Plane = self_671;
+    self_1063 = self_1062;
+    let _e2: Plane = self_1063;
     return Point(_e2.g0_);
 }
 
-fn plane_scalar_geometric_product(self_672: Plane, other_566: Scalar) -> Plane {
-    var self_673: Plane;
-    var other_567: Scalar;
+fn plane_anti_reversal(self_1064: Plane) -> Plane {
+    var self_1065: Plane;
 
-    self_673 = self_672;
-    other_567 = other_566;
-    let _e4: Plane = self_673;
-    let _e6: Scalar = other_567;
+    self_1065 = self_1064;
+    let _e2: Plane = self_1065;
+    return Plane((_e2.g0_ * vec3<f32>(-(1.0))));
+}
+
+fn plane_scalar_geometric_product(self_1066: Plane, other_932: Scalar) -> Plane {
+    var self_1067: Plane;
+    var other_933: Scalar;
+
+    self_1067 = self_1066;
+    other_933 = other_932;
+    let _e4: Plane = self_1067;
+    let _e6: Scalar = other_933;
     return Plane((_e4.g0_ * vec3<f32>(_e6.g0_)));
 }
 
-fn plane_scalar_outer_product(self_674: Plane, other_568: Scalar) -> Plane {
-    var self_675: Plane;
-    var other_569: Scalar;
+fn plane_scalar_outer_product(self_1068: Plane, other_934: Scalar) -> Plane {
+    var self_1069: Plane;
+    var other_935: Scalar;
 
-    self_675 = self_674;
-    other_569 = other_568;
-    let _e4: Plane = self_675;
-    let _e6: Scalar = other_569;
+    self_1069 = self_1068;
+    other_935 = other_934;
+    let _e4: Plane = self_1069;
+    let _e6: Scalar = other_935;
     return Plane((_e4.g0_ * vec3<f32>(_e6.g0_)));
 }
 
-fn plane_scalar_inner_product(self_676: Plane, other_570: Scalar) -> Plane {
-    var self_677: Plane;
-    var other_571: Scalar;
+fn plane_scalar_inner_product(self_1070: Plane, other_936: Scalar) -> Plane {
+    var self_1071: Plane;
+    var other_937: Scalar;
 
-    self_677 = self_676;
-    other_571 = other_570;
-    let _e4: Plane = self_677;
-    let _e6: Scalar = other_571;
+    self_1071 = self_1070;
+    other_937 = other_936;
+    let _e4: Plane = self_1071;
+    let _e6: Scalar = other_937;
     return Plane((_e4.g0_ * vec3<f32>(_e6.g0_)));
 }
 
-fn plane_scalar_right_contraction(self_678: Plane, other_572: Scalar) -> Plane {
-    var self_679: Plane;
-    var other_573: Scalar;
+fn plane_scalar_right_contraction(self_1072: Plane, other_938: Scalar) -> Plane {
+    var self_1073: Plane;
+    var other_939: Scalar;
 
-    self_679 = self_678;
-    other_573 = other_572;
-    let _e4: Plane = self_679;
-    let _e6: Scalar = other_573;
+    self_1073 = self_1072;
+    other_939 = other_938;
+    let _e4: Plane = self_1073;
+    let _e6: Scalar = other_939;
     return Plane((_e4.g0_ * vec3<f32>(_e6.g0_)));
 }
 
-fn plane_multi_vector_add(self_680: Plane, other_574: MultiVector) -> MultiVector {
-    var self_681: Plane;
-    var other_575: MultiVector;
+fn plane_anti_scalar_add(self_1074: Plane, other_940: AntiScalar) -> MotorDual {
+    var self_1075: Plane;
+    var other_941: AntiScalar;
 
-    self_681 = self_680;
-    other_575 = other_574;
-    let _e4: Plane = self_681;
-    let _e7: Plane = self_681;
-    let _e10: Plane = self_681;
-    let _e13: Plane = self_681;
-    let _e23: MultiVector = other_575;
-    let _e26: Plane = self_681;
-    let _e36: MultiVector = other_575;
+    self_1075 = self_1074;
+    other_941 = other_940;
+    let _e4: Plane = self_1075;
+    let _e7: Plane = self_1075;
+    let _e10: Plane = self_1075;
+    let _e13: Plane = self_1075;
+    let _e23: AntiScalar = other_941;
+    return MotorDual(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y, _e13.g0_.z) * vec4<f32>(0.0, 1.0, 1.0, 1.0)) + (vec4<f32>(_e23.g0_) * vec4<f32>(1.0, 0.0, 0.0, 0.0))));
+}
+
+fn plane_anti_scalar_sub(self_1076: Plane, other_942: AntiScalar) -> MotorDual {
+    var self_1077: Plane;
+    var other_943: AntiScalar;
+
+    self_1077 = self_1076;
+    other_943 = other_942;
+    let _e4: Plane = self_1077;
+    let _e7: Plane = self_1077;
+    let _e10: Plane = self_1077;
+    let _e13: Plane = self_1077;
+    let _e23: AntiScalar = other_943;
+    return MotorDual(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y, _e13.g0_.z) * vec4<f32>(0.0, 1.0, 1.0, 1.0)) - (vec4<f32>(_e23.g0_) * vec4<f32>(1.0, 0.0, 0.0, 0.0))));
+}
+
+fn plane_anti_scalar_geometric_product(self_1078: Plane, other_944: AntiScalar) -> IdealPoint {
+    var self_1079: Plane;
+    var other_945: AntiScalar;
+
+    self_1079 = self_1078;
+    other_945 = other_944;
+    let _e4: Plane = self_1079;
+    let _e7: Plane = self_1079;
+    let _e11: AntiScalar = other_945;
+    return IdealPoint((vec2<f32>(_e4.g0_.y, _e7.g0_.z) * vec2<f32>(_e11.g0_)));
+}
+
+fn plane_anti_scalar_regressive_product(self_1080: Plane, other_946: AntiScalar) -> Plane {
+    var self_1081: Plane;
+    var other_947: AntiScalar;
+
+    self_1081 = self_1080;
+    other_947 = other_946;
+    let _e4: Plane = self_1081;
+    let _e6: AntiScalar = other_947;
+    return Plane((_e4.g0_ * vec3<f32>(_e6.g0_)));
+}
+
+fn plane_anti_scalar_inner_product(self_1082: Plane, other_948: AntiScalar) -> IdealPoint {
+    var self_1083: Plane;
+    var other_949: AntiScalar;
+
+    self_1083 = self_1082;
+    other_949 = other_948;
+    let _e4: Plane = self_1083;
+    let _e7: Plane = self_1083;
+    let _e11: AntiScalar = other_949;
+    return IdealPoint((vec2<f32>(_e4.g0_.y, _e7.g0_.z) * vec2<f32>(_e11.g0_)));
+}
+
+fn plane_anti_scalar_geometric_anti_product(self_1084: Plane, other_950: AntiScalar) -> Plane {
+    var self_1085: Plane;
+    var other_951: AntiScalar;
+
+    self_1085 = self_1084;
+    other_951 = other_950;
+    let _e4: Plane = self_1085;
+    let _e6: AntiScalar = other_951;
+    return Plane((_e4.g0_ * vec3<f32>(_e6.g0_)));
+}
+
+fn plane_anti_scalar_inner_anti_product(self_1086: Plane, other_952: AntiScalar) -> Plane {
+    var self_1087: Plane;
+    var other_953: AntiScalar;
+
+    self_1087 = self_1086;
+    other_953 = other_952;
+    let _e4: Plane = self_1087;
+    let _e6: AntiScalar = other_953;
+    return Plane((_e4.g0_ * vec3<f32>(_e6.g0_)));
+}
+
+fn plane_anti_scalar_left_contraction(self_1088: Plane, other_954: AntiScalar) -> IdealPoint {
+    var self_1089: Plane;
+    var other_955: AntiScalar;
+
+    self_1089 = self_1088;
+    other_955 = other_954;
+    let _e4: Plane = self_1089;
+    let _e7: Plane = self_1089;
+    let _e11: AntiScalar = other_955;
+    return IdealPoint((vec2<f32>(_e4.g0_.y, _e7.g0_.z) * vec2<f32>(_e11.g0_)));
+}
+
+fn plane_anti_scalar_right_anti_contraction(self_1090: Plane, other_956: AntiScalar) -> Plane {
+    var self_1091: Plane;
+    var other_957: AntiScalar;
+
+    self_1091 = self_1090;
+    other_957 = other_956;
+    let _e4: Plane = self_1091;
+    let _e6: AntiScalar = other_957;
+    return Plane((_e4.g0_ * vec3<f32>(_e6.g0_)));
+}
+
+fn plane_multi_vector_add(self_1092: Plane, other_958: MultiVector) -> MultiVector {
+    var self_1093: Plane;
+    var other_959: MultiVector;
+
+    self_1093 = self_1092;
+    other_959 = other_958;
+    let _e4: Plane = self_1093;
+    let _e7: Plane = self_1093;
+    let _e10: Plane = self_1093;
+    let _e13: Plane = self_1093;
+    let _e23: MultiVector = other_959;
+    let _e26: Plane = self_1093;
+    let _e36: MultiVector = other_959;
     return MultiVector(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.z, _e13.g0_.y) * vec4<f32>(0.0, 0.0, 1.0, 1.0)) + _e23.g0_), ((vec4<f32>(_e26.g0_.x) * vec4<f32>(1.0, 0.0, 0.0, 0.0)) + _e36.g1_));
 }
 
-fn plane_multi_vector_sub(self_682: Plane, other_576: MultiVector) -> MultiVector {
-    var self_683: Plane;
-    var other_577: MultiVector;
+fn plane_multi_vector_sub(self_1094: Plane, other_960: MultiVector) -> MultiVector {
+    var self_1095: Plane;
+    var other_961: MultiVector;
 
-    self_683 = self_682;
-    other_577 = other_576;
-    let _e4: Plane = self_683;
-    let _e7: Plane = self_683;
-    let _e10: Plane = self_683;
-    let _e13: Plane = self_683;
-    let _e23: MultiVector = other_577;
-    let _e26: Plane = self_683;
-    let _e36: MultiVector = other_577;
+    self_1095 = self_1094;
+    other_961 = other_960;
+    let _e4: Plane = self_1095;
+    let _e7: Plane = self_1095;
+    let _e10: Plane = self_1095;
+    let _e13: Plane = self_1095;
+    let _e23: MultiVector = other_961;
+    let _e26: Plane = self_1095;
+    let _e36: MultiVector = other_961;
     return MultiVector(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.z, _e13.g0_.y) * vec4<f32>(0.0, 0.0, 1.0, 1.0)) - _e23.g0_), ((vec4<f32>(_e26.g0_.x) * vec4<f32>(1.0, 0.0, 0.0, 0.0)) - _e36.g1_));
 }
 
-fn plane_multi_vector_geometric_product(self_684: Plane, other_578: MultiVector) -> MultiVector {
-    var self_685: Plane;
-    var other_579: MultiVector;
+fn plane_multi_vector_geometric_product(self_1096: Plane, other_962: MultiVector) -> MultiVector {
+    var self_1097: Plane;
+    var other_963: MultiVector;
 
-    self_685 = self_684;
-    other_579 = other_578;
-    let _e4: Plane = self_685;
-    let _e8: MultiVector = other_579;
-    let _e20: Plane = self_685;
-    let _e24: MultiVector = other_579;
-    let _e29: Plane = self_685;
-    let _e33: MultiVector = other_579;
-    let _e43: Plane = self_685;
-    let _e47: MultiVector = other_579;
-    let _e52: Plane = self_685;
-    let _e56: MultiVector = other_579;
+    self_1097 = self_1096;
+    other_963 = other_962;
+    let _e4: Plane = self_1097;
+    let _e8: MultiVector = other_963;
+    let _e20: Plane = self_1097;
+    let _e24: MultiVector = other_963;
+    let _e29: Plane = self_1097;
+    let _e33: MultiVector = other_963;
+    let _e43: Plane = self_1097;
+    let _e47: MultiVector = other_963;
+    let _e52: Plane = self_1097;
+    let _e56: MultiVector = other_963;
     return MultiVector((((vec4<f32>(_e4.g0_.y) * _e8.g0_.wzyx) * vec4<f32>(1.0, -(1.0), -(1.0), 1.0)) + (vec4<f32>(_e20.g0_.z) * _e24.g0_.zwxy)), ((((vec4<f32>(_e29.g0_.x) * _e33.g0_) * vec4<f32>(1.0, 1.0, 1.0, -(1.0))) + (vec4<f32>(_e43.g0_.y) * _e47.g1_.wzyx)) + ((vec4<f32>(_e52.g0_.z) * _e56.g1_.zwxy) * vec4<f32>(-(1.0), 1.0, -(1.0), 1.0))));
 }
 
-fn plane_multi_vector_scalar_product(self_686: Plane, other_580: MultiVector) -> Scalar {
-    var self_687: Plane;
-    var other_581: MultiVector;
+fn plane_multi_vector_geometric_anti_product(self_1098: Plane, other_964: MultiVector) -> MultiVector {
+    var self_1099: Plane;
+    var other_965: MultiVector;
 
-    self_687 = self_686;
-    other_581 = other_580;
-    let _e4: Plane = self_687;
-    let _e7: MultiVector = other_581;
-    let _e11: Plane = self_687;
-    let _e14: MultiVector = other_581;
+    self_1099 = self_1098;
+    other_965 = other_964;
+    let _e4: Plane = self_1099;
+    let _e8: MultiVector = other_965;
+    let _e20: Plane = self_1099;
+    let _e24: MultiVector = other_965;
+    let _e36: Plane = self_1099;
+    let _e40: MultiVector = other_965;
+    let _e52: Plane = self_1099;
+    let _e56: MultiVector = other_965;
+    return MultiVector(((((vec4<f32>(_e4.g0_.x) * _e8.g0_.yxwz) * vec4<f32>(1.0, -(1.0), 1.0, -(1.0))) + ((vec4<f32>(_e20.g0_.y) * _e24.g1_.zwxy) * vec4<f32>(1.0, 1.0, -(1.0), 1.0))) + ((vec4<f32>(_e36.g0_.z) * _e40.g1_.wzyx) * vec4<f32>(1.0, -(1.0), 1.0, 1.0))), ((vec4<f32>(_e52.g0_.x) * _e56.g1_.yxwz) * vec4<f32>(1.0, -(1.0), -(1.0), 1.0)));
+}
+
+fn plane_multi_vector_scalar_product(self_1100: Plane, other_966: MultiVector) -> Scalar {
+    var self_1101: Plane;
+    var other_967: MultiVector;
+
+    self_1101 = self_1100;
+    other_967 = other_966;
+    let _e4: Plane = self_1101;
+    let _e7: MultiVector = other_967;
+    let _e11: Plane = self_1101;
+    let _e14: MultiVector = other_967;
     return Scalar(((_e4.g0_.y * _e7.g0_.w) + (_e11.g0_.z * _e14.g0_.z)));
 }
 
-fn plane_rotor_geometric_product(self_688: Plane, other_582: Rotor) -> MotorDual {
-    var self_689: Plane;
-    var other_583: Rotor;
+fn plane_multi_vector_anti_scalar_product(self_1102: Plane, other_968: MultiVector) -> AntiScalar {
+    var self_1103: Plane;
+    var other_969: MultiVector;
 
-    self_689 = self_688;
-    other_583 = other_582;
-    let _e4: Plane = self_689;
-    let _e8: Rotor = other_583;
-    let _e11: Rotor = other_583;
-    let _e14: Rotor = other_583;
-    let _e17: Rotor = other_583;
-    let _e28: Plane = self_689;
-    let _e31: Plane = self_689;
-    let _e34: Plane = self_689;
-    let _e37: Plane = self_689;
-    let _e41: Rotor = other_583;
-    let _e44: Rotor = other_583;
-    let _e47: Rotor = other_583;
-    let _e50: Rotor = other_583;
+    self_1103 = self_1102;
+    other_969 = other_968;
+    let _e5: Plane = self_1103;
+    let _e8: MultiVector = other_969;
+    return AntiScalar((0.0 - (_e5.g0_.x * _e8.g1_.x)));
+}
+
+fn plane_rotor_geometric_product(self_1104: Plane, other_970: Rotor) -> MotorDual {
+    var self_1105: Plane;
+    var other_971: Rotor;
+
+    self_1105 = self_1104;
+    other_971 = other_970;
+    let _e4: Plane = self_1105;
+    let _e8: Rotor = other_971;
+    let _e11: Rotor = other_971;
+    let _e14: Rotor = other_971;
+    let _e17: Rotor = other_971;
+    let _e28: Plane = self_1105;
+    let _e31: Plane = self_1105;
+    let _e34: Plane = self_1105;
+    let _e37: Plane = self_1105;
+    let _e41: Rotor = other_971;
+    let _e44: Rotor = other_971;
+    let _e47: Rotor = other_971;
+    let _e50: Rotor = other_971;
     return MotorDual((((vec4<f32>(_e4.g0_.z) * vec4<f32>(_e8.g0_.y, _e11.g0_.y, _e14.g0_.y, _e17.g0_.x)) * vec4<f32>(0.0, 0.0, 1.0, 1.0)) + ((vec4<f32>(_e28.g0_.x, _e31.g0_.x, _e34.g0_.y, _e37.g0_.y) * vec4<f32>(_e41.g0_.y, _e44.g0_.x, _e47.g0_.x, _e50.g0_.y)) * vec4<f32>(1.0, 1.0, 1.0, -(1.0)))));
 }
 
-fn plane_rotor_regressive_product(self_690: Plane, other_584: Rotor) -> Scalar {
-    var self_691: Plane;
-    var other_585: Rotor;
+fn plane_rotor_regressive_product(self_1106: Plane, other_972: Rotor) -> Scalar {
+    var self_1107: Plane;
+    var other_973: Rotor;
 
-    self_691 = self_690;
-    other_585 = other_584;
-    let _e4: Plane = self_691;
-    let _e7: Rotor = other_585;
+    self_1107 = self_1106;
+    other_973 = other_972;
+    let _e4: Plane = self_1107;
+    let _e7: Rotor = other_973;
     return Scalar((_e4.g0_.x * _e7.g0_.y));
 }
 
-fn plane_rotor_outer_product(self_692: Plane, other_586: Rotor) -> MotorDual {
-    var self_693: Plane;
-    var other_587: Rotor;
+fn plane_rotor_outer_product(self_1108: Plane, other_974: Rotor) -> MotorDual {
+    var self_1109: Plane;
+    var other_975: Rotor;
 
-    self_693 = self_692;
-    other_587 = other_586;
-    let _e4: Plane = self_693;
-    let _e7: Plane = self_693;
-    let _e10: Plane = self_693;
-    let _e13: Plane = self_693;
-    let _e17: Rotor = other_587;
-    let _e20: Rotor = other_587;
-    let _e23: Rotor = other_587;
-    let _e26: Rotor = other_587;
+    self_1109 = self_1108;
+    other_975 = other_974;
+    let _e4: Plane = self_1109;
+    let _e7: Plane = self_1109;
+    let _e10: Plane = self_1109;
+    let _e13: Plane = self_1109;
+    let _e17: Rotor = other_975;
+    let _e20: Rotor = other_975;
+    let _e23: Rotor = other_975;
+    let _e26: Rotor = other_975;
     return MotorDual((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y, _e13.g0_.z) * vec4<f32>(_e17.g0_.y, _e20.g0_.x, _e23.g0_.x, _e26.g0_.x)));
 }
 
-fn plane_rotor_inner_product(self_694: Plane, other_588: Rotor) -> Plane {
-    var self_695: Plane;
-    var other_589: Rotor;
+fn plane_rotor_inner_product(self_1110: Plane, other_976: Rotor) -> Plane {
+    var self_1111: Plane;
+    var other_977: Rotor;
 
-    self_695 = self_694;
-    other_589 = other_588;
-    let _e4: Plane = self_695;
-    let _e8: Rotor = other_589;
-    let _e11: Rotor = other_589;
-    let _e14: Rotor = other_589;
-    let _e24: Plane = self_695;
-    let _e27: Rotor = other_589;
-    let _e30: Rotor = other_589;
-    let _e33: Rotor = other_589;
+    self_1111 = self_1110;
+    other_977 = other_976;
+    let _e4: Plane = self_1111;
+    let _e8: Rotor = other_977;
+    let _e11: Rotor = other_977;
+    let _e14: Rotor = other_977;
+    let _e24: Plane = self_1111;
+    let _e27: Rotor = other_977;
+    let _e30: Rotor = other_977;
+    let _e33: Rotor = other_977;
     return Plane((((vec3<f32>(_e4.g0_.z) * vec3<f32>(_e8.g0_.y, _e11.g0_.y, _e14.g0_.x)) * vec3<f32>(0.0, 1.0, 1.0)) + ((_e24.g0_.xyy * vec3<f32>(_e27.g0_.x, _e30.g0_.x, _e33.g0_.y)) * vec3<f32>(1.0, 1.0, -(1.0)))));
 }
 
-fn plane_rotor_right_contraction(self_696: Plane, other_590: Rotor) -> Plane {
-    var self_697: Plane;
-    var other_591: Rotor;
+fn plane_rotor_geometric_anti_product(self_1112: Plane, other_978: Rotor) -> Rotor {
+    var self_1113: Plane;
+    var other_979: Rotor;
 
-    self_697 = self_696;
-    other_591 = other_590;
-    let _e4: Plane = self_697;
-    let _e6: Rotor = other_591;
+    self_1113 = self_1112;
+    other_979 = other_978;
+    let _e4: Plane = self_1113;
+    let _e8: Rotor = other_979;
+    return Rotor(((vec2<f32>(_e4.g0_.x) * _e8.g0_.yx) * vec2<f32>(1.0, -(1.0))));
+}
+
+fn plane_rotor_right_contraction(self_1114: Plane, other_980: Rotor) -> Plane {
+    var self_1115: Plane;
+    var other_981: Rotor;
+
+    self_1115 = self_1114;
+    other_981 = other_980;
+    let _e4: Plane = self_1115;
+    let _e6: Rotor = other_981;
     return Plane((_e4.g0_ * vec3<f32>(_e6.g0_.x)));
 }
 
-fn plane_point_geometric_product(self_698: Plane, other_592: Point) -> MotorDual {
-    var self_699: Plane;
-    var other_593: Point;
+fn plane_point_geometric_product(self_1116: Plane, other_982: Point) -> MotorDual {
+    var self_1117: Plane;
+    var other_983: Point;
 
-    self_699 = self_698;
-    other_593 = other_592;
-    let _e4: Plane = self_699;
-    let _e8: Point = other_593;
-    let _e11: Point = other_593;
-    let _e14: Point = other_593;
-    let _e17: Point = other_593;
-    let _e29: Plane = self_699;
-    let _e33: Point = other_593;
-    let _e36: Point = other_593;
-    let _e39: Point = other_593;
-    let _e42: Point = other_593;
-    let _e55: Plane = self_699;
-    let _e59: Point = other_593;
+    self_1117 = self_1116;
+    other_983 = other_982;
+    let _e4: Plane = self_1117;
+    let _e8: Point = other_983;
+    let _e11: Point = other_983;
+    let _e14: Point = other_983;
+    let _e17: Point = other_983;
+    let _e29: Plane = self_1117;
+    let _e33: Point = other_983;
+    let _e36: Point = other_983;
+    let _e39: Point = other_983;
+    let _e42: Point = other_983;
+    let _e55: Plane = self_1117;
+    let _e59: Point = other_983;
     return MotorDual(((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.y, _e11.g0_.z, _e14.g0_.y, _e17.g0_.x)) * vec4<f32>(1.0, 1.0, 0.0, -(1.0))) + ((vec4<f32>(_e29.g0_.z) * vec4<f32>(_e33.g0_.z, _e36.g0_.y, _e39.g0_.x, _e42.g0_.z)) * vec4<f32>(1.0, -(1.0), 1.0, 0.0))) + ((vec4<f32>(_e55.g0_.x) * vec4<f32>(_e59.g0_.x)) * vec4<f32>(1.0, 0.0, 0.0, 0.0))));
 }
 
-fn plane_point_regressive_product(self_700: Plane, other_594: Point) -> Scalar {
-    var self_701: Plane;
-    var other_595: Point;
+fn plane_point_regressive_product(self_1118: Plane, other_984: Point) -> Scalar {
+    var self_1119: Plane;
+    var other_985: Point;
 
-    self_701 = self_700;
-    other_595 = other_594;
-    let _e4: Plane = self_701;
-    let _e7: Point = other_595;
-    let _e11: Plane = self_701;
-    let _e14: Point = other_595;
-    let _e19: Plane = self_701;
-    let _e22: Point = other_595;
+    self_1119 = self_1118;
+    other_985 = other_984;
+    let _e4: Plane = self_1119;
+    let _e7: Point = other_985;
+    let _e11: Plane = self_1119;
+    let _e14: Point = other_985;
+    let _e19: Plane = self_1119;
+    let _e22: Point = other_985;
     return Scalar((((_e4.g0_.x * _e7.g0_.x) + (_e11.g0_.y * _e14.g0_.y)) + (_e19.g0_.z * _e22.g0_.z)));
 }
 
-fn plane_point_inner_product(self_702: Plane, other_596: Point) -> Plane {
-    var self_703: Plane;
-    var other_597: Point;
+fn plane_point_outer_product(self_1120: Plane, other_986: Point) -> AntiScalar {
+    var self_1121: Plane;
+    var other_987: Point;
 
-    self_703 = self_702;
-    other_597 = other_596;
-    let _e4: Plane = self_703;
-    let _e8: Point = other_597;
-    let _e18: Plane = self_703;
-    let _e21: Point = other_597;
+    self_1121 = self_1120;
+    other_987 = other_986;
+    let _e4: Plane = self_1121;
+    let _e7: Point = other_987;
+    let _e11: Plane = self_1121;
+    let _e14: Point = other_987;
+    let _e19: Plane = self_1121;
+    let _e22: Point = other_987;
+    return AntiScalar((((_e4.g0_.x * _e7.g0_.x) + (_e11.g0_.y * _e14.g0_.y)) + (_e19.g0_.z * _e22.g0_.z)));
+}
+
+fn plane_point_inner_product(self_1122: Plane, other_988: Point) -> Plane {
+    var self_1123: Plane;
+    var other_989: Point;
+
+    self_1123 = self_1122;
+    other_989 = other_988;
+    let _e4: Plane = self_1123;
+    let _e8: Point = other_989;
+    let _e18: Plane = self_1123;
+    let _e21: Point = other_989;
     return Plane((((vec3<f32>(_e4.g0_.z) * _e8.g0_.yxy) * vec3<f32>(-(1.0), 1.0, 0.0)) + ((_e18.g0_.yxy * _e21.g0_.zxx) * vec3<f32>(1.0, 0.0, -(1.0)))));
 }
 
-fn plane_point_left_contraction(self_704: Plane, other_598: Point) -> Plane {
-    var self_705: Plane;
-    var other_599: Point;
+fn plane_point_geometric_anti_product(self_1124: Plane, other_990: Point) -> Motor {
+    var self_1125: Plane;
+    var other_991: Point;
 
-    self_705 = self_704;
-    other_599 = other_598;
-    let _e4: Plane = self_705;
-    let _e8: Point = other_599;
-    let _e18: Plane = self_705;
-    let _e21: Point = other_599;
+    self_1125 = self_1124;
+    other_991 = other_990;
+    let _e4: Plane = self_1125;
+    let _e8: Point = other_991;
+    let _e11: Point = other_991;
+    let _e14: Point = other_991;
+    let _e17: Point = other_991;
+    let _e28: Plane = self_1125;
+    let _e32: Point = other_991;
+    let _e35: Point = other_991;
+    let _e38: Point = other_991;
+    let _e41: Point = other_991;
+    let _e54: Plane = self_1125;
+    let _e58: Point = other_991;
+    let _e61: Point = other_991;
+    let _e64: Point = other_991;
+    let _e67: Point = other_991;
+    return Motor(((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.y, _e11.g0_.z, _e14.g0_.y, _e17.g0_.y)) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) + ((vec4<f32>(_e28.g0_.z) * vec4<f32>(_e32.g0_.z, _e35.g0_.y, _e38.g0_.z, _e41.g0_.z)) * vec4<f32>(1.0, -(1.0), 0.0, 0.0))) + ((vec4<f32>(_e54.g0_.x) * vec4<f32>(_e58.g0_.x, _e61.g0_.x, _e64.g0_.z, _e67.g0_.y)) * vec4<f32>(1.0, 0.0, -(1.0), 1.0))));
+}
+
+fn plane_point_inner_anti_product(self_1126: Plane, other_992: Point) -> Point {
+    var self_1127: Plane;
+    var other_993: Point;
+
+    self_1127 = self_1126;
+    other_993 = other_992;
+    let _e4: Plane = self_1127;
+    let _e8: Point = other_993;
+    let _e19: Plane = self_1127;
+    let _e22: Point = other_993;
+    return Point((((vec3<f32>(_e4.g0_.z) * vec3<f32>(_e8.g0_.y)) * vec3<f32>(-(1.0), 0.0, 0.0)) + ((_e19.g0_.yxx * _e22.g0_.zzy) * vec3<f32>(1.0, -(1.0), 1.0))));
+}
+
+fn plane_point_left_contraction(self_1128: Plane, other_994: Point) -> Plane {
+    var self_1129: Plane;
+    var other_995: Point;
+
+    self_1129 = self_1128;
+    other_995 = other_994;
+    let _e4: Plane = self_1129;
+    let _e8: Point = other_995;
+    let _e18: Plane = self_1129;
+    let _e21: Point = other_995;
     return Plane((((vec3<f32>(_e4.g0_.z) * _e8.g0_.yxy) * vec3<f32>(-(1.0), 1.0, 0.0)) + ((_e18.g0_.yxy * _e21.g0_.zxx) * vec3<f32>(1.0, 0.0, -(1.0)))));
 }
 
-fn plane_ideal_point_regressive_product(self_706: Plane, other_600: IdealPoint) -> Scalar {
-    var self_707: Plane;
-    var other_601: IdealPoint;
+fn plane_point_right_anti_contraction(self_1130: Plane, other_996: Point) -> Point {
+    var self_1131: Plane;
+    var other_997: Point;
 
-    self_707 = self_706;
-    other_601 = other_600;
-    let _e4: Plane = self_707;
-    let _e7: IdealPoint = other_601;
-    let _e11: Plane = self_707;
-    let _e14: IdealPoint = other_601;
+    self_1131 = self_1130;
+    other_997 = other_996;
+    let _e4: Plane = self_1131;
+    let _e8: Point = other_997;
+    let _e19: Plane = self_1131;
+    let _e22: Point = other_997;
+    return Point((((vec3<f32>(_e4.g0_.z) * vec3<f32>(_e8.g0_.y)) * vec3<f32>(-(1.0), 0.0, 0.0)) + ((_e19.g0_.yxx * _e22.g0_.zzy) * vec3<f32>(1.0, -(1.0), 1.0))));
+}
+
+fn plane_ideal_point_regressive_product(self_1132: Plane, other_998: IdealPoint) -> Scalar {
+    var self_1133: Plane;
+    var other_999: IdealPoint;
+
+    self_1133 = self_1132;
+    other_999 = other_998;
+    let _e4: Plane = self_1133;
+    let _e7: IdealPoint = other_999;
+    let _e11: Plane = self_1133;
+    let _e14: IdealPoint = other_999;
     return Scalar(((_e4.g0_.y * _e7.g0_.x) + (_e11.g0_.z * _e14.g0_.y)));
 }
 
-fn plane_plane_add(self_708: Plane, other_602: Plane) -> Plane {
-    var self_709: Plane;
-    var other_603: Plane;
+fn plane_ideal_point_outer_product(self_1134: Plane, other_1000: IdealPoint) -> AntiScalar {
+    var self_1135: Plane;
+    var other_1001: IdealPoint;
 
-    self_709 = self_708;
-    other_603 = other_602;
-    let _e4: Plane = self_709;
-    let _e6: Plane = other_603;
+    self_1135 = self_1134;
+    other_1001 = other_1000;
+    let _e4: Plane = self_1135;
+    let _e7: IdealPoint = other_1001;
+    let _e11: Plane = self_1135;
+    let _e14: IdealPoint = other_1001;
+    return AntiScalar(((_e4.g0_.y * _e7.g0_.x) + (_e11.g0_.z * _e14.g0_.y)));
+}
+
+fn plane_ideal_point_geometric_anti_product(self_1136: Plane, other_1002: IdealPoint) -> Motor {
+    var self_1137: Plane;
+    var other_1003: IdealPoint;
+
+    self_1137 = self_1136;
+    other_1003 = other_1002;
+    let _e4: Plane = self_1137;
+    let _e8: IdealPoint = other_1003;
+    let _e11: IdealPoint = other_1003;
+    let _e14: IdealPoint = other_1003;
+    let _e17: IdealPoint = other_1003;
+    let _e29: Plane = self_1137;
+    let _e32: Plane = self_1137;
+    let _e35: Plane = self_1137;
+    let _e38: Plane = self_1137;
+    let _e42: IdealPoint = other_1003;
+    let _e45: IdealPoint = other_1003;
+    let _e48: IdealPoint = other_1003;
+    let _e51: IdealPoint = other_1003;
+    return Motor((((vec4<f32>(_e4.g0_.z) * vec4<f32>(_e8.g0_.y, _e11.g0_.x, _e14.g0_.y, _e17.g0_.y)) * vec4<f32>(1.0, -(1.0), 0.0, 0.0)) + ((vec4<f32>(_e29.g0_.y, _e32.g0_.y, _e35.g0_.x, _e38.g0_.x) * vec4<f32>(_e42.g0_.x, _e45.g0_.y, _e48.g0_.y, _e51.g0_.x)) * vec4<f32>(1.0, 1.0, -(1.0), 1.0))));
+}
+
+fn plane_ideal_point_inner_anti_product(self_1138: Plane, other_1004: IdealPoint) -> Point {
+    var self_1139: Plane;
+    var other_1005: IdealPoint;
+
+    self_1139 = self_1138;
+    other_1005 = other_1004;
+    let _e4: Plane = self_1139;
+    let _e8: IdealPoint = other_1005;
+    let _e19: Plane = self_1139;
+    let _e22: IdealPoint = other_1005;
+    let _e25: IdealPoint = other_1005;
+    let _e28: IdealPoint = other_1005;
+    return Point((((vec3<f32>(_e4.g0_.z) * vec3<f32>(_e8.g0_.x)) * vec3<f32>(-(1.0), 0.0, 0.0)) + ((_e19.g0_.yxx * vec3<f32>(_e22.g0_.y, _e25.g0_.y, _e28.g0_.x)) * vec3<f32>(1.0, -(1.0), 1.0))));
+}
+
+fn plane_ideal_point_right_anti_contraction(self_1140: Plane, other_1006: IdealPoint) -> Point {
+    var self_1141: Plane;
+    var other_1007: IdealPoint;
+
+    self_1141 = self_1140;
+    other_1007 = other_1006;
+    let _e4: Plane = self_1141;
+    let _e8: IdealPoint = other_1007;
+    let _e19: Plane = self_1141;
+    let _e22: IdealPoint = other_1007;
+    let _e25: IdealPoint = other_1007;
+    let _e28: IdealPoint = other_1007;
+    return Point((((vec3<f32>(_e4.g0_.z) * vec3<f32>(_e8.g0_.x)) * vec3<f32>(-(1.0), 0.0, 0.0)) + ((_e19.g0_.yxx * vec3<f32>(_e22.g0_.y, _e25.g0_.y, _e28.g0_.x)) * vec3<f32>(1.0, -(1.0), 1.0))));
+}
+
+fn plane_plane_add(self_1142: Plane, other_1008: Plane) -> Plane {
+    var self_1143: Plane;
+    var other_1009: Plane;
+
+    self_1143 = self_1142;
+    other_1009 = other_1008;
+    let _e4: Plane = self_1143;
+    let _e6: Plane = other_1009;
     return Plane((_e4.g0_ + _e6.g0_));
 }
 
-fn plane_plane_sub(self_710: Plane, other_604: Plane) -> Plane {
-    var self_711: Plane;
-    var other_605: Plane;
+fn plane_plane_sub(self_1144: Plane, other_1010: Plane) -> Plane {
+    var self_1145: Plane;
+    var other_1011: Plane;
 
-    self_711 = self_710;
-    other_605 = other_604;
-    let _e4: Plane = self_711;
-    let _e6: Plane = other_605;
+    self_1145 = self_1144;
+    other_1011 = other_1010;
+    let _e4: Plane = self_1145;
+    let _e6: Plane = other_1011;
     return Plane((_e4.g0_ - _e6.g0_));
 }
 
-fn plane_plane_mul(self_712: Plane, other_606: Plane) -> Plane {
-    var self_713: Plane;
-    var other_607: Plane;
+fn plane_plane_mul(self_1146: Plane, other_1012: Plane) -> Plane {
+    var self_1147: Plane;
+    var other_1013: Plane;
 
-    self_713 = self_712;
-    other_607 = other_606;
-    let _e4: Plane = self_713;
-    let _e6: Plane = other_607;
+    self_1147 = self_1146;
+    other_1013 = other_1012;
+    let _e4: Plane = self_1147;
+    let _e6: Plane = other_1013;
     return Plane((_e4.g0_ * _e6.g0_));
 }
 
-fn plane_plane_div(self_714: Plane, other_608: Plane) -> Plane {
-    var self_715: Plane;
-    var other_609: Plane;
+fn plane_plane_div(self_1148: Plane, other_1014: Plane) -> Plane {
+    var self_1149: Plane;
+    var other_1015: Plane;
 
-    self_715 = self_714;
-    other_609 = other_608;
-    let _e4: Plane = self_715;
-    let _e7: Plane = self_715;
-    let _e10: Plane = self_715;
-    let _e19: Plane = other_609;
-    let _e22: Plane = other_609;
-    let _e25: Plane = other_609;
+    self_1149 = self_1148;
+    other_1015 = other_1014;
+    let _e4: Plane = self_1149;
+    let _e7: Plane = self_1149;
+    let _e10: Plane = self_1149;
+    let _e19: Plane = other_1015;
+    let _e22: Plane = other_1015;
+    let _e25: Plane = other_1015;
     return Plane((((vec3<f32>(_e4.g0_.x, _e7.g0_.y, _e10.g0_.z) * vec3<f32>(1.0, 1.0, 1.0)) / vec3<f32>(_e19.g0_.x, _e22.g0_.y, _e25.g0_.z)) * vec3<f32>(1.0, 1.0, 1.0)));
 }
 
-fn plane_plane_geometric_product(self_716: Plane, other_610: Plane) -> Motor {
-    var self_717: Plane;
-    var other_611: Plane;
+fn plane_plane_geometric_product(self_1150: Plane, other_1016: Plane) -> Motor {
+    var self_1151: Plane;
+    var other_1017: Plane;
 
-    self_717 = self_716;
-    other_611 = other_610;
-    let _e4: Plane = self_717;
-    let _e8: Plane = other_611;
-    let _e11: Plane = other_611;
-    let _e14: Plane = other_611;
-    let _e17: Plane = other_611;
-    let _e29: Plane = self_717;
-    let _e33: Plane = other_611;
-    let _e36: Plane = other_611;
-    let _e39: Plane = other_611;
-    let _e42: Plane = other_611;
-    let _e55: Plane = self_717;
-    let _e59: Plane = other_611;
-    let _e62: Plane = other_611;
-    let _e65: Plane = other_611;
-    let _e68: Plane = other_611;
+    self_1151 = self_1150;
+    other_1017 = other_1016;
+    let _e4: Plane = self_1151;
+    let _e8: Plane = other_1017;
+    let _e11: Plane = other_1017;
+    let _e14: Plane = other_1017;
+    let _e17: Plane = other_1017;
+    let _e29: Plane = self_1151;
+    let _e33: Plane = other_1017;
+    let _e36: Plane = other_1017;
+    let _e39: Plane = other_1017;
+    let _e42: Plane = other_1017;
+    let _e55: Plane = self_1151;
+    let _e59: Plane = other_1017;
+    let _e62: Plane = other_1017;
+    let _e65: Plane = other_1017;
+    let _e68: Plane = other_1017;
     return Motor(((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.y, _e11.g0_.z, _e14.g0_.y, _e17.g0_.x)) * vec4<f32>(1.0, -(1.0), 0.0, 1.0)) + ((vec4<f32>(_e29.g0_.z) * vec4<f32>(_e33.g0_.z, _e36.g0_.y, _e39.g0_.x, _e42.g0_.z)) * vec4<f32>(1.0, 1.0, -(1.0), 0.0))) + ((vec4<f32>(_e55.g0_.x) * vec4<f32>(_e59.g0_.x, _e62.g0_.x, _e65.g0_.z, _e68.g0_.y)) * vec4<f32>(0.0, 0.0, 1.0, -(1.0)))));
 }
 
-fn plane_plane_outer_product(self_718: Plane, other_612: Plane) -> Point {
-    var self_719: Plane;
-    var other_613: Plane;
+fn plane_plane_outer_product(self_1152: Plane, other_1018: Plane) -> Point {
+    var self_1153: Plane;
+    var other_1019: Plane;
 
-    self_719 = self_718;
-    other_613 = other_612;
-    let _e4: Plane = self_719;
-    let _e8: Plane = other_613;
-    let _e18: Plane = self_719;
-    let _e22: Plane = other_613;
-    let _e33: Plane = self_719;
-    let _e37: Plane = other_613;
+    self_1153 = self_1152;
+    other_1019 = other_1018;
+    let _e4: Plane = self_1153;
+    let _e8: Plane = other_1019;
+    let _e18: Plane = self_1153;
+    let _e22: Plane = other_1019;
+    let _e33: Plane = self_1153;
+    let _e37: Plane = other_1019;
     return Point(((((vec3<f32>(_e4.g0_.y) * _e8.g0_.zzx) * vec3<f32>(-(1.0), 0.0, 1.0)) + ((vec3<f32>(_e18.g0_.z) * _e22.g0_.yxy) * vec3<f32>(1.0, -(1.0), 0.0))) + ((vec3<f32>(_e33.g0_.x) * _e37.g0_.xzy) * vec3<f32>(0.0, 1.0, -(1.0)))));
 }
 
-fn plane_plane_inner_product(self_720: Plane, other_614: Plane) -> Scalar {
-    var self_721: Plane;
-    var other_615: Plane;
+fn plane_plane_inner_product(self_1154: Plane, other_1020: Plane) -> Scalar {
+    var self_1155: Plane;
+    var other_1021: Plane;
 
-    self_721 = self_720;
-    other_615 = other_614;
-    let _e4: Plane = self_721;
-    let _e7: Plane = other_615;
-    let _e11: Plane = self_721;
-    let _e14: Plane = other_615;
+    self_1155 = self_1154;
+    other_1021 = other_1020;
+    let _e4: Plane = self_1155;
+    let _e7: Plane = other_1021;
+    let _e11: Plane = self_1155;
+    let _e14: Plane = other_1021;
     return Scalar(((_e4.g0_.y * _e7.g0_.y) + (_e11.g0_.z * _e14.g0_.z)));
 }
 
-fn plane_plane_left_contraction(self_722: Plane, other_616: Plane) -> Scalar {
-    var self_723: Plane;
-    var other_617: Plane;
+fn plane_plane_inner_anti_product(self_1156: Plane, other_1022: Plane) -> AntiScalar {
+    var self_1157: Plane;
+    var other_1023: Plane;
 
-    self_723 = self_722;
-    other_617 = other_616;
-    let _e4: Plane = self_723;
-    let _e7: Plane = other_617;
-    let _e11: Plane = self_723;
-    let _e14: Plane = other_617;
+    self_1157 = self_1156;
+    other_1023 = other_1022;
+    let _e5: Plane = self_1157;
+    let _e8: Plane = other_1023;
+    return AntiScalar((0.0 - (_e5.g0_.x * _e8.g0_.x)));
+}
+
+fn plane_plane_left_contraction(self_1158: Plane, other_1024: Plane) -> Scalar {
+    var self_1159: Plane;
+    var other_1025: Plane;
+
+    self_1159 = self_1158;
+    other_1025 = other_1024;
+    let _e4: Plane = self_1159;
+    let _e7: Plane = other_1025;
+    let _e11: Plane = self_1159;
+    let _e14: Plane = other_1025;
     return Scalar(((_e4.g0_.y * _e7.g0_.y) + (_e11.g0_.z * _e14.g0_.z)));
 }
 
-fn plane_plane_right_contraction(self_724: Plane, other_618: Plane) -> Scalar {
-    var self_725: Plane;
-    var other_619: Plane;
+fn plane_plane_right_contraction(self_1160: Plane, other_1026: Plane) -> Scalar {
+    var self_1161: Plane;
+    var other_1027: Plane;
 
-    self_725 = self_724;
-    other_619 = other_618;
-    let _e4: Plane = self_725;
-    let _e7: Plane = other_619;
-    let _e11: Plane = self_725;
-    let _e14: Plane = other_619;
+    self_1161 = self_1160;
+    other_1027 = other_1026;
+    let _e4: Plane = self_1161;
+    let _e7: Plane = other_1027;
+    let _e11: Plane = self_1161;
+    let _e14: Plane = other_1027;
     return Scalar(((_e4.g0_.y * _e7.g0_.y) + (_e11.g0_.z * _e14.g0_.z)));
 }
 
-fn plane_plane_scalar_product(self_726: Plane, other_620: Plane) -> Scalar {
-    var self_727: Plane;
-    var other_621: Plane;
+fn plane_plane_left_anti_contraction(self_1162: Plane, other_1028: Plane) -> AntiScalar {
+    var self_1163: Plane;
+    var other_1029: Plane;
 
-    self_727 = self_726;
-    other_621 = other_620;
-    let _e4: Plane = self_727;
-    let _e7: Plane = other_621;
-    let _e11: Plane = self_727;
-    let _e14: Plane = other_621;
+    self_1163 = self_1162;
+    other_1029 = other_1028;
+    let _e5: Plane = self_1163;
+    let _e8: Plane = other_1029;
+    return AntiScalar((0.0 - (_e5.g0_.x * _e8.g0_.x)));
+}
+
+fn plane_plane_right_anti_contraction(self_1164: Plane, other_1030: Plane) -> AntiScalar {
+    var self_1165: Plane;
+    var other_1031: Plane;
+
+    self_1165 = self_1164;
+    other_1031 = other_1030;
+    let _e5: Plane = self_1165;
+    let _e8: Plane = other_1031;
+    return AntiScalar((0.0 - (_e5.g0_.x * _e8.g0_.x)));
+}
+
+fn plane_plane_scalar_product(self_1166: Plane, other_1032: Plane) -> Scalar {
+    var self_1167: Plane;
+    var other_1033: Plane;
+
+    self_1167 = self_1166;
+    other_1033 = other_1032;
+    let _e4: Plane = self_1167;
+    let _e7: Plane = other_1033;
+    let _e11: Plane = self_1167;
+    let _e14: Plane = other_1033;
     return Scalar(((_e4.g0_.y * _e7.g0_.y) + (_e11.g0_.z * _e14.g0_.z)));
 }
 
-fn plane_translator_geometric_product(self_728: Plane, other_622: Translator) -> MotorDual {
-    var self_729: Plane;
-    var other_623: Translator;
+fn plane_plane_anti_scalar_product(self_1168: Plane, other_1034: Plane) -> AntiScalar {
+    var self_1169: Plane;
+    var other_1035: Plane;
 
-    self_729 = self_728;
-    other_623 = other_622;
-    let _e4: Plane = self_729;
-    let _e8: Translator = other_623;
-    let _e11: Translator = other_623;
-    let _e14: Translator = other_623;
-    let _e17: Translator = other_623;
-    let _e28: Plane = self_729;
-    let _e32: Translator = other_623;
-    let _e35: Translator = other_623;
-    let _e38: Translator = other_623;
-    let _e41: Translator = other_623;
-    let _e54: Plane = self_729;
-    let _e58: Translator = other_623;
+    self_1169 = self_1168;
+    other_1035 = other_1034;
+    let _e5: Plane = self_1169;
+    let _e8: Plane = other_1035;
+    return AntiScalar((0.0 - (_e5.g0_.x * _e8.g0_.x)));
+}
+
+fn plane_translator_geometric_product(self_1170: Plane, other_1036: Translator) -> MotorDual {
+    var self_1171: Plane;
+    var other_1037: Translator;
+
+    self_1171 = self_1170;
+    other_1037 = other_1036;
+    let _e4: Plane = self_1171;
+    let _e8: Translator = other_1037;
+    let _e11: Translator = other_1037;
+    let _e14: Translator = other_1037;
+    let _e17: Translator = other_1037;
+    let _e28: Plane = self_1171;
+    let _e32: Translator = other_1037;
+    let _e35: Translator = other_1037;
+    let _e38: Translator = other_1037;
+    let _e41: Translator = other_1037;
+    let _e54: Plane = self_1171;
+    let _e58: Translator = other_1037;
     return MotorDual(((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.y, _e11.g0_.z, _e14.g0_.x, _e17.g0_.y)) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) + ((vec4<f32>(_e28.g0_.z) * vec4<f32>(_e32.g0_.z, _e35.g0_.y, _e38.g0_.z, _e41.g0_.x)) * vec4<f32>(1.0, -(1.0), 0.0, 1.0))) + ((vec4<f32>(_e54.g0_.x) * vec4<f32>(_e58.g0_.x)) * vec4<f32>(0.0, 1.0, 0.0, 0.0))));
 }
 
-fn plane_translator_regressive_product(self_730: Plane, other_624: Translator) -> Scalar {
-    var self_731: Plane;
-    var other_625: Translator;
+fn plane_translator_regressive_product(self_1172: Plane, other_1038: Translator) -> Scalar {
+    var self_1173: Plane;
+    var other_1039: Translator;
 
-    self_731 = self_730;
-    other_625 = other_624;
-    let _e4: Plane = self_731;
-    let _e7: Translator = other_625;
-    let _e11: Plane = self_731;
-    let _e14: Translator = other_625;
+    self_1173 = self_1172;
+    other_1039 = other_1038;
+    let _e4: Plane = self_1173;
+    let _e7: Translator = other_1039;
+    let _e11: Plane = self_1173;
+    let _e14: Translator = other_1039;
     return Scalar(((_e4.g0_.y * _e7.g0_.y) + (_e11.g0_.z * _e14.g0_.z)));
 }
 
-fn plane_translator_outer_product(self_732: Plane, other_626: Translator) -> MotorDual {
-    var self_733: Plane;
-    var other_627: Translator;
+fn plane_translator_outer_product(self_1174: Plane, other_1040: Translator) -> MotorDual {
+    var self_1175: Plane;
+    var other_1041: Translator;
 
-    self_733 = self_732;
-    other_627 = other_626;
-    let _e4: Plane = self_733;
-    let _e8: Translator = other_627;
-    let _e11: Translator = other_627;
-    let _e14: Translator = other_627;
-    let _e17: Translator = other_627;
-    let _e28: Plane = self_733;
-    let _e31: Plane = self_733;
-    let _e34: Plane = self_733;
-    let _e37: Plane = self_733;
-    let _e41: Translator = other_627;
-    let _e44: Translator = other_627;
-    let _e47: Translator = other_627;
-    let _e50: Translator = other_627;
+    self_1175 = self_1174;
+    other_1041 = other_1040;
+    let _e4: Plane = self_1175;
+    let _e8: Translator = other_1041;
+    let _e11: Translator = other_1041;
+    let _e14: Translator = other_1041;
+    let _e17: Translator = other_1041;
+    let _e28: Plane = self_1175;
+    let _e31: Plane = self_1175;
+    let _e34: Plane = self_1175;
+    let _e37: Plane = self_1175;
+    let _e41: Translator = other_1041;
+    let _e44: Translator = other_1041;
+    let _e47: Translator = other_1041;
+    let _e50: Translator = other_1041;
     return MotorDual((((vec4<f32>(_e4.g0_.z) * vec4<f32>(_e8.g0_.z, _e11.g0_.z, _e14.g0_.z, _e17.g0_.x)) * vec4<f32>(1.0, 0.0, 0.0, 1.0)) + ((vec4<f32>(_e28.g0_.y, _e31.g0_.x, _e34.g0_.y, _e37.g0_.x) * vec4<f32>(_e41.g0_.y, _e44.g0_.x, _e47.g0_.x, _e50.g0_.x)) * vec4<f32>(1.0, 1.0, 1.0, 0.0))));
 }
 
-fn plane_translator_inner_product(self_734: Plane, other_628: Translator) -> Plane {
-    var self_735: Plane;
-    var other_629: Translator;
+fn plane_translator_inner_product(self_1176: Plane, other_1042: Translator) -> Plane {
+    var self_1177: Plane;
+    var other_1043: Translator;
 
-    self_735 = self_734;
-    other_629 = other_628;
-    let _e4: Plane = self_735;
-    let _e8: Translator = other_629;
-    let _e17: Plane = self_735;
-    let _e21: Translator = other_629;
-    let _e32: Plane = self_735;
-    let _e36: Translator = other_629;
+    self_1177 = self_1176;
+    other_1043 = other_1042;
+    let _e4: Plane = self_1177;
+    let _e8: Translator = other_1043;
+    let _e17: Plane = self_1177;
+    let _e21: Translator = other_1043;
+    let _e32: Plane = self_1177;
+    let _e36: Translator = other_1043;
     return Plane(((((vec3<f32>(_e4.g0_.y) * _e8.g0_.zxz) * vec3<f32>(1.0, 1.0, 0.0)) + ((vec3<f32>(_e17.g0_.z) * _e21.g0_.yyx) * vec3<f32>(-(1.0), 0.0, 1.0))) + ((vec3<f32>(_e32.g0_.x) * vec3<f32>(_e36.g0_.x)) * vec3<f32>(1.0, 0.0, 0.0))));
 }
 
-fn plane_translator_right_contraction(self_736: Plane, other_630: Translator) -> Plane {
-    var self_737: Plane;
-    var other_631: Translator;
+fn plane_translator_geometric_anti_product(self_1178: Plane, other_1044: Translator) -> Motor {
+    var self_1179: Plane;
+    var other_1045: Translator;
 
-    self_737 = self_736;
-    other_631 = other_630;
-    let _e4: Plane = self_737;
-    let _e6: Translator = other_631;
+    self_1179 = self_1178;
+    other_1045 = other_1044;
+    let _e4: Plane = self_1179;
+    let _e8: Translator = other_1045;
+    let _e11: Translator = other_1045;
+    let _e14: Translator = other_1045;
+    let _e17: Translator = other_1045;
+    let _e28: Plane = self_1179;
+    let _e32: Translator = other_1045;
+    let _e35: Translator = other_1045;
+    let _e38: Translator = other_1045;
+    let _e41: Translator = other_1045;
+    let _e54: Plane = self_1179;
+    let _e58: Translator = other_1045;
+    let _e61: Translator = other_1045;
+    let _e64: Translator = other_1045;
+    let _e67: Translator = other_1045;
+    return Motor(((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.y, _e11.g0_.z, _e14.g0_.y, _e17.g0_.y)) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) + ((vec4<f32>(_e28.g0_.z) * vec4<f32>(_e32.g0_.z, _e35.g0_.y, _e38.g0_.z, _e41.g0_.z)) * vec4<f32>(1.0, -(1.0), 0.0, 0.0))) + ((vec4<f32>(_e54.g0_.x) * vec4<f32>(_e58.g0_.x, _e61.g0_.x, _e64.g0_.z, _e67.g0_.y)) * vec4<f32>(0.0, -(1.0), -(1.0), 1.0))));
+}
+
+fn plane_translator_inner_anti_product(self_1180: Plane, other_1046: Translator) -> Point {
+    var self_1181: Plane;
+    var other_1047: Translator;
+
+    self_1181 = self_1180;
+    other_1047 = other_1046;
+    let _e4: Plane = self_1181;
+    let _e8: Translator = other_1047;
+    let _e19: Plane = self_1181;
+    let _e23: Translator = other_1047;
+    let _e35: Plane = self_1181;
+    let _e38: Translator = other_1047;
+    return Point(((((vec3<f32>(_e4.g0_.x) * _e8.g0_.xzy) * vec3<f32>(-(1.0), -(1.0), 1.0)) + ((vec3<f32>(_e19.g0_.z) * vec3<f32>(_e23.g0_.y)) * vec3<f32>(-(1.0), 0.0, 0.0))) + ((_e35.g0_.yxx * _e38.g0_.zxx) * vec3<f32>(1.0, 0.0, 0.0))));
+}
+
+fn plane_translator_right_contraction(self_1182: Plane, other_1048: Translator) -> Plane {
+    var self_1183: Plane;
+    var other_1049: Translator;
+
+    self_1183 = self_1182;
+    other_1049 = other_1048;
+    let _e4: Plane = self_1183;
+    let _e6: Translator = other_1049;
     return Plane((_e4.g0_ * vec3<f32>(_e6.g0_.x)));
 }
 
-fn plane_motor_geometric_product(self_738: Plane, other_632: Motor) -> MotorDual {
-    var self_739: Plane;
-    var other_633: Motor;
+fn plane_translator_right_anti_contraction(self_1184: Plane, other_1050: Translator) -> Point {
+    var self_1185: Plane;
+    var other_1051: Translator;
 
-    self_739 = self_738;
-    other_633 = other_632;
-    let _e4: Plane = self_739;
-    let _e8: Motor = other_633;
-    let _e19: Plane = self_739;
-    let _e23: Motor = other_633;
-    let _e35: Plane = self_739;
-    let _e39: Motor = other_633;
+    self_1185 = self_1184;
+    other_1051 = other_1050;
+    let _e4: Plane = self_1185;
+    let _e8: Translator = other_1051;
+    let _e19: Plane = self_1185;
+    let _e22: Translator = other_1051;
+    return Point((((vec3<f32>(_e4.g0_.z) * vec3<f32>(_e8.g0_.y)) * vec3<f32>(-(1.0), 0.0, 0.0)) + ((_e19.g0_.yxx * _e22.g0_.zzy) * vec3<f32>(1.0, -(1.0), 1.0))));
+}
+
+fn plane_motor_geometric_product(self_1186: Plane, other_1052: Motor) -> MotorDual {
+    var self_1187: Plane;
+    var other_1053: Motor;
+
+    self_1187 = self_1186;
+    other_1053 = other_1052;
+    let _e4: Plane = self_1187;
+    let _e8: Motor = other_1053;
+    let _e19: Plane = self_1187;
+    let _e23: Motor = other_1053;
+    let _e35: Plane = self_1187;
+    let _e39: Motor = other_1053;
     return MotorDual(((((vec4<f32>(_e4.g0_.y) * _e8.g0_.zwxy) * vec4<f32>(1.0, 1.0, 1.0, -(1.0))) + ((vec4<f32>(_e19.g0_.z) * _e23.g0_.wzyx) * vec4<f32>(1.0, -(1.0), 1.0, 1.0))) + ((vec4<f32>(_e35.g0_.x) * _e39.g0_.yxxx) * vec4<f32>(1.0, 1.0, 0.0, 0.0))));
 }
 
-fn plane_motor_regressive_product(self_740: Plane, other_634: Motor) -> Scalar {
-    var self_741: Plane;
-    var other_635: Motor;
+fn plane_motor_regressive_product(self_1188: Plane, other_1054: Motor) -> Scalar {
+    var self_1189: Plane;
+    var other_1055: Motor;
 
-    self_741 = self_740;
-    other_635 = other_634;
-    let _e4: Plane = self_741;
-    let _e7: Motor = other_635;
-    let _e11: Plane = self_741;
-    let _e14: Motor = other_635;
-    let _e19: Plane = self_741;
-    let _e22: Motor = other_635;
+    self_1189 = self_1188;
+    other_1055 = other_1054;
+    let _e4: Plane = self_1189;
+    let _e7: Motor = other_1055;
+    let _e11: Plane = self_1189;
+    let _e14: Motor = other_1055;
+    let _e19: Plane = self_1189;
+    let _e22: Motor = other_1055;
     return Scalar((((_e4.g0_.x * _e7.g0_.y) + (_e11.g0_.y * _e14.g0_.z)) + (_e19.g0_.z * _e22.g0_.w)));
 }
 
-fn plane_motor_outer_product(self_742: Plane, other_636: Motor) -> MotorDual {
-    var self_743: Plane;
-    var other_637: Motor;
+fn plane_motor_outer_product(self_1190: Plane, other_1056: Motor) -> MotorDual {
+    var self_1191: Plane;
+    var other_1057: Motor;
 
-    self_743 = self_742;
-    other_637 = other_636;
-    let _e4: Plane = self_743;
-    let _e8: Motor = other_637;
-    let _e18: Plane = self_743;
-    let _e22: Motor = other_637;
-    let _e33: Plane = self_743;
-    let _e37: Motor = other_637;
+    self_1191 = self_1190;
+    other_1057 = other_1056;
+    let _e4: Plane = self_1191;
+    let _e8: Motor = other_1057;
+    let _e18: Plane = self_1191;
+    let _e22: Motor = other_1057;
+    let _e33: Plane = self_1191;
+    let _e37: Motor = other_1057;
     return MotorDual(((((vec4<f32>(_e4.g0_.y) * _e8.g0_.zzxz) * vec4<f32>(1.0, 0.0, 1.0, 0.0)) + ((vec4<f32>(_e18.g0_.z) * _e22.g0_.wwwx) * vec4<f32>(1.0, 0.0, 0.0, 1.0))) + ((vec4<f32>(_e33.g0_.x) * _e37.g0_.yxxx) * vec4<f32>(1.0, 1.0, 0.0, 0.0))));
 }
 
-fn plane_motor_inner_product(self_744: Plane, other_638: Motor) -> Plane {
-    var self_745: Plane;
-    var other_639: Motor;
+fn plane_motor_inner_product(self_1192: Plane, other_1058: Motor) -> Plane {
+    var self_1193: Plane;
+    var other_1059: Motor;
 
-    self_745 = self_744;
-    other_639 = other_638;
-    let _e4: Plane = self_745;
-    let _e8: Motor = other_639;
-    let _e11: Motor = other_639;
-    let _e14: Motor = other_639;
-    let _e25: Plane = self_745;
-    let _e29: Motor = other_639;
-    let _e32: Motor = other_639;
-    let _e35: Motor = other_639;
-    let _e47: Plane = self_745;
-    let _e51: Motor = other_639;
+    self_1193 = self_1192;
+    other_1059 = other_1058;
+    let _e4: Plane = self_1193;
+    let _e8: Motor = other_1059;
+    let _e11: Motor = other_1059;
+    let _e14: Motor = other_1059;
+    let _e25: Plane = self_1193;
+    let _e29: Motor = other_1059;
+    let _e32: Motor = other_1059;
+    let _e35: Motor = other_1059;
+    let _e47: Plane = self_1193;
+    let _e51: Motor = other_1059;
     return Plane(((((vec3<f32>(_e4.g0_.y) * vec3<f32>(_e8.g0_.w, _e11.g0_.x, _e14.g0_.y)) * vec3<f32>(1.0, 1.0, -(1.0))) + ((vec3<f32>(_e25.g0_.z) * vec3<f32>(_e29.g0_.z, _e32.g0_.y, _e35.g0_.x)) * vec3<f32>(-(1.0), 1.0, 1.0))) + ((vec3<f32>(_e47.g0_.x) * vec3<f32>(_e51.g0_.x)) * vec3<f32>(1.0, 0.0, 0.0))));
 }
 
-fn plane_motor_left_contraction(self_746: Plane, other_640: Motor) -> Plane {
-    var self_747: Plane;
-    var other_641: Motor;
+fn plane_motor_geometric_anti_product(self_1194: Plane, other_1060: Motor) -> Motor {
+    var self_1195: Plane;
+    var other_1061: Motor;
 
-    self_747 = self_746;
-    other_641 = other_640;
-    let _e4: Plane = self_747;
-    let _e8: Motor = other_641;
-    let _e11: Motor = other_641;
-    let _e14: Motor = other_641;
-    let _e25: Plane = self_747;
-    let _e28: Motor = other_641;
-    let _e31: Motor = other_641;
-    let _e34: Motor = other_641;
+    self_1195 = self_1194;
+    other_1061 = other_1060;
+    let _e4: Plane = self_1195;
+    let _e8: Motor = other_1061;
+    let _e20: Plane = self_1195;
+    let _e24: Motor = other_1061;
+    let _e36: Plane = self_1195;
+    let _e39: Plane = self_1195;
+    let _e42: Plane = self_1195;
+    let _e45: Plane = self_1195;
+    let _e49: Motor = other_1061;
+    return Motor(((((vec4<f32>(_e4.g0_.x) * _e8.g0_.yxwz) * vec4<f32>(1.0, -(1.0), -(1.0), 1.0)) + ((vec4<f32>(_e20.g0_.z) * _e24.g0_.wzww) * vec4<f32>(1.0, -(1.0), 0.0, 0.0))) + ((vec4<f32>(_e36.g0_.y, _e39.g0_.y, _e42.g0_.x, _e45.g0_.x) * _e49.g0_.zwxx) * vec4<f32>(1.0, 1.0, 0.0, 0.0))));
+}
+
+fn plane_motor_inner_anti_product(self_1196: Plane, other_1062: Motor) -> Point {
+    var self_1197: Plane;
+    var other_1063: Motor;
+
+    self_1197 = self_1196;
+    other_1063 = other_1062;
+    let _e4: Plane = self_1197;
+    let _e8: Motor = other_1063;
+    let _e11: Motor = other_1063;
+    let _e14: Motor = other_1063;
+    let _e26: Plane = self_1197;
+    let _e30: Motor = other_1063;
+    let _e42: Plane = self_1197;
+    let _e45: Motor = other_1063;
+    let _e48: Motor = other_1063;
+    let _e51: Motor = other_1063;
+    return Point(((((vec3<f32>(_e4.g0_.x) * vec3<f32>(_e8.g0_.x, _e11.g0_.w, _e14.g0_.z)) * vec3<f32>(-(1.0), -(1.0), 1.0)) + ((vec3<f32>(_e26.g0_.z) * vec3<f32>(_e30.g0_.z)) * vec3<f32>(-(1.0), 0.0, 0.0))) + ((_e42.g0_.yxx * vec3<f32>(_e45.g0_.w, _e48.g0_.x, _e51.g0_.x)) * vec3<f32>(1.0, 0.0, 0.0))));
+}
+
+fn plane_motor_left_contraction(self_1198: Plane, other_1064: Motor) -> Plane {
+    var self_1199: Plane;
+    var other_1065: Motor;
+
+    self_1199 = self_1198;
+    other_1065 = other_1064;
+    let _e4: Plane = self_1199;
+    let _e8: Motor = other_1065;
+    let _e11: Motor = other_1065;
+    let _e14: Motor = other_1065;
+    let _e25: Plane = self_1199;
+    let _e28: Motor = other_1065;
+    let _e31: Motor = other_1065;
+    let _e34: Motor = other_1065;
     return Plane((((vec3<f32>(_e4.g0_.z) * vec3<f32>(_e8.g0_.z, _e11.g0_.y, _e14.g0_.z)) * vec3<f32>(-(1.0), 1.0, 0.0)) + ((_e25.g0_.yxy * vec3<f32>(_e28.g0_.w, _e31.g0_.x, _e34.g0_.y)) * vec3<f32>(1.0, 0.0, -(1.0)))));
 }
 
-fn plane_motor_right_contraction(self_748: Plane, other_642: Motor) -> Plane {
-    var self_749: Plane;
-    var other_643: Motor;
+fn plane_motor_right_contraction(self_1200: Plane, other_1066: Motor) -> Plane {
+    var self_1201: Plane;
+    var other_1067: Motor;
 
-    self_749 = self_748;
-    other_643 = other_642;
-    let _e4: Plane = self_749;
-    let _e6: Motor = other_643;
+    self_1201 = self_1200;
+    other_1067 = other_1066;
+    let _e4: Plane = self_1201;
+    let _e6: Motor = other_1067;
     return Plane((_e4.g0_ * vec3<f32>(_e6.g0_.x)));
 }
 
-fn plane_motor_dual_add(self_750: Plane, other_644: MotorDual) -> MotorDual {
-    var self_751: Plane;
-    var other_645: MotorDual;
+fn plane_motor_right_anti_contraction(self_1202: Plane, other_1068: Motor) -> Point {
+    var self_1203: Plane;
+    var other_1069: Motor;
 
-    self_751 = self_750;
-    other_645 = other_644;
-    let _e4: Plane = self_751;
-    let _e7: Plane = self_751;
-    let _e10: Plane = self_751;
-    let _e13: Plane = self_751;
-    let _e23: MotorDual = other_645;
+    self_1203 = self_1202;
+    other_1069 = other_1068;
+    let _e4: Plane = self_1203;
+    let _e8: Motor = other_1069;
+    let _e19: Plane = self_1203;
+    let _e22: Motor = other_1069;
+    let _e25: Motor = other_1069;
+    let _e28: Motor = other_1069;
+    return Point((((vec3<f32>(_e4.g0_.z) * vec3<f32>(_e8.g0_.z)) * vec3<f32>(-(1.0), 0.0, 0.0)) + ((_e19.g0_.yxx * vec3<f32>(_e22.g0_.w, _e25.g0_.w, _e28.g0_.z)) * vec3<f32>(1.0, -(1.0), 1.0))));
+}
+
+fn plane_motor_dual_add(self_1204: Plane, other_1070: MotorDual) -> MotorDual {
+    var self_1205: Plane;
+    var other_1071: MotorDual;
+
+    self_1205 = self_1204;
+    other_1071 = other_1070;
+    let _e4: Plane = self_1205;
+    let _e7: Plane = self_1205;
+    let _e10: Plane = self_1205;
+    let _e13: Plane = self_1205;
+    let _e23: MotorDual = other_1071;
     return MotorDual(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y, _e13.g0_.z) * vec4<f32>(0.0, 1.0, 1.0, 1.0)) + _e23.g0_));
 }
 
-fn plane_motor_dual_sub(self_752: Plane, other_646: MotorDual) -> MotorDual {
-    var self_753: Plane;
-    var other_647: MotorDual;
+fn plane_motor_dual_sub(self_1206: Plane, other_1072: MotorDual) -> MotorDual {
+    var self_1207: Plane;
+    var other_1073: MotorDual;
 
-    self_753 = self_752;
-    other_647 = other_646;
-    let _e4: Plane = self_753;
-    let _e7: Plane = self_753;
-    let _e10: Plane = self_753;
-    let _e13: Plane = self_753;
-    let _e23: MotorDual = other_647;
+    self_1207 = self_1206;
+    other_1073 = other_1072;
+    let _e4: Plane = self_1207;
+    let _e7: Plane = self_1207;
+    let _e10: Plane = self_1207;
+    let _e13: Plane = self_1207;
+    let _e23: MotorDual = other_1073;
     return MotorDual(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y, _e13.g0_.z) * vec4<f32>(0.0, 1.0, 1.0, 1.0)) - _e23.g0_));
 }
 
-fn plane_motor_dual_geometric_product(self_754: Plane, other_648: MotorDual) -> Motor {
-    var self_755: Plane;
-    var other_649: MotorDual;
+fn plane_motor_dual_geometric_product(self_1208: Plane, other_1074: MotorDual) -> Motor {
+    var self_1209: Plane;
+    var other_1075: MotorDual;
 
-    self_755 = self_754;
-    other_649 = other_648;
-    let _e4: Plane = self_755;
-    let _e8: MotorDual = other_649;
-    let _e19: Plane = self_755;
-    let _e23: MotorDual = other_649;
-    let _e35: Plane = self_755;
-    let _e39: MotorDual = other_649;
+    self_1209 = self_1208;
+    other_1075 = other_1074;
+    let _e4: Plane = self_1209;
+    let _e8: MotorDual = other_1075;
+    let _e19: Plane = self_1209;
+    let _e23: MotorDual = other_1075;
+    let _e35: Plane = self_1209;
+    let _e39: MotorDual = other_1075;
     return Motor(((((vec4<f32>(_e4.g0_.y) * _e8.g0_.zwxy) * vec4<f32>(1.0, -(1.0), 1.0, 1.0)) + ((vec4<f32>(_e19.g0_.z) * _e23.g0_.wzyx) * vec4<f32>(1.0, 1.0, -(1.0), 1.0))) + ((vec4<f32>(_e35.g0_.x) * _e39.g0_.xxwz) * vec4<f32>(0.0, 0.0, 1.0, -(1.0)))));
 }
 
-fn plane_motor_dual_regressive_product(self_756: Plane, other_650: MotorDual) -> Plane {
-    var self_757: Plane;
-    var other_651: MotorDual;
+fn plane_motor_dual_regressive_product(self_1210: Plane, other_1076: MotorDual) -> Plane {
+    var self_1211: Plane;
+    var other_1077: MotorDual;
 
-    self_757 = self_756;
-    other_651 = other_650;
-    let _e4: Plane = self_757;
-    let _e6: MotorDual = other_651;
+    self_1211 = self_1210;
+    other_1077 = other_1076;
+    let _e4: Plane = self_1211;
+    let _e6: MotorDual = other_1077;
     return Plane((_e4.g0_ * vec3<f32>(_e6.g0_.x)));
 }
 
-fn plane_motor_dual_outer_product(self_758: Plane, other_652: MotorDual) -> Point {
-    var self_759: Plane;
-    var other_653: MotorDual;
+fn plane_motor_dual_outer_product(self_1212: Plane, other_1078: MotorDual) -> Point {
+    var self_1213: Plane;
+    var other_1079: MotorDual;
 
-    self_759 = self_758;
-    other_653 = other_652;
-    let _e4: Plane = self_759;
-    let _e8: MotorDual = other_653;
-    let _e11: MotorDual = other_653;
-    let _e14: MotorDual = other_653;
-    let _e25: Plane = self_759;
-    let _e29: MotorDual = other_653;
-    let _e32: MotorDual = other_653;
-    let _e35: MotorDual = other_653;
-    let _e47: Plane = self_759;
-    let _e51: MotorDual = other_653;
-    let _e54: MotorDual = other_653;
-    let _e57: MotorDual = other_653;
+    self_1213 = self_1212;
+    other_1079 = other_1078;
+    let _e4: Plane = self_1213;
+    let _e8: MotorDual = other_1079;
+    let _e11: MotorDual = other_1079;
+    let _e14: MotorDual = other_1079;
+    let _e25: Plane = self_1213;
+    let _e29: MotorDual = other_1079;
+    let _e32: MotorDual = other_1079;
+    let _e35: MotorDual = other_1079;
+    let _e47: Plane = self_1213;
+    let _e51: MotorDual = other_1079;
+    let _e54: MotorDual = other_1079;
+    let _e57: MotorDual = other_1079;
     return Point(((((vec3<f32>(_e4.g0_.y) * vec3<f32>(_e8.g0_.w, _e11.g0_.w, _e14.g0_.y)) * vec3<f32>(-(1.0), 0.0, 1.0)) + ((vec3<f32>(_e25.g0_.z) * vec3<f32>(_e29.g0_.z, _e32.g0_.y, _e35.g0_.z)) * vec3<f32>(1.0, -(1.0), 0.0))) + ((vec3<f32>(_e47.g0_.x) * vec3<f32>(_e51.g0_.x, _e54.g0_.w, _e57.g0_.z)) * vec3<f32>(0.0, 1.0, -(1.0)))));
 }
 
-fn plane_motor_dual_inner_product(self_760: Plane, other_654: MotorDual) -> Translator {
-    var self_761: Plane;
-    var other_655: MotorDual;
+fn plane_motor_dual_inner_product(self_1214: Plane, other_1080: MotorDual) -> Translator {
+    var self_1215: Plane;
+    var other_1081: MotorDual;
 
-    self_761 = self_760;
-    other_655 = other_654;
-    let _e4: Plane = self_761;
-    let _e8: MotorDual = other_655;
-    let _e11: MotorDual = other_655;
-    let _e14: MotorDual = other_655;
-    let _e24: Plane = self_761;
-    let _e27: MotorDual = other_655;
-    let _e30: MotorDual = other_655;
-    let _e33: MotorDual = other_655;
+    self_1215 = self_1214;
+    other_1081 = other_1080;
+    let _e4: Plane = self_1215;
+    let _e8: MotorDual = other_1081;
+    let _e11: MotorDual = other_1081;
+    let _e14: MotorDual = other_1081;
+    let _e24: Plane = self_1215;
+    let _e27: MotorDual = other_1081;
+    let _e30: MotorDual = other_1081;
+    let _e33: MotorDual = other_1081;
     return Translator((((vec3<f32>(_e4.g0_.z) * vec3<f32>(_e8.g0_.w, _e11.g0_.w, _e14.g0_.x)) * vec3<f32>(1.0, 0.0, 1.0)) + ((_e24.g0_.yyx * vec3<f32>(_e27.g0_.z, _e30.g0_.x, _e33.g0_.x)) * vec3<f32>(1.0, 1.0, 0.0))));
 }
 
-fn plane_motor_dual_left_contraction(self_762: Plane, other_656: MotorDual) -> Translator {
-    var self_763: Plane;
-    var other_657: MotorDual;
+fn plane_motor_dual_geometric_anti_product(self_1216: Plane, other_1082: MotorDual) -> MotorDual {
+    var self_1217: Plane;
+    var other_1083: MotorDual;
 
-    self_763 = self_762;
-    other_657 = other_656;
-    let _e4: Plane = self_763;
-    let _e8: MotorDual = other_657;
-    let _e11: MotorDual = other_657;
-    let _e14: MotorDual = other_657;
-    let _e24: Plane = self_763;
-    let _e27: MotorDual = other_657;
-    let _e30: MotorDual = other_657;
-    let _e33: MotorDual = other_657;
+    self_1217 = self_1216;
+    other_1083 = other_1082;
+    let _e4: Plane = self_1217;
+    let _e8: MotorDual = other_1083;
+    let _e20: Plane = self_1217;
+    let _e24: MotorDual = other_1083;
+    let _e35: Plane = self_1217;
+    let _e38: Plane = self_1217;
+    let _e41: Plane = self_1217;
+    let _e44: Plane = self_1217;
+    let _e48: MotorDual = other_1083;
+    return MotorDual(((((vec4<f32>(_e4.g0_.x) * _e8.g0_.yxwz) * vec4<f32>(-(1.0), 1.0, -(1.0), 1.0)) + ((vec4<f32>(_e20.g0_.z) * _e24.g0_.yyyx) * vec4<f32>(0.0, 0.0, 1.0, 1.0))) + ((vec4<f32>(_e35.g0_.x, _e38.g0_.x, _e41.g0_.y, _e44.g0_.y) * _e48.g0_.xxxy) * vec4<f32>(0.0, 0.0, 1.0, -(1.0)))));
+}
+
+fn plane_motor_dual_inner_anti_product(self_1218: Plane, other_1084: MotorDual) -> MotorDual {
+    var self_1219: Plane;
+    var other_1085: MotorDual;
+
+    self_1219 = self_1218;
+    other_1085 = other_1084;
+    let _e4: Plane = self_1219;
+    let _e7: Plane = self_1219;
+    let _e10: Plane = self_1219;
+    let _e13: Plane = self_1219;
+    let _e17: MotorDual = other_1085;
+    return MotorDual(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y, _e13.g0_.z) * _e17.g0_.yxxx) * vec4<f32>(-(1.0), 1.0, 1.0, 1.0)));
+}
+
+fn plane_motor_dual_left_contraction(self_1220: Plane, other_1086: MotorDual) -> Translator {
+    var self_1221: Plane;
+    var other_1087: MotorDual;
+
+    self_1221 = self_1220;
+    other_1087 = other_1086;
+    let _e4: Plane = self_1221;
+    let _e8: MotorDual = other_1087;
+    let _e11: MotorDual = other_1087;
+    let _e14: MotorDual = other_1087;
+    let _e24: Plane = self_1221;
+    let _e27: MotorDual = other_1087;
+    let _e30: MotorDual = other_1087;
+    let _e33: MotorDual = other_1087;
     return Translator((((vec3<f32>(_e4.g0_.z) * vec3<f32>(_e8.g0_.w, _e11.g0_.w, _e14.g0_.x)) * vec3<f32>(1.0, 0.0, 1.0)) + ((_e24.g0_.yyx * vec3<f32>(_e27.g0_.z, _e30.g0_.x, _e33.g0_.x)) * vec3<f32>(1.0, 1.0, 0.0))));
 }
 
-fn plane_motor_dual_right_contraction(self_764: Plane, other_658: MotorDual) -> Scalar {
-    var self_765: Plane;
-    var other_659: MotorDual;
+fn plane_motor_dual_right_contraction(self_1222: Plane, other_1088: MotorDual) -> Scalar {
+    var self_1223: Plane;
+    var other_1089: MotorDual;
 
-    self_765 = self_764;
-    other_659 = other_658;
-    let _e4: Plane = self_765;
-    let _e7: MotorDual = other_659;
-    let _e11: Plane = self_765;
-    let _e14: MotorDual = other_659;
+    self_1223 = self_1222;
+    other_1089 = other_1088;
+    let _e4: Plane = self_1223;
+    let _e7: MotorDual = other_1089;
+    let _e11: Plane = self_1223;
+    let _e14: MotorDual = other_1089;
     return Scalar(((_e4.g0_.y * _e7.g0_.z) + (_e11.g0_.z * _e14.g0_.w)));
 }
 
-fn plane_motor_dual_scalar_product(self_766: Plane, other_660: MotorDual) -> Scalar {
-    var self_767: Plane;
-    var other_661: MotorDual;
+fn plane_motor_dual_left_anti_contraction(self_1224: Plane, other_1090: MotorDual) -> AntiScalar {
+    var self_1225: Plane;
+    var other_1091: MotorDual;
 
-    self_767 = self_766;
-    other_661 = other_660;
-    let _e4: Plane = self_767;
-    let _e7: MotorDual = other_661;
-    let _e11: Plane = self_767;
-    let _e14: MotorDual = other_661;
+    self_1225 = self_1224;
+    other_1091 = other_1090;
+    let _e5: Plane = self_1225;
+    let _e8: MotorDual = other_1091;
+    return AntiScalar((0.0 - (_e5.g0_.x * _e8.g0_.y)));
+}
+
+fn plane_motor_dual_right_anti_contraction(self_1226: Plane, other_1092: MotorDual) -> MotorDual {
+    var self_1227: Plane;
+    var other_1093: MotorDual;
+
+    self_1227 = self_1226;
+    other_1093 = other_1092;
+    let _e4: Plane = self_1227;
+    let _e7: Plane = self_1227;
+    let _e10: Plane = self_1227;
+    let _e13: Plane = self_1227;
+    let _e17: MotorDual = other_1093;
+    return MotorDual(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y, _e13.g0_.z) * _e17.g0_.yxxx) * vec4<f32>(-(1.0), 1.0, 1.0, 1.0)));
+}
+
+fn plane_motor_dual_scalar_product(self_1228: Plane, other_1094: MotorDual) -> Scalar {
+    var self_1229: Plane;
+    var other_1095: MotorDual;
+
+    self_1229 = self_1228;
+    other_1095 = other_1094;
+    let _e4: Plane = self_1229;
+    let _e7: MotorDual = other_1095;
+    let _e11: Plane = self_1229;
+    let _e14: MotorDual = other_1095;
     return Scalar(((_e4.g0_.y * _e7.g0_.z) + (_e11.g0_.z * _e14.g0_.w)));
 }
 
-fn plane_squared_magnitude(self_768: Plane) -> Scalar {
-    var self_769: Plane;
+fn plane_motor_dual_anti_scalar_product(self_1230: Plane, other_1096: MotorDual) -> AntiScalar {
+    var self_1231: Plane;
+    var other_1097: MotorDual;
 
-    self_769 = self_768;
-    let _e2: Plane = self_769;
-    let _e3: Plane = self_769;
+    self_1231 = self_1230;
+    other_1097 = other_1096;
+    let _e5: Plane = self_1231;
+    let _e8: MotorDual = other_1097;
+    return AntiScalar((0.0 - (_e5.g0_.x * _e8.g0_.y)));
+}
+
+fn plane_squared_magnitude(self_1232: Plane) -> Scalar {
+    var self_1233: Plane;
+
+    self_1233 = self_1232;
+    let _e2: Plane = self_1233;
+    let _e3: Plane = self_1233;
     let _e4: Plane = plane_reversal(_e3);
     let _e5: Scalar = plane_plane_scalar_product(_e2, _e4);
     return _e5;
 }
 
-fn plane_magnitude(self_770: Plane) -> Scalar {
-    var self_771: Plane;
+fn plane_magnitude(self_1234: Plane) -> Scalar {
+    var self_1235: Plane;
 
-    self_771 = self_770;
-    let _e2: Plane = self_771;
+    self_1235 = self_1234;
+    let _e2: Plane = self_1235;
     let _e3: Scalar = plane_squared_magnitude(_e2);
     return Scalar(sqrt(_e3.g0_));
 }
 
-fn plane_scale(self_772: Plane, other_662: f32) -> Plane {
-    var self_773: Plane;
-    var other_663: f32;
+fn plane_scale(self_1236: Plane, other_1098: f32) -> Plane {
+    var self_1237: Plane;
+    var other_1099: f32;
 
-    self_773 = self_772;
-    other_663 = other_662;
-    let _e4: Plane = self_773;
-    let _e5: f32 = other_663;
+    self_1237 = self_1236;
+    other_1099 = other_1098;
+    let _e4: Plane = self_1237;
+    let _e5: f32 = other_1099;
     let _e7: Plane = plane_scalar_geometric_product(_e4, Scalar(_e5));
     return _e7;
 }
 
-fn plane_signum(self_774: Plane) -> Plane {
-    var self_775: Plane;
+fn plane_signum(self_1238: Plane) -> Plane {
+    var self_1239: Plane;
 
-    self_775 = self_774;
-    let _e2: Plane = self_775;
-    let _e3: Plane = self_775;
+    self_1239 = self_1238;
+    let _e2: Plane = self_1239;
+    let _e3: Plane = self_1239;
     let _e4: Scalar = plane_magnitude(_e3);
     let _e9: Plane = plane_scalar_geometric_product(_e2, Scalar((1.0 / _e4.g0_)));
     return _e9;
 }
 
-fn plane_inverse(self_776: Plane) -> Plane {
-    var self_777: Plane;
+fn plane_inverse(self_1240: Plane) -> Plane {
+    var self_1241: Plane;
 
-    self_777 = self_776;
-    let _e2: Plane = self_777;
+    self_1241 = self_1240;
+    let _e2: Plane = self_1241;
     let _e3: Plane = plane_reversal(_e2);
-    let _e4: Plane = self_777;
+    let _e4: Plane = self_1241;
     let _e5: Scalar = plane_squared_magnitude(_e4);
     let _e10: Plane = plane_scalar_geometric_product(_e3, Scalar((1.0 / _e5.g0_)));
     return _e10;
@@ -5399,1006 +8537,1407 @@ fn translator_one() -> Translator {
     return Translator(vec3<f32>(1.0, 0.0, 0.0));
 }
 
-fn translator_neg(self_778: Translator) -> Translator {
-    var self_779: Translator;
+fn translator_neg(self_1242: Translator) -> Translator {
+    var self_1243: Translator;
 
-    self_779 = self_778;
-    let _e2: Translator = self_779;
+    self_1243 = self_1242;
+    let _e2: Translator = self_1243;
     return Translator((_e2.g0_ * vec3<f32>(-(1.0))));
 }
 
-fn translator_automorphism(self_780: Translator) -> Translator {
-    var self_781: Translator;
+fn translator_automorphism(self_1244: Translator) -> Translator {
+    var self_1245: Translator;
 
-    self_781 = self_780;
-    let _e2: Translator = self_781;
+    self_1245 = self_1244;
+    let _e2: Translator = self_1245;
     return Translator(_e2.g0_);
 }
 
-fn translator_reversal(self_782: Translator) -> Translator {
-    var self_783: Translator;
+fn translator_reversal(self_1246: Translator) -> Translator {
+    var self_1247: Translator;
 
-    self_783 = self_782;
-    let _e2: Translator = self_783;
+    self_1247 = self_1246;
+    let _e2: Translator = self_1247;
     return Translator((_e2.g0_ * vec3<f32>(1.0, -(1.0), -(1.0))));
 }
 
-fn translator_conjugation(self_784: Translator) -> Translator {
-    var self_785: Translator;
+fn translator_conjugation(self_1248: Translator) -> Translator {
+    var self_1249: Translator;
 
-    self_785 = self_784;
-    let _e2: Translator = self_785;
+    self_1249 = self_1248;
+    let _e2: Translator = self_1249;
     return Translator((_e2.g0_ * vec3<f32>(1.0, -(1.0), -(1.0))));
 }
 
-fn translator_scalar_into(self_786: Translator) -> Scalar {
-    var self_787: Translator;
+fn translator_anti_reversal(self_1250: Translator) -> Translator {
+    var self_1251: Translator;
 
-    self_787 = self_786;
-    let _e2: Translator = self_787;
+    self_1251 = self_1250;
+    let _e2: Translator = self_1251;
+    return Translator((_e2.g0_ * vec3<f32>(1.0, -(1.0), -(1.0))));
+}
+
+fn translator_scalar_into(self_1252: Translator) -> Scalar {
+    var self_1253: Translator;
+
+    self_1253 = self_1252;
+    let _e2: Translator = self_1253;
     return Scalar(_e2.g0_.x);
 }
 
-fn translator_scalar_add(self_788: Translator, other_664: Scalar) -> Translator {
-    var self_789: Translator;
-    var other_665: Scalar;
+fn translator_scalar_add(self_1254: Translator, other_1100: Scalar) -> Translator {
+    var self_1255: Translator;
+    var other_1101: Scalar;
 
-    self_789 = self_788;
-    other_665 = other_664;
-    let _e4: Translator = self_789;
-    let _e6: Scalar = other_665;
+    self_1255 = self_1254;
+    other_1101 = other_1100;
+    let _e4: Translator = self_1255;
+    let _e6: Scalar = other_1101;
     return Translator((_e4.g0_ + (vec3<f32>(_e6.g0_) * vec3<f32>(1.0, 0.0, 0.0))));
 }
 
-fn translator_scalar_sub(self_790: Translator, other_666: Scalar) -> Translator {
-    var self_791: Translator;
-    var other_667: Scalar;
+fn translator_scalar_sub(self_1256: Translator, other_1102: Scalar) -> Translator {
+    var self_1257: Translator;
+    var other_1103: Scalar;
 
-    self_791 = self_790;
-    other_667 = other_666;
-    let _e4: Translator = self_791;
-    let _e6: Scalar = other_667;
+    self_1257 = self_1256;
+    other_1103 = other_1102;
+    let _e4: Translator = self_1257;
+    let _e6: Scalar = other_1103;
     return Translator((_e4.g0_ - (vec3<f32>(_e6.g0_) * vec3<f32>(1.0, 0.0, 0.0))));
 }
 
-fn translator_scalar_geometric_product(self_792: Translator, other_668: Scalar) -> Translator {
-    var self_793: Translator;
-    var other_669: Scalar;
+fn translator_scalar_geometric_product(self_1258: Translator, other_1104: Scalar) -> Translator {
+    var self_1259: Translator;
+    var other_1105: Scalar;
 
-    self_793 = self_792;
-    other_669 = other_668;
-    let _e4: Translator = self_793;
-    let _e6: Scalar = other_669;
+    self_1259 = self_1258;
+    other_1105 = other_1104;
+    let _e4: Translator = self_1259;
+    let _e6: Scalar = other_1105;
     return Translator((_e4.g0_ * vec3<f32>(_e6.g0_)));
 }
 
-fn translator_scalar_outer_product(self_794: Translator, other_670: Scalar) -> Translator {
-    var self_795: Translator;
-    var other_671: Scalar;
+fn translator_scalar_outer_product(self_1260: Translator, other_1106: Scalar) -> Translator {
+    var self_1261: Translator;
+    var other_1107: Scalar;
 
-    self_795 = self_794;
-    other_671 = other_670;
-    let _e4: Translator = self_795;
-    let _e6: Scalar = other_671;
+    self_1261 = self_1260;
+    other_1107 = other_1106;
+    let _e4: Translator = self_1261;
+    let _e6: Scalar = other_1107;
     return Translator((_e4.g0_ * vec3<f32>(_e6.g0_)));
 }
 
-fn translator_scalar_inner_product(self_796: Translator, other_672: Scalar) -> Translator {
-    var self_797: Translator;
-    var other_673: Scalar;
+fn translator_scalar_inner_product(self_1262: Translator, other_1108: Scalar) -> Translator {
+    var self_1263: Translator;
+    var other_1109: Scalar;
 
-    self_797 = self_796;
-    other_673 = other_672;
-    let _e4: Translator = self_797;
-    let _e6: Scalar = other_673;
+    self_1263 = self_1262;
+    other_1109 = other_1108;
+    let _e4: Translator = self_1263;
+    let _e6: Scalar = other_1109;
     return Translator((_e4.g0_ * vec3<f32>(_e6.g0_)));
 }
 
-fn translator_scalar_left_contraction(self_798: Translator, other_674: Scalar) -> Scalar {
-    var self_799: Translator;
-    var other_675: Scalar;
+fn translator_scalar_left_contraction(self_1264: Translator, other_1110: Scalar) -> Scalar {
+    var self_1265: Translator;
+    var other_1111: Scalar;
 
-    self_799 = self_798;
-    other_675 = other_674;
-    let _e4: Translator = self_799;
-    let _e7: Scalar = other_675;
+    self_1265 = self_1264;
+    other_1111 = other_1110;
+    let _e4: Translator = self_1265;
+    let _e7: Scalar = other_1111;
     return Scalar((_e4.g0_.x * _e7.g0_));
 }
 
-fn translator_scalar_right_contraction(self_800: Translator, other_676: Scalar) -> Translator {
-    var self_801: Translator;
-    var other_677: Scalar;
+fn translator_scalar_right_contraction(self_1266: Translator, other_1112: Scalar) -> Translator {
+    var self_1267: Translator;
+    var other_1113: Scalar;
 
-    self_801 = self_800;
-    other_677 = other_676;
-    let _e4: Translator = self_801;
-    let _e6: Scalar = other_677;
+    self_1267 = self_1266;
+    other_1113 = other_1112;
+    let _e4: Translator = self_1267;
+    let _e6: Scalar = other_1113;
     return Translator((_e4.g0_ * vec3<f32>(_e6.g0_)));
 }
 
-fn translator_scalar_scalar_product(self_802: Translator, other_678: Scalar) -> Scalar {
-    var self_803: Translator;
-    var other_679: Scalar;
+fn translator_scalar_scalar_product(self_1268: Translator, other_1114: Scalar) -> Scalar {
+    var self_1269: Translator;
+    var other_1115: Scalar;
 
-    self_803 = self_802;
-    other_679 = other_678;
-    let _e4: Translator = self_803;
-    let _e7: Scalar = other_679;
+    self_1269 = self_1268;
+    other_1115 = other_1114;
+    let _e4: Translator = self_1269;
+    let _e7: Scalar = other_1115;
     return Scalar((_e4.g0_.x * _e7.g0_));
 }
 
-fn translator_multi_vector_add(self_804: Translator, other_680: MultiVector) -> MultiVector {
-    var self_805: Translator;
-    var other_681: MultiVector;
+fn translator_anti_scalar_geometric_product(self_1270: Translator, other_1116: AntiScalar) -> AntiScalar {
+    var self_1271: Translator;
+    var other_1117: AntiScalar;
 
-    self_805 = self_804;
-    other_681 = other_680;
-    let _e4: Translator = self_805;
-    let _e14: MultiVector = other_681;
-    let _e17: Translator = self_805;
-    let _e20: Translator = self_805;
-    let _e23: Translator = self_805;
-    let _e26: Translator = self_805;
-    let _e36: MultiVector = other_681;
+    self_1271 = self_1270;
+    other_1117 = other_1116;
+    let _e4: Translator = self_1271;
+    let _e7: AntiScalar = other_1117;
+    return AntiScalar((_e4.g0_.x * _e7.g0_));
+}
+
+fn translator_anti_scalar_regressive_product(self_1272: Translator, other_1118: AntiScalar) -> Translator {
+    var self_1273: Translator;
+    var other_1119: AntiScalar;
+
+    self_1273 = self_1272;
+    other_1119 = other_1118;
+    let _e4: Translator = self_1273;
+    let _e6: AntiScalar = other_1119;
+    return Translator((_e4.g0_ * vec3<f32>(_e6.g0_)));
+}
+
+fn translator_anti_scalar_outer_product(self_1274: Translator, other_1120: AntiScalar) -> AntiScalar {
+    var self_1275: Translator;
+    var other_1121: AntiScalar;
+
+    self_1275 = self_1274;
+    other_1121 = other_1120;
+    let _e4: Translator = self_1275;
+    let _e7: AntiScalar = other_1121;
+    return AntiScalar((_e4.g0_.x * _e7.g0_));
+}
+
+fn translator_anti_scalar_inner_product(self_1276: Translator, other_1122: AntiScalar) -> AntiScalar {
+    var self_1277: Translator;
+    var other_1123: AntiScalar;
+
+    self_1277 = self_1276;
+    other_1123 = other_1122;
+    let _e4: Translator = self_1277;
+    let _e7: AntiScalar = other_1123;
+    return AntiScalar((_e4.g0_.x * _e7.g0_));
+}
+
+fn translator_anti_scalar_geometric_anti_product(self_1278: Translator, other_1124: AntiScalar) -> Translator {
+    var self_1279: Translator;
+    var other_1125: AntiScalar;
+
+    self_1279 = self_1278;
+    other_1125 = other_1124;
+    let _e4: Translator = self_1279;
+    let _e6: AntiScalar = other_1125;
+    return Translator((_e4.g0_ * vec3<f32>(_e6.g0_)));
+}
+
+fn translator_anti_scalar_inner_anti_product(self_1280: Translator, other_1126: AntiScalar) -> Translator {
+    var self_1281: Translator;
+    var other_1127: AntiScalar;
+
+    self_1281 = self_1280;
+    other_1127 = other_1126;
+    let _e4: Translator = self_1281;
+    let _e6: AntiScalar = other_1127;
+    return Translator((_e4.g0_ * vec3<f32>(_e6.g0_)));
+}
+
+fn translator_anti_scalar_left_contraction(self_1282: Translator, other_1128: AntiScalar) -> AntiScalar {
+    var self_1283: Translator;
+    var other_1129: AntiScalar;
+
+    self_1283 = self_1282;
+    other_1129 = other_1128;
+    let _e4: Translator = self_1283;
+    let _e7: AntiScalar = other_1129;
+    return AntiScalar((_e4.g0_.x * _e7.g0_));
+}
+
+fn translator_anti_scalar_right_anti_contraction(self_1284: Translator, other_1130: AntiScalar) -> Translator {
+    var self_1285: Translator;
+    var other_1131: AntiScalar;
+
+    self_1285 = self_1284;
+    other_1131 = other_1130;
+    let _e4: Translator = self_1285;
+    let _e6: AntiScalar = other_1131;
+    return Translator((_e4.g0_ * vec3<f32>(_e6.g0_)));
+}
+
+fn translator_multi_vector_add(self_1286: Translator, other_1132: MultiVector) -> MultiVector {
+    var self_1287: Translator;
+    var other_1133: MultiVector;
+
+    self_1287 = self_1286;
+    other_1133 = other_1132;
+    let _e4: Translator = self_1287;
+    let _e14: MultiVector = other_1133;
+    let _e17: Translator = self_1287;
+    let _e20: Translator = self_1287;
+    let _e23: Translator = self_1287;
+    let _e26: Translator = self_1287;
+    let _e36: MultiVector = other_1133;
     return MultiVector(((vec4<f32>(_e4.g0_.x) * vec4<f32>(1.0, 0.0, 0.0, 0.0)) + _e14.g0_), ((vec4<f32>(_e17.g0_.x, _e20.g0_.x, _e23.g0_.y, _e26.g0_.z) * vec4<f32>(0.0, 0.0, 1.0, 1.0)) + _e36.g1_));
 }
 
-fn translator_multi_vector_sub(self_806: Translator, other_682: MultiVector) -> MultiVector {
-    var self_807: Translator;
-    var other_683: MultiVector;
+fn translator_multi_vector_sub(self_1288: Translator, other_1134: MultiVector) -> MultiVector {
+    var self_1289: Translator;
+    var other_1135: MultiVector;
 
-    self_807 = self_806;
-    other_683 = other_682;
-    let _e4: Translator = self_807;
-    let _e14: MultiVector = other_683;
-    let _e17: Translator = self_807;
-    let _e20: Translator = self_807;
-    let _e23: Translator = self_807;
-    let _e26: Translator = self_807;
-    let _e36: MultiVector = other_683;
+    self_1289 = self_1288;
+    other_1135 = other_1134;
+    let _e4: Translator = self_1289;
+    let _e14: MultiVector = other_1135;
+    let _e17: Translator = self_1289;
+    let _e20: Translator = self_1289;
+    let _e23: Translator = self_1289;
+    let _e26: Translator = self_1289;
+    let _e36: MultiVector = other_1135;
     return MultiVector(((vec4<f32>(_e4.g0_.x) * vec4<f32>(1.0, 0.0, 0.0, 0.0)) - _e14.g0_), ((vec4<f32>(_e17.g0_.x, _e20.g0_.x, _e23.g0_.y, _e26.g0_.z) * vec4<f32>(0.0, 0.0, 1.0, 1.0)) - _e36.g1_));
 }
 
-fn translator_multi_vector_geometric_product(self_808: Translator, other_684: MultiVector) -> MultiVector {
-    var self_809: Translator;
-    var other_685: MultiVector;
+fn translator_multi_vector_geometric_product(self_1290: Translator, other_1136: MultiVector) -> MultiVector {
+    var self_1291: Translator;
+    var other_1137: MultiVector;
 
-    self_809 = self_808;
-    other_685 = other_684;
-    let _e4: Translator = self_809;
-    let _e8: MultiVector = other_685;
-    let _e11: Translator = self_809;
-    let _e15: MultiVector = other_685;
-    let _e18: Translator = self_809;
-    let _e22: MultiVector = other_685;
-    let _e34: Translator = self_809;
-    let _e38: MultiVector = other_685;
+    self_1291 = self_1290;
+    other_1137 = other_1136;
+    let _e4: Translator = self_1291;
+    let _e8: MultiVector = other_1137;
+    let _e11: Translator = self_1291;
+    let _e15: MultiVector = other_1137;
+    let _e18: Translator = self_1291;
+    let _e22: MultiVector = other_1137;
+    let _e34: Translator = self_1291;
+    let _e38: MultiVector = other_1137;
     return MultiVector((vec4<f32>(_e4.g0_.x) * _e8.g0_), (((vec4<f32>(_e11.g0_.x) * _e15.g1_) + ((vec4<f32>(_e18.g0_.y) * _e22.g0_.zwxy) * vec4<f32>(1.0, 1.0, 1.0, -(1.0)))) + ((vec4<f32>(_e34.g0_.z) * _e38.g0_.wzyx) * vec4<f32>(-(1.0), 1.0, 1.0, 1.0))));
 }
 
-fn translator_multi_vector_outer_product(self_810: Translator, other_686: MultiVector) -> MultiVector {
-    var self_811: Translator;
-    var other_687: MultiVector;
+fn translator_multi_vector_outer_product(self_1292: Translator, other_1138: MultiVector) -> MultiVector {
+    var self_1293: Translator;
+    var other_1139: MultiVector;
 
-    self_811 = self_810;
-    other_687 = other_686;
-    let _e4: Translator = self_811;
-    let _e8: MultiVector = other_687;
-    let _e11: Translator = self_811;
-    let _e15: MultiVector = other_687;
-    let _e18: Translator = self_811;
-    let _e22: MultiVector = other_687;
-    let _e33: Translator = self_811;
-    let _e36: Translator = self_811;
-    let _e39: Translator = self_811;
-    let _e42: Translator = self_811;
-    let _e46: MultiVector = other_687;
+    self_1293 = self_1292;
+    other_1139 = other_1138;
+    let _e4: Translator = self_1293;
+    let _e8: MultiVector = other_1139;
+    let _e11: Translator = self_1293;
+    let _e15: MultiVector = other_1139;
+    let _e18: Translator = self_1293;
+    let _e22: MultiVector = other_1139;
+    let _e33: Translator = self_1293;
+    let _e36: Translator = self_1293;
+    let _e39: Translator = self_1293;
+    let _e42: Translator = self_1293;
+    let _e46: MultiVector = other_1139;
     return MultiVector((vec4<f32>(_e4.g0_.x) * _e8.g0_), (((vec4<f32>(_e11.g0_.x) * _e15.g1_) + ((vec4<f32>(_e18.g0_.z) * _e22.g0_.zzzx) * vec4<f32>(0.0, 1.0, 0.0, 1.0))) + ((vec4<f32>(_e33.g0_.x, _e36.g0_.y, _e39.g0_.y, _e42.g0_.x) * _e46.g0_.xwxx) * vec4<f32>(0.0, 1.0, 1.0, 0.0))));
 }
 
-fn translator_multi_vector_inner_product(self_812: Translator, other_688: MultiVector) -> MultiVector {
-    var self_813: Translator;
-    var other_689: MultiVector;
+fn translator_multi_vector_inner_product(self_1294: Translator, other_1140: MultiVector) -> MultiVector {
+    var self_1295: Translator;
+    var other_1141: MultiVector;
 
-    self_813 = self_812;
-    other_689 = other_688;
-    let _e4: Translator = self_813;
-    let _e8: MultiVector = other_689;
-    let _e11: Translator = self_813;
-    let _e15: MultiVector = other_689;
-    let _e18: Translator = self_813;
-    let _e22: MultiVector = other_689;
-    let _e34: Translator = self_813;
-    let _e37: Translator = self_813;
-    let _e40: Translator = self_813;
-    let _e43: Translator = self_813;
-    let _e47: MultiVector = other_689;
+    self_1295 = self_1294;
+    other_1141 = other_1140;
+    let _e4: Translator = self_1295;
+    let _e8: MultiVector = other_1141;
+    let _e11: Translator = self_1295;
+    let _e15: MultiVector = other_1141;
+    let _e18: Translator = self_1295;
+    let _e22: MultiVector = other_1141;
+    let _e34: Translator = self_1295;
+    let _e37: Translator = self_1295;
+    let _e40: Translator = self_1295;
+    let _e43: Translator = self_1295;
+    let _e47: MultiVector = other_1141;
     return MultiVector((vec4<f32>(_e4.g0_.x) * _e8.g0_), (((vec4<f32>(_e11.g0_.x) * _e15.g1_) + ((vec4<f32>(_e18.g0_.z) * _e22.g0_.wwwx) * vec4<f32>(-(1.0), 0.0, 0.0, 1.0))) + ((vec4<f32>(_e34.g0_.y, _e37.g0_.x, _e40.g0_.y, _e43.g0_.x) * _e47.g0_.zxxx) * vec4<f32>(1.0, 0.0, 1.0, 0.0))));
 }
 
-fn translator_multi_vector_left_contraction(self_814: Translator, other_690: MultiVector) -> MultiVector {
-    var self_815: Translator;
-    var other_691: MultiVector;
+fn translator_multi_vector_geometric_anti_product(self_1296: Translator, other_1142: MultiVector) -> MultiVector {
+    var self_1297: Translator;
+    var other_1143: MultiVector;
 
-    self_815 = self_814;
-    other_691 = other_690;
-    let _e4: Translator = self_815;
-    let _e8: MultiVector = other_691;
-    let _e11: Translator = self_815;
-    let _e15: MultiVector = other_691;
+    self_1297 = self_1296;
+    other_1143 = other_1142;
+    let _e4: Translator = self_1297;
+    let _e8: MultiVector = other_1143;
+    let _e19: Translator = self_1297;
+    let _e23: MultiVector = other_1143;
+    let _e28: Translator = self_1297;
+    let _e32: MultiVector = other_1143;
+    let _e45: Translator = self_1297;
+    let _e49: MultiVector = other_1143;
+    let _e61: Translator = self_1297;
+    let _e65: MultiVector = other_1143;
+    return MultiVector(((((vec4<f32>(_e4.g0_.x) * _e8.g1_.yxwz) * vec4<f32>(1.0, -(1.0), 1.0, 1.0)) + (vec4<f32>(_e19.g0_.y) * _e23.g0_.wzyx)) + ((vec4<f32>(_e28.g0_.z) * _e32.g0_.zwxy) * vec4<f32>(1.0, -(1.0), 1.0, -(1.0)))), (((vec4<f32>(_e45.g0_.y) * _e49.g1_.wzyx) * vec4<f32>(-(1.0), 1.0, 1.0, -(1.0))) + (vec4<f32>(_e61.g0_.z) * _e65.g1_.zwxy)));
+}
+
+fn translator_multi_vector_left_contraction(self_1298: Translator, other_1144: MultiVector) -> MultiVector {
+    var self_1299: Translator;
+    var other_1145: MultiVector;
+
+    self_1299 = self_1298;
+    other_1145 = other_1144;
+    let _e4: Translator = self_1299;
+    let _e8: MultiVector = other_1145;
+    let _e11: Translator = self_1299;
+    let _e15: MultiVector = other_1145;
     return MultiVector((vec4<f32>(_e4.g0_.x) * _e8.g0_), (vec4<f32>(_e11.g0_.x) * _e15.g1_));
 }
 
-fn translator_multi_vector_scalar_product(self_816: Translator, other_692: MultiVector) -> Scalar {
-    var self_817: Translator;
-    var other_693: MultiVector;
+fn translator_multi_vector_scalar_product(self_1300: Translator, other_1146: MultiVector) -> Scalar {
+    var self_1301: Translator;
+    var other_1147: MultiVector;
 
-    self_817 = self_816;
-    other_693 = other_692;
-    let _e4: Translator = self_817;
-    let _e7: MultiVector = other_693;
+    self_1301 = self_1300;
+    other_1147 = other_1146;
+    let _e4: Translator = self_1301;
+    let _e7: MultiVector = other_1147;
     return Scalar((_e4.g0_.x * _e7.g0_.x));
 }
 
-fn translator_rotor_add(self_818: Translator, other_694: Rotor) -> Motor {
-    var self_819: Translator;
-    var other_695: Rotor;
+fn translator_multi_vector_anti_scalar_product(self_1302: Translator, other_1148: MultiVector) -> AntiScalar {
+    var self_1303: Translator;
+    var other_1149: MultiVector;
 
-    self_819 = self_818;
-    other_695 = other_694;
-    let _e4: Translator = self_819;
-    let _e7: Translator = self_819;
-    let _e10: Translator = self_819;
-    let _e13: Translator = self_819;
-    let _e23: Rotor = other_695;
-    let _e26: Rotor = other_695;
-    let _e29: Rotor = other_695;
-    let _e32: Rotor = other_695;
+    self_1303 = self_1302;
+    other_1149 = other_1148;
+    let _e4: Translator = self_1303;
+    let _e7: MultiVector = other_1149;
+    let _e11: Translator = self_1303;
+    let _e14: MultiVector = other_1149;
+    return AntiScalar(((_e4.g0_.y * _e7.g1_.z) + (_e11.g0_.z * _e14.g1_.w)));
+}
+
+fn translator_rotor_add(self_1304: Translator, other_1150: Rotor) -> Motor {
+    var self_1305: Translator;
+    var other_1151: Rotor;
+
+    self_1305 = self_1304;
+    other_1151 = other_1150;
+    let _e4: Translator = self_1305;
+    let _e7: Translator = self_1305;
+    let _e10: Translator = self_1305;
+    let _e13: Translator = self_1305;
+    let _e23: Rotor = other_1151;
+    let _e26: Rotor = other_1151;
+    let _e29: Rotor = other_1151;
+    let _e32: Rotor = other_1151;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y, _e13.g0_.z) * vec4<f32>(1.0, 0.0, 1.0, 1.0)) + (vec4<f32>(_e23.g0_.x, _e26.g0_.y, _e29.g0_.x, _e32.g0_.x) * vec4<f32>(1.0, 1.0, 0.0, 0.0))));
 }
 
-fn translator_rotor_sub(self_820: Translator, other_696: Rotor) -> Motor {
-    var self_821: Translator;
-    var other_697: Rotor;
+fn translator_rotor_sub(self_1306: Translator, other_1152: Rotor) -> Motor {
+    var self_1307: Translator;
+    var other_1153: Rotor;
 
-    self_821 = self_820;
-    other_697 = other_696;
-    let _e4: Translator = self_821;
-    let _e7: Translator = self_821;
-    let _e10: Translator = self_821;
-    let _e13: Translator = self_821;
-    let _e23: Rotor = other_697;
-    let _e26: Rotor = other_697;
-    let _e29: Rotor = other_697;
-    let _e32: Rotor = other_697;
+    self_1307 = self_1306;
+    other_1153 = other_1152;
+    let _e4: Translator = self_1307;
+    let _e7: Translator = self_1307;
+    let _e10: Translator = self_1307;
+    let _e13: Translator = self_1307;
+    let _e23: Rotor = other_1153;
+    let _e26: Rotor = other_1153;
+    let _e29: Rotor = other_1153;
+    let _e32: Rotor = other_1153;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y, _e13.g0_.z) * vec4<f32>(1.0, 0.0, 1.0, 1.0)) - (vec4<f32>(_e23.g0_.x, _e26.g0_.y, _e29.g0_.x, _e32.g0_.x) * vec4<f32>(1.0, 1.0, 0.0, 0.0))));
 }
 
-fn translator_rotor_geometric_product(self_822: Translator, other_698: Rotor) -> Motor {
-    var self_823: Translator;
-    var other_699: Rotor;
+fn translator_rotor_geometric_product(self_1308: Translator, other_1154: Rotor) -> Motor {
+    var self_1309: Translator;
+    var other_1155: Rotor;
 
-    self_823 = self_822;
-    other_699 = other_698;
-    let _e4: Translator = self_823;
-    let _e8: Rotor = other_699;
-    let _e11: Rotor = other_699;
-    let _e14: Rotor = other_699;
-    let _e17: Rotor = other_699;
-    let _e28: Translator = self_823;
-    let _e31: Translator = self_823;
-    let _e34: Translator = self_823;
-    let _e37: Translator = self_823;
-    let _e41: Rotor = other_699;
-    let _e44: Rotor = other_699;
-    let _e47: Rotor = other_699;
-    let _e50: Rotor = other_699;
+    self_1309 = self_1308;
+    other_1155 = other_1154;
+    let _e4: Translator = self_1309;
+    let _e8: Rotor = other_1155;
+    let _e11: Rotor = other_1155;
+    let _e14: Rotor = other_1155;
+    let _e17: Rotor = other_1155;
+    let _e28: Translator = self_1309;
+    let _e31: Translator = self_1309;
+    let _e34: Translator = self_1309;
+    let _e37: Translator = self_1309;
+    let _e41: Rotor = other_1155;
+    let _e44: Rotor = other_1155;
+    let _e47: Rotor = other_1155;
+    let _e50: Rotor = other_1155;
     return Motor((((vec4<f32>(_e4.g0_.z) * vec4<f32>(_e8.g0_.y, _e11.g0_.y, _e14.g0_.y, _e17.g0_.x)) * vec4<f32>(0.0, 0.0, 1.0, 1.0)) + ((vec4<f32>(_e28.g0_.x, _e31.g0_.x, _e34.g0_.y, _e37.g0_.y) * vec4<f32>(_e41.g0_.x, _e44.g0_.y, _e47.g0_.x, _e50.g0_.y)) * vec4<f32>(1.0, 1.0, 1.0, -(1.0)))));
 }
 
-fn translator_rotor_outer_product(self_824: Translator, other_700: Rotor) -> Motor {
-    var self_825: Translator;
-    var other_701: Rotor;
+fn translator_rotor_outer_product(self_1310: Translator, other_1156: Rotor) -> Motor {
+    var self_1311: Translator;
+    var other_1157: Rotor;
 
-    self_825 = self_824;
-    other_701 = other_700;
-    let _e4: Translator = self_825;
-    let _e7: Translator = self_825;
-    let _e10: Translator = self_825;
-    let _e13: Translator = self_825;
-    let _e17: Rotor = other_701;
-    let _e20: Rotor = other_701;
-    let _e23: Rotor = other_701;
-    let _e26: Rotor = other_701;
+    self_1311 = self_1310;
+    other_1157 = other_1156;
+    let _e4: Translator = self_1311;
+    let _e7: Translator = self_1311;
+    let _e10: Translator = self_1311;
+    let _e13: Translator = self_1311;
+    let _e17: Rotor = other_1157;
+    let _e20: Rotor = other_1157;
+    let _e23: Rotor = other_1157;
+    let _e26: Rotor = other_1157;
     return Motor((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y, _e13.g0_.z) * vec4<f32>(_e17.g0_.x, _e20.g0_.y, _e23.g0_.x, _e26.g0_.x)));
 }
 
-fn translator_rotor_inner_product(self_826: Translator, other_702: Rotor) -> Motor {
-    var self_827: Translator;
-    var other_703: Rotor;
+fn translator_rotor_inner_product(self_1312: Translator, other_1158: Rotor) -> Motor {
+    var self_1313: Translator;
+    var other_1159: Rotor;
 
-    self_827 = self_826;
-    other_703 = other_702;
-    let _e4: Translator = self_827;
-    let _e7: Translator = self_827;
-    let _e10: Translator = self_827;
-    let _e13: Translator = self_827;
-    let _e17: Rotor = other_703;
-    let _e20: Rotor = other_703;
-    let _e23: Rotor = other_703;
-    let _e26: Rotor = other_703;
+    self_1313 = self_1312;
+    other_1159 = other_1158;
+    let _e4: Translator = self_1313;
+    let _e7: Translator = self_1313;
+    let _e10: Translator = self_1313;
+    let _e13: Translator = self_1313;
+    let _e17: Rotor = other_1159;
+    let _e20: Rotor = other_1159;
+    let _e23: Rotor = other_1159;
+    let _e26: Rotor = other_1159;
     return Motor((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y, _e13.g0_.z) * vec4<f32>(_e17.g0_.x, _e20.g0_.y, _e23.g0_.x, _e26.g0_.x)));
 }
 
-fn translator_rotor_left_contraction(self_828: Translator, other_704: Rotor) -> Rotor {
-    var self_829: Translator;
-    var other_705: Rotor;
+fn translator_rotor_left_contraction(self_1314: Translator, other_1160: Rotor) -> Rotor {
+    var self_1315: Translator;
+    var other_1161: Rotor;
 
-    self_829 = self_828;
-    other_705 = other_704;
-    let _e4: Translator = self_829;
-    let _e8: Rotor = other_705;
+    self_1315 = self_1314;
+    other_1161 = other_1160;
+    let _e4: Translator = self_1315;
+    let _e8: Rotor = other_1161;
     return Rotor((vec2<f32>(_e4.g0_.x) * _e8.g0_));
 }
 
-fn translator_rotor_right_contraction(self_830: Translator, other_706: Rotor) -> Translator {
-    var self_831: Translator;
-    var other_707: Rotor;
+fn translator_rotor_right_contraction(self_1316: Translator, other_1162: Rotor) -> Translator {
+    var self_1317: Translator;
+    var other_1163: Rotor;
 
-    self_831 = self_830;
-    other_707 = other_706;
-    let _e4: Translator = self_831;
-    let _e6: Rotor = other_707;
+    self_1317 = self_1316;
+    other_1163 = other_1162;
+    let _e4: Translator = self_1317;
+    let _e6: Rotor = other_1163;
     return Translator((_e4.g0_ * vec3<f32>(_e6.g0_.x)));
 }
 
-fn translator_rotor_scalar_product(self_832: Translator, other_708: Rotor) -> Scalar {
-    var self_833: Translator;
-    var other_709: Rotor;
+fn translator_rotor_scalar_product(self_1318: Translator, other_1164: Rotor) -> Scalar {
+    var self_1319: Translator;
+    var other_1165: Rotor;
 
-    self_833 = self_832;
-    other_709 = other_708;
-    let _e4: Translator = self_833;
-    let _e7: Rotor = other_709;
+    self_1319 = self_1318;
+    other_1165 = other_1164;
+    let _e4: Translator = self_1319;
+    let _e7: Rotor = other_1165;
     return Scalar((_e4.g0_.x * _e7.g0_.x));
 }
 
-fn translator_point_add(self_834: Translator, other_710: Point) -> Motor {
-    var self_835: Translator;
-    var other_711: Point;
+fn translator_point_add(self_1320: Translator, other_1166: Point) -> Motor {
+    var self_1321: Translator;
+    var other_1167: Point;
 
-    self_835 = self_834;
-    other_711 = other_710;
-    let _e4: Translator = self_835;
-    let _e7: Translator = self_835;
-    let _e10: Translator = self_835;
-    let _e13: Translator = self_835;
-    let _e23: Point = other_711;
-    let _e26: Point = other_711;
-    let _e29: Point = other_711;
-    let _e32: Point = other_711;
+    self_1321 = self_1320;
+    other_1167 = other_1166;
+    let _e4: Translator = self_1321;
+    let _e7: Translator = self_1321;
+    let _e10: Translator = self_1321;
+    let _e13: Translator = self_1321;
+    let _e23: Point = other_1167;
+    let _e26: Point = other_1167;
+    let _e29: Point = other_1167;
+    let _e32: Point = other_1167;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y, _e13.g0_.z) * vec4<f32>(1.0, 0.0, 1.0, 1.0)) + (vec4<f32>(_e23.g0_.x, _e26.g0_.x, _e29.g0_.y, _e32.g0_.z) * vec4<f32>(0.0, 1.0, 1.0, 1.0))));
 }
 
-fn translator_point_sub(self_836: Translator, other_712: Point) -> Motor {
-    var self_837: Translator;
-    var other_713: Point;
+fn translator_point_sub(self_1322: Translator, other_1168: Point) -> Motor {
+    var self_1323: Translator;
+    var other_1169: Point;
 
-    self_837 = self_836;
-    other_713 = other_712;
-    let _e4: Translator = self_837;
-    let _e7: Translator = self_837;
-    let _e10: Translator = self_837;
-    let _e13: Translator = self_837;
-    let _e23: Point = other_713;
-    let _e26: Point = other_713;
-    let _e29: Point = other_713;
-    let _e32: Point = other_713;
+    self_1323 = self_1322;
+    other_1169 = other_1168;
+    let _e4: Translator = self_1323;
+    let _e7: Translator = self_1323;
+    let _e10: Translator = self_1323;
+    let _e13: Translator = self_1323;
+    let _e23: Point = other_1169;
+    let _e26: Point = other_1169;
+    let _e29: Point = other_1169;
+    let _e32: Point = other_1169;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y, _e13.g0_.z) * vec4<f32>(1.0, 0.0, 1.0, 1.0)) - (vec4<f32>(_e23.g0_.x, _e26.g0_.x, _e29.g0_.y, _e32.g0_.z) * vec4<f32>(0.0, 1.0, 1.0, 1.0))));
 }
 
-fn translator_point_geometric_product(self_838: Translator, other_714: Point) -> Point {
-    var self_839: Translator;
-    var other_715: Point;
+fn translator_point_geometric_product(self_1324: Translator, other_1170: Point) -> Point {
+    var self_1325: Translator;
+    var other_1171: Point;
 
-    self_839 = self_838;
-    other_715 = other_714;
-    let _e4: Translator = self_839;
-    let _e8: Point = other_715;
-    let _e11: Translator = self_839;
-    let _e14: Point = other_715;
+    self_1325 = self_1324;
+    other_1171 = other_1170;
+    let _e4: Translator = self_1325;
+    let _e8: Point = other_1171;
+    let _e11: Translator = self_1325;
+    let _e14: Point = other_1171;
     return Point(((vec3<f32>(_e4.g0_.x) * _e8.g0_) + ((_e11.g0_.xzy * vec3<f32>(_e14.g0_.x)) * vec3<f32>(0.0, 1.0, -(1.0)))));
 }
 
-fn translator_point_regressive_product(self_840: Translator, other_716: Point) -> Plane {
-    var self_841: Translator;
-    var other_717: Point;
+fn translator_point_regressive_product(self_1326: Translator, other_1172: Point) -> Plane {
+    var self_1327: Translator;
+    var other_1173: Point;
 
-    self_841 = self_840;
-    other_717 = other_716;
-    let _e4: Translator = self_841;
-    let _e8: Point = other_717;
-    let _e18: Translator = self_841;
-    let _e21: Point = other_717;
+    self_1327 = self_1326;
+    other_1173 = other_1172;
+    let _e4: Translator = self_1327;
+    let _e8: Point = other_1173;
+    let _e18: Translator = self_1327;
+    let _e21: Point = other_1173;
     return Plane((((vec3<f32>(_e4.g0_.z) * _e8.g0_.yxy) * vec3<f32>(1.0, -(1.0), 0.0)) + ((_e18.g0_.yxy * _e21.g0_.zxx) * vec3<f32>(-(1.0), 0.0, 1.0))));
 }
 
-fn translator_point_outer_product(self_842: Translator, other_718: Point) -> Point {
-    var self_843: Translator;
-    var other_719: Point;
+fn translator_point_outer_product(self_1328: Translator, other_1174: Point) -> Point {
+    var self_1329: Translator;
+    var other_1175: Point;
 
-    self_843 = self_842;
-    other_719 = other_718;
-    let _e4: Translator = self_843;
-    let _e8: Point = other_719;
+    self_1329 = self_1328;
+    other_1175 = other_1174;
+    let _e4: Translator = self_1329;
+    let _e8: Point = other_1175;
     return Point((vec3<f32>(_e4.g0_.x) * _e8.g0_));
 }
 
-fn translator_point_inner_product(self_844: Translator, other_720: Point) -> Point {
-    var self_845: Translator;
-    var other_721: Point;
+fn translator_point_inner_product(self_1330: Translator, other_1176: Point) -> Point {
+    var self_1331: Translator;
+    var other_1177: Point;
 
-    self_845 = self_844;
-    other_721 = other_720;
-    let _e4: Translator = self_845;
-    let _e8: Point = other_721;
+    self_1331 = self_1330;
+    other_1177 = other_1176;
+    let _e4: Translator = self_1331;
+    let _e8: Point = other_1177;
     return Point((vec3<f32>(_e4.g0_.x) * _e8.g0_));
 }
 
-fn translator_point_left_contraction(self_846: Translator, other_722: Point) -> Point {
-    var self_847: Translator;
-    var other_723: Point;
+fn translator_point_geometric_anti_product(self_1332: Translator, other_1178: Point) -> MotorDual {
+    var self_1333: Translator;
+    var other_1179: Point;
 
-    self_847 = self_846;
-    other_723 = other_722;
-    let _e4: Translator = self_847;
-    let _e8: Point = other_723;
+    self_1333 = self_1332;
+    other_1179 = other_1178;
+    let _e4: Translator = self_1333;
+    let _e8: Point = other_1179;
+    let _e11: Point = other_1179;
+    let _e14: Point = other_1179;
+    let _e17: Point = other_1179;
+    let _e29: Translator = self_1333;
+    let _e33: Point = other_1179;
+    let _e36: Point = other_1179;
+    let _e39: Point = other_1179;
+    let _e42: Point = other_1179;
+    let _e55: Translator = self_1333;
+    let _e59: Point = other_1179;
+    let _e62: Point = other_1179;
+    let _e65: Point = other_1179;
+    let _e68: Point = other_1179;
+    return MotorDual(((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.y, _e11.g0_.z, _e14.g0_.y, _e17.g0_.x)) * vec4<f32>(1.0, -(1.0), 0.0, 1.0)) + ((vec4<f32>(_e29.g0_.z) * vec4<f32>(_e33.g0_.z, _e36.g0_.y, _e39.g0_.x, _e42.g0_.z)) * vec4<f32>(1.0, 1.0, -(1.0), 0.0))) + ((vec4<f32>(_e55.g0_.x) * vec4<f32>(_e59.g0_.x, _e62.g0_.x, _e65.g0_.y, _e68.g0_.z)) * vec4<f32>(0.0, 0.0, 1.0, 1.0))));
+}
+
+fn translator_point_left_contraction(self_1334: Translator, other_1180: Point) -> Point {
+    var self_1335: Translator;
+    var other_1181: Point;
+
+    self_1335 = self_1334;
+    other_1181 = other_1180;
+    let _e4: Translator = self_1335;
+    let _e8: Point = other_1181;
     return Point((vec3<f32>(_e4.g0_.x) * _e8.g0_));
 }
 
-fn translator_ideal_point_into(self_848: Translator) -> IdealPoint {
-    var self_849: Translator;
+fn translator_point_left_anti_contraction(self_1336: Translator, other_1182: Point) -> AntiScalar {
+    var self_1337: Translator;
+    var other_1183: Point;
 
-    self_849 = self_848;
-    let _e2: Translator = self_849;
-    let _e5: Translator = self_849;
+    self_1337 = self_1336;
+    other_1183 = other_1182;
+    let _e4: Translator = self_1337;
+    let _e7: Point = other_1183;
+    let _e11: Translator = self_1337;
+    let _e14: Point = other_1183;
+    return AntiScalar(((_e4.g0_.y * _e7.g0_.y) + (_e11.g0_.z * _e14.g0_.z)));
+}
+
+fn translator_point_anti_scalar_product(self_1338: Translator, other_1184: Point) -> AntiScalar {
+    var self_1339: Translator;
+    var other_1185: Point;
+
+    self_1339 = self_1338;
+    other_1185 = other_1184;
+    let _e4: Translator = self_1339;
+    let _e7: Point = other_1185;
+    let _e11: Translator = self_1339;
+    let _e14: Point = other_1185;
+    return AntiScalar(((_e4.g0_.y * _e7.g0_.y) + (_e11.g0_.z * _e14.g0_.z)));
+}
+
+fn translator_ideal_point_into(self_1340: Translator) -> IdealPoint {
+    var self_1341: Translator;
+
+    self_1341 = self_1340;
+    let _e2: Translator = self_1341;
+    let _e5: Translator = self_1341;
     return IdealPoint(vec2<f32>(_e2.g0_.y, _e5.g0_.z));
 }
 
-fn translator_ideal_point_add(self_850: Translator, other_724: IdealPoint) -> Translator {
-    var self_851: Translator;
-    var other_725: IdealPoint;
+fn translator_ideal_point_add(self_1342: Translator, other_1186: IdealPoint) -> Translator {
+    var self_1343: Translator;
+    var other_1187: IdealPoint;
 
-    self_851 = self_850;
-    other_725 = other_724;
-    let _e4: Translator = self_851;
-    let _e6: IdealPoint = other_725;
-    let _e9: IdealPoint = other_725;
-    let _e12: IdealPoint = other_725;
+    self_1343 = self_1342;
+    other_1187 = other_1186;
+    let _e4: Translator = self_1343;
+    let _e6: IdealPoint = other_1187;
+    let _e9: IdealPoint = other_1187;
+    let _e12: IdealPoint = other_1187;
     return Translator((_e4.g0_ + (vec3<f32>(_e6.g0_.x, _e9.g0_.x, _e12.g0_.y) * vec3<f32>(0.0, 1.0, 1.0))));
 }
 
-fn translator_ideal_point_sub(self_852: Translator, other_726: IdealPoint) -> Translator {
-    var self_853: Translator;
-    var other_727: IdealPoint;
+fn translator_ideal_point_sub(self_1344: Translator, other_1188: IdealPoint) -> Translator {
+    var self_1345: Translator;
+    var other_1189: IdealPoint;
 
-    self_853 = self_852;
-    other_727 = other_726;
-    let _e4: Translator = self_853;
-    let _e6: IdealPoint = other_727;
-    let _e9: IdealPoint = other_727;
-    let _e12: IdealPoint = other_727;
+    self_1345 = self_1344;
+    other_1189 = other_1188;
+    let _e4: Translator = self_1345;
+    let _e6: IdealPoint = other_1189;
+    let _e9: IdealPoint = other_1189;
+    let _e12: IdealPoint = other_1189;
     return Translator((_e4.g0_ - (vec3<f32>(_e6.g0_.x, _e9.g0_.x, _e12.g0_.y) * vec3<f32>(0.0, 1.0, 1.0))));
 }
 
-fn translator_ideal_point_geometric_product(self_854: Translator, other_728: IdealPoint) -> IdealPoint {
-    var self_855: Translator;
-    var other_729: IdealPoint;
+fn translator_ideal_point_geometric_product(self_1346: Translator, other_1190: IdealPoint) -> IdealPoint {
+    var self_1347: Translator;
+    var other_1191: IdealPoint;
 
-    self_855 = self_854;
-    other_729 = other_728;
-    let _e4: Translator = self_855;
-    let _e8: IdealPoint = other_729;
+    self_1347 = self_1346;
+    other_1191 = other_1190;
+    let _e4: Translator = self_1347;
+    let _e8: IdealPoint = other_1191;
     return IdealPoint((vec2<f32>(_e4.g0_.x) * _e8.g0_));
 }
 
-fn translator_ideal_point_outer_product(self_856: Translator, other_730: IdealPoint) -> IdealPoint {
-    var self_857: Translator;
-    var other_731: IdealPoint;
+fn translator_ideal_point_outer_product(self_1348: Translator, other_1192: IdealPoint) -> IdealPoint {
+    var self_1349: Translator;
+    var other_1193: IdealPoint;
 
-    self_857 = self_856;
-    other_731 = other_730;
-    let _e4: Translator = self_857;
-    let _e8: IdealPoint = other_731;
+    self_1349 = self_1348;
+    other_1193 = other_1192;
+    let _e4: Translator = self_1349;
+    let _e8: IdealPoint = other_1193;
     return IdealPoint((vec2<f32>(_e4.g0_.x) * _e8.g0_));
 }
 
-fn translator_ideal_point_inner_product(self_858: Translator, other_732: IdealPoint) -> IdealPoint {
-    var self_859: Translator;
-    var other_733: IdealPoint;
+fn translator_ideal_point_inner_product(self_1350: Translator, other_1194: IdealPoint) -> IdealPoint {
+    var self_1351: Translator;
+    var other_1195: IdealPoint;
 
-    self_859 = self_858;
-    other_733 = other_732;
-    let _e4: Translator = self_859;
-    let _e8: IdealPoint = other_733;
+    self_1351 = self_1350;
+    other_1195 = other_1194;
+    let _e4: Translator = self_1351;
+    let _e8: IdealPoint = other_1195;
     return IdealPoint((vec2<f32>(_e4.g0_.x) * _e8.g0_));
 }
 
-fn translator_ideal_point_left_contraction(self_860: Translator, other_734: IdealPoint) -> IdealPoint {
-    var self_861: Translator;
-    var other_735: IdealPoint;
+fn translator_ideal_point_geometric_anti_product(self_1352: Translator, other_1196: IdealPoint) -> MotorDual {
+    var self_1353: Translator;
+    var other_1197: IdealPoint;
 
-    self_861 = self_860;
-    other_735 = other_734;
-    let _e4: Translator = self_861;
-    let _e8: IdealPoint = other_735;
+    self_1353 = self_1352;
+    other_1197 = other_1196;
+    let _e4: Translator = self_1353;
+    let _e8: IdealPoint = other_1197;
+    let _e11: IdealPoint = other_1197;
+    let _e14: IdealPoint = other_1197;
+    let _e17: IdealPoint = other_1197;
+    let _e28: Translator = self_1353;
+    let _e31: Translator = self_1353;
+    let _e34: Translator = self_1353;
+    let _e37: Translator = self_1353;
+    let _e41: IdealPoint = other_1197;
+    let _e44: IdealPoint = other_1197;
+    let _e47: IdealPoint = other_1197;
+    let _e50: IdealPoint = other_1197;
+    return MotorDual((((vec4<f32>(_e4.g0_.z) * vec4<f32>(_e8.g0_.y, _e11.g0_.x, _e14.g0_.y, _e17.g0_.y)) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) + ((vec4<f32>(_e28.g0_.y, _e31.g0_.y, _e34.g0_.x, _e37.g0_.x) * vec4<f32>(_e41.g0_.x, _e44.g0_.y, _e47.g0_.x, _e50.g0_.y)) * vec4<f32>(1.0, -(1.0), 1.0, 1.0))));
+}
+
+fn translator_ideal_point_left_contraction(self_1354: Translator, other_1198: IdealPoint) -> IdealPoint {
+    var self_1355: Translator;
+    var other_1199: IdealPoint;
+
+    self_1355 = self_1354;
+    other_1199 = other_1198;
+    let _e4: Translator = self_1355;
+    let _e8: IdealPoint = other_1199;
     return IdealPoint((vec2<f32>(_e4.g0_.x) * _e8.g0_));
 }
 
-fn translator_plane_geometric_product(self_862: Translator, other_736: Plane) -> MotorDual {
-    var self_863: Translator;
-    var other_737: Plane;
+fn translator_ideal_point_left_anti_contraction(self_1356: Translator, other_1200: IdealPoint) -> AntiScalar {
+    var self_1357: Translator;
+    var other_1201: IdealPoint;
 
-    self_863 = self_862;
-    other_737 = other_736;
-    let _e4: Translator = self_863;
-    let _e8: Plane = other_737;
-    let _e11: Plane = other_737;
-    let _e14: Plane = other_737;
-    let _e17: Plane = other_737;
-    let _e28: Translator = self_863;
-    let _e32: Plane = other_737;
-    let _e35: Plane = other_737;
-    let _e38: Plane = other_737;
-    let _e41: Plane = other_737;
-    let _e54: Translator = self_863;
-    let _e58: Plane = other_737;
-    let _e61: Plane = other_737;
-    let _e64: Plane = other_737;
-    let _e67: Plane = other_737;
+    self_1357 = self_1356;
+    other_1201 = other_1200;
+    let _e4: Translator = self_1357;
+    let _e7: IdealPoint = other_1201;
+    let _e11: Translator = self_1357;
+    let _e14: IdealPoint = other_1201;
+    return AntiScalar(((_e4.g0_.y * _e7.g0_.x) + (_e11.g0_.z * _e14.g0_.y)));
+}
+
+fn translator_ideal_point_anti_scalar_product(self_1358: Translator, other_1202: IdealPoint) -> AntiScalar {
+    var self_1359: Translator;
+    var other_1203: IdealPoint;
+
+    self_1359 = self_1358;
+    other_1203 = other_1202;
+    let _e4: Translator = self_1359;
+    let _e7: IdealPoint = other_1203;
+    let _e11: Translator = self_1359;
+    let _e14: IdealPoint = other_1203;
+    return AntiScalar(((_e4.g0_.y * _e7.g0_.x) + (_e11.g0_.z * _e14.g0_.y)));
+}
+
+fn translator_plane_geometric_product(self_1360: Translator, other_1204: Plane) -> MotorDual {
+    var self_1361: Translator;
+    var other_1205: Plane;
+
+    self_1361 = self_1360;
+    other_1205 = other_1204;
+    let _e4: Translator = self_1361;
+    let _e8: Plane = other_1205;
+    let _e11: Plane = other_1205;
+    let _e14: Plane = other_1205;
+    let _e17: Plane = other_1205;
+    let _e28: Translator = self_1361;
+    let _e32: Plane = other_1205;
+    let _e35: Plane = other_1205;
+    let _e38: Plane = other_1205;
+    let _e41: Plane = other_1205;
+    let _e54: Translator = self_1361;
+    let _e58: Plane = other_1205;
+    let _e61: Plane = other_1205;
+    let _e64: Plane = other_1205;
+    let _e67: Plane = other_1205;
     return MotorDual(((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.y, _e11.g0_.z, _e14.g0_.y, _e17.g0_.y)) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) + ((vec4<f32>(_e28.g0_.z) * vec4<f32>(_e32.g0_.z, _e35.g0_.y, _e38.g0_.z, _e41.g0_.z)) * vec4<f32>(1.0, -(1.0), 0.0, 0.0))) + ((vec4<f32>(_e54.g0_.x) * vec4<f32>(_e58.g0_.x, _e61.g0_.x, _e64.g0_.y, _e67.g0_.z)) * vec4<f32>(0.0, 1.0, 1.0, 1.0))));
 }
 
-fn translator_plane_regressive_product(self_864: Translator, other_738: Plane) -> Scalar {
-    var self_865: Translator;
-    var other_739: Plane;
+fn translator_plane_regressive_product(self_1362: Translator, other_1206: Plane) -> Scalar {
+    var self_1363: Translator;
+    var other_1207: Plane;
 
-    self_865 = self_864;
-    other_739 = other_738;
-    let _e4: Translator = self_865;
-    let _e7: Plane = other_739;
-    let _e11: Translator = self_865;
-    let _e14: Plane = other_739;
+    self_1363 = self_1362;
+    other_1207 = other_1206;
+    let _e4: Translator = self_1363;
+    let _e7: Plane = other_1207;
+    let _e11: Translator = self_1363;
+    let _e14: Plane = other_1207;
     return Scalar(((_e4.g0_.y * _e7.g0_.y) + (_e11.g0_.z * _e14.g0_.z)));
 }
 
-fn translator_plane_outer_product(self_866: Translator, other_740: Plane) -> MotorDual {
-    var self_867: Translator;
-    var other_741: Plane;
+fn translator_plane_outer_product(self_1364: Translator, other_1208: Plane) -> MotorDual {
+    var self_1365: Translator;
+    var other_1209: Plane;
 
-    self_867 = self_866;
-    other_741 = other_740;
-    let _e4: Translator = self_867;
-    let _e8: Plane = other_741;
-    let _e19: Translator = self_867;
-    let _e22: Translator = self_867;
-    let _e25: Translator = self_867;
-    let _e28: Translator = self_867;
-    let _e32: Plane = other_741;
-    let _e35: Plane = other_741;
-    let _e38: Plane = other_741;
-    let _e41: Plane = other_741;
+    self_1365 = self_1364;
+    other_1209 = other_1208;
+    let _e4: Translator = self_1365;
+    let _e8: Plane = other_1209;
+    let _e19: Translator = self_1365;
+    let _e22: Translator = self_1365;
+    let _e25: Translator = self_1365;
+    let _e28: Translator = self_1365;
+    let _e32: Plane = other_1209;
+    let _e35: Plane = other_1209;
+    let _e38: Plane = other_1209;
+    let _e41: Plane = other_1209;
     return MotorDual((((vec4<f32>(_e4.g0_.z) * vec4<f32>(_e8.g0_.z)) * vec4<f32>(1.0, 0.0, 0.0, 0.0)) + (vec4<f32>(_e19.g0_.y, _e22.g0_.x, _e25.g0_.x, _e28.g0_.x) * vec4<f32>(_e32.g0_.y, _e35.g0_.x, _e38.g0_.y, _e41.g0_.z))));
 }
 
-fn translator_plane_inner_product(self_868: Translator, other_742: Plane) -> Plane {
-    var self_869: Translator;
-    var other_743: Plane;
+fn translator_plane_inner_product(self_1366: Translator, other_1210: Plane) -> Plane {
+    var self_1367: Translator;
+    var other_1211: Plane;
 
-    self_869 = self_868;
-    other_743 = other_742;
-    let _e4: Translator = self_869;
-    let _e8: Plane = other_743;
-    let _e11: Translator = self_869;
-    let _e15: Plane = other_743;
-    let _e27: Translator = self_869;
-    let _e30: Plane = other_743;
+    self_1367 = self_1366;
+    other_1211 = other_1210;
+    let _e4: Translator = self_1367;
+    let _e8: Plane = other_1211;
+    let _e11: Translator = self_1367;
+    let _e15: Plane = other_1211;
+    let _e27: Translator = self_1367;
+    let _e30: Plane = other_1211;
     return Plane((((vec3<f32>(_e4.g0_.x) * _e8.g0_) + ((vec3<f32>(_e11.g0_.z) * vec3<f32>(_e15.g0_.y)) * vec3<f32>(-(1.0), 0.0, 0.0))) + ((_e27.g0_.yxx * _e30.g0_.zxx) * vec3<f32>(1.0, 0.0, 0.0))));
 }
 
-fn translator_plane_left_contraction(self_870: Translator, other_744: Plane) -> Plane {
-    var self_871: Translator;
-    var other_745: Plane;
+fn translator_plane_geometric_anti_product(self_1368: Translator, other_1212: Plane) -> Motor {
+    var self_1369: Translator;
+    var other_1213: Plane;
 
-    self_871 = self_870;
-    other_745 = other_744;
-    let _e4: Translator = self_871;
-    let _e8: Plane = other_745;
+    self_1369 = self_1368;
+    other_1213 = other_1212;
+    let _e4: Translator = self_1369;
+    let _e8: Plane = other_1213;
+    let _e11: Plane = other_1213;
+    let _e14: Plane = other_1213;
+    let _e17: Plane = other_1213;
+    let _e29: Translator = self_1369;
+    let _e33: Plane = other_1213;
+    let _e36: Plane = other_1213;
+    let _e39: Plane = other_1213;
+    let _e42: Plane = other_1213;
+    let _e55: Translator = self_1369;
+    let _e59: Plane = other_1213;
+    return Motor(((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.y, _e11.g0_.z, _e14.g0_.y, _e17.g0_.x)) * vec4<f32>(1.0, 1.0, 0.0, -(1.0))) + ((vec4<f32>(_e29.g0_.z) * vec4<f32>(_e33.g0_.z, _e36.g0_.y, _e39.g0_.x, _e42.g0_.z)) * vec4<f32>(1.0, -(1.0), 1.0, 0.0))) + ((vec4<f32>(_e55.g0_.x) * vec4<f32>(_e59.g0_.x)) * vec4<f32>(0.0, -(1.0), 0.0, 0.0))));
+}
+
+fn translator_plane_inner_anti_product(self_1370: Translator, other_1214: Plane) -> Point {
+    var self_1371: Translator;
+    var other_1215: Plane;
+
+    self_1371 = self_1370;
+    other_1215 = other_1214;
+    let _e4: Translator = self_1371;
+    let _e8: Plane = other_1215;
+    let _e18: Translator = self_1371;
+    let _e22: Plane = other_1215;
+    let _e33: Translator = self_1371;
+    let _e37: Plane = other_1215;
+    return Point(((((vec3<f32>(_e4.g0_.y) * _e8.g0_.zzx) * vec3<f32>(1.0, 0.0, -(1.0))) + ((vec3<f32>(_e18.g0_.z) * _e22.g0_.yxy) * vec3<f32>(-(1.0), 1.0, 0.0))) + ((vec3<f32>(_e33.g0_.x) * vec3<f32>(_e37.g0_.x)) * vec3<f32>(-(1.0), 0.0, 0.0))));
+}
+
+fn translator_plane_left_contraction(self_1372: Translator, other_1216: Plane) -> Plane {
+    var self_1373: Translator;
+    var other_1217: Plane;
+
+    self_1373 = self_1372;
+    other_1217 = other_1216;
+    let _e4: Translator = self_1373;
+    let _e8: Plane = other_1217;
     return Plane((vec3<f32>(_e4.g0_.x) * _e8.g0_));
 }
 
-fn translator_translator_add(self_872: Translator, other_746: Translator) -> Translator {
-    var self_873: Translator;
-    var other_747: Translator;
+fn translator_plane_left_anti_contraction(self_1374: Translator, other_1218: Plane) -> Point {
+    var self_1375: Translator;
+    var other_1219: Plane;
 
-    self_873 = self_872;
-    other_747 = other_746;
-    let _e4: Translator = self_873;
-    let _e6: Translator = other_747;
+    self_1375 = self_1374;
+    other_1219 = other_1218;
+    let _e4: Translator = self_1375;
+    let _e8: Plane = other_1219;
+    let _e18: Translator = self_1375;
+    let _e21: Plane = other_1219;
+    return Point((((vec3<f32>(_e4.g0_.z) * _e8.g0_.yxy) * vec3<f32>(-(1.0), 1.0, 0.0)) + ((_e18.g0_.yxy * _e21.g0_.zxx) * vec3<f32>(1.0, 0.0, -(1.0)))));
+}
+
+fn translator_translator_add(self_1376: Translator, other_1220: Translator) -> Translator {
+    var self_1377: Translator;
+    var other_1221: Translator;
+
+    self_1377 = self_1376;
+    other_1221 = other_1220;
+    let _e4: Translator = self_1377;
+    let _e6: Translator = other_1221;
     return Translator((_e4.g0_ + _e6.g0_));
 }
 
-fn translator_translator_sub(self_874: Translator, other_748: Translator) -> Translator {
-    var self_875: Translator;
-    var other_749: Translator;
+fn translator_translator_sub(self_1378: Translator, other_1222: Translator) -> Translator {
+    var self_1379: Translator;
+    var other_1223: Translator;
 
-    self_875 = self_874;
-    other_749 = other_748;
-    let _e4: Translator = self_875;
-    let _e6: Translator = other_749;
+    self_1379 = self_1378;
+    other_1223 = other_1222;
+    let _e4: Translator = self_1379;
+    let _e6: Translator = other_1223;
     return Translator((_e4.g0_ - _e6.g0_));
 }
 
-fn translator_translator_mul(self_876: Translator, other_750: Translator) -> Translator {
-    var self_877: Translator;
-    var other_751: Translator;
+fn translator_translator_mul(self_1380: Translator, other_1224: Translator) -> Translator {
+    var self_1381: Translator;
+    var other_1225: Translator;
 
-    self_877 = self_876;
-    other_751 = other_750;
-    let _e4: Translator = self_877;
-    let _e6: Translator = other_751;
+    self_1381 = self_1380;
+    other_1225 = other_1224;
+    let _e4: Translator = self_1381;
+    let _e6: Translator = other_1225;
     return Translator((_e4.g0_ * _e6.g0_));
 }
 
-fn translator_translator_div(self_878: Translator, other_752: Translator) -> Translator {
-    var self_879: Translator;
-    var other_753: Translator;
+fn translator_translator_div(self_1382: Translator, other_1226: Translator) -> Translator {
+    var self_1383: Translator;
+    var other_1227: Translator;
 
-    self_879 = self_878;
-    other_753 = other_752;
-    let _e4: Translator = self_879;
-    let _e7: Translator = self_879;
-    let _e10: Translator = self_879;
-    let _e19: Translator = other_753;
-    let _e22: Translator = other_753;
-    let _e25: Translator = other_753;
+    self_1383 = self_1382;
+    other_1227 = other_1226;
+    let _e4: Translator = self_1383;
+    let _e7: Translator = self_1383;
+    let _e10: Translator = self_1383;
+    let _e19: Translator = other_1227;
+    let _e22: Translator = other_1227;
+    let _e25: Translator = other_1227;
     return Translator((((vec3<f32>(_e4.g0_.x, _e7.g0_.y, _e10.g0_.z) * vec3<f32>(1.0, 1.0, 1.0)) / vec3<f32>(_e19.g0_.x, _e22.g0_.y, _e25.g0_.z)) * vec3<f32>(1.0, 1.0, 1.0)));
 }
 
-fn translator_translator_geometric_product(self_880: Translator, other_754: Translator) -> Translator {
-    var self_881: Translator;
-    var other_755: Translator;
+fn translator_translator_geometric_product(self_1384: Translator, other_1228: Translator) -> Translator {
+    var self_1385: Translator;
+    var other_1229: Translator;
 
-    self_881 = self_880;
-    other_755 = other_754;
-    let _e4: Translator = self_881;
-    let _e8: Translator = other_755;
-    let _e11: Translator = self_881;
-    let _e13: Translator = other_755;
+    self_1385 = self_1384;
+    other_1229 = other_1228;
+    let _e4: Translator = self_1385;
+    let _e8: Translator = other_1229;
+    let _e11: Translator = self_1385;
+    let _e13: Translator = other_1229;
     return Translator(((vec3<f32>(_e4.g0_.x) * _e8.g0_) + ((_e11.g0_ * vec3<f32>(_e13.g0_.x)) * vec3<f32>(0.0, 1.0, 1.0))));
 }
 
-fn translator_translator_outer_product(self_882: Translator, other_756: Translator) -> Translator {
-    var self_883: Translator;
-    var other_757: Translator;
+fn translator_translator_outer_product(self_1386: Translator, other_1230: Translator) -> Translator {
+    var self_1387: Translator;
+    var other_1231: Translator;
 
-    self_883 = self_882;
-    other_757 = other_756;
-    let _e4: Translator = self_883;
-    let _e8: Translator = other_757;
-    let _e11: Translator = self_883;
-    let _e13: Translator = other_757;
+    self_1387 = self_1386;
+    other_1231 = other_1230;
+    let _e4: Translator = self_1387;
+    let _e8: Translator = other_1231;
+    let _e11: Translator = self_1387;
+    let _e13: Translator = other_1231;
     return Translator(((vec3<f32>(_e4.g0_.x) * _e8.g0_) + ((_e11.g0_ * vec3<f32>(_e13.g0_.x)) * vec3<f32>(0.0, 1.0, 1.0))));
 }
 
-fn translator_translator_inner_product(self_884: Translator, other_758: Translator) -> Translator {
-    var self_885: Translator;
-    var other_759: Translator;
+fn translator_translator_inner_product(self_1388: Translator, other_1232: Translator) -> Translator {
+    var self_1389: Translator;
+    var other_1233: Translator;
 
-    self_885 = self_884;
-    other_759 = other_758;
-    let _e4: Translator = self_885;
-    let _e8: Translator = other_759;
-    let _e11: Translator = self_885;
-    let _e13: Translator = other_759;
+    self_1389 = self_1388;
+    other_1233 = other_1232;
+    let _e4: Translator = self_1389;
+    let _e8: Translator = other_1233;
+    let _e11: Translator = self_1389;
+    let _e13: Translator = other_1233;
     return Translator(((vec3<f32>(_e4.g0_.x) * _e8.g0_) + ((_e11.g0_ * vec3<f32>(_e13.g0_.x)) * vec3<f32>(0.0, 1.0, 1.0))));
 }
 
-fn translator_translator_left_contraction(self_886: Translator, other_760: Translator) -> Translator {
-    var self_887: Translator;
-    var other_761: Translator;
+fn translator_translator_geometric_anti_product(self_1390: Translator, other_1234: Translator) -> MotorDual {
+    var self_1391: Translator;
+    var other_1235: Translator;
 
-    self_887 = self_886;
-    other_761 = other_760;
-    let _e4: Translator = self_887;
-    let _e8: Translator = other_761;
+    self_1391 = self_1390;
+    other_1235 = other_1234;
+    let _e4: Translator = self_1391;
+    let _e8: Translator = other_1235;
+    let _e11: Translator = other_1235;
+    let _e14: Translator = other_1235;
+    let _e17: Translator = other_1235;
+    let _e29: Translator = self_1391;
+    let _e33: Translator = other_1235;
+    let _e36: Translator = other_1235;
+    let _e39: Translator = other_1235;
+    let _e42: Translator = other_1235;
+    let _e54: Translator = self_1391;
+    let _e58: Translator = other_1235;
+    let _e61: Translator = other_1235;
+    let _e64: Translator = other_1235;
+    let _e67: Translator = other_1235;
+    return MotorDual(((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.y, _e11.g0_.z, _e14.g0_.x, _e17.g0_.y)) * vec4<f32>(1.0, -(1.0), 1.0, 0.0)) + ((vec4<f32>(_e29.g0_.z) * vec4<f32>(_e33.g0_.z, _e36.g0_.y, _e39.g0_.z, _e42.g0_.x)) * vec4<f32>(1.0, 1.0, 0.0, 1.0))) + ((vec4<f32>(_e54.g0_.x) * vec4<f32>(_e58.g0_.x, _e61.g0_.x, _e64.g0_.y, _e67.g0_.z)) * vec4<f32>(0.0, 0.0, 1.0, 1.0))));
+}
+
+fn translator_translator_left_contraction(self_1392: Translator, other_1236: Translator) -> Translator {
+    var self_1393: Translator;
+    var other_1237: Translator;
+
+    self_1393 = self_1392;
+    other_1237 = other_1236;
+    let _e4: Translator = self_1393;
+    let _e8: Translator = other_1237;
     return Translator((vec3<f32>(_e4.g0_.x) * _e8.g0_));
 }
 
-fn translator_translator_right_contraction(self_888: Translator, other_762: Translator) -> Translator {
-    var self_889: Translator;
-    var other_763: Translator;
+fn translator_translator_right_contraction(self_1394: Translator, other_1238: Translator) -> Translator {
+    var self_1395: Translator;
+    var other_1239: Translator;
 
-    self_889 = self_888;
-    other_763 = other_762;
-    let _e4: Translator = self_889;
-    let _e6: Translator = other_763;
+    self_1395 = self_1394;
+    other_1239 = other_1238;
+    let _e4: Translator = self_1395;
+    let _e6: Translator = other_1239;
     return Translator((_e4.g0_ * vec3<f32>(_e6.g0_.x)));
 }
 
-fn translator_translator_scalar_product(self_890: Translator, other_764: Translator) -> Scalar {
-    var self_891: Translator;
-    var other_765: Translator;
+fn translator_translator_scalar_product(self_1396: Translator, other_1240: Translator) -> Scalar {
+    var self_1397: Translator;
+    var other_1241: Translator;
 
-    self_891 = self_890;
-    other_765 = other_764;
-    let _e4: Translator = self_891;
-    let _e7: Translator = other_765;
+    self_1397 = self_1396;
+    other_1241 = other_1240;
+    let _e4: Translator = self_1397;
+    let _e7: Translator = other_1241;
     return Scalar((_e4.g0_.x * _e7.g0_.x));
 }
 
-fn translator_motor_add(self_892: Translator, other_766: Motor) -> Motor {
-    var self_893: Translator;
-    var other_767: Motor;
+fn translator_translator_anti_scalar_product(self_1398: Translator, other_1242: Translator) -> AntiScalar {
+    var self_1399: Translator;
+    var other_1243: Translator;
 
-    self_893 = self_892;
-    other_767 = other_766;
-    let _e4: Translator = self_893;
-    let _e7: Translator = self_893;
-    let _e10: Translator = self_893;
-    let _e13: Translator = self_893;
-    let _e23: Motor = other_767;
+    self_1399 = self_1398;
+    other_1243 = other_1242;
+    let _e4: Translator = self_1399;
+    let _e7: Translator = other_1243;
+    let _e11: Translator = self_1399;
+    let _e14: Translator = other_1243;
+    return AntiScalar(((_e4.g0_.y * _e7.g0_.y) + (_e11.g0_.z * _e14.g0_.z)));
+}
+
+fn translator_motor_add(self_1400: Translator, other_1244: Motor) -> Motor {
+    var self_1401: Translator;
+    var other_1245: Motor;
+
+    self_1401 = self_1400;
+    other_1245 = other_1244;
+    let _e4: Translator = self_1401;
+    let _e7: Translator = self_1401;
+    let _e10: Translator = self_1401;
+    let _e13: Translator = self_1401;
+    let _e23: Motor = other_1245;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y, _e13.g0_.z) * vec4<f32>(1.0, 0.0, 1.0, 1.0)) + _e23.g0_));
 }
 
-fn translator_motor_sub(self_894: Translator, other_768: Motor) -> Motor {
-    var self_895: Translator;
-    var other_769: Motor;
+fn translator_motor_sub(self_1402: Translator, other_1246: Motor) -> Motor {
+    var self_1403: Translator;
+    var other_1247: Motor;
 
-    self_895 = self_894;
-    other_769 = other_768;
-    let _e4: Translator = self_895;
-    let _e7: Translator = self_895;
-    let _e10: Translator = self_895;
-    let _e13: Translator = self_895;
-    let _e23: Motor = other_769;
+    self_1403 = self_1402;
+    other_1247 = other_1246;
+    let _e4: Translator = self_1403;
+    let _e7: Translator = self_1403;
+    let _e10: Translator = self_1403;
+    let _e13: Translator = self_1403;
+    let _e23: Motor = other_1247;
     return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y, _e13.g0_.z) * vec4<f32>(1.0, 0.0, 1.0, 1.0)) - _e23.g0_));
 }
 
-fn translator_motor_geometric_product(self_896: Translator, other_770: Motor) -> Motor {
-    var self_897: Translator;
-    var other_771: Motor;
+fn translator_motor_geometric_product(self_1404: Translator, other_1248: Motor) -> Motor {
+    var self_1405: Translator;
+    var other_1249: Motor;
 
-    self_897 = self_896;
-    other_771 = other_770;
-    let _e4: Translator = self_897;
-    let _e8: Motor = other_771;
-    let _e11: Translator = self_897;
-    let _e15: Motor = other_771;
-    let _e26: Translator = self_897;
-    let _e29: Translator = self_897;
-    let _e32: Translator = self_897;
-    let _e35: Translator = self_897;
-    let _e39: Motor = other_771;
+    self_1405 = self_1404;
+    other_1249 = other_1248;
+    let _e4: Translator = self_1405;
+    let _e8: Motor = other_1249;
+    let _e11: Translator = self_1405;
+    let _e15: Motor = other_1249;
+    let _e26: Translator = self_1405;
+    let _e29: Translator = self_1405;
+    let _e32: Translator = self_1405;
+    let _e35: Translator = self_1405;
+    let _e39: Motor = other_1249;
     return Motor((((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.z) * _e15.g0_.yyyx) * vec4<f32>(0.0, 0.0, 1.0, 1.0))) + ((vec4<f32>(_e26.g0_.x, _e29.g0_.x, _e32.g0_.y, _e35.g0_.y) * _e39.g0_.xxxy) * vec4<f32>(0.0, 0.0, 1.0, -(1.0)))));
 }
 
-fn translator_motor_regressive_product(self_898: Translator, other_772: Motor) -> Plane {
-    var self_899: Translator;
-    var other_773: Motor;
+fn translator_motor_regressive_product(self_1406: Translator, other_1250: Motor) -> Plane {
+    var self_1407: Translator;
+    var other_1251: Motor;
 
-    self_899 = self_898;
-    other_773 = other_772;
-    let _e4: Translator = self_899;
-    let _e8: Motor = other_773;
-    let _e11: Motor = other_773;
-    let _e14: Motor = other_773;
-    let _e25: Translator = self_899;
-    let _e28: Motor = other_773;
-    let _e31: Motor = other_773;
-    let _e34: Motor = other_773;
+    self_1407 = self_1406;
+    other_1251 = other_1250;
+    let _e4: Translator = self_1407;
+    let _e8: Motor = other_1251;
+    let _e11: Motor = other_1251;
+    let _e14: Motor = other_1251;
+    let _e25: Translator = self_1407;
+    let _e28: Motor = other_1251;
+    let _e31: Motor = other_1251;
+    let _e34: Motor = other_1251;
     return Plane((((vec3<f32>(_e4.g0_.z) * vec3<f32>(_e8.g0_.z, _e11.g0_.y, _e14.g0_.z)) * vec3<f32>(1.0, -(1.0), 0.0)) + ((_e25.g0_.yxy * vec3<f32>(_e28.g0_.w, _e31.g0_.x, _e34.g0_.y)) * vec3<f32>(-(1.0), 0.0, 1.0))));
 }
 
-fn translator_motor_outer_product(self_900: Translator, other_774: Motor) -> Motor {
-    var self_901: Translator;
-    var other_775: Motor;
+fn translator_motor_outer_product(self_1408: Translator, other_1252: Motor) -> Motor {
+    var self_1409: Translator;
+    var other_1253: Motor;
 
-    self_901 = self_900;
-    other_775 = other_774;
-    let _e4: Translator = self_901;
-    let _e8: Motor = other_775;
-    let _e11: Translator = self_901;
-    let _e14: Translator = self_901;
-    let _e17: Translator = self_901;
-    let _e20: Translator = self_901;
-    let _e24: Motor = other_775;
+    self_1409 = self_1408;
+    other_1253 = other_1252;
+    let _e4: Translator = self_1409;
+    let _e8: Motor = other_1253;
+    let _e11: Translator = self_1409;
+    let _e14: Translator = self_1409;
+    let _e17: Translator = self_1409;
+    let _e20: Translator = self_1409;
+    let _e24: Motor = other_1253;
     return Motor(((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.x, _e14.g0_.x, _e17.g0_.y, _e20.g0_.z) * vec4<f32>(_e24.g0_.x)) * vec4<f32>(0.0, 0.0, 1.0, 1.0))));
 }
 
-fn translator_motor_inner_product(self_902: Translator, other_776: Motor) -> Motor {
-    var self_903: Translator;
-    var other_777: Motor;
+fn translator_motor_inner_product(self_1410: Translator, other_1254: Motor) -> Motor {
+    var self_1411: Translator;
+    var other_1255: Motor;
 
-    self_903 = self_902;
-    other_777 = other_776;
-    let _e4: Translator = self_903;
-    let _e8: Motor = other_777;
-    let _e11: Translator = self_903;
-    let _e14: Translator = self_903;
-    let _e17: Translator = self_903;
-    let _e20: Translator = self_903;
-    let _e24: Motor = other_777;
+    self_1411 = self_1410;
+    other_1255 = other_1254;
+    let _e4: Translator = self_1411;
+    let _e8: Motor = other_1255;
+    let _e11: Translator = self_1411;
+    let _e14: Translator = self_1411;
+    let _e17: Translator = self_1411;
+    let _e20: Translator = self_1411;
+    let _e24: Motor = other_1255;
     return Motor(((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.x, _e14.g0_.x, _e17.g0_.y, _e20.g0_.z) * vec4<f32>(_e24.g0_.x)) * vec4<f32>(0.0, 0.0, 1.0, 1.0))));
 }
 
-fn translator_motor_left_contraction(self_904: Translator, other_778: Motor) -> Motor {
-    var self_905: Translator;
-    var other_779: Motor;
+fn translator_motor_geometric_anti_product(self_1412: Translator, other_1256: Motor) -> MotorDual {
+    var self_1413: Translator;
+    var other_1257: Motor;
 
-    self_905 = self_904;
-    other_779 = other_778;
-    let _e4: Translator = self_905;
-    let _e8: Motor = other_779;
+    self_1413 = self_1412;
+    other_1257 = other_1256;
+    let _e4: Translator = self_1413;
+    let _e8: Motor = other_1257;
+    let _e19: Translator = self_1413;
+    let _e23: Motor = other_1257;
+    let _e35: Translator = self_1413;
+    let _e39: Motor = other_1257;
+    return MotorDual(((((vec4<f32>(_e4.g0_.y) * _e8.g0_.zwxy) * vec4<f32>(1.0, -(1.0), 1.0, 1.0)) + ((vec4<f32>(_e19.g0_.z) * _e23.g0_.wzyx) * vec4<f32>(1.0, 1.0, -(1.0), 1.0))) + ((vec4<f32>(_e35.g0_.x) * _e39.g0_.xxzw) * vec4<f32>(0.0, 0.0, 1.0, 1.0))));
+}
+
+fn translator_motor_left_contraction(self_1414: Translator, other_1258: Motor) -> Motor {
+    var self_1415: Translator;
+    var other_1259: Motor;
+
+    self_1415 = self_1414;
+    other_1259 = other_1258;
+    let _e4: Translator = self_1415;
+    let _e8: Motor = other_1259;
     return Motor((vec4<f32>(_e4.g0_.x) * _e8.g0_));
 }
 
-fn translator_motor_right_contraction(self_906: Translator, other_780: Motor) -> Translator {
-    var self_907: Translator;
-    var other_781: Motor;
+fn translator_motor_right_contraction(self_1416: Translator, other_1260: Motor) -> Translator {
+    var self_1417: Translator;
+    var other_1261: Motor;
 
-    self_907 = self_906;
-    other_781 = other_780;
-    let _e4: Translator = self_907;
-    let _e6: Motor = other_781;
+    self_1417 = self_1416;
+    other_1261 = other_1260;
+    let _e4: Translator = self_1417;
+    let _e6: Motor = other_1261;
     return Translator((_e4.g0_ * vec3<f32>(_e6.g0_.x)));
 }
 
-fn translator_motor_scalar_product(self_908: Translator, other_782: Motor) -> Scalar {
-    var self_909: Translator;
-    var other_783: Motor;
+fn translator_motor_scalar_product(self_1418: Translator, other_1262: Motor) -> Scalar {
+    var self_1419: Translator;
+    var other_1263: Motor;
 
-    self_909 = self_908;
-    other_783 = other_782;
-    let _e4: Translator = self_909;
-    let _e7: Motor = other_783;
+    self_1419 = self_1418;
+    other_1263 = other_1262;
+    let _e4: Translator = self_1419;
+    let _e7: Motor = other_1263;
     return Scalar((_e4.g0_.x * _e7.g0_.x));
 }
 
-fn translator_motor_dual_geometric_product(self_910: Translator, other_784: MotorDual) -> MotorDual {
-    var self_911: Translator;
-    var other_785: MotorDual;
+fn translator_motor_anti_scalar_product(self_1420: Translator, other_1264: Motor) -> AntiScalar {
+    var self_1421: Translator;
+    var other_1265: Motor;
 
-    self_911 = self_910;
-    other_785 = other_784;
-    let _e4: Translator = self_911;
-    let _e8: MotorDual = other_785;
-    let _e11: Translator = self_911;
-    let _e15: MotorDual = other_785;
-    let _e27: Translator = self_911;
-    let _e30: Translator = self_911;
-    let _e33: Translator = self_911;
-    let _e36: Translator = self_911;
-    let _e40: MotorDual = other_785;
+    self_1421 = self_1420;
+    other_1265 = other_1264;
+    let _e4: Translator = self_1421;
+    let _e7: Motor = other_1265;
+    let _e11: Translator = self_1421;
+    let _e14: Motor = other_1265;
+    return AntiScalar(((_e4.g0_.y * _e7.g0_.z) + (_e11.g0_.z * _e14.g0_.w)));
+}
+
+fn translator_motor_dual_geometric_product(self_1422: Translator, other_1266: MotorDual) -> MotorDual {
+    var self_1423: Translator;
+    var other_1267: MotorDual;
+
+    self_1423 = self_1422;
+    other_1267 = other_1266;
+    let _e4: Translator = self_1423;
+    let _e8: MotorDual = other_1267;
+    let _e11: Translator = self_1423;
+    let _e15: MotorDual = other_1267;
+    let _e27: Translator = self_1423;
+    let _e30: Translator = self_1423;
+    let _e33: Translator = self_1423;
+    let _e36: Translator = self_1423;
+    let _e40: MotorDual = other_1267;
     return MotorDual((((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.z) * _e15.g0_.wzww) * vec4<f32>(1.0, -(1.0), 0.0, 0.0))) + ((vec4<f32>(_e27.g0_.y, _e30.g0_.y, _e33.g0_.x, _e36.g0_.x) * _e40.g0_.zwxx) * vec4<f32>(1.0, 1.0, 0.0, 0.0))));
 }
 
-fn translator_motor_dual_regressive_product(self_912: Translator, other_786: MotorDual) -> Translator {
-    var self_913: Translator;
-    var other_787: MotorDual;
+fn translator_motor_dual_regressive_product(self_1424: Translator, other_1268: MotorDual) -> Translator {
+    var self_1425: Translator;
+    var other_1269: MotorDual;
 
-    self_913 = self_912;
-    other_787 = other_786;
-    let _e4: Translator = self_913;
-    let _e8: MotorDual = other_787;
-    let _e11: MotorDual = other_787;
-    let _e14: MotorDual = other_787;
-    let _e24: Translator = self_913;
-    let _e28: MotorDual = other_787;
-    let _e31: MotorDual = other_787;
-    let _e34: MotorDual = other_787;
-    let _e45: Translator = self_913;
-    let _e49: MotorDual = other_787;
+    self_1425 = self_1424;
+    other_1269 = other_1268;
+    let _e4: Translator = self_1425;
+    let _e8: MotorDual = other_1269;
+    let _e11: MotorDual = other_1269;
+    let _e14: MotorDual = other_1269;
+    let _e24: Translator = self_1425;
+    let _e28: MotorDual = other_1269;
+    let _e31: MotorDual = other_1269;
+    let _e34: MotorDual = other_1269;
+    let _e45: Translator = self_1425;
+    let _e49: MotorDual = other_1269;
     return Translator(((((vec3<f32>(_e4.g0_.y) * vec3<f32>(_e8.g0_.z, _e11.g0_.x, _e14.g0_.z)) * vec3<f32>(1.0, 1.0, 0.0)) + ((vec3<f32>(_e24.g0_.z) * vec3<f32>(_e28.g0_.w, _e31.g0_.w, _e34.g0_.x)) * vec3<f32>(1.0, 0.0, 1.0))) + ((vec3<f32>(_e45.g0_.x) * vec3<f32>(_e49.g0_.x)) * vec3<f32>(1.0, 0.0, 0.0))));
 }
 
-fn translator_motor_dual_outer_product(self_914: Translator, other_788: MotorDual) -> MotorDual {
-    var self_915: Translator;
-    var other_789: MotorDual;
+fn translator_motor_dual_outer_product(self_1426: Translator, other_1270: MotorDual) -> MotorDual {
+    var self_1427: Translator;
+    var other_1271: MotorDual;
 
-    self_915 = self_914;
-    other_789 = other_788;
-    let _e4: Translator = self_915;
-    let _e8: MotorDual = other_789;
-    let _e11: Translator = self_915;
-    let _e15: MotorDual = other_789;
-    let _e27: Translator = self_915;
-    let _e30: Translator = self_915;
-    let _e33: Translator = self_915;
-    let _e36: Translator = self_915;
-    let _e40: MotorDual = other_789;
+    self_1427 = self_1426;
+    other_1271 = other_1270;
+    let _e4: Translator = self_1427;
+    let _e8: MotorDual = other_1271;
+    let _e11: Translator = self_1427;
+    let _e15: MotorDual = other_1271;
+    let _e27: Translator = self_1427;
+    let _e30: Translator = self_1427;
+    let _e33: Translator = self_1427;
+    let _e36: Translator = self_1427;
+    let _e40: MotorDual = other_1271;
     return MotorDual((((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.z) * vec4<f32>(_e15.g0_.w)) * vec4<f32>(1.0, 0.0, 0.0, 0.0))) + ((vec4<f32>(_e27.g0_.y, _e30.g0_.x, _e33.g0_.x, _e36.g0_.x) * _e40.g0_.zxxx) * vec4<f32>(1.0, 0.0, 0.0, 0.0))));
 }
 
-fn translator_motor_dual_inner_product(self_916: Translator, other_790: MotorDual) -> MotorDual {
-    var self_917: Translator;
-    var other_791: MotorDual;
+fn translator_motor_dual_inner_product(self_1428: Translator, other_1272: MotorDual) -> MotorDual {
+    var self_1429: Translator;
+    var other_1273: MotorDual;
 
-    self_917 = self_916;
-    other_791 = other_790;
-    let _e4: Translator = self_917;
-    let _e8: MotorDual = other_791;
-    let _e11: Translator = self_917;
-    let _e15: MotorDual = other_791;
-    let _e28: Translator = self_917;
-    let _e31: Translator = self_917;
-    let _e34: Translator = self_917;
-    let _e37: Translator = self_917;
-    let _e41: MotorDual = other_791;
+    self_1429 = self_1428;
+    other_1273 = other_1272;
+    let _e4: Translator = self_1429;
+    let _e8: MotorDual = other_1273;
+    let _e11: Translator = self_1429;
+    let _e15: MotorDual = other_1273;
+    let _e28: Translator = self_1429;
+    let _e31: Translator = self_1429;
+    let _e34: Translator = self_1429;
+    let _e37: Translator = self_1429;
+    let _e41: MotorDual = other_1273;
     return MotorDual((((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.z) * vec4<f32>(_e15.g0_.z)) * vec4<f32>(0.0, -(1.0), 0.0, 0.0))) + ((vec4<f32>(_e28.g0_.x, _e31.g0_.y, _e34.g0_.x, _e37.g0_.x) * _e41.g0_.xwxx) * vec4<f32>(0.0, 1.0, 0.0, 0.0))));
 }
 
-fn translator_motor_dual_left_contraction(self_918: Translator, other_792: MotorDual) -> MotorDual {
-    var self_919: Translator;
-    var other_793: MotorDual;
+fn translator_motor_dual_geometric_anti_product(self_1430: Translator, other_1274: MotorDual) -> Motor {
+    var self_1431: Translator;
+    var other_1275: MotorDual;
 
-    self_919 = self_918;
-    other_793 = other_792;
-    let _e4: Translator = self_919;
-    let _e8: MotorDual = other_793;
+    self_1431 = self_1430;
+    other_1275 = other_1274;
+    let _e4: Translator = self_1431;
+    let _e8: MotorDual = other_1275;
+    let _e19: Translator = self_1431;
+    let _e23: MotorDual = other_1275;
+    let _e35: Translator = self_1431;
+    let _e39: MotorDual = other_1275;
+    return Motor(((((vec4<f32>(_e4.g0_.y) * _e8.g0_.zwxy) * vec4<f32>(1.0, 1.0, 1.0, -(1.0))) + ((vec4<f32>(_e19.g0_.z) * _e23.g0_.wzyx) * vec4<f32>(1.0, -(1.0), 1.0, 1.0))) + ((vec4<f32>(_e35.g0_.x) * _e39.g0_.xyxx) * vec4<f32>(1.0, -(1.0), 0.0, 0.0))));
+}
+
+fn translator_motor_dual_inner_anti_product(self_1432: Translator, other_1276: MotorDual) -> Motor {
+    var self_1433: Translator;
+    var other_1277: MotorDual;
+
+    self_1433 = self_1432;
+    other_1277 = other_1276;
+    let _e4: Translator = self_1433;
+    let _e8: MotorDual = other_1277;
+    let _e19: Translator = self_1433;
+    let _e23: MotorDual = other_1277;
+    let _e35: Translator = self_1433;
+    let _e39: MotorDual = other_1277;
+    return Motor(((((vec4<f32>(_e4.g0_.y) * _e8.g0_.wwxy) * vec4<f32>(0.0, 1.0, 1.0, -(1.0))) + ((vec4<f32>(_e19.g0_.z) * _e23.g0_.zzyx) * vec4<f32>(0.0, -(1.0), 1.0, 1.0))) + ((vec4<f32>(_e35.g0_.x) * _e39.g0_.xyxx) * vec4<f32>(1.0, -(1.0), 0.0, 0.0))));
+}
+
+fn translator_motor_dual_left_contraction(self_1434: Translator, other_1278: MotorDual) -> MotorDual {
+    var self_1435: Translator;
+    var other_1279: MotorDual;
+
+    self_1435 = self_1434;
+    other_1279 = other_1278;
+    let _e4: Translator = self_1435;
+    let _e8: MotorDual = other_1279;
     return MotorDual((vec4<f32>(_e4.g0_.x) * _e8.g0_));
 }
 
-fn translator_squared_magnitude(self_920: Translator) -> Scalar {
-    var self_921: Translator;
+fn translator_motor_dual_left_anti_contraction(self_1436: Translator, other_1280: MotorDual) -> Point {
+    var self_1437: Translator;
+    var other_1281: MotorDual;
 
-    self_921 = self_920;
-    let _e2: Translator = self_921;
-    let _e3: Translator = self_921;
+    self_1437 = self_1436;
+    other_1281 = other_1280;
+    let _e4: Translator = self_1437;
+    let _e8: MotorDual = other_1281;
+    let _e11: MotorDual = other_1281;
+    let _e14: MotorDual = other_1281;
+    let _e25: Translator = self_1437;
+    let _e28: MotorDual = other_1281;
+    let _e31: MotorDual = other_1281;
+    let _e34: MotorDual = other_1281;
+    return Point((((vec3<f32>(_e4.g0_.z) * vec3<f32>(_e8.g0_.z, _e11.g0_.y, _e14.g0_.z)) * vec3<f32>(-(1.0), 1.0, 0.0)) + ((_e25.g0_.yxy * vec3<f32>(_e28.g0_.w, _e31.g0_.x, _e34.g0_.y)) * vec3<f32>(1.0, 0.0, -(1.0)))));
+}
+
+fn translator_motor_dual_right_anti_contraction(self_1438: Translator, other_1282: MotorDual) -> Motor {
+    var self_1439: Translator;
+    var other_1283: MotorDual;
+
+    self_1439 = self_1438;
+    other_1283 = other_1282;
+    let _e4: Translator = self_1439;
+    let _e7: Translator = self_1439;
+    let _e10: Translator = self_1439;
+    let _e13: Translator = self_1439;
+    let _e17: MotorDual = other_1283;
+    return Motor(((vec4<f32>(_e4.g0_.x, _e7.g0_.x, _e10.g0_.y, _e13.g0_.z) * _e17.g0_.xyxx) * vec4<f32>(1.0, -(1.0), 1.0, 1.0)));
+}
+
+fn translator_squared_magnitude(self_1440: Translator) -> Scalar {
+    var self_1441: Translator;
+
+    self_1441 = self_1440;
+    let _e2: Translator = self_1441;
+    let _e3: Translator = self_1441;
     let _e4: Translator = translator_reversal(_e3);
     let _e5: Scalar = translator_translator_scalar_product(_e2, _e4);
     return _e5;
 }
 
-fn translator_magnitude(self_922: Translator) -> Scalar {
-    var self_923: Translator;
+fn translator_magnitude(self_1442: Translator) -> Scalar {
+    var self_1443: Translator;
 
-    self_923 = self_922;
-    let _e2: Translator = self_923;
+    self_1443 = self_1442;
+    let _e2: Translator = self_1443;
     let _e3: Scalar = translator_squared_magnitude(_e2);
     return Scalar(sqrt(_e3.g0_));
 }
 
-fn translator_scale(self_924: Translator, other_794: f32) -> Translator {
-    var self_925: Translator;
-    var other_795: f32;
+fn translator_scale(self_1444: Translator, other_1284: f32) -> Translator {
+    var self_1445: Translator;
+    var other_1285: f32;
 
-    self_925 = self_924;
-    other_795 = other_794;
-    let _e4: Translator = self_925;
-    let _e5: f32 = other_795;
+    self_1445 = self_1444;
+    other_1285 = other_1284;
+    let _e4: Translator = self_1445;
+    let _e5: f32 = other_1285;
     let _e7: Translator = translator_scalar_geometric_product(_e4, Scalar(_e5));
     return _e7;
 }
 
-fn translator_signum(self_926: Translator) -> Translator {
-    var self_927: Translator;
+fn translator_signum(self_1446: Translator) -> Translator {
+    var self_1447: Translator;
 
-    self_927 = self_926;
-    let _e2: Translator = self_927;
-    let _e3: Translator = self_927;
+    self_1447 = self_1446;
+    let _e2: Translator = self_1447;
+    let _e3: Translator = self_1447;
     let _e4: Scalar = translator_magnitude(_e3);
     let _e9: Translator = translator_scalar_geometric_product(_e2, Scalar((1.0 / _e4.g0_)));
     return _e9;
 }
 
-fn translator_inverse(self_928: Translator) -> Translator {
-    var self_929: Translator;
+fn translator_inverse(self_1448: Translator) -> Translator {
+    var self_1449: Translator;
 
-    self_929 = self_928;
-    let _e2: Translator = self_929;
+    self_1449 = self_1448;
+    let _e2: Translator = self_1449;
     let _e3: Translator = translator_reversal(_e2);
-    let _e4: Translator = self_929;
+    let _e4: Translator = self_1449;
     let _e5: Scalar = translator_squared_magnitude(_e4);
     let _e10: Translator = translator_scalar_geometric_product(_e3, Scalar((1.0 / _e5.g0_)));
     return _e10;
@@ -6412,1218 +9951,1609 @@ fn motor_one() -> Motor {
     return Motor(vec4<f32>(1.0, 0.0, 0.0, 0.0));
 }
 
-fn motor_neg(self_930: Motor) -> Motor {
-    var self_931: Motor;
+fn motor_neg(self_1450: Motor) -> Motor {
+    var self_1451: Motor;
 
-    self_931 = self_930;
-    let _e2: Motor = self_931;
+    self_1451 = self_1450;
+    let _e2: Motor = self_1451;
     return Motor((_e2.g0_ * vec4<f32>(-(1.0))));
 }
 
-fn motor_automorphism(self_932: Motor) -> Motor {
-    var self_933: Motor;
+fn motor_automorphism(self_1452: Motor) -> Motor {
+    var self_1453: Motor;
 
-    self_933 = self_932;
-    let _e2: Motor = self_933;
+    self_1453 = self_1452;
+    let _e2: Motor = self_1453;
     return Motor(_e2.g0_);
 }
 
-fn motor_reversal(self_934: Motor) -> Motor {
-    var self_935: Motor;
+fn motor_reversal(self_1454: Motor) -> Motor {
+    var self_1455: Motor;
 
-    self_935 = self_934;
-    let _e2: Motor = self_935;
+    self_1455 = self_1454;
+    let _e2: Motor = self_1455;
     return Motor((_e2.g0_ * vec4<f32>(1.0, -(1.0), -(1.0), -(1.0))));
 }
 
-fn motor_conjugation(self_936: Motor) -> Motor {
-    var self_937: Motor;
+fn motor_conjugation(self_1456: Motor) -> Motor {
+    var self_1457: Motor;
 
-    self_937 = self_936;
-    let _e2: Motor = self_937;
+    self_1457 = self_1456;
+    let _e2: Motor = self_1457;
     return Motor((_e2.g0_ * vec4<f32>(1.0, -(1.0), -(1.0), -(1.0))));
 }
 
-fn motor_dual(self_938: Motor) -> MotorDual {
-    var self_939: Motor;
+fn motor_dual(self_1458: Motor) -> MotorDual {
+    var self_1459: Motor;
 
-    self_939 = self_938;
-    let _e2: Motor = self_939;
+    self_1459 = self_1458;
+    let _e2: Motor = self_1459;
     return MotorDual(_e2.g0_);
 }
 
-fn motor_scalar_into(self_940: Motor) -> Scalar {
-    var self_941: Motor;
+fn motor_anti_reversal(self_1460: Motor) -> Motor {
+    var self_1461: Motor;
 
-    self_941 = self_940;
-    let _e2: Motor = self_941;
+    self_1461 = self_1460;
+    let _e2: Motor = self_1461;
+    return Motor((_e2.g0_ * vec4<f32>(1.0, -(1.0), -(1.0), -(1.0))));
+}
+
+fn motor_scalar_into(self_1462: Motor) -> Scalar {
+    var self_1463: Motor;
+
+    self_1463 = self_1462;
+    let _e2: Motor = self_1463;
     return Scalar(_e2.g0_.x);
 }
 
-fn motor_scalar_add(self_942: Motor, other_796: Scalar) -> Motor {
-    var self_943: Motor;
-    var other_797: Scalar;
+fn motor_scalar_add(self_1464: Motor, other_1286: Scalar) -> Motor {
+    var self_1465: Motor;
+    var other_1287: Scalar;
 
-    self_943 = self_942;
-    other_797 = other_796;
-    let _e4: Motor = self_943;
-    let _e6: Scalar = other_797;
+    self_1465 = self_1464;
+    other_1287 = other_1286;
+    let _e4: Motor = self_1465;
+    let _e6: Scalar = other_1287;
     return Motor((_e4.g0_ + (vec4<f32>(_e6.g0_) * vec4<f32>(1.0, 0.0, 0.0, 0.0))));
 }
 
-fn motor_scalar_sub(self_944: Motor, other_798: Scalar) -> Motor {
-    var self_945: Motor;
-    var other_799: Scalar;
+fn motor_scalar_sub(self_1466: Motor, other_1288: Scalar) -> Motor {
+    var self_1467: Motor;
+    var other_1289: Scalar;
 
-    self_945 = self_944;
-    other_799 = other_798;
-    let _e4: Motor = self_945;
-    let _e6: Scalar = other_799;
+    self_1467 = self_1466;
+    other_1289 = other_1288;
+    let _e4: Motor = self_1467;
+    let _e6: Scalar = other_1289;
     return Motor((_e4.g0_ - (vec4<f32>(_e6.g0_) * vec4<f32>(1.0, 0.0, 0.0, 0.0))));
 }
 
-fn motor_scalar_geometric_product(self_946: Motor, other_800: Scalar) -> Motor {
-    var self_947: Motor;
-    var other_801: Scalar;
+fn motor_scalar_geometric_product(self_1468: Motor, other_1290: Scalar) -> Motor {
+    var self_1469: Motor;
+    var other_1291: Scalar;
 
-    self_947 = self_946;
-    other_801 = other_800;
-    let _e4: Motor = self_947;
-    let _e6: Scalar = other_801;
+    self_1469 = self_1468;
+    other_1291 = other_1290;
+    let _e4: Motor = self_1469;
+    let _e6: Scalar = other_1291;
     return Motor((_e4.g0_ * vec4<f32>(_e6.g0_)));
 }
 
-fn motor_scalar_outer_product(self_948: Motor, other_802: Scalar) -> Motor {
-    var self_949: Motor;
-    var other_803: Scalar;
+fn motor_scalar_outer_product(self_1470: Motor, other_1292: Scalar) -> Motor {
+    var self_1471: Motor;
+    var other_1293: Scalar;
 
-    self_949 = self_948;
-    other_803 = other_802;
-    let _e4: Motor = self_949;
-    let _e6: Scalar = other_803;
+    self_1471 = self_1470;
+    other_1293 = other_1292;
+    let _e4: Motor = self_1471;
+    let _e6: Scalar = other_1293;
     return Motor((_e4.g0_ * vec4<f32>(_e6.g0_)));
 }
 
-fn motor_scalar_inner_product(self_950: Motor, other_804: Scalar) -> Motor {
-    var self_951: Motor;
-    var other_805: Scalar;
+fn motor_scalar_inner_product(self_1472: Motor, other_1294: Scalar) -> Motor {
+    var self_1473: Motor;
+    var other_1295: Scalar;
 
-    self_951 = self_950;
-    other_805 = other_804;
-    let _e4: Motor = self_951;
-    let _e6: Scalar = other_805;
+    self_1473 = self_1472;
+    other_1295 = other_1294;
+    let _e4: Motor = self_1473;
+    let _e6: Scalar = other_1295;
     return Motor((_e4.g0_ * vec4<f32>(_e6.g0_)));
 }
 
-fn motor_scalar_left_contraction(self_952: Motor, other_806: Scalar) -> Scalar {
-    var self_953: Motor;
-    var other_807: Scalar;
+fn motor_scalar_left_contraction(self_1474: Motor, other_1296: Scalar) -> Scalar {
+    var self_1475: Motor;
+    var other_1297: Scalar;
 
-    self_953 = self_952;
-    other_807 = other_806;
-    let _e4: Motor = self_953;
-    let _e7: Scalar = other_807;
+    self_1475 = self_1474;
+    other_1297 = other_1296;
+    let _e4: Motor = self_1475;
+    let _e7: Scalar = other_1297;
     return Scalar((_e4.g0_.x * _e7.g0_));
 }
 
-fn motor_scalar_right_contraction(self_954: Motor, other_808: Scalar) -> Motor {
-    var self_955: Motor;
-    var other_809: Scalar;
+fn motor_scalar_right_contraction(self_1476: Motor, other_1298: Scalar) -> Motor {
+    var self_1477: Motor;
+    var other_1299: Scalar;
 
-    self_955 = self_954;
-    other_809 = other_808;
-    let _e4: Motor = self_955;
-    let _e6: Scalar = other_809;
+    self_1477 = self_1476;
+    other_1299 = other_1298;
+    let _e4: Motor = self_1477;
+    let _e6: Scalar = other_1299;
     return Motor((_e4.g0_ * vec4<f32>(_e6.g0_)));
 }
 
-fn motor_scalar_scalar_product(self_956: Motor, other_810: Scalar) -> Scalar {
-    var self_957: Motor;
-    var other_811: Scalar;
+fn motor_scalar_scalar_product(self_1478: Motor, other_1300: Scalar) -> Scalar {
+    var self_1479: Motor;
+    var other_1301: Scalar;
 
-    self_957 = self_956;
-    other_811 = other_810;
-    let _e4: Motor = self_957;
-    let _e7: Scalar = other_811;
+    self_1479 = self_1478;
+    other_1301 = other_1300;
+    let _e4: Motor = self_1479;
+    let _e7: Scalar = other_1301;
     return Scalar((_e4.g0_.x * _e7.g0_));
 }
 
-fn motor_multi_vector_add(self_958: Motor, other_812: MultiVector) -> MultiVector {
-    var self_959: Motor;
-    var other_813: MultiVector;
+fn motor_anti_scalar_regressive_product(self_1480: Motor, other_1302: AntiScalar) -> Motor {
+    var self_1481: Motor;
+    var other_1303: AntiScalar;
 
-    self_959 = self_958;
-    other_813 = other_812;
-    let _e4: Motor = self_959;
-    let _e13: MultiVector = other_813;
-    let _e16: Motor = self_959;
-    let _e25: MultiVector = other_813;
+    self_1481 = self_1480;
+    other_1303 = other_1302;
+    let _e4: Motor = self_1481;
+    let _e6: AntiScalar = other_1303;
+    return Motor((_e4.g0_ * vec4<f32>(_e6.g0_)));
+}
+
+fn motor_anti_scalar_outer_product(self_1482: Motor, other_1304: AntiScalar) -> AntiScalar {
+    var self_1483: Motor;
+    var other_1305: AntiScalar;
+
+    self_1483 = self_1482;
+    other_1305 = other_1304;
+    let _e4: Motor = self_1483;
+    let _e7: AntiScalar = other_1305;
+    return AntiScalar((_e4.g0_.x * _e7.g0_));
+}
+
+fn motor_anti_scalar_geometric_anti_product(self_1484: Motor, other_1306: AntiScalar) -> Motor {
+    var self_1485: Motor;
+    var other_1307: AntiScalar;
+
+    self_1485 = self_1484;
+    other_1307 = other_1306;
+    let _e4: Motor = self_1485;
+    let _e6: AntiScalar = other_1307;
+    return Motor((_e4.g0_ * vec4<f32>(_e6.g0_)));
+}
+
+fn motor_anti_scalar_inner_anti_product(self_1486: Motor, other_1308: AntiScalar) -> Motor {
+    var self_1487: Motor;
+    var other_1309: AntiScalar;
+
+    self_1487 = self_1486;
+    other_1309 = other_1308;
+    let _e4: Motor = self_1487;
+    let _e6: AntiScalar = other_1309;
+    return Motor((_e4.g0_ * vec4<f32>(_e6.g0_)));
+}
+
+fn motor_anti_scalar_right_anti_contraction(self_1488: Motor, other_1310: AntiScalar) -> Motor {
+    var self_1489: Motor;
+    var other_1311: AntiScalar;
+
+    self_1489 = self_1488;
+    other_1311 = other_1310;
+    let _e4: Motor = self_1489;
+    let _e6: AntiScalar = other_1311;
+    return Motor((_e4.g0_ * vec4<f32>(_e6.g0_)));
+}
+
+fn motor_multi_vector_add(self_1490: Motor, other_1312: MultiVector) -> MultiVector {
+    var self_1491: Motor;
+    var other_1313: MultiVector;
+
+    self_1491 = self_1490;
+    other_1313 = other_1312;
+    let _e4: Motor = self_1491;
+    let _e13: MultiVector = other_1313;
+    let _e16: Motor = self_1491;
+    let _e25: MultiVector = other_1313;
     return MultiVector(((_e4.g0_.xyxx * vec4<f32>(1.0, 1.0, 0.0, 0.0)) + _e13.g0_), ((_e16.g0_.xxzw * vec4<f32>(0.0, 0.0, 1.0, 1.0)) + _e25.g1_));
 }
 
-fn motor_multi_vector_sub(self_960: Motor, other_814: MultiVector) -> MultiVector {
-    var self_961: Motor;
-    var other_815: MultiVector;
+fn motor_multi_vector_sub(self_1492: Motor, other_1314: MultiVector) -> MultiVector {
+    var self_1493: Motor;
+    var other_1315: MultiVector;
 
-    self_961 = self_960;
-    other_815 = other_814;
-    let _e4: Motor = self_961;
-    let _e13: MultiVector = other_815;
-    let _e16: Motor = self_961;
-    let _e25: MultiVector = other_815;
+    self_1493 = self_1492;
+    other_1315 = other_1314;
+    let _e4: Motor = self_1493;
+    let _e13: MultiVector = other_1315;
+    let _e16: Motor = self_1493;
+    let _e25: MultiVector = other_1315;
     return MultiVector(((_e4.g0_.xyxx * vec4<f32>(1.0, 1.0, 0.0, 0.0)) - _e13.g0_), ((_e16.g0_.xxzw * vec4<f32>(0.0, 0.0, 1.0, 1.0)) - _e25.g1_));
 }
 
-fn motor_multi_vector_geometric_product(self_962: Motor, other_816: MultiVector) -> MultiVector {
-    var self_963: Motor;
-    var other_817: MultiVector;
+fn motor_multi_vector_geometric_product(self_1494: Motor, other_1316: MultiVector) -> MultiVector {
+    var self_1495: Motor;
+    var other_1317: MultiVector;
 
-    self_963 = self_962;
-    other_817 = other_816;
-    let _e4: Motor = self_963;
-    let _e8: MultiVector = other_817;
-    let _e11: Motor = self_963;
-    let _e15: MultiVector = other_817;
-    let _e28: Motor = self_963;
-    let _e32: MultiVector = other_817;
-    let _e35: Motor = self_963;
-    let _e39: MultiVector = other_817;
-    let _e52: Motor = self_963;
-    let _e56: MultiVector = other_817;
-    let _e68: Motor = self_963;
-    let _e72: MultiVector = other_817;
+    self_1495 = self_1494;
+    other_1317 = other_1316;
+    let _e4: Motor = self_1495;
+    let _e8: MultiVector = other_1317;
+    let _e11: Motor = self_1495;
+    let _e15: MultiVector = other_1317;
+    let _e28: Motor = self_1495;
+    let _e32: MultiVector = other_1317;
+    let _e35: Motor = self_1495;
+    let _e39: MultiVector = other_1317;
+    let _e52: Motor = self_1495;
+    let _e56: MultiVector = other_1317;
+    let _e68: Motor = self_1495;
+    let _e72: MultiVector = other_1317;
     return MultiVector(((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.y) * _e15.g0_.yxwz) * vec4<f32>(-(1.0), 1.0, 1.0, -(1.0)))), ((((vec4<f32>(_e28.g0_.x) * _e32.g1_) + ((vec4<f32>(_e35.g0_.y) * _e39.g1_.yxwz) * vec4<f32>(-(1.0), 1.0, -(1.0), 1.0))) + ((vec4<f32>(_e52.g0_.z) * _e56.g0_.zwxy) * vec4<f32>(1.0, 1.0, 1.0, -(1.0)))) + ((vec4<f32>(_e68.g0_.w) * _e72.g0_.wzyx) * vec4<f32>(-(1.0), 1.0, 1.0, 1.0))));
 }
 
-fn motor_multi_vector_outer_product(self_964: Motor, other_818: MultiVector) -> MultiVector {
-    var self_965: Motor;
-    var other_819: MultiVector;
+fn motor_multi_vector_outer_product(self_1496: Motor, other_1318: MultiVector) -> MultiVector {
+    var self_1497: Motor;
+    var other_1319: MultiVector;
 
-    self_965 = self_964;
-    other_819 = other_818;
-    let _e4: Motor = self_965;
-    let _e8: MultiVector = other_819;
-    let _e11: Motor = self_965;
-    let _e14: MultiVector = other_819;
-    let _e26: Motor = self_965;
-    let _e30: MultiVector = other_819;
-    let _e33: Motor = self_965;
-    let _e37: MultiVector = other_819;
-    let _e48: Motor = self_965;
-    let _e52: MultiVector = other_819;
-    let _e63: Motor = self_965;
-    let _e66: MultiVector = other_819;
+    self_1497 = self_1496;
+    other_1319 = other_1318;
+    let _e4: Motor = self_1497;
+    let _e8: MultiVector = other_1319;
+    let _e11: Motor = self_1497;
+    let _e14: MultiVector = other_1319;
+    let _e26: Motor = self_1497;
+    let _e30: MultiVector = other_1319;
+    let _e33: Motor = self_1497;
+    let _e37: MultiVector = other_1319;
+    let _e48: Motor = self_1497;
+    let _e52: MultiVector = other_1319;
+    let _e63: Motor = self_1497;
+    let _e66: MultiVector = other_1319;
     return MultiVector(((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((_e11.g0_.xyxx * vec4<f32>(_e14.g0_.x)) * vec4<f32>(0.0, 1.0, 0.0, 0.0))), ((((vec4<f32>(_e26.g0_.x) * _e30.g1_) + ((vec4<f32>(_e33.g0_.z) * _e37.g0_.wwxw) * vec4<f32>(0.0, 1.0, 1.0, 0.0))) + ((vec4<f32>(_e48.g0_.w) * _e52.g0_.zzzx) * vec4<f32>(0.0, 1.0, 0.0, 1.0))) + ((_e63.g0_.xyxx * vec4<f32>(_e66.g1_.x)) * vec4<f32>(0.0, 1.0, 0.0, 0.0))));
 }
 
-fn motor_multi_vector_inner_product(self_966: Motor, other_820: MultiVector) -> MultiVector {
-    var self_967: Motor;
-    var other_821: MultiVector;
+fn motor_multi_vector_inner_product(self_1498: Motor, other_1320: MultiVector) -> MultiVector {
+    var self_1499: Motor;
+    var other_1321: MultiVector;
 
-    self_967 = self_966;
-    other_821 = other_820;
-    let _e4: Motor = self_967;
-    let _e8: MultiVector = other_821;
-    let _e11: Motor = self_967;
-    let _e15: MultiVector = other_821;
-    let _e28: Motor = self_967;
-    let _e32: MultiVector = other_821;
-    let _e35: Motor = self_967;
-    let _e39: MultiVector = other_821;
-    let _e50: Motor = self_967;
-    let _e54: MultiVector = other_821;
-    let _e66: Motor = self_967;
-    let _e69: MultiVector = other_821;
+    self_1499 = self_1498;
+    other_1321 = other_1320;
+    let _e4: Motor = self_1499;
+    let _e8: MultiVector = other_1321;
+    let _e11: Motor = self_1499;
+    let _e15: MultiVector = other_1321;
+    let _e28: Motor = self_1499;
+    let _e32: MultiVector = other_1321;
+    let _e35: Motor = self_1499;
+    let _e39: MultiVector = other_1321;
+    let _e50: Motor = self_1499;
+    let _e54: MultiVector = other_1321;
+    let _e66: Motor = self_1499;
+    let _e69: MultiVector = other_1321;
     return MultiVector(((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.y) * _e15.g0_.yxwz) * vec4<f32>(-(1.0), 1.0, 1.0, -(1.0)))), ((((vec4<f32>(_e28.g0_.x) * _e32.g1_) + ((vec4<f32>(_e35.g0_.z) * _e39.g0_.zzxz) * vec4<f32>(1.0, 0.0, 1.0, 0.0))) + ((vec4<f32>(_e50.g0_.w) * _e54.g0_.wwwx) * vec4<f32>(-(1.0), 0.0, 0.0, 1.0))) + ((_e66.g0_.yxxx * _e69.g1_.yxxx) * vec4<f32>(-(1.0), 0.0, 0.0, 0.0))));
 }
 
-fn motor_multi_vector_left_contraction(self_968: Motor, other_822: MultiVector) -> MultiVector {
-    var self_969: Motor;
-    var other_823: MultiVector;
+fn motor_multi_vector_geometric_anti_product(self_1500: Motor, other_1322: MultiVector) -> MultiVector {
+    var self_1501: Motor;
+    var other_1323: MultiVector;
 
-    self_969 = self_968;
-    other_823 = other_822;
-    let _e4: Motor = self_969;
-    let _e8: MultiVector = other_823;
-    let _e11: Motor = self_969;
-    let _e14: MultiVector = other_823;
-    let _e26: Motor = self_969;
-    let _e30: MultiVector = other_823;
-    let _e33: Motor = self_969;
-    let _e36: MultiVector = other_823;
+    self_1501 = self_1500;
+    other_1323 = other_1322;
+    let _e4: Motor = self_1501;
+    let _e8: MultiVector = other_1323;
+    let _e19: Motor = self_1501;
+    let _e23: MultiVector = other_1323;
+    let _e34: Motor = self_1501;
+    let _e38: MultiVector = other_1323;
+    let _e43: Motor = self_1501;
+    let _e47: MultiVector = other_1323;
+    let _e60: Motor = self_1501;
+    let _e64: MultiVector = other_1323;
+    let _e76: Motor = self_1501;
+    let _e80: MultiVector = other_1323;
+    return MultiVector((((((vec4<f32>(_e4.g0_.x) * _e8.g1_.yxwz) * vec4<f32>(1.0, -(1.0), 1.0, 1.0)) + ((vec4<f32>(_e19.g0_.y) * _e23.g1_) * vec4<f32>(1.0, 1.0, -(1.0), 1.0))) + (vec4<f32>(_e34.g0_.z) * _e38.g0_.wzyx)) + ((vec4<f32>(_e43.g0_.w) * _e47.g0_.zwxy) * vec4<f32>(1.0, -(1.0), 1.0, -(1.0)))), (((vec4<f32>(_e60.g0_.z) * _e64.g1_.wzyx) * vec4<f32>(-(1.0), 1.0, 1.0, -(1.0))) + (vec4<f32>(_e76.g0_.w) * _e80.g1_.zwxy)));
+}
+
+fn motor_multi_vector_left_contraction(self_1502: Motor, other_1324: MultiVector) -> MultiVector {
+    var self_1503: Motor;
+    var other_1325: MultiVector;
+
+    self_1503 = self_1502;
+    other_1325 = other_1324;
+    let _e4: Motor = self_1503;
+    let _e8: MultiVector = other_1325;
+    let _e11: Motor = self_1503;
+    let _e14: MultiVector = other_1325;
+    let _e26: Motor = self_1503;
+    let _e30: MultiVector = other_1325;
+    let _e33: Motor = self_1503;
+    let _e36: MultiVector = other_1325;
     return MultiVector(((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((_e11.g0_.yxxx * _e14.g0_.yxxx) * vec4<f32>(-(1.0), 0.0, 0.0, 0.0))), ((vec4<f32>(_e26.g0_.x) * _e30.g1_) + ((_e33.g0_.yxxx * _e36.g1_.yxxx) * vec4<f32>(-(1.0), 0.0, 0.0, 0.0))));
 }
 
-fn motor_multi_vector_scalar_product(self_970: Motor, other_824: MultiVector) -> Scalar {
-    var self_971: Motor;
-    var other_825: MultiVector;
+fn motor_multi_vector_scalar_product(self_1504: Motor, other_1326: MultiVector) -> Scalar {
+    var self_1505: Motor;
+    var other_1327: MultiVector;
 
-    self_971 = self_970;
-    other_825 = other_824;
-    let _e4: Motor = self_971;
-    let _e7: MultiVector = other_825;
-    let _e11: Motor = self_971;
-    let _e14: MultiVector = other_825;
+    self_1505 = self_1504;
+    other_1327 = other_1326;
+    let _e4: Motor = self_1505;
+    let _e7: MultiVector = other_1327;
+    let _e11: Motor = self_1505;
+    let _e14: MultiVector = other_1327;
     return Scalar(((_e4.g0_.x * _e7.g0_.x) - (_e11.g0_.y * _e14.g0_.y)));
 }
 
-fn motor_rotor_into(self_972: Motor) -> Rotor {
-    var self_973: Motor;
+fn motor_multi_vector_anti_scalar_product(self_1506: Motor, other_1328: MultiVector) -> AntiScalar {
+    var self_1507: Motor;
+    var other_1329: MultiVector;
 
-    self_973 = self_972;
-    let _e2: Motor = self_973;
-    let _e5: Motor = self_973;
+    self_1507 = self_1506;
+    other_1329 = other_1328;
+    let _e4: Motor = self_1507;
+    let _e7: MultiVector = other_1329;
+    let _e11: Motor = self_1507;
+    let _e14: MultiVector = other_1329;
+    return AntiScalar(((_e4.g0_.z * _e7.g1_.z) + (_e11.g0_.w * _e14.g1_.w)));
+}
+
+fn motor_rotor_into(self_1508: Motor) -> Rotor {
+    var self_1509: Motor;
+
+    self_1509 = self_1508;
+    let _e2: Motor = self_1509;
+    let _e5: Motor = self_1509;
     return Rotor(vec2<f32>(_e2.g0_.x, _e5.g0_.y));
 }
 
-fn motor_rotor_add(self_974: Motor, other_826: Rotor) -> Motor {
-    var self_975: Motor;
-    var other_827: Rotor;
+fn motor_rotor_add(self_1510: Motor, other_1330: Rotor) -> Motor {
+    var self_1511: Motor;
+    var other_1331: Rotor;
 
-    self_975 = self_974;
-    other_827 = other_826;
-    let _e4: Motor = self_975;
-    let _e6: Rotor = other_827;
-    let _e9: Rotor = other_827;
-    let _e12: Rotor = other_827;
-    let _e15: Rotor = other_827;
+    self_1511 = self_1510;
+    other_1331 = other_1330;
+    let _e4: Motor = self_1511;
+    let _e6: Rotor = other_1331;
+    let _e9: Rotor = other_1331;
+    let _e12: Rotor = other_1331;
+    let _e15: Rotor = other_1331;
     return Motor((_e4.g0_ + (vec4<f32>(_e6.g0_.x, _e9.g0_.y, _e12.g0_.x, _e15.g0_.x) * vec4<f32>(1.0, 1.0, 0.0, 0.0))));
 }
 
-fn motor_rotor_sub(self_976: Motor, other_828: Rotor) -> Motor {
-    var self_977: Motor;
-    var other_829: Rotor;
+fn motor_rotor_sub(self_1512: Motor, other_1332: Rotor) -> Motor {
+    var self_1513: Motor;
+    var other_1333: Rotor;
 
-    self_977 = self_976;
-    other_829 = other_828;
-    let _e4: Motor = self_977;
-    let _e6: Rotor = other_829;
-    let _e9: Rotor = other_829;
-    let _e12: Rotor = other_829;
-    let _e15: Rotor = other_829;
+    self_1513 = self_1512;
+    other_1333 = other_1332;
+    let _e4: Motor = self_1513;
+    let _e6: Rotor = other_1333;
+    let _e9: Rotor = other_1333;
+    let _e12: Rotor = other_1333;
+    let _e15: Rotor = other_1333;
     return Motor((_e4.g0_ - (vec4<f32>(_e6.g0_.x, _e9.g0_.y, _e12.g0_.x, _e15.g0_.x) * vec4<f32>(1.0, 1.0, 0.0, 0.0))));
 }
 
-fn motor_rotor_geometric_product(self_978: Motor, other_830: Rotor) -> Motor {
-    var self_979: Motor;
-    var other_831: Rotor;
+fn motor_rotor_geometric_product(self_1514: Motor, other_1334: Rotor) -> Motor {
+    var self_1515: Motor;
+    var other_1335: Rotor;
 
-    self_979 = self_978;
-    other_831 = other_830;
-    let _e4: Motor = self_979;
-    let _e8: Rotor = other_831;
-    let _e11: Rotor = other_831;
-    let _e14: Rotor = other_831;
-    let _e17: Rotor = other_831;
-    let _e29: Motor = self_979;
-    let _e33: Rotor = other_831;
-    let _e36: Rotor = other_831;
-    let _e39: Rotor = other_831;
-    let _e42: Rotor = other_831;
-    let _e54: Motor = self_979;
-    let _e57: Rotor = other_831;
-    let _e60: Rotor = other_831;
-    let _e63: Rotor = other_831;
-    let _e66: Rotor = other_831;
+    self_1515 = self_1514;
+    other_1335 = other_1334;
+    let _e4: Motor = self_1515;
+    let _e8: Rotor = other_1335;
+    let _e11: Rotor = other_1335;
+    let _e14: Rotor = other_1335;
+    let _e17: Rotor = other_1335;
+    let _e29: Motor = self_1515;
+    let _e33: Rotor = other_1335;
+    let _e36: Rotor = other_1335;
+    let _e39: Rotor = other_1335;
+    let _e42: Rotor = other_1335;
+    let _e54: Motor = self_1515;
+    let _e57: Rotor = other_1335;
+    let _e60: Rotor = other_1335;
+    let _e63: Rotor = other_1335;
+    let _e66: Rotor = other_1335;
     return Motor(((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.y, _e11.g0_.x, _e14.g0_.y, _e17.g0_.y)) * vec4<f32>(-(1.0), 1.0, 0.0, 0.0)) + ((vec4<f32>(_e29.g0_.w) * vec4<f32>(_e33.g0_.y, _e36.g0_.y, _e39.g0_.y, _e42.g0_.x)) * vec4<f32>(0.0, 0.0, 1.0, 1.0))) + ((_e54.g0_.xxzz * vec4<f32>(_e57.g0_.x, _e60.g0_.y, _e63.g0_.x, _e66.g0_.y)) * vec4<f32>(1.0, 1.0, 1.0, -(1.0)))));
 }
 
-fn motor_rotor_outer_product(self_980: Motor, other_832: Rotor) -> Motor {
-    var self_981: Motor;
-    var other_833: Rotor;
+fn motor_rotor_outer_product(self_1516: Motor, other_1336: Rotor) -> Motor {
+    var self_1517: Motor;
+    var other_1337: Rotor;
 
-    self_981 = self_980;
-    other_833 = other_832;
-    let _e4: Motor = self_981;
-    let _e8: Rotor = other_833;
-    let _e19: Motor = self_981;
-    let _e22: Rotor = other_833;
-    let _e25: Rotor = other_833;
-    let _e28: Rotor = other_833;
-    let _e31: Rotor = other_833;
+    self_1517 = self_1516;
+    other_1337 = other_1336;
+    let _e4: Motor = self_1517;
+    let _e8: Rotor = other_1337;
+    let _e19: Motor = self_1517;
+    let _e22: Rotor = other_1337;
+    let _e25: Rotor = other_1337;
+    let _e28: Rotor = other_1337;
+    let _e31: Rotor = other_1337;
     return Motor((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.x)) * vec4<f32>(0.0, 1.0, 0.0, 0.0)) + (_e19.g0_.xxzw * vec4<f32>(_e22.g0_.x, _e25.g0_.y, _e28.g0_.x, _e31.g0_.x))));
 }
 
-fn motor_rotor_inner_product(self_982: Motor, other_834: Rotor) -> Motor {
-    var self_983: Motor;
-    var other_835: Rotor;
+fn motor_rotor_inner_product(self_1518: Motor, other_1338: Rotor) -> Motor {
+    var self_1519: Motor;
+    var other_1339: Rotor;
 
-    self_983 = self_982;
-    other_835 = other_834;
-    let _e4: Motor = self_983;
-    let _e8: Rotor = other_835;
-    let _e11: Rotor = other_835;
-    let _e14: Rotor = other_835;
-    let _e17: Rotor = other_835;
-    let _e29: Motor = self_983;
-    let _e32: Rotor = other_835;
-    let _e35: Rotor = other_835;
-    let _e38: Rotor = other_835;
-    let _e41: Rotor = other_835;
+    self_1519 = self_1518;
+    other_1339 = other_1338;
+    let _e4: Motor = self_1519;
+    let _e8: Rotor = other_1339;
+    let _e11: Rotor = other_1339;
+    let _e14: Rotor = other_1339;
+    let _e17: Rotor = other_1339;
+    let _e29: Motor = self_1519;
+    let _e32: Rotor = other_1339;
+    let _e35: Rotor = other_1339;
+    let _e38: Rotor = other_1339;
+    let _e41: Rotor = other_1339;
     return Motor((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.y, _e11.g0_.x, _e14.g0_.y, _e17.g0_.y)) * vec4<f32>(-(1.0), 1.0, 0.0, 0.0)) + (_e29.g0_.xxzw * vec4<f32>(_e32.g0_.x, _e35.g0_.y, _e38.g0_.x, _e41.g0_.x))));
 }
 
-fn motor_rotor_left_contraction(self_984: Motor, other_836: Rotor) -> Rotor {
-    var self_985: Motor;
-    var other_837: Rotor;
+fn motor_rotor_left_contraction(self_1520: Motor, other_1340: Rotor) -> Rotor {
+    var self_1521: Motor;
+    var other_1341: Rotor;
 
-    self_985 = self_984;
-    other_837 = other_836;
-    let _e4: Motor = self_985;
-    let _e8: Rotor = other_837;
-    let _e11: Motor = self_985;
-    let _e14: Motor = self_985;
-    let _e18: Rotor = other_837;
+    self_1521 = self_1520;
+    other_1341 = other_1340;
+    let _e4: Motor = self_1521;
+    let _e8: Rotor = other_1341;
+    let _e11: Motor = self_1521;
+    let _e14: Motor = self_1521;
+    let _e18: Rotor = other_1341;
     return Rotor(((vec2<f32>(_e4.g0_.x) * _e8.g0_) + ((vec2<f32>(_e11.g0_.y, _e14.g0_.x) * _e18.g0_.yx) * vec2<f32>(-(1.0), 0.0))));
 }
 
-fn motor_rotor_right_contraction(self_986: Motor, other_838: Rotor) -> Motor {
-    var self_987: Motor;
-    var other_839: Rotor;
+fn motor_rotor_right_contraction(self_1522: Motor, other_1342: Rotor) -> Motor {
+    var self_1523: Motor;
+    var other_1343: Rotor;
 
-    self_987 = self_986;
-    other_839 = other_838;
-    let _e4: Motor = self_987;
-    let _e8: Rotor = other_839;
-    let _e11: Rotor = other_839;
-    let _e14: Rotor = other_839;
-    let _e17: Rotor = other_839;
-    let _e29: Motor = self_987;
-    let _e32: Rotor = other_839;
+    self_1523 = self_1522;
+    other_1343 = other_1342;
+    let _e4: Motor = self_1523;
+    let _e8: Rotor = other_1343;
+    let _e11: Rotor = other_1343;
+    let _e14: Rotor = other_1343;
+    let _e17: Rotor = other_1343;
+    let _e29: Motor = self_1523;
+    let _e32: Rotor = other_1343;
     return Motor((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.y, _e11.g0_.x, _e14.g0_.y, _e17.g0_.y)) * vec4<f32>(-(1.0), 1.0, 0.0, 0.0)) + ((_e29.g0_.xxzw * vec4<f32>(_e32.g0_.x)) * vec4<f32>(1.0, 0.0, 1.0, 1.0))));
 }
 
-fn motor_rotor_scalar_product(self_988: Motor, other_840: Rotor) -> Scalar {
-    var self_989: Motor;
-    var other_841: Rotor;
+fn motor_rotor_scalar_product(self_1524: Motor, other_1344: Rotor) -> Scalar {
+    var self_1525: Motor;
+    var other_1345: Rotor;
 
-    self_989 = self_988;
-    other_841 = other_840;
-    let _e4: Motor = self_989;
-    let _e7: Rotor = other_841;
-    let _e11: Motor = self_989;
-    let _e14: Rotor = other_841;
+    self_1525 = self_1524;
+    other_1345 = other_1344;
+    let _e4: Motor = self_1525;
+    let _e7: Rotor = other_1345;
+    let _e11: Motor = self_1525;
+    let _e14: Rotor = other_1345;
     return Scalar(((_e4.g0_.x * _e7.g0_.x) - (_e11.g0_.y * _e14.g0_.y)));
 }
 
-fn motor_point_into(self_990: Motor) -> Point {
-    var self_991: Motor;
+fn motor_point_into(self_1526: Motor) -> Point {
+    var self_1527: Motor;
 
-    self_991 = self_990;
-    let _e2: Motor = self_991;
-    let _e5: Motor = self_991;
-    let _e8: Motor = self_991;
+    self_1527 = self_1526;
+    let _e2: Motor = self_1527;
+    let _e5: Motor = self_1527;
+    let _e8: Motor = self_1527;
     return Point(vec3<f32>(_e2.g0_.y, _e5.g0_.z, _e8.g0_.w));
 }
 
-fn motor_point_add(self_992: Motor, other_842: Point) -> Motor {
-    var self_993: Motor;
-    var other_843: Point;
+fn motor_point_add(self_1528: Motor, other_1346: Point) -> Motor {
+    var self_1529: Motor;
+    var other_1347: Point;
 
-    self_993 = self_992;
-    other_843 = other_842;
-    let _e4: Motor = self_993;
-    let _e6: Point = other_843;
-    let _e9: Point = other_843;
-    let _e12: Point = other_843;
-    let _e15: Point = other_843;
+    self_1529 = self_1528;
+    other_1347 = other_1346;
+    let _e4: Motor = self_1529;
+    let _e6: Point = other_1347;
+    let _e9: Point = other_1347;
+    let _e12: Point = other_1347;
+    let _e15: Point = other_1347;
     return Motor((_e4.g0_ + (vec4<f32>(_e6.g0_.x, _e9.g0_.x, _e12.g0_.y, _e15.g0_.z) * vec4<f32>(0.0, 1.0, 1.0, 1.0))));
 }
 
-fn motor_point_sub(self_994: Motor, other_844: Point) -> Motor {
-    var self_995: Motor;
-    var other_845: Point;
+fn motor_point_sub(self_1530: Motor, other_1348: Point) -> Motor {
+    var self_1531: Motor;
+    var other_1349: Point;
 
-    self_995 = self_994;
-    other_845 = other_844;
-    let _e4: Motor = self_995;
-    let _e6: Point = other_845;
-    let _e9: Point = other_845;
-    let _e12: Point = other_845;
-    let _e15: Point = other_845;
+    self_1531 = self_1530;
+    other_1349 = other_1348;
+    let _e4: Motor = self_1531;
+    let _e6: Point = other_1349;
+    let _e9: Point = other_1349;
+    let _e12: Point = other_1349;
+    let _e15: Point = other_1349;
     return Motor((_e4.g0_ - (vec4<f32>(_e6.g0_.x, _e9.g0_.x, _e12.g0_.y, _e15.g0_.z) * vec4<f32>(0.0, 1.0, 1.0, 1.0))));
 }
 
-fn motor_point_geometric_product(self_996: Motor, other_846: Point) -> Motor {
-    var self_997: Motor;
-    var other_847: Point;
+fn motor_point_geometric_product(self_1532: Motor, other_1350: Point) -> Motor {
+    var self_1533: Motor;
+    var other_1351: Point;
 
-    self_997 = self_996;
-    other_847 = other_846;
-    let _e4: Motor = self_997;
-    let _e8: Point = other_847;
-    let _e11: Point = other_847;
-    let _e14: Point = other_847;
-    let _e17: Point = other_847;
-    let _e30: Motor = self_997;
-    let _e34: Point = other_847;
-    let _e47: Motor = self_997;
-    let _e51: Point = other_847;
-    let _e63: Motor = self_997;
-    let _e67: Point = other_847;
-    let _e70: Point = other_847;
-    let _e73: Point = other_847;
-    let _e76: Point = other_847;
+    self_1533 = self_1532;
+    other_1351 = other_1350;
+    let _e4: Motor = self_1533;
+    let _e8: Point = other_1351;
+    let _e11: Point = other_1351;
+    let _e14: Point = other_1351;
+    let _e17: Point = other_1351;
+    let _e30: Motor = self_1533;
+    let _e34: Point = other_1351;
+    let _e47: Motor = self_1533;
+    let _e51: Point = other_1351;
+    let _e63: Motor = self_1533;
+    let _e67: Point = other_1351;
+    let _e70: Point = other_1351;
+    let _e73: Point = other_1351;
+    let _e76: Point = other_1351;
     return Motor((((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.x, _e11.g0_.x, _e14.g0_.z, _e17.g0_.y)) * vec4<f32>(-(1.0), 0.0, -(1.0), 1.0)) + ((vec4<f32>(_e30.g0_.z) * vec4<f32>(_e34.g0_.x)) * vec4<f32>(0.0, 0.0, 0.0, -(1.0)))) + ((vec4<f32>(_e47.g0_.w) * vec4<f32>(_e51.g0_.x)) * vec4<f32>(0.0, 0.0, 1.0, 0.0))) + ((vec4<f32>(_e63.g0_.x) * vec4<f32>(_e67.g0_.x, _e70.g0_.x, _e73.g0_.y, _e76.g0_.z)) * vec4<f32>(0.0, 1.0, 1.0, 1.0))));
 }
 
-fn motor_point_regressive_product(self_998: Motor, other_848: Point) -> Plane {
-    var self_999: Motor;
-    var other_849: Point;
+fn motor_point_regressive_product(self_1534: Motor, other_1352: Point) -> Plane {
+    var self_1535: Motor;
+    var other_1353: Point;
 
-    self_999 = self_998;
-    other_849 = other_848;
-    let _e4: Motor = self_999;
-    let _e8: Point = other_849;
-    let _e18: Motor = self_999;
-    let _e22: Point = other_849;
-    let _e33: Motor = self_999;
-    let _e36: Motor = self_999;
-    let _e39: Motor = self_999;
-    let _e43: Point = other_849;
+    self_1535 = self_1534;
+    other_1353 = other_1352;
+    let _e4: Motor = self_1535;
+    let _e8: Point = other_1353;
+    let _e18: Motor = self_1535;
+    let _e22: Point = other_1353;
+    let _e33: Motor = self_1535;
+    let _e36: Motor = self_1535;
+    let _e39: Motor = self_1535;
+    let _e43: Point = other_1353;
     return Plane(((((vec3<f32>(_e4.g0_.z) * _e8.g0_.zzx) * vec3<f32>(-(1.0), 0.0, 1.0)) + ((vec3<f32>(_e18.g0_.w) * _e22.g0_.yxy) * vec3<f32>(1.0, -(1.0), 0.0))) + ((vec3<f32>(_e33.g0_.x, _e36.g0_.y, _e39.g0_.y) * _e43.g0_.xzy) * vec3<f32>(0.0, 1.0, -(1.0)))));
 }
 
-fn motor_point_outer_product(self_1000: Motor, other_850: Point) -> Point {
-    var self_1001: Motor;
-    var other_851: Point;
+fn motor_point_outer_product(self_1536: Motor, other_1354: Point) -> Point {
+    var self_1537: Motor;
+    var other_1355: Point;
 
-    self_1001 = self_1000;
-    other_851 = other_850;
-    let _e4: Motor = self_1001;
-    let _e8: Point = other_851;
+    self_1537 = self_1536;
+    other_1355 = other_1354;
+    let _e4: Motor = self_1537;
+    let _e8: Point = other_1355;
     return Point((vec3<f32>(_e4.g0_.x) * _e8.g0_));
 }
 
-fn motor_point_inner_product(self_1002: Motor, other_852: Point) -> Motor {
-    var self_1003: Motor;
-    var other_853: Point;
+fn motor_point_inner_product(self_1538: Motor, other_1356: Point) -> Motor {
+    var self_1539: Motor;
+    var other_1357: Point;
 
-    self_1003 = self_1002;
-    other_853 = other_852;
-    let _e4: Motor = self_1003;
-    let _e7: Point = other_853;
-    let _e10: Point = other_853;
-    let _e13: Point = other_853;
-    let _e16: Point = other_853;
+    self_1539 = self_1538;
+    other_1357 = other_1356;
+    let _e4: Motor = self_1539;
+    let _e7: Point = other_1357;
+    let _e10: Point = other_1357;
+    let _e13: Point = other_1357;
+    let _e16: Point = other_1357;
     return Motor(((_e4.g0_.yxxx * vec4<f32>(_e7.g0_.x, _e10.g0_.x, _e13.g0_.y, _e16.g0_.z)) * vec4<f32>(-(1.0), 1.0, 1.0, 1.0)));
 }
 
-fn motor_point_left_contraction(self_1004: Motor, other_854: Point) -> Motor {
-    var self_1005: Motor;
-    var other_855: Point;
+fn motor_point_geometric_anti_product(self_1540: Motor, other_1358: Point) -> MotorDual {
+    var self_1541: Motor;
+    var other_1359: Point;
 
-    self_1005 = self_1004;
-    other_855 = other_854;
-    let _e4: Motor = self_1005;
-    let _e7: Point = other_855;
-    let _e10: Point = other_855;
-    let _e13: Point = other_855;
-    let _e16: Point = other_855;
+    self_1541 = self_1540;
+    other_1359 = other_1358;
+    let _e4: Motor = self_1541;
+    let _e8: Point = other_1359;
+    let _e11: Point = other_1359;
+    let _e14: Point = other_1359;
+    let _e17: Point = other_1359;
+    let _e29: Motor = self_1541;
+    let _e33: Point = other_1359;
+    let _e36: Point = other_1359;
+    let _e39: Point = other_1359;
+    let _e42: Point = other_1359;
+    let _e55: Motor = self_1541;
+    let _e59: Point = other_1359;
+    let _e62: Point = other_1359;
+    let _e65: Point = other_1359;
+    let _e68: Point = other_1359;
+    let _e81: Motor = self_1541;
+    let _e85: Point = other_1359;
+    let _e88: Point = other_1359;
+    let _e91: Point = other_1359;
+    let _e94: Point = other_1359;
+    return MotorDual((((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.z, _e11.g0_.z, _e14.g0_.z, _e17.g0_.y)) * vec4<f32>(0.0, 0.0, 1.0, -(1.0))) + ((vec4<f32>(_e29.g0_.z) * vec4<f32>(_e33.g0_.y, _e36.g0_.z, _e39.g0_.y, _e42.g0_.x)) * vec4<f32>(1.0, -(1.0), 0.0, 1.0))) + ((vec4<f32>(_e55.g0_.w) * vec4<f32>(_e59.g0_.z, _e62.g0_.y, _e65.g0_.x, _e68.g0_.z)) * vec4<f32>(1.0, 1.0, -(1.0), 0.0))) + ((vec4<f32>(_e81.g0_.x) * vec4<f32>(_e85.g0_.x, _e88.g0_.x, _e91.g0_.y, _e94.g0_.z)) * vec4<f32>(0.0, 0.0, 1.0, 1.0))));
+}
+
+fn motor_point_left_contraction(self_1542: Motor, other_1360: Point) -> Motor {
+    var self_1543: Motor;
+    var other_1361: Point;
+
+    self_1543 = self_1542;
+    other_1361 = other_1360;
+    let _e4: Motor = self_1543;
+    let _e7: Point = other_1361;
+    let _e10: Point = other_1361;
+    let _e13: Point = other_1361;
+    let _e16: Point = other_1361;
     return Motor(((_e4.g0_.yxxx * vec4<f32>(_e7.g0_.x, _e10.g0_.x, _e13.g0_.y, _e16.g0_.z)) * vec4<f32>(-(1.0), 1.0, 1.0, 1.0)));
 }
 
-fn motor_point_right_contraction(self_1006: Motor, other_856: Point) -> Scalar {
-    var self_1007: Motor;
-    var other_857: Point;
+fn motor_point_right_contraction(self_1544: Motor, other_1362: Point) -> Scalar {
+    var self_1545: Motor;
+    var other_1363: Point;
 
-    self_1007 = self_1006;
-    other_857 = other_856;
-    let _e5: Motor = self_1007;
-    let _e8: Point = other_857;
+    self_1545 = self_1544;
+    other_1363 = other_1362;
+    let _e5: Motor = self_1545;
+    let _e8: Point = other_1363;
     return Scalar((0.0 - (_e5.g0_.y * _e8.g0_.x)));
 }
 
-fn motor_point_scalar_product(self_1008: Motor, other_858: Point) -> Scalar {
-    var self_1009: Motor;
-    var other_859: Point;
+fn motor_point_left_anti_contraction(self_1546: Motor, other_1364: Point) -> AntiScalar {
+    var self_1547: Motor;
+    var other_1365: Point;
 
-    self_1009 = self_1008;
-    other_859 = other_858;
-    let _e5: Motor = self_1009;
-    let _e8: Point = other_859;
+    self_1547 = self_1546;
+    other_1365 = other_1364;
+    let _e4: Motor = self_1547;
+    let _e7: Point = other_1365;
+    let _e11: Motor = self_1547;
+    let _e14: Point = other_1365;
+    return AntiScalar(((_e4.g0_.z * _e7.g0_.y) + (_e11.g0_.w * _e14.g0_.z)));
+}
+
+fn motor_point_scalar_product(self_1548: Motor, other_1366: Point) -> Scalar {
+    var self_1549: Motor;
+    var other_1367: Point;
+
+    self_1549 = self_1548;
+    other_1367 = other_1366;
+    let _e5: Motor = self_1549;
+    let _e8: Point = other_1367;
     return Scalar((0.0 - (_e5.g0_.y * _e8.g0_.x)));
 }
 
-fn motor_ideal_point_into(self_1010: Motor) -> IdealPoint {
-    var self_1011: Motor;
+fn motor_point_anti_scalar_product(self_1550: Motor, other_1368: Point) -> AntiScalar {
+    var self_1551: Motor;
+    var other_1369: Point;
 
-    self_1011 = self_1010;
-    let _e2: Motor = self_1011;
-    let _e5: Motor = self_1011;
+    self_1551 = self_1550;
+    other_1369 = other_1368;
+    let _e4: Motor = self_1551;
+    let _e7: Point = other_1369;
+    let _e11: Motor = self_1551;
+    let _e14: Point = other_1369;
+    return AntiScalar(((_e4.g0_.z * _e7.g0_.y) + (_e11.g0_.w * _e14.g0_.z)));
+}
+
+fn motor_ideal_point_into(self_1552: Motor) -> IdealPoint {
+    var self_1553: Motor;
+
+    self_1553 = self_1552;
+    let _e2: Motor = self_1553;
+    let _e5: Motor = self_1553;
     return IdealPoint(vec2<f32>(_e2.g0_.z, _e5.g0_.w));
 }
 
-fn motor_ideal_point_add(self_1012: Motor, other_860: IdealPoint) -> Motor {
-    var self_1013: Motor;
-    var other_861: IdealPoint;
+fn motor_ideal_point_add(self_1554: Motor, other_1370: IdealPoint) -> Motor {
+    var self_1555: Motor;
+    var other_1371: IdealPoint;
 
-    self_1013 = self_1012;
-    other_861 = other_860;
-    let _e4: Motor = self_1013;
-    let _e6: IdealPoint = other_861;
-    let _e9: IdealPoint = other_861;
-    let _e12: IdealPoint = other_861;
-    let _e15: IdealPoint = other_861;
+    self_1555 = self_1554;
+    other_1371 = other_1370;
+    let _e4: Motor = self_1555;
+    let _e6: IdealPoint = other_1371;
+    let _e9: IdealPoint = other_1371;
+    let _e12: IdealPoint = other_1371;
+    let _e15: IdealPoint = other_1371;
     return Motor((_e4.g0_ + (vec4<f32>(_e6.g0_.x, _e9.g0_.x, _e12.g0_.x, _e15.g0_.y) * vec4<f32>(0.0, 0.0, 1.0, 1.0))));
 }
 
-fn motor_ideal_point_sub(self_1014: Motor, other_862: IdealPoint) -> Motor {
-    var self_1015: Motor;
-    var other_863: IdealPoint;
+fn motor_ideal_point_sub(self_1556: Motor, other_1372: IdealPoint) -> Motor {
+    var self_1557: Motor;
+    var other_1373: IdealPoint;
 
-    self_1015 = self_1014;
-    other_863 = other_862;
-    let _e4: Motor = self_1015;
-    let _e6: IdealPoint = other_863;
-    let _e9: IdealPoint = other_863;
-    let _e12: IdealPoint = other_863;
-    let _e15: IdealPoint = other_863;
+    self_1557 = self_1556;
+    other_1373 = other_1372;
+    let _e4: Motor = self_1557;
+    let _e6: IdealPoint = other_1373;
+    let _e9: IdealPoint = other_1373;
+    let _e12: IdealPoint = other_1373;
+    let _e15: IdealPoint = other_1373;
     return Motor((_e4.g0_ - (vec4<f32>(_e6.g0_.x, _e9.g0_.x, _e12.g0_.x, _e15.g0_.y) * vec4<f32>(0.0, 0.0, 1.0, 1.0))));
 }
 
-fn motor_ideal_point_geometric_product(self_1016: Motor, other_864: IdealPoint) -> IdealPoint {
-    var self_1017: Motor;
-    var other_865: IdealPoint;
+fn motor_ideal_point_geometric_product(self_1558: Motor, other_1374: IdealPoint) -> IdealPoint {
+    var self_1559: Motor;
+    var other_1375: IdealPoint;
 
-    self_1017 = self_1016;
-    other_865 = other_864;
-    let _e4: Motor = self_1017;
-    let _e8: IdealPoint = other_865;
-    let _e11: Motor = self_1017;
-    let _e15: IdealPoint = other_865;
+    self_1559 = self_1558;
+    other_1375 = other_1374;
+    let _e4: Motor = self_1559;
+    let _e8: IdealPoint = other_1375;
+    let _e11: Motor = self_1559;
+    let _e15: IdealPoint = other_1375;
     return IdealPoint(((vec2<f32>(_e4.g0_.x) * _e8.g0_) + ((vec2<f32>(_e11.g0_.y) * _e15.g0_.yx) * vec2<f32>(-(1.0), 1.0))));
 }
 
-fn motor_ideal_point_regressive_product(self_1018: Motor, other_866: IdealPoint) -> Plane {
-    var self_1019: Motor;
-    var other_867: IdealPoint;
+fn motor_ideal_point_regressive_product(self_1560: Motor, other_1376: IdealPoint) -> Plane {
+    var self_1561: Motor;
+    var other_1377: IdealPoint;
 
-    self_1019 = self_1018;
-    other_867 = other_866;
-    let _e4: Motor = self_1019;
-    let _e8: IdealPoint = other_867;
-    let _e18: Motor = self_1019;
-    let _e21: Motor = self_1019;
-    let _e24: Motor = self_1019;
-    let _e28: IdealPoint = other_867;
-    let _e31: IdealPoint = other_867;
-    let _e34: IdealPoint = other_867;
+    self_1561 = self_1560;
+    other_1377 = other_1376;
+    let _e4: Motor = self_1561;
+    let _e8: IdealPoint = other_1377;
+    let _e18: Motor = self_1561;
+    let _e21: Motor = self_1561;
+    let _e24: Motor = self_1561;
+    let _e28: IdealPoint = other_1377;
+    let _e31: IdealPoint = other_1377;
+    let _e34: IdealPoint = other_1377;
     return Plane((((vec3<f32>(_e4.g0_.w) * vec3<f32>(_e8.g0_.x)) * vec3<f32>(1.0, 0.0, 0.0)) + ((vec3<f32>(_e18.g0_.z, _e21.g0_.y, _e24.g0_.y) * vec3<f32>(_e28.g0_.y, _e31.g0_.y, _e34.g0_.x)) * vec3<f32>(-(1.0), 1.0, -(1.0)))));
 }
 
-fn motor_ideal_point_outer_product(self_1020: Motor, other_868: IdealPoint) -> IdealPoint {
-    var self_1021: Motor;
-    var other_869: IdealPoint;
+fn motor_ideal_point_outer_product(self_1562: Motor, other_1378: IdealPoint) -> IdealPoint {
+    var self_1563: Motor;
+    var other_1379: IdealPoint;
 
-    self_1021 = self_1020;
-    other_869 = other_868;
-    let _e4: Motor = self_1021;
-    let _e8: IdealPoint = other_869;
+    self_1563 = self_1562;
+    other_1379 = other_1378;
+    let _e4: Motor = self_1563;
+    let _e8: IdealPoint = other_1379;
     return IdealPoint((vec2<f32>(_e4.g0_.x) * _e8.g0_));
 }
 
-fn motor_ideal_point_inner_product(self_1022: Motor, other_870: IdealPoint) -> IdealPoint {
-    var self_1023: Motor;
-    var other_871: IdealPoint;
+fn motor_ideal_point_inner_product(self_1564: Motor, other_1380: IdealPoint) -> IdealPoint {
+    var self_1565: Motor;
+    var other_1381: IdealPoint;
 
-    self_1023 = self_1022;
-    other_871 = other_870;
-    let _e4: Motor = self_1023;
-    let _e8: IdealPoint = other_871;
+    self_1565 = self_1564;
+    other_1381 = other_1380;
+    let _e4: Motor = self_1565;
+    let _e8: IdealPoint = other_1381;
     return IdealPoint((vec2<f32>(_e4.g0_.x) * _e8.g0_));
 }
 
-fn motor_ideal_point_left_contraction(self_1024: Motor, other_872: IdealPoint) -> IdealPoint {
-    var self_1025: Motor;
-    var other_873: IdealPoint;
+fn motor_ideal_point_geometric_anti_product(self_1566: Motor, other_1382: IdealPoint) -> MotorDual {
+    var self_1567: Motor;
+    var other_1383: IdealPoint;
 
-    self_1025 = self_1024;
-    other_873 = other_872;
-    let _e4: Motor = self_1025;
-    let _e8: IdealPoint = other_873;
+    self_1567 = self_1566;
+    other_1383 = other_1382;
+    let _e4: Motor = self_1567;
+    let _e8: IdealPoint = other_1383;
+    let _e11: IdealPoint = other_1383;
+    let _e14: IdealPoint = other_1383;
+    let _e17: IdealPoint = other_1383;
+    let _e29: Motor = self_1567;
+    let _e33: IdealPoint = other_1383;
+    let _e36: IdealPoint = other_1383;
+    let _e39: IdealPoint = other_1383;
+    let _e42: IdealPoint = other_1383;
+    let _e54: Motor = self_1567;
+    let _e57: IdealPoint = other_1383;
+    let _e60: IdealPoint = other_1383;
+    let _e63: IdealPoint = other_1383;
+    let _e66: IdealPoint = other_1383;
+    return MotorDual(((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.y, _e11.g0_.y, _e14.g0_.y, _e17.g0_.x)) * vec4<f32>(0.0, 0.0, 1.0, -(1.0))) + ((vec4<f32>(_e29.g0_.w) * vec4<f32>(_e33.g0_.y, _e36.g0_.x, _e39.g0_.y, _e42.g0_.y)) * vec4<f32>(1.0, 1.0, 0.0, 0.0))) + ((_e54.g0_.zzxx * vec4<f32>(_e57.g0_.x, _e60.g0_.y, _e63.g0_.x, _e66.g0_.y)) * vec4<f32>(1.0, -(1.0), 1.0, 1.0))));
+}
+
+fn motor_ideal_point_left_contraction(self_1568: Motor, other_1384: IdealPoint) -> IdealPoint {
+    var self_1569: Motor;
+    var other_1385: IdealPoint;
+
+    self_1569 = self_1568;
+    other_1385 = other_1384;
+    let _e4: Motor = self_1569;
+    let _e8: IdealPoint = other_1385;
     return IdealPoint((vec2<f32>(_e4.g0_.x) * _e8.g0_));
 }
 
-fn motor_plane_geometric_product(self_1026: Motor, other_874: Plane) -> MotorDual {
-    var self_1027: Motor;
-    var other_875: Plane;
+fn motor_ideal_point_left_anti_contraction(self_1570: Motor, other_1386: IdealPoint) -> AntiScalar {
+    var self_1571: Motor;
+    var other_1387: IdealPoint;
 
-    self_1027 = self_1026;
-    other_875 = other_874;
-    let _e4: Motor = self_1027;
-    let _e8: Plane = other_875;
-    let _e11: Plane = other_875;
-    let _e14: Plane = other_875;
-    let _e17: Plane = other_875;
-    let _e29: Motor = self_1027;
-    let _e33: Plane = other_875;
-    let _e36: Plane = other_875;
-    let _e39: Plane = other_875;
-    let _e42: Plane = other_875;
-    let _e54: Motor = self_1027;
-    let _e58: Plane = other_875;
-    let _e61: Plane = other_875;
-    let _e64: Plane = other_875;
-    let _e67: Plane = other_875;
-    let _e80: Motor = self_1027;
-    let _e84: Plane = other_875;
-    let _e87: Plane = other_875;
-    let _e90: Plane = other_875;
-    let _e93: Plane = other_875;
+    self_1571 = self_1570;
+    other_1387 = other_1386;
+    let _e4: Motor = self_1571;
+    let _e7: IdealPoint = other_1387;
+    let _e11: Motor = self_1571;
+    let _e14: IdealPoint = other_1387;
+    return AntiScalar(((_e4.g0_.z * _e7.g0_.x) + (_e11.g0_.w * _e14.g0_.y)));
+}
+
+fn motor_ideal_point_anti_scalar_product(self_1572: Motor, other_1388: IdealPoint) -> AntiScalar {
+    var self_1573: Motor;
+    var other_1389: IdealPoint;
+
+    self_1573 = self_1572;
+    other_1389 = other_1388;
+    let _e4: Motor = self_1573;
+    let _e7: IdealPoint = other_1389;
+    let _e11: Motor = self_1573;
+    let _e14: IdealPoint = other_1389;
+    return AntiScalar(((_e4.g0_.z * _e7.g0_.x) + (_e11.g0_.w * _e14.g0_.y)));
+}
+
+fn motor_plane_geometric_product(self_1574: Motor, other_1390: Plane) -> MotorDual {
+    var self_1575: Motor;
+    var other_1391: Plane;
+
+    self_1575 = self_1574;
+    other_1391 = other_1390;
+    let _e4: Motor = self_1575;
+    let _e8: Plane = other_1391;
+    let _e11: Plane = other_1391;
+    let _e14: Plane = other_1391;
+    let _e17: Plane = other_1391;
+    let _e29: Motor = self_1575;
+    let _e33: Plane = other_1391;
+    let _e36: Plane = other_1391;
+    let _e39: Plane = other_1391;
+    let _e42: Plane = other_1391;
+    let _e54: Motor = self_1575;
+    let _e58: Plane = other_1391;
+    let _e61: Plane = other_1391;
+    let _e64: Plane = other_1391;
+    let _e67: Plane = other_1391;
+    let _e80: Motor = self_1575;
+    let _e84: Plane = other_1391;
+    let _e87: Plane = other_1391;
+    let _e90: Plane = other_1391;
+    let _e93: Plane = other_1391;
     return MotorDual((((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.x, _e11.g0_.x, _e14.g0_.z, _e17.g0_.y)) * vec4<f32>(1.0, 0.0, -(1.0), 1.0)) + ((vec4<f32>(_e29.g0_.z) * vec4<f32>(_e33.g0_.y, _e36.g0_.z, _e39.g0_.y, _e42.g0_.y)) * vec4<f32>(1.0, 1.0, 0.0, 0.0))) + ((vec4<f32>(_e54.g0_.w) * vec4<f32>(_e58.g0_.z, _e61.g0_.y, _e64.g0_.z, _e67.g0_.z)) * vec4<f32>(1.0, -(1.0), 0.0, 0.0))) + ((vec4<f32>(_e80.g0_.x) * vec4<f32>(_e84.g0_.x, _e87.g0_.x, _e90.g0_.y, _e93.g0_.z)) * vec4<f32>(0.0, 1.0, 1.0, 1.0))));
 }
 
-fn motor_plane_regressive_product(self_1028: Motor, other_876: Plane) -> Scalar {
-    var self_1029: Motor;
-    var other_877: Plane;
+fn motor_plane_regressive_product(self_1576: Motor, other_1392: Plane) -> Scalar {
+    var self_1577: Motor;
+    var other_1393: Plane;
 
-    self_1029 = self_1028;
-    other_877 = other_876;
-    let _e4: Motor = self_1029;
-    let _e7: Plane = other_877;
-    let _e11: Motor = self_1029;
-    let _e14: Plane = other_877;
-    let _e19: Motor = self_1029;
-    let _e22: Plane = other_877;
+    self_1577 = self_1576;
+    other_1393 = other_1392;
+    let _e4: Motor = self_1577;
+    let _e7: Plane = other_1393;
+    let _e11: Motor = self_1577;
+    let _e14: Plane = other_1393;
+    let _e19: Motor = self_1577;
+    let _e22: Plane = other_1393;
     return Scalar((((_e4.g0_.y * _e7.g0_.x) + (_e11.g0_.z * _e14.g0_.y)) + (_e19.g0_.w * _e22.g0_.z)));
 }
 
-fn motor_plane_outer_product(self_1030: Motor, other_878: Plane) -> MotorDual {
-    var self_1031: Motor;
-    var other_879: Plane;
+fn motor_plane_outer_product(self_1578: Motor, other_1394: Plane) -> MotorDual {
+    var self_1579: Motor;
+    var other_1395: Plane;
 
-    self_1031 = self_1030;
-    other_879 = other_878;
-    let _e4: Motor = self_1031;
-    let _e8: Plane = other_879;
-    let _e19: Motor = self_1031;
-    let _e23: Plane = other_879;
-    let _e35: Motor = self_1031;
-    let _e38: Plane = other_879;
-    let _e41: Plane = other_879;
-    let _e44: Plane = other_879;
-    let _e47: Plane = other_879;
+    self_1579 = self_1578;
+    other_1395 = other_1394;
+    let _e4: Motor = self_1579;
+    let _e8: Plane = other_1395;
+    let _e19: Motor = self_1579;
+    let _e23: Plane = other_1395;
+    let _e35: Motor = self_1579;
+    let _e38: Plane = other_1395;
+    let _e41: Plane = other_1395;
+    let _e44: Plane = other_1395;
+    let _e47: Plane = other_1395;
     return MotorDual(((((vec4<f32>(_e4.g0_.z) * vec4<f32>(_e8.g0_.y)) * vec4<f32>(1.0, 0.0, 0.0, 0.0)) + ((vec4<f32>(_e19.g0_.w) * vec4<f32>(_e23.g0_.z)) * vec4<f32>(1.0, 0.0, 0.0, 0.0))) + (_e35.g0_.yxxx * vec4<f32>(_e38.g0_.x, _e41.g0_.x, _e44.g0_.y, _e47.g0_.z))));
 }
 
-fn motor_plane_inner_product(self_1032: Motor, other_880: Plane) -> Plane {
-    var self_1033: Motor;
-    var other_881: Plane;
+fn motor_plane_inner_product(self_1580: Motor, other_1396: Plane) -> Plane {
+    var self_1581: Motor;
+    var other_1397: Plane;
 
-    self_1033 = self_1032;
-    other_881 = other_880;
-    let _e4: Motor = self_1033;
-    let _e8: Plane = other_881;
-    let _e11: Motor = self_1033;
-    let _e15: Plane = other_881;
-    let _e27: Motor = self_1033;
-    let _e30: Motor = self_1033;
-    let _e33: Motor = self_1033;
-    let _e37: Plane = other_881;
+    self_1581 = self_1580;
+    other_1397 = other_1396;
+    let _e4: Motor = self_1581;
+    let _e8: Plane = other_1397;
+    let _e11: Motor = self_1581;
+    let _e15: Plane = other_1397;
+    let _e27: Motor = self_1581;
+    let _e30: Motor = self_1581;
+    let _e33: Motor = self_1581;
+    let _e37: Plane = other_1397;
     return Plane((((vec3<f32>(_e4.g0_.x) * _e8.g0_) + ((vec3<f32>(_e11.g0_.w) * vec3<f32>(_e15.g0_.y)) * vec3<f32>(-(1.0), 0.0, 0.0))) + ((vec3<f32>(_e27.g0_.z, _e30.g0_.y, _e33.g0_.y) * _e37.g0_.zzy) * vec3<f32>(1.0, -(1.0), 1.0))));
 }
 
-fn motor_plane_left_contraction(self_1034: Motor, other_882: Plane) -> Plane {
-    var self_1035: Motor;
-    var other_883: Plane;
+fn motor_plane_geometric_anti_product(self_1582: Motor, other_1398: Plane) -> Motor {
+    var self_1583: Motor;
+    var other_1399: Plane;
 
-    self_1035 = self_1034;
-    other_883 = other_882;
-    let _e4: Motor = self_1035;
-    let _e8: Plane = other_883;
+    self_1583 = self_1582;
+    other_1399 = other_1398;
+    let _e4: Motor = self_1583;
+    let _e8: Plane = other_1399;
+    let _e11: Plane = other_1399;
+    let _e14: Plane = other_1399;
+    let _e17: Plane = other_1399;
+    let _e29: Motor = self_1583;
+    let _e33: Plane = other_1399;
+    let _e36: Plane = other_1399;
+    let _e39: Plane = other_1399;
+    let _e42: Plane = other_1399;
+    let _e55: Motor = self_1583;
+    let _e58: Plane = other_1399;
+    return Motor(((((vec4<f32>(_e4.g0_.z) * vec4<f32>(_e8.g0_.y, _e11.g0_.z, _e14.g0_.y, _e17.g0_.x)) * vec4<f32>(1.0, 1.0, 0.0, -(1.0))) + ((vec4<f32>(_e29.g0_.w) * vec4<f32>(_e33.g0_.z, _e36.g0_.y, _e39.g0_.x, _e42.g0_.z)) * vec4<f32>(1.0, -(1.0), 1.0, 0.0))) + ((_e55.g0_.yxxx * vec4<f32>(_e58.g0_.x)) * vec4<f32>(1.0, -(1.0), 0.0, 0.0))));
+}
+
+fn motor_plane_inner_anti_product(self_1584: Motor, other_1400: Plane) -> Point {
+    var self_1585: Motor;
+    var other_1401: Plane;
+
+    self_1585 = self_1584;
+    other_1401 = other_1400;
+    let _e4: Motor = self_1585;
+    let _e8: Plane = other_1401;
+    let _e18: Motor = self_1585;
+    let _e22: Plane = other_1401;
+    let _e33: Motor = self_1585;
+    let _e37: Plane = other_1401;
+    return Point(((((vec3<f32>(_e4.g0_.z) * _e8.g0_.zzx) * vec3<f32>(1.0, 0.0, -(1.0))) + ((vec3<f32>(_e18.g0_.w) * _e22.g0_.yxy) * vec3<f32>(-(1.0), 1.0, 0.0))) + ((vec3<f32>(_e33.g0_.x) * vec3<f32>(_e37.g0_.x)) * vec3<f32>(-(1.0), 0.0, 0.0))));
+}
+
+fn motor_plane_left_contraction(self_1586: Motor, other_1402: Plane) -> Plane {
+    var self_1587: Motor;
+    var other_1403: Plane;
+
+    self_1587 = self_1586;
+    other_1403 = other_1402;
+    let _e4: Motor = self_1587;
+    let _e8: Plane = other_1403;
     return Plane((vec3<f32>(_e4.g0_.x) * _e8.g0_));
 }
 
-fn motor_plane_right_contraction(self_1036: Motor, other_884: Plane) -> Plane {
-    var self_1037: Motor;
-    var other_885: Plane;
+fn motor_plane_right_contraction(self_1588: Motor, other_1404: Plane) -> Plane {
+    var self_1589: Motor;
+    var other_1405: Plane;
 
-    self_1037 = self_1036;
-    other_885 = other_884;
-    let _e4: Motor = self_1037;
-    let _e8: Plane = other_885;
-    let _e19: Motor = self_1037;
-    let _e22: Motor = self_1037;
-    let _e25: Motor = self_1037;
-    let _e29: Plane = other_885;
+    self_1589 = self_1588;
+    other_1405 = other_1404;
+    let _e4: Motor = self_1589;
+    let _e8: Plane = other_1405;
+    let _e19: Motor = self_1589;
+    let _e22: Motor = self_1589;
+    let _e25: Motor = self_1589;
+    let _e29: Plane = other_1405;
     return Plane((((vec3<f32>(_e4.g0_.w) * vec3<f32>(_e8.g0_.y)) * vec3<f32>(-(1.0), 0.0, 0.0)) + ((vec3<f32>(_e19.g0_.z, _e22.g0_.y, _e25.g0_.y) * _e29.g0_.zzy) * vec3<f32>(1.0, -(1.0), 1.0))));
 }
 
-fn motor_translator_into(self_1038: Motor) -> Translator {
-    var self_1039: Motor;
+fn motor_plane_left_anti_contraction(self_1590: Motor, other_1406: Plane) -> Point {
+    var self_1591: Motor;
+    var other_1407: Plane;
 
-    self_1039 = self_1038;
-    let _e2: Motor = self_1039;
-    let _e5: Motor = self_1039;
-    let _e8: Motor = self_1039;
+    self_1591 = self_1590;
+    other_1407 = other_1406;
+    let _e4: Motor = self_1591;
+    let _e8: Plane = other_1407;
+    let _e18: Motor = self_1591;
+    let _e21: Motor = self_1591;
+    let _e24: Motor = self_1591;
+    let _e28: Plane = other_1407;
+    return Point((((vec3<f32>(_e4.g0_.w) * _e8.g0_.yxy) * vec3<f32>(-(1.0), 1.0, 0.0)) + ((vec3<f32>(_e18.g0_.z, _e21.g0_.x, _e24.g0_.z) * _e28.g0_.zxx) * vec3<f32>(1.0, 0.0, -(1.0)))));
+}
+
+fn motor_translator_into(self_1592: Motor) -> Translator {
+    var self_1593: Motor;
+
+    self_1593 = self_1592;
+    let _e2: Motor = self_1593;
+    let _e5: Motor = self_1593;
+    let _e8: Motor = self_1593;
     return Translator(vec3<f32>(_e2.g0_.x, _e5.g0_.z, _e8.g0_.w));
 }
 
-fn motor_translator_add(self_1040: Motor, other_886: Translator) -> Motor {
-    var self_1041: Motor;
-    var other_887: Translator;
+fn motor_translator_add(self_1594: Motor, other_1408: Translator) -> Motor {
+    var self_1595: Motor;
+    var other_1409: Translator;
 
-    self_1041 = self_1040;
-    other_887 = other_886;
-    let _e4: Motor = self_1041;
-    let _e6: Translator = other_887;
-    let _e9: Translator = other_887;
-    let _e12: Translator = other_887;
-    let _e15: Translator = other_887;
+    self_1595 = self_1594;
+    other_1409 = other_1408;
+    let _e4: Motor = self_1595;
+    let _e6: Translator = other_1409;
+    let _e9: Translator = other_1409;
+    let _e12: Translator = other_1409;
+    let _e15: Translator = other_1409;
     return Motor((_e4.g0_ + (vec4<f32>(_e6.g0_.x, _e9.g0_.x, _e12.g0_.y, _e15.g0_.z) * vec4<f32>(1.0, 0.0, 1.0, 1.0))));
 }
 
-fn motor_translator_sub(self_1042: Motor, other_888: Translator) -> Motor {
-    var self_1043: Motor;
-    var other_889: Translator;
+fn motor_translator_sub(self_1596: Motor, other_1410: Translator) -> Motor {
+    var self_1597: Motor;
+    var other_1411: Translator;
 
-    self_1043 = self_1042;
-    other_889 = other_888;
-    let _e4: Motor = self_1043;
-    let _e6: Translator = other_889;
-    let _e9: Translator = other_889;
-    let _e12: Translator = other_889;
-    let _e15: Translator = other_889;
+    self_1597 = self_1596;
+    other_1411 = other_1410;
+    let _e4: Motor = self_1597;
+    let _e6: Translator = other_1411;
+    let _e9: Translator = other_1411;
+    let _e12: Translator = other_1411;
+    let _e15: Translator = other_1411;
     return Motor((_e4.g0_ - (vec4<f32>(_e6.g0_.x, _e9.g0_.x, _e12.g0_.y, _e15.g0_.z) * vec4<f32>(1.0, 0.0, 1.0, 1.0))));
 }
 
-fn motor_translator_geometric_product(self_1044: Motor, other_890: Translator) -> Motor {
-    var self_1045: Motor;
-    var other_891: Translator;
+fn motor_translator_geometric_product(self_1598: Motor, other_1412: Translator) -> Motor {
+    var self_1599: Motor;
+    var other_1413: Translator;
 
-    self_1045 = self_1044;
-    other_891 = other_890;
-    let _e4: Motor = self_1045;
-    let _e8: Translator = other_891;
-    let _e11: Translator = other_891;
-    let _e14: Translator = other_891;
-    let _e17: Translator = other_891;
-    let _e29: Motor = self_1045;
-    let _e33: Translator = other_891;
-    let _e45: Motor = self_1045;
-    let _e49: Translator = other_891;
-    let _e61: Motor = self_1045;
-    let _e65: Translator = other_891;
-    let _e68: Translator = other_891;
-    let _e71: Translator = other_891;
-    let _e74: Translator = other_891;
+    self_1599 = self_1598;
+    other_1413 = other_1412;
+    let _e4: Motor = self_1599;
+    let _e8: Translator = other_1413;
+    let _e11: Translator = other_1413;
+    let _e14: Translator = other_1413;
+    let _e17: Translator = other_1413;
+    let _e29: Motor = self_1599;
+    let _e33: Translator = other_1413;
+    let _e45: Motor = self_1599;
+    let _e49: Translator = other_1413;
+    let _e61: Motor = self_1599;
+    let _e65: Translator = other_1413;
+    let _e68: Translator = other_1413;
+    let _e71: Translator = other_1413;
+    let _e74: Translator = other_1413;
     return Motor((((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.x, _e11.g0_.x, _e14.g0_.z, _e17.g0_.y)) * vec4<f32>(0.0, 1.0, -(1.0), 1.0)) + ((vec4<f32>(_e29.g0_.z) * vec4<f32>(_e33.g0_.x)) * vec4<f32>(0.0, 0.0, 1.0, 0.0))) + ((vec4<f32>(_e45.g0_.w) * vec4<f32>(_e49.g0_.x)) * vec4<f32>(0.0, 0.0, 0.0, 1.0))) + ((vec4<f32>(_e61.g0_.x) * vec4<f32>(_e65.g0_.x, _e68.g0_.x, _e71.g0_.y, _e74.g0_.z)) * vec4<f32>(1.0, 0.0, 1.0, 1.0))));
 }
 
-fn motor_translator_regressive_product(self_1046: Motor, other_892: Translator) -> Plane {
-    var self_1047: Motor;
-    var other_893: Translator;
+fn motor_translator_regressive_product(self_1600: Motor, other_1414: Translator) -> Plane {
+    var self_1601: Motor;
+    var other_1415: Translator;
 
-    self_1047 = self_1046;
-    other_893 = other_892;
-    let _e4: Motor = self_1047;
-    let _e8: Translator = other_893;
-    let _e18: Motor = self_1047;
-    let _e21: Motor = self_1047;
-    let _e24: Motor = self_1047;
-    let _e28: Translator = other_893;
+    self_1601 = self_1600;
+    other_1415 = other_1414;
+    let _e4: Motor = self_1601;
+    let _e8: Translator = other_1415;
+    let _e18: Motor = self_1601;
+    let _e21: Motor = self_1601;
+    let _e24: Motor = self_1601;
+    let _e28: Translator = other_1415;
     return Plane((((vec3<f32>(_e4.g0_.w) * vec3<f32>(_e8.g0_.y)) * vec3<f32>(1.0, 0.0, 0.0)) + ((vec3<f32>(_e18.g0_.z, _e21.g0_.y, _e24.g0_.y) * _e28.g0_.zzy) * vec3<f32>(-(1.0), 1.0, -(1.0)))));
 }
 
-fn motor_translator_outer_product(self_1048: Motor, other_894: Translator) -> Motor {
-    var self_1049: Motor;
-    var other_895: Translator;
+fn motor_translator_outer_product(self_1602: Motor, other_1416: Translator) -> Motor {
+    var self_1603: Motor;
+    var other_1417: Translator;
 
-    self_1049 = self_1048;
-    other_895 = other_894;
-    let _e4: Motor = self_1049;
-    let _e8: Translator = other_895;
-    let _e19: Motor = self_1049;
-    let _e23: Translator = other_895;
-    let _e35: Motor = self_1049;
-    let _e38: Translator = other_895;
-    let _e41: Translator = other_895;
-    let _e44: Translator = other_895;
-    let _e47: Translator = other_895;
+    self_1603 = self_1602;
+    other_1417 = other_1416;
+    let _e4: Motor = self_1603;
+    let _e8: Translator = other_1417;
+    let _e19: Motor = self_1603;
+    let _e23: Translator = other_1417;
+    let _e35: Motor = self_1603;
+    let _e38: Translator = other_1417;
+    let _e41: Translator = other_1417;
+    let _e44: Translator = other_1417;
+    let _e47: Translator = other_1417;
     return Motor(((((vec4<f32>(_e4.g0_.z) * vec4<f32>(_e8.g0_.x)) * vec4<f32>(0.0, 0.0, 1.0, 0.0)) + ((vec4<f32>(_e19.g0_.w) * vec4<f32>(_e23.g0_.x)) * vec4<f32>(0.0, 0.0, 0.0, 1.0))) + (_e35.g0_.xyxx * vec4<f32>(_e38.g0_.x, _e41.g0_.x, _e44.g0_.y, _e47.g0_.z))));
 }
 
-fn motor_translator_inner_product(self_1050: Motor, other_896: Translator) -> Motor {
-    var self_1051: Motor;
-    var other_897: Translator;
+fn motor_translator_inner_product(self_1604: Motor, other_1418: Translator) -> Motor {
+    var self_1605: Motor;
+    var other_1419: Translator;
 
-    self_1051 = self_1050;
-    other_897 = other_896;
-    let _e4: Motor = self_1051;
-    let _e8: Translator = other_897;
-    let _e19: Motor = self_1051;
-    let _e23: Translator = other_897;
-    let _e35: Motor = self_1051;
-    let _e38: Translator = other_897;
-    let _e41: Translator = other_897;
-    let _e44: Translator = other_897;
-    let _e47: Translator = other_897;
+    self_1605 = self_1604;
+    other_1419 = other_1418;
+    let _e4: Motor = self_1605;
+    let _e8: Translator = other_1419;
+    let _e19: Motor = self_1605;
+    let _e23: Translator = other_1419;
+    let _e35: Motor = self_1605;
+    let _e38: Translator = other_1419;
+    let _e41: Translator = other_1419;
+    let _e44: Translator = other_1419;
+    let _e47: Translator = other_1419;
     return Motor(((((vec4<f32>(_e4.g0_.z) * vec4<f32>(_e8.g0_.x)) * vec4<f32>(0.0, 0.0, 1.0, 0.0)) + ((vec4<f32>(_e19.g0_.w) * vec4<f32>(_e23.g0_.x)) * vec4<f32>(0.0, 0.0, 0.0, 1.0))) + (_e35.g0_.xyxx * vec4<f32>(_e38.g0_.x, _e41.g0_.x, _e44.g0_.y, _e47.g0_.z))));
 }
 
-fn motor_translator_left_contraction(self_1052: Motor, other_898: Translator) -> Translator {
-    var self_1053: Motor;
-    var other_899: Translator;
+fn motor_translator_geometric_anti_product(self_1606: Motor, other_1420: Translator) -> MotorDual {
+    var self_1607: Motor;
+    var other_1421: Translator;
 
-    self_1053 = self_1052;
-    other_899 = other_898;
-    let _e4: Motor = self_1053;
-    let _e8: Translator = other_899;
+    self_1607 = self_1606;
+    other_1421 = other_1420;
+    let _e4: Motor = self_1607;
+    let _e8: Translator = other_1421;
+    let _e11: Translator = other_1421;
+    let _e14: Translator = other_1421;
+    let _e17: Translator = other_1421;
+    let _e29: Motor = self_1607;
+    let _e33: Translator = other_1421;
+    let _e36: Translator = other_1421;
+    let _e39: Translator = other_1421;
+    let _e42: Translator = other_1421;
+    let _e55: Motor = self_1607;
+    let _e59: Translator = other_1421;
+    let _e62: Translator = other_1421;
+    let _e65: Translator = other_1421;
+    let _e68: Translator = other_1421;
+    let _e80: Motor = self_1607;
+    let _e84: Translator = other_1421;
+    let _e87: Translator = other_1421;
+    let _e90: Translator = other_1421;
+    let _e93: Translator = other_1421;
+    return MotorDual((((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.z, _e11.g0_.z, _e14.g0_.z, _e17.g0_.y)) * vec4<f32>(0.0, 0.0, 1.0, -(1.0))) + ((vec4<f32>(_e29.g0_.z) * vec4<f32>(_e33.g0_.y, _e36.g0_.z, _e39.g0_.x, _e42.g0_.y)) * vec4<f32>(1.0, -(1.0), 1.0, 0.0))) + ((vec4<f32>(_e55.g0_.w) * vec4<f32>(_e59.g0_.z, _e62.g0_.y, _e65.g0_.z, _e68.g0_.x)) * vec4<f32>(1.0, 1.0, 0.0, 1.0))) + ((vec4<f32>(_e80.g0_.x) * vec4<f32>(_e84.g0_.x, _e87.g0_.x, _e90.g0_.y, _e93.g0_.z)) * vec4<f32>(0.0, 0.0, 1.0, 1.0))));
+}
+
+fn motor_translator_left_contraction(self_1608: Motor, other_1422: Translator) -> Translator {
+    var self_1609: Motor;
+    var other_1423: Translator;
+
+    self_1609 = self_1608;
+    other_1423 = other_1422;
+    let _e4: Motor = self_1609;
+    let _e8: Translator = other_1423;
     return Translator((vec3<f32>(_e4.g0_.x) * _e8.g0_));
 }
 
-fn motor_translator_right_contraction(self_1054: Motor, other_900: Translator) -> Motor {
-    var self_1055: Motor;
-    var other_901: Translator;
+fn motor_translator_right_contraction(self_1610: Motor, other_1424: Translator) -> Motor {
+    var self_1611: Motor;
+    var other_1425: Translator;
 
-    self_1055 = self_1054;
-    other_901 = other_900;
-    let _e4: Motor = self_1055;
-    let _e6: Translator = other_901;
+    self_1611 = self_1610;
+    other_1425 = other_1424;
+    let _e4: Motor = self_1611;
+    let _e6: Translator = other_1425;
     return Motor((_e4.g0_ * vec4<f32>(_e6.g0_.x)));
 }
 
-fn motor_translator_scalar_product(self_1056: Motor, other_902: Translator) -> Scalar {
-    var self_1057: Motor;
-    var other_903: Translator;
+fn motor_translator_scalar_product(self_1612: Motor, other_1426: Translator) -> Scalar {
+    var self_1613: Motor;
+    var other_1427: Translator;
 
-    self_1057 = self_1056;
-    other_903 = other_902;
-    let _e4: Motor = self_1057;
-    let _e7: Translator = other_903;
+    self_1613 = self_1612;
+    other_1427 = other_1426;
+    let _e4: Motor = self_1613;
+    let _e7: Translator = other_1427;
     return Scalar((_e4.g0_.x * _e7.g0_.x));
 }
 
-fn motor_motor_add(self_1058: Motor, other_904: Motor) -> Motor {
-    var self_1059: Motor;
-    var other_905: Motor;
+fn motor_translator_anti_scalar_product(self_1614: Motor, other_1428: Translator) -> AntiScalar {
+    var self_1615: Motor;
+    var other_1429: Translator;
 
-    self_1059 = self_1058;
-    other_905 = other_904;
-    let _e4: Motor = self_1059;
-    let _e6: Motor = other_905;
+    self_1615 = self_1614;
+    other_1429 = other_1428;
+    let _e4: Motor = self_1615;
+    let _e7: Translator = other_1429;
+    let _e11: Motor = self_1615;
+    let _e14: Translator = other_1429;
+    return AntiScalar(((_e4.g0_.z * _e7.g0_.y) + (_e11.g0_.w * _e14.g0_.z)));
+}
+
+fn motor_motor_add(self_1616: Motor, other_1430: Motor) -> Motor {
+    var self_1617: Motor;
+    var other_1431: Motor;
+
+    self_1617 = self_1616;
+    other_1431 = other_1430;
+    let _e4: Motor = self_1617;
+    let _e6: Motor = other_1431;
     return Motor((_e4.g0_ + _e6.g0_));
 }
 
-fn motor_motor_sub(self_1060: Motor, other_906: Motor) -> Motor {
-    var self_1061: Motor;
-    var other_907: Motor;
+fn motor_motor_sub(self_1618: Motor, other_1432: Motor) -> Motor {
+    var self_1619: Motor;
+    var other_1433: Motor;
 
-    self_1061 = self_1060;
-    other_907 = other_906;
-    let _e4: Motor = self_1061;
-    let _e6: Motor = other_907;
+    self_1619 = self_1618;
+    other_1433 = other_1432;
+    let _e4: Motor = self_1619;
+    let _e6: Motor = other_1433;
     return Motor((_e4.g0_ - _e6.g0_));
 }
 
-fn motor_motor_mul(self_1062: Motor, other_908: Motor) -> Motor {
-    var self_1063: Motor;
-    var other_909: Motor;
+fn motor_motor_mul(self_1620: Motor, other_1434: Motor) -> Motor {
+    var self_1621: Motor;
+    var other_1435: Motor;
 
-    self_1063 = self_1062;
-    other_909 = other_908;
-    let _e4: Motor = self_1063;
-    let _e6: Motor = other_909;
+    self_1621 = self_1620;
+    other_1435 = other_1434;
+    let _e4: Motor = self_1621;
+    let _e6: Motor = other_1435;
     return Motor((_e4.g0_ * _e6.g0_));
 }
 
-fn motor_motor_div(self_1064: Motor, other_910: Motor) -> Motor {
-    var self_1065: Motor;
-    var other_911: Motor;
+fn motor_motor_div(self_1622: Motor, other_1436: Motor) -> Motor {
+    var self_1623: Motor;
+    var other_1437: Motor;
 
-    self_1065 = self_1064;
-    other_911 = other_910;
-    let _e4: Motor = self_1065;
-    let _e7: Motor = self_1065;
-    let _e10: Motor = self_1065;
-    let _e13: Motor = self_1065;
-    let _e23: Motor = other_911;
-    let _e26: Motor = other_911;
-    let _e29: Motor = other_911;
-    let _e32: Motor = other_911;
+    self_1623 = self_1622;
+    other_1437 = other_1436;
+    let _e4: Motor = self_1623;
+    let _e7: Motor = self_1623;
+    let _e10: Motor = self_1623;
+    let _e13: Motor = self_1623;
+    let _e23: Motor = other_1437;
+    let _e26: Motor = other_1437;
+    let _e29: Motor = other_1437;
+    let _e32: Motor = other_1437;
     return Motor((((vec4<f32>(_e4.g0_.x, _e7.g0_.y, _e10.g0_.z, _e13.g0_.w) * vec4<f32>(1.0, 1.0, 1.0, 1.0)) / vec4<f32>(_e23.g0_.x, _e26.g0_.y, _e29.g0_.z, _e32.g0_.w)) * vec4<f32>(1.0, 1.0, 1.0, 1.0)));
 }
 
-fn motor_motor_geometric_product(self_1066: Motor, other_912: Motor) -> Motor {
-    var self_1067: Motor;
-    var other_913: Motor;
+fn motor_motor_geometric_product(self_1624: Motor, other_1438: Motor) -> Motor {
+    var self_1625: Motor;
+    var other_1439: Motor;
 
-    self_1067 = self_1066;
-    other_913 = other_912;
-    let _e4: Motor = self_1067;
-    let _e8: Motor = other_913;
-    let _e11: Motor = self_1067;
-    let _e15: Motor = other_913;
-    let _e28: Motor = self_1067;
-    let _e32: Motor = other_913;
-    let _e43: Motor = self_1067;
-    let _e46: Motor = other_913;
+    self_1625 = self_1624;
+    other_1439 = other_1438;
+    let _e4: Motor = self_1625;
+    let _e8: Motor = other_1439;
+    let _e11: Motor = self_1625;
+    let _e15: Motor = other_1439;
+    let _e28: Motor = self_1625;
+    let _e32: Motor = other_1439;
+    let _e43: Motor = self_1625;
+    let _e46: Motor = other_1439;
     return Motor(((((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.y) * _e15.g0_.yxwz) * vec4<f32>(-(1.0), 1.0, -(1.0), 1.0))) + ((vec4<f32>(_e28.g0_.w) * _e32.g0_.yyyx) * vec4<f32>(0.0, 0.0, 1.0, 1.0))) + ((_e43.g0_.xxzz * _e46.g0_.xxxy) * vec4<f32>(0.0, 0.0, 1.0, -(1.0)))));
 }
 
-fn motor_motor_regressive_product(self_1068: Motor, other_914: Motor) -> Plane {
-    var self_1069: Motor;
-    var other_915: Motor;
+fn motor_motor_regressive_product(self_1626: Motor, other_1440: Motor) -> Plane {
+    var self_1627: Motor;
+    var other_1441: Motor;
 
-    self_1069 = self_1068;
-    other_915 = other_914;
-    let _e4: Motor = self_1069;
-    let _e8: Motor = other_915;
-    let _e11: Motor = other_915;
-    let _e14: Motor = other_915;
-    let _e25: Motor = self_1069;
-    let _e29: Motor = other_915;
-    let _e32: Motor = other_915;
-    let _e35: Motor = other_915;
-    let _e47: Motor = self_1069;
-    let _e50: Motor = self_1069;
-    let _e53: Motor = self_1069;
-    let _e57: Motor = other_915;
-    let _e60: Motor = other_915;
-    let _e63: Motor = other_915;
+    self_1627 = self_1626;
+    other_1441 = other_1440;
+    let _e4: Motor = self_1627;
+    let _e8: Motor = other_1441;
+    let _e11: Motor = other_1441;
+    let _e14: Motor = other_1441;
+    let _e25: Motor = self_1627;
+    let _e29: Motor = other_1441;
+    let _e32: Motor = other_1441;
+    let _e35: Motor = other_1441;
+    let _e47: Motor = self_1627;
+    let _e50: Motor = self_1627;
+    let _e53: Motor = self_1627;
+    let _e57: Motor = other_1441;
+    let _e60: Motor = other_1441;
+    let _e63: Motor = other_1441;
     return Plane(((((vec3<f32>(_e4.g0_.z) * vec3<f32>(_e8.g0_.w, _e11.g0_.w, _e14.g0_.y)) * vec3<f32>(-(1.0), 0.0, 1.0)) + ((vec3<f32>(_e25.g0_.w) * vec3<f32>(_e29.g0_.z, _e32.g0_.y, _e35.g0_.z)) * vec3<f32>(1.0, -(1.0), 0.0))) + ((vec3<f32>(_e47.g0_.x, _e50.g0_.y, _e53.g0_.y) * vec3<f32>(_e57.g0_.x, _e60.g0_.w, _e63.g0_.z)) * vec3<f32>(0.0, 1.0, -(1.0)))));
 }
 
-fn motor_motor_outer_product(self_1070: Motor, other_916: Motor) -> Motor {
-    var self_1071: Motor;
-    var other_917: Motor;
+fn motor_motor_outer_product(self_1628: Motor, other_1442: Motor) -> Motor {
+    var self_1629: Motor;
+    var other_1443: Motor;
 
-    self_1071 = self_1070;
-    other_917 = other_916;
-    let _e4: Motor = self_1071;
-    let _e8: Motor = other_917;
-    let _e11: Motor = self_1071;
-    let _e13: Motor = other_917;
+    self_1629 = self_1628;
+    other_1443 = other_1442;
+    let _e4: Motor = self_1629;
+    let _e8: Motor = other_1443;
+    let _e11: Motor = self_1629;
+    let _e13: Motor = other_1443;
     return Motor(((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((_e11.g0_ * vec4<f32>(_e13.g0_.x)) * vec4<f32>(0.0, 1.0, 1.0, 1.0))));
 }
 
-fn motor_motor_inner_product(self_1072: Motor, other_918: Motor) -> Motor {
-    var self_1073: Motor;
-    var other_919: Motor;
+fn motor_motor_inner_product(self_1630: Motor, other_1444: Motor) -> Motor {
+    var self_1631: Motor;
+    var other_1445: Motor;
 
-    self_1073 = self_1072;
-    other_919 = other_918;
-    let _e4: Motor = self_1073;
-    let _e8: Motor = other_919;
-    let _e11: Motor = self_1073;
-    let _e14: Motor = other_919;
+    self_1631 = self_1630;
+    other_1445 = other_1444;
+    let _e4: Motor = self_1631;
+    let _e8: Motor = other_1445;
+    let _e11: Motor = self_1631;
+    let _e14: Motor = other_1445;
     return Motor(((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((_e11.g0_.yyzw * _e14.g0_.yxxx) * vec4<f32>(-(1.0), 1.0, 1.0, 1.0))));
 }
 
-fn motor_motor_left_contraction(self_1074: Motor, other_920: Motor) -> Motor {
-    var self_1075: Motor;
-    var other_921: Motor;
+fn motor_motor_geometric_anti_product(self_1632: Motor, other_1446: Motor) -> MotorDual {
+    var self_1633: Motor;
+    var other_1447: Motor;
 
-    self_1075 = self_1074;
-    other_921 = other_920;
-    let _e4: Motor = self_1075;
-    let _e8: Motor = other_921;
-    let _e11: Motor = self_1075;
-    let _e14: Motor = other_921;
+    self_1633 = self_1632;
+    other_1447 = other_1446;
+    let _e4: Motor = self_1633;
+    let _e8: Motor = other_1447;
+    let _e19: Motor = self_1633;
+    let _e23: Motor = other_1447;
+    let _e35: Motor = self_1633;
+    let _e39: Motor = other_1447;
+    let _e51: Motor = self_1633;
+    let _e55: Motor = other_1447;
+    return MotorDual((((((vec4<f32>(_e4.g0_.y) * _e8.g0_.wwwz) * vec4<f32>(0.0, 0.0, 1.0, -(1.0))) + ((vec4<f32>(_e19.g0_.z) * _e23.g0_.zwxy) * vec4<f32>(1.0, -(1.0), 1.0, 1.0))) + ((vec4<f32>(_e35.g0_.w) * _e39.g0_.wzyx) * vec4<f32>(1.0, 1.0, -(1.0), 1.0))) + ((vec4<f32>(_e51.g0_.x) * _e55.g0_.xxzw) * vec4<f32>(0.0, 0.0, 1.0, 1.0))));
+}
+
+fn motor_motor_left_contraction(self_1634: Motor, other_1448: Motor) -> Motor {
+    var self_1635: Motor;
+    var other_1449: Motor;
+
+    self_1635 = self_1634;
+    other_1449 = other_1448;
+    let _e4: Motor = self_1635;
+    let _e8: Motor = other_1449;
+    let _e11: Motor = self_1635;
+    let _e14: Motor = other_1449;
     return Motor(((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((_e11.g0_.yxxx * _e14.g0_.yxxx) * vec4<f32>(-(1.0), 0.0, 0.0, 0.0))));
 }
 
-fn motor_motor_right_contraction(self_1076: Motor, other_922: Motor) -> Motor {
-    var self_1077: Motor;
-    var other_923: Motor;
+fn motor_motor_right_contraction(self_1636: Motor, other_1450: Motor) -> Motor {
+    var self_1637: Motor;
+    var other_1451: Motor;
 
-    self_1077 = self_1076;
-    other_923 = other_922;
-    let _e4: Motor = self_1077;
-    let _e8: Motor = other_923;
-    let _e19: Motor = self_1077;
-    let _e22: Motor = other_923;
+    self_1637 = self_1636;
+    other_1451 = other_1450;
+    let _e4: Motor = self_1637;
+    let _e8: Motor = other_1451;
+    let _e19: Motor = self_1637;
+    let _e22: Motor = other_1451;
     return Motor((((vec4<f32>(_e4.g0_.y) * _e8.g0_.yxyy) * vec4<f32>(-(1.0), 1.0, 0.0, 0.0)) + ((_e19.g0_.xxzw * vec4<f32>(_e22.g0_.x)) * vec4<f32>(1.0, 0.0, 1.0, 1.0))));
 }
 
-fn motor_motor_scalar_product(self_1078: Motor, other_924: Motor) -> Scalar {
-    var self_1079: Motor;
-    var other_925: Motor;
+fn motor_motor_scalar_product(self_1638: Motor, other_1452: Motor) -> Scalar {
+    var self_1639: Motor;
+    var other_1453: Motor;
 
-    self_1079 = self_1078;
-    other_925 = other_924;
-    let _e4: Motor = self_1079;
-    let _e7: Motor = other_925;
-    let _e11: Motor = self_1079;
-    let _e14: Motor = other_925;
+    self_1639 = self_1638;
+    other_1453 = other_1452;
+    let _e4: Motor = self_1639;
+    let _e7: Motor = other_1453;
+    let _e11: Motor = self_1639;
+    let _e14: Motor = other_1453;
     return Scalar(((_e4.g0_.x * _e7.g0_.x) - (_e11.g0_.y * _e14.g0_.y)));
 }
 
-fn motor_motor_dual_add(self_1080: Motor, other_926: MotorDual) -> MultiVector {
-    var self_1081: Motor;
-    var other_927: MotorDual;
+fn motor_motor_anti_scalar_product(self_1640: Motor, other_1454: Motor) -> AntiScalar {
+    var self_1641: Motor;
+    var other_1455: Motor;
 
-    self_1081 = self_1080;
-    other_927 = other_926;
-    let _e4: Motor = self_1081;
-    let _e13: MotorDual = other_927;
-    let _e23: Motor = self_1081;
-    let _e32: MotorDual = other_927;
+    self_1641 = self_1640;
+    other_1455 = other_1454;
+    let _e4: Motor = self_1641;
+    let _e7: Motor = other_1455;
+    let _e11: Motor = self_1641;
+    let _e14: Motor = other_1455;
+    return AntiScalar(((_e4.g0_.z * _e7.g0_.z) + (_e11.g0_.w * _e14.g0_.w)));
+}
+
+fn motor_motor_dual_add(self_1642: Motor, other_1456: MotorDual) -> MultiVector {
+    var self_1643: Motor;
+    var other_1457: MotorDual;
+
+    self_1643 = self_1642;
+    other_1457 = other_1456;
+    let _e4: Motor = self_1643;
+    let _e13: MotorDual = other_1457;
+    let _e23: Motor = self_1643;
+    let _e32: MotorDual = other_1457;
     return MultiVector(((_e4.g0_.xyxx * vec4<f32>(1.0, 1.0, 0.0, 0.0)) + (_e13.g0_.xxwz * vec4<f32>(0.0, 0.0, 1.0, 1.0))), ((_e23.g0_.xxzw * vec4<f32>(0.0, 0.0, 1.0, 1.0)) + (_e32.g0_.yxxx * vec4<f32>(1.0, 1.0, 0.0, 0.0))));
 }
 
-fn motor_motor_dual_sub(self_1082: Motor, other_928: MotorDual) -> MultiVector {
-    var self_1083: Motor;
-    var other_929: MotorDual;
+fn motor_motor_dual_sub(self_1644: Motor, other_1458: MotorDual) -> MultiVector {
+    var self_1645: Motor;
+    var other_1459: MotorDual;
 
-    self_1083 = self_1082;
-    other_929 = other_928;
-    let _e4: Motor = self_1083;
-    let _e13: MotorDual = other_929;
-    let _e23: Motor = self_1083;
-    let _e32: MotorDual = other_929;
+    self_1645 = self_1644;
+    other_1459 = other_1458;
+    let _e4: Motor = self_1645;
+    let _e13: MotorDual = other_1459;
+    let _e23: Motor = self_1645;
+    let _e32: MotorDual = other_1459;
     return MultiVector(((_e4.g0_.xyxx * vec4<f32>(1.0, 1.0, 0.0, 0.0)) - (_e13.g0_.xxwz * vec4<f32>(0.0, 0.0, 1.0, 1.0))), ((_e23.g0_.xxzw * vec4<f32>(0.0, 0.0, 1.0, 1.0)) - (_e32.g0_.yxxx * vec4<f32>(1.0, 1.0, 0.0, 0.0))));
 }
 
-fn motor_motor_dual_geometric_product(self_1084: Motor, other_930: MotorDual) -> MotorDual {
-    var self_1085: Motor;
-    var other_931: MotorDual;
+fn motor_motor_dual_geometric_product(self_1646: Motor, other_1460: MotorDual) -> MotorDual {
+    var self_1647: Motor;
+    var other_1461: MotorDual;
 
-    self_1085 = self_1084;
-    other_931 = other_930;
-    let _e4: Motor = self_1085;
-    let _e8: MotorDual = other_931;
-    let _e11: Motor = self_1085;
-    let _e15: MotorDual = other_931;
-    let _e28: Motor = self_1085;
-    let _e32: MotorDual = other_931;
-    let _e44: Motor = self_1085;
-    let _e47: MotorDual = other_931;
+    self_1647 = self_1646;
+    other_1461 = other_1460;
+    let _e4: Motor = self_1647;
+    let _e8: MotorDual = other_1461;
+    let _e11: Motor = self_1647;
+    let _e15: MotorDual = other_1461;
+    let _e28: Motor = self_1647;
+    let _e32: MotorDual = other_1461;
+    let _e44: Motor = self_1647;
+    let _e47: MotorDual = other_1461;
     return MotorDual(((((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.y) * _e15.g0_.yxwz) * vec4<f32>(1.0, -(1.0), -(1.0), 1.0))) + ((vec4<f32>(_e28.g0_.w) * _e32.g0_.wzww) * vec4<f32>(1.0, -(1.0), 0.0, 0.0))) + ((_e44.g0_.zzxx * _e47.g0_.zwxx) * vec4<f32>(1.0, 1.0, 0.0, 0.0))));
 }
 
-fn motor_motor_dual_regressive_product(self_1086: Motor, other_932: MotorDual) -> Motor {
-    var self_1087: Motor;
-    var other_933: MotorDual;
+fn motor_motor_dual_regressive_product(self_1648: Motor, other_1462: MotorDual) -> Motor {
+    var self_1649: Motor;
+    var other_1463: MotorDual;
 
-    self_1087 = self_1086;
-    other_933 = other_932;
-    let _e4: Motor = self_1087;
-    let _e8: MotorDual = other_933;
-    let _e18: Motor = self_1087;
-    let _e22: MotorDual = other_933;
-    let _e33: Motor = self_1087;
-    let _e37: MotorDual = other_933;
-    let _e48: Motor = self_1087;
-    let _e52: MotorDual = other_933;
+    self_1649 = self_1648;
+    other_1463 = other_1462;
+    let _e4: Motor = self_1649;
+    let _e8: MotorDual = other_1463;
+    let _e18: Motor = self_1649;
+    let _e22: MotorDual = other_1463;
+    let _e33: Motor = self_1649;
+    let _e37: MotorDual = other_1463;
+    let _e48: Motor = self_1649;
+    let _e52: MotorDual = other_1463;
     return Motor((((((vec4<f32>(_e4.g0_.y) * _e8.g0_.yxyy) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) + ((vec4<f32>(_e18.g0_.z) * _e22.g0_.zzxz) * vec4<f32>(1.0, 0.0, 1.0, 0.0))) + ((vec4<f32>(_e33.g0_.w) * _e37.g0_.wwwx) * vec4<f32>(1.0, 0.0, 0.0, 1.0))) + ((vec4<f32>(_e48.g0_.x) * vec4<f32>(_e52.g0_.x)) * vec4<f32>(1.0, 0.0, 0.0, 0.0))));
 }
 
-fn motor_motor_dual_outer_product(self_1088: Motor, other_934: MotorDual) -> MotorDual {
-    var self_1089: Motor;
-    var other_935: MotorDual;
+fn motor_motor_dual_outer_product(self_1650: Motor, other_1464: MotorDual) -> MotorDual {
+    var self_1651: Motor;
+    var other_1465: MotorDual;
 
-    self_1089 = self_1088;
-    other_935 = other_934;
-    let _e4: Motor = self_1089;
-    let _e8: MotorDual = other_935;
-    let _e11: Motor = self_1089;
-    let _e15: MotorDual = other_935;
-    let _e27: Motor = self_1089;
-    let _e31: MotorDual = other_935;
-    let _e43: Motor = self_1089;
-    let _e46: MotorDual = other_935;
+    self_1651 = self_1650;
+    other_1465 = other_1464;
+    let _e4: Motor = self_1651;
+    let _e8: MotorDual = other_1465;
+    let _e11: Motor = self_1651;
+    let _e15: MotorDual = other_1465;
+    let _e27: Motor = self_1651;
+    let _e31: MotorDual = other_1465;
+    let _e43: Motor = self_1651;
+    let _e46: MotorDual = other_1465;
     return MotorDual(((((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.z) * vec4<f32>(_e15.g0_.z)) * vec4<f32>(1.0, 0.0, 0.0, 0.0))) + ((vec4<f32>(_e27.g0_.w) * vec4<f32>(_e31.g0_.w)) * vec4<f32>(1.0, 0.0, 0.0, 0.0))) + ((_e43.g0_.yxxx * _e46.g0_.yxxx) * vec4<f32>(1.0, 0.0, 0.0, 0.0))));
 }
 
-fn motor_motor_dual_inner_product(self_1090: Motor, other_936: MotorDual) -> MotorDual {
-    var self_1091: Motor;
-    var other_937: MotorDual;
+fn motor_motor_dual_inner_product(self_1652: Motor, other_1466: MotorDual) -> MotorDual {
+    var self_1653: Motor;
+    var other_1467: MotorDual;
 
-    self_1091 = self_1090;
-    other_937 = other_936;
-    let _e4: Motor = self_1091;
-    let _e8: MotorDual = other_937;
-    let _e11: Motor = self_1091;
-    let _e15: MotorDual = other_937;
-    let _e27: Motor = self_1091;
-    let _e31: MotorDual = other_937;
-    let _e44: Motor = self_1091;
-    let _e47: MotorDual = other_937;
+    self_1653 = self_1652;
+    other_1467 = other_1466;
+    let _e4: Motor = self_1653;
+    let _e8: MotorDual = other_1467;
+    let _e11: Motor = self_1653;
+    let _e15: MotorDual = other_1467;
+    let _e27: Motor = self_1653;
+    let _e31: MotorDual = other_1467;
+    let _e44: Motor = self_1653;
+    let _e47: MotorDual = other_1467;
     return MotorDual(((((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.z) * vec4<f32>(_e15.g0_.w)) * vec4<f32>(0.0, 1.0, 0.0, 0.0))) + ((vec4<f32>(_e27.g0_.w) * vec4<f32>(_e31.g0_.z)) * vec4<f32>(0.0, -(1.0), 0.0, 0.0))) + ((_e44.g0_.xyyy * _e47.g0_.xxwz) * vec4<f32>(0.0, -(1.0), -(1.0), 1.0))));
 }
 
-fn motor_motor_dual_left_contraction(self_1092: Motor, other_938: MotorDual) -> MotorDual {
-    var self_1093: Motor;
-    var other_939: MotorDual;
+fn motor_motor_dual_geometric_anti_product(self_1654: Motor, other_1468: MotorDual) -> Motor {
+    var self_1655: Motor;
+    var other_1469: MotorDual;
 
-    self_1093 = self_1092;
-    other_939 = other_938;
-    let _e4: Motor = self_1093;
-    let _e8: MotorDual = other_939;
-    let _e11: Motor = self_1093;
-    let _e14: MotorDual = other_939;
+    self_1655 = self_1654;
+    other_1469 = other_1468;
+    let _e4: Motor = self_1655;
+    let _e8: MotorDual = other_1469;
+    let _e18: Motor = self_1655;
+    let _e22: MotorDual = other_1469;
+    let _e34: Motor = self_1655;
+    let _e38: MotorDual = other_1469;
+    let _e50: Motor = self_1655;
+    let _e54: MotorDual = other_1469;
+    return Motor((((((vec4<f32>(_e4.g0_.y) * _e8.g0_.yxyy) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) + ((vec4<f32>(_e18.g0_.z) * _e22.g0_.zwxy) * vec4<f32>(1.0, 1.0, 1.0, -(1.0)))) + ((vec4<f32>(_e34.g0_.w) * _e38.g0_.wzyx) * vec4<f32>(1.0, -(1.0), 1.0, 1.0))) + ((vec4<f32>(_e50.g0_.x) * _e54.g0_.xyxx) * vec4<f32>(1.0, -(1.0), 0.0, 0.0))));
+}
+
+fn motor_motor_dual_inner_anti_product(self_1656: Motor, other_1470: MotorDual) -> Motor {
+    var self_1657: Motor;
+    var other_1471: MotorDual;
+
+    self_1657 = self_1656;
+    other_1471 = other_1470;
+    let _e4: Motor = self_1657;
+    let _e8: MotorDual = other_1471;
+    let _e19: Motor = self_1657;
+    let _e23: MotorDual = other_1471;
+    let _e35: Motor = self_1657;
+    let _e39: MotorDual = other_1471;
+    let _e51: Motor = self_1657;
+    let _e55: MotorDual = other_1471;
+    return Motor((((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.x)) * vec4<f32>(0.0, 1.0, 0.0, 0.0)) + ((vec4<f32>(_e19.g0_.z) * _e23.g0_.wwxy) * vec4<f32>(0.0, 1.0, 1.0, -(1.0)))) + ((vec4<f32>(_e35.g0_.w) * _e39.g0_.zzyx) * vec4<f32>(0.0, -(1.0), 1.0, 1.0))) + ((vec4<f32>(_e51.g0_.x) * _e55.g0_.xyxx) * vec4<f32>(1.0, -(1.0), 0.0, 0.0))));
+}
+
+fn motor_motor_dual_left_contraction(self_1658: Motor, other_1472: MotorDual) -> MotorDual {
+    var self_1659: Motor;
+    var other_1473: MotorDual;
+
+    self_1659 = self_1658;
+    other_1473 = other_1472;
+    let _e4: Motor = self_1659;
+    let _e8: MotorDual = other_1473;
+    let _e11: Motor = self_1659;
+    let _e14: MotorDual = other_1473;
     return MotorDual(((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((_e11.g0_.xyxx * vec4<f32>(_e14.g0_.x)) * vec4<f32>(0.0, -(1.0), 0.0, 0.0))));
 }
 
-fn motor_motor_dual_right_contraction(self_1094: Motor, other_940: MotorDual) -> Plane {
-    var self_1095: Motor;
-    var other_941: MotorDual;
+fn motor_motor_dual_right_contraction(self_1660: Motor, other_1474: MotorDual) -> Plane {
+    var self_1661: Motor;
+    var other_1475: MotorDual;
 
-    self_1095 = self_1094;
-    other_941 = other_940;
-    let _e4: Motor = self_1095;
-    let _e8: MotorDual = other_941;
-    let _e19: Motor = self_1095;
-    let _e22: Motor = self_1095;
-    let _e25: Motor = self_1095;
-    let _e29: MotorDual = other_941;
-    let _e32: MotorDual = other_941;
-    let _e35: MotorDual = other_941;
+    self_1661 = self_1660;
+    other_1475 = other_1474;
+    let _e4: Motor = self_1661;
+    let _e8: MotorDual = other_1475;
+    let _e19: Motor = self_1661;
+    let _e22: Motor = self_1661;
+    let _e25: Motor = self_1661;
+    let _e29: MotorDual = other_1475;
+    let _e32: MotorDual = other_1475;
+    let _e35: MotorDual = other_1475;
     return Plane((((vec3<f32>(_e4.g0_.w) * vec3<f32>(_e8.g0_.z)) * vec3<f32>(-(1.0), 0.0, 0.0)) + ((vec3<f32>(_e19.g0_.z, _e22.g0_.y, _e25.g0_.y) * vec3<f32>(_e29.g0_.w, _e32.g0_.w, _e35.g0_.z)) * vec3<f32>(1.0, -(1.0), 1.0))));
 }
 
-fn motor_squared_magnitude(self_1096: Motor) -> Scalar {
-    var self_1097: Motor;
+fn motor_motor_dual_left_anti_contraction(self_1662: Motor, other_1476: MotorDual) -> Point {
+    var self_1663: Motor;
+    var other_1477: MotorDual;
 
-    self_1097 = self_1096;
-    let _e2: Motor = self_1097;
-    let _e3: Motor = self_1097;
+    self_1663 = self_1662;
+    other_1477 = other_1476;
+    let _e4: Motor = self_1663;
+    let _e8: MotorDual = other_1477;
+    let _e11: MotorDual = other_1477;
+    let _e14: MotorDual = other_1477;
+    let _e25: Motor = self_1663;
+    let _e28: Motor = self_1663;
+    let _e31: Motor = self_1663;
+    let _e35: MotorDual = other_1477;
+    let _e38: MotorDual = other_1477;
+    let _e41: MotorDual = other_1477;
+    return Point((((vec3<f32>(_e4.g0_.w) * vec3<f32>(_e8.g0_.z, _e11.g0_.y, _e14.g0_.z)) * vec3<f32>(-(1.0), 1.0, 0.0)) + ((vec3<f32>(_e25.g0_.z, _e28.g0_.x, _e31.g0_.z) * vec3<f32>(_e35.g0_.w, _e38.g0_.x, _e41.g0_.y)) * vec3<f32>(1.0, 0.0, -(1.0)))));
+}
+
+fn motor_motor_dual_right_anti_contraction(self_1664: Motor, other_1478: MotorDual) -> Motor {
+    var self_1665: Motor;
+    var other_1479: MotorDual;
+
+    self_1665 = self_1664;
+    other_1479 = other_1478;
+    let _e4: Motor = self_1665;
+    let _e8: MotorDual = other_1479;
+    let _e19: Motor = self_1665;
+    let _e22: MotorDual = other_1479;
+    return Motor((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.x)) * vec4<f32>(0.0, 1.0, 0.0, 0.0)) + ((_e19.g0_.xxzw * _e22.g0_.xyxx) * vec4<f32>(1.0, -(1.0), 1.0, 1.0))));
+}
+
+fn motor_squared_magnitude(self_1666: Motor) -> Scalar {
+    var self_1667: Motor;
+
+    self_1667 = self_1666;
+    let _e2: Motor = self_1667;
+    let _e3: Motor = self_1667;
     let _e4: Motor = motor_reversal(_e3);
     let _e5: Scalar = motor_motor_scalar_product(_e2, _e4);
     return _e5;
 }
 
-fn motor_magnitude(self_1098: Motor) -> Scalar {
-    var self_1099: Motor;
+fn motor_magnitude(self_1668: Motor) -> Scalar {
+    var self_1669: Motor;
 
-    self_1099 = self_1098;
-    let _e2: Motor = self_1099;
+    self_1669 = self_1668;
+    let _e2: Motor = self_1669;
     let _e3: Scalar = motor_squared_magnitude(_e2);
     return Scalar(sqrt(_e3.g0_));
 }
 
-fn motor_scale(self_1100: Motor, other_942: f32) -> Motor {
-    var self_1101: Motor;
-    var other_943: f32;
+fn motor_scale(self_1670: Motor, other_1480: f32) -> Motor {
+    var self_1671: Motor;
+    var other_1481: f32;
 
-    self_1101 = self_1100;
-    other_943 = other_942;
-    let _e4: Motor = self_1101;
-    let _e5: f32 = other_943;
+    self_1671 = self_1670;
+    other_1481 = other_1480;
+    let _e4: Motor = self_1671;
+    let _e5: f32 = other_1481;
     let _e7: Motor = motor_scalar_geometric_product(_e4, Scalar(_e5));
     return _e7;
 }
 
-fn motor_signum(self_1102: Motor) -> Motor {
-    var self_1103: Motor;
+fn motor_signum(self_1672: Motor) -> Motor {
+    var self_1673: Motor;
 
-    self_1103 = self_1102;
-    let _e2: Motor = self_1103;
-    let _e3: Motor = self_1103;
+    self_1673 = self_1672;
+    let _e2: Motor = self_1673;
+    let _e3: Motor = self_1673;
     let _e4: Scalar = motor_magnitude(_e3);
     let _e9: Motor = motor_scalar_geometric_product(_e2, Scalar((1.0 / _e4.g0_)));
     return _e9;
 }
 
-fn motor_inverse(self_1104: Motor) -> Motor {
-    var self_1105: Motor;
+fn motor_inverse(self_1674: Motor) -> Motor {
+    var self_1675: Motor;
 
-    self_1105 = self_1104;
-    let _e2: Motor = self_1105;
+    self_1675 = self_1674;
+    let _e2: Motor = self_1675;
     let _e3: Motor = motor_reversal(_e2);
-    let _e4: Motor = self_1105;
+    let _e4: Motor = self_1675;
     let _e5: Scalar = motor_squared_magnitude(_e4);
     let _e10: Motor = motor_scalar_geometric_product(_e3, Scalar((1.0 / _e5.g0_)));
     return _e10;
@@ -7637,1044 +11567,1843 @@ fn motor_dual_one() -> MotorDual {
     return MotorDual(vec4<f32>(0.0));
 }
 
-fn motor_dual_neg(self_1106: MotorDual) -> MotorDual {
-    var self_1107: MotorDual;
+fn motor_dual_neg(self_1676: MotorDual) -> MotorDual {
+    var self_1677: MotorDual;
 
-    self_1107 = self_1106;
-    let _e2: MotorDual = self_1107;
+    self_1677 = self_1676;
+    let _e2: MotorDual = self_1677;
     return MotorDual((_e2.g0_ * vec4<f32>(-(1.0))));
 }
 
-fn motor_dual_automorphism(self_1108: MotorDual) -> MotorDual {
-    var self_1109: MotorDual;
+fn motor_dual_automorphism(self_1678: MotorDual) -> MotorDual {
+    var self_1679: MotorDual;
 
-    self_1109 = self_1108;
-    let _e2: MotorDual = self_1109;
+    self_1679 = self_1678;
+    let _e2: MotorDual = self_1679;
     return MotorDual((_e2.g0_ * vec4<f32>(-(1.0))));
 }
 
-fn motor_dual_reversal(self_1110: MotorDual) -> MotorDual {
-    var self_1111: MotorDual;
+fn motor_dual_reversal(self_1680: MotorDual) -> MotorDual {
+    var self_1681: MotorDual;
 
-    self_1111 = self_1110;
-    let _e2: MotorDual = self_1111;
+    self_1681 = self_1680;
+    let _e2: MotorDual = self_1681;
     return MotorDual((_e2.g0_ * vec4<f32>(-(1.0), 1.0, 1.0, 1.0)));
 }
 
-fn motor_dual_conjugation(self_1112: MotorDual) -> MotorDual {
-    var self_1113: MotorDual;
+fn motor_dual_conjugation(self_1682: MotorDual) -> MotorDual {
+    var self_1683: MotorDual;
 
-    self_1113 = self_1112;
-    let _e2: MotorDual = self_1113;
+    self_1683 = self_1682;
+    let _e2: MotorDual = self_1683;
     return MotorDual((_e2.g0_ * vec4<f32>(1.0, -(1.0), -(1.0), -(1.0))));
 }
 
-fn motor_dual_dual(self_1114: MotorDual) -> Motor {
-    var self_1115: MotorDual;
+fn motor_dual_dual(self_1684: MotorDual) -> Motor {
+    var self_1685: MotorDual;
 
-    self_1115 = self_1114;
-    let _e2: MotorDual = self_1115;
+    self_1685 = self_1684;
+    let _e2: MotorDual = self_1685;
     return Motor(_e2.g0_);
 }
 
-fn motor_dual_scalar_geometric_product(self_1116: MotorDual, other_944: Scalar) -> MotorDual {
-    var self_1117: MotorDual;
-    var other_945: Scalar;
+fn motor_dual_anti_reversal(self_1686: MotorDual) -> MotorDual {
+    var self_1687: MotorDual;
 
-    self_1117 = self_1116;
-    other_945 = other_944;
-    let _e4: MotorDual = self_1117;
-    let _e6: Scalar = other_945;
+    self_1687 = self_1686;
+    let _e2: MotorDual = self_1687;
+    return MotorDual((_e2.g0_ * vec4<f32>(1.0, -(1.0), -(1.0), -(1.0))));
+}
+
+fn motor_dual_scalar_geometric_product(self_1688: MotorDual, other_1482: Scalar) -> MotorDual {
+    var self_1689: MotorDual;
+    var other_1483: Scalar;
+
+    self_1689 = self_1688;
+    other_1483 = other_1482;
+    let _e4: MotorDual = self_1689;
+    let _e6: Scalar = other_1483;
     return MotorDual((_e4.g0_ * vec4<f32>(_e6.g0_)));
 }
 
-fn motor_dual_scalar_regressive_product(self_1118: MotorDual, other_946: Scalar) -> Scalar {
-    var self_1119: MotorDual;
-    var other_947: Scalar;
+fn motor_dual_scalar_regressive_product(self_1690: MotorDual, other_1484: Scalar) -> Scalar {
+    var self_1691: MotorDual;
+    var other_1485: Scalar;
 
-    self_1119 = self_1118;
-    other_947 = other_946;
-    let _e4: MotorDual = self_1119;
-    let _e7: Scalar = other_947;
+    self_1691 = self_1690;
+    other_1485 = other_1484;
+    let _e4: MotorDual = self_1691;
+    let _e7: Scalar = other_1485;
     return Scalar((_e4.g0_.x * _e7.g0_));
 }
 
-fn motor_dual_scalar_outer_product(self_1120: MotorDual, other_948: Scalar) -> MotorDual {
-    var self_1121: MotorDual;
-    var other_949: Scalar;
+fn motor_dual_scalar_outer_product(self_1692: MotorDual, other_1486: Scalar) -> MotorDual {
+    var self_1693: MotorDual;
+    var other_1487: Scalar;
 
-    self_1121 = self_1120;
-    other_949 = other_948;
-    let _e4: MotorDual = self_1121;
-    let _e6: Scalar = other_949;
+    self_1693 = self_1692;
+    other_1487 = other_1486;
+    let _e4: MotorDual = self_1693;
+    let _e6: Scalar = other_1487;
     return MotorDual((_e4.g0_ * vec4<f32>(_e6.g0_)));
 }
 
-fn motor_dual_scalar_inner_product(self_1122: MotorDual, other_950: Scalar) -> MotorDual {
-    var self_1123: MotorDual;
-    var other_951: Scalar;
+fn motor_dual_scalar_inner_product(self_1694: MotorDual, other_1488: Scalar) -> MotorDual {
+    var self_1695: MotorDual;
+    var other_1489: Scalar;
 
-    self_1123 = self_1122;
-    other_951 = other_950;
-    let _e4: MotorDual = self_1123;
-    let _e6: Scalar = other_951;
+    self_1695 = self_1694;
+    other_1489 = other_1488;
+    let _e4: MotorDual = self_1695;
+    let _e6: Scalar = other_1489;
     return MotorDual((_e4.g0_ * vec4<f32>(_e6.g0_)));
 }
 
-fn motor_dual_scalar_right_contraction(self_1124: MotorDual, other_952: Scalar) -> MotorDual {
-    var self_1125: MotorDual;
-    var other_953: Scalar;
+fn motor_dual_scalar_geometric_anti_product(self_1696: MotorDual, other_1490: Scalar) -> Rotor {
+    var self_1697: MotorDual;
+    var other_1491: Scalar;
 
-    self_1125 = self_1124;
-    other_953 = other_952;
-    let _e4: MotorDual = self_1125;
-    let _e6: Scalar = other_953;
+    self_1697 = self_1696;
+    other_1491 = other_1490;
+    let _e4: MotorDual = self_1697;
+    let _e7: MotorDual = self_1697;
+    let _e11: Scalar = other_1491;
+    return Rotor(((vec2<f32>(_e4.g0_.x, _e7.g0_.y) * vec2<f32>(_e11.g0_)) * vec2<f32>(1.0, -(1.0))));
+}
+
+fn motor_dual_scalar_inner_anti_product(self_1698: MotorDual, other_1492: Scalar) -> Rotor {
+    var self_1699: MotorDual;
+    var other_1493: Scalar;
+
+    self_1699 = self_1698;
+    other_1493 = other_1492;
+    let _e4: MotorDual = self_1699;
+    let _e7: MotorDual = self_1699;
+    let _e11: Scalar = other_1493;
+    return Rotor(((vec2<f32>(_e4.g0_.x, _e7.g0_.y) * vec2<f32>(_e11.g0_)) * vec2<f32>(1.0, -(1.0))));
+}
+
+fn motor_dual_scalar_right_contraction(self_1700: MotorDual, other_1494: Scalar) -> MotorDual {
+    var self_1701: MotorDual;
+    var other_1495: Scalar;
+
+    self_1701 = self_1700;
+    other_1495 = other_1494;
+    let _e4: MotorDual = self_1701;
+    let _e6: Scalar = other_1495;
     return MotorDual((_e4.g0_ * vec4<f32>(_e6.g0_)));
 }
 
-fn motor_dual_multi_vector_add(self_1126: MotorDual, other_954: MultiVector) -> MultiVector {
-    var self_1127: MotorDual;
-    var other_955: MultiVector;
+fn motor_dual_scalar_left_anti_contraction(self_1702: MotorDual, other_1496: Scalar) -> Rotor {
+    var self_1703: MotorDual;
+    var other_1497: Scalar;
 
-    self_1127 = self_1126;
-    other_955 = other_954;
-    let _e4: MotorDual = self_1127;
-    let _e13: MultiVector = other_955;
-    let _e16: MotorDual = self_1127;
-    let _e25: MultiVector = other_955;
+    self_1703 = self_1702;
+    other_1497 = other_1496;
+    let _e4: MotorDual = self_1703;
+    let _e7: MotorDual = self_1703;
+    let _e11: Scalar = other_1497;
+    return Rotor(((vec2<f32>(_e4.g0_.x, _e7.g0_.y) * vec2<f32>(_e11.g0_)) * vec2<f32>(1.0, -(1.0))));
+}
+
+fn motor_dual_anti_scalar_into(self_1704: MotorDual) -> AntiScalar {
+    var self_1705: MotorDual;
+
+    self_1705 = self_1704;
+    let _e2: MotorDual = self_1705;
+    return AntiScalar(_e2.g0_.x);
+}
+
+fn motor_dual_anti_scalar_add(self_1706: MotorDual, other_1498: AntiScalar) -> MotorDual {
+    var self_1707: MotorDual;
+    var other_1499: AntiScalar;
+
+    self_1707 = self_1706;
+    other_1499 = other_1498;
+    let _e4: MotorDual = self_1707;
+    let _e6: AntiScalar = other_1499;
+    return MotorDual((_e4.g0_ + (vec4<f32>(_e6.g0_) * vec4<f32>(1.0, 0.0, 0.0, 0.0))));
+}
+
+fn motor_dual_anti_scalar_sub(self_1708: MotorDual, other_1500: AntiScalar) -> MotorDual {
+    var self_1709: MotorDual;
+    var other_1501: AntiScalar;
+
+    self_1709 = self_1708;
+    other_1501 = other_1500;
+    let _e4: MotorDual = self_1709;
+    let _e6: AntiScalar = other_1501;
+    return MotorDual((_e4.g0_ - (vec4<f32>(_e6.g0_) * vec4<f32>(1.0, 0.0, 0.0, 0.0))));
+}
+
+fn motor_dual_anti_scalar_geometric_product(self_1710: MotorDual, other_1502: AntiScalar) -> IdealPoint {
+    var self_1711: MotorDual;
+    var other_1503: AntiScalar;
+
+    self_1711 = self_1710;
+    other_1503 = other_1502;
+    let _e4: MotorDual = self_1711;
+    let _e7: MotorDual = self_1711;
+    let _e11: AntiScalar = other_1503;
+    return IdealPoint((vec2<f32>(_e4.g0_.z, _e7.g0_.w) * vec2<f32>(_e11.g0_)));
+}
+
+fn motor_dual_anti_scalar_regressive_product(self_1712: MotorDual, other_1504: AntiScalar) -> MotorDual {
+    var self_1713: MotorDual;
+    var other_1505: AntiScalar;
+
+    self_1713 = self_1712;
+    other_1505 = other_1504;
+    let _e4: MotorDual = self_1713;
+    let _e6: AntiScalar = other_1505;
+    return MotorDual((_e4.g0_ * vec4<f32>(_e6.g0_)));
+}
+
+fn motor_dual_anti_scalar_inner_product(self_1714: MotorDual, other_1506: AntiScalar) -> IdealPoint {
+    var self_1715: MotorDual;
+    var other_1507: AntiScalar;
+
+    self_1715 = self_1714;
+    other_1507 = other_1506;
+    let _e4: MotorDual = self_1715;
+    let _e7: MotorDual = self_1715;
+    let _e11: AntiScalar = other_1507;
+    return IdealPoint((vec2<f32>(_e4.g0_.z, _e7.g0_.w) * vec2<f32>(_e11.g0_)));
+}
+
+fn motor_dual_anti_scalar_geometric_anti_product(self_1716: MotorDual, other_1508: AntiScalar) -> MotorDual {
+    var self_1717: MotorDual;
+    var other_1509: AntiScalar;
+
+    self_1717 = self_1716;
+    other_1509 = other_1508;
+    let _e4: MotorDual = self_1717;
+    let _e6: AntiScalar = other_1509;
+    return MotorDual((_e4.g0_ * vec4<f32>(_e6.g0_)));
+}
+
+fn motor_dual_anti_scalar_inner_anti_product(self_1718: MotorDual, other_1510: AntiScalar) -> MotorDual {
+    var self_1719: MotorDual;
+    var other_1511: AntiScalar;
+
+    self_1719 = self_1718;
+    other_1511 = other_1510;
+    let _e4: MotorDual = self_1719;
+    let _e6: AntiScalar = other_1511;
+    return MotorDual((_e4.g0_ * vec4<f32>(_e6.g0_)));
+}
+
+fn motor_dual_anti_scalar_left_contraction(self_1720: MotorDual, other_1512: AntiScalar) -> IdealPoint {
+    var self_1721: MotorDual;
+    var other_1513: AntiScalar;
+
+    self_1721 = self_1720;
+    other_1513 = other_1512;
+    let _e4: MotorDual = self_1721;
+    let _e7: MotorDual = self_1721;
+    let _e11: AntiScalar = other_1513;
+    return IdealPoint((vec2<f32>(_e4.g0_.z, _e7.g0_.w) * vec2<f32>(_e11.g0_)));
+}
+
+fn motor_dual_anti_scalar_left_anti_contraction(self_1722: MotorDual, other_1514: AntiScalar) -> AntiScalar {
+    var self_1723: MotorDual;
+    var other_1515: AntiScalar;
+
+    self_1723 = self_1722;
+    other_1515 = other_1514;
+    let _e4: MotorDual = self_1723;
+    let _e7: AntiScalar = other_1515;
+    return AntiScalar((_e4.g0_.x * _e7.g0_));
+}
+
+fn motor_dual_anti_scalar_right_anti_contraction(self_1724: MotorDual, other_1516: AntiScalar) -> MotorDual {
+    var self_1725: MotorDual;
+    var other_1517: AntiScalar;
+
+    self_1725 = self_1724;
+    other_1517 = other_1516;
+    let _e4: MotorDual = self_1725;
+    let _e6: AntiScalar = other_1517;
+    return MotorDual((_e4.g0_ * vec4<f32>(_e6.g0_)));
+}
+
+fn motor_dual_anti_scalar_anti_scalar_product(self_1726: MotorDual, other_1518: AntiScalar) -> AntiScalar {
+    var self_1727: MotorDual;
+    var other_1519: AntiScalar;
+
+    self_1727 = self_1726;
+    other_1519 = other_1518;
+    let _e4: MotorDual = self_1727;
+    let _e7: AntiScalar = other_1519;
+    return AntiScalar((_e4.g0_.x * _e7.g0_));
+}
+
+fn motor_dual_multi_vector_add(self_1728: MotorDual, other_1520: MultiVector) -> MultiVector {
+    var self_1729: MotorDual;
+    var other_1521: MultiVector;
+
+    self_1729 = self_1728;
+    other_1521 = other_1520;
+    let _e4: MotorDual = self_1729;
+    let _e13: MultiVector = other_1521;
+    let _e16: MotorDual = self_1729;
+    let _e25: MultiVector = other_1521;
     return MultiVector(((_e4.g0_.xxwz * vec4<f32>(0.0, 0.0, 1.0, 1.0)) + _e13.g0_), ((_e16.g0_.yxxx * vec4<f32>(1.0, 1.0, 0.0, 0.0)) + _e25.g1_));
 }
 
-fn motor_dual_multi_vector_sub(self_1128: MotorDual, other_956: MultiVector) -> MultiVector {
-    var self_1129: MotorDual;
-    var other_957: MultiVector;
+fn motor_dual_multi_vector_sub(self_1730: MotorDual, other_1522: MultiVector) -> MultiVector {
+    var self_1731: MotorDual;
+    var other_1523: MultiVector;
 
-    self_1129 = self_1128;
-    other_957 = other_956;
-    let _e4: MotorDual = self_1129;
-    let _e13: MultiVector = other_957;
-    let _e16: MotorDual = self_1129;
-    let _e25: MultiVector = other_957;
+    self_1731 = self_1730;
+    other_1523 = other_1522;
+    let _e4: MotorDual = self_1731;
+    let _e13: MultiVector = other_1523;
+    let _e16: MotorDual = self_1731;
+    let _e25: MultiVector = other_1523;
     return MultiVector(((_e4.g0_.xxwz * vec4<f32>(0.0, 0.0, 1.0, 1.0)) - _e13.g0_), ((_e16.g0_.yxxx * vec4<f32>(1.0, 1.0, 0.0, 0.0)) - _e25.g1_));
 }
 
-fn motor_dual_multi_vector_geometric_product(self_1130: MotorDual, other_958: MultiVector) -> MultiVector {
-    var self_1131: MotorDual;
-    var other_959: MultiVector;
+fn motor_dual_multi_vector_geometric_product(self_1732: MotorDual, other_1524: MultiVector) -> MultiVector {
+    var self_1733: MotorDual;
+    var other_1525: MultiVector;
 
-    self_1131 = self_1130;
-    other_959 = other_958;
-    let _e4: MotorDual = self_1131;
-    let _e8: MultiVector = other_959;
-    let _e20: MotorDual = self_1131;
-    let _e24: MultiVector = other_959;
-    let _e29: MotorDual = self_1131;
-    let _e33: MultiVector = other_959;
-    let _e44: MotorDual = self_1131;
-    let _e48: MultiVector = other_959;
-    let _e59: MotorDual = self_1131;
-    let _e63: MultiVector = other_959;
-    let _e68: MotorDual = self_1131;
-    let _e72: MultiVector = other_959;
+    self_1733 = self_1732;
+    other_1525 = other_1524;
+    let _e4: MotorDual = self_1733;
+    let _e8: MultiVector = other_1525;
+    let _e20: MotorDual = self_1733;
+    let _e24: MultiVector = other_1525;
+    let _e29: MotorDual = self_1733;
+    let _e33: MultiVector = other_1525;
+    let _e44: MotorDual = self_1733;
+    let _e48: MultiVector = other_1525;
+    let _e59: MotorDual = self_1733;
+    let _e63: MultiVector = other_1525;
+    let _e68: MotorDual = self_1733;
+    let _e72: MultiVector = other_1525;
     return MultiVector((((vec4<f32>(_e4.g0_.z) * _e8.g0_.wzyx) * vec4<f32>(1.0, -(1.0), -(1.0), 1.0)) + (vec4<f32>(_e20.g0_.w) * _e24.g0_.zwxy)), (((((vec4<f32>(_e29.g0_.x) * _e33.g0_.yxwz) * vec4<f32>(-(1.0), 1.0, 1.0, 1.0)) + ((vec4<f32>(_e44.g0_.y) * _e48.g0_) * vec4<f32>(1.0, 1.0, 1.0, -(1.0)))) + (vec4<f32>(_e59.g0_.z) * _e63.g1_.wzyx)) + ((vec4<f32>(_e68.g0_.w) * _e72.g1_.zwxy) * vec4<f32>(-(1.0), 1.0, -(1.0), 1.0))));
 }
 
-fn motor_dual_multi_vector_regressive_product(self_1132: MotorDual, other_960: MultiVector) -> MultiVector {
-    var self_1133: MotorDual;
-    var other_961: MultiVector;
+fn motor_dual_multi_vector_regressive_product(self_1734: MotorDual, other_1526: MultiVector) -> MultiVector {
+    var self_1735: MotorDual;
+    var other_1527: MultiVector;
 
-    self_1133 = self_1132;
-    other_961 = other_960;
-    let _e4: MotorDual = self_1133;
-    let _e8: MultiVector = other_961;
-    let _e11: MotorDual = self_1133;
-    let _e15: MultiVector = other_961;
-    let _e26: MotorDual = self_1133;
-    let _e30: MultiVector = other_961;
-    let _e41: MotorDual = self_1133;
-    let _e44: MultiVector = other_961;
-    let _e55: MotorDual = self_1133;
-    let _e59: MultiVector = other_961;
-    let _e62: MotorDual = self_1133;
-    let _e65: MultiVector = other_961;
+    self_1735 = self_1734;
+    other_1527 = other_1526;
+    let _e4: MotorDual = self_1735;
+    let _e8: MultiVector = other_1527;
+    let _e11: MotorDual = self_1735;
+    let _e15: MultiVector = other_1527;
+    let _e26: MotorDual = self_1735;
+    let _e30: MultiVector = other_1527;
+    let _e41: MotorDual = self_1735;
+    let _e44: MultiVector = other_1527;
+    let _e55: MotorDual = self_1735;
+    let _e59: MultiVector = other_1527;
+    let _e62: MotorDual = self_1735;
+    let _e65: MultiVector = other_1527;
     return MultiVector(((((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.z) * _e15.g1_.zzzy) * vec4<f32>(1.0, 0.0, 0.0, 1.0))) + ((vec4<f32>(_e26.g0_.w) * _e30.g1_.wwyw) * vec4<f32>(1.0, 0.0, 1.0, 0.0))) + ((_e41.g0_.yxxx * _e44.g0_.yxxx) * vec4<f32>(1.0, 0.0, 0.0, 0.0))), ((vec4<f32>(_e55.g0_.x) * _e59.g1_) + ((_e62.g0_.yxxx * _e65.g1_.yxxx) * vec4<f32>(1.0, 0.0, 0.0, 0.0))));
 }
 
-fn motor_dual_multi_vector_scalar_product(self_1134: MotorDual, other_962: MultiVector) -> Scalar {
-    var self_1135: MotorDual;
-    var other_963: MultiVector;
+fn motor_dual_multi_vector_geometric_anti_product(self_1736: MotorDual, other_1528: MultiVector) -> MultiVector {
+    var self_1737: MotorDual;
+    var other_1529: MultiVector;
 
-    self_1135 = self_1134;
-    other_963 = other_962;
-    let _e4: MotorDual = self_1135;
-    let _e7: MultiVector = other_963;
-    let _e11: MotorDual = self_1135;
-    let _e14: MultiVector = other_963;
+    self_1737 = self_1736;
+    other_1529 = other_1528;
+    let _e4: MotorDual = self_1737;
+    let _e8: MultiVector = other_1529;
+    let _e11: MotorDual = self_1737;
+    let _e15: MultiVector = other_1529;
+    let _e28: MotorDual = self_1737;
+    let _e32: MultiVector = other_1529;
+    let _e44: MotorDual = self_1737;
+    let _e48: MultiVector = other_1529;
+    let _e60: MotorDual = self_1737;
+    let _e64: MultiVector = other_1529;
+    let _e67: MotorDual = self_1737;
+    let _e71: MultiVector = other_1529;
+    return MultiVector(((((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.y) * _e15.g0_.yxwz) * vec4<f32>(1.0, -(1.0), 1.0, -(1.0)))) + ((vec4<f32>(_e28.g0_.z) * _e32.g1_.zwxy) * vec4<f32>(1.0, 1.0, -(1.0), 1.0))) + ((vec4<f32>(_e44.g0_.w) * _e48.g1_.wzyx) * vec4<f32>(1.0, -(1.0), 1.0, 1.0))), ((vec4<f32>(_e60.g0_.x) * _e64.g1_) + ((vec4<f32>(_e67.g0_.y) * _e71.g1_.yxwz) * vec4<f32>(1.0, -(1.0), -(1.0), 1.0))));
+}
+
+fn motor_dual_multi_vector_inner_anti_product(self_1738: MotorDual, other_1530: MultiVector) -> MultiVector {
+    var self_1739: MotorDual;
+    var other_1531: MultiVector;
+
+    self_1739 = self_1738;
+    other_1531 = other_1530;
+    let _e4: MotorDual = self_1739;
+    let _e8: MultiVector = other_1531;
+    let _e11: MotorDual = self_1739;
+    let _e15: MultiVector = other_1531;
+    let _e26: MotorDual = self_1739;
+    let _e30: MultiVector = other_1531;
+    let _e42: MotorDual = self_1739;
+    let _e45: MultiVector = other_1531;
+    let _e58: MotorDual = self_1739;
+    let _e62: MultiVector = other_1531;
+    let _e65: MotorDual = self_1739;
+    let _e69: MultiVector = other_1531;
+    return MultiVector(((((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.z) * _e15.g1_.wwwy) * vec4<f32>(0.0, 1.0, 0.0, 1.0))) + ((vec4<f32>(_e26.g0_.w) * _e30.g1_.zzyz) * vec4<f32>(0.0, -(1.0), 1.0, 0.0))) + ((_e42.g0_.xyxx * vec4<f32>(_e45.g0_.x)) * vec4<f32>(0.0, -(1.0), 0.0, 0.0))), ((vec4<f32>(_e58.g0_.x) * _e62.g1_) + ((vec4<f32>(_e65.g0_.y) * _e69.g1_.yxwz) * vec4<f32>(1.0, -(1.0), -(1.0), 1.0))));
+}
+
+fn motor_dual_multi_vector_left_anti_contraction(self_1740: MotorDual, other_1532: MultiVector) -> MultiVector {
+    var self_1741: MotorDual;
+    var other_1533: MultiVector;
+
+    self_1741 = self_1740;
+    other_1533 = other_1532;
+    let _e4: MotorDual = self_1741;
+    let _e8: MultiVector = other_1533;
+    let _e11: MotorDual = self_1741;
+    let _e14: MultiVector = other_1533;
+    let _e27: MotorDual = self_1741;
+    let _e31: MultiVector = other_1533;
+    let _e34: MotorDual = self_1741;
+    let _e37: MultiVector = other_1533;
+    return MultiVector(((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((_e11.g0_.xyxx * vec4<f32>(_e14.g0_.x)) * vec4<f32>(0.0, -(1.0), 0.0, 0.0))), ((vec4<f32>(_e27.g0_.x) * _e31.g1_) + ((_e34.g0_.xyxx * vec4<f32>(_e37.g1_.x)) * vec4<f32>(0.0, -(1.0), 0.0, 0.0))));
+}
+
+fn motor_dual_multi_vector_scalar_product(self_1742: MotorDual, other_1534: MultiVector) -> Scalar {
+    var self_1743: MotorDual;
+    var other_1535: MultiVector;
+
+    self_1743 = self_1742;
+    other_1535 = other_1534;
+    let _e4: MotorDual = self_1743;
+    let _e7: MultiVector = other_1535;
+    let _e11: MotorDual = self_1743;
+    let _e14: MultiVector = other_1535;
     return Scalar(((_e4.g0_.z * _e7.g0_.w) + (_e11.g0_.w * _e14.g0_.z)));
 }
 
-fn motor_dual_rotor_geometric_product(self_1136: MotorDual, other_964: Rotor) -> MotorDual {
-    var self_1137: MotorDual;
-    var other_965: Rotor;
+fn motor_dual_multi_vector_anti_scalar_product(self_1744: MotorDual, other_1536: MultiVector) -> AntiScalar {
+    var self_1745: MotorDual;
+    var other_1537: MultiVector;
 
-    self_1137 = self_1136;
-    other_965 = other_964;
-    let _e4: MotorDual = self_1137;
-    let _e8: Rotor = other_965;
-    let _e11: Rotor = other_965;
-    let _e14: Rotor = other_965;
-    let _e17: Rotor = other_965;
-    let _e28: MotorDual = self_1137;
-    let _e32: Rotor = other_965;
-    let _e35: Rotor = other_965;
-    let _e38: Rotor = other_965;
-    let _e41: Rotor = other_965;
-    let _e53: MotorDual = self_1137;
-    let _e56: Rotor = other_965;
-    let _e59: Rotor = other_965;
-    let _e62: Rotor = other_965;
-    let _e65: Rotor = other_965;
+    self_1745 = self_1744;
+    other_1537 = other_1536;
+    let _e4: MotorDual = self_1745;
+    let _e7: MultiVector = other_1537;
+    let _e11: MotorDual = self_1745;
+    let _e14: MultiVector = other_1537;
+    return AntiScalar(((_e4.g0_.x * _e7.g1_.y) - (_e11.g0_.y * _e14.g1_.x)));
+}
+
+fn motor_dual_rotor_geometric_product(self_1746: MotorDual, other_1538: Rotor) -> MotorDual {
+    var self_1747: MotorDual;
+    var other_1539: Rotor;
+
+    self_1747 = self_1746;
+    other_1539 = other_1538;
+    let _e4: MotorDual = self_1747;
+    let _e8: Rotor = other_1539;
+    let _e11: Rotor = other_1539;
+    let _e14: Rotor = other_1539;
+    let _e17: Rotor = other_1539;
+    let _e28: MotorDual = self_1747;
+    let _e32: Rotor = other_1539;
+    let _e35: Rotor = other_1539;
+    let _e38: Rotor = other_1539;
+    let _e41: Rotor = other_1539;
+    let _e53: MotorDual = self_1747;
+    let _e56: Rotor = other_1539;
+    let _e59: Rotor = other_1539;
+    let _e62: Rotor = other_1539;
+    let _e65: Rotor = other_1539;
     return MotorDual(((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.y, _e11.g0_.x, _e14.g0_.y, _e17.g0_.y)) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) + ((vec4<f32>(_e28.g0_.w) * vec4<f32>(_e32.g0_.y, _e35.g0_.y, _e38.g0_.y, _e41.g0_.x)) * vec4<f32>(0.0, 0.0, 1.0, 1.0))) + ((_e53.g0_.xxzz * vec4<f32>(_e56.g0_.x, _e59.g0_.y, _e62.g0_.x, _e65.g0_.y)) * vec4<f32>(1.0, -(1.0), 1.0, -(1.0)))));
 }
 
-fn motor_dual_rotor_regressive_product(self_1138: MotorDual, other_966: Rotor) -> Rotor {
-    var self_1139: MotorDual;
-    var other_967: Rotor;
+fn motor_dual_rotor_regressive_product(self_1748: MotorDual, other_1540: Rotor) -> Rotor {
+    var self_1749: MotorDual;
+    var other_1541: Rotor;
 
-    self_1139 = self_1138;
-    other_967 = other_966;
-    let _e4: MotorDual = self_1139;
-    let _e8: Rotor = other_967;
-    let _e11: MotorDual = self_1139;
-    let _e14: MotorDual = self_1139;
-    let _e18: Rotor = other_967;
+    self_1749 = self_1748;
+    other_1541 = other_1540;
+    let _e4: MotorDual = self_1749;
+    let _e8: Rotor = other_1541;
+    let _e11: MotorDual = self_1749;
+    let _e14: MotorDual = self_1749;
+    let _e18: Rotor = other_1541;
     return Rotor(((vec2<f32>(_e4.g0_.x) * _e8.g0_) + ((vec2<f32>(_e11.g0_.y, _e14.g0_.x) * _e18.g0_.yx) * vec2<f32>(1.0, 0.0))));
 }
 
-fn motor_dual_rotor_outer_product(self_1140: MotorDual, other_968: Rotor) -> MotorDual {
-    var self_1141: MotorDual;
-    var other_969: Rotor;
+fn motor_dual_rotor_outer_product(self_1750: MotorDual, other_1542: Rotor) -> MotorDual {
+    var self_1751: MotorDual;
+    var other_1543: Rotor;
 
-    self_1141 = self_1140;
-    other_969 = other_968;
-    let _e4: MotorDual = self_1141;
-    let _e8: Rotor = other_969;
-    let _e11: Rotor = other_969;
-    let _e14: Rotor = other_969;
-    let _e17: Rotor = other_969;
-    let _e28: MotorDual = self_1141;
-    let _e31: Rotor = other_969;
+    self_1751 = self_1750;
+    other_1543 = other_1542;
+    let _e4: MotorDual = self_1751;
+    let _e8: Rotor = other_1543;
+    let _e11: Rotor = other_1543;
+    let _e14: Rotor = other_1543;
+    let _e17: Rotor = other_1543;
+    let _e28: MotorDual = self_1751;
+    let _e31: Rotor = other_1543;
     return MotorDual((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.y, _e11.g0_.x, _e14.g0_.y, _e17.g0_.y)) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) + ((_e28.g0_.xxzw * vec4<f32>(_e31.g0_.x)) * vec4<f32>(1.0, 0.0, 1.0, 1.0))));
 }
 
-fn motor_dual_rotor_inner_product(self_1142: MotorDual, other_970: Rotor) -> MotorDual {
-    var self_1143: MotorDual;
-    var other_971: Rotor;
+fn motor_dual_rotor_inner_product(self_1752: MotorDual, other_1544: Rotor) -> MotorDual {
+    var self_1753: MotorDual;
+    var other_1545: Rotor;
 
-    self_1143 = self_1142;
-    other_971 = other_970;
-    let _e4: MotorDual = self_1143;
-    let _e8: Rotor = other_971;
-    let _e19: MotorDual = self_1143;
-    let _e23: Rotor = other_971;
-    let _e26: Rotor = other_971;
-    let _e29: Rotor = other_971;
-    let _e32: Rotor = other_971;
-    let _e44: MotorDual = self_1143;
-    let _e47: Rotor = other_971;
-    let _e50: Rotor = other_971;
-    let _e53: Rotor = other_971;
-    let _e56: Rotor = other_971;
+    self_1753 = self_1752;
+    other_1545 = other_1544;
+    let _e4: MotorDual = self_1753;
+    let _e8: Rotor = other_1545;
+    let _e19: MotorDual = self_1753;
+    let _e23: Rotor = other_1545;
+    let _e26: Rotor = other_1545;
+    let _e29: Rotor = other_1545;
+    let _e32: Rotor = other_1545;
+    let _e44: MotorDual = self_1753;
+    let _e47: Rotor = other_1545;
+    let _e50: Rotor = other_1545;
+    let _e53: Rotor = other_1545;
+    let _e56: Rotor = other_1545;
     return MotorDual(((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.x)) * vec4<f32>(0.0, 1.0, 0.0, 0.0)) + ((vec4<f32>(_e19.g0_.w) * vec4<f32>(_e23.g0_.y, _e26.g0_.y, _e29.g0_.y, _e32.g0_.x)) * vec4<f32>(0.0, 0.0, 1.0, 1.0))) + ((_e44.g0_.xxzz * vec4<f32>(_e47.g0_.x, _e50.g0_.y, _e53.g0_.x, _e56.g0_.y)) * vec4<f32>(1.0, -(1.0), 1.0, -(1.0)))));
 }
 
-fn motor_dual_rotor_right_contraction(self_1144: MotorDual, other_972: Rotor) -> MotorDual {
-    var self_1145: MotorDual;
-    var other_973: Rotor;
+fn motor_dual_rotor_geometric_anti_product(self_1754: MotorDual, other_1546: Rotor) -> Rotor {
+    var self_1755: MotorDual;
+    var other_1547: Rotor;
 
-    self_1145 = self_1144;
-    other_973 = other_972;
-    let _e4: MotorDual = self_1145;
-    let _e8: Rotor = other_973;
-    let _e19: MotorDual = self_1145;
-    let _e22: Rotor = other_973;
-    let _e25: Rotor = other_973;
-    let _e28: Rotor = other_973;
-    let _e31: Rotor = other_973;
+    self_1755 = self_1754;
+    other_1547 = other_1546;
+    let _e4: MotorDual = self_1755;
+    let _e8: Rotor = other_1547;
+    let _e11: MotorDual = self_1755;
+    let _e15: Rotor = other_1547;
+    return Rotor(((vec2<f32>(_e4.g0_.x) * _e8.g0_) + ((vec2<f32>(_e11.g0_.y) * _e15.g0_.yx) * vec2<f32>(1.0, -(1.0)))));
+}
+
+fn motor_dual_rotor_inner_anti_product(self_1756: MotorDual, other_1548: Rotor) -> Rotor {
+    var self_1757: MotorDual;
+    var other_1549: Rotor;
+
+    self_1757 = self_1756;
+    other_1549 = other_1548;
+    let _e4: MotorDual = self_1757;
+    let _e8: Rotor = other_1549;
+    let _e11: MotorDual = self_1757;
+    let _e14: MotorDual = self_1757;
+    let _e18: Rotor = other_1549;
+    return Rotor(((vec2<f32>(_e4.g0_.x) * _e8.g0_) + ((vec2<f32>(_e11.g0_.x, _e14.g0_.y) * vec2<f32>(_e18.g0_.x)) * vec2<f32>(0.0, -(1.0)))));
+}
+
+fn motor_dual_rotor_right_contraction(self_1758: MotorDual, other_1550: Rotor) -> MotorDual {
+    var self_1759: MotorDual;
+    var other_1551: Rotor;
+
+    self_1759 = self_1758;
+    other_1551 = other_1550;
+    let _e4: MotorDual = self_1759;
+    let _e8: Rotor = other_1551;
+    let _e19: MotorDual = self_1759;
+    let _e22: Rotor = other_1551;
+    let _e25: Rotor = other_1551;
+    let _e28: Rotor = other_1551;
+    let _e31: Rotor = other_1551;
     return MotorDual((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.x)) * vec4<f32>(0.0, 1.0, 0.0, 0.0)) + ((_e19.g0_.xxzw * vec4<f32>(_e22.g0_.x, _e25.g0_.y, _e28.g0_.x, _e31.g0_.x)) * vec4<f32>(1.0, -(1.0), 1.0, 1.0))));
 }
 
-fn motor_dual_point_geometric_product(self_1146: MotorDual, other_974: Point) -> MotorDual {
-    var self_1147: MotorDual;
-    var other_975: Point;
+fn motor_dual_rotor_left_anti_contraction(self_1760: MotorDual, other_1552: Rotor) -> Rotor {
+    var self_1761: MotorDual;
+    var other_1553: Rotor;
 
-    self_1147 = self_1146;
-    other_975 = other_974;
-    let _e4: MotorDual = self_1147;
-    let _e8: Point = other_975;
-    let _e11: Point = other_975;
-    let _e14: Point = other_975;
-    let _e17: Point = other_975;
-    let _e29: MotorDual = self_1147;
-    let _e33: Point = other_975;
-    let _e36: Point = other_975;
-    let _e39: Point = other_975;
-    let _e42: Point = other_975;
-    let _e55: MotorDual = self_1147;
-    let _e58: Point = other_975;
+    self_1761 = self_1760;
+    other_1553 = other_1552;
+    let _e4: MotorDual = self_1761;
+    let _e8: Rotor = other_1553;
+    let _e11: MotorDual = self_1761;
+    let _e14: MotorDual = self_1761;
+    let _e18: Rotor = other_1553;
+    return Rotor(((vec2<f32>(_e4.g0_.x) * _e8.g0_) + ((vec2<f32>(_e11.g0_.x, _e14.g0_.y) * vec2<f32>(_e18.g0_.x)) * vec2<f32>(0.0, -(1.0)))));
+}
+
+fn motor_dual_point_geometric_product(self_1762: MotorDual, other_1554: Point) -> MotorDual {
+    var self_1763: MotorDual;
+    var other_1555: Point;
+
+    self_1763 = self_1762;
+    other_1555 = other_1554;
+    let _e4: MotorDual = self_1763;
+    let _e8: Point = other_1555;
+    let _e11: Point = other_1555;
+    let _e14: Point = other_1555;
+    let _e17: Point = other_1555;
+    let _e29: MotorDual = self_1763;
+    let _e33: Point = other_1555;
+    let _e36: Point = other_1555;
+    let _e39: Point = other_1555;
+    let _e42: Point = other_1555;
+    let _e55: MotorDual = self_1763;
+    let _e58: Point = other_1555;
     return MotorDual(((((vec4<f32>(_e4.g0_.z) * vec4<f32>(_e8.g0_.y, _e11.g0_.z, _e14.g0_.y, _e17.g0_.x)) * vec4<f32>(1.0, 1.0, 0.0, -(1.0))) + ((vec4<f32>(_e29.g0_.w) * vec4<f32>(_e33.g0_.z, _e36.g0_.y, _e39.g0_.x, _e42.g0_.z)) * vec4<f32>(1.0, -(1.0), 1.0, 0.0))) + ((_e55.g0_.yxxx * vec4<f32>(_e58.g0_.x)) * vec4<f32>(1.0, -(1.0), 0.0, 0.0))));
 }
 
-fn motor_dual_point_regressive_product(self_1148: MotorDual, other_976: Point) -> Motor {
-    var self_1149: MotorDual;
-    var other_977: Point;
+fn motor_dual_point_regressive_product(self_1764: MotorDual, other_1556: Point) -> Motor {
+    var self_1765: MotorDual;
+    var other_1557: Point;
 
-    self_1149 = self_1148;
-    other_977 = other_976;
-    let _e4: MotorDual = self_1149;
-    let _e8: Point = other_977;
-    let _e19: MotorDual = self_1149;
-    let _e23: Point = other_977;
-    let _e35: MotorDual = self_1149;
-    let _e38: Point = other_977;
-    let _e41: Point = other_977;
-    let _e44: Point = other_977;
-    let _e47: Point = other_977;
+    self_1765 = self_1764;
+    other_1557 = other_1556;
+    let _e4: MotorDual = self_1765;
+    let _e8: Point = other_1557;
+    let _e19: MotorDual = self_1765;
+    let _e23: Point = other_1557;
+    let _e35: MotorDual = self_1765;
+    let _e38: Point = other_1557;
+    let _e41: Point = other_1557;
+    let _e44: Point = other_1557;
+    let _e47: Point = other_1557;
     return Motor(((((vec4<f32>(_e4.g0_.z) * vec4<f32>(_e8.g0_.y)) * vec4<f32>(1.0, 0.0, 0.0, 0.0)) + ((vec4<f32>(_e19.g0_.w) * vec4<f32>(_e23.g0_.z)) * vec4<f32>(1.0, 0.0, 0.0, 0.0))) + (_e35.g0_.yxxx * vec4<f32>(_e38.g0_.x, _e41.g0_.x, _e44.g0_.y, _e47.g0_.z))));
 }
 
-fn motor_dual_point_inner_product(self_1150: MotorDual, other_978: Point) -> Plane {
-    var self_1151: MotorDual;
-    var other_979: Point;
+fn motor_dual_point_outer_product(self_1766: MotorDual, other_1558: Point) -> AntiScalar {
+    var self_1767: MotorDual;
+    var other_1559: Point;
 
-    self_1151 = self_1150;
-    other_979 = other_978;
-    let _e4: MotorDual = self_1151;
-    let _e8: Point = other_979;
-    let _e18: MotorDual = self_1151;
-    let _e22: Point = other_979;
-    let _e33: MotorDual = self_1151;
-    let _e37: Point = other_979;
+    self_1767 = self_1766;
+    other_1559 = other_1558;
+    let _e4: MotorDual = self_1767;
+    let _e7: Point = other_1559;
+    let _e11: MotorDual = self_1767;
+    let _e14: Point = other_1559;
+    let _e19: MotorDual = self_1767;
+    let _e22: Point = other_1559;
+    return AntiScalar((((_e4.g0_.y * _e7.g0_.x) + (_e11.g0_.z * _e14.g0_.y)) + (_e19.g0_.w * _e22.g0_.z)));
+}
+
+fn motor_dual_point_inner_product(self_1768: MotorDual, other_1560: Point) -> Plane {
+    var self_1769: MotorDual;
+    var other_1561: Point;
+
+    self_1769 = self_1768;
+    other_1561 = other_1560;
+    let _e4: MotorDual = self_1769;
+    let _e8: Point = other_1561;
+    let _e18: MotorDual = self_1769;
+    let _e22: Point = other_1561;
+    let _e33: MotorDual = self_1769;
+    let _e37: Point = other_1561;
     return Plane(((((vec3<f32>(_e4.g0_.z) * _e8.g0_.zzx) * vec3<f32>(1.0, 0.0, -(1.0))) + ((vec3<f32>(_e18.g0_.w) * _e22.g0_.yxy) * vec3<f32>(-(1.0), 1.0, 0.0))) + ((vec3<f32>(_e33.g0_.x) * vec3<f32>(_e37.g0_.x)) * vec3<f32>(-(1.0), 0.0, 0.0))));
 }
 
-fn motor_dual_point_left_contraction(self_1152: MotorDual, other_980: Point) -> Plane {
-    var self_1153: MotorDual;
-    var other_981: Point;
+fn motor_dual_point_geometric_anti_product(self_1770: MotorDual, other_1562: Point) -> Motor {
+    var self_1771: MotorDual;
+    var other_1563: Point;
 
-    self_1153 = self_1152;
-    other_981 = other_980;
-    let _e4: MotorDual = self_1153;
-    let _e8: Point = other_981;
-    let _e18: MotorDual = self_1153;
-    let _e21: MotorDual = self_1153;
-    let _e24: MotorDual = self_1153;
-    let _e28: Point = other_981;
+    self_1771 = self_1770;
+    other_1563 = other_1562;
+    let _e4: MotorDual = self_1771;
+    let _e8: Point = other_1563;
+    let _e11: Point = other_1563;
+    let _e14: Point = other_1563;
+    let _e17: Point = other_1563;
+    let _e29: MotorDual = self_1771;
+    let _e33: Point = other_1563;
+    let _e36: Point = other_1563;
+    let _e39: Point = other_1563;
+    let _e42: Point = other_1563;
+    let _e54: MotorDual = self_1771;
+    let _e58: Point = other_1563;
+    let _e61: Point = other_1563;
+    let _e64: Point = other_1563;
+    let _e67: Point = other_1563;
+    let _e80: MotorDual = self_1771;
+    let _e84: Point = other_1563;
+    let _e87: Point = other_1563;
+    let _e90: Point = other_1563;
+    let _e93: Point = other_1563;
+    return Motor((((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.x, _e11.g0_.x, _e14.g0_.z, _e17.g0_.y)) * vec4<f32>(1.0, 0.0, -(1.0), 1.0)) + ((vec4<f32>(_e29.g0_.z) * vec4<f32>(_e33.g0_.y, _e36.g0_.z, _e39.g0_.y, _e42.g0_.y)) * vec4<f32>(1.0, 1.0, 0.0, 0.0))) + ((vec4<f32>(_e54.g0_.w) * vec4<f32>(_e58.g0_.z, _e61.g0_.y, _e64.g0_.z, _e67.g0_.z)) * vec4<f32>(1.0, -(1.0), 0.0, 0.0))) + ((vec4<f32>(_e80.g0_.x) * vec4<f32>(_e84.g0_.x, _e87.g0_.x, _e90.g0_.y, _e93.g0_.z)) * vec4<f32>(0.0, 1.0, 1.0, 1.0))));
+}
+
+fn motor_dual_point_inner_anti_product(self_1772: MotorDual, other_1564: Point) -> Point {
+    var self_1773: MotorDual;
+    var other_1565: Point;
+
+    self_1773 = self_1772;
+    other_1565 = other_1564;
+    let _e4: MotorDual = self_1773;
+    let _e8: Point = other_1565;
+    let _e11: MotorDual = self_1773;
+    let _e15: Point = other_1565;
+    let _e27: MotorDual = self_1773;
+    let _e30: MotorDual = self_1773;
+    let _e33: MotorDual = self_1773;
+    let _e37: Point = other_1565;
+    return Point((((vec3<f32>(_e4.g0_.x) * _e8.g0_) + ((vec3<f32>(_e11.g0_.w) * vec3<f32>(_e15.g0_.y)) * vec3<f32>(-(1.0), 0.0, 0.0))) + ((vec3<f32>(_e27.g0_.z, _e30.g0_.y, _e33.g0_.y) * _e37.g0_.zzy) * vec3<f32>(1.0, -(1.0), 1.0))));
+}
+
+fn motor_dual_point_left_contraction(self_1774: MotorDual, other_1566: Point) -> Plane {
+    var self_1775: MotorDual;
+    var other_1567: Point;
+
+    self_1775 = self_1774;
+    other_1567 = other_1566;
+    let _e4: MotorDual = self_1775;
+    let _e8: Point = other_1567;
+    let _e18: MotorDual = self_1775;
+    let _e21: MotorDual = self_1775;
+    let _e24: MotorDual = self_1775;
+    let _e28: Point = other_1567;
     return Plane((((vec3<f32>(_e4.g0_.w) * _e8.g0_.yxy) * vec3<f32>(-(1.0), 1.0, 0.0)) + ((vec3<f32>(_e18.g0_.z, _e21.g0_.x, _e24.g0_.z) * _e28.g0_.zxx) * vec3<f32>(1.0, 0.0, -(1.0)))));
 }
 
-fn motor_dual_ideal_point_regressive_product(self_1154: MotorDual, other_982: IdealPoint) -> Translator {
-    var self_1155: MotorDual;
-    var other_983: IdealPoint;
+fn motor_dual_point_left_anti_contraction(self_1776: MotorDual, other_1568: Point) -> Point {
+    var self_1777: MotorDual;
+    var other_1569: Point;
 
-    self_1155 = self_1154;
-    other_983 = other_982;
-    let _e4: MotorDual = self_1155;
-    let _e8: IdealPoint = other_983;
-    let _e18: MotorDual = self_1155;
-    let _e21: MotorDual = self_1155;
-    let _e24: MotorDual = self_1155;
-    let _e28: IdealPoint = other_983;
-    let _e31: IdealPoint = other_983;
-    let _e34: IdealPoint = other_983;
+    self_1777 = self_1776;
+    other_1569 = other_1568;
+    let _e4: MotorDual = self_1777;
+    let _e8: Point = other_1569;
+    return Point((vec3<f32>(_e4.g0_.x) * _e8.g0_));
+}
+
+fn motor_dual_point_right_anti_contraction(self_1778: MotorDual, other_1570: Point) -> Point {
+    var self_1779: MotorDual;
+    var other_1571: Point;
+
+    self_1779 = self_1778;
+    other_1571 = other_1570;
+    let _e4: MotorDual = self_1779;
+    let _e8: Point = other_1571;
+    let _e19: MotorDual = self_1779;
+    let _e22: MotorDual = self_1779;
+    let _e25: MotorDual = self_1779;
+    let _e29: Point = other_1571;
+    return Point((((vec3<f32>(_e4.g0_.w) * vec3<f32>(_e8.g0_.y)) * vec3<f32>(-(1.0), 0.0, 0.0)) + ((vec3<f32>(_e19.g0_.z, _e22.g0_.y, _e25.g0_.y) * _e29.g0_.zzy) * vec3<f32>(1.0, -(1.0), 1.0))));
+}
+
+fn motor_dual_ideal_point_regressive_product(self_1780: MotorDual, other_1572: IdealPoint) -> Translator {
+    var self_1781: MotorDual;
+    var other_1573: IdealPoint;
+
+    self_1781 = self_1780;
+    other_1573 = other_1572;
+    let _e4: MotorDual = self_1781;
+    let _e8: IdealPoint = other_1573;
+    let _e18: MotorDual = self_1781;
+    let _e21: MotorDual = self_1781;
+    let _e24: MotorDual = self_1781;
+    let _e28: IdealPoint = other_1573;
+    let _e31: IdealPoint = other_1573;
+    let _e34: IdealPoint = other_1573;
     return Translator((((vec3<f32>(_e4.g0_.w) * vec3<f32>(_e8.g0_.y)) * vec3<f32>(1.0, 0.0, 0.0)) + (vec3<f32>(_e18.g0_.z, _e21.g0_.x, _e24.g0_.x) * vec3<f32>(_e28.g0_.x, _e31.g0_.x, _e34.g0_.y))));
 }
 
-fn motor_dual_plane_into(self_1156: MotorDual) -> Plane {
-    var self_1157: MotorDual;
+fn motor_dual_ideal_point_outer_product(self_1782: MotorDual, other_1574: IdealPoint) -> AntiScalar {
+    var self_1783: MotorDual;
+    var other_1575: IdealPoint;
 
-    self_1157 = self_1156;
-    let _e2: MotorDual = self_1157;
-    let _e5: MotorDual = self_1157;
-    let _e8: MotorDual = self_1157;
+    self_1783 = self_1782;
+    other_1575 = other_1574;
+    let _e4: MotorDual = self_1783;
+    let _e7: IdealPoint = other_1575;
+    let _e11: MotorDual = self_1783;
+    let _e14: IdealPoint = other_1575;
+    return AntiScalar(((_e4.g0_.z * _e7.g0_.x) + (_e11.g0_.w * _e14.g0_.y)));
+}
+
+fn motor_dual_ideal_point_geometric_anti_product(self_1784: MotorDual, other_1576: IdealPoint) -> Motor {
+    var self_1785: MotorDual;
+    var other_1577: IdealPoint;
+
+    self_1785 = self_1784;
+    other_1577 = other_1576;
+    let _e4: MotorDual = self_1785;
+    let _e8: IdealPoint = other_1577;
+    let _e11: IdealPoint = other_1577;
+    let _e14: IdealPoint = other_1577;
+    let _e17: IdealPoint = other_1577;
+    let _e29: MotorDual = self_1785;
+    let _e33: IdealPoint = other_1577;
+    let _e36: IdealPoint = other_1577;
+    let _e39: IdealPoint = other_1577;
+    let _e42: IdealPoint = other_1577;
+    let _e55: MotorDual = self_1785;
+    let _e58: IdealPoint = other_1577;
+    let _e61: IdealPoint = other_1577;
+    let _e64: IdealPoint = other_1577;
+    let _e67: IdealPoint = other_1577;
+    return Motor(((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.y, _e11.g0_.y, _e14.g0_.y, _e17.g0_.x)) * vec4<f32>(0.0, 0.0, -(1.0), 1.0)) + ((vec4<f32>(_e29.g0_.w) * vec4<f32>(_e33.g0_.y, _e36.g0_.x, _e39.g0_.y, _e42.g0_.y)) * vec4<f32>(1.0, -(1.0), 0.0, 0.0))) + (_e55.g0_.zzxx * vec4<f32>(_e58.g0_.x, _e61.g0_.y, _e64.g0_.x, _e67.g0_.y))));
+}
+
+fn motor_dual_ideal_point_inner_anti_product(self_1786: MotorDual, other_1578: IdealPoint) -> Point {
+    var self_1787: MotorDual;
+    var other_1579: IdealPoint;
+
+    self_1787 = self_1786;
+    other_1579 = other_1578;
+    let _e4: MotorDual = self_1787;
+    let _e8: IdealPoint = other_1579;
+    let _e11: IdealPoint = other_1579;
+    let _e14: IdealPoint = other_1579;
+    let _e25: MotorDual = self_1787;
+    let _e29: IdealPoint = other_1579;
+    let _e41: MotorDual = self_1787;
+    let _e44: MotorDual = self_1787;
+    let _e47: MotorDual = self_1787;
+    let _e51: IdealPoint = other_1579;
+    let _e54: IdealPoint = other_1579;
+    let _e57: IdealPoint = other_1579;
+    return Point(((((vec3<f32>(_e4.g0_.y) * vec3<f32>(_e8.g0_.y, _e11.g0_.y, _e14.g0_.x)) * vec3<f32>(0.0, -(1.0), 1.0)) + ((vec3<f32>(_e25.g0_.w) * vec3<f32>(_e29.g0_.x)) * vec3<f32>(-(1.0), 0.0, 0.0))) + (vec3<f32>(_e41.g0_.z, _e44.g0_.x, _e47.g0_.x) * vec3<f32>(_e51.g0_.y, _e54.g0_.x, _e57.g0_.y))));
+}
+
+fn motor_dual_ideal_point_left_anti_contraction(self_1788: MotorDual, other_1580: IdealPoint) -> IdealPoint {
+    var self_1789: MotorDual;
+    var other_1581: IdealPoint;
+
+    self_1789 = self_1788;
+    other_1581 = other_1580;
+    let _e4: MotorDual = self_1789;
+    let _e8: IdealPoint = other_1581;
+    return IdealPoint((vec2<f32>(_e4.g0_.x) * _e8.g0_));
+}
+
+fn motor_dual_ideal_point_right_anti_contraction(self_1790: MotorDual, other_1582: IdealPoint) -> Point {
+    var self_1791: MotorDual;
+    var other_1583: IdealPoint;
+
+    self_1791 = self_1790;
+    other_1583 = other_1582;
+    let _e4: MotorDual = self_1791;
+    let _e8: IdealPoint = other_1583;
+    let _e19: MotorDual = self_1791;
+    let _e22: MotorDual = self_1791;
+    let _e25: MotorDual = self_1791;
+    let _e29: IdealPoint = other_1583;
+    let _e32: IdealPoint = other_1583;
+    let _e35: IdealPoint = other_1583;
+    return Point((((vec3<f32>(_e4.g0_.w) * vec3<f32>(_e8.g0_.x)) * vec3<f32>(-(1.0), 0.0, 0.0)) + ((vec3<f32>(_e19.g0_.z, _e22.g0_.y, _e25.g0_.y) * vec3<f32>(_e29.g0_.y, _e32.g0_.y, _e35.g0_.x)) * vec3<f32>(1.0, -(1.0), 1.0))));
+}
+
+fn motor_dual_plane_into(self_1792: MotorDual) -> Plane {
+    var self_1793: MotorDual;
+
+    self_1793 = self_1792;
+    let _e2: MotorDual = self_1793;
+    let _e5: MotorDual = self_1793;
+    let _e8: MotorDual = self_1793;
     return Plane(vec3<f32>(_e2.g0_.y, _e5.g0_.z, _e8.g0_.w));
 }
 
-fn motor_dual_plane_add(self_1158: MotorDual, other_984: Plane) -> MotorDual {
-    var self_1159: MotorDual;
-    var other_985: Plane;
+fn motor_dual_plane_add(self_1794: MotorDual, other_1584: Plane) -> MotorDual {
+    var self_1795: MotorDual;
+    var other_1585: Plane;
 
-    self_1159 = self_1158;
-    other_985 = other_984;
-    let _e4: MotorDual = self_1159;
-    let _e6: Plane = other_985;
-    let _e9: Plane = other_985;
-    let _e12: Plane = other_985;
-    let _e15: Plane = other_985;
+    self_1795 = self_1794;
+    other_1585 = other_1584;
+    let _e4: MotorDual = self_1795;
+    let _e6: Plane = other_1585;
+    let _e9: Plane = other_1585;
+    let _e12: Plane = other_1585;
+    let _e15: Plane = other_1585;
     return MotorDual((_e4.g0_ + (vec4<f32>(_e6.g0_.x, _e9.g0_.x, _e12.g0_.y, _e15.g0_.z) * vec4<f32>(0.0, 1.0, 1.0, 1.0))));
 }
 
-fn motor_dual_plane_sub(self_1160: MotorDual, other_986: Plane) -> MotorDual {
-    var self_1161: MotorDual;
-    var other_987: Plane;
+fn motor_dual_plane_sub(self_1796: MotorDual, other_1586: Plane) -> MotorDual {
+    var self_1797: MotorDual;
+    var other_1587: Plane;
 
-    self_1161 = self_1160;
-    other_987 = other_986;
-    let _e4: MotorDual = self_1161;
-    let _e6: Plane = other_987;
-    let _e9: Plane = other_987;
-    let _e12: Plane = other_987;
-    let _e15: Plane = other_987;
+    self_1797 = self_1796;
+    other_1587 = other_1586;
+    let _e4: MotorDual = self_1797;
+    let _e6: Plane = other_1587;
+    let _e9: Plane = other_1587;
+    let _e12: Plane = other_1587;
+    let _e15: Plane = other_1587;
     return MotorDual((_e4.g0_ - (vec4<f32>(_e6.g0_.x, _e9.g0_.x, _e12.g0_.y, _e15.g0_.z) * vec4<f32>(0.0, 1.0, 1.0, 1.0))));
 }
 
-fn motor_dual_plane_geometric_product(self_1162: MotorDual, other_988: Plane) -> Motor {
-    var self_1163: MotorDual;
-    var other_989: Plane;
+fn motor_dual_plane_geometric_product(self_1798: MotorDual, other_1588: Plane) -> Motor {
+    var self_1799: MotorDual;
+    var other_1589: Plane;
 
-    self_1163 = self_1162;
-    other_989 = other_988;
-    let _e4: MotorDual = self_1163;
-    let _e8: Plane = other_989;
-    let _e11: Plane = other_989;
-    let _e14: Plane = other_989;
-    let _e17: Plane = other_989;
-    let _e29: MotorDual = self_1163;
-    let _e33: Plane = other_989;
-    let _e36: Plane = other_989;
-    let _e39: Plane = other_989;
-    let _e42: Plane = other_989;
-    let _e55: MotorDual = self_1163;
-    let _e59: Plane = other_989;
-    let _e62: Plane = other_989;
-    let _e65: Plane = other_989;
-    let _e68: Plane = other_989;
-    let _e81: MotorDual = self_1163;
-    let _e85: Plane = other_989;
-    let _e88: Plane = other_989;
-    let _e91: Plane = other_989;
-    let _e94: Plane = other_989;
+    self_1799 = self_1798;
+    other_1589 = other_1588;
+    let _e4: MotorDual = self_1799;
+    let _e8: Plane = other_1589;
+    let _e11: Plane = other_1589;
+    let _e14: Plane = other_1589;
+    let _e17: Plane = other_1589;
+    let _e29: MotorDual = self_1799;
+    let _e33: Plane = other_1589;
+    let _e36: Plane = other_1589;
+    let _e39: Plane = other_1589;
+    let _e42: Plane = other_1589;
+    let _e55: MotorDual = self_1799;
+    let _e59: Plane = other_1589;
+    let _e62: Plane = other_1589;
+    let _e65: Plane = other_1589;
+    let _e68: Plane = other_1589;
+    let _e81: MotorDual = self_1799;
+    let _e85: Plane = other_1589;
+    let _e88: Plane = other_1589;
+    let _e91: Plane = other_1589;
+    let _e94: Plane = other_1589;
     return Motor((((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.z, _e11.g0_.z, _e14.g0_.z, _e17.g0_.y)) * vec4<f32>(0.0, 0.0, 1.0, -(1.0))) + ((vec4<f32>(_e29.g0_.z) * vec4<f32>(_e33.g0_.y, _e36.g0_.z, _e39.g0_.y, _e42.g0_.x)) * vec4<f32>(1.0, -(1.0), 0.0, 1.0))) + ((vec4<f32>(_e55.g0_.w) * vec4<f32>(_e59.g0_.z, _e62.g0_.y, _e65.g0_.x, _e68.g0_.z)) * vec4<f32>(1.0, 1.0, -(1.0), 0.0))) + ((vec4<f32>(_e81.g0_.x) * vec4<f32>(_e85.g0_.x, _e88.g0_.x, _e91.g0_.y, _e94.g0_.z)) * vec4<f32>(0.0, 0.0, 1.0, 1.0))));
 }
 
-fn motor_dual_plane_regressive_product(self_1164: MotorDual, other_990: Plane) -> Plane {
-    var self_1165: MotorDual;
-    var other_991: Plane;
+fn motor_dual_plane_regressive_product(self_1800: MotorDual, other_1590: Plane) -> Plane {
+    var self_1801: MotorDual;
+    var other_1591: Plane;
 
-    self_1165 = self_1164;
-    other_991 = other_990;
-    let _e4: MotorDual = self_1165;
-    let _e8: Plane = other_991;
+    self_1801 = self_1800;
+    other_1591 = other_1590;
+    let _e4: MotorDual = self_1801;
+    let _e8: Plane = other_1591;
     return Plane((vec3<f32>(_e4.g0_.x) * _e8.g0_));
 }
 
-fn motor_dual_plane_outer_product(self_1166: MotorDual, other_992: Plane) -> Point {
-    var self_1167: MotorDual;
-    var other_993: Plane;
+fn motor_dual_plane_outer_product(self_1802: MotorDual, other_1592: Plane) -> Point {
+    var self_1803: MotorDual;
+    var other_1593: Plane;
 
-    self_1167 = self_1166;
-    other_993 = other_992;
-    let _e4: MotorDual = self_1167;
-    let _e8: Plane = other_993;
-    let _e18: MotorDual = self_1167;
-    let _e22: Plane = other_993;
-    let _e33: MotorDual = self_1167;
-    let _e36: MotorDual = self_1167;
-    let _e39: MotorDual = self_1167;
-    let _e43: Plane = other_993;
+    self_1803 = self_1802;
+    other_1593 = other_1592;
+    let _e4: MotorDual = self_1803;
+    let _e8: Plane = other_1593;
+    let _e18: MotorDual = self_1803;
+    let _e22: Plane = other_1593;
+    let _e33: MotorDual = self_1803;
+    let _e36: MotorDual = self_1803;
+    let _e39: MotorDual = self_1803;
+    let _e43: Plane = other_1593;
     return Point(((((vec3<f32>(_e4.g0_.z) * _e8.g0_.zzx) * vec3<f32>(-(1.0), 0.0, 1.0)) + ((vec3<f32>(_e18.g0_.w) * _e22.g0_.yxy) * vec3<f32>(1.0, -(1.0), 0.0))) + ((vec3<f32>(_e33.g0_.x, _e36.g0_.y, _e39.g0_.y) * _e43.g0_.xzy) * vec3<f32>(0.0, 1.0, -(1.0)))));
 }
 
-fn motor_dual_plane_inner_product(self_1168: MotorDual, other_994: Plane) -> Translator {
-    var self_1169: MotorDual;
-    var other_995: Plane;
+fn motor_dual_plane_inner_product(self_1804: MotorDual, other_1594: Plane) -> Translator {
+    var self_1805: MotorDual;
+    var other_1595: Plane;
 
-    self_1169 = self_1168;
-    other_995 = other_994;
-    let _e4: MotorDual = self_1169;
-    let _e8: Plane = other_995;
-    let _e18: MotorDual = self_1169;
-    let _e21: MotorDual = self_1169;
-    let _e24: MotorDual = self_1169;
-    let _e28: Plane = other_995;
+    self_1805 = self_1804;
+    other_1595 = other_1594;
+    let _e4: MotorDual = self_1805;
+    let _e8: Plane = other_1595;
+    let _e18: MotorDual = self_1805;
+    let _e21: MotorDual = self_1805;
+    let _e24: MotorDual = self_1805;
+    let _e28: Plane = other_1595;
     return Translator((((vec3<f32>(_e4.g0_.w) * vec3<f32>(_e8.g0_.z)) * vec3<f32>(1.0, 0.0, 0.0)) + (vec3<f32>(_e18.g0_.z, _e21.g0_.x, _e24.g0_.x) * _e28.g0_.yyz)));
 }
 
-fn motor_dual_plane_left_contraction(self_1170: MotorDual, other_996: Plane) -> Scalar {
-    var self_1171: MotorDual;
-    var other_997: Plane;
+fn motor_dual_plane_geometric_anti_product(self_1806: MotorDual, other_1596: Plane) -> MotorDual {
+    var self_1807: MotorDual;
+    var other_1597: Plane;
 
-    self_1171 = self_1170;
-    other_997 = other_996;
-    let _e4: MotorDual = self_1171;
-    let _e7: Plane = other_997;
-    let _e11: MotorDual = self_1171;
-    let _e14: Plane = other_997;
+    self_1807 = self_1806;
+    other_1597 = other_1596;
+    let _e4: MotorDual = self_1807;
+    let _e8: Plane = other_1597;
+    let _e11: Plane = other_1597;
+    let _e14: Plane = other_1597;
+    let _e17: Plane = other_1597;
+    let _e30: MotorDual = self_1807;
+    let _e34: Plane = other_1597;
+    let _e47: MotorDual = self_1807;
+    let _e51: Plane = other_1597;
+    let _e63: MotorDual = self_1807;
+    let _e67: Plane = other_1597;
+    let _e70: Plane = other_1597;
+    let _e73: Plane = other_1597;
+    let _e76: Plane = other_1597;
+    return MotorDual((((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.x, _e11.g0_.x, _e14.g0_.z, _e17.g0_.y)) * vec4<f32>(-(1.0), 0.0, -(1.0), 1.0)) + ((vec4<f32>(_e30.g0_.z) * vec4<f32>(_e34.g0_.x)) * vec4<f32>(0.0, 0.0, 0.0, -(1.0)))) + ((vec4<f32>(_e47.g0_.w) * vec4<f32>(_e51.g0_.x)) * vec4<f32>(0.0, 0.0, 1.0, 0.0))) + ((vec4<f32>(_e63.g0_.x) * vec4<f32>(_e67.g0_.x, _e70.g0_.x, _e73.g0_.y, _e76.g0_.z)) * vec4<f32>(0.0, 1.0, 1.0, 1.0))));
+}
+
+fn motor_dual_plane_inner_anti_product(self_1808: MotorDual, other_1598: Plane) -> MotorDual {
+    var self_1809: MotorDual;
+    var other_1599: Plane;
+
+    self_1809 = self_1808;
+    other_1599 = other_1598;
+    let _e4: MotorDual = self_1809;
+    let _e7: Plane = other_1599;
+    let _e10: Plane = other_1599;
+    let _e13: Plane = other_1599;
+    let _e16: Plane = other_1599;
+    return MotorDual(((_e4.g0_.yxxx * vec4<f32>(_e7.g0_.x, _e10.g0_.x, _e13.g0_.y, _e16.g0_.z)) * vec4<f32>(-(1.0), 1.0, 1.0, 1.0)));
+}
+
+fn motor_dual_plane_left_contraction(self_1810: MotorDual, other_1600: Plane) -> Scalar {
+    var self_1811: MotorDual;
+    var other_1601: Plane;
+
+    self_1811 = self_1810;
+    other_1601 = other_1600;
+    let _e4: MotorDual = self_1811;
+    let _e7: Plane = other_1601;
+    let _e11: MotorDual = self_1811;
+    let _e14: Plane = other_1601;
     return Scalar(((_e4.g0_.z * _e7.g0_.y) + (_e11.g0_.w * _e14.g0_.z)));
 }
 
-fn motor_dual_plane_right_contraction(self_1172: MotorDual, other_998: Plane) -> Translator {
-    var self_1173: MotorDual;
-    var other_999: Plane;
+fn motor_dual_plane_right_contraction(self_1812: MotorDual, other_1602: Plane) -> Translator {
+    var self_1813: MotorDual;
+    var other_1603: Plane;
 
-    self_1173 = self_1172;
-    other_999 = other_998;
-    let _e4: MotorDual = self_1173;
-    let _e8: Plane = other_999;
-    let _e18: MotorDual = self_1173;
-    let _e21: MotorDual = self_1173;
-    let _e24: MotorDual = self_1173;
-    let _e28: Plane = other_999;
+    self_1813 = self_1812;
+    other_1603 = other_1602;
+    let _e4: MotorDual = self_1813;
+    let _e8: Plane = other_1603;
+    let _e18: MotorDual = self_1813;
+    let _e21: MotorDual = self_1813;
+    let _e24: MotorDual = self_1813;
+    let _e28: Plane = other_1603;
     return Translator((((vec3<f32>(_e4.g0_.w) * vec3<f32>(_e8.g0_.z)) * vec3<f32>(1.0, 0.0, 0.0)) + (vec3<f32>(_e18.g0_.z, _e21.g0_.x, _e24.g0_.x) * _e28.g0_.yyz)));
 }
 
-fn motor_dual_plane_scalar_product(self_1174: MotorDual, other_1000: Plane) -> Scalar {
-    var self_1175: MotorDual;
-    var other_1001: Plane;
+fn motor_dual_plane_left_anti_contraction(self_1814: MotorDual, other_1604: Plane) -> MotorDual {
+    var self_1815: MotorDual;
+    var other_1605: Plane;
 
-    self_1175 = self_1174;
-    other_1001 = other_1000;
-    let _e4: MotorDual = self_1175;
-    let _e7: Plane = other_1001;
-    let _e11: MotorDual = self_1175;
-    let _e14: Plane = other_1001;
+    self_1815 = self_1814;
+    other_1605 = other_1604;
+    let _e4: MotorDual = self_1815;
+    let _e7: Plane = other_1605;
+    let _e10: Plane = other_1605;
+    let _e13: Plane = other_1605;
+    let _e16: Plane = other_1605;
+    return MotorDual(((_e4.g0_.yxxx * vec4<f32>(_e7.g0_.x, _e10.g0_.x, _e13.g0_.y, _e16.g0_.z)) * vec4<f32>(-(1.0), 1.0, 1.0, 1.0)));
+}
+
+fn motor_dual_plane_right_anti_contraction(self_1816: MotorDual, other_1606: Plane) -> AntiScalar {
+    var self_1817: MotorDual;
+    var other_1607: Plane;
+
+    self_1817 = self_1816;
+    other_1607 = other_1606;
+    let _e5: MotorDual = self_1817;
+    let _e8: Plane = other_1607;
+    return AntiScalar((0.0 - (_e5.g0_.y * _e8.g0_.x)));
+}
+
+fn motor_dual_plane_scalar_product(self_1818: MotorDual, other_1608: Plane) -> Scalar {
+    var self_1819: MotorDual;
+    var other_1609: Plane;
+
+    self_1819 = self_1818;
+    other_1609 = other_1608;
+    let _e4: MotorDual = self_1819;
+    let _e7: Plane = other_1609;
+    let _e11: MotorDual = self_1819;
+    let _e14: Plane = other_1609;
     return Scalar(((_e4.g0_.z * _e7.g0_.y) + (_e11.g0_.w * _e14.g0_.z)));
 }
 
-fn motor_dual_translator_geometric_product(self_1176: MotorDual, other_1002: Translator) -> MotorDual {
-    var self_1177: MotorDual;
-    var other_1003: Translator;
+fn motor_dual_plane_anti_scalar_product(self_1820: MotorDual, other_1610: Plane) -> AntiScalar {
+    var self_1821: MotorDual;
+    var other_1611: Plane;
 
-    self_1177 = self_1176;
-    other_1003 = other_1002;
-    let _e4: MotorDual = self_1177;
-    let _e8: Translator = other_1003;
-    let _e11: Translator = other_1003;
-    let _e14: Translator = other_1003;
-    let _e17: Translator = other_1003;
-    let _e28: MotorDual = self_1177;
-    let _e32: Translator = other_1003;
-    let _e35: Translator = other_1003;
-    let _e38: Translator = other_1003;
-    let _e41: Translator = other_1003;
-    let _e54: MotorDual = self_1177;
-    let _e57: Translator = other_1003;
+    self_1821 = self_1820;
+    other_1611 = other_1610;
+    let _e5: MotorDual = self_1821;
+    let _e8: Plane = other_1611;
+    return AntiScalar((0.0 - (_e5.g0_.y * _e8.g0_.x)));
+}
+
+fn motor_dual_translator_geometric_product(self_1822: MotorDual, other_1612: Translator) -> MotorDual {
+    var self_1823: MotorDual;
+    var other_1613: Translator;
+
+    self_1823 = self_1822;
+    other_1613 = other_1612;
+    let _e4: MotorDual = self_1823;
+    let _e8: Translator = other_1613;
+    let _e11: Translator = other_1613;
+    let _e14: Translator = other_1613;
+    let _e17: Translator = other_1613;
+    let _e28: MotorDual = self_1823;
+    let _e32: Translator = other_1613;
+    let _e35: Translator = other_1613;
+    let _e38: Translator = other_1613;
+    let _e41: Translator = other_1613;
+    let _e54: MotorDual = self_1823;
+    let _e57: Translator = other_1613;
     return MotorDual(((((vec4<f32>(_e4.g0_.z) * vec4<f32>(_e8.g0_.y, _e11.g0_.z, _e14.g0_.x, _e17.g0_.y)) * vec4<f32>(1.0, 1.0, 1.0, 0.0)) + ((vec4<f32>(_e28.g0_.w) * vec4<f32>(_e32.g0_.z, _e35.g0_.y, _e38.g0_.z, _e41.g0_.x)) * vec4<f32>(1.0, -(1.0), 0.0, 1.0))) + ((_e54.g0_.xyxx * vec4<f32>(_e57.g0_.x)) * vec4<f32>(1.0, 1.0, 0.0, 0.0))));
 }
 
-fn motor_dual_translator_regressive_product(self_1178: MotorDual, other_1004: Translator) -> Translator {
-    var self_1179: MotorDual;
-    var other_1005: Translator;
+fn motor_dual_translator_regressive_product(self_1824: MotorDual, other_1614: Translator) -> Translator {
+    var self_1825: MotorDual;
+    var other_1615: Translator;
 
-    self_1179 = self_1178;
-    other_1005 = other_1004;
-    let _e4: MotorDual = self_1179;
-    let _e8: Translator = other_1005;
-    let _e11: MotorDual = self_1179;
-    let _e15: Translator = other_1005;
-    let _e26: MotorDual = self_1179;
-    let _e29: MotorDual = self_1179;
-    let _e32: MotorDual = self_1179;
-    let _e36: Translator = other_1005;
+    self_1825 = self_1824;
+    other_1615 = other_1614;
+    let _e4: MotorDual = self_1825;
+    let _e8: Translator = other_1615;
+    let _e11: MotorDual = self_1825;
+    let _e15: Translator = other_1615;
+    let _e26: MotorDual = self_1825;
+    let _e29: MotorDual = self_1825;
+    let _e32: MotorDual = self_1825;
+    let _e36: Translator = other_1615;
     return Translator((((vec3<f32>(_e4.g0_.x) * _e8.g0_) + ((vec3<f32>(_e11.g0_.w) * vec3<f32>(_e15.g0_.z)) * vec3<f32>(1.0, 0.0, 0.0))) + ((vec3<f32>(_e26.g0_.z, _e29.g0_.x, _e32.g0_.x) * _e36.g0_.yxx) * vec3<f32>(1.0, 0.0, 0.0))));
 }
 
-fn motor_dual_translator_outer_product(self_1180: MotorDual, other_1006: Translator) -> MotorDual {
-    var self_1181: MotorDual;
-    var other_1007: Translator;
+fn motor_dual_translator_outer_product(self_1826: MotorDual, other_1616: Translator) -> MotorDual {
+    var self_1827: MotorDual;
+    var other_1617: Translator;
 
-    self_1181 = self_1180;
-    other_1007 = other_1006;
-    let _e4: MotorDual = self_1181;
-    let _e8: Translator = other_1007;
-    let _e11: Translator = other_1007;
-    let _e14: Translator = other_1007;
-    let _e17: Translator = other_1007;
-    let _e28: MotorDual = self_1181;
-    let _e32: Translator = other_1007;
-    let _e35: Translator = other_1007;
-    let _e38: Translator = other_1007;
-    let _e41: Translator = other_1007;
-    let _e53: MotorDual = self_1181;
-    let _e56: Translator = other_1007;
+    self_1827 = self_1826;
+    other_1617 = other_1616;
+    let _e4: MotorDual = self_1827;
+    let _e8: Translator = other_1617;
+    let _e11: Translator = other_1617;
+    let _e14: Translator = other_1617;
+    let _e17: Translator = other_1617;
+    let _e28: MotorDual = self_1827;
+    let _e32: Translator = other_1617;
+    let _e35: Translator = other_1617;
+    let _e38: Translator = other_1617;
+    let _e41: Translator = other_1617;
+    let _e53: MotorDual = self_1827;
+    let _e56: Translator = other_1617;
     return MotorDual(((((vec4<f32>(_e4.g0_.z) * vec4<f32>(_e8.g0_.y, _e11.g0_.y, _e14.g0_.x, _e17.g0_.y)) * vec4<f32>(1.0, 0.0, 1.0, 0.0)) + ((vec4<f32>(_e28.g0_.w) * vec4<f32>(_e32.g0_.z, _e35.g0_.z, _e38.g0_.z, _e41.g0_.x)) * vec4<f32>(1.0, 0.0, 0.0, 1.0))) + ((_e53.g0_.xyxx * vec4<f32>(_e56.g0_.x)) * vec4<f32>(1.0, 1.0, 0.0, 0.0))));
 }
 
-fn motor_dual_translator_inner_product(self_1182: MotorDual, other_1008: Translator) -> MotorDual {
-    var self_1183: MotorDual;
-    var other_1009: Translator;
+fn motor_dual_translator_inner_product(self_1828: MotorDual, other_1618: Translator) -> MotorDual {
+    var self_1829: MotorDual;
+    var other_1619: Translator;
 
-    self_1183 = self_1182;
-    other_1009 = other_1008;
-    let _e4: MotorDual = self_1183;
-    let _e8: Translator = other_1009;
-    let _e11: Translator = other_1009;
-    let _e14: Translator = other_1009;
-    let _e17: Translator = other_1009;
-    let _e28: MotorDual = self_1183;
-    let _e32: Translator = other_1009;
-    let _e35: Translator = other_1009;
-    let _e38: Translator = other_1009;
-    let _e41: Translator = other_1009;
-    let _e54: MotorDual = self_1183;
-    let _e57: Translator = other_1009;
+    self_1829 = self_1828;
+    other_1619 = other_1618;
+    let _e4: MotorDual = self_1829;
+    let _e8: Translator = other_1619;
+    let _e11: Translator = other_1619;
+    let _e14: Translator = other_1619;
+    let _e17: Translator = other_1619;
+    let _e28: MotorDual = self_1829;
+    let _e32: Translator = other_1619;
+    let _e35: Translator = other_1619;
+    let _e38: Translator = other_1619;
+    let _e41: Translator = other_1619;
+    let _e54: MotorDual = self_1829;
+    let _e57: Translator = other_1619;
     return MotorDual(((((vec4<f32>(_e4.g0_.z) * vec4<f32>(_e8.g0_.z, _e11.g0_.z, _e14.g0_.x, _e17.g0_.z)) * vec4<f32>(0.0, 1.0, 1.0, 0.0)) + ((vec4<f32>(_e28.g0_.w) * vec4<f32>(_e32.g0_.y, _e35.g0_.y, _e38.g0_.y, _e41.g0_.x)) * vec4<f32>(0.0, -(1.0), 0.0, 1.0))) + ((_e54.g0_.xyxx * vec4<f32>(_e57.g0_.x)) * vec4<f32>(1.0, 1.0, 0.0, 0.0))));
 }
 
-fn motor_dual_translator_right_contraction(self_1184: MotorDual, other_1010: Translator) -> MotorDual {
-    var self_1185: MotorDual;
-    var other_1011: Translator;
+fn motor_dual_translator_geometric_anti_product(self_1830: MotorDual, other_1620: Translator) -> Motor {
+    var self_1831: MotorDual;
+    var other_1621: Translator;
 
-    self_1185 = self_1184;
-    other_1011 = other_1010;
-    let _e4: MotorDual = self_1185;
-    let _e6: Translator = other_1011;
+    self_1831 = self_1830;
+    other_1621 = other_1620;
+    let _e4: MotorDual = self_1831;
+    let _e8: Translator = other_1621;
+    let _e11: Translator = other_1621;
+    let _e14: Translator = other_1621;
+    let _e17: Translator = other_1621;
+    let _e30: MotorDual = self_1831;
+    let _e34: Translator = other_1621;
+    let _e37: Translator = other_1621;
+    let _e40: Translator = other_1621;
+    let _e43: Translator = other_1621;
+    let _e55: MotorDual = self_1831;
+    let _e59: Translator = other_1621;
+    let _e62: Translator = other_1621;
+    let _e65: Translator = other_1621;
+    let _e68: Translator = other_1621;
+    let _e81: MotorDual = self_1831;
+    let _e85: Translator = other_1621;
+    let _e88: Translator = other_1621;
+    let _e91: Translator = other_1621;
+    let _e94: Translator = other_1621;
+    return Motor((((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.x, _e11.g0_.x, _e14.g0_.z, _e17.g0_.y)) * vec4<f32>(0.0, -(1.0), -(1.0), 1.0)) + ((vec4<f32>(_e30.g0_.z) * vec4<f32>(_e34.g0_.y, _e37.g0_.z, _e40.g0_.y, _e43.g0_.y)) * vec4<f32>(1.0, 1.0, 0.0, 0.0))) + ((vec4<f32>(_e55.g0_.w) * vec4<f32>(_e59.g0_.z, _e62.g0_.y, _e65.g0_.z, _e68.g0_.z)) * vec4<f32>(1.0, -(1.0), 0.0, 0.0))) + ((vec4<f32>(_e81.g0_.x) * vec4<f32>(_e85.g0_.x, _e88.g0_.x, _e91.g0_.y, _e94.g0_.z)) * vec4<f32>(1.0, 0.0, 1.0, 1.0))));
+}
+
+fn motor_dual_translator_inner_anti_product(self_1832: MotorDual, other_1622: Translator) -> Motor {
+    var self_1833: MotorDual;
+    var other_1623: Translator;
+
+    self_1833 = self_1832;
+    other_1623 = other_1622;
+    let _e4: MotorDual = self_1833;
+    let _e8: Translator = other_1623;
+    let _e11: Translator = other_1623;
+    let _e14: Translator = other_1623;
+    let _e17: Translator = other_1623;
+    let _e30: MotorDual = self_1833;
+    let _e34: Translator = other_1623;
+    let _e47: MotorDual = self_1833;
+    let _e50: Translator = other_1623;
+    let _e53: Translator = other_1623;
+    let _e56: Translator = other_1623;
+    let _e59: Translator = other_1623;
+    return Motor(((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.x, _e11.g0_.x, _e14.g0_.z, _e17.g0_.y)) * vec4<f32>(0.0, -(1.0), -(1.0), 1.0)) + ((vec4<f32>(_e30.g0_.w) * vec4<f32>(_e34.g0_.y)) * vec4<f32>(0.0, -(1.0), 0.0, 0.0))) + (_e47.g0_.xzxx * vec4<f32>(_e50.g0_.x, _e53.g0_.z, _e56.g0_.y, _e59.g0_.z))));
+}
+
+fn motor_dual_translator_right_contraction(self_1834: MotorDual, other_1624: Translator) -> MotorDual {
+    var self_1835: MotorDual;
+    var other_1625: Translator;
+
+    self_1835 = self_1834;
+    other_1625 = other_1624;
+    let _e4: MotorDual = self_1835;
+    let _e6: Translator = other_1625;
     return MotorDual((_e4.g0_ * vec4<f32>(_e6.g0_.x)));
 }
 
-fn motor_dual_motor_add(self_1186: MotorDual, other_1012: Motor) -> MultiVector {
-    var self_1187: MotorDual;
-    var other_1013: Motor;
+fn motor_dual_translator_left_anti_contraction(self_1836: MotorDual, other_1626: Translator) -> Motor {
+    var self_1837: MotorDual;
+    var other_1627: Translator;
 
-    self_1187 = self_1186;
-    other_1013 = other_1012;
-    let _e4: MotorDual = self_1187;
-    let _e13: Motor = other_1013;
-    let _e23: MotorDual = self_1187;
-    let _e32: Motor = other_1013;
+    self_1837 = self_1836;
+    other_1627 = other_1626;
+    let _e4: MotorDual = self_1837;
+    let _e7: Translator = other_1627;
+    let _e10: Translator = other_1627;
+    let _e13: Translator = other_1627;
+    let _e16: Translator = other_1627;
+    return Motor(((_e4.g0_.xyxx * vec4<f32>(_e7.g0_.x, _e10.g0_.x, _e13.g0_.y, _e16.g0_.z)) * vec4<f32>(1.0, -(1.0), 1.0, 1.0)));
+}
+
+fn motor_dual_translator_right_anti_contraction(self_1838: MotorDual, other_1628: Translator) -> Point {
+    var self_1839: MotorDual;
+    var other_1629: Translator;
+
+    self_1839 = self_1838;
+    other_1629 = other_1628;
+    let _e4: MotorDual = self_1839;
+    let _e8: Translator = other_1629;
+    let _e19: MotorDual = self_1839;
+    let _e22: MotorDual = self_1839;
+    let _e25: MotorDual = self_1839;
+    let _e29: Translator = other_1629;
+    return Point((((vec3<f32>(_e4.g0_.w) * vec3<f32>(_e8.g0_.y)) * vec3<f32>(-(1.0), 0.0, 0.0)) + ((vec3<f32>(_e19.g0_.z, _e22.g0_.y, _e25.g0_.y) * _e29.g0_.zzy) * vec3<f32>(1.0, -(1.0), 1.0))));
+}
+
+fn motor_dual_motor_add(self_1840: MotorDual, other_1630: Motor) -> MultiVector {
+    var self_1841: MotorDual;
+    var other_1631: Motor;
+
+    self_1841 = self_1840;
+    other_1631 = other_1630;
+    let _e4: MotorDual = self_1841;
+    let _e13: Motor = other_1631;
+    let _e23: MotorDual = self_1841;
+    let _e32: Motor = other_1631;
     return MultiVector(((_e4.g0_.xxwz * vec4<f32>(0.0, 0.0, 1.0, 1.0)) + (_e13.g0_.xyxx * vec4<f32>(1.0, 1.0, 0.0, 0.0))), ((_e23.g0_.yxxx * vec4<f32>(1.0, 1.0, 0.0, 0.0)) + (_e32.g0_.xxzw * vec4<f32>(0.0, 0.0, 1.0, 1.0))));
 }
 
-fn motor_dual_motor_sub(self_1188: MotorDual, other_1014: Motor) -> MultiVector {
-    var self_1189: MotorDual;
-    var other_1015: Motor;
+fn motor_dual_motor_sub(self_1842: MotorDual, other_1632: Motor) -> MultiVector {
+    var self_1843: MotorDual;
+    var other_1633: Motor;
 
-    self_1189 = self_1188;
-    other_1015 = other_1014;
-    let _e4: MotorDual = self_1189;
-    let _e13: Motor = other_1015;
-    let _e23: MotorDual = self_1189;
-    let _e32: Motor = other_1015;
+    self_1843 = self_1842;
+    other_1633 = other_1632;
+    let _e4: MotorDual = self_1843;
+    let _e13: Motor = other_1633;
+    let _e23: MotorDual = self_1843;
+    let _e32: Motor = other_1633;
     return MultiVector(((_e4.g0_.xxwz * vec4<f32>(0.0, 0.0, 1.0, 1.0)) - (_e13.g0_.xyxx * vec4<f32>(1.0, 1.0, 0.0, 0.0))), ((_e23.g0_.yxxx * vec4<f32>(1.0, 1.0, 0.0, 0.0)) - (_e32.g0_.xxzw * vec4<f32>(0.0, 0.0, 1.0, 1.0))));
 }
 
-fn motor_dual_motor_geometric_product(self_1190: MotorDual, other_1016: Motor) -> MotorDual {
-    var self_1191: MotorDual;
-    var other_1017: Motor;
+fn motor_dual_motor_geometric_product(self_1844: MotorDual, other_1634: Motor) -> MotorDual {
+    var self_1845: MotorDual;
+    var other_1635: Motor;
 
-    self_1191 = self_1190;
-    other_1017 = other_1016;
-    let _e4: MotorDual = self_1191;
-    let _e8: Motor = other_1017;
-    let _e18: MotorDual = self_1191;
-    let _e22: Motor = other_1017;
-    let _e34: MotorDual = self_1191;
-    let _e38: Motor = other_1017;
-    let _e50: MotorDual = self_1191;
-    let _e54: Motor = other_1017;
+    self_1845 = self_1844;
+    other_1635 = other_1634;
+    let _e4: MotorDual = self_1845;
+    let _e8: Motor = other_1635;
+    let _e18: MotorDual = self_1845;
+    let _e22: Motor = other_1635;
+    let _e34: MotorDual = self_1845;
+    let _e38: Motor = other_1635;
+    let _e50: MotorDual = self_1845;
+    let _e54: Motor = other_1635;
     return MotorDual((((((vec4<f32>(_e4.g0_.y) * _e8.g0_.yxyy) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) + ((vec4<f32>(_e18.g0_.z) * _e22.g0_.zwxy) * vec4<f32>(1.0, 1.0, 1.0, -(1.0)))) + ((vec4<f32>(_e34.g0_.w) * _e38.g0_.wzyx) * vec4<f32>(1.0, -(1.0), 1.0, 1.0))) + ((vec4<f32>(_e50.g0_.x) * _e54.g0_.xyxx) * vec4<f32>(1.0, -(1.0), 0.0, 0.0))));
 }
 
-fn motor_dual_motor_regressive_product(self_1192: MotorDual, other_1018: Motor) -> Motor {
-    var self_1193: MotorDual;
-    var other_1019: Motor;
+fn motor_dual_motor_regressive_product(self_1846: MotorDual, other_1636: Motor) -> Motor {
+    var self_1847: MotorDual;
+    var other_1637: Motor;
 
-    self_1193 = self_1192;
-    other_1019 = other_1018;
-    let _e4: MotorDual = self_1193;
-    let _e8: Motor = other_1019;
-    let _e11: MotorDual = self_1193;
-    let _e15: Motor = other_1019;
-    let _e27: MotorDual = self_1193;
-    let _e31: Motor = other_1019;
-    let _e43: MotorDual = self_1193;
-    let _e46: Motor = other_1019;
+    self_1847 = self_1846;
+    other_1637 = other_1636;
+    let _e4: MotorDual = self_1847;
+    let _e8: Motor = other_1637;
+    let _e11: MotorDual = self_1847;
+    let _e15: Motor = other_1637;
+    let _e27: MotorDual = self_1847;
+    let _e31: Motor = other_1637;
+    let _e43: MotorDual = self_1847;
+    let _e46: Motor = other_1637;
     return Motor(((((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.z) * vec4<f32>(_e15.g0_.z)) * vec4<f32>(1.0, 0.0, 0.0, 0.0))) + ((vec4<f32>(_e27.g0_.w) * vec4<f32>(_e31.g0_.w)) * vec4<f32>(1.0, 0.0, 0.0, 0.0))) + ((_e43.g0_.yxxx * _e46.g0_.yxxx) * vec4<f32>(1.0, 0.0, 0.0, 0.0))));
 }
 
-fn motor_dual_motor_outer_product(self_1194: MotorDual, other_1020: Motor) -> MotorDual {
-    var self_1195: MotorDual;
-    var other_1021: Motor;
+fn motor_dual_motor_outer_product(self_1848: MotorDual, other_1638: Motor) -> MotorDual {
+    var self_1849: MotorDual;
+    var other_1639: Motor;
 
-    self_1195 = self_1194;
-    other_1021 = other_1020;
-    let _e4: MotorDual = self_1195;
-    let _e8: Motor = other_1021;
-    let _e18: MotorDual = self_1195;
-    let _e22: Motor = other_1021;
-    let _e33: MotorDual = self_1195;
-    let _e37: Motor = other_1021;
-    let _e48: MotorDual = self_1195;
-    let _e52: Motor = other_1021;
+    self_1849 = self_1848;
+    other_1639 = other_1638;
+    let _e4: MotorDual = self_1849;
+    let _e8: Motor = other_1639;
+    let _e18: MotorDual = self_1849;
+    let _e22: Motor = other_1639;
+    let _e33: MotorDual = self_1849;
+    let _e37: Motor = other_1639;
+    let _e48: MotorDual = self_1849;
+    let _e52: Motor = other_1639;
     return MotorDual((((((vec4<f32>(_e4.g0_.y) * _e8.g0_.yxyy) * vec4<f32>(1.0, 1.0, 0.0, 0.0)) + ((vec4<f32>(_e18.g0_.z) * _e22.g0_.zzxz) * vec4<f32>(1.0, 0.0, 1.0, 0.0))) + ((vec4<f32>(_e33.g0_.w) * _e37.g0_.wwwx) * vec4<f32>(1.0, 0.0, 0.0, 1.0))) + ((vec4<f32>(_e48.g0_.x) * vec4<f32>(_e52.g0_.x)) * vec4<f32>(1.0, 0.0, 0.0, 0.0))));
 }
 
-fn motor_dual_motor_inner_product(self_1196: MotorDual, other_1022: Motor) -> MotorDual {
-    var self_1197: MotorDual;
-    var other_1023: Motor;
+fn motor_dual_motor_inner_product(self_1850: MotorDual, other_1640: Motor) -> MotorDual {
+    var self_1851: MotorDual;
+    var other_1641: Motor;
 
-    self_1197 = self_1196;
-    other_1023 = other_1022;
-    let _e4: MotorDual = self_1197;
-    let _e8: Motor = other_1023;
-    let _e19: MotorDual = self_1197;
-    let _e23: Motor = other_1023;
-    let _e35: MotorDual = self_1197;
-    let _e39: Motor = other_1023;
-    let _e51: MotorDual = self_1197;
-    let _e55: Motor = other_1023;
+    self_1851 = self_1850;
+    other_1641 = other_1640;
+    let _e4: MotorDual = self_1851;
+    let _e8: Motor = other_1641;
+    let _e19: MotorDual = self_1851;
+    let _e23: Motor = other_1641;
+    let _e35: MotorDual = self_1851;
+    let _e39: Motor = other_1641;
+    let _e51: MotorDual = self_1851;
+    let _e55: Motor = other_1641;
     return MotorDual((((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.x)) * vec4<f32>(0.0, 1.0, 0.0, 0.0)) + ((vec4<f32>(_e19.g0_.z) * _e23.g0_.wwxy) * vec4<f32>(0.0, 1.0, 1.0, -(1.0)))) + ((vec4<f32>(_e35.g0_.w) * _e39.g0_.zzyx) * vec4<f32>(0.0, -(1.0), 1.0, 1.0))) + ((vec4<f32>(_e51.g0_.x) * _e55.g0_.xyxx) * vec4<f32>(1.0, -(1.0), 0.0, 0.0))));
 }
 
-fn motor_dual_motor_left_contraction(self_1198: MotorDual, other_1024: Motor) -> Plane {
-    var self_1199: MotorDual;
-    var other_1025: Motor;
+fn motor_dual_motor_geometric_anti_product(self_1852: MotorDual, other_1642: Motor) -> Motor {
+    var self_1853: MotorDual;
+    var other_1643: Motor;
 
-    self_1199 = self_1198;
-    other_1025 = other_1024;
-    let _e4: MotorDual = self_1199;
-    let _e8: Motor = other_1025;
-    let _e11: Motor = other_1025;
-    let _e14: Motor = other_1025;
-    let _e25: MotorDual = self_1199;
-    let _e28: MotorDual = self_1199;
-    let _e31: MotorDual = self_1199;
-    let _e35: Motor = other_1025;
-    let _e38: Motor = other_1025;
-    let _e41: Motor = other_1025;
+    self_1853 = self_1852;
+    other_1643 = other_1642;
+    let _e4: MotorDual = self_1853;
+    let _e8: Motor = other_1643;
+    let _e11: MotorDual = self_1853;
+    let _e15: Motor = other_1643;
+    let _e28: MotorDual = self_1853;
+    let _e32: Motor = other_1643;
+    let _e44: MotorDual = self_1853;
+    let _e47: Motor = other_1643;
+    return Motor(((((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.y) * _e15.g0_.yxwz) * vec4<f32>(1.0, -(1.0), -(1.0), 1.0))) + ((vec4<f32>(_e28.g0_.w) * _e32.g0_.wzww) * vec4<f32>(1.0, -(1.0), 0.0, 0.0))) + ((_e44.g0_.zzxx * _e47.g0_.zwxx) * vec4<f32>(1.0, 1.0, 0.0, 0.0))));
+}
+
+fn motor_dual_motor_inner_anti_product(self_1854: MotorDual, other_1644: Motor) -> Motor {
+    var self_1855: MotorDual;
+    var other_1645: Motor;
+
+    self_1855 = self_1854;
+    other_1645 = other_1644;
+    let _e4: MotorDual = self_1855;
+    let _e8: Motor = other_1645;
+    let _e11: MotorDual = self_1855;
+    let _e15: Motor = other_1645;
+    let _e27: MotorDual = self_1855;
+    let _e31: Motor = other_1645;
+    let _e44: MotorDual = self_1855;
+    let _e47: Motor = other_1645;
+    return Motor(((((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.z) * vec4<f32>(_e15.g0_.w)) * vec4<f32>(0.0, 1.0, 0.0, 0.0))) + ((vec4<f32>(_e27.g0_.w) * vec4<f32>(_e31.g0_.z)) * vec4<f32>(0.0, -(1.0), 0.0, 0.0))) + ((_e44.g0_.xyyy * _e47.g0_.xxwz) * vec4<f32>(0.0, -(1.0), -(1.0), 1.0))));
+}
+
+fn motor_dual_motor_left_contraction(self_1856: MotorDual, other_1646: Motor) -> Plane {
+    var self_1857: MotorDual;
+    var other_1647: Motor;
+
+    self_1857 = self_1856;
+    other_1647 = other_1646;
+    let _e4: MotorDual = self_1857;
+    let _e8: Motor = other_1647;
+    let _e11: Motor = other_1647;
+    let _e14: Motor = other_1647;
+    let _e25: MotorDual = self_1857;
+    let _e28: MotorDual = self_1857;
+    let _e31: MotorDual = self_1857;
+    let _e35: Motor = other_1647;
+    let _e38: Motor = other_1647;
+    let _e41: Motor = other_1647;
     return Plane((((vec3<f32>(_e4.g0_.w) * vec3<f32>(_e8.g0_.z, _e11.g0_.y, _e14.g0_.z)) * vec3<f32>(-(1.0), 1.0, 0.0)) + ((vec3<f32>(_e25.g0_.z, _e28.g0_.x, _e31.g0_.z) * vec3<f32>(_e35.g0_.w, _e38.g0_.x, _e41.g0_.y)) * vec3<f32>(1.0, 0.0, -(1.0)))));
 }
 
-fn motor_dual_motor_right_contraction(self_1200: MotorDual, other_1026: Motor) -> MotorDual {
-    var self_1201: MotorDual;
-    var other_1027: Motor;
+fn motor_dual_motor_right_contraction(self_1858: MotorDual, other_1648: Motor) -> MotorDual {
+    var self_1859: MotorDual;
+    var other_1649: Motor;
 
-    self_1201 = self_1200;
-    other_1027 = other_1026;
-    let _e4: MotorDual = self_1201;
-    let _e8: Motor = other_1027;
-    let _e19: MotorDual = self_1201;
-    let _e22: Motor = other_1027;
+    self_1859 = self_1858;
+    other_1649 = other_1648;
+    let _e4: MotorDual = self_1859;
+    let _e8: Motor = other_1649;
+    let _e19: MotorDual = self_1859;
+    let _e22: Motor = other_1649;
     return MotorDual((((vec4<f32>(_e4.g0_.y) * vec4<f32>(_e8.g0_.x)) * vec4<f32>(0.0, 1.0, 0.0, 0.0)) + ((_e19.g0_.xxzw * _e22.g0_.xyxx) * vec4<f32>(1.0, -(1.0), 1.0, 1.0))));
 }
 
-fn motor_dual_motor_dual_add(self_1202: MotorDual, other_1028: MotorDual) -> MotorDual {
-    var self_1203: MotorDual;
-    var other_1029: MotorDual;
+fn motor_dual_motor_left_anti_contraction(self_1860: MotorDual, other_1650: Motor) -> Motor {
+    var self_1861: MotorDual;
+    var other_1651: Motor;
 
-    self_1203 = self_1202;
-    other_1029 = other_1028;
-    let _e4: MotorDual = self_1203;
-    let _e6: MotorDual = other_1029;
+    self_1861 = self_1860;
+    other_1651 = other_1650;
+    let _e4: MotorDual = self_1861;
+    let _e8: Motor = other_1651;
+    let _e11: MotorDual = self_1861;
+    let _e14: Motor = other_1651;
+    return Motor(((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((_e11.g0_.xyxx * vec4<f32>(_e14.g0_.x)) * vec4<f32>(0.0, -(1.0), 0.0, 0.0))));
+}
+
+fn motor_dual_motor_right_anti_contraction(self_1862: MotorDual, other_1652: Motor) -> Point {
+    var self_1863: MotorDual;
+    var other_1653: Motor;
+
+    self_1863 = self_1862;
+    other_1653 = other_1652;
+    let _e4: MotorDual = self_1863;
+    let _e8: Motor = other_1653;
+    let _e19: MotorDual = self_1863;
+    let _e22: MotorDual = self_1863;
+    let _e25: MotorDual = self_1863;
+    let _e29: Motor = other_1653;
+    let _e32: Motor = other_1653;
+    let _e35: Motor = other_1653;
+    return Point((((vec3<f32>(_e4.g0_.w) * vec3<f32>(_e8.g0_.z)) * vec3<f32>(-(1.0), 0.0, 0.0)) + ((vec3<f32>(_e19.g0_.z, _e22.g0_.y, _e25.g0_.y) * vec3<f32>(_e29.g0_.w, _e32.g0_.w, _e35.g0_.z)) * vec3<f32>(1.0, -(1.0), 1.0))));
+}
+
+fn motor_dual_motor_dual_add(self_1864: MotorDual, other_1654: MotorDual) -> MotorDual {
+    var self_1865: MotorDual;
+    var other_1655: MotorDual;
+
+    self_1865 = self_1864;
+    other_1655 = other_1654;
+    let _e4: MotorDual = self_1865;
+    let _e6: MotorDual = other_1655;
     return MotorDual((_e4.g0_ + _e6.g0_));
 }
 
-fn motor_dual_motor_dual_sub(self_1204: MotorDual, other_1030: MotorDual) -> MotorDual {
-    var self_1205: MotorDual;
-    var other_1031: MotorDual;
+fn motor_dual_motor_dual_sub(self_1866: MotorDual, other_1656: MotorDual) -> MotorDual {
+    var self_1867: MotorDual;
+    var other_1657: MotorDual;
 
-    self_1205 = self_1204;
-    other_1031 = other_1030;
-    let _e4: MotorDual = self_1205;
-    let _e6: MotorDual = other_1031;
+    self_1867 = self_1866;
+    other_1657 = other_1656;
+    let _e4: MotorDual = self_1867;
+    let _e6: MotorDual = other_1657;
     return MotorDual((_e4.g0_ - _e6.g0_));
 }
 
-fn motor_dual_motor_dual_mul(self_1206: MotorDual, other_1032: MotorDual) -> MotorDual {
-    var self_1207: MotorDual;
-    var other_1033: MotorDual;
+fn motor_dual_motor_dual_mul(self_1868: MotorDual, other_1658: MotorDual) -> MotorDual {
+    var self_1869: MotorDual;
+    var other_1659: MotorDual;
 
-    self_1207 = self_1206;
-    other_1033 = other_1032;
-    let _e4: MotorDual = self_1207;
-    let _e6: MotorDual = other_1033;
+    self_1869 = self_1868;
+    other_1659 = other_1658;
+    let _e4: MotorDual = self_1869;
+    let _e6: MotorDual = other_1659;
     return MotorDual((_e4.g0_ * _e6.g0_));
 }
 
-fn motor_dual_motor_dual_div(self_1208: MotorDual, other_1034: MotorDual) -> MotorDual {
-    var self_1209: MotorDual;
-    var other_1035: MotorDual;
+fn motor_dual_motor_dual_div(self_1870: MotorDual, other_1660: MotorDual) -> MotorDual {
+    var self_1871: MotorDual;
+    var other_1661: MotorDual;
 
-    self_1209 = self_1208;
-    other_1035 = other_1034;
-    let _e4: MotorDual = self_1209;
-    let _e7: MotorDual = self_1209;
-    let _e10: MotorDual = self_1209;
-    let _e13: MotorDual = self_1209;
-    let _e23: MotorDual = other_1035;
-    let _e26: MotorDual = other_1035;
-    let _e29: MotorDual = other_1035;
-    let _e32: MotorDual = other_1035;
+    self_1871 = self_1870;
+    other_1661 = other_1660;
+    let _e4: MotorDual = self_1871;
+    let _e7: MotorDual = self_1871;
+    let _e10: MotorDual = self_1871;
+    let _e13: MotorDual = self_1871;
+    let _e23: MotorDual = other_1661;
+    let _e26: MotorDual = other_1661;
+    let _e29: MotorDual = other_1661;
+    let _e32: MotorDual = other_1661;
     return MotorDual((((vec4<f32>(_e4.g0_.x, _e7.g0_.y, _e10.g0_.z, _e13.g0_.w) * vec4<f32>(1.0, 1.0, 1.0, 1.0)) / vec4<f32>(_e23.g0_.x, _e26.g0_.y, _e29.g0_.z, _e32.g0_.w)) * vec4<f32>(1.0, 1.0, 1.0, 1.0)));
 }
 
-fn motor_dual_motor_dual_geometric_product(self_1210: MotorDual, other_1036: MotorDual) -> Motor {
-    var self_1211: MotorDual;
-    var other_1037: MotorDual;
+fn motor_dual_motor_dual_geometric_product(self_1872: MotorDual, other_1662: MotorDual) -> Motor {
+    var self_1873: MotorDual;
+    var other_1663: MotorDual;
 
-    self_1211 = self_1210;
-    other_1037 = other_1036;
-    let _e4: MotorDual = self_1211;
-    let _e8: MotorDual = other_1037;
-    let _e19: MotorDual = self_1211;
-    let _e23: MotorDual = other_1037;
-    let _e35: MotorDual = self_1211;
-    let _e39: MotorDual = other_1037;
-    let _e51: MotorDual = self_1211;
-    let _e55: MotorDual = other_1037;
+    self_1873 = self_1872;
+    other_1663 = other_1662;
+    let _e4: MotorDual = self_1873;
+    let _e8: MotorDual = other_1663;
+    let _e19: MotorDual = self_1873;
+    let _e23: MotorDual = other_1663;
+    let _e35: MotorDual = self_1873;
+    let _e39: MotorDual = other_1663;
+    let _e51: MotorDual = self_1873;
+    let _e55: MotorDual = other_1663;
     return Motor((((((vec4<f32>(_e4.g0_.y) * _e8.g0_.wwwz) * vec4<f32>(0.0, 0.0, 1.0, -(1.0))) + ((vec4<f32>(_e19.g0_.z) * _e23.g0_.zwxy) * vec4<f32>(1.0, -(1.0), 1.0, 1.0))) + ((vec4<f32>(_e35.g0_.w) * _e39.g0_.wzyx) * vec4<f32>(1.0, 1.0, -(1.0), 1.0))) + ((vec4<f32>(_e51.g0_.x) * _e55.g0_.xxzw) * vec4<f32>(0.0, 0.0, 1.0, 1.0))));
 }
 
-fn motor_dual_motor_dual_regressive_product(self_1212: MotorDual, other_1038: MotorDual) -> MotorDual {
-    var self_1213: MotorDual;
-    var other_1039: MotorDual;
+fn motor_dual_motor_dual_regressive_product(self_1874: MotorDual, other_1664: MotorDual) -> MotorDual {
+    var self_1875: MotorDual;
+    var other_1665: MotorDual;
 
-    self_1213 = self_1212;
-    other_1039 = other_1038;
-    let _e4: MotorDual = self_1213;
-    let _e8: MotorDual = other_1039;
-    let _e11: MotorDual = self_1213;
-    let _e13: MotorDual = other_1039;
+    self_1875 = self_1874;
+    other_1665 = other_1664;
+    let _e4: MotorDual = self_1875;
+    let _e8: MotorDual = other_1665;
+    let _e11: MotorDual = self_1875;
+    let _e13: MotorDual = other_1665;
     return MotorDual(((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((_e11.g0_ * vec4<f32>(_e13.g0_.x)) * vec4<f32>(0.0, 1.0, 1.0, 1.0))));
 }
 
-fn motor_dual_motor_dual_outer_product(self_1214: MotorDual, other_1040: MotorDual) -> Point {
-    var self_1215: MotorDual;
-    var other_1041: MotorDual;
+fn motor_dual_motor_dual_outer_product(self_1876: MotorDual, other_1666: MotorDual) -> Point {
+    var self_1877: MotorDual;
+    var other_1667: MotorDual;
 
-    self_1215 = self_1214;
-    other_1041 = other_1040;
-    let _e4: MotorDual = self_1215;
-    let _e8: MotorDual = other_1041;
-    let _e11: MotorDual = other_1041;
-    let _e14: MotorDual = other_1041;
-    let _e25: MotorDual = self_1215;
-    let _e29: MotorDual = other_1041;
-    let _e32: MotorDual = other_1041;
-    let _e35: MotorDual = other_1041;
-    let _e47: MotorDual = self_1215;
-    let _e50: MotorDual = self_1215;
-    let _e53: MotorDual = self_1215;
-    let _e57: MotorDual = other_1041;
-    let _e60: MotorDual = other_1041;
-    let _e63: MotorDual = other_1041;
+    self_1877 = self_1876;
+    other_1667 = other_1666;
+    let _e4: MotorDual = self_1877;
+    let _e8: MotorDual = other_1667;
+    let _e11: MotorDual = other_1667;
+    let _e14: MotorDual = other_1667;
+    let _e25: MotorDual = self_1877;
+    let _e29: MotorDual = other_1667;
+    let _e32: MotorDual = other_1667;
+    let _e35: MotorDual = other_1667;
+    let _e47: MotorDual = self_1877;
+    let _e50: MotorDual = self_1877;
+    let _e53: MotorDual = self_1877;
+    let _e57: MotorDual = other_1667;
+    let _e60: MotorDual = other_1667;
+    let _e63: MotorDual = other_1667;
     return Point(((((vec3<f32>(_e4.g0_.z) * vec3<f32>(_e8.g0_.w, _e11.g0_.w, _e14.g0_.y)) * vec3<f32>(-(1.0), 0.0, 1.0)) + ((vec3<f32>(_e25.g0_.w) * vec3<f32>(_e29.g0_.z, _e32.g0_.y, _e35.g0_.z)) * vec3<f32>(1.0, -(1.0), 0.0))) + ((vec3<f32>(_e47.g0_.x, _e50.g0_.y, _e53.g0_.y) * vec3<f32>(_e57.g0_.x, _e60.g0_.w, _e63.g0_.z)) * vec3<f32>(0.0, 1.0, -(1.0)))));
 }
 
-fn motor_dual_motor_dual_inner_product(self_1216: MotorDual, other_1042: MotorDual) -> Translator {
-    var self_1217: MotorDual;
-    var other_1043: MotorDual;
+fn motor_dual_motor_dual_inner_product(self_1878: MotorDual, other_1668: MotorDual) -> Translator {
+    var self_1879: MotorDual;
+    var other_1669: MotorDual;
 
-    self_1217 = self_1216;
-    other_1043 = other_1042;
-    let _e4: MotorDual = self_1217;
-    let _e8: MotorDual = other_1043;
-    let _e11: MotorDual = other_1043;
-    let _e14: MotorDual = other_1043;
-    let _e24: MotorDual = self_1217;
-    let _e28: MotorDual = other_1043;
-    let _e31: MotorDual = other_1043;
-    let _e34: MotorDual = other_1043;
-    let _e45: MotorDual = self_1217;
-    let _e49: MotorDual = other_1043;
-    let _e52: MotorDual = other_1043;
-    let _e55: MotorDual = other_1043;
+    self_1879 = self_1878;
+    other_1669 = other_1668;
+    let _e4: MotorDual = self_1879;
+    let _e8: MotorDual = other_1669;
+    let _e11: MotorDual = other_1669;
+    let _e14: MotorDual = other_1669;
+    let _e24: MotorDual = self_1879;
+    let _e28: MotorDual = other_1669;
+    let _e31: MotorDual = other_1669;
+    let _e34: MotorDual = other_1669;
+    let _e45: MotorDual = self_1879;
+    let _e49: MotorDual = other_1669;
+    let _e52: MotorDual = other_1669;
+    let _e55: MotorDual = other_1669;
     return Translator(((((vec3<f32>(_e4.g0_.z) * vec3<f32>(_e8.g0_.z, _e11.g0_.x, _e14.g0_.z)) * vec3<f32>(1.0, 1.0, 0.0)) + ((vec3<f32>(_e24.g0_.w) * vec3<f32>(_e28.g0_.w, _e31.g0_.w, _e34.g0_.x)) * vec3<f32>(1.0, 0.0, 1.0))) + ((vec3<f32>(_e45.g0_.x) * vec3<f32>(_e49.g0_.x, _e52.g0_.z, _e55.g0_.w)) * vec3<f32>(0.0, 1.0, 1.0))));
 }
 
-fn motor_dual_motor_dual_left_contraction(self_1218: MotorDual, other_1044: MotorDual) -> Translator {
-    var self_1219: MotorDual;
-    var other_1045: MotorDual;
+fn motor_dual_motor_dual_geometric_anti_product(self_1880: MotorDual, other_1670: MotorDual) -> MotorDual {
+    var self_1881: MotorDual;
+    var other_1671: MotorDual;
 
-    self_1219 = self_1218;
-    other_1045 = other_1044;
-    let _e4: MotorDual = self_1219;
-    let _e8: MotorDual = other_1045;
-    let _e11: MotorDual = other_1045;
-    let _e14: MotorDual = other_1045;
-    let _e24: MotorDual = self_1219;
-    let _e27: MotorDual = self_1219;
-    let _e30: MotorDual = self_1219;
-    let _e34: MotorDual = other_1045;
-    let _e37: MotorDual = other_1045;
-    let _e40: MotorDual = other_1045;
+    self_1881 = self_1880;
+    other_1671 = other_1670;
+    let _e4: MotorDual = self_1881;
+    let _e8: MotorDual = other_1671;
+    let _e11: MotorDual = self_1881;
+    let _e15: MotorDual = other_1671;
+    let _e28: MotorDual = self_1881;
+    let _e32: MotorDual = other_1671;
+    let _e43: MotorDual = self_1881;
+    let _e46: MotorDual = other_1671;
+    return MotorDual(((((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((vec4<f32>(_e11.g0_.y) * _e15.g0_.yxwz) * vec4<f32>(-(1.0), 1.0, -(1.0), 1.0))) + ((vec4<f32>(_e28.g0_.w) * _e32.g0_.yyyx) * vec4<f32>(0.0, 0.0, 1.0, 1.0))) + ((_e43.g0_.xxzz * _e46.g0_.xxxy) * vec4<f32>(0.0, 0.0, 1.0, -(1.0)))));
+}
+
+fn motor_dual_motor_dual_inner_anti_product(self_1882: MotorDual, other_1672: MotorDual) -> MotorDual {
+    var self_1883: MotorDual;
+    var other_1673: MotorDual;
+
+    self_1883 = self_1882;
+    other_1673 = other_1672;
+    let _e4: MotorDual = self_1883;
+    let _e8: MotorDual = other_1673;
+    let _e11: MotorDual = self_1883;
+    let _e14: MotorDual = other_1673;
+    return MotorDual(((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((_e11.g0_.yyzw * _e14.g0_.yxxx) * vec4<f32>(-(1.0), 1.0, 1.0, 1.0))));
+}
+
+fn motor_dual_motor_dual_left_contraction(self_1884: MotorDual, other_1674: MotorDual) -> Translator {
+    var self_1885: MotorDual;
+    var other_1675: MotorDual;
+
+    self_1885 = self_1884;
+    other_1675 = other_1674;
+    let _e4: MotorDual = self_1885;
+    let _e8: MotorDual = other_1675;
+    let _e11: MotorDual = other_1675;
+    let _e14: MotorDual = other_1675;
+    let _e24: MotorDual = self_1885;
+    let _e27: MotorDual = self_1885;
+    let _e30: MotorDual = self_1885;
+    let _e34: MotorDual = other_1675;
+    let _e37: MotorDual = other_1675;
+    let _e40: MotorDual = other_1675;
     return Translator((((vec3<f32>(_e4.g0_.w) * vec3<f32>(_e8.g0_.w, _e11.g0_.w, _e14.g0_.x)) * vec3<f32>(1.0, 0.0, 1.0)) + ((vec3<f32>(_e24.g0_.z, _e27.g0_.z, _e30.g0_.x) * vec3<f32>(_e34.g0_.z, _e37.g0_.x, _e40.g0_.x)) * vec3<f32>(1.0, 1.0, 0.0))));
 }
 
-fn motor_dual_motor_dual_right_contraction(self_1220: MotorDual, other_1046: MotorDual) -> Translator {
-    var self_1221: MotorDual;
-    var other_1047: MotorDual;
+fn motor_dual_motor_dual_right_contraction(self_1886: MotorDual, other_1676: MotorDual) -> Translator {
+    var self_1887: MotorDual;
+    var other_1677: MotorDual;
 
-    self_1221 = self_1220;
-    other_1047 = other_1046;
-    let _e4: MotorDual = self_1221;
-    let _e8: MotorDual = other_1047;
-    let _e18: MotorDual = self_1221;
-    let _e21: MotorDual = self_1221;
-    let _e24: MotorDual = self_1221;
-    let _e28: MotorDual = other_1047;
-    let _e31: MotorDual = other_1047;
-    let _e34: MotorDual = other_1047;
+    self_1887 = self_1886;
+    other_1677 = other_1676;
+    let _e4: MotorDual = self_1887;
+    let _e8: MotorDual = other_1677;
+    let _e18: MotorDual = self_1887;
+    let _e21: MotorDual = self_1887;
+    let _e24: MotorDual = self_1887;
+    let _e28: MotorDual = other_1677;
+    let _e31: MotorDual = other_1677;
+    let _e34: MotorDual = other_1677;
     return Translator((((vec3<f32>(_e4.g0_.w) * vec3<f32>(_e8.g0_.w)) * vec3<f32>(1.0, 0.0, 0.0)) + (vec3<f32>(_e18.g0_.z, _e21.g0_.x, _e24.g0_.x) * vec3<f32>(_e28.g0_.z, _e31.g0_.z, _e34.g0_.w))));
 }
 
-fn motor_dual_motor_dual_scalar_product(self_1222: MotorDual, other_1048: MotorDual) -> Scalar {
-    var self_1223: MotorDual;
-    var other_1049: MotorDual;
+fn motor_dual_motor_dual_left_anti_contraction(self_1888: MotorDual, other_1678: MotorDual) -> MotorDual {
+    var self_1889: MotorDual;
+    var other_1679: MotorDual;
 
-    self_1223 = self_1222;
-    other_1049 = other_1048;
-    let _e4: MotorDual = self_1223;
-    let _e7: MotorDual = other_1049;
-    let _e11: MotorDual = self_1223;
-    let _e14: MotorDual = other_1049;
+    self_1889 = self_1888;
+    other_1679 = other_1678;
+    let _e4: MotorDual = self_1889;
+    let _e8: MotorDual = other_1679;
+    let _e11: MotorDual = self_1889;
+    let _e14: MotorDual = other_1679;
+    return MotorDual(((vec4<f32>(_e4.g0_.x) * _e8.g0_) + ((_e11.g0_.yxxx * _e14.g0_.yxxx) * vec4<f32>(-(1.0), 0.0, 0.0, 0.0))));
+}
+
+fn motor_dual_motor_dual_right_anti_contraction(self_1890: MotorDual, other_1680: MotorDual) -> MotorDual {
+    var self_1891: MotorDual;
+    var other_1681: MotorDual;
+
+    self_1891 = self_1890;
+    other_1681 = other_1680;
+    let _e4: MotorDual = self_1891;
+    let _e8: MotorDual = other_1681;
+    let _e19: MotorDual = self_1891;
+    let _e22: MotorDual = other_1681;
+    return MotorDual((((vec4<f32>(_e4.g0_.y) * _e8.g0_.yxyy) * vec4<f32>(-(1.0), 1.0, 0.0, 0.0)) + ((_e19.g0_.xxzw * vec4<f32>(_e22.g0_.x)) * vec4<f32>(1.0, 0.0, 1.0, 1.0))));
+}
+
+fn motor_dual_motor_dual_scalar_product(self_1892: MotorDual, other_1682: MotorDual) -> Scalar {
+    var self_1893: MotorDual;
+    var other_1683: MotorDual;
+
+    self_1893 = self_1892;
+    other_1683 = other_1682;
+    let _e4: MotorDual = self_1893;
+    let _e7: MotorDual = other_1683;
+    let _e11: MotorDual = self_1893;
+    let _e14: MotorDual = other_1683;
     return Scalar(((_e4.g0_.z * _e7.g0_.z) + (_e11.g0_.w * _e14.g0_.w)));
 }
 
-fn motor_dual_squared_magnitude(self_1224: MotorDual) -> Scalar {
-    var self_1225: MotorDual;
+fn motor_dual_motor_dual_anti_scalar_product(self_1894: MotorDual, other_1684: MotorDual) -> AntiScalar {
+    var self_1895: MotorDual;
+    var other_1685: MotorDual;
 
-    self_1225 = self_1224;
-    let _e2: MotorDual = self_1225;
-    let _e3: MotorDual = self_1225;
+    self_1895 = self_1894;
+    other_1685 = other_1684;
+    let _e4: MotorDual = self_1895;
+    let _e7: MotorDual = other_1685;
+    let _e11: MotorDual = self_1895;
+    let _e14: MotorDual = other_1685;
+    return AntiScalar(((_e4.g0_.x * _e7.g0_.x) - (_e11.g0_.y * _e14.g0_.y)));
+}
+
+fn motor_dual_squared_magnitude(self_1896: MotorDual) -> Scalar {
+    var self_1897: MotorDual;
+
+    self_1897 = self_1896;
+    let _e2: MotorDual = self_1897;
+    let _e3: MotorDual = self_1897;
     let _e4: MotorDual = motor_dual_reversal(_e3);
     let _e5: Scalar = motor_dual_motor_dual_scalar_product(_e2, _e4);
     return _e5;
 }
 
-fn motor_dual_magnitude(self_1226: MotorDual) -> Scalar {
-    var self_1227: MotorDual;
+fn motor_dual_magnitude(self_1898: MotorDual) -> Scalar {
+    var self_1899: MotorDual;
 
-    self_1227 = self_1226;
-    let _e2: MotorDual = self_1227;
+    self_1899 = self_1898;
+    let _e2: MotorDual = self_1899;
     let _e3: Scalar = motor_dual_squared_magnitude(_e2);
     return Scalar(sqrt(_e3.g0_));
 }
 
-fn motor_dual_scale(self_1228: MotorDual, other_1050: f32) -> MotorDual {
-    var self_1229: MotorDual;
-    var other_1051: f32;
+fn motor_dual_scale(self_1900: MotorDual, other_1686: f32) -> MotorDual {
+    var self_1901: MotorDual;
+    var other_1687: f32;
 
-    self_1229 = self_1228;
-    other_1051 = other_1050;
-    let _e4: MotorDual = self_1229;
-    let _e5: f32 = other_1051;
+    self_1901 = self_1900;
+    other_1687 = other_1686;
+    let _e4: MotorDual = self_1901;
+    let _e5: f32 = other_1687;
     let _e7: MotorDual = motor_dual_scalar_geometric_product(_e4, Scalar(_e5));
     return _e7;
 }
 
-fn motor_dual_signum(self_1230: MotorDual) -> MotorDual {
-    var self_1231: MotorDual;
+fn motor_dual_signum(self_1902: MotorDual) -> MotorDual {
+    var self_1903: MotorDual;
 
-    self_1231 = self_1230;
-    let _e2: MotorDual = self_1231;
-    let _e3: MotorDual = self_1231;
+    self_1903 = self_1902;
+    let _e2: MotorDual = self_1903;
+    let _e3: MotorDual = self_1903;
     let _e4: Scalar = motor_dual_magnitude(_e3);
     let _e9: MotorDual = motor_dual_scalar_geometric_product(_e2, Scalar((1.0 / _e4.g0_)));
     return _e9;
 }
 
-fn motor_dual_inverse(self_1232: MotorDual) -> MotorDual {
-    var self_1233: MotorDual;
+fn motor_dual_inverse(self_1904: MotorDual) -> MotorDual {
+    var self_1905: MotorDual;
 
-    self_1233 = self_1232;
-    let _e2: MotorDual = self_1233;
+    self_1905 = self_1904;
+    let _e2: MotorDual = self_1905;
     let _e3: MotorDual = motor_dual_reversal(_e2);
-    let _e4: MotorDual = self_1233;
+    let _e4: MotorDual = self_1905;
     let _e5: Scalar = motor_dual_squared_magnitude(_e4);
     let _e10: MotorDual = motor_dual_scalar_geometric_product(_e3, Scalar((1.0 / _e5.g0_)));
     return _e10;
 }
 
-fn ideal_point_motor_geometric_quotient(self_1234: IdealPoint, other_1052: Motor) -> IdealPoint {
-    var self_1235: IdealPoint;
-    var other_1053: Motor;
+fn anti_scalar_motor_dual_geometric_quotient(self_1906: AntiScalar, other_1688: MotorDual) -> IdealPoint {
+    var self_1907: AntiScalar;
+    var other_1689: MotorDual;
 
-    self_1235 = self_1234;
-    other_1053 = other_1052;
-    let _e4: IdealPoint = self_1235;
-    let _e5: Motor = other_1053;
+    self_1907 = self_1906;
+    other_1689 = other_1688;
+    let _e4: AntiScalar = self_1907;
+    let _e5: MotorDual = other_1689;
+    let _e6: MotorDual = motor_dual_inverse(_e5);
+    let _e7: IdealPoint = anti_scalar_motor_dual_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_plane_geometric_quotient(self_1908: AntiScalar, other_1690: Plane) -> IdealPoint {
+    var self_1909: AntiScalar;
+    var other_1691: Plane;
+
+    self_1909 = self_1908;
+    other_1691 = other_1690;
+    let _e4: AntiScalar = self_1909;
+    let _e5: Plane = other_1691;
+    let _e6: Plane = plane_inverse(_e5);
+    let _e7: IdealPoint = anti_scalar_plane_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_scalar_geometric_quotient(self_1910: AntiScalar, other_1692: Scalar) -> AntiScalar {
+    var self_1911: AntiScalar;
+    var other_1693: Scalar;
+
+    self_1911 = self_1910;
+    other_1693 = other_1692;
+    let _e4: AntiScalar = self_1911;
+    let _e5: Scalar = other_1693;
+    let _e6: Scalar = scalar_inverse(_e5);
+    let _e7: AntiScalar = anti_scalar_scalar_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_translator_geometric_quotient(self_1912: AntiScalar, other_1694: Translator) -> AntiScalar {
+    var self_1913: AntiScalar;
+    var other_1695: Translator;
+
+    self_1913 = self_1912;
+    other_1695 = other_1694;
+    let _e4: AntiScalar = self_1913;
+    let _e5: Translator = other_1695;
+    let _e6: Translator = translator_inverse(_e5);
+    let _e7: AntiScalar = anti_scalar_translator_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn ideal_point_motor_geometric_quotient(self_1914: IdealPoint, other_1696: Motor) -> IdealPoint {
+    var self_1915: IdealPoint;
+    var other_1697: Motor;
+
+    self_1915 = self_1914;
+    other_1697 = other_1696;
+    let _e4: IdealPoint = self_1915;
+    let _e5: Motor = other_1697;
     let _e6: Motor = motor_inverse(_e5);
     let _e7: IdealPoint = ideal_point_motor_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn ideal_point_point_geometric_quotient(self_1236: IdealPoint, other_1054: Point) -> IdealPoint {
-    var self_1237: IdealPoint;
-    var other_1055: Point;
+fn ideal_point_point_geometric_quotient(self_1916: IdealPoint, other_1698: Point) -> IdealPoint {
+    var self_1917: IdealPoint;
+    var other_1699: Point;
 
-    self_1237 = self_1236;
-    other_1055 = other_1054;
-    let _e4: IdealPoint = self_1237;
-    let _e5: Point = other_1055;
+    self_1917 = self_1916;
+    other_1699 = other_1698;
+    let _e4: IdealPoint = self_1917;
+    let _e5: Point = other_1699;
     let _e6: Point = point_inverse(_e5);
     let _e7: IdealPoint = ideal_point_point_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn ideal_point_rotor_geometric_quotient(self_1238: IdealPoint, other_1056: Rotor) -> IdealPoint {
-    var self_1239: IdealPoint;
-    var other_1057: Rotor;
+fn ideal_point_rotor_geometric_quotient(self_1918: IdealPoint, other_1700: Rotor) -> IdealPoint {
+    var self_1919: IdealPoint;
+    var other_1701: Rotor;
 
-    self_1239 = self_1238;
-    other_1057 = other_1056;
-    let _e4: IdealPoint = self_1239;
-    let _e5: Rotor = other_1057;
+    self_1919 = self_1918;
+    other_1701 = other_1700;
+    let _e4: IdealPoint = self_1919;
+    let _e5: Rotor = other_1701;
     let _e6: Rotor = rotor_inverse(_e5);
     let _e7: IdealPoint = ideal_point_rotor_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn ideal_point_scalar_geometric_quotient(self_1240: IdealPoint, other_1058: Scalar) -> IdealPoint {
-    var self_1241: IdealPoint;
-    var other_1059: Scalar;
+fn ideal_point_scalar_geometric_quotient(self_1920: IdealPoint, other_1702: Scalar) -> IdealPoint {
+    var self_1921: IdealPoint;
+    var other_1703: Scalar;
 
-    self_1241 = self_1240;
-    other_1059 = other_1058;
-    let _e4: IdealPoint = self_1241;
-    let _e5: Scalar = other_1059;
+    self_1921 = self_1920;
+    other_1703 = other_1702;
+    let _e4: IdealPoint = self_1921;
+    let _e5: Scalar = other_1703;
     let _e6: Scalar = scalar_inverse(_e5);
     let _e7: IdealPoint = ideal_point_scalar_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn ideal_point_translator_geometric_quotient(self_1242: IdealPoint, other_1060: Translator) -> IdealPoint {
-    var self_1243: IdealPoint;
-    var other_1061: Translator;
+fn ideal_point_translator_geometric_quotient(self_1922: IdealPoint, other_1704: Translator) -> IdealPoint {
+    var self_1923: IdealPoint;
+    var other_1705: Translator;
 
-    self_1243 = self_1242;
-    other_1061 = other_1060;
-    let _e4: IdealPoint = self_1243;
-    let _e5: Translator = other_1061;
+    self_1923 = self_1922;
+    other_1705 = other_1704;
+    let _e4: IdealPoint = self_1923;
+    let _e5: Translator = other_1705;
     let _e6: Translator = translator_inverse(_e5);
     let _e7: IdealPoint = ideal_point_translator_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn motor_ideal_point_transformation(self_1244: Motor, other_1062: IdealPoint) -> IdealPoint {
-    var self_1245: Motor;
-    var other_1063: IdealPoint;
+fn motor_ideal_point_transformation(self_1924: Motor, other_1706: IdealPoint) -> IdealPoint {
+    var self_1925: Motor;
+    var other_1707: IdealPoint;
 
-    self_1245 = self_1244;
-    other_1063 = other_1062;
-    let _e4: Motor = self_1245;
-    let _e5: IdealPoint = other_1063;
+    self_1925 = self_1924;
+    other_1707 = other_1706;
+    let _e4: Motor = self_1925;
+    let _e5: IdealPoint = other_1707;
     let _e6: IdealPoint = motor_ideal_point_geometric_product(_e4, _e5);
-    let _e7: Motor = self_1245;
+    let _e7: Motor = self_1925;
     let _e8: Motor = motor_reversal(_e7);
     let _e9: IdealPoint = ideal_point_motor_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn motor_powi(self_1246: Motor, exponent: i32) -> Motor {
-    var self_1247: Motor;
+fn motor_powi(self_1926: Motor, exponent: i32) -> Motor {
+    var self_1927: Motor;
     var exponent_1: i32;
     var local: Motor;
     var x: Motor;
     var y: Motor;
     var n: i32;
 
-    self_1247 = self_1246;
+    self_1927 = self_1926;
     exponent_1 = exponent;
     let _e4: i32 = exponent_1;
     if (_e4 == 0) {
@@ -8685,11 +13414,11 @@ fn motor_powi(self_1246: Motor, exponent: i32) -> Motor {
     }
     let _e8: i32 = exponent_1;
     if (_e8 < 0) {
-        let _e11: Motor = self_1247;
+        let _e11: Motor = self_1927;
         let _e12: Motor = motor_inverse(_e11);
         local = _e12;
     } else {
-        let _e14: Motor = self_1247;
+        let _e14: Motor = self_1927;
         local = _e14;
     }
     let _e15: Motor = local;
@@ -8727,531 +13456,531 @@ fn motor_powi(self_1246: Motor, exponent: i32) -> Motor {
     return _e43;
 }
 
-fn motor_motor_geometric_quotient(self_1248: Motor, other_1064: Motor) -> Motor {
-    var self_1249: Motor;
-    var other_1065: Motor;
+fn motor_motor_geometric_quotient(self_1928: Motor, other_1708: Motor) -> Motor {
+    var self_1929: Motor;
+    var other_1709: Motor;
 
-    self_1249 = self_1248;
-    other_1065 = other_1064;
-    let _e4: Motor = self_1249;
-    let _e5: Motor = other_1065;
+    self_1929 = self_1928;
+    other_1709 = other_1708;
+    let _e4: Motor = self_1929;
+    let _e5: Motor = other_1709;
     let _e6: Motor = motor_inverse(_e5);
     let _e7: Motor = motor_motor_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn motor_motor_transformation(self_1250: Motor, other_1066: Motor) -> Motor {
-    var self_1251: Motor;
-    var other_1067: Motor;
+fn motor_motor_transformation(self_1930: Motor, other_1710: Motor) -> Motor {
+    var self_1931: Motor;
+    var other_1711: Motor;
 
-    self_1251 = self_1250;
-    other_1067 = other_1066;
-    let _e4: Motor = self_1251;
-    let _e5: Motor = other_1067;
+    self_1931 = self_1930;
+    other_1711 = other_1710;
+    let _e4: Motor = self_1931;
+    let _e5: Motor = other_1711;
     let _e6: Motor = motor_motor_geometric_product(_e4, _e5);
-    let _e7: Motor = self_1251;
+    let _e7: Motor = self_1931;
     let _e8: Motor = motor_reversal(_e7);
     let _e9: Motor = motor_motor_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn motor_motor_dual_geometric_quotient(self_1252: Motor, other_1068: MotorDual) -> MotorDual {
-    var self_1253: Motor;
-    var other_1069: MotorDual;
+fn motor_motor_dual_geometric_quotient(self_1932: Motor, other_1712: MotorDual) -> MotorDual {
+    var self_1933: Motor;
+    var other_1713: MotorDual;
 
-    self_1253 = self_1252;
-    other_1069 = other_1068;
-    let _e4: Motor = self_1253;
-    let _e5: MotorDual = other_1069;
+    self_1933 = self_1932;
+    other_1713 = other_1712;
+    let _e4: Motor = self_1933;
+    let _e5: MotorDual = other_1713;
     let _e6: MotorDual = motor_dual_inverse(_e5);
     let _e7: MotorDual = motor_motor_dual_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn motor_motor_dual_transformation(self_1254: Motor, other_1070: MotorDual) -> MotorDual {
-    var self_1255: Motor;
-    var other_1071: MotorDual;
+fn motor_motor_dual_transformation(self_1934: Motor, other_1714: MotorDual) -> MotorDual {
+    var self_1935: Motor;
+    var other_1715: MotorDual;
 
-    self_1255 = self_1254;
-    other_1071 = other_1070;
-    let _e4: Motor = self_1255;
-    let _e5: MotorDual = other_1071;
+    self_1935 = self_1934;
+    other_1715 = other_1714;
+    let _e4: Motor = self_1935;
+    let _e5: MotorDual = other_1715;
     let _e6: MotorDual = motor_motor_dual_geometric_product(_e4, _e5);
-    let _e7: Motor = self_1255;
+    let _e7: Motor = self_1935;
     let _e8: Motor = motor_reversal(_e7);
     let _e9: MotorDual = motor_dual_motor_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn motor_multi_vector_geometric_quotient(self_1256: Motor, other_1072: MultiVector) -> MultiVector {
-    var self_1257: Motor;
-    var other_1073: MultiVector;
+fn motor_multi_vector_geometric_quotient(self_1936: Motor, other_1716: MultiVector) -> MultiVector {
+    var self_1937: Motor;
+    var other_1717: MultiVector;
 
-    self_1257 = self_1256;
-    other_1073 = other_1072;
-    let _e4: Motor = self_1257;
-    let _e5: MultiVector = other_1073;
+    self_1937 = self_1936;
+    other_1717 = other_1716;
+    let _e4: Motor = self_1937;
+    let _e5: MultiVector = other_1717;
     let _e6: MultiVector = multi_vector_inverse(_e5);
     let _e7: MultiVector = motor_multi_vector_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn motor_multi_vector_transformation(self_1258: Motor, other_1074: MultiVector) -> MultiVector {
-    var self_1259: Motor;
-    var other_1075: MultiVector;
+fn motor_multi_vector_transformation(self_1938: Motor, other_1718: MultiVector) -> MultiVector {
+    var self_1939: Motor;
+    var other_1719: MultiVector;
 
-    self_1259 = self_1258;
-    other_1075 = other_1074;
-    let _e4: Motor = self_1259;
-    let _e5: MultiVector = other_1075;
+    self_1939 = self_1938;
+    other_1719 = other_1718;
+    let _e4: Motor = self_1939;
+    let _e5: MultiVector = other_1719;
     let _e6: MultiVector = motor_multi_vector_geometric_product(_e4, _e5);
-    let _e7: Motor = self_1259;
+    let _e7: Motor = self_1939;
     let _e8: Motor = motor_reversal(_e7);
     let _e9: MultiVector = multi_vector_motor_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn motor_plane_geometric_quotient(self_1260: Motor, other_1076: Plane) -> MotorDual {
-    var self_1261: Motor;
-    var other_1077: Plane;
+fn motor_plane_geometric_quotient(self_1940: Motor, other_1720: Plane) -> MotorDual {
+    var self_1941: Motor;
+    var other_1721: Plane;
 
-    self_1261 = self_1260;
-    other_1077 = other_1076;
-    let _e4: Motor = self_1261;
-    let _e5: Plane = other_1077;
+    self_1941 = self_1940;
+    other_1721 = other_1720;
+    let _e4: Motor = self_1941;
+    let _e5: Plane = other_1721;
     let _e6: Plane = plane_inverse(_e5);
     let _e7: MotorDual = motor_plane_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn motor_plane_transformation(self_1262: Motor, other_1078: Plane) -> Plane {
-    var self_1263: Motor;
-    var other_1079: Plane;
+fn motor_plane_transformation(self_1942: Motor, other_1722: Plane) -> Plane {
+    var self_1943: Motor;
+    var other_1723: Plane;
 
-    self_1263 = self_1262;
-    other_1079 = other_1078;
-    let _e4: Motor = self_1263;
-    let _e5: Plane = other_1079;
+    self_1943 = self_1942;
+    other_1723 = other_1722;
+    let _e4: Motor = self_1943;
+    let _e5: Plane = other_1723;
     let _e6: MotorDual = motor_plane_geometric_product(_e4, _e5);
-    let _e7: Motor = self_1263;
+    let _e7: Motor = self_1943;
     let _e8: Motor = motor_reversal(_e7);
     let _e9: MotorDual = motor_dual_motor_geometric_product(_e6, _e8);
     let _e10: Plane = motor_dual_plane_into(_e9);
     return _e10;
 }
 
-fn motor_point_geometric_quotient(self_1264: Motor, other_1080: Point) -> Motor {
-    var self_1265: Motor;
-    var other_1081: Point;
+fn motor_point_geometric_quotient(self_1944: Motor, other_1724: Point) -> Motor {
+    var self_1945: Motor;
+    var other_1725: Point;
 
-    self_1265 = self_1264;
-    other_1081 = other_1080;
-    let _e4: Motor = self_1265;
-    let _e5: Point = other_1081;
+    self_1945 = self_1944;
+    other_1725 = other_1724;
+    let _e4: Motor = self_1945;
+    let _e5: Point = other_1725;
     let _e6: Point = point_inverse(_e5);
     let _e7: Motor = motor_point_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn motor_point_transformation(self_1266: Motor, other_1082: Point) -> Point {
-    var self_1267: Motor;
-    var other_1083: Point;
+fn motor_point_transformation(self_1946: Motor, other_1726: Point) -> Point {
+    var self_1947: Motor;
+    var other_1727: Point;
 
-    self_1267 = self_1266;
-    other_1083 = other_1082;
-    let _e4: Motor = self_1267;
-    let _e5: Point = other_1083;
+    self_1947 = self_1946;
+    other_1727 = other_1726;
+    let _e4: Motor = self_1947;
+    let _e5: Point = other_1727;
     let _e6: Motor = motor_point_geometric_product(_e4, _e5);
-    let _e7: Motor = self_1267;
+    let _e7: Motor = self_1947;
     let _e8: Motor = motor_reversal(_e7);
     let _e9: Motor = motor_motor_geometric_product(_e6, _e8);
     let _e10: Point = motor_point_into(_e9);
     return _e10;
 }
 
-fn motor_rotor_geometric_quotient(self_1268: Motor, other_1084: Rotor) -> Motor {
-    var self_1269: Motor;
-    var other_1085: Rotor;
+fn motor_rotor_geometric_quotient(self_1948: Motor, other_1728: Rotor) -> Motor {
+    var self_1949: Motor;
+    var other_1729: Rotor;
 
-    self_1269 = self_1268;
-    other_1085 = other_1084;
-    let _e4: Motor = self_1269;
-    let _e5: Rotor = other_1085;
+    self_1949 = self_1948;
+    other_1729 = other_1728;
+    let _e4: Motor = self_1949;
+    let _e5: Rotor = other_1729;
     let _e6: Rotor = rotor_inverse(_e5);
     let _e7: Motor = motor_rotor_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn motor_rotor_transformation(self_1270: Motor, other_1086: Rotor) -> Rotor {
-    var self_1271: Motor;
-    var other_1087: Rotor;
+fn motor_rotor_transformation(self_1950: Motor, other_1730: Rotor) -> Rotor {
+    var self_1951: Motor;
+    var other_1731: Rotor;
 
-    self_1271 = self_1270;
-    other_1087 = other_1086;
-    let _e4: Motor = self_1271;
-    let _e5: Rotor = other_1087;
+    self_1951 = self_1950;
+    other_1731 = other_1730;
+    let _e4: Motor = self_1951;
+    let _e5: Rotor = other_1731;
     let _e6: Motor = motor_rotor_geometric_product(_e4, _e5);
-    let _e7: Motor = self_1271;
+    let _e7: Motor = self_1951;
     let _e8: Motor = motor_reversal(_e7);
     let _e9: Motor = motor_motor_geometric_product(_e6, _e8);
     let _e10: Rotor = motor_rotor_into(_e9);
     return _e10;
 }
 
-fn motor_scalar_geometric_quotient(self_1272: Motor, other_1088: Scalar) -> Motor {
-    var self_1273: Motor;
-    var other_1089: Scalar;
+fn motor_scalar_geometric_quotient(self_1952: Motor, other_1732: Scalar) -> Motor {
+    var self_1953: Motor;
+    var other_1733: Scalar;
 
-    self_1273 = self_1272;
-    other_1089 = other_1088;
-    let _e4: Motor = self_1273;
-    let _e5: Scalar = other_1089;
+    self_1953 = self_1952;
+    other_1733 = other_1732;
+    let _e4: Motor = self_1953;
+    let _e5: Scalar = other_1733;
     let _e6: Scalar = scalar_inverse(_e5);
     let _e7: Motor = motor_scalar_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn motor_scalar_transformation(self_1274: Motor, other_1090: Scalar) -> Scalar {
-    var self_1275: Motor;
-    var other_1091: Scalar;
+fn motor_scalar_transformation(self_1954: Motor, other_1734: Scalar) -> Scalar {
+    var self_1955: Motor;
+    var other_1735: Scalar;
 
-    self_1275 = self_1274;
-    other_1091 = other_1090;
-    let _e4: Motor = self_1275;
-    let _e5: Scalar = other_1091;
+    self_1955 = self_1954;
+    other_1735 = other_1734;
+    let _e4: Motor = self_1955;
+    let _e5: Scalar = other_1735;
     let _e6: Motor = motor_scalar_geometric_product(_e4, _e5);
-    let _e7: Motor = self_1275;
+    let _e7: Motor = self_1955;
     let _e8: Motor = motor_reversal(_e7);
     let _e9: Motor = motor_motor_geometric_product(_e6, _e8);
     let _e10: Scalar = motor_scalar_into(_e9);
     return _e10;
 }
 
-fn motor_translator_geometric_quotient(self_1276: Motor, other_1092: Translator) -> Motor {
-    var self_1277: Motor;
-    var other_1093: Translator;
+fn motor_translator_geometric_quotient(self_1956: Motor, other_1736: Translator) -> Motor {
+    var self_1957: Motor;
+    var other_1737: Translator;
 
-    self_1277 = self_1276;
-    other_1093 = other_1092;
-    let _e4: Motor = self_1277;
-    let _e5: Translator = other_1093;
+    self_1957 = self_1956;
+    other_1737 = other_1736;
+    let _e4: Motor = self_1957;
+    let _e5: Translator = other_1737;
     let _e6: Translator = translator_inverse(_e5);
     let _e7: Motor = motor_translator_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn motor_translator_transformation(self_1278: Motor, other_1094: Translator) -> Translator {
-    var self_1279: Motor;
-    var other_1095: Translator;
+fn motor_translator_transformation(self_1958: Motor, other_1738: Translator) -> Translator {
+    var self_1959: Motor;
+    var other_1739: Translator;
 
-    self_1279 = self_1278;
-    other_1095 = other_1094;
-    let _e4: Motor = self_1279;
-    let _e5: Translator = other_1095;
+    self_1959 = self_1958;
+    other_1739 = other_1738;
+    let _e4: Motor = self_1959;
+    let _e5: Translator = other_1739;
     let _e6: Motor = motor_translator_geometric_product(_e4, _e5);
-    let _e7: Motor = self_1279;
+    let _e7: Motor = self_1959;
     let _e8: Motor = motor_reversal(_e7);
     let _e9: Motor = motor_motor_geometric_product(_e6, _e8);
     let _e10: Translator = motor_translator_into(_e9);
     return _e10;
 }
 
-fn motor_dual_motor_geometric_quotient(self_1280: MotorDual, other_1096: Motor) -> MotorDual {
-    var self_1281: MotorDual;
-    var other_1097: Motor;
+fn motor_dual_motor_geometric_quotient(self_1960: MotorDual, other_1740: Motor) -> MotorDual {
+    var self_1961: MotorDual;
+    var other_1741: Motor;
 
-    self_1281 = self_1280;
-    other_1097 = other_1096;
-    let _e4: MotorDual = self_1281;
-    let _e5: Motor = other_1097;
+    self_1961 = self_1960;
+    other_1741 = other_1740;
+    let _e4: MotorDual = self_1961;
+    let _e5: Motor = other_1741;
     let _e6: Motor = motor_inverse(_e5);
     let _e7: MotorDual = motor_dual_motor_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn motor_dual_motor_transformation(self_1282: MotorDual, other_1098: Motor) -> Motor {
-    var self_1283: MotorDual;
-    var other_1099: Motor;
+fn motor_dual_motor_transformation(self_1962: MotorDual, other_1742: Motor) -> Motor {
+    var self_1963: MotorDual;
+    var other_1743: Motor;
 
-    self_1283 = self_1282;
-    other_1099 = other_1098;
-    let _e4: MotorDual = self_1283;
-    let _e5: Motor = other_1099;
+    self_1963 = self_1962;
+    other_1743 = other_1742;
+    let _e4: MotorDual = self_1963;
+    let _e5: Motor = other_1743;
     let _e6: MotorDual = motor_dual_motor_geometric_product(_e4, _e5);
-    let _e7: MotorDual = self_1283;
+    let _e7: MotorDual = self_1963;
     let _e8: MotorDual = motor_dual_reversal(_e7);
     let _e9: Motor = motor_dual_motor_dual_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn motor_dual_motor_dual_geometric_quotient(self_1284: MotorDual, other_1100: MotorDual) -> Motor {
-    var self_1285: MotorDual;
-    var other_1101: MotorDual;
+fn motor_dual_motor_dual_geometric_quotient(self_1964: MotorDual, other_1744: MotorDual) -> Motor {
+    var self_1965: MotorDual;
+    var other_1745: MotorDual;
 
-    self_1285 = self_1284;
-    other_1101 = other_1100;
-    let _e4: MotorDual = self_1285;
-    let _e5: MotorDual = other_1101;
+    self_1965 = self_1964;
+    other_1745 = other_1744;
+    let _e4: MotorDual = self_1965;
+    let _e5: MotorDual = other_1745;
     let _e6: MotorDual = motor_dual_inverse(_e5);
     let _e7: Motor = motor_dual_motor_dual_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn motor_dual_motor_dual_transformation(self_1286: MotorDual, other_1102: MotorDual) -> MotorDual {
-    var self_1287: MotorDual;
-    var other_1103: MotorDual;
+fn motor_dual_motor_dual_transformation(self_1966: MotorDual, other_1746: MotorDual) -> MotorDual {
+    var self_1967: MotorDual;
+    var other_1747: MotorDual;
 
-    self_1287 = self_1286;
-    other_1103 = other_1102;
-    let _e4: MotorDual = self_1287;
-    let _e5: MotorDual = other_1103;
+    self_1967 = self_1966;
+    other_1747 = other_1746;
+    let _e4: MotorDual = self_1967;
+    let _e5: MotorDual = other_1747;
     let _e6: Motor = motor_dual_motor_dual_geometric_product(_e4, _e5);
-    let _e7: MotorDual = self_1287;
+    let _e7: MotorDual = self_1967;
     let _e8: MotorDual = motor_dual_reversal(_e7);
     let _e9: MotorDual = motor_motor_dual_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn motor_dual_multi_vector_geometric_quotient(self_1288: MotorDual, other_1104: MultiVector) -> MultiVector {
-    var self_1289: MotorDual;
-    var other_1105: MultiVector;
+fn motor_dual_multi_vector_geometric_quotient(self_1968: MotorDual, other_1748: MultiVector) -> MultiVector {
+    var self_1969: MotorDual;
+    var other_1749: MultiVector;
 
-    self_1289 = self_1288;
-    other_1105 = other_1104;
-    let _e4: MotorDual = self_1289;
-    let _e5: MultiVector = other_1105;
+    self_1969 = self_1968;
+    other_1749 = other_1748;
+    let _e4: MotorDual = self_1969;
+    let _e5: MultiVector = other_1749;
     let _e6: MultiVector = multi_vector_inverse(_e5);
     let _e7: MultiVector = motor_dual_multi_vector_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn motor_dual_multi_vector_transformation(self_1290: MotorDual, other_1106: MultiVector) -> MultiVector {
-    var self_1291: MotorDual;
-    var other_1107: MultiVector;
+fn motor_dual_multi_vector_transformation(self_1970: MotorDual, other_1750: MultiVector) -> MultiVector {
+    var self_1971: MotorDual;
+    var other_1751: MultiVector;
 
-    self_1291 = self_1290;
-    other_1107 = other_1106;
-    let _e4: MotorDual = self_1291;
-    let _e5: MultiVector = other_1107;
+    self_1971 = self_1970;
+    other_1751 = other_1750;
+    let _e4: MotorDual = self_1971;
+    let _e5: MultiVector = other_1751;
     let _e6: MultiVector = motor_dual_multi_vector_geometric_product(_e4, _e5);
-    let _e7: MotorDual = self_1291;
+    let _e7: MotorDual = self_1971;
     let _e8: MotorDual = motor_dual_reversal(_e7);
     let _e9: MultiVector = multi_vector_motor_dual_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn motor_dual_plane_geometric_quotient(self_1292: MotorDual, other_1108: Plane) -> Motor {
-    var self_1293: MotorDual;
-    var other_1109: Plane;
+fn motor_dual_plane_geometric_quotient(self_1972: MotorDual, other_1752: Plane) -> Motor {
+    var self_1973: MotorDual;
+    var other_1753: Plane;
 
-    self_1293 = self_1292;
-    other_1109 = other_1108;
-    let _e4: MotorDual = self_1293;
-    let _e5: Plane = other_1109;
+    self_1973 = self_1972;
+    other_1753 = other_1752;
+    let _e4: MotorDual = self_1973;
+    let _e5: Plane = other_1753;
     let _e6: Plane = plane_inverse(_e5);
     let _e7: Motor = motor_dual_plane_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn motor_dual_plane_transformation(self_1294: MotorDual, other_1110: Plane) -> Plane {
-    var self_1295: MotorDual;
-    var other_1111: Plane;
+fn motor_dual_plane_transformation(self_1974: MotorDual, other_1754: Plane) -> Plane {
+    var self_1975: MotorDual;
+    var other_1755: Plane;
 
-    self_1295 = self_1294;
-    other_1111 = other_1110;
-    let _e4: MotorDual = self_1295;
-    let _e5: Plane = other_1111;
+    self_1975 = self_1974;
+    other_1755 = other_1754;
+    let _e4: MotorDual = self_1975;
+    let _e5: Plane = other_1755;
     let _e6: Motor = motor_dual_plane_geometric_product(_e4, _e5);
-    let _e7: MotorDual = self_1295;
+    let _e7: MotorDual = self_1975;
     let _e8: MotorDual = motor_dual_reversal(_e7);
     let _e9: MotorDual = motor_motor_dual_geometric_product(_e6, _e8);
     let _e10: Plane = motor_dual_plane_into(_e9);
     return _e10;
 }
 
-fn motor_dual_point_geometric_quotient(self_1296: MotorDual, other_1112: Point) -> MotorDual {
-    var self_1297: MotorDual;
-    var other_1113: Point;
+fn motor_dual_point_geometric_quotient(self_1976: MotorDual, other_1756: Point) -> MotorDual {
+    var self_1977: MotorDual;
+    var other_1757: Point;
 
-    self_1297 = self_1296;
-    other_1113 = other_1112;
-    let _e4: MotorDual = self_1297;
-    let _e5: Point = other_1113;
+    self_1977 = self_1976;
+    other_1757 = other_1756;
+    let _e4: MotorDual = self_1977;
+    let _e5: Point = other_1757;
     let _e6: Point = point_inverse(_e5);
     let _e7: MotorDual = motor_dual_point_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn motor_dual_point_transformation(self_1298: MotorDual, other_1114: Point) -> Point {
-    var self_1299: MotorDual;
-    var other_1115: Point;
+fn motor_dual_point_transformation(self_1978: MotorDual, other_1758: Point) -> Point {
+    var self_1979: MotorDual;
+    var other_1759: Point;
 
-    self_1299 = self_1298;
-    other_1115 = other_1114;
-    let _e4: MotorDual = self_1299;
-    let _e5: Point = other_1115;
+    self_1979 = self_1978;
+    other_1759 = other_1758;
+    let _e4: MotorDual = self_1979;
+    let _e5: Point = other_1759;
     let _e6: MotorDual = motor_dual_point_geometric_product(_e4, _e5);
-    let _e7: MotorDual = self_1299;
+    let _e7: MotorDual = self_1979;
     let _e8: MotorDual = motor_dual_reversal(_e7);
     let _e9: Motor = motor_dual_motor_dual_geometric_product(_e6, _e8);
     let _e10: Point = motor_point_into(_e9);
     return _e10;
 }
 
-fn motor_dual_rotor_geometric_quotient(self_1300: MotorDual, other_1116: Rotor) -> MotorDual {
-    var self_1301: MotorDual;
-    var other_1117: Rotor;
+fn motor_dual_rotor_geometric_quotient(self_1980: MotorDual, other_1760: Rotor) -> MotorDual {
+    var self_1981: MotorDual;
+    var other_1761: Rotor;
 
-    self_1301 = self_1300;
-    other_1117 = other_1116;
-    let _e4: MotorDual = self_1301;
-    let _e5: Rotor = other_1117;
+    self_1981 = self_1980;
+    other_1761 = other_1760;
+    let _e4: MotorDual = self_1981;
+    let _e5: Rotor = other_1761;
     let _e6: Rotor = rotor_inverse(_e5);
     let _e7: MotorDual = motor_dual_rotor_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn motor_dual_rotor_transformation(self_1302: MotorDual, other_1118: Rotor) -> Rotor {
-    var self_1303: MotorDual;
-    var other_1119: Rotor;
+fn motor_dual_rotor_transformation(self_1982: MotorDual, other_1762: Rotor) -> Rotor {
+    var self_1983: MotorDual;
+    var other_1763: Rotor;
 
-    self_1303 = self_1302;
-    other_1119 = other_1118;
-    let _e4: MotorDual = self_1303;
-    let _e5: Rotor = other_1119;
+    self_1983 = self_1982;
+    other_1763 = other_1762;
+    let _e4: MotorDual = self_1983;
+    let _e5: Rotor = other_1763;
     let _e6: MotorDual = motor_dual_rotor_geometric_product(_e4, _e5);
-    let _e7: MotorDual = self_1303;
+    let _e7: MotorDual = self_1983;
     let _e8: MotorDual = motor_dual_reversal(_e7);
     let _e9: Motor = motor_dual_motor_dual_geometric_product(_e6, _e8);
     let _e10: Rotor = motor_rotor_into(_e9);
     return _e10;
 }
 
-fn motor_dual_scalar_geometric_quotient(self_1304: MotorDual, other_1120: Scalar) -> MotorDual {
-    var self_1305: MotorDual;
-    var other_1121: Scalar;
+fn motor_dual_scalar_geometric_quotient(self_1984: MotorDual, other_1764: Scalar) -> MotorDual {
+    var self_1985: MotorDual;
+    var other_1765: Scalar;
 
-    self_1305 = self_1304;
-    other_1121 = other_1120;
-    let _e4: MotorDual = self_1305;
-    let _e5: Scalar = other_1121;
+    self_1985 = self_1984;
+    other_1765 = other_1764;
+    let _e4: MotorDual = self_1985;
+    let _e5: Scalar = other_1765;
     let _e6: Scalar = scalar_inverse(_e5);
     let _e7: MotorDual = motor_dual_scalar_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn motor_dual_scalar_transformation(self_1306: MotorDual, other_1122: Scalar) -> Scalar {
-    var self_1307: MotorDual;
-    var other_1123: Scalar;
+fn motor_dual_scalar_transformation(self_1986: MotorDual, other_1766: Scalar) -> Scalar {
+    var self_1987: MotorDual;
+    var other_1767: Scalar;
 
-    self_1307 = self_1306;
-    other_1123 = other_1122;
-    let _e4: MotorDual = self_1307;
-    let _e5: Scalar = other_1123;
+    self_1987 = self_1986;
+    other_1767 = other_1766;
+    let _e4: MotorDual = self_1987;
+    let _e5: Scalar = other_1767;
     let _e6: MotorDual = motor_dual_scalar_geometric_product(_e4, _e5);
-    let _e7: MotorDual = self_1307;
+    let _e7: MotorDual = self_1987;
     let _e8: MotorDual = motor_dual_reversal(_e7);
     let _e9: Motor = motor_dual_motor_dual_geometric_product(_e6, _e8);
     let _e10: Scalar = motor_scalar_into(_e9);
     return _e10;
 }
 
-fn motor_dual_translator_geometric_quotient(self_1308: MotorDual, other_1124: Translator) -> MotorDual {
-    var self_1309: MotorDual;
-    var other_1125: Translator;
+fn motor_dual_translator_geometric_quotient(self_1988: MotorDual, other_1768: Translator) -> MotorDual {
+    var self_1989: MotorDual;
+    var other_1769: Translator;
 
-    self_1309 = self_1308;
-    other_1125 = other_1124;
-    let _e4: MotorDual = self_1309;
-    let _e5: Translator = other_1125;
+    self_1989 = self_1988;
+    other_1769 = other_1768;
+    let _e4: MotorDual = self_1989;
+    let _e5: Translator = other_1769;
     let _e6: Translator = translator_inverse(_e5);
     let _e7: MotorDual = motor_dual_translator_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn motor_dual_translator_transformation(self_1310: MotorDual, other_1126: Translator) -> Translator {
-    var self_1311: MotorDual;
-    var other_1127: Translator;
+fn motor_dual_translator_transformation(self_1990: MotorDual, other_1770: Translator) -> Translator {
+    var self_1991: MotorDual;
+    var other_1771: Translator;
 
-    self_1311 = self_1310;
-    other_1127 = other_1126;
-    let _e4: MotorDual = self_1311;
-    let _e5: Translator = other_1127;
+    self_1991 = self_1990;
+    other_1771 = other_1770;
+    let _e4: MotorDual = self_1991;
+    let _e5: Translator = other_1771;
     let _e6: MotorDual = motor_dual_translator_geometric_product(_e4, _e5);
-    let _e7: MotorDual = self_1311;
+    let _e7: MotorDual = self_1991;
     let _e8: MotorDual = motor_dual_reversal(_e7);
     let _e9: Motor = motor_dual_motor_dual_geometric_product(_e6, _e8);
     let _e10: Translator = motor_translator_into(_e9);
     return _e10;
 }
 
-fn multi_vector_motor_geometric_quotient(self_1312: MultiVector, other_1128: Motor) -> MultiVector {
-    var self_1313: MultiVector;
-    var other_1129: Motor;
+fn multi_vector_motor_geometric_quotient(self_1992: MultiVector, other_1772: Motor) -> MultiVector {
+    var self_1993: MultiVector;
+    var other_1773: Motor;
 
-    self_1313 = self_1312;
-    other_1129 = other_1128;
-    let _e4: MultiVector = self_1313;
-    let _e5: Motor = other_1129;
+    self_1993 = self_1992;
+    other_1773 = other_1772;
+    let _e4: MultiVector = self_1993;
+    let _e5: Motor = other_1773;
     let _e6: Motor = motor_inverse(_e5);
     let _e7: MultiVector = multi_vector_motor_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn multi_vector_motor_transformation(self_1314: MultiVector, other_1130: Motor) -> Motor {
-    var self_1315: MultiVector;
-    var other_1131: Motor;
+fn multi_vector_motor_transformation(self_1994: MultiVector, other_1774: Motor) -> Motor {
+    var self_1995: MultiVector;
+    var other_1775: Motor;
 
-    self_1315 = self_1314;
-    other_1131 = other_1130;
-    let _e4: MultiVector = self_1315;
-    let _e5: Motor = other_1131;
+    self_1995 = self_1994;
+    other_1775 = other_1774;
+    let _e4: MultiVector = self_1995;
+    let _e5: Motor = other_1775;
     let _e6: MultiVector = multi_vector_motor_geometric_product(_e4, _e5);
-    let _e7: MultiVector = self_1315;
+    let _e7: MultiVector = self_1995;
     let _e8: MultiVector = multi_vector_reversal(_e7);
     let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
     let _e10: Motor = multi_vector_motor_into(_e9);
     return _e10;
 }
 
-fn multi_vector_motor_dual_geometric_quotient(self_1316: MultiVector, other_1132: MotorDual) -> MultiVector {
-    var self_1317: MultiVector;
-    var other_1133: MotorDual;
+fn multi_vector_motor_dual_geometric_quotient(self_1996: MultiVector, other_1776: MotorDual) -> MultiVector {
+    var self_1997: MultiVector;
+    var other_1777: MotorDual;
 
-    self_1317 = self_1316;
-    other_1133 = other_1132;
-    let _e4: MultiVector = self_1317;
-    let _e5: MotorDual = other_1133;
+    self_1997 = self_1996;
+    other_1777 = other_1776;
+    let _e4: MultiVector = self_1997;
+    let _e5: MotorDual = other_1777;
     let _e6: MotorDual = motor_dual_inverse(_e5);
     let _e7: MultiVector = multi_vector_motor_dual_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn multi_vector_motor_dual_transformation(self_1318: MultiVector, other_1134: MotorDual) -> MotorDual {
-    var self_1319: MultiVector;
-    var other_1135: MotorDual;
+fn multi_vector_motor_dual_transformation(self_1998: MultiVector, other_1778: MotorDual) -> MotorDual {
+    var self_1999: MultiVector;
+    var other_1779: MotorDual;
 
-    self_1319 = self_1318;
-    other_1135 = other_1134;
-    let _e4: MultiVector = self_1319;
-    let _e5: MotorDual = other_1135;
+    self_1999 = self_1998;
+    other_1779 = other_1778;
+    let _e4: MultiVector = self_1999;
+    let _e5: MotorDual = other_1779;
     let _e6: MultiVector = multi_vector_motor_dual_geometric_product(_e4, _e5);
-    let _e7: MultiVector = self_1319;
+    let _e7: MultiVector = self_1999;
     let _e8: MultiVector = multi_vector_reversal(_e7);
     let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
     let _e10: MotorDual = multi_vector_motor_dual_into(_e9);
     return _e10;
 }
 
-fn multi_vector_powi(self_1320: MultiVector, exponent_2: i32) -> MultiVector {
-    var self_1321: MultiVector;
+fn multi_vector_powi(self_2000: MultiVector, exponent_2: i32) -> MultiVector {
+    var self_2001: MultiVector;
     var exponent_3: i32;
     var local_1: MultiVector;
     var x_1: MultiVector;
     var y_1: MultiVector;
     var n_1: i32;
 
-    self_1321 = self_1320;
+    self_2001 = self_2000;
     exponent_3 = exponent_2;
     let _e4: i32 = exponent_3;
     if (_e4 == 0) {
@@ -9262,11 +13991,11 @@ fn multi_vector_powi(self_1320: MultiVector, exponent_2: i32) -> MultiVector {
     }
     let _e8: i32 = exponent_3;
     if (_e8 < 0) {
-        let _e11: MultiVector = self_1321;
+        let _e11: MultiVector = self_2001;
         let _e12: MultiVector = multi_vector_inverse(_e11);
         local_1 = _e12;
     } else {
-        let _e14: MultiVector = self_1321;
+        let _e14: MultiVector = self_2001;
         local_1 = _e14;
     }
     let _e15: MultiVector = local_1;
@@ -9304,816 +14033,816 @@ fn multi_vector_powi(self_1320: MultiVector, exponent_2: i32) -> MultiVector {
     return _e43;
 }
 
-fn multi_vector_multi_vector_geometric_quotient(self_1322: MultiVector, other_1136: MultiVector) -> MultiVector {
-    var self_1323: MultiVector;
-    var other_1137: MultiVector;
+fn multi_vector_multi_vector_geometric_quotient(self_2002: MultiVector, other_1780: MultiVector) -> MultiVector {
+    var self_2003: MultiVector;
+    var other_1781: MultiVector;
 
-    self_1323 = self_1322;
-    other_1137 = other_1136;
-    let _e4: MultiVector = self_1323;
-    let _e5: MultiVector = other_1137;
+    self_2003 = self_2002;
+    other_1781 = other_1780;
+    let _e4: MultiVector = self_2003;
+    let _e5: MultiVector = other_1781;
     let _e6: MultiVector = multi_vector_inverse(_e5);
     let _e7: MultiVector = multi_vector_multi_vector_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn multi_vector_multi_vector_transformation(self_1324: MultiVector, other_1138: MultiVector) -> MultiVector {
-    var self_1325: MultiVector;
-    var other_1139: MultiVector;
+fn multi_vector_multi_vector_transformation(self_2004: MultiVector, other_1782: MultiVector) -> MultiVector {
+    var self_2005: MultiVector;
+    var other_1783: MultiVector;
 
-    self_1325 = self_1324;
-    other_1139 = other_1138;
-    let _e4: MultiVector = self_1325;
-    let _e5: MultiVector = other_1139;
+    self_2005 = self_2004;
+    other_1783 = other_1782;
+    let _e4: MultiVector = self_2005;
+    let _e5: MultiVector = other_1783;
     let _e6: MultiVector = multi_vector_multi_vector_geometric_product(_e4, _e5);
-    let _e7: MultiVector = self_1325;
+    let _e7: MultiVector = self_2005;
     let _e8: MultiVector = multi_vector_reversal(_e7);
     let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn multi_vector_plane_geometric_quotient(self_1326: MultiVector, other_1140: Plane) -> MultiVector {
-    var self_1327: MultiVector;
-    var other_1141: Plane;
+fn multi_vector_plane_geometric_quotient(self_2006: MultiVector, other_1784: Plane) -> MultiVector {
+    var self_2007: MultiVector;
+    var other_1785: Plane;
 
-    self_1327 = self_1326;
-    other_1141 = other_1140;
-    let _e4: MultiVector = self_1327;
-    let _e5: Plane = other_1141;
+    self_2007 = self_2006;
+    other_1785 = other_1784;
+    let _e4: MultiVector = self_2007;
+    let _e5: Plane = other_1785;
     let _e6: Plane = plane_inverse(_e5);
     let _e7: MultiVector = multi_vector_plane_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn multi_vector_plane_transformation(self_1328: MultiVector, other_1142: Plane) -> Plane {
-    var self_1329: MultiVector;
-    var other_1143: Plane;
+fn multi_vector_plane_transformation(self_2008: MultiVector, other_1786: Plane) -> Plane {
+    var self_2009: MultiVector;
+    var other_1787: Plane;
 
-    self_1329 = self_1328;
-    other_1143 = other_1142;
-    let _e4: MultiVector = self_1329;
-    let _e5: Plane = other_1143;
+    self_2009 = self_2008;
+    other_1787 = other_1786;
+    let _e4: MultiVector = self_2009;
+    let _e5: Plane = other_1787;
     let _e6: MultiVector = multi_vector_plane_geometric_product(_e4, _e5);
-    let _e7: MultiVector = self_1329;
+    let _e7: MultiVector = self_2009;
     let _e8: MultiVector = multi_vector_reversal(_e7);
     let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
     let _e10: Plane = multi_vector_plane_into(_e9);
     return _e10;
 }
 
-fn multi_vector_point_geometric_quotient(self_1330: MultiVector, other_1144: Point) -> MultiVector {
-    var self_1331: MultiVector;
-    var other_1145: Point;
+fn multi_vector_point_geometric_quotient(self_2010: MultiVector, other_1788: Point) -> MultiVector {
+    var self_2011: MultiVector;
+    var other_1789: Point;
 
-    self_1331 = self_1330;
-    other_1145 = other_1144;
-    let _e4: MultiVector = self_1331;
-    let _e5: Point = other_1145;
+    self_2011 = self_2010;
+    other_1789 = other_1788;
+    let _e4: MultiVector = self_2011;
+    let _e5: Point = other_1789;
     let _e6: Point = point_inverse(_e5);
     let _e7: MultiVector = multi_vector_point_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn multi_vector_point_transformation(self_1332: MultiVector, other_1146: Point) -> Point {
-    var self_1333: MultiVector;
-    var other_1147: Point;
+fn multi_vector_point_transformation(self_2012: MultiVector, other_1790: Point) -> Point {
+    var self_2013: MultiVector;
+    var other_1791: Point;
 
-    self_1333 = self_1332;
-    other_1147 = other_1146;
-    let _e4: MultiVector = self_1333;
-    let _e5: Point = other_1147;
+    self_2013 = self_2012;
+    other_1791 = other_1790;
+    let _e4: MultiVector = self_2013;
+    let _e5: Point = other_1791;
     let _e6: MultiVector = multi_vector_point_geometric_product(_e4, _e5);
-    let _e7: MultiVector = self_1333;
+    let _e7: MultiVector = self_2013;
     let _e8: MultiVector = multi_vector_reversal(_e7);
     let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
     let _e10: Point = multi_vector_point_into(_e9);
     return _e10;
 }
 
-fn multi_vector_rotor_geometric_quotient(self_1334: MultiVector, other_1148: Rotor) -> MultiVector {
-    var self_1335: MultiVector;
-    var other_1149: Rotor;
+fn multi_vector_rotor_geometric_quotient(self_2014: MultiVector, other_1792: Rotor) -> MultiVector {
+    var self_2015: MultiVector;
+    var other_1793: Rotor;
 
-    self_1335 = self_1334;
-    other_1149 = other_1148;
-    let _e4: MultiVector = self_1335;
-    let _e5: Rotor = other_1149;
+    self_2015 = self_2014;
+    other_1793 = other_1792;
+    let _e4: MultiVector = self_2015;
+    let _e5: Rotor = other_1793;
     let _e6: Rotor = rotor_inverse(_e5);
     let _e7: MultiVector = multi_vector_rotor_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn multi_vector_rotor_transformation(self_1336: MultiVector, other_1150: Rotor) -> Rotor {
-    var self_1337: MultiVector;
-    var other_1151: Rotor;
+fn multi_vector_rotor_transformation(self_2016: MultiVector, other_1794: Rotor) -> Rotor {
+    var self_2017: MultiVector;
+    var other_1795: Rotor;
 
-    self_1337 = self_1336;
-    other_1151 = other_1150;
-    let _e4: MultiVector = self_1337;
-    let _e5: Rotor = other_1151;
+    self_2017 = self_2016;
+    other_1795 = other_1794;
+    let _e4: MultiVector = self_2017;
+    let _e5: Rotor = other_1795;
     let _e6: MultiVector = multi_vector_rotor_geometric_product(_e4, _e5);
-    let _e7: MultiVector = self_1337;
+    let _e7: MultiVector = self_2017;
     let _e8: MultiVector = multi_vector_reversal(_e7);
     let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
     let _e10: Rotor = multi_vector_rotor_into(_e9);
     return _e10;
 }
 
-fn multi_vector_scalar_geometric_quotient(self_1338: MultiVector, other_1152: Scalar) -> MultiVector {
-    var self_1339: MultiVector;
-    var other_1153: Scalar;
+fn multi_vector_scalar_geometric_quotient(self_2018: MultiVector, other_1796: Scalar) -> MultiVector {
+    var self_2019: MultiVector;
+    var other_1797: Scalar;
 
-    self_1339 = self_1338;
-    other_1153 = other_1152;
-    let _e4: MultiVector = self_1339;
-    let _e5: Scalar = other_1153;
+    self_2019 = self_2018;
+    other_1797 = other_1796;
+    let _e4: MultiVector = self_2019;
+    let _e5: Scalar = other_1797;
     let _e6: Scalar = scalar_inverse(_e5);
     let _e7: MultiVector = multi_vector_scalar_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn multi_vector_scalar_transformation(self_1340: MultiVector, other_1154: Scalar) -> Scalar {
-    var self_1341: MultiVector;
-    var other_1155: Scalar;
+fn multi_vector_scalar_transformation(self_2020: MultiVector, other_1798: Scalar) -> Scalar {
+    var self_2021: MultiVector;
+    var other_1799: Scalar;
 
-    self_1341 = self_1340;
-    other_1155 = other_1154;
-    let _e4: MultiVector = self_1341;
-    let _e5: Scalar = other_1155;
+    self_2021 = self_2020;
+    other_1799 = other_1798;
+    let _e4: MultiVector = self_2021;
+    let _e5: Scalar = other_1799;
     let _e6: MultiVector = multi_vector_scalar_geometric_product(_e4, _e5);
-    let _e7: MultiVector = self_1341;
+    let _e7: MultiVector = self_2021;
     let _e8: MultiVector = multi_vector_reversal(_e7);
     let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
     let _e10: Scalar = multi_vector_scalar_into(_e9);
     return _e10;
 }
 
-fn multi_vector_translator_geometric_quotient(self_1342: MultiVector, other_1156: Translator) -> MultiVector {
-    var self_1343: MultiVector;
-    var other_1157: Translator;
+fn multi_vector_translator_geometric_quotient(self_2022: MultiVector, other_1800: Translator) -> MultiVector {
+    var self_2023: MultiVector;
+    var other_1801: Translator;
 
-    self_1343 = self_1342;
-    other_1157 = other_1156;
-    let _e4: MultiVector = self_1343;
-    let _e5: Translator = other_1157;
+    self_2023 = self_2022;
+    other_1801 = other_1800;
+    let _e4: MultiVector = self_2023;
+    let _e5: Translator = other_1801;
     let _e6: Translator = translator_inverse(_e5);
     let _e7: MultiVector = multi_vector_translator_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn multi_vector_translator_transformation(self_1344: MultiVector, other_1158: Translator) -> Translator {
-    var self_1345: MultiVector;
-    var other_1159: Translator;
+fn multi_vector_translator_transformation(self_2024: MultiVector, other_1802: Translator) -> Translator {
+    var self_2025: MultiVector;
+    var other_1803: Translator;
 
-    self_1345 = self_1344;
-    other_1159 = other_1158;
-    let _e4: MultiVector = self_1345;
-    let _e5: Translator = other_1159;
+    self_2025 = self_2024;
+    other_1803 = other_1802;
+    let _e4: MultiVector = self_2025;
+    let _e5: Translator = other_1803;
     let _e6: MultiVector = multi_vector_translator_geometric_product(_e4, _e5);
-    let _e7: MultiVector = self_1345;
+    let _e7: MultiVector = self_2025;
     let _e8: MultiVector = multi_vector_reversal(_e7);
     let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
     let _e10: Translator = multi_vector_translator_into(_e9);
     return _e10;
 }
 
-fn plane_motor_geometric_quotient(self_1346: Plane, other_1160: Motor) -> MotorDual {
-    var self_1347: Plane;
-    var other_1161: Motor;
+fn plane_motor_geometric_quotient(self_2026: Plane, other_1804: Motor) -> MotorDual {
+    var self_2027: Plane;
+    var other_1805: Motor;
 
-    self_1347 = self_1346;
-    other_1161 = other_1160;
-    let _e4: Plane = self_1347;
-    let _e5: Motor = other_1161;
+    self_2027 = self_2026;
+    other_1805 = other_1804;
+    let _e4: Plane = self_2027;
+    let _e5: Motor = other_1805;
     let _e6: Motor = motor_inverse(_e5);
     let _e7: MotorDual = plane_motor_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn plane_motor_transformation(self_1348: Plane, other_1162: Motor) -> Motor {
-    var self_1349: Plane;
-    var other_1163: Motor;
+fn plane_motor_transformation(self_2028: Plane, other_1806: Motor) -> Motor {
+    var self_2029: Plane;
+    var other_1807: Motor;
 
-    self_1349 = self_1348;
-    other_1163 = other_1162;
-    let _e4: Plane = self_1349;
-    let _e5: Motor = other_1163;
+    self_2029 = self_2028;
+    other_1807 = other_1806;
+    let _e4: Plane = self_2029;
+    let _e5: Motor = other_1807;
     let _e6: MotorDual = plane_motor_geometric_product(_e4, _e5);
-    let _e7: Plane = self_1349;
+    let _e7: Plane = self_2029;
     let _e8: Plane = plane_reversal(_e7);
     let _e9: Motor = motor_dual_plane_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn plane_motor_dual_geometric_quotient(self_1350: Plane, other_1164: MotorDual) -> Motor {
-    var self_1351: Plane;
-    var other_1165: MotorDual;
+fn plane_motor_dual_geometric_quotient(self_2030: Plane, other_1808: MotorDual) -> Motor {
+    var self_2031: Plane;
+    var other_1809: MotorDual;
 
-    self_1351 = self_1350;
-    other_1165 = other_1164;
-    let _e4: Plane = self_1351;
-    let _e5: MotorDual = other_1165;
+    self_2031 = self_2030;
+    other_1809 = other_1808;
+    let _e4: Plane = self_2031;
+    let _e5: MotorDual = other_1809;
     let _e6: MotorDual = motor_dual_inverse(_e5);
     let _e7: Motor = plane_motor_dual_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn plane_motor_dual_transformation(self_1352: Plane, other_1166: MotorDual) -> MotorDual {
-    var self_1353: Plane;
-    var other_1167: MotorDual;
+fn plane_motor_dual_transformation(self_2032: Plane, other_1810: MotorDual) -> MotorDual {
+    var self_2033: Plane;
+    var other_1811: MotorDual;
 
-    self_1353 = self_1352;
-    other_1167 = other_1166;
-    let _e4: Plane = self_1353;
-    let _e5: MotorDual = other_1167;
+    self_2033 = self_2032;
+    other_1811 = other_1810;
+    let _e4: Plane = self_2033;
+    let _e5: MotorDual = other_1811;
     let _e6: Motor = plane_motor_dual_geometric_product(_e4, _e5);
-    let _e7: Plane = self_1353;
+    let _e7: Plane = self_2033;
     let _e8: Plane = plane_reversal(_e7);
     let _e9: MotorDual = motor_plane_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn plane_multi_vector_geometric_quotient(self_1354: Plane, other_1168: MultiVector) -> MultiVector {
-    var self_1355: Plane;
-    var other_1169: MultiVector;
+fn plane_multi_vector_geometric_quotient(self_2034: Plane, other_1812: MultiVector) -> MultiVector {
+    var self_2035: Plane;
+    var other_1813: MultiVector;
 
-    self_1355 = self_1354;
-    other_1169 = other_1168;
-    let _e4: Plane = self_1355;
-    let _e5: MultiVector = other_1169;
+    self_2035 = self_2034;
+    other_1813 = other_1812;
+    let _e4: Plane = self_2035;
+    let _e5: MultiVector = other_1813;
     let _e6: MultiVector = multi_vector_inverse(_e5);
     let _e7: MultiVector = plane_multi_vector_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn plane_multi_vector_transformation(self_1356: Plane, other_1170: MultiVector) -> MultiVector {
-    var self_1357: Plane;
-    var other_1171: MultiVector;
+fn plane_multi_vector_transformation(self_2036: Plane, other_1814: MultiVector) -> MultiVector {
+    var self_2037: Plane;
+    var other_1815: MultiVector;
 
-    self_1357 = self_1356;
-    other_1171 = other_1170;
-    let _e4: Plane = self_1357;
-    let _e5: MultiVector = other_1171;
+    self_2037 = self_2036;
+    other_1815 = other_1814;
+    let _e4: Plane = self_2037;
+    let _e5: MultiVector = other_1815;
     let _e6: MultiVector = plane_multi_vector_geometric_product(_e4, _e5);
-    let _e7: Plane = self_1357;
+    let _e7: Plane = self_2037;
     let _e8: Plane = plane_reversal(_e7);
     let _e9: MultiVector = multi_vector_plane_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn plane_plane_geometric_quotient(self_1358: Plane, other_1172: Plane) -> Motor {
-    var self_1359: Plane;
-    var other_1173: Plane;
+fn plane_plane_geometric_quotient(self_2038: Plane, other_1816: Plane) -> Motor {
+    var self_2039: Plane;
+    var other_1817: Plane;
 
-    self_1359 = self_1358;
-    other_1173 = other_1172;
-    let _e4: Plane = self_1359;
-    let _e5: Plane = other_1173;
+    self_2039 = self_2038;
+    other_1817 = other_1816;
+    let _e4: Plane = self_2039;
+    let _e5: Plane = other_1817;
     let _e6: Plane = plane_inverse(_e5);
     let _e7: Motor = plane_plane_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn plane_plane_transformation(self_1360: Plane, other_1174: Plane) -> Plane {
-    var self_1361: Plane;
-    var other_1175: Plane;
+fn plane_plane_transformation(self_2040: Plane, other_1818: Plane) -> Plane {
+    var self_2041: Plane;
+    var other_1819: Plane;
 
-    self_1361 = self_1360;
-    other_1175 = other_1174;
-    let _e4: Plane = self_1361;
-    let _e5: Plane = other_1175;
+    self_2041 = self_2040;
+    other_1819 = other_1818;
+    let _e4: Plane = self_2041;
+    let _e5: Plane = other_1819;
     let _e6: Motor = plane_plane_geometric_product(_e4, _e5);
-    let _e7: Plane = self_1361;
+    let _e7: Plane = self_2041;
     let _e8: Plane = plane_reversal(_e7);
     let _e9: MotorDual = motor_plane_geometric_product(_e6, _e8);
     let _e10: Plane = motor_dual_plane_into(_e9);
     return _e10;
 }
 
-fn plane_point_geometric_quotient(self_1362: Plane, other_1176: Point) -> MotorDual {
-    var self_1363: Plane;
-    var other_1177: Point;
+fn plane_point_geometric_quotient(self_2042: Plane, other_1820: Point) -> MotorDual {
+    var self_2043: Plane;
+    var other_1821: Point;
 
-    self_1363 = self_1362;
-    other_1177 = other_1176;
-    let _e4: Plane = self_1363;
-    let _e5: Point = other_1177;
+    self_2043 = self_2042;
+    other_1821 = other_1820;
+    let _e4: Plane = self_2043;
+    let _e5: Point = other_1821;
     let _e6: Point = point_inverse(_e5);
     let _e7: MotorDual = plane_point_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn plane_point_transformation(self_1364: Plane, other_1178: Point) -> Point {
-    var self_1365: Plane;
-    var other_1179: Point;
+fn plane_point_transformation(self_2044: Plane, other_1822: Point) -> Point {
+    var self_2045: Plane;
+    var other_1823: Point;
 
-    self_1365 = self_1364;
-    other_1179 = other_1178;
-    let _e4: Plane = self_1365;
-    let _e5: Point = other_1179;
+    self_2045 = self_2044;
+    other_1823 = other_1822;
+    let _e4: Plane = self_2045;
+    let _e5: Point = other_1823;
     let _e6: MotorDual = plane_point_geometric_product(_e4, _e5);
-    let _e7: Plane = self_1365;
+    let _e7: Plane = self_2045;
     let _e8: Plane = plane_reversal(_e7);
     let _e9: Motor = motor_dual_plane_geometric_product(_e6, _e8);
     let _e10: Point = motor_point_into(_e9);
     return _e10;
 }
 
-fn plane_rotor_geometric_quotient(self_1366: Plane, other_1180: Rotor) -> MotorDual {
-    var self_1367: Plane;
-    var other_1181: Rotor;
+fn plane_rotor_geometric_quotient(self_2046: Plane, other_1824: Rotor) -> MotorDual {
+    var self_2047: Plane;
+    var other_1825: Rotor;
 
-    self_1367 = self_1366;
-    other_1181 = other_1180;
-    let _e4: Plane = self_1367;
-    let _e5: Rotor = other_1181;
+    self_2047 = self_2046;
+    other_1825 = other_1824;
+    let _e4: Plane = self_2047;
+    let _e5: Rotor = other_1825;
     let _e6: Rotor = rotor_inverse(_e5);
     let _e7: MotorDual = plane_rotor_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn plane_rotor_transformation(self_1368: Plane, other_1182: Rotor) -> Rotor {
-    var self_1369: Plane;
-    var other_1183: Rotor;
+fn plane_rotor_transformation(self_2048: Plane, other_1826: Rotor) -> Rotor {
+    var self_2049: Plane;
+    var other_1827: Rotor;
 
-    self_1369 = self_1368;
-    other_1183 = other_1182;
-    let _e4: Plane = self_1369;
-    let _e5: Rotor = other_1183;
+    self_2049 = self_2048;
+    other_1827 = other_1826;
+    let _e4: Plane = self_2049;
+    let _e5: Rotor = other_1827;
     let _e6: MotorDual = plane_rotor_geometric_product(_e4, _e5);
-    let _e7: Plane = self_1369;
+    let _e7: Plane = self_2049;
     let _e8: Plane = plane_reversal(_e7);
     let _e9: Motor = motor_dual_plane_geometric_product(_e6, _e8);
     let _e10: Rotor = motor_rotor_into(_e9);
     return _e10;
 }
 
-fn plane_scalar_geometric_quotient(self_1370: Plane, other_1184: Scalar) -> Plane {
-    var self_1371: Plane;
-    var other_1185: Scalar;
+fn plane_scalar_geometric_quotient(self_2050: Plane, other_1828: Scalar) -> Plane {
+    var self_2051: Plane;
+    var other_1829: Scalar;
 
-    self_1371 = self_1370;
-    other_1185 = other_1184;
-    let _e4: Plane = self_1371;
-    let _e5: Scalar = other_1185;
+    self_2051 = self_2050;
+    other_1829 = other_1828;
+    let _e4: Plane = self_2051;
+    let _e5: Scalar = other_1829;
     let _e6: Scalar = scalar_inverse(_e5);
     let _e7: Plane = plane_scalar_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn plane_scalar_transformation(self_1372: Plane, other_1186: Scalar) -> Scalar {
-    var self_1373: Plane;
-    var other_1187: Scalar;
+fn plane_scalar_transformation(self_2052: Plane, other_1830: Scalar) -> Scalar {
+    var self_2053: Plane;
+    var other_1831: Scalar;
 
-    self_1373 = self_1372;
-    other_1187 = other_1186;
-    let _e4: Plane = self_1373;
-    let _e5: Scalar = other_1187;
+    self_2053 = self_2052;
+    other_1831 = other_1830;
+    let _e4: Plane = self_2053;
+    let _e5: Scalar = other_1831;
     let _e6: Plane = plane_scalar_geometric_product(_e4, _e5);
-    let _e7: Plane = self_1373;
+    let _e7: Plane = self_2053;
     let _e8: Plane = plane_reversal(_e7);
     let _e9: Motor = plane_plane_geometric_product(_e6, _e8);
     let _e10: Scalar = motor_scalar_into(_e9);
     return _e10;
 }
 
-fn plane_translator_geometric_quotient(self_1374: Plane, other_1188: Translator) -> MotorDual {
-    var self_1375: Plane;
-    var other_1189: Translator;
+fn plane_translator_geometric_quotient(self_2054: Plane, other_1832: Translator) -> MotorDual {
+    var self_2055: Plane;
+    var other_1833: Translator;
 
-    self_1375 = self_1374;
-    other_1189 = other_1188;
-    let _e4: Plane = self_1375;
-    let _e5: Translator = other_1189;
+    self_2055 = self_2054;
+    other_1833 = other_1832;
+    let _e4: Plane = self_2055;
+    let _e5: Translator = other_1833;
     let _e6: Translator = translator_inverse(_e5);
     let _e7: MotorDual = plane_translator_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn plane_translator_transformation(self_1376: Plane, other_1190: Translator) -> Translator {
-    var self_1377: Plane;
-    var other_1191: Translator;
+fn plane_translator_transformation(self_2056: Plane, other_1834: Translator) -> Translator {
+    var self_2057: Plane;
+    var other_1835: Translator;
 
-    self_1377 = self_1376;
-    other_1191 = other_1190;
-    let _e4: Plane = self_1377;
-    let _e5: Translator = other_1191;
+    self_2057 = self_2056;
+    other_1835 = other_1834;
+    let _e4: Plane = self_2057;
+    let _e5: Translator = other_1835;
     let _e6: MotorDual = plane_translator_geometric_product(_e4, _e5);
-    let _e7: Plane = self_1377;
+    let _e7: Plane = self_2057;
     let _e8: Plane = plane_reversal(_e7);
     let _e9: Motor = motor_dual_plane_geometric_product(_e6, _e8);
     let _e10: Translator = motor_translator_into(_e9);
     return _e10;
 }
 
-fn point_ideal_point_transformation(self_1378: Point, other_1192: IdealPoint) -> IdealPoint {
-    var self_1379: Point;
-    var other_1193: IdealPoint;
+fn point_ideal_point_transformation(self_2058: Point, other_1836: IdealPoint) -> IdealPoint {
+    var self_2059: Point;
+    var other_1837: IdealPoint;
 
-    self_1379 = self_1378;
-    other_1193 = other_1192;
-    let _e4: Point = self_1379;
-    let _e5: IdealPoint = other_1193;
+    self_2059 = self_2058;
+    other_1837 = other_1836;
+    let _e4: Point = self_2059;
+    let _e5: IdealPoint = other_1837;
     let _e6: IdealPoint = point_ideal_point_geometric_product(_e4, _e5);
-    let _e7: Point = self_1379;
+    let _e7: Point = self_2059;
     let _e8: Point = point_reversal(_e7);
     let _e9: IdealPoint = ideal_point_point_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn point_motor_geometric_quotient(self_1380: Point, other_1194: Motor) -> Motor {
-    var self_1381: Point;
-    var other_1195: Motor;
+fn point_motor_geometric_quotient(self_2060: Point, other_1838: Motor) -> Motor {
+    var self_2061: Point;
+    var other_1839: Motor;
 
-    self_1381 = self_1380;
-    other_1195 = other_1194;
-    let _e4: Point = self_1381;
-    let _e5: Motor = other_1195;
+    self_2061 = self_2060;
+    other_1839 = other_1838;
+    let _e4: Point = self_2061;
+    let _e5: Motor = other_1839;
     let _e6: Motor = motor_inverse(_e5);
     let _e7: Motor = point_motor_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn point_motor_transformation(self_1382: Point, other_1196: Motor) -> Motor {
-    var self_1383: Point;
-    var other_1197: Motor;
+fn point_motor_transformation(self_2062: Point, other_1840: Motor) -> Motor {
+    var self_2063: Point;
+    var other_1841: Motor;
 
-    self_1383 = self_1382;
-    other_1197 = other_1196;
-    let _e4: Point = self_1383;
-    let _e5: Motor = other_1197;
+    self_2063 = self_2062;
+    other_1841 = other_1840;
+    let _e4: Point = self_2063;
+    let _e5: Motor = other_1841;
     let _e6: Motor = point_motor_geometric_product(_e4, _e5);
-    let _e7: Point = self_1383;
+    let _e7: Point = self_2063;
     let _e8: Point = point_reversal(_e7);
     let _e9: Motor = motor_point_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn point_motor_dual_geometric_quotient(self_1384: Point, other_1198: MotorDual) -> MotorDual {
-    var self_1385: Point;
-    var other_1199: MotorDual;
+fn point_motor_dual_geometric_quotient(self_2064: Point, other_1842: MotorDual) -> MotorDual {
+    var self_2065: Point;
+    var other_1843: MotorDual;
 
-    self_1385 = self_1384;
-    other_1199 = other_1198;
-    let _e4: Point = self_1385;
-    let _e5: MotorDual = other_1199;
+    self_2065 = self_2064;
+    other_1843 = other_1842;
+    let _e4: Point = self_2065;
+    let _e5: MotorDual = other_1843;
     let _e6: MotorDual = motor_dual_inverse(_e5);
     let _e7: MotorDual = point_motor_dual_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn point_motor_dual_transformation(self_1386: Point, other_1200: MotorDual) -> MotorDual {
-    var self_1387: Point;
-    var other_1201: MotorDual;
+fn point_motor_dual_transformation(self_2066: Point, other_1844: MotorDual) -> MotorDual {
+    var self_2067: Point;
+    var other_1845: MotorDual;
 
-    self_1387 = self_1386;
-    other_1201 = other_1200;
-    let _e4: Point = self_1387;
-    let _e5: MotorDual = other_1201;
+    self_2067 = self_2066;
+    other_1845 = other_1844;
+    let _e4: Point = self_2067;
+    let _e5: MotorDual = other_1845;
     let _e6: MotorDual = point_motor_dual_geometric_product(_e4, _e5);
-    let _e7: Point = self_1387;
+    let _e7: Point = self_2067;
     let _e8: Point = point_reversal(_e7);
     let _e9: MotorDual = motor_dual_point_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn point_multi_vector_geometric_quotient(self_1388: Point, other_1202: MultiVector) -> MultiVector {
-    var self_1389: Point;
-    var other_1203: MultiVector;
+fn point_multi_vector_geometric_quotient(self_2068: Point, other_1846: MultiVector) -> MultiVector {
+    var self_2069: Point;
+    var other_1847: MultiVector;
 
-    self_1389 = self_1388;
-    other_1203 = other_1202;
-    let _e4: Point = self_1389;
-    let _e5: MultiVector = other_1203;
+    self_2069 = self_2068;
+    other_1847 = other_1846;
+    let _e4: Point = self_2069;
+    let _e5: MultiVector = other_1847;
     let _e6: MultiVector = multi_vector_inverse(_e5);
     let _e7: MultiVector = point_multi_vector_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn point_multi_vector_transformation(self_1390: Point, other_1204: MultiVector) -> MultiVector {
-    var self_1391: Point;
-    var other_1205: MultiVector;
+fn point_multi_vector_transformation(self_2070: Point, other_1848: MultiVector) -> MultiVector {
+    var self_2071: Point;
+    var other_1849: MultiVector;
 
-    self_1391 = self_1390;
-    other_1205 = other_1204;
-    let _e4: Point = self_1391;
-    let _e5: MultiVector = other_1205;
+    self_2071 = self_2070;
+    other_1849 = other_1848;
+    let _e4: Point = self_2071;
+    let _e5: MultiVector = other_1849;
     let _e6: MultiVector = point_multi_vector_geometric_product(_e4, _e5);
-    let _e7: Point = self_1391;
+    let _e7: Point = self_2071;
     let _e8: Point = point_reversal(_e7);
     let _e9: MultiVector = multi_vector_point_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn point_plane_geometric_quotient(self_1392: Point, other_1206: Plane) -> MotorDual {
-    var self_1393: Point;
-    var other_1207: Plane;
+fn point_plane_geometric_quotient(self_2072: Point, other_1850: Plane) -> MotorDual {
+    var self_2073: Point;
+    var other_1851: Plane;
 
-    self_1393 = self_1392;
-    other_1207 = other_1206;
-    let _e4: Point = self_1393;
-    let _e5: Plane = other_1207;
+    self_2073 = self_2072;
+    other_1851 = other_1850;
+    let _e4: Point = self_2073;
+    let _e5: Plane = other_1851;
     let _e6: Plane = plane_inverse(_e5);
     let _e7: MotorDual = point_plane_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn point_plane_transformation(self_1394: Point, other_1208: Plane) -> Plane {
-    var self_1395: Point;
-    var other_1209: Plane;
+fn point_plane_transformation(self_2074: Point, other_1852: Plane) -> Plane {
+    var self_2075: Point;
+    var other_1853: Plane;
 
-    self_1395 = self_1394;
-    other_1209 = other_1208;
-    let _e4: Point = self_1395;
-    let _e5: Plane = other_1209;
+    self_2075 = self_2074;
+    other_1853 = other_1852;
+    let _e4: Point = self_2075;
+    let _e5: Plane = other_1853;
     let _e6: MotorDual = point_plane_geometric_product(_e4, _e5);
-    let _e7: Point = self_1395;
+    let _e7: Point = self_2075;
     let _e8: Point = point_reversal(_e7);
     let _e9: MotorDual = motor_dual_point_geometric_product(_e6, _e8);
     let _e10: Plane = motor_dual_plane_into(_e9);
     return _e10;
 }
 
-fn point_point_geometric_quotient(self_1396: Point, other_1210: Point) -> Translator {
-    var self_1397: Point;
-    var other_1211: Point;
+fn point_point_geometric_quotient(self_2076: Point, other_1854: Point) -> Translator {
+    var self_2077: Point;
+    var other_1855: Point;
 
-    self_1397 = self_1396;
-    other_1211 = other_1210;
-    let _e4: Point = self_1397;
-    let _e5: Point = other_1211;
+    self_2077 = self_2076;
+    other_1855 = other_1854;
+    let _e4: Point = self_2077;
+    let _e5: Point = other_1855;
     let _e6: Point = point_inverse(_e5);
     let _e7: Translator = point_point_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn point_point_transformation(self_1398: Point, other_1212: Point) -> Point {
-    var self_1399: Point;
-    var other_1213: Point;
+fn point_point_transformation(self_2078: Point, other_1856: Point) -> Point {
+    var self_2079: Point;
+    var other_1857: Point;
 
-    self_1399 = self_1398;
-    other_1213 = other_1212;
-    let _e4: Point = self_1399;
-    let _e5: Point = other_1213;
+    self_2079 = self_2078;
+    other_1857 = other_1856;
+    let _e4: Point = self_2079;
+    let _e5: Point = other_1857;
     let _e6: Translator = point_point_geometric_product(_e4, _e5);
-    let _e7: Point = self_1399;
+    let _e7: Point = self_2079;
     let _e8: Point = point_reversal(_e7);
     let _e9: Point = translator_point_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn point_rotor_geometric_quotient(self_1400: Point, other_1214: Rotor) -> Motor {
-    var self_1401: Point;
-    var other_1215: Rotor;
+fn point_rotor_geometric_quotient(self_2080: Point, other_1858: Rotor) -> Motor {
+    var self_2081: Point;
+    var other_1859: Rotor;
 
-    self_1401 = self_1400;
-    other_1215 = other_1214;
-    let _e4: Point = self_1401;
-    let _e5: Rotor = other_1215;
+    self_2081 = self_2080;
+    other_1859 = other_1858;
+    let _e4: Point = self_2081;
+    let _e5: Rotor = other_1859;
     let _e6: Rotor = rotor_inverse(_e5);
     let _e7: Motor = point_rotor_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn point_rotor_transformation(self_1402: Point, other_1216: Rotor) -> Rotor {
-    var self_1403: Point;
-    var other_1217: Rotor;
+fn point_rotor_transformation(self_2082: Point, other_1860: Rotor) -> Rotor {
+    var self_2083: Point;
+    var other_1861: Rotor;
 
-    self_1403 = self_1402;
-    other_1217 = other_1216;
-    let _e4: Point = self_1403;
-    let _e5: Rotor = other_1217;
+    self_2083 = self_2082;
+    other_1861 = other_1860;
+    let _e4: Point = self_2083;
+    let _e5: Rotor = other_1861;
     let _e6: Motor = point_rotor_geometric_product(_e4, _e5);
-    let _e7: Point = self_1403;
+    let _e7: Point = self_2083;
     let _e8: Point = point_reversal(_e7);
     let _e9: Motor = motor_point_geometric_product(_e6, _e8);
     let _e10: Rotor = motor_rotor_into(_e9);
     return _e10;
 }
 
-fn point_scalar_geometric_quotient(self_1404: Point, other_1218: Scalar) -> Point {
-    var self_1405: Point;
-    var other_1219: Scalar;
+fn point_scalar_geometric_quotient(self_2084: Point, other_1862: Scalar) -> Point {
+    var self_2085: Point;
+    var other_1863: Scalar;
 
-    self_1405 = self_1404;
-    other_1219 = other_1218;
-    let _e4: Point = self_1405;
-    let _e5: Scalar = other_1219;
+    self_2085 = self_2084;
+    other_1863 = other_1862;
+    let _e4: Point = self_2085;
+    let _e5: Scalar = other_1863;
     let _e6: Scalar = scalar_inverse(_e5);
     let _e7: Point = point_scalar_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn point_scalar_transformation(self_1406: Point, other_1220: Scalar) -> Scalar {
-    var self_1407: Point;
-    var other_1221: Scalar;
+fn point_scalar_transformation(self_2086: Point, other_1864: Scalar) -> Scalar {
+    var self_2087: Point;
+    var other_1865: Scalar;
 
-    self_1407 = self_1406;
-    other_1221 = other_1220;
-    let _e4: Point = self_1407;
-    let _e5: Scalar = other_1221;
+    self_2087 = self_2086;
+    other_1865 = other_1864;
+    let _e4: Point = self_2087;
+    let _e5: Scalar = other_1865;
     let _e6: Point = point_scalar_geometric_product(_e4, _e5);
-    let _e7: Point = self_1407;
+    let _e7: Point = self_2087;
     let _e8: Point = point_reversal(_e7);
     let _e9: Translator = point_point_geometric_product(_e6, _e8);
     let _e10: Scalar = translator_scalar_into(_e9);
     return _e10;
 }
 
-fn point_translator_geometric_quotient(self_1408: Point, other_1222: Translator) -> Point {
-    var self_1409: Point;
-    var other_1223: Translator;
+fn point_translator_geometric_quotient(self_2088: Point, other_1866: Translator) -> Point {
+    var self_2089: Point;
+    var other_1867: Translator;
 
-    self_1409 = self_1408;
-    other_1223 = other_1222;
-    let _e4: Point = self_1409;
-    let _e5: Translator = other_1223;
+    self_2089 = self_2088;
+    other_1867 = other_1866;
+    let _e4: Point = self_2089;
+    let _e5: Translator = other_1867;
     let _e6: Translator = translator_inverse(_e5);
     let _e7: Point = point_translator_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn point_translator_transformation(self_1410: Point, other_1224: Translator) -> Translator {
-    var self_1411: Point;
-    var other_1225: Translator;
+fn point_translator_transformation(self_2090: Point, other_1868: Translator) -> Translator {
+    var self_2091: Point;
+    var other_1869: Translator;
 
-    self_1411 = self_1410;
-    other_1225 = other_1224;
-    let _e4: Point = self_1411;
-    let _e5: Translator = other_1225;
+    self_2091 = self_2090;
+    other_1869 = other_1868;
+    let _e4: Point = self_2091;
+    let _e5: Translator = other_1869;
     let _e6: Point = point_translator_geometric_product(_e4, _e5);
-    let _e7: Point = self_1411;
+    let _e7: Point = self_2091;
     let _e8: Point = point_reversal(_e7);
     let _e9: Translator = point_point_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn rotor_ideal_point_transformation(self_1412: Rotor, other_1226: IdealPoint) -> IdealPoint {
-    var self_1413: Rotor;
-    var other_1227: IdealPoint;
+fn rotor_ideal_point_transformation(self_2092: Rotor, other_1870: IdealPoint) -> IdealPoint {
+    var self_2093: Rotor;
+    var other_1871: IdealPoint;
 
-    self_1413 = self_1412;
-    other_1227 = other_1226;
-    let _e4: Rotor = self_1413;
-    let _e5: IdealPoint = other_1227;
+    self_2093 = self_2092;
+    other_1871 = other_1870;
+    let _e4: Rotor = self_2093;
+    let _e5: IdealPoint = other_1871;
     let _e6: IdealPoint = rotor_ideal_point_geometric_product(_e4, _e5);
-    let _e7: Rotor = self_1413;
+    let _e7: Rotor = self_2093;
     let _e8: Rotor = rotor_reversal(_e7);
     let _e9: IdealPoint = ideal_point_rotor_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn rotor_motor_geometric_quotient(self_1414: Rotor, other_1228: Motor) -> Motor {
-    var self_1415: Rotor;
-    var other_1229: Motor;
+fn rotor_motor_geometric_quotient(self_2094: Rotor, other_1872: Motor) -> Motor {
+    var self_2095: Rotor;
+    var other_1873: Motor;
 
-    self_1415 = self_1414;
-    other_1229 = other_1228;
-    let _e4: Rotor = self_1415;
-    let _e5: Motor = other_1229;
+    self_2095 = self_2094;
+    other_1873 = other_1872;
+    let _e4: Rotor = self_2095;
+    let _e5: Motor = other_1873;
     let _e6: Motor = motor_inverse(_e5);
     let _e7: Motor = rotor_motor_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn rotor_motor_transformation(self_1416: Rotor, other_1230: Motor) -> Motor {
-    var self_1417: Rotor;
-    var other_1231: Motor;
+fn rotor_motor_transformation(self_2096: Rotor, other_1874: Motor) -> Motor {
+    var self_2097: Rotor;
+    var other_1875: Motor;
 
-    self_1417 = self_1416;
-    other_1231 = other_1230;
-    let _e4: Rotor = self_1417;
-    let _e5: Motor = other_1231;
+    self_2097 = self_2096;
+    other_1875 = other_1874;
+    let _e4: Rotor = self_2097;
+    let _e5: Motor = other_1875;
     let _e6: Motor = rotor_motor_geometric_product(_e4, _e5);
-    let _e7: Rotor = self_1417;
+    let _e7: Rotor = self_2097;
     let _e8: Rotor = rotor_reversal(_e7);
     let _e9: Motor = motor_rotor_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn rotor_motor_dual_geometric_quotient(self_1418: Rotor, other_1232: MotorDual) -> MotorDual {
-    var self_1419: Rotor;
-    var other_1233: MotorDual;
+fn rotor_motor_dual_geometric_quotient(self_2098: Rotor, other_1876: MotorDual) -> MotorDual {
+    var self_2099: Rotor;
+    var other_1877: MotorDual;
 
-    self_1419 = self_1418;
-    other_1233 = other_1232;
-    let _e4: Rotor = self_1419;
-    let _e5: MotorDual = other_1233;
+    self_2099 = self_2098;
+    other_1877 = other_1876;
+    let _e4: Rotor = self_2099;
+    let _e5: MotorDual = other_1877;
     let _e6: MotorDual = motor_dual_inverse(_e5);
     let _e7: MotorDual = rotor_motor_dual_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn rotor_motor_dual_transformation(self_1420: Rotor, other_1234: MotorDual) -> MotorDual {
-    var self_1421: Rotor;
-    var other_1235: MotorDual;
+fn rotor_motor_dual_transformation(self_2100: Rotor, other_1878: MotorDual) -> MotorDual {
+    var self_2101: Rotor;
+    var other_1879: MotorDual;
 
-    self_1421 = self_1420;
-    other_1235 = other_1234;
-    let _e4: Rotor = self_1421;
-    let _e5: MotorDual = other_1235;
+    self_2101 = self_2100;
+    other_1879 = other_1878;
+    let _e4: Rotor = self_2101;
+    let _e5: MotorDual = other_1879;
     let _e6: MotorDual = rotor_motor_dual_geometric_product(_e4, _e5);
-    let _e7: Rotor = self_1421;
+    let _e7: Rotor = self_2101;
     let _e8: Rotor = rotor_reversal(_e7);
     let _e9: MotorDual = motor_dual_rotor_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn rotor_multi_vector_geometric_quotient(self_1422: Rotor, other_1236: MultiVector) -> MultiVector {
-    var self_1423: Rotor;
-    var other_1237: MultiVector;
+fn rotor_multi_vector_geometric_quotient(self_2102: Rotor, other_1880: MultiVector) -> MultiVector {
+    var self_2103: Rotor;
+    var other_1881: MultiVector;
 
-    self_1423 = self_1422;
-    other_1237 = other_1236;
-    let _e4: Rotor = self_1423;
-    let _e5: MultiVector = other_1237;
+    self_2103 = self_2102;
+    other_1881 = other_1880;
+    let _e4: Rotor = self_2103;
+    let _e5: MultiVector = other_1881;
     let _e6: MultiVector = multi_vector_inverse(_e5);
     let _e7: MultiVector = rotor_multi_vector_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn rotor_multi_vector_transformation(self_1424: Rotor, other_1238: MultiVector) -> MultiVector {
-    var self_1425: Rotor;
-    var other_1239: MultiVector;
+fn rotor_multi_vector_transformation(self_2104: Rotor, other_1882: MultiVector) -> MultiVector {
+    var self_2105: Rotor;
+    var other_1883: MultiVector;
 
-    self_1425 = self_1424;
-    other_1239 = other_1238;
-    let _e4: Rotor = self_1425;
-    let _e5: MultiVector = other_1239;
+    self_2105 = self_2104;
+    other_1883 = other_1882;
+    let _e4: Rotor = self_2105;
+    let _e5: MultiVector = other_1883;
     let _e6: MultiVector = rotor_multi_vector_geometric_product(_e4, _e5);
-    let _e7: Rotor = self_1425;
+    let _e7: Rotor = self_2105;
     let _e8: Rotor = rotor_reversal(_e7);
     let _e9: MultiVector = multi_vector_rotor_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn rotor_plane_geometric_quotient(self_1426: Rotor, other_1240: Plane) -> MotorDual {
-    var self_1427: Rotor;
-    var other_1241: Plane;
+fn rotor_plane_geometric_quotient(self_2106: Rotor, other_1884: Plane) -> MotorDual {
+    var self_2107: Rotor;
+    var other_1885: Plane;
 
-    self_1427 = self_1426;
-    other_1241 = other_1240;
-    let _e4: Rotor = self_1427;
-    let _e5: Plane = other_1241;
+    self_2107 = self_2106;
+    other_1885 = other_1884;
+    let _e4: Rotor = self_2107;
+    let _e5: Plane = other_1885;
     let _e6: Plane = plane_inverse(_e5);
     let _e7: MotorDual = rotor_plane_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn rotor_plane_transformation(self_1428: Rotor, other_1242: Plane) -> Plane {
-    var self_1429: Rotor;
-    var other_1243: Plane;
+fn rotor_plane_transformation(self_2108: Rotor, other_1886: Plane) -> Plane {
+    var self_2109: Rotor;
+    var other_1887: Plane;
 
-    self_1429 = self_1428;
-    other_1243 = other_1242;
-    let _e4: Rotor = self_1429;
-    let _e5: Plane = other_1243;
+    self_2109 = self_2108;
+    other_1887 = other_1886;
+    let _e4: Rotor = self_2109;
+    let _e5: Plane = other_1887;
     let _e6: MotorDual = rotor_plane_geometric_product(_e4, _e5);
-    let _e7: Rotor = self_1429;
+    let _e7: Rotor = self_2109;
     let _e8: Rotor = rotor_reversal(_e7);
     let _e9: MotorDual = motor_dual_rotor_geometric_product(_e6, _e8);
     let _e10: Plane = motor_dual_plane_into(_e9);
     return _e10;
 }
 
-fn rotor_point_geometric_quotient(self_1430: Rotor, other_1244: Point) -> Motor {
-    var self_1431: Rotor;
-    var other_1245: Point;
+fn rotor_point_geometric_quotient(self_2110: Rotor, other_1888: Point) -> Motor {
+    var self_2111: Rotor;
+    var other_1889: Point;
 
-    self_1431 = self_1430;
-    other_1245 = other_1244;
-    let _e4: Rotor = self_1431;
-    let _e5: Point = other_1245;
+    self_2111 = self_2110;
+    other_1889 = other_1888;
+    let _e4: Rotor = self_2111;
+    let _e5: Point = other_1889;
     let _e6: Point = point_inverse(_e5);
     let _e7: Motor = rotor_point_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn rotor_point_transformation(self_1432: Rotor, other_1246: Point) -> Point {
-    var self_1433: Rotor;
-    var other_1247: Point;
+fn rotor_point_transformation(self_2112: Rotor, other_1890: Point) -> Point {
+    var self_2113: Rotor;
+    var other_1891: Point;
 
-    self_1433 = self_1432;
-    other_1247 = other_1246;
-    let _e4: Rotor = self_1433;
-    let _e5: Point = other_1247;
+    self_2113 = self_2112;
+    other_1891 = other_1890;
+    let _e4: Rotor = self_2113;
+    let _e5: Point = other_1891;
     let _e6: Motor = rotor_point_geometric_product(_e4, _e5);
-    let _e7: Rotor = self_1433;
+    let _e7: Rotor = self_2113;
     let _e8: Rotor = rotor_reversal(_e7);
     let _e9: Motor = motor_rotor_geometric_product(_e6, _e8);
     let _e10: Point = motor_point_into(_e9);
     return _e10;
 }
 
-fn rotor_powi(self_1434: Rotor, exponent_4: i32) -> Rotor {
-    var self_1435: Rotor;
+fn rotor_powi(self_2114: Rotor, exponent_4: i32) -> Rotor {
+    var self_2115: Rotor;
     var exponent_5: i32;
     var local_2: Rotor;
     var x_2: Rotor;
     var y_2: Rotor;
     var n_2: i32;
 
-    self_1435 = self_1434;
+    self_2115 = self_2114;
     exponent_5 = exponent_4;
     let _e4: i32 = exponent_5;
     if (_e4 == 0) {
@@ -10124,11 +14853,11 @@ fn rotor_powi(self_1434: Rotor, exponent_4: i32) -> Rotor {
     }
     let _e8: i32 = exponent_5;
     if (_e8 < 0) {
-        let _e11: Rotor = self_1435;
+        let _e11: Rotor = self_2115;
         let _e12: Rotor = rotor_inverse(_e11);
         local_2 = _e12;
     } else {
-        let _e14: Rotor = self_1435;
+        let _e14: Rotor = self_2115;
         local_2 = _e14;
     }
     let _e15: Rotor = local_2;
@@ -10166,284 +14895,299 @@ fn rotor_powi(self_1434: Rotor, exponent_4: i32) -> Rotor {
     return _e43;
 }
 
-fn rotor_rotor_geometric_quotient(self_1436: Rotor, other_1248: Rotor) -> Rotor {
-    var self_1437: Rotor;
-    var other_1249: Rotor;
+fn rotor_rotor_geometric_quotient(self_2116: Rotor, other_1892: Rotor) -> Rotor {
+    var self_2117: Rotor;
+    var other_1893: Rotor;
 
-    self_1437 = self_1436;
-    other_1249 = other_1248;
-    let _e4: Rotor = self_1437;
-    let _e5: Rotor = other_1249;
+    self_2117 = self_2116;
+    other_1893 = other_1892;
+    let _e4: Rotor = self_2117;
+    let _e5: Rotor = other_1893;
     let _e6: Rotor = rotor_inverse(_e5);
     let _e7: Rotor = rotor_rotor_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn rotor_rotor_transformation(self_1438: Rotor, other_1250: Rotor) -> Rotor {
-    var self_1439: Rotor;
-    var other_1251: Rotor;
+fn rotor_rotor_transformation(self_2118: Rotor, other_1894: Rotor) -> Rotor {
+    var self_2119: Rotor;
+    var other_1895: Rotor;
 
-    self_1439 = self_1438;
-    other_1251 = other_1250;
-    let _e4: Rotor = self_1439;
-    let _e5: Rotor = other_1251;
+    self_2119 = self_2118;
+    other_1895 = other_1894;
+    let _e4: Rotor = self_2119;
+    let _e5: Rotor = other_1895;
     let _e6: Rotor = rotor_rotor_geometric_product(_e4, _e5);
-    let _e7: Rotor = self_1439;
+    let _e7: Rotor = self_2119;
     let _e8: Rotor = rotor_reversal(_e7);
     let _e9: Rotor = rotor_rotor_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn rotor_scalar_geometric_quotient(self_1440: Rotor, other_1252: Scalar) -> Rotor {
-    var self_1441: Rotor;
-    var other_1253: Scalar;
+fn rotor_scalar_geometric_quotient(self_2120: Rotor, other_1896: Scalar) -> Rotor {
+    var self_2121: Rotor;
+    var other_1897: Scalar;
 
-    self_1441 = self_1440;
-    other_1253 = other_1252;
-    let _e4: Rotor = self_1441;
-    let _e5: Scalar = other_1253;
+    self_2121 = self_2120;
+    other_1897 = other_1896;
+    let _e4: Rotor = self_2121;
+    let _e5: Scalar = other_1897;
     let _e6: Scalar = scalar_inverse(_e5);
     let _e7: Rotor = rotor_scalar_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn rotor_scalar_transformation(self_1442: Rotor, other_1254: Scalar) -> Scalar {
-    var self_1443: Rotor;
-    var other_1255: Scalar;
+fn rotor_scalar_transformation(self_2122: Rotor, other_1898: Scalar) -> Scalar {
+    var self_2123: Rotor;
+    var other_1899: Scalar;
 
-    self_1443 = self_1442;
-    other_1255 = other_1254;
-    let _e4: Rotor = self_1443;
-    let _e5: Scalar = other_1255;
+    self_2123 = self_2122;
+    other_1899 = other_1898;
+    let _e4: Rotor = self_2123;
+    let _e5: Scalar = other_1899;
     let _e6: Rotor = rotor_scalar_geometric_product(_e4, _e5);
-    let _e7: Rotor = self_1443;
+    let _e7: Rotor = self_2123;
     let _e8: Rotor = rotor_reversal(_e7);
     let _e9: Rotor = rotor_rotor_geometric_product(_e6, _e8);
     let _e10: Scalar = rotor_scalar_into(_e9);
     return _e10;
 }
 
-fn rotor_translator_geometric_quotient(self_1444: Rotor, other_1256: Translator) -> Motor {
-    var self_1445: Rotor;
-    var other_1257: Translator;
+fn rotor_translator_geometric_quotient(self_2124: Rotor, other_1900: Translator) -> Motor {
+    var self_2125: Rotor;
+    var other_1901: Translator;
 
-    self_1445 = self_1444;
-    other_1257 = other_1256;
-    let _e4: Rotor = self_1445;
-    let _e5: Translator = other_1257;
+    self_2125 = self_2124;
+    other_1901 = other_1900;
+    let _e4: Rotor = self_2125;
+    let _e5: Translator = other_1901;
     let _e6: Translator = translator_inverse(_e5);
     let _e7: Motor = rotor_translator_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn rotor_translator_transformation(self_1446: Rotor, other_1258: Translator) -> Translator {
-    var self_1447: Rotor;
-    var other_1259: Translator;
+fn rotor_translator_transformation(self_2126: Rotor, other_1902: Translator) -> Translator {
+    var self_2127: Rotor;
+    var other_1903: Translator;
 
-    self_1447 = self_1446;
-    other_1259 = other_1258;
-    let _e4: Rotor = self_1447;
-    let _e5: Translator = other_1259;
+    self_2127 = self_2126;
+    other_1903 = other_1902;
+    let _e4: Rotor = self_2127;
+    let _e5: Translator = other_1903;
     let _e6: Motor = rotor_translator_geometric_product(_e4, _e5);
-    let _e7: Rotor = self_1447;
+    let _e7: Rotor = self_2127;
     let _e8: Rotor = rotor_reversal(_e7);
     let _e9: Motor = motor_rotor_geometric_product(_e6, _e8);
     let _e10: Translator = motor_translator_into(_e9);
     return _e10;
 }
 
-fn scalar_ideal_point_transformation(self_1448: Scalar, other_1260: IdealPoint) -> IdealPoint {
-    var self_1449: Scalar;
-    var other_1261: IdealPoint;
+fn scalar_anti_scalar_transformation(self_2128: Scalar, other_1904: AntiScalar) -> AntiScalar {
+    var self_2129: Scalar;
+    var other_1905: AntiScalar;
 
-    self_1449 = self_1448;
-    other_1261 = other_1260;
-    let _e4: Scalar = self_1449;
-    let _e5: IdealPoint = other_1261;
+    self_2129 = self_2128;
+    other_1905 = other_1904;
+    let _e4: Scalar = self_2129;
+    let _e5: AntiScalar = other_1905;
+    let _e6: AntiScalar = scalar_anti_scalar_geometric_product(_e4, _e5);
+    let _e7: Scalar = self_2129;
+    let _e8: Scalar = scalar_reversal(_e7);
+    let _e9: AntiScalar = anti_scalar_scalar_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn scalar_ideal_point_transformation(self_2130: Scalar, other_1906: IdealPoint) -> IdealPoint {
+    var self_2131: Scalar;
+    var other_1907: IdealPoint;
+
+    self_2131 = self_2130;
+    other_1907 = other_1906;
+    let _e4: Scalar = self_2131;
+    let _e5: IdealPoint = other_1907;
     let _e6: IdealPoint = scalar_ideal_point_geometric_product(_e4, _e5);
-    let _e7: Scalar = self_1449;
+    let _e7: Scalar = self_2131;
     let _e8: Scalar = scalar_reversal(_e7);
     let _e9: IdealPoint = ideal_point_scalar_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn scalar_motor_geometric_quotient(self_1450: Scalar, other_1262: Motor) -> Motor {
-    var self_1451: Scalar;
-    var other_1263: Motor;
+fn scalar_motor_geometric_quotient(self_2132: Scalar, other_1908: Motor) -> Motor {
+    var self_2133: Scalar;
+    var other_1909: Motor;
 
-    self_1451 = self_1450;
-    other_1263 = other_1262;
-    let _e4: Scalar = self_1451;
-    let _e5: Motor = other_1263;
+    self_2133 = self_2132;
+    other_1909 = other_1908;
+    let _e4: Scalar = self_2133;
+    let _e5: Motor = other_1909;
     let _e6: Motor = motor_inverse(_e5);
     let _e7: Motor = scalar_motor_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn scalar_motor_transformation(self_1452: Scalar, other_1264: Motor) -> Motor {
-    var self_1453: Scalar;
-    var other_1265: Motor;
+fn scalar_motor_transformation(self_2134: Scalar, other_1910: Motor) -> Motor {
+    var self_2135: Scalar;
+    var other_1911: Motor;
 
-    self_1453 = self_1452;
-    other_1265 = other_1264;
-    let _e4: Scalar = self_1453;
-    let _e5: Motor = other_1265;
+    self_2135 = self_2134;
+    other_1911 = other_1910;
+    let _e4: Scalar = self_2135;
+    let _e5: Motor = other_1911;
     let _e6: Motor = scalar_motor_geometric_product(_e4, _e5);
-    let _e7: Scalar = self_1453;
+    let _e7: Scalar = self_2135;
     let _e8: Scalar = scalar_reversal(_e7);
     let _e9: Motor = motor_scalar_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn scalar_motor_dual_geometric_quotient(self_1454: Scalar, other_1266: MotorDual) -> MotorDual {
-    var self_1455: Scalar;
-    var other_1267: MotorDual;
+fn scalar_motor_dual_geometric_quotient(self_2136: Scalar, other_1912: MotorDual) -> MotorDual {
+    var self_2137: Scalar;
+    var other_1913: MotorDual;
 
-    self_1455 = self_1454;
-    other_1267 = other_1266;
-    let _e4: Scalar = self_1455;
-    let _e5: MotorDual = other_1267;
+    self_2137 = self_2136;
+    other_1913 = other_1912;
+    let _e4: Scalar = self_2137;
+    let _e5: MotorDual = other_1913;
     let _e6: MotorDual = motor_dual_inverse(_e5);
     let _e7: MotorDual = scalar_motor_dual_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn scalar_motor_dual_transformation(self_1456: Scalar, other_1268: MotorDual) -> MotorDual {
-    var self_1457: Scalar;
-    var other_1269: MotorDual;
+fn scalar_motor_dual_transformation(self_2138: Scalar, other_1914: MotorDual) -> MotorDual {
+    var self_2139: Scalar;
+    var other_1915: MotorDual;
 
-    self_1457 = self_1456;
-    other_1269 = other_1268;
-    let _e4: Scalar = self_1457;
-    let _e5: MotorDual = other_1269;
+    self_2139 = self_2138;
+    other_1915 = other_1914;
+    let _e4: Scalar = self_2139;
+    let _e5: MotorDual = other_1915;
     let _e6: MotorDual = scalar_motor_dual_geometric_product(_e4, _e5);
-    let _e7: Scalar = self_1457;
+    let _e7: Scalar = self_2139;
     let _e8: Scalar = scalar_reversal(_e7);
     let _e9: MotorDual = motor_dual_scalar_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn scalar_multi_vector_geometric_quotient(self_1458: Scalar, other_1270: MultiVector) -> MultiVector {
-    var self_1459: Scalar;
-    var other_1271: MultiVector;
+fn scalar_multi_vector_geometric_quotient(self_2140: Scalar, other_1916: MultiVector) -> MultiVector {
+    var self_2141: Scalar;
+    var other_1917: MultiVector;
 
-    self_1459 = self_1458;
-    other_1271 = other_1270;
-    let _e4: Scalar = self_1459;
-    let _e5: MultiVector = other_1271;
+    self_2141 = self_2140;
+    other_1917 = other_1916;
+    let _e4: Scalar = self_2141;
+    let _e5: MultiVector = other_1917;
     let _e6: MultiVector = multi_vector_inverse(_e5);
     let _e7: MultiVector = scalar_multi_vector_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn scalar_multi_vector_transformation(self_1460: Scalar, other_1272: MultiVector) -> MultiVector {
-    var self_1461: Scalar;
-    var other_1273: MultiVector;
+fn scalar_multi_vector_transformation(self_2142: Scalar, other_1918: MultiVector) -> MultiVector {
+    var self_2143: Scalar;
+    var other_1919: MultiVector;
 
-    self_1461 = self_1460;
-    other_1273 = other_1272;
-    let _e4: Scalar = self_1461;
-    let _e5: MultiVector = other_1273;
+    self_2143 = self_2142;
+    other_1919 = other_1918;
+    let _e4: Scalar = self_2143;
+    let _e5: MultiVector = other_1919;
     let _e6: MultiVector = scalar_multi_vector_geometric_product(_e4, _e5);
-    let _e7: Scalar = self_1461;
+    let _e7: Scalar = self_2143;
     let _e8: Scalar = scalar_reversal(_e7);
     let _e9: MultiVector = multi_vector_scalar_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn scalar_plane_geometric_quotient(self_1462: Scalar, other_1274: Plane) -> Plane {
-    var self_1463: Scalar;
-    var other_1275: Plane;
+fn scalar_plane_geometric_quotient(self_2144: Scalar, other_1920: Plane) -> Plane {
+    var self_2145: Scalar;
+    var other_1921: Plane;
 
-    self_1463 = self_1462;
-    other_1275 = other_1274;
-    let _e4: Scalar = self_1463;
-    let _e5: Plane = other_1275;
+    self_2145 = self_2144;
+    other_1921 = other_1920;
+    let _e4: Scalar = self_2145;
+    let _e5: Plane = other_1921;
     let _e6: Plane = plane_inverse(_e5);
     let _e7: Plane = scalar_plane_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn scalar_plane_transformation(self_1464: Scalar, other_1276: Plane) -> Plane {
-    var self_1465: Scalar;
-    var other_1277: Plane;
+fn scalar_plane_transformation(self_2146: Scalar, other_1922: Plane) -> Plane {
+    var self_2147: Scalar;
+    var other_1923: Plane;
 
-    self_1465 = self_1464;
-    other_1277 = other_1276;
-    let _e4: Scalar = self_1465;
-    let _e5: Plane = other_1277;
+    self_2147 = self_2146;
+    other_1923 = other_1922;
+    let _e4: Scalar = self_2147;
+    let _e5: Plane = other_1923;
     let _e6: Plane = scalar_plane_geometric_product(_e4, _e5);
-    let _e7: Scalar = self_1465;
+    let _e7: Scalar = self_2147;
     let _e8: Scalar = scalar_reversal(_e7);
     let _e9: Plane = plane_scalar_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn scalar_point_geometric_quotient(self_1466: Scalar, other_1278: Point) -> Point {
-    var self_1467: Scalar;
-    var other_1279: Point;
+fn scalar_point_geometric_quotient(self_2148: Scalar, other_1924: Point) -> Point {
+    var self_2149: Scalar;
+    var other_1925: Point;
 
-    self_1467 = self_1466;
-    other_1279 = other_1278;
-    let _e4: Scalar = self_1467;
-    let _e5: Point = other_1279;
+    self_2149 = self_2148;
+    other_1925 = other_1924;
+    let _e4: Scalar = self_2149;
+    let _e5: Point = other_1925;
     let _e6: Point = point_inverse(_e5);
     let _e7: Point = scalar_point_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn scalar_point_transformation(self_1468: Scalar, other_1280: Point) -> Point {
-    var self_1469: Scalar;
-    var other_1281: Point;
+fn scalar_point_transformation(self_2150: Scalar, other_1926: Point) -> Point {
+    var self_2151: Scalar;
+    var other_1927: Point;
 
-    self_1469 = self_1468;
-    other_1281 = other_1280;
-    let _e4: Scalar = self_1469;
-    let _e5: Point = other_1281;
+    self_2151 = self_2150;
+    other_1927 = other_1926;
+    let _e4: Scalar = self_2151;
+    let _e5: Point = other_1927;
     let _e6: Point = scalar_point_geometric_product(_e4, _e5);
-    let _e7: Scalar = self_1469;
+    let _e7: Scalar = self_2151;
     let _e8: Scalar = scalar_reversal(_e7);
     let _e9: Point = point_scalar_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn scalar_rotor_geometric_quotient(self_1470: Scalar, other_1282: Rotor) -> Rotor {
-    var self_1471: Scalar;
-    var other_1283: Rotor;
+fn scalar_rotor_geometric_quotient(self_2152: Scalar, other_1928: Rotor) -> Rotor {
+    var self_2153: Scalar;
+    var other_1929: Rotor;
 
-    self_1471 = self_1470;
-    other_1283 = other_1282;
-    let _e4: Scalar = self_1471;
-    let _e5: Rotor = other_1283;
+    self_2153 = self_2152;
+    other_1929 = other_1928;
+    let _e4: Scalar = self_2153;
+    let _e5: Rotor = other_1929;
     let _e6: Rotor = rotor_inverse(_e5);
     let _e7: Rotor = scalar_rotor_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn scalar_rotor_transformation(self_1472: Scalar, other_1284: Rotor) -> Rotor {
-    var self_1473: Scalar;
-    var other_1285: Rotor;
+fn scalar_rotor_transformation(self_2154: Scalar, other_1930: Rotor) -> Rotor {
+    var self_2155: Scalar;
+    var other_1931: Rotor;
 
-    self_1473 = self_1472;
-    other_1285 = other_1284;
-    let _e4: Scalar = self_1473;
-    let _e5: Rotor = other_1285;
+    self_2155 = self_2154;
+    other_1931 = other_1930;
+    let _e4: Scalar = self_2155;
+    let _e5: Rotor = other_1931;
     let _e6: Rotor = scalar_rotor_geometric_product(_e4, _e5);
-    let _e7: Scalar = self_1473;
+    let _e7: Scalar = self_2155;
     let _e8: Scalar = scalar_reversal(_e7);
     let _e9: Rotor = rotor_scalar_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn scalar_powi(self_1474: Scalar, exponent_6: i32) -> Scalar {
-    var self_1475: Scalar;
+fn scalar_powi(self_2156: Scalar, exponent_6: i32) -> Scalar {
+    var self_2157: Scalar;
     var exponent_7: i32;
     var local_3: Scalar;
     var x_3: Scalar;
     var y_3: Scalar;
     var n_3: i32;
 
-    self_1475 = self_1474;
+    self_2157 = self_2156;
     exponent_7 = exponent_6;
     let _e4: i32 = exponent_7;
     if (_e4 == 0) {
@@ -10454,11 +15198,11 @@ fn scalar_powi(self_1474: Scalar, exponent_6: i32) -> Scalar {
     }
     let _e8: i32 = exponent_7;
     if (_e8 < 0) {
-        let _e11: Scalar = self_1475;
+        let _e11: Scalar = self_2157;
         let _e12: Scalar = scalar_inverse(_e11);
         local_3 = _e12;
     } else {
-        let _e14: Scalar = self_1475;
+        let _e14: Scalar = self_2157;
         local_3 = _e14;
     }
     let _e15: Scalar = local_3;
@@ -10496,285 +15240,300 @@ fn scalar_powi(self_1474: Scalar, exponent_6: i32) -> Scalar {
     return _e43;
 }
 
-fn scalar_scalar_geometric_quotient(self_1476: Scalar, other_1286: Scalar) -> Scalar {
-    var self_1477: Scalar;
-    var other_1287: Scalar;
+fn scalar_scalar_geometric_quotient(self_2158: Scalar, other_1932: Scalar) -> Scalar {
+    var self_2159: Scalar;
+    var other_1933: Scalar;
 
-    self_1477 = self_1476;
-    other_1287 = other_1286;
-    let _e4: Scalar = self_1477;
-    let _e5: Scalar = other_1287;
+    self_2159 = self_2158;
+    other_1933 = other_1932;
+    let _e4: Scalar = self_2159;
+    let _e5: Scalar = other_1933;
     let _e6: Scalar = scalar_inverse(_e5);
     let _e7: Scalar = scalar_scalar_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn scalar_scalar_transformation(self_1478: Scalar, other_1288: Scalar) -> Scalar {
-    var self_1479: Scalar;
-    var other_1289: Scalar;
+fn scalar_scalar_transformation(self_2160: Scalar, other_1934: Scalar) -> Scalar {
+    var self_2161: Scalar;
+    var other_1935: Scalar;
 
-    self_1479 = self_1478;
-    other_1289 = other_1288;
-    let _e4: Scalar = self_1479;
-    let _e5: Scalar = other_1289;
+    self_2161 = self_2160;
+    other_1935 = other_1934;
+    let _e4: Scalar = self_2161;
+    let _e5: Scalar = other_1935;
     let _e6: Scalar = scalar_scalar_geometric_product(_e4, _e5);
-    let _e7: Scalar = self_1479;
+    let _e7: Scalar = self_2161;
     let _e8: Scalar = scalar_reversal(_e7);
     let _e9: Scalar = scalar_scalar_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn scalar_translator_geometric_quotient(self_1480: Scalar, other_1290: Translator) -> Translator {
-    var self_1481: Scalar;
-    var other_1291: Translator;
+fn scalar_translator_geometric_quotient(self_2162: Scalar, other_1936: Translator) -> Translator {
+    var self_2163: Scalar;
+    var other_1937: Translator;
 
-    self_1481 = self_1480;
-    other_1291 = other_1290;
-    let _e4: Scalar = self_1481;
-    let _e5: Translator = other_1291;
+    self_2163 = self_2162;
+    other_1937 = other_1936;
+    let _e4: Scalar = self_2163;
+    let _e5: Translator = other_1937;
     let _e6: Translator = translator_inverse(_e5);
     let _e7: Translator = scalar_translator_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn scalar_translator_transformation(self_1482: Scalar, other_1292: Translator) -> Translator {
-    var self_1483: Scalar;
-    var other_1293: Translator;
+fn scalar_translator_transformation(self_2164: Scalar, other_1938: Translator) -> Translator {
+    var self_2165: Scalar;
+    var other_1939: Translator;
 
-    self_1483 = self_1482;
-    other_1293 = other_1292;
-    let _e4: Scalar = self_1483;
-    let _e5: Translator = other_1293;
+    self_2165 = self_2164;
+    other_1939 = other_1938;
+    let _e4: Scalar = self_2165;
+    let _e5: Translator = other_1939;
     let _e6: Translator = scalar_translator_geometric_product(_e4, _e5);
-    let _e7: Scalar = self_1483;
+    let _e7: Scalar = self_2165;
     let _e8: Scalar = scalar_reversal(_e7);
     let _e9: Translator = translator_scalar_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn translator_ideal_point_transformation(self_1484: Translator, other_1294: IdealPoint) -> IdealPoint {
-    var self_1485: Translator;
-    var other_1295: IdealPoint;
+fn translator_anti_scalar_transformation(self_2166: Translator, other_1940: AntiScalar) -> AntiScalar {
+    var self_2167: Translator;
+    var other_1941: AntiScalar;
 
-    self_1485 = self_1484;
-    other_1295 = other_1294;
-    let _e4: Translator = self_1485;
-    let _e5: IdealPoint = other_1295;
+    self_2167 = self_2166;
+    other_1941 = other_1940;
+    let _e4: Translator = self_2167;
+    let _e5: AntiScalar = other_1941;
+    let _e6: AntiScalar = translator_anti_scalar_geometric_product(_e4, _e5);
+    let _e7: Translator = self_2167;
+    let _e8: Translator = translator_reversal(_e7);
+    let _e9: AntiScalar = anti_scalar_translator_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn translator_ideal_point_transformation(self_2168: Translator, other_1942: IdealPoint) -> IdealPoint {
+    var self_2169: Translator;
+    var other_1943: IdealPoint;
+
+    self_2169 = self_2168;
+    other_1943 = other_1942;
+    let _e4: Translator = self_2169;
+    let _e5: IdealPoint = other_1943;
     let _e6: IdealPoint = translator_ideal_point_geometric_product(_e4, _e5);
-    let _e7: Translator = self_1485;
+    let _e7: Translator = self_2169;
     let _e8: Translator = translator_reversal(_e7);
     let _e9: IdealPoint = ideal_point_translator_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn translator_motor_geometric_quotient(self_1486: Translator, other_1296: Motor) -> Motor {
-    var self_1487: Translator;
-    var other_1297: Motor;
+fn translator_motor_geometric_quotient(self_2170: Translator, other_1944: Motor) -> Motor {
+    var self_2171: Translator;
+    var other_1945: Motor;
 
-    self_1487 = self_1486;
-    other_1297 = other_1296;
-    let _e4: Translator = self_1487;
-    let _e5: Motor = other_1297;
+    self_2171 = self_2170;
+    other_1945 = other_1944;
+    let _e4: Translator = self_2171;
+    let _e5: Motor = other_1945;
     let _e6: Motor = motor_inverse(_e5);
     let _e7: Motor = translator_motor_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn translator_motor_transformation(self_1488: Translator, other_1298: Motor) -> Motor {
-    var self_1489: Translator;
-    var other_1299: Motor;
+fn translator_motor_transformation(self_2172: Translator, other_1946: Motor) -> Motor {
+    var self_2173: Translator;
+    var other_1947: Motor;
 
-    self_1489 = self_1488;
-    other_1299 = other_1298;
-    let _e4: Translator = self_1489;
-    let _e5: Motor = other_1299;
+    self_2173 = self_2172;
+    other_1947 = other_1946;
+    let _e4: Translator = self_2173;
+    let _e5: Motor = other_1947;
     let _e6: Motor = translator_motor_geometric_product(_e4, _e5);
-    let _e7: Translator = self_1489;
+    let _e7: Translator = self_2173;
     let _e8: Translator = translator_reversal(_e7);
     let _e9: Motor = motor_translator_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn translator_motor_dual_geometric_quotient(self_1490: Translator, other_1300: MotorDual) -> MotorDual {
-    var self_1491: Translator;
-    var other_1301: MotorDual;
+fn translator_motor_dual_geometric_quotient(self_2174: Translator, other_1948: MotorDual) -> MotorDual {
+    var self_2175: Translator;
+    var other_1949: MotorDual;
 
-    self_1491 = self_1490;
-    other_1301 = other_1300;
-    let _e4: Translator = self_1491;
-    let _e5: MotorDual = other_1301;
+    self_2175 = self_2174;
+    other_1949 = other_1948;
+    let _e4: Translator = self_2175;
+    let _e5: MotorDual = other_1949;
     let _e6: MotorDual = motor_dual_inverse(_e5);
     let _e7: MotorDual = translator_motor_dual_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn translator_motor_dual_transformation(self_1492: Translator, other_1302: MotorDual) -> MotorDual {
-    var self_1493: Translator;
-    var other_1303: MotorDual;
+fn translator_motor_dual_transformation(self_2176: Translator, other_1950: MotorDual) -> MotorDual {
+    var self_2177: Translator;
+    var other_1951: MotorDual;
 
-    self_1493 = self_1492;
-    other_1303 = other_1302;
-    let _e4: Translator = self_1493;
-    let _e5: MotorDual = other_1303;
+    self_2177 = self_2176;
+    other_1951 = other_1950;
+    let _e4: Translator = self_2177;
+    let _e5: MotorDual = other_1951;
     let _e6: MotorDual = translator_motor_dual_geometric_product(_e4, _e5);
-    let _e7: Translator = self_1493;
+    let _e7: Translator = self_2177;
     let _e8: Translator = translator_reversal(_e7);
     let _e9: MotorDual = motor_dual_translator_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn translator_multi_vector_geometric_quotient(self_1494: Translator, other_1304: MultiVector) -> MultiVector {
-    var self_1495: Translator;
-    var other_1305: MultiVector;
+fn translator_multi_vector_geometric_quotient(self_2178: Translator, other_1952: MultiVector) -> MultiVector {
+    var self_2179: Translator;
+    var other_1953: MultiVector;
 
-    self_1495 = self_1494;
-    other_1305 = other_1304;
-    let _e4: Translator = self_1495;
-    let _e5: MultiVector = other_1305;
+    self_2179 = self_2178;
+    other_1953 = other_1952;
+    let _e4: Translator = self_2179;
+    let _e5: MultiVector = other_1953;
     let _e6: MultiVector = multi_vector_inverse(_e5);
     let _e7: MultiVector = translator_multi_vector_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn translator_multi_vector_transformation(self_1496: Translator, other_1306: MultiVector) -> MultiVector {
-    var self_1497: Translator;
-    var other_1307: MultiVector;
+fn translator_multi_vector_transformation(self_2180: Translator, other_1954: MultiVector) -> MultiVector {
+    var self_2181: Translator;
+    var other_1955: MultiVector;
 
-    self_1497 = self_1496;
-    other_1307 = other_1306;
-    let _e4: Translator = self_1497;
-    let _e5: MultiVector = other_1307;
+    self_2181 = self_2180;
+    other_1955 = other_1954;
+    let _e4: Translator = self_2181;
+    let _e5: MultiVector = other_1955;
     let _e6: MultiVector = translator_multi_vector_geometric_product(_e4, _e5);
-    let _e7: Translator = self_1497;
+    let _e7: Translator = self_2181;
     let _e8: Translator = translator_reversal(_e7);
     let _e9: MultiVector = multi_vector_translator_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn translator_plane_geometric_quotient(self_1498: Translator, other_1308: Plane) -> MotorDual {
-    var self_1499: Translator;
-    var other_1309: Plane;
+fn translator_plane_geometric_quotient(self_2182: Translator, other_1956: Plane) -> MotorDual {
+    var self_2183: Translator;
+    var other_1957: Plane;
 
-    self_1499 = self_1498;
-    other_1309 = other_1308;
-    let _e4: Translator = self_1499;
-    let _e5: Plane = other_1309;
+    self_2183 = self_2182;
+    other_1957 = other_1956;
+    let _e4: Translator = self_2183;
+    let _e5: Plane = other_1957;
     let _e6: Plane = plane_inverse(_e5);
     let _e7: MotorDual = translator_plane_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn translator_plane_transformation(self_1500: Translator, other_1310: Plane) -> Plane {
-    var self_1501: Translator;
-    var other_1311: Plane;
+fn translator_plane_transformation(self_2184: Translator, other_1958: Plane) -> Plane {
+    var self_2185: Translator;
+    var other_1959: Plane;
 
-    self_1501 = self_1500;
-    other_1311 = other_1310;
-    let _e4: Translator = self_1501;
-    let _e5: Plane = other_1311;
+    self_2185 = self_2184;
+    other_1959 = other_1958;
+    let _e4: Translator = self_2185;
+    let _e5: Plane = other_1959;
     let _e6: MotorDual = translator_plane_geometric_product(_e4, _e5);
-    let _e7: Translator = self_1501;
+    let _e7: Translator = self_2185;
     let _e8: Translator = translator_reversal(_e7);
     let _e9: MotorDual = motor_dual_translator_geometric_product(_e6, _e8);
     let _e10: Plane = motor_dual_plane_into(_e9);
     return _e10;
 }
 
-fn translator_point_geometric_quotient(self_1502: Translator, other_1312: Point) -> Point {
-    var self_1503: Translator;
-    var other_1313: Point;
+fn translator_point_geometric_quotient(self_2186: Translator, other_1960: Point) -> Point {
+    var self_2187: Translator;
+    var other_1961: Point;
 
-    self_1503 = self_1502;
-    other_1313 = other_1312;
-    let _e4: Translator = self_1503;
-    let _e5: Point = other_1313;
+    self_2187 = self_2186;
+    other_1961 = other_1960;
+    let _e4: Translator = self_2187;
+    let _e5: Point = other_1961;
     let _e6: Point = point_inverse(_e5);
     let _e7: Point = translator_point_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn translator_point_transformation(self_1504: Translator, other_1314: Point) -> Point {
-    var self_1505: Translator;
-    var other_1315: Point;
+fn translator_point_transformation(self_2188: Translator, other_1962: Point) -> Point {
+    var self_2189: Translator;
+    var other_1963: Point;
 
-    self_1505 = self_1504;
-    other_1315 = other_1314;
-    let _e4: Translator = self_1505;
-    let _e5: Point = other_1315;
+    self_2189 = self_2188;
+    other_1963 = other_1962;
+    let _e4: Translator = self_2189;
+    let _e5: Point = other_1963;
     let _e6: Point = translator_point_geometric_product(_e4, _e5);
-    let _e7: Translator = self_1505;
+    let _e7: Translator = self_2189;
     let _e8: Translator = translator_reversal(_e7);
     let _e9: Point = point_translator_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn translator_rotor_geometric_quotient(self_1506: Translator, other_1316: Rotor) -> Motor {
-    var self_1507: Translator;
-    var other_1317: Rotor;
+fn translator_rotor_geometric_quotient(self_2190: Translator, other_1964: Rotor) -> Motor {
+    var self_2191: Translator;
+    var other_1965: Rotor;
 
-    self_1507 = self_1506;
-    other_1317 = other_1316;
-    let _e4: Translator = self_1507;
-    let _e5: Rotor = other_1317;
+    self_2191 = self_2190;
+    other_1965 = other_1964;
+    let _e4: Translator = self_2191;
+    let _e5: Rotor = other_1965;
     let _e6: Rotor = rotor_inverse(_e5);
     let _e7: Motor = translator_rotor_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn translator_rotor_transformation(self_1508: Translator, other_1318: Rotor) -> Rotor {
-    var self_1509: Translator;
-    var other_1319: Rotor;
+fn translator_rotor_transformation(self_2192: Translator, other_1966: Rotor) -> Rotor {
+    var self_2193: Translator;
+    var other_1967: Rotor;
 
-    self_1509 = self_1508;
-    other_1319 = other_1318;
-    let _e4: Translator = self_1509;
-    let _e5: Rotor = other_1319;
+    self_2193 = self_2192;
+    other_1967 = other_1966;
+    let _e4: Translator = self_2193;
+    let _e5: Rotor = other_1967;
     let _e6: Motor = translator_rotor_geometric_product(_e4, _e5);
-    let _e7: Translator = self_1509;
+    let _e7: Translator = self_2193;
     let _e8: Translator = translator_reversal(_e7);
     let _e9: Motor = motor_translator_geometric_product(_e6, _e8);
     let _e10: Rotor = motor_rotor_into(_e9);
     return _e10;
 }
 
-fn translator_scalar_geometric_quotient(self_1510: Translator, other_1320: Scalar) -> Translator {
-    var self_1511: Translator;
-    var other_1321: Scalar;
+fn translator_scalar_geometric_quotient(self_2194: Translator, other_1968: Scalar) -> Translator {
+    var self_2195: Translator;
+    var other_1969: Scalar;
 
-    self_1511 = self_1510;
-    other_1321 = other_1320;
-    let _e4: Translator = self_1511;
-    let _e5: Scalar = other_1321;
+    self_2195 = self_2194;
+    other_1969 = other_1968;
+    let _e4: Translator = self_2195;
+    let _e5: Scalar = other_1969;
     let _e6: Scalar = scalar_inverse(_e5);
     let _e7: Translator = translator_scalar_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn translator_scalar_transformation(self_1512: Translator, other_1322: Scalar) -> Scalar {
-    var self_1513: Translator;
-    var other_1323: Scalar;
+fn translator_scalar_transformation(self_2196: Translator, other_1970: Scalar) -> Scalar {
+    var self_2197: Translator;
+    var other_1971: Scalar;
 
-    self_1513 = self_1512;
-    other_1323 = other_1322;
-    let _e4: Translator = self_1513;
-    let _e5: Scalar = other_1323;
+    self_2197 = self_2196;
+    other_1971 = other_1970;
+    let _e4: Translator = self_2197;
+    let _e5: Scalar = other_1971;
     let _e6: Translator = translator_scalar_geometric_product(_e4, _e5);
-    let _e7: Translator = self_1513;
+    let _e7: Translator = self_2197;
     let _e8: Translator = translator_reversal(_e7);
     let _e9: Translator = translator_translator_geometric_product(_e6, _e8);
     let _e10: Scalar = translator_scalar_into(_e9);
     return _e10;
 }
 
-fn translator_powi(self_1514: Translator, exponent_8: i32) -> Translator {
-    var self_1515: Translator;
+fn translator_powi(self_2198: Translator, exponent_8: i32) -> Translator {
+    var self_2199: Translator;
     var exponent_9: i32;
     var local_4: Translator;
     var x_4: Translator;
     var y_4: Translator;
     var n_4: i32;
 
-    self_1515 = self_1514;
+    self_2199 = self_2198;
     exponent_9 = exponent_8;
     let _e4: i32 = exponent_9;
     if (_e4 == 0) {
@@ -10785,11 +15544,11 @@ fn translator_powi(self_1514: Translator, exponent_8: i32) -> Translator {
     }
     let _e8: i32 = exponent_9;
     if (_e8 < 0) {
-        let _e11: Translator = self_1515;
+        let _e11: Translator = self_2199;
         let _e12: Translator = translator_inverse(_e11);
         local_4 = _e12;
     } else {
-        let _e14: Translator = self_1515;
+        let _e14: Translator = self_2199;
         local_4 = _e14;
     }
     let _e15: Translator = local_4;
@@ -10827,29 +15586,29 @@ fn translator_powi(self_1514: Translator, exponent_8: i32) -> Translator {
     return _e43;
 }
 
-fn translator_translator_geometric_quotient(self_1516: Translator, other_1324: Translator) -> Translator {
-    var self_1517: Translator;
-    var other_1325: Translator;
+fn translator_translator_geometric_quotient(self_2200: Translator, other_1972: Translator) -> Translator {
+    var self_2201: Translator;
+    var other_1973: Translator;
 
-    self_1517 = self_1516;
-    other_1325 = other_1324;
-    let _e4: Translator = self_1517;
-    let _e5: Translator = other_1325;
+    self_2201 = self_2200;
+    other_1973 = other_1972;
+    let _e4: Translator = self_2201;
+    let _e5: Translator = other_1973;
     let _e6: Translator = translator_inverse(_e5);
     let _e7: Translator = translator_translator_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn translator_translator_transformation(self_1518: Translator, other_1326: Translator) -> Translator {
-    var self_1519: Translator;
-    var other_1327: Translator;
+fn translator_translator_transformation(self_2202: Translator, other_1974: Translator) -> Translator {
+    var self_2203: Translator;
+    var other_1975: Translator;
 
-    self_1519 = self_1518;
-    other_1327 = other_1326;
-    let _e4: Translator = self_1519;
-    let _e5: Translator = other_1327;
+    self_2203 = self_2202;
+    other_1975 = other_1974;
+    let _e4: Translator = self_2203;
+    let _e5: Translator = other_1975;
     let _e6: Translator = translator_translator_geometric_product(_e4, _e5);
-    let _e7: Translator = self_1519;
+    let _e7: Translator = self_2203;
     let _e8: Translator = translator_reversal(_e7);
     let _e9: Translator = translator_translator_geometric_product(_e6, _e8);
     return _e9;

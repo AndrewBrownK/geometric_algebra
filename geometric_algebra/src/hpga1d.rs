@@ -183,6 +183,14 @@ impl Conjugation for Scalar {
     }
 }
 
+impl AntiReversal for Scalar {
+    type Output = Scalar;
+
+    fn anti_reversal(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() } }
+    }
+}
+
 impl Add<Scalar> for Scalar {
     type Output = Scalar;
 
@@ -335,6 +343,22 @@ impl InnerProduct<SplitComplexNumber> for Scalar {
     }
 }
 
+impl GeometricAntiProduct<SplitComplexNumber> for Scalar {
+    type Output = SplitComplexNumber;
+
+    fn geometric_anti_product(self, other: SplitComplexNumber) -> SplitComplexNumber {
+        SplitComplexNumber { groups: SplitComplexNumberGroups { g0: Simd32x2::from(self.group0()) * swizzle!(other.group0(), 1, 0) } }
+    }
+}
+
+impl InnerAntiProduct<SplitComplexNumber> for Scalar {
+    type Output = SplitComplexNumber;
+
+    fn inner_anti_product(self, other: SplitComplexNumber) -> SplitComplexNumber {
+        SplitComplexNumber { groups: SplitComplexNumberGroups { g0: Simd32x2::from(self.group0()) * swizzle!(other.group0(), 1, 0) } }
+    }
+}
+
 impl LeftContraction<SplitComplexNumber> for Scalar {
     type Output = SplitComplexNumber;
 
@@ -348,6 +372,14 @@ impl RightContraction<SplitComplexNumber> for Scalar {
 
     fn right_contraction(self, other: SplitComplexNumber) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0() * other.group0()[0] } }
+    }
+}
+
+impl RightAntiContraction<SplitComplexNumber> for Scalar {
+    type Output = SplitComplexNumber;
+
+    fn right_anti_contraction(self, other: SplitComplexNumber) -> SplitComplexNumber {
+        SplitComplexNumber { groups: SplitComplexNumberGroups { g0: Simd32x2::from(self.group0()) * swizzle!(other.group0(), 1, 0) } }
     }
 }
 
@@ -451,6 +483,14 @@ impl Dual for SplitComplexNumber {
     }
 }
 
+impl AntiReversal for SplitComplexNumber {
+    type Output = SplitComplexNumber;
+
+    fn anti_reversal(self) -> SplitComplexNumber {
+        SplitComplexNumber { groups: SplitComplexNumberGroups { g0: self.group0() * Simd32x2::from([1.0, -1.0]) } }
+    }
+}
+
 impl Into<Scalar> for SplitComplexNumber {
     fn into(self) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] } }
@@ -517,6 +557,22 @@ impl InnerProduct<Scalar> for SplitComplexNumber {
     }
 }
 
+impl GeometricAntiProduct<Scalar> for SplitComplexNumber {
+    type Output = SplitComplexNumber;
+
+    fn geometric_anti_product(self, other: Scalar) -> SplitComplexNumber {
+        SplitComplexNumber { groups: SplitComplexNumberGroups { g0: swizzle!(self.group0(), 1, 0) * Simd32x2::from(other.group0()) } }
+    }
+}
+
+impl InnerAntiProduct<Scalar> for SplitComplexNumber {
+    type Output = SplitComplexNumber;
+
+    fn inner_anti_product(self, other: Scalar) -> SplitComplexNumber {
+        SplitComplexNumber { groups: SplitComplexNumberGroups { g0: swizzle!(self.group0(), 1, 0) * Simd32x2::from(other.group0()) } }
+    }
+}
+
 impl LeftContraction<Scalar> for SplitComplexNumber {
     type Output = Scalar;
 
@@ -530,6 +586,14 @@ impl RightContraction<Scalar> for SplitComplexNumber {
 
     fn right_contraction(self, other: Scalar) -> SplitComplexNumber {
         SplitComplexNumber { groups: SplitComplexNumberGroups { g0: self.group0() * Simd32x2::from(other.group0()) } }
+    }
+}
+
+impl LeftAntiContraction<Scalar> for SplitComplexNumber {
+    type Output = SplitComplexNumber;
+
+    fn left_anti_contraction(self, other: Scalar) -> SplitComplexNumber {
+        SplitComplexNumber { groups: SplitComplexNumberGroups { g0: swizzle!(self.group0(), 1, 0) * Simd32x2::from(other.group0()) } }
     }
 }
 
@@ -629,6 +693,22 @@ impl InnerProduct<SplitComplexNumber> for SplitComplexNumber {
     }
 }
 
+impl GeometricAntiProduct<SplitComplexNumber> for SplitComplexNumber {
+    type Output = SplitComplexNumber;
+
+    fn geometric_anti_product(self, other: SplitComplexNumber) -> SplitComplexNumber {
+        SplitComplexNumber { groups: SplitComplexNumberGroups { g0: Simd32x2::from(self.group0()[0]) * swizzle!(other.group0(), 1, 0) + Simd32x2::from(self.group0()[1]) * other.group0() } }
+    }
+}
+
+impl InnerAntiProduct<SplitComplexNumber> for SplitComplexNumber {
+    type Output = SplitComplexNumber;
+
+    fn inner_anti_product(self, other: SplitComplexNumber) -> SplitComplexNumber {
+        SplitComplexNumber { groups: SplitComplexNumberGroups { g0: Simd32x2::from(self.group0()[0]) * swizzle!(other.group0(), 1, 0) + Simd32x2::from(self.group0()[1]) * other.group0() } }
+    }
+}
+
 impl LeftContraction<SplitComplexNumber> for SplitComplexNumber {
     type Output = SplitComplexNumber;
 
@@ -642,6 +722,22 @@ impl RightContraction<SplitComplexNumber> for SplitComplexNumber {
 
     fn right_contraction(self, other: SplitComplexNumber) -> SplitComplexNumber {
         SplitComplexNumber { groups: SplitComplexNumberGroups { g0: Simd32x2::from(self.group0()[1]) * swizzle!(other.group0(), 1, 0) + Simd32x2::from(self.group0()[0]) * Simd32x2::from(other.group0()[0]) * Simd32x2::from([1.0, 0.0]) } }
+    }
+}
+
+impl LeftAntiContraction<SplitComplexNumber> for SplitComplexNumber {
+    type Output = SplitComplexNumber;
+
+    fn left_anti_contraction(self, other: SplitComplexNumber) -> SplitComplexNumber {
+        SplitComplexNumber { groups: SplitComplexNumberGroups { g0: Simd32x2::from(self.group0()[1]) * other.group0() + Simd32x2::from(self.group0()[0]) * Simd32x2::from(other.group0()[0]) * Simd32x2::from([0.0, 1.0]) } }
+    }
+}
+
+impl RightAntiContraction<SplitComplexNumber> for SplitComplexNumber {
+    type Output = SplitComplexNumber;
+
+    fn right_anti_contraction(self, other: SplitComplexNumber) -> SplitComplexNumber {
+        SplitComplexNumber { groups: SplitComplexNumberGroups { g0: Simd32x2::from(self.group0()[0]) * swizzle!(other.group0(), 1, 0) + self.group0() * other.group0() * Simd32x2::from([0.0, 1.0]) } }
     }
 }
 

@@ -183,6 +183,14 @@ impl Conjugation for Scalar {
     }
 }
 
+impl AntiReversal for Scalar {
+    type Output = Scalar;
+
+    fn anti_reversal(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() } }
+    }
+}
+
 impl Add<Scalar> for Scalar {
     type Output = Scalar;
 
@@ -335,6 +343,22 @@ impl InnerProduct<DualNumber> for Scalar {
     }
 }
 
+impl GeometricAntiProduct<DualNumber> for Scalar {
+    type Output = Scalar;
+
+    fn geometric_anti_product(self, other: DualNumber) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() * other.group0()[1] } }
+    }
+}
+
+impl InnerAntiProduct<DualNumber> for Scalar {
+    type Output = Scalar;
+
+    fn inner_anti_product(self, other: DualNumber) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() * other.group0()[1] } }
+    }
+}
+
 impl LeftContraction<DualNumber> for Scalar {
     type Output = DualNumber;
 
@@ -348,6 +372,14 @@ impl RightContraction<DualNumber> for Scalar {
 
     fn right_contraction(self, other: DualNumber) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0() * other.group0()[0] } }
+    }
+}
+
+impl RightAntiContraction<DualNumber> for Scalar {
+    type Output = Scalar;
+
+    fn right_anti_contraction(self, other: DualNumber) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() * other.group0()[1] } }
     }
 }
 
@@ -451,6 +483,14 @@ impl Dual for DualNumber {
     }
 }
 
+impl AntiReversal for DualNumber {
+    type Output = DualNumber;
+
+    fn anti_reversal(self) -> DualNumber {
+        DualNumber { groups: DualNumberGroups { g0: self.group0() * Simd32x2::from([1.0, -1.0]) } }
+    }
+}
+
 impl Into<Scalar> for DualNumber {
     fn into(self) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] } }
@@ -517,6 +557,22 @@ impl InnerProduct<Scalar> for DualNumber {
     }
 }
 
+impl GeometricAntiProduct<Scalar> for DualNumber {
+    type Output = Scalar;
+
+    fn geometric_anti_product(self, other: Scalar) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0()[1] * other.group0() } }
+    }
+}
+
+impl InnerAntiProduct<Scalar> for DualNumber {
+    type Output = Scalar;
+
+    fn inner_anti_product(self, other: Scalar) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0()[1] * other.group0() } }
+    }
+}
+
 impl LeftContraction<Scalar> for DualNumber {
     type Output = Scalar;
 
@@ -530,6 +586,14 @@ impl RightContraction<Scalar> for DualNumber {
 
     fn right_contraction(self, other: Scalar) -> DualNumber {
         DualNumber { groups: DualNumberGroups { g0: self.group0() * Simd32x2::from(other.group0()) } }
+    }
+}
+
+impl LeftAntiContraction<Scalar> for DualNumber {
+    type Output = Scalar;
+
+    fn left_anti_contraction(self, other: Scalar) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0()[1] * other.group0() } }
     }
 }
 
@@ -629,6 +693,22 @@ impl InnerProduct<DualNumber> for DualNumber {
     }
 }
 
+impl GeometricAntiProduct<DualNumber> for DualNumber {
+    type Output = DualNumber;
+
+    fn geometric_anti_product(self, other: DualNumber) -> DualNumber {
+        DualNumber { groups: DualNumberGroups { g0: Simd32x2::from(self.group0()[1]) * other.group0() + Simd32x2::from(self.group0()[0]) * swizzle!(other.group0(), 1, 0) * Simd32x2::from([1.0, 0.0]) } }
+    }
+}
+
+impl InnerAntiProduct<DualNumber> for DualNumber {
+    type Output = DualNumber;
+
+    fn inner_anti_product(self, other: DualNumber) -> DualNumber {
+        DualNumber { groups: DualNumberGroups { g0: Simd32x2::from(self.group0()[1]) * other.group0() + Simd32x2::from(self.group0()[0]) * swizzle!(other.group0(), 1, 0) * Simd32x2::from([1.0, 0.0]) } }
+    }
+}
+
 impl LeftContraction<DualNumber> for DualNumber {
     type Output = DualNumber;
 
@@ -642,6 +722,22 @@ impl RightContraction<DualNumber> for DualNumber {
 
     fn right_contraction(self, other: DualNumber) -> DualNumber {
         DualNumber { groups: DualNumberGroups { g0: self.group0() * Simd32x2::from(other.group0()[0]) } }
+    }
+}
+
+impl LeftAntiContraction<DualNumber> for DualNumber {
+    type Output = DualNumber;
+
+    fn left_anti_contraction(self, other: DualNumber) -> DualNumber {
+        DualNumber { groups: DualNumberGroups { g0: Simd32x2::from(self.group0()[1]) * other.group0() } }
+    }
+}
+
+impl RightAntiContraction<DualNumber> for DualNumber {
+    type Output = DualNumber;
+
+    fn right_anti_contraction(self, other: DualNumber) -> DualNumber {
+        DualNumber { groups: DualNumberGroups { g0: self.group0() * Simd32x2::from(other.group0()[1]) } }
     }
 }
 
