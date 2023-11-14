@@ -285,6 +285,7 @@ impl Product {
 
             ("ScalarProduct", product.projected(|_r, _s, t| t == 0)),
             ("AntiScalarProduct", product.projected(|_r, _s, t| t == 0).dual(algebra)),
+            // ("AntiScalarProduct", product.projected(|_r, _s, t| t == algebra.generator_squares.len())),
         ]
     }
 }

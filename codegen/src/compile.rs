@@ -698,6 +698,31 @@ impl MultiVectorClass {
         }
     }
 
+    // pub fn derive_unitize<'a>(
+    //     name: &'static str,
+    //     weight_norm: &AstNode<'a>,
+    //     parameter_a: &Parameter<'a>,
+    // ) -> AstNode<'a> {
+    //     AstNode::TraitImplementation {
+    //         result: parameter_a.clone(),
+    //         parameters: vec![parameter_a.clone()],
+    //         body: vec![AstNode::ReturnStatement {
+    //             expression: Box::new(Expression {
+    //                 size: 1,
+    //                 content: ExpressionContent::InvokeInstanceMethod(
+    //                     parameter_a.data_type.clone(),
+    //                     Box::new(Expression {
+    //                         size: 1,
+    //                         content: ExpressionContent::Variable(parameter_a.name),
+    //                     }),
+    //                     // TODO how do I even divide a multivector by an antiscalar?
+    //
+    //                 )
+    //             }),
+    //         }],
+    //     }
+    // }
+
     pub fn derive_scale<'a>(
         name: &'static str,
         geometric_product: &AstNode<'a>,

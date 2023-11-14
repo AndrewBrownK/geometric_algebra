@@ -255,6 +255,22 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
             }
 
             // TODO unitize operation
+
+            // TODO also when it comes to CGA I am only seeing Norms for round objects, I need
+            //  to figure out how to have both flat and round norms. Hmm... It seems to start
+            //  with the fact I'm not getting enough AntiScalarProduct implementations.
+            //  You can look at the orange boxes here https://conformalgeometricalgebra.com/wiki/index.php?title=Geometric_products
+            //  and see that a RadialPoint should anti_scalar_product with itself, but the code generation
+            //  is not giving us that implementation. I'm wondering if this could be due to the
+            //  G(4,1) vs G(3,0,2) distinction. hmmm.. you could check ppga3d...
+            //  ....huh... yeah there is both ScalarProduct and AntiScalarProduct for Point against itself in ppga3d.
+            //  Hmm.. and in CGA current impl there is ScalarProduct for RadialPoint on itself, and
+            //  AntiScalarProduct for FlatPoint on itself, but not vice versa.
+            //  Oh right ppga3d doesn't use the same objects to mean point as I am in cga3d...
+            //  Okay so let's make an "rga3d" that follows the conventions we actually expect.
+            //  Okay confirmed in rga3d that Point has both ScalarProduct and AntiScalarProduct with itself.
+            //  hmmm... rga3d does not have a BulkNorm for Rotor... because all terms have the projective element...
+            //  I guess that makes sense.... but couldn't it be just as well that I want to invoke "bulk_norm" and get a zero?
         }
 
         // Can implement even more traits using existing traits

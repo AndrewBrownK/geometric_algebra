@@ -10,6 +10,7 @@ pub mod epga3d;
 pub mod ppga3d;
 pub mod hpga3d;
 pub mod cga3d;
+pub mod rga3d;
 pub mod simd;
 pub mod polynomial;
 
@@ -439,6 +440,7 @@ pub trait GeometricNorm {
     fn geometric_norm(self) -> Self::Output;
 }
 
+
 /// Direction without magnitude (set to scalar `-1.0` or `1.0`)
 ///
 /// Also called sign or normalize
@@ -567,6 +569,4 @@ impl FlatPointExt for cga3d::FlatPoint {
     fn from_xyz_at_infinity(x: f32, y: f32, z: f32) -> Self {
         cga3d::FlatPoint::new(x, y, z, 0.0)
     }
-
-    // TODO bulk norm, weight norm, geometric norm, unitize
 }

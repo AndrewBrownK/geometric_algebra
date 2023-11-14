@@ -63,7 +63,27 @@ fn main() {
                 e30,e31,e32|e12,e20,e01|\
                 e304,e314,e324|e124,e204,e014|\
                 e312,e320,e301,e210|\
-                e3124,e3204,e3014,e2104"
+                e3124,e3204,e3014,e2104",
+
+
+        "rga3d:1,1,1,0;\
+            Scalar:1;\
+            AntiScalar:e0123;\
+            HomogeneousMagnitude:1,e0123;\
+            Point:e0,e1,e2,e3;\
+            Line:e30,e31,e32|e12,e20,e01;\
+            Plane:e312,e320,e301,e210;\
+            Motor:e30,e31,e32,e0123|e12,e20,e01;\
+            Rotor:e30,e31,e32,e0123;\
+            Translator:e12,e20,e01,e0123;\
+            Flector:e0,e1,e2,e3|e312,e320,e301,e210;\
+            MultiVector:\
+                1,e0123,e0123|\
+                e0,e1,e2,e3|\
+                e30,e31,e32|e12,e20,e01|\
+                e30,e31,e32|e12,e20,e01|\
+                e312,e320,e301,e210|\
+                e312,e320,e301,e210"
     ];
 
     for algebra in algebras {
