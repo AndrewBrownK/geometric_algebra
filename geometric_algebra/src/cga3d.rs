@@ -139,6 +139,75 @@ impl std::fmt::Debug for AntiScalar {
 }
 
 #[derive(Clone, Copy)]
+struct HomogeneousMagnitudeGroups {
+    /// 1, e01234
+    g0: Simd32x2,
+}
+
+#[derive(Clone, Copy)]
+pub union HomogeneousMagnitude {
+    groups: HomogeneousMagnitudeGroups,
+    /// 1, e01234, 0, 0
+    elements: [f32; 4],
+}
+
+impl HomogeneousMagnitude {
+    #[allow(clippy::too_many_arguments)]
+    pub const fn new(element0: f32, element1: f32) -> Self {
+        Self { elements: [element0, element1, 0.0, 0.0] }
+    }
+    pub const fn from_groups(g0: Simd32x2) -> Self {
+        Self { groups: HomogeneousMagnitudeGroups { g0 } }
+    }
+    #[inline(always)]
+    pub fn group0(&self) -> Simd32x2 {
+        unsafe { self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group0_mut(&mut self) -> &mut Simd32x2 {
+        unsafe { &mut self.groups.g0 }
+    }
+}
+
+const HOMOGENEOUSMAGNITUDE_INDEX_REMAP: [usize; 2] = [0, 1];
+
+impl std::ops::Index<usize> for HomogeneousMagnitude {
+    type Output = f32;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        unsafe { &self.elements[HOMOGENEOUSMAGNITUDE_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::ops::IndexMut<usize> for HomogeneousMagnitude {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        unsafe { &mut self.elements[HOMOGENEOUSMAGNITUDE_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::convert::From<HomogeneousMagnitude> for [f32; 2] {
+    fn from(vector: HomogeneousMagnitude) -> Self {
+        unsafe { [vector.elements[0], vector.elements[1]] }
+    }
+}
+
+impl std::convert::From<[f32; 2]> for HomogeneousMagnitude {
+    fn from(array: [f32; 2]) -> Self {
+        Self { elements: [array[0], array[1], 0.0, 0.0] }
+    }
+}
+
+impl std::fmt::Debug for HomogeneousMagnitude {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter
+            .debug_struct("HomogeneousMagnitude")
+            .field("1", &self[0])
+            .field("e01234", &self[1])
+            .finish()
+    }
+}
+
+#[derive(Clone, Copy)]
 struct RadialPointGroups {
     /// e0, e1, e2
     g0: Simd32x3,
@@ -1468,6 +1537,22 @@ impl ScalarProduct<Scalar> for Scalar {
     }
 }
 
+impl Add<AntiScalar> for Scalar {
+    type Output = HomogeneousMagnitude;
+
+    fn add(self, other: AntiScalar) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(self.group0()) * Simd32x2::from([1.0, 0.0]) + Simd32x2::from(other.group0()) * Simd32x2::from([0.0, 1.0]) } }
+    }
+}
+
+impl Sub<AntiScalar> for Scalar {
+    type Output = HomogeneousMagnitude;
+
+    fn sub(self, other: AntiScalar) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(self.group0()) * Simd32x2::from([1.0, 0.0]) - Simd32x2::from(other.group0()) * Simd32x2::from([0.0, 1.0]) } }
+    }
+}
+
 impl GeometricProduct<AntiScalar> for Scalar {
     type Output = AntiScalar;
 
@@ -1529,6 +1614,102 @@ impl RightAntiContraction<AntiScalar> for Scalar {
 
     fn right_anti_contraction(self, other: AntiScalar) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0() * other.group0() } }
+    }
+}
+
+impl Add<HomogeneousMagnitude> for Scalar {
+    type Output = HomogeneousMagnitude;
+
+    fn add(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(self.group0()) * Simd32x2::from([1.0, 0.0]) + other.group0() } }
+    }
+}
+
+impl Sub<HomogeneousMagnitude> for Scalar {
+    type Output = HomogeneousMagnitude;
+
+    fn sub(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(self.group0()) * Simd32x2::from([1.0, 0.0]) - other.group0() } }
+    }
+}
+
+impl GeometricProduct<HomogeneousMagnitude> for Scalar {
+    type Output = HomogeneousMagnitude;
+
+    fn geometric_product(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl RegressiveProduct<HomogeneousMagnitude> for Scalar {
+    type Output = Scalar;
+
+    fn regressive_product(self, other: HomogeneousMagnitude) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() * other.group0()[1] } }
+    }
+}
+
+impl OuterProduct<HomogeneousMagnitude> for Scalar {
+    type Output = HomogeneousMagnitude;
+
+    fn outer_product(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl InnerProduct<HomogeneousMagnitude> for Scalar {
+    type Output = HomogeneousMagnitude;
+
+    fn inner_product(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl GeometricAntiProduct<HomogeneousMagnitude> for Scalar {
+    type Output = Scalar;
+
+    fn geometric_anti_product(self, other: HomogeneousMagnitude) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() * other.group0()[1] } }
+    }
+}
+
+impl InnerAntiProduct<HomogeneousMagnitude> for Scalar {
+    type Output = Scalar;
+
+    fn inner_anti_product(self, other: HomogeneousMagnitude) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() * other.group0()[1] } }
+    }
+}
+
+impl LeftContraction<HomogeneousMagnitude> for Scalar {
+    type Output = HomogeneousMagnitude;
+
+    fn left_contraction(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl RightContraction<HomogeneousMagnitude> for Scalar {
+    type Output = Scalar;
+
+    fn right_contraction(self, other: HomogeneousMagnitude) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() * other.group0()[0] } }
+    }
+}
+
+impl RightAntiContraction<HomogeneousMagnitude> for Scalar {
+    type Output = Scalar;
+
+    fn right_anti_contraction(self, other: HomogeneousMagnitude) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() * other.group0()[1] } }
+    }
+}
+
+impl ScalarProduct<HomogeneousMagnitude> for Scalar {
+    type Output = Scalar;
+
+    fn scalar_product(self, other: HomogeneousMagnitude) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() * other.group0()[0] } }
     }
 }
 
@@ -2168,6 +2349,22 @@ impl AntiReversal for AntiScalar {
     }
 }
 
+impl Add<Scalar> for AntiScalar {
+    type Output = HomogeneousMagnitude;
+
+    fn add(self, other: Scalar) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, 1.0]) + Simd32x2::from(other.group0()) * Simd32x2::from([1.0, 0.0]) } }
+    }
+}
+
+impl Sub<Scalar> for AntiScalar {
+    type Output = HomogeneousMagnitude;
+
+    fn sub(self, other: Scalar) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, 1.0]) - Simd32x2::from(other.group0()) * Simd32x2::from([1.0, 0.0]) } }
+    }
+}
+
 impl GeometricProduct<Scalar> for AntiScalar {
     type Output = AntiScalar;
 
@@ -2333,6 +2530,102 @@ impl AntiScalarProduct<AntiScalar> for AntiScalar {
 
     fn anti_scalar_product(self, other: AntiScalar) -> AntiScalar {
         AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0() } }
+    }
+}
+
+impl Add<HomogeneousMagnitude> for AntiScalar {
+    type Output = HomogeneousMagnitude;
+
+    fn add(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, 1.0]) + other.group0() } }
+    }
+}
+
+impl Sub<HomogeneousMagnitude> for AntiScalar {
+    type Output = HomogeneousMagnitude;
+
+    fn sub(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, 1.0]) - other.group0() } }
+    }
+}
+
+impl GeometricProduct<HomogeneousMagnitude> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn geometric_product(self, other: HomogeneousMagnitude) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0()[0] } }
+    }
+}
+
+impl RegressiveProduct<HomogeneousMagnitude> for AntiScalar {
+    type Output = HomogeneousMagnitude;
+
+    fn regressive_product(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl OuterProduct<HomogeneousMagnitude> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn outer_product(self, other: HomogeneousMagnitude) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0()[0] } }
+    }
+}
+
+impl InnerProduct<HomogeneousMagnitude> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn inner_product(self, other: HomogeneousMagnitude) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0()[0] } }
+    }
+}
+
+impl GeometricAntiProduct<HomogeneousMagnitude> for AntiScalar {
+    type Output = HomogeneousMagnitude;
+
+    fn geometric_anti_product(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl InnerAntiProduct<HomogeneousMagnitude> for AntiScalar {
+    type Output = HomogeneousMagnitude;
+
+    fn inner_anti_product(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl RightContraction<HomogeneousMagnitude> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn right_contraction(self, other: HomogeneousMagnitude) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0()[0] } }
+    }
+}
+
+impl LeftAntiContraction<HomogeneousMagnitude> for AntiScalar {
+    type Output = HomogeneousMagnitude;
+
+    fn left_anti_contraction(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(self.group0()) * other.group0() } }
+    }
+}
+
+impl RightAntiContraction<HomogeneousMagnitude> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn right_anti_contraction(self, other: HomogeneousMagnitude) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0()[1] } }
+    }
+}
+
+impl AntiScalarProduct<HomogeneousMagnitude> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: HomogeneousMagnitude) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0()[1] } }
     }
 }
 
@@ -2928,6 +3221,1158 @@ impl Scale for AntiScalar {
     }
 }
 
+impl Zero for HomogeneousMagnitude {
+    fn zero() -> Self {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(0.0) } }
+    }
+}
+
+impl One for HomogeneousMagnitude {
+    fn one() -> Self {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from([1.0, 0.0]) } }
+    }
+}
+
+impl Neg for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn neg(self) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() * Simd32x2::from(-1.0) } }
+    }
+}
+
+impl Automorphism for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn automorphism(self) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() * Simd32x2::from([1.0, -1.0]) } }
+    }
+}
+
+impl Reversal for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn reversal(self) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() } }
+    }
+}
+
+impl Conjugation for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn conjugation(self) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() * Simd32x2::from([1.0, -1.0]) } }
+    }
+}
+
+impl Dual for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn dual(self) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: swizzle!(self.group0(), 1, 0) } }
+    }
+}
+
+impl AntiReversal for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn anti_reversal(self) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() * Simd32x2::from([1.0, -1.0]) } }
+    }
+}
+
+impl Into<Scalar> for HomogeneousMagnitude {
+    fn into(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0()[0] } }
+    }
+}
+
+impl Add<Scalar> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn add(self, other: Scalar) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() + Simd32x2::from(other.group0()) * Simd32x2::from([1.0, 0.0]) } }
+    }
+}
+
+impl AddAssign<Scalar> for HomogeneousMagnitude {
+    fn add_assign(&mut self, other: Scalar) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Sub<Scalar> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn sub(self, other: Scalar) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() - Simd32x2::from(other.group0()) * Simd32x2::from([1.0, 0.0]) } }
+    }
+}
+
+impl SubAssign<Scalar> for HomogeneousMagnitude {
+    fn sub_assign(&mut self, other: Scalar) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl GeometricProduct<Scalar> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn geometric_product(self, other: Scalar) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() * Simd32x2::from(other.group0()) } }
+    }
+}
+
+impl RegressiveProduct<Scalar> for HomogeneousMagnitude {
+    type Output = Scalar;
+
+    fn regressive_product(self, other: Scalar) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0()[1] * other.group0() } }
+    }
+}
+
+impl OuterProduct<Scalar> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn outer_product(self, other: Scalar) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() * Simd32x2::from(other.group0()) } }
+    }
+}
+
+impl InnerProduct<Scalar> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn inner_product(self, other: Scalar) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() * Simd32x2::from(other.group0()) } }
+    }
+}
+
+impl GeometricAntiProduct<Scalar> for HomogeneousMagnitude {
+    type Output = Scalar;
+
+    fn geometric_anti_product(self, other: Scalar) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0()[1] * other.group0() } }
+    }
+}
+
+impl InnerAntiProduct<Scalar> for HomogeneousMagnitude {
+    type Output = Scalar;
+
+    fn inner_anti_product(self, other: Scalar) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0()[1] * other.group0() } }
+    }
+}
+
+impl LeftContraction<Scalar> for HomogeneousMagnitude {
+    type Output = Scalar;
+
+    fn left_contraction(self, other: Scalar) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0() } }
+    }
+}
+
+impl RightContraction<Scalar> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn right_contraction(self, other: Scalar) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() * Simd32x2::from(other.group0()) } }
+    }
+}
+
+impl LeftAntiContraction<Scalar> for HomogeneousMagnitude {
+    type Output = Scalar;
+
+    fn left_anti_contraction(self, other: Scalar) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0()[1] * other.group0() } }
+    }
+}
+
+impl ScalarProduct<Scalar> for HomogeneousMagnitude {
+    type Output = Scalar;
+
+    fn scalar_product(self, other: Scalar) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0() } }
+    }
+}
+
+impl Into<AntiScalar> for HomogeneousMagnitude {
+    fn into(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[1] } }
+    }
+}
+
+impl Add<AntiScalar> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn add(self, other: AntiScalar) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() + Simd32x2::from(other.group0()) * Simd32x2::from([0.0, 1.0]) } }
+    }
+}
+
+impl AddAssign<AntiScalar> for HomogeneousMagnitude {
+    fn add_assign(&mut self, other: AntiScalar) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Sub<AntiScalar> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn sub(self, other: AntiScalar) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() - Simd32x2::from(other.group0()) * Simd32x2::from([0.0, 1.0]) } }
+    }
+}
+
+impl SubAssign<AntiScalar> for HomogeneousMagnitude {
+    fn sub_assign(&mut self, other: AntiScalar) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl GeometricProduct<AntiScalar> for HomogeneousMagnitude {
+    type Output = AntiScalar;
+
+    fn geometric_product(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[0] * other.group0() } }
+    }
+}
+
+impl RegressiveProduct<AntiScalar> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn regressive_product(self, other: AntiScalar) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() * Simd32x2::from(other.group0()) } }
+    }
+}
+
+impl OuterProduct<AntiScalar> for HomogeneousMagnitude {
+    type Output = AntiScalar;
+
+    fn outer_product(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[0] * other.group0() } }
+    }
+}
+
+impl InnerProduct<AntiScalar> for HomogeneousMagnitude {
+    type Output = AntiScalar;
+
+    fn inner_product(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[0] * other.group0() } }
+    }
+}
+
+impl GeometricAntiProduct<AntiScalar> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn geometric_anti_product(self, other: AntiScalar) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() * Simd32x2::from(other.group0()) } }
+    }
+}
+
+impl InnerAntiProduct<AntiScalar> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn inner_anti_product(self, other: AntiScalar) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() * Simd32x2::from(other.group0()) } }
+    }
+}
+
+impl LeftContraction<AntiScalar> for HomogeneousMagnitude {
+    type Output = AntiScalar;
+
+    fn left_contraction(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[0] * other.group0() } }
+    }
+}
+
+impl LeftAntiContraction<AntiScalar> for HomogeneousMagnitude {
+    type Output = AntiScalar;
+
+    fn left_anti_contraction(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[1] * other.group0() } }
+    }
+}
+
+impl RightAntiContraction<AntiScalar> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn right_anti_contraction(self, other: AntiScalar) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() * Simd32x2::from(other.group0()) } }
+    }
+}
+
+impl AntiScalarProduct<AntiScalar> for HomogeneousMagnitude {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[1] * other.group0() } }
+    }
+}
+
+impl Add<HomogeneousMagnitude> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn add(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() + other.group0() } }
+    }
+}
+
+impl AddAssign<HomogeneousMagnitude> for HomogeneousMagnitude {
+    fn add_assign(&mut self, other: HomogeneousMagnitude) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Sub<HomogeneousMagnitude> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn sub(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() - other.group0() } }
+    }
+}
+
+impl SubAssign<HomogeneousMagnitude> for HomogeneousMagnitude {
+    fn sub_assign(&mut self, other: HomogeneousMagnitude) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Mul<HomogeneousMagnitude> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn mul(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() * other.group0() } }
+    }
+}
+
+impl MulAssign<HomogeneousMagnitude> for HomogeneousMagnitude {
+    fn mul_assign(&mut self, other: HomogeneousMagnitude) {
+        *self = (*self).mul(other);
+    }
+}
+
+impl Div<HomogeneousMagnitude> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn div(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from([self.group0()[0], self.group0()[1]]) * Simd32x2::from([1.0, 1.0]) / Simd32x2::from([other.group0()[0], other.group0()[1]]) * Simd32x2::from([1.0, 1.0]) } }
+    }
+}
+
+impl DivAssign<HomogeneousMagnitude> for HomogeneousMagnitude {
+    fn div_assign(&mut self, other: HomogeneousMagnitude) {
+        *self = (*self).div(other);
+    }
+}
+
+impl GeometricProduct<HomogeneousMagnitude> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn geometric_product(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(self.group0()[0]) * other.group0() + self.group0() * Simd32x2::from(other.group0()[0]) * Simd32x2::from([0.0, 1.0]) } }
+    }
+}
+
+impl RegressiveProduct<HomogeneousMagnitude> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn regressive_product(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(self.group0()[1]) * other.group0() + Simd32x2::from(self.group0()[0]) * swizzle!(other.group0(), 1, 0) * Simd32x2::from([1.0, 0.0]) } }
+    }
+}
+
+impl OuterProduct<HomogeneousMagnitude> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn outer_product(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(self.group0()[0]) * other.group0() + self.group0() * Simd32x2::from(other.group0()[0]) * Simd32x2::from([0.0, 1.0]) } }
+    }
+}
+
+impl InnerProduct<HomogeneousMagnitude> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn inner_product(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(self.group0()[0]) * other.group0() + self.group0() * Simd32x2::from(other.group0()[0]) * Simd32x2::from([0.0, 1.0]) } }
+    }
+}
+
+impl GeometricAntiProduct<HomogeneousMagnitude> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn geometric_anti_product(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(self.group0()[1]) * other.group0() + Simd32x2::from(self.group0()[0]) * swizzle!(other.group0(), 1, 0) * Simd32x2::from([1.0, 0.0]) } }
+    }
+}
+
+impl InnerAntiProduct<HomogeneousMagnitude> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn inner_anti_product(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(self.group0()[1]) * other.group0() + Simd32x2::from(self.group0()[0]) * swizzle!(other.group0(), 1, 0) * Simd32x2::from([1.0, 0.0]) } }
+    }
+}
+
+impl LeftContraction<HomogeneousMagnitude> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn left_contraction(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(self.group0()[0]) * other.group0() } }
+    }
+}
+
+impl RightContraction<HomogeneousMagnitude> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn right_contraction(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() * Simd32x2::from(other.group0()[0]) } }
+    }
+}
+
+impl LeftAntiContraction<HomogeneousMagnitude> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn left_anti_contraction(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(self.group0()[1]) * other.group0() } }
+    }
+}
+
+impl RightAntiContraction<HomogeneousMagnitude> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn right_anti_contraction(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() * Simd32x2::from(other.group0()[1]) } }
+    }
+}
+
+impl ScalarProduct<HomogeneousMagnitude> for HomogeneousMagnitude {
+    type Output = Scalar;
+
+    fn scalar_product(self, other: HomogeneousMagnitude) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0()[0] } }
+    }
+}
+
+impl AntiScalarProduct<HomogeneousMagnitude> for HomogeneousMagnitude {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: HomogeneousMagnitude) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[1] * other.group0()[1] } }
+    }
+}
+
+impl RegressiveProduct<RadialPoint> for HomogeneousMagnitude {
+    type Output = RadialPoint;
+
+    fn regressive_product(self, other: RadialPoint) -> RadialPoint {
+        RadialPoint { groups: RadialPointGroups { g0: Simd32x3::from(self.group0()[1]) * other.group0(), g1: Simd32x2::from(self.group0()[1]) * other.group1() } }
+    }
+}
+
+impl OuterProduct<RadialPoint> for HomogeneousMagnitude {
+    type Output = RadialPoint;
+
+    fn outer_product(self, other: RadialPoint) -> RadialPoint {
+        RadialPoint { groups: RadialPointGroups { g0: Simd32x3::from(self.group0()[0]) * other.group0(), g1: Simd32x2::from(self.group0()[0]) * other.group1() } }
+    }
+}
+
+impl GeometricAntiProduct<RadialPoint> for HomogeneousMagnitude {
+    type Output = RadialPoint;
+
+    fn geometric_anti_product(self, other: RadialPoint) -> RadialPoint {
+        RadialPoint { groups: RadialPointGroups { g0: Simd32x3::from(self.group0()[1]) * other.group0(), g1: Simd32x2::from(self.group0()[1]) * other.group1() } }
+    }
+}
+
+impl InnerAntiProduct<RadialPoint> for HomogeneousMagnitude {
+    type Output = RadialPoint;
+
+    fn inner_anti_product(self, other: RadialPoint) -> RadialPoint {
+        RadialPoint { groups: RadialPointGroups { g0: Simd32x3::from(self.group0()[1]) * other.group0(), g1: Simd32x2::from(self.group0()[1]) * other.group1() } }
+    }
+}
+
+impl LeftContraction<RadialPoint> for HomogeneousMagnitude {
+    type Output = RadialPoint;
+
+    fn left_contraction(self, other: RadialPoint) -> RadialPoint {
+        RadialPoint { groups: RadialPointGroups { g0: Simd32x3::from(self.group0()[0]) * other.group0(), g1: Simd32x2::from(self.group0()[0]) * other.group1() } }
+    }
+}
+
+impl LeftAntiContraction<RadialPoint> for HomogeneousMagnitude {
+    type Output = RadialPoint;
+
+    fn left_anti_contraction(self, other: RadialPoint) -> RadialPoint {
+        RadialPoint { groups: RadialPointGroups { g0: Simd32x3::from(self.group0()[1]) * other.group0(), g1: Simd32x2::from(self.group0()[1]) * other.group1() } }
+    }
+}
+
+impl GeometricProduct<FlatPoint> for HomogeneousMagnitude {
+    type Output = FlatPoint;
+
+    fn geometric_product(self, other: FlatPoint) -> FlatPoint {
+        FlatPoint { groups: FlatPointGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0() } }
+    }
+}
+
+impl RegressiveProduct<FlatPoint> for HomogeneousMagnitude {
+    type Output = FlatPoint;
+
+    fn regressive_product(self, other: FlatPoint) -> FlatPoint {
+        FlatPoint { groups: FlatPointGroups { g0: Simd32x4::from(self.group0()[1]) * other.group0() } }
+    }
+}
+
+impl OuterProduct<FlatPoint> for HomogeneousMagnitude {
+    type Output = FlatPoint;
+
+    fn outer_product(self, other: FlatPoint) -> FlatPoint {
+        FlatPoint { groups: FlatPointGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0() } }
+    }
+}
+
+impl InnerProduct<FlatPoint> for HomogeneousMagnitude {
+    type Output = FlatPoint;
+
+    fn inner_product(self, other: FlatPoint) -> FlatPoint {
+        FlatPoint { groups: FlatPointGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0() } }
+    }
+}
+
+impl LeftContraction<FlatPoint> for HomogeneousMagnitude {
+    type Output = FlatPoint;
+
+    fn left_contraction(self, other: FlatPoint) -> FlatPoint {
+        FlatPoint { groups: FlatPointGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0() } }
+    }
+}
+
+impl LeftAntiContraction<FlatPoint> for HomogeneousMagnitude {
+    type Output = FlatPoint;
+
+    fn left_anti_contraction(self, other: FlatPoint) -> FlatPoint {
+        FlatPoint { groups: FlatPointGroups { g0: Simd32x4::from(self.group0()[1]) * other.group0() } }
+    }
+}
+
+impl RegressiveProduct<Dipole> for HomogeneousMagnitude {
+    type Output = Dipole;
+
+    fn regressive_product(self, other: Dipole) -> Dipole {
+        Dipole { groups: DipoleGroups { g0: Simd32x3::from(self.group0()[1]) * other.group0(), g1: Simd32x3::from(self.group0()[1]) * other.group1(), g2: Simd32x4::from(self.group0()[1]) * other.group2() } }
+    }
+}
+
+impl OuterProduct<Dipole> for HomogeneousMagnitude {
+    type Output = Dipole;
+
+    fn outer_product(self, other: Dipole) -> Dipole {
+        Dipole { groups: DipoleGroups { g0: Simd32x3::from(self.group0()[0]) * other.group0(), g1: Simd32x3::from(self.group0()[0]) * other.group1(), g2: Simd32x4::from(self.group0()[0]) * other.group2() } }
+    }
+}
+
+impl LeftContraction<Dipole> for HomogeneousMagnitude {
+    type Output = Dipole;
+
+    fn left_contraction(self, other: Dipole) -> Dipole {
+        Dipole { groups: DipoleGroups { g0: Simd32x3::from(self.group0()[0]) * other.group0(), g1: Simd32x3::from(self.group0()[0]) * other.group1(), g2: Simd32x4::from(self.group0()[0]) * other.group2() } }
+    }
+}
+
+impl LeftAntiContraction<Dipole> for HomogeneousMagnitude {
+    type Output = Dipole;
+
+    fn left_anti_contraction(self, other: Dipole) -> Dipole {
+        Dipole { groups: DipoleGroups { g0: Simd32x3::from(self.group0()[1]) * other.group0(), g1: Simd32x3::from(self.group0()[1]) * other.group1(), g2: Simd32x4::from(self.group0()[1]) * other.group2() } }
+    }
+}
+
+impl GeometricProduct<Line> for HomogeneousMagnitude {
+    type Output = Line;
+
+    fn geometric_product(self, other: Line) -> Line {
+        Line { groups: LineGroups { g0: Simd32x3::from(self.group0()[0]) * other.group0(), g1: Simd32x3::from(self.group0()[0]) * other.group1() } }
+    }
+}
+
+impl RegressiveProduct<Line> for HomogeneousMagnitude {
+    type Output = Line;
+
+    fn regressive_product(self, other: Line) -> Line {
+        Line { groups: LineGroups { g0: Simd32x3::from(self.group0()[1]) * other.group0(), g1: Simd32x3::from(self.group0()[1]) * other.group1() } }
+    }
+}
+
+impl OuterProduct<Line> for HomogeneousMagnitude {
+    type Output = Line;
+
+    fn outer_product(self, other: Line) -> Line {
+        Line { groups: LineGroups { g0: Simd32x3::from(self.group0()[0]) * other.group0(), g1: Simd32x3::from(self.group0()[0]) * other.group1() } }
+    }
+}
+
+impl InnerProduct<Line> for HomogeneousMagnitude {
+    type Output = Line;
+
+    fn inner_product(self, other: Line) -> Line {
+        Line { groups: LineGroups { g0: Simd32x3::from(self.group0()[0]) * other.group0(), g1: Simd32x3::from(self.group0()[0]) * other.group1() } }
+    }
+}
+
+impl LeftContraction<Line> for HomogeneousMagnitude {
+    type Output = Line;
+
+    fn left_contraction(self, other: Line) -> Line {
+        Line { groups: LineGroups { g0: Simd32x3::from(self.group0()[0]) * other.group0(), g1: Simd32x3::from(self.group0()[0]) * other.group1() } }
+    }
+}
+
+impl LeftAntiContraction<Line> for HomogeneousMagnitude {
+    type Output = Line;
+
+    fn left_anti_contraction(self, other: Line) -> Line {
+        Line { groups: LineGroups { g0: Simd32x3::from(self.group0()[1]) * other.group0(), g1: Simd32x3::from(self.group0()[1]) * other.group1() } }
+    }
+}
+
+impl RegressiveProduct<Circle> for HomogeneousMagnitude {
+    type Output = Circle;
+
+    fn regressive_product(self, other: Circle) -> Circle {
+        Circle { groups: CircleGroups { g0: Simd32x4::from(self.group0()[1]) * other.group0(), g1: Simd32x3::from(self.group0()[1]) * other.group1(), g2: Simd32x3::from(self.group0()[1]) * other.group2() } }
+    }
+}
+
+impl OuterProduct<Circle> for HomogeneousMagnitude {
+    type Output = Circle;
+
+    fn outer_product(self, other: Circle) -> Circle {
+        Circle { groups: CircleGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0(), g1: Simd32x3::from(self.group0()[0]) * other.group1(), g2: Simd32x3::from(self.group0()[0]) * other.group2() } }
+    }
+}
+
+impl LeftContraction<Circle> for HomogeneousMagnitude {
+    type Output = Circle;
+
+    fn left_contraction(self, other: Circle) -> Circle {
+        Circle { groups: CircleGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0(), g1: Simd32x3::from(self.group0()[0]) * other.group1(), g2: Simd32x3::from(self.group0()[0]) * other.group2() } }
+    }
+}
+
+impl LeftAntiContraction<Circle> for HomogeneousMagnitude {
+    type Output = Circle;
+
+    fn left_anti_contraction(self, other: Circle) -> Circle {
+        Circle { groups: CircleGroups { g0: Simd32x4::from(self.group0()[1]) * other.group0(), g1: Simd32x3::from(self.group0()[1]) * other.group1(), g2: Simd32x3::from(self.group0()[1]) * other.group2() } }
+    }
+}
+
+impl GeometricProduct<Plane> for HomogeneousMagnitude {
+    type Output = Plane;
+
+    fn geometric_product(self, other: Plane) -> Plane {
+        Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0() } }
+    }
+}
+
+impl RegressiveProduct<Plane> for HomogeneousMagnitude {
+    type Output = Plane;
+
+    fn regressive_product(self, other: Plane) -> Plane {
+        Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()[1]) * other.group0() } }
+    }
+}
+
+impl OuterProduct<Plane> for HomogeneousMagnitude {
+    type Output = Plane;
+
+    fn outer_product(self, other: Plane) -> Plane {
+        Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0() } }
+    }
+}
+
+impl InnerProduct<Plane> for HomogeneousMagnitude {
+    type Output = Plane;
+
+    fn inner_product(self, other: Plane) -> Plane {
+        Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0() } }
+    }
+}
+
+impl LeftContraction<Plane> for HomogeneousMagnitude {
+    type Output = Plane;
+
+    fn left_contraction(self, other: Plane) -> Plane {
+        Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0() } }
+    }
+}
+
+impl LeftAntiContraction<Plane> for HomogeneousMagnitude {
+    type Output = Plane;
+
+    fn left_anti_contraction(self, other: Plane) -> Plane {
+        Plane { groups: PlaneGroups { g0: Simd32x4::from(self.group0()[1]) * other.group0() } }
+    }
+}
+
+impl GeometricProduct<Sphere> for HomogeneousMagnitude {
+    type Output = Sphere;
+
+    fn geometric_product(self, other: Sphere) -> Sphere {
+        Sphere { groups: SphereGroups { g0: Simd32x2::from(self.group0()[0]) * other.group0(), g1: Simd32x3::from(self.group0()[0]) * other.group1() } }
+    }
+}
+
+impl RegressiveProduct<Sphere> for HomogeneousMagnitude {
+    type Output = Sphere;
+
+    fn regressive_product(self, other: Sphere) -> Sphere {
+        Sphere { groups: SphereGroups { g0: Simd32x2::from(self.group0()[1]) * other.group0(), g1: Simd32x3::from(self.group0()[1]) * other.group1() } }
+    }
+}
+
+impl OuterProduct<Sphere> for HomogeneousMagnitude {
+    type Output = Sphere;
+
+    fn outer_product(self, other: Sphere) -> Sphere {
+        Sphere { groups: SphereGroups { g0: Simd32x2::from(self.group0()[0]) * other.group0(), g1: Simd32x3::from(self.group0()[0]) * other.group1() } }
+    }
+}
+
+impl InnerProduct<Sphere> for HomogeneousMagnitude {
+    type Output = Sphere;
+
+    fn inner_product(self, other: Sphere) -> Sphere {
+        Sphere { groups: SphereGroups { g0: Simd32x2::from(self.group0()[0]) * other.group0(), g1: Simd32x3::from(self.group0()[0]) * other.group1() } }
+    }
+}
+
+impl LeftContraction<Sphere> for HomogeneousMagnitude {
+    type Output = Sphere;
+
+    fn left_contraction(self, other: Sphere) -> Sphere {
+        Sphere { groups: SphereGroups { g0: Simd32x2::from(self.group0()[0]) * other.group0(), g1: Simd32x3::from(self.group0()[0]) * other.group1() } }
+    }
+}
+
+impl LeftAntiContraction<Sphere> for HomogeneousMagnitude {
+    type Output = Sphere;
+
+    fn left_anti_contraction(self, other: Sphere) -> Sphere {
+        Sphere { groups: SphereGroups { g0: Simd32x2::from(self.group0()[1]) * other.group0(), g1: Simd32x3::from(self.group0()[1]) * other.group1() } }
+    }
+}
+
+impl GeometricProduct<Motor> for HomogeneousMagnitude {
+    type Output = Motor;
+
+    fn geometric_product(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0(), g1: Simd32x4::from(self.group0()[0]) * other.group1() } }
+    }
+}
+
+impl OuterProduct<Motor> for HomogeneousMagnitude {
+    type Output = Motor;
+
+    fn outer_product(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0(), g1: Simd32x4::from(self.group0()[0]) * other.group1() } }
+    }
+}
+
+impl InnerProduct<Motor> for HomogeneousMagnitude {
+    type Output = Motor;
+
+    fn inner_product(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0(), g1: Simd32x4::from(self.group0()[0]) * other.group1() } }
+    }
+}
+
+impl LeftContraction<Motor> for HomogeneousMagnitude {
+    type Output = Motor;
+
+    fn left_contraction(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0(), g1: Simd32x4::from(self.group0()[0]) * other.group1() } }
+    }
+}
+
+impl LeftAntiContraction<Motor> for HomogeneousMagnitude {
+    type Output = Motor;
+
+    fn left_anti_contraction(self, other: Motor) -> Motor {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(self.group0()[1]) * other.group0(), g1: Simd32x4::from(self.group0()[1]) * other.group1() } }
+    }
+}
+
+impl AntiScalarProduct<Motor> for HomogeneousMagnitude {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Motor) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[1] * other.group0()[3] } }
+    }
+}
+
+impl GeometricProduct<Rotor> for HomogeneousMagnitude {
+    type Output = Rotor;
+
+    fn geometric_product(self, other: Rotor) -> Rotor {
+        Rotor { groups: RotorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0() } }
+    }
+}
+
+impl OuterProduct<Rotor> for HomogeneousMagnitude {
+    type Output = Rotor;
+
+    fn outer_product(self, other: Rotor) -> Rotor {
+        Rotor { groups: RotorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0() } }
+    }
+}
+
+impl InnerProduct<Rotor> for HomogeneousMagnitude {
+    type Output = Rotor;
+
+    fn inner_product(self, other: Rotor) -> Rotor {
+        Rotor { groups: RotorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0() } }
+    }
+}
+
+impl LeftContraction<Rotor> for HomogeneousMagnitude {
+    type Output = Rotor;
+
+    fn left_contraction(self, other: Rotor) -> Rotor {
+        Rotor { groups: RotorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0() } }
+    }
+}
+
+impl LeftAntiContraction<Rotor> for HomogeneousMagnitude {
+    type Output = Rotor;
+
+    fn left_anti_contraction(self, other: Rotor) -> Rotor {
+        Rotor { groups: RotorGroups { g0: Simd32x4::from(self.group0()[1]) * other.group0() } }
+    }
+}
+
+impl AntiScalarProduct<Rotor> for HomogeneousMagnitude {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Rotor) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[1] * other.group0()[3] } }
+    }
+}
+
+impl GeometricProduct<Translator> for HomogeneousMagnitude {
+    type Output = Translator;
+
+    fn geometric_product(self, other: Translator) -> Translator {
+        Translator { groups: TranslatorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0() } }
+    }
+}
+
+impl OuterProduct<Translator> for HomogeneousMagnitude {
+    type Output = Translator;
+
+    fn outer_product(self, other: Translator) -> Translator {
+        Translator { groups: TranslatorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0() } }
+    }
+}
+
+impl InnerProduct<Translator> for HomogeneousMagnitude {
+    type Output = Translator;
+
+    fn inner_product(self, other: Translator) -> Translator {
+        Translator { groups: TranslatorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0() } }
+    }
+}
+
+impl LeftContraction<Translator> for HomogeneousMagnitude {
+    type Output = Translator;
+
+    fn left_contraction(self, other: Translator) -> Translator {
+        Translator { groups: TranslatorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0() } }
+    }
+}
+
+impl LeftAntiContraction<Translator> for HomogeneousMagnitude {
+    type Output = Translator;
+
+    fn left_anti_contraction(self, other: Translator) -> Translator {
+        Translator { groups: TranslatorGroups { g0: Simd32x4::from(self.group0()[1]) * other.group0() } }
+    }
+}
+
+impl RightAntiContraction<Translator> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn right_anti_contraction(self, other: Translator) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() * Simd32x2::from(other.group0()[3]) } }
+    }
+}
+
+impl AntiScalarProduct<Translator> for HomogeneousMagnitude {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Translator) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[1] * other.group0()[3] } }
+    }
+}
+
+impl GeometricProduct<Flector> for HomogeneousMagnitude {
+    type Output = Flector;
+
+    fn geometric_product(self, other: Flector) -> Flector {
+        Flector { groups: FlectorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0(), g1: Simd32x4::from(self.group0()[0]) * other.group1() } }
+    }
+}
+
+impl RegressiveProduct<Flector> for HomogeneousMagnitude {
+    type Output = Flector;
+
+    fn regressive_product(self, other: Flector) -> Flector {
+        Flector { groups: FlectorGroups { g0: Simd32x4::from(self.group0()[1]) * other.group0(), g1: Simd32x4::from(self.group0()[1]) * other.group1() } }
+    }
+}
+
+impl OuterProduct<Flector> for HomogeneousMagnitude {
+    type Output = Flector;
+
+    fn outer_product(self, other: Flector) -> Flector {
+        Flector { groups: FlectorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0(), g1: Simd32x4::from(self.group0()[0]) * other.group1() } }
+    }
+}
+
+impl InnerProduct<Flector> for HomogeneousMagnitude {
+    type Output = Flector;
+
+    fn inner_product(self, other: Flector) -> Flector {
+        Flector { groups: FlectorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0(), g1: Simd32x4::from(self.group0()[0]) * other.group1() } }
+    }
+}
+
+impl LeftContraction<Flector> for HomogeneousMagnitude {
+    type Output = Flector;
+
+    fn left_contraction(self, other: Flector) -> Flector {
+        Flector { groups: FlectorGroups { g0: Simd32x4::from(self.group0()[0]) * other.group0(), g1: Simd32x4::from(self.group0()[0]) * other.group1() } }
+    }
+}
+
+impl LeftAntiContraction<Flector> for HomogeneousMagnitude {
+    type Output = Flector;
+
+    fn left_anti_contraction(self, other: Flector) -> Flector {
+        Flector { groups: FlectorGroups { g0: Simd32x4::from(self.group0()[1]) * other.group0(), g1: Simd32x4::from(self.group0()[1]) * other.group1() } }
+    }
+}
+
+impl OuterProduct<Dilation> for HomogeneousMagnitude {
+    type Output = Dilation;
+
+    fn outer_product(self, other: Dilation) -> Dilation {
+        Dilation { groups: DilationGroups { g0: Simd32x3::from(self.group0()[0]) * other.group0(), g1: Simd32x2::from(self.group0()[0]) * other.group1() } }
+    }
+}
+
+impl LeftContraction<Dilation> for HomogeneousMagnitude {
+    type Output = Dilation;
+
+    fn left_contraction(self, other: Dilation) -> Dilation {
+        Dilation { groups: DilationGroups { g0: Simd32x3::from(self.group0()[0]) * other.group0(), g1: Simd32x2::from(self.group0()[0]) * other.group1() } }
+    }
+}
+
+impl LeftAntiContraction<Dilation> for HomogeneousMagnitude {
+    type Output = Dilation;
+
+    fn left_anti_contraction(self, other: Dilation) -> Dilation {
+        Dilation { groups: DilationGroups { g0: Simd32x3::from(self.group0()[1]) * other.group0(), g1: Simd32x2::from(self.group0()[1]) * other.group1() } }
+    }
+}
+
+impl RightAntiContraction<Dilation> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn right_anti_contraction(self, other: Dilation) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() * Simd32x2::from(other.group1()[1]) } }
+    }
+}
+
+impl AntiScalarProduct<Dilation> for HomogeneousMagnitude {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: Dilation) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[1] * other.group1()[1] } }
+    }
+}
+
+impl Add<MultiVector> for HomogeneousMagnitude {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x3::from([self.group0()[0], self.group0()[0], self.group0()[1]]) * Simd32x3::from([1.0, 0.0, 1.0]) + other.group0(), g1: other.group1(), g2: other.group2(), g3: other.group3(), g4: other.group4(), g5: other.group5(), g6: other.group6(), g7: other.group7(), g8: other.group8(), g9: other.group9() } }
+    }
+}
+
+impl Sub<MultiVector> for HomogeneousMagnitude {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x3::from([self.group0()[0], self.group0()[0], self.group0()[1]]) * Simd32x3::from([1.0, 0.0, 1.0]) - other.group0(), g1: Simd32x3::from(0.0) - other.group1(), g2: Simd32x2::from(0.0) - other.group2(), g3: Simd32x4::from(0.0) - other.group3(), g4: Simd32x3::from(0.0) - other.group4(), g5: Simd32x3::from(0.0) - other.group5(), g6: Simd32x3::from(0.0) - other.group6(), g7: Simd32x3::from(0.0) - other.group7(), g8: Simd32x4::from(0.0) - other.group8(), g9: Simd32x4::from(0.0) - other.group9() } }
+    }
+}
+
+impl GeometricProduct<MultiVector> for HomogeneousMagnitude {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x3::from(self.group0()[0]) * other.group0() + Simd32x3::from([self.group0()[0], self.group0()[0], self.group0()[1]]) * Simd32x3::from(other.group0()[0]) * Simd32x3::from([0.0, 0.0, 1.0]), g1: Simd32x3::from(self.group0()[0]) * other.group1(), g2: Simd32x2::from(self.group0()[0]) * other.group2(), g3: Simd32x4::from(self.group0()[0]) * other.group3() + Simd32x4::from([self.group0()[0], self.group0()[0], self.group0()[0], self.group0()[1]]) * swizzle!(other.group8(), 0, 0, 0, 3) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]), g4: Simd32x3::from(self.group0()[0]) * other.group4(), g5: Simd32x3::from(self.group0()[0]) * other.group5(), g6: Simd32x3::from(self.group0()[0]) * other.group6() + Simd32x3::from(self.group0()[1]) * other.group5(), g7: Simd32x3::from(self.group0()[0]) * other.group7(), g8: Simd32x4::from(self.group0()[0]) * other.group8(), g9: Simd32x4::from(self.group0()[0]) * other.group9() + Simd32x4::from([self.group0()[1], self.group0()[1], self.group0()[1], self.group0()[0]]) * Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group1()[0]]) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]) } }
+    }
+}
+
+impl RegressiveProduct<MultiVector> for HomogeneousMagnitude {
+    type Output = MultiVector;
+
+    fn regressive_product(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x3::from(self.group0()[1]) * other.group0() + Simd32x3::from(self.group0()[0]) * swizzle!(other.group0(), 2, 0, 0) * Simd32x3::from([1.0, 0.0, 0.0]), g1: Simd32x3::from(self.group0()[1]) * other.group1(), g2: Simd32x2::from(self.group0()[1]) * other.group2(), g3: Simd32x4::from(self.group0()[1]) * other.group3(), g4: Simd32x3::from(self.group0()[1]) * other.group4(), g5: Simd32x3::from(self.group0()[1]) * other.group5(), g6: Simd32x3::from(self.group0()[1]) * other.group6(), g7: Simd32x3::from(self.group0()[1]) * other.group7(), g8: Simd32x4::from(self.group0()[1]) * other.group8(), g9: Simd32x4::from(self.group0()[1]) * other.group9() } }
+    }
+}
+
+impl OuterProduct<MultiVector> for HomogeneousMagnitude {
+    type Output = MultiVector;
+
+    fn outer_product(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x3::from(self.group0()[0]) * other.group0() + Simd32x3::from([self.group0()[0], self.group0()[0], self.group0()[1]]) * Simd32x3::from(other.group0()[0]) * Simd32x3::from([0.0, 0.0, 1.0]), g1: Simd32x3::from(self.group0()[0]) * other.group1(), g2: Simd32x2::from(self.group0()[0]) * other.group2(), g3: Simd32x4::from(self.group0()[0]) * other.group3(), g4: Simd32x3::from(self.group0()[0]) * other.group4(), g5: Simd32x3::from(self.group0()[0]) * other.group5(), g6: Simd32x3::from(self.group0()[0]) * other.group6(), g7: Simd32x3::from(self.group0()[0]) * other.group7(), g8: Simd32x4::from(self.group0()[0]) * other.group8(), g9: Simd32x4::from(self.group0()[0]) * other.group9() } }
+    }
+}
+
+impl InnerProduct<MultiVector> for HomogeneousMagnitude {
+    type Output = MultiVector;
+
+    fn inner_product(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x3::from(self.group0()[0]) * other.group0() + Simd32x3::from([self.group0()[0], self.group0()[0], self.group0()[1]]) * Simd32x3::from(other.group0()[0]) * Simd32x3::from([0.0, 0.0, 1.0]), g1: Simd32x3::from(self.group0()[0]) * other.group1(), g2: Simd32x2::from(self.group0()[0]) * other.group2(), g3: Simd32x4::from(self.group0()[0]) * other.group3() + Simd32x4::from([self.group0()[0], self.group0()[0], self.group0()[0], self.group0()[1]]) * swizzle!(other.group8(), 0, 0, 0, 3) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]), g4: Simd32x3::from(self.group0()[0]) * other.group4(), g5: Simd32x3::from(self.group0()[0]) * other.group5(), g6: Simd32x3::from(self.group0()[0]) * other.group6() + Simd32x3::from(self.group0()[1]) * other.group5(), g7: Simd32x3::from(self.group0()[0]) * other.group7(), g8: Simd32x4::from(self.group0()[0]) * other.group8(), g9: Simd32x4::from(self.group0()[0]) * other.group9() + Simd32x4::from([self.group0()[1], self.group0()[1], self.group0()[1], self.group0()[0]]) * Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group1()[0]]) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]) } }
+    }
+}
+
+impl GeometricAntiProduct<MultiVector> for HomogeneousMagnitude {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x3::from(self.group0()[1]) * other.group0() + Simd32x3::from(self.group0()[0]) * swizzle!(other.group0(), 2, 0, 0) * Simd32x3::from([1.0, 0.0, 0.0]), g1: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group9()[0], other.group9()[1], other.group9()[2]]) + Simd32x3::from(self.group0()[1]) * other.group1(), g2: Simd32x2::from(self.group0()[1]) * other.group2(), g3: Simd32x4::from(self.group0()[1]) * other.group3(), g4: Simd32x3::from(self.group0()[1]) * other.group4(), g5: Simd32x3::from(self.group0()[0]) * other.group6() + Simd32x3::from(self.group0()[1]) * other.group5(), g6: Simd32x3::from(self.group0()[1]) * other.group6(), g7: Simd32x3::from(self.group0()[1]) * other.group7(), g8: Simd32x4::from(self.group0()[1]) * other.group8() + Simd32x4::from(self.group0()[0]) * swizzle!(other.group3(), 0, 0, 0, 3) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]), g9: Simd32x4::from(self.group0()[1]) * other.group9() } }
+    }
+}
+
+impl InnerAntiProduct<MultiVector> for HomogeneousMagnitude {
+    type Output = MultiVector;
+
+    fn inner_anti_product(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x3::from(self.group0()[1]) * other.group0() + Simd32x3::from(self.group0()[0]) * swizzle!(other.group0(), 2, 0, 0) * Simd32x3::from([1.0, 0.0, 0.0]), g1: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group9()[0], other.group9()[1], other.group9()[2]]) + Simd32x3::from(self.group0()[1]) * other.group1(), g2: Simd32x2::from(self.group0()[1]) * other.group2(), g3: Simd32x4::from(self.group0()[1]) * other.group3(), g4: Simd32x3::from(self.group0()[1]) * other.group4(), g5: Simd32x3::from(self.group0()[0]) * other.group6() + Simd32x3::from(self.group0()[1]) * other.group5(), g6: Simd32x3::from(self.group0()[1]) * other.group6(), g7: Simd32x3::from(self.group0()[1]) * other.group7(), g8: Simd32x4::from(self.group0()[1]) * other.group8() + Simd32x4::from(self.group0()[0]) * swizzle!(other.group3(), 0, 0, 0, 3) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]), g9: Simd32x4::from(self.group0()[1]) * other.group9() } }
+    }
+}
+
+impl LeftContraction<MultiVector> for HomogeneousMagnitude {
+    type Output = MultiVector;
+
+    fn left_contraction(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x3::from(self.group0()[0]) * other.group0(), g1: Simd32x3::from(self.group0()[0]) * other.group1(), g2: Simd32x2::from(self.group0()[0]) * other.group2(), g3: Simd32x4::from(self.group0()[0]) * other.group3(), g4: Simd32x3::from(self.group0()[0]) * other.group4(), g5: Simd32x3::from(self.group0()[0]) * other.group5(), g6: Simd32x3::from(self.group0()[0]) * other.group6(), g7: Simd32x3::from(self.group0()[0]) * other.group7(), g8: Simd32x4::from(self.group0()[0]) * other.group8(), g9: Simd32x4::from(self.group0()[0]) * other.group9() } }
+    }
+}
+
+impl LeftAntiContraction<MultiVector> for HomogeneousMagnitude {
+    type Output = MultiVector;
+
+    fn left_anti_contraction(self, other: MultiVector) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x3::from(self.group0()[1]) * other.group0(), g1: Simd32x3::from(self.group0()[1]) * other.group1(), g2: Simd32x2::from(self.group0()[1]) * other.group2(), g3: Simd32x4::from(self.group0()[1]) * other.group3(), g4: Simd32x3::from(self.group0()[1]) * other.group4(), g5: Simd32x3::from(self.group0()[1]) * other.group5(), g6: Simd32x3::from(self.group0()[1]) * other.group6(), g7: Simd32x3::from(self.group0()[1]) * other.group7(), g8: Simd32x4::from(self.group0()[1]) * other.group8(), g9: Simd32x4::from(self.group0()[1]) * other.group9() } }
+    }
+}
+
+impl ScalarProduct<MultiVector> for HomogeneousMagnitude {
+    type Output = Scalar;
+
+    fn scalar_product(self, other: MultiVector) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0()[0] } }
+    }
+}
+
+impl AntiScalarProduct<MultiVector> for HomogeneousMagnitude {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: MultiVector) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[1] * other.group0()[2] } }
+    }
+}
+
+impl SquaredMagnitude for HomogeneousMagnitude {
+    type Output = Scalar;
+
+    fn squared_magnitude(self) -> Scalar {
+        self.scalar_product(self.reversal())
+    }
+}
+
+impl Magnitude for HomogeneousMagnitude {
+    type Output = Scalar;
+
+    fn magnitude(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl BulkNorm for HomogeneousMagnitude {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl SquaredAntiMagnitude for HomogeneousMagnitude {
+    type Output = AntiScalar;
+
+    fn squared_anti_magnitude(self) -> AntiScalar {
+        self.anti_scalar_product(self.anti_reversal())
+    }
+}
+
+impl WeightNorm for HomogeneousMagnitude {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
+    }
+}
+
+impl GeometricNorm for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn geometric_norm(self) -> HomogeneousMagnitude {
+        self.bulk_norm() + self.weight_norm()
+    }
+}
+
+impl Scale for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn scale(self, other: f32) -> HomogeneousMagnitude {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: other } })
+    }
+}
+
+impl Signum for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn signum(self) -> HomogeneousMagnitude {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.magnitude().group0() } })
+    }
+}
+
+impl Inverse for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn inverse(self) -> HomogeneousMagnitude {
+        self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
 impl Zero for RadialPoint {
     fn zero() -> Self {
         RadialPoint { groups: RadialPointGroups { g0: Simd32x3::from(0.0), g1: Simd32x2::from(0.0) } }
@@ -3049,6 +4494,54 @@ impl RightAntiContraction<AntiScalar> for RadialPoint {
 
     fn right_anti_contraction(self, other: AntiScalar) -> RadialPoint {
         RadialPoint { groups: RadialPointGroups { g0: self.group0() * Simd32x3::from(other.group0()), g1: self.group1() * Simd32x2::from(other.group0()) } }
+    }
+}
+
+impl RegressiveProduct<HomogeneousMagnitude> for RadialPoint {
+    type Output = RadialPoint;
+
+    fn regressive_product(self, other: HomogeneousMagnitude) -> RadialPoint {
+        RadialPoint { groups: RadialPointGroups { g0: self.group0() * Simd32x3::from(other.group0()[1]), g1: self.group1() * Simd32x2::from(other.group0()[1]) } }
+    }
+}
+
+impl OuterProduct<HomogeneousMagnitude> for RadialPoint {
+    type Output = RadialPoint;
+
+    fn outer_product(self, other: HomogeneousMagnitude) -> RadialPoint {
+        RadialPoint { groups: RadialPointGroups { g0: self.group0() * Simd32x3::from(other.group0()[0]), g1: self.group1() * Simd32x2::from(other.group0()[0]) } }
+    }
+}
+
+impl GeometricAntiProduct<HomogeneousMagnitude> for RadialPoint {
+    type Output = RadialPoint;
+
+    fn geometric_anti_product(self, other: HomogeneousMagnitude) -> RadialPoint {
+        RadialPoint { groups: RadialPointGroups { g0: self.group0() * Simd32x3::from(other.group0()[1]), g1: self.group1() * Simd32x2::from(other.group0()[1]) } }
+    }
+}
+
+impl InnerAntiProduct<HomogeneousMagnitude> for RadialPoint {
+    type Output = RadialPoint;
+
+    fn inner_anti_product(self, other: HomogeneousMagnitude) -> RadialPoint {
+        RadialPoint { groups: RadialPointGroups { g0: self.group0() * Simd32x3::from(other.group0()[1]), g1: self.group1() * Simd32x2::from(other.group0()[1]) } }
+    }
+}
+
+impl RightContraction<HomogeneousMagnitude> for RadialPoint {
+    type Output = RadialPoint;
+
+    fn right_contraction(self, other: HomogeneousMagnitude) -> RadialPoint {
+        RadialPoint { groups: RadialPointGroups { g0: self.group0() * Simd32x3::from(other.group0()[0]), g1: self.group1() * Simd32x2::from(other.group0()[0]) } }
+    }
+}
+
+impl RightAntiContraction<HomogeneousMagnitude> for RadialPoint {
+    type Output = RadialPoint;
+
+    fn right_anti_contraction(self, other: HomogeneousMagnitude) -> RadialPoint {
+        RadialPoint { groups: RadialPointGroups { g0: self.group0() * Simd32x3::from(other.group0()[1]), g1: self.group1() * Simd32x2::from(other.group0()[1]) } }
     }
 }
 
@@ -3597,6 +5090,54 @@ impl RightAntiContraction<AntiScalar> for FlatPoint {
 
     fn right_anti_contraction(self, other: AntiScalar) -> FlatPoint {
         FlatPoint { groups: FlatPointGroups { g0: self.group0() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl GeometricProduct<HomogeneousMagnitude> for FlatPoint {
+    type Output = FlatPoint;
+
+    fn geometric_product(self, other: HomogeneousMagnitude) -> FlatPoint {
+        FlatPoint { groups: FlatPointGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl RegressiveProduct<HomogeneousMagnitude> for FlatPoint {
+    type Output = FlatPoint;
+
+    fn regressive_product(self, other: HomogeneousMagnitude) -> FlatPoint {
+        FlatPoint { groups: FlatPointGroups { g0: self.group0() * Simd32x4::from(other.group0()[1]) } }
+    }
+}
+
+impl OuterProduct<HomogeneousMagnitude> for FlatPoint {
+    type Output = FlatPoint;
+
+    fn outer_product(self, other: HomogeneousMagnitude) -> FlatPoint {
+        FlatPoint { groups: FlatPointGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl InnerProduct<HomogeneousMagnitude> for FlatPoint {
+    type Output = FlatPoint;
+
+    fn inner_product(self, other: HomogeneousMagnitude) -> FlatPoint {
+        FlatPoint { groups: FlatPointGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl RightContraction<HomogeneousMagnitude> for FlatPoint {
+    type Output = FlatPoint;
+
+    fn right_contraction(self, other: HomogeneousMagnitude) -> FlatPoint {
+        FlatPoint { groups: FlatPointGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl RightAntiContraction<HomogeneousMagnitude> for FlatPoint {
+    type Output = FlatPoint;
+
+    fn right_anti_contraction(self, other: HomogeneousMagnitude) -> FlatPoint {
+        FlatPoint { groups: FlatPointGroups { g0: self.group0() * Simd32x4::from(other.group0()[1]) } }
     }
 }
 
@@ -4196,6 +5737,38 @@ impl RightAntiContraction<AntiScalar> for Dipole {
     }
 }
 
+impl RegressiveProduct<HomogeneousMagnitude> for Dipole {
+    type Output = Dipole;
+
+    fn regressive_product(self, other: HomogeneousMagnitude) -> Dipole {
+        Dipole { groups: DipoleGroups { g0: self.group0() * Simd32x3::from(other.group0()[1]), g1: self.group1() * Simd32x3::from(other.group0()[1]), g2: self.group2() * Simd32x4::from(other.group0()[1]) } }
+    }
+}
+
+impl OuterProduct<HomogeneousMagnitude> for Dipole {
+    type Output = Dipole;
+
+    fn outer_product(self, other: HomogeneousMagnitude) -> Dipole {
+        Dipole { groups: DipoleGroups { g0: self.group0() * Simd32x3::from(other.group0()[0]), g1: self.group1() * Simd32x3::from(other.group0()[0]), g2: self.group2() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl RightContraction<HomogeneousMagnitude> for Dipole {
+    type Output = Dipole;
+
+    fn right_contraction(self, other: HomogeneousMagnitude) -> Dipole {
+        Dipole { groups: DipoleGroups { g0: self.group0() * Simd32x3::from(other.group0()[0]), g1: self.group1() * Simd32x3::from(other.group0()[0]), g2: self.group2() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl RightAntiContraction<HomogeneousMagnitude> for Dipole {
+    type Output = Dipole;
+
+    fn right_anti_contraction(self, other: HomogeneousMagnitude) -> Dipole {
+        Dipole { groups: DipoleGroups { g0: self.group0() * Simd32x3::from(other.group0()[1]), g1: self.group1() * Simd32x3::from(other.group0()[1]), g2: self.group2() * Simd32x4::from(other.group0()[1]) } }
+    }
+}
+
 impl OuterProduct<RadialPoint> for Dipole {
     type Output = Circle;
 
@@ -4782,6 +6355,38 @@ impl Magnitude for Dipole {
     }
 }
 
+impl BulkNorm for Dipole {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl SquaredAntiMagnitude for Dipole {
+    type Output = AntiScalar;
+
+    fn squared_anti_magnitude(self) -> AntiScalar {
+        self.anti_scalar_product(self.anti_reversal())
+    }
+}
+
+impl WeightNorm for Dipole {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
+    }
+}
+
+impl GeometricNorm for Dipole {
+    type Output = HomogeneousMagnitude;
+
+    fn geometric_norm(self) -> HomogeneousMagnitude {
+        self.bulk_norm() + self.weight_norm()
+    }
+}
+
 impl Scale for Dipole {
     type Output = Dipole;
 
@@ -4919,6 +6524,54 @@ impl RightAntiContraction<AntiScalar> for Line {
 
     fn right_anti_contraction(self, other: AntiScalar) -> Line {
         Line { groups: LineGroups { g0: self.group0() * Simd32x3::from(other.group0()), g1: self.group1() * Simd32x3::from(other.group0()) } }
+    }
+}
+
+impl GeometricProduct<HomogeneousMagnitude> for Line {
+    type Output = Line;
+
+    fn geometric_product(self, other: HomogeneousMagnitude) -> Line {
+        Line { groups: LineGroups { g0: self.group0() * Simd32x3::from(other.group0()[0]), g1: self.group1() * Simd32x3::from(other.group0()[0]) } }
+    }
+}
+
+impl RegressiveProduct<HomogeneousMagnitude> for Line {
+    type Output = Line;
+
+    fn regressive_product(self, other: HomogeneousMagnitude) -> Line {
+        Line { groups: LineGroups { g0: self.group0() * Simd32x3::from(other.group0()[1]), g1: self.group1() * Simd32x3::from(other.group0()[1]) } }
+    }
+}
+
+impl OuterProduct<HomogeneousMagnitude> for Line {
+    type Output = Line;
+
+    fn outer_product(self, other: HomogeneousMagnitude) -> Line {
+        Line { groups: LineGroups { g0: self.group0() * Simd32x3::from(other.group0()[0]), g1: self.group1() * Simd32x3::from(other.group0()[0]) } }
+    }
+}
+
+impl InnerProduct<HomogeneousMagnitude> for Line {
+    type Output = Line;
+
+    fn inner_product(self, other: HomogeneousMagnitude) -> Line {
+        Line { groups: LineGroups { g0: self.group0() * Simd32x3::from(other.group0()[0]), g1: self.group1() * Simd32x3::from(other.group0()[0]) } }
+    }
+}
+
+impl RightContraction<HomogeneousMagnitude> for Line {
+    type Output = Line;
+
+    fn right_contraction(self, other: HomogeneousMagnitude) -> Line {
+        Line { groups: LineGroups { g0: self.group0() * Simd32x3::from(other.group0()[0]), g1: self.group1() * Simd32x3::from(other.group0()[0]) } }
+    }
+}
+
+impl RightAntiContraction<HomogeneousMagnitude> for Line {
+    type Output = Line;
+
+    fn right_anti_contraction(self, other: HomogeneousMagnitude) -> Line {
+        Line { groups: LineGroups { g0: self.group0() * Simd32x3::from(other.group0()[1]), g1: self.group1() * Simd32x3::from(other.group0()[1]) } }
     }
 }
 
@@ -5518,6 +7171,38 @@ impl RightAntiContraction<AntiScalar> for Circle {
     }
 }
 
+impl RegressiveProduct<HomogeneousMagnitude> for Circle {
+    type Output = Circle;
+
+    fn regressive_product(self, other: HomogeneousMagnitude) -> Circle {
+        Circle { groups: CircleGroups { g0: self.group0() * Simd32x4::from(other.group0()[1]), g1: self.group1() * Simd32x3::from(other.group0()[1]), g2: self.group2() * Simd32x3::from(other.group0()[1]) } }
+    }
+}
+
+impl OuterProduct<HomogeneousMagnitude> for Circle {
+    type Output = Circle;
+
+    fn outer_product(self, other: HomogeneousMagnitude) -> Circle {
+        Circle { groups: CircleGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]), g1: self.group1() * Simd32x3::from(other.group0()[0]), g2: self.group2() * Simd32x3::from(other.group0()[0]) } }
+    }
+}
+
+impl RightContraction<HomogeneousMagnitude> for Circle {
+    type Output = Circle;
+
+    fn right_contraction(self, other: HomogeneousMagnitude) -> Circle {
+        Circle { groups: CircleGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]), g1: self.group1() * Simd32x3::from(other.group0()[0]), g2: self.group2() * Simd32x3::from(other.group0()[0]) } }
+    }
+}
+
+impl RightAntiContraction<HomogeneousMagnitude> for Circle {
+    type Output = Circle;
+
+    fn right_anti_contraction(self, other: HomogeneousMagnitude) -> Circle {
+        Circle { groups: CircleGroups { g0: self.group0() * Simd32x4::from(other.group0()[1]), g1: self.group1() * Simd32x3::from(other.group0()[1]), g2: self.group2() * Simd32x3::from(other.group0()[1]) } }
+    }
+}
+
 impl OuterProduct<RadialPoint> for Circle {
     type Output = Sphere;
 
@@ -6072,6 +7757,38 @@ impl Magnitude for Circle {
     }
 }
 
+impl BulkNorm for Circle {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl SquaredAntiMagnitude for Circle {
+    type Output = AntiScalar;
+
+    fn squared_anti_magnitude(self) -> AntiScalar {
+        self.anti_scalar_product(self.anti_reversal())
+    }
+}
+
+impl WeightNorm for Circle {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
+    }
+}
+
+impl GeometricNorm for Circle {
+    type Output = HomogeneousMagnitude;
+
+    fn geometric_norm(self) -> HomogeneousMagnitude {
+        self.bulk_norm() + self.weight_norm()
+    }
+}
+
 impl Scale for Circle {
     type Output = Circle;
 
@@ -6209,6 +7926,54 @@ impl RightAntiContraction<AntiScalar> for Plane {
 
     fn right_anti_contraction(self, other: AntiScalar) -> Plane {
         Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl GeometricProduct<HomogeneousMagnitude> for Plane {
+    type Output = Plane;
+
+    fn geometric_product(self, other: HomogeneousMagnitude) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl RegressiveProduct<HomogeneousMagnitude> for Plane {
+    type Output = Plane;
+
+    fn regressive_product(self, other: HomogeneousMagnitude) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()[1]) } }
+    }
+}
+
+impl OuterProduct<HomogeneousMagnitude> for Plane {
+    type Output = Plane;
+
+    fn outer_product(self, other: HomogeneousMagnitude) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl InnerProduct<HomogeneousMagnitude> for Plane {
+    type Output = Plane;
+
+    fn inner_product(self, other: HomogeneousMagnitude) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl RightContraction<HomogeneousMagnitude> for Plane {
+    type Output = Plane;
+
+    fn right_contraction(self, other: HomogeneousMagnitude) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl RightAntiContraction<HomogeneousMagnitude> for Plane {
+    type Output = Plane;
+
+    fn right_anti_contraction(self, other: HomogeneousMagnitude) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(other.group0()[1]) } }
     }
 }
 
@@ -6816,6 +8581,54 @@ impl RightAntiContraction<AntiScalar> for Sphere {
     }
 }
 
+impl GeometricProduct<HomogeneousMagnitude> for Sphere {
+    type Output = Sphere;
+
+    fn geometric_product(self, other: HomogeneousMagnitude) -> Sphere {
+        Sphere { groups: SphereGroups { g0: self.group0() * Simd32x2::from(other.group0()[0]), g1: self.group1() * Simd32x3::from(other.group0()[0]) } }
+    }
+}
+
+impl RegressiveProduct<HomogeneousMagnitude> for Sphere {
+    type Output = Sphere;
+
+    fn regressive_product(self, other: HomogeneousMagnitude) -> Sphere {
+        Sphere { groups: SphereGroups { g0: self.group0() * Simd32x2::from(other.group0()[1]), g1: self.group1() * Simd32x3::from(other.group0()[1]) } }
+    }
+}
+
+impl OuterProduct<HomogeneousMagnitude> for Sphere {
+    type Output = Sphere;
+
+    fn outer_product(self, other: HomogeneousMagnitude) -> Sphere {
+        Sphere { groups: SphereGroups { g0: self.group0() * Simd32x2::from(other.group0()[0]), g1: self.group1() * Simd32x3::from(other.group0()[0]) } }
+    }
+}
+
+impl InnerProduct<HomogeneousMagnitude> for Sphere {
+    type Output = Sphere;
+
+    fn inner_product(self, other: HomogeneousMagnitude) -> Sphere {
+        Sphere { groups: SphereGroups { g0: self.group0() * Simd32x2::from(other.group0()[0]), g1: self.group1() * Simd32x3::from(other.group0()[0]) } }
+    }
+}
+
+impl RightContraction<HomogeneousMagnitude> for Sphere {
+    type Output = Sphere;
+
+    fn right_contraction(self, other: HomogeneousMagnitude) -> Sphere {
+        Sphere { groups: SphereGroups { g0: self.group0() * Simd32x2::from(other.group0()[0]), g1: self.group1() * Simd32x3::from(other.group0()[0]) } }
+    }
+}
+
+impl RightAntiContraction<HomogeneousMagnitude> for Sphere {
+    type Output = Sphere;
+
+    fn right_anti_contraction(self, other: HomogeneousMagnitude) -> Sphere {
+        Sphere { groups: SphereGroups { g0: self.group0() * Simd32x2::from(other.group0()[1]), g1: self.group1() * Simd32x3::from(other.group0()[1]) } }
+    }
+}
+
 impl RegressiveProduct<RadialPoint> for Sphere {
     type Output = Scalar;
 
@@ -7397,6 +9210,54 @@ impl AntiScalarProduct<AntiScalar> for Motor {
 
     fn anti_scalar_product(self, other: AntiScalar) -> AntiScalar {
         AntiScalar { groups: AntiScalarGroups { g0: self.group0()[3] * other.group0() } }
+    }
+}
+
+impl GeometricProduct<HomogeneousMagnitude> for Motor {
+    type Output = Motor;
+
+    fn geometric_product(self, other: HomogeneousMagnitude) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]), g1: self.group1() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl OuterProduct<HomogeneousMagnitude> for Motor {
+    type Output = Motor;
+
+    fn outer_product(self, other: HomogeneousMagnitude) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]), g1: self.group1() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl InnerProduct<HomogeneousMagnitude> for Motor {
+    type Output = Motor;
+
+    fn inner_product(self, other: HomogeneousMagnitude) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]), g1: self.group1() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl RightContraction<HomogeneousMagnitude> for Motor {
+    type Output = Motor;
+
+    fn right_contraction(self, other: HomogeneousMagnitude) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]), g1: self.group1() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl RightAntiContraction<HomogeneousMagnitude> for Motor {
+    type Output = Motor;
+
+    fn right_anti_contraction(self, other: HomogeneousMagnitude) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group0() * Simd32x4::from(other.group0()[1]), g1: self.group1() * Simd32x4::from(other.group0()[1]) } }
+    }
+}
+
+impl AntiScalarProduct<HomogeneousMagnitude> for Motor {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: HomogeneousMagnitude) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[3] * other.group0()[1] } }
     }
 }
 
@@ -8180,6 +10041,54 @@ impl AntiScalarProduct<AntiScalar> for Rotor {
     }
 }
 
+impl GeometricProduct<HomogeneousMagnitude> for Rotor {
+    type Output = Rotor;
+
+    fn geometric_product(self, other: HomogeneousMagnitude) -> Rotor {
+        Rotor { groups: RotorGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl OuterProduct<HomogeneousMagnitude> for Rotor {
+    type Output = Rotor;
+
+    fn outer_product(self, other: HomogeneousMagnitude) -> Rotor {
+        Rotor { groups: RotorGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl InnerProduct<HomogeneousMagnitude> for Rotor {
+    type Output = Rotor;
+
+    fn inner_product(self, other: HomogeneousMagnitude) -> Rotor {
+        Rotor { groups: RotorGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl RightContraction<HomogeneousMagnitude> for Rotor {
+    type Output = Rotor;
+
+    fn right_contraction(self, other: HomogeneousMagnitude) -> Rotor {
+        Rotor { groups: RotorGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl RightAntiContraction<HomogeneousMagnitude> for Rotor {
+    type Output = Rotor;
+
+    fn right_anti_contraction(self, other: HomogeneousMagnitude) -> Rotor {
+        Rotor { groups: RotorGroups { g0: self.group0() * Simd32x4::from(other.group0()[1]) } }
+    }
+}
+
+impl AntiScalarProduct<HomogeneousMagnitude> for Rotor {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: HomogeneousMagnitude) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[3] * other.group0()[1] } }
+    }
+}
+
 impl RegressiveProduct<RadialPoint> for Rotor {
     type Output = RadialPoint;
 
@@ -8850,6 +10759,62 @@ impl AntiScalarProduct<AntiScalar> for Translator {
     }
 }
 
+impl GeometricProduct<HomogeneousMagnitude> for Translator {
+    type Output = Translator;
+
+    fn geometric_product(self, other: HomogeneousMagnitude) -> Translator {
+        Translator { groups: TranslatorGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl OuterProduct<HomogeneousMagnitude> for Translator {
+    type Output = Translator;
+
+    fn outer_product(self, other: HomogeneousMagnitude) -> Translator {
+        Translator { groups: TranslatorGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl InnerProduct<HomogeneousMagnitude> for Translator {
+    type Output = Translator;
+
+    fn inner_product(self, other: HomogeneousMagnitude) -> Translator {
+        Translator { groups: TranslatorGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl RightContraction<HomogeneousMagnitude> for Translator {
+    type Output = Translator;
+
+    fn right_contraction(self, other: HomogeneousMagnitude) -> Translator {
+        Translator { groups: TranslatorGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl LeftAntiContraction<HomogeneousMagnitude> for Translator {
+    type Output = HomogeneousMagnitude;
+
+    fn left_anti_contraction(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(self.group0()[3]) * other.group0() } }
+    }
+}
+
+impl RightAntiContraction<HomogeneousMagnitude> for Translator {
+    type Output = Translator;
+
+    fn right_anti_contraction(self, other: HomogeneousMagnitude) -> Translator {
+        Translator { groups: TranslatorGroups { g0: self.group0() * Simd32x4::from(other.group0()[1]) } }
+    }
+}
+
+impl AntiScalarProduct<HomogeneousMagnitude> for Translator {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: HomogeneousMagnitude) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[3] * other.group0()[1] } }
+    }
+}
+
 impl RegressiveProduct<RadialPoint> for Translator {
     type Output = RadialPoint;
 
@@ -9459,6 +11424,54 @@ impl RightAntiContraction<AntiScalar> for Flector {
 
     fn right_anti_contraction(self, other: AntiScalar) -> Flector {
         Flector { groups: FlectorGroups { g0: self.group0() * Simd32x4::from(other.group0()), g1: self.group1() * Simd32x4::from(other.group0()) } }
+    }
+}
+
+impl GeometricProduct<HomogeneousMagnitude> for Flector {
+    type Output = Flector;
+
+    fn geometric_product(self, other: HomogeneousMagnitude) -> Flector {
+        Flector { groups: FlectorGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]), g1: self.group1() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl RegressiveProduct<HomogeneousMagnitude> for Flector {
+    type Output = Flector;
+
+    fn regressive_product(self, other: HomogeneousMagnitude) -> Flector {
+        Flector { groups: FlectorGroups { g0: self.group0() * Simd32x4::from(other.group0()[1]), g1: self.group1() * Simd32x4::from(other.group0()[1]) } }
+    }
+}
+
+impl OuterProduct<HomogeneousMagnitude> for Flector {
+    type Output = Flector;
+
+    fn outer_product(self, other: HomogeneousMagnitude) -> Flector {
+        Flector { groups: FlectorGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]), g1: self.group1() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl InnerProduct<HomogeneousMagnitude> for Flector {
+    type Output = Flector;
+
+    fn inner_product(self, other: HomogeneousMagnitude) -> Flector {
+        Flector { groups: FlectorGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]), g1: self.group1() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl RightContraction<HomogeneousMagnitude> for Flector {
+    type Output = Flector;
+
+    fn right_contraction(self, other: HomogeneousMagnitude) -> Flector {
+        Flector { groups: FlectorGroups { g0: self.group0() * Simd32x4::from(other.group0()[0]), g1: self.group1() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl RightAntiContraction<HomogeneousMagnitude> for Flector {
+    type Output = Flector;
+
+    fn right_anti_contraction(self, other: HomogeneousMagnitude) -> Flector {
+        Flector { groups: FlectorGroups { g0: self.group0() * Simd32x4::from(other.group0()[1]), g1: self.group1() * Simd32x4::from(other.group0()[1]) } }
     }
 }
 
@@ -10176,6 +12189,46 @@ impl AntiScalarProduct<AntiScalar> for Dilation {
     }
 }
 
+impl OuterProduct<HomogeneousMagnitude> for Dilation {
+    type Output = Dilation;
+
+    fn outer_product(self, other: HomogeneousMagnitude) -> Dilation {
+        Dilation { groups: DilationGroups { g0: self.group0() * Simd32x3::from(other.group0()[0]), g1: self.group1() * Simd32x2::from(other.group0()[0]) } }
+    }
+}
+
+impl RightContraction<HomogeneousMagnitude> for Dilation {
+    type Output = Dilation;
+
+    fn right_contraction(self, other: HomogeneousMagnitude) -> Dilation {
+        Dilation { groups: DilationGroups { g0: self.group0() * Simd32x3::from(other.group0()[0]), g1: self.group1() * Simd32x2::from(other.group0()[0]) } }
+    }
+}
+
+impl LeftAntiContraction<HomogeneousMagnitude> for Dilation {
+    type Output = HomogeneousMagnitude;
+
+    fn left_anti_contraction(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(self.group1()[1]) * other.group0() } }
+    }
+}
+
+impl RightAntiContraction<HomogeneousMagnitude> for Dilation {
+    type Output = Dilation;
+
+    fn right_anti_contraction(self, other: HomogeneousMagnitude) -> Dilation {
+        Dilation { groups: DilationGroups { g0: self.group0() * Simd32x3::from(other.group0()[1]), g1: self.group1() * Simd32x2::from(other.group0()[1]) } }
+    }
+}
+
+impl AntiScalarProduct<HomogeneousMagnitude> for Dilation {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: HomogeneousMagnitude) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group1()[1] * other.group0()[1] } }
+    }
+}
+
 impl RegressiveProduct<RadialPoint> for Dilation {
     type Output = RadialPoint;
 
@@ -10640,6 +12693,38 @@ impl Magnitude for Dilation {
     }
 }
 
+impl BulkNorm for Dilation {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl SquaredAntiMagnitude for Dilation {
+    type Output = AntiScalar;
+
+    fn squared_anti_magnitude(self) -> AntiScalar {
+        self.anti_scalar_product(self.anti_reversal())
+    }
+}
+
+impl WeightNorm for Dilation {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
+    }
+}
+
+impl GeometricNorm for Dilation {
+    type Output = HomogeneousMagnitude;
+
+    fn geometric_norm(self) -> HomogeneousMagnitude {
+        self.bulk_norm() + self.weight_norm()
+    }
+}
+
 impl Scale for Dilation {
     type Output = Dilation;
 
@@ -10901,6 +12986,120 @@ impl AntiScalarProduct<AntiScalar> for MultiVector {
 
     fn anti_scalar_product(self, other: AntiScalar) -> AntiScalar {
         AntiScalar { groups: AntiScalarGroups { g0: self.group0()[2] * other.group0() } }
+    }
+}
+
+impl Into<HomogeneousMagnitude> for MultiVector {
+    fn into(self) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from([self.group0()[0], self.group0()[2]]) } }
+    }
+}
+
+impl Add<HomogeneousMagnitude> for MultiVector {
+    type Output = MultiVector;
+
+    fn add(self, other: HomogeneousMagnitude) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: self.group0() + Simd32x3::from([other.group0()[0], other.group0()[0], other.group0()[1]]) * Simd32x3::from([1.0, 0.0, 1.0]), g1: self.group1(), g2: self.group2(), g3: self.group3(), g4: self.group4(), g5: self.group5(), g6: self.group6(), g7: self.group7(), g8: self.group8(), g9: self.group9() } }
+    }
+}
+
+impl AddAssign<HomogeneousMagnitude> for MultiVector {
+    fn add_assign(&mut self, other: HomogeneousMagnitude) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Sub<HomogeneousMagnitude> for MultiVector {
+    type Output = MultiVector;
+
+    fn sub(self, other: HomogeneousMagnitude) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: self.group0() - Simd32x3::from([other.group0()[0], other.group0()[0], other.group0()[1]]) * Simd32x3::from([1.0, 0.0, 1.0]), g1: self.group1(), g2: self.group2(), g3: self.group3(), g4: self.group4(), g5: self.group5(), g6: self.group6(), g7: self.group7(), g8: self.group8(), g9: self.group9() } }
+    }
+}
+
+impl SubAssign<HomogeneousMagnitude> for MultiVector {
+    fn sub_assign(&mut self, other: HomogeneousMagnitude) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl GeometricProduct<HomogeneousMagnitude> for MultiVector {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: HomogeneousMagnitude) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x3::from(self.group0()[2]) * Simd32x3::from(other.group0()[0]) * Simd32x3::from([0.0, 0.0, 1.0]) + swizzle!(self.group0(), 0, 1, 0) * Simd32x3::from([other.group0()[0], other.group0()[0], other.group0()[1]]), g1: self.group1() * Simd32x3::from(other.group0()[0]), g2: self.group2() * Simd32x2::from(other.group0()[0]), g3: Simd32x4::from(self.group8()[3]) * Simd32x4::from(other.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) + self.group3() * Simd32x4::from(other.group0()[0]), g4: self.group4() * Simd32x3::from(other.group0()[0]), g5: self.group5() * Simd32x3::from(other.group0()[0]), g6: Simd32x3::from(self.group6()[0]) * Simd32x3::from(other.group0()[0]) * Simd32x3::from([1.0, 0.0, 0.0]) + Simd32x3::from(self.group6()[1]) * Simd32x3::from(other.group0()[0]) * Simd32x3::from([0.0, 1.0, 0.0]) + Simd32x3::from(self.group6()[2]) * Simd32x3::from(other.group0()[0]) * Simd32x3::from([0.0, 0.0, 1.0]) + self.group5() * Simd32x3::from(other.group0()[1]), g7: self.group7() * Simd32x3::from(other.group0()[0]), g8: self.group8() * Simd32x4::from(other.group0()[0]), g9: Simd32x4::from(self.group9()[0]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group9()[1]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group9()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group9()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]]) * Simd32x4::from([other.group0()[1], other.group0()[1], other.group0()[1], other.group0()[0]]) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]) } }
+    }
+}
+
+impl RegressiveProduct<HomogeneousMagnitude> for MultiVector {
+    type Output = MultiVector;
+
+    fn regressive_product(self, other: HomogeneousMagnitude) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[0], other.group0()[0], other.group0()[1]]) * Simd32x3::from([1.0, 0.0, 1.0]) + swizzle!(self.group0(), 0, 1, 0) * Simd32x3::from([other.group0()[1], other.group0()[1], other.group0()[0]]) * Simd32x3::from([1.0, 1.0, 0.0]), g1: self.group1() * Simd32x3::from(other.group0()[1]), g2: self.group2() * Simd32x2::from(other.group0()[1]), g3: self.group3() * Simd32x4::from(other.group0()[1]), g4: self.group4() * Simd32x3::from(other.group0()[1]), g5: self.group5() * Simd32x3::from(other.group0()[1]), g6: self.group6() * Simd32x3::from(other.group0()[1]), g7: self.group7() * Simd32x3::from(other.group0()[1]), g8: self.group8() * Simd32x4::from(other.group0()[1]), g9: self.group9() * Simd32x4::from(other.group0()[1]) } }
+    }
+}
+
+impl OuterProduct<HomogeneousMagnitude> for MultiVector {
+    type Output = MultiVector;
+
+    fn outer_product(self, other: HomogeneousMagnitude) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x3::from(self.group0()[2]) * Simd32x3::from(other.group0()[0]) * Simd32x3::from([0.0, 0.0, 1.0]) + swizzle!(self.group0(), 0, 1, 0) * Simd32x3::from([other.group0()[0], other.group0()[0], other.group0()[1]]), g1: self.group1() * Simd32x3::from(other.group0()[0]), g2: self.group2() * Simd32x2::from(other.group0()[0]), g3: self.group3() * Simd32x4::from(other.group0()[0]), g4: self.group4() * Simd32x3::from(other.group0()[0]), g5: self.group5() * Simd32x3::from(other.group0()[0]), g6: self.group6() * Simd32x3::from(other.group0()[0]), g7: self.group7() * Simd32x3::from(other.group0()[0]), g8: self.group8() * Simd32x4::from(other.group0()[0]), g9: self.group9() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl InnerProduct<HomogeneousMagnitude> for MultiVector {
+    type Output = MultiVector;
+
+    fn inner_product(self, other: HomogeneousMagnitude) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x3::from(self.group0()[2]) * Simd32x3::from(other.group0()[0]) * Simd32x3::from([0.0, 0.0, 1.0]) + swizzle!(self.group0(), 0, 1, 0) * Simd32x3::from([other.group0()[0], other.group0()[0], other.group0()[1]]), g1: self.group1() * Simd32x3::from(other.group0()[0]), g2: self.group2() * Simd32x2::from(other.group0()[0]), g3: Simd32x4::from(self.group8()[3]) * Simd32x4::from(other.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) + self.group3() * Simd32x4::from(other.group0()[0]), g4: self.group4() * Simd32x3::from(other.group0()[0]), g5: self.group5() * Simd32x3::from(other.group0()[0]), g6: Simd32x3::from(self.group6()[0]) * Simd32x3::from(other.group0()[0]) * Simd32x3::from([1.0, 0.0, 0.0]) + Simd32x3::from(self.group6()[1]) * Simd32x3::from(other.group0()[0]) * Simd32x3::from([0.0, 1.0, 0.0]) + Simd32x3::from(self.group6()[2]) * Simd32x3::from(other.group0()[0]) * Simd32x3::from([0.0, 0.0, 1.0]) + self.group5() * Simd32x3::from(other.group0()[1]), g7: self.group7() * Simd32x3::from(other.group0()[0]), g8: self.group8() * Simd32x4::from(other.group0()[0]), g9: Simd32x4::from(self.group9()[0]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group9()[1]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group9()[2]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 1.0, 0.0]) + Simd32x4::from(self.group9()[3]) * Simd32x4::from(other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]]) * Simd32x4::from([other.group0()[1], other.group0()[1], other.group0()[1], other.group0()[0]]) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]) } }
+    }
+}
+
+impl GeometricAntiProduct<HomogeneousMagnitude> for MultiVector {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: HomogeneousMagnitude) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[0], other.group0()[0], other.group0()[1]]) * Simd32x3::from([1.0, 0.0, 1.0]) + swizzle!(self.group0(), 0, 1, 0) * Simd32x3::from([other.group0()[1], other.group0()[1], other.group0()[0]]) * Simd32x3::from([1.0, 1.0, 0.0]), g1: Simd32x3::from(self.group9()[0]) * Simd32x3::from(other.group0()[0]) * Simd32x3::from([1.0, 0.0, 0.0]) + Simd32x3::from(self.group9()[1]) * Simd32x3::from(other.group0()[0]) * Simd32x3::from([0.0, 1.0, 0.0]) + Simd32x3::from(self.group9()[2]) * Simd32x3::from(other.group0()[0]) * Simd32x3::from([0.0, 0.0, 1.0]) + self.group1() * Simd32x3::from(other.group0()[1]), g2: self.group2() * Simd32x2::from(other.group0()[1]), g3: self.group3() * Simd32x4::from(other.group0()[1]), g4: self.group4() * Simd32x3::from(other.group0()[1]), g5: Simd32x3::from(self.group6()[0]) * Simd32x3::from(other.group0()[0]) * Simd32x3::from([1.0, 0.0, 0.0]) + Simd32x3::from(self.group6()[1]) * Simd32x3::from(other.group0()[0]) * Simd32x3::from([0.0, 1.0, 0.0]) + Simd32x3::from(self.group6()[2]) * Simd32x3::from(other.group0()[0]) * Simd32x3::from([0.0, 0.0, 1.0]) + self.group5() * Simd32x3::from(other.group0()[1]), g6: self.group6() * Simd32x3::from(other.group0()[1]), g7: self.group7() * Simd32x3::from(other.group0()[1]), g8: Simd32x4::from(self.group8()[3]) * Simd32x4::from(other.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group8()[0], self.group8()[1], self.group8()[2], self.group3()[3]]) * Simd32x4::from([other.group0()[1], other.group0()[1], other.group0()[1], other.group0()[0]]), g9: self.group9() * Simd32x4::from(other.group0()[1]) } }
+    }
+}
+
+impl InnerAntiProduct<HomogeneousMagnitude> for MultiVector {
+    type Output = MultiVector;
+
+    fn inner_anti_product(self, other: HomogeneousMagnitude) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[0], other.group0()[0], other.group0()[1]]) * Simd32x3::from([1.0, 0.0, 1.0]) + swizzle!(self.group0(), 0, 1, 0) * Simd32x3::from([other.group0()[1], other.group0()[1], other.group0()[0]]) * Simd32x3::from([1.0, 1.0, 0.0]), g1: Simd32x3::from(self.group9()[0]) * Simd32x3::from(other.group0()[0]) * Simd32x3::from([1.0, 0.0, 0.0]) + Simd32x3::from(self.group9()[1]) * Simd32x3::from(other.group0()[0]) * Simd32x3::from([0.0, 1.0, 0.0]) + Simd32x3::from(self.group9()[2]) * Simd32x3::from(other.group0()[0]) * Simd32x3::from([0.0, 0.0, 1.0]) + self.group1() * Simd32x3::from(other.group0()[1]), g2: self.group2() * Simd32x2::from(other.group0()[1]), g3: self.group3() * Simd32x4::from(other.group0()[1]), g4: self.group4() * Simd32x3::from(other.group0()[1]), g5: Simd32x3::from(self.group6()[0]) * Simd32x3::from(other.group0()[0]) * Simd32x3::from([1.0, 0.0, 0.0]) + Simd32x3::from(self.group6()[1]) * Simd32x3::from(other.group0()[0]) * Simd32x3::from([0.0, 1.0, 0.0]) + Simd32x3::from(self.group6()[2]) * Simd32x3::from(other.group0()[0]) * Simd32x3::from([0.0, 0.0, 1.0]) + self.group5() * Simd32x3::from(other.group0()[1]), g6: self.group6() * Simd32x3::from(other.group0()[1]), g7: self.group7() * Simd32x3::from(other.group0()[1]), g8: Simd32x4::from(self.group8()[3]) * Simd32x4::from(other.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) + Simd32x4::from([self.group8()[0], self.group8()[1], self.group8()[2], self.group3()[3]]) * Simd32x4::from([other.group0()[1], other.group0()[1], other.group0()[1], other.group0()[0]]), g9: self.group9() * Simd32x4::from(other.group0()[1]) } }
+    }
+}
+
+impl RightContraction<HomogeneousMagnitude> for MultiVector {
+    type Output = MultiVector;
+
+    fn right_contraction(self, other: HomogeneousMagnitude) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: self.group0() * Simd32x3::from(other.group0()[0]), g1: self.group1() * Simd32x3::from(other.group0()[0]), g2: self.group2() * Simd32x2::from(other.group0()[0]), g3: self.group3() * Simd32x4::from(other.group0()[0]), g4: self.group4() * Simd32x3::from(other.group0()[0]), g5: self.group5() * Simd32x3::from(other.group0()[0]), g6: self.group6() * Simd32x3::from(other.group0()[0]), g7: self.group7() * Simd32x3::from(other.group0()[0]), g8: self.group8() * Simd32x4::from(other.group0()[0]), g9: self.group9() * Simd32x4::from(other.group0()[0]) } }
+    }
+}
+
+impl RightAntiContraction<HomogeneousMagnitude> for MultiVector {
+    type Output = MultiVector;
+
+    fn right_anti_contraction(self, other: HomogeneousMagnitude) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: self.group0() * Simd32x3::from(other.group0()[1]), g1: self.group1() * Simd32x3::from(other.group0()[1]), g2: self.group2() * Simd32x2::from(other.group0()[1]), g3: self.group3() * Simd32x4::from(other.group0()[1]), g4: self.group4() * Simd32x3::from(other.group0()[1]), g5: self.group5() * Simd32x3::from(other.group0()[1]), g6: self.group6() * Simd32x3::from(other.group0()[1]), g7: self.group7() * Simd32x3::from(other.group0()[1]), g8: self.group8() * Simd32x4::from(other.group0()[1]), g9: self.group9() * Simd32x4::from(other.group0()[1]) } }
+    }
+}
+
+impl ScalarProduct<HomogeneousMagnitude> for MultiVector {
+    type Output = Scalar;
+
+    fn scalar_product(self, other: HomogeneousMagnitude) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0()[0] * other.group0()[0] } }
+    }
+}
+
+impl AntiScalarProduct<HomogeneousMagnitude> for MultiVector {
+    type Output = AntiScalar;
+
+    fn anti_scalar_product(self, other: HomogeneousMagnitude) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[2] * other.group0()[1] } }
     }
 }
 
@@ -11788,6 +13987,38 @@ impl Magnitude for MultiVector {
     }
 }
 
+impl BulkNorm for MultiVector {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl SquaredAntiMagnitude for MultiVector {
+    type Output = AntiScalar;
+
+    fn squared_anti_magnitude(self) -> AntiScalar {
+        self.anti_scalar_product(self.anti_reversal())
+    }
+}
+
+impl WeightNorm for MultiVector {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
+    }
+}
+
+impl GeometricNorm for MultiVector {
+    type Output = HomogeneousMagnitude;
+
+    fn geometric_norm(self) -> HomogeneousMagnitude {
+        self.bulk_norm() + self.weight_norm()
+    }
+}
+
 impl Scale for MultiVector {
     type Output = MultiVector;
 
@@ -11809,6 +14040,14 @@ impl Inverse for MultiVector {
 
     fn inverse(self) -> MultiVector {
         self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
+impl GeometricQuotient<HomogeneousMagnitude> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn geometric_quotient(self, other: HomogeneousMagnitude) -> AntiScalar {
+        self.geometric_product(other.inverse())
     }
 }
 
@@ -11980,6 +14219,14 @@ impl GeometricQuotient<Dipole> for FlatPoint {
     }
 }
 
+impl GeometricQuotient<HomogeneousMagnitude> for FlatPoint {
+    type Output = FlatPoint;
+
+    fn geometric_quotient(self, other: HomogeneousMagnitude) -> FlatPoint {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Scalar> for FlatPoint {
     type Output = FlatPoint;
 
@@ -12012,6 +14259,14 @@ impl GeometricQuotient<Dipole> for Flector {
     }
 }
 
+impl GeometricQuotient<HomogeneousMagnitude> for Flector {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: HomogeneousMagnitude) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<RadialPoint> for Flector {
     type Output = Motor;
 
@@ -12028,10 +14283,159 @@ impl GeometricQuotient<Scalar> for Flector {
     }
 }
 
+impl Transformation<AntiScalar> for HomogeneousMagnitude {
+    type Output = AntiScalar;
+
+    fn transformation(self, other: AntiScalar) -> AntiScalar {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<FlatPoint> for HomogeneousMagnitude {
+    type Output = FlatPoint;
+
+    fn transformation(self, other: FlatPoint) -> FlatPoint {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<Flector> for HomogeneousMagnitude {
+    type Output = Flector;
+
+    fn transformation(self, other: Flector) -> Flector {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Powi for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn powi(self, exponent: isize) -> HomogeneousMagnitude {
+        if exponent == 0 {
+            return HomogeneousMagnitude::one();
+        }
+        let mut x: HomogeneousMagnitude = if exponent < 0 { self.inverse() } else { self };
+        let mut y: HomogeneousMagnitude = HomogeneousMagnitude::one();
+        let mut n: isize = exponent.abs();
+        while 1 < n {
+            if n & 1 == 1 {
+                y = x.geometric_product(y);
+            }
+            x = x.geometric_product(x);
+            n = n >> 1;
+        }
+        x.geometric_product(y)
+    }
+}
+
+impl GeometricQuotient<HomogeneousMagnitude> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn geometric_quotient(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl Transformation<HomogeneousMagnitude> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn transformation(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<Line> for HomogeneousMagnitude {
+    type Output = Line;
+
+    fn transformation(self, other: Line) -> Line {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<Motor> for HomogeneousMagnitude {
+    type Output = Motor;
+
+    fn transformation(self, other: Motor) -> Motor {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl GeometricQuotient<MultiVector> for HomogeneousMagnitude {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: MultiVector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl Transformation<MultiVector> for HomogeneousMagnitude {
+    type Output = MultiVector;
+
+    fn transformation(self, other: MultiVector) -> MultiVector {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<Plane> for HomogeneousMagnitude {
+    type Output = Plane;
+
+    fn transformation(self, other: Plane) -> Plane {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<Rotor> for HomogeneousMagnitude {
+    type Output = Rotor;
+
+    fn transformation(self, other: Rotor) -> Rotor {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl GeometricQuotient<Scalar> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn geometric_quotient(self, other: Scalar) -> HomogeneousMagnitude {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl Transformation<Scalar> for HomogeneousMagnitude {
+    type Output = Scalar;
+
+    fn transformation(self, other: Scalar) -> Scalar {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Sphere> for HomogeneousMagnitude {
+    type Output = Sphere;
+
+    fn transformation(self, other: Sphere) -> Sphere {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<Translator> for HomogeneousMagnitude {
+    type Output = Translator;
+
+    fn transformation(self, other: Translator) -> Translator {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
 impl GeometricQuotient<Dipole> for Line {
     type Output = Motor;
 
     fn geometric_quotient(self, other: Dipole) -> Motor {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<HomogeneousMagnitude> for Line {
+    type Output = Line;
+
+    fn geometric_quotient(self, other: HomogeneousMagnitude) -> Line {
         self.geometric_product(other.inverse())
     }
 }
@@ -12072,6 +14476,14 @@ impl GeometricQuotient<Dipole> for Motor {
     type Output = Motor;
 
     fn geometric_quotient(self, other: Dipole) -> Motor {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<HomogeneousMagnitude> for Motor {
+    type Output = Motor;
+
+    fn geometric_quotient(self, other: HomogeneousMagnitude) -> Motor {
         self.geometric_product(other.inverse())
     }
 }
@@ -12136,6 +14548,22 @@ impl Transformation<Dipole> for MultiVector {
     type Output = Dipole;
 
     fn transformation(self, other: Dipole) -> Dipole {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl GeometricQuotient<HomogeneousMagnitude> for MultiVector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: HomogeneousMagnitude) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl Transformation<HomogeneousMagnitude> for MultiVector {
+    type Output = HomogeneousMagnitude;
+
+    fn transformation(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
         self.geometric_product(other).geometric_product(self.reversal()).into()
     }
 }
@@ -12209,6 +14637,14 @@ impl Transformation<Scalar> for MultiVector {
     }
 }
 
+impl GeometricQuotient<HomogeneousMagnitude> for Plane {
+    type Output = Plane;
+
+    fn geometric_quotient(self, other: HomogeneousMagnitude) -> Plane {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Scalar> for Plane {
     type Output = Plane;
 
@@ -12269,6 +14705,14 @@ impl GeometricQuotient<Dipole> for Rotor {
     type Output = Rotor;
 
     fn geometric_quotient(self, other: Dipole) -> Rotor {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<HomogeneousMagnitude> for Rotor {
+    type Output = Rotor;
+
+    fn geometric_quotient(self, other: HomogeneousMagnitude) -> Rotor {
         self.geometric_product(other.inverse())
     }
 }
@@ -12349,6 +14793,22 @@ impl Transformation<Flector> for Scalar {
     type Output = Flector;
 
     fn transformation(self, other: Flector) -> Flector {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl GeometricQuotient<HomogeneousMagnitude> for Scalar {
+    type Output = HomogeneousMagnitude;
+
+    fn geometric_quotient(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl Transformation<HomogeneousMagnitude> for Scalar {
+    type Output = HomogeneousMagnitude;
+
+    fn transformation(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
         self.geometric_product(other).geometric_product(self.reversal())
     }
 }
@@ -12470,6 +14930,14 @@ impl Transformation<Translator> for Scalar {
     }
 }
 
+impl GeometricQuotient<HomogeneousMagnitude> for Sphere {
+    type Output = Sphere;
+
+    fn geometric_quotient(self, other: HomogeneousMagnitude) -> Sphere {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Scalar> for Sphere {
     type Output = Sphere;
 
@@ -12482,6 +14950,14 @@ impl GeometricQuotient<Dipole> for Translator {
     type Output = Motor;
 
     fn geometric_quotient(self, other: Dipole) -> Motor {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<HomogeneousMagnitude> for Translator {
+    type Output = Translator;
+
+    fn geometric_quotient(self, other: HomogeneousMagnitude) -> Translator {
         self.geometric_product(other.inverse())
     }
 }

@@ -407,12 +407,36 @@ pub trait SquaredMagnitude {
     fn squared_magnitude(self) -> Self::Output;
 }
 
+/// Square of the anti-magnitude
+pub trait SquaredAntiMagnitude {
+    type Output;
+    fn squared_anti_magnitude(self) -> Self::Output;
+}
+
 /// Length as scalar
 ///
 /// Also called amplitude, absolute value or norm
 pub trait Magnitude {
     type Output;
     fn magnitude(self) -> Self::Output;
+}
+
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+pub trait BulkNorm {
+    type Output;
+    fn bulk_norm(self) -> Self::Output;
+}
+
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+pub trait WeightNorm {
+    type Output;
+    fn weight_norm(self) -> Self::Output;
+}
+
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+pub trait GeometricNorm {
+    type Output;
+    fn geometric_norm(self) -> Self::Output;
 }
 
 /// Direction without magnitude (set to scalar `-1.0` or `1.0`)
@@ -530,3 +554,19 @@ pub trait Unitize {
 // pub trait Dilate {
 //     fn dilate(factor: f32) -> Self;
 // }
+
+
+pub trait FlatPointExt {
+    fn from_xyz(x: f32, y: f32, z: f32) -> Self;
+    fn from_xyz_at_infinity(x: f32, y: f32, z: f32) -> Self;
+}
+impl FlatPointExt for cga3d::FlatPoint {
+    fn from_xyz(x: f32, y: f32, z: f32) -> Self {
+        cga3d::FlatPoint::new(x, y, z, 1.0)
+    }
+    fn from_xyz_at_infinity(x: f32, y: f32, z: f32) -> Self {
+        cga3d::FlatPoint::new(x, y, z, 0.0)
+    }
+
+    // TODO bulk norm, weight norm, geometric norm, unitize
+}

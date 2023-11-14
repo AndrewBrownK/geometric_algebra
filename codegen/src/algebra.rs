@@ -27,7 +27,7 @@ impl<'a> GeometricAlgebra<'a> {
 
 pub type BasisElementIndex = u16;
 
-#[derive(Clone, PartialEq, Eq, Hash)]
+#[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub struct BasisElement {
     pub scalar: isize,
     pub index: BasisElementIndex,
@@ -188,6 +188,15 @@ impl Involution {
                 let anti_grade = dimensions - grade;
                 anti_grade % 4 >= 2
             })),
+
+            // TODO
+            // ("BulkNorm", involution.dual(algebra)),
+            // ("WeightNorm", involution.dual(algebra)),
+            // ("GeometricNorm", involution.dual(algebra)),
+            //
+            // ("RoundBulkNorm", involution.dual(algebra)),
+            // ("RoundWeightNorm", involution.dual(algebra)),
+            // ("RoundGeometricNorm", involution.dual(algebra)),
         ]
     }
 }
@@ -257,6 +266,8 @@ impl Product {
             ("GeometricProduct", product.clone()),
             ("RegressiveProduct", product.projected(|r, s, t| t == r + s).dual(algebra)),
             ("OuterProduct", product.projected(|r, s, t| t == r + s)),
+            // TODO actually.... might be best to not represent norms as involutions? Anything with a a dot product should have a norm,
+            //  because the norm is the square root of the dot product. So I should use that instead (of involutions).
             ("InnerProduct", product.projected(|r, s, t| t == (r as isize - s as isize).unsigned_abs())),
 
             ("GeometricAntiProduct", product.clone().dual(algebra)),
@@ -295,7 +306,7 @@ impl MultiVectorClassRegistry {
     }
 }
 
-#[derive(PartialEq, Eq)]
+#[derive(PartialEq, Eq, Debug)]
 pub struct MultiVectorClass {
     pub class_name: String,
     pub grouped_basis: Vec<Vec<BasisElement>>,

@@ -43,6 +43,7 @@ fn main() {
         "cga3d:1,1,1,0,0;\
             Scalar:1;\
             AntiScalar:e01234;\
+            HomogeneousMagnitude:1,e01234;\
             RadialPoint:e0,e1,e2|e3,e4;\
             FlatPoint:e04,e14,e24,e34;\
             Dipole:e30,e31,e32|e12,e20,e01|e04,e14,e24,e34;\

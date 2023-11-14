@@ -8,6 +8,11 @@ struct AntiScalar {
     float g0;
 };
 
+struct HomogeneousMagnitude {
+    // 1, e01234
+    vec2 g0;
+};
+
 struct RadialPoint {
     // e0, e1, e2
     vec3 g0;
@@ -183,6 +188,14 @@ Scalar scalar_scalar_scalar_product(Scalar self, Scalar other) {
     return Scalar(self.g0 * other.g0);
 }
 
+HomogeneousMagnitude scalar_anti_scalar_add(Scalar self, AntiScalar other) {
+    return HomogeneousMagnitude(vec2(self.g0) * vec2(1.0, 0.0) + vec2(other.g0) * vec2(0.0, 1.0));
+}
+
+HomogeneousMagnitude scalar_anti_scalar_sub(Scalar self, AntiScalar other) {
+    return HomogeneousMagnitude(vec2(self.g0) * vec2(1.0, 0.0) - vec2(other.g0) * vec2(0.0, 1.0));
+}
+
 AntiScalar scalar_anti_scalar_geometric_product(Scalar self, AntiScalar other) {
     return AntiScalar(self.g0 * other.g0);
 }
@@ -213,6 +226,54 @@ AntiScalar scalar_anti_scalar_left_contraction(Scalar self, AntiScalar other) {
 
 Scalar scalar_anti_scalar_right_anti_contraction(Scalar self, AntiScalar other) {
     return Scalar(self.g0 * other.g0);
+}
+
+HomogeneousMagnitude scalar_homogeneous_magnitude_add(Scalar self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0) * vec2(1.0, 0.0) + other.g0);
+}
+
+HomogeneousMagnitude scalar_homogeneous_magnitude_sub(Scalar self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0) * vec2(1.0, 0.0) - other.g0);
+}
+
+HomogeneousMagnitude scalar_homogeneous_magnitude_geometric_product(Scalar self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0) * other.g0);
+}
+
+Scalar scalar_homogeneous_magnitude_regressive_product(Scalar self, HomogeneousMagnitude other) {
+    return Scalar(self.g0 * other.g0.y);
+}
+
+HomogeneousMagnitude scalar_homogeneous_magnitude_outer_product(Scalar self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0) * other.g0);
+}
+
+HomogeneousMagnitude scalar_homogeneous_magnitude_inner_product(Scalar self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0) * other.g0);
+}
+
+Scalar scalar_homogeneous_magnitude_geometric_anti_product(Scalar self, HomogeneousMagnitude other) {
+    return Scalar(self.g0 * other.g0.y);
+}
+
+Scalar scalar_homogeneous_magnitude_inner_anti_product(Scalar self, HomogeneousMagnitude other) {
+    return Scalar(self.g0 * other.g0.y);
+}
+
+HomogeneousMagnitude scalar_homogeneous_magnitude_left_contraction(Scalar self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0) * other.g0);
+}
+
+Scalar scalar_homogeneous_magnitude_right_contraction(Scalar self, HomogeneousMagnitude other) {
+    return Scalar(self.g0 * other.g0.x);
+}
+
+Scalar scalar_homogeneous_magnitude_right_anti_contraction(Scalar self, HomogeneousMagnitude other) {
+    return Scalar(self.g0 * other.g0.y);
+}
+
+Scalar scalar_homogeneous_magnitude_scalar_product(Scalar self, HomogeneousMagnitude other) {
+    return Scalar(self.g0 * other.g0.x);
 }
 
 RadialPoint scalar_radial_point_geometric_product(Scalar self, RadialPoint other) {
@@ -535,6 +596,14 @@ AntiScalar anti_scalar_anti_reversal(AntiScalar self) {
     return AntiScalar(self.g0 * -1.0);
 }
 
+HomogeneousMagnitude anti_scalar_scalar_add(AntiScalar self, Scalar other) {
+    return HomogeneousMagnitude(vec2(self.g0) * vec2(0.0, 1.0) + vec2(other.g0) * vec2(1.0, 0.0));
+}
+
+HomogeneousMagnitude anti_scalar_scalar_sub(AntiScalar self, Scalar other) {
+    return HomogeneousMagnitude(vec2(self.g0) * vec2(0.0, 1.0) - vec2(other.g0) * vec2(1.0, 0.0));
+}
+
 AntiScalar anti_scalar_scalar_geometric_product(AntiScalar self, Scalar other) {
     return AntiScalar(self.g0 * other.g0);
 }
@@ -605,6 +674,54 @@ AntiScalar anti_scalar_anti_scalar_right_anti_contraction(AntiScalar self, AntiS
 
 AntiScalar anti_scalar_anti_scalar_anti_scalar_product(AntiScalar self, AntiScalar other) {
     return AntiScalar(self.g0 * other.g0);
+}
+
+HomogeneousMagnitude anti_scalar_homogeneous_magnitude_add(AntiScalar self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0) * vec2(0.0, 1.0) + other.g0);
+}
+
+HomogeneousMagnitude anti_scalar_homogeneous_magnitude_sub(AntiScalar self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0) * vec2(0.0, 1.0) - other.g0);
+}
+
+AntiScalar anti_scalar_homogeneous_magnitude_geometric_product(AntiScalar self, HomogeneousMagnitude other) {
+    return AntiScalar(self.g0 * other.g0.x);
+}
+
+HomogeneousMagnitude anti_scalar_homogeneous_magnitude_regressive_product(AntiScalar self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0) * other.g0);
+}
+
+AntiScalar anti_scalar_homogeneous_magnitude_outer_product(AntiScalar self, HomogeneousMagnitude other) {
+    return AntiScalar(self.g0 * other.g0.x);
+}
+
+AntiScalar anti_scalar_homogeneous_magnitude_inner_product(AntiScalar self, HomogeneousMagnitude other) {
+    return AntiScalar(self.g0 * other.g0.x);
+}
+
+HomogeneousMagnitude anti_scalar_homogeneous_magnitude_geometric_anti_product(AntiScalar self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0) * other.g0);
+}
+
+HomogeneousMagnitude anti_scalar_homogeneous_magnitude_inner_anti_product(AntiScalar self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0) * other.g0);
+}
+
+AntiScalar anti_scalar_homogeneous_magnitude_right_contraction(AntiScalar self, HomogeneousMagnitude other) {
+    return AntiScalar(self.g0 * other.g0.x);
+}
+
+HomogeneousMagnitude anti_scalar_homogeneous_magnitude_left_anti_contraction(AntiScalar self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0) * other.g0);
+}
+
+AntiScalar anti_scalar_homogeneous_magnitude_right_anti_contraction(AntiScalar self, HomogeneousMagnitude other) {
+    return AntiScalar(self.g0 * other.g0.y);
+}
+
+AntiScalar anti_scalar_homogeneous_magnitude_anti_scalar_product(AntiScalar self, HomogeneousMagnitude other) {
+    return AntiScalar(self.g0 * other.g0.y);
 }
 
 RadialPoint anti_scalar_radial_point_regressive_product(AntiScalar self, RadialPoint other) {
@@ -903,6 +1020,562 @@ AntiScalar anti_scalar_scale(AntiScalar self, float other) {
     return anti_scalar_scalar_geometric_product(self, Scalar(other));
 }
 
+HomogeneousMagnitude homogeneous_magnitude_zero() {
+    return HomogeneousMagnitude(vec2(0.0));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_one() {
+    return HomogeneousMagnitude(vec2(1.0, 0.0));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_neg(HomogeneousMagnitude self) {
+    return HomogeneousMagnitude(self.g0 * vec2(-1.0));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_automorphism(HomogeneousMagnitude self) {
+    return HomogeneousMagnitude(self.g0 * vec2(1.0, -1.0));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_reversal(HomogeneousMagnitude self) {
+    return HomogeneousMagnitude(self.g0);
+}
+
+HomogeneousMagnitude homogeneous_magnitude_conjugation(HomogeneousMagnitude self) {
+    return HomogeneousMagnitude(self.g0 * vec2(1.0, -1.0));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_dual(HomogeneousMagnitude self) {
+    return HomogeneousMagnitude(self.g0.yx);
+}
+
+HomogeneousMagnitude homogeneous_magnitude_anti_reversal(HomogeneousMagnitude self) {
+    return HomogeneousMagnitude(self.g0 * vec2(1.0, -1.0));
+}
+
+Scalar homogeneous_magnitude_scalar_into(HomogeneousMagnitude self) {
+    return Scalar(self.g0.x);
+}
+
+HomogeneousMagnitude homogeneous_magnitude_scalar_add(HomogeneousMagnitude self, Scalar other) {
+    return HomogeneousMagnitude(self.g0 + vec2(other.g0) * vec2(1.0, 0.0));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_scalar_sub(HomogeneousMagnitude self, Scalar other) {
+    return HomogeneousMagnitude(self.g0 - vec2(other.g0) * vec2(1.0, 0.0));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_scalar_geometric_product(HomogeneousMagnitude self, Scalar other) {
+    return HomogeneousMagnitude(self.g0 * vec2(other.g0));
+}
+
+Scalar homogeneous_magnitude_scalar_regressive_product(HomogeneousMagnitude self, Scalar other) {
+    return Scalar(self.g0.y * other.g0);
+}
+
+HomogeneousMagnitude homogeneous_magnitude_scalar_outer_product(HomogeneousMagnitude self, Scalar other) {
+    return HomogeneousMagnitude(self.g0 * vec2(other.g0));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_scalar_inner_product(HomogeneousMagnitude self, Scalar other) {
+    return HomogeneousMagnitude(self.g0 * vec2(other.g0));
+}
+
+Scalar homogeneous_magnitude_scalar_geometric_anti_product(HomogeneousMagnitude self, Scalar other) {
+    return Scalar(self.g0.y * other.g0);
+}
+
+Scalar homogeneous_magnitude_scalar_inner_anti_product(HomogeneousMagnitude self, Scalar other) {
+    return Scalar(self.g0.y * other.g0);
+}
+
+Scalar homogeneous_magnitude_scalar_left_contraction(HomogeneousMagnitude self, Scalar other) {
+    return Scalar(self.g0.x * other.g0);
+}
+
+HomogeneousMagnitude homogeneous_magnitude_scalar_right_contraction(HomogeneousMagnitude self, Scalar other) {
+    return HomogeneousMagnitude(self.g0 * vec2(other.g0));
+}
+
+Scalar homogeneous_magnitude_scalar_left_anti_contraction(HomogeneousMagnitude self, Scalar other) {
+    return Scalar(self.g0.y * other.g0);
+}
+
+Scalar homogeneous_magnitude_scalar_scalar_product(HomogeneousMagnitude self, Scalar other) {
+    return Scalar(self.g0.x * other.g0);
+}
+
+AntiScalar homogeneous_magnitude_anti_scalar_into(HomogeneousMagnitude self) {
+    return AntiScalar(self.g0.y);
+}
+
+HomogeneousMagnitude homogeneous_magnitude_anti_scalar_add(HomogeneousMagnitude self, AntiScalar other) {
+    return HomogeneousMagnitude(self.g0 + vec2(other.g0) * vec2(0.0, 1.0));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_anti_scalar_sub(HomogeneousMagnitude self, AntiScalar other) {
+    return HomogeneousMagnitude(self.g0 - vec2(other.g0) * vec2(0.0, 1.0));
+}
+
+AntiScalar homogeneous_magnitude_anti_scalar_geometric_product(HomogeneousMagnitude self, AntiScalar other) {
+    return AntiScalar(self.g0.x * other.g0);
+}
+
+HomogeneousMagnitude homogeneous_magnitude_anti_scalar_regressive_product(HomogeneousMagnitude self, AntiScalar other) {
+    return HomogeneousMagnitude(self.g0 * vec2(other.g0));
+}
+
+AntiScalar homogeneous_magnitude_anti_scalar_outer_product(HomogeneousMagnitude self, AntiScalar other) {
+    return AntiScalar(self.g0.x * other.g0);
+}
+
+AntiScalar homogeneous_magnitude_anti_scalar_inner_product(HomogeneousMagnitude self, AntiScalar other) {
+    return AntiScalar(self.g0.x * other.g0);
+}
+
+HomogeneousMagnitude homogeneous_magnitude_anti_scalar_geometric_anti_product(HomogeneousMagnitude self, AntiScalar other) {
+    return HomogeneousMagnitude(self.g0 * vec2(other.g0));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_anti_scalar_inner_anti_product(HomogeneousMagnitude self, AntiScalar other) {
+    return HomogeneousMagnitude(self.g0 * vec2(other.g0));
+}
+
+AntiScalar homogeneous_magnitude_anti_scalar_left_contraction(HomogeneousMagnitude self, AntiScalar other) {
+    return AntiScalar(self.g0.x * other.g0);
+}
+
+AntiScalar homogeneous_magnitude_anti_scalar_left_anti_contraction(HomogeneousMagnitude self, AntiScalar other) {
+    return AntiScalar(self.g0.y * other.g0);
+}
+
+HomogeneousMagnitude homogeneous_magnitude_anti_scalar_right_anti_contraction(HomogeneousMagnitude self, AntiScalar other) {
+    return HomogeneousMagnitude(self.g0 * vec2(other.g0));
+}
+
+AntiScalar homogeneous_magnitude_anti_scalar_anti_scalar_product(HomogeneousMagnitude self, AntiScalar other) {
+    return AntiScalar(self.g0.y * other.g0);
+}
+
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_add(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(self.g0 + other.g0);
+}
+
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_sub(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(self.g0 - other.g0);
+}
+
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_mul(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(self.g0 * other.g0);
+}
+
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_div(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0.x, self.g0.y) * vec2(1.0, 1.0) / vec2(other.g0.x, other.g0.y) * vec2(1.0, 1.0));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_geometric_product(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0.x) * other.g0 + self.g0 * vec2(other.g0.x) * vec2(0.0, 1.0));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_regressive_product(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0.y) * other.g0 + vec2(self.g0.x) * other.g0.yx * vec2(1.0, 0.0));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_outer_product(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0.x) * other.g0 + self.g0 * vec2(other.g0.x) * vec2(0.0, 1.0));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_inner_product(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0.x) * other.g0 + self.g0 * vec2(other.g0.x) * vec2(0.0, 1.0));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_geometric_anti_product(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0.y) * other.g0 + vec2(self.g0.x) * other.g0.yx * vec2(1.0, 0.0));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_inner_anti_product(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0.y) * other.g0 + vec2(self.g0.x) * other.g0.yx * vec2(1.0, 0.0));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_left_contraction(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0.x) * other.g0);
+}
+
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_right_contraction(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(self.g0 * vec2(other.g0.x));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_left_anti_contraction(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0.y) * other.g0);
+}
+
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_right_anti_contraction(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(self.g0 * vec2(other.g0.y));
+}
+
+Scalar homogeneous_magnitude_homogeneous_magnitude_scalar_product(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return Scalar(self.g0.x * other.g0.x);
+}
+
+AntiScalar homogeneous_magnitude_homogeneous_magnitude_anti_scalar_product(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return AntiScalar(self.g0.y * other.g0.y);
+}
+
+RadialPoint homogeneous_magnitude_radial_point_regressive_product(HomogeneousMagnitude self, RadialPoint other) {
+    return RadialPoint(vec3(self.g0.y) * other.g0, vec2(self.g0.y) * other.g1);
+}
+
+RadialPoint homogeneous_magnitude_radial_point_outer_product(HomogeneousMagnitude self, RadialPoint other) {
+    return RadialPoint(vec3(self.g0.x) * other.g0, vec2(self.g0.x) * other.g1);
+}
+
+RadialPoint homogeneous_magnitude_radial_point_geometric_anti_product(HomogeneousMagnitude self, RadialPoint other) {
+    return RadialPoint(vec3(self.g0.y) * other.g0, vec2(self.g0.y) * other.g1);
+}
+
+RadialPoint homogeneous_magnitude_radial_point_inner_anti_product(HomogeneousMagnitude self, RadialPoint other) {
+    return RadialPoint(vec3(self.g0.y) * other.g0, vec2(self.g0.y) * other.g1);
+}
+
+RadialPoint homogeneous_magnitude_radial_point_left_contraction(HomogeneousMagnitude self, RadialPoint other) {
+    return RadialPoint(vec3(self.g0.x) * other.g0, vec2(self.g0.x) * other.g1);
+}
+
+RadialPoint homogeneous_magnitude_radial_point_left_anti_contraction(HomogeneousMagnitude self, RadialPoint other) {
+    return RadialPoint(vec3(self.g0.y) * other.g0, vec2(self.g0.y) * other.g1);
+}
+
+FlatPoint homogeneous_magnitude_flat_point_geometric_product(HomogeneousMagnitude self, FlatPoint other) {
+    return FlatPoint(vec4(self.g0.x) * other.g0);
+}
+
+FlatPoint homogeneous_magnitude_flat_point_regressive_product(HomogeneousMagnitude self, FlatPoint other) {
+    return FlatPoint(vec4(self.g0.y) * other.g0);
+}
+
+FlatPoint homogeneous_magnitude_flat_point_outer_product(HomogeneousMagnitude self, FlatPoint other) {
+    return FlatPoint(vec4(self.g0.x) * other.g0);
+}
+
+FlatPoint homogeneous_magnitude_flat_point_inner_product(HomogeneousMagnitude self, FlatPoint other) {
+    return FlatPoint(vec4(self.g0.x) * other.g0);
+}
+
+FlatPoint homogeneous_magnitude_flat_point_left_contraction(HomogeneousMagnitude self, FlatPoint other) {
+    return FlatPoint(vec4(self.g0.x) * other.g0);
+}
+
+FlatPoint homogeneous_magnitude_flat_point_left_anti_contraction(HomogeneousMagnitude self, FlatPoint other) {
+    return FlatPoint(vec4(self.g0.y) * other.g0);
+}
+
+Dipole homogeneous_magnitude_dipole_regressive_product(HomogeneousMagnitude self, Dipole other) {
+    return Dipole(vec3(self.g0.y) * other.g0, vec3(self.g0.y) * other.g1, vec4(self.g0.y) * other.g2);
+}
+
+Dipole homogeneous_magnitude_dipole_outer_product(HomogeneousMagnitude self, Dipole other) {
+    return Dipole(vec3(self.g0.x) * other.g0, vec3(self.g0.x) * other.g1, vec4(self.g0.x) * other.g2);
+}
+
+Dipole homogeneous_magnitude_dipole_left_contraction(HomogeneousMagnitude self, Dipole other) {
+    return Dipole(vec3(self.g0.x) * other.g0, vec3(self.g0.x) * other.g1, vec4(self.g0.x) * other.g2);
+}
+
+Dipole homogeneous_magnitude_dipole_left_anti_contraction(HomogeneousMagnitude self, Dipole other) {
+    return Dipole(vec3(self.g0.y) * other.g0, vec3(self.g0.y) * other.g1, vec4(self.g0.y) * other.g2);
+}
+
+Line homogeneous_magnitude_line_geometric_product(HomogeneousMagnitude self, Line other) {
+    return Line(vec3(self.g0.x) * other.g0, vec3(self.g0.x) * other.g1);
+}
+
+Line homogeneous_magnitude_line_regressive_product(HomogeneousMagnitude self, Line other) {
+    return Line(vec3(self.g0.y) * other.g0, vec3(self.g0.y) * other.g1);
+}
+
+Line homogeneous_magnitude_line_outer_product(HomogeneousMagnitude self, Line other) {
+    return Line(vec3(self.g0.x) * other.g0, vec3(self.g0.x) * other.g1);
+}
+
+Line homogeneous_magnitude_line_inner_product(HomogeneousMagnitude self, Line other) {
+    return Line(vec3(self.g0.x) * other.g0, vec3(self.g0.x) * other.g1);
+}
+
+Line homogeneous_magnitude_line_left_contraction(HomogeneousMagnitude self, Line other) {
+    return Line(vec3(self.g0.x) * other.g0, vec3(self.g0.x) * other.g1);
+}
+
+Line homogeneous_magnitude_line_left_anti_contraction(HomogeneousMagnitude self, Line other) {
+    return Line(vec3(self.g0.y) * other.g0, vec3(self.g0.y) * other.g1);
+}
+
+Circle homogeneous_magnitude_circle_regressive_product(HomogeneousMagnitude self, Circle other) {
+    return Circle(vec4(self.g0.y) * other.g0, vec3(self.g0.y) * other.g1, vec3(self.g0.y) * other.g2);
+}
+
+Circle homogeneous_magnitude_circle_outer_product(HomogeneousMagnitude self, Circle other) {
+    return Circle(vec4(self.g0.x) * other.g0, vec3(self.g0.x) * other.g1, vec3(self.g0.x) * other.g2);
+}
+
+Circle homogeneous_magnitude_circle_left_contraction(HomogeneousMagnitude self, Circle other) {
+    return Circle(vec4(self.g0.x) * other.g0, vec3(self.g0.x) * other.g1, vec3(self.g0.x) * other.g2);
+}
+
+Circle homogeneous_magnitude_circle_left_anti_contraction(HomogeneousMagnitude self, Circle other) {
+    return Circle(vec4(self.g0.y) * other.g0, vec3(self.g0.y) * other.g1, vec3(self.g0.y) * other.g2);
+}
+
+Plane homogeneous_magnitude_plane_geometric_product(HomogeneousMagnitude self, Plane other) {
+    return Plane(vec4(self.g0.x) * other.g0);
+}
+
+Plane homogeneous_magnitude_plane_regressive_product(HomogeneousMagnitude self, Plane other) {
+    return Plane(vec4(self.g0.y) * other.g0);
+}
+
+Plane homogeneous_magnitude_plane_outer_product(HomogeneousMagnitude self, Plane other) {
+    return Plane(vec4(self.g0.x) * other.g0);
+}
+
+Plane homogeneous_magnitude_plane_inner_product(HomogeneousMagnitude self, Plane other) {
+    return Plane(vec4(self.g0.x) * other.g0);
+}
+
+Plane homogeneous_magnitude_plane_left_contraction(HomogeneousMagnitude self, Plane other) {
+    return Plane(vec4(self.g0.x) * other.g0);
+}
+
+Plane homogeneous_magnitude_plane_left_anti_contraction(HomogeneousMagnitude self, Plane other) {
+    return Plane(vec4(self.g0.y) * other.g0);
+}
+
+Sphere homogeneous_magnitude_sphere_geometric_product(HomogeneousMagnitude self, Sphere other) {
+    return Sphere(vec2(self.g0.x) * other.g0, vec3(self.g0.x) * other.g1);
+}
+
+Sphere homogeneous_magnitude_sphere_regressive_product(HomogeneousMagnitude self, Sphere other) {
+    return Sphere(vec2(self.g0.y) * other.g0, vec3(self.g0.y) * other.g1);
+}
+
+Sphere homogeneous_magnitude_sphere_outer_product(HomogeneousMagnitude self, Sphere other) {
+    return Sphere(vec2(self.g0.x) * other.g0, vec3(self.g0.x) * other.g1);
+}
+
+Sphere homogeneous_magnitude_sphere_inner_product(HomogeneousMagnitude self, Sphere other) {
+    return Sphere(vec2(self.g0.x) * other.g0, vec3(self.g0.x) * other.g1);
+}
+
+Sphere homogeneous_magnitude_sphere_left_contraction(HomogeneousMagnitude self, Sphere other) {
+    return Sphere(vec2(self.g0.x) * other.g0, vec3(self.g0.x) * other.g1);
+}
+
+Sphere homogeneous_magnitude_sphere_left_anti_contraction(HomogeneousMagnitude self, Sphere other) {
+    return Sphere(vec2(self.g0.y) * other.g0, vec3(self.g0.y) * other.g1);
+}
+
+Motor homogeneous_magnitude_motor_geometric_product(HomogeneousMagnitude self, Motor other) {
+    return Motor(vec4(self.g0.x) * other.g0, vec4(self.g0.x) * other.g1);
+}
+
+Motor homogeneous_magnitude_motor_outer_product(HomogeneousMagnitude self, Motor other) {
+    return Motor(vec4(self.g0.x) * other.g0, vec4(self.g0.x) * other.g1);
+}
+
+Motor homogeneous_magnitude_motor_inner_product(HomogeneousMagnitude self, Motor other) {
+    return Motor(vec4(self.g0.x) * other.g0, vec4(self.g0.x) * other.g1);
+}
+
+Motor homogeneous_magnitude_motor_left_contraction(HomogeneousMagnitude self, Motor other) {
+    return Motor(vec4(self.g0.x) * other.g0, vec4(self.g0.x) * other.g1);
+}
+
+Motor homogeneous_magnitude_motor_left_anti_contraction(HomogeneousMagnitude self, Motor other) {
+    return Motor(vec4(self.g0.y) * other.g0, vec4(self.g0.y) * other.g1);
+}
+
+AntiScalar homogeneous_magnitude_motor_anti_scalar_product(HomogeneousMagnitude self, Motor other) {
+    return AntiScalar(self.g0.y * other.g0.w);
+}
+
+Rotor homogeneous_magnitude_rotor_geometric_product(HomogeneousMagnitude self, Rotor other) {
+    return Rotor(vec4(self.g0.x) * other.g0);
+}
+
+Rotor homogeneous_magnitude_rotor_outer_product(HomogeneousMagnitude self, Rotor other) {
+    return Rotor(vec4(self.g0.x) * other.g0);
+}
+
+Rotor homogeneous_magnitude_rotor_inner_product(HomogeneousMagnitude self, Rotor other) {
+    return Rotor(vec4(self.g0.x) * other.g0);
+}
+
+Rotor homogeneous_magnitude_rotor_left_contraction(HomogeneousMagnitude self, Rotor other) {
+    return Rotor(vec4(self.g0.x) * other.g0);
+}
+
+Rotor homogeneous_magnitude_rotor_left_anti_contraction(HomogeneousMagnitude self, Rotor other) {
+    return Rotor(vec4(self.g0.y) * other.g0);
+}
+
+AntiScalar homogeneous_magnitude_rotor_anti_scalar_product(HomogeneousMagnitude self, Rotor other) {
+    return AntiScalar(self.g0.y * other.g0.w);
+}
+
+Translator homogeneous_magnitude_translator_geometric_product(HomogeneousMagnitude self, Translator other) {
+    return Translator(vec4(self.g0.x) * other.g0);
+}
+
+Translator homogeneous_magnitude_translator_outer_product(HomogeneousMagnitude self, Translator other) {
+    return Translator(vec4(self.g0.x) * other.g0);
+}
+
+Translator homogeneous_magnitude_translator_inner_product(HomogeneousMagnitude self, Translator other) {
+    return Translator(vec4(self.g0.x) * other.g0);
+}
+
+Translator homogeneous_magnitude_translator_left_contraction(HomogeneousMagnitude self, Translator other) {
+    return Translator(vec4(self.g0.x) * other.g0);
+}
+
+Translator homogeneous_magnitude_translator_left_anti_contraction(HomogeneousMagnitude self, Translator other) {
+    return Translator(vec4(self.g0.y) * other.g0);
+}
+
+HomogeneousMagnitude homogeneous_magnitude_translator_right_anti_contraction(HomogeneousMagnitude self, Translator other) {
+    return HomogeneousMagnitude(self.g0 * vec2(other.g0.w));
+}
+
+AntiScalar homogeneous_magnitude_translator_anti_scalar_product(HomogeneousMagnitude self, Translator other) {
+    return AntiScalar(self.g0.y * other.g0.w);
+}
+
+Flector homogeneous_magnitude_flector_geometric_product(HomogeneousMagnitude self, Flector other) {
+    return Flector(vec4(self.g0.x) * other.g0, vec4(self.g0.x) * other.g1);
+}
+
+Flector homogeneous_magnitude_flector_regressive_product(HomogeneousMagnitude self, Flector other) {
+    return Flector(vec4(self.g0.y) * other.g0, vec4(self.g0.y) * other.g1);
+}
+
+Flector homogeneous_magnitude_flector_outer_product(HomogeneousMagnitude self, Flector other) {
+    return Flector(vec4(self.g0.x) * other.g0, vec4(self.g0.x) * other.g1);
+}
+
+Flector homogeneous_magnitude_flector_inner_product(HomogeneousMagnitude self, Flector other) {
+    return Flector(vec4(self.g0.x) * other.g0, vec4(self.g0.x) * other.g1);
+}
+
+Flector homogeneous_magnitude_flector_left_contraction(HomogeneousMagnitude self, Flector other) {
+    return Flector(vec4(self.g0.x) * other.g0, vec4(self.g0.x) * other.g1);
+}
+
+Flector homogeneous_magnitude_flector_left_anti_contraction(HomogeneousMagnitude self, Flector other) {
+    return Flector(vec4(self.g0.y) * other.g0, vec4(self.g0.y) * other.g1);
+}
+
+Dilation homogeneous_magnitude_dilation_outer_product(HomogeneousMagnitude self, Dilation other) {
+    return Dilation(vec3(self.g0.x) * other.g0, vec2(self.g0.x) * other.g1);
+}
+
+Dilation homogeneous_magnitude_dilation_left_contraction(HomogeneousMagnitude self, Dilation other) {
+    return Dilation(vec3(self.g0.x) * other.g0, vec2(self.g0.x) * other.g1);
+}
+
+Dilation homogeneous_magnitude_dilation_left_anti_contraction(HomogeneousMagnitude self, Dilation other) {
+    return Dilation(vec3(self.g0.y) * other.g0, vec2(self.g0.y) * other.g1);
+}
+
+HomogeneousMagnitude homogeneous_magnitude_dilation_right_anti_contraction(HomogeneousMagnitude self, Dilation other) {
+    return HomogeneousMagnitude(self.g0 * vec2(other.g1.y));
+}
+
+AntiScalar homogeneous_magnitude_dilation_anti_scalar_product(HomogeneousMagnitude self, Dilation other) {
+    return AntiScalar(self.g0.y * other.g1.y);
+}
+
+MultiVector homogeneous_magnitude_multi_vector_add(HomogeneousMagnitude self, MultiVector other) {
+    return MultiVector(vec3(self.g0.x, self.g0.x, self.g0.y) * vec3(1.0, 0.0, 1.0) + other.g0, other.g1, other.g2, other.g3, other.g4, other.g5, other.g6, other.g7, other.g8, other.g9);
+}
+
+MultiVector homogeneous_magnitude_multi_vector_sub(HomogeneousMagnitude self, MultiVector other) {
+    return MultiVector(vec3(self.g0.x, self.g0.x, self.g0.y) * vec3(1.0, 0.0, 1.0) - other.g0, vec3(0.0) - other.g1, vec2(0.0) - other.g2, vec4(0.0) - other.g3, vec3(0.0) - other.g4, vec3(0.0) - other.g5, vec3(0.0) - other.g6, vec3(0.0) - other.g7, vec4(0.0) - other.g8, vec4(0.0) - other.g9);
+}
+
+MultiVector homogeneous_magnitude_multi_vector_geometric_product(HomogeneousMagnitude self, MultiVector other) {
+    return MultiVector(vec3(self.g0.x) * other.g0 + vec3(self.g0.x, self.g0.x, self.g0.y) * vec3(other.g0.x) * vec3(0.0, 0.0, 1.0), vec3(self.g0.x) * other.g1, vec2(self.g0.x) * other.g2, vec4(self.g0.x) * other.g3 + vec4(self.g0.x, self.g0.x, self.g0.x, self.g0.y) * other.g8.xxxw * vec4(0.0, 0.0, 0.0, 1.0), vec3(self.g0.x) * other.g4, vec3(self.g0.x) * other.g5, vec3(self.g0.x) * other.g6 + vec3(self.g0.y) * other.g5, vec3(self.g0.x) * other.g7, vec4(self.g0.x) * other.g8, vec4(self.g0.x) * other.g9 + vec4(self.g0.y, self.g0.y, self.g0.y, self.g0.x) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, 0.0));
+}
+
+MultiVector homogeneous_magnitude_multi_vector_regressive_product(HomogeneousMagnitude self, MultiVector other) {
+    return MultiVector(vec3(self.g0.y) * other.g0 + vec3(self.g0.x) * other.g0.zxx * vec3(1.0, 0.0, 0.0), vec3(self.g0.y) * other.g1, vec2(self.g0.y) * other.g2, vec4(self.g0.y) * other.g3, vec3(self.g0.y) * other.g4, vec3(self.g0.y) * other.g5, vec3(self.g0.y) * other.g6, vec3(self.g0.y) * other.g7, vec4(self.g0.y) * other.g8, vec4(self.g0.y) * other.g9);
+}
+
+MultiVector homogeneous_magnitude_multi_vector_outer_product(HomogeneousMagnitude self, MultiVector other) {
+    return MultiVector(vec3(self.g0.x) * other.g0 + vec3(self.g0.x, self.g0.x, self.g0.y) * vec3(other.g0.x) * vec3(0.0, 0.0, 1.0), vec3(self.g0.x) * other.g1, vec2(self.g0.x) * other.g2, vec4(self.g0.x) * other.g3, vec3(self.g0.x) * other.g4, vec3(self.g0.x) * other.g5, vec3(self.g0.x) * other.g6, vec3(self.g0.x) * other.g7, vec4(self.g0.x) * other.g8, vec4(self.g0.x) * other.g9);
+}
+
+MultiVector homogeneous_magnitude_multi_vector_inner_product(HomogeneousMagnitude self, MultiVector other) {
+    return MultiVector(vec3(self.g0.x) * other.g0 + vec3(self.g0.x, self.g0.x, self.g0.y) * vec3(other.g0.x) * vec3(0.0, 0.0, 1.0), vec3(self.g0.x) * other.g1, vec2(self.g0.x) * other.g2, vec4(self.g0.x) * other.g3 + vec4(self.g0.x, self.g0.x, self.g0.x, self.g0.y) * other.g8.xxxw * vec4(0.0, 0.0, 0.0, 1.0), vec3(self.g0.x) * other.g4, vec3(self.g0.x) * other.g5, vec3(self.g0.x) * other.g6 + vec3(self.g0.y) * other.g5, vec3(self.g0.x) * other.g7, vec4(self.g0.x) * other.g8, vec4(self.g0.x) * other.g9 + vec4(self.g0.y, self.g0.y, self.g0.y, self.g0.x) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, 0.0));
+}
+
+MultiVector homogeneous_magnitude_multi_vector_geometric_anti_product(HomogeneousMagnitude self, MultiVector other) {
+    return MultiVector(vec3(self.g0.y) * other.g0 + vec3(self.g0.x) * other.g0.zxx * vec3(1.0, 0.0, 0.0), vec3(self.g0.x) * vec3(other.g9.x, other.g9.y, other.g9.z) + vec3(self.g0.y) * other.g1, vec2(self.g0.y) * other.g2, vec4(self.g0.y) * other.g3, vec3(self.g0.y) * other.g4, vec3(self.g0.x) * other.g6 + vec3(self.g0.y) * other.g5, vec3(self.g0.y) * other.g6, vec3(self.g0.y) * other.g7, vec4(self.g0.y) * other.g8 + vec4(self.g0.x) * other.g3.xxxw * vec4(0.0, 0.0, 0.0, 1.0), vec4(self.g0.y) * other.g9);
+}
+
+MultiVector homogeneous_magnitude_multi_vector_inner_anti_product(HomogeneousMagnitude self, MultiVector other) {
+    return MultiVector(vec3(self.g0.y) * other.g0 + vec3(self.g0.x) * other.g0.zxx * vec3(1.0, 0.0, 0.0), vec3(self.g0.x) * vec3(other.g9.x, other.g9.y, other.g9.z) + vec3(self.g0.y) * other.g1, vec2(self.g0.y) * other.g2, vec4(self.g0.y) * other.g3, vec3(self.g0.y) * other.g4, vec3(self.g0.x) * other.g6 + vec3(self.g0.y) * other.g5, vec3(self.g0.y) * other.g6, vec3(self.g0.y) * other.g7, vec4(self.g0.y) * other.g8 + vec4(self.g0.x) * other.g3.xxxw * vec4(0.0, 0.0, 0.0, 1.0), vec4(self.g0.y) * other.g9);
+}
+
+MultiVector homogeneous_magnitude_multi_vector_left_contraction(HomogeneousMagnitude self, MultiVector other) {
+    return MultiVector(vec3(self.g0.x) * other.g0, vec3(self.g0.x) * other.g1, vec2(self.g0.x) * other.g2, vec4(self.g0.x) * other.g3, vec3(self.g0.x) * other.g4, vec3(self.g0.x) * other.g5, vec3(self.g0.x) * other.g6, vec3(self.g0.x) * other.g7, vec4(self.g0.x) * other.g8, vec4(self.g0.x) * other.g9);
+}
+
+MultiVector homogeneous_magnitude_multi_vector_left_anti_contraction(HomogeneousMagnitude self, MultiVector other) {
+    return MultiVector(vec3(self.g0.y) * other.g0, vec3(self.g0.y) * other.g1, vec2(self.g0.y) * other.g2, vec4(self.g0.y) * other.g3, vec3(self.g0.y) * other.g4, vec3(self.g0.y) * other.g5, vec3(self.g0.y) * other.g6, vec3(self.g0.y) * other.g7, vec4(self.g0.y) * other.g8, vec4(self.g0.y) * other.g9);
+}
+
+Scalar homogeneous_magnitude_multi_vector_scalar_product(HomogeneousMagnitude self, MultiVector other) {
+    return Scalar(self.g0.x * other.g0.x);
+}
+
+AntiScalar homogeneous_magnitude_multi_vector_anti_scalar_product(HomogeneousMagnitude self, MultiVector other) {
+    return AntiScalar(self.g0.y * other.g0.z);
+}
+
+Scalar homogeneous_magnitude_squared_magnitude(HomogeneousMagnitude self) {
+    return homogeneous_magnitude_homogeneous_magnitude_scalar_product(self, homogeneous_magnitude_reversal(self));
+}
+
+Scalar homogeneous_magnitude_magnitude(HomogeneousMagnitude self) {
+    return Scalar(sqrt(homogeneous_magnitude_squared_magnitude(self).g0));
+}
+
+Scalar homogeneous_magnitude_bulk_norm(HomogeneousMagnitude self) {
+    return Scalar(sqrt(homogeneous_magnitude_squared_magnitude(self).g0));
+}
+
+AntiScalar homogeneous_magnitude_squared_anti_magnitude(HomogeneousMagnitude self) {
+    return homogeneous_magnitude_homogeneous_magnitude_anti_scalar_product(self, homogeneous_magnitude_anti_reversal(self));
+}
+
+AntiScalar homogeneous_magnitude_weight_norm(HomogeneousMagnitude self) {
+    return AntiScalar(sqrt(homogeneous_magnitude_squared_anti_magnitude(self).g0));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_geometric_norm(HomogeneousMagnitude self) {
+    return homogeneous_magnitude_bulk_norm(self) + homogeneous_magnitude_weight_norm(self);
+}
+
+HomogeneousMagnitude homogeneous_magnitude_scale(HomogeneousMagnitude self, float other) {
+    return homogeneous_magnitude_scalar_geometric_product(self, Scalar(other));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_signum(HomogeneousMagnitude self) {
+    return homogeneous_magnitude_scalar_geometric_product(self, Scalar(1.0 / homogeneous_magnitude_magnitude(self).g0));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_inverse(HomogeneousMagnitude self) {
+    return homogeneous_magnitude_scalar_geometric_product(homogeneous_magnitude_reversal(self), Scalar(1.0 / homogeneous_magnitude_squared_magnitude(self).g0));
+}
+
 RadialPoint radial_point_zero() {
     return RadialPoint(vec3(0.0), vec2(0.0));
 }
@@ -965,6 +1638,30 @@ RadialPoint radial_point_anti_scalar_inner_anti_product(RadialPoint self, AntiSc
 
 RadialPoint radial_point_anti_scalar_right_anti_contraction(RadialPoint self, AntiScalar other) {
     return RadialPoint(self.g0 * vec3(other.g0), self.g1 * vec2(other.g0));
+}
+
+RadialPoint radial_point_homogeneous_magnitude_regressive_product(RadialPoint self, HomogeneousMagnitude other) {
+    return RadialPoint(self.g0 * vec3(other.g0.y), self.g1 * vec2(other.g0.y));
+}
+
+RadialPoint radial_point_homogeneous_magnitude_outer_product(RadialPoint self, HomogeneousMagnitude other) {
+    return RadialPoint(self.g0 * vec3(other.g0.x), self.g1 * vec2(other.g0.x));
+}
+
+RadialPoint radial_point_homogeneous_magnitude_geometric_anti_product(RadialPoint self, HomogeneousMagnitude other) {
+    return RadialPoint(self.g0 * vec3(other.g0.y), self.g1 * vec2(other.g0.y));
+}
+
+RadialPoint radial_point_homogeneous_magnitude_inner_anti_product(RadialPoint self, HomogeneousMagnitude other) {
+    return RadialPoint(self.g0 * vec3(other.g0.y), self.g1 * vec2(other.g0.y));
+}
+
+RadialPoint radial_point_homogeneous_magnitude_right_contraction(RadialPoint self, HomogeneousMagnitude other) {
+    return RadialPoint(self.g0 * vec3(other.g0.x), self.g1 * vec2(other.g0.x));
+}
+
+RadialPoint radial_point_homogeneous_magnitude_right_anti_contraction(RadialPoint self, HomogeneousMagnitude other) {
+    return RadialPoint(self.g0 * vec3(other.g0.y), self.g1 * vec2(other.g0.y));
 }
 
 RadialPoint radial_point_radial_point_add(RadialPoint self, RadialPoint other) {
@@ -1229,6 +1926,30 @@ FlatPoint flat_point_anti_scalar_inner_anti_product(FlatPoint self, AntiScalar o
 
 FlatPoint flat_point_anti_scalar_right_anti_contraction(FlatPoint self, AntiScalar other) {
     return FlatPoint(self.g0 * vec4(other.g0));
+}
+
+FlatPoint flat_point_homogeneous_magnitude_geometric_product(FlatPoint self, HomogeneousMagnitude other) {
+    return FlatPoint(self.g0 * vec4(other.g0.x));
+}
+
+FlatPoint flat_point_homogeneous_magnitude_regressive_product(FlatPoint self, HomogeneousMagnitude other) {
+    return FlatPoint(self.g0 * vec4(other.g0.y));
+}
+
+FlatPoint flat_point_homogeneous_magnitude_outer_product(FlatPoint self, HomogeneousMagnitude other) {
+    return FlatPoint(self.g0 * vec4(other.g0.x));
+}
+
+FlatPoint flat_point_homogeneous_magnitude_inner_product(FlatPoint self, HomogeneousMagnitude other) {
+    return FlatPoint(self.g0 * vec4(other.g0.x));
+}
+
+FlatPoint flat_point_homogeneous_magnitude_right_contraction(FlatPoint self, HomogeneousMagnitude other) {
+    return FlatPoint(self.g0 * vec4(other.g0.x));
+}
+
+FlatPoint flat_point_homogeneous_magnitude_right_anti_contraction(FlatPoint self, HomogeneousMagnitude other) {
+    return FlatPoint(self.g0 * vec4(other.g0.y));
 }
 
 Line flat_point_radial_point_outer_product(FlatPoint self, RadialPoint other) {
@@ -1519,6 +2240,22 @@ Dipole dipole_anti_scalar_right_anti_contraction(Dipole self, AntiScalar other) 
     return Dipole(self.g0 * vec3(other.g0), self.g1 * vec3(other.g0), self.g2 * vec4(other.g0));
 }
 
+Dipole dipole_homogeneous_magnitude_regressive_product(Dipole self, HomogeneousMagnitude other) {
+    return Dipole(self.g0 * vec3(other.g0.y), self.g1 * vec3(other.g0.y), self.g2 * vec4(other.g0.y));
+}
+
+Dipole dipole_homogeneous_magnitude_outer_product(Dipole self, HomogeneousMagnitude other) {
+    return Dipole(self.g0 * vec3(other.g0.x), self.g1 * vec3(other.g0.x), self.g2 * vec4(other.g0.x));
+}
+
+Dipole dipole_homogeneous_magnitude_right_contraction(Dipole self, HomogeneousMagnitude other) {
+    return Dipole(self.g0 * vec3(other.g0.x), self.g1 * vec3(other.g0.x), self.g2 * vec4(other.g0.x));
+}
+
+Dipole dipole_homogeneous_magnitude_right_anti_contraction(Dipole self, HomogeneousMagnitude other) {
+    return Dipole(self.g0 * vec3(other.g0.y), self.g1 * vec3(other.g0.y), self.g2 * vec4(other.g0.y));
+}
+
 Circle dipole_radial_point_outer_product(Dipole self, RadialPoint other) {
     return Circle(vec4(self.g0.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g0.z) * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g0.y) * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g1.x) * vec4(other.g1.x, other.g1.x, other.g1.x, other.g0.x) * vec4(1.0, 0.0, 0.0, -1.0) + vec4(self.g1.y) * vec4(other.g1.x, other.g1.x, other.g1.x, other.g0.y) * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g1.x, other.g1.x, other.g1.x, other.g0.z) * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g0.x) * vec4(0.0, -1.0, 1.0, 0.0), vec3(self.g2.x) * vec3(other.g1.x) * vec3(1.0, 0.0, 0.0) + vec3(self.g2.y) * vec3(other.g1.x) * vec3(0.0, 1.0, 0.0) + vec3(self.g2.z) * vec3(other.g1.x) * vec3(0.0, 0.0, 1.0) - vec3(self.g2.w) * other.g0 + self.g0 * vec3(other.g1.y), vec3(self.g2.x) * other.g0.zzy * vec3(0.0, 1.0, -1.0) + vec3(self.g2.y) * other.g0.zzx * vec3(-1.0, 0.0, 1.0) + vec3(self.g2.z) * other.g0.yxy * vec3(1.0, -1.0, 0.0) + self.g1 * vec3(other.g1.y));
 }
@@ -1795,6 +2532,22 @@ Scalar dipole_magnitude(Dipole self) {
     return Scalar(sqrt(dipole_squared_magnitude(self).g0));
 }
 
+Scalar dipole_bulk_norm(Dipole self) {
+    return Scalar(sqrt(dipole_squared_magnitude(self).g0));
+}
+
+AntiScalar dipole_squared_anti_magnitude(Dipole self) {
+    return dipole_dipole_anti_scalar_product(self, dipole_anti_reversal(self));
+}
+
+AntiScalar dipole_weight_norm(Dipole self) {
+    return AntiScalar(sqrt(dipole_squared_anti_magnitude(self).g0));
+}
+
+HomogeneousMagnitude dipole_geometric_norm(Dipole self) {
+    return dipole_bulk_norm(self) + dipole_weight_norm(self);
+}
+
 Dipole dipole_scale(Dipole self, float other) {
     return dipole_scalar_geometric_product(self, Scalar(other));
 }
@@ -1865,6 +2618,30 @@ Line line_anti_scalar_inner_anti_product(Line self, AntiScalar other) {
 
 Line line_anti_scalar_right_anti_contraction(Line self, AntiScalar other) {
     return Line(self.g0 * vec3(other.g0), self.g1 * vec3(other.g0));
+}
+
+Line line_homogeneous_magnitude_geometric_product(Line self, HomogeneousMagnitude other) {
+    return Line(self.g0 * vec3(other.g0.x), self.g1 * vec3(other.g0.x));
+}
+
+Line line_homogeneous_magnitude_regressive_product(Line self, HomogeneousMagnitude other) {
+    return Line(self.g0 * vec3(other.g0.y), self.g1 * vec3(other.g0.y));
+}
+
+Line line_homogeneous_magnitude_outer_product(Line self, HomogeneousMagnitude other) {
+    return Line(self.g0 * vec3(other.g0.x), self.g1 * vec3(other.g0.x));
+}
+
+Line line_homogeneous_magnitude_inner_product(Line self, HomogeneousMagnitude other) {
+    return Line(self.g0 * vec3(other.g0.x), self.g1 * vec3(other.g0.x));
+}
+
+Line line_homogeneous_magnitude_right_contraction(Line self, HomogeneousMagnitude other) {
+    return Line(self.g0 * vec3(other.g0.x), self.g1 * vec3(other.g0.x));
+}
+
+Line line_homogeneous_magnitude_right_anti_contraction(Line self, HomogeneousMagnitude other) {
+    return Line(self.g0 * vec3(other.g0.y), self.g1 * vec3(other.g0.y));
 }
 
 Flector line_radial_point_geometric_product(Line self, RadialPoint other) {
@@ -2155,6 +2932,22 @@ Circle circle_anti_scalar_right_anti_contraction(Circle self, AntiScalar other) 
     return Circle(self.g0 * vec4(other.g0), self.g1 * vec3(other.g0), self.g2 * vec3(other.g0));
 }
 
+Circle circle_homogeneous_magnitude_regressive_product(Circle self, HomogeneousMagnitude other) {
+    return Circle(self.g0 * vec4(other.g0.y), self.g1 * vec3(other.g0.y), self.g2 * vec3(other.g0.y));
+}
+
+Circle circle_homogeneous_magnitude_outer_product(Circle self, HomogeneousMagnitude other) {
+    return Circle(self.g0 * vec4(other.g0.x), self.g1 * vec3(other.g0.x), self.g2 * vec3(other.g0.x));
+}
+
+Circle circle_homogeneous_magnitude_right_contraction(Circle self, HomogeneousMagnitude other) {
+    return Circle(self.g0 * vec4(other.g0.x), self.g1 * vec3(other.g0.x), self.g2 * vec3(other.g0.x));
+}
+
+Circle circle_homogeneous_magnitude_right_anti_contraction(Circle self, HomogeneousMagnitude other) {
+    return Circle(self.g0 * vec4(other.g0.y), self.g1 * vec3(other.g0.y), self.g2 * vec3(other.g0.y));
+}
+
 Sphere circle_radial_point_outer_product(Circle self, RadialPoint other) {
     return Sphere(vec2(self.g0.y) * vec2(other.g0.y) * vec2(-1.0, 0.0) + vec2(self.g0.z) * vec2(other.g0.z) * vec2(-1.0, 0.0) + vec2(self.g0.w) * other.g1 * vec2(-1.0, 1.0) + vec2(self.g2.x) * vec2(other.g0.x) * vec2(0.0, 1.0) + vec2(self.g2.y) * vec2(other.g0.y) * vec2(0.0, 1.0) + vec2(self.g2.z) * vec2(other.g0.z) * vec2(0.0, 1.0) + vec2(self.g0.x) * vec2(other.g0.x) * vec2(-1.0, 0.0), vec3(self.g1.x) * other.g0.zzy * vec3(0.0, 1.0, -1.0) + vec3(self.g1.y) * other.g0.zzx * vec3(-1.0, 0.0, 1.0) + vec3(self.g1.z) * other.g0.yxy * vec3(1.0, -1.0, 0.0) + vec3(self.g2.x) * vec3(other.g1.x) * vec3(-1.0, 0.0, 0.0) + vec3(self.g2.y) * vec3(other.g1.x) * vec3(0.0, -1.0, 0.0) + vec3(self.g2.z) * vec3(other.g1.x) * vec3(0.0, 0.0, -1.0) + vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y));
 }
@@ -2415,6 +3208,22 @@ Scalar circle_magnitude(Circle self) {
     return Scalar(sqrt(circle_squared_magnitude(self).g0));
 }
 
+Scalar circle_bulk_norm(Circle self) {
+    return Scalar(sqrt(circle_squared_magnitude(self).g0));
+}
+
+AntiScalar circle_squared_anti_magnitude(Circle self) {
+    return circle_circle_anti_scalar_product(self, circle_anti_reversal(self));
+}
+
+AntiScalar circle_weight_norm(Circle self) {
+    return AntiScalar(sqrt(circle_squared_anti_magnitude(self).g0));
+}
+
+HomogeneousMagnitude circle_geometric_norm(Circle self) {
+    return circle_bulk_norm(self) + circle_weight_norm(self);
+}
+
 Circle circle_scale(Circle self, float other) {
     return circle_scalar_geometric_product(self, Scalar(other));
 }
@@ -2485,6 +3294,30 @@ Plane plane_anti_scalar_inner_anti_product(Plane self, AntiScalar other) {
 
 Plane plane_anti_scalar_right_anti_contraction(Plane self, AntiScalar other) {
     return Plane(self.g0 * vec4(other.g0));
+}
+
+Plane plane_homogeneous_magnitude_geometric_product(Plane self, HomogeneousMagnitude other) {
+    return Plane(self.g0 * vec4(other.g0.x));
+}
+
+Plane plane_homogeneous_magnitude_regressive_product(Plane self, HomogeneousMagnitude other) {
+    return Plane(self.g0 * vec4(other.g0.y));
+}
+
+Plane plane_homogeneous_magnitude_outer_product(Plane self, HomogeneousMagnitude other) {
+    return Plane(self.g0 * vec4(other.g0.x));
+}
+
+Plane plane_homogeneous_magnitude_inner_product(Plane self, HomogeneousMagnitude other) {
+    return Plane(self.g0 * vec4(other.g0.x));
+}
+
+Plane plane_homogeneous_magnitude_right_contraction(Plane self, HomogeneousMagnitude other) {
+    return Plane(self.g0 * vec4(other.g0.x));
+}
+
+Plane plane_homogeneous_magnitude_right_anti_contraction(Plane self, HomogeneousMagnitude other) {
+    return Plane(self.g0 * vec4(other.g0.y));
 }
 
 Scalar plane_radial_point_regressive_product(Plane self, RadialPoint other) {
@@ -2779,6 +3612,30 @@ Sphere sphere_anti_scalar_right_anti_contraction(Sphere self, AntiScalar other) 
     return Sphere(self.g0 * vec2(other.g0), self.g1 * vec3(other.g0));
 }
 
+Sphere sphere_homogeneous_magnitude_geometric_product(Sphere self, HomogeneousMagnitude other) {
+    return Sphere(self.g0 * vec2(other.g0.x), self.g1 * vec3(other.g0.x));
+}
+
+Sphere sphere_homogeneous_magnitude_regressive_product(Sphere self, HomogeneousMagnitude other) {
+    return Sphere(self.g0 * vec2(other.g0.y), self.g1 * vec3(other.g0.y));
+}
+
+Sphere sphere_homogeneous_magnitude_outer_product(Sphere self, HomogeneousMagnitude other) {
+    return Sphere(self.g0 * vec2(other.g0.x), self.g1 * vec3(other.g0.x));
+}
+
+Sphere sphere_homogeneous_magnitude_inner_product(Sphere self, HomogeneousMagnitude other) {
+    return Sphere(self.g0 * vec2(other.g0.x), self.g1 * vec3(other.g0.x));
+}
+
+Sphere sphere_homogeneous_magnitude_right_contraction(Sphere self, HomogeneousMagnitude other) {
+    return Sphere(self.g0 * vec2(other.g0.x), self.g1 * vec3(other.g0.x));
+}
+
+Sphere sphere_homogeneous_magnitude_right_anti_contraction(Sphere self, HomogeneousMagnitude other) {
+    return Sphere(self.g0 * vec2(other.g0.y), self.g1 * vec3(other.g0.y));
+}
+
 Scalar sphere_radial_point_regressive_product(Sphere self, RadialPoint other) {
     return Scalar(self.g0.x * other.g1.y + self.g0.y * other.g1.x + self.g1.x * other.g0.x + self.g1.y * other.g0.y + self.g1.z * other.g0.z);
 }
@@ -3049,6 +3906,30 @@ Motor motor_anti_scalar_right_anti_contraction(Motor self, AntiScalar other) {
 
 AntiScalar motor_anti_scalar_anti_scalar_product(Motor self, AntiScalar other) {
     return AntiScalar(self.g0.w * other.g0);
+}
+
+Motor motor_homogeneous_magnitude_geometric_product(Motor self, HomogeneousMagnitude other) {
+    return Motor(self.g0 * vec4(other.g0.x), self.g1 * vec4(other.g0.x));
+}
+
+Motor motor_homogeneous_magnitude_outer_product(Motor self, HomogeneousMagnitude other) {
+    return Motor(self.g0 * vec4(other.g0.x), self.g1 * vec4(other.g0.x));
+}
+
+Motor motor_homogeneous_magnitude_inner_product(Motor self, HomogeneousMagnitude other) {
+    return Motor(self.g0 * vec4(other.g0.x), self.g1 * vec4(other.g0.x));
+}
+
+Motor motor_homogeneous_magnitude_right_contraction(Motor self, HomogeneousMagnitude other) {
+    return Motor(self.g0 * vec4(other.g0.x), self.g1 * vec4(other.g0.x));
+}
+
+Motor motor_homogeneous_magnitude_right_anti_contraction(Motor self, HomogeneousMagnitude other) {
+    return Motor(self.g0 * vec4(other.g0.y), self.g1 * vec4(other.g0.y));
+}
+
+AntiScalar motor_homogeneous_magnitude_anti_scalar_product(Motor self, HomogeneousMagnitude other) {
+    return AntiScalar(self.g0.w * other.g0.y);
 }
 
 Flector motor_radial_point_geometric_product(Motor self, RadialPoint other) {
@@ -3411,6 +4292,30 @@ AntiScalar rotor_anti_scalar_anti_scalar_product(Rotor self, AntiScalar other) {
     return AntiScalar(self.g0.w * other.g0);
 }
 
+Rotor rotor_homogeneous_magnitude_geometric_product(Rotor self, HomogeneousMagnitude other) {
+    return Rotor(self.g0 * vec4(other.g0.x));
+}
+
+Rotor rotor_homogeneous_magnitude_outer_product(Rotor self, HomogeneousMagnitude other) {
+    return Rotor(self.g0 * vec4(other.g0.x));
+}
+
+Rotor rotor_homogeneous_magnitude_inner_product(Rotor self, HomogeneousMagnitude other) {
+    return Rotor(self.g0 * vec4(other.g0.x));
+}
+
+Rotor rotor_homogeneous_magnitude_right_contraction(Rotor self, HomogeneousMagnitude other) {
+    return Rotor(self.g0 * vec4(other.g0.x));
+}
+
+Rotor rotor_homogeneous_magnitude_right_anti_contraction(Rotor self, HomogeneousMagnitude other) {
+    return Rotor(self.g0 * vec4(other.g0.y));
+}
+
+AntiScalar rotor_homogeneous_magnitude_anti_scalar_product(Rotor self, HomogeneousMagnitude other) {
+    return AntiScalar(self.g0.w * other.g0.y);
+}
+
 RadialPoint rotor_radial_point_regressive_product(Rotor self, RadialPoint other) {
     return RadialPoint(vec3(self.g0.w) * other.g0, vec2(self.g0.w) * other.g1);
 }
@@ -3731,6 +4636,34 @@ AntiScalar translator_anti_scalar_anti_scalar_product(Translator self, AntiScala
     return AntiScalar(self.g0.w * other.g0);
 }
 
+Translator translator_homogeneous_magnitude_geometric_product(Translator self, HomogeneousMagnitude other) {
+    return Translator(self.g0 * vec4(other.g0.x));
+}
+
+Translator translator_homogeneous_magnitude_outer_product(Translator self, HomogeneousMagnitude other) {
+    return Translator(self.g0 * vec4(other.g0.x));
+}
+
+Translator translator_homogeneous_magnitude_inner_product(Translator self, HomogeneousMagnitude other) {
+    return Translator(self.g0 * vec4(other.g0.x));
+}
+
+Translator translator_homogeneous_magnitude_right_contraction(Translator self, HomogeneousMagnitude other) {
+    return Translator(self.g0 * vec4(other.g0.x));
+}
+
+HomogeneousMagnitude translator_homogeneous_magnitude_left_anti_contraction(Translator self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0.w) * other.g0);
+}
+
+Translator translator_homogeneous_magnitude_right_anti_contraction(Translator self, HomogeneousMagnitude other) {
+    return Translator(self.g0 * vec4(other.g0.y));
+}
+
+AntiScalar translator_homogeneous_magnitude_anti_scalar_product(Translator self, HomogeneousMagnitude other) {
+    return AntiScalar(self.g0.w * other.g0.y);
+}
+
 RadialPoint translator_radial_point_regressive_product(Translator self, RadialPoint other) {
     return RadialPoint(vec3(self.g0.w) * other.g0, vec2(self.g0.w) * other.g1);
 }
@@ -4025,6 +4958,30 @@ Flector flector_anti_scalar_inner_anti_product(Flector self, AntiScalar other) {
 
 Flector flector_anti_scalar_right_anti_contraction(Flector self, AntiScalar other) {
     return Flector(self.g0 * vec4(other.g0), self.g1 * vec4(other.g0));
+}
+
+Flector flector_homogeneous_magnitude_geometric_product(Flector self, HomogeneousMagnitude other) {
+    return Flector(self.g0 * vec4(other.g0.x), self.g1 * vec4(other.g0.x));
+}
+
+Flector flector_homogeneous_magnitude_regressive_product(Flector self, HomogeneousMagnitude other) {
+    return Flector(self.g0 * vec4(other.g0.y), self.g1 * vec4(other.g0.y));
+}
+
+Flector flector_homogeneous_magnitude_outer_product(Flector self, HomogeneousMagnitude other) {
+    return Flector(self.g0 * vec4(other.g0.x), self.g1 * vec4(other.g0.x));
+}
+
+Flector flector_homogeneous_magnitude_inner_product(Flector self, HomogeneousMagnitude other) {
+    return Flector(self.g0 * vec4(other.g0.x), self.g1 * vec4(other.g0.x));
+}
+
+Flector flector_homogeneous_magnitude_right_contraction(Flector self, HomogeneousMagnitude other) {
+    return Flector(self.g0 * vec4(other.g0.x), self.g1 * vec4(other.g0.x));
+}
+
+Flector flector_homogeneous_magnitude_right_anti_contraction(Flector self, HomogeneousMagnitude other) {
+    return Flector(self.g0 * vec4(other.g0.y), self.g1 * vec4(other.g0.y));
 }
 
 Motor flector_radial_point_geometric_product(Flector self, RadialPoint other) {
@@ -4359,6 +5316,26 @@ AntiScalar dilation_anti_scalar_anti_scalar_product(Dilation self, AntiScalar ot
     return AntiScalar(self.g1.y * other.g0);
 }
 
+Dilation dilation_homogeneous_magnitude_outer_product(Dilation self, HomogeneousMagnitude other) {
+    return Dilation(self.g0 * vec3(other.g0.x), self.g1 * vec2(other.g0.x));
+}
+
+Dilation dilation_homogeneous_magnitude_right_contraction(Dilation self, HomogeneousMagnitude other) {
+    return Dilation(self.g0 * vec3(other.g0.x), self.g1 * vec2(other.g0.x));
+}
+
+HomogeneousMagnitude dilation_homogeneous_magnitude_left_anti_contraction(Dilation self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g1.y) * other.g0);
+}
+
+Dilation dilation_homogeneous_magnitude_right_anti_contraction(Dilation self, HomogeneousMagnitude other) {
+    return Dilation(self.g0 * vec3(other.g0.y), self.g1 * vec2(other.g0.y));
+}
+
+AntiScalar dilation_homogeneous_magnitude_anti_scalar_product(Dilation self, HomogeneousMagnitude other) {
+    return AntiScalar(self.g1.y * other.g0.y);
+}
+
 RadialPoint dilation_radial_point_regressive_product(Dilation self, RadialPoint other) {
     return RadialPoint(vec3(self.g1.y) * other.g0, vec2(self.g1.y) * other.g1);
 }
@@ -4579,6 +5556,22 @@ Scalar dilation_magnitude(Dilation self) {
     return Scalar(sqrt(dilation_squared_magnitude(self).g0));
 }
 
+Scalar dilation_bulk_norm(Dilation self) {
+    return Scalar(sqrt(dilation_squared_magnitude(self).g0));
+}
+
+AntiScalar dilation_squared_anti_magnitude(Dilation self) {
+    return dilation_dilation_anti_scalar_product(self, dilation_anti_reversal(self));
+}
+
+AntiScalar dilation_weight_norm(Dilation self) {
+    return AntiScalar(sqrt(dilation_squared_anti_magnitude(self).g0));
+}
+
+HomogeneousMagnitude dilation_geometric_norm(Dilation self) {
+    return dilation_bulk_norm(self) + dilation_weight_norm(self);
+}
+
 Dilation dilation_scale(Dilation self, float other) {
     return dilation_scalar_geometric_product(self, Scalar(other));
 }
@@ -4701,6 +5694,58 @@ MultiVector multi_vector_anti_scalar_right_anti_contraction(MultiVector self, An
 
 AntiScalar multi_vector_anti_scalar_anti_scalar_product(MultiVector self, AntiScalar other) {
     return AntiScalar(self.g0.z * other.g0);
+}
+
+HomogeneousMagnitude multi_vector_homogeneous_magnitude_into(MultiVector self) {
+    return HomogeneousMagnitude(vec2(self.g0.x, self.g0.z));
+}
+
+MultiVector multi_vector_homogeneous_magnitude_add(MultiVector self, HomogeneousMagnitude other) {
+    return MultiVector(self.g0 + vec3(other.g0.x, other.g0.x, other.g0.y) * vec3(1.0, 0.0, 1.0), self.g1, self.g2, self.g3, self.g4, self.g5, self.g6, self.g7, self.g8, self.g9);
+}
+
+MultiVector multi_vector_homogeneous_magnitude_sub(MultiVector self, HomogeneousMagnitude other) {
+    return MultiVector(self.g0 - vec3(other.g0.x, other.g0.x, other.g0.y) * vec3(1.0, 0.0, 1.0), self.g1, self.g2, self.g3, self.g4, self.g5, self.g6, self.g7, self.g8, self.g9);
+}
+
+MultiVector multi_vector_homogeneous_magnitude_geometric_product(MultiVector self, HomogeneousMagnitude other) {
+    return MultiVector(vec3(self.g0.z) * vec3(other.g0.x) * vec3(0.0, 0.0, 1.0) + self.g0.xyx * vec3(other.g0.x, other.g0.x, other.g0.y), self.g1 * vec3(other.g0.x), self.g2 * vec2(other.g0.x), vec4(self.g8.w) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + self.g3 * vec4(other.g0.x), self.g4 * vec3(other.g0.x), self.g5 * vec3(other.g0.x), vec3(self.g6.x) * vec3(other.g0.x) * vec3(1.0, 0.0, 0.0) + vec3(self.g6.y) * vec3(other.g0.x) * vec3(0.0, 1.0, 0.0) + vec3(self.g6.z) * vec3(other.g0.x) * vec3(0.0, 0.0, 1.0) + self.g5 * vec3(other.g0.y), self.g7 * vec3(other.g0.x), self.g8 * vec4(other.g0.x), vec4(self.g9.x) * vec4(other.g0.x) * vec4(1.0, 0.0, 0.0, 0.0) + vec4(self.g9.y) * vec4(other.g0.x) * vec4(0.0, 1.0, 0.0, 0.0) + vec4(self.g9.z) * vec4(other.g0.x) * vec4(0.0, 0.0, 1.0, 0.0) + vec4(self.g9.w) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(other.g0.y, other.g0.y, other.g0.y, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0));
+}
+
+MultiVector multi_vector_homogeneous_magnitude_regressive_product(MultiVector self, HomogeneousMagnitude other) {
+    return MultiVector(vec3(self.g0.z) * vec3(other.g0.x, other.g0.x, other.g0.y) * vec3(1.0, 0.0, 1.0) + self.g0.xyx * vec3(other.g0.y, other.g0.y, other.g0.x) * vec3(1.0, 1.0, 0.0), self.g1 * vec3(other.g0.y), self.g2 * vec2(other.g0.y), self.g3 * vec4(other.g0.y), self.g4 * vec3(other.g0.y), self.g5 * vec3(other.g0.y), self.g6 * vec3(other.g0.y), self.g7 * vec3(other.g0.y), self.g8 * vec4(other.g0.y), self.g9 * vec4(other.g0.y));
+}
+
+MultiVector multi_vector_homogeneous_magnitude_outer_product(MultiVector self, HomogeneousMagnitude other) {
+    return MultiVector(vec3(self.g0.z) * vec3(other.g0.x) * vec3(0.0, 0.0, 1.0) + self.g0.xyx * vec3(other.g0.x, other.g0.x, other.g0.y), self.g1 * vec3(other.g0.x), self.g2 * vec2(other.g0.x), self.g3 * vec4(other.g0.x), self.g4 * vec3(other.g0.x), self.g5 * vec3(other.g0.x), self.g6 * vec3(other.g0.x), self.g7 * vec3(other.g0.x), self.g8 * vec4(other.g0.x), self.g9 * vec4(other.g0.x));
+}
+
+MultiVector multi_vector_homogeneous_magnitude_inner_product(MultiVector self, HomogeneousMagnitude other) {
+    return MultiVector(vec3(self.g0.z) * vec3(other.g0.x) * vec3(0.0, 0.0, 1.0) + self.g0.xyx * vec3(other.g0.x, other.g0.x, other.g0.y), self.g1 * vec3(other.g0.x), self.g2 * vec2(other.g0.x), vec4(self.g8.w) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + self.g3 * vec4(other.g0.x), self.g4 * vec3(other.g0.x), self.g5 * vec3(other.g0.x), vec3(self.g6.x) * vec3(other.g0.x) * vec3(1.0, 0.0, 0.0) + vec3(self.g6.y) * vec3(other.g0.x) * vec3(0.0, 1.0, 0.0) + vec3(self.g6.z) * vec3(other.g0.x) * vec3(0.0, 0.0, 1.0) + self.g5 * vec3(other.g0.y), self.g7 * vec3(other.g0.x), self.g8 * vec4(other.g0.x), vec4(self.g9.x) * vec4(other.g0.x) * vec4(1.0, 0.0, 0.0, 0.0) + vec4(self.g9.y) * vec4(other.g0.x) * vec4(0.0, 1.0, 0.0, 0.0) + vec4(self.g9.z) * vec4(other.g0.x) * vec4(0.0, 0.0, 1.0, 0.0) + vec4(self.g9.w) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(other.g0.y, other.g0.y, other.g0.y, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0));
+}
+
+MultiVector multi_vector_homogeneous_magnitude_geometric_anti_product(MultiVector self, HomogeneousMagnitude other) {
+    return MultiVector(vec3(self.g0.z) * vec3(other.g0.x, other.g0.x, other.g0.y) * vec3(1.0, 0.0, 1.0) + self.g0.xyx * vec3(other.g0.y, other.g0.y, other.g0.x) * vec3(1.0, 1.0, 0.0), vec3(self.g9.x) * vec3(other.g0.x) * vec3(1.0, 0.0, 0.0) + vec3(self.g9.y) * vec3(other.g0.x) * vec3(0.0, 1.0, 0.0) + vec3(self.g9.z) * vec3(other.g0.x) * vec3(0.0, 0.0, 1.0) + self.g1 * vec3(other.g0.y), self.g2 * vec2(other.g0.y), self.g3 * vec4(other.g0.y), self.g4 * vec3(other.g0.y), vec3(self.g6.x) * vec3(other.g0.x) * vec3(1.0, 0.0, 0.0) + vec3(self.g6.y) * vec3(other.g0.x) * vec3(0.0, 1.0, 0.0) + vec3(self.g6.z) * vec3(other.g0.x) * vec3(0.0, 0.0, 1.0) + self.g5 * vec3(other.g0.y), self.g6 * vec3(other.g0.y), self.g7 * vec3(other.g0.y), vec4(self.g8.w) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g8.x, self.g8.y, self.g8.z, self.g3.w) * vec4(other.g0.y, other.g0.y, other.g0.y, other.g0.x), self.g9 * vec4(other.g0.y));
+}
+
+MultiVector multi_vector_homogeneous_magnitude_inner_anti_product(MultiVector self, HomogeneousMagnitude other) {
+    return MultiVector(vec3(self.g0.z) * vec3(other.g0.x, other.g0.x, other.g0.y) * vec3(1.0, 0.0, 1.0) + self.g0.xyx * vec3(other.g0.y, other.g0.y, other.g0.x) * vec3(1.0, 1.0, 0.0), vec3(self.g9.x) * vec3(other.g0.x) * vec3(1.0, 0.0, 0.0) + vec3(self.g9.y) * vec3(other.g0.x) * vec3(0.0, 1.0, 0.0) + vec3(self.g9.z) * vec3(other.g0.x) * vec3(0.0, 0.0, 1.0) + self.g1 * vec3(other.g0.y), self.g2 * vec2(other.g0.y), self.g3 * vec4(other.g0.y), self.g4 * vec3(other.g0.y), vec3(self.g6.x) * vec3(other.g0.x) * vec3(1.0, 0.0, 0.0) + vec3(self.g6.y) * vec3(other.g0.x) * vec3(0.0, 1.0, 0.0) + vec3(self.g6.z) * vec3(other.g0.x) * vec3(0.0, 0.0, 1.0) + self.g5 * vec3(other.g0.y), self.g6 * vec3(other.g0.y), self.g7 * vec3(other.g0.y), vec4(self.g8.w) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g8.x, self.g8.y, self.g8.z, self.g3.w) * vec4(other.g0.y, other.g0.y, other.g0.y, other.g0.x), self.g9 * vec4(other.g0.y));
+}
+
+MultiVector multi_vector_homogeneous_magnitude_right_contraction(MultiVector self, HomogeneousMagnitude other) {
+    return MultiVector(self.g0 * vec3(other.g0.x), self.g1 * vec3(other.g0.x), self.g2 * vec2(other.g0.x), self.g3 * vec4(other.g0.x), self.g4 * vec3(other.g0.x), self.g5 * vec3(other.g0.x), self.g6 * vec3(other.g0.x), self.g7 * vec3(other.g0.x), self.g8 * vec4(other.g0.x), self.g9 * vec4(other.g0.x));
+}
+
+MultiVector multi_vector_homogeneous_magnitude_right_anti_contraction(MultiVector self, HomogeneousMagnitude other) {
+    return MultiVector(self.g0 * vec3(other.g0.y), self.g1 * vec3(other.g0.y), self.g2 * vec2(other.g0.y), self.g3 * vec4(other.g0.y), self.g4 * vec3(other.g0.y), self.g5 * vec3(other.g0.y), self.g6 * vec3(other.g0.y), self.g7 * vec3(other.g0.y), self.g8 * vec4(other.g0.y), self.g9 * vec4(other.g0.y));
+}
+
+Scalar multi_vector_homogeneous_magnitude_scalar_product(MultiVector self, HomogeneousMagnitude other) {
+    return Scalar(self.g0.x * other.g0.x);
+}
+
+AntiScalar multi_vector_homogeneous_magnitude_anti_scalar_product(MultiVector self, HomogeneousMagnitude other) {
+    return AntiScalar(self.g0.z * other.g0.y);
 }
 
 RadialPoint multi_vector_radial_point_into(MultiVector self) {
@@ -5079,6 +6124,22 @@ Scalar multi_vector_magnitude(MultiVector self) {
     return Scalar(sqrt(multi_vector_squared_magnitude(self).g0));
 }
 
+Scalar multi_vector_bulk_norm(MultiVector self) {
+    return Scalar(sqrt(multi_vector_squared_magnitude(self).g0));
+}
+
+AntiScalar multi_vector_squared_anti_magnitude(MultiVector self) {
+    return multi_vector_multi_vector_anti_scalar_product(self, multi_vector_anti_reversal(self));
+}
+
+AntiScalar multi_vector_weight_norm(MultiVector self) {
+    return AntiScalar(sqrt(multi_vector_squared_anti_magnitude(self).g0));
+}
+
+HomogeneousMagnitude multi_vector_geometric_norm(MultiVector self) {
+    return multi_vector_bulk_norm(self) + multi_vector_weight_norm(self);
+}
+
 MultiVector multi_vector_scale(MultiVector self, float other) {
     return multi_vector_scalar_geometric_product(self, Scalar(other));
 }
@@ -5089,6 +6150,10 @@ MultiVector multi_vector_signum(MultiVector self) {
 
 MultiVector multi_vector_inverse(MultiVector self) {
     return multi_vector_scalar_geometric_product(multi_vector_reversal(self), Scalar(1.0 / multi_vector_squared_magnitude(self).g0));
+}
+
+AntiScalar anti_scalar_homogeneous_magnitude_geometric_quotient(AntiScalar self, HomogeneousMagnitude other) {
+    return anti_scalar_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
 }
 
 AntiScalar anti_scalar_scalar_geometric_quotient(AntiScalar self, Scalar other) {
@@ -5175,6 +6240,10 @@ Flector flat_point_dipole_geometric_quotient(FlatPoint self, Dipole other) {
     return flat_point_dipole_geometric_product(self, dipole_inverse(other));
 }
 
+FlatPoint flat_point_homogeneous_magnitude_geometric_quotient(FlatPoint self, HomogeneousMagnitude other) {
+    return flat_point_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
+}
+
 FlatPoint flat_point_scalar_geometric_quotient(FlatPoint self, Scalar other) {
     return flat_point_scalar_geometric_product(self, scalar_inverse(other));
 }
@@ -5191,6 +6260,10 @@ Flector flector_dipole_geometric_quotient(Flector self, Dipole other) {
     return flector_dipole_geometric_product(self, dipole_inverse(other));
 }
 
+Flector flector_homogeneous_magnitude_geometric_quotient(Flector self, HomogeneousMagnitude other) {
+    return flector_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
+}
+
 Motor flector_radial_point_geometric_quotient(Flector self, RadialPoint other) {
     return flector_radial_point_geometric_product(self, radial_point_inverse(other));
 }
@@ -5199,8 +6272,89 @@ Flector flector_scalar_geometric_quotient(Flector self, Scalar other) {
     return flector_scalar_geometric_product(self, scalar_inverse(other));
 }
 
+AntiScalar homogeneous_magnitude_anti_scalar_transformation(HomogeneousMagnitude self, AntiScalar other) {
+    return anti_scalar_homogeneous_magnitude_geometric_product(homogeneous_magnitude_anti_scalar_geometric_product(self, other), homogeneous_magnitude_reversal(self));
+}
+
+FlatPoint homogeneous_magnitude_flat_point_transformation(HomogeneousMagnitude self, FlatPoint other) {
+    return flat_point_homogeneous_magnitude_geometric_product(homogeneous_magnitude_flat_point_geometric_product(self, other), homogeneous_magnitude_reversal(self));
+}
+
+Flector homogeneous_magnitude_flector_transformation(HomogeneousMagnitude self, Flector other) {
+    return flector_homogeneous_magnitude_geometric_product(homogeneous_magnitude_flector_geometric_product(self, other), homogeneous_magnitude_reversal(self));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_powi(HomogeneousMagnitude self, int exponent) {
+    if(exponent == 0) {
+        return homogeneous_magnitude_one();
+    }
+    HomogeneousMagnitude x = (exponent < 0) ? homogeneous_magnitude_inverse(self) : self;
+    HomogeneousMagnitude y = homogeneous_magnitude_one();
+    int n = abs(exponent);
+    while(1 < n) {
+        if((n & 1) == 1) {
+            y = homogeneous_magnitude_homogeneous_magnitude_geometric_product(x, y);
+        }
+        x = homogeneous_magnitude_homogeneous_magnitude_geometric_product(x, x);
+        n = n >> 1;
+    }
+    return homogeneous_magnitude_homogeneous_magnitude_geometric_product(x, y);
+}
+
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_geometric_quotient(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return homogeneous_magnitude_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_transformation(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return homogeneous_magnitude_homogeneous_magnitude_geometric_product(homogeneous_magnitude_homogeneous_magnitude_geometric_product(self, other), homogeneous_magnitude_reversal(self));
+}
+
+Line homogeneous_magnitude_line_transformation(HomogeneousMagnitude self, Line other) {
+    return line_homogeneous_magnitude_geometric_product(homogeneous_magnitude_line_geometric_product(self, other), homogeneous_magnitude_reversal(self));
+}
+
+Motor homogeneous_magnitude_motor_transformation(HomogeneousMagnitude self, Motor other) {
+    return motor_homogeneous_magnitude_geometric_product(homogeneous_magnitude_motor_geometric_product(self, other), homogeneous_magnitude_reversal(self));
+}
+
+MultiVector homogeneous_magnitude_multi_vector_geometric_quotient(HomogeneousMagnitude self, MultiVector other) {
+    return homogeneous_magnitude_multi_vector_geometric_product(self, multi_vector_inverse(other));
+}
+
+MultiVector homogeneous_magnitude_multi_vector_transformation(HomogeneousMagnitude self, MultiVector other) {
+    return multi_vector_homogeneous_magnitude_geometric_product(homogeneous_magnitude_multi_vector_geometric_product(self, other), homogeneous_magnitude_reversal(self));
+}
+
+Plane homogeneous_magnitude_plane_transformation(HomogeneousMagnitude self, Plane other) {
+    return plane_homogeneous_magnitude_geometric_product(homogeneous_magnitude_plane_geometric_product(self, other), homogeneous_magnitude_reversal(self));
+}
+
+Rotor homogeneous_magnitude_rotor_transformation(HomogeneousMagnitude self, Rotor other) {
+    return rotor_homogeneous_magnitude_geometric_product(homogeneous_magnitude_rotor_geometric_product(self, other), homogeneous_magnitude_reversal(self));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_scalar_geometric_quotient(HomogeneousMagnitude self, Scalar other) {
+    return homogeneous_magnitude_scalar_geometric_product(self, scalar_inverse(other));
+}
+
+Scalar homogeneous_magnitude_scalar_transformation(HomogeneousMagnitude self, Scalar other) {
+    return homogeneous_magnitude_scalar_into(homogeneous_magnitude_homogeneous_magnitude_geometric_product(homogeneous_magnitude_scalar_geometric_product(self, other), homogeneous_magnitude_reversal(self)));
+}
+
+Sphere homogeneous_magnitude_sphere_transformation(HomogeneousMagnitude self, Sphere other) {
+    return sphere_homogeneous_magnitude_geometric_product(homogeneous_magnitude_sphere_geometric_product(self, other), homogeneous_magnitude_reversal(self));
+}
+
+Translator homogeneous_magnitude_translator_transformation(HomogeneousMagnitude self, Translator other) {
+    return translator_homogeneous_magnitude_geometric_product(homogeneous_magnitude_translator_geometric_product(self, other), homogeneous_magnitude_reversal(self));
+}
+
 Motor line_dipole_geometric_quotient(Line self, Dipole other) {
     return line_dipole_geometric_product(self, dipole_inverse(other));
+}
+
+Line line_homogeneous_magnitude_geometric_quotient(Line self, HomogeneousMagnitude other) {
+    return line_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
 }
 
 Flector line_radial_point_geometric_quotient(Line self, RadialPoint other) {
@@ -5221,6 +6375,10 @@ Flector motor_dilation_geometric_quotient(Motor self, Dilation other) {
 
 Motor motor_dipole_geometric_quotient(Motor self, Dipole other) {
     return motor_dipole_geometric_product(self, dipole_inverse(other));
+}
+
+Motor motor_homogeneous_magnitude_geometric_quotient(Motor self, HomogeneousMagnitude other) {
+    return motor_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
 }
 
 Flector motor_radial_point_geometric_quotient(Motor self, RadialPoint other) {
@@ -5253,6 +6411,14 @@ MultiVector multi_vector_dipole_geometric_quotient(MultiVector self, Dipole othe
 
 Dipole multi_vector_dipole_transformation(MultiVector self, Dipole other) {
     return multi_vector_dipole_into(multi_vector_multi_vector_geometric_product(multi_vector_dipole_geometric_product(self, other), multi_vector_reversal(self)));
+}
+
+MultiVector multi_vector_homogeneous_magnitude_geometric_quotient(MultiVector self, HomogeneousMagnitude other) {
+    return multi_vector_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
+}
+
+HomogeneousMagnitude multi_vector_homogeneous_magnitude_transformation(MultiVector self, HomogeneousMagnitude other) {
+    return multi_vector_homogeneous_magnitude_into(multi_vector_multi_vector_geometric_product(multi_vector_homogeneous_magnitude_geometric_product(self, other), multi_vector_reversal(self)));
 }
 
 MultiVector multi_vector_powi(MultiVector self, int exponent) {
@@ -5296,6 +6462,10 @@ Scalar multi_vector_scalar_transformation(MultiVector self, Scalar other) {
     return multi_vector_scalar_into(multi_vector_multi_vector_geometric_product(multi_vector_scalar_geometric_product(self, other), multi_vector_reversal(self)));
 }
 
+Plane plane_homogeneous_magnitude_geometric_quotient(Plane self, HomogeneousMagnitude other) {
+    return plane_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
+}
+
 Plane plane_scalar_geometric_quotient(Plane self, Scalar other) {
     return plane_scalar_geometric_product(self, scalar_inverse(other));
 }
@@ -5326,6 +6496,10 @@ RadialPoint radial_point_scalar_geometric_quotient(RadialPoint self, Scalar othe
 
 Rotor rotor_dipole_geometric_quotient(Rotor self, Dipole other) {
     return rotor_dipole_geometric_product(self, dipole_inverse(other));
+}
+
+Rotor rotor_homogeneous_magnitude_geometric_quotient(Rotor self, HomogeneousMagnitude other) {
+    return rotor_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
 }
 
 Rotor rotor_scalar_geometric_quotient(Rotor self, Scalar other) {
@@ -5366,6 +6540,14 @@ FlatPoint scalar_flat_point_transformation(Scalar self, FlatPoint other) {
 
 Flector scalar_flector_transformation(Scalar self, Flector other) {
     return flector_scalar_geometric_product(scalar_flector_geometric_product(self, other), scalar_reversal(self));
+}
+
+HomogeneousMagnitude scalar_homogeneous_magnitude_geometric_quotient(Scalar self, HomogeneousMagnitude other) {
+    return scalar_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
+}
+
+HomogeneousMagnitude scalar_homogeneous_magnitude_transformation(Scalar self, HomogeneousMagnitude other) {
+    return homogeneous_magnitude_scalar_geometric_product(scalar_homogeneous_magnitude_geometric_product(self, other), scalar_reversal(self));
 }
 
 Line scalar_line_transformation(Scalar self, Line other) {
@@ -5433,12 +6615,20 @@ Translator scalar_translator_transformation(Scalar self, Translator other) {
     return translator_scalar_geometric_product(scalar_translator_geometric_product(self, other), scalar_reversal(self));
 }
 
+Sphere sphere_homogeneous_magnitude_geometric_quotient(Sphere self, HomogeneousMagnitude other) {
+    return sphere_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
+}
+
 Sphere sphere_scalar_geometric_quotient(Sphere self, Scalar other) {
     return sphere_scalar_geometric_product(self, scalar_inverse(other));
 }
 
 Motor translator_dipole_geometric_quotient(Translator self, Dipole other) {
     return translator_dipole_geometric_product(self, dipole_inverse(other));
+}
+
+Translator translator_homogeneous_magnitude_geometric_quotient(Translator self, HomogeneousMagnitude other) {
+    return translator_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
 }
 
 Translator translator_scalar_geometric_quotient(Translator self, Scalar other) {

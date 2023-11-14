@@ -1613,6 +1613,30 @@ impl Magnitude for Scalar {
     }
 }
 
+impl BulkNorm for Scalar {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl SquaredAntiMagnitude for Scalar {
+    type Output = AntiScalar;
+
+    fn squared_anti_magnitude(self) -> AntiScalar {
+        self.anti_scalar_product(self.anti_reversal())
+    }
+}
+
+impl WeightNorm for Scalar {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
+    }
+}
+
 impl Scale for Scalar {
     type Output = Scalar;
 
@@ -2438,6 +2462,30 @@ impl Magnitude for AntiScalar {
 
     fn magnitude(self) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl BulkNorm for AntiScalar {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl SquaredAntiMagnitude for AntiScalar {
+    type Output = AntiScalar;
+
+    fn squared_anti_magnitude(self) -> AntiScalar {
+        self.anti_scalar_product(self.anti_reversal())
+    }
+}
+
+impl WeightNorm for AntiScalar {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
     }
 }
 
@@ -3575,6 +3623,30 @@ impl Magnitude for MultiVector {
     }
 }
 
+impl BulkNorm for MultiVector {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl SquaredAntiMagnitude for MultiVector {
+    type Output = AntiScalar;
+
+    fn squared_anti_magnitude(self) -> AntiScalar {
+        self.anti_scalar_product(self.anti_reversal())
+    }
+}
+
+impl WeightNorm for MultiVector {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
+    }
+}
+
 impl Scale for MultiVector {
     type Output = MultiVector;
 
@@ -4482,6 +4554,30 @@ impl Magnitude for Rotor {
 
     fn magnitude(self) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl BulkNorm for Rotor {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl SquaredAntiMagnitude for Rotor {
+    type Output = AntiScalar;
+
+    fn squared_anti_magnitude(self) -> AntiScalar {
+        self.anti_scalar_product(self.anti_reversal())
+    }
+}
+
+impl WeightNorm for Rotor {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
     }
 }
 
@@ -5499,6 +5595,30 @@ impl Magnitude for Point {
     }
 }
 
+impl BulkNorm for Point {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl SquaredAntiMagnitude for Point {
+    type Output = AntiScalar;
+
+    fn squared_anti_magnitude(self) -> AntiScalar {
+        self.anti_scalar_product(self.anti_reversal())
+    }
+}
+
+impl WeightNorm for Point {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
+    }
+}
+
 impl Scale for Point {
     type Output = Point;
 
@@ -6316,6 +6436,30 @@ impl Magnitude for IdealPoint {
 
     fn magnitude(self) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl BulkNorm for IdealPoint {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl SquaredAntiMagnitude for IdealPoint {
+    type Output = AntiScalar;
+
+    fn squared_anti_magnitude(self) -> AntiScalar {
+        self.anti_scalar_product(self.anti_reversal())
+    }
+}
+
+impl WeightNorm for IdealPoint {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
     }
 }
 
@@ -7208,6 +7352,30 @@ impl Magnitude for Plane {
 
     fn magnitude(self) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl BulkNorm for Plane {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl SquaredAntiMagnitude for Plane {
+    type Output = AntiScalar;
+
+    fn squared_anti_magnitude(self) -> AntiScalar {
+        self.anti_scalar_product(self.anti_reversal())
+    }
+}
+
+impl WeightNorm for Plane {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
     }
 }
 
@@ -8216,6 +8384,30 @@ impl Magnitude for Translator {
 
     fn magnitude(self) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl BulkNorm for Translator {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl SquaredAntiMagnitude for Translator {
+    type Output = AntiScalar;
+
+    fn squared_anti_magnitude(self) -> AntiScalar {
+        self.anti_scalar_product(self.anti_reversal())
+    }
+}
+
+impl WeightNorm for Translator {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
     }
 }
 
@@ -9401,6 +9593,30 @@ impl Magnitude for Motor {
     }
 }
 
+impl BulkNorm for Motor {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl SquaredAntiMagnitude for Motor {
+    type Output = AntiScalar;
+
+    fn squared_anti_magnitude(self) -> AntiScalar {
+        self.anti_scalar_product(self.anti_reversal())
+    }
+}
+
+impl WeightNorm for Motor {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
+    }
+}
+
 impl Scale for Motor {
     type Output = Motor;
 
@@ -10454,6 +10670,30 @@ impl Magnitude for MotorDual {
 
     fn magnitude(self) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl BulkNorm for MotorDual {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl SquaredAntiMagnitude for MotorDual {
+    type Output = AntiScalar;
+
+    fn squared_anti_magnitude(self) -> AntiScalar {
+        self.anti_scalar_product(self.anti_reversal())
+    }
+}
+
+impl WeightNorm for MotorDual {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
     }
 }
 

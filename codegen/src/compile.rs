@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+use naga::MathFunction::Exp;
 use crate::{
     algebra::{BasisElement, BasisElementIndex, Involution, MultiVectorClass, MultiVectorClassRegistry, Product},
     ast::{AstNode, DataType, Expression, ExpressionContent, Parameter},
@@ -8,7 +10,7 @@ macro_rules! result_of_trait {
     ($ast_node:expr) => {
         match $ast_node {
             AstNode::TraitImplementation { ref result, .. } => result,
-            _ => unreachable!(),
+            the_fuck => unreachable!("There must be a TraitImplementation result {the_fuck:?}"),
         }
     };
 }
@@ -209,6 +211,7 @@ impl MultiVectorClass {
         let a_flat_basis = parameter_a.multi_vector_class().flat_basis();
         let mut result_signature = Vec::new();
         for a_element in a_flat_basis.iter() {
+            // TODO involution terms (working towards "norm" involutions)
             for (in_element, out_element) in involution.terms.iter() {
                 if in_element.index == a_element.index {
                     result_signature.push(out_element.index);
@@ -217,6 +220,7 @@ impl MultiVectorClass {
             }
         }
         if project {
+            // TODO involution terms (working towards "norm" involutions)
             for (in_element, _out_element) in involution.terms.iter() {
                 if !a_flat_basis.iter().any(|element| element.index == in_element.index) {
                     return AstNode::None;
@@ -233,11 +237,13 @@ impl MultiVectorClass {
                 let (factors, a_indices): (Vec<_>, Vec<_>) = (0..size)
                     .map(|index_in_group| {
                         let result_element = &result_flat_basis[base_index + index_in_group];
+                        // TODO involution terms (working towards "norm" involutions)
                         let involution_element = involution
                             .terms
                             .iter()
                             .position(|(_in_element, out_element)| out_element.index == result_element.index)
                             .unwrap();
+                        // TODO involution terms (working towards "norm" involutions)
                         let (in_element, out_element) = &involution.terms[involution_element];
                         let index_in_a = a_flat_basis.iter().position(|a_element| a_element.index == in_element.index).unwrap();
                         (
@@ -636,6 +642,59 @@ impl MultiVectorClass {
                     ),
                 }),
             }],
+        }
+    }
+
+
+    pub fn derive_geometric_norm<'a>(
+        name: &'static str,
+        bulk_norm: &AstNode<'a>,
+        weight_norm: &AstNode<'a>,
+        registry: &'a MultiVectorClassRegistry,
+        parameter_a: &Parameter<'a>,
+    ) -> AstNode<'a> {
+        let bulk_norm_result = result_of_trait!(bulk_norm);
+        let weight_norm_result = result_of_trait!(weight_norm);
+        let mut result_bases = bulk_norm_result.multi_vector_class().signature();
+        result_bases.append(&mut weight_norm_result.multi_vector_class().signature());
+
+        // eprintln!("Expected result bases {result_bases:?}");
+        // let r: HashMap<String, _> = registry.classes.iter().map(|it| (it.class_name.to_string(), it.signature())).collect();
+        // eprintln!("Available result bases {r:?}");
+
+        let result = match registry.get(&result_bases) {
+            Some(r) => r,
+            None => return AstNode::None
+        };
+
+        AstNode::TraitImplementation {
+            result: Parameter { name, data_type: DataType::MultiVector(&result) },
+            parameters: vec![parameter_a.clone()],
+            body: vec![AstNode::ReturnStatement {
+                expression: Box::new(Expression {
+                    size: 1,
+                    content: ExpressionContent::Add(
+                        Box::new(Expression { size: 1, content: ExpressionContent::InvokeInstanceMethod(
+                            parameter_a.data_type.clone(),
+                            Box::new(Expression {
+                                size: 1,
+                                content: ExpressionContent::Variable(parameter_a.name),
+                            }),
+                            bulk_norm_result.name,
+                            vec![]
+                        )}),
+                        Box::new(Expression { size: 1, content: ExpressionContent::InvokeInstanceMethod(
+                            parameter_a.data_type.clone(),
+                            Box::new(Expression {
+                                size: 1,
+                                content: ExpressionContent::Variable(parameter_a.name),
+                            }),
+                            weight_norm_result.name,
+                            vec![]
+                        )}),
+                    )
+                }),
+            }]
         }
     }
 

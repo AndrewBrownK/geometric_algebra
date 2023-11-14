@@ -1189,6 +1189,18 @@ Scalar multi_vector_magnitude(MultiVector self) {
     return Scalar(sqrt(multi_vector_squared_magnitude(self).g0));
 }
 
+Scalar multi_vector_bulk_norm(MultiVector self) {
+    return Scalar(sqrt(multi_vector_squared_magnitude(self).g0));
+}
+
+AntiScalar multi_vector_squared_anti_magnitude(MultiVector self) {
+    return multi_vector_multi_vector_anti_scalar_product(self, multi_vector_anti_reversal(self));
+}
+
+AntiScalar multi_vector_weight_norm(MultiVector self) {
+    return AntiScalar(sqrt(multi_vector_squared_anti_magnitude(self).g0));
+}
+
 MultiVector multi_vector_scale(MultiVector self, float other) {
     return multi_vector_scalar_geometric_product(self, Scalar(other));
 }
@@ -1845,6 +1857,18 @@ Scalar point_magnitude(Point self) {
     return Scalar(sqrt(point_squared_magnitude(self).g0));
 }
 
+Scalar point_bulk_norm(Point self) {
+    return Scalar(sqrt(point_squared_magnitude(self).g0));
+}
+
+AntiScalar point_squared_anti_magnitude(Point self) {
+    return point_point_anti_scalar_product(self, point_anti_reversal(self));
+}
+
+AntiScalar point_weight_norm(Point self) {
+    return AntiScalar(sqrt(point_squared_anti_magnitude(self).g0));
+}
+
 Point point_scale(Point self, float other) {
     return point_scalar_geometric_product(self, Scalar(other));
 }
@@ -2425,6 +2449,18 @@ Scalar plane_magnitude(Plane self) {
     return Scalar(sqrt(plane_squared_magnitude(self).g0));
 }
 
+Scalar plane_bulk_norm(Plane self) {
+    return Scalar(sqrt(plane_squared_magnitude(self).g0));
+}
+
+AntiScalar plane_squared_anti_magnitude(Plane self) {
+    return plane_plane_anti_scalar_product(self, plane_anti_reversal(self));
+}
+
+AntiScalar plane_weight_norm(Plane self) {
+    return AntiScalar(sqrt(plane_squared_anti_magnitude(self).g0));
+}
+
 Plane plane_scale(Plane self, float other) {
     return plane_scalar_geometric_product(self, Scalar(other));
 }
@@ -2807,6 +2843,18 @@ Scalar line_squared_magnitude(Line self) {
 
 Scalar line_magnitude(Line self) {
     return Scalar(sqrt(line_squared_magnitude(self).g0));
+}
+
+Scalar line_bulk_norm(Line self) {
+    return Scalar(sqrt(line_squared_magnitude(self).g0));
+}
+
+AntiScalar line_squared_anti_magnitude(Line self) {
+    return line_line_anti_scalar_product(self, line_anti_reversal(self));
+}
+
+AntiScalar line_weight_norm(Line self) {
+    return AntiScalar(sqrt(line_squared_anti_magnitude(self).g0));
 }
 
 Line line_scale(Line self, float other) {
@@ -3207,6 +3255,18 @@ Scalar translator_squared_magnitude(Translator self) {
 
 Scalar translator_magnitude(Translator self) {
     return Scalar(sqrt(translator_squared_magnitude(self).g0));
+}
+
+Scalar translator_bulk_norm(Translator self) {
+    return Scalar(sqrt(translator_squared_magnitude(self).g0));
+}
+
+AntiScalar translator_squared_anti_magnitude(Translator self) {
+    return translator_translator_anti_scalar_product(self, translator_anti_reversal(self));
+}
+
+AntiScalar translator_weight_norm(Translator self) {
+    return AntiScalar(sqrt(translator_squared_anti_magnitude(self).g0));
 }
 
 Translator translator_scale(Translator self, float other) {
@@ -3733,6 +3793,18 @@ Scalar motor_magnitude(Motor self) {
     return Scalar(sqrt(motor_squared_magnitude(self).g0));
 }
 
+Scalar motor_bulk_norm(Motor self) {
+    return Scalar(sqrt(motor_squared_magnitude(self).g0));
+}
+
+AntiScalar motor_squared_anti_magnitude(Motor self) {
+    return motor_motor_anti_scalar_product(self, motor_anti_reversal(self));
+}
+
+AntiScalar motor_weight_norm(Motor self) {
+    return AntiScalar(sqrt(motor_squared_anti_magnitude(self).g0));
+}
+
 Motor motor_scale(Motor self, float other) {
     return motor_scalar_geometric_product(self, Scalar(other));
 }
@@ -4091,6 +4163,18 @@ Scalar point_and_plane_squared_magnitude(PointAndPlane self) {
 
 Scalar point_and_plane_magnitude(PointAndPlane self) {
     return Scalar(sqrt(point_and_plane_squared_magnitude(self).g0));
+}
+
+Scalar point_and_plane_bulk_norm(PointAndPlane self) {
+    return Scalar(sqrt(point_and_plane_squared_magnitude(self).g0));
+}
+
+AntiScalar point_and_plane_squared_anti_magnitude(PointAndPlane self) {
+    return point_and_plane_point_and_plane_anti_scalar_product(self, point_and_plane_anti_reversal(self));
+}
+
+AntiScalar point_and_plane_weight_norm(PointAndPlane self) {
+    return AntiScalar(sqrt(point_and_plane_squared_anti_magnitude(self).g0));
 }
 
 PointAndPlane point_and_plane_scale(PointAndPlane self, float other) {

@@ -224,8 +224,37 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
             emitter.emit(&squared_magnitude).unwrap();
             let magnitude = MultiVectorClass::derive_magnitude("Magnitude", &squared_magnitude, &parameter_a);
             emitter.emit(&magnitude).unwrap();
+
+            let bulk_norm = MultiVectorClass::derive_magnitude("BulkNorm", &squared_magnitude, &parameter_a);
+
             single_trait_implementations.insert(result_of_trait!(squared_magnitude).name.to_string(), squared_magnitude);
             single_trait_implementations.insert(result_of_trait!(magnitude).name.to_string(), magnitude);
+
+            let (anti_scalar_product, anti_reversal) = match (pair_trait_implementations.get("AntiScalarProduct"), single_trait_implementations.get("AntiReversal")) {
+                (Some(sp), Some(r)) => (sp, r),
+                (_, _) => continue,
+            };
+
+            emitter.emit(&bulk_norm).unwrap();
+            let squared_anti_magnitude = MultiVectorClass::derive_squared_magnitude("SquaredAntiMagnitude", anti_scalar_product, anti_reversal, &parameter_a);
+            emitter.emit(&squared_anti_magnitude).unwrap();
+            let weight_norm = MultiVectorClass::derive_magnitude("WeightNorm", &squared_anti_magnitude, &parameter_a);
+            emitter.emit(&weight_norm).unwrap();
+
+            let geometric_norm = MultiVectorClass::derive_geometric_norm("GeometricNorm", &bulk_norm, &weight_norm, &registry, &parameter_a);
+            emitter.emit(&geometric_norm).unwrap();
+
+            single_trait_implementations.insert(result_of_trait!(bulk_norm).name.to_string(), bulk_norm);
+            single_trait_implementations.insert(result_of_trait!(squared_anti_magnitude).name.to_string(), squared_anti_magnitude);
+            single_trait_implementations.insert(result_of_trait!(weight_norm).name.to_string(), weight_norm);
+            match &geometric_norm {
+                AstNode::TraitImplementation { ref result, .. } => {
+                    single_trait_implementations.insert(result.name.to_string(), geometric_norm);
+                },
+                _ => {}
+            }
+
+            // TODO unitize operation
         }
 
         // Can implement even more traits using existing traits

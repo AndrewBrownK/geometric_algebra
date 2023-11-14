@@ -116,6 +116,8 @@ fn cga_basics() {
     // Flector?
     
     let flector = flat_point_b + plane_abc1;
+
+    // TODO dilation?
 }
 
 
