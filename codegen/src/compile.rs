@@ -211,7 +211,6 @@ impl MultiVectorClass {
         let a_flat_basis = parameter_a.multi_vector_class().flat_basis();
         let mut result_signature = Vec::new();
         for a_element in a_flat_basis.iter() {
-            // TODO involution terms (working towards "norm" involutions)
             for (in_element, out_element) in involution.terms.iter() {
                 if in_element.index == a_element.index {
                     result_signature.push(out_element.index);
@@ -220,7 +219,6 @@ impl MultiVectorClass {
             }
         }
         if project {
-            // TODO involution terms (working towards "norm" involutions)
             for (in_element, _out_element) in involution.terms.iter() {
                 if !a_flat_basis.iter().any(|element| element.index == in_element.index) {
                     return AstNode::None;
@@ -237,13 +235,11 @@ impl MultiVectorClass {
                 let (factors, a_indices): (Vec<_>, Vec<_>) = (0..size)
                     .map(|index_in_group| {
                         let result_element = &result_flat_basis[base_index + index_in_group];
-                        // TODO involution terms (working towards "norm" involutions)
                         let involution_element = involution
                             .terms
                             .iter()
                             .position(|(_in_element, out_element)| out_element.index == result_element.index)
                             .unwrap();
-                        // TODO involution terms (working towards "norm" involutions)
                         let (in_element, out_element) = &involution.terms[involution_element];
                         let index_in_a = a_flat_basis.iter().position(|a_element| a_element.index == in_element.index).unwrap();
                         (

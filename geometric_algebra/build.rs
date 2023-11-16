@@ -3,14 +3,6 @@ use::codegen;
 fn main() {
 
     let algebras = [
-        // TODO
-        //  - The first thing you should take note of is that in "ppga3d:0,1,1,1" the projective
-        //    dimensions is e0, while I am accustomed to the projective dimension being e4.
-        //  - The second thing to notice then, is that this might actually be representing the
-        //    duals of geometric objects, instead of the objects themselves. See exposition here:
-        //    http://rigidgeometricalgebra.org/wiki/index.php?title=Duality
-        //    And the formula for the dual listed here:
-        //    https://conformalgeometricalgebra.org/wiki/index.php?title=Plane
         "epga1d:1,1;Scalar:1;ComplexNumber:1,e01",
         "ppga1d:0,1;Scalar:1;DualNumber:1,e01",
         "hpga1d:-1,1;Scalar:1;SplitComplexNumber:1,e01",
@@ -24,22 +16,6 @@ fn main() {
         // TODO implementing conformal might not be straightforward, but here is an idea
         //  It might not work as raw [1,1,1,1,-1] since e+ and e- get treated weird to arrive at e4 and e5
         //  However maybe we can do [1,1,1,0,0] and hack in the proper behaviors where applicable
-        //  Namely, the following traits (search "<MultiVector> for MultiVector"):
-        //   - OuterProduct
-        //   - SquaredMagnitude?
-        //   - any projection-like products?
-        //   - add some traits: Carrier, AntiCarrier, Center, Round/Flat Bulk/Weight, Container, etc
-
-        // TODO I FIGURED OUT THE WEIRD ORDERING/GROUPING OF COMPONENTS!!!
-        //  Look at epga3d MultiVectorGroups for example... and then look at the dot product table,
-        //  and the implementation of InnerProduct<MultiVector> for MultiVector.
-        //  I'll have to see if this is an optional optimization choice (and the algebra can
-        //  still figure itself out even if you do not follow this pattern) or if this grouping
-        //  pattern is really required.
-        //  Okay actually on second thought... I'm not as immediately sure. The implementation
-        //  of InnerProduct is more complex that I first realized. Which could be a good thing...
-        //  in that it is actually doing what it is supposed to instead of making unclear
-        //  assumptions about the grouping pattern. Let's see....
         "cga3d:1,1,1,0,0;\
             Scalar:1;\
             AntiScalar:e01234;\

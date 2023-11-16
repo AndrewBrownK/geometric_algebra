@@ -188,15 +188,6 @@ impl Involution {
                 let anti_grade = dimensions - grade;
                 anti_grade % 4 >= 2
             })),
-
-            // TODO
-            // ("BulkNorm", involution.dual(algebra)),
-            // ("WeightNorm", involution.dual(algebra)),
-            // ("GeometricNorm", involution.dual(algebra)),
-            //
-            // ("RoundBulkNorm", involution.dual(algebra)),
-            // ("RoundWeightNorm", involution.dual(algebra)),
-            // ("RoundGeometricNorm", involution.dual(algebra)),
         ]
     }
 }
@@ -208,7 +199,6 @@ pub struct ProductTerm {
     pub factor_b: BasisElement,
 }
 
-// TODO actually CGA hack might be here
 #[derive(Clone)]
 pub struct Product {
     pub terms: Vec<ProductTerm>,
@@ -266,8 +256,6 @@ impl Product {
             ("GeometricProduct", product.clone()),
             ("RegressiveProduct", product.projected(|r, s, t| t == r + s).dual(algebra)),
             ("OuterProduct", product.projected(|r, s, t| t == r + s)),
-            // TODO actually.... might be best to not represent norms as involutions? Anything with a a dot product should have a norm,
-            //  because the norm is the square root of the dot product. So I should use that instead (of involutions).
             ("InnerProduct", product.projected(|r, s, t| t == (r as isize - s as isize).unsigned_abs())),
 
             ("GeometricAntiProduct", product.clone().dual(algebra)),

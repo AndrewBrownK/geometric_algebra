@@ -275,7 +275,6 @@ pub trait GeometricQuotient<T> {
 
 /// Dual of the geometric product grade filtered by `t == r + s`
 ///
-/// TODO sort out if the following line is accurate:
 /// Also called meet, anti-wedge, or exterior anti-product
 pub trait RegressiveProduct<T> {
     type Output;
@@ -297,7 +296,6 @@ impl<I, T> Meet<T> for I where I: RegressiveProduct<T> {
 
 /// Geometric product grade filtered by `t == r + s`
 ///
-/// TODO sort out if the following line is accurate:
 /// Also called join, wedge, or exterior product
 pub trait OuterProduct<T> {
     type Output;
@@ -330,7 +328,8 @@ pub trait DotProduct<T>: InnerProduct<T> {
 impl<I, T> DotProduct<T> for I where I: InnerProduct<T> {
     fn dot(self, other: T) -> Self::Output { self.inner_product(other) }
 }
-// TODO generate implementations
+
+
 /// Geometric product grade filtered by `t == (r - s).abs()`
 ///
 /// Also called fat anti-dot product
@@ -360,7 +359,6 @@ pub trait RightContraction<T> {
     fn right_contraction(self, other: T) -> Self::Output;
 }
 
-// TODO generate implementations
 /// Geometric product grade filtered by `t == s - r`
 /// http://rigidgeometricalgebra.org/wiki/index.php?title=Interior_products
 pub trait LeftAntiContraction<T> {
@@ -368,7 +366,6 @@ pub trait LeftAntiContraction<T> {
     fn left_anti_contraction(self, other: T) -> Self::Output;
 }
 
-// TODO generate implementations
 /// Geometric product grade filtered by `t == r - s`
 /// http://rigidgeometricalgebra.org/wiki/index.php?title=Interior_products
 pub trait RightAntiContraction<T> {
@@ -537,12 +534,13 @@ pub trait RoundWeight {
 // TODO generate implementations
 /// Euclidean distance between objects
 /// http://rigidgeometricalgebra.org/wiki/index.php?title=Euclidean_distance
+/// distance(a,b) = bulk_norm(attitude(a wedge b)) + weight_norm(a wedge attitude(b))
+/// where attitude(c) = c anti_wedge complement(e4) where e4 is the projective dimension
 pub trait Distance<T> {
     type Output;
     fn distance(self, other: T) -> Self::Output;
 }
 
-// TODO generate implementations
 /// Unitization
 /// http://rigidgeometricalgebra.org/wiki/index.php?title=Unitization
 pub trait Unitize {

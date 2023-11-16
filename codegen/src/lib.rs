@@ -128,8 +128,6 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
         emitter.emit(&AstNode::ClassDefinition { class }).unwrap();
     }
 
-    // TODO CGA hacks are probably in one or both of the following for loops
-
     let mut trait_implementations = std::collections::BTreeMap::new();
     for class_a in registry.classes.iter() {
         let parameter_a = Parameter {
@@ -147,9 +145,8 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
         // TODO for some reason not all involutions are being output for CGA,
         //  for example search "impl Dual" in cga3d.rs vs ppga3d.rs.
         //  This is strange because some involutions are written, like Reversal.
-        //  I am wondering if this is because of the extra dimension e0. Sheesh.
+        //  I am wondering if this is because of the extra projective dimension. Sheesh.
         for (name, involution) in involutions.iter() {
-            // TODO there is a bug here (glsl) where Dual of Sphere tries to access a vector element on a raw (non-vector) float
             let ast_node = MultiVectorClass::involution(name, involution, &parameter_a, &registry, false);
             emitter.emit(&ast_node).unwrap();
             if ast_node != AstNode::None {
@@ -193,7 +190,7 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
             //  So far it only exists for round objects, and does not output the object its transforming
             //  You can see from this source that multiplying by e5 is the correct idea
             //  https://conformalgeometricalgebra.com/wiki/index.php?title=Translation
-            //  So I bet it is my extra e0 that is throwing things off
+            //  So I bet it is my extra projective is throwing things off
             for (name, product) in products.iter() {
                 let ast_node = MultiVectorClass::product(name, product, &parameter_a, &parameter_b, &registry);
                 emitter.emit(&ast_node).unwrap();
@@ -253,24 +250,6 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
                 },
                 _ => {}
             }
-
-            // TODO unitize operation
-
-            // TODO also when it comes to CGA I am only seeing Norms for round objects, I need
-            //  to figure out how to have both flat and round norms. Hmm... It seems to start
-            //  with the fact I'm not getting enough AntiScalarProduct implementations.
-            //  You can look at the orange boxes here https://conformalgeometricalgebra.com/wiki/index.php?title=Geometric_products
-            //  and see that a RadialPoint should anti_scalar_product with itself, but the code generation
-            //  is not giving us that implementation. I'm wondering if this could be due to the
-            //  G(4,1) vs G(3,0,2) distinction. hmmm.. you could check ppga3d...
-            //  ....huh... yeah there is both ScalarProduct and AntiScalarProduct for Point against itself in ppga3d.
-            //  Hmm.. and in CGA current impl there is ScalarProduct for RadialPoint on itself, and
-            //  AntiScalarProduct for FlatPoint on itself, but not vice versa.
-            //  Oh right ppga3d doesn't use the same objects to mean point as I am in cga3d...
-            //  Okay so let's make an "rga3d" that follows the conventions we actually expect.
-            //  Okay confirmed in rga3d that Point has both ScalarProduct and AntiScalarProduct with itself.
-            //  hmmm... rga3d does not have a BulkNorm for Rotor... because all terms have the projective element...
-            //  I guess that makes sense.... but couldn't it be just as well that I want to invoke "bulk_norm" and get a zero?
         }
 
         // Can implement even more traits using existing traits
