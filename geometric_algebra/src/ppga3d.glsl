@@ -1213,6 +1213,10 @@ MultiVector multi_vector_inverse(MultiVector self) {
     return multi_vector_scalar_geometric_product(multi_vector_reversal(self), Scalar(1.0 / multi_vector_squared_magnitude(self).g0));
 }
 
+MultiVector multi_vector_unitize(MultiVector self) {
+    return multi_vector_scalar_geometric_product(self, Scalar(1.0 / multi_vector_weight_norm(self).g0));
+}
+
 Rotor rotor_zero() {
     return Rotor(vec4(0.0));
 }
@@ -1881,6 +1885,10 @@ Point point_inverse(Point self) {
     return point_scalar_geometric_product(point_reversal(self), Scalar(1.0 / point_squared_magnitude(self).g0));
 }
 
+Point point_unitize(Point self) {
+    return point_scalar_geometric_product(self, Scalar(1.0 / point_weight_norm(self).g0));
+}
+
 IdealPoint ideal_point_zero() {
     return IdealPoint(vec3(0.0));
 }
@@ -2473,6 +2481,10 @@ Plane plane_inverse(Plane self) {
     return plane_scalar_geometric_product(plane_reversal(self), Scalar(1.0 / plane_squared_magnitude(self).g0));
 }
 
+Plane plane_unitize(Plane self) {
+    return plane_scalar_geometric_product(self, Scalar(1.0 / plane_weight_norm(self).g0));
+}
+
 Line line_zero() {
     return Line(vec3(0.0), vec3(0.0));
 }
@@ -2867,6 +2879,10 @@ Line line_signum(Line self) {
 
 Line line_inverse(Line self) {
     return line_scalar_geometric_product(line_reversal(self), Scalar(1.0 / line_squared_magnitude(self).g0));
+}
+
+Line line_unitize(Line self) {
+    return line_scalar_geometric_product(self, Scalar(1.0 / line_weight_norm(self).g0));
 }
 
 Translator translator_zero() {
@@ -3279,6 +3295,10 @@ Translator translator_signum(Translator self) {
 
 Translator translator_inverse(Translator self) {
     return translator_scalar_geometric_product(translator_reversal(self), Scalar(1.0 / translator_squared_magnitude(self).g0));
+}
+
+Translator translator_unitize(Translator self) {
+    return translator_scalar_geometric_product(self, Scalar(1.0 / translator_weight_norm(self).g0));
 }
 
 Motor motor_zero() {
@@ -3817,6 +3837,10 @@ Motor motor_inverse(Motor self) {
     return motor_scalar_geometric_product(motor_reversal(self), Scalar(1.0 / motor_squared_magnitude(self).g0));
 }
 
+Motor motor_unitize(Motor self) {
+    return motor_scalar_geometric_product(self, Scalar(1.0 / motor_weight_norm(self).g0));
+}
+
 PointAndPlane point_and_plane_zero() {
     return PointAndPlane(vec4(0.0), vec4(0.0));
 }
@@ -4187,6 +4211,10 @@ PointAndPlane point_and_plane_signum(PointAndPlane self) {
 
 PointAndPlane point_and_plane_inverse(PointAndPlane self) {
     return point_and_plane_scalar_geometric_product(point_and_plane_reversal(self), Scalar(1.0 / point_and_plane_squared_magnitude(self).g0));
+}
+
+PointAndPlane point_and_plane_unitize(PointAndPlane self) {
+    return point_and_plane_scalar_geometric_product(self, Scalar(1.0 / point_and_plane_weight_norm(self).g0));
 }
 
 IdealPoint anti_scalar_line_geometric_quotient(AntiScalar self, Line other) {

@@ -1576,6 +1576,10 @@ HomogeneousMagnitude homogeneous_magnitude_inverse(HomogeneousMagnitude self) {
     return homogeneous_magnitude_scalar_geometric_product(homogeneous_magnitude_reversal(self), Scalar(1.0 / homogeneous_magnitude_squared_magnitude(self).g0));
 }
 
+HomogeneousMagnitude homogeneous_magnitude_unitize(HomogeneousMagnitude self) {
+    return homogeneous_magnitude_scalar_geometric_product(self, Scalar(1.0 / homogeneous_magnitude_weight_norm(self).g0));
+}
+
 RadialPoint radial_point_zero() {
     return RadialPoint(vec3(0.0), vec2(0.0));
 }
@@ -2560,6 +2564,10 @@ Dipole dipole_inverse(Dipole self) {
     return dipole_scalar_geometric_product(dipole_reversal(self), Scalar(1.0 / dipole_squared_magnitude(self).g0));
 }
 
+Dipole dipole_unitize(Dipole self) {
+    return dipole_scalar_geometric_product(self, Scalar(1.0 / dipole_weight_norm(self).g0));
+}
+
 Line line_zero() {
     return Line(vec3(0.0), vec3(0.0));
 }
@@ -3234,6 +3242,10 @@ Circle circle_signum(Circle self) {
 
 Circle circle_inverse(Circle self) {
     return circle_scalar_geometric_product(circle_reversal(self), Scalar(1.0 / circle_squared_magnitude(self).g0));
+}
+
+Circle circle_unitize(Circle self) {
+    return circle_scalar_geometric_product(self, Scalar(1.0 / circle_weight_norm(self).g0));
 }
 
 Plane plane_zero() {
@@ -5584,6 +5596,10 @@ Dilation dilation_inverse(Dilation self) {
     return dilation_scalar_geometric_product(dilation_reversal(self), Scalar(1.0 / dilation_squared_magnitude(self).g0));
 }
 
+Dilation dilation_unitize(Dilation self) {
+    return dilation_scalar_geometric_product(self, Scalar(1.0 / dilation_weight_norm(self).g0));
+}
+
 MultiVector multi_vector_zero() {
     return MultiVector(vec3(0.0), vec3(0.0), vec2(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0));
 }
@@ -6150,6 +6166,10 @@ MultiVector multi_vector_signum(MultiVector self) {
 
 MultiVector multi_vector_inverse(MultiVector self) {
     return multi_vector_scalar_geometric_product(multi_vector_reversal(self), Scalar(1.0 / multi_vector_squared_magnitude(self).g0));
+}
+
+MultiVector multi_vector_unitize(MultiVector self) {
+    return multi_vector_scalar_geometric_product(self, Scalar(1.0 / multi_vector_weight_norm(self).g0));
 }
 
 AntiScalar anti_scalar_homogeneous_magnitude_geometric_quotient(AntiScalar self, HomogeneousMagnitude other) {

@@ -3163,6 +3163,14 @@ impl Inverse for HomogeneousMagnitude {
     }
 }
 
+impl Unitize for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn unitize(self) -> HomogeneousMagnitude {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
+    }
+}
+
 impl Zero for Point {
     fn zero() -> Self {
         Point { groups: PointGroups { g0: Simd32x4::from(0.0) } }
@@ -3860,6 +3868,14 @@ impl Inverse for Point {
 
     fn inverse(self) -> Point {
         self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
+impl Unitize for Point {
+    type Output = Point;
+
+    fn unitize(self) -> Point {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
     }
 }
 
@@ -4659,6 +4675,14 @@ impl Inverse for Line {
     }
 }
 
+impl Unitize for Line {
+    type Output = Line;
+
+    fn unitize(self) -> Line {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
+    }
+}
+
 impl Zero for Plane {
     fn zero() -> Self {
         Plane { groups: PlaneGroups { g0: Simd32x4::from(0.0) } }
@@ -5348,6 +5372,14 @@ impl Inverse for Plane {
 
     fn inverse(self) -> Plane {
         self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
+impl Unitize for Plane {
+    type Output = Plane;
+
+    fn unitize(self) -> Plane {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
     }
 }
 
@@ -6184,6 +6216,14 @@ impl Inverse for Motor {
 
     fn inverse(self) -> Motor {
         self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
+impl Unitize for Motor {
+    type Output = Motor;
+
+    fn unitize(self) -> Motor {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
     }
 }
 
@@ -7583,6 +7623,14 @@ impl Inverse for Translator {
     }
 }
 
+impl Unitize for Translator {
+    type Output = Translator;
+
+    fn unitize(self) -> Translator {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
+    }
+}
+
 impl Zero for Flector {
     fn zero() -> Self {
         Flector { groups: FlectorGroups { g0: Simd32x4::from(0.0), g1: Simd32x4::from(0.0) } }
@@ -8380,6 +8428,14 @@ impl Inverse for Flector {
 
     fn inverse(self) -> Flector {
         self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
+impl Unitize for Flector {
+    type Output = Flector;
+
+    fn unitize(self) -> Flector {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
     }
 }
 

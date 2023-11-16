@@ -698,30 +698,74 @@ impl MultiVectorClass {
         }
     }
 
-    // pub fn derive_unitize<'a>(
-    //     name: &'static str,
-    //     weight_norm: &AstNode<'a>,
-    //     parameter_a: &Parameter<'a>,
-    // ) -> AstNode<'a> {
-    //     AstNode::TraitImplementation {
-    //         result: parameter_a.clone(),
-    //         parameters: vec![parameter_a.clone()],
-    //         body: vec![AstNode::ReturnStatement {
-    //             expression: Box::new(Expression {
-    //                 size: 1,
-    //                 content: ExpressionContent::InvokeInstanceMethod(
-    //                     parameter_a.data_type.clone(),
-    //                     Box::new(Expression {
-    //                         size: 1,
-    //                         content: ExpressionContent::Variable(parameter_a.name),
-    //                     }),
-    //                     // TODO how do I even divide a multivector by an antiscalar?
-    //
-    //                 )
-    //             }),
-    //         }],
-    //     }
-    // }
+    pub fn derive_unitize<'a>(
+        name: &'static str,
+        geometric_product: &AstNode<'a>,
+        weight_norm: &AstNode<'a>,
+        parameter_a: &Parameter<'a>,
+        parameter_b: &Parameter<'a>,
+    ) -> AstNode<'a> {
+        let geometric_product_result = result_of_trait!(geometric_product);
+        let weight_norm_result = result_of_trait!(weight_norm);
+        AstNode::TraitImplementation {
+            result: Parameter { name, data_type: geometric_product_result.data_type.clone() },
+            parameters: vec![parameter_a.clone()],
+            body: vec![AstNode::ReturnStatement {
+                expression: Box::new(Expression {
+                    size: 1,
+                    content: ExpressionContent::InvokeInstanceMethod(
+                        parameter_a.data_type.clone(),
+                        Box::new(Expression {
+                            size: 1,
+                            content: ExpressionContent::Variable(parameter_a.name),
+                        }),
+                        geometric_product_result.name,
+                        vec![(
+                            DataType::MultiVector(parameter_b.multi_vector_class()),
+                            Expression {
+                                size: 1,
+                                content: ExpressionContent::InvokeClassMethod(
+                                    parameter_b.multi_vector_class(),
+                                    "Constructor",
+                                    vec![(
+                                        DataType::SimdVector(1),
+                                        Expression {
+                                            size: 1,
+                                            content: ExpressionContent::Divide(
+                                                Box::new(Expression {
+                                                    size: 1,
+                                                    content: ExpressionContent::Constant(DataType::SimdVector(1), vec![1]),
+                                                }),
+                                                Box::new(Expression {
+                                                    size: 1,
+                                                    content: ExpressionContent::Access(
+                                                        Box::new(Expression {
+                                                            size: 1,
+                                                            content: ExpressionContent::InvokeInstanceMethod(
+                                                                parameter_a.data_type.clone(),
+                                                                Box::new(Expression {
+                                                                    size: 1,
+                                                                    content: ExpressionContent::Variable(parameter_a.name),
+                                                                }),
+                                                                weight_norm_result.name,
+                                                                vec![],
+                                                            ),
+                                                        }),
+                                                        0,
+                                                    ),
+                                                }),
+                                            ),
+                                        },
+                                    )],
+                                ),
+                            },
+
+                        )]
+                    )
+                }),
+            }],
+        }
+    }
 
     pub fn derive_scale<'a>(
         name: &'static str,

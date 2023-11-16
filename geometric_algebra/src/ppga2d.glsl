@@ -1166,6 +1166,10 @@ MultiVector multi_vector_inverse(MultiVector self) {
     return multi_vector_scalar_geometric_product(multi_vector_reversal(self), Scalar(1.0 / multi_vector_squared_magnitude(self).g0));
 }
 
+MultiVector multi_vector_unitize(MultiVector self) {
+    return multi_vector_scalar_geometric_product(self, Scalar(1.0 / multi_vector_weight_norm(self).g0));
+}
+
 Rotor rotor_zero() {
     return Rotor(vec2(0.0));
 }
@@ -1930,6 +1934,10 @@ Point point_inverse(Point self) {
     return point_scalar_geometric_product(point_reversal(self), Scalar(1.0 / point_squared_magnitude(self).g0));
 }
 
+Point point_unitize(Point self) {
+    return point_scalar_geometric_product(self, Scalar(1.0 / point_weight_norm(self).g0));
+}
+
 IdealPoint ideal_point_zero() {
     return IdealPoint(vec2(0.0));
 }
@@ -2626,6 +2634,10 @@ Plane plane_inverse(Plane self) {
     return plane_scalar_geometric_product(plane_reversal(self), Scalar(1.0 / plane_squared_magnitude(self).g0));
 }
 
+Plane plane_unitize(Plane self) {
+    return plane_scalar_geometric_product(self, Scalar(1.0 / plane_weight_norm(self).g0));
+}
+
 Translator translator_zero() {
     return Translator(vec3(0.0));
 }
@@ -3060,6 +3072,10 @@ Translator translator_signum(Translator self) {
 
 Translator translator_inverse(Translator self) {
     return translator_scalar_geometric_product(translator_reversal(self), Scalar(1.0 / translator_squared_magnitude(self).g0));
+}
+
+Translator translator_unitize(Translator self) {
+    return translator_scalar_geometric_product(self, Scalar(1.0 / translator_weight_norm(self).g0));
 }
 
 Motor motor_zero() {
@@ -3532,6 +3548,10 @@ Motor motor_signum(Motor self) {
 
 Motor motor_inverse(Motor self) {
     return motor_scalar_geometric_product(motor_reversal(self), Scalar(1.0 / motor_squared_magnitude(self).g0));
+}
+
+Motor motor_unitize(Motor self) {
+    return motor_scalar_geometric_product(self, Scalar(1.0 / motor_weight_norm(self).g0));
 }
 
 MotorDual motor_dual_zero() {
@@ -4012,6 +4032,10 @@ MotorDual motor_dual_signum(MotorDual self) {
 
 MotorDual motor_dual_inverse(MotorDual self) {
     return motor_dual_scalar_geometric_product(motor_dual_reversal(self), Scalar(1.0 / motor_dual_squared_magnitude(self).g0));
+}
+
+MotorDual motor_dual_unitize(MotorDual self) {
+    return motor_dual_scalar_geometric_product(self, Scalar(1.0 / motor_dual_weight_norm(self).g0));
 }
 
 IdealPoint anti_scalar_motor_dual_geometric_quotient(AntiScalar self, MotorDual other) {

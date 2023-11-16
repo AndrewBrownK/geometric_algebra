@@ -546,7 +546,8 @@ pub trait Distance<T> {
 /// Unitization
 /// http://rigidgeometricalgebra.org/wiki/index.php?title=Unitization
 pub trait Unitize {
-    fn unitize(self) -> Self;
+    type Output;
+    fn unitize(self) -> Self::Output;
 }
 
 

@@ -4373,6 +4373,14 @@ impl Inverse for HomogeneousMagnitude {
     }
 }
 
+impl Unitize for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn unitize(self) -> HomogeneousMagnitude {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
+    }
+}
+
 impl Zero for RadialPoint {
     fn zero() -> Self {
         RadialPoint { groups: RadialPointGroups { g0: Simd32x3::from(0.0), g1: Simd32x2::from(0.0) } }
@@ -6411,6 +6419,14 @@ impl Inverse for Dipole {
     }
 }
 
+impl Unitize for Dipole {
+    type Output = Dipole;
+
+    fn unitize(self) -> Dipole {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
+    }
+}
+
 impl Zero for Line {
     fn zero() -> Self {
         Line { groups: LineGroups { g0: Simd32x3::from(0.0), g1: Simd32x3::from(0.0) } }
@@ -7810,6 +7826,14 @@ impl Inverse for Circle {
 
     fn inverse(self) -> Circle {
         self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
+impl Unitize for Circle {
+    type Output = Circle;
+
+    fn unitize(self) -> Circle {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
     }
 }
 
@@ -12749,6 +12773,14 @@ impl Inverse for Dilation {
     }
 }
 
+impl Unitize for Dilation {
+    type Output = Dilation;
+
+    fn unitize(self) -> Dilation {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
+    }
+}
+
 impl Zero for MultiVector {
     fn zero() -> Self {
         MultiVector { groups: MultiVectorGroups { g0: Simd32x3::from(0.0), g1: Simd32x3::from(0.0), g2: Simd32x2::from(0.0), g3: Simd32x4::from(0.0), g4: Simd32x3::from(0.0), g5: Simd32x3::from(0.0), g6: Simd32x3::from(0.0), g7: Simd32x3::from(0.0), g8: Simd32x4::from(0.0), g9: Simd32x4::from(0.0) } }
@@ -14040,6 +14072,14 @@ impl Inverse for MultiVector {
 
     fn inverse(self) -> MultiVector {
         self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
+impl Unitize for MultiVector {
+    type Output = MultiVector;
+
+    fn unitize(self) -> MultiVector {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
     }
 }
 

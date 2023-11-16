@@ -97,7 +97,6 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
                     collector.write_all(b", ")?;
                 }
                 emit_expression(collector, inner_expression)?;
-                // TODO RIGHT HERE actually
                 collector.write_fmt(format_args!(".g{}", array_index))?;
                 if inner_expression.size > 1 {
                     collector.write_fmt(format_args!(".{}", COMPONENT[*component_index]))?;

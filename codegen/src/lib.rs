@@ -280,7 +280,7 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
                 continue;
             }
 
-            // If this type has a GeometricProduct with e0, then we can implement some extra stuff
+            // If this type has a GeometricProduct with scalar, then we can implement some extra stuff
             let geometric_product = match pair_trait_implementations.get("GeometricProduct") {
                 Some(gp) => gp,
                 None => continue,
@@ -304,6 +304,38 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
                     emitter.emit(&inverse).unwrap();
                     single_trait_implementations.insert(result_of_trait!(inverse).name.to_string(), inverse);
                 }
+            }
+        }
+
+
+        // Can implement even more traits using existing traits
+        for (parameter_b, pair_trait_implementations) in pair_trait_implementations.values() {
+
+            if parameter_b.multi_vector_class().grouped_basis != vec![vec![BasisElement::from_index(0)]] {
+                continue;
+            }
+
+            // if parameter_b.multi_vector_class().grouped_basis.len() != 1 {
+            //     continue;
+            // }
+            // if parameter_b.multi_vector_class().grouped_basis[0].len() < algebra.generator_squares.len() {
+            //     continue;
+            // }
+
+            // If this type has a GeometricProduct with scalar, then we can implement some extra stuff
+            let geometric_product = match pair_trait_implementations.get("GeometricProduct") {
+                Some(gp) => gp,
+                None => continue,
+            };
+
+            // if result_of_trait!(geometric_product).multi_vector_class() != parameter_a.multi_vector_class() {
+            //     continue;
+            // }
+
+            if let Some(weight_norm) = single_trait_implementations.get("WeightNorm") {
+                let unitize = MultiVectorClass::derive_unitize("Unitize", geometric_product, weight_norm, &parameter_a, &parameter_b);
+                emitter.emit(&unitize).unwrap();
+                single_trait_implementations.insert(result_of_trait!(unitize).name.to_string(), unitize);
             }
         }
 

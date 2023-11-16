@@ -1661,6 +1661,14 @@ impl Inverse for Scalar {
     }
 }
 
+impl Unitize for Scalar {
+    type Output = Scalar;
+
+    fn unitize(self) -> Scalar {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
+    }
+}
+
 impl Zero for AntiScalar {
     fn zero() -> Self {
         AntiScalar { groups: AntiScalarGroups { g0: 0.0 } }
@@ -2510,6 +2518,14 @@ impl Inverse for AntiScalar {
 
     fn inverse(self) -> AntiScalar {
         self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
+impl Unitize for AntiScalar {
+    type Output = AntiScalar;
+
+    fn unitize(self) -> AntiScalar {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
     }
 }
 
@@ -3671,6 +3687,14 @@ impl Inverse for MultiVector {
     }
 }
 
+impl Unitize for MultiVector {
+    type Output = MultiVector;
+
+    fn unitize(self) -> MultiVector {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
+    }
+}
+
 impl Zero for Rotor {
     fn zero() -> Self {
         Rotor { groups: RotorGroups { g0: Simd32x2::from(0.0) } }
@@ -4602,6 +4626,14 @@ impl Inverse for Rotor {
 
     fn inverse(self) -> Rotor {
         self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
+impl Unitize for Rotor {
+    type Output = Rotor;
+
+    fn unitize(self) -> Rotor {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
     }
 }
 
@@ -5643,6 +5675,14 @@ impl Inverse for Point {
     }
 }
 
+impl Unitize for Point {
+    type Output = Point;
+
+    fn unitize(self) -> Point {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
+    }
+}
+
 impl Zero for IdealPoint {
     fn zero() -> Self {
         IdealPoint { groups: IdealPointGroups { g0: Simd32x2::from(0.0) } }
@@ -6484,6 +6524,14 @@ impl Inverse for IdealPoint {
 
     fn inverse(self) -> IdealPoint {
         self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
+impl Unitize for IdealPoint {
+    type Output = IdealPoint;
+
+    fn unitize(self) -> IdealPoint {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
     }
 }
 
@@ -7400,6 +7448,14 @@ impl Inverse for Plane {
 
     fn inverse(self) -> Plane {
         self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
+impl Unitize for Plane {
+    type Output = Plane;
+
+    fn unitize(self) -> Plane {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
     }
 }
 
@@ -8432,6 +8488,14 @@ impl Inverse for Translator {
 
     fn inverse(self) -> Translator {
         self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
+impl Unitize for Translator {
+    type Output = Translator;
+
+    fn unitize(self) -> Translator {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
     }
 }
 
@@ -9641,6 +9705,14 @@ impl Inverse for Motor {
     }
 }
 
+impl Unitize for Motor {
+    type Output = Motor;
+
+    fn unitize(self) -> Motor {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
+    }
+}
+
 impl Zero for MotorDual {
     fn zero() -> Self {
         MotorDual { groups: MotorDualGroups { g0: Simd32x4::from(0.0) } }
@@ -10718,6 +10790,14 @@ impl Inverse for MotorDual {
 
     fn inverse(self) -> MotorDual {
         self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
+impl Unitize for MotorDual {
+    type Output = MotorDual;
+
+    fn unitize(self) -> MotorDual {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
     }
 }
 

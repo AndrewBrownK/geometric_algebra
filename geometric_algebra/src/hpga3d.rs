@@ -1846,6 +1846,14 @@ impl Inverse for Scalar {
     }
 }
 
+impl Unitize for Scalar {
+    type Output = Scalar;
+
+    fn unitize(self) -> Scalar {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
+    }
+}
+
 impl Zero for AntiScalar {
     fn zero() -> Self {
         AntiScalar { groups: AntiScalarGroups { g0: 0.0 } }
@@ -2735,6 +2743,14 @@ impl Inverse for AntiScalar {
 
     fn inverse(self) -> AntiScalar {
         self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
+impl Unitize for AntiScalar {
+    type Output = AntiScalar;
+
+    fn unitize(self) -> AntiScalar {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
     }
 }
 
@@ -3946,6 +3962,14 @@ impl Inverse for MultiVector {
     }
 }
 
+impl Unitize for MultiVector {
+    type Output = MultiVector;
+
+    fn unitize(self) -> MultiVector {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
+    }
+}
+
 impl Zero for Rotor {
     fn zero() -> Self {
         Rotor { groups: RotorGroups { g0: Simd32x4::from(0.0) } }
@@ -4824,6 +4848,14 @@ impl Inverse for Rotor {
     }
 }
 
+impl Unitize for Rotor {
+    type Output = Rotor;
+
+    fn unitize(self) -> Rotor {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
+    }
+}
+
 impl Zero for Point {
     fn zero() -> Self {
         Point { groups: PointGroups { g0: Simd32x4::from(0.0) } }
@@ -5588,6 +5620,14 @@ impl Inverse for Point {
     }
 }
 
+impl Unitize for Point {
+    type Output = Point;
+
+    fn unitize(self) -> Point {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
+    }
+}
+
 impl Zero for IdealPoint {
     fn zero() -> Self {
         IdealPoint { groups: IdealPointGroups { g0: Simd32x3::from(0.0) } }
@@ -6341,6 +6381,14 @@ impl Inverse for IdealPoint {
 
     fn inverse(self) -> IdealPoint {
         self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
+impl Unitize for IdealPoint {
+    type Output = IdealPoint;
+
+    fn unitize(self) -> IdealPoint {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
     }
 }
 
@@ -7161,6 +7209,14 @@ impl Inverse for Plane {
 
     fn inverse(self) -> Plane {
         self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
+impl Unitize for Plane {
+    type Output = Plane;
+
+    fn unitize(self) -> Plane {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
     }
 }
 
@@ -8082,6 +8138,14 @@ impl Inverse for Line {
     }
 }
 
+impl Unitize for Line {
+    type Output = Line;
+
+    fn unitize(self) -> Line {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
+    }
+}
+
 impl Zero for Translator {
     fn zero() -> Self {
         Translator { groups: TranslatorGroups { g0: Simd32x4::from(0.0) } }
@@ -8983,6 +9047,14 @@ impl Inverse for Translator {
 
     fn inverse(self) -> Translator {
         self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
+impl Unitize for Translator {
+    type Output = Translator;
+
+    fn unitize(self) -> Translator {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
     }
 }
 
@@ -10290,6 +10362,14 @@ impl Inverse for Motor {
     }
 }
 
+impl Unitize for Motor {
+    type Output = Motor;
+
+    fn unitize(self) -> Motor {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
+    }
+}
+
 impl Zero for PointAndPlane {
     fn zero() -> Self {
         PointAndPlane { groups: PointAndPlaneGroups { g0: Simd32x4::from(0.0), g1: Simd32x4::from(0.0) } }
@@ -11207,6 +11287,14 @@ impl Inverse for PointAndPlane {
 
     fn inverse(self) -> PointAndPlane {
         self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
+impl Unitize for PointAndPlane {
+    type Output = PointAndPlane;
+
+    fn unitize(self) -> PointAndPlane {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
     }
 }
 
