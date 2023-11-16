@@ -476,12 +476,17 @@ pub trait Powf {
     fn powf(self, exponent: f32) -> Self::Output;
 }
 
-// TODO generate implementations
-/// Grade and Anti-Grade
+/// Grade
 /// http://rigidgeometricalgebra.org/wiki/index.php?title=Grade_and_antigrade
 pub trait Grade {
     type Output;
     fn grade(self) -> Self::Output;
+}
+
+/// Anti-Grade
+/// http://rigidgeometricalgebra.org/wiki/index.php?title=Grade_and_antigrade
+pub trait AntiGrade {
+    type Output;
     fn anti_grade(self) -> Self::Output;
 }
 

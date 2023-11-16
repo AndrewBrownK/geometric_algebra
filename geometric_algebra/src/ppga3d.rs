@@ -870,6 +870,22 @@ impl One for Scalar {
     }
 }
 
+impl Grade for Scalar {
+    type Output = isize;
+
+    fn grade(self) -> isize {
+        0
+    }
+}
+
+impl AntiGrade for Scalar {
+    type Output = isize;
+
+    fn anti_grade(self) -> isize {
+        4
+    }
+}
+
 impl Neg for Scalar {
     type Output = Scalar;
 
@@ -1607,6 +1623,22 @@ impl Zero for AntiScalar {
 impl One for AntiScalar {
     fn one() -> Self {
         AntiScalar { groups: AntiScalarGroups { g0: 0.0 } }
+    }
+}
+
+impl Grade for AntiScalar {
+    type Output = isize;
+
+    fn grade(self) -> isize {
+        4
+    }
+}
+
+impl AntiGrade for AntiScalar {
+    type Output = isize;
+
+    fn anti_grade(self) -> isize {
+        0
     }
 }
 
@@ -4028,6 +4060,22 @@ impl One for Point {
     }
 }
 
+impl Grade for Point {
+    type Output = isize;
+
+    fn grade(self) -> isize {
+        3
+    }
+}
+
+impl AntiGrade for Point {
+    type Output = isize;
+
+    fn anti_grade(self) -> isize {
+        1
+    }
+}
+
 impl Neg for Point {
     type Output = Point;
 
@@ -4728,6 +4776,22 @@ impl One for IdealPoint {
     }
 }
 
+impl Grade for IdealPoint {
+    type Output = isize;
+
+    fn grade(self) -> isize {
+        2
+    }
+}
+
+impl AntiGrade for IdealPoint {
+    type Output = isize;
+
+    fn anti_grade(self) -> isize {
+        2
+    }
+}
+
 impl Neg for IdealPoint {
     type Output = IdealPoint;
 
@@ -5265,6 +5329,22 @@ impl Zero for Plane {
 impl One for Plane {
     fn one() -> Self {
         Plane { groups: PlaneGroups { g0: Simd32x4::from(0.0) } }
+    }
+}
+
+impl Grade for Plane {
+    type Output = isize;
+
+    fn grade(self) -> isize {
+        1
+    }
+}
+
+impl AntiGrade for Plane {
+    type Output = isize;
+
+    fn anti_grade(self) -> isize {
+        3
     }
 }
 
@@ -5957,6 +6037,22 @@ impl Zero for Line {
 impl One for Line {
     fn one() -> Self {
         Line { groups: LineGroups { g0: Simd32x3::from(0.0), g1: Simd32x3::from(0.0) } }
+    }
+}
+
+impl Grade for Line {
+    type Output = isize;
+
+    fn grade(self) -> isize {
+        2
+    }
+}
+
+impl AntiGrade for Line {
+    type Output = isize;
+
+    fn anti_grade(self) -> isize {
+        2
     }
 }
 

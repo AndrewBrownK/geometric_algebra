@@ -1361,4 +1361,21 @@ impl MultiVectorClass {
             }],
         }
     }
+
+    pub fn derive_grade<'a>(
+        name: &'static str,
+        parameter_a: &Parameter<'a>,
+        grade: usize
+    ) -> AstNode<'a> {
+        AstNode::TraitImplementation {
+            result: Parameter { name, data_type: DataType::Integer },
+            parameters: vec![parameter_a.clone()],
+            body: vec![AstNode::ReturnStatement {
+                expression: Box::new(Expression {
+                    size: 0,
+                    content: ExpressionContent::Constant(DataType::Integer, vec![grade as isize])
+                }),
+            }],
+        }
+    }
 }

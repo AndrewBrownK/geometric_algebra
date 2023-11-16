@@ -14,6 +14,15 @@ fn emit_data_type<W: std::io::Write>(collector: &mut W, data_type: &DataType) ->
     }
 }
 
+fn get_data_type(data_type: &DataType) -> String {
+    match data_type {
+        DataType::Integer => "int".to_string(),
+        DataType::SimdVector(size) if *size == 1 => "float".to_string(),
+        DataType::SimdVector(size) => format_args!("vec{}", *size).to_string(),
+        DataType::MultiVector(class) => format_args!("{}", class.class_name).to_string(),
+    }
+}
+
 fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression) -> std::io::Result<()> {
     match &expression.content {
         ExpressionContent::None => unreachable!(),
@@ -212,13 +221,14 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
             collector.write_all(b"}\n")?;
         }
         AstNode::TraitImplementation { result, parameters, body } => {
-            collector.write_fmt(format_args!("{} ", result.multi_vector_class().class_name))?;
+            let result_type_name = get_data_type(&result.data_type);
+            collector.write_fmt(format_args!("{} ", result_type_name))?;
             match parameters.len() {
-                0 => camel_to_snake_case(collector, &result.multi_vector_class().class_name)?,
+                0 => camel_to_snake_case(collector, &result_type_name)?,
                 1 if result.name == "Into" => {
                     camel_to_snake_case(collector, &parameters[0].multi_vector_class().class_name)?;
                     collector.write_all(b"_")?;
-                    camel_to_snake_case(collector, &result.multi_vector_class().class_name)?;
+                    camel_to_snake_case(collector, &result_type_name)?;
                 }
                 1 => camel_to_snake_case(collector, &parameters[0].multi_vector_class().class_name)?,
                 2 if !matches!(parameters[1].data_type, DataType::MultiVector(_)) => {

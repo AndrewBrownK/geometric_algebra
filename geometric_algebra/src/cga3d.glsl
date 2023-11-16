@@ -124,6 +124,14 @@ Scalar scalar_one() {
     return Scalar(1.0);
 }
 
+int scalar_grade(Scalar self) {
+    return 0;
+}
+
+int scalar_anti_grade(Scalar self) {
+    return 5;
+}
+
 Scalar scalar_neg(Scalar self) {
     return Scalar(self.g0 * -1.0);
 }
@@ -570,6 +578,14 @@ AntiScalar anti_scalar_zero() {
 
 AntiScalar anti_scalar_one() {
     return AntiScalar(0.0);
+}
+
+int anti_scalar_grade(AntiScalar self) {
+    return 5;
+}
+
+int anti_scalar_anti_grade(AntiScalar self) {
+    return 0;
 }
 
 AntiScalar anti_scalar_neg(AntiScalar self) {
@@ -1588,6 +1604,14 @@ RadialPoint radial_point_one() {
     return RadialPoint(vec3(0.0), vec2(0.0));
 }
 
+int radial_point_grade(RadialPoint self) {
+    return 1;
+}
+
+int radial_point_anti_grade(RadialPoint self) {
+    return 4;
+}
+
 RadialPoint radial_point_neg(RadialPoint self) {
     return RadialPoint(self.g0 * vec3(-1.0), self.g1 * vec2(-1.0));
 }
@@ -1878,6 +1902,14 @@ FlatPoint flat_point_zero() {
 
 FlatPoint flat_point_one() {
     return FlatPoint(vec4(0.0));
+}
+
+int flat_point_grade(FlatPoint self) {
+    return 2;
+}
+
+int flat_point_anti_grade(FlatPoint self) {
+    return 3;
 }
 
 FlatPoint flat_point_neg(FlatPoint self) {
@@ -2186,6 +2218,14 @@ Dipole dipole_zero() {
 
 Dipole dipole_one() {
     return Dipole(vec3(0.0), vec3(0.0), vec4(0.0));
+}
+
+int dipole_grade(Dipole self) {
+    return 2;
+}
+
+int dipole_anti_grade(Dipole self) {
+    return 3;
 }
 
 Dipole dipole_neg(Dipole self) {
@@ -2576,6 +2616,14 @@ Line line_one() {
     return Line(vec3(0.0), vec3(0.0));
 }
 
+int line_grade(Line self) {
+    return 3;
+}
+
+int line_anti_grade(Line self) {
+    return 2;
+}
+
 Line line_neg(Line self) {
     return Line(self.g0 * vec3(-1.0), self.g1 * vec3(-1.0));
 }
@@ -2882,6 +2930,14 @@ Circle circle_zero() {
 
 Circle circle_one() {
     return Circle(vec4(0.0), vec3(0.0), vec3(0.0));
+}
+
+int circle_grade(Circle self) {
+    return 3;
+}
+
+int circle_anti_grade(Circle self) {
+    return 2;
 }
 
 Circle circle_neg(Circle self) {
@@ -3256,6 +3312,14 @@ Plane plane_one() {
     return Plane(vec4(0.0));
 }
 
+int plane_grade(Plane self) {
+    return 4;
+}
+
+int plane_anti_grade(Plane self) {
+    return 1;
+}
+
 Plane plane_neg(Plane self) {
     return Plane(self.g0 * vec4(-1.0));
 }
@@ -3566,6 +3630,14 @@ Sphere sphere_zero() {
 
 Sphere sphere_one() {
     return Sphere(vec2(0.0), vec3(0.0));
+}
+
+int sphere_grade(Sphere self) {
+    return 4;
+}
+
+int sphere_anti_grade(Sphere self) {
+    return 1;
 }
 
 Sphere sphere_neg(Sphere self) {

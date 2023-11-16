@@ -73,6 +73,14 @@ Scalar scalar_one() {
     return Scalar(1.0);
 }
 
+int scalar_grade(Scalar self) {
+    return 0;
+}
+
+int scalar_anti_grade(Scalar self) {
+    return 4;
+}
+
 Scalar scalar_neg(Scalar self) {
     return Scalar(self.g0 * -1.0);
 }
@@ -431,6 +439,14 @@ AntiScalar anti_scalar_zero() {
 
 AntiScalar anti_scalar_one() {
     return AntiScalar(0.0);
+}
+
+int anti_scalar_grade(AntiScalar self) {
+    return 4;
+}
+
+int anti_scalar_anti_grade(AntiScalar self) {
+    return 0;
 }
 
 AntiScalar anti_scalar_neg(AntiScalar self) {
@@ -1557,6 +1573,14 @@ Point point_one() {
     return Point(vec4(0.0));
 }
 
+int point_grade(Point self) {
+    return 3;
+}
+
+int point_anti_grade(Point self) {
+    return 1;
+}
+
 Point point_neg(Point self) {
     return Point(self.g0 * vec4(-1.0));
 }
@@ -1897,6 +1921,14 @@ IdealPoint ideal_point_one() {
     return IdealPoint(vec3(0.0));
 }
 
+int ideal_point_grade(IdealPoint self) {
+    return 2;
+}
+
+int ideal_point_anti_grade(IdealPoint self) {
+    return 2;
+}
+
 IdealPoint ideal_point_neg(IdealPoint self) {
     return IdealPoint(self.g0 * vec3(-1.0));
 }
@@ -2155,6 +2187,14 @@ Plane plane_zero() {
 
 Plane plane_one() {
     return Plane(vec4(0.0));
+}
+
+int plane_grade(Plane self) {
+    return 1;
+}
+
+int plane_anti_grade(Plane self) {
+    return 3;
 }
 
 Plane plane_neg(Plane self) {
@@ -2491,6 +2531,14 @@ Line line_zero() {
 
 Line line_one() {
     return Line(vec3(0.0), vec3(0.0));
+}
+
+int line_grade(Line self) {
+    return 2;
+}
+
+int line_anti_grade(Line self) {
+    return 2;
 }
 
 Line line_neg(Line self) {

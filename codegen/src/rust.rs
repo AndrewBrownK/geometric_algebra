@@ -12,6 +12,15 @@ fn emit_data_type<W: std::io::Write>(collector: &mut W, data_type: &DataType) ->
     }
 }
 
+fn get_data_type(data_type: &DataType) -> String {
+    match data_type {
+        DataType::Integer => "isize".to_string(),
+        DataType::SimdVector(size) if *size == 1 => "f32".to_string(),
+        DataType::SimdVector(size) => format_args!("Simd32x{}", *size).to_string(),
+        DataType::MultiVector(class) => format_args!("{}", class.class_name).to_string(),
+    }
+}
+
 fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression) -> std::io::Result<()> {
     match &expression.content {
         ExpressionContent::None => unreachable!(),
@@ -466,12 +475,13 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
             collector.write_all(b"}\n")?;
         }
         AstNode::TraitImplementation { result, parameters, body } => {
+            let result_type_name = get_data_type(&result.data_type);
             match parameters.len() {
-                0 => collector.write_fmt(format_args!("impl {} for {}", result.name, result.multi_vector_class().class_name))?,
+                0 => collector.write_fmt(format_args!("impl {} for {}", result.name, result_type_name))?,
                 1 if result.name == "Into" => collector.write_fmt(format_args!(
                     "impl {}<{}> for {}",
                     result.name,
-                    result.multi_vector_class().class_name,
+                    result_type_name,
                     parameters[0].multi_vector_class().class_name,
                 ))?,
                 1 => collector.write_fmt(format_args!("impl {} for {}", result.name, parameters[0].multi_vector_class().class_name))?,
@@ -489,7 +499,7 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
             collector.write_all(b" {\n")?;
             if !parameters.is_empty() && result.name != "Into" {
                 emit_indentation(collector, indentation + 1)?;
-                collector.write_fmt(format_args!("type Output = {};\n\n", result.multi_vector_class().class_name))?;
+                collector.write_fmt(format_args!("type Output = {};\n\n", result_type_name))?;
             }
             emit_indentation(collector, indentation + 1)?;
             collector.write_all(b"fn ")?;

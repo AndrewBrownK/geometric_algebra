@@ -142,6 +142,20 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
                 single_trait_implementations.insert(name.to_string(), ast_node);
             }
         }
+
+        if let Some((grade, unanimous)) = class_a.flat_basis().iter().map(|a| (a.grade(), true)).reduce(|a, b| (a.0, a.0 == b.0 && a.1 && b.1)) {
+            if unanimous {
+                let anti_grade = algebra.generator_squares.len() - grade;
+                let grade_impl = MultiVectorClass::derive_grade("Grade", &parameter_a, grade);
+                emitter.emit(&grade_impl).unwrap();
+                single_trait_implementations.insert(result_of_trait!(grade_impl).name.to_string(), grade_impl);
+
+                let anti_grade_impl = MultiVectorClass::derive_grade("AntiGrade", &parameter_a, anti_grade);
+                emitter.emit(&anti_grade_impl).unwrap();
+                single_trait_implementations.insert(result_of_trait!(anti_grade_impl).name.to_string(), anti_grade_impl);
+            }
+        }
+
         // TODO for some reason not all involutions are being output for CGA,
         //  for example search "impl Dual" in cga3d.rs vs ppga3d.rs.
         //  This is strange because some involutions are written, like Reversal.

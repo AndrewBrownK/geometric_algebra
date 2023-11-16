@@ -151,6 +151,22 @@ impl One for Scalar {
     }
 }
 
+impl Grade for Scalar {
+    type Output = isize;
+
+    fn grade(self) -> isize {
+        0
+    }
+}
+
+impl AntiGrade for Scalar {
+    type Output = isize;
+
+    fn anti_grade(self) -> isize {
+        2
+    }
+}
+
 impl Neg for Scalar {
     type Output = Scalar;
 

@@ -16,6 +16,14 @@ Scalar scalar_one() {
     return Scalar(1.0);
 }
 
+int scalar_grade(Scalar self) {
+    return 0;
+}
+
+int scalar_anti_grade(Scalar self) {
+    return 2;
+}
+
 Scalar scalar_neg(Scalar self) {
     return Scalar(self.g0 * -1.0);
 }

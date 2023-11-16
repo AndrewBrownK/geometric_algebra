@@ -47,7 +47,9 @@ impl<'a> Parameter<'a> {
         if let DataType::MultiVector(class) = self.data_type {
             class
         } else {
-            unreachable!()
+            let n = self.name;
+            let d = &self.data_type;
+            unreachable!("No multi_vector_class for {n:?} with datatype {d:?}")
         }
     }
 }

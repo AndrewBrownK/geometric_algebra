@@ -1385,6 +1385,22 @@ impl One for Scalar {
     }
 }
 
+impl Grade for Scalar {
+    type Output = isize;
+
+    fn grade(self) -> isize {
+        0
+    }
+}
+
+impl AntiGrade for Scalar {
+    type Output = isize;
+
+    fn anti_grade(self) -> isize {
+        5
+    }
+}
+
 impl Neg for Scalar {
     type Output = Scalar;
 
@@ -2298,6 +2314,22 @@ impl Zero for AntiScalar {
 impl One for AntiScalar {
     fn one() -> Self {
         AntiScalar { groups: AntiScalarGroups { g0: 0.0 } }
+    }
+}
+
+impl Grade for AntiScalar {
+    type Output = isize;
+
+    fn grade(self) -> isize {
+        5
+    }
+}
+
+impl AntiGrade for AntiScalar {
+    type Output = isize;
+
+    fn anti_grade(self) -> isize {
+        0
     }
 }
 
@@ -4393,6 +4425,22 @@ impl One for RadialPoint {
     }
 }
 
+impl Grade for RadialPoint {
+    type Output = isize;
+
+    fn grade(self) -> isize {
+        1
+    }
+}
+
+impl AntiGrade for RadialPoint {
+    type Output = isize;
+
+    fn anti_grade(self) -> isize {
+        4
+    }
+}
+
 impl Neg for RadialPoint {
     type Output = RadialPoint;
 
@@ -4994,6 +5042,22 @@ impl Zero for FlatPoint {
 impl One for FlatPoint {
     fn one() -> Self {
         FlatPoint { groups: FlatPointGroups { g0: Simd32x4::from(0.0) } }
+    }
+}
+
+impl Grade for FlatPoint {
+    type Output = isize;
+
+    fn grade(self) -> isize {
+        2
+    }
+}
+
+impl AntiGrade for FlatPoint {
+    type Output = isize;
+
+    fn anti_grade(self) -> isize {
+        3
     }
 }
 
@@ -5630,6 +5694,22 @@ impl Zero for Dipole {
 impl One for Dipole {
     fn one() -> Self {
         Dipole { groups: DipoleGroups { g0: Simd32x3::from(0.0), g1: Simd32x3::from(0.0), g2: Simd32x4::from(0.0) } }
+    }
+}
+
+impl Grade for Dipole {
+    type Output = isize;
+
+    fn grade(self) -> isize {
+        2
+    }
+}
+
+impl AntiGrade for Dipole {
+    type Output = isize;
+
+    fn anti_grade(self) -> isize {
+        3
     }
 }
 
@@ -6439,6 +6519,22 @@ impl One for Line {
     }
 }
 
+impl Grade for Line {
+    type Output = isize;
+
+    fn grade(self) -> isize {
+        3
+    }
+}
+
+impl AntiGrade for Line {
+    type Output = isize;
+
+    fn anti_grade(self) -> isize {
+        2
+    }
+}
+
 impl Neg for Line {
     type Output = Line;
 
@@ -7072,6 +7168,22 @@ impl Zero for Circle {
 impl One for Circle {
     fn one() -> Self {
         Circle { groups: CircleGroups { g0: Simd32x4::from(0.0), g1: Simd32x3::from(0.0), g2: Simd32x3::from(0.0) } }
+    }
+}
+
+impl Grade for Circle {
+    type Output = isize;
+
+    fn grade(self) -> isize {
+        3
+    }
+}
+
+impl AntiGrade for Circle {
+    type Output = isize;
+
+    fn anti_grade(self) -> isize {
+        2
     }
 }
 
@@ -7849,6 +7961,22 @@ impl One for Plane {
     }
 }
 
+impl Grade for Plane {
+    type Output = isize;
+
+    fn grade(self) -> isize {
+        4
+    }
+}
+
+impl AntiGrade for Plane {
+    type Output = isize;
+
+    fn anti_grade(self) -> isize {
+        1
+    }
+}
+
 impl Neg for Plane {
     type Output = Plane;
 
@@ -8490,6 +8618,22 @@ impl Zero for Sphere {
 impl One for Sphere {
     fn one() -> Self {
         Sphere { groups: SphereGroups { g0: Simd32x2::from(0.0), g1: Simd32x3::from(0.0) } }
+    }
+}
+
+impl Grade for Sphere {
+    type Output = isize;
+
+    fn grade(self) -> isize {
+        4
+    }
+}
+
+impl AntiGrade for Sphere {
+    type Output = isize;
+
+    fn anti_grade(self) -> isize {
+        1
     }
 }
 
