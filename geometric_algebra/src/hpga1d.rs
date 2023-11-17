@@ -207,6 +207,14 @@ impl AntiReversal for Scalar {
     }
 }
 
+impl DoubleComplement for Scalar {
+    type Output = Scalar;
+
+    fn double_complement(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() } }
+    }
+}
+
 impl Add<Scalar> for Scalar {
     type Output = Scalar;
 
@@ -504,6 +512,30 @@ impl AntiReversal for SplitComplexNumber {
 
     fn anti_reversal(self) -> SplitComplexNumber {
         SplitComplexNumber { groups: SplitComplexNumberGroups { g0: self.group0() * Simd32x2::from([1.0, -1.0]) } }
+    }
+}
+
+impl RightComplement for SplitComplexNumber {
+    type Output = SplitComplexNumber;
+
+    fn right_complement(self) -> SplitComplexNumber {
+        SplitComplexNumber { groups: SplitComplexNumberGroups { g0: swizzle!(self.group0(), 1, 0) } }
+    }
+}
+
+impl LeftComplement for SplitComplexNumber {
+    type Output = SplitComplexNumber;
+
+    fn left_complement(self) -> SplitComplexNumber {
+        SplitComplexNumber { groups: SplitComplexNumberGroups { g0: swizzle!(self.group0(), 1, 0) } }
+    }
+}
+
+impl DoubleComplement for SplitComplexNumber {
+    type Output = SplitComplexNumber;
+
+    fn double_complement(self) -> SplitComplexNumber {
+        SplitComplexNumber { groups: SplitComplexNumberGroups { g0: self.group0() } }
     }
 }
 

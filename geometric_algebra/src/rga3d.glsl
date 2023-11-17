@@ -113,6 +113,18 @@ Scalar scalar_anti_reversal(Scalar self) {
     return Scalar(self.g0);
 }
 
+AntiScalar scalar_right_complement(Scalar self) {
+    return AntiScalar(self.g0);
+}
+
+AntiScalar scalar_left_complement(Scalar self) {
+    return AntiScalar(self.g0);
+}
+
+Scalar scalar_double_complement(Scalar self) {
+    return Scalar(self.g0);
+}
+
 Scalar scalar_scalar_add(Scalar self, Scalar other) {
     return Scalar(self.g0 + other.g0);
 }
@@ -446,6 +458,18 @@ Scalar anti_scalar_dual(AntiScalar self) {
 }
 
 AntiScalar anti_scalar_anti_reversal(AntiScalar self) {
+    return AntiScalar(self.g0);
+}
+
+Scalar anti_scalar_right_complement(AntiScalar self) {
+    return Scalar(self.g0);
+}
+
+Scalar anti_scalar_left_complement(AntiScalar self) {
+    return Scalar(self.g0);
+}
+
+AntiScalar anti_scalar_double_complement(AntiScalar self) {
     return AntiScalar(self.g0);
 }
 
@@ -790,6 +814,18 @@ HomogeneousMagnitude homogeneous_magnitude_dual(HomogeneousMagnitude self) {
 }
 
 HomogeneousMagnitude homogeneous_magnitude_anti_reversal(HomogeneousMagnitude self) {
+    return HomogeneousMagnitude(self.g0);
+}
+
+HomogeneousMagnitude homogeneous_magnitude_right_complement(HomogeneousMagnitude self) {
+    return HomogeneousMagnitude(self.g0.yx);
+}
+
+HomogeneousMagnitude homogeneous_magnitude_left_complement(HomogeneousMagnitude self) {
+    return HomogeneousMagnitude(self.g0.yx);
+}
+
+HomogeneousMagnitude homogeneous_magnitude_double_complement(HomogeneousMagnitude self) {
     return HomogeneousMagnitude(self.g0);
 }
 
@@ -1221,6 +1257,18 @@ Point point_anti_reversal(Point self) {
     return Point(self.g0 * vec4(-1.0));
 }
 
+Plane point_right_complement(Point self) {
+    return Plane(self.g0);
+}
+
+Plane point_left_complement(Point self) {
+    return Plane(self.g0 * vec4(-1.0));
+}
+
+Point point_double_complement(Point self) {
+    return Point(self.g0 * vec4(-1.0));
+}
+
 Point point_scalar_geometric_product(Point self, Scalar other) {
     return Point(self.g0 * vec4(other.g0));
 }
@@ -1571,6 +1619,18 @@ Line line_dual(Line self) {
 
 Line line_anti_reversal(Line self) {
     return Line(self.g0 * vec3(-1.0), self.g1 * vec3(-1.0));
+}
+
+Line line_right_complement(Line self) {
+    return Line(self.g1 * vec3(-1.0), self.g0 * vec3(-1.0));
+}
+
+Line line_left_complement(Line self) {
+    return Line(self.g1 * vec3(-1.0), self.g0 * vec3(-1.0));
+}
+
+Line line_double_complement(Line self) {
+    return Line(self.g0, self.g1);
 }
 
 Line line_scalar_geometric_product(Line self, Scalar other) {
@@ -1973,6 +2033,18 @@ Plane plane_anti_reversal(Plane self) {
     return Plane(self.g0);
 }
 
+Point plane_right_complement(Plane self) {
+    return Point(self.g0 * vec4(-1.0));
+}
+
+Point plane_left_complement(Plane self) {
+    return Point(self.g0);
+}
+
+Plane plane_double_complement(Plane self) {
+    return Plane(self.g0 * vec4(-1.0));
+}
+
 Plane plane_scalar_geometric_product(Plane self, Scalar other) {
     return Plane(self.g0 * vec4(other.g0));
 }
@@ -2307,6 +2379,10 @@ Motor motor_conjugation(Motor self) {
 
 Motor motor_anti_reversal(Motor self) {
     return Motor(self.g0 * vec4(-1.0, -1.0, -1.0, 1.0), self.g1 * vec3(-1.0));
+}
+
+Motor motor_double_complement(Motor self) {
+    return Motor(self.g0, self.g1);
 }
 
 Motor motor_scalar_geometric_product(Motor self, Scalar other) {
@@ -2701,6 +2777,10 @@ Rotor rotor_anti_reversal(Rotor self) {
     return Rotor(self.g0 * vec4(-1.0, -1.0, -1.0, 1.0));
 }
 
+Rotor rotor_double_complement(Rotor self) {
+    return Rotor(self.g0);
+}
+
 Rotor rotor_scalar_geometric_product(Rotor self, Scalar other) {
     return Rotor(self.g0 * vec4(other.g0));
 }
@@ -2999,6 +3079,10 @@ Translator translator_conjugation(Translator self) {
 
 Translator translator_anti_reversal(Translator self) {
     return Translator(self.g0 * vec4(-1.0, -1.0, -1.0, 1.0));
+}
+
+Translator translator_double_complement(Translator self) {
+    return Translator(self.g0);
 }
 
 Translator translator_scalar_geometric_product(Translator self, Scalar other) {
@@ -3375,6 +3459,18 @@ Flector flector_dual(Flector self) {
 
 Flector flector_anti_reversal(Flector self) {
     return Flector(self.g0 * vec4(-1.0), self.g1);
+}
+
+Flector flector_right_complement(Flector self) {
+    return Flector(self.g1 * vec4(-1.0), self.g0);
+}
+
+Flector flector_left_complement(Flector self) {
+    return Flector(self.g1, self.g0 * vec4(-1.0));
+}
+
+Flector flector_double_complement(Flector self) {
+    return Flector(self.g0 * vec4(-1.0), self.g1 * vec4(-1.0));
 }
 
 Flector flector_scalar_geometric_product(Flector self, Scalar other) {
@@ -3755,6 +3851,10 @@ MultiVector multi_vector_conjugation(MultiVector self) {
 
 MultiVector multi_vector_anti_reversal(MultiVector self) {
     return MultiVector(self.g0.xyy, self.g1 * vec4(-1.0), self.g2 * vec3(-1.0), self.g3 * vec3(-1.0), self.g2 * vec3(-1.0), self.g3 * vec3(-1.0), self.g6, self.g6);
+}
+
+MultiVector multi_vector_double_complement(MultiVector self) {
+    return MultiVector(self.g0.xyy, self.g1 * vec4(-1.0), self.g2, self.g3, self.g2, self.g3, self.g6 * vec4(-1.0), self.g6 * vec4(-1.0));
 }
 
 Scalar multi_vector_scalar_into(MultiVector self) {

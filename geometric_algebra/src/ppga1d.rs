@@ -207,6 +207,14 @@ impl AntiReversal for Scalar {
     }
 }
 
+impl DoubleComplement for Scalar {
+    type Output = Scalar;
+
+    fn double_complement(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() } }
+    }
+}
+
 impl Add<Scalar> for Scalar {
     type Output = Scalar;
 
@@ -504,6 +512,30 @@ impl AntiReversal for DualNumber {
 
     fn anti_reversal(self) -> DualNumber {
         DualNumber { groups: DualNumberGroups { g0: self.group0() * Simd32x2::from([1.0, -1.0]) } }
+    }
+}
+
+impl RightComplement for DualNumber {
+    type Output = DualNumber;
+
+    fn right_complement(self) -> DualNumber {
+        DualNumber { groups: DualNumberGroups { g0: swizzle!(self.group0(), 1, 0) } }
+    }
+}
+
+impl LeftComplement for DualNumber {
+    type Output = DualNumber;
+
+    fn left_complement(self) -> DualNumber {
+        DualNumber { groups: DualNumberGroups { g0: swizzle!(self.group0(), 1, 0) } }
+    }
+}
+
+impl DoubleComplement for DualNumber {
+    type Output = DualNumber;
+
+    fn double_complement(self) -> DualNumber {
+        DualNumber { groups: DualNumberGroups { g0: self.group0() } }
     }
 }
 

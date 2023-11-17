@@ -934,6 +934,30 @@ impl AntiReversal for Scalar {
     }
 }
 
+impl RightComplement for Scalar {
+    type Output = AntiScalar;
+
+    fn right_complement(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() } }
+    }
+}
+
+impl LeftComplement for Scalar {
+    type Output = AntiScalar;
+
+    fn left_complement(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() } }
+    }
+}
+
+impl DoubleComplement for Scalar {
+    type Output = Scalar;
+
+    fn double_complement(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() } }
+    }
+}
+
 impl Add<Scalar> for Scalar {
     type Output = Scalar;
 
@@ -1690,6 +1714,30 @@ impl AntiReversal for AntiScalar {
     }
 }
 
+impl RightComplement for AntiScalar {
+    type Output = Scalar;
+
+    fn right_complement(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() } }
+    }
+}
+
+impl LeftComplement for AntiScalar {
+    type Output = Scalar;
+
+    fn left_complement(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() } }
+    }
+}
+
+impl DoubleComplement for AntiScalar {
+    type Output = AntiScalar;
+
+    fn double_complement(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() } }
+    }
+}
+
 impl GeometricProduct<Scalar> for AntiScalar {
     type Output = AntiScalar;
 
@@ -2355,6 +2403,30 @@ impl AntiReversal for MultiVector {
 
     fn anti_reversal(self) -> MultiVector {
         MultiVector { groups: MultiVectorGroups { g0: self.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: self.group1() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]), g2: self.group2() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g3: self.group3() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl RightComplement for MultiVector {
+    type Output = MultiVector;
+
+    fn right_complement(self) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: self.group3(), g1: self.group2() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]), g2: self.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g3: self.group0() } }
+    }
+}
+
+impl LeftComplement for MultiVector {
+    type Output = MultiVector;
+
+    fn left_complement(self) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: self.group3(), g1: self.group2() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g2: self.group1() * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]), g3: self.group0() } }
+    }
+}
+
+impl DoubleComplement for MultiVector {
+    type Output = MultiVector;
+
+    fn double_complement(self) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: self.group0(), g1: self.group1() * Simd32x4::from(-1.0), g2: self.group2() * Simd32x4::from(-1.0), g3: self.group3() } }
     }
 }
 
@@ -3406,6 +3478,14 @@ impl AntiReversal for Rotor {
     }
 }
 
+impl DoubleComplement for Rotor {
+    type Output = Rotor;
+
+    fn double_complement(self) -> Rotor {
+        Rotor { groups: RotorGroups { g0: self.group0() } }
+    }
+}
+
 impl Into<Scalar> for Rotor {
     fn into(self) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[0] } }
@@ -4124,6 +4204,30 @@ impl AntiReversal for Point {
     }
 }
 
+impl RightComplement for Point {
+    type Output = Plane;
+
+    fn right_complement(self) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl LeftComplement for Point {
+    type Output = Plane;
+
+    fn left_complement(self) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() } }
+    }
+}
+
+impl DoubleComplement for Point {
+    type Output = Point;
+
+    fn double_complement(self) -> Point {
+        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
+    }
+}
+
 impl GeometricProduct<Scalar> for Point {
     type Output = Point;
 
@@ -4832,6 +4936,14 @@ impl AntiReversal for IdealPoint {
     }
 }
 
+impl DoubleComplement for IdealPoint {
+    type Output = IdealPoint;
+
+    fn double_complement(self) -> IdealPoint {
+        IdealPoint { groups: IdealPointGroups { g0: self.group0() } }
+    }
+}
+
 impl Add<Scalar> for IdealPoint {
     type Output = Translator;
 
@@ -5392,6 +5504,30 @@ impl AntiReversal for Plane {
     type Output = Plane;
 
     fn anti_reversal(self) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl RightComplement for Plane {
+    type Output = Point;
+
+    fn right_complement(self) -> Point {
+        Point { groups: PointGroups { g0: self.group0() } }
+    }
+}
+
+impl LeftComplement for Plane {
+    type Output = Point;
+
+    fn left_complement(self) -> Point {
+        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl DoubleComplement for Plane {
+    type Output = Plane;
+
+    fn double_complement(self) -> Plane {
         Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
     }
 }
@@ -6101,6 +6237,30 @@ impl AntiReversal for Line {
 
     fn anti_reversal(self) -> Line {
         Line { groups: LineGroups { g0: self.group0() * Simd32x3::from(-1.0), g1: self.group1() * Simd32x3::from(-1.0) } }
+    }
+}
+
+impl RightComplement for Line {
+    type Output = Line;
+
+    fn right_complement(self) -> Line {
+        Line { groups: LineGroups { g0: self.group1(), g1: self.group0() } }
+    }
+}
+
+impl LeftComplement for Line {
+    type Output = Line;
+
+    fn left_complement(self) -> Line {
+        Line { groups: LineGroups { g0: self.group1(), g1: self.group0() } }
+    }
+}
+
+impl DoubleComplement for Line {
+    type Output = Line;
+
+    fn double_complement(self) -> Line {
+        Line { groups: LineGroups { g0: self.group0(), g1: self.group1() } }
     }
 }
 
@@ -6923,6 +7083,14 @@ impl AntiReversal for Translator {
 
     fn anti_reversal(self) -> Translator {
         Translator { groups: TranslatorGroups { g0: self.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl DoubleComplement for Translator {
+    type Output = Translator;
+
+    fn double_complement(self) -> Translator {
+        Translator { groups: TranslatorGroups { g0: self.group0() } }
     }
 }
 
@@ -7803,6 +7971,30 @@ impl AntiReversal for Motor {
 
     fn anti_reversal(self) -> Motor {
         Motor { groups: MotorGroups { g0: self.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]), g1: self.group1() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]) } }
+    }
+}
+
+impl RightComplement for Motor {
+    type Output = Motor;
+
+    fn right_complement(self) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group1(), g1: self.group0() } }
+    }
+}
+
+impl LeftComplement for Motor {
+    type Output = Motor;
+
+    fn left_complement(self) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group1(), g1: self.group0() } }
+    }
+}
+
+impl DoubleComplement for Motor {
+    type Output = Motor;
+
+    fn double_complement(self) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group0(), g1: self.group1() } }
     }
 }
 
@@ -8963,6 +9155,30 @@ impl AntiReversal for PointAndPlane {
 
     fn anti_reversal(self) -> PointAndPlane {
         PointAndPlane { groups: PointAndPlaneGroups { g0: self.group0(), g1: self.group1() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl RightComplement for PointAndPlane {
+    type Output = PointAndPlane;
+
+    fn right_complement(self) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: self.group1(), g1: self.group0() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl LeftComplement for PointAndPlane {
+    type Output = PointAndPlane;
+
+    fn left_complement(self) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: self.group1() * Simd32x4::from(-1.0), g1: self.group0() } }
+    }
+}
+
+impl DoubleComplement for PointAndPlane {
+    type Output = PointAndPlane;
+
+    fn double_complement(self) -> PointAndPlane {
+        PointAndPlane { groups: PointAndPlaneGroups { g0: self.group0() * Simd32x4::from(-1.0), g1: self.group1() * Simd32x4::from(-1.0) } }
     }
 }
 

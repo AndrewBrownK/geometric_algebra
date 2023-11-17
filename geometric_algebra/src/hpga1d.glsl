@@ -44,6 +44,10 @@ Scalar scalar_anti_reversal(Scalar self) {
     return Scalar(self.g0);
 }
 
+Scalar scalar_double_complement(Scalar self) {
+    return Scalar(self.g0);
+}
+
 Scalar scalar_scalar_add(Scalar self, Scalar other) {
     return Scalar(self.g0 + other.g0);
 }
@@ -182,6 +186,18 @@ SplitComplexNumber split_complex_number_dual(SplitComplexNumber self) {
 
 SplitComplexNumber split_complex_number_anti_reversal(SplitComplexNumber self) {
     return SplitComplexNumber(self.g0 * vec2(1.0, -1.0));
+}
+
+SplitComplexNumber split_complex_number_right_complement(SplitComplexNumber self) {
+    return SplitComplexNumber(self.g0.yx);
+}
+
+SplitComplexNumber split_complex_number_left_complement(SplitComplexNumber self) {
+    return SplitComplexNumber(self.g0.yx);
+}
+
+SplitComplexNumber split_complex_number_double_complement(SplitComplexNumber self) {
+    return SplitComplexNumber(self.g0);
 }
 
 Scalar split_complex_number_scalar_into(SplitComplexNumber self) {

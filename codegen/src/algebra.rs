@@ -74,6 +74,15 @@ impl BasisElement {
         result
     }
 
+    pub fn other_dual(&self, algebra: &GeometricAlgebra) -> Self {
+        let mut result = Self {
+            scalar: self.scalar,
+            index: algebra.basis_size() as BasisElementIndex - 1 - self.index,
+        };
+        result.scalar *= BasisElement::product(&result, self, algebra).scalar;
+        result
+    }
+
     pub fn product(a: &Self, b: &Self, algebra: &GeometricAlgebra) -> Self {
         let commutations = a.component_bits().fold((0, a.index, b.index), |(commutations, a, b), index| {
             let hurdles_a = a & (BasisElementIndex::MAX << (index + 1));
@@ -168,26 +177,67 @@ impl Involution {
         }
     }
 
-    pub fn dual(&self, algebra: &GeometricAlgebra) -> Self {
+    pub fn right_complement(&self, algebra: &GeometricAlgebra) -> Self {
         Self {
             terms: self.terms.iter().map(|(key, value)| (key.clone(), value.dual(algebra))).collect(),
+        }
+    }
+
+    pub fn left_complement(&self, algebra: &GeometricAlgebra) -> Self {
+        Self {
+            terms: self.terms.iter().map(|(key, value)| (key.clone(), value.other_dual(algebra))).collect(),
+        }
+    }
+
+    pub fn double_complement(&self, algebra: &GeometricAlgebra) -> Self {
+        Self {
+            terms: self.terms.iter().map(|(key, value)| (key.clone(), value.dual(algebra).dual(algebra))).collect(),
         }
     }
 
     pub fn involutions(algebra: &GeometricAlgebra) -> Vec<(&'static str, Self)> {
         let involution = Self::identity(algebra);
         let dimensions = algebra.basis_size();
+
+        // TODO so how to implement right and left complement?
+        //  it is apparently VERY similar to the "dual" involution.
+        //  The difference comes down to negation of terms whether the wedge product
+        //  is left to right or right to left. So I need to figure out if the current
+        //  "Dual" involution is either of the complements, or its own thing. Then I should
+        //  have a clue from there how to implement the remaining complement, or both
+        //  if necessary.
+
+        // struct PointGroups: e0, e1, e2, e3
+        // struct PlaneGroups: e123, -e023, e013, -e012
+
+        // impl Dual for Point -> Plane with no negations
+        // impl Dual for Plane -> Point with all terms negated
+
+        // I need to know if PlaneGroups translates perfectly to the slightly different ordered bases in the wiki
+        // DON"T FORGET that program goes from 0-3, while wiki goes from 1-4
+        // wiki e423 = program e123 (e312 -> -e132 -> e123)
+        // wiki e431 = program -e023 (e320 -> -e230 -> e203 -> -e023)
+        // wiki e412 = program e013 (e301 -> -e031 -> e013)
+        // wiki e321 = program -e012 (e210 -> -e201 -> e021 -> -e012)
+
+        // Okay so the wiki and the program are indeed using the same bases, which is great
+        // That means it is especially easy to tell... current trait Dual = Right Complement!
+
+
         vec![
             ("Neg", involution.negated(|_grade| true)),
             ("Automorphism", involution.negated(|grade| grade % 2 == 1)),
             ("Reversal", involution.negated(|grade| grade % 4 >= 2)),
             ("Conjugation", involution.negated(|grade| (grade + 3) % 4 < 2)),
-            ("Dual", involution.dual(algebra)),
+            ("Dual", involution.right_complement(algebra)),
             // Confirmed accurate: epga3d MultiVector
             ("AntiReversal", involution.negated(|grade| {
                 let anti_grade = dimensions - grade;
                 anti_grade % 4 >= 2
             })),
+            ("RightComplement", involution.right_complement(algebra)),
+            ("LeftComplement", involution.left_complement(algebra)),
+            ("DoubleComplement", involution.double_complement(algebra)),
         ]
     }
 }

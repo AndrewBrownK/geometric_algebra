@@ -490,13 +490,25 @@ pub trait AntiGrade {
     fn anti_grade(self) -> Self::Output;
 }
 
-// TODO generate implementations
-/// Right Complement and Left Complement
+/// Right Complement
 /// http://rigidgeometricalgebra.org/wiki/index.php?title=Complements
-pub trait Complement {
+pub trait RightComplement {
     type Output;
     fn right_complement(self) -> Self::Output;
+}
+
+/// Left Complement
+/// http://rigidgeometricalgebra.org/wiki/index.php?title=Complements
+pub trait LeftComplement {
+    type Output;
     fn left_complement(self) -> Self::Output;
+}
+
+/// Double Complement
+/// http://rigidgeometricalgebra.org/wiki/index.php?title=Complements
+pub trait DoubleComplement {
+    type Output;
+    fn double_complement(self) -> Self::Output;
 }
 
 

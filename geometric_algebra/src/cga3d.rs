@@ -1449,6 +1449,30 @@ impl AntiReversal for Scalar {
     }
 }
 
+impl RightComplement for Scalar {
+    type Output = AntiScalar;
+
+    fn right_complement(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() } }
+    }
+}
+
+impl LeftComplement for Scalar {
+    type Output = AntiScalar;
+
+    fn left_complement(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() } }
+    }
+}
+
+impl DoubleComplement for Scalar {
+    type Output = Scalar;
+
+    fn double_complement(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() } }
+    }
+}
+
 impl Add<Scalar> for Scalar {
     type Output = Scalar;
 
@@ -2381,6 +2405,30 @@ impl AntiReversal for AntiScalar {
     }
 }
 
+impl RightComplement for AntiScalar {
+    type Output = Scalar;
+
+    fn right_complement(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() } }
+    }
+}
+
+impl LeftComplement for AntiScalar {
+    type Output = Scalar;
+
+    fn left_complement(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() } }
+    }
+}
+
+impl DoubleComplement for AntiScalar {
+    type Output = AntiScalar;
+
+    fn double_complement(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() } }
+    }
+}
+
 impl Add<Scalar> for AntiScalar {
     type Output = HomogeneousMagnitude;
 
@@ -3310,6 +3358,30 @@ impl AntiReversal for HomogeneousMagnitude {
 
     fn anti_reversal(self) -> HomogeneousMagnitude {
         HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() * Simd32x2::from([1.0, -1.0]) } }
+    }
+}
+
+impl RightComplement for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn right_complement(self) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: swizzle!(self.group0(), 1, 0) } }
+    }
+}
+
+impl LeftComplement for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn left_complement(self) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: swizzle!(self.group0(), 1, 0) } }
+    }
+}
+
+impl DoubleComplement for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn double_complement(self) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() } }
     }
 }
 
@@ -4489,6 +4561,30 @@ impl AntiReversal for RadialPoint {
     }
 }
 
+impl RightComplement for RadialPoint {
+    type Output = Sphere;
+
+    fn right_complement(self) -> Sphere {
+        Sphere { groups: SphereGroups { g0: swizzle!(self.group1(), 1, 0), g1: self.group0() } }
+    }
+}
+
+impl LeftComplement for RadialPoint {
+    type Output = Sphere;
+
+    fn left_complement(self) -> Sphere {
+        Sphere { groups: SphereGroups { g0: swizzle!(self.group1(), 1, 0), g1: self.group0() } }
+    }
+}
+
+impl DoubleComplement for RadialPoint {
+    type Output = RadialPoint;
+
+    fn double_complement(self) -> RadialPoint {
+        RadialPoint { groups: RadialPointGroups { g0: self.group0(), g1: self.group1() } }
+    }
+}
+
 impl GeometricProduct<Scalar> for RadialPoint {
     type Output = RadialPoint;
 
@@ -5098,6 +5194,14 @@ impl AntiReversal for FlatPoint {
 
     fn anti_reversal(self) -> FlatPoint {
         FlatPoint { groups: FlatPointGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl DoubleComplement for FlatPoint {
+    type Output = FlatPoint;
+
+    fn double_complement(self) -> FlatPoint {
+        FlatPoint { groups: FlatPointGroups { g0: self.group0() } }
     }
 }
 
@@ -5758,6 +5862,30 @@ impl AntiReversal for Dipole {
 
     fn anti_reversal(self) -> Dipole {
         Dipole { groups: DipoleGroups { g0: self.group0() * Simd32x3::from(-1.0), g1: self.group1() * Simd32x3::from(-1.0), g2: self.group2() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl RightComplement for Dipole {
+    type Output = Circle;
+
+    fn right_complement(self) -> Circle {
+        Circle { groups: CircleGroups { g0: self.group2() * Simd32x4::from(-1.0), g1: self.group1() * Simd32x3::from(-1.0), g2: self.group0() * Simd32x3::from(-1.0) } }
+    }
+}
+
+impl LeftComplement for Dipole {
+    type Output = Circle;
+
+    fn left_complement(self) -> Circle {
+        Circle { groups: CircleGroups { g0: self.group2() * Simd32x4::from(-1.0), g1: self.group1() * Simd32x3::from(-1.0), g2: self.group0() * Simd32x3::from(-1.0) } }
+    }
+}
+
+impl DoubleComplement for Dipole {
+    type Output = Dipole;
+
+    fn double_complement(self) -> Dipole {
+        Dipole { groups: DipoleGroups { g0: self.group0(), g1: self.group1(), g2: self.group2() } }
     }
 }
 
@@ -6575,6 +6703,14 @@ impl AntiReversal for Line {
     }
 }
 
+impl DoubleComplement for Line {
+    type Output = Line;
+
+    fn double_complement(self) -> Line {
+        Line { groups: LineGroups { g0: self.group0(), g1: self.group1() } }
+    }
+}
+
 impl GeometricProduct<Scalar> for Line {
     type Output = Line;
 
@@ -7231,6 +7367,30 @@ impl AntiReversal for Circle {
     type Output = Circle;
 
     fn anti_reversal(self) -> Circle {
+        Circle { groups: CircleGroups { g0: self.group0(), g1: self.group1(), g2: self.group2() } }
+    }
+}
+
+impl RightComplement for Circle {
+    type Output = Dipole;
+
+    fn right_complement(self) -> Dipole {
+        Dipole { groups: DipoleGroups { g0: self.group2() * Simd32x3::from(-1.0), g1: self.group1() * Simd32x3::from(-1.0), g2: self.group0() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl LeftComplement for Circle {
+    type Output = Dipole;
+
+    fn left_complement(self) -> Dipole {
+        Dipole { groups: DipoleGroups { g0: self.group2() * Simd32x3::from(-1.0), g1: self.group1() * Simd32x3::from(-1.0), g2: self.group0() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl DoubleComplement for Circle {
+    type Output = Circle;
+
+    fn double_complement(self) -> Circle {
         Circle { groups: CircleGroups { g0: self.group0(), g1: self.group1(), g2: self.group2() } }
     }
 }
@@ -8017,6 +8177,14 @@ impl AntiReversal for Plane {
     }
 }
 
+impl DoubleComplement for Plane {
+    type Output = Plane;
+
+    fn double_complement(self) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() } }
+    }
+}
+
 impl GeometricProduct<Scalar> for Plane {
     type Output = Plane;
 
@@ -8685,6 +8853,30 @@ impl AntiReversal for Sphere {
     }
 }
 
+impl RightComplement for Sphere {
+    type Output = RadialPoint;
+
+    fn right_complement(self) -> RadialPoint {
+        RadialPoint { groups: RadialPointGroups { g0: self.group1(), g1: swizzle!(self.group0(), 1, 0) } }
+    }
+}
+
+impl LeftComplement for Sphere {
+    type Output = RadialPoint;
+
+    fn left_complement(self) -> RadialPoint {
+        RadialPoint { groups: RadialPointGroups { g0: self.group1(), g1: swizzle!(self.group0(), 1, 0) } }
+    }
+}
+
+impl DoubleComplement for Sphere {
+    type Output = Sphere;
+
+    fn double_complement(self) -> Sphere {
+        Sphere { groups: SphereGroups { g0: self.group0(), g1: self.group1() } }
+    }
+}
+
 impl GeometricProduct<Scalar> for Sphere {
     type Output = Sphere;
 
@@ -9256,6 +9448,14 @@ impl AntiReversal for Motor {
 
     fn anti_reversal(self) -> Motor {
         Motor { groups: MotorGroups { g0: self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]), g1: self.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) } }
+    }
+}
+
+impl DoubleComplement for Motor {
+    type Output = Motor;
+
+    fn double_complement(self) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group0(), g1: self.group1() } }
     }
 }
 
@@ -10087,6 +10287,14 @@ impl AntiReversal for Rotor {
     }
 }
 
+impl DoubleComplement for Rotor {
+    type Output = Rotor;
+
+    fn double_complement(self) -> Rotor {
+        Rotor { groups: RotorGroups { g0: self.group0() } }
+    }
+}
+
 impl GeometricProduct<Scalar> for Rotor {
     type Output = Rotor;
 
@@ -10778,6 +10986,14 @@ impl AntiReversal for Translator {
 
     fn anti_reversal(self) -> Translator {
         Translator { groups: TranslatorGroups { g0: self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) } }
+    }
+}
+
+impl DoubleComplement for Translator {
+    type Output = Translator;
+
+    fn double_complement(self) -> Translator {
+        Translator { groups: TranslatorGroups { g0: self.group0() } }
     }
 }
 
@@ -11531,6 +11747,14 @@ impl AntiReversal for Flector {
     }
 }
 
+impl DoubleComplement for Flector {
+    type Output = Flector;
+
+    fn double_complement(self) -> Flector {
+        Flector { groups: FlectorGroups { g0: self.group0(), g1: self.group1() } }
+    }
+}
+
 impl GeometricProduct<Scalar> for Flector {
     type Output = Flector;
 
@@ -12208,6 +12432,14 @@ impl AntiReversal for Dilation {
 
     fn anti_reversal(self) -> Dilation {
         Dilation { groups: DilationGroups { g0: self.group0(), g1: self.group1() * Simd32x2::from([1.0, -1.0]) } }
+    }
+}
+
+impl DoubleComplement for Dilation {
+    type Output = Dilation;
+
+    fn double_complement(self) -> Dilation {
+        Dilation { groups: DilationGroups { g0: self.group0(), g1: self.group1() } }
     }
 }
 
@@ -12982,6 +13214,30 @@ impl AntiReversal for MultiVector {
 
     fn anti_reversal(self) -> MultiVector {
         MultiVector { groups: MultiVectorGroups { g0: self.group0() * Simd32x3::from([1.0, 1.0, -1.0]), g1: self.group1() * Simd32x3::from(-1.0), g2: self.group2() * Simd32x2::from(-1.0), g3: self.group3() * Simd32x4::from(-1.0), g4: self.group4() * Simd32x3::from(-1.0), g5: self.group5() * Simd32x3::from(-1.0), g6: self.group6(), g7: self.group7(), g8: self.group8(), g9: self.group9() } }
+    }
+}
+
+impl RightComplement for MultiVector {
+    type Output = MultiVector;
+
+    fn right_complement(self) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x3::from([self.group0()[2], self.group2()[1], self.group0()[0]]), g1: Simd32x3::from([self.group9()[0], self.group9()[1], self.group9()[2]]), g2: Simd32x2::from([self.group9()[3], self.group0()[1]]), g3: self.group8() * Simd32x4::from(-1.0), g4: self.group7() * Simd32x3::from(-1.0), g5: self.group6() * Simd32x3::from(-1.0), g6: self.group5() * Simd32x3::from(-1.0), g7: self.group4() * Simd32x3::from(-1.0), g8: self.group3() * Simd32x4::from(-1.0), g9: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group2()[0]]) } }
+    }
+}
+
+impl LeftComplement for MultiVector {
+    type Output = MultiVector;
+
+    fn left_complement(self) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x3::from([self.group0()[2], self.group2()[1], self.group0()[0]]), g1: Simd32x3::from([self.group9()[0], self.group9()[1], self.group9()[2]]), g2: Simd32x2::from([self.group9()[3], self.group0()[1]]), g3: self.group8() * Simd32x4::from(-1.0), g4: self.group7() * Simd32x3::from(-1.0), g5: self.group6() * Simd32x3::from(-1.0), g6: self.group5() * Simd32x3::from(-1.0), g7: self.group4() * Simd32x3::from(-1.0), g8: self.group3() * Simd32x4::from(-1.0), g9: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group2()[0]]) } }
+    }
+}
+
+impl DoubleComplement for MultiVector {
+    type Output = MultiVector;
+
+    fn double_complement(self) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: self.group0(), g1: self.group1(), g2: self.group2(), g3: self.group3(), g4: self.group4(), g5: self.group5(), g6: self.group6(), g7: self.group7(), g8: self.group8(), g9: self.group9() } }
     }
 }
 

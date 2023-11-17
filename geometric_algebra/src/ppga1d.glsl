@@ -44,6 +44,10 @@ Scalar scalar_anti_reversal(Scalar self) {
     return Scalar(self.g0);
 }
 
+Scalar scalar_double_complement(Scalar self) {
+    return Scalar(self.g0);
+}
+
 Scalar scalar_scalar_add(Scalar self, Scalar other) {
     return Scalar(self.g0 + other.g0);
 }
@@ -182,6 +186,18 @@ DualNumber dual_number_dual(DualNumber self) {
 
 DualNumber dual_number_anti_reversal(DualNumber self) {
     return DualNumber(self.g0 * vec2(1.0, -1.0));
+}
+
+DualNumber dual_number_right_complement(DualNumber self) {
+    return DualNumber(self.g0.yx);
+}
+
+DualNumber dual_number_left_complement(DualNumber self) {
+    return DualNumber(self.g0.yx);
+}
+
+DualNumber dual_number_double_complement(DualNumber self) {
+    return DualNumber(self.g0);
 }
 
 Scalar dual_number_scalar_into(DualNumber self) {
