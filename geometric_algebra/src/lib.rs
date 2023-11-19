@@ -519,6 +519,14 @@ pub trait Attitude {
     fn attitude(self) -> Self::Output;
 }
 
+
+/// Euclidean Distance
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Euclidean_distance
+pub trait EuclideanDistance<T> {
+    type Output;
+    fn euclidean_distance(self, other: T) -> Self::Output;
+}
+
 // TODO generate implementations
 /// The Bulk of an object usually describes the object's relationship with the origin.
 /// An object with a Bulk of zero contains the origin.

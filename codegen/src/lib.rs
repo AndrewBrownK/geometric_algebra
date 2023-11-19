@@ -358,8 +358,6 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
         }
 
 
-
-
         trait_implementations.insert(
             parameter_a.multi_vector_class().class_name.clone(),
             (parameter_a.clone(), single_trait_implementations, pair_trait_implementations),
@@ -422,6 +420,126 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    let param_pairs: Vec<_> = trait_implementations.iter().filter_map(|(_, (parameter_a, _, pair_trait_impls))| {
+        let parameter_bs = pair_trait_impls.values().filter_map(|(parameter_b, pair_trait_impls)| {
+            if pair_trait_impls.contains_key("OuterProduct") { Some(parameter_b.clone()) } else { None }
+        }).collect::<Vec<Parameter>>();
+
+        if parameter_bs.is_empty() { None } else {
+            Some(parameter_bs.into_iter().map(|b| (parameter_a.clone(), b)).collect::<Vec<_>>())
+        }
+    }).flatten().collect();
+
+    for (parameter_a, parameter_b) in param_pairs {
+
+
+        // TODO remove this condition
+        if algebra.generator_squares != [1,1,1,0] {
+            break;
+        }
+
+        let bulk_wedge = match trait_implementations.get(&parameter_a.multi_vector_class().class_name) {
+            None => continue,
+            Some((a, _, stuff)) => match stuff.get(&parameter_b.multi_vector_class().class_name) {
+                None => continue,
+                Some((_, stuff)) => match stuff.get("OuterProduct") {
+                    None => continue,
+                    Some(wp) => wp
+                }
+            }
+        };
+        let bulk_wedge_result = result_of_trait!(bulk_wedge);
+
+        let bulk_attitude = match trait_implementations.get(&bulk_wedge_result.multi_vector_class().class_name) {
+            Some((_, singles, _)) => match singles.get("Attitude") {
+                Some(a) => a,
+                None => continue,
+            },
+            None => continue
+        };
+        let bulk_attitude_result = result_of_trait!(bulk_attitude);
+
+        let weight_attitude = match trait_implementations.get(&parameter_b.multi_vector_class().class_name) {
+            Some((_, singles, _)) => match singles.get("Attitude") {
+                Some(a) => a,
+                None => continue,
+            },
+            None => continue,
+        };
+        let weight_attitude_result = result_of_trait!(weight_attitude);
+
+
+
+
+        let weight_wedge = match trait_implementations.get(&parameter_a.multi_vector_class().class_name) {
+            None => continue,
+            Some((a, _, stuff)) => match stuff.get(&weight_attitude_result.multi_vector_class().class_name) {
+                None => continue,
+                Some((_, stuff)) => match stuff.get("OuterProduct") {
+                    None => continue,
+                    Some(wp) => wp
+                }
+            }
+        };
+        let weight_wedge_result = result_of_trait!(weight_wedge);
+
+
+
+
+
+        let bulk_norm = match trait_implementations.get(&bulk_attitude_result.multi_vector_class().class_name) {
+            Some((_, singles, _)) => match singles.get("BulkNorm") {
+                Some(bn) => bn,
+                None => continue,
+            },
+            None => continue
+        };
+
+        let weight_norm = match trait_implementations.get(&weight_wedge_result.multi_vector_class().class_name) {
+            Some((_, singles, _)) => match singles.get("WeightNorm") {
+                Some(wn) => wn,
+                None => continue,
+            },
+            None => continue
+        };
+
+        let bulk_norm_result = result_of_trait!(bulk_norm);
+        let weight_norm_result = result_of_trait!(weight_norm);
+        let final_add = match trait_implementations.get(&bulk_norm_result.multi_vector_class().class_name) {
+            Some((_, _, pairs)) => {
+                match pairs.get(&weight_norm_result.multi_vector_class().class_name) {
+                    Some((_, pair_trait_impls)) => match pair_trait_impls.get("Add") {
+                        Some(add) => add,
+                        None => continue
+                    },
+                    None => continue,
+                }
+            }
+            None => continue,
+        };
+        let final_result = result_of_trait!(final_add);
+
+        let ed = MultiVectorClass::derive_euclidean_distance(
+            "EuclideanDistance",
+            &parameter_a,
+            &parameter_b,
+            &final_result,
+            &bulk_wedge,
+            &bulk_attitude,
+            &bulk_norm,
+            &weight_attitude,
+            &weight_wedge,
+            &weight_norm
+        );
+        emitter.emit(&ed).unwrap();
+
+        if let Some((_, _, pairs)) = trait_implementations.get_mut(&parameter_a.multi_vector_class().class_name) {
+            if let Some((_, pair_impls)) = pairs.get_mut(&parameter_b.multi_vector_class().class_name) {
+                pair_impls.insert("EuclideanDistance".to_string(), ed);
             }
         }
     }

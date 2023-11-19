@@ -1427,8 +1427,70 @@ impl MultiVectorClass {
                                     body
                                 ),
                             }
-                            )]
+                        )]
                     )
+                }),
+            }],
+        }
+    }
+
+    // https://rigidgeometricalgebra.org/wiki/index.php?title=Euclidean_distance
+    pub fn derive_euclidean_distance<'a>(
+        name: &'static str,
+
+        parameter_a: &Parameter<'a>,
+        parameter_b: &Parameter<'a>,
+        result: &Parameter<'a>,
+
+        bulk_wedge: &AstNode<'a>,
+        bulk_attitude: &AstNode<'a>,
+        bulk_norm: &AstNode<'a>,
+
+        weight_attitude: &AstNode<'a>,
+        weight_wedge: &AstNode<'a>,
+        weight_norm: &AstNode<'a>,
+    ) -> AstNode<'a> {
+        let bulk_wedge_result = result_of_trait!(bulk_wedge);
+        let bulk_attitude_result = result_of_trait!(bulk_attitude);
+        let bulk_norm_result = result_of_trait!(bulk_norm);
+        let weight_attitude_result = result_of_trait!(weight_attitude);
+        let weight_wedge_result = result_of_trait!(weight_wedge);
+        let weight_norm_result = result_of_trait!(weight_norm);
+
+        AstNode::TraitImplementation {
+            result: Parameter { name, data_type: result.data_type.clone() },
+            parameters: vec![parameter_a.clone(), parameter_b.clone()],
+            body: vec![AstNode::ReturnStatement {
+                expression: Box::new(Expression {
+                    size: 1,
+                    content: ExpressionContent::Add(
+                        Box::new(Expression {
+                            size: 1,
+                            content: ExpressionContent::InvokeInstanceMethod(
+                                bulk_attitude_result.data_type.clone(),
+                                Box::new(Expression {
+                                    size: 1,
+                                    content: ExpressionContent::Variable(bulk_attitude_result.name),
+                                }),
+                                bulk_norm_result.name,
+                                //TODO
+                                vec![]
+                            ),
+                        }),
+                        Box::new(Expression {
+                            size: 1,
+                            content: ExpressionContent::InvokeInstanceMethod(
+                                weight_wedge_result.data_type.clone(),
+                                Box::new(Expression {
+                                    size: 1,
+                                    content: ExpressionContent::Variable(weight_wedge_result.name),
+                                }),
+                                weight_norm_result.name,
+                                //TODO
+                                vec![]
+                            ),
+                        }),
+                    ),
                 }),
             }],
         }

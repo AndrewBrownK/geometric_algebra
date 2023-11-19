@@ -4323,3 +4323,135 @@ Translator translator_scalar_geometric_quotient(Translator self, Scalar other) {
     return translator_scalar_geometric_product(self, scalar_inverse(other));
 }
 
+HomogeneousMagnitude flector_line_euclidean_distance(Flector self, Line other) {
+    return line_bulk_norm(Attitude) + motor_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude flector_motor_euclidean_distance(Flector self, Motor other) {
+    return line_bulk_norm(Attitude) + motor_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude flector_plane_euclidean_distance(Flector self, Plane other) {
+    return plane_bulk_norm(Attitude) + plane_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude flector_point_euclidean_distance(Flector self, Point other) {
+    return flector_bulk_norm(Attitude) + flector_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude homogeneous_magnitude_anti_scalar_euclidean_distance(HomogeneousMagnitude self, AntiScalar other) {
+    return plane_bulk_norm(Attitude) + plane_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_euclidean_distance(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return plane_bulk_norm(Attitude) + plane_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude homogeneous_magnitude_line_euclidean_distance(HomogeneousMagnitude self, Line other) {
+    return point_bulk_norm(Attitude) + point_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude homogeneous_magnitude_motor_euclidean_distance(HomogeneousMagnitude self, Motor other) {
+    return flector_bulk_norm(Attitude) + flector_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude homogeneous_magnitude_plane_euclidean_distance(HomogeneousMagnitude self, Plane other) {
+    return line_bulk_norm(Attitude) + line_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude homogeneous_magnitude_rotor_euclidean_distance(HomogeneousMagnitude self, Rotor other) {
+    return flector_bulk_norm(Attitude) + flector_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude line_line_euclidean_distance(Line self, Line other) {
+    return plane_bulk_norm(Attitude) + plane_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude line_motor_euclidean_distance(Line self, Motor other) {
+    return plane_bulk_norm(Attitude) + plane_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude line_point_euclidean_distance(Line self, Point other) {
+    return line_bulk_norm(Attitude) + line_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude line_rotor_euclidean_distance(Line self, Rotor other) {
+    return plane_bulk_norm(Attitude) + plane_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude motor_line_euclidean_distance(Motor self, Line other) {
+    return plane_bulk_norm(Attitude) + plane_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude motor_motor_euclidean_distance(Motor self, Motor other) {
+    return plane_bulk_norm(Attitude) + plane_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude motor_point_euclidean_distance(Motor self, Point other) {
+    return line_bulk_norm(Attitude) + motor_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude motor_rotor_euclidean_distance(Motor self, Rotor other) {
+    return plane_bulk_norm(Attitude) + plane_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude plane_point_euclidean_distance(Plane self, Point other) {
+    return plane_bulk_norm(Attitude) + plane_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude point_line_euclidean_distance(Point self, Line other) {
+    return line_bulk_norm(Attitude) + line_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude point_motor_euclidean_distance(Point self, Motor other) {
+    return line_bulk_norm(Attitude) + motor_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude point_plane_euclidean_distance(Point self, Plane other) {
+    return plane_bulk_norm(Attitude) + plane_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude point_point_euclidean_distance(Point self, Point other) {
+    return point_bulk_norm(Attitude) + point_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude scalar_anti_scalar_euclidean_distance(Scalar self, AntiScalar other) {
+    return plane_bulk_norm(Attitude) + plane_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude scalar_homogeneous_magnitude_euclidean_distance(Scalar self, HomogeneousMagnitude other) {
+    return plane_bulk_norm(Attitude) + plane_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude scalar_line_euclidean_distance(Scalar self, Line other) {
+    return point_bulk_norm(Attitude) + point_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude scalar_motor_euclidean_distance(Scalar self, Motor other) {
+    return flector_bulk_norm(Attitude) + flector_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude scalar_plane_euclidean_distance(Scalar self, Plane other) {
+    return line_bulk_norm(Attitude) + line_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude scalar_rotor_euclidean_distance(Scalar self, Rotor other) {
+    return flector_bulk_norm(Attitude) + flector_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude translator_line_euclidean_distance(Translator self, Line other) {
+    return plane_bulk_norm(Attitude) + plane_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude translator_motor_euclidean_distance(Translator self, Motor other) {
+    return plane_bulk_norm(Attitude) + plane_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude translator_point_euclidean_distance(Translator self, Point other) {
+    return line_bulk_norm(Attitude) + translator_weight_norm(OuterProduct);
+}
+
+HomogeneousMagnitude translator_rotor_euclidean_distance(Translator self, Rotor other) {
+    return plane_bulk_norm(Attitude) + plane_weight_norm(OuterProduct);
+}
+
