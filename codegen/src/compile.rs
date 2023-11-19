@@ -1378,4 +1378,59 @@ impl MultiVectorClass {
             }],
         }
     }
+
+    pub fn derive_attitude<'a>(
+        name: &'static str,
+        anti_wedge: &AstNode<'a>,
+        parameter_a: &Parameter<'a>,
+        parameter_b: &Parameter<'a>,
+        non_projective_blade: &BasisElement,
+    ) -> AstNode<'a> {
+        let b_flat_basis = parameter_b.multi_vector_class().flat_basis();
+        let mut body = Vec::new();
+        let mut base_index = 0;
+        for b_group in parameter_b.multi_vector_class().grouped_basis.iter() {
+            let size = b_group.len();
+            let factors: Vec<_> = (0..size).map(|index_in_group| {
+                let b_element = &b_flat_basis[base_index + index_in_group];
+                if b_element == non_projective_blade { 1 } else { 0 }
+            }).collect();
+            let expression = Expression {
+                size,
+                content: ExpressionContent::Constant(DataType::SimdVector(size), factors),
+            };
+            body.push((DataType::SimdVector(size), *simplify_and_legalize(Box::new(expression))));
+            base_index += size;
+        }
+
+        let anti_wedge_result = result_of_trait!(anti_wedge);
+        AstNode::TraitImplementation {
+            result: Parameter { name, data_type: anti_wedge_result.data_type.clone() },
+            parameters: vec![parameter_a.clone()],
+            body: vec![AstNode::ReturnStatement {
+                expression: Box::new(Expression {
+                    size: 1,
+                    content: ExpressionContent::InvokeInstanceMethod(
+                        parameter_a.data_type.clone(),
+                        Box::new(Expression {
+                            size: 1,
+                            content: ExpressionContent::Variable(parameter_a.name),
+                        }),
+                        anti_wedge_result.name,
+                        vec![(
+                            DataType::MultiVector(parameter_b.multi_vector_class()),
+                            Expression {
+                                size: 1,
+                                content: ExpressionContent::InvokeClassMethod(
+                                    parameter_b.multi_vector_class(),
+                                    "Constructor",
+                                    body
+                                ),
+                            }
+                            )]
+                    )
+                }),
+            }],
+        }
+    }
 }

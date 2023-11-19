@@ -308,22 +308,11 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
                 continue;
             }
 
-            // if parameter_b.multi_vector_class().grouped_basis.len() != 1 {
-            //     continue;
-            // }
-            // if parameter_b.multi_vector_class().grouped_basis[0].len() < algebra.generator_squares.len() {
-            //     continue;
-            // }
-
             // If this type has a GeometricProduct with scalar, then we can implement some extra stuff
             let geometric_product = match pair_trait_implementations.get("GeometricProduct") {
                 Some(gp) => gp,
                 None => continue,
             };
-
-            // if result_of_trait!(geometric_product).multi_vector_class() != parameter_a.multi_vector_class() {
-            //     continue;
-            // }
 
             if let Some(weight_norm) = single_trait_implementations.get("WeightNorm") {
                 let unitize = MultiVectorClass::derive_unitize("Unitize", geometric_product, weight_norm, &parameter_a, &parameter_b);
@@ -331,6 +320,45 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
                 single_trait_implementations.insert(result_of_trait!(unitize).name.to_string(), unitize);
             }
         }
+
+
+
+        // panic!("Where is my panic!");
+
+
+        // Can implement even more traits using existing traits
+        for (parameter_b, pair_trait_implementations) in pair_trait_implementations.values() {
+
+
+            let anti_wedge_product = match pair_trait_implementations.get("RegressiveProduct") {
+                Some(p) => p,
+                None => continue
+            };
+
+            let bases = parameter_b.multi_vector_class().flat_basis();
+            let nzd = algebra.generator_squares.iter().filter(|it| **it != 0isize).count();
+
+            if bases.iter().any(|it| it.grade() != nzd) {
+                continue
+            }
+            let special_base = match bases.iter().find(|it| BasisElement::product(&it, &it, &algebra).scalar != 0) {
+                Some(b) => b,
+                None => continue,
+            };
+
+            let attitude = MultiVectorClass::derive_attitude(
+                "Attitude",
+                anti_wedge_product,
+                &parameter_a,
+                &parameter_b,
+                &special_base
+            );
+            emitter.emit(&attitude).unwrap();
+            single_trait_implementations.insert(result_of_trait!(attitude).name.to_string(), attitude);
+        }
+
+
+
 
         trait_implementations.insert(
             parameter_a.multi_vector_class().class_name.clone(),

@@ -789,6 +789,10 @@ AntiScalar anti_scalar_scale(AntiScalar self, float other) {
     return anti_scalar_scalar_geometric_product(self, Scalar(other));
 }
 
+Point anti_scalar_attitude(AntiScalar self) {
+    return anti_scalar_point_regressive_product(self, Point(vec4(1.0, 0.0, 0.0, 0.0)));
+}
+
 MultiVector multi_vector_zero() {
     return MultiVector(vec4(0.0), vec4(0.0), vec4(0.0), vec4(0.0));
 }
@@ -1965,6 +1969,10 @@ Point point_unitize(Point self) {
     return point_scalar_geometric_product(self, Scalar(1.0 / point_weight_norm(self).g0));
 }
 
+Line point_attitude(Point self) {
+    return point_point_regressive_product(self, Point(vec4(1.0, 0.0, 0.0, 0.0)));
+}
+
 IdealPoint ideal_point_zero() {
     return IdealPoint(vec3(0.0));
 }
@@ -2235,6 +2243,10 @@ Point ideal_point_point_and_plane_left_anti_contraction(IdealPoint self, PointAn
 
 IdealPoint ideal_point_scale(IdealPoint self, float other) {
     return ideal_point_scalar_geometric_product(self, Scalar(other));
+}
+
+Plane ideal_point_attitude(IdealPoint self) {
+    return ideal_point_point_regressive_product(self, Point(vec4(1.0, 0.0, 0.0, 0.0)));
 }
 
 Plane plane_zero() {
@@ -2591,6 +2603,10 @@ Plane plane_inverse(Plane self) {
 
 Plane plane_unitize(Plane self) {
     return plane_scalar_geometric_product(self, Scalar(1.0 / plane_weight_norm(self).g0));
+}
+
+Scalar plane_attitude(Plane self) {
+    return plane_point_regressive_product(self, Point(vec4(1.0, 0.0, 0.0, 0.0)));
 }
 
 Line line_zero() {
@@ -3013,6 +3029,10 @@ Line line_unitize(Line self) {
     return line_scalar_geometric_product(self, Scalar(1.0 / line_weight_norm(self).g0));
 }
 
+Plane line_attitude(Line self) {
+    return line_point_regressive_product(self, Point(vec4(1.0, 0.0, 0.0, 0.0)));
+}
+
 Translator translator_zero() {
     return Translator(vec4(0.0));
 }
@@ -3431,6 +3451,10 @@ Translator translator_inverse(Translator self) {
 
 Translator translator_unitize(Translator self) {
     return translator_scalar_geometric_product(self, Scalar(1.0 / translator_weight_norm(self).g0));
+}
+
+Plane translator_attitude(Translator self) {
+    return translator_point_regressive_product(self, Point(vec4(1.0, 0.0, 0.0, 0.0)));
 }
 
 Motor motor_zero() {
@@ -3983,6 +4007,10 @@ Motor motor_inverse(Motor self) {
 
 Motor motor_unitize(Motor self) {
     return motor_scalar_geometric_product(self, Scalar(1.0 / motor_weight_norm(self).g0));
+}
+
+PointAndPlane motor_attitude(Motor self) {
+    return motor_point_regressive_product(self, Point(vec4(1.0, 0.0, 0.0, 0.0)));
 }
 
 PointAndPlane point_and_plane_zero() {

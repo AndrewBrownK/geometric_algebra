@@ -1060,6 +1060,10 @@ AntiScalar anti_scalar_scale(AntiScalar self, float other) {
     return anti_scalar_scalar_geometric_product(self, Scalar(other));
 }
 
+Circle anti_scalar_attitude(AntiScalar self) {
+    return anti_scalar_circle_regressive_product(self, Circle(vec4(0.0, 0.0, 0.0, 1.0), vec3(0.0), vec3(0.0)));
+}
+
 HomogeneousMagnitude homogeneous_magnitude_zero() {
     return HomogeneousMagnitude(vec2(0.0));
 }
@@ -1630,6 +1634,10 @@ HomogeneousMagnitude homogeneous_magnitude_inverse(HomogeneousMagnitude self) {
 
 HomogeneousMagnitude homogeneous_magnitude_unitize(HomogeneousMagnitude self) {
     return homogeneous_magnitude_scalar_geometric_product(self, Scalar(1.0 / homogeneous_magnitude_weight_norm(self).g0));
+}
+
+Circle homogeneous_magnitude_attitude(HomogeneousMagnitude self) {
+    return homogeneous_magnitude_circle_regressive_product(self, Circle(vec4(0.0, 0.0, 0.0, 1.0), vec3(0.0), vec3(0.0)));
 }
 
 RadialPoint radial_point_zero() {
@@ -2264,6 +2272,10 @@ FlatPoint flat_point_scale(FlatPoint self, float other) {
     return flat_point_scalar_geometric_product(self, Scalar(other));
 }
 
+Scalar flat_point_attitude(FlatPoint self) {
+    return flat_point_circle_regressive_product(self, Circle(vec4(0.0, 0.0, 0.0, 1.0), vec3(0.0), vec3(0.0)));
+}
+
 Dipole dipole_zero() {
     return Dipole(vec3(0.0), vec3(0.0), vec4(0.0));
 }
@@ -2672,6 +2684,10 @@ Dipole dipole_unitize(Dipole self) {
     return dipole_scalar_geometric_product(self, Scalar(1.0 / dipole_weight_norm(self).g0));
 }
 
+Scalar dipole_attitude(Dipole self) {
+    return dipole_circle_regressive_product(self, Circle(vec4(0.0, 0.0, 0.0, 1.0), vec3(0.0), vec3(0.0)));
+}
+
 Line line_zero() {
     return Line(vec3(0.0), vec3(0.0));
 }
@@ -2990,6 +3006,10 @@ AntiScalar line_multi_vector_anti_scalar_product(Line self, MultiVector other) {
 
 Line line_scale(Line self, float other) {
     return line_scalar_geometric_product(self, Scalar(other));
+}
+
+RadialPoint line_attitude(Line self) {
+    return line_circle_regressive_product(self, Circle(vec4(0.0, 0.0, 0.0, 1.0), vec3(0.0), vec3(0.0)));
 }
 
 Circle circle_zero() {
@@ -3384,6 +3404,10 @@ Circle circle_unitize(Circle self) {
     return circle_scalar_geometric_product(self, Scalar(1.0 / circle_weight_norm(self).g0));
 }
 
+RadialPoint circle_attitude(Circle self) {
+    return circle_circle_regressive_product(self, Circle(vec4(0.0, 0.0, 0.0, 1.0), vec3(0.0), vec3(0.0)));
+}
+
 Plane plane_zero() {
     return Plane(vec4(0.0));
 }
@@ -3708,6 +3732,10 @@ Plane plane_scale(Plane self, float other) {
     return plane_scalar_geometric_product(self, Scalar(other));
 }
 
+Dipole plane_attitude(Plane self) {
+    return plane_circle_regressive_product(self, Circle(vec4(0.0, 0.0, 0.0, 1.0), vec3(0.0), vec3(0.0)));
+}
+
 Sphere sphere_zero() {
     return Sphere(vec2(0.0), vec3(0.0));
 }
@@ -4002,6 +4030,10 @@ AntiScalar sphere_multi_vector_anti_scalar_product(Sphere self, MultiVector othe
 
 Sphere sphere_scale(Sphere self, float other) {
     return sphere_scalar_geometric_product(self, Scalar(other));
+}
+
+Dipole sphere_attitude(Sphere self) {
+    return sphere_circle_regressive_product(self, Circle(vec4(0.0, 0.0, 0.0, 1.0), vec3(0.0), vec3(0.0)));
 }
 
 Motor motor_zero() {

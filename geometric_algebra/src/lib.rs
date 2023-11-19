@@ -512,6 +512,13 @@ pub trait DoubleComplement {
 }
 
 
+/// Attitude
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Attitude
+pub trait Attitude {
+    type Output;
+    fn attitude(self) -> Self::Output;
+}
+
 // TODO generate implementations
 /// The Bulk of an object usually describes the object's relationship with the origin.
 /// An object with a Bulk of zero contains the origin.

@@ -2371,6 +2371,14 @@ impl Scale for AntiScalar {
     }
 }
 
+impl Attitude for AntiScalar {
+    type Output = Plane;
+
+    fn attitude(self) -> Plane {
+        self.regressive_product(Plane { groups: PlaneGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } })
+    }
+}
+
 impl Zero for HomogeneousMagnitude {
     fn zero() -> Self {
         HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(0.0) } }
@@ -3275,6 +3283,14 @@ impl Unitize for HomogeneousMagnitude {
     }
 }
 
+impl Attitude for HomogeneousMagnitude {
+    type Output = Plane;
+
+    fn attitude(self) -> Plane {
+        self.regressive_product(Plane { groups: PlaneGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } })
+    }
+}
+
 impl Zero for Point {
     fn zero() -> Self {
         Point { groups: PointGroups { g0: Simd32x4::from(0.0) } }
@@ -4020,6 +4036,14 @@ impl Unitize for Point {
 
     fn unitize(self) -> Point {
         self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
+    }
+}
+
+impl Attitude for Point {
+    type Output = Scalar;
+
+    fn attitude(self) -> Scalar {
+        self.regressive_product(Plane { groups: PlaneGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } })
     }
 }
 
@@ -4867,6 +4891,14 @@ impl Unitize for Line {
     }
 }
 
+impl Attitude for Line {
+    type Output = Point;
+
+    fn attitude(self) -> Point {
+        self.regressive_product(Plane { groups: PlaneGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } })
+    }
+}
+
 impl Zero for Plane {
     fn zero() -> Self {
         Plane { groups: PlaneGroups { g0: Simd32x4::from(0.0) } }
@@ -5604,6 +5636,14 @@ impl Unitize for Plane {
 
     fn unitize(self) -> Plane {
         self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
+    }
+}
+
+impl Attitude for Plane {
+    type Output = Line;
+
+    fn attitude(self) -> Line {
+        self.regressive_product(Plane { groups: PlaneGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } })
     }
 }
 
@@ -6459,6 +6499,14 @@ impl Unitize for Motor {
     }
 }
 
+impl Attitude for Motor {
+    type Output = Flector;
+
+    fn attitude(self) -> Flector {
+        self.regressive_product(Plane { groups: PlaneGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } })
+    }
+}
+
 impl Zero for Rotor {
     fn zero() -> Self {
         Rotor { groups: RotorGroups { g0: Simd32x4::from(0.0) } }
@@ -7094,6 +7142,14 @@ impl Scale for Rotor {
 
     fn scale(self, other: f32) -> Rotor {
         self.geometric_product(Scalar { groups: ScalarGroups { g0: other } })
+    }
+}
+
+impl Attitude for Rotor {
+    type Output = Flector;
+
+    fn attitude(self) -> Flector {
+        self.regressive_product(Plane { groups: PlaneGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } })
     }
 }
 

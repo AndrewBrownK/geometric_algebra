@@ -3301,6 +3301,14 @@ impl Scale for AntiScalar {
     }
 }
 
+impl Attitude for AntiScalar {
+    type Output = Circle;
+
+    fn attitude(self) -> Circle {
+        self.regressive_product(Circle { groups: CircleGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]), g1: Simd32x3::from(0.0), g2: Simd32x3::from(0.0) } })
+    }
+}
+
 impl Zero for HomogeneousMagnitude {
     fn zero() -> Self {
         HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(0.0) } }
@@ -4482,6 +4490,14 @@ impl Unitize for HomogeneousMagnitude {
 
     fn unitize(self) -> HomogeneousMagnitude {
         self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
+    }
+}
+
+impl Attitude for HomogeneousMagnitude {
+    type Output = Circle;
+
+    fn attitude(self) -> Circle {
+        self.regressive_product(Circle { groups: CircleGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]), g1: Simd32x3::from(0.0), g2: Simd32x3::from(0.0) } })
     }
 }
 
@@ -5789,6 +5805,14 @@ impl Scale for FlatPoint {
     }
 }
 
+impl Attitude for FlatPoint {
+    type Output = Scalar;
+
+    fn attitude(self) -> Scalar {
+        self.regressive_product(Circle { groups: CircleGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]), g1: Simd32x3::from(0.0), g2: Simd32x3::from(0.0) } })
+    }
+}
+
 impl Zero for Dipole {
     fn zero() -> Self {
         Dipole { groups: DipoleGroups { g0: Simd32x3::from(0.0), g1: Simd32x3::from(0.0), g2: Simd32x4::from(0.0) } }
@@ -6635,6 +6659,14 @@ impl Unitize for Dipole {
     }
 }
 
+impl Attitude for Dipole {
+    type Output = Scalar;
+
+    fn attitude(self) -> Scalar {
+        self.regressive_product(Circle { groups: CircleGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]), g1: Simd32x3::from(0.0), g2: Simd32x3::from(0.0) } })
+    }
+}
+
 impl Zero for Line {
     fn zero() -> Self {
         Line { groups: LineGroups { g0: Simd32x3::from(0.0), g1: Simd32x3::from(0.0) } }
@@ -7292,6 +7324,14 @@ impl Scale for Line {
 
     fn scale(self, other: f32) -> Line {
         self.geometric_product(Scalar { groups: ScalarGroups { g0: other } })
+    }
+}
+
+impl Attitude for Line {
+    type Output = RadialPoint;
+
+    fn attitude(self) -> RadialPoint {
+        self.regressive_product(Circle { groups: CircleGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]), g1: Simd32x3::from(0.0), g2: Simd32x3::from(0.0) } })
     }
 }
 
@@ -8109,6 +8149,14 @@ impl Unitize for Circle {
     }
 }
 
+impl Attitude for Circle {
+    type Output = RadialPoint;
+
+    fn attitude(self) -> RadialPoint {
+        self.regressive_product(Circle { groups: CircleGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]), g1: Simd32x3::from(0.0), g2: Simd32x3::from(0.0) } })
+    }
+}
+
 impl Zero for Plane {
     fn zero() -> Self {
         Plane { groups: PlaneGroups { g0: Simd32x4::from(0.0) } }
@@ -8777,6 +8825,14 @@ impl Scale for Plane {
     }
 }
 
+impl Attitude for Plane {
+    type Output = Dipole;
+
+    fn attitude(self) -> Dipole {
+        self.regressive_product(Circle { groups: CircleGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]), g1: Simd32x3::from(0.0), g2: Simd32x3::from(0.0) } })
+    }
+}
+
 impl Zero for Sphere {
     fn zero() -> Self {
         Sphere { groups: SphereGroups { g0: Simd32x2::from(0.0), g1: Simd32x3::from(0.0) } }
@@ -9396,6 +9452,14 @@ impl Scale for Sphere {
 
     fn scale(self, other: f32) -> Sphere {
         self.geometric_product(Scalar { groups: ScalarGroups { g0: other } })
+    }
+}
+
+impl Attitude for Sphere {
+    type Output = Dipole;
+
+    fn attitude(self) -> Dipole {
+        self.regressive_product(Circle { groups: CircleGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]), g1: Simd32x3::from(0.0), g2: Simd32x3::from(0.0) } })
     }
 }
 

@@ -785,6 +785,10 @@ AntiScalar anti_scalar_scale(AntiScalar self, float other) {
     return anti_scalar_scalar_geometric_product(self, Scalar(other));
 }
 
+Plane anti_scalar_attitude(AntiScalar self) {
+    return anti_scalar_plane_regressive_product(self, Plane(vec4(0.0, 0.0, 0.0, 1.0)));
+}
+
 HomogeneousMagnitude homogeneous_magnitude_zero() {
     return HomogeneousMagnitude(vec2(0.0));
 }
@@ -1217,6 +1221,10 @@ HomogeneousMagnitude homogeneous_magnitude_unitize(HomogeneousMagnitude self) {
     return homogeneous_magnitude_scalar_geometric_product(self, Scalar(1.0 / homogeneous_magnitude_weight_norm(self).g0));
 }
 
+Plane homogeneous_magnitude_attitude(HomogeneousMagnitude self) {
+    return homogeneous_magnitude_plane_regressive_product(self, Plane(vec4(0.0, 0.0, 0.0, 1.0)));
+}
+
 Point point_zero() {
     return Point(vec4(0.0));
 }
@@ -1579,6 +1587,10 @@ Point point_inverse(Point self) {
 
 Point point_unitize(Point self) {
     return point_scalar_geometric_product(self, Scalar(1.0 / point_weight_norm(self).g0));
+}
+
+Scalar point_attitude(Point self) {
+    return point_plane_regressive_product(self, Plane(vec4(0.0, 0.0, 0.0, 1.0)));
 }
 
 Line line_zero() {
@@ -1993,6 +2005,10 @@ Line line_unitize(Line self) {
     return line_scalar_geometric_product(self, Scalar(1.0 / line_weight_norm(self).g0));
 }
 
+Point line_attitude(Line self) {
+    return line_plane_regressive_product(self, Plane(vec4(0.0, 0.0, 0.0, 1.0)));
+}
+
 Plane plane_zero() {
     return Plane(vec4(0.0));
 }
@@ -2351,6 +2367,10 @@ Plane plane_inverse(Plane self) {
 
 Plane plane_unitize(Plane self) {
     return plane_scalar_geometric_product(self, Scalar(1.0 / plane_weight_norm(self).g0));
+}
+
+Line plane_attitude(Plane self) {
+    return plane_plane_regressive_product(self, Plane(vec4(0.0, 0.0, 0.0, 1.0)));
 }
 
 Motor motor_zero() {
@@ -2749,6 +2769,10 @@ Motor motor_unitize(Motor self) {
     return motor_scalar_geometric_product(self, Scalar(1.0 / motor_weight_norm(self).g0));
 }
 
+Flector motor_attitude(Motor self) {
+    return motor_plane_regressive_product(self, Plane(vec4(0.0, 0.0, 0.0, 1.0)));
+}
+
 Rotor rotor_zero() {
     return Rotor(vec4(0.0));
 }
@@ -3051,6 +3075,10 @@ AntiScalar rotor_multi_vector_anti_scalar_product(Rotor self, MultiVector other)
 
 Rotor rotor_scale(Rotor self, float other) {
     return rotor_scalar_geometric_product(self, Scalar(other));
+}
+
+Flector rotor_attitude(Rotor self) {
+    return rotor_plane_regressive_product(self, Plane(vec4(0.0, 0.0, 0.0, 1.0)));
 }
 
 Translator translator_zero() {
