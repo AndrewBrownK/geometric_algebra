@@ -3178,7 +3178,8 @@ fn homogeneous_magnitude_geometric_norm(self_548: HomogeneousMagnitude) -> Homog
     let _e3: Scalar = homogeneous_magnitude_bulk_norm(_e2);
     let _e4: HomogeneousMagnitude = self_549;
     let _e5: AntiScalar = homogeneous_magnitude_weight_norm(_e4);
-    return (_e3 + _e5);
+    let _e6: HomogeneousMagnitude = scalar_anti_scalar_add(_e3, _e5);
+    return _e6;
 }
 
 fn homogeneous_magnitude_scale(self_550: HomogeneousMagnitude, other_466: f32) -> HomogeneousMagnitude {
@@ -4526,7 +4527,8 @@ fn point_geometric_norm(self_726: Point) -> HomogeneousMagnitude {
     let _e3: Scalar = point_bulk_norm(_e2);
     let _e4: Point = self_727;
     let _e5: AntiScalar = point_weight_norm(_e4);
-    return (_e3 + _e5);
+    let _e6: HomogeneousMagnitude = scalar_anti_scalar_add(_e3, _e5);
+    return _e6;
 }
 
 fn point_scale(self_728: Point, other_604: f32) -> Point {
@@ -6190,7 +6192,8 @@ fn line_geometric_norm(self_928: Line) -> HomogeneousMagnitude {
     let _e3: Scalar = line_bulk_norm(_e2);
     let _e4: Line = self_929;
     let _e5: AntiScalar = line_weight_norm(_e4);
-    return (_e3 + _e5);
+    let _e6: HomogeneousMagnitude = scalar_anti_scalar_add(_e3, _e5);
+    return _e6;
 }
 
 fn line_scale(self_930: Line, other_766: f32) -> Line {
@@ -7550,7 +7553,8 @@ fn plane_geometric_norm(self_1104: Plane) -> HomogeneousMagnitude {
     let _e3: Scalar = plane_bulk_norm(_e2);
     let _e4: Plane = self_1105;
     let _e5: AntiScalar = plane_weight_norm(_e4);
-    return (_e3 + _e5);
+    let _e6: HomogeneousMagnitude = scalar_anti_scalar_add(_e3, _e5);
+    return _e6;
 }
 
 fn plane_scale(self_1106: Plane, other_902: f32) -> Plane {
@@ -9149,7 +9153,8 @@ fn motor_geometric_norm(self_1300: Motor) -> HomogeneousMagnitude {
     let _e3: Scalar = motor_bulk_norm(_e2);
     let _e4: Motor = self_1301;
     let _e5: AntiScalar = motor_weight_norm(_e4);
-    return (_e3 + _e5);
+    let _e6: HomogeneousMagnitude = scalar_anti_scalar_add(_e3, _e5);
+    return _e6;
 }
 
 fn motor_scale(self_1302: Motor, other_1058: f32) -> Motor {
@@ -11458,7 +11463,8 @@ fn translator_geometric_norm(self_1636: Translator) -> HomogeneousMagnitude {
     let _e3: Scalar = translator_bulk_norm(_e2);
     let _e4: Translator = self_1637;
     let _e5: AntiScalar = translator_weight_norm(_e4);
-    return (_e3 + _e5);
+    let _e6: HomogeneousMagnitude = scalar_anti_scalar_add(_e3, _e5);
+    return _e6;
 }
 
 fn translator_scale(self_1638: Translator, other_1344: f32) -> Translator {
@@ -13474,7 +13480,8 @@ fn flector_geometric_norm(self_1830: Flector) -> HomogeneousMagnitude {
     let _e3: Scalar = flector_bulk_norm(_e2);
     let _e4: Flector = self_1831;
     let _e5: AntiScalar = flector_weight_norm(_e4);
-    return (_e3 + _e5);
+    let _e6: HomogeneousMagnitude = scalar_anti_scalar_add(_e3, _e5);
+    return _e6;
 }
 
 fn flector_scale(self_1832: Flector, other_1498: f32) -> Flector {
@@ -14023,7 +14030,8 @@ fn multi_vector_geometric_norm(self_1912: MultiVector) -> HomogeneousMagnitude {
     let _e3: Scalar = multi_vector_bulk_norm(_e2);
     let _e4: MultiVector = self_1913;
     let _e5: AntiScalar = multi_vector_weight_norm(_e4);
-    return (_e3 + _e5);
+    let _e6: HomogeneousMagnitude = scalar_anti_scalar_add(_e3, _e5);
+    return _e6;
 }
 
 fn anti_scalar_homogeneous_magnitude_geometric_quotient(self_1914: AntiScalar, other_1546: HomogeneousMagnitude) -> AntiScalar {
@@ -15115,5 +15123,665 @@ fn translator_scalar_geometric_quotient(self_2056: Translator, other_1684: Scala
     let _e6: Scalar = scalar_inverse(_e5);
     let _e7: Translator = translator_scalar_geometric_product(_e4, _e6);
     return _e7;
+}
+
+fn flector_line_euclidean_distance(self_2058: Flector, other_1686: Line) -> HomogeneousMagnitude {
+    var self_2059: Flector;
+    var other_1687: Line;
+
+    self_2059 = self_2058;
+    other_1687 = other_1686;
+    let _e4: Flector = self_2059;
+    let _e5: Line = other_1687;
+    let _e6: Plane = flector_line_outer_product(_e4, _e5);
+    let _e7: Line = plane_attitude(_e6);
+    let _e8: Scalar = line_bulk_norm(_e7);
+    let _e9: Flector = self_2059;
+    let _e10: Line = other_1687;
+    let _e11: Point = line_attitude(_e10);
+    let _e12: Motor = flector_point_outer_product(_e9, _e11);
+    let _e13: AntiScalar = motor_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn flector_motor_euclidean_distance(self_2060: Flector, other_1688: Motor) -> HomogeneousMagnitude {
+    var self_2061: Flector;
+    var other_1689: Motor;
+
+    self_2061 = self_2060;
+    other_1689 = other_1688;
+    let _e4: Flector = self_2061;
+    let _e5: Motor = other_1689;
+    let _e6: Plane = flector_motor_outer_product(_e4, _e5);
+    let _e7: Line = plane_attitude(_e6);
+    let _e8: Scalar = line_bulk_norm(_e7);
+    let _e9: Flector = self_2061;
+    let _e10: Motor = other_1689;
+    let _e11: Flector = motor_attitude(_e10);
+    let _e12: Motor = flector_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = motor_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn flector_plane_euclidean_distance(self_2062: Flector, other_1690: Plane) -> HomogeneousMagnitude {
+    var self_2063: Flector;
+    var other_1691: Plane;
+
+    self_2063 = self_2062;
+    other_1691 = other_1690;
+    let _e4: Flector = self_2063;
+    let _e5: Plane = other_1691;
+    let _e6: AntiScalar = flector_plane_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Flector = self_2063;
+    let _e10: Plane = other_1691;
+    let _e11: Line = plane_attitude(_e10);
+    let _e12: Plane = flector_line_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn flector_point_euclidean_distance(self_2064: Flector, other_1692: Point) -> HomogeneousMagnitude {
+    var self_2065: Flector;
+    var other_1693: Point;
+
+    self_2065 = self_2064;
+    other_1693 = other_1692;
+    let _e4: Flector = self_2065;
+    let _e5: Point = other_1693;
+    let _e6: Motor = flector_point_outer_product(_e4, _e5);
+    let _e7: Flector = motor_attitude(_e6);
+    let _e8: Scalar = flector_bulk_norm(_e7);
+    let _e9: Flector = self_2065;
+    let _e10: Point = other_1693;
+    let _e11: Scalar = point_attitude(_e10);
+    let _e12: Flector = flector_scalar_outer_product(_e9, _e11);
+    let _e13: AntiScalar = flector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn homogeneous_magnitude_anti_scalar_euclidean_distance(self_2066: HomogeneousMagnitude, other_1694: AntiScalar) -> HomogeneousMagnitude {
+    var self_2067: HomogeneousMagnitude;
+    var other_1695: AntiScalar;
+
+    self_2067 = self_2066;
+    other_1695 = other_1694;
+    let _e4: HomogeneousMagnitude = self_2067;
+    let _e5: AntiScalar = other_1695;
+    let _e6: AntiScalar = homogeneous_magnitude_anti_scalar_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: HomogeneousMagnitude = self_2067;
+    let _e10: AntiScalar = other_1695;
+    let _e11: Plane = anti_scalar_attitude(_e10);
+    let _e12: Plane = homogeneous_magnitude_plane_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn homogeneous_magnitude_homogeneous_magnitude_euclidean_distance(self_2068: HomogeneousMagnitude, other_1696: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_2069: HomogeneousMagnitude;
+    var other_1697: HomogeneousMagnitude;
+
+    self_2069 = self_2068;
+    other_1697 = other_1696;
+    let _e4: HomogeneousMagnitude = self_2069;
+    let _e5: HomogeneousMagnitude = other_1697;
+    let _e6: HomogeneousMagnitude = homogeneous_magnitude_homogeneous_magnitude_outer_product(_e4, _e5);
+    let _e7: Plane = homogeneous_magnitude_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: HomogeneousMagnitude = self_2069;
+    let _e10: HomogeneousMagnitude = other_1697;
+    let _e11: Plane = homogeneous_magnitude_attitude(_e10);
+    let _e12: Plane = homogeneous_magnitude_plane_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn homogeneous_magnitude_line_euclidean_distance(self_2070: HomogeneousMagnitude, other_1698: Line) -> HomogeneousMagnitude {
+    var self_2071: HomogeneousMagnitude;
+    var other_1699: Line;
+
+    self_2071 = self_2070;
+    other_1699 = other_1698;
+    let _e4: HomogeneousMagnitude = self_2071;
+    let _e5: Line = other_1699;
+    let _e6: Line = homogeneous_magnitude_line_outer_product(_e4, _e5);
+    let _e7: Point = line_attitude(_e6);
+    let _e8: Scalar = point_bulk_norm(_e7);
+    let _e9: HomogeneousMagnitude = self_2071;
+    let _e10: Line = other_1699;
+    let _e11: Point = line_attitude(_e10);
+    let _e12: Point = homogeneous_magnitude_point_outer_product(_e9, _e11);
+    let _e13: AntiScalar = point_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn homogeneous_magnitude_motor_euclidean_distance(self_2072: HomogeneousMagnitude, other_1700: Motor) -> HomogeneousMagnitude {
+    var self_2073: HomogeneousMagnitude;
+    var other_1701: Motor;
+
+    self_2073 = self_2072;
+    other_1701 = other_1700;
+    let _e4: HomogeneousMagnitude = self_2073;
+    let _e5: Motor = other_1701;
+    let _e6: Motor = homogeneous_magnitude_motor_outer_product(_e4, _e5);
+    let _e7: Flector = motor_attitude(_e6);
+    let _e8: Scalar = flector_bulk_norm(_e7);
+    let _e9: HomogeneousMagnitude = self_2073;
+    let _e10: Motor = other_1701;
+    let _e11: Flector = motor_attitude(_e10);
+    let _e12: Flector = homogeneous_magnitude_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = flector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn homogeneous_magnitude_plane_euclidean_distance(self_2074: HomogeneousMagnitude, other_1702: Plane) -> HomogeneousMagnitude {
+    var self_2075: HomogeneousMagnitude;
+    var other_1703: Plane;
+
+    self_2075 = self_2074;
+    other_1703 = other_1702;
+    let _e4: HomogeneousMagnitude = self_2075;
+    let _e5: Plane = other_1703;
+    let _e6: Plane = homogeneous_magnitude_plane_outer_product(_e4, _e5);
+    let _e7: Line = plane_attitude(_e6);
+    let _e8: Scalar = line_bulk_norm(_e7);
+    let _e9: HomogeneousMagnitude = self_2075;
+    let _e10: Plane = other_1703;
+    let _e11: Line = plane_attitude(_e10);
+    let _e12: Line = homogeneous_magnitude_line_outer_product(_e9, _e11);
+    let _e13: AntiScalar = line_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn homogeneous_magnitude_rotor_euclidean_distance(self_2076: HomogeneousMagnitude, other_1704: Rotor) -> HomogeneousMagnitude {
+    var self_2077: HomogeneousMagnitude;
+    var other_1705: Rotor;
+
+    self_2077 = self_2076;
+    other_1705 = other_1704;
+    let _e4: HomogeneousMagnitude = self_2077;
+    let _e5: Rotor = other_1705;
+    let _e6: Rotor = homogeneous_magnitude_rotor_outer_product(_e4, _e5);
+    let _e7: Flector = rotor_attitude(_e6);
+    let _e8: Scalar = flector_bulk_norm(_e7);
+    let _e9: HomogeneousMagnitude = self_2077;
+    let _e10: Rotor = other_1705;
+    let _e11: Flector = rotor_attitude(_e10);
+    let _e12: Flector = homogeneous_magnitude_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = flector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn line_line_euclidean_distance(self_2078: Line, other_1706: Line) -> HomogeneousMagnitude {
+    var self_2079: Line;
+    var other_1707: Line;
+
+    self_2079 = self_2078;
+    other_1707 = other_1706;
+    let _e4: Line = self_2079;
+    let _e5: Line = other_1707;
+    let _e6: AntiScalar = line_line_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Line = self_2079;
+    let _e10: Line = other_1707;
+    let _e11: Point = line_attitude(_e10);
+    let _e12: Plane = line_point_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn line_motor_euclidean_distance(self_2080: Line, other_1708: Motor) -> HomogeneousMagnitude {
+    var self_2081: Line;
+    var other_1709: Motor;
+
+    self_2081 = self_2080;
+    other_1709 = other_1708;
+    let _e4: Line = self_2081;
+    let _e5: Motor = other_1709;
+    let _e6: AntiScalar = line_motor_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Line = self_2081;
+    let _e10: Motor = other_1709;
+    let _e11: Flector = motor_attitude(_e10);
+    let _e12: Plane = line_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn line_point_euclidean_distance(self_2082: Line, other_1710: Point) -> HomogeneousMagnitude {
+    var self_2083: Line;
+    var other_1711: Point;
+
+    self_2083 = self_2082;
+    other_1711 = other_1710;
+    let _e4: Line = self_2083;
+    let _e5: Point = other_1711;
+    let _e6: Plane = line_point_outer_product(_e4, _e5);
+    let _e7: Line = plane_attitude(_e6);
+    let _e8: Scalar = line_bulk_norm(_e7);
+    let _e9: Line = self_2083;
+    let _e10: Point = other_1711;
+    let _e11: Scalar = point_attitude(_e10);
+    let _e12: Line = line_scalar_outer_product(_e9, _e11);
+    let _e13: AntiScalar = line_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn line_rotor_euclidean_distance(self_2084: Line, other_1712: Rotor) -> HomogeneousMagnitude {
+    var self_2085: Line;
+    var other_1713: Rotor;
+
+    self_2085 = self_2084;
+    other_1713 = other_1712;
+    let _e4: Line = self_2085;
+    let _e5: Rotor = other_1713;
+    let _e6: AntiScalar = line_rotor_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Line = self_2085;
+    let _e10: Rotor = other_1713;
+    let _e11: Flector = rotor_attitude(_e10);
+    let _e12: Plane = line_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn motor_line_euclidean_distance(self_2086: Motor, other_1714: Line) -> HomogeneousMagnitude {
+    var self_2087: Motor;
+    var other_1715: Line;
+
+    self_2087 = self_2086;
+    other_1715 = other_1714;
+    let _e4: Motor = self_2087;
+    let _e5: Line = other_1715;
+    let _e6: AntiScalar = motor_line_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Motor = self_2087;
+    let _e10: Line = other_1715;
+    let _e11: Point = line_attitude(_e10);
+    let _e12: Plane = motor_point_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn motor_motor_euclidean_distance(self_2088: Motor, other_1716: Motor) -> HomogeneousMagnitude {
+    var self_2089: Motor;
+    var other_1717: Motor;
+
+    self_2089 = self_2088;
+    other_1717 = other_1716;
+    let _e4: Motor = self_2089;
+    let _e5: Motor = other_1717;
+    let _e6: AntiScalar = motor_motor_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Motor = self_2089;
+    let _e10: Motor = other_1717;
+    let _e11: Flector = motor_attitude(_e10);
+    let _e12: Plane = motor_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn motor_point_euclidean_distance(self_2090: Motor, other_1718: Point) -> HomogeneousMagnitude {
+    var self_2091: Motor;
+    var other_1719: Point;
+
+    self_2091 = self_2090;
+    other_1719 = other_1718;
+    let _e4: Motor = self_2091;
+    let _e5: Point = other_1719;
+    let _e6: Plane = motor_point_outer_product(_e4, _e5);
+    let _e7: Line = plane_attitude(_e6);
+    let _e8: Scalar = line_bulk_norm(_e7);
+    let _e9: Motor = self_2091;
+    let _e10: Point = other_1719;
+    let _e11: Scalar = point_attitude(_e10);
+    let _e12: Motor = motor_scalar_outer_product(_e9, _e11);
+    let _e13: AntiScalar = motor_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn motor_rotor_euclidean_distance(self_2092: Motor, other_1720: Rotor) -> HomogeneousMagnitude {
+    var self_2093: Motor;
+    var other_1721: Rotor;
+
+    self_2093 = self_2092;
+    other_1721 = other_1720;
+    let _e4: Motor = self_2093;
+    let _e5: Rotor = other_1721;
+    let _e6: AntiScalar = motor_rotor_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Motor = self_2093;
+    let _e10: Rotor = other_1721;
+    let _e11: Flector = rotor_attitude(_e10);
+    let _e12: Plane = motor_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn plane_point_euclidean_distance(self_2094: Plane, other_1722: Point) -> HomogeneousMagnitude {
+    var self_2095: Plane;
+    var other_1723: Point;
+
+    self_2095 = self_2094;
+    other_1723 = other_1722;
+    let _e4: Plane = self_2095;
+    let _e5: Point = other_1723;
+    let _e6: AntiScalar = plane_point_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Plane = self_2095;
+    let _e10: Point = other_1723;
+    let _e11: Scalar = point_attitude(_e10);
+    let _e12: Plane = plane_scalar_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn point_line_euclidean_distance(self_2096: Point, other_1724: Line) -> HomogeneousMagnitude {
+    var self_2097: Point;
+    var other_1725: Line;
+
+    self_2097 = self_2096;
+    other_1725 = other_1724;
+    let _e4: Point = self_2097;
+    let _e5: Line = other_1725;
+    let _e6: Plane = point_line_outer_product(_e4, _e5);
+    let _e7: Line = plane_attitude(_e6);
+    let _e8: Scalar = line_bulk_norm(_e7);
+    let _e9: Point = self_2097;
+    let _e10: Line = other_1725;
+    let _e11: Point = line_attitude(_e10);
+    let _e12: Line = point_point_outer_product(_e9, _e11);
+    let _e13: AntiScalar = line_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn point_motor_euclidean_distance(self_2098: Point, other_1726: Motor) -> HomogeneousMagnitude {
+    var self_2099: Point;
+    var other_1727: Motor;
+
+    self_2099 = self_2098;
+    other_1727 = other_1726;
+    let _e4: Point = self_2099;
+    let _e5: Motor = other_1727;
+    let _e6: Plane = point_motor_outer_product(_e4, _e5);
+    let _e7: Line = plane_attitude(_e6);
+    let _e8: Scalar = line_bulk_norm(_e7);
+    let _e9: Point = self_2099;
+    let _e10: Motor = other_1727;
+    let _e11: Flector = motor_attitude(_e10);
+    let _e12: Motor = point_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = motor_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn point_plane_euclidean_distance(self_2100: Point, other_1728: Plane) -> HomogeneousMagnitude {
+    var self_2101: Point;
+    var other_1729: Plane;
+
+    self_2101 = self_2100;
+    other_1729 = other_1728;
+    let _e4: Point = self_2101;
+    let _e5: Plane = other_1729;
+    let _e6: AntiScalar = point_plane_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Point = self_2101;
+    let _e10: Plane = other_1729;
+    let _e11: Line = plane_attitude(_e10);
+    let _e12: Plane = point_line_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn point_point_euclidean_distance(self_2102: Point, other_1730: Point) -> HomogeneousMagnitude {
+    var self_2103: Point;
+    var other_1731: Point;
+
+    self_2103 = self_2102;
+    other_1731 = other_1730;
+    let _e4: Point = self_2103;
+    let _e5: Point = other_1731;
+    let _e6: Line = point_point_outer_product(_e4, _e5);
+    let _e7: Point = line_attitude(_e6);
+    let _e8: Scalar = point_bulk_norm(_e7);
+    let _e9: Point = self_2103;
+    let _e10: Point = other_1731;
+    let _e11: Scalar = point_attitude(_e10);
+    let _e12: Point = point_scalar_outer_product(_e9, _e11);
+    let _e13: AntiScalar = point_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn scalar_anti_scalar_euclidean_distance(self_2104: Scalar, other_1732: AntiScalar) -> HomogeneousMagnitude {
+    var self_2105: Scalar;
+    var other_1733: AntiScalar;
+
+    self_2105 = self_2104;
+    other_1733 = other_1732;
+    let _e4: Scalar = self_2105;
+    let _e5: AntiScalar = other_1733;
+    let _e6: AntiScalar = scalar_anti_scalar_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Scalar = self_2105;
+    let _e10: AntiScalar = other_1733;
+    let _e11: Plane = anti_scalar_attitude(_e10);
+    let _e12: Plane = scalar_plane_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn scalar_homogeneous_magnitude_euclidean_distance(self_2106: Scalar, other_1734: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_2107: Scalar;
+    var other_1735: HomogeneousMagnitude;
+
+    self_2107 = self_2106;
+    other_1735 = other_1734;
+    let _e4: Scalar = self_2107;
+    let _e5: HomogeneousMagnitude = other_1735;
+    let _e6: HomogeneousMagnitude = scalar_homogeneous_magnitude_outer_product(_e4, _e5);
+    let _e7: Plane = homogeneous_magnitude_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Scalar = self_2107;
+    let _e10: HomogeneousMagnitude = other_1735;
+    let _e11: Plane = homogeneous_magnitude_attitude(_e10);
+    let _e12: Plane = scalar_plane_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn scalar_line_euclidean_distance(self_2108: Scalar, other_1736: Line) -> HomogeneousMagnitude {
+    var self_2109: Scalar;
+    var other_1737: Line;
+
+    self_2109 = self_2108;
+    other_1737 = other_1736;
+    let _e4: Scalar = self_2109;
+    let _e5: Line = other_1737;
+    let _e6: Line = scalar_line_outer_product(_e4, _e5);
+    let _e7: Point = line_attitude(_e6);
+    let _e8: Scalar = point_bulk_norm(_e7);
+    let _e9: Scalar = self_2109;
+    let _e10: Line = other_1737;
+    let _e11: Point = line_attitude(_e10);
+    let _e12: Point = scalar_point_outer_product(_e9, _e11);
+    let _e13: AntiScalar = point_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn scalar_motor_euclidean_distance(self_2110: Scalar, other_1738: Motor) -> HomogeneousMagnitude {
+    var self_2111: Scalar;
+    var other_1739: Motor;
+
+    self_2111 = self_2110;
+    other_1739 = other_1738;
+    let _e4: Scalar = self_2111;
+    let _e5: Motor = other_1739;
+    let _e6: Motor = scalar_motor_outer_product(_e4, _e5);
+    let _e7: Flector = motor_attitude(_e6);
+    let _e8: Scalar = flector_bulk_norm(_e7);
+    let _e9: Scalar = self_2111;
+    let _e10: Motor = other_1739;
+    let _e11: Flector = motor_attitude(_e10);
+    let _e12: Flector = scalar_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = flector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn scalar_plane_euclidean_distance(self_2112: Scalar, other_1740: Plane) -> HomogeneousMagnitude {
+    var self_2113: Scalar;
+    var other_1741: Plane;
+
+    self_2113 = self_2112;
+    other_1741 = other_1740;
+    let _e4: Scalar = self_2113;
+    let _e5: Plane = other_1741;
+    let _e6: Plane = scalar_plane_outer_product(_e4, _e5);
+    let _e7: Line = plane_attitude(_e6);
+    let _e8: Scalar = line_bulk_norm(_e7);
+    let _e9: Scalar = self_2113;
+    let _e10: Plane = other_1741;
+    let _e11: Line = plane_attitude(_e10);
+    let _e12: Line = scalar_line_outer_product(_e9, _e11);
+    let _e13: AntiScalar = line_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn scalar_rotor_euclidean_distance(self_2114: Scalar, other_1742: Rotor) -> HomogeneousMagnitude {
+    var self_2115: Scalar;
+    var other_1743: Rotor;
+
+    self_2115 = self_2114;
+    other_1743 = other_1742;
+    let _e4: Scalar = self_2115;
+    let _e5: Rotor = other_1743;
+    let _e6: Rotor = scalar_rotor_outer_product(_e4, _e5);
+    let _e7: Flector = rotor_attitude(_e6);
+    let _e8: Scalar = flector_bulk_norm(_e7);
+    let _e9: Scalar = self_2115;
+    let _e10: Rotor = other_1743;
+    let _e11: Flector = rotor_attitude(_e10);
+    let _e12: Flector = scalar_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = flector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn translator_line_euclidean_distance(self_2116: Translator, other_1744: Line) -> HomogeneousMagnitude {
+    var self_2117: Translator;
+    var other_1745: Line;
+
+    self_2117 = self_2116;
+    other_1745 = other_1744;
+    let _e4: Translator = self_2117;
+    let _e5: Line = other_1745;
+    let _e6: AntiScalar = translator_line_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Translator = self_2117;
+    let _e10: Line = other_1745;
+    let _e11: Point = line_attitude(_e10);
+    let _e12: Plane = translator_point_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn translator_motor_euclidean_distance(self_2118: Translator, other_1746: Motor) -> HomogeneousMagnitude {
+    var self_2119: Translator;
+    var other_1747: Motor;
+
+    self_2119 = self_2118;
+    other_1747 = other_1746;
+    let _e4: Translator = self_2119;
+    let _e5: Motor = other_1747;
+    let _e6: AntiScalar = translator_motor_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Translator = self_2119;
+    let _e10: Motor = other_1747;
+    let _e11: Flector = motor_attitude(_e10);
+    let _e12: Plane = translator_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn translator_point_euclidean_distance(self_2120: Translator, other_1748: Point) -> HomogeneousMagnitude {
+    var self_2121: Translator;
+    var other_1749: Point;
+
+    self_2121 = self_2120;
+    other_1749 = other_1748;
+    let _e4: Translator = self_2121;
+    let _e5: Point = other_1749;
+    let _e6: Plane = translator_point_outer_product(_e4, _e5);
+    let _e7: Line = plane_attitude(_e6);
+    let _e8: Scalar = line_bulk_norm(_e7);
+    let _e9: Translator = self_2121;
+    let _e10: Point = other_1749;
+    let _e11: Scalar = point_attitude(_e10);
+    let _e12: Translator = translator_scalar_outer_product(_e9, _e11);
+    let _e13: AntiScalar = translator_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn translator_rotor_euclidean_distance(self_2122: Translator, other_1750: Rotor) -> HomogeneousMagnitude {
+    var self_2123: Translator;
+    var other_1751: Rotor;
+
+    self_2123 = self_2122;
+    other_1751 = other_1750;
+    let _e4: Translator = self_2123;
+    let _e5: Rotor = other_1751;
+    let _e6: AntiScalar = translator_rotor_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Translator = self_2123;
+    let _e10: Rotor = other_1751;
+    let _e11: Flector = rotor_attitude(_e10);
+    let _e12: Plane = translator_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
 }
 

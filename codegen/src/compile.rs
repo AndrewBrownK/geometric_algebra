@@ -648,9 +648,11 @@ impl MultiVectorClass {
         weight_norm: &AstNode<'a>,
         registry: &'a MultiVectorClassRegistry,
         parameter_a: &Parameter<'a>,
+        add: &AstNode<'a>,
     ) -> AstNode<'a> {
         let bulk_norm_result = result_of_trait!(bulk_norm);
         let weight_norm_result = result_of_trait!(weight_norm);
+        let add_result = result_of_trait!(add);
         let mut result_bases = bulk_norm_result.multi_vector_class().signature();
         result_bases.append(&mut weight_norm_result.multi_vector_class().signature());
 
@@ -663,33 +665,49 @@ impl MultiVectorClass {
             None => return AstNode::None
         };
 
+        let do_bulk_norm = Expression {
+            size: 1,
+            content: ExpressionContent::InvokeInstanceMethod(
+                parameter_a.data_type.clone(),
+                Box::new(Expression {
+                    size: 1,
+                    content: ExpressionContent::Variable(parameter_a.name),
+                }),
+                bulk_norm_result.name,
+                vec![]
+            )
+        };
+        let do_weight_norm = Expression {
+            size: 1,
+            content: ExpressionContent::InvokeInstanceMethod(
+                parameter_a.data_type.clone(),
+                Box::new(Expression {
+                    size: 1,
+                    content: ExpressionContent::Variable(parameter_a.name),
+                }),
+                weight_norm_result.name,
+                vec![]
+            )
+        };
+
+        let do_add = Expression {
+            size: 1,
+            content: ExpressionContent::InvokeInstanceMethod(
+                bulk_norm_result.data_type.clone(),
+                Box::new(do_bulk_norm),
+                add_result.name,
+                vec![(
+                    weight_norm_result.data_type.clone(),
+                    do_weight_norm
+                )]
+            )
+        };
+
         AstNode::TraitImplementation {
             result: Parameter { name, data_type: DataType::MultiVector(&result) },
             parameters: vec![parameter_a.clone()],
             body: vec![AstNode::ReturnStatement {
-                expression: Box::new(Expression {
-                    size: 1,
-                    content: ExpressionContent::Add(
-                        Box::new(Expression { size: 1, content: ExpressionContent::InvokeInstanceMethod(
-                            parameter_a.data_type.clone(),
-                            Box::new(Expression {
-                                size: 1,
-                                content: ExpressionContent::Variable(parameter_a.name),
-                            }),
-                            bulk_norm_result.name,
-                            vec![]
-                        )}),
-                        Box::new(Expression { size: 1, content: ExpressionContent::InvokeInstanceMethod(
-                            parameter_a.data_type.clone(),
-                            Box::new(Expression {
-                                size: 1,
-                                content: ExpressionContent::Variable(parameter_a.name),
-                            }),
-                            weight_norm_result.name,
-                            vec![]
-                        )}),
-                    )
-                }),
+                expression: Box::new(do_add),
             }]
         }
     }
@@ -1449,6 +1467,8 @@ impl MultiVectorClass {
         weight_attitude: &AstNode<'a>,
         weight_wedge: &AstNode<'a>,
         weight_norm: &AstNode<'a>,
+
+        final_add: &AstNode<'a>,
     ) -> AstNode<'a> {
         let bulk_wedge_result = result_of_trait!(bulk_wedge);
         let bulk_attitude_result = result_of_trait!(bulk_attitude);
@@ -1456,42 +1476,91 @@ impl MultiVectorClass {
         let weight_attitude_result = result_of_trait!(weight_attitude);
         let weight_wedge_result = result_of_trait!(weight_wedge);
         let weight_norm_result = result_of_trait!(weight_norm);
+        let final_add_result = result_of_trait!(final_add);
+
+        // InvokeInstanceMethod:
+        // - Class implementing trait
+        // - Inner expression
+        // - Method name
+        // - Arguments
+
+        let do_bulk_wedge = Expression {
+            size: 1,
+            content: ExpressionContent::InvokeInstanceMethod(
+                parameter_a.data_type.clone(),
+                Box::new(Expression { size: 1, content: ExpressionContent::Variable(parameter_a.name) }),
+                bulk_wedge_result.name,
+                vec![
+                    (parameter_b.data_type.clone(), Expression { size: 1, content: ExpressionContent::Variable(parameter_b.name) })
+                ]
+            )
+        };
+
+        let do_bulk_attitude = Expression {
+            size: 1,
+            content: ExpressionContent::InvokeInstanceMethod(
+                bulk_wedge_result.data_type.clone(),
+                Box::new(do_bulk_wedge),
+                bulk_attitude_result.name,
+                vec![]
+            )
+        };
+
+        let do_bulk_norm = Expression {
+            size: 1,
+            content: ExpressionContent::InvokeInstanceMethod(
+                bulk_attitude_result.data_type.clone(),
+                Box::new(do_bulk_attitude),
+                bulk_norm_result.name,
+                vec![]
+            )
+        };
+
+        let do_weight_attitude = Expression {
+            size: 1,
+            content: ExpressionContent::InvokeInstanceMethod(
+                parameter_b.data_type.clone(),
+                Box::new(Expression { size: 1, content: ExpressionContent::Variable(parameter_b.name) }),
+                weight_attitude_result.name,
+                vec![]
+            ),
+        };
+
+        let do_weight_wedge = Expression {
+            size: 1,
+            content: ExpressionContent::InvokeInstanceMethod(
+                parameter_a.data_type.clone(),
+                Box::new(Expression { size: 1, content: ExpressionContent::Variable(parameter_a.name) }),
+                weight_wedge_result.name,
+                vec![(weight_attitude_result.data_type.clone(), do_weight_attitude)]
+            ),
+        };
+
+        let do_weight_norm = Expression {
+            size: 1,
+            content: ExpressionContent::InvokeInstanceMethod(
+                weight_wedge_result.data_type.clone(),
+                Box::new(do_weight_wedge),
+                weight_norm_result.name,
+                vec![]
+            ),
+        };
+
+        let do_add = Expression {
+            size: 1,
+            content: ExpressionContent::InvokeInstanceMethod(
+                bulk_norm_result.data_type.clone(),
+                Box::new(do_bulk_norm),
+                final_add_result.name,
+                vec![(weight_norm_result.data_type.clone(), do_weight_norm)]
+            )
+        };
 
         AstNode::TraitImplementation {
             result: Parameter { name, data_type: result.data_type.clone() },
             parameters: vec![parameter_a.clone(), parameter_b.clone()],
             body: vec![AstNode::ReturnStatement {
-                expression: Box::new(Expression {
-                    size: 1,
-                    content: ExpressionContent::Add(
-                        Box::new(Expression {
-                            size: 1,
-                            content: ExpressionContent::InvokeInstanceMethod(
-                                bulk_attitude_result.data_type.clone(),
-                                Box::new(Expression {
-                                    size: 1,
-                                    content: ExpressionContent::Variable(bulk_attitude_result.name),
-                                }),
-                                bulk_norm_result.name,
-                                //TODO
-                                vec![]
-                            ),
-                        }),
-                        Box::new(Expression {
-                            size: 1,
-                            content: ExpressionContent::InvokeInstanceMethod(
-                                weight_wedge_result.data_type.clone(),
-                                Box::new(Expression {
-                                    size: 1,
-                                    content: ExpressionContent::Variable(weight_wedge_result.name),
-                                }),
-                                weight_norm_result.name,
-                                //TODO
-                                vec![]
-                            ),
-                        }),
-                    ),
-                }),
+                expression: Box::new(do_add),
             }],
         }
     }

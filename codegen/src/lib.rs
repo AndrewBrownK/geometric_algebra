@@ -5,7 +5,7 @@ mod emit;
 mod glsl;
 mod rust;
 
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 use std::io::{Read, Write};
 use std::path::PathBuf;
 use naga;
@@ -252,18 +252,29 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
             let weight_norm = MultiVectorClass::derive_magnitude("WeightNorm", &squared_anti_magnitude, &parameter_a);
             emitter.emit(&weight_norm).unwrap();
 
-            let geometric_norm = MultiVectorClass::derive_geometric_norm("GeometricNorm", &bulk_norm, &weight_norm, &registry, &parameter_a);
-            emitter.emit(&geometric_norm).unwrap();
+
+            let bulk_norm_result = result_of_trait!(bulk_norm);
+            let weight_norm_result = result_of_trait!(weight_norm);
+            if let Some((_, _, scalar_pair_impls)) = trait_implementations.get(&bulk_norm_result.multi_vector_class().class_name) {
+                let scalar_pair_impls: &BTreeMap<String, (Parameter, BTreeMap<String, AstNode>)> = scalar_pair_impls;
+                if let Some((_, homogenous_pair_impls)) = scalar_pair_impls.get(&weight_norm_result.multi_vector_class().class_name) {
+                    if let Some(add) = homogenous_pair_impls.get("Add") {
+                        let geometric_norm = MultiVectorClass::derive_geometric_norm("GeometricNorm", &bulk_norm, &weight_norm, &registry, &parameter_a, &add);
+                        emitter.emit(&geometric_norm).unwrap();
+                        match &geometric_norm {
+                            AstNode::TraitImplementation { ref result, .. } => {
+                                single_trait_implementations.insert(result.name.to_string(), geometric_norm);
+                            },
+                            _ => {}
+                        }
+                    }
+                }
+            }
 
             single_trait_implementations.insert(result_of_trait!(bulk_norm).name.to_string(), bulk_norm);
             single_trait_implementations.insert(result_of_trait!(squared_anti_magnitude).name.to_string(), squared_anti_magnitude);
             single_trait_implementations.insert(result_of_trait!(weight_norm).name.to_string(), weight_norm);
-            match &geometric_norm {
-                AstNode::TraitImplementation { ref result, .. } => {
-                    single_trait_implementations.insert(result.name.to_string(), geometric_norm);
-                },
-                _ => {}
-            }
+
         }
 
         // Can implement even more traits using existing traits
@@ -436,12 +447,6 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
 
     for (parameter_a, parameter_b) in param_pairs {
 
-
-        // TODO remove this condition
-        if algebra.generator_squares != [1,1,1,0] {
-            break;
-        }
-
         let bulk_wedge = match trait_implementations.get(&parameter_a.multi_vector_class().class_name) {
             None => continue,
             Some((a, _, stuff)) => match stuff.get(&parameter_b.multi_vector_class().class_name) {
@@ -488,9 +493,6 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
         let weight_wedge_result = result_of_trait!(weight_wedge);
 
 
-
-
-
         let bulk_norm = match trait_implementations.get(&bulk_attitude_result.multi_vector_class().class_name) {
             Some((_, singles, _)) => match singles.get("BulkNorm") {
                 Some(bn) => bn,
@@ -533,7 +535,8 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
             &bulk_norm,
             &weight_attitude,
             &weight_wedge,
-            &weight_norm
+            &weight_norm,
+            &final_add
         );
         emitter.emit(&ed).unwrap();
 

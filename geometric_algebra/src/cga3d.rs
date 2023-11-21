@@ -4457,7 +4457,7 @@ impl GeometricNorm for HomogeneousMagnitude {
     type Output = HomogeneousMagnitude;
 
     fn geometric_norm(self) -> HomogeneousMagnitude {
-        self.bulk_norm() + self.weight_norm()
+        self.bulk_norm().add(self.weight_norm())
     }
 }
 
@@ -6623,7 +6623,7 @@ impl GeometricNorm for Dipole {
     type Output = HomogeneousMagnitude;
 
     fn geometric_norm(self) -> HomogeneousMagnitude {
-        self.bulk_norm() + self.weight_norm()
+        self.bulk_norm().add(self.weight_norm())
     }
 }
 
@@ -8113,7 +8113,7 @@ impl GeometricNorm for Circle {
     type Output = HomogeneousMagnitude;
 
     fn geometric_norm(self) -> HomogeneousMagnitude {
-        self.bulk_norm() + self.weight_norm()
+        self.bulk_norm().add(self.weight_norm())
     }
 }
 
@@ -13185,7 +13185,7 @@ impl GeometricNorm for Dilation {
     type Output = HomogeneousMagnitude;
 
     fn geometric_norm(self) -> HomogeneousMagnitude {
-        self.bulk_norm() + self.weight_norm()
+        self.bulk_norm().add(self.weight_norm())
     }
 }
 
@@ -14511,7 +14511,7 @@ impl GeometricNorm for MultiVector {
     type Output = HomogeneousMagnitude;
 
     fn geometric_norm(self) -> HomogeneousMagnitude {
-        self.bulk_norm() + self.weight_norm()
+        self.bulk_norm().add(self.weight_norm())
     }
 }
 
@@ -15471,6 +15471,166 @@ impl GeometricQuotient<Scalar> for Translator {
 
     fn geometric_quotient(self, other: Scalar) -> Translator {
         self.geometric_product(other.inverse())
+    }
+}
+
+impl EuclideanDistance<Dipole> for Circle {
+    type Output = HomogeneousMagnitude;
+
+    fn euclidean_distance(self, other: Dipole) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl EuclideanDistance<FlatPoint> for Circle {
+    type Output = HomogeneousMagnitude;
+
+    fn euclidean_distance(self, other: FlatPoint) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl EuclideanDistance<Dipole> for Dilation {
+    type Output = HomogeneousMagnitude;
+
+    fn euclidean_distance(self, other: Dipole) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl EuclideanDistance<FlatPoint> for Dilation {
+    type Output = HomogeneousMagnitude;
+
+    fn euclidean_distance(self, other: FlatPoint) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl EuclideanDistance<Circle> for Dipole {
+    type Output = HomogeneousMagnitude;
+
+    fn euclidean_distance(self, other: Circle) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl EuclideanDistance<Dipole> for Dipole {
+    type Output = HomogeneousMagnitude;
+
+    fn euclidean_distance(self, other: Dipole) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl EuclideanDistance<FlatPoint> for Dipole {
+    type Output = HomogeneousMagnitude;
+
+    fn euclidean_distance(self, other: FlatPoint) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl EuclideanDistance<Line> for Dipole {
+    type Output = HomogeneousMagnitude;
+
+    fn euclidean_distance(self, other: Line) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl EuclideanDistance<AntiScalar> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn euclidean_distance(self, other: AntiScalar) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl EuclideanDistance<HomogeneousMagnitude> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn euclidean_distance(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl EuclideanDistance<Plane> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn euclidean_distance(self, other: Plane) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl EuclideanDistance<Sphere> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn euclidean_distance(self, other: Sphere) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl EuclideanDistance<Circle> for RadialPoint {
+    type Output = HomogeneousMagnitude;
+
+    fn euclidean_distance(self, other: Circle) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl EuclideanDistance<Line> for RadialPoint {
+    type Output = HomogeneousMagnitude;
+
+    fn euclidean_distance(self, other: Line) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl EuclideanDistance<Plane> for RadialPoint {
+    type Output = HomogeneousMagnitude;
+
+    fn euclidean_distance(self, other: Plane) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl EuclideanDistance<Sphere> for RadialPoint {
+    type Output = HomogeneousMagnitude;
+
+    fn euclidean_distance(self, other: Sphere) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl EuclideanDistance<AntiScalar> for Scalar {
+    type Output = HomogeneousMagnitude;
+
+    fn euclidean_distance(self, other: AntiScalar) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl EuclideanDistance<HomogeneousMagnitude> for Scalar {
+    type Output = HomogeneousMagnitude;
+
+    fn euclidean_distance(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl EuclideanDistance<Plane> for Scalar {
+    type Output = HomogeneousMagnitude;
+
+    fn euclidean_distance(self, other: Plane) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl EuclideanDistance<Sphere> for Scalar {
+    type Output = HomogeneousMagnitude;
+
+    fn euclidean_distance(self, other: Sphere) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 

@@ -4734,7 +4734,8 @@ fn homogeneous_magnitude_geometric_norm(self_734: HomogeneousMagnitude) -> Homog
     let _e3: Scalar = homogeneous_magnitude_bulk_norm(_e2);
     let _e4: HomogeneousMagnitude = self_735;
     let _e5: AntiScalar = homogeneous_magnitude_weight_norm(_e4);
-    return (_e3 + _e5);
+    let _e6: HomogeneousMagnitude = scalar_anti_scalar_add(_e3, _e5);
+    return _e6;
 }
 
 fn homogeneous_magnitude_scale(self_736: HomogeneousMagnitude, other_652: f32) -> HomogeneousMagnitude {
@@ -9829,7 +9830,8 @@ fn dipole_geometric_norm(self_1240: Dipole) -> HomogeneousMagnitude {
     let _e3: Scalar = dipole_bulk_norm(_e2);
     let _e4: Dipole = self_1241;
     let _e5: AntiScalar = dipole_weight_norm(_e4);
-    return (_e3 + _e5);
+    let _e6: HomogeneousMagnitude = scalar_anti_scalar_add(_e3, _e5);
+    return _e6;
 }
 
 fn dipole_scale(self_1242: Dipole, other_1072: f32) -> Dipole {
@@ -13799,7 +13801,8 @@ fn circle_geometric_norm(self_1588: Circle) -> HomogeneousMagnitude {
     let _e3: Scalar = circle_bulk_norm(_e2);
     let _e4: Circle = self_1589;
     let _e5: AntiScalar = circle_weight_norm(_e4);
-    return (_e3 + _e5);
+    let _e6: HomogeneousMagnitude = scalar_anti_scalar_add(_e3, _e5);
+    return _e6;
 }
 
 fn circle_scale(self_1590: Circle, other_1362: f32) -> Circle {
@@ -25472,7 +25475,8 @@ fn dilation_geometric_norm(self_2764: Dilation) -> HomogeneousMagnitude {
     let _e3: Scalar = dilation_bulk_norm(_e2);
     let _e4: Dilation = self_2765;
     let _e5: AntiScalar = dilation_weight_norm(_e4);
-    return (_e3 + _e5);
+    let _e6: HomogeneousMagnitude = scalar_anti_scalar_add(_e3, _e5);
+    return _e6;
 }
 
 fn dilation_scale(self_2766: Dilation, other_2400: f32) -> Dilation {
@@ -35271,7 +35275,8 @@ fn multi_vector_geometric_norm(self_3052: MultiVector) -> HomogeneousMagnitude {
     let _e3: Scalar = multi_vector_bulk_norm(_e2);
     let _e4: MultiVector = self_3053;
     let _e5: AntiScalar = multi_vector_weight_norm(_e4);
-    return (_e3 + _e5);
+    let _e6: HomogeneousMagnitude = scalar_anti_scalar_add(_e3, _e5);
+    return _e6;
 }
 
 fn multi_vector_scale(self_3054: MultiVector, other_2622: f32) -> MultiVector {
@@ -37020,5 +37025,405 @@ fn translator_scalar_geometric_quotient(self_3282: Translator, other_2838: Scala
     let _e6: Scalar = scalar_inverse(_e5);
     let _e7: Translator = translator_scalar_geometric_product(_e4, _e6);
     return _e7;
+}
+
+fn circle_dipole_euclidean_distance(self_3284: Circle, other_2840: Dipole) -> HomogeneousMagnitude {
+    var self_3285: Circle;
+    var other_2841: Dipole;
+
+    self_3285 = self_3284;
+    other_2841 = other_2840;
+    let _e4: Circle = self_3285;
+    let _e5: Dipole = other_2841;
+    let _e6: AntiScalar = circle_dipole_outer_product(_e4, _e5);
+    let _e7: Circle = anti_scalar_attitude(_e6);
+    let _e8: Scalar = circle_bulk_norm(_e7);
+    let _e9: Circle = self_3285;
+    let _e10: Dipole = other_2841;
+    let _e11: Scalar = dipole_attitude(_e10);
+    let _e12: Circle = circle_scalar_outer_product(_e9, _e11);
+    let _e13: AntiScalar = circle_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn circle_flat_point_euclidean_distance(self_3286: Circle, other_2842: FlatPoint) -> HomogeneousMagnitude {
+    var self_3287: Circle;
+    var other_2843: FlatPoint;
+
+    self_3287 = self_3286;
+    other_2843 = other_2842;
+    let _e4: Circle = self_3287;
+    let _e5: FlatPoint = other_2843;
+    let _e6: AntiScalar = circle_flat_point_outer_product(_e4, _e5);
+    let _e7: Circle = anti_scalar_attitude(_e6);
+    let _e8: Scalar = circle_bulk_norm(_e7);
+    let _e9: Circle = self_3287;
+    let _e10: FlatPoint = other_2843;
+    let _e11: Scalar = flat_point_attitude(_e10);
+    let _e12: Circle = circle_scalar_outer_product(_e9, _e11);
+    let _e13: AntiScalar = circle_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn dilation_dipole_euclidean_distance(self_3288: Dilation, other_2844: Dipole) -> HomogeneousMagnitude {
+    var self_3289: Dilation;
+    var other_2845: Dipole;
+
+    self_3289 = self_3288;
+    other_2845 = other_2844;
+    let _e4: Dilation = self_3289;
+    let _e5: Dipole = other_2845;
+    let _e6: AntiScalar = dilation_dipole_outer_product(_e4, _e5);
+    let _e7: Circle = anti_scalar_attitude(_e6);
+    let _e8: Scalar = circle_bulk_norm(_e7);
+    let _e9: Dilation = self_3289;
+    let _e10: Dipole = other_2845;
+    let _e11: Scalar = dipole_attitude(_e10);
+    let _e12: Dilation = dilation_scalar_outer_product(_e9, _e11);
+    let _e13: AntiScalar = dilation_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn dilation_flat_point_euclidean_distance(self_3290: Dilation, other_2846: FlatPoint) -> HomogeneousMagnitude {
+    var self_3291: Dilation;
+    var other_2847: FlatPoint;
+
+    self_3291 = self_3290;
+    other_2847 = other_2846;
+    let _e4: Dilation = self_3291;
+    let _e5: FlatPoint = other_2847;
+    let _e6: AntiScalar = dilation_flat_point_outer_product(_e4, _e5);
+    let _e7: Circle = anti_scalar_attitude(_e6);
+    let _e8: Scalar = circle_bulk_norm(_e7);
+    let _e9: Dilation = self_3291;
+    let _e10: FlatPoint = other_2847;
+    let _e11: Scalar = flat_point_attitude(_e10);
+    let _e12: Dilation = dilation_scalar_outer_product(_e9, _e11);
+    let _e13: AntiScalar = dilation_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn dipole_circle_euclidean_distance(self_3292: Dipole, other_2848: Circle) -> HomogeneousMagnitude {
+    var self_3293: Dipole;
+    var other_2849: Circle;
+
+    self_3293 = self_3292;
+    other_2849 = other_2848;
+    let _e4: Dipole = self_3293;
+    let _e5: Circle = other_2849;
+    let _e6: AntiScalar = dipole_circle_outer_product(_e4, _e5);
+    let _e7: Circle = anti_scalar_attitude(_e6);
+    let _e8: Scalar = circle_bulk_norm(_e7);
+    let _e9: Dipole = self_3293;
+    let _e10: Circle = other_2849;
+    let _e11: RadialPoint = circle_attitude(_e10);
+    let _e12: Circle = dipole_radial_point_outer_product(_e9, _e11);
+    let _e13: AntiScalar = circle_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn dipole_dipole_euclidean_distance(self_3294: Dipole, other_2850: Dipole) -> HomogeneousMagnitude {
+    var self_3295: Dipole;
+    var other_2851: Dipole;
+
+    self_3295 = self_3294;
+    other_2851 = other_2850;
+    let _e4: Dipole = self_3295;
+    let _e5: Dipole = other_2851;
+    let _e6: Sphere = dipole_dipole_outer_product(_e4, _e5);
+    let _e7: Dipole = sphere_attitude(_e6);
+    let _e8: Scalar = dipole_bulk_norm(_e7);
+    let _e9: Dipole = self_3295;
+    let _e10: Dipole = other_2851;
+    let _e11: Scalar = dipole_attitude(_e10);
+    let _e12: Dipole = dipole_scalar_outer_product(_e9, _e11);
+    let _e13: AntiScalar = dipole_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn dipole_flat_point_euclidean_distance(self_3296: Dipole, other_2852: FlatPoint) -> HomogeneousMagnitude {
+    var self_3297: Dipole;
+    var other_2853: FlatPoint;
+
+    self_3297 = self_3296;
+    other_2853 = other_2852;
+    let _e4: Dipole = self_3297;
+    let _e5: FlatPoint = other_2853;
+    let _e6: Plane = dipole_flat_point_outer_product(_e4, _e5);
+    let _e7: Dipole = plane_attitude(_e6);
+    let _e8: Scalar = dipole_bulk_norm(_e7);
+    let _e9: Dipole = self_3297;
+    let _e10: FlatPoint = other_2853;
+    let _e11: Scalar = flat_point_attitude(_e10);
+    let _e12: Dipole = dipole_scalar_outer_product(_e9, _e11);
+    let _e13: AntiScalar = dipole_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn dipole_line_euclidean_distance(self_3298: Dipole, other_2854: Line) -> HomogeneousMagnitude {
+    var self_3299: Dipole;
+    var other_2855: Line;
+
+    self_3299 = self_3298;
+    other_2855 = other_2854;
+    let _e4: Dipole = self_3299;
+    let _e5: Line = other_2855;
+    let _e6: AntiScalar = dipole_line_outer_product(_e4, _e5);
+    let _e7: Circle = anti_scalar_attitude(_e6);
+    let _e8: Scalar = circle_bulk_norm(_e7);
+    let _e9: Dipole = self_3299;
+    let _e10: Line = other_2855;
+    let _e11: RadialPoint = line_attitude(_e10);
+    let _e12: Circle = dipole_radial_point_outer_product(_e9, _e11);
+    let _e13: AntiScalar = circle_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn homogeneous_magnitude_anti_scalar_euclidean_distance(self_3300: HomogeneousMagnitude, other_2856: AntiScalar) -> HomogeneousMagnitude {
+    var self_3301: HomogeneousMagnitude;
+    var other_2857: AntiScalar;
+
+    self_3301 = self_3300;
+    other_2857 = other_2856;
+    let _e4: HomogeneousMagnitude = self_3301;
+    let _e5: AntiScalar = other_2857;
+    let _e6: AntiScalar = homogeneous_magnitude_anti_scalar_outer_product(_e4, _e5);
+    let _e7: Circle = anti_scalar_attitude(_e6);
+    let _e8: Scalar = circle_bulk_norm(_e7);
+    let _e9: HomogeneousMagnitude = self_3301;
+    let _e10: AntiScalar = other_2857;
+    let _e11: Circle = anti_scalar_attitude(_e10);
+    let _e12: Circle = homogeneous_magnitude_circle_outer_product(_e9, _e11);
+    let _e13: AntiScalar = circle_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn homogeneous_magnitude_homogeneous_magnitude_euclidean_distance(self_3302: HomogeneousMagnitude, other_2858: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_3303: HomogeneousMagnitude;
+    var other_2859: HomogeneousMagnitude;
+
+    self_3303 = self_3302;
+    other_2859 = other_2858;
+    let _e4: HomogeneousMagnitude = self_3303;
+    let _e5: HomogeneousMagnitude = other_2859;
+    let _e6: HomogeneousMagnitude = homogeneous_magnitude_homogeneous_magnitude_outer_product(_e4, _e5);
+    let _e7: Circle = homogeneous_magnitude_attitude(_e6);
+    let _e8: Scalar = circle_bulk_norm(_e7);
+    let _e9: HomogeneousMagnitude = self_3303;
+    let _e10: HomogeneousMagnitude = other_2859;
+    let _e11: Circle = homogeneous_magnitude_attitude(_e10);
+    let _e12: Circle = homogeneous_magnitude_circle_outer_product(_e9, _e11);
+    let _e13: AntiScalar = circle_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn homogeneous_magnitude_plane_euclidean_distance(self_3304: HomogeneousMagnitude, other_2860: Plane) -> HomogeneousMagnitude {
+    var self_3305: HomogeneousMagnitude;
+    var other_2861: Plane;
+
+    self_3305 = self_3304;
+    other_2861 = other_2860;
+    let _e4: HomogeneousMagnitude = self_3305;
+    let _e5: Plane = other_2861;
+    let _e6: Plane = homogeneous_magnitude_plane_outer_product(_e4, _e5);
+    let _e7: Dipole = plane_attitude(_e6);
+    let _e8: Scalar = dipole_bulk_norm(_e7);
+    let _e9: HomogeneousMagnitude = self_3305;
+    let _e10: Plane = other_2861;
+    let _e11: Dipole = plane_attitude(_e10);
+    let _e12: Dipole = homogeneous_magnitude_dipole_outer_product(_e9, _e11);
+    let _e13: AntiScalar = dipole_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn homogeneous_magnitude_sphere_euclidean_distance(self_3306: HomogeneousMagnitude, other_2862: Sphere) -> HomogeneousMagnitude {
+    var self_3307: HomogeneousMagnitude;
+    var other_2863: Sphere;
+
+    self_3307 = self_3306;
+    other_2863 = other_2862;
+    let _e4: HomogeneousMagnitude = self_3307;
+    let _e5: Sphere = other_2863;
+    let _e6: Sphere = homogeneous_magnitude_sphere_outer_product(_e4, _e5);
+    let _e7: Dipole = sphere_attitude(_e6);
+    let _e8: Scalar = dipole_bulk_norm(_e7);
+    let _e9: HomogeneousMagnitude = self_3307;
+    let _e10: Sphere = other_2863;
+    let _e11: Dipole = sphere_attitude(_e10);
+    let _e12: Dipole = homogeneous_magnitude_dipole_outer_product(_e9, _e11);
+    let _e13: AntiScalar = dipole_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn radial_point_circle_euclidean_distance(self_3308: RadialPoint, other_2864: Circle) -> HomogeneousMagnitude {
+    var self_3309: RadialPoint;
+    var other_2865: Circle;
+
+    self_3309 = self_3308;
+    other_2865 = other_2864;
+    let _e4: RadialPoint = self_3309;
+    let _e5: Circle = other_2865;
+    let _e6: Sphere = radial_point_circle_outer_product(_e4, _e5);
+    let _e7: Dipole = sphere_attitude(_e6);
+    let _e8: Scalar = dipole_bulk_norm(_e7);
+    let _e9: RadialPoint = self_3309;
+    let _e10: Circle = other_2865;
+    let _e11: RadialPoint = circle_attitude(_e10);
+    let _e12: Dipole = radial_point_radial_point_outer_product(_e9, _e11);
+    let _e13: AntiScalar = dipole_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn radial_point_line_euclidean_distance(self_3310: RadialPoint, other_2866: Line) -> HomogeneousMagnitude {
+    var self_3311: RadialPoint;
+    var other_2867: Line;
+
+    self_3311 = self_3310;
+    other_2867 = other_2866;
+    let _e4: RadialPoint = self_3311;
+    let _e5: Line = other_2867;
+    let _e6: Plane = radial_point_line_outer_product(_e4, _e5);
+    let _e7: Dipole = plane_attitude(_e6);
+    let _e8: Scalar = dipole_bulk_norm(_e7);
+    let _e9: RadialPoint = self_3311;
+    let _e10: Line = other_2867;
+    let _e11: RadialPoint = line_attitude(_e10);
+    let _e12: Dipole = radial_point_radial_point_outer_product(_e9, _e11);
+    let _e13: AntiScalar = dipole_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn radial_point_plane_euclidean_distance(self_3312: RadialPoint, other_2868: Plane) -> HomogeneousMagnitude {
+    var self_3313: RadialPoint;
+    var other_2869: Plane;
+
+    self_3313 = self_3312;
+    other_2869 = other_2868;
+    let _e4: RadialPoint = self_3313;
+    let _e5: Plane = other_2869;
+    let _e6: AntiScalar = radial_point_plane_outer_product(_e4, _e5);
+    let _e7: Circle = anti_scalar_attitude(_e6);
+    let _e8: Scalar = circle_bulk_norm(_e7);
+    let _e9: RadialPoint = self_3313;
+    let _e10: Plane = other_2869;
+    let _e11: Dipole = plane_attitude(_e10);
+    let _e12: Circle = radial_point_dipole_outer_product(_e9, _e11);
+    let _e13: AntiScalar = circle_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn radial_point_sphere_euclidean_distance(self_3314: RadialPoint, other_2870: Sphere) -> HomogeneousMagnitude {
+    var self_3315: RadialPoint;
+    var other_2871: Sphere;
+
+    self_3315 = self_3314;
+    other_2871 = other_2870;
+    let _e4: RadialPoint = self_3315;
+    let _e5: Sphere = other_2871;
+    let _e6: AntiScalar = radial_point_sphere_outer_product(_e4, _e5);
+    let _e7: Circle = anti_scalar_attitude(_e6);
+    let _e8: Scalar = circle_bulk_norm(_e7);
+    let _e9: RadialPoint = self_3315;
+    let _e10: Sphere = other_2871;
+    let _e11: Dipole = sphere_attitude(_e10);
+    let _e12: Circle = radial_point_dipole_outer_product(_e9, _e11);
+    let _e13: AntiScalar = circle_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn scalar_anti_scalar_euclidean_distance(self_3316: Scalar, other_2872: AntiScalar) -> HomogeneousMagnitude {
+    var self_3317: Scalar;
+    var other_2873: AntiScalar;
+
+    self_3317 = self_3316;
+    other_2873 = other_2872;
+    let _e4: Scalar = self_3317;
+    let _e5: AntiScalar = other_2873;
+    let _e6: AntiScalar = scalar_anti_scalar_outer_product(_e4, _e5);
+    let _e7: Circle = anti_scalar_attitude(_e6);
+    let _e8: Scalar = circle_bulk_norm(_e7);
+    let _e9: Scalar = self_3317;
+    let _e10: AntiScalar = other_2873;
+    let _e11: Circle = anti_scalar_attitude(_e10);
+    let _e12: Circle = scalar_circle_outer_product(_e9, _e11);
+    let _e13: AntiScalar = circle_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn scalar_homogeneous_magnitude_euclidean_distance(self_3318: Scalar, other_2874: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_3319: Scalar;
+    var other_2875: HomogeneousMagnitude;
+
+    self_3319 = self_3318;
+    other_2875 = other_2874;
+    let _e4: Scalar = self_3319;
+    let _e5: HomogeneousMagnitude = other_2875;
+    let _e6: HomogeneousMagnitude = scalar_homogeneous_magnitude_outer_product(_e4, _e5);
+    let _e7: Circle = homogeneous_magnitude_attitude(_e6);
+    let _e8: Scalar = circle_bulk_norm(_e7);
+    let _e9: Scalar = self_3319;
+    let _e10: HomogeneousMagnitude = other_2875;
+    let _e11: Circle = homogeneous_magnitude_attitude(_e10);
+    let _e12: Circle = scalar_circle_outer_product(_e9, _e11);
+    let _e13: AntiScalar = circle_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn scalar_plane_euclidean_distance(self_3320: Scalar, other_2876: Plane) -> HomogeneousMagnitude {
+    var self_3321: Scalar;
+    var other_2877: Plane;
+
+    self_3321 = self_3320;
+    other_2877 = other_2876;
+    let _e4: Scalar = self_3321;
+    let _e5: Plane = other_2877;
+    let _e6: Plane = scalar_plane_outer_product(_e4, _e5);
+    let _e7: Dipole = plane_attitude(_e6);
+    let _e8: Scalar = dipole_bulk_norm(_e7);
+    let _e9: Scalar = self_3321;
+    let _e10: Plane = other_2877;
+    let _e11: Dipole = plane_attitude(_e10);
+    let _e12: Dipole = scalar_dipole_outer_product(_e9, _e11);
+    let _e13: AntiScalar = dipole_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn scalar_sphere_euclidean_distance(self_3322: Scalar, other_2878: Sphere) -> HomogeneousMagnitude {
+    var self_3323: Scalar;
+    var other_2879: Sphere;
+
+    self_3323 = self_3322;
+    other_2879 = other_2878;
+    let _e4: Scalar = self_3323;
+    let _e5: Sphere = other_2879;
+    let _e6: Sphere = scalar_sphere_outer_product(_e4, _e5);
+    let _e7: Dipole = sphere_attitude(_e6);
+    let _e8: Scalar = dipole_bulk_norm(_e7);
+    let _e9: Scalar = self_3323;
+    let _e10: Sphere = other_2879;
+    let _e11: Dipole = sphere_attitude(_e10);
+    let _e12: Dipole = scalar_dipole_outer_product(_e9, _e11);
+    let _e13: AntiScalar = dipole_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
 }
 

@@ -3247,7 +3247,7 @@ impl GeometricNorm for HomogeneousMagnitude {
     type Output = HomogeneousMagnitude;
 
     fn geometric_norm(self) -> HomogeneousMagnitude {
-        self.bulk_norm() + self.weight_norm()
+        self.bulk_norm().add(self.weight_norm())
     }
 }
 
@@ -4003,7 +4003,7 @@ impl GeometricNorm for Point {
     type Output = HomogeneousMagnitude;
 
     fn geometric_norm(self) -> HomogeneousMagnitude {
-        self.bulk_norm() + self.weight_norm()
+        self.bulk_norm().add(self.weight_norm())
     }
 }
 
@@ -4855,7 +4855,7 @@ impl GeometricNorm for Line {
     type Output = HomogeneousMagnitude;
 
     fn geometric_norm(self) -> HomogeneousMagnitude {
-        self.bulk_norm() + self.weight_norm()
+        self.bulk_norm().add(self.weight_norm())
     }
 }
 
@@ -5603,7 +5603,7 @@ impl GeometricNorm for Plane {
     type Output = HomogeneousMagnitude;
 
     fn geometric_norm(self) -> HomogeneousMagnitude {
-        self.bulk_norm() + self.weight_norm()
+        self.bulk_norm().add(self.weight_norm())
     }
 }
 
@@ -6463,7 +6463,7 @@ impl GeometricNorm for Motor {
     type Output = HomogeneousMagnitude;
 
     fn geometric_norm(self) -> HomogeneousMagnitude {
-        self.bulk_norm() + self.weight_norm()
+        self.bulk_norm().add(self.weight_norm())
     }
 }
 
@@ -7899,7 +7899,7 @@ impl GeometricNorm for Translator {
     type Output = HomogeneousMagnitude;
 
     fn geometric_norm(self) -> HomogeneousMagnitude {
-        self.bulk_norm() + self.weight_norm()
+        self.bulk_norm().add(self.weight_norm())
     }
 }
 
@@ -8731,7 +8731,7 @@ impl GeometricNorm for Flector {
     type Output = HomogeneousMagnitude;
 
     fn geometric_norm(self) -> HomogeneousMagnitude {
-        self.bulk_norm() + self.weight_norm()
+        self.bulk_norm().add(self.weight_norm())
     }
 }
 
@@ -9067,7 +9067,7 @@ impl GeometricNorm for MultiVector {
     type Output = HomogeneousMagnitude;
 
     fn geometric_norm(self) -> HomogeneousMagnitude {
-        self.bulk_norm() + self.weight_norm()
+        self.bulk_norm().add(self.weight_norm())
     }
 }
 
@@ -9677,7 +9677,7 @@ impl EuclideanDistance<Line> for Flector {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Line) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9685,7 +9685,7 @@ impl EuclideanDistance<Motor> for Flector {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Motor) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9693,7 +9693,7 @@ impl EuclideanDistance<Plane> for Flector {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Plane) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9701,7 +9701,7 @@ impl EuclideanDistance<Point> for Flector {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Point) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9709,7 +9709,7 @@ impl EuclideanDistance<AntiScalar> for HomogeneousMagnitude {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: AntiScalar) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9717,7 +9717,7 @@ impl EuclideanDistance<HomogeneousMagnitude> for HomogeneousMagnitude {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9725,7 +9725,7 @@ impl EuclideanDistance<Line> for HomogeneousMagnitude {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Line) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9733,7 +9733,7 @@ impl EuclideanDistance<Motor> for HomogeneousMagnitude {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Motor) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9741,7 +9741,7 @@ impl EuclideanDistance<Plane> for HomogeneousMagnitude {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Plane) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9749,7 +9749,7 @@ impl EuclideanDistance<Rotor> for HomogeneousMagnitude {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Rotor) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9757,7 +9757,7 @@ impl EuclideanDistance<Line> for Line {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Line) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9765,7 +9765,7 @@ impl EuclideanDistance<Motor> for Line {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Motor) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9773,7 +9773,7 @@ impl EuclideanDistance<Point> for Line {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Point) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9781,7 +9781,7 @@ impl EuclideanDistance<Rotor> for Line {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Rotor) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9789,7 +9789,7 @@ impl EuclideanDistance<Line> for Motor {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Line) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9797,7 +9797,7 @@ impl EuclideanDistance<Motor> for Motor {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Motor) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9805,7 +9805,7 @@ impl EuclideanDistance<Point> for Motor {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Point) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9813,7 +9813,7 @@ impl EuclideanDistance<Rotor> for Motor {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Rotor) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9821,7 +9821,7 @@ impl EuclideanDistance<Point> for Plane {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Point) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9829,7 +9829,7 @@ impl EuclideanDistance<Line> for Point {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Line) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9837,7 +9837,7 @@ impl EuclideanDistance<Motor> for Point {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Motor) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9845,7 +9845,7 @@ impl EuclideanDistance<Plane> for Point {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Plane) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9853,7 +9853,7 @@ impl EuclideanDistance<Point> for Point {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Point) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9861,7 +9861,7 @@ impl EuclideanDistance<AntiScalar> for Scalar {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: AntiScalar) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9869,7 +9869,7 @@ impl EuclideanDistance<HomogeneousMagnitude> for Scalar {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9877,7 +9877,7 @@ impl EuclideanDistance<Line> for Scalar {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Line) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9885,7 +9885,7 @@ impl EuclideanDistance<Motor> for Scalar {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Motor) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9893,7 +9893,7 @@ impl EuclideanDistance<Plane> for Scalar {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Plane) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9901,7 +9901,7 @@ impl EuclideanDistance<Rotor> for Scalar {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Rotor) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9909,7 +9909,7 @@ impl EuclideanDistance<Line> for Translator {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Line) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9917,7 +9917,7 @@ impl EuclideanDistance<Motor> for Translator {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Motor) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9925,7 +9925,7 @@ impl EuclideanDistance<Point> for Translator {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Point) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 
@@ -9933,7 +9933,7 @@ impl EuclideanDistance<Rotor> for Translator {
     type Output = HomogeneousMagnitude;
 
     fn euclidean_distance(self, other: Rotor) -> HomogeneousMagnitude {
-        Attitude.bulk_norm() + OuterProduct.weight_norm()
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
 

@@ -1617,7 +1617,7 @@ AntiScalar homogeneous_magnitude_weight_norm(HomogeneousMagnitude self) {
 }
 
 HomogeneousMagnitude homogeneous_magnitude_geometric_norm(HomogeneousMagnitude self) {
-    return homogeneous_magnitude_bulk_norm(self) + homogeneous_magnitude_weight_norm(self);
+    return scalar_anti_scalar_add(homogeneous_magnitude_bulk_norm(self), homogeneous_magnitude_weight_norm(self));
 }
 
 HomogeneousMagnitude homogeneous_magnitude_scale(HomogeneousMagnitude self, float other) {
@@ -2665,7 +2665,7 @@ AntiScalar dipole_weight_norm(Dipole self) {
 }
 
 HomogeneousMagnitude dipole_geometric_norm(Dipole self) {
-    return dipole_bulk_norm(self) + dipole_weight_norm(self);
+    return scalar_anti_scalar_add(dipole_bulk_norm(self), dipole_weight_norm(self));
 }
 
 Dipole dipole_scale(Dipole self, float other) {
@@ -3385,7 +3385,7 @@ AntiScalar circle_weight_norm(Circle self) {
 }
 
 HomogeneousMagnitude circle_geometric_norm(Circle self) {
-    return circle_bulk_norm(self) + circle_weight_norm(self);
+    return scalar_anti_scalar_add(circle_bulk_norm(self), circle_weight_norm(self));
 }
 
 Circle circle_scale(Circle self, float other) {
@@ -5801,7 +5801,7 @@ AntiScalar dilation_weight_norm(Dilation self) {
 }
 
 HomogeneousMagnitude dilation_geometric_norm(Dilation self) {
-    return dilation_bulk_norm(self) + dilation_weight_norm(self);
+    return scalar_anti_scalar_add(dilation_bulk_norm(self), dilation_weight_norm(self));
 }
 
 Dilation dilation_scale(Dilation self, float other) {
@@ -6385,7 +6385,7 @@ AntiScalar multi_vector_weight_norm(MultiVector self) {
 }
 
 HomogeneousMagnitude multi_vector_geometric_norm(MultiVector self) {
-    return multi_vector_bulk_norm(self) + multi_vector_weight_norm(self);
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(self), multi_vector_weight_norm(self));
 }
 
 MultiVector multi_vector_scale(MultiVector self, float other) {
@@ -6885,5 +6885,85 @@ Translator translator_homogeneous_magnitude_geometric_quotient(Translator self, 
 
 Translator translator_scalar_geometric_quotient(Translator self, Scalar other) {
     return translator_scalar_geometric_product(self, scalar_inverse(other));
+}
+
+HomogeneousMagnitude circle_dipole_euclidean_distance(Circle self, Dipole other) {
+    return scalar_anti_scalar_add(circle_bulk_norm(anti_scalar_attitude(circle_dipole_outer_product(self, other))), circle_weight_norm(circle_scalar_outer_product(self, dipole_attitude(other))));
+}
+
+HomogeneousMagnitude circle_flat_point_euclidean_distance(Circle self, FlatPoint other) {
+    return scalar_anti_scalar_add(circle_bulk_norm(anti_scalar_attitude(circle_flat_point_outer_product(self, other))), circle_weight_norm(circle_scalar_outer_product(self, flat_point_attitude(other))));
+}
+
+HomogeneousMagnitude dilation_dipole_euclidean_distance(Dilation self, Dipole other) {
+    return scalar_anti_scalar_add(circle_bulk_norm(anti_scalar_attitude(dilation_dipole_outer_product(self, other))), dilation_weight_norm(dilation_scalar_outer_product(self, dipole_attitude(other))));
+}
+
+HomogeneousMagnitude dilation_flat_point_euclidean_distance(Dilation self, FlatPoint other) {
+    return scalar_anti_scalar_add(circle_bulk_norm(anti_scalar_attitude(dilation_flat_point_outer_product(self, other))), dilation_weight_norm(dilation_scalar_outer_product(self, flat_point_attitude(other))));
+}
+
+HomogeneousMagnitude dipole_circle_euclidean_distance(Dipole self, Circle other) {
+    return scalar_anti_scalar_add(circle_bulk_norm(anti_scalar_attitude(dipole_circle_outer_product(self, other))), circle_weight_norm(dipole_radial_point_outer_product(self, circle_attitude(other))));
+}
+
+HomogeneousMagnitude dipole_dipole_euclidean_distance(Dipole self, Dipole other) {
+    return scalar_anti_scalar_add(dipole_bulk_norm(sphere_attitude(dipole_dipole_outer_product(self, other))), dipole_weight_norm(dipole_scalar_outer_product(self, dipole_attitude(other))));
+}
+
+HomogeneousMagnitude dipole_flat_point_euclidean_distance(Dipole self, FlatPoint other) {
+    return scalar_anti_scalar_add(dipole_bulk_norm(plane_attitude(dipole_flat_point_outer_product(self, other))), dipole_weight_norm(dipole_scalar_outer_product(self, flat_point_attitude(other))));
+}
+
+HomogeneousMagnitude dipole_line_euclidean_distance(Dipole self, Line other) {
+    return scalar_anti_scalar_add(circle_bulk_norm(anti_scalar_attitude(dipole_line_outer_product(self, other))), circle_weight_norm(dipole_radial_point_outer_product(self, line_attitude(other))));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_anti_scalar_euclidean_distance(HomogeneousMagnitude self, AntiScalar other) {
+    return scalar_anti_scalar_add(circle_bulk_norm(anti_scalar_attitude(homogeneous_magnitude_anti_scalar_outer_product(self, other))), circle_weight_norm(homogeneous_magnitude_circle_outer_product(self, anti_scalar_attitude(other))));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_euclidean_distance(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return scalar_anti_scalar_add(circle_bulk_norm(homogeneous_magnitude_attitude(homogeneous_magnitude_homogeneous_magnitude_outer_product(self, other))), circle_weight_norm(homogeneous_magnitude_circle_outer_product(self, homogeneous_magnitude_attitude(other))));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_plane_euclidean_distance(HomogeneousMagnitude self, Plane other) {
+    return scalar_anti_scalar_add(dipole_bulk_norm(plane_attitude(homogeneous_magnitude_plane_outer_product(self, other))), dipole_weight_norm(homogeneous_magnitude_dipole_outer_product(self, plane_attitude(other))));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_sphere_euclidean_distance(HomogeneousMagnitude self, Sphere other) {
+    return scalar_anti_scalar_add(dipole_bulk_norm(sphere_attitude(homogeneous_magnitude_sphere_outer_product(self, other))), dipole_weight_norm(homogeneous_magnitude_dipole_outer_product(self, sphere_attitude(other))));
+}
+
+HomogeneousMagnitude radial_point_circle_euclidean_distance(RadialPoint self, Circle other) {
+    return scalar_anti_scalar_add(dipole_bulk_norm(sphere_attitude(radial_point_circle_outer_product(self, other))), dipole_weight_norm(radial_point_radial_point_outer_product(self, circle_attitude(other))));
+}
+
+HomogeneousMagnitude radial_point_line_euclidean_distance(RadialPoint self, Line other) {
+    return scalar_anti_scalar_add(dipole_bulk_norm(plane_attitude(radial_point_line_outer_product(self, other))), dipole_weight_norm(radial_point_radial_point_outer_product(self, line_attitude(other))));
+}
+
+HomogeneousMagnitude radial_point_plane_euclidean_distance(RadialPoint self, Plane other) {
+    return scalar_anti_scalar_add(circle_bulk_norm(anti_scalar_attitude(radial_point_plane_outer_product(self, other))), circle_weight_norm(radial_point_dipole_outer_product(self, plane_attitude(other))));
+}
+
+HomogeneousMagnitude radial_point_sphere_euclidean_distance(RadialPoint self, Sphere other) {
+    return scalar_anti_scalar_add(circle_bulk_norm(anti_scalar_attitude(radial_point_sphere_outer_product(self, other))), circle_weight_norm(radial_point_dipole_outer_product(self, sphere_attitude(other))));
+}
+
+HomogeneousMagnitude scalar_anti_scalar_euclidean_distance(Scalar self, AntiScalar other) {
+    return scalar_anti_scalar_add(circle_bulk_norm(anti_scalar_attitude(scalar_anti_scalar_outer_product(self, other))), circle_weight_norm(scalar_circle_outer_product(self, anti_scalar_attitude(other))));
+}
+
+HomogeneousMagnitude scalar_homogeneous_magnitude_euclidean_distance(Scalar self, HomogeneousMagnitude other) {
+    return scalar_anti_scalar_add(circle_bulk_norm(homogeneous_magnitude_attitude(scalar_homogeneous_magnitude_outer_product(self, other))), circle_weight_norm(scalar_circle_outer_product(self, homogeneous_magnitude_attitude(other))));
+}
+
+HomogeneousMagnitude scalar_plane_euclidean_distance(Scalar self, Plane other) {
+    return scalar_anti_scalar_add(dipole_bulk_norm(plane_attitude(scalar_plane_outer_product(self, other))), dipole_weight_norm(scalar_dipole_outer_product(self, plane_attitude(other))));
+}
+
+HomogeneousMagnitude scalar_sphere_euclidean_distance(Scalar self, Sphere other) {
+    return scalar_anti_scalar_add(dipole_bulk_norm(sphere_attitude(scalar_sphere_outer_product(self, other))), dipole_weight_norm(scalar_dipole_outer_product(self, sphere_attitude(other))));
 }
 
