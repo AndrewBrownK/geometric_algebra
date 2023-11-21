@@ -283,10 +283,19 @@ impl Product {
         let product = Self::new(&basis, &basis, algebra);
         vec![
             ("GeometricProduct", product.clone()),
-            ("RegressiveProduct", product.projected(|r, s, t| t == r + s).dual(algebra)),
-            ("OuterProduct", product.projected(|r, s, t| t == r + s)),
-            ("InnerProduct", product.projected(|r, s, t| t == (r as isize - s as isize).unsigned_abs())),
 
+            // These 3 things are synonyms
+            ("RegressiveProduct", product.projected(|r, s, t| t == r + s).dual(algebra)),
+            ("AntiWedge", product.projected(|r, s, t| t == r + s).dual(algebra)),
+            ("Meet", product.projected(|r, s, t| t == r + s).dual(algebra)),
+
+
+
+            ("OuterProduct", product.projected(|r, s, t| t == r + s)),
+            ("Wedge", product.projected(|r, s, t| t == r + s)),
+            ("Join", product.projected(|r, s, t| t == r + s)),
+
+            ("InnerProduct", product.projected(|r, s, t| t == (r as isize - s as isize).unsigned_abs())),
             ("GeometricAntiProduct", product.clone().dual(algebra)),
             ("InnerAntiProduct", product.projected(|r, s, t| t == (r as isize - s as isize).unsigned_abs()).dual(algebra)),
 
@@ -296,7 +305,10 @@ impl Product {
             ("RightAntiContraction", product.projected(|r, s, t| t as isize == r as isize - s as isize).dual(algebra)),
 
             ("ScalarProduct", product.projected(|_r, _s, t| t == 0)),
+            ("Dot", product.projected(|_r, _s, t| t == 0)),
+
             ("AntiScalarProduct", product.projected(|_r, _s, t| t == 0).dual(algebra)),
+            ("AntiDot", product.projected(|_r, _s, t| t == 0).dual(algebra)),
         ]
     }
 }

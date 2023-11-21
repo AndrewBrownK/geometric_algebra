@@ -149,6 +149,14 @@ Scalar scalar_scalar_outer_product(Scalar self, Scalar other) {
     return Scalar(self.g0 * other.g0);
 }
 
+Scalar scalar_scalar_wedge(Scalar self, Scalar other) {
+    return Scalar(self.g0 * other.g0);
+}
+
+Scalar scalar_scalar_join(Scalar self, Scalar other) {
+    return Scalar(self.g0 * other.g0);
+}
+
 Scalar scalar_scalar_inner_product(Scalar self, Scalar other) {
     return Scalar(self.g0 * other.g0);
 }
@@ -162,6 +170,10 @@ Scalar scalar_scalar_right_contraction(Scalar self, Scalar other) {
 }
 
 Scalar scalar_scalar_scalar_product(Scalar self, Scalar other) {
+    return Scalar(self.g0 * other.g0);
+}
+
+Scalar scalar_scalar_dot(Scalar self, Scalar other) {
     return Scalar(self.g0 * other.g0);
 }
 
@@ -181,7 +193,23 @@ Scalar scalar_anti_scalar_regressive_product(Scalar self, AntiScalar other) {
     return Scalar(self.g0 * other.g0);
 }
 
+Scalar scalar_anti_scalar_anti_wedge(Scalar self, AntiScalar other) {
+    return Scalar(self.g0 * other.g0);
+}
+
+Scalar scalar_anti_scalar_meet(Scalar self, AntiScalar other) {
+    return Scalar(self.g0 * other.g0);
+}
+
 AntiScalar scalar_anti_scalar_outer_product(Scalar self, AntiScalar other) {
+    return AntiScalar(self.g0 * other.g0);
+}
+
+AntiScalar scalar_anti_scalar_wedge(Scalar self, AntiScalar other) {
+    return AntiScalar(self.g0 * other.g0);
+}
+
+AntiScalar scalar_anti_scalar_join(Scalar self, AntiScalar other) {
     return AntiScalar(self.g0 * other.g0);
 }
 
@@ -221,7 +249,23 @@ Scalar scalar_homogeneous_magnitude_regressive_product(Scalar self, HomogeneousM
     return Scalar(self.g0 * other.g0.y);
 }
 
+Scalar scalar_homogeneous_magnitude_anti_wedge(Scalar self, HomogeneousMagnitude other) {
+    return Scalar(self.g0 * other.g0.y);
+}
+
+Scalar scalar_homogeneous_magnitude_meet(Scalar self, HomogeneousMagnitude other) {
+    return Scalar(self.g0 * other.g0.y);
+}
+
 HomogeneousMagnitude scalar_homogeneous_magnitude_outer_product(Scalar self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0) * other.g0);
+}
+
+HomogeneousMagnitude scalar_homogeneous_magnitude_wedge(Scalar self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0) * other.g0);
+}
+
+HomogeneousMagnitude scalar_homogeneous_magnitude_join(Scalar self, HomogeneousMagnitude other) {
     return HomogeneousMagnitude(vec2(self.g0) * other.g0);
 }
 
@@ -253,11 +297,23 @@ Scalar scalar_homogeneous_magnitude_scalar_product(Scalar self, HomogeneousMagni
     return Scalar(self.g0 * other.g0.x);
 }
 
+Scalar scalar_homogeneous_magnitude_dot(Scalar self, HomogeneousMagnitude other) {
+    return Scalar(self.g0 * other.g0.x);
+}
+
 Point scalar_point_geometric_product(Scalar self, Point other) {
     return Point(vec4(self.g0) * other.g0);
 }
 
 Point scalar_point_outer_product(Scalar self, Point other) {
+    return Point(vec4(self.g0) * other.g0);
+}
+
+Point scalar_point_wedge(Scalar self, Point other) {
+    return Point(vec4(self.g0) * other.g0);
+}
+
+Point scalar_point_join(Scalar self, Point other) {
     return Point(vec4(self.g0) * other.g0);
 }
 
@@ -277,6 +333,14 @@ Line scalar_line_outer_product(Scalar self, Line other) {
     return Line(vec3(self.g0) * other.g0, vec3(self.g0) * other.g1);
 }
 
+Line scalar_line_wedge(Scalar self, Line other) {
+    return Line(vec3(self.g0) * other.g0, vec3(self.g0) * other.g1);
+}
+
+Line scalar_line_join(Scalar self, Line other) {
+    return Line(vec3(self.g0) * other.g0, vec3(self.g0) * other.g1);
+}
+
 Line scalar_line_inner_product(Scalar self, Line other) {
     return Line(vec3(self.g0) * other.g0, vec3(self.g0) * other.g1);
 }
@@ -290,6 +354,14 @@ Plane scalar_plane_geometric_product(Scalar self, Plane other) {
 }
 
 Plane scalar_plane_outer_product(Scalar self, Plane other) {
+    return Plane(vec4(self.g0) * other.g0);
+}
+
+Plane scalar_plane_wedge(Scalar self, Plane other) {
+    return Plane(vec4(self.g0) * other.g0);
+}
+
+Plane scalar_plane_join(Scalar self, Plane other) {
     return Plane(vec4(self.g0) * other.g0);
 }
 
@@ -309,7 +381,23 @@ Scalar scalar_motor_regressive_product(Scalar self, Motor other) {
     return Scalar(self.g0 * other.g0.w);
 }
 
+Scalar scalar_motor_anti_wedge(Scalar self, Motor other) {
+    return Scalar(self.g0 * other.g0.w);
+}
+
+Scalar scalar_motor_meet(Scalar self, Motor other) {
+    return Scalar(self.g0 * other.g0.w);
+}
+
 Motor scalar_motor_outer_product(Scalar self, Motor other) {
+    return Motor(vec4(self.g0) * other.g0, vec3(self.g0) * other.g1);
+}
+
+Motor scalar_motor_wedge(Scalar self, Motor other) {
+    return Motor(vec4(self.g0) * other.g0, vec3(self.g0) * other.g1);
+}
+
+Motor scalar_motor_join(Scalar self, Motor other) {
     return Motor(vec4(self.g0) * other.g0, vec3(self.g0) * other.g1);
 }
 
@@ -329,7 +417,23 @@ Scalar scalar_rotor_regressive_product(Scalar self, Rotor other) {
     return Scalar(self.g0 * other.g0.w);
 }
 
+Scalar scalar_rotor_anti_wedge(Scalar self, Rotor other) {
+    return Scalar(self.g0 * other.g0.w);
+}
+
+Scalar scalar_rotor_meet(Scalar self, Rotor other) {
+    return Scalar(self.g0 * other.g0.w);
+}
+
 Rotor scalar_rotor_outer_product(Scalar self, Rotor other) {
+    return Rotor(vec4(self.g0) * other.g0);
+}
+
+Rotor scalar_rotor_wedge(Scalar self, Rotor other) {
+    return Rotor(vec4(self.g0) * other.g0);
+}
+
+Rotor scalar_rotor_join(Scalar self, Rotor other) {
     return Rotor(vec4(self.g0) * other.g0);
 }
 
@@ -349,7 +453,23 @@ Scalar scalar_translator_regressive_product(Scalar self, Translator other) {
     return Scalar(self.g0 * other.g0.w);
 }
 
+Scalar scalar_translator_anti_wedge(Scalar self, Translator other) {
+    return Scalar(self.g0 * other.g0.w);
+}
+
+Scalar scalar_translator_meet(Scalar self, Translator other) {
+    return Scalar(self.g0 * other.g0.w);
+}
+
 Translator scalar_translator_outer_product(Scalar self, Translator other) {
+    return Translator(vec4(self.g0) * other.g0);
+}
+
+Translator scalar_translator_wedge(Scalar self, Translator other) {
+    return Translator(vec4(self.g0) * other.g0);
+}
+
+Translator scalar_translator_join(Scalar self, Translator other) {
     return Translator(vec4(self.g0) * other.g0);
 }
 
@@ -381,6 +501,14 @@ Flector scalar_flector_outer_product(Scalar self, Flector other) {
     return Flector(vec4(self.g0) * other.g0, vec4(self.g0) * other.g1);
 }
 
+Flector scalar_flector_wedge(Scalar self, Flector other) {
+    return Flector(vec4(self.g0) * other.g0, vec4(self.g0) * other.g1);
+}
+
+Flector scalar_flector_join(Scalar self, Flector other) {
+    return Flector(vec4(self.g0) * other.g0, vec4(self.g0) * other.g1);
+}
+
 Flector scalar_flector_inner_product(Scalar self, Flector other) {
     return Flector(vec4(self.g0) * other.g0, vec4(self.g0) * other.g1);
 }
@@ -393,11 +521,23 @@ Scalar scalar_multi_vector_regressive_product(Scalar self, MultiVector other) {
     return Scalar(self.g0 * other.g0.y);
 }
 
+Scalar scalar_multi_vector_anti_wedge(Scalar self, MultiVector other) {
+    return Scalar(self.g0 * other.g0.y);
+}
+
+Scalar scalar_multi_vector_meet(Scalar self, MultiVector other) {
+    return Scalar(self.g0 * other.g0.y);
+}
+
 Scalar scalar_multi_vector_right_contraction(Scalar self, MultiVector other) {
     return Scalar(self.g0 * other.g0.x);
 }
 
 Scalar scalar_multi_vector_scalar_product(Scalar self, MultiVector other) {
+    return Scalar(self.g0 * other.g0.x);
+}
+
+Scalar scalar_multi_vector_dot(Scalar self, MultiVector other) {
     return Scalar(self.g0 * other.g0.x);
 }
 
@@ -489,7 +629,23 @@ Scalar anti_scalar_scalar_regressive_product(AntiScalar self, Scalar other) {
     return Scalar(self.g0 * other.g0);
 }
 
+Scalar anti_scalar_scalar_anti_wedge(AntiScalar self, Scalar other) {
+    return Scalar(self.g0 * other.g0);
+}
+
+Scalar anti_scalar_scalar_meet(AntiScalar self, Scalar other) {
+    return Scalar(self.g0 * other.g0);
+}
+
 AntiScalar anti_scalar_scalar_outer_product(AntiScalar self, Scalar other) {
+    return AntiScalar(self.g0 * other.g0);
+}
+
+AntiScalar anti_scalar_scalar_wedge(AntiScalar self, Scalar other) {
+    return AntiScalar(self.g0 * other.g0);
+}
+
+AntiScalar anti_scalar_scalar_join(AntiScalar self, Scalar other) {
     return AntiScalar(self.g0 * other.g0);
 }
 
@@ -533,6 +689,14 @@ AntiScalar anti_scalar_anti_scalar_regressive_product(AntiScalar self, AntiScala
     return AntiScalar(self.g0 * other.g0);
 }
 
+AntiScalar anti_scalar_anti_scalar_anti_wedge(AntiScalar self, AntiScalar other) {
+    return AntiScalar(self.g0 * other.g0);
+}
+
+AntiScalar anti_scalar_anti_scalar_meet(AntiScalar self, AntiScalar other) {
+    return AntiScalar(self.g0 * other.g0);
+}
+
 AntiScalar anti_scalar_anti_scalar_geometric_anti_product(AntiScalar self, AntiScalar other) {
     return AntiScalar(self.g0 * other.g0);
 }
@@ -553,6 +717,10 @@ AntiScalar anti_scalar_anti_scalar_anti_scalar_product(AntiScalar self, AntiScal
     return AntiScalar(self.g0 * other.g0);
 }
 
+AntiScalar anti_scalar_anti_scalar_anti_dot(AntiScalar self, AntiScalar other) {
+    return AntiScalar(self.g0 * other.g0);
+}
+
 HomogeneousMagnitude anti_scalar_homogeneous_magnitude_add(AntiScalar self, HomogeneousMagnitude other) {
     return HomogeneousMagnitude(vec2(self.g0) * vec2(0.0, 1.0) + other.g0);
 }
@@ -569,7 +737,23 @@ HomogeneousMagnitude anti_scalar_homogeneous_magnitude_regressive_product(AntiSc
     return HomogeneousMagnitude(vec2(self.g0) * other.g0);
 }
 
+HomogeneousMagnitude anti_scalar_homogeneous_magnitude_anti_wedge(AntiScalar self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0) * other.g0);
+}
+
+HomogeneousMagnitude anti_scalar_homogeneous_magnitude_meet(AntiScalar self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0) * other.g0);
+}
+
 AntiScalar anti_scalar_homogeneous_magnitude_outer_product(AntiScalar self, HomogeneousMagnitude other) {
+    return AntiScalar(self.g0 * other.g0.x);
+}
+
+AntiScalar anti_scalar_homogeneous_magnitude_wedge(AntiScalar self, HomogeneousMagnitude other) {
+    return AntiScalar(self.g0 * other.g0.x);
+}
+
+AntiScalar anti_scalar_homogeneous_magnitude_join(AntiScalar self, HomogeneousMagnitude other) {
     return AntiScalar(self.g0 * other.g0.x);
 }
 
@@ -601,7 +785,19 @@ AntiScalar anti_scalar_homogeneous_magnitude_anti_scalar_product(AntiScalar self
     return AntiScalar(self.g0 * other.g0.y);
 }
 
+AntiScalar anti_scalar_homogeneous_magnitude_anti_dot(AntiScalar self, HomogeneousMagnitude other) {
+    return AntiScalar(self.g0 * other.g0.y);
+}
+
 Point anti_scalar_point_regressive_product(AntiScalar self, Point other) {
+    return Point(vec4(self.g0) * other.g0);
+}
+
+Point anti_scalar_point_anti_wedge(AntiScalar self, Point other) {
+    return Point(vec4(self.g0) * other.g0);
+}
+
+Point anti_scalar_point_meet(AntiScalar self, Point other) {
     return Point(vec4(self.g0) * other.g0);
 }
 
@@ -629,6 +825,14 @@ Line anti_scalar_line_regressive_product(AntiScalar self, Line other) {
     return Line(vec3(self.g0) * other.g0, vec3(self.g0) * other.g1);
 }
 
+Line anti_scalar_line_anti_wedge(AntiScalar self, Line other) {
+    return Line(vec3(self.g0) * other.g0, vec3(self.g0) * other.g1);
+}
+
+Line anti_scalar_line_meet(AntiScalar self, Line other) {
+    return Line(vec3(self.g0) * other.g0, vec3(self.g0) * other.g1);
+}
+
 Line anti_scalar_line_geometric_anti_product(AntiScalar self, Line other) {
     return Line(vec3(self.g0) * other.g0, vec3(self.g0) * other.g1);
 }
@@ -642,6 +846,14 @@ Line anti_scalar_line_left_anti_contraction(AntiScalar self, Line other) {
 }
 
 Plane anti_scalar_plane_regressive_product(AntiScalar self, Plane other) {
+    return Plane(vec4(self.g0) * other.g0);
+}
+
+Plane anti_scalar_plane_anti_wedge(AntiScalar self, Plane other) {
+    return Plane(vec4(self.g0) * other.g0);
+}
+
+Plane anti_scalar_plane_meet(AntiScalar self, Plane other) {
     return Plane(vec4(self.g0) * other.g0);
 }
 
@@ -669,6 +881,14 @@ Motor anti_scalar_motor_regressive_product(AntiScalar self, Motor other) {
     return Motor(vec4(self.g0) * other.g0, vec3(self.g0) * other.g1);
 }
 
+Motor anti_scalar_motor_anti_wedge(AntiScalar self, Motor other) {
+    return Motor(vec4(self.g0) * other.g0, vec3(self.g0) * other.g1);
+}
+
+Motor anti_scalar_motor_meet(AntiScalar self, Motor other) {
+    return Motor(vec4(self.g0) * other.g0, vec3(self.g0) * other.g1);
+}
+
 Motor anti_scalar_motor_geometric_anti_product(AntiScalar self, Motor other) {
     return Motor(vec4(self.g0) * other.g0, vec3(self.g0) * other.g1);
 }
@@ -689,6 +909,10 @@ AntiScalar anti_scalar_motor_anti_scalar_product(AntiScalar self, Motor other) {
     return AntiScalar(self.g0 * other.g0.w);
 }
 
+AntiScalar anti_scalar_motor_anti_dot(AntiScalar self, Motor other) {
+    return AntiScalar(self.g0 * other.g0.w);
+}
+
 Rotor anti_scalar_rotor_add(AntiScalar self, Rotor other) {
     return Rotor(vec4(self.g0) * vec4(0.0, 0.0, 0.0, 1.0) + other.g0);
 }
@@ -698,6 +922,14 @@ Rotor anti_scalar_rotor_sub(AntiScalar self, Rotor other) {
 }
 
 Rotor anti_scalar_rotor_regressive_product(AntiScalar self, Rotor other) {
+    return Rotor(vec4(self.g0) * other.g0);
+}
+
+Rotor anti_scalar_rotor_anti_wedge(AntiScalar self, Rotor other) {
+    return Rotor(vec4(self.g0) * other.g0);
+}
+
+Rotor anti_scalar_rotor_meet(AntiScalar self, Rotor other) {
     return Rotor(vec4(self.g0) * other.g0);
 }
 
@@ -721,6 +953,10 @@ AntiScalar anti_scalar_rotor_anti_scalar_product(AntiScalar self, Rotor other) {
     return AntiScalar(self.g0 * other.g0.w);
 }
 
+AntiScalar anti_scalar_rotor_anti_dot(AntiScalar self, Rotor other) {
+    return AntiScalar(self.g0 * other.g0.w);
+}
+
 Translator anti_scalar_translator_add(AntiScalar self, Translator other) {
     return Translator(vec4(self.g0) * vec4(0.0, 0.0, 0.0, 1.0) + other.g0);
 }
@@ -730,6 +966,14 @@ Translator anti_scalar_translator_sub(AntiScalar self, Translator other) {
 }
 
 Translator anti_scalar_translator_regressive_product(AntiScalar self, Translator other) {
+    return Translator(vec4(self.g0) * other.g0);
+}
+
+Translator anti_scalar_translator_anti_wedge(AntiScalar self, Translator other) {
+    return Translator(vec4(self.g0) * other.g0);
+}
+
+Translator anti_scalar_translator_meet(AntiScalar self, Translator other) {
     return Translator(vec4(self.g0) * other.g0);
 }
 
@@ -753,7 +997,19 @@ AntiScalar anti_scalar_translator_anti_scalar_product(AntiScalar self, Translato
     return AntiScalar(self.g0 * other.g0.w);
 }
 
+AntiScalar anti_scalar_translator_anti_dot(AntiScalar self, Translator other) {
+    return AntiScalar(self.g0 * other.g0.w);
+}
+
 Flector anti_scalar_flector_regressive_product(AntiScalar self, Flector other) {
+    return Flector(vec4(self.g0) * other.g0, vec4(self.g0) * other.g1);
+}
+
+Flector anti_scalar_flector_anti_wedge(AntiScalar self, Flector other) {
+    return Flector(vec4(self.g0) * other.g0, vec4(self.g0) * other.g1);
+}
+
+Flector anti_scalar_flector_meet(AntiScalar self, Flector other) {
     return Flector(vec4(self.g0) * other.g0, vec4(self.g0) * other.g1);
 }
 
@@ -773,11 +1029,23 @@ AntiScalar anti_scalar_multi_vector_outer_product(AntiScalar self, MultiVector o
     return AntiScalar(self.g0 * other.g0.x);
 }
 
+AntiScalar anti_scalar_multi_vector_wedge(AntiScalar self, MultiVector other) {
+    return AntiScalar(self.g0 * other.g0.x);
+}
+
+AntiScalar anti_scalar_multi_vector_join(AntiScalar self, MultiVector other) {
+    return AntiScalar(self.g0 * other.g0.x);
+}
+
 AntiScalar anti_scalar_multi_vector_right_anti_contraction(AntiScalar self, MultiVector other) {
     return AntiScalar(self.g0 * other.g0.y);
 }
 
 AntiScalar anti_scalar_multi_vector_anti_scalar_product(AntiScalar self, MultiVector other) {
+    return AntiScalar(self.g0 * other.g0.y);
+}
+
+AntiScalar anti_scalar_multi_vector_anti_dot(AntiScalar self, MultiVector other) {
     return AntiScalar(self.g0 * other.g0.y);
 }
 
@@ -853,7 +1121,23 @@ Scalar homogeneous_magnitude_scalar_regressive_product(HomogeneousMagnitude self
     return Scalar(self.g0.y * other.g0);
 }
 
+Scalar homogeneous_magnitude_scalar_anti_wedge(HomogeneousMagnitude self, Scalar other) {
+    return Scalar(self.g0.y * other.g0);
+}
+
+Scalar homogeneous_magnitude_scalar_meet(HomogeneousMagnitude self, Scalar other) {
+    return Scalar(self.g0.y * other.g0);
+}
+
 HomogeneousMagnitude homogeneous_magnitude_scalar_outer_product(HomogeneousMagnitude self, Scalar other) {
+    return HomogeneousMagnitude(self.g0 * vec2(other.g0));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_scalar_wedge(HomogeneousMagnitude self, Scalar other) {
+    return HomogeneousMagnitude(self.g0 * vec2(other.g0));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_scalar_join(HomogeneousMagnitude self, Scalar other) {
     return HomogeneousMagnitude(self.g0 * vec2(other.g0));
 }
 
@@ -885,6 +1169,10 @@ Scalar homogeneous_magnitude_scalar_scalar_product(HomogeneousMagnitude self, Sc
     return Scalar(self.g0.x * other.g0);
 }
 
+Scalar homogeneous_magnitude_scalar_dot(HomogeneousMagnitude self, Scalar other) {
+    return Scalar(self.g0.x * other.g0);
+}
+
 AntiScalar homogeneous_magnitude_anti_scalar_into(HomogeneousMagnitude self) {
     return AntiScalar(self.g0.y);
 }
@@ -905,7 +1193,23 @@ HomogeneousMagnitude homogeneous_magnitude_anti_scalar_regressive_product(Homoge
     return HomogeneousMagnitude(self.g0 * vec2(other.g0));
 }
 
+HomogeneousMagnitude homogeneous_magnitude_anti_scalar_anti_wedge(HomogeneousMagnitude self, AntiScalar other) {
+    return HomogeneousMagnitude(self.g0 * vec2(other.g0));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_anti_scalar_meet(HomogeneousMagnitude self, AntiScalar other) {
+    return HomogeneousMagnitude(self.g0 * vec2(other.g0));
+}
+
 AntiScalar homogeneous_magnitude_anti_scalar_outer_product(HomogeneousMagnitude self, AntiScalar other) {
+    return AntiScalar(self.g0.x * other.g0);
+}
+
+AntiScalar homogeneous_magnitude_anti_scalar_wedge(HomogeneousMagnitude self, AntiScalar other) {
+    return AntiScalar(self.g0.x * other.g0);
+}
+
+AntiScalar homogeneous_magnitude_anti_scalar_join(HomogeneousMagnitude self, AntiScalar other) {
     return AntiScalar(self.g0.x * other.g0);
 }
 
@@ -937,6 +1241,10 @@ AntiScalar homogeneous_magnitude_anti_scalar_anti_scalar_product(HomogeneousMagn
     return AntiScalar(self.g0.y * other.g0);
 }
 
+AntiScalar homogeneous_magnitude_anti_scalar_anti_dot(HomogeneousMagnitude self, AntiScalar other) {
+    return AntiScalar(self.g0.y * other.g0);
+}
+
 HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_add(HomogeneousMagnitude self, HomogeneousMagnitude other) {
     return HomogeneousMagnitude(self.g0 + other.g0);
 }
@@ -961,7 +1269,23 @@ HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_regressive_prod
     return HomogeneousMagnitude(vec2(self.g0.y) * other.g0 + vec2(self.g0.x) * other.g0.yx * vec2(1.0, 0.0));
 }
 
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_anti_wedge(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0.y) * other.g0 + vec2(self.g0.x) * other.g0.yx * vec2(1.0, 0.0));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_meet(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0.y) * other.g0 + vec2(self.g0.x) * other.g0.yx * vec2(1.0, 0.0));
+}
+
 HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_outer_product(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0.x) * other.g0 + self.g0 * vec2(other.g0.x) * vec2(0.0, 1.0));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_wedge(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return HomogeneousMagnitude(vec2(self.g0.x) * other.g0 + self.g0 * vec2(other.g0.x) * vec2(0.0, 1.0));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_join(HomogeneousMagnitude self, HomogeneousMagnitude other) {
     return HomogeneousMagnitude(vec2(self.g0.x) * other.g0 + self.g0 * vec2(other.g0.x) * vec2(0.0, 1.0));
 }
 
@@ -997,7 +1321,15 @@ Scalar homogeneous_magnitude_homogeneous_magnitude_scalar_product(HomogeneousMag
     return Scalar(self.g0.x * other.g0.x);
 }
 
+Scalar homogeneous_magnitude_homogeneous_magnitude_dot(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return Scalar(self.g0.x * other.g0.x);
+}
+
 AntiScalar homogeneous_magnitude_homogeneous_magnitude_anti_scalar_product(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return AntiScalar(self.g0.y * other.g0.y);
+}
+
+AntiScalar homogeneous_magnitude_homogeneous_magnitude_anti_dot(HomogeneousMagnitude self, HomogeneousMagnitude other) {
     return AntiScalar(self.g0.y * other.g0.y);
 }
 
@@ -1005,7 +1337,23 @@ Point homogeneous_magnitude_point_regressive_product(HomogeneousMagnitude self, 
     return Point(vec4(self.g0.y) * other.g0);
 }
 
+Point homogeneous_magnitude_point_anti_wedge(HomogeneousMagnitude self, Point other) {
+    return Point(vec4(self.g0.y) * other.g0);
+}
+
+Point homogeneous_magnitude_point_meet(HomogeneousMagnitude self, Point other) {
+    return Point(vec4(self.g0.y) * other.g0);
+}
+
 Point homogeneous_magnitude_point_outer_product(HomogeneousMagnitude self, Point other) {
+    return Point(vec4(self.g0.x) * other.g0);
+}
+
+Point homogeneous_magnitude_point_wedge(HomogeneousMagnitude self, Point other) {
+    return Point(vec4(self.g0.x) * other.g0);
+}
+
+Point homogeneous_magnitude_point_join(HomogeneousMagnitude self, Point other) {
     return Point(vec4(self.g0.x) * other.g0);
 }
 
@@ -1025,7 +1373,23 @@ Line homogeneous_magnitude_line_regressive_product(HomogeneousMagnitude self, Li
     return Line(vec3(self.g0.y) * other.g0, vec3(self.g0.y) * other.g1);
 }
 
+Line homogeneous_magnitude_line_anti_wedge(HomogeneousMagnitude self, Line other) {
+    return Line(vec3(self.g0.y) * other.g0, vec3(self.g0.y) * other.g1);
+}
+
+Line homogeneous_magnitude_line_meet(HomogeneousMagnitude self, Line other) {
+    return Line(vec3(self.g0.y) * other.g0, vec3(self.g0.y) * other.g1);
+}
+
 Line homogeneous_magnitude_line_outer_product(HomogeneousMagnitude self, Line other) {
+    return Line(vec3(self.g0.x) * other.g0, vec3(self.g0.x) * other.g1);
+}
+
+Line homogeneous_magnitude_line_wedge(HomogeneousMagnitude self, Line other) {
+    return Line(vec3(self.g0.x) * other.g0, vec3(self.g0.x) * other.g1);
+}
+
+Line homogeneous_magnitude_line_join(HomogeneousMagnitude self, Line other) {
     return Line(vec3(self.g0.x) * other.g0, vec3(self.g0.x) * other.g1);
 }
 
@@ -1053,7 +1417,23 @@ Plane homogeneous_magnitude_plane_regressive_product(HomogeneousMagnitude self, 
     return Plane(vec4(self.g0.y) * other.g0);
 }
 
+Plane homogeneous_magnitude_plane_anti_wedge(HomogeneousMagnitude self, Plane other) {
+    return Plane(vec4(self.g0.y) * other.g0);
+}
+
+Plane homogeneous_magnitude_plane_meet(HomogeneousMagnitude self, Plane other) {
+    return Plane(vec4(self.g0.y) * other.g0);
+}
+
 Plane homogeneous_magnitude_plane_outer_product(HomogeneousMagnitude self, Plane other) {
+    return Plane(vec4(self.g0.x) * other.g0);
+}
+
+Plane homogeneous_magnitude_plane_wedge(HomogeneousMagnitude self, Plane other) {
+    return Plane(vec4(self.g0.x) * other.g0);
+}
+
+Plane homogeneous_magnitude_plane_join(HomogeneousMagnitude self, Plane other) {
     return Plane(vec4(self.g0.x) * other.g0);
 }
 
@@ -1073,6 +1453,14 @@ Motor homogeneous_magnitude_motor_outer_product(HomogeneousMagnitude self, Motor
     return Motor(vec4(self.g0.x) * other.g0, vec3(self.g0.x) * other.g1);
 }
 
+Motor homogeneous_magnitude_motor_wedge(HomogeneousMagnitude self, Motor other) {
+    return Motor(vec4(self.g0.x) * other.g0, vec3(self.g0.x) * other.g1);
+}
+
+Motor homogeneous_magnitude_motor_join(HomogeneousMagnitude self, Motor other) {
+    return Motor(vec4(self.g0.x) * other.g0, vec3(self.g0.x) * other.g1);
+}
+
 Motor homogeneous_magnitude_motor_inner_product(HomogeneousMagnitude self, Motor other) {
     return Motor(vec4(self.g0.x) * other.g0 + vec4(self.g0.y, self.g0.y, self.g0.y, self.g0.x) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, 0.0), vec3(self.g0.x) * other.g1);
 }
@@ -1089,11 +1477,23 @@ AntiScalar homogeneous_magnitude_motor_anti_scalar_product(HomogeneousMagnitude 
     return AntiScalar(self.g0.y * other.g0.w);
 }
 
+AntiScalar homogeneous_magnitude_motor_anti_dot(HomogeneousMagnitude self, Motor other) {
+    return AntiScalar(self.g0.y * other.g0.w);
+}
+
 Rotor homogeneous_magnitude_rotor_geometric_product(HomogeneousMagnitude self, Rotor other) {
     return Rotor(vec4(self.g0.x) * other.g0);
 }
 
 Rotor homogeneous_magnitude_rotor_outer_product(HomogeneousMagnitude self, Rotor other) {
+    return Rotor(vec4(self.g0.x) * other.g0);
+}
+
+Rotor homogeneous_magnitude_rotor_wedge(HomogeneousMagnitude self, Rotor other) {
+    return Rotor(vec4(self.g0.x) * other.g0);
+}
+
+Rotor homogeneous_magnitude_rotor_join(HomogeneousMagnitude self, Rotor other) {
     return Rotor(vec4(self.g0.x) * other.g0);
 }
 
@@ -1113,11 +1513,23 @@ AntiScalar homogeneous_magnitude_rotor_anti_scalar_product(HomogeneousMagnitude 
     return AntiScalar(self.g0.y * other.g0.w);
 }
 
+AntiScalar homogeneous_magnitude_rotor_anti_dot(HomogeneousMagnitude self, Rotor other) {
+    return AntiScalar(self.g0.y * other.g0.w);
+}
+
 Motor homogeneous_magnitude_translator_geometric_product(HomogeneousMagnitude self, Translator other) {
     return Motor(vec4(self.g0.y, self.g0.y, self.g0.y, self.g0.x) * other.g0, vec3(self.g0.x) * vec3(other.g0.x, other.g0.y, other.g0.z));
 }
 
 Translator homogeneous_magnitude_translator_outer_product(HomogeneousMagnitude self, Translator other) {
+    return Translator(vec4(self.g0.x) * other.g0);
+}
+
+Translator homogeneous_magnitude_translator_wedge(HomogeneousMagnitude self, Translator other) {
+    return Translator(vec4(self.g0.x) * other.g0);
+}
+
+Translator homogeneous_magnitude_translator_join(HomogeneousMagnitude self, Translator other) {
     return Translator(vec4(self.g0.x) * other.g0);
 }
 
@@ -1141,6 +1553,10 @@ AntiScalar homogeneous_magnitude_translator_anti_scalar_product(HomogeneousMagni
     return AntiScalar(self.g0.y * other.g0.w);
 }
 
+AntiScalar homogeneous_magnitude_translator_anti_dot(HomogeneousMagnitude self, Translator other) {
+    return AntiScalar(self.g0.y * other.g0.w);
+}
+
 Flector homogeneous_magnitude_flector_geometric_product(HomogeneousMagnitude self, Flector other) {
     return Flector(vec4(self.g0.x) * other.g0 + vec4(self.g0.x, self.g0.x, self.g0.x, self.g0.y) * other.g1.xxxw * vec4(0.0, 0.0, 0.0, -1.0), vec4(self.g0.x) * other.g1 + vec4(self.g0.y, self.g0.y, self.g0.y, self.g0.x) * other.g0.xyzx * vec4(-1.0, -1.0, -1.0, 0.0));
 }
@@ -1149,7 +1565,23 @@ Flector homogeneous_magnitude_flector_regressive_product(HomogeneousMagnitude se
     return Flector(vec4(self.g0.y) * other.g0, vec4(self.g0.y) * other.g1);
 }
 
+Flector homogeneous_magnitude_flector_anti_wedge(HomogeneousMagnitude self, Flector other) {
+    return Flector(vec4(self.g0.y) * other.g0, vec4(self.g0.y) * other.g1);
+}
+
+Flector homogeneous_magnitude_flector_meet(HomogeneousMagnitude self, Flector other) {
+    return Flector(vec4(self.g0.y) * other.g0, vec4(self.g0.y) * other.g1);
+}
+
 Flector homogeneous_magnitude_flector_outer_product(HomogeneousMagnitude self, Flector other) {
+    return Flector(vec4(self.g0.x) * other.g0, vec4(self.g0.x) * other.g1);
+}
+
+Flector homogeneous_magnitude_flector_wedge(HomogeneousMagnitude self, Flector other) {
+    return Flector(vec4(self.g0.x) * other.g0, vec4(self.g0.x) * other.g1);
+}
+
+Flector homogeneous_magnitude_flector_join(HomogeneousMagnitude self, Flector other) {
     return Flector(vec4(self.g0.x) * other.g0, vec4(self.g0.x) * other.g1);
 }
 
@@ -1177,7 +1609,15 @@ Scalar homogeneous_magnitude_multi_vector_scalar_product(HomogeneousMagnitude se
     return Scalar(self.g0.x * other.g0.x);
 }
 
+Scalar homogeneous_magnitude_multi_vector_dot(HomogeneousMagnitude self, MultiVector other) {
+    return Scalar(self.g0.x * other.g0.x);
+}
+
 AntiScalar homogeneous_magnitude_multi_vector_anti_scalar_product(HomogeneousMagnitude self, MultiVector other) {
+    return AntiScalar(self.g0.y * other.g0.y);
+}
+
+AntiScalar homogeneous_magnitude_multi_vector_anti_dot(HomogeneousMagnitude self, MultiVector other) {
     return AntiScalar(self.g0.y * other.g0.y);
 }
 
@@ -1285,6 +1725,14 @@ Point point_scalar_outer_product(Point self, Scalar other) {
     return Point(self.g0 * vec4(other.g0));
 }
 
+Point point_scalar_wedge(Point self, Scalar other) {
+    return Point(self.g0 * vec4(other.g0));
+}
+
+Point point_scalar_join(Point self, Scalar other) {
+    return Point(self.g0 * vec4(other.g0));
+}
+
 Point point_scalar_inner_product(Point self, Scalar other) {
     return Point(self.g0 * vec4(other.g0));
 }
@@ -1294,6 +1742,14 @@ Point point_scalar_right_contraction(Point self, Scalar other) {
 }
 
 Point point_anti_scalar_regressive_product(Point self, AntiScalar other) {
+    return Point(self.g0 * vec4(other.g0));
+}
+
+Point point_anti_scalar_anti_wedge(Point self, AntiScalar other) {
+    return Point(self.g0 * vec4(other.g0));
+}
+
+Point point_anti_scalar_meet(Point self, AntiScalar other) {
     return Point(self.g0 * vec4(other.g0));
 }
 
@@ -1313,7 +1769,23 @@ Point point_homogeneous_magnitude_regressive_product(Point self, HomogeneousMagn
     return Point(self.g0 * vec4(other.g0.y));
 }
 
+Point point_homogeneous_magnitude_anti_wedge(Point self, HomogeneousMagnitude other) {
+    return Point(self.g0 * vec4(other.g0.y));
+}
+
+Point point_homogeneous_magnitude_meet(Point self, HomogeneousMagnitude other) {
+    return Point(self.g0 * vec4(other.g0.y));
+}
+
 Point point_homogeneous_magnitude_outer_product(Point self, HomogeneousMagnitude other) {
+    return Point(self.g0 * vec4(other.g0.x));
+}
+
+Point point_homogeneous_magnitude_wedge(Point self, HomogeneousMagnitude other) {
+    return Point(self.g0 * vec4(other.g0.x));
+}
+
+Point point_homogeneous_magnitude_join(Point self, HomogeneousMagnitude other) {
     return Point(self.g0 * vec4(other.g0.x));
 }
 
@@ -1342,6 +1814,14 @@ Point point_point_div(Point self, Point other) {
 }
 
 Line point_point_outer_product(Point self, Point other) {
+    return Line(vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w) * vec3(-1.0), vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0));
+}
+
+Line point_point_wedge(Point self, Point other) {
+    return Line(vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w) * vec3(-1.0), vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0));
+}
+
+Line point_point_join(Point self, Point other) {
     return Line(vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w) * vec3(-1.0), vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0));
 }
 
@@ -1377,7 +1857,15 @@ Scalar point_point_scalar_product(Point self, Point other) {
     return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
 }
 
+Scalar point_point_dot(Point self, Point other) {
+    return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
+}
+
 AntiScalar point_point_anti_scalar_product(Point self, Point other) {
+    return AntiScalar(0.0 - self.g0.w * other.g0.w);
+}
+
+AntiScalar point_point_anti_dot(Point self, Point other) {
     return AntiScalar(0.0 - self.g0.w * other.g0.w);
 }
 
@@ -1386,6 +1874,14 @@ Flector point_line_geometric_product(Point self, Line other) {
 }
 
 Plane point_line_outer_product(Point self, Line other) {
+    return Plane(vec4(self.g0.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g1.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g1.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.w) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g1.x) * vec4(0.0, 1.0, -1.0, -1.0));
+}
+
+Plane point_line_wedge(Point self, Line other) {
+    return Plane(vec4(self.g0.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g1.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g1.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.w) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g1.x) * vec4(0.0, 1.0, -1.0, -1.0));
+}
+
+Plane point_line_join(Point self, Line other) {
     return Plane(vec4(self.g0.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g1.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g1.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.w) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g1.x) * vec4(0.0, 1.0, -1.0, -1.0));
 }
 
@@ -1421,7 +1917,23 @@ Scalar point_plane_regressive_product(Point self, Plane other) {
     return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g0.w * other.g0.w);
 }
 
+Scalar point_plane_anti_wedge(Point self, Plane other) {
+    return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g0.w * other.g0.w);
+}
+
+Scalar point_plane_meet(Point self, Plane other) {
+    return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g0.w * other.g0.w);
+}
+
 AntiScalar point_plane_outer_product(Point self, Plane other) {
+    return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g0.w * other.g0.w);
+}
+
+AntiScalar point_plane_wedge(Point self, Plane other) {
+    return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g0.w * other.g0.w);
+}
+
+AntiScalar point_plane_join(Point self, Plane other) {
     return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g0.w * other.g0.w);
 }
 
@@ -1449,7 +1961,23 @@ Point point_motor_regressive_product(Point self, Motor other) {
     return Point(self.g0 * vec4(other.g0.w));
 }
 
+Point point_motor_anti_wedge(Point self, Motor other) {
+    return Point(self.g0 * vec4(other.g0.w));
+}
+
+Point point_motor_meet(Point self, Motor other) {
+    return Point(self.g0 * vec4(other.g0.w));
+}
+
 Plane point_motor_outer_product(Point self, Motor other) {
+    return Plane(vec4(self.g0.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g1.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g1.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.w) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g1.x) * vec4(0.0, 1.0, -1.0, -1.0));
+}
+
+Plane point_motor_wedge(Point self, Motor other) {
+    return Plane(vec4(self.g0.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g1.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g1.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.w) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g1.x) * vec4(0.0, 1.0, -1.0, -1.0));
+}
+
+Plane point_motor_join(Point self, Motor other) {
     return Plane(vec4(self.g0.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g1.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g1.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.w) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g1.x) * vec4(0.0, 1.0, -1.0, -1.0));
 }
 
@@ -1469,6 +1997,14 @@ Point point_rotor_regressive_product(Point self, Rotor other) {
     return Point(self.g0 * vec4(other.g0.w));
 }
 
+Point point_rotor_anti_wedge(Point self, Rotor other) {
+    return Point(self.g0 * vec4(other.g0.w));
+}
+
+Point point_rotor_meet(Point self, Rotor other) {
+    return Point(self.g0 * vec4(other.g0.w));
+}
+
 Flector point_rotor_geometric_anti_product(Point self, Rotor other) {
     return Flector(vec4(self.g0.y) * other.g0.zwxz * vec4(1.0, 1.0, -1.0, 0.0) + vec4(self.g0.z) * other.g0.yxwy * vec4(-1.0, 1.0, 1.0, 0.0) + self.g0.xxxw * other.g0.wzyw * vec4(1.0, -1.0, 1.0, 1.0), vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * other.g0.xyzx * vec4(1.0, 1.0, 1.0, -1.0));
 }
@@ -1485,7 +2021,23 @@ Point point_translator_regressive_product(Point self, Translator other) {
     return Point(self.g0 * vec4(other.g0.w));
 }
 
+Point point_translator_anti_wedge(Point self, Translator other) {
+    return Point(self.g0 * vec4(other.g0.w));
+}
+
+Point point_translator_meet(Point self, Translator other) {
+    return Point(self.g0 * vec4(other.g0.w));
+}
+
 Plane point_translator_outer_product(Point self, Translator other) {
+    return Plane(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * other.g0.xyzx * vec4(1.0, 1.0, 1.0, -1.0));
+}
+
+Plane point_translator_wedge(Point self, Translator other) {
+    return Plane(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * other.g0.xyzx * vec4(1.0, 1.0, 1.0, -1.0));
+}
+
+Plane point_translator_join(Point self, Translator other) {
     return Plane(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * other.g0.xyzx * vec4(1.0, 1.0, 1.0, -1.0));
 }
 
@@ -1513,7 +2065,23 @@ Scalar point_flector_regressive_product(Point self, Flector other) {
     return Scalar(self.g0.x * other.g1.x + self.g0.y * other.g1.y + self.g0.z * other.g1.z + self.g0.w * other.g1.w);
 }
 
+Scalar point_flector_anti_wedge(Point self, Flector other) {
+    return Scalar(self.g0.x * other.g1.x + self.g0.y * other.g1.y + self.g0.z * other.g1.z + self.g0.w * other.g1.w);
+}
+
+Scalar point_flector_meet(Point self, Flector other) {
+    return Scalar(self.g0.x * other.g1.x + self.g0.y * other.g1.y + self.g0.z * other.g1.z + self.g0.w * other.g1.w);
+}
+
 Motor point_flector_outer_product(Point self, Flector other) {
+    return Motor(vec4(self.g0.y) * vec4(other.g0.w, other.g0.w, other.g0.w, other.g1.y) * vec4(0.0, -1.0, 0.0, 1.0) + vec4(self.g0.z) * vec4(other.g0.w, other.g0.w, other.g0.w, other.g1.z) * vec4(0.0, 0.0, -1.0, 1.0) + vec4(self.g0.w) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.w) + vec4(self.g0.x) * vec4(other.g0.w, other.g0.x, other.g0.x, other.g1.x) * vec4(-1.0, 0.0, 0.0, 1.0), vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0));
+}
+
+Motor point_flector_wedge(Point self, Flector other) {
+    return Motor(vec4(self.g0.y) * vec4(other.g0.w, other.g0.w, other.g0.w, other.g1.y) * vec4(0.0, -1.0, 0.0, 1.0) + vec4(self.g0.z) * vec4(other.g0.w, other.g0.w, other.g0.w, other.g1.z) * vec4(0.0, 0.0, -1.0, 1.0) + vec4(self.g0.w) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.w) + vec4(self.g0.x) * vec4(other.g0.w, other.g0.x, other.g0.x, other.g1.x) * vec4(-1.0, 0.0, 0.0, 1.0), vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0));
+}
+
+Motor point_flector_join(Point self, Flector other) {
     return Motor(vec4(self.g0.y) * vec4(other.g0.w, other.g0.w, other.g0.w, other.g1.y) * vec4(0.0, -1.0, 0.0, 1.0) + vec4(self.g0.z) * vec4(other.g0.w, other.g0.w, other.g0.w, other.g1.z) * vec4(0.0, 0.0, -1.0, 1.0) + vec4(self.g0.w) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.w) + vec4(self.g0.x) * vec4(other.g0.w, other.g0.x, other.g0.x, other.g1.x) * vec4(-1.0, 0.0, 0.0, 1.0), vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0));
 }
 
@@ -1537,7 +2105,15 @@ Scalar point_flector_scalar_product(Point self, Flector other) {
     return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
 }
 
+Scalar point_flector_dot(Point self, Flector other) {
+    return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
+}
+
 AntiScalar point_flector_anti_scalar_product(Point self, Flector other) {
+    return AntiScalar(0.0 - self.g0.w * other.g0.w);
+}
+
+AntiScalar point_flector_anti_dot(Point self, Flector other) {
     return AntiScalar(0.0 - self.g0.w * other.g0.w);
 }
 
@@ -1545,7 +2121,15 @@ Scalar point_multi_vector_scalar_product(Point self, MultiVector other) {
     return Scalar(self.g0.x * other.g1.x + self.g0.y * other.g1.y + self.g0.z * other.g1.z);
 }
 
+Scalar point_multi_vector_dot(Point self, MultiVector other) {
+    return Scalar(self.g0.x * other.g1.x + self.g0.y * other.g1.y + self.g0.z * other.g1.z);
+}
+
 AntiScalar point_multi_vector_anti_scalar_product(Point self, MultiVector other) {
+    return AntiScalar(0.0 - self.g0.w * other.g1.w);
+}
+
+AntiScalar point_multi_vector_anti_dot(Point self, MultiVector other) {
     return AntiScalar(0.0 - self.g0.w * other.g1.w);
 }
 
@@ -1653,6 +2237,14 @@ Line line_scalar_outer_product(Line self, Scalar other) {
     return Line(self.g0 * vec3(other.g0), self.g1 * vec3(other.g0));
 }
 
+Line line_scalar_wedge(Line self, Scalar other) {
+    return Line(self.g0 * vec3(other.g0), self.g1 * vec3(other.g0));
+}
+
+Line line_scalar_join(Line self, Scalar other) {
+    return Line(self.g0 * vec3(other.g0), self.g1 * vec3(other.g0));
+}
+
 Line line_scalar_inner_product(Line self, Scalar other) {
     return Line(self.g0 * vec3(other.g0), self.g1 * vec3(other.g0));
 }
@@ -1670,6 +2262,14 @@ Motor line_anti_scalar_sub(Line self, AntiScalar other) {
 }
 
 Line line_anti_scalar_regressive_product(Line self, AntiScalar other) {
+    return Line(self.g0 * vec3(other.g0), self.g1 * vec3(other.g0));
+}
+
+Line line_anti_scalar_anti_wedge(Line self, AntiScalar other) {
+    return Line(self.g0 * vec3(other.g0), self.g1 * vec3(other.g0));
+}
+
+Line line_anti_scalar_meet(Line self, AntiScalar other) {
     return Line(self.g0 * vec3(other.g0), self.g1 * vec3(other.g0));
 }
 
@@ -1693,7 +2293,23 @@ Line line_homogeneous_magnitude_regressive_product(Line self, HomogeneousMagnitu
     return Line(self.g0 * vec3(other.g0.y), self.g1 * vec3(other.g0.y));
 }
 
+Line line_homogeneous_magnitude_anti_wedge(Line self, HomogeneousMagnitude other) {
+    return Line(self.g0 * vec3(other.g0.y), self.g1 * vec3(other.g0.y));
+}
+
+Line line_homogeneous_magnitude_meet(Line self, HomogeneousMagnitude other) {
+    return Line(self.g0 * vec3(other.g0.y), self.g1 * vec3(other.g0.y));
+}
+
 Line line_homogeneous_magnitude_outer_product(Line self, HomogeneousMagnitude other) {
+    return Line(self.g0 * vec3(other.g0.x), self.g1 * vec3(other.g0.x));
+}
+
+Line line_homogeneous_magnitude_wedge(Line self, HomogeneousMagnitude other) {
+    return Line(self.g0 * vec3(other.g0.x), self.g1 * vec3(other.g0.x));
+}
+
+Line line_homogeneous_magnitude_join(Line self, HomogeneousMagnitude other) {
     return Line(self.g0 * vec3(other.g0.x), self.g1 * vec3(other.g0.x));
 }
 
@@ -1722,6 +2338,14 @@ Flector line_point_geometric_product(Line self, Point other) {
 }
 
 Plane line_point_outer_product(Line self, Point other) {
+    return Plane(vec4(self.g0.y) * other.g0.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * other.g0.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g1.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g1.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.x, self.g0.x, self.g0.x, self.g1.x) * other.g0.wzyx * vec4(1.0, -1.0, 1.0, -1.0));
+}
+
+Plane line_point_wedge(Line self, Point other) {
+    return Plane(vec4(self.g0.y) * other.g0.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * other.g0.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g1.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g1.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.x, self.g0.x, self.g0.x, self.g1.x) * other.g0.wzyx * vec4(1.0, -1.0, 1.0, -1.0));
+}
+
+Plane line_point_join(Line self, Point other) {
     return Plane(vec4(self.g0.y) * other.g0.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * other.g0.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g1.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g1.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.x, self.g0.x, self.g0.x, self.g1.x) * other.g0.wzyx * vec4(1.0, -1.0, 1.0, -1.0));
 }
 
@@ -1761,7 +2385,23 @@ Scalar line_line_regressive_product(Line self, Line other) {
     return Scalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
 }
 
+Scalar line_line_anti_wedge(Line self, Line other) {
+    return Scalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
+}
+
+Scalar line_line_meet(Line self, Line other) {
+    return Scalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
+}
+
 AntiScalar line_line_outer_product(Line self, Line other) {
+    return AntiScalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
+}
+
+AntiScalar line_line_wedge(Line self, Line other) {
+    return AntiScalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
+}
+
+AntiScalar line_line_join(Line self, Line other) {
     return AntiScalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
 }
 
@@ -1793,11 +2433,27 @@ Scalar line_line_scalar_product(Line self, Line other) {
     return Scalar(0.0 - self.g1.x * other.g1.x - self.g1.y * other.g1.y - self.g1.z * other.g1.z);
 }
 
+Scalar line_line_dot(Line self, Line other) {
+    return Scalar(0.0 - self.g1.x * other.g1.x - self.g1.y * other.g1.y - self.g1.z * other.g1.z);
+}
+
 AntiScalar line_line_anti_scalar_product(Line self, Line other) {
     return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
+AntiScalar line_line_anti_dot(Line self, Line other) {
+    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+}
+
 Point line_plane_regressive_product(Line self, Plane other) {
+    return Point(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.y) * other.g0.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g1.z) * other.g0.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g0.x, self.g1.x, self.g1.x, self.g0.x) * other.g0.wzyx * vec4(1.0, -1.0, 1.0, -1.0));
+}
+
+Point line_plane_anti_wedge(Line self, Plane other) {
+    return Point(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.y) * other.g0.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g1.z) * other.g0.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g0.x, self.g1.x, self.g1.x, self.g0.x) * other.g0.wzyx * vec4(1.0, -1.0, 1.0, -1.0));
+}
+
+Point line_plane_meet(Line self, Plane other) {
     return Point(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.y) * other.g0.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g1.z) * other.g0.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g0.x, self.g1.x, self.g1.x, self.g0.x) * other.g0.wzyx * vec4(1.0, -1.0, 1.0, -1.0));
 }
 
@@ -1833,6 +2489,14 @@ AntiScalar line_motor_outer_product(Line self, Motor other) {
     return AntiScalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
 }
 
+AntiScalar line_motor_wedge(Line self, Motor other) {
+    return AntiScalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
+}
+
+AntiScalar line_motor_join(Line self, Motor other) {
+    return AntiScalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
+}
+
 Motor line_motor_inner_anti_product(Line self, Motor other) {
     return Motor(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0), self.g1 * vec3(other.g0.w));
 }
@@ -1853,7 +2517,15 @@ Scalar line_motor_scalar_product(Line self, Motor other) {
     return Scalar(0.0 - self.g1.x * other.g1.x - self.g1.y * other.g1.y - self.g1.z * other.g1.z);
 }
 
+Scalar line_motor_dot(Line self, Motor other) {
+    return Scalar(0.0 - self.g1.x * other.g1.x - self.g1.y * other.g1.y - self.g1.z * other.g1.z);
+}
+
 AntiScalar line_motor_anti_scalar_product(Line self, Motor other) {
+    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+}
+
+AntiScalar line_motor_anti_dot(Line self, Motor other) {
     return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
@@ -1873,6 +2545,14 @@ AntiScalar line_rotor_outer_product(Line self, Rotor other) {
     return AntiScalar(0.0 - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
 }
 
+AntiScalar line_rotor_wedge(Line self, Rotor other) {
+    return AntiScalar(0.0 - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
+}
+
+AntiScalar line_rotor_join(Line self, Rotor other) {
+    return AntiScalar(0.0 - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
+}
+
 Motor line_rotor_inner_anti_product(Line self, Rotor other) {
     return Motor(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0), self.g1 * vec3(other.g0.w));
 }
@@ -1889,6 +2569,10 @@ AntiScalar line_rotor_anti_scalar_product(Line self, Rotor other) {
     return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
+AntiScalar line_rotor_anti_dot(Line self, Rotor other) {
+    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+}
+
 Motor line_translator_add(Line self, Translator other) {
     return Motor(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(1.0, 1.0, 1.0, 0.0) + other.g0.xxxw * vec4(0.0, 0.0, 0.0, 1.0), self.g1 + vec3(other.g0.x, other.g0.y, other.g0.z));
 }
@@ -1898,6 +2582,14 @@ Motor line_translator_sub(Line self, Translator other) {
 }
 
 AntiScalar line_translator_outer_product(Line self, Translator other) {
+    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+}
+
+AntiScalar line_translator_wedge(Line self, Translator other) {
+    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+}
+
+AntiScalar line_translator_join(Line self, Translator other) {
     return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
@@ -1917,6 +2609,10 @@ Scalar line_translator_scalar_product(Line self, Translator other) {
     return Scalar(0.0 - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
 }
 
+Scalar line_translator_dot(Line self, Translator other) {
+    return Scalar(0.0 - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
+}
+
 Flector line_flector_geometric_product(Line self, Flector other) {
     return Flector(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g1.x) * vec4(other.g1.w, other.g0.z, other.g0.y, other.g1.x) * vec4(1.0, 1.0, -1.0, -1.0) + vec4(self.g1.y) * vec4(other.g0.z, other.g1.w, other.g0.x, other.g1.y) * vec4(-1.0, 1.0, 1.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.y, other.g0.x, other.g1.w, other.g1.z) * vec4(1.0, -1.0, 1.0, -1.0) + vec4(self.g0.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, 1.0), vec4(self.g0.y) * vec4(other.g0.z, other.g1.w, other.g0.x, other.g0.z) * vec4(1.0, -1.0, -1.0, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g1.w, other.g0.y) * vec4(-1.0, 1.0, -1.0, 0.0) + vec4(self.g1.x) * vec4(other.g0.w, other.g1.z, other.g1.y, other.g0.x) * vec4(1.0, 1.0, -1.0, -1.0) + vec4(self.g1.y) * vec4(other.g1.z, other.g0.w, other.g1.x, other.g0.y) * vec4(-1.0, 1.0, 1.0, -1.0) + vec4(self.g1.z) * vec4(other.g1.y, other.g1.x, other.g0.w, other.g0.z) * vec4(1.0, -1.0, 1.0, -1.0) + vec4(self.g0.x) * vec4(other.g1.w, other.g0.z, other.g0.y, other.g1.x) * vec4(-1.0, -1.0, 1.0, 0.0));
 }
@@ -1925,7 +2621,23 @@ Point line_flector_regressive_product(Line self, Flector other) {
     return Point(vec4(self.g0.y) * other.g1.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g1.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.y) * other.g1.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g1.z) * other.g1.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g0.x, self.g1.x, self.g1.x, self.g0.x) * other.g1.wzyx * vec4(1.0, -1.0, 1.0, -1.0));
 }
 
+Point line_flector_anti_wedge(Line self, Flector other) {
+    return Point(vec4(self.g0.y) * other.g1.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g1.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.y) * other.g1.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g1.z) * other.g1.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g0.x, self.g1.x, self.g1.x, self.g0.x) * other.g1.wzyx * vec4(1.0, -1.0, 1.0, -1.0));
+}
+
+Point line_flector_meet(Line self, Flector other) {
+    return Point(vec4(self.g0.y) * other.g1.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g1.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.y) * other.g1.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g1.z) * other.g1.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g0.x, self.g1.x, self.g1.x, self.g0.x) * other.g1.wzyx * vec4(1.0, -1.0, 1.0, -1.0));
+}
+
 Plane line_flector_outer_product(Line self, Flector other) {
+    return Plane(vec4(self.g0.y) * other.g0.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * other.g0.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g1.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g1.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.x, self.g0.x, self.g0.x, self.g1.x) * other.g0.wzyx * vec4(1.0, -1.0, 1.0, -1.0));
+}
+
+Plane line_flector_wedge(Line self, Flector other) {
+    return Plane(vec4(self.g0.y) * other.g0.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * other.g0.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g1.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g1.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.x, self.g0.x, self.g0.x, self.g1.x) * other.g0.wzyx * vec4(1.0, -1.0, 1.0, -1.0));
+}
+
+Plane line_flector_join(Line self, Flector other) {
     return Plane(vec4(self.g0.y) * other.g0.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * other.g0.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g1.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g1.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.x, self.g0.x, self.g0.x, self.g1.x) * other.g0.wzyx * vec4(1.0, -1.0, 1.0, -1.0));
 }
 
@@ -1961,7 +2673,15 @@ Scalar line_multi_vector_scalar_product(Line self, MultiVector other) {
     return Scalar(0.0 - self.g1.x * other.g3.x - self.g1.y * other.g3.y - self.g1.z * other.g3.z);
 }
 
+Scalar line_multi_vector_dot(Line self, MultiVector other) {
+    return Scalar(0.0 - self.g1.x * other.g3.x - self.g1.y * other.g3.y - self.g1.z * other.g3.z);
+}
+
 AntiScalar line_multi_vector_anti_scalar_product(Line self, MultiVector other) {
+    return AntiScalar(0.0 - self.g0.x * other.g2.x - self.g0.y * other.g2.y - self.g0.z * other.g2.z);
+}
+
+AntiScalar line_multi_vector_anti_dot(Line self, MultiVector other) {
     return AntiScalar(0.0 - self.g0.x * other.g2.x - self.g0.y * other.g2.y - self.g0.z * other.g2.z);
 }
 
@@ -2069,6 +2789,14 @@ Plane plane_scalar_outer_product(Plane self, Scalar other) {
     return Plane(self.g0 * vec4(other.g0));
 }
 
+Plane plane_scalar_wedge(Plane self, Scalar other) {
+    return Plane(self.g0 * vec4(other.g0));
+}
+
+Plane plane_scalar_join(Plane self, Scalar other) {
+    return Plane(self.g0 * vec4(other.g0));
+}
+
 Plane plane_scalar_inner_product(Plane self, Scalar other) {
     return Plane(self.g0 * vec4(other.g0));
 }
@@ -2078,6 +2806,14 @@ Plane plane_scalar_right_contraction(Plane self, Scalar other) {
 }
 
 Plane plane_anti_scalar_regressive_product(Plane self, AntiScalar other) {
+    return Plane(self.g0 * vec4(other.g0));
+}
+
+Plane plane_anti_scalar_anti_wedge(Plane self, AntiScalar other) {
+    return Plane(self.g0 * vec4(other.g0));
+}
+
+Plane plane_anti_scalar_meet(Plane self, AntiScalar other) {
     return Plane(self.g0 * vec4(other.g0));
 }
 
@@ -2097,7 +2833,23 @@ Plane plane_homogeneous_magnitude_regressive_product(Plane self, HomogeneousMagn
     return Plane(self.g0 * vec4(other.g0.y));
 }
 
+Plane plane_homogeneous_magnitude_anti_wedge(Plane self, HomogeneousMagnitude other) {
+    return Plane(self.g0 * vec4(other.g0.y));
+}
+
+Plane plane_homogeneous_magnitude_meet(Plane self, HomogeneousMagnitude other) {
+    return Plane(self.g0 * vec4(other.g0.y));
+}
+
 Plane plane_homogeneous_magnitude_outer_product(Plane self, HomogeneousMagnitude other) {
+    return Plane(self.g0 * vec4(other.g0.x));
+}
+
+Plane plane_homogeneous_magnitude_wedge(Plane self, HomogeneousMagnitude other) {
+    return Plane(self.g0 * vec4(other.g0.x));
+}
+
+Plane plane_homogeneous_magnitude_join(Plane self, HomogeneousMagnitude other) {
     return Plane(self.g0 * vec4(other.g0.x));
 }
 
@@ -2125,7 +2877,23 @@ Scalar plane_point_regressive_product(Plane self, Point other) {
     return Scalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z - self.g0.w * other.g0.w);
 }
 
+Scalar plane_point_anti_wedge(Plane self, Point other) {
+    return Scalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z - self.g0.w * other.g0.w);
+}
+
+Scalar plane_point_meet(Plane self, Point other) {
+    return Scalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z - self.g0.w * other.g0.w);
+}
+
 AntiScalar plane_point_outer_product(Plane self, Point other) {
+    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z - self.g0.w * other.g0.w);
+}
+
+AntiScalar plane_point_wedge(Plane self, Point other) {
+    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z - self.g0.w * other.g0.w);
+}
+
+AntiScalar plane_point_join(Plane self, Point other) {
     return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z - self.g0.w * other.g0.w);
 }
 
@@ -2146,6 +2914,14 @@ Line plane_point_left_anti_contraction(Plane self, Point other) {
 }
 
 Point plane_line_regressive_product(Plane self, Line other) {
+    return Point(vec4(self.g0.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.w) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x) * vec4(other.g1.x, other.g1.z, other.g1.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0));
+}
+
+Point plane_line_anti_wedge(Plane self, Line other) {
+    return Point(vec4(self.g0.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.w) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x) * vec4(other.g1.x, other.g1.z, other.g1.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0));
+}
+
+Point plane_line_meet(Plane self, Line other) {
     return Point(vec4(self.g0.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.w) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x) * vec4(other.g1.x, other.g1.z, other.g1.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0));
 }
 
@@ -2189,6 +2965,14 @@ Line plane_plane_regressive_product(Plane self, Plane other) {
     return Line(vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, 1.0, -1.0), vec3(0.0) - vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w));
 }
 
+Line plane_plane_anti_wedge(Plane self, Plane other) {
+    return Line(vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, 1.0, -1.0), vec3(0.0) - vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w));
+}
+
+Line plane_plane_meet(Plane self, Plane other) {
+    return Line(vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, 1.0, -1.0), vec3(0.0) - vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w));
+}
+
 Scalar plane_plane_inner_product(Plane self, Plane other) {
     return Scalar(0.0 - self.g0.w * other.g0.w);
 }
@@ -2221,11 +3005,27 @@ Scalar plane_plane_scalar_product(Plane self, Plane other) {
     return Scalar(0.0 - self.g0.w * other.g0.w);
 }
 
+Scalar plane_plane_dot(Plane self, Plane other) {
+    return Scalar(0.0 - self.g0.w * other.g0.w);
+}
+
 AntiScalar plane_plane_anti_scalar_product(Plane self, Plane other) {
     return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
 }
 
+AntiScalar plane_plane_anti_dot(Plane self, Plane other) {
+    return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
+}
+
 Flector plane_motor_regressive_product(Plane self, Motor other) {
+    return Flector(vec4(self.g0.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.w) * other.g0.xyzx * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x) * vec4(other.g1.x, other.g1.z, other.g1.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0), self.g0 * vec4(other.g0.w));
+}
+
+Flector plane_motor_anti_wedge(Plane self, Motor other) {
+    return Flector(vec4(self.g0.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.w) * other.g0.xyzx * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x) * vec4(other.g1.x, other.g1.z, other.g1.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0), self.g0 * vec4(other.g0.w));
+}
+
+Flector plane_motor_meet(Plane self, Motor other) {
     return Flector(vec4(self.g0.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.w) * other.g0.xyzx * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x) * vec4(other.g1.x, other.g1.z, other.g1.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0), self.g0 * vec4(other.g0.w));
 }
 
@@ -2254,6 +3054,14 @@ Plane plane_motor_right_anti_contraction(Plane self, Motor other) {
 }
 
 Flector plane_rotor_regressive_product(Plane self, Rotor other) {
+    return Flector(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * other.g0.xyzx * vec4(1.0, 1.0, 1.0, -1.0), self.g0 * vec4(other.g0.w));
+}
+
+Flector plane_rotor_anti_wedge(Plane self, Rotor other) {
+    return Flector(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * other.g0.xyzx * vec4(1.0, 1.0, 1.0, -1.0), self.g0 * vec4(other.g0.w));
+}
+
+Flector plane_rotor_meet(Plane self, Rotor other) {
     return Flector(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * other.g0.xyzx * vec4(1.0, 1.0, 1.0, -1.0), self.g0 * vec4(other.g0.w));
 }
 
@@ -2297,6 +3105,14 @@ AntiScalar plane_flector_outer_product(Plane self, Flector other) {
     return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z - self.g0.w * other.g0.w);
 }
 
+AntiScalar plane_flector_wedge(Plane self, Flector other) {
+    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z - self.g0.w * other.g0.w);
+}
+
+AntiScalar plane_flector_join(Plane self, Flector other) {
+    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z - self.g0.w * other.g0.w);
+}
+
 Motor plane_flector_inner_anti_product(Plane self, Flector other) {
     return Motor(vec4(self.g0.y) * vec4(other.g0.w, other.g0.w, other.g0.w, other.g1.y) * vec4(0.0, -1.0, 0.0, 1.0) + vec4(self.g0.z) * vec4(other.g0.w, other.g0.w, other.g0.w, other.g1.z) * vec4(0.0, 0.0, -1.0, 1.0) + vec4(self.g0.x) * vec4(other.g0.w, other.g0.x, other.g0.x, other.g1.x) * vec4(-1.0, 0.0, 0.0, 1.0), vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0));
 }
@@ -2317,7 +3133,15 @@ Scalar plane_flector_scalar_product(Plane self, Flector other) {
     return Scalar(0.0 - self.g0.w * other.g1.w);
 }
 
+Scalar plane_flector_dot(Plane self, Flector other) {
+    return Scalar(0.0 - self.g0.w * other.g1.w);
+}
+
 AntiScalar plane_flector_anti_scalar_product(Plane self, Flector other) {
+    return AntiScalar(self.g0.x * other.g1.x + self.g0.y * other.g1.y + self.g0.z * other.g1.z);
+}
+
+AntiScalar plane_flector_anti_dot(Plane self, Flector other) {
     return AntiScalar(self.g0.x * other.g1.x + self.g0.y * other.g1.y + self.g0.z * other.g1.z);
 }
 
@@ -2325,7 +3149,15 @@ Scalar plane_multi_vector_scalar_product(Plane self, MultiVector other) {
     return Scalar(0.0 - self.g0.w * other.g6.w);
 }
 
+Scalar plane_multi_vector_dot(Plane self, MultiVector other) {
+    return Scalar(0.0 - self.g0.w * other.g6.w);
+}
+
 AntiScalar plane_multi_vector_anti_scalar_product(Plane self, MultiVector other) {
+    return AntiScalar(self.g0.x * other.g6.x + self.g0.y * other.g6.y + self.g0.z * other.g6.z);
+}
+
+AntiScalar plane_multi_vector_anti_dot(Plane self, MultiVector other) {
     return AntiScalar(self.g0.x * other.g6.x + self.g0.y * other.g6.y + self.g0.z * other.g6.z);
 }
 
@@ -2413,7 +3245,23 @@ Scalar motor_scalar_regressive_product(Motor self, Scalar other) {
     return Scalar(self.g0.w * other.g0);
 }
 
+Scalar motor_scalar_anti_wedge(Motor self, Scalar other) {
+    return Scalar(self.g0.w * other.g0);
+}
+
+Scalar motor_scalar_meet(Motor self, Scalar other) {
+    return Scalar(self.g0.w * other.g0);
+}
+
 Motor motor_scalar_outer_product(Motor self, Scalar other) {
+    return Motor(self.g0 * vec4(other.g0), self.g1 * vec3(other.g0));
+}
+
+Motor motor_scalar_wedge(Motor self, Scalar other) {
+    return Motor(self.g0 * vec4(other.g0), self.g1 * vec3(other.g0));
+}
+
+Motor motor_scalar_join(Motor self, Scalar other) {
     return Motor(self.g0 * vec4(other.g0), self.g1 * vec3(other.g0));
 }
 
@@ -2441,6 +3289,14 @@ Motor motor_anti_scalar_regressive_product(Motor self, AntiScalar other) {
     return Motor(self.g0 * vec4(other.g0), self.g1 * vec3(other.g0));
 }
 
+Motor motor_anti_scalar_anti_wedge(Motor self, AntiScalar other) {
+    return Motor(self.g0 * vec4(other.g0), self.g1 * vec3(other.g0));
+}
+
+Motor motor_anti_scalar_meet(Motor self, AntiScalar other) {
+    return Motor(self.g0 * vec4(other.g0), self.g1 * vec3(other.g0));
+}
+
 Motor motor_anti_scalar_geometric_anti_product(Motor self, AntiScalar other) {
     return Motor(self.g0 * vec4(other.g0), self.g1 * vec3(other.g0));
 }
@@ -2461,11 +3317,23 @@ AntiScalar motor_anti_scalar_anti_scalar_product(Motor self, AntiScalar other) {
     return AntiScalar(self.g0.w * other.g0);
 }
 
+AntiScalar motor_anti_scalar_anti_dot(Motor self, AntiScalar other) {
+    return AntiScalar(self.g0.w * other.g0);
+}
+
 Motor motor_homogeneous_magnitude_geometric_product(Motor self, HomogeneousMagnitude other) {
     return Motor(vec4(self.g1.x) * vec4(other.g0.y) * vec4(1.0, 0.0, 0.0, 0.0) + vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 1.0, 0.0, 0.0) + vec4(self.g1.z) * vec4(other.g0.y) * vec4(0.0, 0.0, 1.0, 0.0) + self.g0 * vec4(other.g0.x), self.g1 * vec3(other.g0.x));
 }
 
 Motor motor_homogeneous_magnitude_outer_product(Motor self, HomogeneousMagnitude other) {
+    return Motor(self.g0 * vec4(other.g0.x), self.g1 * vec3(other.g0.x));
+}
+
+Motor motor_homogeneous_magnitude_wedge(Motor self, HomogeneousMagnitude other) {
+    return Motor(self.g0 * vec4(other.g0.x), self.g1 * vec3(other.g0.x));
+}
+
+Motor motor_homogeneous_magnitude_join(Motor self, HomogeneousMagnitude other) {
     return Motor(self.g0 * vec4(other.g0.x), self.g1 * vec3(other.g0.x));
 }
 
@@ -2485,6 +3353,10 @@ AntiScalar motor_homogeneous_magnitude_anti_scalar_product(Motor self, Homogeneo
     return AntiScalar(self.g0.w * other.g0.y);
 }
 
+AntiScalar motor_homogeneous_magnitude_anti_dot(Motor self, HomogeneousMagnitude other) {
+    return AntiScalar(self.g0.w * other.g0.y);
+}
+
 Flector motor_point_geometric_product(Motor self, Point other) {
     return Flector(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g1.x) * other.g0.zzyz * vec4(0.0, 1.0, -1.0, 0.0) + vec4(self.g1.y) * other.g0.zzxz * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g1.z) * other.g0.yxyy * vec4(1.0, -1.0, 0.0, 0.0) + vec4(self.g0.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, 1.0), vec4(self.g0.y) * other.g0.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * other.g0.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g0.w) * other.g0.xyzx * vec4(-1.0, -1.0, -1.0, 0.0) + vec4(self.g1.x) * other.g0.wwwx * vec4(1.0, 0.0, 0.0, -1.0) + vec4(self.g1.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g1.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.xzyx * vec4(0.0, -1.0, 1.0, 0.0));
 }
@@ -2493,7 +3365,23 @@ Point motor_point_regressive_product(Motor self, Point other) {
     return Point(vec4(self.g0.w) * other.g0);
 }
 
+Point motor_point_anti_wedge(Motor self, Point other) {
+    return Point(vec4(self.g0.w) * other.g0);
+}
+
+Point motor_point_meet(Motor self, Point other) {
+    return Point(vec4(self.g0.w) * other.g0);
+}
+
 Plane motor_point_outer_product(Motor self, Point other) {
+    return Plane(vec4(self.g0.y) * other.g0.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * other.g0.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g1.x) * other.g0.wwwx * vec4(1.0, 0.0, 0.0, -1.0) + vec4(self.g1.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g1.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.xzyx * vec4(0.0, -1.0, 1.0, 0.0));
+}
+
+Plane motor_point_wedge(Motor self, Point other) {
+    return Plane(vec4(self.g0.y) * other.g0.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * other.g0.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g1.x) * other.g0.wwwx * vec4(1.0, 0.0, 0.0, -1.0) + vec4(self.g1.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g1.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.xzyx * vec4(0.0, -1.0, 1.0, 0.0));
+}
+
+Plane motor_point_join(Motor self, Point other) {
     return Plane(vec4(self.g0.y) * other.g0.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * other.g0.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g1.x) * other.g0.wwwx * vec4(1.0, 0.0, 0.0, -1.0) + vec4(self.g1.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g1.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.xzyx * vec4(0.0, -1.0, 1.0, 0.0));
 }
 
@@ -2525,6 +3413,14 @@ AntiScalar motor_line_outer_product(Motor self, Line other) {
     return AntiScalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
 }
 
+AntiScalar motor_line_wedge(Motor self, Line other) {
+    return AntiScalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
+}
+
+AntiScalar motor_line_join(Motor self, Line other) {
+    return AntiScalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
+}
+
 Motor motor_line_inner_anti_product(Motor self, Line other) {
     return Motor(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, -1.0), vec3(self.g0.w) * other.g1);
 }
@@ -2545,11 +3441,27 @@ Scalar motor_line_scalar_product(Motor self, Line other) {
     return Scalar(0.0 - self.g1.x * other.g1.x - self.g1.y * other.g1.y - self.g1.z * other.g1.z);
 }
 
+Scalar motor_line_dot(Motor self, Line other) {
+    return Scalar(0.0 - self.g1.x * other.g1.x - self.g1.y * other.g1.y - self.g1.z * other.g1.z);
+}
+
 AntiScalar motor_line_anti_scalar_product(Motor self, Line other) {
     return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
+AntiScalar motor_line_anti_dot(Motor self, Line other) {
+    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+}
+
 Flector motor_plane_regressive_product(Motor self, Plane other) {
+    return Flector(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.x) * other.g0.zzyz * vec4(0.0, -1.0, 1.0, 0.0) + vec4(self.g1.y) * other.g0.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g1.z) * other.g0.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0), vec4(self.g0.w) * other.g0);
+}
+
+Flector motor_plane_anti_wedge(Motor self, Plane other) {
+    return Flector(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.x) * other.g0.zzyz * vec4(0.0, -1.0, 1.0, 0.0) + vec4(self.g1.y) * other.g0.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g1.z) * other.g0.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0), vec4(self.g0.w) * other.g0);
+}
+
+Flector motor_plane_meet(Motor self, Plane other) {
     return Flector(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.x) * other.g0.zzyz * vec4(0.0, -1.0, 1.0, 0.0) + vec4(self.g1.y) * other.g0.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g1.z) * other.g0.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0), vec4(self.g0.w) * other.g0);
 }
 
@@ -2597,6 +3509,14 @@ AntiScalar motor_motor_outer_product(Motor self, Motor other) {
     return AntiScalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
 }
 
+AntiScalar motor_motor_wedge(Motor self, Motor other) {
+    return AntiScalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
+}
+
+AntiScalar motor_motor_join(Motor self, Motor other) {
+    return AntiScalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
+}
+
 Motor motor_motor_inner_anti_product(Motor self, Motor other) {
     return Motor(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.w) * other.g0 + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0), vec3(self.g0.w) * other.g1 + self.g1 * vec3(other.g0.w));
 }
@@ -2613,7 +3533,15 @@ Scalar motor_motor_scalar_product(Motor self, Motor other) {
     return Scalar(0.0 - self.g1.x * other.g1.x - self.g1.y * other.g1.y - self.g1.z * other.g1.z);
 }
 
+Scalar motor_motor_dot(Motor self, Motor other) {
+    return Scalar(0.0 - self.g1.x * other.g1.x - self.g1.y * other.g1.y - self.g1.z * other.g1.z);
+}
+
 AntiScalar motor_motor_anti_scalar_product(Motor self, Motor other) {
+    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z + self.g0.w * other.g0.w);
+}
+
+AntiScalar motor_motor_anti_dot(Motor self, Motor other) {
     return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z + self.g0.w * other.g0.w);
 }
 
@@ -2637,6 +3565,14 @@ AntiScalar motor_rotor_outer_product(Motor self, Rotor other) {
     return AntiScalar(0.0 - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
 }
 
+AntiScalar motor_rotor_wedge(Motor self, Rotor other) {
+    return AntiScalar(0.0 - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
+}
+
+AntiScalar motor_rotor_join(Motor self, Rotor other) {
+    return AntiScalar(0.0 - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
+}
+
 Motor motor_rotor_inner_anti_product(Motor self, Rotor other) {
     return Motor(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.w) * other.g0 + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0), self.g1 * vec3(other.g0.w));
 }
@@ -2650,6 +3586,10 @@ Motor motor_rotor_right_anti_contraction(Motor self, Rotor other) {
 }
 
 AntiScalar motor_rotor_anti_scalar_product(Motor self, Rotor other) {
+    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z + self.g0.w * other.g0.w);
+}
+
+AntiScalar motor_rotor_anti_dot(Motor self, Rotor other) {
     return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z + self.g0.w * other.g0.w);
 }
 
@@ -2669,6 +3609,14 @@ AntiScalar motor_translator_outer_product(Motor self, Translator other) {
     return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
+AntiScalar motor_translator_wedge(Motor self, Translator other) {
+    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+}
+
+AntiScalar motor_translator_join(Motor self, Translator other) {
+    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+}
+
 Motor motor_translator_inner_anti_product(Motor self, Translator other) {
     return Motor(self.g0 * vec4(other.g0.w), vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z) + self.g1 * vec3(other.g0.w));
 }
@@ -2685,7 +3633,15 @@ Scalar motor_translator_scalar_product(Motor self, Translator other) {
     return Scalar(0.0 - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
 }
 
+Scalar motor_translator_dot(Motor self, Translator other) {
+    return Scalar(0.0 - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
+}
+
 AntiScalar motor_translator_anti_scalar_product(Motor self, Translator other) {
+    return AntiScalar(self.g0.w * other.g0.w);
+}
+
+AntiScalar motor_translator_anti_dot(Motor self, Translator other) {
     return AntiScalar(self.g0.w * other.g0.w);
 }
 
@@ -2697,7 +3653,23 @@ Flector motor_flector_regressive_product(Motor self, Flector other) {
     return Flector(vec4(self.g0.y) * other.g1.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g1.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.w) * other.g0 + vec4(self.g1.x) * other.g1.zzyz * vec4(0.0, -1.0, 1.0, 0.0) + vec4(self.g1.y) * other.g1.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g1.z) * other.g1.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g0.x) * other.g1.wxxx * vec4(1.0, 0.0, 0.0, -1.0), vec4(self.g0.w) * other.g1);
 }
 
+Flector motor_flector_anti_wedge(Motor self, Flector other) {
+    return Flector(vec4(self.g0.y) * other.g1.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g1.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.w) * other.g0 + vec4(self.g1.x) * other.g1.zzyz * vec4(0.0, -1.0, 1.0, 0.0) + vec4(self.g1.y) * other.g1.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g1.z) * other.g1.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g0.x) * other.g1.wxxx * vec4(1.0, 0.0, 0.0, -1.0), vec4(self.g0.w) * other.g1);
+}
+
+Flector motor_flector_meet(Motor self, Flector other) {
+    return Flector(vec4(self.g0.y) * other.g1.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g1.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.w) * other.g0 + vec4(self.g1.x) * other.g1.zzyz * vec4(0.0, -1.0, 1.0, 0.0) + vec4(self.g1.y) * other.g1.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g1.z) * other.g1.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g0.x) * other.g1.wxxx * vec4(1.0, 0.0, 0.0, -1.0), vec4(self.g0.w) * other.g1);
+}
+
 Plane motor_flector_outer_product(Motor self, Flector other) {
+    return Plane(vec4(self.g0.y) * other.g0.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * other.g0.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g1.x) * other.g0.wwwx * vec4(1.0, 0.0, 0.0, -1.0) + vec4(self.g1.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g1.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.xzyx * vec4(0.0, -1.0, 1.0, 0.0));
+}
+
+Plane motor_flector_wedge(Motor self, Flector other) {
+    return Plane(vec4(self.g0.y) * other.g0.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * other.g0.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g1.x) * other.g0.wwwx * vec4(1.0, 0.0, 0.0, -1.0) + vec4(self.g1.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g1.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.xzyx * vec4(0.0, -1.0, 1.0, 0.0));
+}
+
+Plane motor_flector_join(Motor self, Flector other) {
     return Plane(vec4(self.g0.y) * other.g0.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * other.g0.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g1.x) * other.g0.wwwx * vec4(1.0, 0.0, 0.0, -1.0) + vec4(self.g1.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g1.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.xzyx * vec4(0.0, -1.0, 1.0, 0.0));
 }
 
@@ -2725,7 +3697,15 @@ Scalar motor_multi_vector_scalar_product(Motor self, MultiVector other) {
     return Scalar(0.0 - self.g1.x * other.g3.x - self.g1.y * other.g3.y - self.g1.z * other.g3.z);
 }
 
+Scalar motor_multi_vector_dot(Motor self, MultiVector other) {
+    return Scalar(0.0 - self.g1.x * other.g3.x - self.g1.y * other.g3.y - self.g1.z * other.g3.z);
+}
+
 AntiScalar motor_multi_vector_anti_scalar_product(Motor self, MultiVector other) {
+    return AntiScalar(0.0 - self.g0.x * other.g2.x - self.g0.y * other.g2.y - self.g0.z * other.g2.z + self.g0.w * other.g0.y);
+}
+
+AntiScalar motor_multi_vector_anti_dot(Motor self, MultiVector other) {
     return AntiScalar(0.0 - self.g0.x * other.g2.x - self.g0.y * other.g2.y - self.g0.z * other.g2.z + self.g0.w * other.g0.y);
 }
 
@@ -2813,7 +3793,23 @@ Scalar rotor_scalar_regressive_product(Rotor self, Scalar other) {
     return Scalar(self.g0.w * other.g0);
 }
 
+Scalar rotor_scalar_anti_wedge(Rotor self, Scalar other) {
+    return Scalar(self.g0.w * other.g0);
+}
+
+Scalar rotor_scalar_meet(Rotor self, Scalar other) {
+    return Scalar(self.g0.w * other.g0);
+}
+
 Rotor rotor_scalar_outer_product(Rotor self, Scalar other) {
+    return Rotor(self.g0 * vec4(other.g0));
+}
+
+Rotor rotor_scalar_wedge(Rotor self, Scalar other) {
+    return Rotor(self.g0 * vec4(other.g0));
+}
+
+Rotor rotor_scalar_join(Rotor self, Scalar other) {
     return Rotor(self.g0 * vec4(other.g0));
 }
 
@@ -2841,6 +3837,14 @@ Rotor rotor_anti_scalar_regressive_product(Rotor self, AntiScalar other) {
     return Rotor(self.g0 * vec4(other.g0));
 }
 
+Rotor rotor_anti_scalar_anti_wedge(Rotor self, AntiScalar other) {
+    return Rotor(self.g0 * vec4(other.g0));
+}
+
+Rotor rotor_anti_scalar_meet(Rotor self, AntiScalar other) {
+    return Rotor(self.g0 * vec4(other.g0));
+}
+
 Rotor rotor_anti_scalar_geometric_anti_product(Rotor self, AntiScalar other) {
     return Rotor(self.g0 * vec4(other.g0));
 }
@@ -2861,11 +3865,23 @@ AntiScalar rotor_anti_scalar_anti_scalar_product(Rotor self, AntiScalar other) {
     return AntiScalar(self.g0.w * other.g0);
 }
 
+AntiScalar rotor_anti_scalar_anti_dot(Rotor self, AntiScalar other) {
+    return AntiScalar(self.g0.w * other.g0);
+}
+
 Rotor rotor_homogeneous_magnitude_geometric_product(Rotor self, HomogeneousMagnitude other) {
     return Rotor(self.g0 * vec4(other.g0.x));
 }
 
 Rotor rotor_homogeneous_magnitude_outer_product(Rotor self, HomogeneousMagnitude other) {
+    return Rotor(self.g0 * vec4(other.g0.x));
+}
+
+Rotor rotor_homogeneous_magnitude_wedge(Rotor self, HomogeneousMagnitude other) {
+    return Rotor(self.g0 * vec4(other.g0.x));
+}
+
+Rotor rotor_homogeneous_magnitude_join(Rotor self, HomogeneousMagnitude other) {
     return Rotor(self.g0 * vec4(other.g0.x));
 }
 
@@ -2885,7 +3901,19 @@ AntiScalar rotor_homogeneous_magnitude_anti_scalar_product(Rotor self, Homogeneo
     return AntiScalar(self.g0.w * other.g0.y);
 }
 
+AntiScalar rotor_homogeneous_magnitude_anti_dot(Rotor self, HomogeneousMagnitude other) {
+    return AntiScalar(self.g0.w * other.g0.y);
+}
+
 Point rotor_point_regressive_product(Rotor self, Point other) {
+    return Point(vec4(self.g0.w) * other.g0);
+}
+
+Point rotor_point_anti_wedge(Rotor self, Point other) {
+    return Point(vec4(self.g0.w) * other.g0);
+}
+
+Point rotor_point_meet(Rotor self, Point other) {
     return Point(vec4(self.g0.w) * other.g0);
 }
 
@@ -2917,6 +3945,14 @@ AntiScalar rotor_line_outer_product(Rotor self, Line other) {
     return AntiScalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z);
 }
 
+AntiScalar rotor_line_wedge(Rotor self, Line other) {
+    return AntiScalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z);
+}
+
+AntiScalar rotor_line_join(Rotor self, Line other) {
+    return AntiScalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z);
+}
+
 Motor rotor_line_inner_anti_product(Rotor self, Line other) {
     return Motor(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, -1.0), vec3(self.g0.w) * other.g1);
 }
@@ -2933,7 +3969,19 @@ AntiScalar rotor_line_anti_scalar_product(Rotor self, Line other) {
     return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
+AntiScalar rotor_line_anti_dot(Rotor self, Line other) {
+    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+}
+
 Flector rotor_plane_regressive_product(Rotor self, Plane other) {
+    return Flector(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0), vec4(self.g0.w) * other.g0);
+}
+
+Flector rotor_plane_anti_wedge(Rotor self, Plane other) {
+    return Flector(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0), vec4(self.g0.w) * other.g0);
+}
+
+Flector rotor_plane_meet(Rotor self, Plane other) {
     return Flector(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0), vec4(self.g0.w) * other.g0);
 }
 
@@ -2965,6 +4013,14 @@ AntiScalar rotor_motor_outer_product(Rotor self, Motor other) {
     return AntiScalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z);
 }
 
+AntiScalar rotor_motor_wedge(Rotor self, Motor other) {
+    return AntiScalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z);
+}
+
+AntiScalar rotor_motor_join(Rotor self, Motor other) {
+    return AntiScalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z);
+}
+
 Motor rotor_motor_inner_anti_product(Rotor self, Motor other) {
     return Motor(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.w) * other.g0 + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0), vec3(self.g0.w) * other.g1);
 }
@@ -2978,6 +4034,10 @@ Rotor rotor_motor_right_anti_contraction(Rotor self, Motor other) {
 }
 
 AntiScalar rotor_motor_anti_scalar_product(Rotor self, Motor other) {
+    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z + self.g0.w * other.g0.w);
+}
+
+AntiScalar rotor_motor_anti_dot(Rotor self, Motor other) {
     return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z + self.g0.w * other.g0.w);
 }
 
@@ -3001,6 +4061,14 @@ Rotor rotor_rotor_regressive_product(Rotor self, Rotor other) {
     return Rotor(vec4(self.g0.w) * other.g0 + self.g0.xyzx * other.g0.wwwx * vec4(1.0, 1.0, 1.0, 0.0));
 }
 
+Rotor rotor_rotor_anti_wedge(Rotor self, Rotor other) {
+    return Rotor(vec4(self.g0.w) * other.g0 + self.g0.xyzx * other.g0.wwwx * vec4(1.0, 1.0, 1.0, 0.0));
+}
+
+Rotor rotor_rotor_meet(Rotor self, Rotor other) {
+    return Rotor(vec4(self.g0.w) * other.g0 + self.g0.xyzx * other.g0.wwwx * vec4(1.0, 1.0, 1.0, 0.0));
+}
+
 Rotor rotor_rotor_geometric_anti_product(Rotor self, Rotor other) {
     return Rotor(vec4(self.g0.x) * other.g0.wzyx * vec4(1.0, -1.0, 1.0, -1.0) + vec4(self.g0.y) * other.g0.zwxy * vec4(1.0, 1.0, -1.0, -1.0) + vec4(self.g0.z) * other.g0.yxwz * vec4(-1.0, 1.0, 1.0, -1.0) + vec4(self.g0.w) * other.g0);
 }
@@ -3021,6 +4089,10 @@ AntiScalar rotor_rotor_anti_scalar_product(Rotor self, Rotor other) {
     return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z + self.g0.w * other.g0.w);
 }
 
+AntiScalar rotor_rotor_anti_dot(Rotor self, Rotor other) {
+    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z + self.g0.w * other.g0.w);
+}
+
 Motor rotor_translator_add(Rotor self, Translator other) {
     return Motor(self.g0 + other.g0.xxxw * vec4(0.0, 0.0, 0.0, 1.0), vec3(other.g0.x, other.g0.y, other.g0.z));
 }
@@ -3034,6 +4106,14 @@ Rotor rotor_translator_geometric_product(Rotor self, Translator other) {
 }
 
 AntiScalar rotor_translator_outer_product(Rotor self, Translator other) {
+    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+}
+
+AntiScalar rotor_translator_wedge(Rotor self, Translator other) {
+    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+}
+
+AntiScalar rotor_translator_join(Rotor self, Translator other) {
     return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
@@ -3053,7 +4133,19 @@ AntiScalar rotor_translator_anti_scalar_product(Rotor self, Translator other) {
     return AntiScalar(self.g0.w * other.g0.w);
 }
 
+AntiScalar rotor_translator_anti_dot(Rotor self, Translator other) {
+    return AntiScalar(self.g0.w * other.g0.w);
+}
+
 Flector rotor_flector_regressive_product(Rotor self, Flector other) {
+    return Flector(vec4(self.g0.y) * other.g1.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g1.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.w) * other.g0 + vec4(self.g0.x) * other.g1.wxxx * vec4(1.0, 0.0, 0.0, -1.0), vec4(self.g0.w) * other.g1);
+}
+
+Flector rotor_flector_anti_wedge(Rotor self, Flector other) {
+    return Flector(vec4(self.g0.y) * other.g1.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g1.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.w) * other.g0 + vec4(self.g0.x) * other.g1.wxxx * vec4(1.0, 0.0, 0.0, -1.0), vec4(self.g0.w) * other.g1);
+}
+
+Flector rotor_flector_meet(Rotor self, Flector other) {
     return Flector(vec4(self.g0.y) * other.g1.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g1.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.w) * other.g0 + vec4(self.g0.x) * other.g1.wxxx * vec4(1.0, 0.0, 0.0, -1.0), vec4(self.g0.w) * other.g1);
 }
 
@@ -3070,6 +4162,10 @@ Flector rotor_flector_left_anti_contraction(Rotor self, Flector other) {
 }
 
 AntiScalar rotor_multi_vector_anti_scalar_product(Rotor self, MultiVector other) {
+    return AntiScalar(0.0 - self.g0.x * other.g2.x - self.g0.y * other.g2.y - self.g0.z * other.g2.z + self.g0.w * other.g0.y);
+}
+
+AntiScalar rotor_multi_vector_anti_dot(Rotor self, MultiVector other) {
     return AntiScalar(0.0 - self.g0.x * other.g2.x - self.g0.y * other.g2.y - self.g0.z * other.g2.z + self.g0.w * other.g0.y);
 }
 
@@ -3121,7 +4217,23 @@ Scalar translator_scalar_regressive_product(Translator self, Scalar other) {
     return Scalar(self.g0.w * other.g0);
 }
 
+Scalar translator_scalar_anti_wedge(Translator self, Scalar other) {
+    return Scalar(self.g0.w * other.g0);
+}
+
+Scalar translator_scalar_meet(Translator self, Scalar other) {
+    return Scalar(self.g0.w * other.g0);
+}
+
 Translator translator_scalar_outer_product(Translator self, Scalar other) {
+    return Translator(self.g0 * vec4(other.g0));
+}
+
+Translator translator_scalar_wedge(Translator self, Scalar other) {
+    return Translator(self.g0 * vec4(other.g0));
+}
+
+Translator translator_scalar_join(Translator self, Scalar other) {
     return Translator(self.g0 * vec4(other.g0));
 }
 
@@ -3161,6 +4273,14 @@ Translator translator_anti_scalar_regressive_product(Translator self, AntiScalar
     return Translator(self.g0 * vec4(other.g0));
 }
 
+Translator translator_anti_scalar_anti_wedge(Translator self, AntiScalar other) {
+    return Translator(self.g0 * vec4(other.g0));
+}
+
+Translator translator_anti_scalar_meet(Translator self, AntiScalar other) {
+    return Translator(self.g0 * vec4(other.g0));
+}
+
 Translator translator_anti_scalar_geometric_anti_product(Translator self, AntiScalar other) {
     return Translator(self.g0 * vec4(other.g0));
 }
@@ -3181,11 +4301,23 @@ AntiScalar translator_anti_scalar_anti_scalar_product(Translator self, AntiScala
     return AntiScalar(self.g0.w * other.g0);
 }
 
+AntiScalar translator_anti_scalar_anti_dot(Translator self, AntiScalar other) {
+    return AntiScalar(self.g0.w * other.g0);
+}
+
 Motor translator_homogeneous_magnitude_geometric_product(Translator self, HomogeneousMagnitude other) {
     return Motor(self.g0 * vec4(other.g0.y, other.g0.y, other.g0.y, other.g0.x), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.x));
 }
 
 Translator translator_homogeneous_magnitude_outer_product(Translator self, HomogeneousMagnitude other) {
+    return Translator(self.g0 * vec4(other.g0.x));
+}
+
+Translator translator_homogeneous_magnitude_wedge(Translator self, HomogeneousMagnitude other) {
+    return Translator(self.g0 * vec4(other.g0.x));
+}
+
+Translator translator_homogeneous_magnitude_join(Translator self, HomogeneousMagnitude other) {
     return Translator(self.g0 * vec4(other.g0.x));
 }
 
@@ -3209,11 +4341,31 @@ AntiScalar translator_homogeneous_magnitude_anti_scalar_product(Translator self,
     return AntiScalar(self.g0.w * other.g0.y);
 }
 
+AntiScalar translator_homogeneous_magnitude_anti_dot(Translator self, HomogeneousMagnitude other) {
+    return AntiScalar(self.g0.w * other.g0.y);
+}
+
 Point translator_point_regressive_product(Translator self, Point other) {
     return Point(vec4(self.g0.w) * other.g0);
 }
 
+Point translator_point_anti_wedge(Translator self, Point other) {
+    return Point(vec4(self.g0.w) * other.g0);
+}
+
+Point translator_point_meet(Translator self, Point other) {
+    return Point(vec4(self.g0.w) * other.g0);
+}
+
 Plane translator_point_outer_product(Translator self, Point other) {
+    return Plane(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+}
+
+Plane translator_point_wedge(Translator self, Point other) {
+    return Plane(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+}
+
+Plane translator_point_join(Translator self, Point other) {
     return Plane(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
 }
 
@@ -3241,6 +4393,14 @@ AntiScalar translator_line_outer_product(Translator self, Line other) {
     return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
+AntiScalar translator_line_wedge(Translator self, Line other) {
+    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+}
+
+AntiScalar translator_line_join(Translator self, Line other) {
+    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+}
+
 Line translator_line_inner_anti_product(Translator self, Line other) {
     return Line(vec3(self.g0.w) * other.g0, vec3(self.g0.w) * other.g1);
 }
@@ -3254,6 +4414,10 @@ Line translator_line_left_anti_contraction(Translator self, Line other) {
 }
 
 Scalar translator_line_scalar_product(Translator self, Line other) {
+    return Scalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z);
+}
+
+Scalar translator_line_dot(Translator self, Line other) {
     return Scalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z);
 }
 
@@ -3285,6 +4449,14 @@ AntiScalar translator_motor_outer_product(Translator self, Motor other) {
     return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
+AntiScalar translator_motor_wedge(Translator self, Motor other) {
+    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+}
+
+AntiScalar translator_motor_join(Translator self, Motor other) {
+    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+}
+
 Motor translator_motor_inner_anti_product(Translator self, Motor other) {
     return Motor(vec4(self.g0.w) * other.g0, vec3(self.g0.w) * other.g1 + vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w));
 }
@@ -3301,7 +4473,15 @@ Scalar translator_motor_scalar_product(Translator self, Motor other) {
     return Scalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z);
 }
 
+Scalar translator_motor_dot(Translator self, Motor other) {
+    return Scalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z);
+}
+
 AntiScalar translator_motor_anti_scalar_product(Translator self, Motor other) {
+    return AntiScalar(self.g0.w * other.g0.w);
+}
+
+AntiScalar translator_motor_anti_dot(Translator self, Motor other) {
     return AntiScalar(self.g0.w * other.g0.w);
 }
 
@@ -3321,6 +4501,14 @@ AntiScalar translator_rotor_outer_product(Translator self, Rotor other) {
     return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
+AntiScalar translator_rotor_wedge(Translator self, Rotor other) {
+    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+}
+
+AntiScalar translator_rotor_join(Translator self, Rotor other) {
+    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+}
+
 Motor translator_rotor_inner_anti_product(Translator self, Rotor other) {
     return Motor(vec4(self.g0.w) * other.g0, vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w));
 }
@@ -3334,6 +4522,10 @@ Translator translator_rotor_right_anti_contraction(Translator self, Rotor other)
 }
 
 AntiScalar translator_rotor_anti_scalar_product(Translator self, Rotor other) {
+    return AntiScalar(self.g0.w * other.g0.w);
+}
+
+AntiScalar translator_rotor_anti_dot(Translator self, Rotor other) {
     return AntiScalar(self.g0.w * other.g0.w);
 }
 
@@ -3357,6 +4549,14 @@ Translator translator_translator_regressive_product(Translator self, Translator 
     return Translator(vec4(self.g0.w) * other.g0 + self.g0.xyzx * other.g0.wwwx * vec4(1.0, 1.0, 1.0, 0.0));
 }
 
+Translator translator_translator_anti_wedge(Translator self, Translator other) {
+    return Translator(vec4(self.g0.w) * other.g0 + self.g0.xyzx * other.g0.wwwx * vec4(1.0, 1.0, 1.0, 0.0));
+}
+
+Translator translator_translator_meet(Translator self, Translator other) {
+    return Translator(vec4(self.g0.w) * other.g0 + self.g0.xyzx * other.g0.wwwx * vec4(1.0, 1.0, 1.0, 0.0));
+}
+
 Translator translator_translator_geometric_anti_product(Translator self, Translator other) {
     return Translator(vec4(self.g0.w) * other.g0 + self.g0.xyzx * other.g0.wwwx * vec4(1.0, 1.0, 1.0, 0.0));
 }
@@ -3377,7 +4577,15 @@ Scalar translator_translator_scalar_product(Translator self, Translator other) {
     return Scalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
+Scalar translator_translator_dot(Translator self, Translator other) {
+    return Scalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+}
+
 AntiScalar translator_translator_anti_scalar_product(Translator self, Translator other) {
+    return AntiScalar(self.g0.w * other.g0.w);
+}
+
+AntiScalar translator_translator_anti_dot(Translator self, Translator other) {
     return AntiScalar(self.g0.w * other.g0.w);
 }
 
@@ -3389,7 +4597,23 @@ Flector translator_flector_regressive_product(Translator self, Flector other) {
     return Flector(vec4(self.g0.y) * other.g1.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * other.g1.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g0.w) * other.g0 + vec4(self.g0.x) * other.g1.xzyx * vec4(0.0, -1.0, 1.0, 0.0), vec4(self.g0.w) * other.g1);
 }
 
+Flector translator_flector_anti_wedge(Translator self, Flector other) {
+    return Flector(vec4(self.g0.y) * other.g1.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * other.g1.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g0.w) * other.g0 + vec4(self.g0.x) * other.g1.xzyx * vec4(0.0, -1.0, 1.0, 0.0), vec4(self.g0.w) * other.g1);
+}
+
+Flector translator_flector_meet(Translator self, Flector other) {
+    return Flector(vec4(self.g0.y) * other.g1.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * other.g1.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g0.w) * other.g0 + vec4(self.g0.x) * other.g1.xzyx * vec4(0.0, -1.0, 1.0, 0.0), vec4(self.g0.w) * other.g1);
+}
+
 Plane translator_flector_outer_product(Translator self, Flector other) {
+    return Plane(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+}
+
+Plane translator_flector_wedge(Translator self, Flector other) {
+    return Plane(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+}
+
+Plane translator_flector_join(Translator self, Flector other) {
     return Plane(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
 }
 
@@ -3413,7 +4637,15 @@ Scalar translator_multi_vector_scalar_product(Translator self, MultiVector other
     return Scalar(0.0 - self.g0.x * other.g3.x - self.g0.y * other.g3.y - self.g0.z * other.g3.z);
 }
 
+Scalar translator_multi_vector_dot(Translator self, MultiVector other) {
+    return Scalar(0.0 - self.g0.x * other.g3.x - self.g0.y * other.g3.y - self.g0.z * other.g3.z);
+}
+
 AntiScalar translator_multi_vector_anti_scalar_product(Translator self, MultiVector other) {
+    return AntiScalar(self.g0.w * other.g0.y);
+}
+
+AntiScalar translator_multi_vector_anti_dot(Translator self, MultiVector other) {
     return AntiScalar(self.g0.w * other.g0.y);
 }
 
@@ -3509,6 +4741,14 @@ Flector flector_scalar_outer_product(Flector self, Scalar other) {
     return Flector(self.g0 * vec4(other.g0), self.g1 * vec4(other.g0));
 }
 
+Flector flector_scalar_wedge(Flector self, Scalar other) {
+    return Flector(self.g0 * vec4(other.g0), self.g1 * vec4(other.g0));
+}
+
+Flector flector_scalar_join(Flector self, Scalar other) {
+    return Flector(self.g0 * vec4(other.g0), self.g1 * vec4(other.g0));
+}
+
 Flector flector_scalar_inner_product(Flector self, Scalar other) {
     return Flector(self.g0 * vec4(other.g0), self.g1 * vec4(other.g0));
 }
@@ -3518,6 +4758,14 @@ Flector flector_scalar_right_contraction(Flector self, Scalar other) {
 }
 
 Flector flector_anti_scalar_regressive_product(Flector self, AntiScalar other) {
+    return Flector(self.g0 * vec4(other.g0), self.g1 * vec4(other.g0));
+}
+
+Flector flector_anti_scalar_anti_wedge(Flector self, AntiScalar other) {
+    return Flector(self.g0 * vec4(other.g0), self.g1 * vec4(other.g0));
+}
+
+Flector flector_anti_scalar_meet(Flector self, AntiScalar other) {
     return Flector(self.g0 * vec4(other.g0), self.g1 * vec4(other.g0));
 }
 
@@ -3541,7 +4789,23 @@ Flector flector_homogeneous_magnitude_regressive_product(Flector self, Homogeneo
     return Flector(self.g0 * vec4(other.g0.y), self.g1 * vec4(other.g0.y));
 }
 
+Flector flector_homogeneous_magnitude_anti_wedge(Flector self, HomogeneousMagnitude other) {
+    return Flector(self.g0 * vec4(other.g0.y), self.g1 * vec4(other.g0.y));
+}
+
+Flector flector_homogeneous_magnitude_meet(Flector self, HomogeneousMagnitude other) {
+    return Flector(self.g0 * vec4(other.g0.y), self.g1 * vec4(other.g0.y));
+}
+
 Flector flector_homogeneous_magnitude_outer_product(Flector self, HomogeneousMagnitude other) {
+    return Flector(self.g0 * vec4(other.g0.x), self.g1 * vec4(other.g0.x));
+}
+
+Flector flector_homogeneous_magnitude_wedge(Flector self, HomogeneousMagnitude other) {
+    return Flector(self.g0 * vec4(other.g0.x), self.g1 * vec4(other.g0.x));
+}
+
+Flector flector_homogeneous_magnitude_join(Flector self, HomogeneousMagnitude other) {
     return Flector(self.g0 * vec4(other.g0.x), self.g1 * vec4(other.g0.x));
 }
 
@@ -3581,7 +4845,23 @@ Scalar flector_point_regressive_product(Flector self, Point other) {
     return Scalar(0.0 - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z - self.g1.w * other.g0.w);
 }
 
+Scalar flector_point_anti_wedge(Flector self, Point other) {
+    return Scalar(0.0 - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z - self.g1.w * other.g0.w);
+}
+
+Scalar flector_point_meet(Flector self, Point other) {
+    return Scalar(0.0 - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z - self.g1.w * other.g0.w);
+}
+
 Motor flector_point_outer_product(Flector self, Point other) {
+    return Motor(vec4(self.g0.w) * other.g0.xyzx * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.w) * vec4(other.g0.w) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.x, self.g0.y, self.g0.z, self.g1.x) * other.g0.wwwx * vec4(-1.0), vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0));
+}
+
+Motor flector_point_wedge(Flector self, Point other) {
+    return Motor(vec4(self.g0.w) * other.g0.xyzx * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.w) * vec4(other.g0.w) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.x, self.g0.y, self.g0.z, self.g1.x) * other.g0.wwwx * vec4(-1.0), vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0));
+}
+
+Motor flector_point_join(Flector self, Point other) {
     return Motor(vec4(self.g0.w) * other.g0.xyzx * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.w) * vec4(other.g0.w) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.x, self.g0.y, self.g0.z, self.g1.x) * other.g0.wwwx * vec4(-1.0), vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0));
 }
 
@@ -3605,7 +4885,15 @@ Scalar flector_point_scalar_product(Flector self, Point other) {
     return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
 }
 
+Scalar flector_point_dot(Flector self, Point other) {
+    return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
+}
+
 AntiScalar flector_point_anti_scalar_product(Flector self, Point other) {
+    return AntiScalar(0.0 - self.g0.w * other.g0.w);
+}
+
+AntiScalar flector_point_anti_dot(Flector self, Point other) {
     return AntiScalar(0.0 - self.g0.w * other.g0.w);
 }
 
@@ -3617,7 +4905,23 @@ Point flector_line_regressive_product(Flector self, Line other) {
     return Point(vec4(self.g1.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g1.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g1.w) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g1.x) * vec4(other.g1.x, other.g1.z, other.g1.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0));
 }
 
+Point flector_line_anti_wedge(Flector self, Line other) {
+    return Point(vec4(self.g1.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g1.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g1.w) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g1.x) * vec4(other.g1.x, other.g1.z, other.g1.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0));
+}
+
+Point flector_line_meet(Flector self, Line other) {
+    return Point(vec4(self.g1.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g1.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g1.w) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g1.x) * vec4(other.g1.x, other.g1.z, other.g1.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0));
+}
+
 Plane flector_line_outer_product(Flector self, Line other) {
+    return Plane(vec4(self.g0.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g1.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g1.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.w) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g1.x) * vec4(0.0, 1.0, -1.0, -1.0));
+}
+
+Plane flector_line_wedge(Flector self, Line other) {
+    return Plane(vec4(self.g0.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g1.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g1.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.w) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g1.x) * vec4(0.0, 1.0, -1.0, -1.0));
+}
+
+Plane flector_line_join(Flector self, Line other) {
     return Plane(vec4(self.g0.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g1.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g1.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.w) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g1.x) * vec4(0.0, 1.0, -1.0, -1.0));
 }
 
@@ -3665,6 +4969,14 @@ AntiScalar flector_plane_outer_product(Flector self, Plane other) {
     return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g0.w * other.g0.w);
 }
 
+AntiScalar flector_plane_wedge(Flector self, Plane other) {
+    return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g0.w * other.g0.w);
+}
+
+AntiScalar flector_plane_join(Flector self, Plane other) {
+    return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g0.w * other.g0.w);
+}
+
 Motor flector_plane_inner_anti_product(Flector self, Plane other) {
     return Motor(vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g1.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.w, self.g0.w, self.g0.w, self.g1.x) * other.g0.xyzx * vec4(-1.0, -1.0, -1.0, 1.0), vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, 1.0, -1.0));
 }
@@ -3685,7 +4997,15 @@ Scalar flector_plane_scalar_product(Flector self, Plane other) {
     return Scalar(0.0 - self.g1.w * other.g0.w);
 }
 
+Scalar flector_plane_dot(Flector self, Plane other) {
+    return Scalar(0.0 - self.g1.w * other.g0.w);
+}
+
 AntiScalar flector_plane_anti_scalar_product(Flector self, Plane other) {
+    return AntiScalar(self.g1.x * other.g0.x + self.g1.y * other.g0.y + self.g1.z * other.g0.z);
+}
+
+AntiScalar flector_plane_anti_dot(Flector self, Plane other) {
     return AntiScalar(self.g1.x * other.g0.x + self.g1.y * other.g0.y + self.g1.z * other.g0.z);
 }
 
@@ -3697,7 +5017,23 @@ Flector flector_motor_regressive_product(Flector self, Motor other) {
     return Flector(vec4(self.g1.x) * vec4(other.g1.z, other.g1.z, other.g1.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0) + vec4(self.g1.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g1.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g1.w) * other.g0.xyzx * vec4(1.0, 1.0, 1.0, 0.0) + self.g0 * vec4(other.g0.w), self.g1 * vec4(other.g0.w));
 }
 
+Flector flector_motor_anti_wedge(Flector self, Motor other) {
+    return Flector(vec4(self.g1.x) * vec4(other.g1.z, other.g1.z, other.g1.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0) + vec4(self.g1.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g1.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g1.w) * other.g0.xyzx * vec4(1.0, 1.0, 1.0, 0.0) + self.g0 * vec4(other.g0.w), self.g1 * vec4(other.g0.w));
+}
+
+Flector flector_motor_meet(Flector self, Motor other) {
+    return Flector(vec4(self.g1.x) * vec4(other.g1.z, other.g1.z, other.g1.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0) + vec4(self.g1.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g1.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g1.w) * other.g0.xyzx * vec4(1.0, 1.0, 1.0, 0.0) + self.g0 * vec4(other.g0.w), self.g1 * vec4(other.g0.w));
+}
+
 Plane flector_motor_outer_product(Flector self, Motor other) {
+    return Plane(vec4(self.g0.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g1.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g1.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.w) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g1.x) * vec4(0.0, 1.0, -1.0, -1.0));
+}
+
+Plane flector_motor_wedge(Flector self, Motor other) {
+    return Plane(vec4(self.g0.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g1.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g1.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.w) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g1.x) * vec4(0.0, 1.0, -1.0, -1.0));
+}
+
+Plane flector_motor_join(Flector self, Motor other) {
     return Plane(vec4(self.g0.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g1.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g1.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.w) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g1.x) * vec4(0.0, 1.0, -1.0, -1.0));
 }
 
@@ -3725,6 +5061,14 @@ Flector flector_rotor_regressive_product(Flector self, Rotor other) {
     return Flector(vec4(self.g1.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.w) * other.g0.xyzx * vec4(1.0, 1.0, 1.0, 0.0) + self.g0 * vec4(other.g0.w), self.g1 * vec4(other.g0.w));
 }
 
+Flector flector_rotor_anti_wedge(Flector self, Rotor other) {
+    return Flector(vec4(self.g1.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.w) * other.g0.xyzx * vec4(1.0, 1.0, 1.0, 0.0) + self.g0 * vec4(other.g0.w), self.g1 * vec4(other.g0.w));
+}
+
+Flector flector_rotor_meet(Flector self, Rotor other) {
+    return Flector(vec4(self.g1.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.w) * other.g0.xyzx * vec4(1.0, 1.0, 1.0, 0.0) + self.g0 * vec4(other.g0.w), self.g1 * vec4(other.g0.w));
+}
+
 Flector flector_rotor_geometric_anti_product(Flector self, Rotor other) {
     return Flector(vec4(self.g0.y) * other.g0.zwxz * vec4(1.0, 1.0, -1.0, 0.0) + vec4(self.g0.z) * other.g0.yxwy * vec4(-1.0, 1.0, 1.0, 0.0) + vec4(self.g1.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.w) * other.g0.xyzx * vec4(1.0, 1.0, 1.0, 0.0) + self.g0.xxxw * other.g0.wzyw * vec4(1.0, -1.0, 1.0, 1.0), vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.x) * other.g0.wzyw * vec4(1.0, -1.0, 1.0, 0.0) + vec4(self.g1.y) * other.g0.zwxz * vec4(1.0, 1.0, -1.0, 0.0) + vec4(self.g1.z) * other.g0.yxwy * vec4(-1.0, 1.0, 1.0, 0.0) + vec4(self.g1.w) * vec4(other.g0.w) * vec4(0.0, 0.0, 0.0, 1.0) + self.g0.wwwx * other.g0.xyzx * vec4(1.0, 1.0, 1.0, -1.0));
 }
@@ -3745,7 +5089,23 @@ Flector flector_translator_regressive_product(Flector self, Translator other) {
     return Flector(vec4(self.g1.x) * other.g0.zzyz * vec4(0.0, 1.0, -1.0, 0.0) + vec4(self.g1.y) * other.g0.zzxz * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g1.z) * other.g0.yxyy * vec4(1.0, -1.0, 0.0, 0.0) + self.g0 * vec4(other.g0.w), self.g1 * vec4(other.g0.w));
 }
 
+Flector flector_translator_anti_wedge(Flector self, Translator other) {
+    return Flector(vec4(self.g1.x) * other.g0.zzyz * vec4(0.0, 1.0, -1.0, 0.0) + vec4(self.g1.y) * other.g0.zzxz * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g1.z) * other.g0.yxyy * vec4(1.0, -1.0, 0.0, 0.0) + self.g0 * vec4(other.g0.w), self.g1 * vec4(other.g0.w));
+}
+
+Flector flector_translator_meet(Flector self, Translator other) {
+    return Flector(vec4(self.g1.x) * other.g0.zzyz * vec4(0.0, 1.0, -1.0, 0.0) + vec4(self.g1.y) * other.g0.zzxz * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g1.z) * other.g0.yxyy * vec4(1.0, -1.0, 0.0, 0.0) + self.g0 * vec4(other.g0.w), self.g1 * vec4(other.g0.w));
+}
+
 Plane flector_translator_outer_product(Flector self, Translator other) {
+    return Plane(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * other.g0.xyzx * vec4(1.0, 1.0, 1.0, -1.0));
+}
+
+Plane flector_translator_wedge(Flector self, Translator other) {
+    return Plane(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * other.g0.xyzx * vec4(1.0, 1.0, 1.0, -1.0));
+}
+
+Plane flector_translator_join(Flector self, Translator other) {
     return Plane(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * other.g0.xyzx * vec4(1.0, 1.0, 1.0, -1.0));
 }
 
@@ -3785,6 +5145,14 @@ Motor flector_flector_outer_product(Flector self, Flector other) {
     return Motor(vec4(self.g0.y) * vec4(other.g0.w, other.g0.w, other.g0.w, other.g1.y) * vec4(0.0, -1.0, 0.0, 1.0) + vec4(self.g0.z) * vec4(other.g0.w, other.g0.w, other.g0.w, other.g1.z) * vec4(0.0, 0.0, -1.0, 1.0) + vec4(self.g0.w) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.w) + vec4(self.g1.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.w) * vec4(other.g0.w) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.x) * vec4(other.g0.w, other.g0.x, other.g0.x, other.g1.x) * vec4(-1.0, 0.0, 0.0, 1.0), vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0));
 }
 
+Motor flector_flector_wedge(Flector self, Flector other) {
+    return Motor(vec4(self.g0.y) * vec4(other.g0.w, other.g0.w, other.g0.w, other.g1.y) * vec4(0.0, -1.0, 0.0, 1.0) + vec4(self.g0.z) * vec4(other.g0.w, other.g0.w, other.g0.w, other.g1.z) * vec4(0.0, 0.0, -1.0, 1.0) + vec4(self.g0.w) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.w) + vec4(self.g1.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.w) * vec4(other.g0.w) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.x) * vec4(other.g0.w, other.g0.x, other.g0.x, other.g1.x) * vec4(-1.0, 0.0, 0.0, 1.0), vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0));
+}
+
+Motor flector_flector_join(Flector self, Flector other) {
+    return Motor(vec4(self.g0.y) * vec4(other.g0.w, other.g0.w, other.g0.w, other.g1.y) * vec4(0.0, -1.0, 0.0, 1.0) + vec4(self.g0.z) * vec4(other.g0.w, other.g0.w, other.g0.w, other.g1.z) * vec4(0.0, 0.0, -1.0, 1.0) + vec4(self.g0.w) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.w) + vec4(self.g1.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.w) * vec4(other.g0.w) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.x) * vec4(other.g0.w, other.g0.x, other.g0.x, other.g1.x) * vec4(-1.0, 0.0, 0.0, 1.0), vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0));
+}
+
 Motor flector_flector_inner_anti_product(Flector self, Flector other) {
     return Motor(vec4(0.0) - vec4(self.g0.w) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g0.w) + vec4(self.g1.y) * vec4(other.g0.w, other.g0.w, other.g0.w, other.g1.y) * vec4(0.0, -1.0, 0.0, 1.0) + vec4(self.g1.z) * vec4(other.g0.w, other.g0.w, other.g0.w, other.g1.z) * vec4(0.0, 0.0, -1.0, 1.0) + vec4(self.g1.x) * vec4(other.g0.w, other.g0.x, other.g0.x, other.g1.x) * vec4(-1.0, 0.0, 0.0, 1.0), vec3(self.g0.y) * vec3(other.g1.z, other.g1.z, other.g1.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * vec3(other.g1.y, other.g1.x, other.g1.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g1.x) * vec3(other.g0.z, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0) + vec3(self.g1.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g1.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g1.x, other.g1.z, other.g1.y) * vec3(0.0, 1.0, -1.0));
 }
@@ -3801,7 +5169,15 @@ Scalar flector_flector_scalar_product(Flector self, Flector other) {
     return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z - self.g1.w * other.g1.w);
 }
 
+Scalar flector_flector_dot(Flector self, Flector other) {
+    return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z - self.g1.w * other.g1.w);
+}
+
 AntiScalar flector_flector_anti_scalar_product(Flector self, Flector other) {
+    return AntiScalar(0.0 - self.g0.w * other.g0.w + self.g1.x * other.g1.x + self.g1.y * other.g1.y + self.g1.z * other.g1.z);
+}
+
+AntiScalar flector_flector_anti_dot(Flector self, Flector other) {
     return AntiScalar(0.0 - self.g0.w * other.g0.w + self.g1.x * other.g1.x + self.g1.y * other.g1.y + self.g1.z * other.g1.z);
 }
 
@@ -3809,7 +5185,15 @@ Scalar flector_multi_vector_scalar_product(Flector self, MultiVector other) {
     return Scalar(self.g0.x * other.g1.x + self.g0.y * other.g1.y + self.g0.z * other.g1.z - self.g1.w * other.g6.w);
 }
 
+Scalar flector_multi_vector_dot(Flector self, MultiVector other) {
+    return Scalar(self.g0.x * other.g1.x + self.g0.y * other.g1.y + self.g0.z * other.g1.z - self.g1.w * other.g6.w);
+}
+
 AntiScalar flector_multi_vector_anti_scalar_product(Flector self, MultiVector other) {
+    return AntiScalar(0.0 - self.g0.w * other.g1.w + self.g1.x * other.g6.x + self.g1.y * other.g6.y + self.g1.z * other.g6.z);
+}
+
+AntiScalar flector_multi_vector_anti_dot(Flector self, MultiVector other) {
     return AntiScalar(0.0 - self.g0.w * other.g1.w + self.g1.x * other.g6.x + self.g1.y * other.g6.y + self.g1.z * other.g6.z);
 }
 
@@ -3893,6 +5277,14 @@ Scalar multi_vector_scalar_regressive_product(MultiVector self, Scalar other) {
     return Scalar(self.g0.y * other.g0);
 }
 
+Scalar multi_vector_scalar_anti_wedge(MultiVector self, Scalar other) {
+    return Scalar(self.g0.y * other.g0);
+}
+
+Scalar multi_vector_scalar_meet(MultiVector self, Scalar other) {
+    return Scalar(self.g0.y * other.g0);
+}
+
 Scalar multi_vector_scalar_left_contraction(MultiVector self, Scalar other) {
     return Scalar(self.g0.x * other.g0);
 }
@@ -3901,7 +5293,19 @@ Scalar multi_vector_scalar_scalar_product(MultiVector self, Scalar other) {
     return Scalar(self.g0.x * other.g0);
 }
 
+Scalar multi_vector_scalar_dot(MultiVector self, Scalar other) {
+    return Scalar(self.g0.x * other.g0);
+}
+
 AntiScalar multi_vector_anti_scalar_outer_product(MultiVector self, AntiScalar other) {
+    return AntiScalar(self.g0.x * other.g0);
+}
+
+AntiScalar multi_vector_anti_scalar_wedge(MultiVector self, AntiScalar other) {
+    return AntiScalar(self.g0.x * other.g0);
+}
+
+AntiScalar multi_vector_anti_scalar_join(MultiVector self, AntiScalar other) {
     return AntiScalar(self.g0.x * other.g0);
 }
 
@@ -3913,11 +5317,23 @@ AntiScalar multi_vector_anti_scalar_anti_scalar_product(MultiVector self, AntiSc
     return AntiScalar(self.g0.y * other.g0);
 }
 
+AntiScalar multi_vector_anti_scalar_anti_dot(MultiVector self, AntiScalar other) {
+    return AntiScalar(self.g0.y * other.g0);
+}
+
 Scalar multi_vector_homogeneous_magnitude_scalar_product(MultiVector self, HomogeneousMagnitude other) {
     return Scalar(self.g0.x * other.g0.x);
 }
 
+Scalar multi_vector_homogeneous_magnitude_dot(MultiVector self, HomogeneousMagnitude other) {
+    return Scalar(self.g0.x * other.g0.x);
+}
+
 AntiScalar multi_vector_homogeneous_magnitude_anti_scalar_product(MultiVector self, HomogeneousMagnitude other) {
+    return AntiScalar(self.g0.y * other.g0.y);
+}
+
+AntiScalar multi_vector_homogeneous_magnitude_anti_dot(MultiVector self, HomogeneousMagnitude other) {
     return AntiScalar(self.g0.y * other.g0.y);
 }
 
@@ -3929,7 +5345,15 @@ Scalar multi_vector_point_scalar_product(MultiVector self, Point other) {
     return Scalar(self.g1.x * other.g0.x + self.g1.y * other.g0.y + self.g1.z * other.g0.z);
 }
 
+Scalar multi_vector_point_dot(MultiVector self, Point other) {
+    return Scalar(self.g1.x * other.g0.x + self.g1.y * other.g0.y + self.g1.z * other.g0.z);
+}
+
 AntiScalar multi_vector_point_anti_scalar_product(MultiVector self, Point other) {
+    return AntiScalar(0.0 - self.g1.w * other.g0.w);
+}
+
+AntiScalar multi_vector_point_anti_dot(MultiVector self, Point other) {
     return AntiScalar(0.0 - self.g1.w * other.g0.w);
 }
 
@@ -3937,7 +5361,15 @@ Scalar multi_vector_line_scalar_product(MultiVector self, Line other) {
     return Scalar(0.0 - self.g3.x * other.g1.x - self.g3.y * other.g1.y - self.g3.z * other.g1.z);
 }
 
+Scalar multi_vector_line_dot(MultiVector self, Line other) {
+    return Scalar(0.0 - self.g3.x * other.g1.x - self.g3.y * other.g1.y - self.g3.z * other.g1.z);
+}
+
 AntiScalar multi_vector_line_anti_scalar_product(MultiVector self, Line other) {
+    return AntiScalar(0.0 - self.g2.x * other.g0.x - self.g2.y * other.g0.y - self.g2.z * other.g0.z);
+}
+
+AntiScalar multi_vector_line_anti_dot(MultiVector self, Line other) {
     return AntiScalar(0.0 - self.g2.x * other.g0.x - self.g2.y * other.g0.y - self.g2.z * other.g0.z);
 }
 
@@ -3945,7 +5377,15 @@ Scalar multi_vector_plane_scalar_product(MultiVector self, Plane other) {
     return Scalar(0.0 - self.g6.w * other.g0.w);
 }
 
+Scalar multi_vector_plane_dot(MultiVector self, Plane other) {
+    return Scalar(0.0 - self.g6.w * other.g0.w);
+}
+
 AntiScalar multi_vector_plane_anti_scalar_product(MultiVector self, Plane other) {
+    return AntiScalar(self.g6.x * other.g0.x + self.g6.y * other.g0.y + self.g6.z * other.g0.z);
+}
+
+AntiScalar multi_vector_plane_anti_dot(MultiVector self, Plane other) {
     return AntiScalar(self.g6.x * other.g0.x + self.g6.y * other.g0.y + self.g6.z * other.g0.z);
 }
 
@@ -3953,7 +5393,15 @@ Scalar multi_vector_motor_scalar_product(MultiVector self, Motor other) {
     return Scalar(0.0 - self.g3.x * other.g1.x - self.g3.y * other.g1.y - self.g3.z * other.g1.z);
 }
 
+Scalar multi_vector_motor_dot(MultiVector self, Motor other) {
+    return Scalar(0.0 - self.g3.x * other.g1.x - self.g3.y * other.g1.y - self.g3.z * other.g1.z);
+}
+
 AntiScalar multi_vector_motor_anti_scalar_product(MultiVector self, Motor other) {
+    return AntiScalar(self.g0.y * other.g0.w - self.g2.x * other.g0.x - self.g2.y * other.g0.y - self.g2.z * other.g0.z);
+}
+
+AntiScalar multi_vector_motor_anti_dot(MultiVector self, Motor other) {
     return AntiScalar(self.g0.y * other.g0.w - self.g2.x * other.g0.x - self.g2.y * other.g0.y - self.g2.z * other.g0.z);
 }
 
@@ -3961,7 +5409,15 @@ AntiScalar multi_vector_rotor_anti_scalar_product(MultiVector self, Rotor other)
     return AntiScalar(self.g0.y * other.g0.w - self.g2.x * other.g0.x - self.g2.y * other.g0.y - self.g2.z * other.g0.z);
 }
 
+AntiScalar multi_vector_rotor_anti_dot(MultiVector self, Rotor other) {
+    return AntiScalar(self.g0.y * other.g0.w - self.g2.x * other.g0.x - self.g2.y * other.g0.y - self.g2.z * other.g0.z);
+}
+
 Scalar multi_vector_translator_scalar_product(MultiVector self, Translator other) {
+    return Scalar(0.0 - self.g3.x * other.g0.x - self.g3.y * other.g0.y - self.g3.z * other.g0.z);
+}
+
+Scalar multi_vector_translator_dot(MultiVector self, Translator other) {
     return Scalar(0.0 - self.g3.x * other.g0.x - self.g3.y * other.g0.y - self.g3.z * other.g0.z);
 }
 
@@ -3969,7 +5425,15 @@ AntiScalar multi_vector_translator_anti_scalar_product(MultiVector self, Transla
     return AntiScalar(self.g0.y * other.g0.w);
 }
 
+AntiScalar multi_vector_translator_anti_dot(MultiVector self, Translator other) {
+    return AntiScalar(self.g0.y * other.g0.w);
+}
+
 Scalar multi_vector_flector_scalar_product(MultiVector self, Flector other) {
+    return Scalar(self.g1.x * other.g0.x + self.g1.y * other.g0.y + self.g1.z * other.g0.z - self.g6.w * other.g1.w);
+}
+
+Scalar multi_vector_flector_dot(MultiVector self, Flector other) {
     return Scalar(self.g1.x * other.g0.x + self.g1.y * other.g0.y + self.g1.z * other.g0.z - self.g6.w * other.g1.w);
 }
 
@@ -3977,11 +5441,23 @@ AntiScalar multi_vector_flector_anti_scalar_product(MultiVector self, Flector ot
     return AntiScalar(0.0 - self.g1.w * other.g0.w + self.g6.x * other.g1.x + self.g6.y * other.g1.y + self.g6.z * other.g1.z);
 }
 
+AntiScalar multi_vector_flector_anti_dot(MultiVector self, Flector other) {
+    return AntiScalar(0.0 - self.g1.w * other.g0.w + self.g6.x * other.g1.x + self.g6.y * other.g1.y + self.g6.z * other.g1.z);
+}
+
 Scalar multi_vector_multi_vector_scalar_product(MultiVector self, MultiVector other) {
     return Scalar(self.g0.x * other.g0.x + self.g1.x * other.g1.x + self.g1.y * other.g1.y + self.g1.z * other.g1.z - self.g3.x * other.g3.x - self.g3.y * other.g3.y - self.g3.z * other.g3.z - self.g6.w * other.g6.w);
 }
 
+Scalar multi_vector_multi_vector_dot(MultiVector self, MultiVector other) {
+    return Scalar(self.g0.x * other.g0.x + self.g1.x * other.g1.x + self.g1.y * other.g1.y + self.g1.z * other.g1.z - self.g3.x * other.g3.x - self.g3.y * other.g3.y - self.g3.z * other.g3.z - self.g6.w * other.g6.w);
+}
+
 AntiScalar multi_vector_multi_vector_anti_scalar_product(MultiVector self, MultiVector other) {
+    return AntiScalar(self.g0.y * other.g0.y - self.g1.w * other.g1.w - self.g2.x * other.g2.x - self.g2.y * other.g2.y - self.g2.z * other.g2.z + self.g6.x * other.g6.x + self.g6.y * other.g6.y + self.g6.z * other.g6.z);
+}
+
+AntiScalar multi_vector_multi_vector_anti_dot(MultiVector self, MultiVector other) {
     return AntiScalar(self.g0.y * other.g0.y - self.g1.w * other.g1.w - self.g2.x * other.g2.x - self.g2.y * other.g2.y - self.g2.z * other.g2.z + self.g6.x * other.g6.x + self.g6.y * other.g6.y + self.g6.z * other.g6.z);
 }
 
@@ -4323,135 +5799,135 @@ Translator translator_scalar_geometric_quotient(Translator self, Scalar other) {
     return translator_scalar_geometric_product(self, scalar_inverse(other));
 }
 
-HomogeneousMagnitude flector_line_euclidean_distance(Flector self, Line other) {
+HomogeneousMagnitude flector_line_distance(Flector self, Line other) {
     return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(flector_line_outer_product(self, other))), motor_weight_norm(flector_point_outer_product(self, line_attitude(other))));
 }
 
-HomogeneousMagnitude flector_motor_euclidean_distance(Flector self, Motor other) {
+HomogeneousMagnitude flector_motor_distance(Flector self, Motor other) {
     return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(flector_motor_outer_product(self, other))), motor_weight_norm(flector_flector_outer_product(self, motor_attitude(other))));
 }
 
-HomogeneousMagnitude flector_plane_euclidean_distance(Flector self, Plane other) {
+HomogeneousMagnitude flector_plane_distance(Flector self, Plane other) {
     return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(flector_plane_outer_product(self, other))), plane_weight_norm(flector_line_outer_product(self, plane_attitude(other))));
 }
 
-HomogeneousMagnitude flector_point_euclidean_distance(Flector self, Point other) {
+HomogeneousMagnitude flector_point_distance(Flector self, Point other) {
     return scalar_anti_scalar_add(flector_bulk_norm(motor_attitude(flector_point_outer_product(self, other))), flector_weight_norm(flector_scalar_outer_product(self, point_attitude(other))));
 }
 
-HomogeneousMagnitude homogeneous_magnitude_anti_scalar_euclidean_distance(HomogeneousMagnitude self, AntiScalar other) {
+HomogeneousMagnitude homogeneous_magnitude_anti_scalar_distance(HomogeneousMagnitude self, AntiScalar other) {
     return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(homogeneous_magnitude_anti_scalar_outer_product(self, other))), plane_weight_norm(homogeneous_magnitude_plane_outer_product(self, anti_scalar_attitude(other))));
 }
 
-HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_euclidean_distance(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_distance(HomogeneousMagnitude self, HomogeneousMagnitude other) {
     return scalar_anti_scalar_add(plane_bulk_norm(homogeneous_magnitude_attitude(homogeneous_magnitude_homogeneous_magnitude_outer_product(self, other))), plane_weight_norm(homogeneous_magnitude_plane_outer_product(self, homogeneous_magnitude_attitude(other))));
 }
 
-HomogeneousMagnitude homogeneous_magnitude_line_euclidean_distance(HomogeneousMagnitude self, Line other) {
+HomogeneousMagnitude homogeneous_magnitude_line_distance(HomogeneousMagnitude self, Line other) {
     return scalar_anti_scalar_add(point_bulk_norm(line_attitude(homogeneous_magnitude_line_outer_product(self, other))), point_weight_norm(homogeneous_magnitude_point_outer_product(self, line_attitude(other))));
 }
 
-HomogeneousMagnitude homogeneous_magnitude_motor_euclidean_distance(HomogeneousMagnitude self, Motor other) {
+HomogeneousMagnitude homogeneous_magnitude_motor_distance(HomogeneousMagnitude self, Motor other) {
     return scalar_anti_scalar_add(flector_bulk_norm(motor_attitude(homogeneous_magnitude_motor_outer_product(self, other))), flector_weight_norm(homogeneous_magnitude_flector_outer_product(self, motor_attitude(other))));
 }
 
-HomogeneousMagnitude homogeneous_magnitude_plane_euclidean_distance(HomogeneousMagnitude self, Plane other) {
+HomogeneousMagnitude homogeneous_magnitude_plane_distance(HomogeneousMagnitude self, Plane other) {
     return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(homogeneous_magnitude_plane_outer_product(self, other))), line_weight_norm(homogeneous_magnitude_line_outer_product(self, plane_attitude(other))));
 }
 
-HomogeneousMagnitude homogeneous_magnitude_rotor_euclidean_distance(HomogeneousMagnitude self, Rotor other) {
+HomogeneousMagnitude homogeneous_magnitude_rotor_distance(HomogeneousMagnitude self, Rotor other) {
     return scalar_anti_scalar_add(flector_bulk_norm(rotor_attitude(homogeneous_magnitude_rotor_outer_product(self, other))), flector_weight_norm(homogeneous_magnitude_flector_outer_product(self, rotor_attitude(other))));
 }
 
-HomogeneousMagnitude line_line_euclidean_distance(Line self, Line other) {
+HomogeneousMagnitude line_line_distance(Line self, Line other) {
     return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(line_line_outer_product(self, other))), plane_weight_norm(line_point_outer_product(self, line_attitude(other))));
 }
 
-HomogeneousMagnitude line_motor_euclidean_distance(Line self, Motor other) {
+HomogeneousMagnitude line_motor_distance(Line self, Motor other) {
     return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(line_motor_outer_product(self, other))), plane_weight_norm(line_flector_outer_product(self, motor_attitude(other))));
 }
 
-HomogeneousMagnitude line_point_euclidean_distance(Line self, Point other) {
+HomogeneousMagnitude line_point_distance(Line self, Point other) {
     return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(line_point_outer_product(self, other))), line_weight_norm(line_scalar_outer_product(self, point_attitude(other))));
 }
 
-HomogeneousMagnitude line_rotor_euclidean_distance(Line self, Rotor other) {
+HomogeneousMagnitude line_rotor_distance(Line self, Rotor other) {
     return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(line_rotor_outer_product(self, other))), plane_weight_norm(line_flector_outer_product(self, rotor_attitude(other))));
 }
 
-HomogeneousMagnitude motor_line_euclidean_distance(Motor self, Line other) {
+HomogeneousMagnitude motor_line_distance(Motor self, Line other) {
     return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(motor_line_outer_product(self, other))), plane_weight_norm(motor_point_outer_product(self, line_attitude(other))));
 }
 
-HomogeneousMagnitude motor_motor_euclidean_distance(Motor self, Motor other) {
+HomogeneousMagnitude motor_motor_distance(Motor self, Motor other) {
     return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(motor_motor_outer_product(self, other))), plane_weight_norm(motor_flector_outer_product(self, motor_attitude(other))));
 }
 
-HomogeneousMagnitude motor_point_euclidean_distance(Motor self, Point other) {
+HomogeneousMagnitude motor_point_distance(Motor self, Point other) {
     return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(motor_point_outer_product(self, other))), motor_weight_norm(motor_scalar_outer_product(self, point_attitude(other))));
 }
 
-HomogeneousMagnitude motor_rotor_euclidean_distance(Motor self, Rotor other) {
+HomogeneousMagnitude motor_rotor_distance(Motor self, Rotor other) {
     return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(motor_rotor_outer_product(self, other))), plane_weight_norm(motor_flector_outer_product(self, rotor_attitude(other))));
 }
 
-HomogeneousMagnitude plane_point_euclidean_distance(Plane self, Point other) {
+HomogeneousMagnitude plane_point_distance(Plane self, Point other) {
     return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(plane_point_outer_product(self, other))), plane_weight_norm(plane_scalar_outer_product(self, point_attitude(other))));
 }
 
-HomogeneousMagnitude point_line_euclidean_distance(Point self, Line other) {
+HomogeneousMagnitude point_line_distance(Point self, Line other) {
     return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(point_line_outer_product(self, other))), line_weight_norm(point_point_outer_product(self, line_attitude(other))));
 }
 
-HomogeneousMagnitude point_motor_euclidean_distance(Point self, Motor other) {
+HomogeneousMagnitude point_motor_distance(Point self, Motor other) {
     return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(point_motor_outer_product(self, other))), motor_weight_norm(point_flector_outer_product(self, motor_attitude(other))));
 }
 
-HomogeneousMagnitude point_plane_euclidean_distance(Point self, Plane other) {
+HomogeneousMagnitude point_plane_distance(Point self, Plane other) {
     return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(point_plane_outer_product(self, other))), plane_weight_norm(point_line_outer_product(self, plane_attitude(other))));
 }
 
-HomogeneousMagnitude point_point_euclidean_distance(Point self, Point other) {
+HomogeneousMagnitude point_point_distance(Point self, Point other) {
     return scalar_anti_scalar_add(point_bulk_norm(line_attitude(point_point_outer_product(self, other))), point_weight_norm(point_scalar_outer_product(self, point_attitude(other))));
 }
 
-HomogeneousMagnitude scalar_anti_scalar_euclidean_distance(Scalar self, AntiScalar other) {
+HomogeneousMagnitude scalar_anti_scalar_distance(Scalar self, AntiScalar other) {
     return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(scalar_anti_scalar_outer_product(self, other))), plane_weight_norm(scalar_plane_outer_product(self, anti_scalar_attitude(other))));
 }
 
-HomogeneousMagnitude scalar_homogeneous_magnitude_euclidean_distance(Scalar self, HomogeneousMagnitude other) {
+HomogeneousMagnitude scalar_homogeneous_magnitude_distance(Scalar self, HomogeneousMagnitude other) {
     return scalar_anti_scalar_add(plane_bulk_norm(homogeneous_magnitude_attitude(scalar_homogeneous_magnitude_outer_product(self, other))), plane_weight_norm(scalar_plane_outer_product(self, homogeneous_magnitude_attitude(other))));
 }
 
-HomogeneousMagnitude scalar_line_euclidean_distance(Scalar self, Line other) {
+HomogeneousMagnitude scalar_line_distance(Scalar self, Line other) {
     return scalar_anti_scalar_add(point_bulk_norm(line_attitude(scalar_line_outer_product(self, other))), point_weight_norm(scalar_point_outer_product(self, line_attitude(other))));
 }
 
-HomogeneousMagnitude scalar_motor_euclidean_distance(Scalar self, Motor other) {
+HomogeneousMagnitude scalar_motor_distance(Scalar self, Motor other) {
     return scalar_anti_scalar_add(flector_bulk_norm(motor_attitude(scalar_motor_outer_product(self, other))), flector_weight_norm(scalar_flector_outer_product(self, motor_attitude(other))));
 }
 
-HomogeneousMagnitude scalar_plane_euclidean_distance(Scalar self, Plane other) {
+HomogeneousMagnitude scalar_plane_distance(Scalar self, Plane other) {
     return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(scalar_plane_outer_product(self, other))), line_weight_norm(scalar_line_outer_product(self, plane_attitude(other))));
 }
 
-HomogeneousMagnitude scalar_rotor_euclidean_distance(Scalar self, Rotor other) {
+HomogeneousMagnitude scalar_rotor_distance(Scalar self, Rotor other) {
     return scalar_anti_scalar_add(flector_bulk_norm(rotor_attitude(scalar_rotor_outer_product(self, other))), flector_weight_norm(scalar_flector_outer_product(self, rotor_attitude(other))));
 }
 
-HomogeneousMagnitude translator_line_euclidean_distance(Translator self, Line other) {
+HomogeneousMagnitude translator_line_distance(Translator self, Line other) {
     return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(translator_line_outer_product(self, other))), plane_weight_norm(translator_point_outer_product(self, line_attitude(other))));
 }
 
-HomogeneousMagnitude translator_motor_euclidean_distance(Translator self, Motor other) {
+HomogeneousMagnitude translator_motor_distance(Translator self, Motor other) {
     return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(translator_motor_outer_product(self, other))), plane_weight_norm(translator_flector_outer_product(self, motor_attitude(other))));
 }
 
-HomogeneousMagnitude translator_point_euclidean_distance(Translator self, Point other) {
+HomogeneousMagnitude translator_point_distance(Translator self, Point other) {
     return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(translator_point_outer_product(self, other))), translator_weight_norm(translator_scalar_outer_product(self, point_attitude(other))));
 }
 
-HomogeneousMagnitude translator_rotor_euclidean_distance(Translator self, Rotor other) {
+HomogeneousMagnitude translator_rotor_distance(Translator self, Rotor other) {
     return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(translator_rotor_outer_product(self, other))), plane_weight_norm(translator_flector_outer_product(self, rotor_attitude(other))));
 }
 

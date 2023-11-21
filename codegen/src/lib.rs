@@ -526,7 +526,7 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
         let final_result = result_of_trait!(final_add);
 
         let ed = MultiVectorClass::derive_euclidean_distance(
-            "EuclideanDistance",
+            "Distance",
             &parameter_a,
             &parameter_b,
             &final_result,
@@ -542,7 +542,7 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
 
         if let Some((_, _, pairs)) = trait_implementations.get_mut(&parameter_a.multi_vector_class().class_name) {
             if let Some((_, pair_impls)) = pairs.get_mut(&parameter_b.multi_vector_class().class_name) {
-                pair_impls.insert("EuclideanDistance".to_string(), ed);
+                pair_impls.insert("Distance".to_string(), ed);
             }
         }
     }

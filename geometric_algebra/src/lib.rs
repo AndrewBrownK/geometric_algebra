@@ -281,17 +281,13 @@ pub trait RegressiveProduct<T> {
     fn regressive_product(self, other: T) -> Self::Output;
 }
 
-pub trait AntiWedge<T>: RegressiveProduct<T> {
+pub trait AntiWedge<T> {
+    type Output;
     fn anti_wedge(self, other: T) -> Self::Output;
 }
-impl<I, T> AntiWedge<T> for I where I: RegressiveProduct<T> {
-    fn anti_wedge(self, other: T) -> Self::Output { self.regressive_product(other) }
-}
-pub trait Meet<T>: RegressiveProduct<T> {
+pub trait Meet<T> {
+    type Output;
     fn meet(self, other: T) -> Self::Output;
-}
-impl<I, T> Meet<T> for I where I: RegressiveProduct<T> {
-    fn meet(self, other: T) -> Self::Output { self.regressive_product(other) }
 }
 
 /// Geometric product grade filtered by `t == r + s`
@@ -301,17 +297,13 @@ pub trait OuterProduct<T> {
     type Output;
     fn outer_product(self, other: T) -> Self::Output;
 }
-pub trait Wedge<T>: OuterProduct<T> {
+pub trait Wedge<T> {
+    type Output;
     fn wedge(self, other: T) -> Self::Output;
 }
-impl<I, T> Wedge<T> for I where I: OuterProduct<T> {
-    fn wedge(self, other: T) -> Self::Output { self.outer_product(other) }
-}
-pub trait Join<T>: OuterProduct<T> {
+pub trait Join<T> {
+    type Output;
     fn join(self, other: T) -> Self::Output;
-}
-impl<I, T> Join<T> for I where I: OuterProduct<T> {
-    fn join(self, other: T) -> Self::Output { self.outer_product(other) }
 }
 
 /// Geometric product grade filtered by `t == (r - s).abs()`
@@ -322,11 +314,9 @@ pub trait InnerProduct<T> {
     type Output;
     fn inner_product(self, other: T) -> Self::Output;
 }
-pub trait DotProduct<T>: InnerProduct<T> {
+pub trait Dot<T> {
+    type Output;
     fn dot(self, other: T) -> Self::Output;
-}
-impl<I, T> DotProduct<T> for I where I: InnerProduct<T> {
-    fn dot(self, other: T) -> Self::Output { self.inner_product(other) }
 }
 
 
@@ -338,11 +328,10 @@ pub trait InnerAntiProduct<T> {
     type Output;
     fn inner_anti_product(self, other: T) -> Self::Output;
 }
-pub trait AntiDot<T>: InnerAntiProduct<T> {
+
+pub trait AntiDot<T> {
+    type Output;
     fn anti_dot(self, other: T) -> Self::Output;
-}
-impl<I, T> AntiDot<T> for I where I: InnerAntiProduct<T> {
-    fn anti_dot(self, other: T) -> Self::Output { self.inner_anti_product(other) }
 }
 
 /// Geometric product grade filtered by `t == s - r`
@@ -519,14 +508,6 @@ pub trait Attitude {
     fn attitude(self) -> Self::Output;
 }
 
-
-/// Euclidean Distance
-/// https://rigidgeometricalgebra.org/wiki/index.php?title=Euclidean_distance
-pub trait EuclideanDistance<T> {
-    type Output;
-    fn euclidean_distance(self, other: T) -> Self::Output;
-}
-
 // TODO generate implementations
 /// The Bulk of an object usually describes the object's relationship with the origin.
 /// An object with a Bulk of zero contains the origin.
@@ -563,7 +544,6 @@ pub trait RoundWeight {
     fn round_weight(self) -> Self::Output;
 }
 
-// TODO generate implementations
 /// Euclidean distance between objects
 /// http://rigidgeometricalgebra.org/wiki/index.php?title=Euclidean_distance
 /// distance(a,b) = bulk_norm(attitude(a wedge b)) + weight_norm(a wedge attitude(b))
