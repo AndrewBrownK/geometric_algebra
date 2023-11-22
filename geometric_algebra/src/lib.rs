@@ -382,6 +382,16 @@ pub trait Transformation<T> {
     fn transformation(self, other: T) -> Self::Output;
 }
 
+/// (self geometric_anti_product other) geometric_anti_product (anti_reversal self)
+///
+/// Also called sandwich product
+/// See article "Projective Geometric Algebra Done Right"
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Projective_Geometric_Algebra_Done_Right
+pub trait Sandwich<T> {
+    type Output;
+    fn sandwich(self, other: T) -> Self::Output;
+}
+
 /// Geometric product with a scalar
 pub trait Scale {
     type Output;

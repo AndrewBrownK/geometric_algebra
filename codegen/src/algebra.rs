@@ -283,6 +283,7 @@ impl Product {
         let product = Self::new(&basis, &basis, algebra);
         vec![
             ("GeometricProduct", product.clone()),
+            ("GeometricAntiProduct", product.clone().dual(algebra)),
 
             // These 3 things are synonyms
             ("RegressiveProduct", product.projected(|r, s, t| t == r + s).dual(algebra)),
@@ -296,7 +297,6 @@ impl Product {
             ("Join", product.projected(|r, s, t| t == r + s)),
 
             ("InnerProduct", product.projected(|r, s, t| t == (r as isize - s as isize).unsigned_abs())),
-            ("GeometricAntiProduct", product.clone().dual(algebra)),
             ("InnerAntiProduct", product.projected(|r, s, t| t == (r as isize - s as isize).unsigned_abs()).dual(algebra)),
 
             ("LeftContraction", product.projected(|r, s, t| t as isize == s as isize - r as isize)),

@@ -78,11 +78,9 @@ fn main() {
             Translator:e12,e20,e01,e0123;\
             Flector:e0,e1,e2,e3|e312,e320,e301,e210;\
             MultiVector:\
-                1,e0123,e0123|\
+                1,e0123|\
                 e0,e1,e2,e3|\
                 e30,e31,e32|e12,e20,e01|\
-                e30,e31,e32|e12,e20,e01|\
-                e312,e320,e301,e210|\
                 e312,e320,e301,e210"
     ];
 

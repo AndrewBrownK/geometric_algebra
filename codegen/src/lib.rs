@@ -415,6 +415,7 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
                                     if let Some(c_pair_trait_implementations) =
                                         c_trait_implementations.2.get(&parameter_b.multi_vector_class().class_name)
                                     {
+                                        // TODO
                                         let transformation = MultiVectorClass::derive_sandwich_product(
                                             "Transformation",
                                             geometric_product,
@@ -432,6 +433,43 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
                     }
                 }
             }
+        }
+    }
+
+
+    for (parameter_a, single_trait_implementations, pair_trait_implementations) in trait_implementations.values() {
+        for (parameter_b, pair_trait_implementations) in pair_trait_implementations.values() {
+            let geometric_anti_product_1 = match pair_trait_implementations.get("GeometricAntiProduct") {
+                None => continue,
+                Some(p) => p
+            };
+            let geometric_anti_product_result_1 = result_of_trait!(geometric_anti_product_1);
+            let anti_reversal = match single_trait_implementations.get("AntiReversal") {
+                None => continue,
+                Some(r) => r,
+            };
+            let anti_reversal_result = result_of_trait!(anti_reversal);
+            let geometric_anti_product_2 = match trait_implementations.get(&geometric_anti_product_result_1.multi_vector_class().class_name) {
+                None => continue,
+                Some((_, _, pair_impls)) => match pair_impls.get(&anti_reversal_result.multi_vector_class().class_name) {
+                    None => continue,
+                    Some((_, i)) => match i.get("GeometricAntiProduct") {
+                        None => continue,
+                        Some(p) => p,
+                    }
+                }
+            };
+            // let geometric_anti_product_result_2 = result_of_trait!(geometric_anti_product_2);
+            let sandwich = MultiVectorClass::derive_sandwich_product(
+                "Sandwich",
+                geometric_anti_product_1,
+                geometric_anti_product_2,
+                anti_reversal,
+                None,
+                parameter_a,
+                parameter_b
+            );
+            emitter.emit(&sandwich).unwrap();
         }
     }
 
