@@ -459,13 +459,24 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
                     }
                 }
             };
+            let geometric_anti_product_result_2 = result_of_trait!(geometric_anti_product_2);
+            let do_into = match trait_implementations.get(&geometric_anti_product_result_2.multi_vector_class().class_name) {
+                None => continue,
+                Some((_, _, pair_impls)) => match pair_impls.get(&parameter_b.multi_vector_class().class_name) {
+                    None => continue,
+                    Some((_, i)) => match i.get("Into") {
+                        None => continue,
+                        Some(i) => i,
+                    }
+                }
+            };
             // let geometric_anti_product_result_2 = result_of_trait!(geometric_anti_product_2);
             let sandwich = MultiVectorClass::derive_sandwich_product(
                 "Sandwich",
                 geometric_anti_product_1,
                 geometric_anti_product_2,
                 anti_reversal,
-                None,
+                Some(do_into),
                 parameter_a,
                 parameter_b
             );

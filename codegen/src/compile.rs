@@ -404,17 +404,18 @@ impl MultiVectorClass {
 
         // Be a little bit more flexible when finding a result type
         // Needed (for example) in order to get geometric product on Motor x Line
-        // without having to define every kind of intermediate type
+        // without having to predefine every intermediate type of product
 
         let mut result_class = registry.get(&result_signature);
-        // if result_class.is_none() {
-        //     let mut viable_classes: Vec<_> = registry.classes.iter().filter(|it| {
-        //         let sig = it.signature();
-        //         result_signature.iter().all(|it| sig.contains(it))
-        //     }).collect();
-        //     viable_classes.sort_by_key(|it| it.signature().len());
-        //     result_class = viable_classes.first().map(|it| *it);
-        // }
+
+        if result_class.is_none() && !result_signature.is_empty() {
+            let mut viable_classes: Vec<_> = registry.classes.iter().filter(|it| {
+                let sig = it.signature();
+                result_signature.iter().all(|it| sig.contains(it))
+            }).collect();
+            viable_classes.sort_by_key(|it| it.signature().len());
+            result_class = viable_classes.first().map(|it| *it);
+        }
 
         let result_class = match result_class {
             None => return AstNode::None,
