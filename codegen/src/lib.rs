@@ -470,7 +470,6 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
                     }
                 }
             };
-            // let geometric_anti_product_result_2 = result_of_trait!(geometric_anti_product_2);
             let sandwich = MultiVectorClass::derive_sandwich_product(
                 "Sandwich",
                 geometric_anti_product_1,
@@ -595,6 +594,22 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
             }
         }
     }
+
+    // TODO:
+    //  - Inversion?
+    //    https://rigidgeometricalgebra.org/wiki/index.php?title=Inversion
+    //  - Transflection?
+    //    https://rigidgeometricalgebra.org/wiki/index.php?title=Transflection
+    //  - Reflection?
+    //    https://rigidgeometricalgebra.org/wiki/index.php?title=Reflection
+    //  - Projection? requires "weight expansion"?
+    //    https://rigidgeometricalgebra.org/wiki/index.php?title=Projections
+    //  - Commutators?
+    //    https://rigidgeometricalgebra.org/wiki/index.php?title=Commutators
+    //  - Geometric Property?
+    //    https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_property
+
+    // TODO aha: https://projectivegeometricalgebra.org/projgeomalg.pdf
 
     do_wgsl(algebra_name, file_path);
 }
