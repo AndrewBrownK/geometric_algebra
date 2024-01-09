@@ -17550,7 +17550,84 @@ impl Attitude for MultiVector {
     }
 }
 
-impl GeometricQuotient<Flector> for AntiScalar {
+impl Powi for Scalar {
+    type Output = Scalar;
+
+    fn powi(self, exponent: isize) -> Scalar {
+        if exponent == 0 {
+            return Scalar::one();
+        }
+        let mut x: Scalar = if exponent < 0 { self.inverse() } else { self };
+        let mut y: Scalar = Scalar::one();
+        let mut n: isize = exponent.abs();
+        while 1 < n {
+            if n & 1 == 1 {
+                y = x.geometric_product(y);
+            }
+            x = x.geometric_product(x);
+            n = n >> 1;
+        }
+        x.geometric_product(y)
+    }
+}
+
+impl GeometricQuotient<Scalar> for Scalar {
+    type Output = Scalar;
+
+    fn geometric_quotient(self, other: Scalar) -> Scalar {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<HomogeneousMagnitude> for Scalar {
+    type Output = HomogeneousMagnitude;
+
+    fn geometric_quotient(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Point> for Scalar {
+    type Output = Point;
+
+    fn geometric_quotient(self, other: Point) -> Point {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Line> for Scalar {
+    type Output = Line;
+
+    fn geometric_quotient(self, other: Line) -> Line {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Plane> for Scalar {
+    type Output = Plane;
+
+    fn geometric_quotient(self, other: Plane) -> Plane {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Motor> for Scalar {
+    type Output = Motor;
+
+    fn geometric_quotient(self, other: Motor) -> Motor {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Translator> for Scalar {
+    type Output = Translator;
+
+    fn geometric_quotient(self, other: Translator) -> Translator {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Flector> for Scalar {
     type Output = Flector;
 
     fn geometric_quotient(self, other: Flector) -> Flector {
@@ -17558,11 +17635,19 @@ impl GeometricQuotient<Flector> for AntiScalar {
     }
 }
 
-impl Transformation<Flector> for AntiScalar {
-    type Output = Flector;
+impl GeometricQuotient<MultiVector> for Scalar {
+    type Output = MultiVector;
 
-    fn transformation(self, other: Flector) -> Flector {
-        self.geometric_product(other).geometric_product(self.reversal())
+    fn geometric_quotient(self, other: MultiVector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Scalar> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn geometric_quotient(self, other: Scalar) -> AntiScalar {
+        self.geometric_product(other.inverse())
     }
 }
 
@@ -17570,6 +17655,14 @@ impl GeometricQuotient<HomogeneousMagnitude> for AntiScalar {
     type Output = AntiScalar;
 
     fn geometric_quotient(self, other: HomogeneousMagnitude) -> AntiScalar {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Point> for AntiScalar {
+    type Output = Plane;
+
+    fn geometric_quotient(self, other: Point) -> Plane {
         self.geometric_product(other.inverse())
     }
 }
@@ -17582,30 +17675,6 @@ impl GeometricQuotient<Line> for AntiScalar {
     }
 }
 
-impl GeometricQuotient<Motor> for AntiScalar {
-    type Output = Rotor;
-
-    fn geometric_quotient(self, other: Motor) -> Rotor {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<MultiVector> for AntiScalar {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: MultiVector) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<MultiVector> for AntiScalar {
-    type Output = MultiVector;
-
-    fn transformation(self, other: MultiVector) -> MultiVector {
-        self.geometric_product(other).geometric_product(self.reversal())
-    }
-}
-
 impl GeometricQuotient<Plane> for AntiScalar {
     type Output = Point;
 
@@ -17614,34 +17683,10 @@ impl GeometricQuotient<Plane> for AntiScalar {
     }
 }
 
-impl Transformation<Plane> for AntiScalar {
-    type Output = Plane;
+impl GeometricQuotient<Motor> for AntiScalar {
+    type Output = Rotor;
 
-    fn transformation(self, other: Plane) -> Plane {
-        self.geometric_product(other).geometric_product(self.reversal())
-    }
-}
-
-impl GeometricQuotient<Point> for AntiScalar {
-    type Output = Plane;
-
-    fn geometric_quotient(self, other: Point) -> Plane {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Point> for AntiScalar {
-    type Output = Point;
-
-    fn transformation(self, other: Point) -> Point {
-        self.geometric_product(other).geometric_product(self.reversal())
-    }
-}
-
-impl GeometricQuotient<Scalar> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn geometric_quotient(self, other: Scalar) -> AntiScalar {
+    fn geometric_quotient(self, other: Motor) -> Rotor {
         self.geometric_product(other.inverse())
     }
 }
@@ -17654,175 +17699,7 @@ impl GeometricQuotient<Translator> for AntiScalar {
     }
 }
 
-impl Transformation<AntiScalar> for Flector {
-    type Output = AntiScalar;
-
-    fn transformation(self, other: AntiScalar) -> AntiScalar {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Flector> for Flector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Flector) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Flector> for Flector {
-    type Output = Flector;
-
-    fn transformation(self, other: Flector) -> Flector {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<HomogeneousMagnitude> for Flector {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: HomogeneousMagnitude) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<HomogeneousMagnitude> for Flector {
-    type Output = HomogeneousMagnitude;
-
-    fn transformation(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Line> for Flector {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Line) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Line> for Flector {
-    type Output = Line;
-
-    fn transformation(self, other: Line) -> Line {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Motor> for Flector {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Motor) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Motor> for Flector {
-    type Output = Motor;
-
-    fn transformation(self, other: Motor) -> Motor {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<MultiVector> for Flector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: MultiVector) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<MultiVector> for Flector {
-    type Output = MultiVector;
-
-    fn transformation(self, other: MultiVector) -> MultiVector {
-        self.geometric_product(other).geometric_product(self.reversal())
-    }
-}
-
-impl GeometricQuotient<Plane> for Flector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Plane) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Plane> for Flector {
-    type Output = Plane;
-
-    fn transformation(self, other: Plane) -> Plane {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Point> for Flector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Point) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Point> for Flector {
-    type Output = Point;
-
-    fn transformation(self, other: Point) -> Point {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl Transformation<Rotor> for Flector {
-    type Output = Rotor;
-
-    fn transformation(self, other: Rotor) -> Rotor {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Scalar> for Flector {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Scalar) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Scalar> for Flector {
-    type Output = Scalar;
-
-    fn transformation(self, other: Scalar) -> Scalar {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Translator> for Flector {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Translator) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Translator> for Flector {
-    type Output = Translator;
-
-    fn transformation(self, other: Translator) -> Translator {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl Transformation<AntiScalar> for HomogeneousMagnitude {
-    type Output = AntiScalar;
-
-    fn transformation(self, other: AntiScalar) -> AntiScalar {
-        self.geometric_product(other).geometric_product(self.reversal())
-    }
-}
-
-impl GeometricQuotient<Flector> for HomogeneousMagnitude {
+impl GeometricQuotient<Flector> for AntiScalar {
     type Output = Flector;
 
     fn geometric_quotient(self, other: Flector) -> Flector {
@@ -17830,11 +17707,19 @@ impl GeometricQuotient<Flector> for HomogeneousMagnitude {
     }
 }
 
-impl Transformation<Flector> for HomogeneousMagnitude {
-    type Output = Flector;
+impl GeometricQuotient<MultiVector> for AntiScalar {
+    type Output = MultiVector;
 
-    fn transformation(self, other: Flector) -> Flector {
-        self.geometric_product(other).geometric_product(self.reversal())
+    fn geometric_quotient(self, other: MultiVector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Scalar> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn geometric_quotient(self, other: Scalar) -> HomogeneousMagnitude {
+        self.geometric_product(other.inverse())
     }
 }
 
@@ -17867,11 +17752,11 @@ impl GeometricQuotient<HomogeneousMagnitude> for HomogeneousMagnitude {
     }
 }
 
-impl Transformation<HomogeneousMagnitude> for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
+impl GeometricQuotient<Point> for HomogeneousMagnitude {
+    type Output = Flector;
 
-    fn transformation(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
-        self.geometric_product(other).geometric_product(self.reversal())
+    fn geometric_quotient(self, other: Point) -> Flector {
+        self.geometric_product(other.inverse())
     }
 }
 
@@ -17883,11 +17768,11 @@ impl GeometricQuotient<Line> for HomogeneousMagnitude {
     }
 }
 
-impl Transformation<Line> for HomogeneousMagnitude {
-    type Output = Line;
+impl GeometricQuotient<Plane> for HomogeneousMagnitude {
+    type Output = Flector;
 
-    fn transformation(self, other: Line) -> Line {
-        self.geometric_product(other).geometric_product(self.reversal())
+    fn geometric_quotient(self, other: Plane) -> Flector {
+        self.geometric_product(other.inverse())
     }
 }
 
@@ -17899,11 +17784,19 @@ impl GeometricQuotient<Motor> for HomogeneousMagnitude {
     }
 }
 
-impl Transformation<Motor> for HomogeneousMagnitude {
+impl GeometricQuotient<Translator> for HomogeneousMagnitude {
     type Output = Motor;
 
-    fn transformation(self, other: Motor) -> Motor {
-        self.geometric_product(other).geometric_product(self.reversal())
+    fn geometric_quotient(self, other: Translator) -> Motor {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Flector> for HomogeneousMagnitude {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: Flector) -> Flector {
+        self.geometric_product(other.inverse())
     }
 }
 
@@ -17915,211 +17808,75 @@ impl GeometricQuotient<MultiVector> for HomogeneousMagnitude {
     }
 }
 
-impl Transformation<MultiVector> for HomogeneousMagnitude {
-    type Output = MultiVector;
-
-    fn transformation(self, other: MultiVector) -> MultiVector {
-        self.geometric_product(other).geometric_product(self.reversal())
-    }
-}
-
-impl GeometricQuotient<Plane> for HomogeneousMagnitude {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Plane) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Plane> for HomogeneousMagnitude {
-    type Output = Plane;
-
-    fn transformation(self, other: Plane) -> Plane {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Point> for HomogeneousMagnitude {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Point) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Point> for HomogeneousMagnitude {
+impl GeometricQuotient<Scalar> for Point {
     type Output = Point;
 
-    fn transformation(self, other: Point) -> Point {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl Transformation<Rotor> for HomogeneousMagnitude {
-    type Output = Rotor;
-
-    fn transformation(self, other: Rotor) -> Rotor {
-        self.geometric_product(other).geometric_product(self.reversal())
-    }
-}
-
-impl GeometricQuotient<Scalar> for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
-
-    fn geometric_quotient(self, other: Scalar) -> HomogeneousMagnitude {
+    fn geometric_quotient(self, other: Scalar) -> Point {
         self.geometric_product(other.inverse())
     }
 }
 
-impl Transformation<Scalar> for HomogeneousMagnitude {
-    type Output = Scalar;
-
-    fn transformation(self, other: Scalar) -> Scalar {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Translator> for HomogeneousMagnitude {
-    type Output = Motor;
-
-    fn geometric_quotient(self, other: Translator) -> Motor {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Translator> for HomogeneousMagnitude {
-    type Output = Translator;
-
-    fn transformation(self, other: Translator) -> Translator {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl Transformation<AntiScalar> for Line {
-    type Output = AntiScalar;
-
-    fn transformation(self, other: AntiScalar) -> AntiScalar {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Flector> for Line {
+impl GeometricQuotient<HomogeneousMagnitude> for Point {
     type Output = Flector;
 
-    fn geometric_quotient(self, other: Flector) -> Flector {
+    fn geometric_quotient(self, other: HomogeneousMagnitude) -> Flector {
         self.geometric_product(other.inverse())
     }
 }
 
-impl Transformation<Flector> for Line {
+impl GeometricQuotient<Point> for Point {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: Point) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Line> for Point {
     type Output = Flector;
 
-    fn transformation(self, other: Flector) -> Flector {
-        self.geometric_product(other).geometric_product(self.reversal())
-    }
-}
-
-impl GeometricQuotient<HomogeneousMagnitude> for Line {
-    type Output = Line;
-
-    fn geometric_quotient(self, other: HomogeneousMagnitude) -> Line {
+    fn geometric_quotient(self, other: Line) -> Flector {
         self.geometric_product(other.inverse())
     }
 }
 
-impl Transformation<HomogeneousMagnitude> for Line {
-    type Output = HomogeneousMagnitude;
-
-    fn transformation(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Line> for Line {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Line) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Line> for Line {
-    type Output = Line;
-
-    fn transformation(self, other: Line) -> Line {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Motor> for Line {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Motor) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Motor> for Line {
+impl GeometricQuotient<Plane> for Point {
     type Output = Motor;
 
-    fn transformation(self, other: Motor) -> Motor {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
+    fn geometric_quotient(self, other: Plane) -> Motor {
+        self.geometric_product(other.inverse())
     }
 }
 
-impl GeometricQuotient<MultiVector> for Line {
+impl GeometricQuotient<Motor> for Point {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: Motor) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Translator> for Point {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: Translator) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Flector> for Point {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: Flector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<MultiVector> for Point {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: MultiVector) -> MultiVector {
         self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<MultiVector> for Line {
-    type Output = MultiVector;
-
-    fn transformation(self, other: MultiVector) -> MultiVector {
-        self.geometric_product(other).geometric_product(self.reversal())
-    }
-}
-
-impl GeometricQuotient<Plane> for Line {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Plane) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Plane> for Line {
-    type Output = Plane;
-
-    fn transformation(self, other: Plane) -> Plane {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Point> for Line {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Point) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Point> for Line {
-    type Output = Point;
-
-    fn transformation(self, other: Point) -> Point {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl Transformation<Rotor> for Line {
-    type Output = Rotor;
-
-    fn transformation(self, other: Rotor) -> Rotor {
-        self.geometric_product(other).geometric_product(self.reversal())
     }
 }
 
@@ -18131,11 +17888,43 @@ impl GeometricQuotient<Scalar> for Line {
     }
 }
 
-impl Transformation<Scalar> for Line {
-    type Output = Scalar;
+impl GeometricQuotient<HomogeneousMagnitude> for Line {
+    type Output = Line;
 
-    fn transformation(self, other: Scalar) -> Scalar {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
+    fn geometric_quotient(self, other: HomogeneousMagnitude) -> Line {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Point> for Line {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: Point) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Line> for Line {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: Line) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Plane> for Line {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: Plane) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Motor> for Line {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: Motor) -> MultiVector {
+        self.geometric_product(other.inverse())
     }
 }
 
@@ -18147,23 +17936,7 @@ impl GeometricQuotient<Translator> for Line {
     }
 }
 
-impl Transformation<Translator> for Line {
-    type Output = Translator;
-
-    fn transformation(self, other: Translator) -> Translator {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl Transformation<AntiScalar> for Motor {
-    type Output = AntiScalar;
-
-    fn transformation(self, other: AntiScalar) -> AntiScalar {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Flector> for Motor {
+impl GeometricQuotient<Flector> for Line {
     type Output = Flector;
 
     fn geometric_quotient(self, other: Flector) -> Flector {
@@ -18171,63 +17944,7 @@ impl GeometricQuotient<Flector> for Motor {
     }
 }
 
-impl Transformation<Flector> for Motor {
-    type Output = Flector;
-
-    fn transformation(self, other: Flector) -> Flector {
-        self.geometric_product(other).geometric_product(self.reversal())
-    }
-}
-
-impl GeometricQuotient<HomogeneousMagnitude> for Motor {
-    type Output = Motor;
-
-    fn geometric_quotient(self, other: HomogeneousMagnitude) -> Motor {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<HomogeneousMagnitude> for Motor {
-    type Output = HomogeneousMagnitude;
-
-    fn transformation(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Line> for Motor {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Line) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Line> for Motor {
-    type Output = Line;
-
-    fn transformation(self, other: Line) -> Line {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Motor> for Motor {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Motor) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Motor> for Motor {
-    type Output = Motor;
-
-    fn transformation(self, other: Motor) -> Motor {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<MultiVector> for Motor {
+impl GeometricQuotient<MultiVector> for Line {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: MultiVector) -> MultiVector {
@@ -18235,51 +17952,75 @@ impl GeometricQuotient<MultiVector> for Motor {
     }
 }
 
-impl Transformation<MultiVector> for Motor {
-    type Output = MultiVector;
-
-    fn transformation(self, other: MultiVector) -> MultiVector {
-        self.geometric_product(other).geometric_product(self.reversal())
-    }
-}
-
-impl GeometricQuotient<Plane> for Motor {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Plane) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Plane> for Motor {
+impl GeometricQuotient<Scalar> for Plane {
     type Output = Plane;
 
-    fn transformation(self, other: Plane) -> Plane {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Point> for Motor {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Point) -> Flector {
+    fn geometric_quotient(self, other: Scalar) -> Plane {
         self.geometric_product(other.inverse())
     }
 }
 
-impl Transformation<Point> for Motor {
-    type Output = Point;
+impl GeometricQuotient<HomogeneousMagnitude> for Plane {
+    type Output = Flector;
 
-    fn transformation(self, other: Point) -> Point {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
+    fn geometric_quotient(self, other: HomogeneousMagnitude) -> Flector {
+        self.geometric_product(other.inverse())
     }
 }
 
-impl Transformation<Rotor> for Motor {
-    type Output = Rotor;
+impl GeometricQuotient<Point> for Plane {
+    type Output = Motor;
 
-    fn transformation(self, other: Rotor) -> Rotor {
-        self.geometric_product(other).geometric_product(self.reversal())
+    fn geometric_quotient(self, other: Point) -> Motor {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Line> for Plane {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: Line) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Plane> for Plane {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: Plane) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Motor> for Plane {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: Motor) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Translator> for Plane {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: Translator) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Flector> for Plane {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: Flector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<MultiVector> for Plane {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: MultiVector) -> MultiVector {
+        self.geometric_product(other.inverse())
     }
 }
 
@@ -18291,11 +18032,43 @@ impl GeometricQuotient<Scalar> for Motor {
     }
 }
 
-impl Transformation<Scalar> for Motor {
-    type Output = Scalar;
+impl GeometricQuotient<HomogeneousMagnitude> for Motor {
+    type Output = Motor;
 
-    fn transformation(self, other: Scalar) -> Scalar {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
+    fn geometric_quotient(self, other: HomogeneousMagnitude) -> Motor {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Point> for Motor {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: Point) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Line> for Motor {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: Line) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Plane> for Motor {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: Plane) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Motor> for Motor {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: Motor) -> MultiVector {
+        self.geometric_product(other.inverse())
     }
 }
 
@@ -18307,23 +18080,223 @@ impl GeometricQuotient<Translator> for Motor {
     }
 }
 
-impl Transformation<Translator> for Motor {
+impl GeometricQuotient<Flector> for Motor {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: Flector) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<MultiVector> for Motor {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: MultiVector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Scalar> for Rotor {
+    type Output = Rotor;
+
+    fn geometric_quotient(self, other: Scalar) -> Rotor {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<HomogeneousMagnitude> for Rotor {
+    type Output = Rotor;
+
+    fn geometric_quotient(self, other: HomogeneousMagnitude) -> Rotor {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Point> for Rotor {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: Point) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Line> for Rotor {
+    type Output = Rotor;
+
+    fn geometric_quotient(self, other: Line) -> Rotor {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Plane> for Rotor {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: Plane) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Motor> for Rotor {
+    type Output = Rotor;
+
+    fn geometric_quotient(self, other: Motor) -> Rotor {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Translator> for Rotor {
+    type Output = Rotor;
+
+    fn geometric_quotient(self, other: Translator) -> Rotor {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Flector> for Rotor {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: Flector) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<MultiVector> for Rotor {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: MultiVector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Scalar> for Translator {
     type Output = Translator;
 
-    fn transformation(self, other: Translator) -> Translator {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
+    fn geometric_quotient(self, other: Scalar) -> Translator {
+        self.geometric_product(other.inverse())
     }
 }
 
-impl Transformation<AntiScalar> for MultiVector {
-    type Output = AntiScalar;
+impl GeometricQuotient<HomogeneousMagnitude> for Translator {
+    type Output = Motor;
 
-    fn transformation(self, other: AntiScalar) -> AntiScalar {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
+    fn geometric_quotient(self, other: HomogeneousMagnitude) -> Motor {
+        self.geometric_product(other.inverse())
     }
 }
 
-impl GeometricQuotient<Flector> for MultiVector {
+impl GeometricQuotient<Point> for Translator {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: Point) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Line> for Translator {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: Line) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Plane> for Translator {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: Plane) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Motor> for Translator {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: Motor) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Translator> for Translator {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: Translator) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Flector> for Translator {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: Flector) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<MultiVector> for Translator {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: MultiVector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Scalar> for Flector {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: Scalar) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<HomogeneousMagnitude> for Flector {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: HomogeneousMagnitude) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Point> for Flector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: Point) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Line> for Flector {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: Line) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Plane> for Flector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: Plane) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Motor> for Flector {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: Motor) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Translator> for Flector {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: Translator) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Flector> for Flector {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Flector) -> MultiVector {
@@ -18331,11 +18304,19 @@ impl GeometricQuotient<Flector> for MultiVector {
     }
 }
 
-impl Transformation<Flector> for MultiVector {
-    type Output = Flector;
+impl GeometricQuotient<MultiVector> for Flector {
+    type Output = MultiVector;
 
-    fn transformation(self, other: Flector) -> Flector {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
+    fn geometric_quotient(self, other: MultiVector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Scalar> for MultiVector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: Scalar) -> MultiVector {
+        self.geometric_product(other.inverse())
     }
 }
 
@@ -18347,11 +18328,11 @@ impl GeometricQuotient<HomogeneousMagnitude> for MultiVector {
     }
 }
 
-impl Transformation<HomogeneousMagnitude> for MultiVector {
-    type Output = HomogeneousMagnitude;
+impl GeometricQuotient<Point> for MultiVector {
+    type Output = MultiVector;
 
-    fn transformation(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
+    fn geometric_quotient(self, other: Point) -> MultiVector {
+        self.geometric_product(other.inverse())
     }
 }
 
@@ -18363,11 +18344,11 @@ impl GeometricQuotient<Line> for MultiVector {
     }
 }
 
-impl Transformation<Line> for MultiVector {
-    type Output = Line;
+impl GeometricQuotient<Plane> for MultiVector {
+    type Output = MultiVector;
 
-    fn transformation(self, other: Line) -> Line {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
+    fn geometric_quotient(self, other: Plane) -> MultiVector {
+        self.geometric_product(other.inverse())
     }
 }
 
@@ -18379,11 +18360,19 @@ impl GeometricQuotient<Motor> for MultiVector {
     }
 }
 
-impl Transformation<Motor> for MultiVector {
-    type Output = Motor;
+impl GeometricQuotient<Translator> for MultiVector {
+    type Output = MultiVector;
 
-    fn transformation(self, other: Motor) -> Motor {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
+    fn geometric_quotient(self, other: Translator) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Flector> for MultiVector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: Flector) -> MultiVector {
+        self.geometric_product(other.inverse())
     }
 }
 
@@ -18416,507 +18405,11 @@ impl GeometricQuotient<MultiVector> for MultiVector {
     }
 }
 
-impl Transformation<MultiVector> for MultiVector {
-    type Output = MultiVector;
-
-    fn transformation(self, other: MultiVector) -> MultiVector {
-        self.geometric_product(other).geometric_product(self.reversal())
-    }
-}
-
-impl GeometricQuotient<Plane> for MultiVector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Plane) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Plane> for MultiVector {
-    type Output = Plane;
-
-    fn transformation(self, other: Plane) -> Plane {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Point> for MultiVector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Point) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Point> for MultiVector {
-    type Output = Point;
-
-    fn transformation(self, other: Point) -> Point {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl Transformation<Rotor> for MultiVector {
-    type Output = Rotor;
-
-    fn transformation(self, other: Rotor) -> Rotor {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Scalar> for MultiVector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Scalar) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Scalar> for MultiVector {
+impl Transformation<Scalar> for Scalar {
     type Output = Scalar;
 
     fn transformation(self, other: Scalar) -> Scalar {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Translator> for MultiVector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Translator) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Translator> for MultiVector {
-    type Output = Translator;
-
-    fn transformation(self, other: Translator) -> Translator {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl Transformation<AntiScalar> for Plane {
-    type Output = AntiScalar;
-
-    fn transformation(self, other: AntiScalar) -> AntiScalar {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Flector> for Plane {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Flector) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Flector> for Plane {
-    type Output = Flector;
-
-    fn transformation(self, other: Flector) -> Flector {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<HomogeneousMagnitude> for Plane {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: HomogeneousMagnitude) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<HomogeneousMagnitude> for Plane {
-    type Output = HomogeneousMagnitude;
-
-    fn transformation(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Line> for Plane {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Line) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Line> for Plane {
-    type Output = Line;
-
-    fn transformation(self, other: Line) -> Line {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Motor> for Plane {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Motor) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Motor> for Plane {
-    type Output = Motor;
-
-    fn transformation(self, other: Motor) -> Motor {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<MultiVector> for Plane {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: MultiVector) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<MultiVector> for Plane {
-    type Output = MultiVector;
-
-    fn transformation(self, other: MultiVector) -> MultiVector {
         self.geometric_product(other).geometric_product(self.reversal())
-    }
-}
-
-impl GeometricQuotient<Plane> for Plane {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Plane) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Plane> for Plane {
-    type Output = Plane;
-
-    fn transformation(self, other: Plane) -> Plane {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Point> for Plane {
-    type Output = Motor;
-
-    fn geometric_quotient(self, other: Point) -> Motor {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Point> for Plane {
-    type Output = Point;
-
-    fn transformation(self, other: Point) -> Point {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl Transformation<Rotor> for Plane {
-    type Output = Rotor;
-
-    fn transformation(self, other: Rotor) -> Rotor {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Scalar> for Plane {
-    type Output = Plane;
-
-    fn geometric_quotient(self, other: Scalar) -> Plane {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Scalar> for Plane {
-    type Output = Scalar;
-
-    fn transformation(self, other: Scalar) -> Scalar {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Translator> for Plane {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Translator) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Translator> for Plane {
-    type Output = Translator;
-
-    fn transformation(self, other: Translator) -> Translator {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl Transformation<AntiScalar> for Point {
-    type Output = AntiScalar;
-
-    fn transformation(self, other: AntiScalar) -> AntiScalar {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Flector> for Point {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Flector) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Flector> for Point {
-    type Output = Flector;
-
-    fn transformation(self, other: Flector) -> Flector {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<HomogeneousMagnitude> for Point {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: HomogeneousMagnitude) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<HomogeneousMagnitude> for Point {
-    type Output = HomogeneousMagnitude;
-
-    fn transformation(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Line> for Point {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Line) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Line> for Point {
-    type Output = Line;
-
-    fn transformation(self, other: Line) -> Line {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Motor> for Point {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Motor) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Motor> for Point {
-    type Output = Motor;
-
-    fn transformation(self, other: Motor) -> Motor {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<MultiVector> for Point {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: MultiVector) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<MultiVector> for Point {
-    type Output = MultiVector;
-
-    fn transformation(self, other: MultiVector) -> MultiVector {
-        self.geometric_product(other).geometric_product(self.reversal())
-    }
-}
-
-impl GeometricQuotient<Plane> for Point {
-    type Output = Motor;
-
-    fn geometric_quotient(self, other: Plane) -> Motor {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Plane> for Point {
-    type Output = Plane;
-
-    fn transformation(self, other: Plane) -> Plane {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Point> for Point {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Point) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Point> for Point {
-    type Output = Point;
-
-    fn transformation(self, other: Point) -> Point {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl Transformation<Rotor> for Point {
-    type Output = Rotor;
-
-    fn transformation(self, other: Rotor) -> Rotor {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Scalar> for Point {
-    type Output = Point;
-
-    fn geometric_quotient(self, other: Scalar) -> Point {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Scalar> for Point {
-    type Output = Scalar;
-
-    fn transformation(self, other: Scalar) -> Scalar {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Translator> for Point {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Translator) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Translator> for Point {
-    type Output = Translator;
-
-    fn transformation(self, other: Translator) -> Translator {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Flector> for Rotor {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Flector) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Flector> for Rotor {
-    type Output = Flector;
-
-    fn transformation(self, other: Flector) -> Flector {
-        self.geometric_product(other).geometric_product(self.reversal())
-    }
-}
-
-impl GeometricQuotient<HomogeneousMagnitude> for Rotor {
-    type Output = Rotor;
-
-    fn geometric_quotient(self, other: HomogeneousMagnitude) -> Rotor {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Line> for Rotor {
-    type Output = Rotor;
-
-    fn geometric_quotient(self, other: Line) -> Rotor {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Motor> for Rotor {
-    type Output = Rotor;
-
-    fn geometric_quotient(self, other: Motor) -> Rotor {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<MultiVector> for Rotor {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: MultiVector) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<MultiVector> for Rotor {
-    type Output = MultiVector;
-
-    fn transformation(self, other: MultiVector) -> MultiVector {
-        self.geometric_product(other).geometric_product(self.reversal())
-    }
-}
-
-impl GeometricQuotient<Plane> for Rotor {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Plane) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Plane> for Rotor {
-    type Output = Plane;
-
-    fn transformation(self, other: Plane) -> Plane {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Point> for Rotor {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Point) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Point> for Rotor {
-    type Output = Point;
-
-    fn transformation(self, other: Point) -> Point {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Scalar> for Rotor {
-    type Output = Rotor;
-
-    fn geometric_quotient(self, other: Scalar) -> Rotor {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Translator> for Rotor {
-    type Output = Rotor;
-
-    fn geometric_quotient(self, other: Translator) -> Rotor {
-        self.geometric_product(other.inverse())
     }
 }
 
@@ -18928,30 +18421,6 @@ impl Transformation<AntiScalar> for Scalar {
     }
 }
 
-impl GeometricQuotient<Flector> for Scalar {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Flector) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Flector> for Scalar {
-    type Output = Flector;
-
-    fn transformation(self, other: Flector) -> Flector {
-        self.geometric_product(other).geometric_product(self.reversal())
-    }
-}
-
-impl GeometricQuotient<HomogeneousMagnitude> for Scalar {
-    type Output = HomogeneousMagnitude;
-
-    fn geometric_quotient(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
-        self.geometric_product(other.inverse())
-    }
-}
-
 impl Transformation<HomogeneousMagnitude> for Scalar {
     type Output = HomogeneousMagnitude;
 
@@ -18960,11 +18429,11 @@ impl Transformation<HomogeneousMagnitude> for Scalar {
     }
 }
 
-impl GeometricQuotient<Line> for Scalar {
-    type Output = Line;
+impl Transformation<Point> for Scalar {
+    type Output = Point;
 
-    fn geometric_quotient(self, other: Line) -> Line {
-        self.geometric_product(other.inverse())
+    fn transformation(self, other: Point) -> Point {
+        self.geometric_product(other).geometric_product(self.reversal())
     }
 }
 
@@ -18976,46 +18445,6 @@ impl Transformation<Line> for Scalar {
     }
 }
 
-impl GeometricQuotient<Motor> for Scalar {
-    type Output = Motor;
-
-    fn geometric_quotient(self, other: Motor) -> Motor {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Motor> for Scalar {
-    type Output = Motor;
-
-    fn transformation(self, other: Motor) -> Motor {
-        self.geometric_product(other).geometric_product(self.reversal())
-    }
-}
-
-impl GeometricQuotient<MultiVector> for Scalar {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: MultiVector) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<MultiVector> for Scalar {
-    type Output = MultiVector;
-
-    fn transformation(self, other: MultiVector) -> MultiVector {
-        self.geometric_product(other).geometric_product(self.reversal())
-    }
-}
-
-impl GeometricQuotient<Plane> for Scalar {
-    type Output = Plane;
-
-    fn geometric_quotient(self, other: Plane) -> Plane {
-        self.geometric_product(other.inverse())
-    }
-}
-
 impl Transformation<Plane> for Scalar {
     type Output = Plane;
 
@@ -19024,18 +18453,10 @@ impl Transformation<Plane> for Scalar {
     }
 }
 
-impl GeometricQuotient<Point> for Scalar {
-    type Output = Point;
+impl Transformation<Motor> for Scalar {
+    type Output = Motor;
 
-    fn geometric_quotient(self, other: Point) -> Point {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Point> for Scalar {
-    type Output = Point;
-
-    fn transformation(self, other: Point) -> Point {
+    fn transformation(self, other: Motor) -> Motor {
         self.geometric_product(other).geometric_product(self.reversal())
     }
 }
@@ -19048,56 +18469,539 @@ impl Transformation<Rotor> for Scalar {
     }
 }
 
-impl Powi for Scalar {
-    type Output = Scalar;
-
-    fn powi(self, exponent: isize) -> Scalar {
-        if exponent == 0 {
-            return Scalar::one();
-        }
-        let mut x: Scalar = if exponent < 0 { self.inverse() } else { self };
-        let mut y: Scalar = Scalar::one();
-        let mut n: isize = exponent.abs();
-        while 1 < n {
-            if n & 1 == 1 {
-                y = x.geometric_product(y);
-            }
-            x = x.geometric_product(x);
-            n = n >> 1;
-        }
-        x.geometric_product(y)
-    }
-}
-
-impl GeometricQuotient<Scalar> for Scalar {
-    type Output = Scalar;
-
-    fn geometric_quotient(self, other: Scalar) -> Scalar {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Scalar> for Scalar {
-    type Output = Scalar;
-
-    fn transformation(self, other: Scalar) -> Scalar {
-        self.geometric_product(other).geometric_product(self.reversal())
-    }
-}
-
-impl GeometricQuotient<Translator> for Scalar {
-    type Output = Translator;
-
-    fn geometric_quotient(self, other: Translator) -> Translator {
-        self.geometric_product(other.inverse())
-    }
-}
-
 impl Transformation<Translator> for Scalar {
     type Output = Translator;
 
     fn transformation(self, other: Translator) -> Translator {
         self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<Flector> for Scalar {
+    type Output = Flector;
+
+    fn transformation(self, other: Flector) -> Flector {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<MultiVector> for Scalar {
+    type Output = MultiVector;
+
+    fn transformation(self, other: MultiVector) -> MultiVector {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<Point> for AntiScalar {
+    type Output = Point;
+
+    fn transformation(self, other: Point) -> Point {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<Plane> for AntiScalar {
+    type Output = Plane;
+
+    fn transformation(self, other: Plane) -> Plane {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<Flector> for AntiScalar {
+    type Output = Flector;
+
+    fn transformation(self, other: Flector) -> Flector {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<MultiVector> for AntiScalar {
+    type Output = MultiVector;
+
+    fn transformation(self, other: MultiVector) -> MultiVector {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<Scalar> for HomogeneousMagnitude {
+    type Output = Scalar;
+
+    fn transformation(self, other: Scalar) -> Scalar {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<AntiScalar> for HomogeneousMagnitude {
+    type Output = AntiScalar;
+
+    fn transformation(self, other: AntiScalar) -> AntiScalar {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<HomogeneousMagnitude> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn transformation(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<Point> for HomogeneousMagnitude {
+    type Output = Point;
+
+    fn transformation(self, other: Point) -> Point {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Line> for HomogeneousMagnitude {
+    type Output = Line;
+
+    fn transformation(self, other: Line) -> Line {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<Plane> for HomogeneousMagnitude {
+    type Output = Plane;
+
+    fn transformation(self, other: Plane) -> Plane {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Motor> for HomogeneousMagnitude {
+    type Output = Motor;
+
+    fn transformation(self, other: Motor) -> Motor {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<Rotor> for HomogeneousMagnitude {
+    type Output = Rotor;
+
+    fn transformation(self, other: Rotor) -> Rotor {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<Translator> for HomogeneousMagnitude {
+    type Output = Translator;
+
+    fn transformation(self, other: Translator) -> Translator {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Flector> for HomogeneousMagnitude {
+    type Output = Flector;
+
+    fn transformation(self, other: Flector) -> Flector {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<MultiVector> for HomogeneousMagnitude {
+    type Output = MultiVector;
+
+    fn transformation(self, other: MultiVector) -> MultiVector {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<Scalar> for Point {
+    type Output = Scalar;
+
+    fn transformation(self, other: Scalar) -> Scalar {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<AntiScalar> for Point {
+    type Output = AntiScalar;
+
+    fn transformation(self, other: AntiScalar) -> AntiScalar {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<HomogeneousMagnitude> for Point {
+    type Output = HomogeneousMagnitude;
+
+    fn transformation(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Point> for Point {
+    type Output = Point;
+
+    fn transformation(self, other: Point) -> Point {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Line> for Point {
+    type Output = Line;
+
+    fn transformation(self, other: Line) -> Line {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Plane> for Point {
+    type Output = Plane;
+
+    fn transformation(self, other: Plane) -> Plane {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Motor> for Point {
+    type Output = Motor;
+
+    fn transformation(self, other: Motor) -> Motor {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Rotor> for Point {
+    type Output = Rotor;
+
+    fn transformation(self, other: Rotor) -> Rotor {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Translator> for Point {
+    type Output = Translator;
+
+    fn transformation(self, other: Translator) -> Translator {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Flector> for Point {
+    type Output = Flector;
+
+    fn transformation(self, other: Flector) -> Flector {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<MultiVector> for Point {
+    type Output = MultiVector;
+
+    fn transformation(self, other: MultiVector) -> MultiVector {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<Scalar> for Line {
+    type Output = Scalar;
+
+    fn transformation(self, other: Scalar) -> Scalar {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<AntiScalar> for Line {
+    type Output = AntiScalar;
+
+    fn transformation(self, other: AntiScalar) -> AntiScalar {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<HomogeneousMagnitude> for Line {
+    type Output = HomogeneousMagnitude;
+
+    fn transformation(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Point> for Line {
+    type Output = Point;
+
+    fn transformation(self, other: Point) -> Point {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Line> for Line {
+    type Output = Line;
+
+    fn transformation(self, other: Line) -> Line {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Plane> for Line {
+    type Output = Plane;
+
+    fn transformation(self, other: Plane) -> Plane {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Motor> for Line {
+    type Output = Motor;
+
+    fn transformation(self, other: Motor) -> Motor {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Rotor> for Line {
+    type Output = Rotor;
+
+    fn transformation(self, other: Rotor) -> Rotor {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<Translator> for Line {
+    type Output = Translator;
+
+    fn transformation(self, other: Translator) -> Translator {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Flector> for Line {
+    type Output = Flector;
+
+    fn transformation(self, other: Flector) -> Flector {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<MultiVector> for Line {
+    type Output = MultiVector;
+
+    fn transformation(self, other: MultiVector) -> MultiVector {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<Scalar> for Plane {
+    type Output = Scalar;
+
+    fn transformation(self, other: Scalar) -> Scalar {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<AntiScalar> for Plane {
+    type Output = AntiScalar;
+
+    fn transformation(self, other: AntiScalar) -> AntiScalar {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<HomogeneousMagnitude> for Plane {
+    type Output = HomogeneousMagnitude;
+
+    fn transformation(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Point> for Plane {
+    type Output = Point;
+
+    fn transformation(self, other: Point) -> Point {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Line> for Plane {
+    type Output = Line;
+
+    fn transformation(self, other: Line) -> Line {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Plane> for Plane {
+    type Output = Plane;
+
+    fn transformation(self, other: Plane) -> Plane {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Motor> for Plane {
+    type Output = Motor;
+
+    fn transformation(self, other: Motor) -> Motor {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Rotor> for Plane {
+    type Output = Rotor;
+
+    fn transformation(self, other: Rotor) -> Rotor {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Translator> for Plane {
+    type Output = Translator;
+
+    fn transformation(self, other: Translator) -> Translator {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Flector> for Plane {
+    type Output = Flector;
+
+    fn transformation(self, other: Flector) -> Flector {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<MultiVector> for Plane {
+    type Output = MultiVector;
+
+    fn transformation(self, other: MultiVector) -> MultiVector {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<Scalar> for Motor {
+    type Output = Scalar;
+
+    fn transformation(self, other: Scalar) -> Scalar {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<AntiScalar> for Motor {
+    type Output = AntiScalar;
+
+    fn transformation(self, other: AntiScalar) -> AntiScalar {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<HomogeneousMagnitude> for Motor {
+    type Output = HomogeneousMagnitude;
+
+    fn transformation(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Point> for Motor {
+    type Output = Point;
+
+    fn transformation(self, other: Point) -> Point {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Line> for Motor {
+    type Output = Line;
+
+    fn transformation(self, other: Line) -> Line {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Plane> for Motor {
+    type Output = Plane;
+
+    fn transformation(self, other: Plane) -> Plane {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Motor> for Motor {
+    type Output = Motor;
+
+    fn transformation(self, other: Motor) -> Motor {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Rotor> for Motor {
+    type Output = Rotor;
+
+    fn transformation(self, other: Rotor) -> Rotor {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<Translator> for Motor {
+    type Output = Translator;
+
+    fn transformation(self, other: Translator) -> Translator {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Flector> for Motor {
+    type Output = Flector;
+
+    fn transformation(self, other: Flector) -> Flector {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<MultiVector> for Motor {
+    type Output = MultiVector;
+
+    fn transformation(self, other: MultiVector) -> MultiVector {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<Point> for Rotor {
+    type Output = Point;
+
+    fn transformation(self, other: Point) -> Point {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Plane> for Rotor {
+    type Output = Plane;
+
+    fn transformation(self, other: Plane) -> Plane {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Flector> for Rotor {
+    type Output = Flector;
+
+    fn transformation(self, other: Flector) -> Flector {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<MultiVector> for Rotor {
+    type Output = MultiVector;
+
+    fn transformation(self, other: MultiVector) -> MultiVector {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<Scalar> for Translator {
+    type Output = Scalar;
+
+    fn transformation(self, other: Scalar) -> Scalar {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
     }
 }
 
@@ -19109,30 +19013,6 @@ impl Transformation<AntiScalar> for Translator {
     }
 }
 
-impl GeometricQuotient<Flector> for Translator {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Flector) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Flector> for Translator {
-    type Output = Flector;
-
-    fn transformation(self, other: Flector) -> Flector {
-        self.geometric_product(other).geometric_product(self.reversal())
-    }
-}
-
-impl GeometricQuotient<HomogeneousMagnitude> for Translator {
-    type Output = Motor;
-
-    fn geometric_quotient(self, other: HomogeneousMagnitude) -> Motor {
-        self.geometric_product(other.inverse())
-    }
-}
-
 impl Transformation<HomogeneousMagnitude> for Translator {
     type Output = HomogeneousMagnitude;
 
@@ -19141,11 +19021,11 @@ impl Transformation<HomogeneousMagnitude> for Translator {
     }
 }
 
-impl GeometricQuotient<Line> for Translator {
-    type Output = MultiVector;
+impl Transformation<Point> for Translator {
+    type Output = Point;
 
-    fn geometric_quotient(self, other: Line) -> MultiVector {
-        self.geometric_product(other.inverse())
+    fn transformation(self, other: Point) -> Point {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
     }
 }
 
@@ -19157,46 +19037,6 @@ impl Transformation<Line> for Translator {
     }
 }
 
-impl GeometricQuotient<Motor> for Translator {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Motor) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Motor> for Translator {
-    type Output = Motor;
-
-    fn transformation(self, other: Motor) -> Motor {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<MultiVector> for Translator {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: MultiVector) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<MultiVector> for Translator {
-    type Output = MultiVector;
-
-    fn transformation(self, other: MultiVector) -> MultiVector {
-        self.geometric_product(other).geometric_product(self.reversal())
-    }
-}
-
-impl GeometricQuotient<Plane> for Translator {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Plane) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
 impl Transformation<Plane> for Translator {
     type Output = Plane;
 
@@ -19205,18 +19045,10 @@ impl Transformation<Plane> for Translator {
     }
 }
 
-impl GeometricQuotient<Point> for Translator {
-    type Output = Flector;
+impl Transformation<Motor> for Translator {
+    type Output = Motor;
 
-    fn geometric_quotient(self, other: Point) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Point> for Translator {
-    type Output = Point;
-
-    fn transformation(self, other: Point) -> Point {
+    fn transformation(self, other: Motor) -> Motor {
         self.geometric_product(other).geometric_product(self.reversal()).into()
     }
 }
@@ -19229,30 +19061,6 @@ impl Transformation<Rotor> for Translator {
     }
 }
 
-impl GeometricQuotient<Scalar> for Translator {
-    type Output = Translator;
-
-    fn geometric_quotient(self, other: Scalar) -> Translator {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl Transformation<Scalar> for Translator {
-    type Output = Scalar;
-
-    fn transformation(self, other: Scalar) -> Scalar {
-        self.geometric_product(other).geometric_product(self.reversal()).into()
-    }
-}
-
-impl GeometricQuotient<Translator> for Translator {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Translator) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
 impl Transformation<Translator> for Translator {
     type Output = Translator;
 
@@ -19261,39 +19069,223 @@ impl Transformation<Translator> for Translator {
     }
 }
 
-impl Sandwich<AntiScalar> for Flector {
-    type Output = AntiScalar;
-
-    fn sandwich(self, other: AntiScalar) -> AntiScalar {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Flector> for Flector {
+impl Transformation<Flector> for Translator {
     type Output = Flector;
 
-    fn sandwich(self, other: Flector) -> Flector {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    fn transformation(self, other: Flector) -> Flector {
+        self.geometric_product(other).geometric_product(self.reversal())
     }
 }
 
-impl Sandwich<HomogeneousMagnitude> for Flector {
+impl Transformation<MultiVector> for Translator {
+    type Output = MultiVector;
+
+    fn transformation(self, other: MultiVector) -> MultiVector {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<Scalar> for Flector {
+    type Output = Scalar;
+
+    fn transformation(self, other: Scalar) -> Scalar {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<AntiScalar> for Flector {
+    type Output = AntiScalar;
+
+    fn transformation(self, other: AntiScalar) -> AntiScalar {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<HomogeneousMagnitude> for Flector {
     type Output = HomogeneousMagnitude;
 
-    fn sandwich(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    fn transformation(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
     }
 }
 
-impl Sandwich<Line> for Flector {
+impl Transformation<Point> for Flector {
+    type Output = Point;
+
+    fn transformation(self, other: Point) -> Point {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Line> for Flector {
     type Output = Line;
 
-    fn sandwich(self, other: Line) -> Line {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    fn transformation(self, other: Line) -> Line {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
     }
 }
 
-impl Sandwich<Motor> for Flector {
+impl Transformation<Plane> for Flector {
+    type Output = Plane;
+
+    fn transformation(self, other: Plane) -> Plane {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Motor> for Flector {
+    type Output = Motor;
+
+    fn transformation(self, other: Motor) -> Motor {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Rotor> for Flector {
+    type Output = Rotor;
+
+    fn transformation(self, other: Rotor) -> Rotor {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Translator> for Flector {
+    type Output = Translator;
+
+    fn transformation(self, other: Translator) -> Translator {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Flector> for Flector {
+    type Output = Flector;
+
+    fn transformation(self, other: Flector) -> Flector {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<MultiVector> for Flector {
+    type Output = MultiVector;
+
+    fn transformation(self, other: MultiVector) -> MultiVector {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Transformation<Scalar> for MultiVector {
+    type Output = Scalar;
+
+    fn transformation(self, other: Scalar) -> Scalar {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<AntiScalar> for MultiVector {
+    type Output = AntiScalar;
+
+    fn transformation(self, other: AntiScalar) -> AntiScalar {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<HomogeneousMagnitude> for MultiVector {
+    type Output = HomogeneousMagnitude;
+
+    fn transformation(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Point> for MultiVector {
+    type Output = Point;
+
+    fn transformation(self, other: Point) -> Point {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Line> for MultiVector {
+    type Output = Line;
+
+    fn transformation(self, other: Line) -> Line {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Plane> for MultiVector {
+    type Output = Plane;
+
+    fn transformation(self, other: Plane) -> Plane {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Motor> for MultiVector {
+    type Output = Motor;
+
+    fn transformation(self, other: Motor) -> Motor {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Rotor> for MultiVector {
+    type Output = Rotor;
+
+    fn transformation(self, other: Rotor) -> Rotor {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Translator> for MultiVector {
+    type Output = Translator;
+
+    fn transformation(self, other: Translator) -> Translator {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<Flector> for MultiVector {
+    type Output = Flector;
+
+    fn transformation(self, other: Flector) -> Flector {
+        self.geometric_product(other).geometric_product(self.reversal()).into()
+    }
+}
+
+impl Transformation<MultiVector> for MultiVector {
+    type Output = MultiVector;
+
+    fn transformation(self, other: MultiVector) -> MultiVector {
+        self.geometric_product(other).geometric_product(self.reversal())
+    }
+}
+
+impl Sandwich<Point> for Scalar {
+    type Output = Point;
+
+    fn sandwich(self, other: Point) -> Point {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Line> for Scalar {
+    type Output = Scalar;
+
+    fn sandwich(self, other: Line) -> Scalar {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Plane> for Scalar {
+    type Output = Plane;
+
+    fn sandwich(self, other: Plane) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Motor> for Scalar {
     type Output = Motor;
 
     fn sandwich(self, other: Motor) -> Motor {
@@ -19301,23 +19293,7 @@ impl Sandwich<Motor> for Flector {
     }
 }
 
-impl Sandwich<Plane> for Flector {
-    type Output = Plane;
-
-    fn sandwich(self, other: Plane) -> Plane {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Point> for Flector {
-    type Output = Point;
-
-    fn sandwich(self, other: Point) -> Point {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Rotor> for Flector {
+impl Sandwich<Rotor> for Scalar {
     type Output = Rotor;
 
     fn sandwich(self, other: Rotor) -> Rotor {
@@ -19325,19 +19301,115 @@ impl Sandwich<Rotor> for Flector {
     }
 }
 
-impl Sandwich<Scalar> for Flector {
-    type Output = Scalar;
+impl Sandwich<Flector> for Scalar {
+    type Output = Flector;
 
-    fn sandwich(self, other: Scalar) -> Scalar {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    fn sandwich(self, other: Flector) -> Flector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
-impl Sandwich<Translator> for Flector {
+impl Sandwich<MultiVector> for Scalar {
+    type Output = MultiVector;
+
+    fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Scalar> for AntiScalar {
+    type Output = Scalar;
+
+    fn sandwich(self, other: Scalar) -> Scalar {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<AntiScalar> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn sandwich(self, other: AntiScalar) -> AntiScalar {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<HomogeneousMagnitude> for AntiScalar {
+    type Output = HomogeneousMagnitude;
+
+    fn sandwich(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Point> for AntiScalar {
+    type Output = Point;
+
+    fn sandwich(self, other: Point) -> Point {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Line> for AntiScalar {
+    type Output = Line;
+
+    fn sandwich(self, other: Line) -> Line {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Plane> for AntiScalar {
+    type Output = Plane;
+
+    fn sandwich(self, other: Plane) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Motor> for AntiScalar {
+    type Output = Motor;
+
+    fn sandwich(self, other: Motor) -> Motor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Rotor> for AntiScalar {
+    type Output = Rotor;
+
+    fn sandwich(self, other: Rotor) -> Rotor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Translator> for AntiScalar {
     type Output = Translator;
 
     fn sandwich(self, other: Translator) -> Translator {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Flector> for AntiScalar {
+    type Output = Flector;
+
+    fn sandwich(self, other: Flector) -> Flector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<MultiVector> for AntiScalar {
+    type Output = MultiVector;
+
+    fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Scalar> for HomogeneousMagnitude {
+    type Output = Scalar;
+
+    fn sandwich(self, other: Scalar) -> Scalar {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
@@ -19349,11 +19421,27 @@ impl Sandwich<AntiScalar> for HomogeneousMagnitude {
     }
 }
 
-impl Sandwich<Motor> for HomogeneousMagnitude {
-    type Output = Motor;
+impl Sandwich<HomogeneousMagnitude> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
 
-    fn sandwich(self, other: Motor) -> Motor {
+    fn sandwich(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Point> for HomogeneousMagnitude {
+    type Output = Point;
+
+    fn sandwich(self, other: Point) -> Point {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Line> for HomogeneousMagnitude {
+    type Output = Line;
+
+    fn sandwich(self, other: Line) -> Line {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
@@ -19365,10 +19453,10 @@ impl Sandwich<Plane> for HomogeneousMagnitude {
     }
 }
 
-impl Sandwich<Point> for HomogeneousMagnitude {
-    type Output = Point;
+impl Sandwich<Motor> for HomogeneousMagnitude {
+    type Output = Motor;
 
-    fn sandwich(self, other: Point) -> Point {
+    fn sandwich(self, other: Motor) -> Motor {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -19389,6 +19477,118 @@ impl Sandwich<Translator> for HomogeneousMagnitude {
     }
 }
 
+impl Sandwich<Flector> for HomogeneousMagnitude {
+    type Output = Flector;
+
+    fn sandwich(self, other: Flector) -> Flector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<MultiVector> for HomogeneousMagnitude {
+    type Output = MultiVector;
+
+    fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Scalar> for Point {
+    type Output = Scalar;
+
+    fn sandwich(self, other: Scalar) -> Scalar {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiScalar> for Point {
+    type Output = AntiScalar;
+
+    fn sandwich(self, other: AntiScalar) -> AntiScalar {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<HomogeneousMagnitude> for Point {
+    type Output = HomogeneousMagnitude;
+
+    fn sandwich(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Point> for Point {
+    type Output = Point;
+
+    fn sandwich(self, other: Point) -> Point {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Line> for Point {
+    type Output = Line;
+
+    fn sandwich(self, other: Line) -> Line {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Plane> for Point {
+    type Output = Plane;
+
+    fn sandwich(self, other: Plane) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Motor> for Point {
+    type Output = Motor;
+
+    fn sandwich(self, other: Motor) -> Motor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Rotor> for Point {
+    type Output = Rotor;
+
+    fn sandwich(self, other: Rotor) -> Rotor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Translator> for Point {
+    type Output = Translator;
+
+    fn sandwich(self, other: Translator) -> Translator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Flector> for Point {
+    type Output = Flector;
+
+    fn sandwich(self, other: Flector) -> Flector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<MultiVector> for Point {
+    type Output = MultiVector;
+
+    fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Scalar> for Line {
+    type Output = Scalar;
+
+    fn sandwich(self, other: Scalar) -> Scalar {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<AntiScalar> for Line {
     type Output = AntiScalar;
 
@@ -19405,18 +19605,18 @@ impl Sandwich<HomogeneousMagnitude> for Line {
     }
 }
 
-impl Sandwich<Line> for Line {
-    type Output = Line;
+impl Sandwich<Point> for Line {
+    type Output = Point;
 
-    fn sandwich(self, other: Line) -> Line {
+    fn sandwich(self, other: Point) -> Point {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<Motor> for Line {
-    type Output = Motor;
+impl Sandwich<Line> for Line {
+    type Output = Line;
 
-    fn sandwich(self, other: Motor) -> Motor {
+    fn sandwich(self, other: Line) -> Line {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -19429,10 +19629,10 @@ impl Sandwich<Plane> for Line {
     }
 }
 
-impl Sandwich<Point> for Line {
-    type Output = Point;
+impl Sandwich<Motor> for Line {
+    type Output = Motor;
 
-    fn sandwich(self, other: Point) -> Point {
+    fn sandwich(self, other: Motor) -> Motor {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -19445,7 +19645,31 @@ impl Sandwich<Rotor> for Line {
     }
 }
 
-impl Sandwich<Scalar> for Line {
+impl Sandwich<Translator> for Line {
+    type Output = Translator;
+
+    fn sandwich(self, other: Translator) -> Translator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Flector> for Line {
+    type Output = Flector;
+
+    fn sandwich(self, other: Flector) -> Flector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<MultiVector> for Line {
+    type Output = MultiVector;
+
+    fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Scalar> for Plane {
     type Output = Scalar;
 
     fn sandwich(self, other: Scalar) -> Scalar {
@@ -19453,10 +19677,90 @@ impl Sandwich<Scalar> for Line {
     }
 }
 
-impl Sandwich<Translator> for Line {
+impl Sandwich<AntiScalar> for Plane {
+    type Output = AntiScalar;
+
+    fn sandwich(self, other: AntiScalar) -> AntiScalar {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<HomogeneousMagnitude> for Plane {
+    type Output = HomogeneousMagnitude;
+
+    fn sandwich(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Point> for Plane {
+    type Output = Point;
+
+    fn sandwich(self, other: Point) -> Point {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Line> for Plane {
+    type Output = Line;
+
+    fn sandwich(self, other: Line) -> Line {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Plane> for Plane {
+    type Output = Plane;
+
+    fn sandwich(self, other: Plane) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Motor> for Plane {
+    type Output = Motor;
+
+    fn sandwich(self, other: Motor) -> Motor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Rotor> for Plane {
+    type Output = Rotor;
+
+    fn sandwich(self, other: Rotor) -> Rotor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Translator> for Plane {
     type Output = Translator;
 
     fn sandwich(self, other: Translator) -> Translator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Flector> for Plane {
+    type Output = Flector;
+
+    fn sandwich(self, other: Flector) -> Flector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<MultiVector> for Plane {
+    type Output = MultiVector;
+
+    fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Scalar> for Motor {
+    type Output = Scalar;
+
+    fn sandwich(self, other: Scalar) -> Scalar {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -19477,18 +19781,18 @@ impl Sandwich<HomogeneousMagnitude> for Motor {
     }
 }
 
-impl Sandwich<Line> for Motor {
-    type Output = Line;
+impl Sandwich<Point> for Motor {
+    type Output = Point;
 
-    fn sandwich(self, other: Line) -> Line {
+    fn sandwich(self, other: Point) -> Point {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<Motor> for Motor {
-    type Output = Motor;
+impl Sandwich<Line> for Motor {
+    type Output = Line;
 
-    fn sandwich(self, other: Motor) -> Motor {
+    fn sandwich(self, other: Line) -> Line {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -19501,10 +19805,10 @@ impl Sandwich<Plane> for Motor {
     }
 }
 
-impl Sandwich<Point> for Motor {
-    type Output = Point;
+impl Sandwich<Motor> for Motor {
+    type Output = Motor;
 
-    fn sandwich(self, other: Point) -> Point {
+    fn sandwich(self, other: Motor) -> Motor {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -19517,14 +19821,6 @@ impl Sandwich<Rotor> for Motor {
     }
 }
 
-impl Sandwich<Scalar> for Motor {
-    type Output = Scalar;
-
-    fn sandwich(self, other: Scalar) -> Scalar {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<Translator> for Motor {
     type Output = Translator;
 
@@ -19533,223 +19829,23 @@ impl Sandwich<Translator> for Motor {
     }
 }
 
-impl Sandwich<AntiScalar> for MultiVector {
-    type Output = AntiScalar;
-
-    fn sandwich(self, other: AntiScalar) -> AntiScalar {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Flector> for MultiVector {
+impl Sandwich<Flector> for Motor {
     type Output = Flector;
 
     fn sandwich(self, other: Flector) -> Flector {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
-impl Sandwich<HomogeneousMagnitude> for MultiVector {
-    type Output = HomogeneousMagnitude;
+impl Sandwich<MultiVector> for Motor {
+    type Output = MultiVector;
 
-    fn sandwich(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
-impl Sandwich<Line> for MultiVector {
-    type Output = Line;
-
-    fn sandwich(self, other: Line) -> Line {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Motor> for MultiVector {
-    type Output = Motor;
-
-    fn sandwich(self, other: Motor) -> Motor {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Plane> for MultiVector {
-    type Output = Plane;
-
-    fn sandwich(self, other: Plane) -> Plane {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Point> for MultiVector {
-    type Output = Point;
-
-    fn sandwich(self, other: Point) -> Point {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Rotor> for MultiVector {
-    type Output = Rotor;
-
-    fn sandwich(self, other: Rotor) -> Rotor {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Scalar> for MultiVector {
-    type Output = Scalar;
-
-    fn sandwich(self, other: Scalar) -> Scalar {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Translator> for MultiVector {
-    type Output = Translator;
-
-    fn sandwich(self, other: Translator) -> Translator {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<AntiScalar> for Plane {
-    type Output = AntiScalar;
-
-    fn sandwich(self, other: AntiScalar) -> AntiScalar {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Flector> for Plane {
-    type Output = Flector;
-
-    fn sandwich(self, other: Flector) -> Flector {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<HomogeneousMagnitude> for Plane {
-    type Output = HomogeneousMagnitude;
-
-    fn sandwich(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Line> for Plane {
-    type Output = Line;
-
-    fn sandwich(self, other: Line) -> Line {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Motor> for Plane {
-    type Output = Motor;
-
-    fn sandwich(self, other: Motor) -> Motor {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Plane> for Plane {
-    type Output = Plane;
-
-    fn sandwich(self, other: Plane) -> Plane {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Point> for Plane {
-    type Output = Point;
-
-    fn sandwich(self, other: Point) -> Point {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Rotor> for Plane {
-    type Output = Rotor;
-
-    fn sandwich(self, other: Rotor) -> Rotor {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Scalar> for Plane {
-    type Output = Scalar;
-
-    fn sandwich(self, other: Scalar) -> Scalar {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Translator> for Plane {
-    type Output = Translator;
-
-    fn sandwich(self, other: Translator) -> Translator {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<AntiScalar> for Point {
-    type Output = AntiScalar;
-
-    fn sandwich(self, other: AntiScalar) -> AntiScalar {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Flector> for Point {
-    type Output = Flector;
-
-    fn sandwich(self, other: Flector) -> Flector {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<HomogeneousMagnitude> for Point {
-    type Output = HomogeneousMagnitude;
-
-    fn sandwich(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Line> for Point {
-    type Output = Line;
-
-    fn sandwich(self, other: Line) -> Line {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Motor> for Point {
-    type Output = Motor;
-
-    fn sandwich(self, other: Motor) -> Motor {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Plane> for Point {
-    type Output = Plane;
-
-    fn sandwich(self, other: Plane) -> Plane {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Rotor> for Point {
-    type Output = Rotor;
-
-    fn sandwich(self, other: Rotor) -> Rotor {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Scalar> for Point {
+impl Sandwich<Scalar> for Rotor {
     type Output = Scalar;
 
     fn sandwich(self, other: Scalar) -> Scalar {
@@ -19773,18 +19869,18 @@ impl Sandwich<HomogeneousMagnitude> for Rotor {
     }
 }
 
-impl Sandwich<Line> for Rotor {
-    type Output = Line;
+impl Sandwich<Point> for Rotor {
+    type Output = Point;
 
-    fn sandwich(self, other: Line) -> Line {
+    fn sandwich(self, other: Point) -> Point {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<Motor> for Rotor {
-    type Output = Motor;
+impl Sandwich<Line> for Rotor {
+    type Output = Line;
 
-    fn sandwich(self, other: Motor) -> Motor {
+    fn sandwich(self, other: Line) -> Line {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -19797,19 +19893,19 @@ impl Sandwich<Plane> for Rotor {
     }
 }
 
-impl Sandwich<Point> for Rotor {
-    type Output = Point;
+impl Sandwich<Motor> for Rotor {
+    type Output = Motor;
 
-    fn sandwich(self, other: Point) -> Point {
+    fn sandwich(self, other: Motor) -> Motor {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<Scalar> for Rotor {
-    type Output = Scalar;
+impl Sandwich<Rotor> for Rotor {
+    type Output = Rotor;
 
-    fn sandwich(self, other: Scalar) -> Scalar {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    fn sandwich(self, other: Rotor) -> Rotor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
@@ -19821,19 +19917,27 @@ impl Sandwich<Translator> for Rotor {
     }
 }
 
-impl Sandwich<Motor> for Scalar {
-    type Output = Motor;
+impl Sandwich<Flector> for Rotor {
+    type Output = Flector;
 
-    fn sandwich(self, other: Motor) -> Motor {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    fn sandwich(self, other: Flector) -> Flector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
-impl Sandwich<Rotor> for Scalar {
-    type Output = Rotor;
+impl Sandwich<MultiVector> for Rotor {
+    type Output = MultiVector;
 
-    fn sandwich(self, other: Rotor) -> Rotor {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Scalar> for Translator {
+    type Output = Scalar;
+
+    fn sandwich(self, other: Scalar) -> Scalar {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
@@ -19853,18 +19957,18 @@ impl Sandwich<HomogeneousMagnitude> for Translator {
     }
 }
 
+impl Sandwich<Point> for Translator {
+    type Output = Point;
+
+    fn sandwich(self, other: Point) -> Point {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
 impl Sandwich<Line> for Translator {
     type Output = Line;
 
     fn sandwich(self, other: Line) -> Line {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Motor> for Translator {
-    type Output = Motor;
-
-    fn sandwich(self, other: Motor) -> Motor {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -19877,6 +19981,14 @@ impl Sandwich<Plane> for Translator {
     }
 }
 
+impl Sandwich<Motor> for Translator {
+    type Output = Motor;
+
+    fn sandwich(self, other: Motor) -> Motor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Rotor> for Translator {
     type Output = Rotor;
 
@@ -19885,459 +19997,203 @@ impl Sandwich<Rotor> for Translator {
     }
 }
 
-impl Distance<Flector> for Flector {
-    type Output = HomogeneousMagnitude;
+impl Sandwich<Translator> for Translator {
+    type Output = Translator;
 
-    fn distance(self, other: Flector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    fn sandwich(self, other: Translator) -> Translator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
-impl Distance<Line> for Flector {
-    type Output = HomogeneousMagnitude;
+impl Sandwich<Flector> for Translator {
+    type Output = Flector;
 
-    fn distance(self, other: Line) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    fn sandwich(self, other: Flector) -> Flector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
-impl Distance<Motor> for Flector {
-    type Output = HomogeneousMagnitude;
+impl Sandwich<MultiVector> for Translator {
+    type Output = MultiVector;
 
-    fn distance(self, other: Motor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
-impl Distance<MultiVector> for Flector {
-    type Output = HomogeneousMagnitude;
+impl Sandwich<Scalar> for Flector {
+    type Output = Scalar;
 
-    fn distance(self, other: MultiVector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    fn sandwich(self, other: Scalar) -> Scalar {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Distance<Plane> for Flector {
-    type Output = HomogeneousMagnitude;
+impl Sandwich<AntiScalar> for Flector {
+    type Output = AntiScalar;
 
-    fn distance(self, other: Plane) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    fn sandwich(self, other: AntiScalar) -> AntiScalar {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Distance<Point> for Flector {
+impl Sandwich<HomogeneousMagnitude> for Flector {
     type Output = HomogeneousMagnitude;
 
-    fn distance(self, other: Point) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    fn sandwich(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Distance<Rotor> for Flector {
-    type Output = HomogeneousMagnitude;
+impl Sandwich<Point> for Flector {
+    type Output = Point;
 
-    fn distance(self, other: Rotor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    fn sandwich(self, other: Point) -> Point {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Distance<Translator> for Flector {
-    type Output = HomogeneousMagnitude;
+impl Sandwich<Line> for Flector {
+    type Output = Line;
 
-    fn distance(self, other: Translator) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    fn sandwich(self, other: Line) -> Line {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Distance<AntiScalar> for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
+impl Sandwich<Plane> for Flector {
+    type Output = Plane;
 
-    fn distance(self, other: AntiScalar) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    fn sandwich(self, other: Plane) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Distance<Flector> for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
+impl Sandwich<Motor> for Flector {
+    type Output = Motor;
 
-    fn distance(self, other: Flector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    fn sandwich(self, other: Motor) -> Motor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Distance<HomogeneousMagnitude> for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
+impl Sandwich<Rotor> for Flector {
+    type Output = Rotor;
 
-    fn distance(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    fn sandwich(self, other: Rotor) -> Rotor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Distance<Line> for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
+impl Sandwich<Translator> for Flector {
+    type Output = Translator;
 
-    fn distance(self, other: Line) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    fn sandwich(self, other: Translator) -> Translator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Distance<Motor> for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
+impl Sandwich<Flector> for Flector {
+    type Output = Flector;
 
-    fn distance(self, other: Motor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    fn sandwich(self, other: Flector) -> Flector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Distance<MultiVector> for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
+impl Sandwich<MultiVector> for Flector {
+    type Output = MultiVector;
 
-    fn distance(self, other: MultiVector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
-impl Distance<Plane> for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
+impl Sandwich<Scalar> for MultiVector {
+    type Output = Scalar;
 
-    fn distance(self, other: Plane) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    fn sandwich(self, other: Scalar) -> Scalar {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Distance<Rotor> for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
+impl Sandwich<AntiScalar> for MultiVector {
+    type Output = AntiScalar;
 
-    fn distance(self, other: Rotor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    fn sandwich(self, other: AntiScalar) -> AntiScalar {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Distance<Translator> for HomogeneousMagnitude {
+impl Sandwich<HomogeneousMagnitude> for MultiVector {
     type Output = HomogeneousMagnitude;
 
-    fn distance(self, other: Translator) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    fn sandwich(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Distance<Flector> for Line {
-    type Output = HomogeneousMagnitude;
+impl Sandwich<Point> for MultiVector {
+    type Output = Point;
 
-    fn distance(self, other: Flector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    fn sandwich(self, other: Point) -> Point {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Distance<Line> for Line {
-    type Output = HomogeneousMagnitude;
+impl Sandwich<Line> for MultiVector {
+    type Output = Line;
 
-    fn distance(self, other: Line) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    fn sandwich(self, other: Line) -> Line {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Distance<Motor> for Line {
-    type Output = HomogeneousMagnitude;
+impl Sandwich<Plane> for MultiVector {
+    type Output = Plane;
 
-    fn distance(self, other: Motor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    fn sandwich(self, other: Plane) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Distance<MultiVector> for Line {
-    type Output = HomogeneousMagnitude;
+impl Sandwich<Motor> for MultiVector {
+    type Output = Motor;
 
-    fn distance(self, other: MultiVector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    fn sandwich(self, other: Motor) -> Motor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Distance<Point> for Line {
-    type Output = HomogeneousMagnitude;
+impl Sandwich<Rotor> for MultiVector {
+    type Output = Rotor;
 
-    fn distance(self, other: Point) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    fn sandwich(self, other: Rotor) -> Rotor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Distance<Rotor> for Line {
-    type Output = HomogeneousMagnitude;
+impl Sandwich<Translator> for MultiVector {
+    type Output = Translator;
 
-    fn distance(self, other: Rotor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    fn sandwich(self, other: Translator) -> Translator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Distance<Translator> for Line {
-    type Output = HomogeneousMagnitude;
+impl Sandwich<Flector> for MultiVector {
+    type Output = Flector;
 
-    fn distance(self, other: Translator) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    fn sandwich(self, other: Flector) -> Flector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Distance<Flector> for Motor {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: Flector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Line> for Motor {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: Line) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Motor> for Motor {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: Motor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<MultiVector> for Motor {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: MultiVector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Point> for Motor {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: Point) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Rotor> for Motor {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: Rotor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Translator> for Motor {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: Translator) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<AntiScalar> for MultiVector {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: AntiScalar) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Flector> for MultiVector {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: Flector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<HomogeneousMagnitude> for MultiVector {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Line> for MultiVector {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: Line) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Motor> for MultiVector {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: Motor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<MultiVector> for MultiVector {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: MultiVector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Plane> for MultiVector {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: Plane) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Point> for MultiVector {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: Point) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Rotor> for MultiVector {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: Rotor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Translator> for MultiVector {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: Translator) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Flector> for Plane {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: Flector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<MultiVector> for Plane {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: MultiVector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Point> for Plane {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: Point) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Flector> for Point {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: Flector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Line> for Point {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: Line) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Motor> for Point {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: Motor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<MultiVector> for Point {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: MultiVector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Plane> for Point {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: Plane) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Point> for Point {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: Point) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Rotor> for Point {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: Rotor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Translator> for Point {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: Translator) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Flector> for Rotor {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: Flector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Line> for Rotor {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: Line) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Motor> for Rotor {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: Motor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<MultiVector> for Rotor {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: MultiVector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Translator> for Rotor {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: Translator) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+impl Sandwich<MultiVector> for MultiVector {
+    type Output = MultiVector;
+
+    fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
@@ -20345,14 +20201,6 @@ impl Distance<AntiScalar> for Scalar {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: AntiScalar) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Flector> for Scalar {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: Flector) -> HomogeneousMagnitude {
         self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
@@ -20373,26 +20221,18 @@ impl Distance<Line> for Scalar {
     }
 }
 
-impl Distance<Motor> for Scalar {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: Motor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<MultiVector> for Scalar {
-    type Output = HomogeneousMagnitude;
-
-    fn distance(self, other: MultiVector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
-    }
-}
-
 impl Distance<Plane> for Scalar {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Plane) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Motor> for Scalar {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Motor) -> HomogeneousMagnitude {
         self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
@@ -20413,10 +20253,338 @@ impl Distance<Translator> for Scalar {
     }
 }
 
-impl Distance<Flector> for Translator {
+impl Distance<Flector> for Scalar {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Flector) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<MultiVector> for Scalar {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: MultiVector) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<AntiScalar> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: AntiScalar) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<HomogeneousMagnitude> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Line> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Line) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Plane> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Plane) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Motor> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Motor) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Rotor> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Rotor) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Translator> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Translator) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Flector> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Flector) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<MultiVector> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: MultiVector) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Point> for Point {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Point) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Line> for Point {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Line) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Plane> for Point {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Plane) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Motor> for Point {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Motor) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Rotor> for Point {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Rotor) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Translator> for Point {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Translator) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Flector> for Point {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Flector) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<MultiVector> for Point {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: MultiVector) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Point> for Line {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Point) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Line> for Line {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Line) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Motor> for Line {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Motor) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Rotor> for Line {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Rotor) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Translator> for Line {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Translator) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Flector> for Line {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Flector) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<MultiVector> for Line {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: MultiVector) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Point> for Plane {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Point) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Flector> for Plane {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Flector) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<MultiVector> for Plane {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: MultiVector) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Point> for Motor {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Point) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Line> for Motor {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Line) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Motor> for Motor {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Motor) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Rotor> for Motor {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Rotor) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Translator> for Motor {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Translator) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Flector> for Motor {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Flector) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<MultiVector> for Motor {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: MultiVector) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Line> for Rotor {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Line) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Motor> for Rotor {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Motor) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Translator> for Rotor {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Translator) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Flector> for Rotor {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Flector) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<MultiVector> for Rotor {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: MultiVector) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Point> for Translator {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Point) -> HomogeneousMagnitude {
         self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
@@ -20437,6 +20605,22 @@ impl Distance<Motor> for Translator {
     }
 }
 
+impl Distance<Rotor> for Translator {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Rotor) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Flector> for Translator {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Flector) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
 impl Distance<MultiVector> for Translator {
     type Output = HomogeneousMagnitude;
 
@@ -20445,7 +20629,7 @@ impl Distance<MultiVector> for Translator {
     }
 }
 
-impl Distance<Point> for Translator {
+impl Distance<Point> for Flector {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Point) -> HomogeneousMagnitude {
@@ -20453,10 +20637,138 @@ impl Distance<Point> for Translator {
     }
 }
 
-impl Distance<Rotor> for Translator {
+impl Distance<Line> for Flector {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Line) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Plane> for Flector {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Plane) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Motor> for Flector {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Motor) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Rotor> for Flector {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Rotor) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Translator> for Flector {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Translator) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Flector> for Flector {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Flector) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<MultiVector> for Flector {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: MultiVector) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<AntiScalar> for MultiVector {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: AntiScalar) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<HomogeneousMagnitude> for MultiVector {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Point> for MultiVector {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Point) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Line> for MultiVector {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Line) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Plane> for MultiVector {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Plane) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Motor> for MultiVector {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Motor) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Rotor> for MultiVector {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Rotor) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Translator> for MultiVector {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Translator) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Flector> for MultiVector {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Flector) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<MultiVector> for MultiVector {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: MultiVector) -> HomogeneousMagnitude {
         self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }

@@ -40506,547 +40506,35 @@ fn multi_vector_attitude(self_4010: MultiVector) -> MultiVector {
     return _e9;
 }
 
-fn anti_scalar_flector_geometric_quotient(self_4012: AntiScalar, other_3610: Flector) -> Flector {
-    var self_4013: AntiScalar;
-    var other_3611: Flector;
-
-    self_4013 = self_4012;
-    other_3611 = other_3610;
-    let _e4: AntiScalar = self_4013;
-    let _e5: Flector = other_3611;
-    let _e6: Flector = flector_inverse(_e5);
-    let _e7: Flector = anti_scalar_flector_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn anti_scalar_flector_transformation(self_4014: AntiScalar, other_3612: Flector) -> Flector {
-    var self_4015: AntiScalar;
-    var other_3613: Flector;
-
-    self_4015 = self_4014;
-    other_3613 = other_3612;
-    let _e4: AntiScalar = self_4015;
-    let _e5: Flector = other_3613;
-    let _e6: Flector = anti_scalar_flector_geometric_product(_e4, _e5);
-    let _e7: AntiScalar = self_4015;
-    let _e8: AntiScalar = anti_scalar_reversal(_e7);
-    let _e9: Flector = flector_anti_scalar_geometric_product(_e6, _e8);
-    return _e9;
-}
-
-fn anti_scalar_homogeneous_magnitude_geometric_quotient(self_4016: AntiScalar, other_3614: HomogeneousMagnitude) -> AntiScalar {
-    var self_4017: AntiScalar;
-    var other_3615: HomogeneousMagnitude;
-
-    self_4017 = self_4016;
-    other_3615 = other_3614;
-    let _e4: AntiScalar = self_4017;
-    let _e5: HomogeneousMagnitude = other_3615;
-    let _e6: HomogeneousMagnitude = homogeneous_magnitude_inverse(_e5);
-    let _e7: AntiScalar = anti_scalar_homogeneous_magnitude_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn anti_scalar_line_geometric_quotient(self_4018: AntiScalar, other_3616: Line) -> Rotor {
-    var self_4019: AntiScalar;
-    var other_3617: Line;
-
-    self_4019 = self_4018;
-    other_3617 = other_3616;
-    let _e4: AntiScalar = self_4019;
-    let _e5: Line = other_3617;
-    let _e6: Line = line_inverse(_e5);
-    let _e7: Rotor = anti_scalar_line_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn anti_scalar_motor_geometric_quotient(self_4020: AntiScalar, other_3618: Motor) -> Rotor {
-    var self_4021: AntiScalar;
-    var other_3619: Motor;
-
-    self_4021 = self_4020;
-    other_3619 = other_3618;
-    let _e4: AntiScalar = self_4021;
-    let _e5: Motor = other_3619;
-    let _e6: Motor = motor_inverse(_e5);
-    let _e7: Rotor = anti_scalar_motor_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn anti_scalar_multi_vector_geometric_quotient(self_4022: AntiScalar, other_3620: MultiVector) -> MultiVector {
-    var self_4023: AntiScalar;
-    var other_3621: MultiVector;
-
-    self_4023 = self_4022;
-    other_3621 = other_3620;
-    let _e4: AntiScalar = self_4023;
-    let _e5: MultiVector = other_3621;
-    let _e6: MultiVector = multi_vector_inverse(_e5);
-    let _e7: MultiVector = anti_scalar_multi_vector_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn anti_scalar_multi_vector_transformation(self_4024: AntiScalar, other_3622: MultiVector) -> MultiVector {
-    var self_4025: AntiScalar;
-    var other_3623: MultiVector;
-
-    self_4025 = self_4024;
-    other_3623 = other_3622;
-    let _e4: AntiScalar = self_4025;
-    let _e5: MultiVector = other_3623;
-    let _e6: MultiVector = anti_scalar_multi_vector_geometric_product(_e4, _e5);
-    let _e7: AntiScalar = self_4025;
-    let _e8: AntiScalar = anti_scalar_reversal(_e7);
-    let _e9: MultiVector = multi_vector_anti_scalar_geometric_product(_e6, _e8);
-    return _e9;
-}
-
-fn anti_scalar_plane_geometric_quotient(self_4026: AntiScalar, other_3624: Plane) -> Point {
-    var self_4027: AntiScalar;
-    var other_3625: Plane;
-
-    self_4027 = self_4026;
-    other_3625 = other_3624;
-    let _e4: AntiScalar = self_4027;
-    let _e5: Plane = other_3625;
-    let _e6: Plane = plane_inverse(_e5);
-    let _e7: Point = anti_scalar_plane_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn anti_scalar_plane_transformation(self_4028: AntiScalar, other_3626: Plane) -> Plane {
-    var self_4029: AntiScalar;
-    var other_3627: Plane;
-
-    self_4029 = self_4028;
-    other_3627 = other_3626;
-    let _e4: AntiScalar = self_4029;
-    let _e5: Plane = other_3627;
-    let _e6: Point = anti_scalar_plane_geometric_product(_e4, _e5);
-    let _e7: AntiScalar = self_4029;
-    let _e8: AntiScalar = anti_scalar_reversal(_e7);
-    let _e9: Plane = point_anti_scalar_geometric_product(_e6, _e8);
-    return _e9;
-}
-
-fn anti_scalar_point_geometric_quotient(self_4030: AntiScalar, other_3628: Point) -> Plane {
-    var self_4031: AntiScalar;
-    var other_3629: Point;
-
-    self_4031 = self_4030;
-    other_3629 = other_3628;
-    let _e4: AntiScalar = self_4031;
-    let _e5: Point = other_3629;
-    let _e6: Point = point_inverse(_e5);
-    let _e7: Plane = anti_scalar_point_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn anti_scalar_point_transformation(self_4032: AntiScalar, other_3630: Point) -> Point {
-    var self_4033: AntiScalar;
-    var other_3631: Point;
-
-    self_4033 = self_4032;
-    other_3631 = other_3630;
-    let _e4: AntiScalar = self_4033;
-    let _e5: Point = other_3631;
-    let _e6: Plane = anti_scalar_point_geometric_product(_e4, _e5);
-    let _e7: AntiScalar = self_4033;
-    let _e8: AntiScalar = anti_scalar_reversal(_e7);
-    let _e9: Point = plane_anti_scalar_geometric_product(_e6, _e8);
-    return _e9;
-}
-
-fn anti_scalar_scalar_geometric_quotient(self_4034: AntiScalar, other_3632: Scalar) -> AntiScalar {
-    var self_4035: AntiScalar;
-    var other_3633: Scalar;
-
-    self_4035 = self_4034;
-    other_3633 = other_3632;
-    let _e4: AntiScalar = self_4035;
-    let _e5: Scalar = other_3633;
-    let _e6: Scalar = scalar_inverse(_e5);
-    let _e7: AntiScalar = anti_scalar_scalar_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn anti_scalar_translator_geometric_quotient(self_4036: AntiScalar, other_3634: Translator) -> Rotor {
-    var self_4037: AntiScalar;
-    var other_3635: Translator;
-
-    self_4037 = self_4036;
-    other_3635 = other_3634;
-    let _e4: AntiScalar = self_4037;
-    let _e5: Translator = other_3635;
-    let _e6: Translator = translator_inverse(_e5);
-    let _e7: Rotor = anti_scalar_translator_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn flector_anti_scalar_transformation(self_4038: Flector, other_3636: AntiScalar) -> AntiScalar {
-    var self_4039: Flector;
-    var other_3637: AntiScalar;
-
-    self_4039 = self_4038;
-    other_3637 = other_3636;
-    let _e4: Flector = self_4039;
-    let _e5: AntiScalar = other_3637;
-    let _e6: Flector = flector_anti_scalar_geometric_product(_e4, _e5);
-    let _e7: Flector = self_4039;
-    let _e8: Flector = flector_reversal(_e7);
-    let _e9: MultiVector = flector_flector_geometric_product(_e6, _e8);
-    let _e10: AntiScalar = multi_vector_anti_scalar_into(_e9);
-    return _e10;
-}
-
-fn flector_flector_geometric_quotient(self_4040: Flector, other_3638: Flector) -> MultiVector {
-    var self_4041: Flector;
-    var other_3639: Flector;
-
-    self_4041 = self_4040;
-    other_3639 = other_3638;
-    let _e4: Flector = self_4041;
-    let _e5: Flector = other_3639;
-    let _e6: Flector = flector_inverse(_e5);
-    let _e7: MultiVector = flector_flector_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn flector_flector_transformation(self_4042: Flector, other_3640: Flector) -> Flector {
-    var self_4043: Flector;
-    var other_3641: Flector;
-
-    self_4043 = self_4042;
-    other_3641 = other_3640;
-    let _e4: Flector = self_4043;
-    let _e5: Flector = other_3641;
-    let _e6: MultiVector = flector_flector_geometric_product(_e4, _e5);
-    let _e7: Flector = self_4043;
-    let _e8: Flector = flector_reversal(_e7);
-    let _e9: MultiVector = multi_vector_flector_geometric_product(_e6, _e8);
-    let _e10: Flector = multi_vector_flector_into(_e9);
-    return _e10;
-}
-
-fn flector_homogeneous_magnitude_geometric_quotient(self_4044: Flector, other_3642: HomogeneousMagnitude) -> Flector {
-    var self_4045: Flector;
-    var other_3643: HomogeneousMagnitude;
-
-    self_4045 = self_4044;
-    other_3643 = other_3642;
-    let _e4: Flector = self_4045;
-    let _e5: HomogeneousMagnitude = other_3643;
-    let _e6: HomogeneousMagnitude = homogeneous_magnitude_inverse(_e5);
-    let _e7: Flector = flector_homogeneous_magnitude_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn flector_homogeneous_magnitude_transformation(self_4046: Flector, other_3644: HomogeneousMagnitude) -> HomogeneousMagnitude {
-    var self_4047: Flector;
-    var other_3645: HomogeneousMagnitude;
-
-    self_4047 = self_4046;
-    other_3645 = other_3644;
-    let _e4: Flector = self_4047;
-    let _e5: HomogeneousMagnitude = other_3645;
-    let _e6: Flector = flector_homogeneous_magnitude_geometric_product(_e4, _e5);
-    let _e7: Flector = self_4047;
-    let _e8: Flector = flector_reversal(_e7);
-    let _e9: MultiVector = flector_flector_geometric_product(_e6, _e8);
-    let _e10: HomogeneousMagnitude = multi_vector_homogeneous_magnitude_into(_e9);
-    return _e10;
-}
-
-fn flector_line_geometric_quotient(self_4048: Flector, other_3646: Line) -> Flector {
-    var self_4049: Flector;
-    var other_3647: Line;
-
-    self_4049 = self_4048;
-    other_3647 = other_3646;
-    let _e4: Flector = self_4049;
-    let _e5: Line = other_3647;
-    let _e6: Line = line_inverse(_e5);
-    let _e7: Flector = flector_line_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn flector_line_transformation(self_4050: Flector, other_3648: Line) -> Line {
-    var self_4051: Flector;
-    var other_3649: Line;
-
-    self_4051 = self_4050;
-    other_3649 = other_3648;
-    let _e4: Flector = self_4051;
-    let _e5: Line = other_3649;
-    let _e6: Flector = flector_line_geometric_product(_e4, _e5);
-    let _e7: Flector = self_4051;
-    let _e8: Flector = flector_reversal(_e7);
-    let _e9: MultiVector = flector_flector_geometric_product(_e6, _e8);
-    let _e10: Line = multi_vector_line_into(_e9);
-    return _e10;
-}
-
-fn flector_motor_geometric_quotient(self_4052: Flector, other_3650: Motor) -> Flector {
-    var self_4053: Flector;
-    var other_3651: Motor;
-
-    self_4053 = self_4052;
-    other_3651 = other_3650;
-    let _e4: Flector = self_4053;
-    let _e5: Motor = other_3651;
-    let _e6: Motor = motor_inverse(_e5);
-    let _e7: Flector = flector_motor_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn flector_motor_transformation(self_4054: Flector, other_3652: Motor) -> Motor {
-    var self_4055: Flector;
-    var other_3653: Motor;
-
-    self_4055 = self_4054;
-    other_3653 = other_3652;
-    let _e4: Flector = self_4055;
-    let _e5: Motor = other_3653;
-    let _e6: Flector = flector_motor_geometric_product(_e4, _e5);
-    let _e7: Flector = self_4055;
-    let _e8: Flector = flector_reversal(_e7);
-    let _e9: MultiVector = flector_flector_geometric_product(_e6, _e8);
-    let _e10: Motor = multi_vector_motor_into(_e9);
-    return _e10;
-}
-
-fn flector_multi_vector_geometric_quotient(self_4056: Flector, other_3654: MultiVector) -> MultiVector {
-    var self_4057: Flector;
-    var other_3655: MultiVector;
-
-    self_4057 = self_4056;
-    other_3655 = other_3654;
-    let _e4: Flector = self_4057;
-    let _e5: MultiVector = other_3655;
-    let _e6: MultiVector = multi_vector_inverse(_e5);
-    let _e7: MultiVector = flector_multi_vector_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn flector_multi_vector_transformation(self_4058: Flector, other_3656: MultiVector) -> MultiVector {
-    var self_4059: Flector;
-    var other_3657: MultiVector;
-
-    self_4059 = self_4058;
-    other_3657 = other_3656;
-    let _e4: Flector = self_4059;
-    let _e5: MultiVector = other_3657;
-    let _e6: MultiVector = flector_multi_vector_geometric_product(_e4, _e5);
-    let _e7: Flector = self_4059;
-    let _e8: Flector = flector_reversal(_e7);
-    let _e9: MultiVector = multi_vector_flector_geometric_product(_e6, _e8);
-    return _e9;
-}
-
-fn flector_plane_geometric_quotient(self_4060: Flector, other_3658: Plane) -> MultiVector {
-    var self_4061: Flector;
-    var other_3659: Plane;
-
-    self_4061 = self_4060;
-    other_3659 = other_3658;
-    let _e4: Flector = self_4061;
-    let _e5: Plane = other_3659;
-    let _e6: Plane = plane_inverse(_e5);
-    let _e7: MultiVector = flector_plane_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn flector_plane_transformation(self_4062: Flector, other_3660: Plane) -> Plane {
-    var self_4063: Flector;
-    var other_3661: Plane;
-
-    self_4063 = self_4062;
-    other_3661 = other_3660;
-    let _e4: Flector = self_4063;
-    let _e5: Plane = other_3661;
-    let _e6: MultiVector = flector_plane_geometric_product(_e4, _e5);
-    let _e7: Flector = self_4063;
-    let _e8: Flector = flector_reversal(_e7);
-    let _e9: MultiVector = multi_vector_flector_geometric_product(_e6, _e8);
-    let _e10: Plane = multi_vector_plane_into(_e9);
-    return _e10;
-}
-
-fn flector_point_geometric_quotient(self_4064: Flector, other_3662: Point) -> MultiVector {
-    var self_4065: Flector;
-    var other_3663: Point;
-
-    self_4065 = self_4064;
-    other_3663 = other_3662;
-    let _e4: Flector = self_4065;
-    let _e5: Point = other_3663;
-    let _e6: Point = point_inverse(_e5);
-    let _e7: MultiVector = flector_point_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn flector_point_transformation(self_4066: Flector, other_3664: Point) -> Point {
-    var self_4067: Flector;
-    var other_3665: Point;
-
-    self_4067 = self_4066;
-    other_3665 = other_3664;
-    let _e4: Flector = self_4067;
-    let _e5: Point = other_3665;
-    let _e6: MultiVector = flector_point_geometric_product(_e4, _e5);
-    let _e7: Flector = self_4067;
-    let _e8: Flector = flector_reversal(_e7);
-    let _e9: MultiVector = multi_vector_flector_geometric_product(_e6, _e8);
-    let _e10: Point = multi_vector_point_into(_e9);
-    return _e10;
-}
-
-fn flector_rotor_transformation(self_4068: Flector, other_3666: Rotor) -> Rotor {
-    var self_4069: Flector;
-    var other_3667: Rotor;
-
-    self_4069 = self_4068;
-    other_3667 = other_3666;
-    let _e4: Flector = self_4069;
-    let _e5: Rotor = other_3667;
-    let _e6: Flector = flector_rotor_geometric_product(_e4, _e5);
-    let _e7: Flector = self_4069;
-    let _e8: Flector = flector_reversal(_e7);
-    let _e9: MultiVector = flector_flector_geometric_product(_e6, _e8);
-    let _e10: Rotor = multi_vector_rotor_into(_e9);
-    return _e10;
-}
-
-fn flector_scalar_geometric_quotient(self_4070: Flector, other_3668: Scalar) -> Flector {
-    var self_4071: Flector;
-    var other_3669: Scalar;
-
-    self_4071 = self_4070;
-    other_3669 = other_3668;
-    let _e4: Flector = self_4071;
-    let _e5: Scalar = other_3669;
-    let _e6: Scalar = scalar_inverse(_e5);
-    let _e7: Flector = flector_scalar_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn flector_scalar_transformation(self_4072: Flector, other_3670: Scalar) -> Scalar {
-    var self_4073: Flector;
-    var other_3671: Scalar;
-
-    self_4073 = self_4072;
-    other_3671 = other_3670;
-    let _e4: Flector = self_4073;
-    let _e5: Scalar = other_3671;
-    let _e6: Flector = flector_scalar_geometric_product(_e4, _e5);
-    let _e7: Flector = self_4073;
-    let _e8: Flector = flector_reversal(_e7);
-    let _e9: MultiVector = flector_flector_geometric_product(_e6, _e8);
-    let _e10: Scalar = multi_vector_scalar_into(_e9);
-    return _e10;
-}
-
-fn flector_translator_geometric_quotient(self_4074: Flector, other_3672: Translator) -> Flector {
-    var self_4075: Flector;
-    var other_3673: Translator;
-
-    self_4075 = self_4074;
-    other_3673 = other_3672;
-    let _e4: Flector = self_4075;
-    let _e5: Translator = other_3673;
-    let _e6: Translator = translator_inverse(_e5);
-    let _e7: Flector = flector_translator_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn flector_translator_transformation(self_4076: Flector, other_3674: Translator) -> Translator {
-    var self_4077: Flector;
-    var other_3675: Translator;
-
-    self_4077 = self_4076;
-    other_3675 = other_3674;
-    let _e4: Flector = self_4077;
-    let _e5: Translator = other_3675;
-    let _e6: Flector = flector_translator_geometric_product(_e4, _e5);
-    let _e7: Flector = self_4077;
-    let _e8: Flector = flector_reversal(_e7);
-    let _e9: MultiVector = flector_flector_geometric_product(_e6, _e8);
-    let _e10: Translator = multi_vector_translator_into(_e9);
-    return _e10;
-}
-
-fn homogeneous_magnitude_anti_scalar_transformation(self_4078: HomogeneousMagnitude, other_3676: AntiScalar) -> AntiScalar {
-    var self_4079: HomogeneousMagnitude;
-    var other_3677: AntiScalar;
-
-    self_4079 = self_4078;
-    other_3677 = other_3676;
-    let _e4: HomogeneousMagnitude = self_4079;
-    let _e5: AntiScalar = other_3677;
-    let _e6: AntiScalar = homogeneous_magnitude_anti_scalar_geometric_product(_e4, _e5);
-    let _e7: HomogeneousMagnitude = self_4079;
-    let _e8: HomogeneousMagnitude = homogeneous_magnitude_reversal(_e7);
-    let _e9: AntiScalar = anti_scalar_homogeneous_magnitude_geometric_product(_e6, _e8);
-    return _e9;
-}
-
-fn homogeneous_magnitude_flector_geometric_quotient(self_4080: HomogeneousMagnitude, other_3678: Flector) -> Flector {
-    var self_4081: HomogeneousMagnitude;
-    var other_3679: Flector;
-
-    self_4081 = self_4080;
-    other_3679 = other_3678;
-    let _e4: HomogeneousMagnitude = self_4081;
-    let _e5: Flector = other_3679;
-    let _e6: Flector = flector_inverse(_e5);
-    let _e7: Flector = homogeneous_magnitude_flector_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn homogeneous_magnitude_flector_transformation(self_4082: HomogeneousMagnitude, other_3680: Flector) -> Flector {
-    var self_4083: HomogeneousMagnitude;
-    var other_3681: Flector;
-
-    self_4083 = self_4082;
-    other_3681 = other_3680;
-    let _e4: HomogeneousMagnitude = self_4083;
-    let _e5: Flector = other_3681;
-    let _e6: Flector = homogeneous_magnitude_flector_geometric_product(_e4, _e5);
-    let _e7: HomogeneousMagnitude = self_4083;
-    let _e8: HomogeneousMagnitude = homogeneous_magnitude_reversal(_e7);
-    let _e9: Flector = flector_homogeneous_magnitude_geometric_product(_e6, _e8);
-    return _e9;
-}
-
-fn homogeneous_magnitude_powi(self_4084: HomogeneousMagnitude, exponent: i32) -> HomogeneousMagnitude {
-    var self_4085: HomogeneousMagnitude;
+fn scalar_powi(self_4012: Scalar, exponent: i32) -> Scalar {
+    var self_4013: Scalar;
     var exponent_1: i32;
-    var local: HomogeneousMagnitude;
-    var x: HomogeneousMagnitude;
-    var y: HomogeneousMagnitude;
+    var local: Scalar;
+    var x: Scalar;
+    var y: Scalar;
     var n: i32;
 
-    self_4085 = self_4084;
+    self_4013 = self_4012;
     exponent_1 = exponent;
     let _e4: i32 = exponent_1;
     if (_e4 == 0) {
         {
-            let _e7: HomogeneousMagnitude = homogeneous_magnitude_one();
+            let _e7: Scalar = scalar_one();
             return _e7;
         }
     }
     let _e8: i32 = exponent_1;
     if (_e8 < 0) {
-        let _e11: HomogeneousMagnitude = self_4085;
-        let _e12: HomogeneousMagnitude = homogeneous_magnitude_inverse(_e11);
+        let _e11: Scalar = self_4013;
+        let _e12: Scalar = scalar_inverse(_e11);
         local = _e12;
     } else {
-        let _e14: HomogeneousMagnitude = self_4085;
+        let _e14: Scalar = self_4013;
         local = _e14;
     }
-    let _e15: HomogeneousMagnitude = local;
+    let _e15: Scalar = local;
     x = _e15;
-    let _e17: HomogeneousMagnitude = homogeneous_magnitude_one();
+    let _e17: Scalar = scalar_one();
     y = _e17;
     let _e19: i32 = exponent_1;
     n = abs(_e19);
@@ -41059,1010 +40547,302 @@ fn homogeneous_magnitude_powi(self_4084: HomogeneousMagnitude, exponent: i32) ->
             let _e26: i32 = n;
             if ((_e26 & 1) == 1) {
                 {
-                    let _e31: HomogeneousMagnitude = x;
-                    let _e32: HomogeneousMagnitude = y;
-                    let _e33: HomogeneousMagnitude = homogeneous_magnitude_homogeneous_magnitude_geometric_product(_e31, _e32);
+                    let _e31: Scalar = x;
+                    let _e32: Scalar = y;
+                    let _e33: Scalar = scalar_scalar_geometric_product(_e31, _e32);
                     y = _e33;
                 }
             }
-            let _e34: HomogeneousMagnitude = x;
-            let _e35: HomogeneousMagnitude = x;
-            let _e36: HomogeneousMagnitude = homogeneous_magnitude_homogeneous_magnitude_geometric_product(_e34, _e35);
+            let _e34: Scalar = x;
+            let _e35: Scalar = x;
+            let _e36: Scalar = scalar_scalar_geometric_product(_e34, _e35);
             x = _e36;
             let _e37: i32 = n;
             n = (_e37 >> 1u);
         }
     }
-    let _e40: HomogeneousMagnitude = x;
-    let _e41: HomogeneousMagnitude = y;
-    let _e42: HomogeneousMagnitude = homogeneous_magnitude_homogeneous_magnitude_geometric_product(_e40, _e41);
+    let _e40: Scalar = x;
+    let _e41: Scalar = y;
+    let _e42: Scalar = scalar_scalar_geometric_product(_e40, _e41);
     return _e42;
 }
 
-fn homogeneous_magnitude_homogeneous_magnitude_geometric_quotient(self_4086: HomogeneousMagnitude, other_3682: HomogeneousMagnitude) -> HomogeneousMagnitude {
-    var self_4087: HomogeneousMagnitude;
-    var other_3683: HomogeneousMagnitude;
+fn scalar_scalar_geometric_quotient(self_4014: Scalar, other_3610: Scalar) -> Scalar {
+    var self_4015: Scalar;
+    var other_3611: Scalar;
 
-    self_4087 = self_4086;
-    other_3683 = other_3682;
-    let _e4: HomogeneousMagnitude = self_4087;
-    let _e5: HomogeneousMagnitude = other_3683;
+    self_4015 = self_4014;
+    other_3611 = other_3610;
+    let _e4: Scalar = self_4015;
+    let _e5: Scalar = other_3611;
+    let _e6: Scalar = scalar_inverse(_e5);
+    let _e7: Scalar = scalar_scalar_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn scalar_homogeneous_magnitude_geometric_quotient(self_4016: Scalar, other_3612: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_4017: Scalar;
+    var other_3613: HomogeneousMagnitude;
+
+    self_4017 = self_4016;
+    other_3613 = other_3612;
+    let _e4: Scalar = self_4017;
+    let _e5: HomogeneousMagnitude = other_3613;
     let _e6: HomogeneousMagnitude = homogeneous_magnitude_inverse(_e5);
-    let _e7: HomogeneousMagnitude = homogeneous_magnitude_homogeneous_magnitude_geometric_product(_e4, _e6);
+    let _e7: HomogeneousMagnitude = scalar_homogeneous_magnitude_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn homogeneous_magnitude_homogeneous_magnitude_transformation(self_4088: HomogeneousMagnitude, other_3684: HomogeneousMagnitude) -> HomogeneousMagnitude {
-    var self_4089: HomogeneousMagnitude;
-    var other_3685: HomogeneousMagnitude;
+fn scalar_point_geometric_quotient(self_4018: Scalar, other_3614: Point) -> Point {
+    var self_4019: Scalar;
+    var other_3615: Point;
 
-    self_4089 = self_4088;
-    other_3685 = other_3684;
-    let _e4: HomogeneousMagnitude = self_4089;
-    let _e5: HomogeneousMagnitude = other_3685;
-    let _e6: HomogeneousMagnitude = homogeneous_magnitude_homogeneous_magnitude_geometric_product(_e4, _e5);
-    let _e7: HomogeneousMagnitude = self_4089;
-    let _e8: HomogeneousMagnitude = homogeneous_magnitude_reversal(_e7);
-    let _e9: HomogeneousMagnitude = homogeneous_magnitude_homogeneous_magnitude_geometric_product(_e6, _e8);
-    return _e9;
-}
-
-fn homogeneous_magnitude_line_geometric_quotient(self_4090: HomogeneousMagnitude, other_3686: Line) -> Line {
-    var self_4091: HomogeneousMagnitude;
-    var other_3687: Line;
-
-    self_4091 = self_4090;
-    other_3687 = other_3686;
-    let _e4: HomogeneousMagnitude = self_4091;
-    let _e5: Line = other_3687;
-    let _e6: Line = line_inverse(_e5);
-    let _e7: Line = homogeneous_magnitude_line_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn homogeneous_magnitude_line_transformation(self_4092: HomogeneousMagnitude, other_3688: Line) -> Line {
-    var self_4093: HomogeneousMagnitude;
-    var other_3689: Line;
-
-    self_4093 = self_4092;
-    other_3689 = other_3688;
-    let _e4: HomogeneousMagnitude = self_4093;
-    let _e5: Line = other_3689;
-    let _e6: Line = homogeneous_magnitude_line_geometric_product(_e4, _e5);
-    let _e7: HomogeneousMagnitude = self_4093;
-    let _e8: HomogeneousMagnitude = homogeneous_magnitude_reversal(_e7);
-    let _e9: Line = line_homogeneous_magnitude_geometric_product(_e6, _e8);
-    return _e9;
-}
-
-fn homogeneous_magnitude_motor_geometric_quotient(self_4094: HomogeneousMagnitude, other_3690: Motor) -> Motor {
-    var self_4095: HomogeneousMagnitude;
-    var other_3691: Motor;
-
-    self_4095 = self_4094;
-    other_3691 = other_3690;
-    let _e4: HomogeneousMagnitude = self_4095;
-    let _e5: Motor = other_3691;
-    let _e6: Motor = motor_inverse(_e5);
-    let _e7: Motor = homogeneous_magnitude_motor_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn homogeneous_magnitude_motor_transformation(self_4096: HomogeneousMagnitude, other_3692: Motor) -> Motor {
-    var self_4097: HomogeneousMagnitude;
-    var other_3693: Motor;
-
-    self_4097 = self_4096;
-    other_3693 = other_3692;
-    let _e4: HomogeneousMagnitude = self_4097;
-    let _e5: Motor = other_3693;
-    let _e6: Motor = homogeneous_magnitude_motor_geometric_product(_e4, _e5);
-    let _e7: HomogeneousMagnitude = self_4097;
-    let _e8: HomogeneousMagnitude = homogeneous_magnitude_reversal(_e7);
-    let _e9: Motor = motor_homogeneous_magnitude_geometric_product(_e6, _e8);
-    return _e9;
-}
-
-fn homogeneous_magnitude_multi_vector_geometric_quotient(self_4098: HomogeneousMagnitude, other_3694: MultiVector) -> MultiVector {
-    var self_4099: HomogeneousMagnitude;
-    var other_3695: MultiVector;
-
-    self_4099 = self_4098;
-    other_3695 = other_3694;
-    let _e4: HomogeneousMagnitude = self_4099;
-    let _e5: MultiVector = other_3695;
-    let _e6: MultiVector = multi_vector_inverse(_e5);
-    let _e7: MultiVector = homogeneous_magnitude_multi_vector_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn homogeneous_magnitude_multi_vector_transformation(self_4100: HomogeneousMagnitude, other_3696: MultiVector) -> MultiVector {
-    var self_4101: HomogeneousMagnitude;
-    var other_3697: MultiVector;
-
-    self_4101 = self_4100;
-    other_3697 = other_3696;
-    let _e4: HomogeneousMagnitude = self_4101;
-    let _e5: MultiVector = other_3697;
-    let _e6: MultiVector = homogeneous_magnitude_multi_vector_geometric_product(_e4, _e5);
-    let _e7: HomogeneousMagnitude = self_4101;
-    let _e8: HomogeneousMagnitude = homogeneous_magnitude_reversal(_e7);
-    let _e9: MultiVector = multi_vector_homogeneous_magnitude_geometric_product(_e6, _e8);
-    return _e9;
-}
-
-fn homogeneous_magnitude_plane_geometric_quotient(self_4102: HomogeneousMagnitude, other_3698: Plane) -> Flector {
-    var self_4103: HomogeneousMagnitude;
-    var other_3699: Plane;
-
-    self_4103 = self_4102;
-    other_3699 = other_3698;
-    let _e4: HomogeneousMagnitude = self_4103;
-    let _e5: Plane = other_3699;
-    let _e6: Plane = plane_inverse(_e5);
-    let _e7: Flector = homogeneous_magnitude_plane_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn homogeneous_magnitude_plane_transformation(self_4104: HomogeneousMagnitude, other_3700: Plane) -> Plane {
-    var self_4105: HomogeneousMagnitude;
-    var other_3701: Plane;
-
-    self_4105 = self_4104;
-    other_3701 = other_3700;
-    let _e4: HomogeneousMagnitude = self_4105;
-    let _e5: Plane = other_3701;
-    let _e6: Flector = homogeneous_magnitude_plane_geometric_product(_e4, _e5);
-    let _e7: HomogeneousMagnitude = self_4105;
-    let _e8: HomogeneousMagnitude = homogeneous_magnitude_reversal(_e7);
-    let _e9: Flector = flector_homogeneous_magnitude_geometric_product(_e6, _e8);
-    let _e10: Plane = flector_plane_into(_e9);
-    return _e10;
-}
-
-fn homogeneous_magnitude_point_geometric_quotient(self_4106: HomogeneousMagnitude, other_3702: Point) -> Flector {
-    var self_4107: HomogeneousMagnitude;
-    var other_3703: Point;
-
-    self_4107 = self_4106;
-    other_3703 = other_3702;
-    let _e4: HomogeneousMagnitude = self_4107;
-    let _e5: Point = other_3703;
+    self_4019 = self_4018;
+    other_3615 = other_3614;
+    let _e4: Scalar = self_4019;
+    let _e5: Point = other_3615;
     let _e6: Point = point_inverse(_e5);
-    let _e7: Flector = homogeneous_magnitude_point_geometric_product(_e4, _e6);
+    let _e7: Point = scalar_point_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn homogeneous_magnitude_point_transformation(self_4108: HomogeneousMagnitude, other_3704: Point) -> Point {
-    var self_4109: HomogeneousMagnitude;
-    var other_3705: Point;
+fn scalar_line_geometric_quotient(self_4020: Scalar, other_3616: Line) -> Line {
+    var self_4021: Scalar;
+    var other_3617: Line;
 
-    self_4109 = self_4108;
-    other_3705 = other_3704;
-    let _e4: HomogeneousMagnitude = self_4109;
-    let _e5: Point = other_3705;
-    let _e6: Flector = homogeneous_magnitude_point_geometric_product(_e4, _e5);
-    let _e7: HomogeneousMagnitude = self_4109;
-    let _e8: HomogeneousMagnitude = homogeneous_magnitude_reversal(_e7);
-    let _e9: Flector = flector_homogeneous_magnitude_geometric_product(_e6, _e8);
-    let _e10: Point = flector_point_into(_e9);
-    return _e10;
+    self_4021 = self_4020;
+    other_3617 = other_3616;
+    let _e4: Scalar = self_4021;
+    let _e5: Line = other_3617;
+    let _e6: Line = line_inverse(_e5);
+    let _e7: Line = scalar_line_geometric_product(_e4, _e6);
+    return _e7;
 }
 
-fn homogeneous_magnitude_rotor_transformation(self_4110: HomogeneousMagnitude, other_3706: Rotor) -> Rotor {
-    var self_4111: HomogeneousMagnitude;
-    var other_3707: Rotor;
+fn scalar_plane_geometric_quotient(self_4022: Scalar, other_3618: Plane) -> Plane {
+    var self_4023: Scalar;
+    var other_3619: Plane;
 
-    self_4111 = self_4110;
-    other_3707 = other_3706;
-    let _e4: HomogeneousMagnitude = self_4111;
-    let _e5: Rotor = other_3707;
-    let _e6: Rotor = homogeneous_magnitude_rotor_geometric_product(_e4, _e5);
-    let _e7: HomogeneousMagnitude = self_4111;
-    let _e8: HomogeneousMagnitude = homogeneous_magnitude_reversal(_e7);
-    let _e9: Rotor = rotor_homogeneous_magnitude_geometric_product(_e6, _e8);
-    return _e9;
+    self_4023 = self_4022;
+    other_3619 = other_3618;
+    let _e4: Scalar = self_4023;
+    let _e5: Plane = other_3619;
+    let _e6: Plane = plane_inverse(_e5);
+    let _e7: Plane = scalar_plane_geometric_product(_e4, _e6);
+    return _e7;
 }
 
-fn homogeneous_magnitude_scalar_geometric_quotient(self_4112: HomogeneousMagnitude, other_3708: Scalar) -> HomogeneousMagnitude {
-    var self_4113: HomogeneousMagnitude;
-    var other_3709: Scalar;
+fn scalar_motor_geometric_quotient(self_4024: Scalar, other_3620: Motor) -> Motor {
+    var self_4025: Scalar;
+    var other_3621: Motor;
 
-    self_4113 = self_4112;
-    other_3709 = other_3708;
-    let _e4: HomogeneousMagnitude = self_4113;
-    let _e5: Scalar = other_3709;
+    self_4025 = self_4024;
+    other_3621 = other_3620;
+    let _e4: Scalar = self_4025;
+    let _e5: Motor = other_3621;
+    let _e6: Motor = motor_inverse(_e5);
+    let _e7: Motor = scalar_motor_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn scalar_translator_geometric_quotient(self_4026: Scalar, other_3622: Translator) -> Translator {
+    var self_4027: Scalar;
+    var other_3623: Translator;
+
+    self_4027 = self_4026;
+    other_3623 = other_3622;
+    let _e4: Scalar = self_4027;
+    let _e5: Translator = other_3623;
+    let _e6: Translator = translator_inverse(_e5);
+    let _e7: Translator = scalar_translator_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn scalar_flector_geometric_quotient(self_4028: Scalar, other_3624: Flector) -> Flector {
+    var self_4029: Scalar;
+    var other_3625: Flector;
+
+    self_4029 = self_4028;
+    other_3625 = other_3624;
+    let _e4: Scalar = self_4029;
+    let _e5: Flector = other_3625;
+    let _e6: Flector = flector_inverse(_e5);
+    let _e7: Flector = scalar_flector_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn scalar_multi_vector_geometric_quotient(self_4030: Scalar, other_3626: MultiVector) -> MultiVector {
+    var self_4031: Scalar;
+    var other_3627: MultiVector;
+
+    self_4031 = self_4030;
+    other_3627 = other_3626;
+    let _e4: Scalar = self_4031;
+    let _e5: MultiVector = other_3627;
+    let _e6: MultiVector = multi_vector_inverse(_e5);
+    let _e7: MultiVector = scalar_multi_vector_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_scalar_geometric_quotient(self_4032: AntiScalar, other_3628: Scalar) -> AntiScalar {
+    var self_4033: AntiScalar;
+    var other_3629: Scalar;
+
+    self_4033 = self_4032;
+    other_3629 = other_3628;
+    let _e4: AntiScalar = self_4033;
+    let _e5: Scalar = other_3629;
+    let _e6: Scalar = scalar_inverse(_e5);
+    let _e7: AntiScalar = anti_scalar_scalar_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_homogeneous_magnitude_geometric_quotient(self_4034: AntiScalar, other_3630: HomogeneousMagnitude) -> AntiScalar {
+    var self_4035: AntiScalar;
+    var other_3631: HomogeneousMagnitude;
+
+    self_4035 = self_4034;
+    other_3631 = other_3630;
+    let _e4: AntiScalar = self_4035;
+    let _e5: HomogeneousMagnitude = other_3631;
+    let _e6: HomogeneousMagnitude = homogeneous_magnitude_inverse(_e5);
+    let _e7: AntiScalar = anti_scalar_homogeneous_magnitude_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_point_geometric_quotient(self_4036: AntiScalar, other_3632: Point) -> Plane {
+    var self_4037: AntiScalar;
+    var other_3633: Point;
+
+    self_4037 = self_4036;
+    other_3633 = other_3632;
+    let _e4: AntiScalar = self_4037;
+    let _e5: Point = other_3633;
+    let _e6: Point = point_inverse(_e5);
+    let _e7: Plane = anti_scalar_point_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_line_geometric_quotient(self_4038: AntiScalar, other_3634: Line) -> Rotor {
+    var self_4039: AntiScalar;
+    var other_3635: Line;
+
+    self_4039 = self_4038;
+    other_3635 = other_3634;
+    let _e4: AntiScalar = self_4039;
+    let _e5: Line = other_3635;
+    let _e6: Line = line_inverse(_e5);
+    let _e7: Rotor = anti_scalar_line_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_plane_geometric_quotient(self_4040: AntiScalar, other_3636: Plane) -> Point {
+    var self_4041: AntiScalar;
+    var other_3637: Plane;
+
+    self_4041 = self_4040;
+    other_3637 = other_3636;
+    let _e4: AntiScalar = self_4041;
+    let _e5: Plane = other_3637;
+    let _e6: Plane = plane_inverse(_e5);
+    let _e7: Point = anti_scalar_plane_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_motor_geometric_quotient(self_4042: AntiScalar, other_3638: Motor) -> Rotor {
+    var self_4043: AntiScalar;
+    var other_3639: Motor;
+
+    self_4043 = self_4042;
+    other_3639 = other_3638;
+    let _e4: AntiScalar = self_4043;
+    let _e5: Motor = other_3639;
+    let _e6: Motor = motor_inverse(_e5);
+    let _e7: Rotor = anti_scalar_motor_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_translator_geometric_quotient(self_4044: AntiScalar, other_3640: Translator) -> Rotor {
+    var self_4045: AntiScalar;
+    var other_3641: Translator;
+
+    self_4045 = self_4044;
+    other_3641 = other_3640;
+    let _e4: AntiScalar = self_4045;
+    let _e5: Translator = other_3641;
+    let _e6: Translator = translator_inverse(_e5);
+    let _e7: Rotor = anti_scalar_translator_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_flector_geometric_quotient(self_4046: AntiScalar, other_3642: Flector) -> Flector {
+    var self_4047: AntiScalar;
+    var other_3643: Flector;
+
+    self_4047 = self_4046;
+    other_3643 = other_3642;
+    let _e4: AntiScalar = self_4047;
+    let _e5: Flector = other_3643;
+    let _e6: Flector = flector_inverse(_e5);
+    let _e7: Flector = anti_scalar_flector_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_multi_vector_geometric_quotient(self_4048: AntiScalar, other_3644: MultiVector) -> MultiVector {
+    var self_4049: AntiScalar;
+    var other_3645: MultiVector;
+
+    self_4049 = self_4048;
+    other_3645 = other_3644;
+    let _e4: AntiScalar = self_4049;
+    let _e5: MultiVector = other_3645;
+    let _e6: MultiVector = multi_vector_inverse(_e5);
+    let _e7: MultiVector = anti_scalar_multi_vector_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_scalar_geometric_quotient(self_4050: HomogeneousMagnitude, other_3646: Scalar) -> HomogeneousMagnitude {
+    var self_4051: HomogeneousMagnitude;
+    var other_3647: Scalar;
+
+    self_4051 = self_4050;
+    other_3647 = other_3646;
+    let _e4: HomogeneousMagnitude = self_4051;
+    let _e5: Scalar = other_3647;
     let _e6: Scalar = scalar_inverse(_e5);
     let _e7: HomogeneousMagnitude = homogeneous_magnitude_scalar_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn homogeneous_magnitude_scalar_transformation(self_4114: HomogeneousMagnitude, other_3710: Scalar) -> Scalar {
-    var self_4115: HomogeneousMagnitude;
-    var other_3711: Scalar;
-
-    self_4115 = self_4114;
-    other_3711 = other_3710;
-    let _e4: HomogeneousMagnitude = self_4115;
-    let _e5: Scalar = other_3711;
-    let _e6: HomogeneousMagnitude = homogeneous_magnitude_scalar_geometric_product(_e4, _e5);
-    let _e7: HomogeneousMagnitude = self_4115;
-    let _e8: HomogeneousMagnitude = homogeneous_magnitude_reversal(_e7);
-    let _e9: HomogeneousMagnitude = homogeneous_magnitude_homogeneous_magnitude_geometric_product(_e6, _e8);
-    let _e10: Scalar = homogeneous_magnitude_scalar_into(_e9);
-    return _e10;
-}
-
-fn homogeneous_magnitude_translator_geometric_quotient(self_4116: HomogeneousMagnitude, other_3712: Translator) -> Motor {
-    var self_4117: HomogeneousMagnitude;
-    var other_3713: Translator;
-
-    self_4117 = self_4116;
-    other_3713 = other_3712;
-    let _e4: HomogeneousMagnitude = self_4117;
-    let _e5: Translator = other_3713;
-    let _e6: Translator = translator_inverse(_e5);
-    let _e7: Motor = homogeneous_magnitude_translator_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn homogeneous_magnitude_translator_transformation(self_4118: HomogeneousMagnitude, other_3714: Translator) -> Translator {
-    var self_4119: HomogeneousMagnitude;
-    var other_3715: Translator;
-
-    self_4119 = self_4118;
-    other_3715 = other_3714;
-    let _e4: HomogeneousMagnitude = self_4119;
-    let _e5: Translator = other_3715;
-    let _e6: Motor = homogeneous_magnitude_translator_geometric_product(_e4, _e5);
-    let _e7: HomogeneousMagnitude = self_4119;
-    let _e8: HomogeneousMagnitude = homogeneous_magnitude_reversal(_e7);
-    let _e9: Motor = motor_homogeneous_magnitude_geometric_product(_e6, _e8);
-    let _e10: Translator = motor_translator_into(_e9);
-    return _e10;
-}
-
-fn line_anti_scalar_transformation(self_4120: Line, other_3716: AntiScalar) -> AntiScalar {
-    var self_4121: Line;
-    var other_3717: AntiScalar;
-
-    self_4121 = self_4120;
-    other_3717 = other_3716;
-    let _e4: Line = self_4121;
-    let _e5: AntiScalar = other_3717;
-    let _e6: Rotor = line_anti_scalar_geometric_product(_e4, _e5);
-    let _e7: Line = self_4121;
-    let _e8: Line = line_reversal(_e7);
-    let _e9: Rotor = rotor_line_geometric_product(_e6, _e8);
-    let _e10: AntiScalar = rotor_anti_scalar_into(_e9);
-    return _e10;
-}
-
-fn line_flector_geometric_quotient(self_4122: Line, other_3718: Flector) -> Flector {
-    var self_4123: Line;
-    var other_3719: Flector;
-
-    self_4123 = self_4122;
-    other_3719 = other_3718;
-    let _e4: Line = self_4123;
-    let _e5: Flector = other_3719;
-    let _e6: Flector = flector_inverse(_e5);
-    let _e7: Flector = line_flector_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn line_flector_transformation(self_4124: Line, other_3720: Flector) -> Flector {
-    var self_4125: Line;
-    var other_3721: Flector;
-
-    self_4125 = self_4124;
-    other_3721 = other_3720;
-    let _e4: Line = self_4125;
-    let _e5: Flector = other_3721;
-    let _e6: Flector = line_flector_geometric_product(_e4, _e5);
-    let _e7: Line = self_4125;
-    let _e8: Line = line_reversal(_e7);
-    let _e9: Flector = flector_line_geometric_product(_e6, _e8);
-    return _e9;
-}
-
-fn line_homogeneous_magnitude_geometric_quotient(self_4126: Line, other_3722: HomogeneousMagnitude) -> Line {
-    var self_4127: Line;
-    var other_3723: HomogeneousMagnitude;
-
-    self_4127 = self_4126;
-    other_3723 = other_3722;
-    let _e4: Line = self_4127;
-    let _e5: HomogeneousMagnitude = other_3723;
-    let _e6: HomogeneousMagnitude = homogeneous_magnitude_inverse(_e5);
-    let _e7: Line = line_homogeneous_magnitude_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn line_homogeneous_magnitude_transformation(self_4128: Line, other_3724: HomogeneousMagnitude) -> HomogeneousMagnitude {
-    var self_4129: Line;
-    var other_3725: HomogeneousMagnitude;
-
-    self_4129 = self_4128;
-    other_3725 = other_3724;
-    let _e4: Line = self_4129;
-    let _e5: HomogeneousMagnitude = other_3725;
-    let _e6: Line = line_homogeneous_magnitude_geometric_product(_e4, _e5);
-    let _e7: Line = self_4129;
-    let _e8: Line = line_reversal(_e7);
-    let _e9: MultiVector = line_line_geometric_product(_e6, _e8);
-    let _e10: HomogeneousMagnitude = multi_vector_homogeneous_magnitude_into(_e9);
-    return _e10;
-}
-
-fn line_line_geometric_quotient(self_4130: Line, other_3726: Line) -> MultiVector {
-    var self_4131: Line;
-    var other_3727: Line;
-
-    self_4131 = self_4130;
-    other_3727 = other_3726;
-    let _e4: Line = self_4131;
-    let _e5: Line = other_3727;
-    let _e6: Line = line_inverse(_e5);
-    let _e7: MultiVector = line_line_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn line_line_transformation(self_4132: Line, other_3728: Line) -> Line {
-    var self_4133: Line;
-    var other_3729: Line;
-
-    self_4133 = self_4132;
-    other_3729 = other_3728;
-    let _e4: Line = self_4133;
-    let _e5: Line = other_3729;
-    let _e6: MultiVector = line_line_geometric_product(_e4, _e5);
-    let _e7: Line = self_4133;
-    let _e8: Line = line_reversal(_e7);
-    let _e9: MultiVector = multi_vector_line_geometric_product(_e6, _e8);
-    let _e10: Line = multi_vector_line_into(_e9);
-    return _e10;
-}
-
-fn line_motor_geometric_quotient(self_4134: Line, other_3730: Motor) -> MultiVector {
-    var self_4135: Line;
-    var other_3731: Motor;
-
-    self_4135 = self_4134;
-    other_3731 = other_3730;
-    let _e4: Line = self_4135;
-    let _e5: Motor = other_3731;
-    let _e6: Motor = motor_inverse(_e5);
-    let _e7: MultiVector = line_motor_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn line_motor_transformation(self_4136: Line, other_3732: Motor) -> Motor {
-    var self_4137: Line;
-    var other_3733: Motor;
-
-    self_4137 = self_4136;
-    other_3733 = other_3732;
-    let _e4: Line = self_4137;
-    let _e5: Motor = other_3733;
-    let _e6: MultiVector = line_motor_geometric_product(_e4, _e5);
-    let _e7: Line = self_4137;
-    let _e8: Line = line_reversal(_e7);
-    let _e9: MultiVector = multi_vector_line_geometric_product(_e6, _e8);
-    let _e10: Motor = multi_vector_motor_into(_e9);
-    return _e10;
-}
-
-fn line_multi_vector_geometric_quotient(self_4138: Line, other_3734: MultiVector) -> MultiVector {
-    var self_4139: Line;
-    var other_3735: MultiVector;
-
-    self_4139 = self_4138;
-    other_3735 = other_3734;
-    let _e4: Line = self_4139;
-    let _e5: MultiVector = other_3735;
-    let _e6: MultiVector = multi_vector_inverse(_e5);
-    let _e7: MultiVector = line_multi_vector_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn line_multi_vector_transformation(self_4140: Line, other_3736: MultiVector) -> MultiVector {
-    var self_4141: Line;
-    var other_3737: MultiVector;
-
-    self_4141 = self_4140;
-    other_3737 = other_3736;
-    let _e4: Line = self_4141;
-    let _e5: MultiVector = other_3737;
-    let _e6: MultiVector = line_multi_vector_geometric_product(_e4, _e5);
-    let _e7: Line = self_4141;
-    let _e8: Line = line_reversal(_e7);
-    let _e9: MultiVector = multi_vector_line_geometric_product(_e6, _e8);
-    return _e9;
-}
-
-fn line_plane_geometric_quotient(self_4142: Line, other_3738: Plane) -> Flector {
-    var self_4143: Line;
-    var other_3739: Plane;
-
-    self_4143 = self_4142;
-    other_3739 = other_3738;
-    let _e4: Line = self_4143;
-    let _e5: Plane = other_3739;
-    let _e6: Plane = plane_inverse(_e5);
-    let _e7: Flector = line_plane_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn line_plane_transformation(self_4144: Line, other_3740: Plane) -> Plane {
-    var self_4145: Line;
-    var other_3741: Plane;
-
-    self_4145 = self_4144;
-    other_3741 = other_3740;
-    let _e4: Line = self_4145;
-    let _e5: Plane = other_3741;
-    let _e6: Flector = line_plane_geometric_product(_e4, _e5);
-    let _e7: Line = self_4145;
-    let _e8: Line = line_reversal(_e7);
-    let _e9: Flector = flector_line_geometric_product(_e6, _e8);
-    let _e10: Plane = flector_plane_into(_e9);
-    return _e10;
-}
-
-fn line_point_geometric_quotient(self_4146: Line, other_3742: Point) -> Flector {
-    var self_4147: Line;
-    var other_3743: Point;
-
-    self_4147 = self_4146;
-    other_3743 = other_3742;
-    let _e4: Line = self_4147;
-    let _e5: Point = other_3743;
-    let _e6: Point = point_inverse(_e5);
-    let _e7: Flector = line_point_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn line_point_transformation(self_4148: Line, other_3744: Point) -> Point {
-    var self_4149: Line;
-    var other_3745: Point;
-
-    self_4149 = self_4148;
-    other_3745 = other_3744;
-    let _e4: Line = self_4149;
-    let _e5: Point = other_3745;
-    let _e6: Flector = line_point_geometric_product(_e4, _e5);
-    let _e7: Line = self_4149;
-    let _e8: Line = line_reversal(_e7);
-    let _e9: Flector = flector_line_geometric_product(_e6, _e8);
-    let _e10: Point = flector_point_into(_e9);
-    return _e10;
-}
-
-fn line_rotor_transformation(self_4150: Line, other_3746: Rotor) -> Rotor {
-    var self_4151: Line;
-    var other_3747: Rotor;
-
-    self_4151 = self_4150;
-    other_3747 = other_3746;
-    let _e4: Line = self_4151;
-    let _e5: Rotor = other_3747;
-    let _e6: Rotor = line_rotor_geometric_product(_e4, _e5);
-    let _e7: Line = self_4151;
-    let _e8: Line = line_reversal(_e7);
-    let _e9: Rotor = rotor_line_geometric_product(_e6, _e8);
-    return _e9;
-}
-
-fn line_scalar_geometric_quotient(self_4152: Line, other_3748: Scalar) -> Line {
-    var self_4153: Line;
-    var other_3749: Scalar;
-
-    self_4153 = self_4152;
-    other_3749 = other_3748;
-    let _e4: Line = self_4153;
-    let _e5: Scalar = other_3749;
-    let _e6: Scalar = scalar_inverse(_e5);
-    let _e7: Line = line_scalar_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn line_scalar_transformation(self_4154: Line, other_3750: Scalar) -> Scalar {
-    var self_4155: Line;
-    var other_3751: Scalar;
-
-    self_4155 = self_4154;
-    other_3751 = other_3750;
-    let _e4: Line = self_4155;
-    let _e5: Scalar = other_3751;
-    let _e6: Line = line_scalar_geometric_product(_e4, _e5);
-    let _e7: Line = self_4155;
-    let _e8: Line = line_reversal(_e7);
-    let _e9: MultiVector = line_line_geometric_product(_e6, _e8);
-    let _e10: Scalar = multi_vector_scalar_into(_e9);
-    return _e10;
-}
-
-fn line_translator_geometric_quotient(self_4156: Line, other_3752: Translator) -> MultiVector {
-    var self_4157: Line;
-    var other_3753: Translator;
-
-    self_4157 = self_4156;
-    other_3753 = other_3752;
-    let _e4: Line = self_4157;
-    let _e5: Translator = other_3753;
-    let _e6: Translator = translator_inverse(_e5);
-    let _e7: MultiVector = line_translator_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn line_translator_transformation(self_4158: Line, other_3754: Translator) -> Translator {
-    var self_4159: Line;
-    var other_3755: Translator;
-
-    self_4159 = self_4158;
-    other_3755 = other_3754;
-    let _e4: Line = self_4159;
-    let _e5: Translator = other_3755;
-    let _e6: MultiVector = line_translator_geometric_product(_e4, _e5);
-    let _e7: Line = self_4159;
-    let _e8: Line = line_reversal(_e7);
-    let _e9: MultiVector = multi_vector_line_geometric_product(_e6, _e8);
-    let _e10: Translator = multi_vector_translator_into(_e9);
-    return _e10;
-}
-
-fn motor_anti_scalar_transformation(self_4160: Motor, other_3756: AntiScalar) -> AntiScalar {
-    var self_4161: Motor;
-    var other_3757: AntiScalar;
-
-    self_4161 = self_4160;
-    other_3757 = other_3756;
-    let _e4: Motor = self_4161;
-    let _e5: AntiScalar = other_3757;
-    let _e6: Rotor = motor_anti_scalar_geometric_product(_e4, _e5);
-    let _e7: Motor = self_4161;
-    let _e8: Motor = motor_reversal(_e7);
-    let _e9: Rotor = rotor_motor_geometric_product(_e6, _e8);
-    let _e10: AntiScalar = rotor_anti_scalar_into(_e9);
-    return _e10;
-}
-
-fn motor_flector_geometric_quotient(self_4162: Motor, other_3758: Flector) -> Flector {
-    var self_4163: Motor;
-    var other_3759: Flector;
-
-    self_4163 = self_4162;
-    other_3759 = other_3758;
-    let _e4: Motor = self_4163;
-    let _e5: Flector = other_3759;
-    let _e6: Flector = flector_inverse(_e5);
-    let _e7: Flector = motor_flector_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn motor_flector_transformation(self_4164: Motor, other_3760: Flector) -> Flector {
-    var self_4165: Motor;
-    var other_3761: Flector;
-
-    self_4165 = self_4164;
-    other_3761 = other_3760;
-    let _e4: Motor = self_4165;
-    let _e5: Flector = other_3761;
-    let _e6: Flector = motor_flector_geometric_product(_e4, _e5);
-    let _e7: Motor = self_4165;
-    let _e8: Motor = motor_reversal(_e7);
-    let _e9: Flector = flector_motor_geometric_product(_e6, _e8);
-    return _e9;
-}
-
-fn motor_homogeneous_magnitude_geometric_quotient(self_4166: Motor, other_3762: HomogeneousMagnitude) -> Motor {
-    var self_4167: Motor;
-    var other_3763: HomogeneousMagnitude;
-
-    self_4167 = self_4166;
-    other_3763 = other_3762;
-    let _e4: Motor = self_4167;
-    let _e5: HomogeneousMagnitude = other_3763;
-    let _e6: HomogeneousMagnitude = homogeneous_magnitude_inverse(_e5);
-    let _e7: Motor = motor_homogeneous_magnitude_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn motor_homogeneous_magnitude_transformation(self_4168: Motor, other_3764: HomogeneousMagnitude) -> HomogeneousMagnitude {
-    var self_4169: Motor;
-    var other_3765: HomogeneousMagnitude;
-
-    self_4169 = self_4168;
-    other_3765 = other_3764;
-    let _e4: Motor = self_4169;
-    let _e5: HomogeneousMagnitude = other_3765;
-    let _e6: Motor = motor_homogeneous_magnitude_geometric_product(_e4, _e5);
-    let _e7: Motor = self_4169;
-    let _e8: Motor = motor_reversal(_e7);
-    let _e9: MultiVector = motor_motor_geometric_product(_e6, _e8);
-    let _e10: HomogeneousMagnitude = multi_vector_homogeneous_magnitude_into(_e9);
-    return _e10;
-}
-
-fn motor_line_geometric_quotient(self_4170: Motor, other_3766: Line) -> MultiVector {
-    var self_4171: Motor;
-    var other_3767: Line;
-
-    self_4171 = self_4170;
-    other_3767 = other_3766;
-    let _e4: Motor = self_4171;
-    let _e5: Line = other_3767;
-    let _e6: Line = line_inverse(_e5);
-    let _e7: MultiVector = motor_line_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn motor_line_transformation(self_4172: Motor, other_3768: Line) -> Line {
-    var self_4173: Motor;
-    var other_3769: Line;
-
-    self_4173 = self_4172;
-    other_3769 = other_3768;
-    let _e4: Motor = self_4173;
-    let _e5: Line = other_3769;
-    let _e6: MultiVector = motor_line_geometric_product(_e4, _e5);
-    let _e7: Motor = self_4173;
-    let _e8: Motor = motor_reversal(_e7);
-    let _e9: MultiVector = multi_vector_motor_geometric_product(_e6, _e8);
-    let _e10: Line = multi_vector_line_into(_e9);
-    return _e10;
-}
-
-fn motor_motor_geometric_quotient(self_4174: Motor, other_3770: Motor) -> MultiVector {
-    var self_4175: Motor;
-    var other_3771: Motor;
-
-    self_4175 = self_4174;
-    other_3771 = other_3770;
-    let _e4: Motor = self_4175;
-    let _e5: Motor = other_3771;
-    let _e6: Motor = motor_inverse(_e5);
-    let _e7: MultiVector = motor_motor_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn motor_motor_transformation(self_4176: Motor, other_3772: Motor) -> Motor {
-    var self_4177: Motor;
-    var other_3773: Motor;
-
-    self_4177 = self_4176;
-    other_3773 = other_3772;
-    let _e4: Motor = self_4177;
-    let _e5: Motor = other_3773;
-    let _e6: MultiVector = motor_motor_geometric_product(_e4, _e5);
-    let _e7: Motor = self_4177;
-    let _e8: Motor = motor_reversal(_e7);
-    let _e9: MultiVector = multi_vector_motor_geometric_product(_e6, _e8);
-    let _e10: Motor = multi_vector_motor_into(_e9);
-    return _e10;
-}
-
-fn motor_multi_vector_geometric_quotient(self_4178: Motor, other_3774: MultiVector) -> MultiVector {
-    var self_4179: Motor;
-    var other_3775: MultiVector;
-
-    self_4179 = self_4178;
-    other_3775 = other_3774;
-    let _e4: Motor = self_4179;
-    let _e5: MultiVector = other_3775;
-    let _e6: MultiVector = multi_vector_inverse(_e5);
-    let _e7: MultiVector = motor_multi_vector_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn motor_multi_vector_transformation(self_4180: Motor, other_3776: MultiVector) -> MultiVector {
-    var self_4181: Motor;
-    var other_3777: MultiVector;
-
-    self_4181 = self_4180;
-    other_3777 = other_3776;
-    let _e4: Motor = self_4181;
-    let _e5: MultiVector = other_3777;
-    let _e6: MultiVector = motor_multi_vector_geometric_product(_e4, _e5);
-    let _e7: Motor = self_4181;
-    let _e8: Motor = motor_reversal(_e7);
-    let _e9: MultiVector = multi_vector_motor_geometric_product(_e6, _e8);
-    return _e9;
-}
-
-fn motor_plane_geometric_quotient(self_4182: Motor, other_3778: Plane) -> Flector {
-    var self_4183: Motor;
-    var other_3779: Plane;
-
-    self_4183 = self_4182;
-    other_3779 = other_3778;
-    let _e4: Motor = self_4183;
-    let _e5: Plane = other_3779;
-    let _e6: Plane = plane_inverse(_e5);
-    let _e7: Flector = motor_plane_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn motor_plane_transformation(self_4184: Motor, other_3780: Plane) -> Plane {
-    var self_4185: Motor;
-    var other_3781: Plane;
-
-    self_4185 = self_4184;
-    other_3781 = other_3780;
-    let _e4: Motor = self_4185;
-    let _e5: Plane = other_3781;
-    let _e6: Flector = motor_plane_geometric_product(_e4, _e5);
-    let _e7: Motor = self_4185;
-    let _e8: Motor = motor_reversal(_e7);
-    let _e9: Flector = flector_motor_geometric_product(_e6, _e8);
-    let _e10: Plane = flector_plane_into(_e9);
-    return _e10;
-}
-
-fn motor_point_geometric_quotient(self_4186: Motor, other_3782: Point) -> Flector {
-    var self_4187: Motor;
-    var other_3783: Point;
-
-    self_4187 = self_4186;
-    other_3783 = other_3782;
-    let _e4: Motor = self_4187;
-    let _e5: Point = other_3783;
-    let _e6: Point = point_inverse(_e5);
-    let _e7: Flector = motor_point_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn motor_point_transformation(self_4188: Motor, other_3784: Point) -> Point {
-    var self_4189: Motor;
-    var other_3785: Point;
-
-    self_4189 = self_4188;
-    other_3785 = other_3784;
-    let _e4: Motor = self_4189;
-    let _e5: Point = other_3785;
-    let _e6: Flector = motor_point_geometric_product(_e4, _e5);
-    let _e7: Motor = self_4189;
-    let _e8: Motor = motor_reversal(_e7);
-    let _e9: Flector = flector_motor_geometric_product(_e6, _e8);
-    let _e10: Point = flector_point_into(_e9);
-    return _e10;
-}
-
-fn motor_rotor_transformation(self_4190: Motor, other_3786: Rotor) -> Rotor {
-    var self_4191: Motor;
-    var other_3787: Rotor;
-
-    self_4191 = self_4190;
-    other_3787 = other_3786;
-    let _e4: Motor = self_4191;
-    let _e5: Rotor = other_3787;
-    let _e6: Rotor = motor_rotor_geometric_product(_e4, _e5);
-    let _e7: Motor = self_4191;
-    let _e8: Motor = motor_reversal(_e7);
-    let _e9: Rotor = rotor_motor_geometric_product(_e6, _e8);
-    return _e9;
-}
-
-fn motor_scalar_geometric_quotient(self_4192: Motor, other_3788: Scalar) -> Motor {
-    var self_4193: Motor;
-    var other_3789: Scalar;
-
-    self_4193 = self_4192;
-    other_3789 = other_3788;
-    let _e4: Motor = self_4193;
-    let _e5: Scalar = other_3789;
-    let _e6: Scalar = scalar_inverse(_e5);
-    let _e7: Motor = motor_scalar_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn motor_scalar_transformation(self_4194: Motor, other_3790: Scalar) -> Scalar {
-    var self_4195: Motor;
-    var other_3791: Scalar;
-
-    self_4195 = self_4194;
-    other_3791 = other_3790;
-    let _e4: Motor = self_4195;
-    let _e5: Scalar = other_3791;
-    let _e6: Motor = motor_scalar_geometric_product(_e4, _e5);
-    let _e7: Motor = self_4195;
-    let _e8: Motor = motor_reversal(_e7);
-    let _e9: MultiVector = motor_motor_geometric_product(_e6, _e8);
-    let _e10: Scalar = multi_vector_scalar_into(_e9);
-    return _e10;
-}
-
-fn motor_translator_geometric_quotient(self_4196: Motor, other_3792: Translator) -> MultiVector {
-    var self_4197: Motor;
-    var other_3793: Translator;
-
-    self_4197 = self_4196;
-    other_3793 = other_3792;
-    let _e4: Motor = self_4197;
-    let _e5: Translator = other_3793;
-    let _e6: Translator = translator_inverse(_e5);
-    let _e7: MultiVector = motor_translator_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn motor_translator_transformation(self_4198: Motor, other_3794: Translator) -> Translator {
-    var self_4199: Motor;
-    var other_3795: Translator;
-
-    self_4199 = self_4198;
-    other_3795 = other_3794;
-    let _e4: Motor = self_4199;
-    let _e5: Translator = other_3795;
-    let _e6: MultiVector = motor_translator_geometric_product(_e4, _e5);
-    let _e7: Motor = self_4199;
-    let _e8: Motor = motor_reversal(_e7);
-    let _e9: MultiVector = multi_vector_motor_geometric_product(_e6, _e8);
-    let _e10: Translator = multi_vector_translator_into(_e9);
-    return _e10;
-}
-
-fn multi_vector_anti_scalar_transformation(self_4200: MultiVector, other_3796: AntiScalar) -> AntiScalar {
-    var self_4201: MultiVector;
-    var other_3797: AntiScalar;
-
-    self_4201 = self_4200;
-    other_3797 = other_3796;
-    let _e4: MultiVector = self_4201;
-    let _e5: AntiScalar = other_3797;
-    let _e6: MultiVector = multi_vector_anti_scalar_geometric_product(_e4, _e5);
-    let _e7: MultiVector = self_4201;
-    let _e8: MultiVector = multi_vector_reversal(_e7);
-    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
-    let _e10: AntiScalar = multi_vector_anti_scalar_into(_e9);
-    return _e10;
-}
-
-fn multi_vector_flector_geometric_quotient(self_4202: MultiVector, other_3798: Flector) -> MultiVector {
-    var self_4203: MultiVector;
-    var other_3799: Flector;
-
-    self_4203 = self_4202;
-    other_3799 = other_3798;
-    let _e4: MultiVector = self_4203;
-    let _e5: Flector = other_3799;
-    let _e6: Flector = flector_inverse(_e5);
-    let _e7: MultiVector = multi_vector_flector_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn multi_vector_flector_transformation(self_4204: MultiVector, other_3800: Flector) -> Flector {
-    var self_4205: MultiVector;
-    var other_3801: Flector;
-
-    self_4205 = self_4204;
-    other_3801 = other_3800;
-    let _e4: MultiVector = self_4205;
-    let _e5: Flector = other_3801;
-    let _e6: MultiVector = multi_vector_flector_geometric_product(_e4, _e5);
-    let _e7: MultiVector = self_4205;
-    let _e8: MultiVector = multi_vector_reversal(_e7);
-    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
-    let _e10: Flector = multi_vector_flector_into(_e9);
-    return _e10;
-}
-
-fn multi_vector_homogeneous_magnitude_geometric_quotient(self_4206: MultiVector, other_3802: HomogeneousMagnitude) -> MultiVector {
-    var self_4207: MultiVector;
-    var other_3803: HomogeneousMagnitude;
-
-    self_4207 = self_4206;
-    other_3803 = other_3802;
-    let _e4: MultiVector = self_4207;
-    let _e5: HomogeneousMagnitude = other_3803;
-    let _e6: HomogeneousMagnitude = homogeneous_magnitude_inverse(_e5);
-    let _e7: MultiVector = multi_vector_homogeneous_magnitude_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn multi_vector_homogeneous_magnitude_transformation(self_4208: MultiVector, other_3804: HomogeneousMagnitude) -> HomogeneousMagnitude {
-    var self_4209: MultiVector;
-    var other_3805: HomogeneousMagnitude;
-
-    self_4209 = self_4208;
-    other_3805 = other_3804;
-    let _e4: MultiVector = self_4209;
-    let _e5: HomogeneousMagnitude = other_3805;
-    let _e6: MultiVector = multi_vector_homogeneous_magnitude_geometric_product(_e4, _e5);
-    let _e7: MultiVector = self_4209;
-    let _e8: MultiVector = multi_vector_reversal(_e7);
-    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
-    let _e10: HomogeneousMagnitude = multi_vector_homogeneous_magnitude_into(_e9);
-    return _e10;
-}
-
-fn multi_vector_line_geometric_quotient(self_4210: MultiVector, other_3806: Line) -> MultiVector {
-    var self_4211: MultiVector;
-    var other_3807: Line;
-
-    self_4211 = self_4210;
-    other_3807 = other_3806;
-    let _e4: MultiVector = self_4211;
-    let _e5: Line = other_3807;
-    let _e6: Line = line_inverse(_e5);
-    let _e7: MultiVector = multi_vector_line_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn multi_vector_line_transformation(self_4212: MultiVector, other_3808: Line) -> Line {
-    var self_4213: MultiVector;
-    var other_3809: Line;
-
-    self_4213 = self_4212;
-    other_3809 = other_3808;
-    let _e4: MultiVector = self_4213;
-    let _e5: Line = other_3809;
-    let _e6: MultiVector = multi_vector_line_geometric_product(_e4, _e5);
-    let _e7: MultiVector = self_4213;
-    let _e8: MultiVector = multi_vector_reversal(_e7);
-    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
-    let _e10: Line = multi_vector_line_into(_e9);
-    return _e10;
-}
-
-fn multi_vector_motor_geometric_quotient(self_4214: MultiVector, other_3810: Motor) -> MultiVector {
-    var self_4215: MultiVector;
-    var other_3811: Motor;
-
-    self_4215 = self_4214;
-    other_3811 = other_3810;
-    let _e4: MultiVector = self_4215;
-    let _e5: Motor = other_3811;
-    let _e6: Motor = motor_inverse(_e5);
-    let _e7: MultiVector = multi_vector_motor_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn multi_vector_motor_transformation(self_4216: MultiVector, other_3812: Motor) -> Motor {
-    var self_4217: MultiVector;
-    var other_3813: Motor;
-
-    self_4217 = self_4216;
-    other_3813 = other_3812;
-    let _e4: MultiVector = self_4217;
-    let _e5: Motor = other_3813;
-    let _e6: MultiVector = multi_vector_motor_geometric_product(_e4, _e5);
-    let _e7: MultiVector = self_4217;
-    let _e8: MultiVector = multi_vector_reversal(_e7);
-    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
-    let _e10: Motor = multi_vector_motor_into(_e9);
-    return _e10;
-}
-
-fn multi_vector_powi(self_4218: MultiVector, exponent_2: i32) -> MultiVector {
-    var self_4219: MultiVector;
+fn homogeneous_magnitude_powi(self_4052: HomogeneousMagnitude, exponent_2: i32) -> HomogeneousMagnitude {
+    var self_4053: HomogeneousMagnitude;
     var exponent_3: i32;
-    var local_1: MultiVector;
-    var x_1: MultiVector;
-    var y_1: MultiVector;
+    var local_1: HomogeneousMagnitude;
+    var x_1: HomogeneousMagnitude;
+    var y_1: HomogeneousMagnitude;
     var n_1: i32;
 
-    self_4219 = self_4218;
+    self_4053 = self_4052;
     exponent_3 = exponent_2;
     let _e4: i32 = exponent_3;
     if (_e4 == 0) {
         {
-            let _e7: MultiVector = multi_vector_one();
+            let _e7: HomogeneousMagnitude = homogeneous_magnitude_one();
             return _e7;
         }
     }
     let _e8: i32 = exponent_3;
     if (_e8 < 0) {
-        let _e11: MultiVector = self_4219;
-        let _e12: MultiVector = multi_vector_inverse(_e11);
+        let _e11: HomogeneousMagnitude = self_4053;
+        let _e12: HomogeneousMagnitude = homogeneous_magnitude_inverse(_e11);
         local_1 = _e12;
     } else {
-        let _e14: MultiVector = self_4219;
+        let _e14: HomogeneousMagnitude = self_4053;
         local_1 = _e14;
     }
-    let _e15: MultiVector = local_1;
+    let _e15: HomogeneousMagnitude = local_1;
     x_1 = _e15;
-    let _e17: MultiVector = multi_vector_one();
+    let _e17: HomogeneousMagnitude = homogeneous_magnitude_one();
     y_1 = _e17;
     let _e19: i32 = exponent_3;
     n_1 = abs(_e19);
@@ -42075,1204 +40855,1082 @@ fn multi_vector_powi(self_4218: MultiVector, exponent_2: i32) -> MultiVector {
             let _e26: i32 = n_1;
             if ((_e26 & 1) == 1) {
                 {
-                    let _e31: MultiVector = x_1;
-                    let _e32: MultiVector = y_1;
-                    let _e33: MultiVector = multi_vector_multi_vector_geometric_product(_e31, _e32);
+                    let _e31: HomogeneousMagnitude = x_1;
+                    let _e32: HomogeneousMagnitude = y_1;
+                    let _e33: HomogeneousMagnitude = homogeneous_magnitude_homogeneous_magnitude_geometric_product(_e31, _e32);
                     y_1 = _e33;
                 }
             }
-            let _e34: MultiVector = x_1;
-            let _e35: MultiVector = x_1;
-            let _e36: MultiVector = multi_vector_multi_vector_geometric_product(_e34, _e35);
+            let _e34: HomogeneousMagnitude = x_1;
+            let _e35: HomogeneousMagnitude = x_1;
+            let _e36: HomogeneousMagnitude = homogeneous_magnitude_homogeneous_magnitude_geometric_product(_e34, _e35);
             x_1 = _e36;
             let _e37: i32 = n_1;
             n_1 = (_e37 >> 1u);
         }
     }
-    let _e40: MultiVector = x_1;
-    let _e41: MultiVector = y_1;
-    let _e42: MultiVector = multi_vector_multi_vector_geometric_product(_e40, _e41);
+    let _e40: HomogeneousMagnitude = x_1;
+    let _e41: HomogeneousMagnitude = y_1;
+    let _e42: HomogeneousMagnitude = homogeneous_magnitude_homogeneous_magnitude_geometric_product(_e40, _e41);
     return _e42;
 }
 
-fn multi_vector_multi_vector_geometric_quotient(self_4220: MultiVector, other_3814: MultiVector) -> MultiVector {
-    var self_4221: MultiVector;
-    var other_3815: MultiVector;
+fn homogeneous_magnitude_homogeneous_magnitude_geometric_quotient(self_4054: HomogeneousMagnitude, other_3648: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_4055: HomogeneousMagnitude;
+    var other_3649: HomogeneousMagnitude;
 
-    self_4221 = self_4220;
-    other_3815 = other_3814;
-    let _e4: MultiVector = self_4221;
-    let _e5: MultiVector = other_3815;
-    let _e6: MultiVector = multi_vector_inverse(_e5);
-    let _e7: MultiVector = multi_vector_multi_vector_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn multi_vector_multi_vector_transformation(self_4222: MultiVector, other_3816: MultiVector) -> MultiVector {
-    var self_4223: MultiVector;
-    var other_3817: MultiVector;
-
-    self_4223 = self_4222;
-    other_3817 = other_3816;
-    let _e4: MultiVector = self_4223;
-    let _e5: MultiVector = other_3817;
-    let _e6: MultiVector = multi_vector_multi_vector_geometric_product(_e4, _e5);
-    let _e7: MultiVector = self_4223;
-    let _e8: MultiVector = multi_vector_reversal(_e7);
-    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
-    return _e9;
-}
-
-fn multi_vector_plane_geometric_quotient(self_4224: MultiVector, other_3818: Plane) -> MultiVector {
-    var self_4225: MultiVector;
-    var other_3819: Plane;
-
-    self_4225 = self_4224;
-    other_3819 = other_3818;
-    let _e4: MultiVector = self_4225;
-    let _e5: Plane = other_3819;
-    let _e6: Plane = plane_inverse(_e5);
-    let _e7: MultiVector = multi_vector_plane_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn multi_vector_plane_transformation(self_4226: MultiVector, other_3820: Plane) -> Plane {
-    var self_4227: MultiVector;
-    var other_3821: Plane;
-
-    self_4227 = self_4226;
-    other_3821 = other_3820;
-    let _e4: MultiVector = self_4227;
-    let _e5: Plane = other_3821;
-    let _e6: MultiVector = multi_vector_plane_geometric_product(_e4, _e5);
-    let _e7: MultiVector = self_4227;
-    let _e8: MultiVector = multi_vector_reversal(_e7);
-    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
-    let _e10: Plane = multi_vector_plane_into(_e9);
-    return _e10;
-}
-
-fn multi_vector_point_geometric_quotient(self_4228: MultiVector, other_3822: Point) -> MultiVector {
-    var self_4229: MultiVector;
-    var other_3823: Point;
-
-    self_4229 = self_4228;
-    other_3823 = other_3822;
-    let _e4: MultiVector = self_4229;
-    let _e5: Point = other_3823;
-    let _e6: Point = point_inverse(_e5);
-    let _e7: MultiVector = multi_vector_point_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn multi_vector_point_transformation(self_4230: MultiVector, other_3824: Point) -> Point {
-    var self_4231: MultiVector;
-    var other_3825: Point;
-
-    self_4231 = self_4230;
-    other_3825 = other_3824;
-    let _e4: MultiVector = self_4231;
-    let _e5: Point = other_3825;
-    let _e6: MultiVector = multi_vector_point_geometric_product(_e4, _e5);
-    let _e7: MultiVector = self_4231;
-    let _e8: MultiVector = multi_vector_reversal(_e7);
-    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
-    let _e10: Point = multi_vector_point_into(_e9);
-    return _e10;
-}
-
-fn multi_vector_rotor_transformation(self_4232: MultiVector, other_3826: Rotor) -> Rotor {
-    var self_4233: MultiVector;
-    var other_3827: Rotor;
-
-    self_4233 = self_4232;
-    other_3827 = other_3826;
-    let _e4: MultiVector = self_4233;
-    let _e5: Rotor = other_3827;
-    let _e6: MultiVector = multi_vector_rotor_geometric_product(_e4, _e5);
-    let _e7: MultiVector = self_4233;
-    let _e8: MultiVector = multi_vector_reversal(_e7);
-    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
-    let _e10: Rotor = multi_vector_rotor_into(_e9);
-    return _e10;
-}
-
-fn multi_vector_scalar_geometric_quotient(self_4234: MultiVector, other_3828: Scalar) -> MultiVector {
-    var self_4235: MultiVector;
-    var other_3829: Scalar;
-
-    self_4235 = self_4234;
-    other_3829 = other_3828;
-    let _e4: MultiVector = self_4235;
-    let _e5: Scalar = other_3829;
-    let _e6: Scalar = scalar_inverse(_e5);
-    let _e7: MultiVector = multi_vector_scalar_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn multi_vector_scalar_transformation(self_4236: MultiVector, other_3830: Scalar) -> Scalar {
-    var self_4237: MultiVector;
-    var other_3831: Scalar;
-
-    self_4237 = self_4236;
-    other_3831 = other_3830;
-    let _e4: MultiVector = self_4237;
-    let _e5: Scalar = other_3831;
-    let _e6: MultiVector = multi_vector_scalar_geometric_product(_e4, _e5);
-    let _e7: MultiVector = self_4237;
-    let _e8: MultiVector = multi_vector_reversal(_e7);
-    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
-    let _e10: Scalar = multi_vector_scalar_into(_e9);
-    return _e10;
-}
-
-fn multi_vector_translator_geometric_quotient(self_4238: MultiVector, other_3832: Translator) -> MultiVector {
-    var self_4239: MultiVector;
-    var other_3833: Translator;
-
-    self_4239 = self_4238;
-    other_3833 = other_3832;
-    let _e4: MultiVector = self_4239;
-    let _e5: Translator = other_3833;
-    let _e6: Translator = translator_inverse(_e5);
-    let _e7: MultiVector = multi_vector_translator_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn multi_vector_translator_transformation(self_4240: MultiVector, other_3834: Translator) -> Translator {
-    var self_4241: MultiVector;
-    var other_3835: Translator;
-
-    self_4241 = self_4240;
-    other_3835 = other_3834;
-    let _e4: MultiVector = self_4241;
-    let _e5: Translator = other_3835;
-    let _e6: MultiVector = multi_vector_translator_geometric_product(_e4, _e5);
-    let _e7: MultiVector = self_4241;
-    let _e8: MultiVector = multi_vector_reversal(_e7);
-    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
-    let _e10: Translator = multi_vector_translator_into(_e9);
-    return _e10;
-}
-
-fn plane_anti_scalar_transformation(self_4242: Plane, other_3836: AntiScalar) -> AntiScalar {
-    var self_4243: Plane;
-    var other_3837: AntiScalar;
-
-    self_4243 = self_4242;
-    other_3837 = other_3836;
-    let _e4: Plane = self_4243;
-    let _e5: AntiScalar = other_3837;
-    let _e6: Point = plane_anti_scalar_geometric_product(_e4, _e5);
-    let _e7: Plane = self_4243;
-    let _e8: Plane = plane_reversal(_e7);
-    let _e9: Motor = point_plane_geometric_product(_e6, _e8);
-    let _e10: AntiScalar = motor_anti_scalar_into(_e9);
-    return _e10;
-}
-
-fn plane_flector_geometric_quotient(self_4244: Plane, other_3838: Flector) -> MultiVector {
-    var self_4245: Plane;
-    var other_3839: Flector;
-
-    self_4245 = self_4244;
-    other_3839 = other_3838;
-    let _e4: Plane = self_4245;
-    let _e5: Flector = other_3839;
-    let _e6: Flector = flector_inverse(_e5);
-    let _e7: MultiVector = plane_flector_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn plane_flector_transformation(self_4246: Plane, other_3840: Flector) -> Flector {
-    var self_4247: Plane;
-    var other_3841: Flector;
-
-    self_4247 = self_4246;
-    other_3841 = other_3840;
-    let _e4: Plane = self_4247;
-    let _e5: Flector = other_3841;
-    let _e6: MultiVector = plane_flector_geometric_product(_e4, _e5);
-    let _e7: Plane = self_4247;
-    let _e8: Plane = plane_reversal(_e7);
-    let _e9: MultiVector = multi_vector_plane_geometric_product(_e6, _e8);
-    let _e10: Flector = multi_vector_flector_into(_e9);
-    return _e10;
-}
-
-fn plane_homogeneous_magnitude_geometric_quotient(self_4248: Plane, other_3842: HomogeneousMagnitude) -> Flector {
-    var self_4249: Plane;
-    var other_3843: HomogeneousMagnitude;
-
-    self_4249 = self_4248;
-    other_3843 = other_3842;
-    let _e4: Plane = self_4249;
-    let _e5: HomogeneousMagnitude = other_3843;
+    self_4055 = self_4054;
+    other_3649 = other_3648;
+    let _e4: HomogeneousMagnitude = self_4055;
+    let _e5: HomogeneousMagnitude = other_3649;
     let _e6: HomogeneousMagnitude = homogeneous_magnitude_inverse(_e5);
-    let _e7: Flector = plane_homogeneous_magnitude_geometric_product(_e4, _e6);
+    let _e7: HomogeneousMagnitude = homogeneous_magnitude_homogeneous_magnitude_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn plane_homogeneous_magnitude_transformation(self_4250: Plane, other_3844: HomogeneousMagnitude) -> HomogeneousMagnitude {
-    var self_4251: Plane;
-    var other_3845: HomogeneousMagnitude;
+fn homogeneous_magnitude_point_geometric_quotient(self_4056: HomogeneousMagnitude, other_3650: Point) -> Flector {
+    var self_4057: HomogeneousMagnitude;
+    var other_3651: Point;
 
-    self_4251 = self_4250;
-    other_3845 = other_3844;
-    let _e4: Plane = self_4251;
-    let _e5: HomogeneousMagnitude = other_3845;
-    let _e6: Flector = plane_homogeneous_magnitude_geometric_product(_e4, _e5);
-    let _e7: Plane = self_4251;
-    let _e8: Plane = plane_reversal(_e7);
-    let _e9: MultiVector = flector_plane_geometric_product(_e6, _e8);
-    let _e10: HomogeneousMagnitude = multi_vector_homogeneous_magnitude_into(_e9);
-    return _e10;
-}
-
-fn plane_line_geometric_quotient(self_4252: Plane, other_3846: Line) -> Flector {
-    var self_4253: Plane;
-    var other_3847: Line;
-
-    self_4253 = self_4252;
-    other_3847 = other_3846;
-    let _e4: Plane = self_4253;
-    let _e5: Line = other_3847;
-    let _e6: Line = line_inverse(_e5);
-    let _e7: Flector = plane_line_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn plane_line_transformation(self_4254: Plane, other_3848: Line) -> Line {
-    var self_4255: Plane;
-    var other_3849: Line;
-
-    self_4255 = self_4254;
-    other_3849 = other_3848;
-    let _e4: Plane = self_4255;
-    let _e5: Line = other_3849;
-    let _e6: Flector = plane_line_geometric_product(_e4, _e5);
-    let _e7: Plane = self_4255;
-    let _e8: Plane = plane_reversal(_e7);
-    let _e9: MultiVector = flector_plane_geometric_product(_e6, _e8);
-    let _e10: Line = multi_vector_line_into(_e9);
-    return _e10;
-}
-
-fn plane_motor_geometric_quotient(self_4256: Plane, other_3850: Motor) -> Flector {
-    var self_4257: Plane;
-    var other_3851: Motor;
-
-    self_4257 = self_4256;
-    other_3851 = other_3850;
-    let _e4: Plane = self_4257;
-    let _e5: Motor = other_3851;
-    let _e6: Motor = motor_inverse(_e5);
-    let _e7: Flector = plane_motor_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn plane_motor_transformation(self_4258: Plane, other_3852: Motor) -> Motor {
-    var self_4259: Plane;
-    var other_3853: Motor;
-
-    self_4259 = self_4258;
-    other_3853 = other_3852;
-    let _e4: Plane = self_4259;
-    let _e5: Motor = other_3853;
-    let _e6: Flector = plane_motor_geometric_product(_e4, _e5);
-    let _e7: Plane = self_4259;
-    let _e8: Plane = plane_reversal(_e7);
-    let _e9: MultiVector = flector_plane_geometric_product(_e6, _e8);
-    let _e10: Motor = multi_vector_motor_into(_e9);
-    return _e10;
-}
-
-fn plane_multi_vector_geometric_quotient(self_4260: Plane, other_3854: MultiVector) -> MultiVector {
-    var self_4261: Plane;
-    var other_3855: MultiVector;
-
-    self_4261 = self_4260;
-    other_3855 = other_3854;
-    let _e4: Plane = self_4261;
-    let _e5: MultiVector = other_3855;
-    let _e6: MultiVector = multi_vector_inverse(_e5);
-    let _e7: MultiVector = plane_multi_vector_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn plane_multi_vector_transformation(self_4262: Plane, other_3856: MultiVector) -> MultiVector {
-    var self_4263: Plane;
-    var other_3857: MultiVector;
-
-    self_4263 = self_4262;
-    other_3857 = other_3856;
-    let _e4: Plane = self_4263;
-    let _e5: MultiVector = other_3857;
-    let _e6: MultiVector = plane_multi_vector_geometric_product(_e4, _e5);
-    let _e7: Plane = self_4263;
-    let _e8: Plane = plane_reversal(_e7);
-    let _e9: MultiVector = multi_vector_plane_geometric_product(_e6, _e8);
-    return _e9;
-}
-
-fn plane_plane_geometric_quotient(self_4264: Plane, other_3858: Plane) -> MultiVector {
-    var self_4265: Plane;
-    var other_3859: Plane;
-
-    self_4265 = self_4264;
-    other_3859 = other_3858;
-    let _e4: Plane = self_4265;
-    let _e5: Plane = other_3859;
-    let _e6: Plane = plane_inverse(_e5);
-    let _e7: MultiVector = plane_plane_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn plane_plane_transformation(self_4266: Plane, other_3860: Plane) -> Plane {
-    var self_4267: Plane;
-    var other_3861: Plane;
-
-    self_4267 = self_4266;
-    other_3861 = other_3860;
-    let _e4: Plane = self_4267;
-    let _e5: Plane = other_3861;
-    let _e6: MultiVector = plane_plane_geometric_product(_e4, _e5);
-    let _e7: Plane = self_4267;
-    let _e8: Plane = plane_reversal(_e7);
-    let _e9: MultiVector = multi_vector_plane_geometric_product(_e6, _e8);
-    let _e10: Plane = multi_vector_plane_into(_e9);
-    return _e10;
-}
-
-fn plane_point_geometric_quotient(self_4268: Plane, other_3862: Point) -> Motor {
-    var self_4269: Plane;
-    var other_3863: Point;
-
-    self_4269 = self_4268;
-    other_3863 = other_3862;
-    let _e4: Plane = self_4269;
-    let _e5: Point = other_3863;
+    self_4057 = self_4056;
+    other_3651 = other_3650;
+    let _e4: HomogeneousMagnitude = self_4057;
+    let _e5: Point = other_3651;
     let _e6: Point = point_inverse(_e5);
-    let _e7: Motor = plane_point_geometric_product(_e4, _e6);
+    let _e7: Flector = homogeneous_magnitude_point_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn plane_point_transformation(self_4270: Plane, other_3864: Point) -> Point {
-    var self_4271: Plane;
-    var other_3865: Point;
+fn homogeneous_magnitude_line_geometric_quotient(self_4058: HomogeneousMagnitude, other_3652: Line) -> Line {
+    var self_4059: HomogeneousMagnitude;
+    var other_3653: Line;
 
-    self_4271 = self_4270;
-    other_3865 = other_3864;
-    let _e4: Plane = self_4271;
-    let _e5: Point = other_3865;
-    let _e6: Motor = plane_point_geometric_product(_e4, _e5);
-    let _e7: Plane = self_4271;
-    let _e8: Plane = plane_reversal(_e7);
-    let _e9: Flector = motor_plane_geometric_product(_e6, _e8);
-    let _e10: Point = flector_point_into(_e9);
-    return _e10;
-}
-
-fn plane_rotor_transformation(self_4272: Plane, other_3866: Rotor) -> Rotor {
-    var self_4273: Plane;
-    var other_3867: Rotor;
-
-    self_4273 = self_4272;
-    other_3867 = other_3866;
-    let _e4: Plane = self_4273;
-    let _e5: Rotor = other_3867;
-    let _e6: Flector = plane_rotor_geometric_product(_e4, _e5);
-    let _e7: Plane = self_4273;
-    let _e8: Plane = plane_reversal(_e7);
-    let _e9: MultiVector = flector_plane_geometric_product(_e6, _e8);
-    let _e10: Rotor = multi_vector_rotor_into(_e9);
-    return _e10;
-}
-
-fn plane_scalar_geometric_quotient(self_4274: Plane, other_3868: Scalar) -> Plane {
-    var self_4275: Plane;
-    var other_3869: Scalar;
-
-    self_4275 = self_4274;
-    other_3869 = other_3868;
-    let _e4: Plane = self_4275;
-    let _e5: Scalar = other_3869;
-    let _e6: Scalar = scalar_inverse(_e5);
-    let _e7: Plane = plane_scalar_geometric_product(_e4, _e6);
+    self_4059 = self_4058;
+    other_3653 = other_3652;
+    let _e4: HomogeneousMagnitude = self_4059;
+    let _e5: Line = other_3653;
+    let _e6: Line = line_inverse(_e5);
+    let _e7: Line = homogeneous_magnitude_line_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn plane_scalar_transformation(self_4276: Plane, other_3870: Scalar) -> Scalar {
-    var self_4277: Plane;
-    var other_3871: Scalar;
+fn homogeneous_magnitude_plane_geometric_quotient(self_4060: HomogeneousMagnitude, other_3654: Plane) -> Flector {
+    var self_4061: HomogeneousMagnitude;
+    var other_3655: Plane;
 
-    self_4277 = self_4276;
-    other_3871 = other_3870;
-    let _e4: Plane = self_4277;
-    let _e5: Scalar = other_3871;
-    let _e6: Plane = plane_scalar_geometric_product(_e4, _e5);
-    let _e7: Plane = self_4277;
-    let _e8: Plane = plane_reversal(_e7);
-    let _e9: MultiVector = plane_plane_geometric_product(_e6, _e8);
-    let _e10: Scalar = multi_vector_scalar_into(_e9);
-    return _e10;
+    self_4061 = self_4060;
+    other_3655 = other_3654;
+    let _e4: HomogeneousMagnitude = self_4061;
+    let _e5: Plane = other_3655;
+    let _e6: Plane = plane_inverse(_e5);
+    let _e7: Flector = homogeneous_magnitude_plane_geometric_product(_e4, _e6);
+    return _e7;
 }
 
-fn plane_translator_geometric_quotient(self_4278: Plane, other_3872: Translator) -> Flector {
-    var self_4279: Plane;
-    var other_3873: Translator;
+fn homogeneous_magnitude_motor_geometric_quotient(self_4062: HomogeneousMagnitude, other_3656: Motor) -> Motor {
+    var self_4063: HomogeneousMagnitude;
+    var other_3657: Motor;
 
-    self_4279 = self_4278;
-    other_3873 = other_3872;
-    let _e4: Plane = self_4279;
-    let _e5: Translator = other_3873;
+    self_4063 = self_4062;
+    other_3657 = other_3656;
+    let _e4: HomogeneousMagnitude = self_4063;
+    let _e5: Motor = other_3657;
+    let _e6: Motor = motor_inverse(_e5);
+    let _e7: Motor = homogeneous_magnitude_motor_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_translator_geometric_quotient(self_4064: HomogeneousMagnitude, other_3658: Translator) -> Motor {
+    var self_4065: HomogeneousMagnitude;
+    var other_3659: Translator;
+
+    self_4065 = self_4064;
+    other_3659 = other_3658;
+    let _e4: HomogeneousMagnitude = self_4065;
+    let _e5: Translator = other_3659;
     let _e6: Translator = translator_inverse(_e5);
-    let _e7: Flector = plane_translator_geometric_product(_e4, _e6);
+    let _e7: Motor = homogeneous_magnitude_translator_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn plane_translator_transformation(self_4280: Plane, other_3874: Translator) -> Translator {
-    var self_4281: Plane;
-    var other_3875: Translator;
+fn homogeneous_magnitude_flector_geometric_quotient(self_4066: HomogeneousMagnitude, other_3660: Flector) -> Flector {
+    var self_4067: HomogeneousMagnitude;
+    var other_3661: Flector;
 
-    self_4281 = self_4280;
-    other_3875 = other_3874;
-    let _e4: Plane = self_4281;
-    let _e5: Translator = other_3875;
-    let _e6: Flector = plane_translator_geometric_product(_e4, _e5);
-    let _e7: Plane = self_4281;
-    let _e8: Plane = plane_reversal(_e7);
-    let _e9: MultiVector = flector_plane_geometric_product(_e6, _e8);
-    let _e10: Translator = multi_vector_translator_into(_e9);
-    return _e10;
-}
-
-fn point_anti_scalar_transformation(self_4282: Point, other_3876: AntiScalar) -> AntiScalar {
-    var self_4283: Point;
-    var other_3877: AntiScalar;
-
-    self_4283 = self_4282;
-    other_3877 = other_3876;
-    let _e4: Point = self_4283;
-    let _e5: AntiScalar = other_3877;
-    let _e6: Plane = point_anti_scalar_geometric_product(_e4, _e5);
-    let _e7: Point = self_4283;
-    let _e8: Point = point_reversal(_e7);
-    let _e9: Motor = plane_point_geometric_product(_e6, _e8);
-    let _e10: AntiScalar = motor_anti_scalar_into(_e9);
-    return _e10;
-}
-
-fn point_flector_geometric_quotient(self_4284: Point, other_3878: Flector) -> MultiVector {
-    var self_4285: Point;
-    var other_3879: Flector;
-
-    self_4285 = self_4284;
-    other_3879 = other_3878;
-    let _e4: Point = self_4285;
-    let _e5: Flector = other_3879;
+    self_4067 = self_4066;
+    other_3661 = other_3660;
+    let _e4: HomogeneousMagnitude = self_4067;
+    let _e5: Flector = other_3661;
     let _e6: Flector = flector_inverse(_e5);
-    let _e7: MultiVector = point_flector_geometric_product(_e4, _e6);
+    let _e7: Flector = homogeneous_magnitude_flector_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn point_flector_transformation(self_4286: Point, other_3880: Flector) -> Flector {
-    var self_4287: Point;
-    var other_3881: Flector;
+fn homogeneous_magnitude_multi_vector_geometric_quotient(self_4068: HomogeneousMagnitude, other_3662: MultiVector) -> MultiVector {
+    var self_4069: HomogeneousMagnitude;
+    var other_3663: MultiVector;
 
-    self_4287 = self_4286;
-    other_3881 = other_3880;
-    let _e4: Point = self_4287;
-    let _e5: Flector = other_3881;
-    let _e6: MultiVector = point_flector_geometric_product(_e4, _e5);
-    let _e7: Point = self_4287;
-    let _e8: Point = point_reversal(_e7);
-    let _e9: MultiVector = multi_vector_point_geometric_product(_e6, _e8);
-    let _e10: Flector = multi_vector_flector_into(_e9);
-    return _e10;
-}
-
-fn point_homogeneous_magnitude_geometric_quotient(self_4288: Point, other_3882: HomogeneousMagnitude) -> Flector {
-    var self_4289: Point;
-    var other_3883: HomogeneousMagnitude;
-
-    self_4289 = self_4288;
-    other_3883 = other_3882;
-    let _e4: Point = self_4289;
-    let _e5: HomogeneousMagnitude = other_3883;
-    let _e6: HomogeneousMagnitude = homogeneous_magnitude_inverse(_e5);
-    let _e7: Flector = point_homogeneous_magnitude_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn point_homogeneous_magnitude_transformation(self_4290: Point, other_3884: HomogeneousMagnitude) -> HomogeneousMagnitude {
-    var self_4291: Point;
-    var other_3885: HomogeneousMagnitude;
-
-    self_4291 = self_4290;
-    other_3885 = other_3884;
-    let _e4: Point = self_4291;
-    let _e5: HomogeneousMagnitude = other_3885;
-    let _e6: Flector = point_homogeneous_magnitude_geometric_product(_e4, _e5);
-    let _e7: Point = self_4291;
-    let _e8: Point = point_reversal(_e7);
-    let _e9: MultiVector = flector_point_geometric_product(_e6, _e8);
-    let _e10: HomogeneousMagnitude = multi_vector_homogeneous_magnitude_into(_e9);
-    return _e10;
-}
-
-fn point_line_geometric_quotient(self_4292: Point, other_3886: Line) -> Flector {
-    var self_4293: Point;
-    var other_3887: Line;
-
-    self_4293 = self_4292;
-    other_3887 = other_3886;
-    let _e4: Point = self_4293;
-    let _e5: Line = other_3887;
-    let _e6: Line = line_inverse(_e5);
-    let _e7: Flector = point_line_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn point_line_transformation(self_4294: Point, other_3888: Line) -> Line {
-    var self_4295: Point;
-    var other_3889: Line;
-
-    self_4295 = self_4294;
-    other_3889 = other_3888;
-    let _e4: Point = self_4295;
-    let _e5: Line = other_3889;
-    let _e6: Flector = point_line_geometric_product(_e4, _e5);
-    let _e7: Point = self_4295;
-    let _e8: Point = point_reversal(_e7);
-    let _e9: MultiVector = flector_point_geometric_product(_e6, _e8);
-    let _e10: Line = multi_vector_line_into(_e9);
-    return _e10;
-}
-
-fn point_motor_geometric_quotient(self_4296: Point, other_3890: Motor) -> Flector {
-    var self_4297: Point;
-    var other_3891: Motor;
-
-    self_4297 = self_4296;
-    other_3891 = other_3890;
-    let _e4: Point = self_4297;
-    let _e5: Motor = other_3891;
-    let _e6: Motor = motor_inverse(_e5);
-    let _e7: Flector = point_motor_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn point_motor_transformation(self_4298: Point, other_3892: Motor) -> Motor {
-    var self_4299: Point;
-    var other_3893: Motor;
-
-    self_4299 = self_4298;
-    other_3893 = other_3892;
-    let _e4: Point = self_4299;
-    let _e5: Motor = other_3893;
-    let _e6: Flector = point_motor_geometric_product(_e4, _e5);
-    let _e7: Point = self_4299;
-    let _e8: Point = point_reversal(_e7);
-    let _e9: MultiVector = flector_point_geometric_product(_e6, _e8);
-    let _e10: Motor = multi_vector_motor_into(_e9);
-    return _e10;
-}
-
-fn point_multi_vector_geometric_quotient(self_4300: Point, other_3894: MultiVector) -> MultiVector {
-    var self_4301: Point;
-    var other_3895: MultiVector;
-
-    self_4301 = self_4300;
-    other_3895 = other_3894;
-    let _e4: Point = self_4301;
-    let _e5: MultiVector = other_3895;
+    self_4069 = self_4068;
+    other_3663 = other_3662;
+    let _e4: HomogeneousMagnitude = self_4069;
+    let _e5: MultiVector = other_3663;
     let _e6: MultiVector = multi_vector_inverse(_e5);
-    let _e7: MultiVector = point_multi_vector_geometric_product(_e4, _e6);
+    let _e7: MultiVector = homogeneous_magnitude_multi_vector_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn point_multi_vector_transformation(self_4302: Point, other_3896: MultiVector) -> MultiVector {
-    var self_4303: Point;
-    var other_3897: MultiVector;
+fn point_scalar_geometric_quotient(self_4070: Point, other_3664: Scalar) -> Point {
+    var self_4071: Point;
+    var other_3665: Scalar;
 
-    self_4303 = self_4302;
-    other_3897 = other_3896;
-    let _e4: Point = self_4303;
-    let _e5: MultiVector = other_3897;
-    let _e6: MultiVector = point_multi_vector_geometric_product(_e4, _e5);
-    let _e7: Point = self_4303;
-    let _e8: Point = point_reversal(_e7);
-    let _e9: MultiVector = multi_vector_point_geometric_product(_e6, _e8);
-    return _e9;
-}
-
-fn point_plane_geometric_quotient(self_4304: Point, other_3898: Plane) -> Motor {
-    var self_4305: Point;
-    var other_3899: Plane;
-
-    self_4305 = self_4304;
-    other_3899 = other_3898;
-    let _e4: Point = self_4305;
-    let _e5: Plane = other_3899;
-    let _e6: Plane = plane_inverse(_e5);
-    let _e7: Motor = point_plane_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn point_plane_transformation(self_4306: Point, other_3900: Plane) -> Plane {
-    var self_4307: Point;
-    var other_3901: Plane;
-
-    self_4307 = self_4306;
-    other_3901 = other_3900;
-    let _e4: Point = self_4307;
-    let _e5: Plane = other_3901;
-    let _e6: Motor = point_plane_geometric_product(_e4, _e5);
-    let _e7: Point = self_4307;
-    let _e8: Point = point_reversal(_e7);
-    let _e9: Flector = motor_point_geometric_product(_e6, _e8);
-    let _e10: Plane = flector_plane_into(_e9);
-    return _e10;
-}
-
-fn point_point_geometric_quotient(self_4308: Point, other_3902: Point) -> MultiVector {
-    var self_4309: Point;
-    var other_3903: Point;
-
-    self_4309 = self_4308;
-    other_3903 = other_3902;
-    let _e4: Point = self_4309;
-    let _e5: Point = other_3903;
-    let _e6: Point = point_inverse(_e5);
-    let _e7: MultiVector = point_point_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn point_point_transformation(self_4310: Point, other_3904: Point) -> Point {
-    var self_4311: Point;
-    var other_3905: Point;
-
-    self_4311 = self_4310;
-    other_3905 = other_3904;
-    let _e4: Point = self_4311;
-    let _e5: Point = other_3905;
-    let _e6: MultiVector = point_point_geometric_product(_e4, _e5);
-    let _e7: Point = self_4311;
-    let _e8: Point = point_reversal(_e7);
-    let _e9: MultiVector = multi_vector_point_geometric_product(_e6, _e8);
-    let _e10: Point = multi_vector_point_into(_e9);
-    return _e10;
-}
-
-fn point_rotor_transformation(self_4312: Point, other_3906: Rotor) -> Rotor {
-    var self_4313: Point;
-    var other_3907: Rotor;
-
-    self_4313 = self_4312;
-    other_3907 = other_3906;
-    let _e4: Point = self_4313;
-    let _e5: Rotor = other_3907;
-    let _e6: Flector = point_rotor_geometric_product(_e4, _e5);
-    let _e7: Point = self_4313;
-    let _e8: Point = point_reversal(_e7);
-    let _e9: MultiVector = flector_point_geometric_product(_e6, _e8);
-    let _e10: Rotor = multi_vector_rotor_into(_e9);
-    return _e10;
-}
-
-fn point_scalar_geometric_quotient(self_4314: Point, other_3908: Scalar) -> Point {
-    var self_4315: Point;
-    var other_3909: Scalar;
-
-    self_4315 = self_4314;
-    other_3909 = other_3908;
-    let _e4: Point = self_4315;
-    let _e5: Scalar = other_3909;
+    self_4071 = self_4070;
+    other_3665 = other_3664;
+    let _e4: Point = self_4071;
+    let _e5: Scalar = other_3665;
     let _e6: Scalar = scalar_inverse(_e5);
     let _e7: Point = point_scalar_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn point_scalar_transformation(self_4316: Point, other_3910: Scalar) -> Scalar {
-    var self_4317: Point;
-    var other_3911: Scalar;
+fn point_homogeneous_magnitude_geometric_quotient(self_4072: Point, other_3666: HomogeneousMagnitude) -> Flector {
+    var self_4073: Point;
+    var other_3667: HomogeneousMagnitude;
 
-    self_4317 = self_4316;
-    other_3911 = other_3910;
-    let _e4: Point = self_4317;
-    let _e5: Scalar = other_3911;
-    let _e6: Point = point_scalar_geometric_product(_e4, _e5);
-    let _e7: Point = self_4317;
-    let _e8: Point = point_reversal(_e7);
-    let _e9: MultiVector = point_point_geometric_product(_e6, _e8);
-    let _e10: Scalar = multi_vector_scalar_into(_e9);
-    return _e10;
+    self_4073 = self_4072;
+    other_3667 = other_3666;
+    let _e4: Point = self_4073;
+    let _e5: HomogeneousMagnitude = other_3667;
+    let _e6: HomogeneousMagnitude = homogeneous_magnitude_inverse(_e5);
+    let _e7: Flector = point_homogeneous_magnitude_geometric_product(_e4, _e6);
+    return _e7;
 }
 
-fn point_translator_geometric_quotient(self_4318: Point, other_3912: Translator) -> Flector {
-    var self_4319: Point;
-    var other_3913: Translator;
+fn point_point_geometric_quotient(self_4074: Point, other_3668: Point) -> MultiVector {
+    var self_4075: Point;
+    var other_3669: Point;
 
-    self_4319 = self_4318;
-    other_3913 = other_3912;
-    let _e4: Point = self_4319;
-    let _e5: Translator = other_3913;
+    self_4075 = self_4074;
+    other_3669 = other_3668;
+    let _e4: Point = self_4075;
+    let _e5: Point = other_3669;
+    let _e6: Point = point_inverse(_e5);
+    let _e7: MultiVector = point_point_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn point_line_geometric_quotient(self_4076: Point, other_3670: Line) -> Flector {
+    var self_4077: Point;
+    var other_3671: Line;
+
+    self_4077 = self_4076;
+    other_3671 = other_3670;
+    let _e4: Point = self_4077;
+    let _e5: Line = other_3671;
+    let _e6: Line = line_inverse(_e5);
+    let _e7: Flector = point_line_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn point_plane_geometric_quotient(self_4078: Point, other_3672: Plane) -> Motor {
+    var self_4079: Point;
+    var other_3673: Plane;
+
+    self_4079 = self_4078;
+    other_3673 = other_3672;
+    let _e4: Point = self_4079;
+    let _e5: Plane = other_3673;
+    let _e6: Plane = plane_inverse(_e5);
+    let _e7: Motor = point_plane_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn point_motor_geometric_quotient(self_4080: Point, other_3674: Motor) -> Flector {
+    var self_4081: Point;
+    var other_3675: Motor;
+
+    self_4081 = self_4080;
+    other_3675 = other_3674;
+    let _e4: Point = self_4081;
+    let _e5: Motor = other_3675;
+    let _e6: Motor = motor_inverse(_e5);
+    let _e7: Flector = point_motor_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn point_translator_geometric_quotient(self_4082: Point, other_3676: Translator) -> Flector {
+    var self_4083: Point;
+    var other_3677: Translator;
+
+    self_4083 = self_4082;
+    other_3677 = other_3676;
+    let _e4: Point = self_4083;
+    let _e5: Translator = other_3677;
     let _e6: Translator = translator_inverse(_e5);
     let _e7: Flector = point_translator_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn point_translator_transformation(self_4320: Point, other_3914: Translator) -> Translator {
-    var self_4321: Point;
-    var other_3915: Translator;
+fn point_flector_geometric_quotient(self_4084: Point, other_3678: Flector) -> MultiVector {
+    var self_4085: Point;
+    var other_3679: Flector;
 
-    self_4321 = self_4320;
-    other_3915 = other_3914;
-    let _e4: Point = self_4321;
-    let _e5: Translator = other_3915;
-    let _e6: Flector = point_translator_geometric_product(_e4, _e5);
-    let _e7: Point = self_4321;
-    let _e8: Point = point_reversal(_e7);
-    let _e9: MultiVector = flector_point_geometric_product(_e6, _e8);
-    let _e10: Translator = multi_vector_translator_into(_e9);
-    return _e10;
-}
-
-fn rotor_flector_geometric_quotient(self_4322: Rotor, other_3916: Flector) -> Flector {
-    var self_4323: Rotor;
-    var other_3917: Flector;
-
-    self_4323 = self_4322;
-    other_3917 = other_3916;
-    let _e4: Rotor = self_4323;
-    let _e5: Flector = other_3917;
+    self_4085 = self_4084;
+    other_3679 = other_3678;
+    let _e4: Point = self_4085;
+    let _e5: Flector = other_3679;
     let _e6: Flector = flector_inverse(_e5);
-    let _e7: Flector = rotor_flector_geometric_product(_e4, _e6);
+    let _e7: MultiVector = point_flector_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn rotor_flector_transformation(self_4324: Rotor, other_3918: Flector) -> Flector {
-    var self_4325: Rotor;
-    var other_3919: Flector;
+fn point_multi_vector_geometric_quotient(self_4086: Point, other_3680: MultiVector) -> MultiVector {
+    var self_4087: Point;
+    var other_3681: MultiVector;
 
-    self_4325 = self_4324;
-    other_3919 = other_3918;
-    let _e4: Rotor = self_4325;
-    let _e5: Flector = other_3919;
-    let _e6: Flector = rotor_flector_geometric_product(_e4, _e5);
-    let _e7: Rotor = self_4325;
-    let _e8: Rotor = rotor_reversal(_e7);
-    let _e9: Flector = flector_rotor_geometric_product(_e6, _e8);
-    return _e9;
-}
-
-fn rotor_homogeneous_magnitude_geometric_quotient(self_4326: Rotor, other_3920: HomogeneousMagnitude) -> Rotor {
-    var self_4327: Rotor;
-    var other_3921: HomogeneousMagnitude;
-
-    self_4327 = self_4326;
-    other_3921 = other_3920;
-    let _e4: Rotor = self_4327;
-    let _e5: HomogeneousMagnitude = other_3921;
-    let _e6: HomogeneousMagnitude = homogeneous_magnitude_inverse(_e5);
-    let _e7: Rotor = rotor_homogeneous_magnitude_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn rotor_line_geometric_quotient(self_4328: Rotor, other_3922: Line) -> Rotor {
-    var self_4329: Rotor;
-    var other_3923: Line;
-
-    self_4329 = self_4328;
-    other_3923 = other_3922;
-    let _e4: Rotor = self_4329;
-    let _e5: Line = other_3923;
-    let _e6: Line = line_inverse(_e5);
-    let _e7: Rotor = rotor_line_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn rotor_motor_geometric_quotient(self_4330: Rotor, other_3924: Motor) -> Rotor {
-    var self_4331: Rotor;
-    var other_3925: Motor;
-
-    self_4331 = self_4330;
-    other_3925 = other_3924;
-    let _e4: Rotor = self_4331;
-    let _e5: Motor = other_3925;
-    let _e6: Motor = motor_inverse(_e5);
-    let _e7: Rotor = rotor_motor_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn rotor_multi_vector_geometric_quotient(self_4332: Rotor, other_3926: MultiVector) -> MultiVector {
-    var self_4333: Rotor;
-    var other_3927: MultiVector;
-
-    self_4333 = self_4332;
-    other_3927 = other_3926;
-    let _e4: Rotor = self_4333;
-    let _e5: MultiVector = other_3927;
+    self_4087 = self_4086;
+    other_3681 = other_3680;
+    let _e4: Point = self_4087;
+    let _e5: MultiVector = other_3681;
     let _e6: MultiVector = multi_vector_inverse(_e5);
-    let _e7: MultiVector = rotor_multi_vector_geometric_product(_e4, _e6);
+    let _e7: MultiVector = point_multi_vector_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn rotor_multi_vector_transformation(self_4334: Rotor, other_3928: MultiVector) -> MultiVector {
-    var self_4335: Rotor;
-    var other_3929: MultiVector;
+fn line_scalar_geometric_quotient(self_4088: Line, other_3682: Scalar) -> Line {
+    var self_4089: Line;
+    var other_3683: Scalar;
 
-    self_4335 = self_4334;
-    other_3929 = other_3928;
-    let _e4: Rotor = self_4335;
-    let _e5: MultiVector = other_3929;
-    let _e6: MultiVector = rotor_multi_vector_geometric_product(_e4, _e5);
-    let _e7: Rotor = self_4335;
-    let _e8: Rotor = rotor_reversal(_e7);
-    let _e9: MultiVector = multi_vector_rotor_geometric_product(_e6, _e8);
-    return _e9;
-}
-
-fn rotor_plane_geometric_quotient(self_4336: Rotor, other_3930: Plane) -> Flector {
-    var self_4337: Rotor;
-    var other_3931: Plane;
-
-    self_4337 = self_4336;
-    other_3931 = other_3930;
-    let _e4: Rotor = self_4337;
-    let _e5: Plane = other_3931;
-    let _e6: Plane = plane_inverse(_e5);
-    let _e7: Flector = rotor_plane_geometric_product(_e4, _e6);
+    self_4089 = self_4088;
+    other_3683 = other_3682;
+    let _e4: Line = self_4089;
+    let _e5: Scalar = other_3683;
+    let _e6: Scalar = scalar_inverse(_e5);
+    let _e7: Line = line_scalar_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn rotor_plane_transformation(self_4338: Rotor, other_3932: Plane) -> Plane {
-    var self_4339: Rotor;
-    var other_3933: Plane;
+fn line_homogeneous_magnitude_geometric_quotient(self_4090: Line, other_3684: HomogeneousMagnitude) -> Line {
+    var self_4091: Line;
+    var other_3685: HomogeneousMagnitude;
 
-    self_4339 = self_4338;
-    other_3933 = other_3932;
-    let _e4: Rotor = self_4339;
-    let _e5: Plane = other_3933;
-    let _e6: Flector = rotor_plane_geometric_product(_e4, _e5);
-    let _e7: Rotor = self_4339;
-    let _e8: Rotor = rotor_reversal(_e7);
-    let _e9: Flector = flector_rotor_geometric_product(_e6, _e8);
-    let _e10: Plane = flector_plane_into(_e9);
-    return _e10;
+    self_4091 = self_4090;
+    other_3685 = other_3684;
+    let _e4: Line = self_4091;
+    let _e5: HomogeneousMagnitude = other_3685;
+    let _e6: HomogeneousMagnitude = homogeneous_magnitude_inverse(_e5);
+    let _e7: Line = line_homogeneous_magnitude_geometric_product(_e4, _e6);
+    return _e7;
 }
 
-fn rotor_point_geometric_quotient(self_4340: Rotor, other_3934: Point) -> Flector {
-    var self_4341: Rotor;
-    var other_3935: Point;
+fn line_point_geometric_quotient(self_4092: Line, other_3686: Point) -> Flector {
+    var self_4093: Line;
+    var other_3687: Point;
 
-    self_4341 = self_4340;
-    other_3935 = other_3934;
-    let _e4: Rotor = self_4341;
-    let _e5: Point = other_3935;
+    self_4093 = self_4092;
+    other_3687 = other_3686;
+    let _e4: Line = self_4093;
+    let _e5: Point = other_3687;
     let _e6: Point = point_inverse(_e5);
-    let _e7: Flector = rotor_point_geometric_product(_e4, _e6);
+    let _e7: Flector = line_point_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn rotor_point_transformation(self_4342: Rotor, other_3936: Point) -> Point {
-    var self_4343: Rotor;
-    var other_3937: Point;
+fn line_line_geometric_quotient(self_4094: Line, other_3688: Line) -> MultiVector {
+    var self_4095: Line;
+    var other_3689: Line;
 
-    self_4343 = self_4342;
-    other_3937 = other_3936;
-    let _e4: Rotor = self_4343;
-    let _e5: Point = other_3937;
-    let _e6: Flector = rotor_point_geometric_product(_e4, _e5);
-    let _e7: Rotor = self_4343;
-    let _e8: Rotor = rotor_reversal(_e7);
-    let _e9: Flector = flector_rotor_geometric_product(_e6, _e8);
-    let _e10: Point = flector_point_into(_e9);
-    return _e10;
+    self_4095 = self_4094;
+    other_3689 = other_3688;
+    let _e4: Line = self_4095;
+    let _e5: Line = other_3689;
+    let _e6: Line = line_inverse(_e5);
+    let _e7: MultiVector = line_line_geometric_product(_e4, _e6);
+    return _e7;
 }
 
-fn rotor_scalar_geometric_quotient(self_4344: Rotor, other_3938: Scalar) -> Rotor {
-    var self_4345: Rotor;
-    var other_3939: Scalar;
+fn line_plane_geometric_quotient(self_4096: Line, other_3690: Plane) -> Flector {
+    var self_4097: Line;
+    var other_3691: Plane;
 
-    self_4345 = self_4344;
-    other_3939 = other_3938;
-    let _e4: Rotor = self_4345;
-    let _e5: Scalar = other_3939;
+    self_4097 = self_4096;
+    other_3691 = other_3690;
+    let _e4: Line = self_4097;
+    let _e5: Plane = other_3691;
+    let _e6: Plane = plane_inverse(_e5);
+    let _e7: Flector = line_plane_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn line_motor_geometric_quotient(self_4098: Line, other_3692: Motor) -> MultiVector {
+    var self_4099: Line;
+    var other_3693: Motor;
+
+    self_4099 = self_4098;
+    other_3693 = other_3692;
+    let _e4: Line = self_4099;
+    let _e5: Motor = other_3693;
+    let _e6: Motor = motor_inverse(_e5);
+    let _e7: MultiVector = line_motor_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn line_translator_geometric_quotient(self_4100: Line, other_3694: Translator) -> MultiVector {
+    var self_4101: Line;
+    var other_3695: Translator;
+
+    self_4101 = self_4100;
+    other_3695 = other_3694;
+    let _e4: Line = self_4101;
+    let _e5: Translator = other_3695;
+    let _e6: Translator = translator_inverse(_e5);
+    let _e7: MultiVector = line_translator_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn line_flector_geometric_quotient(self_4102: Line, other_3696: Flector) -> Flector {
+    var self_4103: Line;
+    var other_3697: Flector;
+
+    self_4103 = self_4102;
+    other_3697 = other_3696;
+    let _e4: Line = self_4103;
+    let _e5: Flector = other_3697;
+    let _e6: Flector = flector_inverse(_e5);
+    let _e7: Flector = line_flector_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn line_multi_vector_geometric_quotient(self_4104: Line, other_3698: MultiVector) -> MultiVector {
+    var self_4105: Line;
+    var other_3699: MultiVector;
+
+    self_4105 = self_4104;
+    other_3699 = other_3698;
+    let _e4: Line = self_4105;
+    let _e5: MultiVector = other_3699;
+    let _e6: MultiVector = multi_vector_inverse(_e5);
+    let _e7: MultiVector = line_multi_vector_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn plane_scalar_geometric_quotient(self_4106: Plane, other_3700: Scalar) -> Plane {
+    var self_4107: Plane;
+    var other_3701: Scalar;
+
+    self_4107 = self_4106;
+    other_3701 = other_3700;
+    let _e4: Plane = self_4107;
+    let _e5: Scalar = other_3701;
+    let _e6: Scalar = scalar_inverse(_e5);
+    let _e7: Plane = plane_scalar_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn plane_homogeneous_magnitude_geometric_quotient(self_4108: Plane, other_3702: HomogeneousMagnitude) -> Flector {
+    var self_4109: Plane;
+    var other_3703: HomogeneousMagnitude;
+
+    self_4109 = self_4108;
+    other_3703 = other_3702;
+    let _e4: Plane = self_4109;
+    let _e5: HomogeneousMagnitude = other_3703;
+    let _e6: HomogeneousMagnitude = homogeneous_magnitude_inverse(_e5);
+    let _e7: Flector = plane_homogeneous_magnitude_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn plane_point_geometric_quotient(self_4110: Plane, other_3704: Point) -> Motor {
+    var self_4111: Plane;
+    var other_3705: Point;
+
+    self_4111 = self_4110;
+    other_3705 = other_3704;
+    let _e4: Plane = self_4111;
+    let _e5: Point = other_3705;
+    let _e6: Point = point_inverse(_e5);
+    let _e7: Motor = plane_point_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn plane_line_geometric_quotient(self_4112: Plane, other_3706: Line) -> Flector {
+    var self_4113: Plane;
+    var other_3707: Line;
+
+    self_4113 = self_4112;
+    other_3707 = other_3706;
+    let _e4: Plane = self_4113;
+    let _e5: Line = other_3707;
+    let _e6: Line = line_inverse(_e5);
+    let _e7: Flector = plane_line_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn plane_plane_geometric_quotient(self_4114: Plane, other_3708: Plane) -> MultiVector {
+    var self_4115: Plane;
+    var other_3709: Plane;
+
+    self_4115 = self_4114;
+    other_3709 = other_3708;
+    let _e4: Plane = self_4115;
+    let _e5: Plane = other_3709;
+    let _e6: Plane = plane_inverse(_e5);
+    let _e7: MultiVector = plane_plane_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn plane_motor_geometric_quotient(self_4116: Plane, other_3710: Motor) -> Flector {
+    var self_4117: Plane;
+    var other_3711: Motor;
+
+    self_4117 = self_4116;
+    other_3711 = other_3710;
+    let _e4: Plane = self_4117;
+    let _e5: Motor = other_3711;
+    let _e6: Motor = motor_inverse(_e5);
+    let _e7: Flector = plane_motor_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn plane_translator_geometric_quotient(self_4118: Plane, other_3712: Translator) -> Flector {
+    var self_4119: Plane;
+    var other_3713: Translator;
+
+    self_4119 = self_4118;
+    other_3713 = other_3712;
+    let _e4: Plane = self_4119;
+    let _e5: Translator = other_3713;
+    let _e6: Translator = translator_inverse(_e5);
+    let _e7: Flector = plane_translator_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn plane_flector_geometric_quotient(self_4120: Plane, other_3714: Flector) -> MultiVector {
+    var self_4121: Plane;
+    var other_3715: Flector;
+
+    self_4121 = self_4120;
+    other_3715 = other_3714;
+    let _e4: Plane = self_4121;
+    let _e5: Flector = other_3715;
+    let _e6: Flector = flector_inverse(_e5);
+    let _e7: MultiVector = plane_flector_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn plane_multi_vector_geometric_quotient(self_4122: Plane, other_3716: MultiVector) -> MultiVector {
+    var self_4123: Plane;
+    var other_3717: MultiVector;
+
+    self_4123 = self_4122;
+    other_3717 = other_3716;
+    let _e4: Plane = self_4123;
+    let _e5: MultiVector = other_3717;
+    let _e6: MultiVector = multi_vector_inverse(_e5);
+    let _e7: MultiVector = plane_multi_vector_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn motor_scalar_geometric_quotient(self_4124: Motor, other_3718: Scalar) -> Motor {
+    var self_4125: Motor;
+    var other_3719: Scalar;
+
+    self_4125 = self_4124;
+    other_3719 = other_3718;
+    let _e4: Motor = self_4125;
+    let _e5: Scalar = other_3719;
+    let _e6: Scalar = scalar_inverse(_e5);
+    let _e7: Motor = motor_scalar_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn motor_homogeneous_magnitude_geometric_quotient(self_4126: Motor, other_3720: HomogeneousMagnitude) -> Motor {
+    var self_4127: Motor;
+    var other_3721: HomogeneousMagnitude;
+
+    self_4127 = self_4126;
+    other_3721 = other_3720;
+    let _e4: Motor = self_4127;
+    let _e5: HomogeneousMagnitude = other_3721;
+    let _e6: HomogeneousMagnitude = homogeneous_magnitude_inverse(_e5);
+    let _e7: Motor = motor_homogeneous_magnitude_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn motor_point_geometric_quotient(self_4128: Motor, other_3722: Point) -> Flector {
+    var self_4129: Motor;
+    var other_3723: Point;
+
+    self_4129 = self_4128;
+    other_3723 = other_3722;
+    let _e4: Motor = self_4129;
+    let _e5: Point = other_3723;
+    let _e6: Point = point_inverse(_e5);
+    let _e7: Flector = motor_point_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn motor_line_geometric_quotient(self_4130: Motor, other_3724: Line) -> MultiVector {
+    var self_4131: Motor;
+    var other_3725: Line;
+
+    self_4131 = self_4130;
+    other_3725 = other_3724;
+    let _e4: Motor = self_4131;
+    let _e5: Line = other_3725;
+    let _e6: Line = line_inverse(_e5);
+    let _e7: MultiVector = motor_line_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn motor_plane_geometric_quotient(self_4132: Motor, other_3726: Plane) -> Flector {
+    var self_4133: Motor;
+    var other_3727: Plane;
+
+    self_4133 = self_4132;
+    other_3727 = other_3726;
+    let _e4: Motor = self_4133;
+    let _e5: Plane = other_3727;
+    let _e6: Plane = plane_inverse(_e5);
+    let _e7: Flector = motor_plane_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn motor_motor_geometric_quotient(self_4134: Motor, other_3728: Motor) -> MultiVector {
+    var self_4135: Motor;
+    var other_3729: Motor;
+
+    self_4135 = self_4134;
+    other_3729 = other_3728;
+    let _e4: Motor = self_4135;
+    let _e5: Motor = other_3729;
+    let _e6: Motor = motor_inverse(_e5);
+    let _e7: MultiVector = motor_motor_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn motor_translator_geometric_quotient(self_4136: Motor, other_3730: Translator) -> MultiVector {
+    var self_4137: Motor;
+    var other_3731: Translator;
+
+    self_4137 = self_4136;
+    other_3731 = other_3730;
+    let _e4: Motor = self_4137;
+    let _e5: Translator = other_3731;
+    let _e6: Translator = translator_inverse(_e5);
+    let _e7: MultiVector = motor_translator_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn motor_flector_geometric_quotient(self_4138: Motor, other_3732: Flector) -> Flector {
+    var self_4139: Motor;
+    var other_3733: Flector;
+
+    self_4139 = self_4138;
+    other_3733 = other_3732;
+    let _e4: Motor = self_4139;
+    let _e5: Flector = other_3733;
+    let _e6: Flector = flector_inverse(_e5);
+    let _e7: Flector = motor_flector_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn motor_multi_vector_geometric_quotient(self_4140: Motor, other_3734: MultiVector) -> MultiVector {
+    var self_4141: Motor;
+    var other_3735: MultiVector;
+
+    self_4141 = self_4140;
+    other_3735 = other_3734;
+    let _e4: Motor = self_4141;
+    let _e5: MultiVector = other_3735;
+    let _e6: MultiVector = multi_vector_inverse(_e5);
+    let _e7: MultiVector = motor_multi_vector_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_scalar_geometric_quotient(self_4142: Rotor, other_3736: Scalar) -> Rotor {
+    var self_4143: Rotor;
+    var other_3737: Scalar;
+
+    self_4143 = self_4142;
+    other_3737 = other_3736;
+    let _e4: Rotor = self_4143;
+    let _e5: Scalar = other_3737;
     let _e6: Scalar = scalar_inverse(_e5);
     let _e7: Rotor = rotor_scalar_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn rotor_translator_geometric_quotient(self_4346: Rotor, other_3940: Translator) -> Rotor {
-    var self_4347: Rotor;
-    var other_3941: Translator;
+fn rotor_homogeneous_magnitude_geometric_quotient(self_4144: Rotor, other_3738: HomogeneousMagnitude) -> Rotor {
+    var self_4145: Rotor;
+    var other_3739: HomogeneousMagnitude;
 
-    self_4347 = self_4346;
-    other_3941 = other_3940;
-    let _e4: Rotor = self_4347;
-    let _e5: Translator = other_3941;
+    self_4145 = self_4144;
+    other_3739 = other_3738;
+    let _e4: Rotor = self_4145;
+    let _e5: HomogeneousMagnitude = other_3739;
+    let _e6: HomogeneousMagnitude = homogeneous_magnitude_inverse(_e5);
+    let _e7: Rotor = rotor_homogeneous_magnitude_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_point_geometric_quotient(self_4146: Rotor, other_3740: Point) -> Flector {
+    var self_4147: Rotor;
+    var other_3741: Point;
+
+    self_4147 = self_4146;
+    other_3741 = other_3740;
+    let _e4: Rotor = self_4147;
+    let _e5: Point = other_3741;
+    let _e6: Point = point_inverse(_e5);
+    let _e7: Flector = rotor_point_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_line_geometric_quotient(self_4148: Rotor, other_3742: Line) -> Rotor {
+    var self_4149: Rotor;
+    var other_3743: Line;
+
+    self_4149 = self_4148;
+    other_3743 = other_3742;
+    let _e4: Rotor = self_4149;
+    let _e5: Line = other_3743;
+    let _e6: Line = line_inverse(_e5);
+    let _e7: Rotor = rotor_line_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_plane_geometric_quotient(self_4150: Rotor, other_3744: Plane) -> Flector {
+    var self_4151: Rotor;
+    var other_3745: Plane;
+
+    self_4151 = self_4150;
+    other_3745 = other_3744;
+    let _e4: Rotor = self_4151;
+    let _e5: Plane = other_3745;
+    let _e6: Plane = plane_inverse(_e5);
+    let _e7: Flector = rotor_plane_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_motor_geometric_quotient(self_4152: Rotor, other_3746: Motor) -> Rotor {
+    var self_4153: Rotor;
+    var other_3747: Motor;
+
+    self_4153 = self_4152;
+    other_3747 = other_3746;
+    let _e4: Rotor = self_4153;
+    let _e5: Motor = other_3747;
+    let _e6: Motor = motor_inverse(_e5);
+    let _e7: Rotor = rotor_motor_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_translator_geometric_quotient(self_4154: Rotor, other_3748: Translator) -> Rotor {
+    var self_4155: Rotor;
+    var other_3749: Translator;
+
+    self_4155 = self_4154;
+    other_3749 = other_3748;
+    let _e4: Rotor = self_4155;
+    let _e5: Translator = other_3749;
     let _e6: Translator = translator_inverse(_e5);
     let _e7: Rotor = rotor_translator_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn scalar_anti_scalar_transformation(self_4348: Scalar, other_3942: AntiScalar) -> AntiScalar {
-    var self_4349: Scalar;
-    var other_3943: AntiScalar;
+fn rotor_flector_geometric_quotient(self_4156: Rotor, other_3750: Flector) -> Flector {
+    var self_4157: Rotor;
+    var other_3751: Flector;
 
-    self_4349 = self_4348;
-    other_3943 = other_3942;
-    let _e4: Scalar = self_4349;
-    let _e5: AntiScalar = other_3943;
-    let _e6: AntiScalar = scalar_anti_scalar_geometric_product(_e4, _e5);
-    let _e7: Scalar = self_4349;
-    let _e8: Scalar = scalar_reversal(_e7);
-    let _e9: AntiScalar = anti_scalar_scalar_geometric_product(_e6, _e8);
-    return _e9;
-}
-
-fn scalar_flector_geometric_quotient(self_4350: Scalar, other_3944: Flector) -> Flector {
-    var self_4351: Scalar;
-    var other_3945: Flector;
-
-    self_4351 = self_4350;
-    other_3945 = other_3944;
-    let _e4: Scalar = self_4351;
-    let _e5: Flector = other_3945;
+    self_4157 = self_4156;
+    other_3751 = other_3750;
+    let _e4: Rotor = self_4157;
+    let _e5: Flector = other_3751;
     let _e6: Flector = flector_inverse(_e5);
-    let _e7: Flector = scalar_flector_geometric_product(_e4, _e6);
+    let _e7: Flector = rotor_flector_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn scalar_flector_transformation(self_4352: Scalar, other_3946: Flector) -> Flector {
-    var self_4353: Scalar;
-    var other_3947: Flector;
+fn rotor_multi_vector_geometric_quotient(self_4158: Rotor, other_3752: MultiVector) -> MultiVector {
+    var self_4159: Rotor;
+    var other_3753: MultiVector;
 
-    self_4353 = self_4352;
-    other_3947 = other_3946;
-    let _e4: Scalar = self_4353;
-    let _e5: Flector = other_3947;
-    let _e6: Flector = scalar_flector_geometric_product(_e4, _e5);
-    let _e7: Scalar = self_4353;
-    let _e8: Scalar = scalar_reversal(_e7);
-    let _e9: Flector = flector_scalar_geometric_product(_e6, _e8);
-    return _e9;
-}
-
-fn scalar_homogeneous_magnitude_geometric_quotient(self_4354: Scalar, other_3948: HomogeneousMagnitude) -> HomogeneousMagnitude {
-    var self_4355: Scalar;
-    var other_3949: HomogeneousMagnitude;
-
-    self_4355 = self_4354;
-    other_3949 = other_3948;
-    let _e4: Scalar = self_4355;
-    let _e5: HomogeneousMagnitude = other_3949;
-    let _e6: HomogeneousMagnitude = homogeneous_magnitude_inverse(_e5);
-    let _e7: HomogeneousMagnitude = scalar_homogeneous_magnitude_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn scalar_homogeneous_magnitude_transformation(self_4356: Scalar, other_3950: HomogeneousMagnitude) -> HomogeneousMagnitude {
-    var self_4357: Scalar;
-    var other_3951: HomogeneousMagnitude;
-
-    self_4357 = self_4356;
-    other_3951 = other_3950;
-    let _e4: Scalar = self_4357;
-    let _e5: HomogeneousMagnitude = other_3951;
-    let _e6: HomogeneousMagnitude = scalar_homogeneous_magnitude_geometric_product(_e4, _e5);
-    let _e7: Scalar = self_4357;
-    let _e8: Scalar = scalar_reversal(_e7);
-    let _e9: HomogeneousMagnitude = homogeneous_magnitude_scalar_geometric_product(_e6, _e8);
-    return _e9;
-}
-
-fn scalar_line_geometric_quotient(self_4358: Scalar, other_3952: Line) -> Line {
-    var self_4359: Scalar;
-    var other_3953: Line;
-
-    self_4359 = self_4358;
-    other_3953 = other_3952;
-    let _e4: Scalar = self_4359;
-    let _e5: Line = other_3953;
-    let _e6: Line = line_inverse(_e5);
-    let _e7: Line = scalar_line_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn scalar_line_transformation(self_4360: Scalar, other_3954: Line) -> Line {
-    var self_4361: Scalar;
-    var other_3955: Line;
-
-    self_4361 = self_4360;
-    other_3955 = other_3954;
-    let _e4: Scalar = self_4361;
-    let _e5: Line = other_3955;
-    let _e6: Line = scalar_line_geometric_product(_e4, _e5);
-    let _e7: Scalar = self_4361;
-    let _e8: Scalar = scalar_reversal(_e7);
-    let _e9: Line = line_scalar_geometric_product(_e6, _e8);
-    return _e9;
-}
-
-fn scalar_motor_geometric_quotient(self_4362: Scalar, other_3956: Motor) -> Motor {
-    var self_4363: Scalar;
-    var other_3957: Motor;
-
-    self_4363 = self_4362;
-    other_3957 = other_3956;
-    let _e4: Scalar = self_4363;
-    let _e5: Motor = other_3957;
-    let _e6: Motor = motor_inverse(_e5);
-    let _e7: Motor = scalar_motor_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn scalar_motor_transformation(self_4364: Scalar, other_3958: Motor) -> Motor {
-    var self_4365: Scalar;
-    var other_3959: Motor;
-
-    self_4365 = self_4364;
-    other_3959 = other_3958;
-    let _e4: Scalar = self_4365;
-    let _e5: Motor = other_3959;
-    let _e6: Motor = scalar_motor_geometric_product(_e4, _e5);
-    let _e7: Scalar = self_4365;
-    let _e8: Scalar = scalar_reversal(_e7);
-    let _e9: Motor = motor_scalar_geometric_product(_e6, _e8);
-    return _e9;
-}
-
-fn scalar_multi_vector_geometric_quotient(self_4366: Scalar, other_3960: MultiVector) -> MultiVector {
-    var self_4367: Scalar;
-    var other_3961: MultiVector;
-
-    self_4367 = self_4366;
-    other_3961 = other_3960;
-    let _e4: Scalar = self_4367;
-    let _e5: MultiVector = other_3961;
+    self_4159 = self_4158;
+    other_3753 = other_3752;
+    let _e4: Rotor = self_4159;
+    let _e5: MultiVector = other_3753;
     let _e6: MultiVector = multi_vector_inverse(_e5);
-    let _e7: MultiVector = scalar_multi_vector_geometric_product(_e4, _e6);
+    let _e7: MultiVector = rotor_multi_vector_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn scalar_multi_vector_transformation(self_4368: Scalar, other_3962: MultiVector) -> MultiVector {
-    var self_4369: Scalar;
-    var other_3963: MultiVector;
+fn translator_scalar_geometric_quotient(self_4160: Translator, other_3754: Scalar) -> Translator {
+    var self_4161: Translator;
+    var other_3755: Scalar;
 
-    self_4369 = self_4368;
-    other_3963 = other_3962;
-    let _e4: Scalar = self_4369;
-    let _e5: MultiVector = other_3963;
-    let _e6: MultiVector = scalar_multi_vector_geometric_product(_e4, _e5);
-    let _e7: Scalar = self_4369;
-    let _e8: Scalar = scalar_reversal(_e7);
-    let _e9: MultiVector = multi_vector_scalar_geometric_product(_e6, _e8);
-    return _e9;
-}
-
-fn scalar_plane_geometric_quotient(self_4370: Scalar, other_3964: Plane) -> Plane {
-    var self_4371: Scalar;
-    var other_3965: Plane;
-
-    self_4371 = self_4370;
-    other_3965 = other_3964;
-    let _e4: Scalar = self_4371;
-    let _e5: Plane = other_3965;
-    let _e6: Plane = plane_inverse(_e5);
-    let _e7: Plane = scalar_plane_geometric_product(_e4, _e6);
+    self_4161 = self_4160;
+    other_3755 = other_3754;
+    let _e4: Translator = self_4161;
+    let _e5: Scalar = other_3755;
+    let _e6: Scalar = scalar_inverse(_e5);
+    let _e7: Translator = translator_scalar_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn scalar_plane_transformation(self_4372: Scalar, other_3966: Plane) -> Plane {
-    var self_4373: Scalar;
-    var other_3967: Plane;
+fn translator_homogeneous_magnitude_geometric_quotient(self_4162: Translator, other_3756: HomogeneousMagnitude) -> Motor {
+    var self_4163: Translator;
+    var other_3757: HomogeneousMagnitude;
 
-    self_4373 = self_4372;
-    other_3967 = other_3966;
-    let _e4: Scalar = self_4373;
-    let _e5: Plane = other_3967;
-    let _e6: Plane = scalar_plane_geometric_product(_e4, _e5);
-    let _e7: Scalar = self_4373;
-    let _e8: Scalar = scalar_reversal(_e7);
-    let _e9: Plane = plane_scalar_geometric_product(_e6, _e8);
-    return _e9;
+    self_4163 = self_4162;
+    other_3757 = other_3756;
+    let _e4: Translator = self_4163;
+    let _e5: HomogeneousMagnitude = other_3757;
+    let _e6: HomogeneousMagnitude = homogeneous_magnitude_inverse(_e5);
+    let _e7: Motor = translator_homogeneous_magnitude_geometric_product(_e4, _e6);
+    return _e7;
 }
 
-fn scalar_point_geometric_quotient(self_4374: Scalar, other_3968: Point) -> Point {
-    var self_4375: Scalar;
-    var other_3969: Point;
+fn translator_point_geometric_quotient(self_4164: Translator, other_3758: Point) -> Flector {
+    var self_4165: Translator;
+    var other_3759: Point;
 
-    self_4375 = self_4374;
-    other_3969 = other_3968;
-    let _e4: Scalar = self_4375;
-    let _e5: Point = other_3969;
+    self_4165 = self_4164;
+    other_3759 = other_3758;
+    let _e4: Translator = self_4165;
+    let _e5: Point = other_3759;
     let _e6: Point = point_inverse(_e5);
-    let _e7: Point = scalar_point_geometric_product(_e4, _e6);
+    let _e7: Flector = translator_point_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn scalar_point_transformation(self_4376: Scalar, other_3970: Point) -> Point {
-    var self_4377: Scalar;
-    var other_3971: Point;
+fn translator_line_geometric_quotient(self_4166: Translator, other_3760: Line) -> MultiVector {
+    var self_4167: Translator;
+    var other_3761: Line;
 
-    self_4377 = self_4376;
-    other_3971 = other_3970;
-    let _e4: Scalar = self_4377;
-    let _e5: Point = other_3971;
-    let _e6: Point = scalar_point_geometric_product(_e4, _e5);
-    let _e7: Scalar = self_4377;
-    let _e8: Scalar = scalar_reversal(_e7);
-    let _e9: Point = point_scalar_geometric_product(_e6, _e8);
-    return _e9;
+    self_4167 = self_4166;
+    other_3761 = other_3760;
+    let _e4: Translator = self_4167;
+    let _e5: Line = other_3761;
+    let _e6: Line = line_inverse(_e5);
+    let _e7: MultiVector = translator_line_geometric_product(_e4, _e6);
+    return _e7;
 }
 
-fn scalar_rotor_transformation(self_4378: Scalar, other_3972: Rotor) -> Rotor {
-    var self_4379: Scalar;
-    var other_3973: Rotor;
+fn translator_plane_geometric_quotient(self_4168: Translator, other_3762: Plane) -> Flector {
+    var self_4169: Translator;
+    var other_3763: Plane;
 
-    self_4379 = self_4378;
-    other_3973 = other_3972;
-    let _e4: Scalar = self_4379;
-    let _e5: Rotor = other_3973;
-    let _e6: Rotor = scalar_rotor_geometric_product(_e4, _e5);
-    let _e7: Scalar = self_4379;
-    let _e8: Scalar = scalar_reversal(_e7);
-    let _e9: Rotor = rotor_scalar_geometric_product(_e6, _e8);
-    return _e9;
+    self_4169 = self_4168;
+    other_3763 = other_3762;
+    let _e4: Translator = self_4169;
+    let _e5: Plane = other_3763;
+    let _e6: Plane = plane_inverse(_e5);
+    let _e7: Flector = translator_plane_geometric_product(_e4, _e6);
+    return _e7;
 }
 
-fn scalar_powi(self_4380: Scalar, exponent_4: i32) -> Scalar {
-    var self_4381: Scalar;
+fn translator_motor_geometric_quotient(self_4170: Translator, other_3764: Motor) -> MultiVector {
+    var self_4171: Translator;
+    var other_3765: Motor;
+
+    self_4171 = self_4170;
+    other_3765 = other_3764;
+    let _e4: Translator = self_4171;
+    let _e5: Motor = other_3765;
+    let _e6: Motor = motor_inverse(_e5);
+    let _e7: MultiVector = translator_motor_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn translator_translator_geometric_quotient(self_4172: Translator, other_3766: Translator) -> MultiVector {
+    var self_4173: Translator;
+    var other_3767: Translator;
+
+    self_4173 = self_4172;
+    other_3767 = other_3766;
+    let _e4: Translator = self_4173;
+    let _e5: Translator = other_3767;
+    let _e6: Translator = translator_inverse(_e5);
+    let _e7: MultiVector = translator_translator_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn translator_flector_geometric_quotient(self_4174: Translator, other_3768: Flector) -> Flector {
+    var self_4175: Translator;
+    var other_3769: Flector;
+
+    self_4175 = self_4174;
+    other_3769 = other_3768;
+    let _e4: Translator = self_4175;
+    let _e5: Flector = other_3769;
+    let _e6: Flector = flector_inverse(_e5);
+    let _e7: Flector = translator_flector_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn translator_multi_vector_geometric_quotient(self_4176: Translator, other_3770: MultiVector) -> MultiVector {
+    var self_4177: Translator;
+    var other_3771: MultiVector;
+
+    self_4177 = self_4176;
+    other_3771 = other_3770;
+    let _e4: Translator = self_4177;
+    let _e5: MultiVector = other_3771;
+    let _e6: MultiVector = multi_vector_inverse(_e5);
+    let _e7: MultiVector = translator_multi_vector_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn flector_scalar_geometric_quotient(self_4178: Flector, other_3772: Scalar) -> Flector {
+    var self_4179: Flector;
+    var other_3773: Scalar;
+
+    self_4179 = self_4178;
+    other_3773 = other_3772;
+    let _e4: Flector = self_4179;
+    let _e5: Scalar = other_3773;
+    let _e6: Scalar = scalar_inverse(_e5);
+    let _e7: Flector = flector_scalar_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn flector_homogeneous_magnitude_geometric_quotient(self_4180: Flector, other_3774: HomogeneousMagnitude) -> Flector {
+    var self_4181: Flector;
+    var other_3775: HomogeneousMagnitude;
+
+    self_4181 = self_4180;
+    other_3775 = other_3774;
+    let _e4: Flector = self_4181;
+    let _e5: HomogeneousMagnitude = other_3775;
+    let _e6: HomogeneousMagnitude = homogeneous_magnitude_inverse(_e5);
+    let _e7: Flector = flector_homogeneous_magnitude_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn flector_point_geometric_quotient(self_4182: Flector, other_3776: Point) -> MultiVector {
+    var self_4183: Flector;
+    var other_3777: Point;
+
+    self_4183 = self_4182;
+    other_3777 = other_3776;
+    let _e4: Flector = self_4183;
+    let _e5: Point = other_3777;
+    let _e6: Point = point_inverse(_e5);
+    let _e7: MultiVector = flector_point_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn flector_line_geometric_quotient(self_4184: Flector, other_3778: Line) -> Flector {
+    var self_4185: Flector;
+    var other_3779: Line;
+
+    self_4185 = self_4184;
+    other_3779 = other_3778;
+    let _e4: Flector = self_4185;
+    let _e5: Line = other_3779;
+    let _e6: Line = line_inverse(_e5);
+    let _e7: Flector = flector_line_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn flector_plane_geometric_quotient(self_4186: Flector, other_3780: Plane) -> MultiVector {
+    var self_4187: Flector;
+    var other_3781: Plane;
+
+    self_4187 = self_4186;
+    other_3781 = other_3780;
+    let _e4: Flector = self_4187;
+    let _e5: Plane = other_3781;
+    let _e6: Plane = plane_inverse(_e5);
+    let _e7: MultiVector = flector_plane_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn flector_motor_geometric_quotient(self_4188: Flector, other_3782: Motor) -> Flector {
+    var self_4189: Flector;
+    var other_3783: Motor;
+
+    self_4189 = self_4188;
+    other_3783 = other_3782;
+    let _e4: Flector = self_4189;
+    let _e5: Motor = other_3783;
+    let _e6: Motor = motor_inverse(_e5);
+    let _e7: Flector = flector_motor_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn flector_translator_geometric_quotient(self_4190: Flector, other_3784: Translator) -> Flector {
+    var self_4191: Flector;
+    var other_3785: Translator;
+
+    self_4191 = self_4190;
+    other_3785 = other_3784;
+    let _e4: Flector = self_4191;
+    let _e5: Translator = other_3785;
+    let _e6: Translator = translator_inverse(_e5);
+    let _e7: Flector = flector_translator_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn flector_flector_geometric_quotient(self_4192: Flector, other_3786: Flector) -> MultiVector {
+    var self_4193: Flector;
+    var other_3787: Flector;
+
+    self_4193 = self_4192;
+    other_3787 = other_3786;
+    let _e4: Flector = self_4193;
+    let _e5: Flector = other_3787;
+    let _e6: Flector = flector_inverse(_e5);
+    let _e7: MultiVector = flector_flector_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn flector_multi_vector_geometric_quotient(self_4194: Flector, other_3788: MultiVector) -> MultiVector {
+    var self_4195: Flector;
+    var other_3789: MultiVector;
+
+    self_4195 = self_4194;
+    other_3789 = other_3788;
+    let _e4: Flector = self_4195;
+    let _e5: MultiVector = other_3789;
+    let _e6: MultiVector = multi_vector_inverse(_e5);
+    let _e7: MultiVector = flector_multi_vector_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_scalar_geometric_quotient(self_4196: MultiVector, other_3790: Scalar) -> MultiVector {
+    var self_4197: MultiVector;
+    var other_3791: Scalar;
+
+    self_4197 = self_4196;
+    other_3791 = other_3790;
+    let _e4: MultiVector = self_4197;
+    let _e5: Scalar = other_3791;
+    let _e6: Scalar = scalar_inverse(_e5);
+    let _e7: MultiVector = multi_vector_scalar_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_homogeneous_magnitude_geometric_quotient(self_4198: MultiVector, other_3792: HomogeneousMagnitude) -> MultiVector {
+    var self_4199: MultiVector;
+    var other_3793: HomogeneousMagnitude;
+
+    self_4199 = self_4198;
+    other_3793 = other_3792;
+    let _e4: MultiVector = self_4199;
+    let _e5: HomogeneousMagnitude = other_3793;
+    let _e6: HomogeneousMagnitude = homogeneous_magnitude_inverse(_e5);
+    let _e7: MultiVector = multi_vector_homogeneous_magnitude_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_point_geometric_quotient(self_4200: MultiVector, other_3794: Point) -> MultiVector {
+    var self_4201: MultiVector;
+    var other_3795: Point;
+
+    self_4201 = self_4200;
+    other_3795 = other_3794;
+    let _e4: MultiVector = self_4201;
+    let _e5: Point = other_3795;
+    let _e6: Point = point_inverse(_e5);
+    let _e7: MultiVector = multi_vector_point_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_line_geometric_quotient(self_4202: MultiVector, other_3796: Line) -> MultiVector {
+    var self_4203: MultiVector;
+    var other_3797: Line;
+
+    self_4203 = self_4202;
+    other_3797 = other_3796;
+    let _e4: MultiVector = self_4203;
+    let _e5: Line = other_3797;
+    let _e6: Line = line_inverse(_e5);
+    let _e7: MultiVector = multi_vector_line_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_plane_geometric_quotient(self_4204: MultiVector, other_3798: Plane) -> MultiVector {
+    var self_4205: MultiVector;
+    var other_3799: Plane;
+
+    self_4205 = self_4204;
+    other_3799 = other_3798;
+    let _e4: MultiVector = self_4205;
+    let _e5: Plane = other_3799;
+    let _e6: Plane = plane_inverse(_e5);
+    let _e7: MultiVector = multi_vector_plane_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_motor_geometric_quotient(self_4206: MultiVector, other_3800: Motor) -> MultiVector {
+    var self_4207: MultiVector;
+    var other_3801: Motor;
+
+    self_4207 = self_4206;
+    other_3801 = other_3800;
+    let _e4: MultiVector = self_4207;
+    let _e5: Motor = other_3801;
+    let _e6: Motor = motor_inverse(_e5);
+    let _e7: MultiVector = multi_vector_motor_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_translator_geometric_quotient(self_4208: MultiVector, other_3802: Translator) -> MultiVector {
+    var self_4209: MultiVector;
+    var other_3803: Translator;
+
+    self_4209 = self_4208;
+    other_3803 = other_3802;
+    let _e4: MultiVector = self_4209;
+    let _e5: Translator = other_3803;
+    let _e6: Translator = translator_inverse(_e5);
+    let _e7: MultiVector = multi_vector_translator_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_flector_geometric_quotient(self_4210: MultiVector, other_3804: Flector) -> MultiVector {
+    var self_4211: MultiVector;
+    var other_3805: Flector;
+
+    self_4211 = self_4210;
+    other_3805 = other_3804;
+    let _e4: MultiVector = self_4211;
+    let _e5: Flector = other_3805;
+    let _e6: Flector = flector_inverse(_e5);
+    let _e7: MultiVector = multi_vector_flector_geometric_product(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_powi(self_4212: MultiVector, exponent_4: i32) -> MultiVector {
+    var self_4213: MultiVector;
     var exponent_5: i32;
-    var local_2: Scalar;
-    var x_2: Scalar;
-    var y_2: Scalar;
+    var local_2: MultiVector;
+    var x_2: MultiVector;
+    var y_2: MultiVector;
     var n_2: i32;
 
-    self_4381 = self_4380;
+    self_4213 = self_4212;
     exponent_5 = exponent_4;
     let _e4: i32 = exponent_5;
     if (_e4 == 0) {
         {
-            let _e7: Scalar = scalar_one();
+            let _e7: MultiVector = multi_vector_one();
             return _e7;
         }
     }
     let _e8: i32 = exponent_5;
     if (_e8 < 0) {
-        let _e11: Scalar = self_4381;
-        let _e12: Scalar = scalar_inverse(_e11);
+        let _e11: MultiVector = self_4213;
+        let _e12: MultiVector = multi_vector_inverse(_e11);
         local_2 = _e12;
     } else {
-        let _e14: Scalar = self_4381;
+        let _e14: MultiVector = self_4213;
         local_2 = _e14;
     }
-    let _e15: Scalar = local_2;
+    let _e15: MultiVector = local_2;
     x_2 = _e15;
-    let _e17: Scalar = scalar_one();
+    let _e17: MultiVector = multi_vector_one();
     y_2 = _e17;
     let _e19: i32 = exponent_5;
     n_2 = abs(_e19);
@@ -43285,2773 +41943,3560 @@ fn scalar_powi(self_4380: Scalar, exponent_4: i32) -> Scalar {
             let _e26: i32 = n_2;
             if ((_e26 & 1) == 1) {
                 {
-                    let _e31: Scalar = x_2;
-                    let _e32: Scalar = y_2;
-                    let _e33: Scalar = scalar_scalar_geometric_product(_e31, _e32);
+                    let _e31: MultiVector = x_2;
+                    let _e32: MultiVector = y_2;
+                    let _e33: MultiVector = multi_vector_multi_vector_geometric_product(_e31, _e32);
                     y_2 = _e33;
                 }
             }
-            let _e34: Scalar = x_2;
-            let _e35: Scalar = x_2;
-            let _e36: Scalar = scalar_scalar_geometric_product(_e34, _e35);
+            let _e34: MultiVector = x_2;
+            let _e35: MultiVector = x_2;
+            let _e36: MultiVector = multi_vector_multi_vector_geometric_product(_e34, _e35);
             x_2 = _e36;
             let _e37: i32 = n_2;
             n_2 = (_e37 >> 1u);
         }
     }
-    let _e40: Scalar = x_2;
-    let _e41: Scalar = y_2;
-    let _e42: Scalar = scalar_scalar_geometric_product(_e40, _e41);
+    let _e40: MultiVector = x_2;
+    let _e41: MultiVector = y_2;
+    let _e42: MultiVector = multi_vector_multi_vector_geometric_product(_e40, _e41);
     return _e42;
 }
 
-fn scalar_scalar_geometric_quotient(self_4382: Scalar, other_3974: Scalar) -> Scalar {
-    var self_4383: Scalar;
-    var other_3975: Scalar;
+fn multi_vector_multi_vector_geometric_quotient(self_4214: MultiVector, other_3806: MultiVector) -> MultiVector {
+    var self_4215: MultiVector;
+    var other_3807: MultiVector;
 
-    self_4383 = self_4382;
-    other_3975 = other_3974;
-    let _e4: Scalar = self_4383;
-    let _e5: Scalar = other_3975;
-    let _e6: Scalar = scalar_inverse(_e5);
-    let _e7: Scalar = scalar_scalar_geometric_product(_e4, _e6);
+    self_4215 = self_4214;
+    other_3807 = other_3806;
+    let _e4: MultiVector = self_4215;
+    let _e5: MultiVector = other_3807;
+    let _e6: MultiVector = multi_vector_inverse(_e5);
+    let _e7: MultiVector = multi_vector_multi_vector_geometric_product(_e4, _e6);
     return _e7;
 }
 
-fn scalar_scalar_transformation(self_4384: Scalar, other_3976: Scalar) -> Scalar {
-    var self_4385: Scalar;
-    var other_3977: Scalar;
+fn scalar_scalar_transformation(self_4216: Scalar, other_3808: Scalar) -> Scalar {
+    var self_4217: Scalar;
+    var other_3809: Scalar;
 
-    self_4385 = self_4384;
-    other_3977 = other_3976;
-    let _e4: Scalar = self_4385;
-    let _e5: Scalar = other_3977;
+    self_4217 = self_4216;
+    other_3809 = other_3808;
+    let _e4: Scalar = self_4217;
+    let _e5: Scalar = other_3809;
     let _e6: Scalar = scalar_scalar_geometric_product(_e4, _e5);
-    let _e7: Scalar = self_4385;
+    let _e7: Scalar = self_4217;
     let _e8: Scalar = scalar_reversal(_e7);
     let _e9: Scalar = scalar_scalar_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn scalar_translator_geometric_quotient(self_4386: Scalar, other_3978: Translator) -> Translator {
-    var self_4387: Scalar;
-    var other_3979: Translator;
+fn scalar_anti_scalar_transformation(self_4218: Scalar, other_3810: AntiScalar) -> AntiScalar {
+    var self_4219: Scalar;
+    var other_3811: AntiScalar;
 
-    self_4387 = self_4386;
-    other_3979 = other_3978;
-    let _e4: Scalar = self_4387;
-    let _e5: Translator = other_3979;
-    let _e6: Translator = translator_inverse(_e5);
-    let _e7: Translator = scalar_translator_geometric_product(_e4, _e6);
-    return _e7;
+    self_4219 = self_4218;
+    other_3811 = other_3810;
+    let _e4: Scalar = self_4219;
+    let _e5: AntiScalar = other_3811;
+    let _e6: AntiScalar = scalar_anti_scalar_geometric_product(_e4, _e5);
+    let _e7: Scalar = self_4219;
+    let _e8: Scalar = scalar_reversal(_e7);
+    let _e9: AntiScalar = anti_scalar_scalar_geometric_product(_e6, _e8);
+    return _e9;
 }
 
-fn scalar_translator_transformation(self_4388: Scalar, other_3980: Translator) -> Translator {
-    var self_4389: Scalar;
-    var other_3981: Translator;
+fn scalar_homogeneous_magnitude_transformation(self_4220: Scalar, other_3812: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_4221: Scalar;
+    var other_3813: HomogeneousMagnitude;
 
-    self_4389 = self_4388;
-    other_3981 = other_3980;
-    let _e4: Scalar = self_4389;
-    let _e5: Translator = other_3981;
+    self_4221 = self_4220;
+    other_3813 = other_3812;
+    let _e4: Scalar = self_4221;
+    let _e5: HomogeneousMagnitude = other_3813;
+    let _e6: HomogeneousMagnitude = scalar_homogeneous_magnitude_geometric_product(_e4, _e5);
+    let _e7: Scalar = self_4221;
+    let _e8: Scalar = scalar_reversal(_e7);
+    let _e9: HomogeneousMagnitude = homogeneous_magnitude_scalar_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn scalar_point_transformation(self_4222: Scalar, other_3814: Point) -> Point {
+    var self_4223: Scalar;
+    var other_3815: Point;
+
+    self_4223 = self_4222;
+    other_3815 = other_3814;
+    let _e4: Scalar = self_4223;
+    let _e5: Point = other_3815;
+    let _e6: Point = scalar_point_geometric_product(_e4, _e5);
+    let _e7: Scalar = self_4223;
+    let _e8: Scalar = scalar_reversal(_e7);
+    let _e9: Point = point_scalar_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn scalar_line_transformation(self_4224: Scalar, other_3816: Line) -> Line {
+    var self_4225: Scalar;
+    var other_3817: Line;
+
+    self_4225 = self_4224;
+    other_3817 = other_3816;
+    let _e4: Scalar = self_4225;
+    let _e5: Line = other_3817;
+    let _e6: Line = scalar_line_geometric_product(_e4, _e5);
+    let _e7: Scalar = self_4225;
+    let _e8: Scalar = scalar_reversal(_e7);
+    let _e9: Line = line_scalar_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn scalar_plane_transformation(self_4226: Scalar, other_3818: Plane) -> Plane {
+    var self_4227: Scalar;
+    var other_3819: Plane;
+
+    self_4227 = self_4226;
+    other_3819 = other_3818;
+    let _e4: Scalar = self_4227;
+    let _e5: Plane = other_3819;
+    let _e6: Plane = scalar_plane_geometric_product(_e4, _e5);
+    let _e7: Scalar = self_4227;
+    let _e8: Scalar = scalar_reversal(_e7);
+    let _e9: Plane = plane_scalar_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn scalar_motor_transformation(self_4228: Scalar, other_3820: Motor) -> Motor {
+    var self_4229: Scalar;
+    var other_3821: Motor;
+
+    self_4229 = self_4228;
+    other_3821 = other_3820;
+    let _e4: Scalar = self_4229;
+    let _e5: Motor = other_3821;
+    let _e6: Motor = scalar_motor_geometric_product(_e4, _e5);
+    let _e7: Scalar = self_4229;
+    let _e8: Scalar = scalar_reversal(_e7);
+    let _e9: Motor = motor_scalar_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn scalar_rotor_transformation(self_4230: Scalar, other_3822: Rotor) -> Rotor {
+    var self_4231: Scalar;
+    var other_3823: Rotor;
+
+    self_4231 = self_4230;
+    other_3823 = other_3822;
+    let _e4: Scalar = self_4231;
+    let _e5: Rotor = other_3823;
+    let _e6: Rotor = scalar_rotor_geometric_product(_e4, _e5);
+    let _e7: Scalar = self_4231;
+    let _e8: Scalar = scalar_reversal(_e7);
+    let _e9: Rotor = rotor_scalar_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn scalar_translator_transformation(self_4232: Scalar, other_3824: Translator) -> Translator {
+    var self_4233: Scalar;
+    var other_3825: Translator;
+
+    self_4233 = self_4232;
+    other_3825 = other_3824;
+    let _e4: Scalar = self_4233;
+    let _e5: Translator = other_3825;
     let _e6: Translator = scalar_translator_geometric_product(_e4, _e5);
-    let _e7: Scalar = self_4389;
+    let _e7: Scalar = self_4233;
     let _e8: Scalar = scalar_reversal(_e7);
     let _e9: Translator = translator_scalar_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn translator_anti_scalar_transformation(self_4390: Translator, other_3982: AntiScalar) -> AntiScalar {
-    var self_4391: Translator;
-    var other_3983: AntiScalar;
+fn scalar_flector_transformation(self_4234: Scalar, other_3826: Flector) -> Flector {
+    var self_4235: Scalar;
+    var other_3827: Flector;
 
-    self_4391 = self_4390;
-    other_3983 = other_3982;
-    let _e4: Translator = self_4391;
-    let _e5: AntiScalar = other_3983;
-    let _e6: Rotor = translator_anti_scalar_geometric_product(_e4, _e5);
-    let _e7: Translator = self_4391;
-    let _e8: Translator = translator_reversal(_e7);
-    let _e9: Rotor = rotor_translator_geometric_product(_e6, _e8);
-    let _e10: AntiScalar = rotor_anti_scalar_into(_e9);
-    return _e10;
-}
-
-fn translator_flector_geometric_quotient(self_4392: Translator, other_3984: Flector) -> Flector {
-    var self_4393: Translator;
-    var other_3985: Flector;
-
-    self_4393 = self_4392;
-    other_3985 = other_3984;
-    let _e4: Translator = self_4393;
-    let _e5: Flector = other_3985;
-    let _e6: Flector = flector_inverse(_e5);
-    let _e7: Flector = translator_flector_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn translator_flector_transformation(self_4394: Translator, other_3986: Flector) -> Flector {
-    var self_4395: Translator;
-    var other_3987: Flector;
-
-    self_4395 = self_4394;
-    other_3987 = other_3986;
-    let _e4: Translator = self_4395;
-    let _e5: Flector = other_3987;
-    let _e6: Flector = translator_flector_geometric_product(_e4, _e5);
-    let _e7: Translator = self_4395;
-    let _e8: Translator = translator_reversal(_e7);
-    let _e9: Flector = flector_translator_geometric_product(_e6, _e8);
+    self_4235 = self_4234;
+    other_3827 = other_3826;
+    let _e4: Scalar = self_4235;
+    let _e5: Flector = other_3827;
+    let _e6: Flector = scalar_flector_geometric_product(_e4, _e5);
+    let _e7: Scalar = self_4235;
+    let _e8: Scalar = scalar_reversal(_e7);
+    let _e9: Flector = flector_scalar_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn translator_homogeneous_magnitude_geometric_quotient(self_4396: Translator, other_3988: HomogeneousMagnitude) -> Motor {
-    var self_4397: Translator;
-    var other_3989: HomogeneousMagnitude;
+fn scalar_multi_vector_transformation(self_4236: Scalar, other_3828: MultiVector) -> MultiVector {
+    var self_4237: Scalar;
+    var other_3829: MultiVector;
 
-    self_4397 = self_4396;
-    other_3989 = other_3988;
-    let _e4: Translator = self_4397;
-    let _e5: HomogeneousMagnitude = other_3989;
-    let _e6: HomogeneousMagnitude = homogeneous_magnitude_inverse(_e5);
-    let _e7: Motor = translator_homogeneous_magnitude_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn translator_homogeneous_magnitude_transformation(self_4398: Translator, other_3990: HomogeneousMagnitude) -> HomogeneousMagnitude {
-    var self_4399: Translator;
-    var other_3991: HomogeneousMagnitude;
-
-    self_4399 = self_4398;
-    other_3991 = other_3990;
-    let _e4: Translator = self_4399;
-    let _e5: HomogeneousMagnitude = other_3991;
-    let _e6: Motor = translator_homogeneous_magnitude_geometric_product(_e4, _e5);
-    let _e7: Translator = self_4399;
-    let _e8: Translator = translator_reversal(_e7);
-    let _e9: MultiVector = motor_translator_geometric_product(_e6, _e8);
-    let _e10: HomogeneousMagnitude = multi_vector_homogeneous_magnitude_into(_e9);
-    return _e10;
-}
-
-fn translator_line_geometric_quotient(self_4400: Translator, other_3992: Line) -> MultiVector {
-    var self_4401: Translator;
-    var other_3993: Line;
-
-    self_4401 = self_4400;
-    other_3993 = other_3992;
-    let _e4: Translator = self_4401;
-    let _e5: Line = other_3993;
-    let _e6: Line = line_inverse(_e5);
-    let _e7: MultiVector = translator_line_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn translator_line_transformation(self_4402: Translator, other_3994: Line) -> Line {
-    var self_4403: Translator;
-    var other_3995: Line;
-
-    self_4403 = self_4402;
-    other_3995 = other_3994;
-    let _e4: Translator = self_4403;
-    let _e5: Line = other_3995;
-    let _e6: MultiVector = translator_line_geometric_product(_e4, _e5);
-    let _e7: Translator = self_4403;
-    let _e8: Translator = translator_reversal(_e7);
-    let _e9: MultiVector = multi_vector_translator_geometric_product(_e6, _e8);
-    let _e10: Line = multi_vector_line_into(_e9);
-    return _e10;
-}
-
-fn translator_motor_geometric_quotient(self_4404: Translator, other_3996: Motor) -> MultiVector {
-    var self_4405: Translator;
-    var other_3997: Motor;
-
-    self_4405 = self_4404;
-    other_3997 = other_3996;
-    let _e4: Translator = self_4405;
-    let _e5: Motor = other_3997;
-    let _e6: Motor = motor_inverse(_e5);
-    let _e7: MultiVector = translator_motor_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn translator_motor_transformation(self_4406: Translator, other_3998: Motor) -> Motor {
-    var self_4407: Translator;
-    var other_3999: Motor;
-
-    self_4407 = self_4406;
-    other_3999 = other_3998;
-    let _e4: Translator = self_4407;
-    let _e5: Motor = other_3999;
-    let _e6: MultiVector = translator_motor_geometric_product(_e4, _e5);
-    let _e7: Translator = self_4407;
-    let _e8: Translator = translator_reversal(_e7);
-    let _e9: MultiVector = multi_vector_translator_geometric_product(_e6, _e8);
-    let _e10: Motor = multi_vector_motor_into(_e9);
-    return _e10;
-}
-
-fn translator_multi_vector_geometric_quotient(self_4408: Translator, other_4000: MultiVector) -> MultiVector {
-    var self_4409: Translator;
-    var other_4001: MultiVector;
-
-    self_4409 = self_4408;
-    other_4001 = other_4000;
-    let _e4: Translator = self_4409;
-    let _e5: MultiVector = other_4001;
-    let _e6: MultiVector = multi_vector_inverse(_e5);
-    let _e7: MultiVector = translator_multi_vector_geometric_product(_e4, _e6);
-    return _e7;
-}
-
-fn translator_multi_vector_transformation(self_4410: Translator, other_4002: MultiVector) -> MultiVector {
-    var self_4411: Translator;
-    var other_4003: MultiVector;
-
-    self_4411 = self_4410;
-    other_4003 = other_4002;
-    let _e4: Translator = self_4411;
-    let _e5: MultiVector = other_4003;
-    let _e6: MultiVector = translator_multi_vector_geometric_product(_e4, _e5);
-    let _e7: Translator = self_4411;
-    let _e8: Translator = translator_reversal(_e7);
-    let _e9: MultiVector = multi_vector_translator_geometric_product(_e6, _e8);
+    self_4237 = self_4236;
+    other_3829 = other_3828;
+    let _e4: Scalar = self_4237;
+    let _e5: MultiVector = other_3829;
+    let _e6: MultiVector = scalar_multi_vector_geometric_product(_e4, _e5);
+    let _e7: Scalar = self_4237;
+    let _e8: Scalar = scalar_reversal(_e7);
+    let _e9: MultiVector = multi_vector_scalar_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn translator_plane_geometric_quotient(self_4412: Translator, other_4004: Plane) -> Flector {
-    var self_4413: Translator;
-    var other_4005: Plane;
+fn anti_scalar_point_transformation(self_4238: AntiScalar, other_3830: Point) -> Point {
+    var self_4239: AntiScalar;
+    var other_3831: Point;
 
-    self_4413 = self_4412;
-    other_4005 = other_4004;
-    let _e4: Translator = self_4413;
-    let _e5: Plane = other_4005;
-    let _e6: Plane = plane_inverse(_e5);
-    let _e7: Flector = translator_plane_geometric_product(_e4, _e6);
-    return _e7;
+    self_4239 = self_4238;
+    other_3831 = other_3830;
+    let _e4: AntiScalar = self_4239;
+    let _e5: Point = other_3831;
+    let _e6: Plane = anti_scalar_point_geometric_product(_e4, _e5);
+    let _e7: AntiScalar = self_4239;
+    let _e8: AntiScalar = anti_scalar_reversal(_e7);
+    let _e9: Point = plane_anti_scalar_geometric_product(_e6, _e8);
+    return _e9;
 }
 
-fn translator_plane_transformation(self_4414: Translator, other_4006: Plane) -> Plane {
-    var self_4415: Translator;
-    var other_4007: Plane;
+fn anti_scalar_plane_transformation(self_4240: AntiScalar, other_3832: Plane) -> Plane {
+    var self_4241: AntiScalar;
+    var other_3833: Plane;
 
-    self_4415 = self_4414;
-    other_4007 = other_4006;
-    let _e4: Translator = self_4415;
-    let _e5: Plane = other_4007;
-    let _e6: Flector = translator_plane_geometric_product(_e4, _e5);
-    let _e7: Translator = self_4415;
-    let _e8: Translator = translator_reversal(_e7);
-    let _e9: Flector = flector_translator_geometric_product(_e6, _e8);
-    let _e10: Plane = flector_plane_into(_e9);
+    self_4241 = self_4240;
+    other_3833 = other_3832;
+    let _e4: AntiScalar = self_4241;
+    let _e5: Plane = other_3833;
+    let _e6: Point = anti_scalar_plane_geometric_product(_e4, _e5);
+    let _e7: AntiScalar = self_4241;
+    let _e8: AntiScalar = anti_scalar_reversal(_e7);
+    let _e9: Plane = point_anti_scalar_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn anti_scalar_flector_transformation(self_4242: AntiScalar, other_3834: Flector) -> Flector {
+    var self_4243: AntiScalar;
+    var other_3835: Flector;
+
+    self_4243 = self_4242;
+    other_3835 = other_3834;
+    let _e4: AntiScalar = self_4243;
+    let _e5: Flector = other_3835;
+    let _e6: Flector = anti_scalar_flector_geometric_product(_e4, _e5);
+    let _e7: AntiScalar = self_4243;
+    let _e8: AntiScalar = anti_scalar_reversal(_e7);
+    let _e9: Flector = flector_anti_scalar_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn anti_scalar_multi_vector_transformation(self_4244: AntiScalar, other_3836: MultiVector) -> MultiVector {
+    var self_4245: AntiScalar;
+    var other_3837: MultiVector;
+
+    self_4245 = self_4244;
+    other_3837 = other_3836;
+    let _e4: AntiScalar = self_4245;
+    let _e5: MultiVector = other_3837;
+    let _e6: MultiVector = anti_scalar_multi_vector_geometric_product(_e4, _e5);
+    let _e7: AntiScalar = self_4245;
+    let _e8: AntiScalar = anti_scalar_reversal(_e7);
+    let _e9: MultiVector = multi_vector_anti_scalar_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn homogeneous_magnitude_scalar_transformation(self_4246: HomogeneousMagnitude, other_3838: Scalar) -> Scalar {
+    var self_4247: HomogeneousMagnitude;
+    var other_3839: Scalar;
+
+    self_4247 = self_4246;
+    other_3839 = other_3838;
+    let _e4: HomogeneousMagnitude = self_4247;
+    let _e5: Scalar = other_3839;
+    let _e6: HomogeneousMagnitude = homogeneous_magnitude_scalar_geometric_product(_e4, _e5);
+    let _e7: HomogeneousMagnitude = self_4247;
+    let _e8: HomogeneousMagnitude = homogeneous_magnitude_reversal(_e7);
+    let _e9: HomogeneousMagnitude = homogeneous_magnitude_homogeneous_magnitude_geometric_product(_e6, _e8);
+    let _e10: Scalar = homogeneous_magnitude_scalar_into(_e9);
     return _e10;
 }
 
-fn translator_point_geometric_quotient(self_4416: Translator, other_4008: Point) -> Flector {
-    var self_4417: Translator;
-    var other_4009: Point;
+fn homogeneous_magnitude_anti_scalar_transformation(self_4248: HomogeneousMagnitude, other_3840: AntiScalar) -> AntiScalar {
+    var self_4249: HomogeneousMagnitude;
+    var other_3841: AntiScalar;
 
-    self_4417 = self_4416;
-    other_4009 = other_4008;
-    let _e4: Translator = self_4417;
-    let _e5: Point = other_4009;
-    let _e6: Point = point_inverse(_e5);
-    let _e7: Flector = translator_point_geometric_product(_e4, _e6);
-    return _e7;
+    self_4249 = self_4248;
+    other_3841 = other_3840;
+    let _e4: HomogeneousMagnitude = self_4249;
+    let _e5: AntiScalar = other_3841;
+    let _e6: AntiScalar = homogeneous_magnitude_anti_scalar_geometric_product(_e4, _e5);
+    let _e7: HomogeneousMagnitude = self_4249;
+    let _e8: HomogeneousMagnitude = homogeneous_magnitude_reversal(_e7);
+    let _e9: AntiScalar = anti_scalar_homogeneous_magnitude_geometric_product(_e6, _e8);
+    return _e9;
 }
 
-fn translator_point_transformation(self_4418: Translator, other_4010: Point) -> Point {
-    var self_4419: Translator;
-    var other_4011: Point;
+fn homogeneous_magnitude_homogeneous_magnitude_transformation(self_4250: HomogeneousMagnitude, other_3842: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_4251: HomogeneousMagnitude;
+    var other_3843: HomogeneousMagnitude;
 
-    self_4419 = self_4418;
-    other_4011 = other_4010;
-    let _e4: Translator = self_4419;
-    let _e5: Point = other_4011;
-    let _e6: Flector = translator_point_geometric_product(_e4, _e5);
-    let _e7: Translator = self_4419;
-    let _e8: Translator = translator_reversal(_e7);
-    let _e9: Flector = flector_translator_geometric_product(_e6, _e8);
+    self_4251 = self_4250;
+    other_3843 = other_3842;
+    let _e4: HomogeneousMagnitude = self_4251;
+    let _e5: HomogeneousMagnitude = other_3843;
+    let _e6: HomogeneousMagnitude = homogeneous_magnitude_homogeneous_magnitude_geometric_product(_e4, _e5);
+    let _e7: HomogeneousMagnitude = self_4251;
+    let _e8: HomogeneousMagnitude = homogeneous_magnitude_reversal(_e7);
+    let _e9: HomogeneousMagnitude = homogeneous_magnitude_homogeneous_magnitude_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn homogeneous_magnitude_point_transformation(self_4252: HomogeneousMagnitude, other_3844: Point) -> Point {
+    var self_4253: HomogeneousMagnitude;
+    var other_3845: Point;
+
+    self_4253 = self_4252;
+    other_3845 = other_3844;
+    let _e4: HomogeneousMagnitude = self_4253;
+    let _e5: Point = other_3845;
+    let _e6: Flector = homogeneous_magnitude_point_geometric_product(_e4, _e5);
+    let _e7: HomogeneousMagnitude = self_4253;
+    let _e8: HomogeneousMagnitude = homogeneous_magnitude_reversal(_e7);
+    let _e9: Flector = flector_homogeneous_magnitude_geometric_product(_e6, _e8);
     let _e10: Point = flector_point_into(_e9);
     return _e10;
 }
 
-fn translator_rotor_transformation(self_4420: Translator, other_4012: Rotor) -> Rotor {
-    var self_4421: Translator;
-    var other_4013: Rotor;
+fn homogeneous_magnitude_line_transformation(self_4254: HomogeneousMagnitude, other_3846: Line) -> Line {
+    var self_4255: HomogeneousMagnitude;
+    var other_3847: Line;
 
-    self_4421 = self_4420;
-    other_4013 = other_4012;
-    let _e4: Translator = self_4421;
-    let _e5: Rotor = other_4013;
-    let _e6: Rotor = translator_rotor_geometric_product(_e4, _e5);
-    let _e7: Translator = self_4421;
-    let _e8: Translator = translator_reversal(_e7);
-    let _e9: Rotor = rotor_translator_geometric_product(_e6, _e8);
+    self_4255 = self_4254;
+    other_3847 = other_3846;
+    let _e4: HomogeneousMagnitude = self_4255;
+    let _e5: Line = other_3847;
+    let _e6: Line = homogeneous_magnitude_line_geometric_product(_e4, _e5);
+    let _e7: HomogeneousMagnitude = self_4255;
+    let _e8: HomogeneousMagnitude = homogeneous_magnitude_reversal(_e7);
+    let _e9: Line = line_homogeneous_magnitude_geometric_product(_e6, _e8);
     return _e9;
 }
 
-fn translator_scalar_geometric_quotient(self_4422: Translator, other_4014: Scalar) -> Translator {
-    var self_4423: Translator;
-    var other_4015: Scalar;
+fn homogeneous_magnitude_plane_transformation(self_4256: HomogeneousMagnitude, other_3848: Plane) -> Plane {
+    var self_4257: HomogeneousMagnitude;
+    var other_3849: Plane;
 
-    self_4423 = self_4422;
-    other_4015 = other_4014;
-    let _e4: Translator = self_4423;
-    let _e5: Scalar = other_4015;
-    let _e6: Scalar = scalar_inverse(_e5);
-    let _e7: Translator = translator_scalar_geometric_product(_e4, _e6);
-    return _e7;
+    self_4257 = self_4256;
+    other_3849 = other_3848;
+    let _e4: HomogeneousMagnitude = self_4257;
+    let _e5: Plane = other_3849;
+    let _e6: Flector = homogeneous_magnitude_plane_geometric_product(_e4, _e5);
+    let _e7: HomogeneousMagnitude = self_4257;
+    let _e8: HomogeneousMagnitude = homogeneous_magnitude_reversal(_e7);
+    let _e9: Flector = flector_homogeneous_magnitude_geometric_product(_e6, _e8);
+    let _e10: Plane = flector_plane_into(_e9);
+    return _e10;
 }
 
-fn translator_scalar_transformation(self_4424: Translator, other_4016: Scalar) -> Scalar {
-    var self_4425: Translator;
-    var other_4017: Scalar;
+fn homogeneous_magnitude_motor_transformation(self_4258: HomogeneousMagnitude, other_3850: Motor) -> Motor {
+    var self_4259: HomogeneousMagnitude;
+    var other_3851: Motor;
 
-    self_4425 = self_4424;
-    other_4017 = other_4016;
-    let _e4: Translator = self_4425;
-    let _e5: Scalar = other_4017;
+    self_4259 = self_4258;
+    other_3851 = other_3850;
+    let _e4: HomogeneousMagnitude = self_4259;
+    let _e5: Motor = other_3851;
+    let _e6: Motor = homogeneous_magnitude_motor_geometric_product(_e4, _e5);
+    let _e7: HomogeneousMagnitude = self_4259;
+    let _e8: HomogeneousMagnitude = homogeneous_magnitude_reversal(_e7);
+    let _e9: Motor = motor_homogeneous_magnitude_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn homogeneous_magnitude_rotor_transformation(self_4260: HomogeneousMagnitude, other_3852: Rotor) -> Rotor {
+    var self_4261: HomogeneousMagnitude;
+    var other_3853: Rotor;
+
+    self_4261 = self_4260;
+    other_3853 = other_3852;
+    let _e4: HomogeneousMagnitude = self_4261;
+    let _e5: Rotor = other_3853;
+    let _e6: Rotor = homogeneous_magnitude_rotor_geometric_product(_e4, _e5);
+    let _e7: HomogeneousMagnitude = self_4261;
+    let _e8: HomogeneousMagnitude = homogeneous_magnitude_reversal(_e7);
+    let _e9: Rotor = rotor_homogeneous_magnitude_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn homogeneous_magnitude_translator_transformation(self_4262: HomogeneousMagnitude, other_3854: Translator) -> Translator {
+    var self_4263: HomogeneousMagnitude;
+    var other_3855: Translator;
+
+    self_4263 = self_4262;
+    other_3855 = other_3854;
+    let _e4: HomogeneousMagnitude = self_4263;
+    let _e5: Translator = other_3855;
+    let _e6: Motor = homogeneous_magnitude_translator_geometric_product(_e4, _e5);
+    let _e7: HomogeneousMagnitude = self_4263;
+    let _e8: HomogeneousMagnitude = homogeneous_magnitude_reversal(_e7);
+    let _e9: Motor = motor_homogeneous_magnitude_geometric_product(_e6, _e8);
+    let _e10: Translator = motor_translator_into(_e9);
+    return _e10;
+}
+
+fn homogeneous_magnitude_flector_transformation(self_4264: HomogeneousMagnitude, other_3856: Flector) -> Flector {
+    var self_4265: HomogeneousMagnitude;
+    var other_3857: Flector;
+
+    self_4265 = self_4264;
+    other_3857 = other_3856;
+    let _e4: HomogeneousMagnitude = self_4265;
+    let _e5: Flector = other_3857;
+    let _e6: Flector = homogeneous_magnitude_flector_geometric_product(_e4, _e5);
+    let _e7: HomogeneousMagnitude = self_4265;
+    let _e8: HomogeneousMagnitude = homogeneous_magnitude_reversal(_e7);
+    let _e9: Flector = flector_homogeneous_magnitude_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn homogeneous_magnitude_multi_vector_transformation(self_4266: HomogeneousMagnitude, other_3858: MultiVector) -> MultiVector {
+    var self_4267: HomogeneousMagnitude;
+    var other_3859: MultiVector;
+
+    self_4267 = self_4266;
+    other_3859 = other_3858;
+    let _e4: HomogeneousMagnitude = self_4267;
+    let _e5: MultiVector = other_3859;
+    let _e6: MultiVector = homogeneous_magnitude_multi_vector_geometric_product(_e4, _e5);
+    let _e7: HomogeneousMagnitude = self_4267;
+    let _e8: HomogeneousMagnitude = homogeneous_magnitude_reversal(_e7);
+    let _e9: MultiVector = multi_vector_homogeneous_magnitude_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn point_scalar_transformation(self_4268: Point, other_3860: Scalar) -> Scalar {
+    var self_4269: Point;
+    var other_3861: Scalar;
+
+    self_4269 = self_4268;
+    other_3861 = other_3860;
+    let _e4: Point = self_4269;
+    let _e5: Scalar = other_3861;
+    let _e6: Point = point_scalar_geometric_product(_e4, _e5);
+    let _e7: Point = self_4269;
+    let _e8: Point = point_reversal(_e7);
+    let _e9: MultiVector = point_point_geometric_product(_e6, _e8);
+    let _e10: Scalar = multi_vector_scalar_into(_e9);
+    return _e10;
+}
+
+fn point_anti_scalar_transformation(self_4270: Point, other_3862: AntiScalar) -> AntiScalar {
+    var self_4271: Point;
+    var other_3863: AntiScalar;
+
+    self_4271 = self_4270;
+    other_3863 = other_3862;
+    let _e4: Point = self_4271;
+    let _e5: AntiScalar = other_3863;
+    let _e6: Plane = point_anti_scalar_geometric_product(_e4, _e5);
+    let _e7: Point = self_4271;
+    let _e8: Point = point_reversal(_e7);
+    let _e9: Motor = plane_point_geometric_product(_e6, _e8);
+    let _e10: AntiScalar = motor_anti_scalar_into(_e9);
+    return _e10;
+}
+
+fn point_homogeneous_magnitude_transformation(self_4272: Point, other_3864: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_4273: Point;
+    var other_3865: HomogeneousMagnitude;
+
+    self_4273 = self_4272;
+    other_3865 = other_3864;
+    let _e4: Point = self_4273;
+    let _e5: HomogeneousMagnitude = other_3865;
+    let _e6: Flector = point_homogeneous_magnitude_geometric_product(_e4, _e5);
+    let _e7: Point = self_4273;
+    let _e8: Point = point_reversal(_e7);
+    let _e9: MultiVector = flector_point_geometric_product(_e6, _e8);
+    let _e10: HomogeneousMagnitude = multi_vector_homogeneous_magnitude_into(_e9);
+    return _e10;
+}
+
+fn point_point_transformation(self_4274: Point, other_3866: Point) -> Point {
+    var self_4275: Point;
+    var other_3867: Point;
+
+    self_4275 = self_4274;
+    other_3867 = other_3866;
+    let _e4: Point = self_4275;
+    let _e5: Point = other_3867;
+    let _e6: MultiVector = point_point_geometric_product(_e4, _e5);
+    let _e7: Point = self_4275;
+    let _e8: Point = point_reversal(_e7);
+    let _e9: MultiVector = multi_vector_point_geometric_product(_e6, _e8);
+    let _e10: Point = multi_vector_point_into(_e9);
+    return _e10;
+}
+
+fn point_line_transformation(self_4276: Point, other_3868: Line) -> Line {
+    var self_4277: Point;
+    var other_3869: Line;
+
+    self_4277 = self_4276;
+    other_3869 = other_3868;
+    let _e4: Point = self_4277;
+    let _e5: Line = other_3869;
+    let _e6: Flector = point_line_geometric_product(_e4, _e5);
+    let _e7: Point = self_4277;
+    let _e8: Point = point_reversal(_e7);
+    let _e9: MultiVector = flector_point_geometric_product(_e6, _e8);
+    let _e10: Line = multi_vector_line_into(_e9);
+    return _e10;
+}
+
+fn point_plane_transformation(self_4278: Point, other_3870: Plane) -> Plane {
+    var self_4279: Point;
+    var other_3871: Plane;
+
+    self_4279 = self_4278;
+    other_3871 = other_3870;
+    let _e4: Point = self_4279;
+    let _e5: Plane = other_3871;
+    let _e6: Motor = point_plane_geometric_product(_e4, _e5);
+    let _e7: Point = self_4279;
+    let _e8: Point = point_reversal(_e7);
+    let _e9: Flector = motor_point_geometric_product(_e6, _e8);
+    let _e10: Plane = flector_plane_into(_e9);
+    return _e10;
+}
+
+fn point_motor_transformation(self_4280: Point, other_3872: Motor) -> Motor {
+    var self_4281: Point;
+    var other_3873: Motor;
+
+    self_4281 = self_4280;
+    other_3873 = other_3872;
+    let _e4: Point = self_4281;
+    let _e5: Motor = other_3873;
+    let _e6: Flector = point_motor_geometric_product(_e4, _e5);
+    let _e7: Point = self_4281;
+    let _e8: Point = point_reversal(_e7);
+    let _e9: MultiVector = flector_point_geometric_product(_e6, _e8);
+    let _e10: Motor = multi_vector_motor_into(_e9);
+    return _e10;
+}
+
+fn point_rotor_transformation(self_4282: Point, other_3874: Rotor) -> Rotor {
+    var self_4283: Point;
+    var other_3875: Rotor;
+
+    self_4283 = self_4282;
+    other_3875 = other_3874;
+    let _e4: Point = self_4283;
+    let _e5: Rotor = other_3875;
+    let _e6: Flector = point_rotor_geometric_product(_e4, _e5);
+    let _e7: Point = self_4283;
+    let _e8: Point = point_reversal(_e7);
+    let _e9: MultiVector = flector_point_geometric_product(_e6, _e8);
+    let _e10: Rotor = multi_vector_rotor_into(_e9);
+    return _e10;
+}
+
+fn point_translator_transformation(self_4284: Point, other_3876: Translator) -> Translator {
+    var self_4285: Point;
+    var other_3877: Translator;
+
+    self_4285 = self_4284;
+    other_3877 = other_3876;
+    let _e4: Point = self_4285;
+    let _e5: Translator = other_3877;
+    let _e6: Flector = point_translator_geometric_product(_e4, _e5);
+    let _e7: Point = self_4285;
+    let _e8: Point = point_reversal(_e7);
+    let _e9: MultiVector = flector_point_geometric_product(_e6, _e8);
+    let _e10: Translator = multi_vector_translator_into(_e9);
+    return _e10;
+}
+
+fn point_flector_transformation(self_4286: Point, other_3878: Flector) -> Flector {
+    var self_4287: Point;
+    var other_3879: Flector;
+
+    self_4287 = self_4286;
+    other_3879 = other_3878;
+    let _e4: Point = self_4287;
+    let _e5: Flector = other_3879;
+    let _e6: MultiVector = point_flector_geometric_product(_e4, _e5);
+    let _e7: Point = self_4287;
+    let _e8: Point = point_reversal(_e7);
+    let _e9: MultiVector = multi_vector_point_geometric_product(_e6, _e8);
+    let _e10: Flector = multi_vector_flector_into(_e9);
+    return _e10;
+}
+
+fn point_multi_vector_transformation(self_4288: Point, other_3880: MultiVector) -> MultiVector {
+    var self_4289: Point;
+    var other_3881: MultiVector;
+
+    self_4289 = self_4288;
+    other_3881 = other_3880;
+    let _e4: Point = self_4289;
+    let _e5: MultiVector = other_3881;
+    let _e6: MultiVector = point_multi_vector_geometric_product(_e4, _e5);
+    let _e7: Point = self_4289;
+    let _e8: Point = point_reversal(_e7);
+    let _e9: MultiVector = multi_vector_point_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn line_scalar_transformation(self_4290: Line, other_3882: Scalar) -> Scalar {
+    var self_4291: Line;
+    var other_3883: Scalar;
+
+    self_4291 = self_4290;
+    other_3883 = other_3882;
+    let _e4: Line = self_4291;
+    let _e5: Scalar = other_3883;
+    let _e6: Line = line_scalar_geometric_product(_e4, _e5);
+    let _e7: Line = self_4291;
+    let _e8: Line = line_reversal(_e7);
+    let _e9: MultiVector = line_line_geometric_product(_e6, _e8);
+    let _e10: Scalar = multi_vector_scalar_into(_e9);
+    return _e10;
+}
+
+fn line_anti_scalar_transformation(self_4292: Line, other_3884: AntiScalar) -> AntiScalar {
+    var self_4293: Line;
+    var other_3885: AntiScalar;
+
+    self_4293 = self_4292;
+    other_3885 = other_3884;
+    let _e4: Line = self_4293;
+    let _e5: AntiScalar = other_3885;
+    let _e6: Rotor = line_anti_scalar_geometric_product(_e4, _e5);
+    let _e7: Line = self_4293;
+    let _e8: Line = line_reversal(_e7);
+    let _e9: Rotor = rotor_line_geometric_product(_e6, _e8);
+    let _e10: AntiScalar = rotor_anti_scalar_into(_e9);
+    return _e10;
+}
+
+fn line_homogeneous_magnitude_transformation(self_4294: Line, other_3886: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_4295: Line;
+    var other_3887: HomogeneousMagnitude;
+
+    self_4295 = self_4294;
+    other_3887 = other_3886;
+    let _e4: Line = self_4295;
+    let _e5: HomogeneousMagnitude = other_3887;
+    let _e6: Line = line_homogeneous_magnitude_geometric_product(_e4, _e5);
+    let _e7: Line = self_4295;
+    let _e8: Line = line_reversal(_e7);
+    let _e9: MultiVector = line_line_geometric_product(_e6, _e8);
+    let _e10: HomogeneousMagnitude = multi_vector_homogeneous_magnitude_into(_e9);
+    return _e10;
+}
+
+fn line_point_transformation(self_4296: Line, other_3888: Point) -> Point {
+    var self_4297: Line;
+    var other_3889: Point;
+
+    self_4297 = self_4296;
+    other_3889 = other_3888;
+    let _e4: Line = self_4297;
+    let _e5: Point = other_3889;
+    let _e6: Flector = line_point_geometric_product(_e4, _e5);
+    let _e7: Line = self_4297;
+    let _e8: Line = line_reversal(_e7);
+    let _e9: Flector = flector_line_geometric_product(_e6, _e8);
+    let _e10: Point = flector_point_into(_e9);
+    return _e10;
+}
+
+fn line_line_transformation(self_4298: Line, other_3890: Line) -> Line {
+    var self_4299: Line;
+    var other_3891: Line;
+
+    self_4299 = self_4298;
+    other_3891 = other_3890;
+    let _e4: Line = self_4299;
+    let _e5: Line = other_3891;
+    let _e6: MultiVector = line_line_geometric_product(_e4, _e5);
+    let _e7: Line = self_4299;
+    let _e8: Line = line_reversal(_e7);
+    let _e9: MultiVector = multi_vector_line_geometric_product(_e6, _e8);
+    let _e10: Line = multi_vector_line_into(_e9);
+    return _e10;
+}
+
+fn line_plane_transformation(self_4300: Line, other_3892: Plane) -> Plane {
+    var self_4301: Line;
+    var other_3893: Plane;
+
+    self_4301 = self_4300;
+    other_3893 = other_3892;
+    let _e4: Line = self_4301;
+    let _e5: Plane = other_3893;
+    let _e6: Flector = line_plane_geometric_product(_e4, _e5);
+    let _e7: Line = self_4301;
+    let _e8: Line = line_reversal(_e7);
+    let _e9: Flector = flector_line_geometric_product(_e6, _e8);
+    let _e10: Plane = flector_plane_into(_e9);
+    return _e10;
+}
+
+fn line_motor_transformation(self_4302: Line, other_3894: Motor) -> Motor {
+    var self_4303: Line;
+    var other_3895: Motor;
+
+    self_4303 = self_4302;
+    other_3895 = other_3894;
+    let _e4: Line = self_4303;
+    let _e5: Motor = other_3895;
+    let _e6: MultiVector = line_motor_geometric_product(_e4, _e5);
+    let _e7: Line = self_4303;
+    let _e8: Line = line_reversal(_e7);
+    let _e9: MultiVector = multi_vector_line_geometric_product(_e6, _e8);
+    let _e10: Motor = multi_vector_motor_into(_e9);
+    return _e10;
+}
+
+fn line_rotor_transformation(self_4304: Line, other_3896: Rotor) -> Rotor {
+    var self_4305: Line;
+    var other_3897: Rotor;
+
+    self_4305 = self_4304;
+    other_3897 = other_3896;
+    let _e4: Line = self_4305;
+    let _e5: Rotor = other_3897;
+    let _e6: Rotor = line_rotor_geometric_product(_e4, _e5);
+    let _e7: Line = self_4305;
+    let _e8: Line = line_reversal(_e7);
+    let _e9: Rotor = rotor_line_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn line_translator_transformation(self_4306: Line, other_3898: Translator) -> Translator {
+    var self_4307: Line;
+    var other_3899: Translator;
+
+    self_4307 = self_4306;
+    other_3899 = other_3898;
+    let _e4: Line = self_4307;
+    let _e5: Translator = other_3899;
+    let _e6: MultiVector = line_translator_geometric_product(_e4, _e5);
+    let _e7: Line = self_4307;
+    let _e8: Line = line_reversal(_e7);
+    let _e9: MultiVector = multi_vector_line_geometric_product(_e6, _e8);
+    let _e10: Translator = multi_vector_translator_into(_e9);
+    return _e10;
+}
+
+fn line_flector_transformation(self_4308: Line, other_3900: Flector) -> Flector {
+    var self_4309: Line;
+    var other_3901: Flector;
+
+    self_4309 = self_4308;
+    other_3901 = other_3900;
+    let _e4: Line = self_4309;
+    let _e5: Flector = other_3901;
+    let _e6: Flector = line_flector_geometric_product(_e4, _e5);
+    let _e7: Line = self_4309;
+    let _e8: Line = line_reversal(_e7);
+    let _e9: Flector = flector_line_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn line_multi_vector_transformation(self_4310: Line, other_3902: MultiVector) -> MultiVector {
+    var self_4311: Line;
+    var other_3903: MultiVector;
+
+    self_4311 = self_4310;
+    other_3903 = other_3902;
+    let _e4: Line = self_4311;
+    let _e5: MultiVector = other_3903;
+    let _e6: MultiVector = line_multi_vector_geometric_product(_e4, _e5);
+    let _e7: Line = self_4311;
+    let _e8: Line = line_reversal(_e7);
+    let _e9: MultiVector = multi_vector_line_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn plane_scalar_transformation(self_4312: Plane, other_3904: Scalar) -> Scalar {
+    var self_4313: Plane;
+    var other_3905: Scalar;
+
+    self_4313 = self_4312;
+    other_3905 = other_3904;
+    let _e4: Plane = self_4313;
+    let _e5: Scalar = other_3905;
+    let _e6: Plane = plane_scalar_geometric_product(_e4, _e5);
+    let _e7: Plane = self_4313;
+    let _e8: Plane = plane_reversal(_e7);
+    let _e9: MultiVector = plane_plane_geometric_product(_e6, _e8);
+    let _e10: Scalar = multi_vector_scalar_into(_e9);
+    return _e10;
+}
+
+fn plane_anti_scalar_transformation(self_4314: Plane, other_3906: AntiScalar) -> AntiScalar {
+    var self_4315: Plane;
+    var other_3907: AntiScalar;
+
+    self_4315 = self_4314;
+    other_3907 = other_3906;
+    let _e4: Plane = self_4315;
+    let _e5: AntiScalar = other_3907;
+    let _e6: Point = plane_anti_scalar_geometric_product(_e4, _e5);
+    let _e7: Plane = self_4315;
+    let _e8: Plane = plane_reversal(_e7);
+    let _e9: Motor = point_plane_geometric_product(_e6, _e8);
+    let _e10: AntiScalar = motor_anti_scalar_into(_e9);
+    return _e10;
+}
+
+fn plane_homogeneous_magnitude_transformation(self_4316: Plane, other_3908: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_4317: Plane;
+    var other_3909: HomogeneousMagnitude;
+
+    self_4317 = self_4316;
+    other_3909 = other_3908;
+    let _e4: Plane = self_4317;
+    let _e5: HomogeneousMagnitude = other_3909;
+    let _e6: Flector = plane_homogeneous_magnitude_geometric_product(_e4, _e5);
+    let _e7: Plane = self_4317;
+    let _e8: Plane = plane_reversal(_e7);
+    let _e9: MultiVector = flector_plane_geometric_product(_e6, _e8);
+    let _e10: HomogeneousMagnitude = multi_vector_homogeneous_magnitude_into(_e9);
+    return _e10;
+}
+
+fn plane_point_transformation(self_4318: Plane, other_3910: Point) -> Point {
+    var self_4319: Plane;
+    var other_3911: Point;
+
+    self_4319 = self_4318;
+    other_3911 = other_3910;
+    let _e4: Plane = self_4319;
+    let _e5: Point = other_3911;
+    let _e6: Motor = plane_point_geometric_product(_e4, _e5);
+    let _e7: Plane = self_4319;
+    let _e8: Plane = plane_reversal(_e7);
+    let _e9: Flector = motor_plane_geometric_product(_e6, _e8);
+    let _e10: Point = flector_point_into(_e9);
+    return _e10;
+}
+
+fn plane_line_transformation(self_4320: Plane, other_3912: Line) -> Line {
+    var self_4321: Plane;
+    var other_3913: Line;
+
+    self_4321 = self_4320;
+    other_3913 = other_3912;
+    let _e4: Plane = self_4321;
+    let _e5: Line = other_3913;
+    let _e6: Flector = plane_line_geometric_product(_e4, _e5);
+    let _e7: Plane = self_4321;
+    let _e8: Plane = plane_reversal(_e7);
+    let _e9: MultiVector = flector_plane_geometric_product(_e6, _e8);
+    let _e10: Line = multi_vector_line_into(_e9);
+    return _e10;
+}
+
+fn plane_plane_transformation(self_4322: Plane, other_3914: Plane) -> Plane {
+    var self_4323: Plane;
+    var other_3915: Plane;
+
+    self_4323 = self_4322;
+    other_3915 = other_3914;
+    let _e4: Plane = self_4323;
+    let _e5: Plane = other_3915;
+    let _e6: MultiVector = plane_plane_geometric_product(_e4, _e5);
+    let _e7: Plane = self_4323;
+    let _e8: Plane = plane_reversal(_e7);
+    let _e9: MultiVector = multi_vector_plane_geometric_product(_e6, _e8);
+    let _e10: Plane = multi_vector_plane_into(_e9);
+    return _e10;
+}
+
+fn plane_motor_transformation(self_4324: Plane, other_3916: Motor) -> Motor {
+    var self_4325: Plane;
+    var other_3917: Motor;
+
+    self_4325 = self_4324;
+    other_3917 = other_3916;
+    let _e4: Plane = self_4325;
+    let _e5: Motor = other_3917;
+    let _e6: Flector = plane_motor_geometric_product(_e4, _e5);
+    let _e7: Plane = self_4325;
+    let _e8: Plane = plane_reversal(_e7);
+    let _e9: MultiVector = flector_plane_geometric_product(_e6, _e8);
+    let _e10: Motor = multi_vector_motor_into(_e9);
+    return _e10;
+}
+
+fn plane_rotor_transformation(self_4326: Plane, other_3918: Rotor) -> Rotor {
+    var self_4327: Plane;
+    var other_3919: Rotor;
+
+    self_4327 = self_4326;
+    other_3919 = other_3918;
+    let _e4: Plane = self_4327;
+    let _e5: Rotor = other_3919;
+    let _e6: Flector = plane_rotor_geometric_product(_e4, _e5);
+    let _e7: Plane = self_4327;
+    let _e8: Plane = plane_reversal(_e7);
+    let _e9: MultiVector = flector_plane_geometric_product(_e6, _e8);
+    let _e10: Rotor = multi_vector_rotor_into(_e9);
+    return _e10;
+}
+
+fn plane_translator_transformation(self_4328: Plane, other_3920: Translator) -> Translator {
+    var self_4329: Plane;
+    var other_3921: Translator;
+
+    self_4329 = self_4328;
+    other_3921 = other_3920;
+    let _e4: Plane = self_4329;
+    let _e5: Translator = other_3921;
+    let _e6: Flector = plane_translator_geometric_product(_e4, _e5);
+    let _e7: Plane = self_4329;
+    let _e8: Plane = plane_reversal(_e7);
+    let _e9: MultiVector = flector_plane_geometric_product(_e6, _e8);
+    let _e10: Translator = multi_vector_translator_into(_e9);
+    return _e10;
+}
+
+fn plane_flector_transformation(self_4330: Plane, other_3922: Flector) -> Flector {
+    var self_4331: Plane;
+    var other_3923: Flector;
+
+    self_4331 = self_4330;
+    other_3923 = other_3922;
+    let _e4: Plane = self_4331;
+    let _e5: Flector = other_3923;
+    let _e6: MultiVector = plane_flector_geometric_product(_e4, _e5);
+    let _e7: Plane = self_4331;
+    let _e8: Plane = plane_reversal(_e7);
+    let _e9: MultiVector = multi_vector_plane_geometric_product(_e6, _e8);
+    let _e10: Flector = multi_vector_flector_into(_e9);
+    return _e10;
+}
+
+fn plane_multi_vector_transformation(self_4332: Plane, other_3924: MultiVector) -> MultiVector {
+    var self_4333: Plane;
+    var other_3925: MultiVector;
+
+    self_4333 = self_4332;
+    other_3925 = other_3924;
+    let _e4: Plane = self_4333;
+    let _e5: MultiVector = other_3925;
+    let _e6: MultiVector = plane_multi_vector_geometric_product(_e4, _e5);
+    let _e7: Plane = self_4333;
+    let _e8: Plane = plane_reversal(_e7);
+    let _e9: MultiVector = multi_vector_plane_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn motor_scalar_transformation(self_4334: Motor, other_3926: Scalar) -> Scalar {
+    var self_4335: Motor;
+    var other_3927: Scalar;
+
+    self_4335 = self_4334;
+    other_3927 = other_3926;
+    let _e4: Motor = self_4335;
+    let _e5: Scalar = other_3927;
+    let _e6: Motor = motor_scalar_geometric_product(_e4, _e5);
+    let _e7: Motor = self_4335;
+    let _e8: Motor = motor_reversal(_e7);
+    let _e9: MultiVector = motor_motor_geometric_product(_e6, _e8);
+    let _e10: Scalar = multi_vector_scalar_into(_e9);
+    return _e10;
+}
+
+fn motor_anti_scalar_transformation(self_4336: Motor, other_3928: AntiScalar) -> AntiScalar {
+    var self_4337: Motor;
+    var other_3929: AntiScalar;
+
+    self_4337 = self_4336;
+    other_3929 = other_3928;
+    let _e4: Motor = self_4337;
+    let _e5: AntiScalar = other_3929;
+    let _e6: Rotor = motor_anti_scalar_geometric_product(_e4, _e5);
+    let _e7: Motor = self_4337;
+    let _e8: Motor = motor_reversal(_e7);
+    let _e9: Rotor = rotor_motor_geometric_product(_e6, _e8);
+    let _e10: AntiScalar = rotor_anti_scalar_into(_e9);
+    return _e10;
+}
+
+fn motor_homogeneous_magnitude_transformation(self_4338: Motor, other_3930: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_4339: Motor;
+    var other_3931: HomogeneousMagnitude;
+
+    self_4339 = self_4338;
+    other_3931 = other_3930;
+    let _e4: Motor = self_4339;
+    let _e5: HomogeneousMagnitude = other_3931;
+    let _e6: Motor = motor_homogeneous_magnitude_geometric_product(_e4, _e5);
+    let _e7: Motor = self_4339;
+    let _e8: Motor = motor_reversal(_e7);
+    let _e9: MultiVector = motor_motor_geometric_product(_e6, _e8);
+    let _e10: HomogeneousMagnitude = multi_vector_homogeneous_magnitude_into(_e9);
+    return _e10;
+}
+
+fn motor_point_transformation(self_4340: Motor, other_3932: Point) -> Point {
+    var self_4341: Motor;
+    var other_3933: Point;
+
+    self_4341 = self_4340;
+    other_3933 = other_3932;
+    let _e4: Motor = self_4341;
+    let _e5: Point = other_3933;
+    let _e6: Flector = motor_point_geometric_product(_e4, _e5);
+    let _e7: Motor = self_4341;
+    let _e8: Motor = motor_reversal(_e7);
+    let _e9: Flector = flector_motor_geometric_product(_e6, _e8);
+    let _e10: Point = flector_point_into(_e9);
+    return _e10;
+}
+
+fn motor_line_transformation(self_4342: Motor, other_3934: Line) -> Line {
+    var self_4343: Motor;
+    var other_3935: Line;
+
+    self_4343 = self_4342;
+    other_3935 = other_3934;
+    let _e4: Motor = self_4343;
+    let _e5: Line = other_3935;
+    let _e6: MultiVector = motor_line_geometric_product(_e4, _e5);
+    let _e7: Motor = self_4343;
+    let _e8: Motor = motor_reversal(_e7);
+    let _e9: MultiVector = multi_vector_motor_geometric_product(_e6, _e8);
+    let _e10: Line = multi_vector_line_into(_e9);
+    return _e10;
+}
+
+fn motor_plane_transformation(self_4344: Motor, other_3936: Plane) -> Plane {
+    var self_4345: Motor;
+    var other_3937: Plane;
+
+    self_4345 = self_4344;
+    other_3937 = other_3936;
+    let _e4: Motor = self_4345;
+    let _e5: Plane = other_3937;
+    let _e6: Flector = motor_plane_geometric_product(_e4, _e5);
+    let _e7: Motor = self_4345;
+    let _e8: Motor = motor_reversal(_e7);
+    let _e9: Flector = flector_motor_geometric_product(_e6, _e8);
+    let _e10: Plane = flector_plane_into(_e9);
+    return _e10;
+}
+
+fn motor_motor_transformation(self_4346: Motor, other_3938: Motor) -> Motor {
+    var self_4347: Motor;
+    var other_3939: Motor;
+
+    self_4347 = self_4346;
+    other_3939 = other_3938;
+    let _e4: Motor = self_4347;
+    let _e5: Motor = other_3939;
+    let _e6: MultiVector = motor_motor_geometric_product(_e4, _e5);
+    let _e7: Motor = self_4347;
+    let _e8: Motor = motor_reversal(_e7);
+    let _e9: MultiVector = multi_vector_motor_geometric_product(_e6, _e8);
+    let _e10: Motor = multi_vector_motor_into(_e9);
+    return _e10;
+}
+
+fn motor_rotor_transformation(self_4348: Motor, other_3940: Rotor) -> Rotor {
+    var self_4349: Motor;
+    var other_3941: Rotor;
+
+    self_4349 = self_4348;
+    other_3941 = other_3940;
+    let _e4: Motor = self_4349;
+    let _e5: Rotor = other_3941;
+    let _e6: Rotor = motor_rotor_geometric_product(_e4, _e5);
+    let _e7: Motor = self_4349;
+    let _e8: Motor = motor_reversal(_e7);
+    let _e9: Rotor = rotor_motor_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn motor_translator_transformation(self_4350: Motor, other_3942: Translator) -> Translator {
+    var self_4351: Motor;
+    var other_3943: Translator;
+
+    self_4351 = self_4350;
+    other_3943 = other_3942;
+    let _e4: Motor = self_4351;
+    let _e5: Translator = other_3943;
+    let _e6: MultiVector = motor_translator_geometric_product(_e4, _e5);
+    let _e7: Motor = self_4351;
+    let _e8: Motor = motor_reversal(_e7);
+    let _e9: MultiVector = multi_vector_motor_geometric_product(_e6, _e8);
+    let _e10: Translator = multi_vector_translator_into(_e9);
+    return _e10;
+}
+
+fn motor_flector_transformation(self_4352: Motor, other_3944: Flector) -> Flector {
+    var self_4353: Motor;
+    var other_3945: Flector;
+
+    self_4353 = self_4352;
+    other_3945 = other_3944;
+    let _e4: Motor = self_4353;
+    let _e5: Flector = other_3945;
+    let _e6: Flector = motor_flector_geometric_product(_e4, _e5);
+    let _e7: Motor = self_4353;
+    let _e8: Motor = motor_reversal(_e7);
+    let _e9: Flector = flector_motor_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn motor_multi_vector_transformation(self_4354: Motor, other_3946: MultiVector) -> MultiVector {
+    var self_4355: Motor;
+    var other_3947: MultiVector;
+
+    self_4355 = self_4354;
+    other_3947 = other_3946;
+    let _e4: Motor = self_4355;
+    let _e5: MultiVector = other_3947;
+    let _e6: MultiVector = motor_multi_vector_geometric_product(_e4, _e5);
+    let _e7: Motor = self_4355;
+    let _e8: Motor = motor_reversal(_e7);
+    let _e9: MultiVector = multi_vector_motor_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn rotor_point_transformation(self_4356: Rotor, other_3948: Point) -> Point {
+    var self_4357: Rotor;
+    var other_3949: Point;
+
+    self_4357 = self_4356;
+    other_3949 = other_3948;
+    let _e4: Rotor = self_4357;
+    let _e5: Point = other_3949;
+    let _e6: Flector = rotor_point_geometric_product(_e4, _e5);
+    let _e7: Rotor = self_4357;
+    let _e8: Rotor = rotor_reversal(_e7);
+    let _e9: Flector = flector_rotor_geometric_product(_e6, _e8);
+    let _e10: Point = flector_point_into(_e9);
+    return _e10;
+}
+
+fn rotor_plane_transformation(self_4358: Rotor, other_3950: Plane) -> Plane {
+    var self_4359: Rotor;
+    var other_3951: Plane;
+
+    self_4359 = self_4358;
+    other_3951 = other_3950;
+    let _e4: Rotor = self_4359;
+    let _e5: Plane = other_3951;
+    let _e6: Flector = rotor_plane_geometric_product(_e4, _e5);
+    let _e7: Rotor = self_4359;
+    let _e8: Rotor = rotor_reversal(_e7);
+    let _e9: Flector = flector_rotor_geometric_product(_e6, _e8);
+    let _e10: Plane = flector_plane_into(_e9);
+    return _e10;
+}
+
+fn rotor_flector_transformation(self_4360: Rotor, other_3952: Flector) -> Flector {
+    var self_4361: Rotor;
+    var other_3953: Flector;
+
+    self_4361 = self_4360;
+    other_3953 = other_3952;
+    let _e4: Rotor = self_4361;
+    let _e5: Flector = other_3953;
+    let _e6: Flector = rotor_flector_geometric_product(_e4, _e5);
+    let _e7: Rotor = self_4361;
+    let _e8: Rotor = rotor_reversal(_e7);
+    let _e9: Flector = flector_rotor_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn rotor_multi_vector_transformation(self_4362: Rotor, other_3954: MultiVector) -> MultiVector {
+    var self_4363: Rotor;
+    var other_3955: MultiVector;
+
+    self_4363 = self_4362;
+    other_3955 = other_3954;
+    let _e4: Rotor = self_4363;
+    let _e5: MultiVector = other_3955;
+    let _e6: MultiVector = rotor_multi_vector_geometric_product(_e4, _e5);
+    let _e7: Rotor = self_4363;
+    let _e8: Rotor = rotor_reversal(_e7);
+    let _e9: MultiVector = multi_vector_rotor_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn translator_scalar_transformation(self_4364: Translator, other_3956: Scalar) -> Scalar {
+    var self_4365: Translator;
+    var other_3957: Scalar;
+
+    self_4365 = self_4364;
+    other_3957 = other_3956;
+    let _e4: Translator = self_4365;
+    let _e5: Scalar = other_3957;
     let _e6: Translator = translator_scalar_geometric_product(_e4, _e5);
-    let _e7: Translator = self_4425;
+    let _e7: Translator = self_4365;
     let _e8: Translator = translator_reversal(_e7);
     let _e9: MultiVector = translator_translator_geometric_product(_e6, _e8);
     let _e10: Scalar = multi_vector_scalar_into(_e9);
     return _e10;
 }
 
-fn translator_translator_geometric_quotient(self_4426: Translator, other_4018: Translator) -> MultiVector {
-    var self_4427: Translator;
-    var other_4019: Translator;
+fn translator_anti_scalar_transformation(self_4366: Translator, other_3958: AntiScalar) -> AntiScalar {
+    var self_4367: Translator;
+    var other_3959: AntiScalar;
 
-    self_4427 = self_4426;
-    other_4019 = other_4018;
-    let _e4: Translator = self_4427;
-    let _e5: Translator = other_4019;
-    let _e6: Translator = translator_inverse(_e5);
-    let _e7: MultiVector = translator_translator_geometric_product(_e4, _e6);
-    return _e7;
+    self_4367 = self_4366;
+    other_3959 = other_3958;
+    let _e4: Translator = self_4367;
+    let _e5: AntiScalar = other_3959;
+    let _e6: Rotor = translator_anti_scalar_geometric_product(_e4, _e5);
+    let _e7: Translator = self_4367;
+    let _e8: Translator = translator_reversal(_e7);
+    let _e9: Rotor = rotor_translator_geometric_product(_e6, _e8);
+    let _e10: AntiScalar = rotor_anti_scalar_into(_e9);
+    return _e10;
 }
 
-fn translator_translator_transformation(self_4428: Translator, other_4020: Translator) -> Translator {
-    var self_4429: Translator;
-    var other_4021: Translator;
+fn translator_homogeneous_magnitude_transformation(self_4368: Translator, other_3960: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_4369: Translator;
+    var other_3961: HomogeneousMagnitude;
 
-    self_4429 = self_4428;
-    other_4021 = other_4020;
-    let _e4: Translator = self_4429;
-    let _e5: Translator = other_4021;
+    self_4369 = self_4368;
+    other_3961 = other_3960;
+    let _e4: Translator = self_4369;
+    let _e5: HomogeneousMagnitude = other_3961;
+    let _e6: Motor = translator_homogeneous_magnitude_geometric_product(_e4, _e5);
+    let _e7: Translator = self_4369;
+    let _e8: Translator = translator_reversal(_e7);
+    let _e9: MultiVector = motor_translator_geometric_product(_e6, _e8);
+    let _e10: HomogeneousMagnitude = multi_vector_homogeneous_magnitude_into(_e9);
+    return _e10;
+}
+
+fn translator_point_transformation(self_4370: Translator, other_3962: Point) -> Point {
+    var self_4371: Translator;
+    var other_3963: Point;
+
+    self_4371 = self_4370;
+    other_3963 = other_3962;
+    let _e4: Translator = self_4371;
+    let _e5: Point = other_3963;
+    let _e6: Flector = translator_point_geometric_product(_e4, _e5);
+    let _e7: Translator = self_4371;
+    let _e8: Translator = translator_reversal(_e7);
+    let _e9: Flector = flector_translator_geometric_product(_e6, _e8);
+    let _e10: Point = flector_point_into(_e9);
+    return _e10;
+}
+
+fn translator_line_transformation(self_4372: Translator, other_3964: Line) -> Line {
+    var self_4373: Translator;
+    var other_3965: Line;
+
+    self_4373 = self_4372;
+    other_3965 = other_3964;
+    let _e4: Translator = self_4373;
+    let _e5: Line = other_3965;
+    let _e6: MultiVector = translator_line_geometric_product(_e4, _e5);
+    let _e7: Translator = self_4373;
+    let _e8: Translator = translator_reversal(_e7);
+    let _e9: MultiVector = multi_vector_translator_geometric_product(_e6, _e8);
+    let _e10: Line = multi_vector_line_into(_e9);
+    return _e10;
+}
+
+fn translator_plane_transformation(self_4374: Translator, other_3966: Plane) -> Plane {
+    var self_4375: Translator;
+    var other_3967: Plane;
+
+    self_4375 = self_4374;
+    other_3967 = other_3966;
+    let _e4: Translator = self_4375;
+    let _e5: Plane = other_3967;
+    let _e6: Flector = translator_plane_geometric_product(_e4, _e5);
+    let _e7: Translator = self_4375;
+    let _e8: Translator = translator_reversal(_e7);
+    let _e9: Flector = flector_translator_geometric_product(_e6, _e8);
+    let _e10: Plane = flector_plane_into(_e9);
+    return _e10;
+}
+
+fn translator_motor_transformation(self_4376: Translator, other_3968: Motor) -> Motor {
+    var self_4377: Translator;
+    var other_3969: Motor;
+
+    self_4377 = self_4376;
+    other_3969 = other_3968;
+    let _e4: Translator = self_4377;
+    let _e5: Motor = other_3969;
+    let _e6: MultiVector = translator_motor_geometric_product(_e4, _e5);
+    let _e7: Translator = self_4377;
+    let _e8: Translator = translator_reversal(_e7);
+    let _e9: MultiVector = multi_vector_translator_geometric_product(_e6, _e8);
+    let _e10: Motor = multi_vector_motor_into(_e9);
+    return _e10;
+}
+
+fn translator_rotor_transformation(self_4378: Translator, other_3970: Rotor) -> Rotor {
+    var self_4379: Translator;
+    var other_3971: Rotor;
+
+    self_4379 = self_4378;
+    other_3971 = other_3970;
+    let _e4: Translator = self_4379;
+    let _e5: Rotor = other_3971;
+    let _e6: Rotor = translator_rotor_geometric_product(_e4, _e5);
+    let _e7: Translator = self_4379;
+    let _e8: Translator = translator_reversal(_e7);
+    let _e9: Rotor = rotor_translator_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn translator_translator_transformation(self_4380: Translator, other_3972: Translator) -> Translator {
+    var self_4381: Translator;
+    var other_3973: Translator;
+
+    self_4381 = self_4380;
+    other_3973 = other_3972;
+    let _e4: Translator = self_4381;
+    let _e5: Translator = other_3973;
     let _e6: MultiVector = translator_translator_geometric_product(_e4, _e5);
-    let _e7: Translator = self_4429;
+    let _e7: Translator = self_4381;
     let _e8: Translator = translator_reversal(_e7);
     let _e9: MultiVector = multi_vector_translator_geometric_product(_e6, _e8);
     let _e10: Translator = multi_vector_translator_into(_e9);
     return _e10;
 }
 
-fn flector_anti_scalar_sandwich(self_4430: Flector, other_4022: AntiScalar) -> AntiScalar {
-    var self_4431: Flector;
-    var other_4023: AntiScalar;
+fn translator_flector_transformation(self_4382: Translator, other_3974: Flector) -> Flector {
+    var self_4383: Translator;
+    var other_3975: Flector;
 
-    self_4431 = self_4430;
-    other_4023 = other_4022;
-    let _e4: Flector = self_4431;
-    let _e5: AntiScalar = other_4023;
-    let _e6: Flector = flector_anti_scalar_geometric_anti_product(_e4, _e5);
-    let _e7: Flector = self_4431;
-    let _e8: Flector = flector_anti_reversal(_e7);
-    let _e9: MultiVector = flector_flector_geometric_anti_product(_e6, _e8);
-    let _e10: AntiScalar = multi_vector_anti_scalar_into(_e9);
-    return _e10;
+    self_4383 = self_4382;
+    other_3975 = other_3974;
+    let _e4: Translator = self_4383;
+    let _e5: Flector = other_3975;
+    let _e6: Flector = translator_flector_geometric_product(_e4, _e5);
+    let _e7: Translator = self_4383;
+    let _e8: Translator = translator_reversal(_e7);
+    let _e9: Flector = flector_translator_geometric_product(_e6, _e8);
+    return _e9;
 }
 
-fn flector_flector_sandwich(self_4432: Flector, other_4024: Flector) -> Flector {
-    var self_4433: Flector;
-    var other_4025: Flector;
+fn translator_multi_vector_transformation(self_4384: Translator, other_3976: MultiVector) -> MultiVector {
+    var self_4385: Translator;
+    var other_3977: MultiVector;
 
-    self_4433 = self_4432;
-    other_4025 = other_4024;
-    let _e4: Flector = self_4433;
-    let _e5: Flector = other_4025;
-    let _e6: MultiVector = flector_flector_geometric_anti_product(_e4, _e5);
-    let _e7: Flector = self_4433;
-    let _e8: Flector = flector_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_flector_geometric_anti_product(_e6, _e8);
-    let _e10: Flector = multi_vector_flector_into(_e9);
-    return _e10;
+    self_4385 = self_4384;
+    other_3977 = other_3976;
+    let _e4: Translator = self_4385;
+    let _e5: MultiVector = other_3977;
+    let _e6: MultiVector = translator_multi_vector_geometric_product(_e4, _e5);
+    let _e7: Translator = self_4385;
+    let _e8: Translator = translator_reversal(_e7);
+    let _e9: MultiVector = multi_vector_translator_geometric_product(_e6, _e8);
+    return _e9;
 }
 
-fn flector_homogeneous_magnitude_sandwich(self_4434: Flector, other_4026: HomogeneousMagnitude) -> HomogeneousMagnitude {
-    var self_4435: Flector;
-    var other_4027: HomogeneousMagnitude;
+fn flector_scalar_transformation(self_4386: Flector, other_3978: Scalar) -> Scalar {
+    var self_4387: Flector;
+    var other_3979: Scalar;
 
-    self_4435 = self_4434;
-    other_4027 = other_4026;
-    let _e4: Flector = self_4435;
-    let _e5: HomogeneousMagnitude = other_4027;
-    let _e6: Flector = flector_homogeneous_magnitude_geometric_anti_product(_e4, _e5);
-    let _e7: Flector = self_4435;
-    let _e8: Flector = flector_anti_reversal(_e7);
-    let _e9: MultiVector = flector_flector_geometric_anti_product(_e6, _e8);
-    let _e10: HomogeneousMagnitude = multi_vector_homogeneous_magnitude_into(_e9);
-    return _e10;
-}
-
-fn flector_line_sandwich(self_4436: Flector, other_4028: Line) -> Line {
-    var self_4437: Flector;
-    var other_4029: Line;
-
-    self_4437 = self_4436;
-    other_4029 = other_4028;
-    let _e4: Flector = self_4437;
-    let _e5: Line = other_4029;
-    let _e6: Flector = flector_line_geometric_anti_product(_e4, _e5);
-    let _e7: Flector = self_4437;
-    let _e8: Flector = flector_anti_reversal(_e7);
-    let _e9: MultiVector = flector_flector_geometric_anti_product(_e6, _e8);
-    let _e10: Line = multi_vector_line_into(_e9);
-    return _e10;
-}
-
-fn flector_motor_sandwich(self_4438: Flector, other_4030: Motor) -> Motor {
-    var self_4439: Flector;
-    var other_4031: Motor;
-
-    self_4439 = self_4438;
-    other_4031 = other_4030;
-    let _e4: Flector = self_4439;
-    let _e5: Motor = other_4031;
-    let _e6: Flector = flector_motor_geometric_anti_product(_e4, _e5);
-    let _e7: Flector = self_4439;
-    let _e8: Flector = flector_anti_reversal(_e7);
-    let _e9: MultiVector = flector_flector_geometric_anti_product(_e6, _e8);
-    let _e10: Motor = multi_vector_motor_into(_e9);
-    return _e10;
-}
-
-fn flector_plane_sandwich(self_4440: Flector, other_4032: Plane) -> Plane {
-    var self_4441: Flector;
-    var other_4033: Plane;
-
-    self_4441 = self_4440;
-    other_4033 = other_4032;
-    let _e4: Flector = self_4441;
-    let _e5: Plane = other_4033;
-    let _e6: MultiVector = flector_plane_geometric_anti_product(_e4, _e5);
-    let _e7: Flector = self_4441;
-    let _e8: Flector = flector_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_flector_geometric_anti_product(_e6, _e8);
-    let _e10: Plane = multi_vector_plane_into(_e9);
-    return _e10;
-}
-
-fn flector_point_sandwich(self_4442: Flector, other_4034: Point) -> Point {
-    var self_4443: Flector;
-    var other_4035: Point;
-
-    self_4443 = self_4442;
-    other_4035 = other_4034;
-    let _e4: Flector = self_4443;
-    let _e5: Point = other_4035;
-    let _e6: MultiVector = flector_point_geometric_anti_product(_e4, _e5);
-    let _e7: Flector = self_4443;
-    let _e8: Flector = flector_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_flector_geometric_anti_product(_e6, _e8);
-    let _e10: Point = multi_vector_point_into(_e9);
-    return _e10;
-}
-
-fn flector_rotor_sandwich(self_4444: Flector, other_4036: Rotor) -> Rotor {
-    var self_4445: Flector;
-    var other_4037: Rotor;
-
-    self_4445 = self_4444;
-    other_4037 = other_4036;
-    let _e4: Flector = self_4445;
-    let _e5: Rotor = other_4037;
-    let _e6: Flector = flector_rotor_geometric_anti_product(_e4, _e5);
-    let _e7: Flector = self_4445;
-    let _e8: Flector = flector_anti_reversal(_e7);
-    let _e9: MultiVector = flector_flector_geometric_anti_product(_e6, _e8);
-    let _e10: Rotor = multi_vector_rotor_into(_e9);
-    return _e10;
-}
-
-fn flector_scalar_sandwich(self_4446: Flector, other_4038: Scalar) -> Scalar {
-    var self_4447: Flector;
-    var other_4039: Scalar;
-
-    self_4447 = self_4446;
-    other_4039 = other_4038;
-    let _e4: Flector = self_4447;
-    let _e5: Scalar = other_4039;
-    let _e6: Flector = flector_scalar_geometric_anti_product(_e4, _e5);
-    let _e7: Flector = self_4447;
-    let _e8: Flector = flector_anti_reversal(_e7);
-    let _e9: MultiVector = flector_flector_geometric_anti_product(_e6, _e8);
+    self_4387 = self_4386;
+    other_3979 = other_3978;
+    let _e4: Flector = self_4387;
+    let _e5: Scalar = other_3979;
+    let _e6: Flector = flector_scalar_geometric_product(_e4, _e5);
+    let _e7: Flector = self_4387;
+    let _e8: Flector = flector_reversal(_e7);
+    let _e9: MultiVector = flector_flector_geometric_product(_e6, _e8);
     let _e10: Scalar = multi_vector_scalar_into(_e9);
     return _e10;
 }
 
-fn flector_translator_sandwich(self_4448: Flector, other_4040: Translator) -> Translator {
-    var self_4449: Flector;
-    var other_4041: Translator;
+fn flector_anti_scalar_transformation(self_4388: Flector, other_3980: AntiScalar) -> AntiScalar {
+    var self_4389: Flector;
+    var other_3981: AntiScalar;
 
-    self_4449 = self_4448;
-    other_4041 = other_4040;
-    let _e4: Flector = self_4449;
-    let _e5: Translator = other_4041;
-    let _e6: Flector = flector_translator_geometric_anti_product(_e4, _e5);
-    let _e7: Flector = self_4449;
-    let _e8: Flector = flector_anti_reversal(_e7);
-    let _e9: MultiVector = flector_flector_geometric_anti_product(_e6, _e8);
+    self_4389 = self_4388;
+    other_3981 = other_3980;
+    let _e4: Flector = self_4389;
+    let _e5: AntiScalar = other_3981;
+    let _e6: Flector = flector_anti_scalar_geometric_product(_e4, _e5);
+    let _e7: Flector = self_4389;
+    let _e8: Flector = flector_reversal(_e7);
+    let _e9: MultiVector = flector_flector_geometric_product(_e6, _e8);
+    let _e10: AntiScalar = multi_vector_anti_scalar_into(_e9);
+    return _e10;
+}
+
+fn flector_homogeneous_magnitude_transformation(self_4390: Flector, other_3982: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_4391: Flector;
+    var other_3983: HomogeneousMagnitude;
+
+    self_4391 = self_4390;
+    other_3983 = other_3982;
+    let _e4: Flector = self_4391;
+    let _e5: HomogeneousMagnitude = other_3983;
+    let _e6: Flector = flector_homogeneous_magnitude_geometric_product(_e4, _e5);
+    let _e7: Flector = self_4391;
+    let _e8: Flector = flector_reversal(_e7);
+    let _e9: MultiVector = flector_flector_geometric_product(_e6, _e8);
+    let _e10: HomogeneousMagnitude = multi_vector_homogeneous_magnitude_into(_e9);
+    return _e10;
+}
+
+fn flector_point_transformation(self_4392: Flector, other_3984: Point) -> Point {
+    var self_4393: Flector;
+    var other_3985: Point;
+
+    self_4393 = self_4392;
+    other_3985 = other_3984;
+    let _e4: Flector = self_4393;
+    let _e5: Point = other_3985;
+    let _e6: MultiVector = flector_point_geometric_product(_e4, _e5);
+    let _e7: Flector = self_4393;
+    let _e8: Flector = flector_reversal(_e7);
+    let _e9: MultiVector = multi_vector_flector_geometric_product(_e6, _e8);
+    let _e10: Point = multi_vector_point_into(_e9);
+    return _e10;
+}
+
+fn flector_line_transformation(self_4394: Flector, other_3986: Line) -> Line {
+    var self_4395: Flector;
+    var other_3987: Line;
+
+    self_4395 = self_4394;
+    other_3987 = other_3986;
+    let _e4: Flector = self_4395;
+    let _e5: Line = other_3987;
+    let _e6: Flector = flector_line_geometric_product(_e4, _e5);
+    let _e7: Flector = self_4395;
+    let _e8: Flector = flector_reversal(_e7);
+    let _e9: MultiVector = flector_flector_geometric_product(_e6, _e8);
+    let _e10: Line = multi_vector_line_into(_e9);
+    return _e10;
+}
+
+fn flector_plane_transformation(self_4396: Flector, other_3988: Plane) -> Plane {
+    var self_4397: Flector;
+    var other_3989: Plane;
+
+    self_4397 = self_4396;
+    other_3989 = other_3988;
+    let _e4: Flector = self_4397;
+    let _e5: Plane = other_3989;
+    let _e6: MultiVector = flector_plane_geometric_product(_e4, _e5);
+    let _e7: Flector = self_4397;
+    let _e8: Flector = flector_reversal(_e7);
+    let _e9: MultiVector = multi_vector_flector_geometric_product(_e6, _e8);
+    let _e10: Plane = multi_vector_plane_into(_e9);
+    return _e10;
+}
+
+fn flector_motor_transformation(self_4398: Flector, other_3990: Motor) -> Motor {
+    var self_4399: Flector;
+    var other_3991: Motor;
+
+    self_4399 = self_4398;
+    other_3991 = other_3990;
+    let _e4: Flector = self_4399;
+    let _e5: Motor = other_3991;
+    let _e6: Flector = flector_motor_geometric_product(_e4, _e5);
+    let _e7: Flector = self_4399;
+    let _e8: Flector = flector_reversal(_e7);
+    let _e9: MultiVector = flector_flector_geometric_product(_e6, _e8);
+    let _e10: Motor = multi_vector_motor_into(_e9);
+    return _e10;
+}
+
+fn flector_rotor_transformation(self_4400: Flector, other_3992: Rotor) -> Rotor {
+    var self_4401: Flector;
+    var other_3993: Rotor;
+
+    self_4401 = self_4400;
+    other_3993 = other_3992;
+    let _e4: Flector = self_4401;
+    let _e5: Rotor = other_3993;
+    let _e6: Flector = flector_rotor_geometric_product(_e4, _e5);
+    let _e7: Flector = self_4401;
+    let _e8: Flector = flector_reversal(_e7);
+    let _e9: MultiVector = flector_flector_geometric_product(_e6, _e8);
+    let _e10: Rotor = multi_vector_rotor_into(_e9);
+    return _e10;
+}
+
+fn flector_translator_transformation(self_4402: Flector, other_3994: Translator) -> Translator {
+    var self_4403: Flector;
+    var other_3995: Translator;
+
+    self_4403 = self_4402;
+    other_3995 = other_3994;
+    let _e4: Flector = self_4403;
+    let _e5: Translator = other_3995;
+    let _e6: Flector = flector_translator_geometric_product(_e4, _e5);
+    let _e7: Flector = self_4403;
+    let _e8: Flector = flector_reversal(_e7);
+    let _e9: MultiVector = flector_flector_geometric_product(_e6, _e8);
     let _e10: Translator = multi_vector_translator_into(_e9);
     return _e10;
 }
 
-fn homogeneous_magnitude_anti_scalar_sandwich(self_4450: HomogeneousMagnitude, other_4042: AntiScalar) -> AntiScalar {
-    var self_4451: HomogeneousMagnitude;
-    var other_4043: AntiScalar;
+fn flector_flector_transformation(self_4404: Flector, other_3996: Flector) -> Flector {
+    var self_4405: Flector;
+    var other_3997: Flector;
+
+    self_4405 = self_4404;
+    other_3997 = other_3996;
+    let _e4: Flector = self_4405;
+    let _e5: Flector = other_3997;
+    let _e6: MultiVector = flector_flector_geometric_product(_e4, _e5);
+    let _e7: Flector = self_4405;
+    let _e8: Flector = flector_reversal(_e7);
+    let _e9: MultiVector = multi_vector_flector_geometric_product(_e6, _e8);
+    let _e10: Flector = multi_vector_flector_into(_e9);
+    return _e10;
+}
+
+fn flector_multi_vector_transformation(self_4406: Flector, other_3998: MultiVector) -> MultiVector {
+    var self_4407: Flector;
+    var other_3999: MultiVector;
+
+    self_4407 = self_4406;
+    other_3999 = other_3998;
+    let _e4: Flector = self_4407;
+    let _e5: MultiVector = other_3999;
+    let _e6: MultiVector = flector_multi_vector_geometric_product(_e4, _e5);
+    let _e7: Flector = self_4407;
+    let _e8: Flector = flector_reversal(_e7);
+    let _e9: MultiVector = multi_vector_flector_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn multi_vector_scalar_transformation(self_4408: MultiVector, other_4000: Scalar) -> Scalar {
+    var self_4409: MultiVector;
+    var other_4001: Scalar;
+
+    self_4409 = self_4408;
+    other_4001 = other_4000;
+    let _e4: MultiVector = self_4409;
+    let _e5: Scalar = other_4001;
+    let _e6: MultiVector = multi_vector_scalar_geometric_product(_e4, _e5);
+    let _e7: MultiVector = self_4409;
+    let _e8: MultiVector = multi_vector_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
+    let _e10: Scalar = multi_vector_scalar_into(_e9);
+    return _e10;
+}
+
+fn multi_vector_anti_scalar_transformation(self_4410: MultiVector, other_4002: AntiScalar) -> AntiScalar {
+    var self_4411: MultiVector;
+    var other_4003: AntiScalar;
+
+    self_4411 = self_4410;
+    other_4003 = other_4002;
+    let _e4: MultiVector = self_4411;
+    let _e5: AntiScalar = other_4003;
+    let _e6: MultiVector = multi_vector_anti_scalar_geometric_product(_e4, _e5);
+    let _e7: MultiVector = self_4411;
+    let _e8: MultiVector = multi_vector_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
+    let _e10: AntiScalar = multi_vector_anti_scalar_into(_e9);
+    return _e10;
+}
+
+fn multi_vector_homogeneous_magnitude_transformation(self_4412: MultiVector, other_4004: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_4413: MultiVector;
+    var other_4005: HomogeneousMagnitude;
+
+    self_4413 = self_4412;
+    other_4005 = other_4004;
+    let _e4: MultiVector = self_4413;
+    let _e5: HomogeneousMagnitude = other_4005;
+    let _e6: MultiVector = multi_vector_homogeneous_magnitude_geometric_product(_e4, _e5);
+    let _e7: MultiVector = self_4413;
+    let _e8: MultiVector = multi_vector_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
+    let _e10: HomogeneousMagnitude = multi_vector_homogeneous_magnitude_into(_e9);
+    return _e10;
+}
+
+fn multi_vector_point_transformation(self_4414: MultiVector, other_4006: Point) -> Point {
+    var self_4415: MultiVector;
+    var other_4007: Point;
+
+    self_4415 = self_4414;
+    other_4007 = other_4006;
+    let _e4: MultiVector = self_4415;
+    let _e5: Point = other_4007;
+    let _e6: MultiVector = multi_vector_point_geometric_product(_e4, _e5);
+    let _e7: MultiVector = self_4415;
+    let _e8: MultiVector = multi_vector_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
+    let _e10: Point = multi_vector_point_into(_e9);
+    return _e10;
+}
+
+fn multi_vector_line_transformation(self_4416: MultiVector, other_4008: Line) -> Line {
+    var self_4417: MultiVector;
+    var other_4009: Line;
+
+    self_4417 = self_4416;
+    other_4009 = other_4008;
+    let _e4: MultiVector = self_4417;
+    let _e5: Line = other_4009;
+    let _e6: MultiVector = multi_vector_line_geometric_product(_e4, _e5);
+    let _e7: MultiVector = self_4417;
+    let _e8: MultiVector = multi_vector_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
+    let _e10: Line = multi_vector_line_into(_e9);
+    return _e10;
+}
+
+fn multi_vector_plane_transformation(self_4418: MultiVector, other_4010: Plane) -> Plane {
+    var self_4419: MultiVector;
+    var other_4011: Plane;
+
+    self_4419 = self_4418;
+    other_4011 = other_4010;
+    let _e4: MultiVector = self_4419;
+    let _e5: Plane = other_4011;
+    let _e6: MultiVector = multi_vector_plane_geometric_product(_e4, _e5);
+    let _e7: MultiVector = self_4419;
+    let _e8: MultiVector = multi_vector_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
+    let _e10: Plane = multi_vector_plane_into(_e9);
+    return _e10;
+}
+
+fn multi_vector_motor_transformation(self_4420: MultiVector, other_4012: Motor) -> Motor {
+    var self_4421: MultiVector;
+    var other_4013: Motor;
+
+    self_4421 = self_4420;
+    other_4013 = other_4012;
+    let _e4: MultiVector = self_4421;
+    let _e5: Motor = other_4013;
+    let _e6: MultiVector = multi_vector_motor_geometric_product(_e4, _e5);
+    let _e7: MultiVector = self_4421;
+    let _e8: MultiVector = multi_vector_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
+    let _e10: Motor = multi_vector_motor_into(_e9);
+    return _e10;
+}
+
+fn multi_vector_rotor_transformation(self_4422: MultiVector, other_4014: Rotor) -> Rotor {
+    var self_4423: MultiVector;
+    var other_4015: Rotor;
+
+    self_4423 = self_4422;
+    other_4015 = other_4014;
+    let _e4: MultiVector = self_4423;
+    let _e5: Rotor = other_4015;
+    let _e6: MultiVector = multi_vector_rotor_geometric_product(_e4, _e5);
+    let _e7: MultiVector = self_4423;
+    let _e8: MultiVector = multi_vector_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
+    let _e10: Rotor = multi_vector_rotor_into(_e9);
+    return _e10;
+}
+
+fn multi_vector_translator_transformation(self_4424: MultiVector, other_4016: Translator) -> Translator {
+    var self_4425: MultiVector;
+    var other_4017: Translator;
+
+    self_4425 = self_4424;
+    other_4017 = other_4016;
+    let _e4: MultiVector = self_4425;
+    let _e5: Translator = other_4017;
+    let _e6: MultiVector = multi_vector_translator_geometric_product(_e4, _e5);
+    let _e7: MultiVector = self_4425;
+    let _e8: MultiVector = multi_vector_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
+    let _e10: Translator = multi_vector_translator_into(_e9);
+    return _e10;
+}
+
+fn multi_vector_flector_transformation(self_4426: MultiVector, other_4018: Flector) -> Flector {
+    var self_4427: MultiVector;
+    var other_4019: Flector;
+
+    self_4427 = self_4426;
+    other_4019 = other_4018;
+    let _e4: MultiVector = self_4427;
+    let _e5: Flector = other_4019;
+    let _e6: MultiVector = multi_vector_flector_geometric_product(_e4, _e5);
+    let _e7: MultiVector = self_4427;
+    let _e8: MultiVector = multi_vector_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
+    let _e10: Flector = multi_vector_flector_into(_e9);
+    return _e10;
+}
+
+fn multi_vector_multi_vector_transformation(self_4428: MultiVector, other_4020: MultiVector) -> MultiVector {
+    var self_4429: MultiVector;
+    var other_4021: MultiVector;
+
+    self_4429 = self_4428;
+    other_4021 = other_4020;
+    let _e4: MultiVector = self_4429;
+    let _e5: MultiVector = other_4021;
+    let _e6: MultiVector = multi_vector_multi_vector_geometric_product(_e4, _e5);
+    let _e7: MultiVector = self_4429;
+    let _e8: MultiVector = multi_vector_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_product(_e6, _e8);
+    return _e9;
+}
+
+fn scalar_point_sandwich(self_4430: Scalar, other_4022: Point) -> Point {
+    var self_4431: Scalar;
+    var other_4023: Point;
+
+    self_4431 = self_4430;
+    other_4023 = other_4022;
+    let _e4: Scalar = self_4431;
+    let _e5: Point = other_4023;
+    let _e6: Plane = scalar_point_geometric_anti_product(_e4, _e5);
+    let _e7: Scalar = self_4431;
+    let _e8: Scalar = scalar_anti_reversal(_e7);
+    let _e9: Point = plane_scalar_geometric_anti_product(_e6, _e8);
+    return _e9;
+}
+
+fn scalar_line_sandwich(self_4432: Scalar, other_4024: Line) -> Scalar {
+    var self_4433: Scalar;
+    var other_4025: Line;
+
+    self_4433 = self_4432;
+    other_4025 = other_4024;
+    let _e4: Scalar = self_4433;
+    let _e5: Line = other_4025;
+    let _e6: Translator = scalar_line_geometric_anti_product(_e4, _e5);
+    let _e7: Scalar = self_4433;
+    let _e8: Scalar = scalar_anti_reversal(_e7);
+    let _e9: Scalar = translator_scalar_geometric_anti_product(_e6, _e8);
+    return _e9;
+}
+
+fn scalar_plane_sandwich(self_4434: Scalar, other_4026: Plane) -> Plane {
+    var self_4435: Scalar;
+    var other_4027: Plane;
+
+    self_4435 = self_4434;
+    other_4027 = other_4026;
+    let _e4: Scalar = self_4435;
+    let _e5: Plane = other_4027;
+    let _e6: Point = scalar_plane_geometric_anti_product(_e4, _e5);
+    let _e7: Scalar = self_4435;
+    let _e8: Scalar = scalar_anti_reversal(_e7);
+    let _e9: Plane = point_scalar_geometric_anti_product(_e6, _e8);
+    return _e9;
+}
+
+fn scalar_motor_sandwich(self_4436: Scalar, other_4028: Motor) -> Motor {
+    var self_4437: Scalar;
+    var other_4029: Motor;
+
+    self_4437 = self_4436;
+    other_4029 = other_4028;
+    let _e4: Scalar = self_4437;
+    let _e5: Motor = other_4029;
+    let _e6: MultiVector = scalar_motor_geometric_anti_product(_e4, _e5);
+    let _e7: Scalar = self_4437;
+    let _e8: Scalar = scalar_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_scalar_geometric_anti_product(_e6, _e8);
+    let _e10: Motor = multi_vector_motor_into(_e9);
+    return _e10;
+}
+
+fn scalar_rotor_sandwich(self_4438: Scalar, other_4030: Rotor) -> Rotor {
+    var self_4439: Scalar;
+    var other_4031: Rotor;
+
+    self_4439 = self_4438;
+    other_4031 = other_4030;
+    let _e4: Scalar = self_4439;
+    let _e5: Rotor = other_4031;
+    let _e6: MultiVector = scalar_rotor_geometric_anti_product(_e4, _e5);
+    let _e7: Scalar = self_4439;
+    let _e8: Scalar = scalar_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_scalar_geometric_anti_product(_e6, _e8);
+    let _e10: Rotor = multi_vector_rotor_into(_e9);
+    return _e10;
+}
+
+fn scalar_flector_sandwich(self_4440: Scalar, other_4032: Flector) -> Flector {
+    var self_4441: Scalar;
+    var other_4033: Flector;
+
+    self_4441 = self_4440;
+    other_4033 = other_4032;
+    let _e4: Scalar = self_4441;
+    let _e5: Flector = other_4033;
+    let _e6: Flector = scalar_flector_geometric_anti_product(_e4, _e5);
+    let _e7: Scalar = self_4441;
+    let _e8: Scalar = scalar_anti_reversal(_e7);
+    let _e9: Flector = flector_scalar_geometric_anti_product(_e6, _e8);
+    return _e9;
+}
+
+fn scalar_multi_vector_sandwich(self_4442: Scalar, other_4034: MultiVector) -> MultiVector {
+    var self_4443: Scalar;
+    var other_4035: MultiVector;
+
+    self_4443 = self_4442;
+    other_4035 = other_4034;
+    let _e4: Scalar = self_4443;
+    let _e5: MultiVector = other_4035;
+    let _e6: MultiVector = scalar_multi_vector_geometric_anti_product(_e4, _e5);
+    let _e7: Scalar = self_4443;
+    let _e8: Scalar = scalar_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_scalar_geometric_anti_product(_e6, _e8);
+    return _e9;
+}
+
+fn anti_scalar_scalar_sandwich(self_4444: AntiScalar, other_4036: Scalar) -> Scalar {
+    var self_4445: AntiScalar;
+    var other_4037: Scalar;
+
+    self_4445 = self_4444;
+    other_4037 = other_4036;
+    let _e4: AntiScalar = self_4445;
+    let _e5: Scalar = other_4037;
+    let _e6: Scalar = anti_scalar_scalar_geometric_anti_product(_e4, _e5);
+    let _e7: AntiScalar = self_4445;
+    let _e8: AntiScalar = anti_scalar_anti_reversal(_e7);
+    let _e9: Scalar = scalar_anti_scalar_geometric_anti_product(_e6, _e8);
+    return _e9;
+}
+
+fn anti_scalar_anti_scalar_sandwich(self_4446: AntiScalar, other_4038: AntiScalar) -> AntiScalar {
+    var self_4447: AntiScalar;
+    var other_4039: AntiScalar;
+
+    self_4447 = self_4446;
+    other_4039 = other_4038;
+    let _e4: AntiScalar = self_4447;
+    let _e5: AntiScalar = other_4039;
+    let _e6: AntiScalar = anti_scalar_anti_scalar_geometric_anti_product(_e4, _e5);
+    let _e7: AntiScalar = self_4447;
+    let _e8: AntiScalar = anti_scalar_anti_reversal(_e7);
+    let _e9: AntiScalar = anti_scalar_anti_scalar_geometric_anti_product(_e6, _e8);
+    return _e9;
+}
+
+fn anti_scalar_homogeneous_magnitude_sandwich(self_4448: AntiScalar, other_4040: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_4449: AntiScalar;
+    var other_4041: HomogeneousMagnitude;
+
+    self_4449 = self_4448;
+    other_4041 = other_4040;
+    let _e4: AntiScalar = self_4449;
+    let _e5: HomogeneousMagnitude = other_4041;
+    let _e6: HomogeneousMagnitude = anti_scalar_homogeneous_magnitude_geometric_anti_product(_e4, _e5);
+    let _e7: AntiScalar = self_4449;
+    let _e8: AntiScalar = anti_scalar_anti_reversal(_e7);
+    let _e9: HomogeneousMagnitude = homogeneous_magnitude_anti_scalar_geometric_anti_product(_e6, _e8);
+    return _e9;
+}
+
+fn anti_scalar_point_sandwich(self_4450: AntiScalar, other_4042: Point) -> Point {
+    var self_4451: AntiScalar;
+    var other_4043: Point;
 
     self_4451 = self_4450;
     other_4043 = other_4042;
-    let _e4: HomogeneousMagnitude = self_4451;
-    let _e5: AntiScalar = other_4043;
+    let _e4: AntiScalar = self_4451;
+    let _e5: Point = other_4043;
+    let _e6: Point = anti_scalar_point_geometric_anti_product(_e4, _e5);
+    let _e7: AntiScalar = self_4451;
+    let _e8: AntiScalar = anti_scalar_anti_reversal(_e7);
+    let _e9: Point = point_anti_scalar_geometric_anti_product(_e6, _e8);
+    return _e9;
+}
+
+fn anti_scalar_line_sandwich(self_4452: AntiScalar, other_4044: Line) -> Line {
+    var self_4453: AntiScalar;
+    var other_4045: Line;
+
+    self_4453 = self_4452;
+    other_4045 = other_4044;
+    let _e4: AntiScalar = self_4453;
+    let _e5: Line = other_4045;
+    let _e6: Line = anti_scalar_line_geometric_anti_product(_e4, _e5);
+    let _e7: AntiScalar = self_4453;
+    let _e8: AntiScalar = anti_scalar_anti_reversal(_e7);
+    let _e9: Line = line_anti_scalar_geometric_anti_product(_e6, _e8);
+    return _e9;
+}
+
+fn anti_scalar_plane_sandwich(self_4454: AntiScalar, other_4046: Plane) -> Plane {
+    var self_4455: AntiScalar;
+    var other_4047: Plane;
+
+    self_4455 = self_4454;
+    other_4047 = other_4046;
+    let _e4: AntiScalar = self_4455;
+    let _e5: Plane = other_4047;
+    let _e6: Plane = anti_scalar_plane_geometric_anti_product(_e4, _e5);
+    let _e7: AntiScalar = self_4455;
+    let _e8: AntiScalar = anti_scalar_anti_reversal(_e7);
+    let _e9: Plane = plane_anti_scalar_geometric_anti_product(_e6, _e8);
+    return _e9;
+}
+
+fn anti_scalar_motor_sandwich(self_4456: AntiScalar, other_4048: Motor) -> Motor {
+    var self_4457: AntiScalar;
+    var other_4049: Motor;
+
+    self_4457 = self_4456;
+    other_4049 = other_4048;
+    let _e4: AntiScalar = self_4457;
+    let _e5: Motor = other_4049;
+    let _e6: Motor = anti_scalar_motor_geometric_anti_product(_e4, _e5);
+    let _e7: AntiScalar = self_4457;
+    let _e8: AntiScalar = anti_scalar_anti_reversal(_e7);
+    let _e9: Motor = motor_anti_scalar_geometric_anti_product(_e6, _e8);
+    return _e9;
+}
+
+fn anti_scalar_rotor_sandwich(self_4458: AntiScalar, other_4050: Rotor) -> Rotor {
+    var self_4459: AntiScalar;
+    var other_4051: Rotor;
+
+    self_4459 = self_4458;
+    other_4051 = other_4050;
+    let _e4: AntiScalar = self_4459;
+    let _e5: Rotor = other_4051;
+    let _e6: Rotor = anti_scalar_rotor_geometric_anti_product(_e4, _e5);
+    let _e7: AntiScalar = self_4459;
+    let _e8: AntiScalar = anti_scalar_anti_reversal(_e7);
+    let _e9: Rotor = rotor_anti_scalar_geometric_anti_product(_e6, _e8);
+    return _e9;
+}
+
+fn anti_scalar_translator_sandwich(self_4460: AntiScalar, other_4052: Translator) -> Translator {
+    var self_4461: AntiScalar;
+    var other_4053: Translator;
+
+    self_4461 = self_4460;
+    other_4053 = other_4052;
+    let _e4: AntiScalar = self_4461;
+    let _e5: Translator = other_4053;
+    let _e6: Translator = anti_scalar_translator_geometric_anti_product(_e4, _e5);
+    let _e7: AntiScalar = self_4461;
+    let _e8: AntiScalar = anti_scalar_anti_reversal(_e7);
+    let _e9: Translator = translator_anti_scalar_geometric_anti_product(_e6, _e8);
+    return _e9;
+}
+
+fn anti_scalar_flector_sandwich(self_4462: AntiScalar, other_4054: Flector) -> Flector {
+    var self_4463: AntiScalar;
+    var other_4055: Flector;
+
+    self_4463 = self_4462;
+    other_4055 = other_4054;
+    let _e4: AntiScalar = self_4463;
+    let _e5: Flector = other_4055;
+    let _e6: Flector = anti_scalar_flector_geometric_anti_product(_e4, _e5);
+    let _e7: AntiScalar = self_4463;
+    let _e8: AntiScalar = anti_scalar_anti_reversal(_e7);
+    let _e9: Flector = flector_anti_scalar_geometric_anti_product(_e6, _e8);
+    return _e9;
+}
+
+fn anti_scalar_multi_vector_sandwich(self_4464: AntiScalar, other_4056: MultiVector) -> MultiVector {
+    var self_4465: AntiScalar;
+    var other_4057: MultiVector;
+
+    self_4465 = self_4464;
+    other_4057 = other_4056;
+    let _e4: AntiScalar = self_4465;
+    let _e5: MultiVector = other_4057;
+    let _e6: MultiVector = anti_scalar_multi_vector_geometric_anti_product(_e4, _e5);
+    let _e7: AntiScalar = self_4465;
+    let _e8: AntiScalar = anti_scalar_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_anti_scalar_geometric_anti_product(_e6, _e8);
+    return _e9;
+}
+
+fn homogeneous_magnitude_scalar_sandwich(self_4466: HomogeneousMagnitude, other_4058: Scalar) -> Scalar {
+    var self_4467: HomogeneousMagnitude;
+    var other_4059: Scalar;
+
+    self_4467 = self_4466;
+    other_4059 = other_4058;
+    let _e4: HomogeneousMagnitude = self_4467;
+    let _e5: Scalar = other_4059;
+    let _e6: Scalar = homogeneous_magnitude_scalar_geometric_anti_product(_e4, _e5);
+    let _e7: HomogeneousMagnitude = self_4467;
+    let _e8: HomogeneousMagnitude = homogeneous_magnitude_anti_reversal(_e7);
+    let _e9: Scalar = scalar_homogeneous_magnitude_geometric_anti_product(_e6, _e8);
+    return _e9;
+}
+
+fn homogeneous_magnitude_anti_scalar_sandwich(self_4468: HomogeneousMagnitude, other_4060: AntiScalar) -> AntiScalar {
+    var self_4469: HomogeneousMagnitude;
+    var other_4061: AntiScalar;
+
+    self_4469 = self_4468;
+    other_4061 = other_4060;
+    let _e4: HomogeneousMagnitude = self_4469;
+    let _e5: AntiScalar = other_4061;
     let _e6: HomogeneousMagnitude = homogeneous_magnitude_anti_scalar_geometric_anti_product(_e4, _e5);
-    let _e7: HomogeneousMagnitude = self_4451;
+    let _e7: HomogeneousMagnitude = self_4469;
     let _e8: HomogeneousMagnitude = homogeneous_magnitude_anti_reversal(_e7);
     let _e9: HomogeneousMagnitude = homogeneous_magnitude_homogeneous_magnitude_geometric_anti_product(_e6, _e8);
     let _e10: AntiScalar = homogeneous_magnitude_anti_scalar_into(_e9);
     return _e10;
 }
 
-fn homogeneous_magnitude_motor_sandwich(self_4452: HomogeneousMagnitude, other_4044: Motor) -> Motor {
-    var self_4453: HomogeneousMagnitude;
-    var other_4045: Motor;
-
-    self_4453 = self_4452;
-    other_4045 = other_4044;
-    let _e4: HomogeneousMagnitude = self_4453;
-    let _e5: Motor = other_4045;
-    let _e6: MultiVector = homogeneous_magnitude_motor_geometric_anti_product(_e4, _e5);
-    let _e7: HomogeneousMagnitude = self_4453;
-    let _e8: HomogeneousMagnitude = homogeneous_magnitude_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_homogeneous_magnitude_geometric_anti_product(_e6, _e8);
-    let _e10: Motor = multi_vector_motor_into(_e9);
-    return _e10;
-}
-
-fn homogeneous_magnitude_plane_sandwich(self_4454: HomogeneousMagnitude, other_4046: Plane) -> Plane {
-    var self_4455: HomogeneousMagnitude;
-    var other_4047: Plane;
-
-    self_4455 = self_4454;
-    other_4047 = other_4046;
-    let _e4: HomogeneousMagnitude = self_4455;
-    let _e5: Plane = other_4047;
-    let _e6: Flector = homogeneous_magnitude_plane_geometric_anti_product(_e4, _e5);
-    let _e7: HomogeneousMagnitude = self_4455;
-    let _e8: HomogeneousMagnitude = homogeneous_magnitude_anti_reversal(_e7);
-    let _e9: Flector = flector_homogeneous_magnitude_geometric_anti_product(_e6, _e8);
-    let _e10: Plane = flector_plane_into(_e9);
-    return _e10;
-}
-
-fn homogeneous_magnitude_point_sandwich(self_4456: HomogeneousMagnitude, other_4048: Point) -> Point {
-    var self_4457: HomogeneousMagnitude;
-    var other_4049: Point;
-
-    self_4457 = self_4456;
-    other_4049 = other_4048;
-    let _e4: HomogeneousMagnitude = self_4457;
-    let _e5: Point = other_4049;
-    let _e6: Flector = homogeneous_magnitude_point_geometric_anti_product(_e4, _e5);
-    let _e7: HomogeneousMagnitude = self_4457;
-    let _e8: HomogeneousMagnitude = homogeneous_magnitude_anti_reversal(_e7);
-    let _e9: Flector = flector_homogeneous_magnitude_geometric_anti_product(_e6, _e8);
-    let _e10: Point = flector_point_into(_e9);
-    return _e10;
-}
-
-fn homogeneous_magnitude_rotor_sandwich(self_4458: HomogeneousMagnitude, other_4050: Rotor) -> Rotor {
-    var self_4459: HomogeneousMagnitude;
-    var other_4051: Rotor;
-
-    self_4459 = self_4458;
-    other_4051 = other_4050;
-    let _e4: HomogeneousMagnitude = self_4459;
-    let _e5: Rotor = other_4051;
-    let _e6: MultiVector = homogeneous_magnitude_rotor_geometric_anti_product(_e4, _e5);
-    let _e7: HomogeneousMagnitude = self_4459;
-    let _e8: HomogeneousMagnitude = homogeneous_magnitude_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_homogeneous_magnitude_geometric_anti_product(_e6, _e8);
-    let _e10: Rotor = multi_vector_rotor_into(_e9);
-    return _e10;
-}
-
-fn homogeneous_magnitude_translator_sandwich(self_4460: HomogeneousMagnitude, other_4052: Translator) -> Translator {
-    var self_4461: HomogeneousMagnitude;
-    var other_4053: Translator;
-
-    self_4461 = self_4460;
-    other_4053 = other_4052;
-    let _e4: HomogeneousMagnitude = self_4461;
-    let _e5: Translator = other_4053;
-    let _e6: MultiVector = homogeneous_magnitude_translator_geometric_anti_product(_e4, _e5);
-    let _e7: HomogeneousMagnitude = self_4461;
-    let _e8: HomogeneousMagnitude = homogeneous_magnitude_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_homogeneous_magnitude_geometric_anti_product(_e6, _e8);
-    let _e10: Translator = multi_vector_translator_into(_e9);
-    return _e10;
-}
-
-fn line_anti_scalar_sandwich(self_4462: Line, other_4054: AntiScalar) -> AntiScalar {
-    var self_4463: Line;
-    var other_4055: AntiScalar;
-
-    self_4463 = self_4462;
-    other_4055 = other_4054;
-    let _e4: Line = self_4463;
-    let _e5: AntiScalar = other_4055;
-    let _e6: Line = line_anti_scalar_geometric_anti_product(_e4, _e5);
-    let _e7: Line = self_4463;
-    let _e8: Line = line_anti_reversal(_e7);
-    let _e9: MultiVector = line_line_geometric_anti_product(_e6, _e8);
-    let _e10: AntiScalar = multi_vector_anti_scalar_into(_e9);
-    return _e10;
-}
-
-fn line_homogeneous_magnitude_sandwich(self_4464: Line, other_4056: HomogeneousMagnitude) -> HomogeneousMagnitude {
-    var self_4465: Line;
-    var other_4057: HomogeneousMagnitude;
-
-    self_4465 = self_4464;
-    other_4057 = other_4056;
-    let _e4: Line = self_4465;
-    let _e5: HomogeneousMagnitude = other_4057;
-    let _e6: Line = line_homogeneous_magnitude_geometric_anti_product(_e4, _e5);
-    let _e7: Line = self_4465;
-    let _e8: Line = line_anti_reversal(_e7);
-    let _e9: MultiVector = line_line_geometric_anti_product(_e6, _e8);
-    let _e10: HomogeneousMagnitude = multi_vector_homogeneous_magnitude_into(_e9);
-    return _e10;
-}
-
-fn line_line_sandwich(self_4466: Line, other_4058: Line) -> Line {
-    var self_4467: Line;
-    var other_4059: Line;
-
-    self_4467 = self_4466;
-    other_4059 = other_4058;
-    let _e4: Line = self_4467;
-    let _e5: Line = other_4059;
-    let _e6: MultiVector = line_line_geometric_anti_product(_e4, _e5);
-    let _e7: Line = self_4467;
-    let _e8: Line = line_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_line_geometric_anti_product(_e6, _e8);
-    let _e10: Line = multi_vector_line_into(_e9);
-    return _e10;
-}
-
-fn line_motor_sandwich(self_4468: Line, other_4060: Motor) -> Motor {
-    var self_4469: Line;
-    var other_4061: Motor;
-
-    self_4469 = self_4468;
-    other_4061 = other_4060;
-    let _e4: Line = self_4469;
-    let _e5: Motor = other_4061;
-    let _e6: MultiVector = line_motor_geometric_anti_product(_e4, _e5);
-    let _e7: Line = self_4469;
-    let _e8: Line = line_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_line_geometric_anti_product(_e6, _e8);
-    let _e10: Motor = multi_vector_motor_into(_e9);
-    return _e10;
-}
-
-fn line_plane_sandwich(self_4470: Line, other_4062: Plane) -> Plane {
-    var self_4471: Line;
-    var other_4063: Plane;
+fn homogeneous_magnitude_homogeneous_magnitude_sandwich(self_4470: HomogeneousMagnitude, other_4062: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_4471: HomogeneousMagnitude;
+    var other_4063: HomogeneousMagnitude;
 
     self_4471 = self_4470;
     other_4063 = other_4062;
-    let _e4: Line = self_4471;
-    let _e5: Plane = other_4063;
-    let _e6: Flector = line_plane_geometric_anti_product(_e4, _e5);
-    let _e7: Line = self_4471;
-    let _e8: Line = line_anti_reversal(_e7);
-    let _e9: Flector = flector_line_geometric_anti_product(_e6, _e8);
-    let _e10: Plane = flector_plane_into(_e9);
-    return _e10;
+    let _e4: HomogeneousMagnitude = self_4471;
+    let _e5: HomogeneousMagnitude = other_4063;
+    let _e6: HomogeneousMagnitude = homogeneous_magnitude_homogeneous_magnitude_geometric_anti_product(_e4, _e5);
+    let _e7: HomogeneousMagnitude = self_4471;
+    let _e8: HomogeneousMagnitude = homogeneous_magnitude_anti_reversal(_e7);
+    let _e9: HomogeneousMagnitude = homogeneous_magnitude_homogeneous_magnitude_geometric_anti_product(_e6, _e8);
+    return _e9;
 }
 
-fn line_point_sandwich(self_4472: Line, other_4064: Point) -> Point {
-    var self_4473: Line;
+fn homogeneous_magnitude_point_sandwich(self_4472: HomogeneousMagnitude, other_4064: Point) -> Point {
+    var self_4473: HomogeneousMagnitude;
     var other_4065: Point;
 
     self_4473 = self_4472;
     other_4065 = other_4064;
-    let _e4: Line = self_4473;
+    let _e4: HomogeneousMagnitude = self_4473;
     let _e5: Point = other_4065;
-    let _e6: Flector = line_point_geometric_anti_product(_e4, _e5);
-    let _e7: Line = self_4473;
-    let _e8: Line = line_anti_reversal(_e7);
-    let _e9: Flector = flector_line_geometric_anti_product(_e6, _e8);
+    let _e6: Flector = homogeneous_magnitude_point_geometric_anti_product(_e4, _e5);
+    let _e7: HomogeneousMagnitude = self_4473;
+    let _e8: HomogeneousMagnitude = homogeneous_magnitude_anti_reversal(_e7);
+    let _e9: Flector = flector_homogeneous_magnitude_geometric_anti_product(_e6, _e8);
     let _e10: Point = flector_point_into(_e9);
     return _e10;
 }
 
-fn line_rotor_sandwich(self_4474: Line, other_4066: Rotor) -> Rotor {
-    var self_4475: Line;
-    var other_4067: Rotor;
+fn homogeneous_magnitude_line_sandwich(self_4474: HomogeneousMagnitude, other_4066: Line) -> Line {
+    var self_4475: HomogeneousMagnitude;
+    var other_4067: Line;
 
     self_4475 = self_4474;
     other_4067 = other_4066;
-    let _e4: Line = self_4475;
-    let _e5: Rotor = other_4067;
-    let _e6: MultiVector = line_rotor_geometric_anti_product(_e4, _e5);
-    let _e7: Line = self_4475;
-    let _e8: Line = line_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_line_geometric_anti_product(_e6, _e8);
-    let _e10: Rotor = multi_vector_rotor_into(_e9);
-    return _e10;
+    let _e4: HomogeneousMagnitude = self_4475;
+    let _e5: Line = other_4067;
+    let _e6: Line = homogeneous_magnitude_line_geometric_anti_product(_e4, _e5);
+    let _e7: HomogeneousMagnitude = self_4475;
+    let _e8: HomogeneousMagnitude = homogeneous_magnitude_anti_reversal(_e7);
+    let _e9: Line = line_homogeneous_magnitude_geometric_anti_product(_e6, _e8);
+    return _e9;
 }
 
-fn line_scalar_sandwich(self_4476: Line, other_4068: Scalar) -> Scalar {
-    var self_4477: Line;
-    var other_4069: Scalar;
+fn homogeneous_magnitude_plane_sandwich(self_4476: HomogeneousMagnitude, other_4068: Plane) -> Plane {
+    var self_4477: HomogeneousMagnitude;
+    var other_4069: Plane;
 
     self_4477 = self_4476;
     other_4069 = other_4068;
-    let _e4: Line = self_4477;
-    let _e5: Scalar = other_4069;
-    let _e6: Translator = line_scalar_geometric_anti_product(_e4, _e5);
-    let _e7: Line = self_4477;
-    let _e8: Line = line_anti_reversal(_e7);
-    let _e9: MultiVector = translator_line_geometric_anti_product(_e6, _e8);
-    let _e10: Scalar = multi_vector_scalar_into(_e9);
+    let _e4: HomogeneousMagnitude = self_4477;
+    let _e5: Plane = other_4069;
+    let _e6: Flector = homogeneous_magnitude_plane_geometric_anti_product(_e4, _e5);
+    let _e7: HomogeneousMagnitude = self_4477;
+    let _e8: HomogeneousMagnitude = homogeneous_magnitude_anti_reversal(_e7);
+    let _e9: Flector = flector_homogeneous_magnitude_geometric_anti_product(_e6, _e8);
+    let _e10: Plane = flector_plane_into(_e9);
     return _e10;
 }
 
-fn line_translator_sandwich(self_4478: Line, other_4070: Translator) -> Translator {
-    var self_4479: Line;
-    var other_4071: Translator;
+fn homogeneous_magnitude_motor_sandwich(self_4478: HomogeneousMagnitude, other_4070: Motor) -> Motor {
+    var self_4479: HomogeneousMagnitude;
+    var other_4071: Motor;
 
     self_4479 = self_4478;
     other_4071 = other_4070;
-    let _e4: Line = self_4479;
-    let _e5: Translator = other_4071;
-    let _e6: MultiVector = line_translator_geometric_anti_product(_e4, _e5);
-    let _e7: Line = self_4479;
-    let _e8: Line = line_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_line_geometric_anti_product(_e6, _e8);
-    let _e10: Translator = multi_vector_translator_into(_e9);
+    let _e4: HomogeneousMagnitude = self_4479;
+    let _e5: Motor = other_4071;
+    let _e6: MultiVector = homogeneous_magnitude_motor_geometric_anti_product(_e4, _e5);
+    let _e7: HomogeneousMagnitude = self_4479;
+    let _e8: HomogeneousMagnitude = homogeneous_magnitude_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_homogeneous_magnitude_geometric_anti_product(_e6, _e8);
+    let _e10: Motor = multi_vector_motor_into(_e9);
     return _e10;
 }
 
-fn motor_anti_scalar_sandwich(self_4480: Motor, other_4072: AntiScalar) -> AntiScalar {
-    var self_4481: Motor;
-    var other_4073: AntiScalar;
+fn homogeneous_magnitude_rotor_sandwich(self_4480: HomogeneousMagnitude, other_4072: Rotor) -> Rotor {
+    var self_4481: HomogeneousMagnitude;
+    var other_4073: Rotor;
 
     self_4481 = self_4480;
     other_4073 = other_4072;
-    let _e4: Motor = self_4481;
-    let _e5: AntiScalar = other_4073;
-    let _e6: Motor = motor_anti_scalar_geometric_anti_product(_e4, _e5);
-    let _e7: Motor = self_4481;
-    let _e8: Motor = motor_anti_reversal(_e7);
-    let _e9: MultiVector = motor_motor_geometric_anti_product(_e6, _e8);
-    let _e10: AntiScalar = multi_vector_anti_scalar_into(_e9);
+    let _e4: HomogeneousMagnitude = self_4481;
+    let _e5: Rotor = other_4073;
+    let _e6: MultiVector = homogeneous_magnitude_rotor_geometric_anti_product(_e4, _e5);
+    let _e7: HomogeneousMagnitude = self_4481;
+    let _e8: HomogeneousMagnitude = homogeneous_magnitude_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_homogeneous_magnitude_geometric_anti_product(_e6, _e8);
+    let _e10: Rotor = multi_vector_rotor_into(_e9);
     return _e10;
 }
 
-fn motor_homogeneous_magnitude_sandwich(self_4482: Motor, other_4074: HomogeneousMagnitude) -> HomogeneousMagnitude {
-    var self_4483: Motor;
-    var other_4075: HomogeneousMagnitude;
+fn homogeneous_magnitude_translator_sandwich(self_4482: HomogeneousMagnitude, other_4074: Translator) -> Translator {
+    var self_4483: HomogeneousMagnitude;
+    var other_4075: Translator;
 
     self_4483 = self_4482;
     other_4075 = other_4074;
-    let _e4: Motor = self_4483;
-    let _e5: HomogeneousMagnitude = other_4075;
-    let _e6: MultiVector = motor_homogeneous_magnitude_geometric_anti_product(_e4, _e5);
-    let _e7: Motor = self_4483;
-    let _e8: Motor = motor_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_motor_geometric_anti_product(_e6, _e8);
-    let _e10: HomogeneousMagnitude = multi_vector_homogeneous_magnitude_into(_e9);
+    let _e4: HomogeneousMagnitude = self_4483;
+    let _e5: Translator = other_4075;
+    let _e6: MultiVector = homogeneous_magnitude_translator_geometric_anti_product(_e4, _e5);
+    let _e7: HomogeneousMagnitude = self_4483;
+    let _e8: HomogeneousMagnitude = homogeneous_magnitude_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_homogeneous_magnitude_geometric_anti_product(_e6, _e8);
+    let _e10: Translator = multi_vector_translator_into(_e9);
     return _e10;
 }
 
-fn motor_line_sandwich(self_4484: Motor, other_4076: Line) -> Line {
-    var self_4485: Motor;
-    var other_4077: Line;
+fn homogeneous_magnitude_flector_sandwich(self_4484: HomogeneousMagnitude, other_4076: Flector) -> Flector {
+    var self_4485: HomogeneousMagnitude;
+    var other_4077: Flector;
 
     self_4485 = self_4484;
     other_4077 = other_4076;
-    let _e4: Motor = self_4485;
-    let _e5: Line = other_4077;
-    let _e6: MultiVector = motor_line_geometric_anti_product(_e4, _e5);
-    let _e7: Motor = self_4485;
-    let _e8: Motor = motor_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_motor_geometric_anti_product(_e6, _e8);
-    let _e10: Line = multi_vector_line_into(_e9);
-    return _e10;
+    let _e4: HomogeneousMagnitude = self_4485;
+    let _e5: Flector = other_4077;
+    let _e6: Flector = homogeneous_magnitude_flector_geometric_anti_product(_e4, _e5);
+    let _e7: HomogeneousMagnitude = self_4485;
+    let _e8: HomogeneousMagnitude = homogeneous_magnitude_anti_reversal(_e7);
+    let _e9: Flector = flector_homogeneous_magnitude_geometric_anti_product(_e6, _e8);
+    return _e9;
 }
 
-fn motor_motor_sandwich(self_4486: Motor, other_4078: Motor) -> Motor {
-    var self_4487: Motor;
-    var other_4079: Motor;
+fn homogeneous_magnitude_multi_vector_sandwich(self_4486: HomogeneousMagnitude, other_4078: MultiVector) -> MultiVector {
+    var self_4487: HomogeneousMagnitude;
+    var other_4079: MultiVector;
 
     self_4487 = self_4486;
     other_4079 = other_4078;
-    let _e4: Motor = self_4487;
-    let _e5: Motor = other_4079;
-    let _e6: MultiVector = motor_motor_geometric_anti_product(_e4, _e5);
-    let _e7: Motor = self_4487;
-    let _e8: Motor = motor_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_motor_geometric_anti_product(_e6, _e8);
-    let _e10: Motor = multi_vector_motor_into(_e9);
-    return _e10;
+    let _e4: HomogeneousMagnitude = self_4487;
+    let _e5: MultiVector = other_4079;
+    let _e6: MultiVector = homogeneous_magnitude_multi_vector_geometric_anti_product(_e4, _e5);
+    let _e7: HomogeneousMagnitude = self_4487;
+    let _e8: HomogeneousMagnitude = homogeneous_magnitude_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_homogeneous_magnitude_geometric_anti_product(_e6, _e8);
+    return _e9;
 }
 
-fn motor_plane_sandwich(self_4488: Motor, other_4080: Plane) -> Plane {
-    var self_4489: Motor;
-    var other_4081: Plane;
+fn point_scalar_sandwich(self_4488: Point, other_4080: Scalar) -> Scalar {
+    var self_4489: Point;
+    var other_4081: Scalar;
 
     self_4489 = self_4488;
     other_4081 = other_4080;
-    let _e4: Motor = self_4489;
-    let _e5: Plane = other_4081;
-    let _e6: Flector = motor_plane_geometric_anti_product(_e4, _e5);
-    let _e7: Motor = self_4489;
-    let _e8: Motor = motor_anti_reversal(_e7);
-    let _e9: Flector = flector_motor_geometric_anti_product(_e6, _e8);
-    let _e10: Plane = flector_plane_into(_e9);
-    return _e10;
-}
-
-fn motor_point_sandwich(self_4490: Motor, other_4082: Point) -> Point {
-    var self_4491: Motor;
-    var other_4083: Point;
-
-    self_4491 = self_4490;
-    other_4083 = other_4082;
-    let _e4: Motor = self_4491;
-    let _e5: Point = other_4083;
-    let _e6: Flector = motor_point_geometric_anti_product(_e4, _e5);
-    let _e7: Motor = self_4491;
-    let _e8: Motor = motor_anti_reversal(_e7);
-    let _e9: Flector = flector_motor_geometric_anti_product(_e6, _e8);
-    let _e10: Point = flector_point_into(_e9);
-    return _e10;
-}
-
-fn motor_rotor_sandwich(self_4492: Motor, other_4084: Rotor) -> Rotor {
-    var self_4493: Motor;
-    var other_4085: Rotor;
-
-    self_4493 = self_4492;
-    other_4085 = other_4084;
-    let _e4: Motor = self_4493;
-    let _e5: Rotor = other_4085;
-    let _e6: MultiVector = motor_rotor_geometric_anti_product(_e4, _e5);
-    let _e7: Motor = self_4493;
-    let _e8: Motor = motor_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_motor_geometric_anti_product(_e6, _e8);
-    let _e10: Rotor = multi_vector_rotor_into(_e9);
-    return _e10;
-}
-
-fn motor_scalar_sandwich(self_4494: Motor, other_4086: Scalar) -> Scalar {
-    var self_4495: Motor;
-    var other_4087: Scalar;
-
-    self_4495 = self_4494;
-    other_4087 = other_4086;
-    let _e4: Motor = self_4495;
-    let _e5: Scalar = other_4087;
-    let _e6: MultiVector = motor_scalar_geometric_anti_product(_e4, _e5);
-    let _e7: Motor = self_4495;
-    let _e8: Motor = motor_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_motor_geometric_anti_product(_e6, _e8);
-    let _e10: Scalar = multi_vector_scalar_into(_e9);
-    return _e10;
-}
-
-fn motor_translator_sandwich(self_4496: Motor, other_4088: Translator) -> Translator {
-    var self_4497: Motor;
-    var other_4089: Translator;
-
-    self_4497 = self_4496;
-    other_4089 = other_4088;
-    let _e4: Motor = self_4497;
-    let _e5: Translator = other_4089;
-    let _e6: MultiVector = motor_translator_geometric_anti_product(_e4, _e5);
-    let _e7: Motor = self_4497;
-    let _e8: Motor = motor_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_motor_geometric_anti_product(_e6, _e8);
-    let _e10: Translator = multi_vector_translator_into(_e9);
-    return _e10;
-}
-
-fn multi_vector_anti_scalar_sandwich(self_4498: MultiVector, other_4090: AntiScalar) -> AntiScalar {
-    var self_4499: MultiVector;
-    var other_4091: AntiScalar;
-
-    self_4499 = self_4498;
-    other_4091 = other_4090;
-    let _e4: MultiVector = self_4499;
-    let _e5: AntiScalar = other_4091;
-    let _e6: MultiVector = multi_vector_anti_scalar_geometric_anti_product(_e4, _e5);
-    let _e7: MultiVector = self_4499;
-    let _e8: MultiVector = multi_vector_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_multi_vector_geometric_anti_product(_e6, _e8);
-    let _e10: AntiScalar = multi_vector_anti_scalar_into(_e9);
-    return _e10;
-}
-
-fn multi_vector_flector_sandwich(self_4500: MultiVector, other_4092: Flector) -> Flector {
-    var self_4501: MultiVector;
-    var other_4093: Flector;
-
-    self_4501 = self_4500;
-    other_4093 = other_4092;
-    let _e4: MultiVector = self_4501;
-    let _e5: Flector = other_4093;
-    let _e6: MultiVector = multi_vector_flector_geometric_anti_product(_e4, _e5);
-    let _e7: MultiVector = self_4501;
-    let _e8: MultiVector = multi_vector_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_multi_vector_geometric_anti_product(_e6, _e8);
-    let _e10: Flector = multi_vector_flector_into(_e9);
-    return _e10;
-}
-
-fn multi_vector_homogeneous_magnitude_sandwich(self_4502: MultiVector, other_4094: HomogeneousMagnitude) -> HomogeneousMagnitude {
-    var self_4503: MultiVector;
-    var other_4095: HomogeneousMagnitude;
-
-    self_4503 = self_4502;
-    other_4095 = other_4094;
-    let _e4: MultiVector = self_4503;
-    let _e5: HomogeneousMagnitude = other_4095;
-    let _e6: MultiVector = multi_vector_homogeneous_magnitude_geometric_anti_product(_e4, _e5);
-    let _e7: MultiVector = self_4503;
-    let _e8: MultiVector = multi_vector_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_multi_vector_geometric_anti_product(_e6, _e8);
-    let _e10: HomogeneousMagnitude = multi_vector_homogeneous_magnitude_into(_e9);
-    return _e10;
-}
-
-fn multi_vector_line_sandwich(self_4504: MultiVector, other_4096: Line) -> Line {
-    var self_4505: MultiVector;
-    var other_4097: Line;
-
-    self_4505 = self_4504;
-    other_4097 = other_4096;
-    let _e4: MultiVector = self_4505;
-    let _e5: Line = other_4097;
-    let _e6: MultiVector = multi_vector_line_geometric_anti_product(_e4, _e5);
-    let _e7: MultiVector = self_4505;
-    let _e8: MultiVector = multi_vector_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_multi_vector_geometric_anti_product(_e6, _e8);
-    let _e10: Line = multi_vector_line_into(_e9);
-    return _e10;
-}
-
-fn multi_vector_motor_sandwich(self_4506: MultiVector, other_4098: Motor) -> Motor {
-    var self_4507: MultiVector;
-    var other_4099: Motor;
-
-    self_4507 = self_4506;
-    other_4099 = other_4098;
-    let _e4: MultiVector = self_4507;
-    let _e5: Motor = other_4099;
-    let _e6: MultiVector = multi_vector_motor_geometric_anti_product(_e4, _e5);
-    let _e7: MultiVector = self_4507;
-    let _e8: MultiVector = multi_vector_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_multi_vector_geometric_anti_product(_e6, _e8);
-    let _e10: Motor = multi_vector_motor_into(_e9);
-    return _e10;
-}
-
-fn multi_vector_plane_sandwich(self_4508: MultiVector, other_4100: Plane) -> Plane {
-    var self_4509: MultiVector;
-    var other_4101: Plane;
-
-    self_4509 = self_4508;
-    other_4101 = other_4100;
-    let _e4: MultiVector = self_4509;
-    let _e5: Plane = other_4101;
-    let _e6: MultiVector = multi_vector_plane_geometric_anti_product(_e4, _e5);
-    let _e7: MultiVector = self_4509;
-    let _e8: MultiVector = multi_vector_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_multi_vector_geometric_anti_product(_e6, _e8);
-    let _e10: Plane = multi_vector_plane_into(_e9);
-    return _e10;
-}
-
-fn multi_vector_point_sandwich(self_4510: MultiVector, other_4102: Point) -> Point {
-    var self_4511: MultiVector;
-    var other_4103: Point;
-
-    self_4511 = self_4510;
-    other_4103 = other_4102;
-    let _e4: MultiVector = self_4511;
-    let _e5: Point = other_4103;
-    let _e6: MultiVector = multi_vector_point_geometric_anti_product(_e4, _e5);
-    let _e7: MultiVector = self_4511;
-    let _e8: MultiVector = multi_vector_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_multi_vector_geometric_anti_product(_e6, _e8);
-    let _e10: Point = multi_vector_point_into(_e9);
-    return _e10;
-}
-
-fn multi_vector_rotor_sandwich(self_4512: MultiVector, other_4104: Rotor) -> Rotor {
-    var self_4513: MultiVector;
-    var other_4105: Rotor;
-
-    self_4513 = self_4512;
-    other_4105 = other_4104;
-    let _e4: MultiVector = self_4513;
-    let _e5: Rotor = other_4105;
-    let _e6: MultiVector = multi_vector_rotor_geometric_anti_product(_e4, _e5);
-    let _e7: MultiVector = self_4513;
-    let _e8: MultiVector = multi_vector_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_multi_vector_geometric_anti_product(_e6, _e8);
-    let _e10: Rotor = multi_vector_rotor_into(_e9);
-    return _e10;
-}
-
-fn multi_vector_scalar_sandwich(self_4514: MultiVector, other_4106: Scalar) -> Scalar {
-    var self_4515: MultiVector;
-    var other_4107: Scalar;
-
-    self_4515 = self_4514;
-    other_4107 = other_4106;
-    let _e4: MultiVector = self_4515;
-    let _e5: Scalar = other_4107;
-    let _e6: MultiVector = multi_vector_scalar_geometric_anti_product(_e4, _e5);
-    let _e7: MultiVector = self_4515;
-    let _e8: MultiVector = multi_vector_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_multi_vector_geometric_anti_product(_e6, _e8);
-    let _e10: Scalar = multi_vector_scalar_into(_e9);
-    return _e10;
-}
-
-fn multi_vector_translator_sandwich(self_4516: MultiVector, other_4108: Translator) -> Translator {
-    var self_4517: MultiVector;
-    var other_4109: Translator;
-
-    self_4517 = self_4516;
-    other_4109 = other_4108;
-    let _e4: MultiVector = self_4517;
-    let _e5: Translator = other_4109;
-    let _e6: MultiVector = multi_vector_translator_geometric_anti_product(_e4, _e5);
-    let _e7: MultiVector = self_4517;
-    let _e8: MultiVector = multi_vector_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_multi_vector_geometric_anti_product(_e6, _e8);
-    let _e10: Translator = multi_vector_translator_into(_e9);
-    return _e10;
-}
-
-fn plane_anti_scalar_sandwich(self_4518: Plane, other_4110: AntiScalar) -> AntiScalar {
-    var self_4519: Plane;
-    var other_4111: AntiScalar;
-
-    self_4519 = self_4518;
-    other_4111 = other_4110;
-    let _e4: Plane = self_4519;
-    let _e5: AntiScalar = other_4111;
-    let _e6: Plane = plane_anti_scalar_geometric_anti_product(_e4, _e5);
-    let _e7: Plane = self_4519;
-    let _e8: Plane = plane_anti_reversal(_e7);
-    let _e9: Motor = plane_plane_geometric_anti_product(_e6, _e8);
-    let _e10: AntiScalar = motor_anti_scalar_into(_e9);
-    return _e10;
-}
-
-fn plane_flector_sandwich(self_4520: Plane, other_4112: Flector) -> Flector {
-    var self_4521: Plane;
-    var other_4113: Flector;
-
-    self_4521 = self_4520;
-    other_4113 = other_4112;
-    let _e4: Plane = self_4521;
-    let _e5: Flector = other_4113;
-    let _e6: MultiVector = plane_flector_geometric_anti_product(_e4, _e5);
-    let _e7: Plane = self_4521;
-    let _e8: Plane = plane_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_plane_geometric_anti_product(_e6, _e8);
-    let _e10: Flector = multi_vector_flector_into(_e9);
-    return _e10;
-}
-
-fn plane_homogeneous_magnitude_sandwich(self_4522: Plane, other_4114: HomogeneousMagnitude) -> HomogeneousMagnitude {
-    var self_4523: Plane;
-    var other_4115: HomogeneousMagnitude;
-
-    self_4523 = self_4522;
-    other_4115 = other_4114;
-    let _e4: Plane = self_4523;
-    let _e5: HomogeneousMagnitude = other_4115;
-    let _e6: Flector = plane_homogeneous_magnitude_geometric_anti_product(_e4, _e5);
-    let _e7: Plane = self_4523;
-    let _e8: Plane = plane_anti_reversal(_e7);
-    let _e9: MultiVector = flector_plane_geometric_anti_product(_e6, _e8);
-    let _e10: HomogeneousMagnitude = multi_vector_homogeneous_magnitude_into(_e9);
-    return _e10;
-}
-
-fn plane_line_sandwich(self_4524: Plane, other_4116: Line) -> Line {
-    var self_4525: Plane;
-    var other_4117: Line;
-
-    self_4525 = self_4524;
-    other_4117 = other_4116;
-    let _e4: Plane = self_4525;
-    let _e5: Line = other_4117;
-    let _e6: Flector = plane_line_geometric_anti_product(_e4, _e5);
-    let _e7: Plane = self_4525;
-    let _e8: Plane = plane_anti_reversal(_e7);
-    let _e9: MultiVector = flector_plane_geometric_anti_product(_e6, _e8);
-    let _e10: Line = multi_vector_line_into(_e9);
-    return _e10;
-}
-
-fn plane_motor_sandwich(self_4526: Plane, other_4118: Motor) -> Motor {
-    var self_4527: Plane;
-    var other_4119: Motor;
-
-    self_4527 = self_4526;
-    other_4119 = other_4118;
-    let _e4: Plane = self_4527;
-    let _e5: Motor = other_4119;
-    let _e6: Flector = plane_motor_geometric_anti_product(_e4, _e5);
-    let _e7: Plane = self_4527;
-    let _e8: Plane = plane_anti_reversal(_e7);
-    let _e9: MultiVector = flector_plane_geometric_anti_product(_e6, _e8);
-    let _e10: Motor = multi_vector_motor_into(_e9);
-    return _e10;
-}
-
-fn plane_plane_sandwich(self_4528: Plane, other_4120: Plane) -> Plane {
-    var self_4529: Plane;
-    var other_4121: Plane;
-
-    self_4529 = self_4528;
-    other_4121 = other_4120;
-    let _e4: Plane = self_4529;
-    let _e5: Plane = other_4121;
-    let _e6: Motor = plane_plane_geometric_anti_product(_e4, _e5);
-    let _e7: Plane = self_4529;
-    let _e8: Plane = plane_anti_reversal(_e7);
-    let _e9: Flector = motor_plane_geometric_anti_product(_e6, _e8);
-    let _e10: Plane = flector_plane_into(_e9);
-    return _e10;
-}
-
-fn plane_point_sandwich(self_4530: Plane, other_4122: Point) -> Point {
-    var self_4531: Plane;
-    var other_4123: Point;
-
-    self_4531 = self_4530;
-    other_4123 = other_4122;
-    let _e4: Plane = self_4531;
-    let _e5: Point = other_4123;
-    let _e6: MultiVector = plane_point_geometric_anti_product(_e4, _e5);
-    let _e7: Plane = self_4531;
-    let _e8: Plane = plane_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_plane_geometric_anti_product(_e6, _e8);
-    let _e10: Point = multi_vector_point_into(_e9);
-    return _e10;
-}
-
-fn plane_rotor_sandwich(self_4532: Plane, other_4124: Rotor) -> Rotor {
-    var self_4533: Plane;
-    var other_4125: Rotor;
-
-    self_4533 = self_4532;
-    other_4125 = other_4124;
-    let _e4: Plane = self_4533;
-    let _e5: Rotor = other_4125;
-    let _e6: Flector = plane_rotor_geometric_anti_product(_e4, _e5);
-    let _e7: Plane = self_4533;
-    let _e8: Plane = plane_anti_reversal(_e7);
-    let _e9: MultiVector = flector_plane_geometric_anti_product(_e6, _e8);
-    let _e10: Rotor = multi_vector_rotor_into(_e9);
-    return _e10;
-}
-
-fn plane_scalar_sandwich(self_4534: Plane, other_4126: Scalar) -> Scalar {
-    var self_4535: Plane;
-    var other_4127: Scalar;
-
-    self_4535 = self_4534;
-    other_4127 = other_4126;
-    let _e4: Plane = self_4535;
-    let _e5: Scalar = other_4127;
-    let _e6: Point = plane_scalar_geometric_anti_product(_e4, _e5);
-    let _e7: Plane = self_4535;
-    let _e8: Plane = plane_anti_reversal(_e7);
-    let _e9: MultiVector = point_plane_geometric_anti_product(_e6, _e8);
-    let _e10: Scalar = multi_vector_scalar_into(_e9);
-    return _e10;
-}
-
-fn plane_translator_sandwich(self_4536: Plane, other_4128: Translator) -> Translator {
-    var self_4537: Plane;
-    var other_4129: Translator;
-
-    self_4537 = self_4536;
-    other_4129 = other_4128;
-    let _e4: Plane = self_4537;
-    let _e5: Translator = other_4129;
-    let _e6: Flector = plane_translator_geometric_anti_product(_e4, _e5);
-    let _e7: Plane = self_4537;
-    let _e8: Plane = plane_anti_reversal(_e7);
-    let _e9: MultiVector = flector_plane_geometric_anti_product(_e6, _e8);
-    let _e10: Translator = multi_vector_translator_into(_e9);
-    return _e10;
-}
-
-fn point_anti_scalar_sandwich(self_4538: Point, other_4130: AntiScalar) -> AntiScalar {
-    var self_4539: Point;
-    var other_4131: AntiScalar;
-
-    self_4539 = self_4538;
-    other_4131 = other_4130;
-    let _e4: Point = self_4539;
-    let _e5: AntiScalar = other_4131;
-    let _e6: Point = point_anti_scalar_geometric_anti_product(_e4, _e5);
-    let _e7: Point = self_4539;
-    let _e8: Point = point_anti_reversal(_e7);
-    let _e9: Translator = point_point_geometric_anti_product(_e6, _e8);
-    let _e10: AntiScalar = translator_anti_scalar_into(_e9);
-    return _e10;
-}
-
-fn point_flector_sandwich(self_4540: Point, other_4132: Flector) -> Flector {
-    var self_4541: Point;
-    var other_4133: Flector;
-
-    self_4541 = self_4540;
-    other_4133 = other_4132;
-    let _e4: Point = self_4541;
-    let _e5: Flector = other_4133;
-    let _e6: MultiVector = point_flector_geometric_anti_product(_e4, _e5);
-    let _e7: Point = self_4541;
-    let _e8: Point = point_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_point_geometric_anti_product(_e6, _e8);
-    let _e10: Flector = multi_vector_flector_into(_e9);
-    return _e10;
-}
-
-fn point_homogeneous_magnitude_sandwich(self_4542: Point, other_4134: HomogeneousMagnitude) -> HomogeneousMagnitude {
-    var self_4543: Point;
-    var other_4135: HomogeneousMagnitude;
-
-    self_4543 = self_4542;
-    other_4135 = other_4134;
-    let _e4: Point = self_4543;
-    let _e5: HomogeneousMagnitude = other_4135;
-    let _e6: Flector = point_homogeneous_magnitude_geometric_anti_product(_e4, _e5);
-    let _e7: Point = self_4543;
-    let _e8: Point = point_anti_reversal(_e7);
-    let _e9: MultiVector = flector_point_geometric_anti_product(_e6, _e8);
-    let _e10: HomogeneousMagnitude = multi_vector_homogeneous_magnitude_into(_e9);
-    return _e10;
-}
-
-fn point_line_sandwich(self_4544: Point, other_4136: Line) -> Line {
-    var self_4545: Point;
-    var other_4137: Line;
-
-    self_4545 = self_4544;
-    other_4137 = other_4136;
-    let _e4: Point = self_4545;
-    let _e5: Line = other_4137;
-    let _e6: Flector = point_line_geometric_anti_product(_e4, _e5);
-    let _e7: Point = self_4545;
-    let _e8: Point = point_anti_reversal(_e7);
-    let _e9: MultiVector = flector_point_geometric_anti_product(_e6, _e8);
-    let _e10: Line = multi_vector_line_into(_e9);
-    return _e10;
-}
-
-fn point_motor_sandwich(self_4546: Point, other_4138: Motor) -> Motor {
-    var self_4547: Point;
-    var other_4139: Motor;
-
-    self_4547 = self_4546;
-    other_4139 = other_4138;
-    let _e4: Point = self_4547;
-    let _e5: Motor = other_4139;
-    let _e6: Flector = point_motor_geometric_anti_product(_e4, _e5);
-    let _e7: Point = self_4547;
-    let _e8: Point = point_anti_reversal(_e7);
-    let _e9: MultiVector = flector_point_geometric_anti_product(_e6, _e8);
-    let _e10: Motor = multi_vector_motor_into(_e9);
-    return _e10;
-}
-
-fn point_plane_sandwich(self_4548: Point, other_4140: Plane) -> Plane {
-    var self_4549: Point;
-    var other_4141: Plane;
-
-    self_4549 = self_4548;
-    other_4141 = other_4140;
-    let _e4: Point = self_4549;
-    let _e5: Plane = other_4141;
-    let _e6: MultiVector = point_plane_geometric_anti_product(_e4, _e5);
-    let _e7: Point = self_4549;
-    let _e8: Point = point_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_point_geometric_anti_product(_e6, _e8);
-    let _e10: Plane = multi_vector_plane_into(_e9);
-    return _e10;
-}
-
-fn point_rotor_sandwich(self_4550: Point, other_4142: Rotor) -> Rotor {
-    var self_4551: Point;
-    var other_4143: Rotor;
-
-    self_4551 = self_4550;
-    other_4143 = other_4142;
-    let _e4: Point = self_4551;
-    let _e5: Rotor = other_4143;
-    let _e6: Flector = point_rotor_geometric_anti_product(_e4, _e5);
-    let _e7: Point = self_4551;
-    let _e8: Point = point_anti_reversal(_e7);
-    let _e9: MultiVector = flector_point_geometric_anti_product(_e6, _e8);
-    let _e10: Rotor = multi_vector_rotor_into(_e9);
-    return _e10;
-}
-
-fn point_scalar_sandwich(self_4552: Point, other_4144: Scalar) -> Scalar {
-    var self_4553: Point;
-    var other_4145: Scalar;
-
-    self_4553 = self_4552;
-    other_4145 = other_4144;
-    let _e4: Point = self_4553;
-    let _e5: Scalar = other_4145;
+    let _e4: Point = self_4489;
+    let _e5: Scalar = other_4081;
     let _e6: Plane = point_scalar_geometric_anti_product(_e4, _e5);
-    let _e7: Point = self_4553;
+    let _e7: Point = self_4489;
     let _e8: Point = point_anti_reversal(_e7);
     let _e9: MultiVector = plane_point_geometric_anti_product(_e6, _e8);
     let _e10: Scalar = multi_vector_scalar_into(_e9);
     return _e10;
 }
 
-fn rotor_anti_scalar_sandwich(self_4554: Rotor, other_4146: AntiScalar) -> AntiScalar {
-    var self_4555: Rotor;
-    var other_4147: AntiScalar;
+fn point_anti_scalar_sandwich(self_4490: Point, other_4082: AntiScalar) -> AntiScalar {
+    var self_4491: Point;
+    var other_4083: AntiScalar;
 
-    self_4555 = self_4554;
-    other_4147 = other_4146;
-    let _e4: Rotor = self_4555;
-    let _e5: AntiScalar = other_4147;
-    let _e6: Rotor = rotor_anti_scalar_geometric_anti_product(_e4, _e5);
-    let _e7: Rotor = self_4555;
-    let _e8: Rotor = rotor_anti_reversal(_e7);
-    let _e9: Rotor = rotor_rotor_geometric_anti_product(_e6, _e8);
-    let _e10: AntiScalar = rotor_anti_scalar_into(_e9);
+    self_4491 = self_4490;
+    other_4083 = other_4082;
+    let _e4: Point = self_4491;
+    let _e5: AntiScalar = other_4083;
+    let _e6: Point = point_anti_scalar_geometric_anti_product(_e4, _e5);
+    let _e7: Point = self_4491;
+    let _e8: Point = point_anti_reversal(_e7);
+    let _e9: Translator = point_point_geometric_anti_product(_e6, _e8);
+    let _e10: AntiScalar = translator_anti_scalar_into(_e9);
     return _e10;
 }
 
-fn rotor_homogeneous_magnitude_sandwich(self_4556: Rotor, other_4148: HomogeneousMagnitude) -> HomogeneousMagnitude {
-    var self_4557: Rotor;
-    var other_4149: HomogeneousMagnitude;
+fn point_homogeneous_magnitude_sandwich(self_4492: Point, other_4084: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_4493: Point;
+    var other_4085: HomogeneousMagnitude;
 
-    self_4557 = self_4556;
-    other_4149 = other_4148;
-    let _e4: Rotor = self_4557;
-    let _e5: HomogeneousMagnitude = other_4149;
-    let _e6: MultiVector = rotor_homogeneous_magnitude_geometric_anti_product(_e4, _e5);
-    let _e7: Rotor = self_4557;
-    let _e8: Rotor = rotor_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_rotor_geometric_anti_product(_e6, _e8);
+    self_4493 = self_4492;
+    other_4085 = other_4084;
+    let _e4: Point = self_4493;
+    let _e5: HomogeneousMagnitude = other_4085;
+    let _e6: Flector = point_homogeneous_magnitude_geometric_anti_product(_e4, _e5);
+    let _e7: Point = self_4493;
+    let _e8: Point = point_anti_reversal(_e7);
+    let _e9: MultiVector = flector_point_geometric_anti_product(_e6, _e8);
     let _e10: HomogeneousMagnitude = multi_vector_homogeneous_magnitude_into(_e9);
     return _e10;
 }
 
-fn rotor_line_sandwich(self_4558: Rotor, other_4150: Line) -> Line {
-    var self_4559: Rotor;
-    var other_4151: Line;
+fn point_point_sandwich(self_4494: Point, other_4086: Point) -> Point {
+    var self_4495: Point;
+    var other_4087: Point;
 
-    self_4559 = self_4558;
-    other_4151 = other_4150;
-    let _e4: Rotor = self_4559;
-    let _e5: Line = other_4151;
-    let _e6: MultiVector = rotor_line_geometric_anti_product(_e4, _e5);
-    let _e7: Rotor = self_4559;
-    let _e8: Rotor = rotor_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_rotor_geometric_anti_product(_e6, _e8);
+    self_4495 = self_4494;
+    other_4087 = other_4086;
+    let _e4: Point = self_4495;
+    let _e5: Point = other_4087;
+    let _e6: Translator = point_point_geometric_anti_product(_e4, _e5);
+    let _e7: Point = self_4495;
+    let _e8: Point = point_anti_reversal(_e7);
+    let _e9: Point = translator_point_geometric_anti_product(_e6, _e8);
+    return _e9;
+}
+
+fn point_line_sandwich(self_4496: Point, other_4088: Line) -> Line {
+    var self_4497: Point;
+    var other_4089: Line;
+
+    self_4497 = self_4496;
+    other_4089 = other_4088;
+    let _e4: Point = self_4497;
+    let _e5: Line = other_4089;
+    let _e6: Flector = point_line_geometric_anti_product(_e4, _e5);
+    let _e7: Point = self_4497;
+    let _e8: Point = point_anti_reversal(_e7);
+    let _e9: MultiVector = flector_point_geometric_anti_product(_e6, _e8);
     let _e10: Line = multi_vector_line_into(_e9);
     return _e10;
 }
 
-fn rotor_motor_sandwich(self_4560: Rotor, other_4152: Motor) -> Motor {
-    var self_4561: Rotor;
-    var other_4153: Motor;
+fn point_plane_sandwich(self_4498: Point, other_4090: Plane) -> Plane {
+    var self_4499: Point;
+    var other_4091: Plane;
 
-    self_4561 = self_4560;
-    other_4153 = other_4152;
-    let _e4: Rotor = self_4561;
-    let _e5: Motor = other_4153;
-    let _e6: MultiVector = rotor_motor_geometric_anti_product(_e4, _e5);
-    let _e7: Rotor = self_4561;
-    let _e8: Rotor = rotor_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_rotor_geometric_anti_product(_e6, _e8);
+    self_4499 = self_4498;
+    other_4091 = other_4090;
+    let _e4: Point = self_4499;
+    let _e5: Plane = other_4091;
+    let _e6: MultiVector = point_plane_geometric_anti_product(_e4, _e5);
+    let _e7: Point = self_4499;
+    let _e8: Point = point_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_point_geometric_anti_product(_e6, _e8);
+    let _e10: Plane = multi_vector_plane_into(_e9);
+    return _e10;
+}
+
+fn point_motor_sandwich(self_4500: Point, other_4092: Motor) -> Motor {
+    var self_4501: Point;
+    var other_4093: Motor;
+
+    self_4501 = self_4500;
+    other_4093 = other_4092;
+    let _e4: Point = self_4501;
+    let _e5: Motor = other_4093;
+    let _e6: Flector = point_motor_geometric_anti_product(_e4, _e5);
+    let _e7: Point = self_4501;
+    let _e8: Point = point_anti_reversal(_e7);
+    let _e9: MultiVector = flector_point_geometric_anti_product(_e6, _e8);
     let _e10: Motor = multi_vector_motor_into(_e9);
     return _e10;
 }
 
-fn rotor_plane_sandwich(self_4562: Rotor, other_4154: Plane) -> Plane {
-    var self_4563: Rotor;
-    var other_4155: Plane;
+fn point_rotor_sandwich(self_4502: Point, other_4094: Rotor) -> Rotor {
+    var self_4503: Point;
+    var other_4095: Rotor;
 
-    self_4563 = self_4562;
-    other_4155 = other_4154;
-    let _e4: Rotor = self_4563;
-    let _e5: Plane = other_4155;
-    let _e6: Flector = rotor_plane_geometric_anti_product(_e4, _e5);
-    let _e7: Rotor = self_4563;
-    let _e8: Rotor = rotor_anti_reversal(_e7);
-    let _e9: Flector = flector_rotor_geometric_anti_product(_e6, _e8);
-    let _e10: Plane = flector_plane_into(_e9);
+    self_4503 = self_4502;
+    other_4095 = other_4094;
+    let _e4: Point = self_4503;
+    let _e5: Rotor = other_4095;
+    let _e6: Flector = point_rotor_geometric_anti_product(_e4, _e5);
+    let _e7: Point = self_4503;
+    let _e8: Point = point_anti_reversal(_e7);
+    let _e9: MultiVector = flector_point_geometric_anti_product(_e6, _e8);
+    let _e10: Rotor = multi_vector_rotor_into(_e9);
     return _e10;
 }
 
-fn rotor_point_sandwich(self_4564: Rotor, other_4156: Point) -> Point {
-    var self_4565: Rotor;
-    var other_4157: Point;
+fn point_translator_sandwich(self_4504: Point, other_4096: Translator) -> Translator {
+    var self_4505: Point;
+    var other_4097: Translator;
 
-    self_4565 = self_4564;
-    other_4157 = other_4156;
-    let _e4: Rotor = self_4565;
-    let _e5: Point = other_4157;
-    let _e6: Flector = rotor_point_geometric_anti_product(_e4, _e5);
-    let _e7: Rotor = self_4565;
-    let _e8: Rotor = rotor_anti_reversal(_e7);
-    let _e9: Flector = flector_rotor_geometric_anti_product(_e6, _e8);
+    self_4505 = self_4504;
+    other_4097 = other_4096;
+    let _e4: Point = self_4505;
+    let _e5: Translator = other_4097;
+    let _e6: Point = point_translator_geometric_anti_product(_e4, _e5);
+    let _e7: Point = self_4505;
+    let _e8: Point = point_anti_reversal(_e7);
+    let _e9: Translator = point_point_geometric_anti_product(_e6, _e8);
+    return _e9;
+}
+
+fn point_flector_sandwich(self_4506: Point, other_4098: Flector) -> Flector {
+    var self_4507: Point;
+    var other_4099: Flector;
+
+    self_4507 = self_4506;
+    other_4099 = other_4098;
+    let _e4: Point = self_4507;
+    let _e5: Flector = other_4099;
+    let _e6: MultiVector = point_flector_geometric_anti_product(_e4, _e5);
+    let _e7: Point = self_4507;
+    let _e8: Point = point_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_point_geometric_anti_product(_e6, _e8);
+    let _e10: Flector = multi_vector_flector_into(_e9);
+    return _e10;
+}
+
+fn point_multi_vector_sandwich(self_4508: Point, other_4100: MultiVector) -> MultiVector {
+    var self_4509: Point;
+    var other_4101: MultiVector;
+
+    self_4509 = self_4508;
+    other_4101 = other_4100;
+    let _e4: Point = self_4509;
+    let _e5: MultiVector = other_4101;
+    let _e6: MultiVector = point_multi_vector_geometric_anti_product(_e4, _e5);
+    let _e7: Point = self_4509;
+    let _e8: Point = point_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_point_geometric_anti_product(_e6, _e8);
+    return _e9;
+}
+
+fn line_scalar_sandwich(self_4510: Line, other_4102: Scalar) -> Scalar {
+    var self_4511: Line;
+    var other_4103: Scalar;
+
+    self_4511 = self_4510;
+    other_4103 = other_4102;
+    let _e4: Line = self_4511;
+    let _e5: Scalar = other_4103;
+    let _e6: Translator = line_scalar_geometric_anti_product(_e4, _e5);
+    let _e7: Line = self_4511;
+    let _e8: Line = line_anti_reversal(_e7);
+    let _e9: MultiVector = translator_line_geometric_anti_product(_e6, _e8);
+    let _e10: Scalar = multi_vector_scalar_into(_e9);
+    return _e10;
+}
+
+fn line_anti_scalar_sandwich(self_4512: Line, other_4104: AntiScalar) -> AntiScalar {
+    var self_4513: Line;
+    var other_4105: AntiScalar;
+
+    self_4513 = self_4512;
+    other_4105 = other_4104;
+    let _e4: Line = self_4513;
+    let _e5: AntiScalar = other_4105;
+    let _e6: Line = line_anti_scalar_geometric_anti_product(_e4, _e5);
+    let _e7: Line = self_4513;
+    let _e8: Line = line_anti_reversal(_e7);
+    let _e9: MultiVector = line_line_geometric_anti_product(_e6, _e8);
+    let _e10: AntiScalar = multi_vector_anti_scalar_into(_e9);
+    return _e10;
+}
+
+fn line_homogeneous_magnitude_sandwich(self_4514: Line, other_4106: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_4515: Line;
+    var other_4107: HomogeneousMagnitude;
+
+    self_4515 = self_4514;
+    other_4107 = other_4106;
+    let _e4: Line = self_4515;
+    let _e5: HomogeneousMagnitude = other_4107;
+    let _e6: Line = line_homogeneous_magnitude_geometric_anti_product(_e4, _e5);
+    let _e7: Line = self_4515;
+    let _e8: Line = line_anti_reversal(_e7);
+    let _e9: MultiVector = line_line_geometric_anti_product(_e6, _e8);
+    let _e10: HomogeneousMagnitude = multi_vector_homogeneous_magnitude_into(_e9);
+    return _e10;
+}
+
+fn line_point_sandwich(self_4516: Line, other_4108: Point) -> Point {
+    var self_4517: Line;
+    var other_4109: Point;
+
+    self_4517 = self_4516;
+    other_4109 = other_4108;
+    let _e4: Line = self_4517;
+    let _e5: Point = other_4109;
+    let _e6: Flector = line_point_geometric_anti_product(_e4, _e5);
+    let _e7: Line = self_4517;
+    let _e8: Line = line_anti_reversal(_e7);
+    let _e9: Flector = flector_line_geometric_anti_product(_e6, _e8);
     let _e10: Point = flector_point_into(_e9);
     return _e10;
 }
 
-fn rotor_scalar_sandwich(self_4566: Rotor, other_4158: Scalar) -> Scalar {
-    var self_4567: Rotor;
-    var other_4159: Scalar;
+fn line_line_sandwich(self_4518: Line, other_4110: Line) -> Line {
+    var self_4519: Line;
+    var other_4111: Line;
+
+    self_4519 = self_4518;
+    other_4111 = other_4110;
+    let _e4: Line = self_4519;
+    let _e5: Line = other_4111;
+    let _e6: MultiVector = line_line_geometric_anti_product(_e4, _e5);
+    let _e7: Line = self_4519;
+    let _e8: Line = line_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_line_geometric_anti_product(_e6, _e8);
+    let _e10: Line = multi_vector_line_into(_e9);
+    return _e10;
+}
+
+fn line_plane_sandwich(self_4520: Line, other_4112: Plane) -> Plane {
+    var self_4521: Line;
+    var other_4113: Plane;
+
+    self_4521 = self_4520;
+    other_4113 = other_4112;
+    let _e4: Line = self_4521;
+    let _e5: Plane = other_4113;
+    let _e6: Flector = line_plane_geometric_anti_product(_e4, _e5);
+    let _e7: Line = self_4521;
+    let _e8: Line = line_anti_reversal(_e7);
+    let _e9: Flector = flector_line_geometric_anti_product(_e6, _e8);
+    let _e10: Plane = flector_plane_into(_e9);
+    return _e10;
+}
+
+fn line_motor_sandwich(self_4522: Line, other_4114: Motor) -> Motor {
+    var self_4523: Line;
+    var other_4115: Motor;
+
+    self_4523 = self_4522;
+    other_4115 = other_4114;
+    let _e4: Line = self_4523;
+    let _e5: Motor = other_4115;
+    let _e6: MultiVector = line_motor_geometric_anti_product(_e4, _e5);
+    let _e7: Line = self_4523;
+    let _e8: Line = line_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_line_geometric_anti_product(_e6, _e8);
+    let _e10: Motor = multi_vector_motor_into(_e9);
+    return _e10;
+}
+
+fn line_rotor_sandwich(self_4524: Line, other_4116: Rotor) -> Rotor {
+    var self_4525: Line;
+    var other_4117: Rotor;
+
+    self_4525 = self_4524;
+    other_4117 = other_4116;
+    let _e4: Line = self_4525;
+    let _e5: Rotor = other_4117;
+    let _e6: MultiVector = line_rotor_geometric_anti_product(_e4, _e5);
+    let _e7: Line = self_4525;
+    let _e8: Line = line_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_line_geometric_anti_product(_e6, _e8);
+    let _e10: Rotor = multi_vector_rotor_into(_e9);
+    return _e10;
+}
+
+fn line_translator_sandwich(self_4526: Line, other_4118: Translator) -> Translator {
+    var self_4527: Line;
+    var other_4119: Translator;
+
+    self_4527 = self_4526;
+    other_4119 = other_4118;
+    let _e4: Line = self_4527;
+    let _e5: Translator = other_4119;
+    let _e6: MultiVector = line_translator_geometric_anti_product(_e4, _e5);
+    let _e7: Line = self_4527;
+    let _e8: Line = line_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_line_geometric_anti_product(_e6, _e8);
+    let _e10: Translator = multi_vector_translator_into(_e9);
+    return _e10;
+}
+
+fn line_flector_sandwich(self_4528: Line, other_4120: Flector) -> Flector {
+    var self_4529: Line;
+    var other_4121: Flector;
+
+    self_4529 = self_4528;
+    other_4121 = other_4120;
+    let _e4: Line = self_4529;
+    let _e5: Flector = other_4121;
+    let _e6: Flector = line_flector_geometric_anti_product(_e4, _e5);
+    let _e7: Line = self_4529;
+    let _e8: Line = line_anti_reversal(_e7);
+    let _e9: Flector = flector_line_geometric_anti_product(_e6, _e8);
+    return _e9;
+}
+
+fn line_multi_vector_sandwich(self_4530: Line, other_4122: MultiVector) -> MultiVector {
+    var self_4531: Line;
+    var other_4123: MultiVector;
+
+    self_4531 = self_4530;
+    other_4123 = other_4122;
+    let _e4: Line = self_4531;
+    let _e5: MultiVector = other_4123;
+    let _e6: MultiVector = line_multi_vector_geometric_anti_product(_e4, _e5);
+    let _e7: Line = self_4531;
+    let _e8: Line = line_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_line_geometric_anti_product(_e6, _e8);
+    return _e9;
+}
+
+fn plane_scalar_sandwich(self_4532: Plane, other_4124: Scalar) -> Scalar {
+    var self_4533: Plane;
+    var other_4125: Scalar;
+
+    self_4533 = self_4532;
+    other_4125 = other_4124;
+    let _e4: Plane = self_4533;
+    let _e5: Scalar = other_4125;
+    let _e6: Point = plane_scalar_geometric_anti_product(_e4, _e5);
+    let _e7: Plane = self_4533;
+    let _e8: Plane = plane_anti_reversal(_e7);
+    let _e9: MultiVector = point_plane_geometric_anti_product(_e6, _e8);
+    let _e10: Scalar = multi_vector_scalar_into(_e9);
+    return _e10;
+}
+
+fn plane_anti_scalar_sandwich(self_4534: Plane, other_4126: AntiScalar) -> AntiScalar {
+    var self_4535: Plane;
+    var other_4127: AntiScalar;
+
+    self_4535 = self_4534;
+    other_4127 = other_4126;
+    let _e4: Plane = self_4535;
+    let _e5: AntiScalar = other_4127;
+    let _e6: Plane = plane_anti_scalar_geometric_anti_product(_e4, _e5);
+    let _e7: Plane = self_4535;
+    let _e8: Plane = plane_anti_reversal(_e7);
+    let _e9: Motor = plane_plane_geometric_anti_product(_e6, _e8);
+    let _e10: AntiScalar = motor_anti_scalar_into(_e9);
+    return _e10;
+}
+
+fn plane_homogeneous_magnitude_sandwich(self_4536: Plane, other_4128: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_4537: Plane;
+    var other_4129: HomogeneousMagnitude;
+
+    self_4537 = self_4536;
+    other_4129 = other_4128;
+    let _e4: Plane = self_4537;
+    let _e5: HomogeneousMagnitude = other_4129;
+    let _e6: Flector = plane_homogeneous_magnitude_geometric_anti_product(_e4, _e5);
+    let _e7: Plane = self_4537;
+    let _e8: Plane = plane_anti_reversal(_e7);
+    let _e9: MultiVector = flector_plane_geometric_anti_product(_e6, _e8);
+    let _e10: HomogeneousMagnitude = multi_vector_homogeneous_magnitude_into(_e9);
+    return _e10;
+}
+
+fn plane_point_sandwich(self_4538: Plane, other_4130: Point) -> Point {
+    var self_4539: Plane;
+    var other_4131: Point;
+
+    self_4539 = self_4538;
+    other_4131 = other_4130;
+    let _e4: Plane = self_4539;
+    let _e5: Point = other_4131;
+    let _e6: MultiVector = plane_point_geometric_anti_product(_e4, _e5);
+    let _e7: Plane = self_4539;
+    let _e8: Plane = plane_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_plane_geometric_anti_product(_e6, _e8);
+    let _e10: Point = multi_vector_point_into(_e9);
+    return _e10;
+}
+
+fn plane_line_sandwich(self_4540: Plane, other_4132: Line) -> Line {
+    var self_4541: Plane;
+    var other_4133: Line;
+
+    self_4541 = self_4540;
+    other_4133 = other_4132;
+    let _e4: Plane = self_4541;
+    let _e5: Line = other_4133;
+    let _e6: Flector = plane_line_geometric_anti_product(_e4, _e5);
+    let _e7: Plane = self_4541;
+    let _e8: Plane = plane_anti_reversal(_e7);
+    let _e9: MultiVector = flector_plane_geometric_anti_product(_e6, _e8);
+    let _e10: Line = multi_vector_line_into(_e9);
+    return _e10;
+}
+
+fn plane_plane_sandwich(self_4542: Plane, other_4134: Plane) -> Plane {
+    var self_4543: Plane;
+    var other_4135: Plane;
+
+    self_4543 = self_4542;
+    other_4135 = other_4134;
+    let _e4: Plane = self_4543;
+    let _e5: Plane = other_4135;
+    let _e6: Motor = plane_plane_geometric_anti_product(_e4, _e5);
+    let _e7: Plane = self_4543;
+    let _e8: Plane = plane_anti_reversal(_e7);
+    let _e9: Flector = motor_plane_geometric_anti_product(_e6, _e8);
+    let _e10: Plane = flector_plane_into(_e9);
+    return _e10;
+}
+
+fn plane_motor_sandwich(self_4544: Plane, other_4136: Motor) -> Motor {
+    var self_4545: Plane;
+    var other_4137: Motor;
+
+    self_4545 = self_4544;
+    other_4137 = other_4136;
+    let _e4: Plane = self_4545;
+    let _e5: Motor = other_4137;
+    let _e6: Flector = plane_motor_geometric_anti_product(_e4, _e5);
+    let _e7: Plane = self_4545;
+    let _e8: Plane = plane_anti_reversal(_e7);
+    let _e9: MultiVector = flector_plane_geometric_anti_product(_e6, _e8);
+    let _e10: Motor = multi_vector_motor_into(_e9);
+    return _e10;
+}
+
+fn plane_rotor_sandwich(self_4546: Plane, other_4138: Rotor) -> Rotor {
+    var self_4547: Plane;
+    var other_4139: Rotor;
+
+    self_4547 = self_4546;
+    other_4139 = other_4138;
+    let _e4: Plane = self_4547;
+    let _e5: Rotor = other_4139;
+    let _e6: Flector = plane_rotor_geometric_anti_product(_e4, _e5);
+    let _e7: Plane = self_4547;
+    let _e8: Plane = plane_anti_reversal(_e7);
+    let _e9: MultiVector = flector_plane_geometric_anti_product(_e6, _e8);
+    let _e10: Rotor = multi_vector_rotor_into(_e9);
+    return _e10;
+}
+
+fn plane_translator_sandwich(self_4548: Plane, other_4140: Translator) -> Translator {
+    var self_4549: Plane;
+    var other_4141: Translator;
+
+    self_4549 = self_4548;
+    other_4141 = other_4140;
+    let _e4: Plane = self_4549;
+    let _e5: Translator = other_4141;
+    let _e6: Flector = plane_translator_geometric_anti_product(_e4, _e5);
+    let _e7: Plane = self_4549;
+    let _e8: Plane = plane_anti_reversal(_e7);
+    let _e9: MultiVector = flector_plane_geometric_anti_product(_e6, _e8);
+    let _e10: Translator = multi_vector_translator_into(_e9);
+    return _e10;
+}
+
+fn plane_flector_sandwich(self_4550: Plane, other_4142: Flector) -> Flector {
+    var self_4551: Plane;
+    var other_4143: Flector;
+
+    self_4551 = self_4550;
+    other_4143 = other_4142;
+    let _e4: Plane = self_4551;
+    let _e5: Flector = other_4143;
+    let _e6: MultiVector = plane_flector_geometric_anti_product(_e4, _e5);
+    let _e7: Plane = self_4551;
+    let _e8: Plane = plane_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_plane_geometric_anti_product(_e6, _e8);
+    let _e10: Flector = multi_vector_flector_into(_e9);
+    return _e10;
+}
+
+fn plane_multi_vector_sandwich(self_4552: Plane, other_4144: MultiVector) -> MultiVector {
+    var self_4553: Plane;
+    var other_4145: MultiVector;
+
+    self_4553 = self_4552;
+    other_4145 = other_4144;
+    let _e4: Plane = self_4553;
+    let _e5: MultiVector = other_4145;
+    let _e6: MultiVector = plane_multi_vector_geometric_anti_product(_e4, _e5);
+    let _e7: Plane = self_4553;
+    let _e8: Plane = plane_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_plane_geometric_anti_product(_e6, _e8);
+    return _e9;
+}
+
+fn motor_scalar_sandwich(self_4554: Motor, other_4146: Scalar) -> Scalar {
+    var self_4555: Motor;
+    var other_4147: Scalar;
+
+    self_4555 = self_4554;
+    other_4147 = other_4146;
+    let _e4: Motor = self_4555;
+    let _e5: Scalar = other_4147;
+    let _e6: MultiVector = motor_scalar_geometric_anti_product(_e4, _e5);
+    let _e7: Motor = self_4555;
+    let _e8: Motor = motor_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_motor_geometric_anti_product(_e6, _e8);
+    let _e10: Scalar = multi_vector_scalar_into(_e9);
+    return _e10;
+}
+
+fn motor_anti_scalar_sandwich(self_4556: Motor, other_4148: AntiScalar) -> AntiScalar {
+    var self_4557: Motor;
+    var other_4149: AntiScalar;
+
+    self_4557 = self_4556;
+    other_4149 = other_4148;
+    let _e4: Motor = self_4557;
+    let _e5: AntiScalar = other_4149;
+    let _e6: Motor = motor_anti_scalar_geometric_anti_product(_e4, _e5);
+    let _e7: Motor = self_4557;
+    let _e8: Motor = motor_anti_reversal(_e7);
+    let _e9: MultiVector = motor_motor_geometric_anti_product(_e6, _e8);
+    let _e10: AntiScalar = multi_vector_anti_scalar_into(_e9);
+    return _e10;
+}
+
+fn motor_homogeneous_magnitude_sandwich(self_4558: Motor, other_4150: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_4559: Motor;
+    var other_4151: HomogeneousMagnitude;
+
+    self_4559 = self_4558;
+    other_4151 = other_4150;
+    let _e4: Motor = self_4559;
+    let _e5: HomogeneousMagnitude = other_4151;
+    let _e6: MultiVector = motor_homogeneous_magnitude_geometric_anti_product(_e4, _e5);
+    let _e7: Motor = self_4559;
+    let _e8: Motor = motor_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_motor_geometric_anti_product(_e6, _e8);
+    let _e10: HomogeneousMagnitude = multi_vector_homogeneous_magnitude_into(_e9);
+    return _e10;
+}
+
+fn motor_point_sandwich(self_4560: Motor, other_4152: Point) -> Point {
+    var self_4561: Motor;
+    var other_4153: Point;
+
+    self_4561 = self_4560;
+    other_4153 = other_4152;
+    let _e4: Motor = self_4561;
+    let _e5: Point = other_4153;
+    let _e6: Flector = motor_point_geometric_anti_product(_e4, _e5);
+    let _e7: Motor = self_4561;
+    let _e8: Motor = motor_anti_reversal(_e7);
+    let _e9: Flector = flector_motor_geometric_anti_product(_e6, _e8);
+    let _e10: Point = flector_point_into(_e9);
+    return _e10;
+}
+
+fn motor_line_sandwich(self_4562: Motor, other_4154: Line) -> Line {
+    var self_4563: Motor;
+    var other_4155: Line;
+
+    self_4563 = self_4562;
+    other_4155 = other_4154;
+    let _e4: Motor = self_4563;
+    let _e5: Line = other_4155;
+    let _e6: MultiVector = motor_line_geometric_anti_product(_e4, _e5);
+    let _e7: Motor = self_4563;
+    let _e8: Motor = motor_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_motor_geometric_anti_product(_e6, _e8);
+    let _e10: Line = multi_vector_line_into(_e9);
+    return _e10;
+}
+
+fn motor_plane_sandwich(self_4564: Motor, other_4156: Plane) -> Plane {
+    var self_4565: Motor;
+    var other_4157: Plane;
+
+    self_4565 = self_4564;
+    other_4157 = other_4156;
+    let _e4: Motor = self_4565;
+    let _e5: Plane = other_4157;
+    let _e6: Flector = motor_plane_geometric_anti_product(_e4, _e5);
+    let _e7: Motor = self_4565;
+    let _e8: Motor = motor_anti_reversal(_e7);
+    let _e9: Flector = flector_motor_geometric_anti_product(_e6, _e8);
+    let _e10: Plane = flector_plane_into(_e9);
+    return _e10;
+}
+
+fn motor_motor_sandwich(self_4566: Motor, other_4158: Motor) -> Motor {
+    var self_4567: Motor;
+    var other_4159: Motor;
 
     self_4567 = self_4566;
     other_4159 = other_4158;
-    let _e4: Rotor = self_4567;
-    let _e5: Scalar = other_4159;
+    let _e4: Motor = self_4567;
+    let _e5: Motor = other_4159;
+    let _e6: MultiVector = motor_motor_geometric_anti_product(_e4, _e5);
+    let _e7: Motor = self_4567;
+    let _e8: Motor = motor_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_motor_geometric_anti_product(_e6, _e8);
+    let _e10: Motor = multi_vector_motor_into(_e9);
+    return _e10;
+}
+
+fn motor_rotor_sandwich(self_4568: Motor, other_4160: Rotor) -> Rotor {
+    var self_4569: Motor;
+    var other_4161: Rotor;
+
+    self_4569 = self_4568;
+    other_4161 = other_4160;
+    let _e4: Motor = self_4569;
+    let _e5: Rotor = other_4161;
+    let _e6: MultiVector = motor_rotor_geometric_anti_product(_e4, _e5);
+    let _e7: Motor = self_4569;
+    let _e8: Motor = motor_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_motor_geometric_anti_product(_e6, _e8);
+    let _e10: Rotor = multi_vector_rotor_into(_e9);
+    return _e10;
+}
+
+fn motor_translator_sandwich(self_4570: Motor, other_4162: Translator) -> Translator {
+    var self_4571: Motor;
+    var other_4163: Translator;
+
+    self_4571 = self_4570;
+    other_4163 = other_4162;
+    let _e4: Motor = self_4571;
+    let _e5: Translator = other_4163;
+    let _e6: MultiVector = motor_translator_geometric_anti_product(_e4, _e5);
+    let _e7: Motor = self_4571;
+    let _e8: Motor = motor_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_motor_geometric_anti_product(_e6, _e8);
+    let _e10: Translator = multi_vector_translator_into(_e9);
+    return _e10;
+}
+
+fn motor_flector_sandwich(self_4572: Motor, other_4164: Flector) -> Flector {
+    var self_4573: Motor;
+    var other_4165: Flector;
+
+    self_4573 = self_4572;
+    other_4165 = other_4164;
+    let _e4: Motor = self_4573;
+    let _e5: Flector = other_4165;
+    let _e6: Flector = motor_flector_geometric_anti_product(_e4, _e5);
+    let _e7: Motor = self_4573;
+    let _e8: Motor = motor_anti_reversal(_e7);
+    let _e9: Flector = flector_motor_geometric_anti_product(_e6, _e8);
+    return _e9;
+}
+
+fn motor_multi_vector_sandwich(self_4574: Motor, other_4166: MultiVector) -> MultiVector {
+    var self_4575: Motor;
+    var other_4167: MultiVector;
+
+    self_4575 = self_4574;
+    other_4167 = other_4166;
+    let _e4: Motor = self_4575;
+    let _e5: MultiVector = other_4167;
+    let _e6: MultiVector = motor_multi_vector_geometric_anti_product(_e4, _e5);
+    let _e7: Motor = self_4575;
+    let _e8: Motor = motor_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_motor_geometric_anti_product(_e6, _e8);
+    return _e9;
+}
+
+fn rotor_scalar_sandwich(self_4576: Rotor, other_4168: Scalar) -> Scalar {
+    var self_4577: Rotor;
+    var other_4169: Scalar;
+
+    self_4577 = self_4576;
+    other_4169 = other_4168;
+    let _e4: Rotor = self_4577;
+    let _e5: Scalar = other_4169;
     let _e6: MultiVector = rotor_scalar_geometric_anti_product(_e4, _e5);
-    let _e7: Rotor = self_4567;
+    let _e7: Rotor = self_4577;
     let _e8: Rotor = rotor_anti_reversal(_e7);
     let _e9: MultiVector = multi_vector_rotor_geometric_anti_product(_e6, _e8);
     let _e10: Scalar = multi_vector_scalar_into(_e9);
     return _e10;
 }
 
-fn rotor_translator_sandwich(self_4568: Rotor, other_4160: Translator) -> Translator {
-    var self_4569: Rotor;
-    var other_4161: Translator;
+fn rotor_anti_scalar_sandwich(self_4578: Rotor, other_4170: AntiScalar) -> AntiScalar {
+    var self_4579: Rotor;
+    var other_4171: AntiScalar;
 
-    self_4569 = self_4568;
-    other_4161 = other_4160;
-    let _e4: Rotor = self_4569;
-    let _e5: Translator = other_4161;
+    self_4579 = self_4578;
+    other_4171 = other_4170;
+    let _e4: Rotor = self_4579;
+    let _e5: AntiScalar = other_4171;
+    let _e6: Rotor = rotor_anti_scalar_geometric_anti_product(_e4, _e5);
+    let _e7: Rotor = self_4579;
+    let _e8: Rotor = rotor_anti_reversal(_e7);
+    let _e9: Rotor = rotor_rotor_geometric_anti_product(_e6, _e8);
+    let _e10: AntiScalar = rotor_anti_scalar_into(_e9);
+    return _e10;
+}
+
+fn rotor_homogeneous_magnitude_sandwich(self_4580: Rotor, other_4172: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_4581: Rotor;
+    var other_4173: HomogeneousMagnitude;
+
+    self_4581 = self_4580;
+    other_4173 = other_4172;
+    let _e4: Rotor = self_4581;
+    let _e5: HomogeneousMagnitude = other_4173;
+    let _e6: MultiVector = rotor_homogeneous_magnitude_geometric_anti_product(_e4, _e5);
+    let _e7: Rotor = self_4581;
+    let _e8: Rotor = rotor_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_rotor_geometric_anti_product(_e6, _e8);
+    let _e10: HomogeneousMagnitude = multi_vector_homogeneous_magnitude_into(_e9);
+    return _e10;
+}
+
+fn rotor_point_sandwich(self_4582: Rotor, other_4174: Point) -> Point {
+    var self_4583: Rotor;
+    var other_4175: Point;
+
+    self_4583 = self_4582;
+    other_4175 = other_4174;
+    let _e4: Rotor = self_4583;
+    let _e5: Point = other_4175;
+    let _e6: Flector = rotor_point_geometric_anti_product(_e4, _e5);
+    let _e7: Rotor = self_4583;
+    let _e8: Rotor = rotor_anti_reversal(_e7);
+    let _e9: Flector = flector_rotor_geometric_anti_product(_e6, _e8);
+    let _e10: Point = flector_point_into(_e9);
+    return _e10;
+}
+
+fn rotor_line_sandwich(self_4584: Rotor, other_4176: Line) -> Line {
+    var self_4585: Rotor;
+    var other_4177: Line;
+
+    self_4585 = self_4584;
+    other_4177 = other_4176;
+    let _e4: Rotor = self_4585;
+    let _e5: Line = other_4177;
+    let _e6: MultiVector = rotor_line_geometric_anti_product(_e4, _e5);
+    let _e7: Rotor = self_4585;
+    let _e8: Rotor = rotor_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_rotor_geometric_anti_product(_e6, _e8);
+    let _e10: Line = multi_vector_line_into(_e9);
+    return _e10;
+}
+
+fn rotor_plane_sandwich(self_4586: Rotor, other_4178: Plane) -> Plane {
+    var self_4587: Rotor;
+    var other_4179: Plane;
+
+    self_4587 = self_4586;
+    other_4179 = other_4178;
+    let _e4: Rotor = self_4587;
+    let _e5: Plane = other_4179;
+    let _e6: Flector = rotor_plane_geometric_anti_product(_e4, _e5);
+    let _e7: Rotor = self_4587;
+    let _e8: Rotor = rotor_anti_reversal(_e7);
+    let _e9: Flector = flector_rotor_geometric_anti_product(_e6, _e8);
+    let _e10: Plane = flector_plane_into(_e9);
+    return _e10;
+}
+
+fn rotor_motor_sandwich(self_4588: Rotor, other_4180: Motor) -> Motor {
+    var self_4589: Rotor;
+    var other_4181: Motor;
+
+    self_4589 = self_4588;
+    other_4181 = other_4180;
+    let _e4: Rotor = self_4589;
+    let _e5: Motor = other_4181;
+    let _e6: MultiVector = rotor_motor_geometric_anti_product(_e4, _e5);
+    let _e7: Rotor = self_4589;
+    let _e8: Rotor = rotor_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_rotor_geometric_anti_product(_e6, _e8);
+    let _e10: Motor = multi_vector_motor_into(_e9);
+    return _e10;
+}
+
+fn rotor_rotor_sandwich(self_4590: Rotor, other_4182: Rotor) -> Rotor {
+    var self_4591: Rotor;
+    var other_4183: Rotor;
+
+    self_4591 = self_4590;
+    other_4183 = other_4182;
+    let _e4: Rotor = self_4591;
+    let _e5: Rotor = other_4183;
+    let _e6: Rotor = rotor_rotor_geometric_anti_product(_e4, _e5);
+    let _e7: Rotor = self_4591;
+    let _e8: Rotor = rotor_anti_reversal(_e7);
+    let _e9: Rotor = rotor_rotor_geometric_anti_product(_e6, _e8);
+    return _e9;
+}
+
+fn rotor_translator_sandwich(self_4592: Rotor, other_4184: Translator) -> Translator {
+    var self_4593: Rotor;
+    var other_4185: Translator;
+
+    self_4593 = self_4592;
+    other_4185 = other_4184;
+    let _e4: Rotor = self_4593;
+    let _e5: Translator = other_4185;
     let _e6: MultiVector = rotor_translator_geometric_anti_product(_e4, _e5);
-    let _e7: Rotor = self_4569;
+    let _e7: Rotor = self_4593;
     let _e8: Rotor = rotor_anti_reversal(_e7);
     let _e9: MultiVector = multi_vector_rotor_geometric_anti_product(_e6, _e8);
     let _e10: Translator = multi_vector_translator_into(_e9);
     return _e10;
 }
 
-fn scalar_motor_sandwich(self_4570: Scalar, other_4162: Motor) -> Motor {
-    var self_4571: Scalar;
-    var other_4163: Motor;
+fn rotor_flector_sandwich(self_4594: Rotor, other_4186: Flector) -> Flector {
+    var self_4595: Rotor;
+    var other_4187: Flector;
 
-    self_4571 = self_4570;
-    other_4163 = other_4162;
-    let _e4: Scalar = self_4571;
-    let _e5: Motor = other_4163;
-    let _e6: MultiVector = scalar_motor_geometric_anti_product(_e4, _e5);
-    let _e7: Scalar = self_4571;
-    let _e8: Scalar = scalar_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_scalar_geometric_anti_product(_e6, _e8);
-    let _e10: Motor = multi_vector_motor_into(_e9);
-    return _e10;
+    self_4595 = self_4594;
+    other_4187 = other_4186;
+    let _e4: Rotor = self_4595;
+    let _e5: Flector = other_4187;
+    let _e6: Flector = rotor_flector_geometric_anti_product(_e4, _e5);
+    let _e7: Rotor = self_4595;
+    let _e8: Rotor = rotor_anti_reversal(_e7);
+    let _e9: Flector = flector_rotor_geometric_anti_product(_e6, _e8);
+    return _e9;
 }
 
-fn scalar_rotor_sandwich(self_4572: Scalar, other_4164: Rotor) -> Rotor {
-    var self_4573: Scalar;
-    var other_4165: Rotor;
+fn rotor_multi_vector_sandwich(self_4596: Rotor, other_4188: MultiVector) -> MultiVector {
+    var self_4597: Rotor;
+    var other_4189: MultiVector;
 
-    self_4573 = self_4572;
-    other_4165 = other_4164;
-    let _e4: Scalar = self_4573;
-    let _e5: Rotor = other_4165;
-    let _e6: MultiVector = scalar_rotor_geometric_anti_product(_e4, _e5);
-    let _e7: Scalar = self_4573;
-    let _e8: Scalar = scalar_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_scalar_geometric_anti_product(_e6, _e8);
-    let _e10: Rotor = multi_vector_rotor_into(_e9);
-    return _e10;
+    self_4597 = self_4596;
+    other_4189 = other_4188;
+    let _e4: Rotor = self_4597;
+    let _e5: MultiVector = other_4189;
+    let _e6: MultiVector = rotor_multi_vector_geometric_anti_product(_e4, _e5);
+    let _e7: Rotor = self_4597;
+    let _e8: Rotor = rotor_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_rotor_geometric_anti_product(_e6, _e8);
+    return _e9;
 }
 
-fn translator_anti_scalar_sandwich(self_4574: Translator, other_4166: AntiScalar) -> AntiScalar {
-    var self_4575: Translator;
-    var other_4167: AntiScalar;
+fn translator_scalar_sandwich(self_4598: Translator, other_4190: Scalar) -> Scalar {
+    var self_4599: Translator;
+    var other_4191: Scalar;
 
-    self_4575 = self_4574;
-    other_4167 = other_4166;
-    let _e4: Translator = self_4575;
-    let _e5: AntiScalar = other_4167;
+    self_4599 = self_4598;
+    other_4191 = other_4190;
+    let _e4: Translator = self_4599;
+    let _e5: Scalar = other_4191;
+    let _e6: Scalar = translator_scalar_geometric_anti_product(_e4, _e5);
+    let _e7: Translator = self_4599;
+    let _e8: Translator = translator_anti_reversal(_e7);
+    let _e9: Scalar = scalar_translator_geometric_anti_product(_e6, _e8);
+    return _e9;
+}
+
+fn translator_anti_scalar_sandwich(self_4600: Translator, other_4192: AntiScalar) -> AntiScalar {
+    var self_4601: Translator;
+    var other_4193: AntiScalar;
+
+    self_4601 = self_4600;
+    other_4193 = other_4192;
+    let _e4: Translator = self_4601;
+    let _e5: AntiScalar = other_4193;
     let _e6: Translator = translator_anti_scalar_geometric_anti_product(_e4, _e5);
-    let _e7: Translator = self_4575;
+    let _e7: Translator = self_4601;
     let _e8: Translator = translator_anti_reversal(_e7);
     let _e9: Translator = translator_translator_geometric_anti_product(_e6, _e8);
     let _e10: AntiScalar = translator_anti_scalar_into(_e9);
     return _e10;
 }
 
-fn translator_homogeneous_magnitude_sandwich(self_4576: Translator, other_4168: HomogeneousMagnitude) -> HomogeneousMagnitude {
-    var self_4577: Translator;
-    var other_4169: HomogeneousMagnitude;
+fn translator_homogeneous_magnitude_sandwich(self_4602: Translator, other_4194: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_4603: Translator;
+    var other_4195: HomogeneousMagnitude;
 
-    self_4577 = self_4576;
-    other_4169 = other_4168;
-    let _e4: Translator = self_4577;
-    let _e5: HomogeneousMagnitude = other_4169;
+    self_4603 = self_4602;
+    other_4195 = other_4194;
+    let _e4: Translator = self_4603;
+    let _e5: HomogeneousMagnitude = other_4195;
     let _e6: MultiVector = translator_homogeneous_magnitude_geometric_anti_product(_e4, _e5);
-    let _e7: Translator = self_4577;
+    let _e7: Translator = self_4603;
     let _e8: Translator = translator_anti_reversal(_e7);
     let _e9: MultiVector = multi_vector_translator_geometric_anti_product(_e6, _e8);
     let _e10: HomogeneousMagnitude = multi_vector_homogeneous_magnitude_into(_e9);
     return _e10;
 }
 
-fn translator_line_sandwich(self_4578: Translator, other_4170: Line) -> Line {
-    var self_4579: Translator;
-    var other_4171: Line;
+fn translator_point_sandwich(self_4604: Translator, other_4196: Point) -> Point {
+    var self_4605: Translator;
+    var other_4197: Point;
 
-    self_4579 = self_4578;
-    other_4171 = other_4170;
-    let _e4: Translator = self_4579;
-    let _e5: Line = other_4171;
+    self_4605 = self_4604;
+    other_4197 = other_4196;
+    let _e4: Translator = self_4605;
+    let _e5: Point = other_4197;
+    let _e6: Point = translator_point_geometric_anti_product(_e4, _e5);
+    let _e7: Translator = self_4605;
+    let _e8: Translator = translator_anti_reversal(_e7);
+    let _e9: Point = point_translator_geometric_anti_product(_e6, _e8);
+    return _e9;
+}
+
+fn translator_line_sandwich(self_4606: Translator, other_4198: Line) -> Line {
+    var self_4607: Translator;
+    var other_4199: Line;
+
+    self_4607 = self_4606;
+    other_4199 = other_4198;
+    let _e4: Translator = self_4607;
+    let _e5: Line = other_4199;
     let _e6: MultiVector = translator_line_geometric_anti_product(_e4, _e5);
-    let _e7: Translator = self_4579;
+    let _e7: Translator = self_4607;
     let _e8: Translator = translator_anti_reversal(_e7);
     let _e9: MultiVector = multi_vector_translator_geometric_anti_product(_e6, _e8);
     let _e10: Line = multi_vector_line_into(_e9);
     return _e10;
 }
 
-fn translator_motor_sandwich(self_4580: Translator, other_4172: Motor) -> Motor {
-    var self_4581: Translator;
-    var other_4173: Motor;
+fn translator_plane_sandwich(self_4608: Translator, other_4200: Plane) -> Plane {
+    var self_4609: Translator;
+    var other_4201: Plane;
 
-    self_4581 = self_4580;
-    other_4173 = other_4172;
-    let _e4: Translator = self_4581;
-    let _e5: Motor = other_4173;
-    let _e6: MultiVector = translator_motor_geometric_anti_product(_e4, _e5);
-    let _e7: Translator = self_4581;
-    let _e8: Translator = translator_anti_reversal(_e7);
-    let _e9: MultiVector = multi_vector_translator_geometric_anti_product(_e6, _e8);
-    let _e10: Motor = multi_vector_motor_into(_e9);
-    return _e10;
-}
-
-fn translator_plane_sandwich(self_4582: Translator, other_4174: Plane) -> Plane {
-    var self_4583: Translator;
-    var other_4175: Plane;
-
-    self_4583 = self_4582;
-    other_4175 = other_4174;
-    let _e4: Translator = self_4583;
-    let _e5: Plane = other_4175;
+    self_4609 = self_4608;
+    other_4201 = other_4200;
+    let _e4: Translator = self_4609;
+    let _e5: Plane = other_4201;
     let _e6: Flector = translator_plane_geometric_anti_product(_e4, _e5);
-    let _e7: Translator = self_4583;
+    let _e7: Translator = self_4609;
     let _e8: Translator = translator_anti_reversal(_e7);
     let _e9: Flector = flector_translator_geometric_anti_product(_e6, _e8);
     let _e10: Plane = flector_plane_into(_e9);
     return _e10;
 }
 
-fn translator_rotor_sandwich(self_4584: Translator, other_4176: Rotor) -> Rotor {
-    var self_4585: Translator;
-    var other_4177: Rotor;
+fn translator_motor_sandwich(self_4610: Translator, other_4202: Motor) -> Motor {
+    var self_4611: Translator;
+    var other_4203: Motor;
 
-    self_4585 = self_4584;
-    other_4177 = other_4176;
-    let _e4: Translator = self_4585;
-    let _e5: Rotor = other_4177;
+    self_4611 = self_4610;
+    other_4203 = other_4202;
+    let _e4: Translator = self_4611;
+    let _e5: Motor = other_4203;
+    let _e6: MultiVector = translator_motor_geometric_anti_product(_e4, _e5);
+    let _e7: Translator = self_4611;
+    let _e8: Translator = translator_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_translator_geometric_anti_product(_e6, _e8);
+    let _e10: Motor = multi_vector_motor_into(_e9);
+    return _e10;
+}
+
+fn translator_rotor_sandwich(self_4612: Translator, other_4204: Rotor) -> Rotor {
+    var self_4613: Translator;
+    var other_4205: Rotor;
+
+    self_4613 = self_4612;
+    other_4205 = other_4204;
+    let _e4: Translator = self_4613;
+    let _e5: Rotor = other_4205;
     let _e6: MultiVector = translator_rotor_geometric_anti_product(_e4, _e5);
-    let _e7: Translator = self_4585;
+    let _e7: Translator = self_4613;
     let _e8: Translator = translator_anti_reversal(_e7);
     let _e9: MultiVector = multi_vector_translator_geometric_anti_product(_e6, _e8);
     let _e10: Rotor = multi_vector_rotor_into(_e9);
     return _e10;
 }
 
-fn flector_flector_distance(self_4586: Flector, other_4178: Flector) -> HomogeneousMagnitude {
-    var self_4587: Flector;
-    var other_4179: Flector;
-
-    self_4587 = self_4586;
-    other_4179 = other_4178;
-    let _e4: Flector = self_4587;
-    let _e5: Flector = other_4179;
-    let _e6: Motor = flector_flector_outer_product(_e4, _e5);
-    let _e7: Flector = motor_attitude(_e6);
-    let _e8: Scalar = flector_bulk_norm(_e7);
-    let _e9: Flector = self_4587;
-    let _e10: Flector = other_4179;
-    let _e11: MultiVector = flector_attitude(_e10);
-    let _e12: MultiVector = flector_multi_vector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn flector_line_distance(self_4588: Flector, other_4180: Line) -> HomogeneousMagnitude {
-    var self_4589: Flector;
-    var other_4181: Line;
-
-    self_4589 = self_4588;
-    other_4181 = other_4180;
-    let _e4: Flector = self_4589;
-    let _e5: Line = other_4181;
-    let _e6: Plane = flector_line_outer_product(_e4, _e5);
-    let _e7: Line = plane_attitude(_e6);
-    let _e8: Scalar = line_bulk_norm(_e7);
-    let _e9: Flector = self_4589;
-    let _e10: Line = other_4181;
-    let _e11: Point = line_attitude(_e10);
-    let _e12: Motor = flector_point_outer_product(_e9, _e11);
-    let _e13: AntiScalar = motor_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn flector_motor_distance(self_4590: Flector, other_4182: Motor) -> HomogeneousMagnitude {
-    var self_4591: Flector;
-    var other_4183: Motor;
-
-    self_4591 = self_4590;
-    other_4183 = other_4182;
-    let _e4: Flector = self_4591;
-    let _e5: Motor = other_4183;
-    let _e6: Plane = flector_motor_outer_product(_e4, _e5);
-    let _e7: Line = plane_attitude(_e6);
-    let _e8: Scalar = line_bulk_norm(_e7);
-    let _e9: Flector = self_4591;
-    let _e10: Motor = other_4183;
-    let _e11: Flector = motor_attitude(_e10);
-    let _e12: Motor = flector_flector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = motor_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn flector_multi_vector_distance(self_4592: Flector, other_4184: MultiVector) -> HomogeneousMagnitude {
-    var self_4593: Flector;
-    var other_4185: MultiVector;
-
-    self_4593 = self_4592;
-    other_4185 = other_4184;
-    let _e4: Flector = self_4593;
-    let _e5: MultiVector = other_4185;
-    let _e6: MultiVector = flector_multi_vector_outer_product(_e4, _e5);
-    let _e7: MultiVector = multi_vector_attitude(_e6);
-    let _e8: Scalar = multi_vector_bulk_norm(_e7);
-    let _e9: Flector = self_4593;
-    let _e10: MultiVector = other_4185;
-    let _e11: MultiVector = multi_vector_attitude(_e10);
-    let _e12: MultiVector = flector_multi_vector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn flector_plane_distance(self_4594: Flector, other_4186: Plane) -> HomogeneousMagnitude {
-    var self_4595: Flector;
-    var other_4187: Plane;
-
-    self_4595 = self_4594;
-    other_4187 = other_4186;
-    let _e4: Flector = self_4595;
-    let _e5: Plane = other_4187;
-    let _e6: AntiScalar = flector_plane_outer_product(_e4, _e5);
-    let _e7: Plane = anti_scalar_attitude(_e6);
-    let _e8: Scalar = plane_bulk_norm(_e7);
-    let _e9: Flector = self_4595;
-    let _e10: Plane = other_4187;
-    let _e11: Line = plane_attitude(_e10);
-    let _e12: Plane = flector_line_outer_product(_e9, _e11);
-    let _e13: AntiScalar = plane_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn flector_point_distance(self_4596: Flector, other_4188: Point) -> HomogeneousMagnitude {
-    var self_4597: Flector;
-    var other_4189: Point;
-
-    self_4597 = self_4596;
-    other_4189 = other_4188;
-    let _e4: Flector = self_4597;
-    let _e5: Point = other_4189;
-    let _e6: Motor = flector_point_outer_product(_e4, _e5);
-    let _e7: Flector = motor_attitude(_e6);
-    let _e8: Scalar = flector_bulk_norm(_e7);
-    let _e9: Flector = self_4597;
-    let _e10: Point = other_4189;
-    let _e11: Scalar = point_attitude(_e10);
-    let _e12: Flector = flector_scalar_outer_product(_e9, _e11);
-    let _e13: AntiScalar = flector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn flector_rotor_distance(self_4598: Flector, other_4190: Rotor) -> HomogeneousMagnitude {
-    var self_4599: Flector;
-    var other_4191: Rotor;
-
-    self_4599 = self_4598;
-    other_4191 = other_4190;
-    let _e4: Flector = self_4599;
-    let _e5: Rotor = other_4191;
-    let _e6: Plane = flector_rotor_outer_product(_e4, _e5);
-    let _e7: Line = plane_attitude(_e6);
-    let _e8: Scalar = line_bulk_norm(_e7);
-    let _e9: Flector = self_4599;
-    let _e10: Rotor = other_4191;
-    let _e11: Flector = rotor_attitude(_e10);
-    let _e12: Motor = flector_flector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = motor_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn flector_translator_distance(self_4600: Flector, other_4192: Translator) -> HomogeneousMagnitude {
-    var self_4601: Flector;
-    var other_4193: Translator;
-
-    self_4601 = self_4600;
-    other_4193 = other_4192;
-    let _e4: Flector = self_4601;
-    let _e5: Translator = other_4193;
-    let _e6: Plane = flector_translator_outer_product(_e4, _e5);
-    let _e7: Line = plane_attitude(_e6);
-    let _e8: Scalar = line_bulk_norm(_e7);
-    let _e9: Flector = self_4601;
-    let _e10: Translator = other_4193;
-    let _e11: Flector = translator_attitude(_e10);
-    let _e12: Motor = flector_flector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = motor_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn homogeneous_magnitude_anti_scalar_distance(self_4602: HomogeneousMagnitude, other_4194: AntiScalar) -> HomogeneousMagnitude {
-    var self_4603: HomogeneousMagnitude;
-    var other_4195: AntiScalar;
-
-    self_4603 = self_4602;
-    other_4195 = other_4194;
-    let _e4: HomogeneousMagnitude = self_4603;
-    let _e5: AntiScalar = other_4195;
-    let _e6: AntiScalar = homogeneous_magnitude_anti_scalar_outer_product(_e4, _e5);
-    let _e7: Plane = anti_scalar_attitude(_e6);
-    let _e8: Scalar = plane_bulk_norm(_e7);
-    let _e9: HomogeneousMagnitude = self_4603;
-    let _e10: AntiScalar = other_4195;
-    let _e11: Plane = anti_scalar_attitude(_e10);
-    let _e12: Plane = homogeneous_magnitude_plane_outer_product(_e9, _e11);
-    let _e13: AntiScalar = plane_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn homogeneous_magnitude_flector_distance(self_4604: HomogeneousMagnitude, other_4196: Flector) -> HomogeneousMagnitude {
-    var self_4605: HomogeneousMagnitude;
-    var other_4197: Flector;
-
-    self_4605 = self_4604;
-    other_4197 = other_4196;
-    let _e4: HomogeneousMagnitude = self_4605;
-    let _e5: Flector = other_4197;
-    let _e6: Flector = homogeneous_magnitude_flector_outer_product(_e4, _e5);
-    let _e7: MultiVector = flector_attitude(_e6);
-    let _e8: Scalar = multi_vector_bulk_norm(_e7);
-    let _e9: HomogeneousMagnitude = self_4605;
-    let _e10: Flector = other_4197;
-    let _e11: MultiVector = flector_attitude(_e10);
-    let _e12: MultiVector = homogeneous_magnitude_multi_vector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn homogeneous_magnitude_homogeneous_magnitude_distance(self_4606: HomogeneousMagnitude, other_4198: HomogeneousMagnitude) -> HomogeneousMagnitude {
-    var self_4607: HomogeneousMagnitude;
-    var other_4199: HomogeneousMagnitude;
-
-    self_4607 = self_4606;
-    other_4199 = other_4198;
-    let _e4: HomogeneousMagnitude = self_4607;
-    let _e5: HomogeneousMagnitude = other_4199;
-    let _e6: HomogeneousMagnitude = homogeneous_magnitude_homogeneous_magnitude_outer_product(_e4, _e5);
-    let _e7: Plane = homogeneous_magnitude_attitude(_e6);
-    let _e8: Scalar = plane_bulk_norm(_e7);
-    let _e9: HomogeneousMagnitude = self_4607;
-    let _e10: HomogeneousMagnitude = other_4199;
-    let _e11: Plane = homogeneous_magnitude_attitude(_e10);
-    let _e12: Plane = homogeneous_magnitude_plane_outer_product(_e9, _e11);
-    let _e13: AntiScalar = plane_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn homogeneous_magnitude_line_distance(self_4608: HomogeneousMagnitude, other_4200: Line) -> HomogeneousMagnitude {
-    var self_4609: HomogeneousMagnitude;
-    var other_4201: Line;
-
-    self_4609 = self_4608;
-    other_4201 = other_4200;
-    let _e4: HomogeneousMagnitude = self_4609;
-    let _e5: Line = other_4201;
-    let _e6: Line = homogeneous_magnitude_line_outer_product(_e4, _e5);
-    let _e7: Point = line_attitude(_e6);
-    let _e8: Scalar = point_bulk_norm(_e7);
-    let _e9: HomogeneousMagnitude = self_4609;
-    let _e10: Line = other_4201;
-    let _e11: Point = line_attitude(_e10);
-    let _e12: Point = homogeneous_magnitude_point_outer_product(_e9, _e11);
-    let _e13: AntiScalar = point_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn homogeneous_magnitude_motor_distance(self_4610: HomogeneousMagnitude, other_4202: Motor) -> HomogeneousMagnitude {
-    var self_4611: HomogeneousMagnitude;
-    var other_4203: Motor;
-
-    self_4611 = self_4610;
-    other_4203 = other_4202;
-    let _e4: HomogeneousMagnitude = self_4611;
-    let _e5: Motor = other_4203;
-    let _e6: Motor = homogeneous_magnitude_motor_outer_product(_e4, _e5);
-    let _e7: Flector = motor_attitude(_e6);
-    let _e8: Scalar = flector_bulk_norm(_e7);
-    let _e9: HomogeneousMagnitude = self_4611;
-    let _e10: Motor = other_4203;
-    let _e11: Flector = motor_attitude(_e10);
-    let _e12: Flector = homogeneous_magnitude_flector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = flector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn homogeneous_magnitude_multi_vector_distance(self_4612: HomogeneousMagnitude, other_4204: MultiVector) -> HomogeneousMagnitude {
-    var self_4613: HomogeneousMagnitude;
-    var other_4205: MultiVector;
-
-    self_4613 = self_4612;
-    other_4205 = other_4204;
-    let _e4: HomogeneousMagnitude = self_4613;
-    let _e5: MultiVector = other_4205;
-    let _e6: MultiVector = homogeneous_magnitude_multi_vector_outer_product(_e4, _e5);
-    let _e7: MultiVector = multi_vector_attitude(_e6);
-    let _e8: Scalar = multi_vector_bulk_norm(_e7);
-    let _e9: HomogeneousMagnitude = self_4613;
-    let _e10: MultiVector = other_4205;
-    let _e11: MultiVector = multi_vector_attitude(_e10);
-    let _e12: MultiVector = homogeneous_magnitude_multi_vector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn homogeneous_magnitude_plane_distance(self_4614: HomogeneousMagnitude, other_4206: Plane) -> HomogeneousMagnitude {
-    var self_4615: HomogeneousMagnitude;
-    var other_4207: Plane;
+fn translator_translator_sandwich(self_4614: Translator, other_4206: Translator) -> Translator {
+    var self_4615: Translator;
+    var other_4207: Translator;
 
     self_4615 = self_4614;
     other_4207 = other_4206;
-    let _e4: HomogeneousMagnitude = self_4615;
-    let _e5: Plane = other_4207;
-    let _e6: Plane = homogeneous_magnitude_plane_outer_product(_e4, _e5);
-    let _e7: Line = plane_attitude(_e6);
-    let _e8: Scalar = line_bulk_norm(_e7);
-    let _e9: HomogeneousMagnitude = self_4615;
-    let _e10: Plane = other_4207;
-    let _e11: Line = plane_attitude(_e10);
-    let _e12: Line = homogeneous_magnitude_line_outer_product(_e9, _e11);
-    let _e13: AntiScalar = line_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
+    let _e4: Translator = self_4615;
+    let _e5: Translator = other_4207;
+    let _e6: Translator = translator_translator_geometric_anti_product(_e4, _e5);
+    let _e7: Translator = self_4615;
+    let _e8: Translator = translator_anti_reversal(_e7);
+    let _e9: Translator = translator_translator_geometric_anti_product(_e6, _e8);
+    return _e9;
 }
 
-fn homogeneous_magnitude_rotor_distance(self_4616: HomogeneousMagnitude, other_4208: Rotor) -> HomogeneousMagnitude {
-    var self_4617: HomogeneousMagnitude;
-    var other_4209: Rotor;
+fn translator_flector_sandwich(self_4616: Translator, other_4208: Flector) -> Flector {
+    var self_4617: Translator;
+    var other_4209: Flector;
 
     self_4617 = self_4616;
     other_4209 = other_4208;
-    let _e4: HomogeneousMagnitude = self_4617;
-    let _e5: Rotor = other_4209;
-    let _e6: Rotor = homogeneous_magnitude_rotor_outer_product(_e4, _e5);
-    let _e7: Flector = rotor_attitude(_e6);
-    let _e8: Scalar = flector_bulk_norm(_e7);
-    let _e9: HomogeneousMagnitude = self_4617;
-    let _e10: Rotor = other_4209;
-    let _e11: Flector = rotor_attitude(_e10);
-    let _e12: Flector = homogeneous_magnitude_flector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = flector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
+    let _e4: Translator = self_4617;
+    let _e5: Flector = other_4209;
+    let _e6: Flector = translator_flector_geometric_anti_product(_e4, _e5);
+    let _e7: Translator = self_4617;
+    let _e8: Translator = translator_anti_reversal(_e7);
+    let _e9: Flector = flector_translator_geometric_anti_product(_e6, _e8);
+    return _e9;
 }
 
-fn homogeneous_magnitude_translator_distance(self_4618: HomogeneousMagnitude, other_4210: Translator) -> HomogeneousMagnitude {
-    var self_4619: HomogeneousMagnitude;
-    var other_4211: Translator;
+fn translator_multi_vector_sandwich(self_4618: Translator, other_4210: MultiVector) -> MultiVector {
+    var self_4619: Translator;
+    var other_4211: MultiVector;
 
     self_4619 = self_4618;
     other_4211 = other_4210;
-    let _e4: HomogeneousMagnitude = self_4619;
-    let _e5: Translator = other_4211;
-    let _e6: Translator = homogeneous_magnitude_translator_outer_product(_e4, _e5);
-    let _e7: Flector = translator_attitude(_e6);
-    let _e8: Scalar = flector_bulk_norm(_e7);
-    let _e9: HomogeneousMagnitude = self_4619;
-    let _e10: Translator = other_4211;
-    let _e11: Flector = translator_attitude(_e10);
-    let _e12: Flector = homogeneous_magnitude_flector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = flector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
+    let _e4: Translator = self_4619;
+    let _e5: MultiVector = other_4211;
+    let _e6: MultiVector = translator_multi_vector_geometric_anti_product(_e4, _e5);
+    let _e7: Translator = self_4619;
+    let _e8: Translator = translator_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_translator_geometric_anti_product(_e6, _e8);
+    return _e9;
 }
 
-fn line_flector_distance(self_4620: Line, other_4212: Flector) -> HomogeneousMagnitude {
-    var self_4621: Line;
-    var other_4213: Flector;
+fn flector_scalar_sandwich(self_4620: Flector, other_4212: Scalar) -> Scalar {
+    var self_4621: Flector;
+    var other_4213: Scalar;
 
     self_4621 = self_4620;
     other_4213 = other_4212;
-    let _e4: Line = self_4621;
-    let _e5: Flector = other_4213;
-    let _e6: Plane = line_flector_outer_product(_e4, _e5);
-    let _e7: Line = plane_attitude(_e6);
-    let _e8: Scalar = line_bulk_norm(_e7);
-    let _e9: Line = self_4621;
-    let _e10: Flector = other_4213;
-    let _e11: MultiVector = flector_attitude(_e10);
-    let _e12: MultiVector = line_multi_vector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
+    let _e4: Flector = self_4621;
+    let _e5: Scalar = other_4213;
+    let _e6: Flector = flector_scalar_geometric_anti_product(_e4, _e5);
+    let _e7: Flector = self_4621;
+    let _e8: Flector = flector_anti_reversal(_e7);
+    let _e9: MultiVector = flector_flector_geometric_anti_product(_e6, _e8);
+    let _e10: Scalar = multi_vector_scalar_into(_e9);
+    return _e10;
 }
 
-fn line_line_distance(self_4622: Line, other_4214: Line) -> HomogeneousMagnitude {
-    var self_4623: Line;
-    var other_4215: Line;
+fn flector_anti_scalar_sandwich(self_4622: Flector, other_4214: AntiScalar) -> AntiScalar {
+    var self_4623: Flector;
+    var other_4215: AntiScalar;
 
     self_4623 = self_4622;
     other_4215 = other_4214;
-    let _e4: Line = self_4623;
-    let _e5: Line = other_4215;
-    let _e6: AntiScalar = line_line_outer_product(_e4, _e5);
-    let _e7: Plane = anti_scalar_attitude(_e6);
-    let _e8: Scalar = plane_bulk_norm(_e7);
-    let _e9: Line = self_4623;
-    let _e10: Line = other_4215;
-    let _e11: Point = line_attitude(_e10);
-    let _e12: Plane = line_point_outer_product(_e9, _e11);
-    let _e13: AntiScalar = plane_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
+    let _e4: Flector = self_4623;
+    let _e5: AntiScalar = other_4215;
+    let _e6: Flector = flector_anti_scalar_geometric_anti_product(_e4, _e5);
+    let _e7: Flector = self_4623;
+    let _e8: Flector = flector_anti_reversal(_e7);
+    let _e9: MultiVector = flector_flector_geometric_anti_product(_e6, _e8);
+    let _e10: AntiScalar = multi_vector_anti_scalar_into(_e9);
+    return _e10;
 }
 
-fn line_motor_distance(self_4624: Line, other_4216: Motor) -> HomogeneousMagnitude {
-    var self_4625: Line;
-    var other_4217: Motor;
+fn flector_homogeneous_magnitude_sandwich(self_4624: Flector, other_4216: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_4625: Flector;
+    var other_4217: HomogeneousMagnitude;
 
     self_4625 = self_4624;
     other_4217 = other_4216;
-    let _e4: Line = self_4625;
-    let _e5: Motor = other_4217;
-    let _e6: AntiScalar = line_motor_outer_product(_e4, _e5);
-    let _e7: Plane = anti_scalar_attitude(_e6);
-    let _e8: Scalar = plane_bulk_norm(_e7);
-    let _e9: Line = self_4625;
-    let _e10: Motor = other_4217;
-    let _e11: Flector = motor_attitude(_e10);
-    let _e12: Plane = line_flector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = plane_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
+    let _e4: Flector = self_4625;
+    let _e5: HomogeneousMagnitude = other_4217;
+    let _e6: Flector = flector_homogeneous_magnitude_geometric_anti_product(_e4, _e5);
+    let _e7: Flector = self_4625;
+    let _e8: Flector = flector_anti_reversal(_e7);
+    let _e9: MultiVector = flector_flector_geometric_anti_product(_e6, _e8);
+    let _e10: HomogeneousMagnitude = multi_vector_homogeneous_magnitude_into(_e9);
+    return _e10;
 }
 
-fn line_multi_vector_distance(self_4626: Line, other_4218: MultiVector) -> HomogeneousMagnitude {
-    var self_4627: Line;
-    var other_4219: MultiVector;
+fn flector_point_sandwich(self_4626: Flector, other_4218: Point) -> Point {
+    var self_4627: Flector;
+    var other_4219: Point;
 
     self_4627 = self_4626;
     other_4219 = other_4218;
-    let _e4: Line = self_4627;
-    let _e5: MultiVector = other_4219;
-    let _e6: MultiVector = line_multi_vector_outer_product(_e4, _e5);
-    let _e7: MultiVector = multi_vector_attitude(_e6);
-    let _e8: Scalar = multi_vector_bulk_norm(_e7);
-    let _e9: Line = self_4627;
-    let _e10: MultiVector = other_4219;
-    let _e11: MultiVector = multi_vector_attitude(_e10);
-    let _e12: MultiVector = line_multi_vector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
+    let _e4: Flector = self_4627;
+    let _e5: Point = other_4219;
+    let _e6: MultiVector = flector_point_geometric_anti_product(_e4, _e5);
+    let _e7: Flector = self_4627;
+    let _e8: Flector = flector_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_flector_geometric_anti_product(_e6, _e8);
+    let _e10: Point = multi_vector_point_into(_e9);
+    return _e10;
 }
 
-fn line_point_distance(self_4628: Line, other_4220: Point) -> HomogeneousMagnitude {
-    var self_4629: Line;
-    var other_4221: Point;
+fn flector_line_sandwich(self_4628: Flector, other_4220: Line) -> Line {
+    var self_4629: Flector;
+    var other_4221: Line;
 
     self_4629 = self_4628;
     other_4221 = other_4220;
-    let _e4: Line = self_4629;
-    let _e5: Point = other_4221;
-    let _e6: Plane = line_point_outer_product(_e4, _e5);
-    let _e7: Line = plane_attitude(_e6);
-    let _e8: Scalar = line_bulk_norm(_e7);
-    let _e9: Line = self_4629;
-    let _e10: Point = other_4221;
-    let _e11: Scalar = point_attitude(_e10);
-    let _e12: Line = line_scalar_outer_product(_e9, _e11);
-    let _e13: AntiScalar = line_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
+    let _e4: Flector = self_4629;
+    let _e5: Line = other_4221;
+    let _e6: Flector = flector_line_geometric_anti_product(_e4, _e5);
+    let _e7: Flector = self_4629;
+    let _e8: Flector = flector_anti_reversal(_e7);
+    let _e9: MultiVector = flector_flector_geometric_anti_product(_e6, _e8);
+    let _e10: Line = multi_vector_line_into(_e9);
+    return _e10;
 }
 
-fn line_rotor_distance(self_4630: Line, other_4222: Rotor) -> HomogeneousMagnitude {
-    var self_4631: Line;
-    var other_4223: Rotor;
+fn flector_plane_sandwich(self_4630: Flector, other_4222: Plane) -> Plane {
+    var self_4631: Flector;
+    var other_4223: Plane;
 
     self_4631 = self_4630;
     other_4223 = other_4222;
-    let _e4: Line = self_4631;
-    let _e5: Rotor = other_4223;
-    let _e6: AntiScalar = line_rotor_outer_product(_e4, _e5);
-    let _e7: Plane = anti_scalar_attitude(_e6);
-    let _e8: Scalar = plane_bulk_norm(_e7);
-    let _e9: Line = self_4631;
-    let _e10: Rotor = other_4223;
-    let _e11: Flector = rotor_attitude(_e10);
-    let _e12: Plane = line_flector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = plane_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
+    let _e4: Flector = self_4631;
+    let _e5: Plane = other_4223;
+    let _e6: MultiVector = flector_plane_geometric_anti_product(_e4, _e5);
+    let _e7: Flector = self_4631;
+    let _e8: Flector = flector_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_flector_geometric_anti_product(_e6, _e8);
+    let _e10: Plane = multi_vector_plane_into(_e9);
+    return _e10;
 }
 
-fn line_translator_distance(self_4632: Line, other_4224: Translator) -> HomogeneousMagnitude {
-    var self_4633: Line;
-    var other_4225: Translator;
+fn flector_motor_sandwich(self_4632: Flector, other_4224: Motor) -> Motor {
+    var self_4633: Flector;
+    var other_4225: Motor;
 
     self_4633 = self_4632;
     other_4225 = other_4224;
-    let _e4: Line = self_4633;
-    let _e5: Translator = other_4225;
-    let _e6: AntiScalar = line_translator_outer_product(_e4, _e5);
-    let _e7: Plane = anti_scalar_attitude(_e6);
-    let _e8: Scalar = plane_bulk_norm(_e7);
-    let _e9: Line = self_4633;
-    let _e10: Translator = other_4225;
-    let _e11: Flector = translator_attitude(_e10);
-    let _e12: Plane = line_flector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = plane_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
+    let _e4: Flector = self_4633;
+    let _e5: Motor = other_4225;
+    let _e6: Flector = flector_motor_geometric_anti_product(_e4, _e5);
+    let _e7: Flector = self_4633;
+    let _e8: Flector = flector_anti_reversal(_e7);
+    let _e9: MultiVector = flector_flector_geometric_anti_product(_e6, _e8);
+    let _e10: Motor = multi_vector_motor_into(_e9);
+    return _e10;
 }
 
-fn motor_flector_distance(self_4634: Motor, other_4226: Flector) -> HomogeneousMagnitude {
-    var self_4635: Motor;
-    var other_4227: Flector;
+fn flector_rotor_sandwich(self_4634: Flector, other_4226: Rotor) -> Rotor {
+    var self_4635: Flector;
+    var other_4227: Rotor;
 
     self_4635 = self_4634;
     other_4227 = other_4226;
-    let _e4: Motor = self_4635;
-    let _e5: Flector = other_4227;
-    let _e6: Plane = motor_flector_outer_product(_e4, _e5);
-    let _e7: Line = plane_attitude(_e6);
-    let _e8: Scalar = line_bulk_norm(_e7);
-    let _e9: Motor = self_4635;
-    let _e10: Flector = other_4227;
-    let _e11: MultiVector = flector_attitude(_e10);
-    let _e12: MultiVector = motor_multi_vector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
+    let _e4: Flector = self_4635;
+    let _e5: Rotor = other_4227;
+    let _e6: Flector = flector_rotor_geometric_anti_product(_e4, _e5);
+    let _e7: Flector = self_4635;
+    let _e8: Flector = flector_anti_reversal(_e7);
+    let _e9: MultiVector = flector_flector_geometric_anti_product(_e6, _e8);
+    let _e10: Rotor = multi_vector_rotor_into(_e9);
+    return _e10;
 }
 
-fn motor_line_distance(self_4636: Motor, other_4228: Line) -> HomogeneousMagnitude {
-    var self_4637: Motor;
-    var other_4229: Line;
+fn flector_translator_sandwich(self_4636: Flector, other_4228: Translator) -> Translator {
+    var self_4637: Flector;
+    var other_4229: Translator;
 
     self_4637 = self_4636;
     other_4229 = other_4228;
-    let _e4: Motor = self_4637;
-    let _e5: Line = other_4229;
-    let _e6: AntiScalar = motor_line_outer_product(_e4, _e5);
-    let _e7: Plane = anti_scalar_attitude(_e6);
-    let _e8: Scalar = plane_bulk_norm(_e7);
-    let _e9: Motor = self_4637;
-    let _e10: Line = other_4229;
-    let _e11: Point = line_attitude(_e10);
-    let _e12: Plane = motor_point_outer_product(_e9, _e11);
-    let _e13: AntiScalar = plane_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
+    let _e4: Flector = self_4637;
+    let _e5: Translator = other_4229;
+    let _e6: Flector = flector_translator_geometric_anti_product(_e4, _e5);
+    let _e7: Flector = self_4637;
+    let _e8: Flector = flector_anti_reversal(_e7);
+    let _e9: MultiVector = flector_flector_geometric_anti_product(_e6, _e8);
+    let _e10: Translator = multi_vector_translator_into(_e9);
+    return _e10;
 }
 
-fn motor_motor_distance(self_4638: Motor, other_4230: Motor) -> HomogeneousMagnitude {
-    var self_4639: Motor;
-    var other_4231: Motor;
+fn flector_flector_sandwich(self_4638: Flector, other_4230: Flector) -> Flector {
+    var self_4639: Flector;
+    var other_4231: Flector;
 
     self_4639 = self_4638;
     other_4231 = other_4230;
-    let _e4: Motor = self_4639;
-    let _e5: Motor = other_4231;
-    let _e6: AntiScalar = motor_motor_outer_product(_e4, _e5);
-    let _e7: Plane = anti_scalar_attitude(_e6);
-    let _e8: Scalar = plane_bulk_norm(_e7);
-    let _e9: Motor = self_4639;
-    let _e10: Motor = other_4231;
-    let _e11: Flector = motor_attitude(_e10);
-    let _e12: Plane = motor_flector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = plane_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
+    let _e4: Flector = self_4639;
+    let _e5: Flector = other_4231;
+    let _e6: MultiVector = flector_flector_geometric_anti_product(_e4, _e5);
+    let _e7: Flector = self_4639;
+    let _e8: Flector = flector_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_flector_geometric_anti_product(_e6, _e8);
+    let _e10: Flector = multi_vector_flector_into(_e9);
+    return _e10;
 }
 
-fn motor_multi_vector_distance(self_4640: Motor, other_4232: MultiVector) -> HomogeneousMagnitude {
-    var self_4641: Motor;
+fn flector_multi_vector_sandwich(self_4640: Flector, other_4232: MultiVector) -> MultiVector {
+    var self_4641: Flector;
     var other_4233: MultiVector;
 
     self_4641 = self_4640;
     other_4233 = other_4232;
-    let _e4: Motor = self_4641;
+    let _e4: Flector = self_4641;
     let _e5: MultiVector = other_4233;
-    let _e6: MultiVector = motor_multi_vector_outer_product(_e4, _e5);
-    let _e7: MultiVector = multi_vector_attitude(_e6);
-    let _e8: Scalar = multi_vector_bulk_norm(_e7);
-    let _e9: Motor = self_4641;
-    let _e10: MultiVector = other_4233;
-    let _e11: MultiVector = multi_vector_attitude(_e10);
-    let _e12: MultiVector = motor_multi_vector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
+    let _e6: MultiVector = flector_multi_vector_geometric_anti_product(_e4, _e5);
+    let _e7: Flector = self_4641;
+    let _e8: Flector = flector_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_flector_geometric_anti_product(_e6, _e8);
+    return _e9;
 }
 
-fn motor_point_distance(self_4642: Motor, other_4234: Point) -> HomogeneousMagnitude {
-    var self_4643: Motor;
-    var other_4235: Point;
+fn multi_vector_scalar_sandwich(self_4642: MultiVector, other_4234: Scalar) -> Scalar {
+    var self_4643: MultiVector;
+    var other_4235: Scalar;
 
     self_4643 = self_4642;
     other_4235 = other_4234;
-    let _e4: Motor = self_4643;
-    let _e5: Point = other_4235;
-    let _e6: Plane = motor_point_outer_product(_e4, _e5);
-    let _e7: Line = plane_attitude(_e6);
-    let _e8: Scalar = line_bulk_norm(_e7);
-    let _e9: Motor = self_4643;
-    let _e10: Point = other_4235;
-    let _e11: Scalar = point_attitude(_e10);
-    let _e12: Motor = motor_scalar_outer_product(_e9, _e11);
-    let _e13: AntiScalar = motor_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
+    let _e4: MultiVector = self_4643;
+    let _e5: Scalar = other_4235;
+    let _e6: MultiVector = multi_vector_scalar_geometric_anti_product(_e4, _e5);
+    let _e7: MultiVector = self_4643;
+    let _e8: MultiVector = multi_vector_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_anti_product(_e6, _e8);
+    let _e10: Scalar = multi_vector_scalar_into(_e9);
+    return _e10;
 }
 
-fn motor_rotor_distance(self_4644: Motor, other_4236: Rotor) -> HomogeneousMagnitude {
-    var self_4645: Motor;
-    var other_4237: Rotor;
+fn multi_vector_anti_scalar_sandwich(self_4644: MultiVector, other_4236: AntiScalar) -> AntiScalar {
+    var self_4645: MultiVector;
+    var other_4237: AntiScalar;
 
     self_4645 = self_4644;
     other_4237 = other_4236;
-    let _e4: Motor = self_4645;
-    let _e5: Rotor = other_4237;
-    let _e6: AntiScalar = motor_rotor_outer_product(_e4, _e5);
-    let _e7: Plane = anti_scalar_attitude(_e6);
-    let _e8: Scalar = plane_bulk_norm(_e7);
-    let _e9: Motor = self_4645;
-    let _e10: Rotor = other_4237;
-    let _e11: Flector = rotor_attitude(_e10);
-    let _e12: Plane = motor_flector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = plane_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
+    let _e4: MultiVector = self_4645;
+    let _e5: AntiScalar = other_4237;
+    let _e6: MultiVector = multi_vector_anti_scalar_geometric_anti_product(_e4, _e5);
+    let _e7: MultiVector = self_4645;
+    let _e8: MultiVector = multi_vector_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_anti_product(_e6, _e8);
+    let _e10: AntiScalar = multi_vector_anti_scalar_into(_e9);
+    return _e10;
 }
 
-fn motor_translator_distance(self_4646: Motor, other_4238: Translator) -> HomogeneousMagnitude {
-    var self_4647: Motor;
-    var other_4239: Translator;
+fn multi_vector_homogeneous_magnitude_sandwich(self_4646: MultiVector, other_4238: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_4647: MultiVector;
+    var other_4239: HomogeneousMagnitude;
 
     self_4647 = self_4646;
     other_4239 = other_4238;
-    let _e4: Motor = self_4647;
-    let _e5: Translator = other_4239;
-    let _e6: AntiScalar = motor_translator_outer_product(_e4, _e5);
-    let _e7: Plane = anti_scalar_attitude(_e6);
-    let _e8: Scalar = plane_bulk_norm(_e7);
-    let _e9: Motor = self_4647;
-    let _e10: Translator = other_4239;
-    let _e11: Flector = translator_attitude(_e10);
-    let _e12: Plane = motor_flector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = plane_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
+    let _e4: MultiVector = self_4647;
+    let _e5: HomogeneousMagnitude = other_4239;
+    let _e6: MultiVector = multi_vector_homogeneous_magnitude_geometric_anti_product(_e4, _e5);
+    let _e7: MultiVector = self_4647;
+    let _e8: MultiVector = multi_vector_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_anti_product(_e6, _e8);
+    let _e10: HomogeneousMagnitude = multi_vector_homogeneous_magnitude_into(_e9);
+    return _e10;
 }
 
-fn multi_vector_anti_scalar_distance(self_4648: MultiVector, other_4240: AntiScalar) -> HomogeneousMagnitude {
+fn multi_vector_point_sandwich(self_4648: MultiVector, other_4240: Point) -> Point {
     var self_4649: MultiVector;
-    var other_4241: AntiScalar;
+    var other_4241: Point;
 
     self_4649 = self_4648;
     other_4241 = other_4240;
     let _e4: MultiVector = self_4649;
-    let _e5: AntiScalar = other_4241;
-    let _e6: AntiScalar = multi_vector_anti_scalar_outer_product(_e4, _e5);
-    let _e7: Plane = anti_scalar_attitude(_e6);
-    let _e8: Scalar = plane_bulk_norm(_e7);
-    let _e9: MultiVector = self_4649;
-    let _e10: AntiScalar = other_4241;
-    let _e11: Plane = anti_scalar_attitude(_e10);
-    let _e12: MultiVector = multi_vector_plane_outer_product(_e9, _e11);
-    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
+    let _e5: Point = other_4241;
+    let _e6: MultiVector = multi_vector_point_geometric_anti_product(_e4, _e5);
+    let _e7: MultiVector = self_4649;
+    let _e8: MultiVector = multi_vector_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_anti_product(_e6, _e8);
+    let _e10: Point = multi_vector_point_into(_e9);
+    return _e10;
 }
 
-fn multi_vector_flector_distance(self_4650: MultiVector, other_4242: Flector) -> HomogeneousMagnitude {
+fn multi_vector_line_sandwich(self_4650: MultiVector, other_4242: Line) -> Line {
     var self_4651: MultiVector;
-    var other_4243: Flector;
+    var other_4243: Line;
 
     self_4651 = self_4650;
     other_4243 = other_4242;
     let _e4: MultiVector = self_4651;
-    let _e5: Flector = other_4243;
-    let _e6: MultiVector = multi_vector_flector_outer_product(_e4, _e5);
-    let _e7: MultiVector = multi_vector_attitude(_e6);
-    let _e8: Scalar = multi_vector_bulk_norm(_e7);
-    let _e9: MultiVector = self_4651;
-    let _e10: Flector = other_4243;
-    let _e11: MultiVector = flector_attitude(_e10);
-    let _e12: MultiVector = multi_vector_multi_vector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
+    let _e5: Line = other_4243;
+    let _e6: MultiVector = multi_vector_line_geometric_anti_product(_e4, _e5);
+    let _e7: MultiVector = self_4651;
+    let _e8: MultiVector = multi_vector_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_anti_product(_e6, _e8);
+    let _e10: Line = multi_vector_line_into(_e9);
+    return _e10;
 }
 
-fn multi_vector_homogeneous_magnitude_distance(self_4652: MultiVector, other_4244: HomogeneousMagnitude) -> HomogeneousMagnitude {
+fn multi_vector_plane_sandwich(self_4652: MultiVector, other_4244: Plane) -> Plane {
     var self_4653: MultiVector;
-    var other_4245: HomogeneousMagnitude;
+    var other_4245: Plane;
 
     self_4653 = self_4652;
     other_4245 = other_4244;
     let _e4: MultiVector = self_4653;
-    let _e5: HomogeneousMagnitude = other_4245;
-    let _e6: MultiVector = multi_vector_homogeneous_magnitude_outer_product(_e4, _e5);
-    let _e7: MultiVector = multi_vector_attitude(_e6);
-    let _e8: Scalar = multi_vector_bulk_norm(_e7);
-    let _e9: MultiVector = self_4653;
-    let _e10: HomogeneousMagnitude = other_4245;
-    let _e11: Plane = homogeneous_magnitude_attitude(_e10);
-    let _e12: MultiVector = multi_vector_plane_outer_product(_e9, _e11);
-    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
+    let _e5: Plane = other_4245;
+    let _e6: MultiVector = multi_vector_plane_geometric_anti_product(_e4, _e5);
+    let _e7: MultiVector = self_4653;
+    let _e8: MultiVector = multi_vector_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_anti_product(_e6, _e8);
+    let _e10: Plane = multi_vector_plane_into(_e9);
+    return _e10;
 }
 
-fn multi_vector_line_distance(self_4654: MultiVector, other_4246: Line) -> HomogeneousMagnitude {
+fn multi_vector_motor_sandwich(self_4654: MultiVector, other_4246: Motor) -> Motor {
     var self_4655: MultiVector;
-    var other_4247: Line;
+    var other_4247: Motor;
 
     self_4655 = self_4654;
     other_4247 = other_4246;
     let _e4: MultiVector = self_4655;
-    let _e5: Line = other_4247;
-    let _e6: MultiVector = multi_vector_line_outer_product(_e4, _e5);
-    let _e7: MultiVector = multi_vector_attitude(_e6);
-    let _e8: Scalar = multi_vector_bulk_norm(_e7);
-    let _e9: MultiVector = self_4655;
-    let _e10: Line = other_4247;
-    let _e11: Point = line_attitude(_e10);
-    let _e12: MultiVector = multi_vector_point_outer_product(_e9, _e11);
-    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
+    let _e5: Motor = other_4247;
+    let _e6: MultiVector = multi_vector_motor_geometric_anti_product(_e4, _e5);
+    let _e7: MultiVector = self_4655;
+    let _e8: MultiVector = multi_vector_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_anti_product(_e6, _e8);
+    let _e10: Motor = multi_vector_motor_into(_e9);
+    return _e10;
 }
 
-fn multi_vector_motor_distance(self_4656: MultiVector, other_4248: Motor) -> HomogeneousMagnitude {
+fn multi_vector_rotor_sandwich(self_4656: MultiVector, other_4248: Rotor) -> Rotor {
     var self_4657: MultiVector;
-    var other_4249: Motor;
+    var other_4249: Rotor;
 
     self_4657 = self_4656;
     other_4249 = other_4248;
     let _e4: MultiVector = self_4657;
-    let _e5: Motor = other_4249;
-    let _e6: MultiVector = multi_vector_motor_outer_product(_e4, _e5);
-    let _e7: MultiVector = multi_vector_attitude(_e6);
-    let _e8: Scalar = multi_vector_bulk_norm(_e7);
-    let _e9: MultiVector = self_4657;
-    let _e10: Motor = other_4249;
-    let _e11: Flector = motor_attitude(_e10);
-    let _e12: MultiVector = multi_vector_flector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
+    let _e5: Rotor = other_4249;
+    let _e6: MultiVector = multi_vector_rotor_geometric_anti_product(_e4, _e5);
+    let _e7: MultiVector = self_4657;
+    let _e8: MultiVector = multi_vector_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_anti_product(_e6, _e8);
+    let _e10: Rotor = multi_vector_rotor_into(_e9);
+    return _e10;
 }
 
-fn multi_vector_multi_vector_distance(self_4658: MultiVector, other_4250: MultiVector) -> HomogeneousMagnitude {
+fn multi_vector_translator_sandwich(self_4658: MultiVector, other_4250: Translator) -> Translator {
     var self_4659: MultiVector;
-    var other_4251: MultiVector;
+    var other_4251: Translator;
 
     self_4659 = self_4658;
     other_4251 = other_4250;
     let _e4: MultiVector = self_4659;
-    let _e5: MultiVector = other_4251;
-    let _e6: MultiVector = multi_vector_multi_vector_outer_product(_e4, _e5);
-    let _e7: MultiVector = multi_vector_attitude(_e6);
-    let _e8: Scalar = multi_vector_bulk_norm(_e7);
-    let _e9: MultiVector = self_4659;
-    let _e10: MultiVector = other_4251;
-    let _e11: MultiVector = multi_vector_attitude(_e10);
-    let _e12: MultiVector = multi_vector_multi_vector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
+    let _e5: Translator = other_4251;
+    let _e6: MultiVector = multi_vector_translator_geometric_anti_product(_e4, _e5);
+    let _e7: MultiVector = self_4659;
+    let _e8: MultiVector = multi_vector_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_anti_product(_e6, _e8);
+    let _e10: Translator = multi_vector_translator_into(_e9);
+    return _e10;
 }
 
-fn multi_vector_plane_distance(self_4660: MultiVector, other_4252: Plane) -> HomogeneousMagnitude {
+fn multi_vector_flector_sandwich(self_4660: MultiVector, other_4252: Flector) -> Flector {
     var self_4661: MultiVector;
-    var other_4253: Plane;
+    var other_4253: Flector;
 
     self_4661 = self_4660;
     other_4253 = other_4252;
     let _e4: MultiVector = self_4661;
-    let _e5: Plane = other_4253;
-    let _e6: MultiVector = multi_vector_plane_outer_product(_e4, _e5);
-    let _e7: MultiVector = multi_vector_attitude(_e6);
-    let _e8: Scalar = multi_vector_bulk_norm(_e7);
-    let _e9: MultiVector = self_4661;
-    let _e10: Plane = other_4253;
-    let _e11: Line = plane_attitude(_e10);
-    let _e12: MultiVector = multi_vector_line_outer_product(_e9, _e11);
-    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
+    let _e5: Flector = other_4253;
+    let _e6: MultiVector = multi_vector_flector_geometric_anti_product(_e4, _e5);
+    let _e7: MultiVector = self_4661;
+    let _e8: MultiVector = multi_vector_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_anti_product(_e6, _e8);
+    let _e10: Flector = multi_vector_flector_into(_e9);
+    return _e10;
 }
 
-fn multi_vector_point_distance(self_4662: MultiVector, other_4254: Point) -> HomogeneousMagnitude {
+fn multi_vector_multi_vector_sandwich(self_4662: MultiVector, other_4254: MultiVector) -> MultiVector {
     var self_4663: MultiVector;
-    var other_4255: Point;
+    var other_4255: MultiVector;
 
     self_4663 = self_4662;
     other_4255 = other_4254;
     let _e4: MultiVector = self_4663;
-    let _e5: Point = other_4255;
-    let _e6: MultiVector = multi_vector_point_outer_product(_e4, _e5);
-    let _e7: MultiVector = multi_vector_attitude(_e6);
-    let _e8: Scalar = multi_vector_bulk_norm(_e7);
-    let _e9: MultiVector = self_4663;
-    let _e10: Point = other_4255;
-    let _e11: Scalar = point_attitude(_e10);
-    let _e12: MultiVector = multi_vector_scalar_outer_product(_e9, _e11);
-    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
+    let _e5: MultiVector = other_4255;
+    let _e6: MultiVector = multi_vector_multi_vector_geometric_anti_product(_e4, _e5);
+    let _e7: MultiVector = self_4663;
+    let _e8: MultiVector = multi_vector_anti_reversal(_e7);
+    let _e9: MultiVector = multi_vector_multi_vector_geometric_anti_product(_e6, _e8);
+    return _e9;
 }
 
-fn multi_vector_rotor_distance(self_4664: MultiVector, other_4256: Rotor) -> HomogeneousMagnitude {
-    var self_4665: MultiVector;
-    var other_4257: Rotor;
+fn scalar_anti_scalar_distance(self_4664: Scalar, other_4256: AntiScalar) -> HomogeneousMagnitude {
+    var self_4665: Scalar;
+    var other_4257: AntiScalar;
 
     self_4665 = self_4664;
     other_4257 = other_4256;
-    let _e4: MultiVector = self_4665;
-    let _e5: Rotor = other_4257;
-    let _e6: MultiVector = multi_vector_rotor_outer_product(_e4, _e5);
-    let _e7: MultiVector = multi_vector_attitude(_e6);
-    let _e8: Scalar = multi_vector_bulk_norm(_e7);
-    let _e9: MultiVector = self_4665;
-    let _e10: Rotor = other_4257;
-    let _e11: Flector = rotor_attitude(_e10);
-    let _e12: MultiVector = multi_vector_flector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn multi_vector_translator_distance(self_4666: MultiVector, other_4258: Translator) -> HomogeneousMagnitude {
-    var self_4667: MultiVector;
-    var other_4259: Translator;
-
-    self_4667 = self_4666;
-    other_4259 = other_4258;
-    let _e4: MultiVector = self_4667;
-    let _e5: Translator = other_4259;
-    let _e6: MultiVector = multi_vector_translator_outer_product(_e4, _e5);
-    let _e7: MultiVector = multi_vector_attitude(_e6);
-    let _e8: Scalar = multi_vector_bulk_norm(_e7);
-    let _e9: MultiVector = self_4667;
-    let _e10: Translator = other_4259;
-    let _e11: Flector = translator_attitude(_e10);
-    let _e12: MultiVector = multi_vector_flector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn plane_flector_distance(self_4668: Plane, other_4260: Flector) -> HomogeneousMagnitude {
-    var self_4669: Plane;
-    var other_4261: Flector;
-
-    self_4669 = self_4668;
-    other_4261 = other_4260;
-    let _e4: Plane = self_4669;
-    let _e5: Flector = other_4261;
-    let _e6: AntiScalar = plane_flector_outer_product(_e4, _e5);
-    let _e7: Plane = anti_scalar_attitude(_e6);
-    let _e8: Scalar = plane_bulk_norm(_e7);
-    let _e9: Plane = self_4669;
-    let _e10: Flector = other_4261;
-    let _e11: MultiVector = flector_attitude(_e10);
-    let _e12: MultiVector = plane_multi_vector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn plane_multi_vector_distance(self_4670: Plane, other_4262: MultiVector) -> HomogeneousMagnitude {
-    var self_4671: Plane;
-    var other_4263: MultiVector;
-
-    self_4671 = self_4670;
-    other_4263 = other_4262;
-    let _e4: Plane = self_4671;
-    let _e5: MultiVector = other_4263;
-    let _e6: MultiVector = plane_multi_vector_outer_product(_e4, _e5);
-    let _e7: MultiVector = multi_vector_attitude(_e6);
-    let _e8: Scalar = multi_vector_bulk_norm(_e7);
-    let _e9: Plane = self_4671;
-    let _e10: MultiVector = other_4263;
-    let _e11: MultiVector = multi_vector_attitude(_e10);
-    let _e12: MultiVector = plane_multi_vector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn plane_point_distance(self_4672: Plane, other_4264: Point) -> HomogeneousMagnitude {
-    var self_4673: Plane;
-    var other_4265: Point;
-
-    self_4673 = self_4672;
-    other_4265 = other_4264;
-    let _e4: Plane = self_4673;
-    let _e5: Point = other_4265;
-    let _e6: AntiScalar = plane_point_outer_product(_e4, _e5);
-    let _e7: Plane = anti_scalar_attitude(_e6);
-    let _e8: Scalar = plane_bulk_norm(_e7);
-    let _e9: Plane = self_4673;
-    let _e10: Point = other_4265;
-    let _e11: Scalar = point_attitude(_e10);
-    let _e12: Plane = plane_scalar_outer_product(_e9, _e11);
-    let _e13: AntiScalar = plane_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn point_flector_distance(self_4674: Point, other_4266: Flector) -> HomogeneousMagnitude {
-    var self_4675: Point;
-    var other_4267: Flector;
-
-    self_4675 = self_4674;
-    other_4267 = other_4266;
-    let _e4: Point = self_4675;
-    let _e5: Flector = other_4267;
-    let _e6: Motor = point_flector_outer_product(_e4, _e5);
-    let _e7: Flector = motor_attitude(_e6);
-    let _e8: Scalar = flector_bulk_norm(_e7);
-    let _e9: Point = self_4675;
-    let _e10: Flector = other_4267;
-    let _e11: MultiVector = flector_attitude(_e10);
-    let _e12: MultiVector = point_multi_vector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn point_line_distance(self_4676: Point, other_4268: Line) -> HomogeneousMagnitude {
-    var self_4677: Point;
-    var other_4269: Line;
-
-    self_4677 = self_4676;
-    other_4269 = other_4268;
-    let _e4: Point = self_4677;
-    let _e5: Line = other_4269;
-    let _e6: Plane = point_line_outer_product(_e4, _e5);
-    let _e7: Line = plane_attitude(_e6);
-    let _e8: Scalar = line_bulk_norm(_e7);
-    let _e9: Point = self_4677;
-    let _e10: Line = other_4269;
-    let _e11: Point = line_attitude(_e10);
-    let _e12: Line = point_point_outer_product(_e9, _e11);
-    let _e13: AntiScalar = line_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn point_motor_distance(self_4678: Point, other_4270: Motor) -> HomogeneousMagnitude {
-    var self_4679: Point;
-    var other_4271: Motor;
-
-    self_4679 = self_4678;
-    other_4271 = other_4270;
-    let _e4: Point = self_4679;
-    let _e5: Motor = other_4271;
-    let _e6: Plane = point_motor_outer_product(_e4, _e5);
-    let _e7: Line = plane_attitude(_e6);
-    let _e8: Scalar = line_bulk_norm(_e7);
-    let _e9: Point = self_4679;
-    let _e10: Motor = other_4271;
-    let _e11: Flector = motor_attitude(_e10);
-    let _e12: Motor = point_flector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = motor_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn point_multi_vector_distance(self_4680: Point, other_4272: MultiVector) -> HomogeneousMagnitude {
-    var self_4681: Point;
-    var other_4273: MultiVector;
-
-    self_4681 = self_4680;
-    other_4273 = other_4272;
-    let _e4: Point = self_4681;
-    let _e5: MultiVector = other_4273;
-    let _e6: MultiVector = point_multi_vector_outer_product(_e4, _e5);
-    let _e7: MultiVector = multi_vector_attitude(_e6);
-    let _e8: Scalar = multi_vector_bulk_norm(_e7);
-    let _e9: Point = self_4681;
-    let _e10: MultiVector = other_4273;
-    let _e11: MultiVector = multi_vector_attitude(_e10);
-    let _e12: MultiVector = point_multi_vector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn point_plane_distance(self_4682: Point, other_4274: Plane) -> HomogeneousMagnitude {
-    var self_4683: Point;
-    var other_4275: Plane;
-
-    self_4683 = self_4682;
-    other_4275 = other_4274;
-    let _e4: Point = self_4683;
-    let _e5: Plane = other_4275;
-    let _e6: AntiScalar = point_plane_outer_product(_e4, _e5);
-    let _e7: Plane = anti_scalar_attitude(_e6);
-    let _e8: Scalar = plane_bulk_norm(_e7);
-    let _e9: Point = self_4683;
-    let _e10: Plane = other_4275;
-    let _e11: Line = plane_attitude(_e10);
-    let _e12: Plane = point_line_outer_product(_e9, _e11);
-    let _e13: AntiScalar = plane_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn point_point_distance(self_4684: Point, other_4276: Point) -> HomogeneousMagnitude {
-    var self_4685: Point;
-    var other_4277: Point;
-
-    self_4685 = self_4684;
-    other_4277 = other_4276;
-    let _e4: Point = self_4685;
-    let _e5: Point = other_4277;
-    let _e6: Line = point_point_outer_product(_e4, _e5);
-    let _e7: Point = line_attitude(_e6);
-    let _e8: Scalar = point_bulk_norm(_e7);
-    let _e9: Point = self_4685;
-    let _e10: Point = other_4277;
-    let _e11: Scalar = point_attitude(_e10);
-    let _e12: Point = point_scalar_outer_product(_e9, _e11);
-    let _e13: AntiScalar = point_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn point_rotor_distance(self_4686: Point, other_4278: Rotor) -> HomogeneousMagnitude {
-    var self_4687: Point;
-    var other_4279: Rotor;
-
-    self_4687 = self_4686;
-    other_4279 = other_4278;
-    let _e4: Point = self_4687;
-    let _e5: Rotor = other_4279;
-    let _e6: Plane = point_rotor_outer_product(_e4, _e5);
-    let _e7: Line = plane_attitude(_e6);
-    let _e8: Scalar = line_bulk_norm(_e7);
-    let _e9: Point = self_4687;
-    let _e10: Rotor = other_4279;
-    let _e11: Flector = rotor_attitude(_e10);
-    let _e12: Motor = point_flector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = motor_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn point_translator_distance(self_4688: Point, other_4280: Translator) -> HomogeneousMagnitude {
-    var self_4689: Point;
-    var other_4281: Translator;
-
-    self_4689 = self_4688;
-    other_4281 = other_4280;
-    let _e4: Point = self_4689;
-    let _e5: Translator = other_4281;
-    let _e6: Plane = point_translator_outer_product(_e4, _e5);
-    let _e7: Line = plane_attitude(_e6);
-    let _e8: Scalar = line_bulk_norm(_e7);
-    let _e9: Point = self_4689;
-    let _e10: Translator = other_4281;
-    let _e11: Flector = translator_attitude(_e10);
-    let _e12: Motor = point_flector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = motor_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn rotor_flector_distance(self_4690: Rotor, other_4282: Flector) -> HomogeneousMagnitude {
-    var self_4691: Rotor;
-    var other_4283: Flector;
-
-    self_4691 = self_4690;
-    other_4283 = other_4282;
-    let _e4: Rotor = self_4691;
-    let _e5: Flector = other_4283;
-    let _e6: Plane = rotor_flector_outer_product(_e4, _e5);
-    let _e7: Line = plane_attitude(_e6);
-    let _e8: Scalar = line_bulk_norm(_e7);
-    let _e9: Rotor = self_4691;
-    let _e10: Flector = other_4283;
-    let _e11: MultiVector = flector_attitude(_e10);
-    let _e12: MultiVector = rotor_multi_vector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn rotor_line_distance(self_4692: Rotor, other_4284: Line) -> HomogeneousMagnitude {
-    var self_4693: Rotor;
-    var other_4285: Line;
-
-    self_4693 = self_4692;
-    other_4285 = other_4284;
-    let _e4: Rotor = self_4693;
-    let _e5: Line = other_4285;
-    let _e6: AntiScalar = rotor_line_outer_product(_e4, _e5);
-    let _e7: Plane = anti_scalar_attitude(_e6);
-    let _e8: Scalar = plane_bulk_norm(_e7);
-    let _e9: Rotor = self_4693;
-    let _e10: Line = other_4285;
-    let _e11: Point = line_attitude(_e10);
-    let _e12: Plane = rotor_point_outer_product(_e9, _e11);
-    let _e13: AntiScalar = plane_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn rotor_motor_distance(self_4694: Rotor, other_4286: Motor) -> HomogeneousMagnitude {
-    var self_4695: Rotor;
-    var other_4287: Motor;
-
-    self_4695 = self_4694;
-    other_4287 = other_4286;
-    let _e4: Rotor = self_4695;
-    let _e5: Motor = other_4287;
-    let _e6: AntiScalar = rotor_motor_outer_product(_e4, _e5);
-    let _e7: Plane = anti_scalar_attitude(_e6);
-    let _e8: Scalar = plane_bulk_norm(_e7);
-    let _e9: Rotor = self_4695;
-    let _e10: Motor = other_4287;
-    let _e11: Flector = motor_attitude(_e10);
-    let _e12: Plane = rotor_flector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = plane_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn rotor_multi_vector_distance(self_4696: Rotor, other_4288: MultiVector) -> HomogeneousMagnitude {
-    var self_4697: Rotor;
-    var other_4289: MultiVector;
-
-    self_4697 = self_4696;
-    other_4289 = other_4288;
-    let _e4: Rotor = self_4697;
-    let _e5: MultiVector = other_4289;
-    let _e6: MultiVector = rotor_multi_vector_outer_product(_e4, _e5);
-    let _e7: MultiVector = multi_vector_attitude(_e6);
-    let _e8: Scalar = multi_vector_bulk_norm(_e7);
-    let _e9: Rotor = self_4697;
-    let _e10: MultiVector = other_4289;
-    let _e11: MultiVector = multi_vector_attitude(_e10);
-    let _e12: MultiVector = rotor_multi_vector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn rotor_translator_distance(self_4698: Rotor, other_4290: Translator) -> HomogeneousMagnitude {
-    var self_4699: Rotor;
-    var other_4291: Translator;
-
-    self_4699 = self_4698;
-    other_4291 = other_4290;
-    let _e4: Rotor = self_4699;
-    let _e5: Translator = other_4291;
-    let _e6: AntiScalar = rotor_translator_outer_product(_e4, _e5);
-    let _e7: Plane = anti_scalar_attitude(_e6);
-    let _e8: Scalar = plane_bulk_norm(_e7);
-    let _e9: Rotor = self_4699;
-    let _e10: Translator = other_4291;
-    let _e11: Flector = translator_attitude(_e10);
-    let _e12: Plane = rotor_flector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = plane_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn scalar_anti_scalar_distance(self_4700: Scalar, other_4292: AntiScalar) -> HomogeneousMagnitude {
-    var self_4701: Scalar;
-    var other_4293: AntiScalar;
-
-    self_4701 = self_4700;
-    other_4293 = other_4292;
-    let _e4: Scalar = self_4701;
-    let _e5: AntiScalar = other_4293;
+    let _e4: Scalar = self_4665;
+    let _e5: AntiScalar = other_4257;
     let _e6: AntiScalar = scalar_anti_scalar_outer_product(_e4, _e5);
     let _e7: Plane = anti_scalar_attitude(_e6);
     let _e8: Scalar = plane_bulk_norm(_e7);
-    let _e9: Scalar = self_4701;
-    let _e10: AntiScalar = other_4293;
+    let _e9: Scalar = self_4665;
+    let _e10: AntiScalar = other_4257;
     let _e11: Plane = anti_scalar_attitude(_e10);
     let _e12: Plane = scalar_plane_outer_product(_e9, _e11);
     let _e13: AntiScalar = plane_weight_norm(_e12);
@@ -46059,39 +45504,19 @@ fn scalar_anti_scalar_distance(self_4700: Scalar, other_4292: AntiScalar) -> Hom
     return _e14;
 }
 
-fn scalar_flector_distance(self_4702: Scalar, other_4294: Flector) -> HomogeneousMagnitude {
-    var self_4703: Scalar;
-    var other_4295: Flector;
+fn scalar_homogeneous_magnitude_distance(self_4666: Scalar, other_4258: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_4667: Scalar;
+    var other_4259: HomogeneousMagnitude;
 
-    self_4703 = self_4702;
-    other_4295 = other_4294;
-    let _e4: Scalar = self_4703;
-    let _e5: Flector = other_4295;
-    let _e6: Flector = scalar_flector_outer_product(_e4, _e5);
-    let _e7: MultiVector = flector_attitude(_e6);
-    let _e8: Scalar = multi_vector_bulk_norm(_e7);
-    let _e9: Scalar = self_4703;
-    let _e10: Flector = other_4295;
-    let _e11: MultiVector = flector_attitude(_e10);
-    let _e12: MultiVector = scalar_multi_vector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn scalar_homogeneous_magnitude_distance(self_4704: Scalar, other_4296: HomogeneousMagnitude) -> HomogeneousMagnitude {
-    var self_4705: Scalar;
-    var other_4297: HomogeneousMagnitude;
-
-    self_4705 = self_4704;
-    other_4297 = other_4296;
-    let _e4: Scalar = self_4705;
-    let _e5: HomogeneousMagnitude = other_4297;
+    self_4667 = self_4666;
+    other_4259 = other_4258;
+    let _e4: Scalar = self_4667;
+    let _e5: HomogeneousMagnitude = other_4259;
     let _e6: HomogeneousMagnitude = scalar_homogeneous_magnitude_outer_product(_e4, _e5);
     let _e7: Plane = homogeneous_magnitude_attitude(_e6);
     let _e8: Scalar = plane_bulk_norm(_e7);
-    let _e9: Scalar = self_4705;
-    let _e10: HomogeneousMagnitude = other_4297;
+    let _e9: Scalar = self_4667;
+    let _e10: HomogeneousMagnitude = other_4259;
     let _e11: Plane = homogeneous_magnitude_attitude(_e10);
     let _e12: Plane = scalar_plane_outer_product(_e9, _e11);
     let _e13: AntiScalar = plane_weight_norm(_e12);
@@ -46099,19 +45524,19 @@ fn scalar_homogeneous_magnitude_distance(self_4704: Scalar, other_4296: Homogene
     return _e14;
 }
 
-fn scalar_line_distance(self_4706: Scalar, other_4298: Line) -> HomogeneousMagnitude {
-    var self_4707: Scalar;
-    var other_4299: Line;
+fn scalar_line_distance(self_4668: Scalar, other_4260: Line) -> HomogeneousMagnitude {
+    var self_4669: Scalar;
+    var other_4261: Line;
 
-    self_4707 = self_4706;
-    other_4299 = other_4298;
-    let _e4: Scalar = self_4707;
-    let _e5: Line = other_4299;
+    self_4669 = self_4668;
+    other_4261 = other_4260;
+    let _e4: Scalar = self_4669;
+    let _e5: Line = other_4261;
     let _e6: Line = scalar_line_outer_product(_e4, _e5);
     let _e7: Point = line_attitude(_e6);
     let _e8: Scalar = point_bulk_norm(_e7);
-    let _e9: Scalar = self_4707;
-    let _e10: Line = other_4299;
+    let _e9: Scalar = self_4669;
+    let _e10: Line = other_4261;
     let _e11: Point = line_attitude(_e10);
     let _e12: Point = scalar_point_outer_product(_e9, _e11);
     let _e13: AntiScalar = point_weight_norm(_e12);
@@ -46119,59 +45544,19 @@ fn scalar_line_distance(self_4706: Scalar, other_4298: Line) -> HomogeneousMagni
     return _e14;
 }
 
-fn scalar_motor_distance(self_4708: Scalar, other_4300: Motor) -> HomogeneousMagnitude {
-    var self_4709: Scalar;
-    var other_4301: Motor;
+fn scalar_plane_distance(self_4670: Scalar, other_4262: Plane) -> HomogeneousMagnitude {
+    var self_4671: Scalar;
+    var other_4263: Plane;
 
-    self_4709 = self_4708;
-    other_4301 = other_4300;
-    let _e4: Scalar = self_4709;
-    let _e5: Motor = other_4301;
-    let _e6: Motor = scalar_motor_outer_product(_e4, _e5);
-    let _e7: Flector = motor_attitude(_e6);
-    let _e8: Scalar = flector_bulk_norm(_e7);
-    let _e9: Scalar = self_4709;
-    let _e10: Motor = other_4301;
-    let _e11: Flector = motor_attitude(_e10);
-    let _e12: Flector = scalar_flector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = flector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn scalar_multi_vector_distance(self_4710: Scalar, other_4302: MultiVector) -> HomogeneousMagnitude {
-    var self_4711: Scalar;
-    var other_4303: MultiVector;
-
-    self_4711 = self_4710;
-    other_4303 = other_4302;
-    let _e4: Scalar = self_4711;
-    let _e5: MultiVector = other_4303;
-    let _e6: MultiVector = scalar_multi_vector_outer_product(_e4, _e5);
-    let _e7: MultiVector = multi_vector_attitude(_e6);
-    let _e8: Scalar = multi_vector_bulk_norm(_e7);
-    let _e9: Scalar = self_4711;
-    let _e10: MultiVector = other_4303;
-    let _e11: MultiVector = multi_vector_attitude(_e10);
-    let _e12: MultiVector = scalar_multi_vector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
-    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
-    return _e14;
-}
-
-fn scalar_plane_distance(self_4712: Scalar, other_4304: Plane) -> HomogeneousMagnitude {
-    var self_4713: Scalar;
-    var other_4305: Plane;
-
-    self_4713 = self_4712;
-    other_4305 = other_4304;
-    let _e4: Scalar = self_4713;
-    let _e5: Plane = other_4305;
+    self_4671 = self_4670;
+    other_4263 = other_4262;
+    let _e4: Scalar = self_4671;
+    let _e5: Plane = other_4263;
     let _e6: Plane = scalar_plane_outer_product(_e4, _e5);
     let _e7: Line = plane_attitude(_e6);
     let _e8: Scalar = line_bulk_norm(_e7);
-    let _e9: Scalar = self_4713;
-    let _e10: Plane = other_4305;
+    let _e9: Scalar = self_4671;
+    let _e10: Plane = other_4263;
     let _e11: Line = plane_attitude(_e10);
     let _e12: Line = scalar_line_outer_product(_e9, _e11);
     let _e13: AntiScalar = line_weight_norm(_e12);
@@ -46179,19 +45564,39 @@ fn scalar_plane_distance(self_4712: Scalar, other_4304: Plane) -> HomogeneousMag
     return _e14;
 }
 
-fn scalar_rotor_distance(self_4714: Scalar, other_4306: Rotor) -> HomogeneousMagnitude {
-    var self_4715: Scalar;
-    var other_4307: Rotor;
+fn scalar_motor_distance(self_4672: Scalar, other_4264: Motor) -> HomogeneousMagnitude {
+    var self_4673: Scalar;
+    var other_4265: Motor;
 
-    self_4715 = self_4714;
-    other_4307 = other_4306;
-    let _e4: Scalar = self_4715;
-    let _e5: Rotor = other_4307;
+    self_4673 = self_4672;
+    other_4265 = other_4264;
+    let _e4: Scalar = self_4673;
+    let _e5: Motor = other_4265;
+    let _e6: Motor = scalar_motor_outer_product(_e4, _e5);
+    let _e7: Flector = motor_attitude(_e6);
+    let _e8: Scalar = flector_bulk_norm(_e7);
+    let _e9: Scalar = self_4673;
+    let _e10: Motor = other_4265;
+    let _e11: Flector = motor_attitude(_e10);
+    let _e12: Flector = scalar_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = flector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn scalar_rotor_distance(self_4674: Scalar, other_4266: Rotor) -> HomogeneousMagnitude {
+    var self_4675: Scalar;
+    var other_4267: Rotor;
+
+    self_4675 = self_4674;
+    other_4267 = other_4266;
+    let _e4: Scalar = self_4675;
+    let _e5: Rotor = other_4267;
     let _e6: Rotor = scalar_rotor_outer_product(_e4, _e5);
     let _e7: Flector = rotor_attitude(_e6);
     let _e8: Scalar = flector_bulk_norm(_e7);
-    let _e9: Scalar = self_4715;
-    let _e10: Rotor = other_4307;
+    let _e9: Scalar = self_4675;
+    let _e10: Rotor = other_4267;
     let _e11: Flector = rotor_attitude(_e10);
     let _e12: Flector = scalar_flector_outer_product(_e9, _e11);
     let _e13: AntiScalar = flector_weight_norm(_e12);
@@ -46199,19 +45604,19 @@ fn scalar_rotor_distance(self_4714: Scalar, other_4306: Rotor) -> HomogeneousMag
     return _e14;
 }
 
-fn scalar_translator_distance(self_4716: Scalar, other_4308: Translator) -> HomogeneousMagnitude {
-    var self_4717: Scalar;
-    var other_4309: Translator;
+fn scalar_translator_distance(self_4676: Scalar, other_4268: Translator) -> HomogeneousMagnitude {
+    var self_4677: Scalar;
+    var other_4269: Translator;
 
-    self_4717 = self_4716;
-    other_4309 = other_4308;
-    let _e4: Scalar = self_4717;
-    let _e5: Translator = other_4309;
+    self_4677 = self_4676;
+    other_4269 = other_4268;
+    let _e4: Scalar = self_4677;
+    let _e5: Translator = other_4269;
     let _e6: Translator = scalar_translator_outer_product(_e4, _e5);
     let _e7: Flector = translator_attitude(_e6);
     let _e8: Scalar = flector_bulk_norm(_e7);
-    let _e9: Scalar = self_4717;
-    let _e10: Translator = other_4309;
+    let _e9: Scalar = self_4677;
+    let _e10: Translator = other_4269;
     let _e11: Flector = translator_attitude(_e10);
     let _e12: Flector = scalar_flector_outer_product(_e9, _e11);
     let _e13: AntiScalar = flector_weight_norm(_e12);
@@ -46219,99 +45624,839 @@ fn scalar_translator_distance(self_4716: Scalar, other_4308: Translator) -> Homo
     return _e14;
 }
 
-fn translator_flector_distance(self_4718: Translator, other_4310: Flector) -> HomogeneousMagnitude {
-    var self_4719: Translator;
-    var other_4311: Flector;
+fn scalar_flector_distance(self_4678: Scalar, other_4270: Flector) -> HomogeneousMagnitude {
+    var self_4679: Scalar;
+    var other_4271: Flector;
+
+    self_4679 = self_4678;
+    other_4271 = other_4270;
+    let _e4: Scalar = self_4679;
+    let _e5: Flector = other_4271;
+    let _e6: Flector = scalar_flector_outer_product(_e4, _e5);
+    let _e7: MultiVector = flector_attitude(_e6);
+    let _e8: Scalar = multi_vector_bulk_norm(_e7);
+    let _e9: Scalar = self_4679;
+    let _e10: Flector = other_4271;
+    let _e11: MultiVector = flector_attitude(_e10);
+    let _e12: MultiVector = scalar_multi_vector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn scalar_multi_vector_distance(self_4680: Scalar, other_4272: MultiVector) -> HomogeneousMagnitude {
+    var self_4681: Scalar;
+    var other_4273: MultiVector;
+
+    self_4681 = self_4680;
+    other_4273 = other_4272;
+    let _e4: Scalar = self_4681;
+    let _e5: MultiVector = other_4273;
+    let _e6: MultiVector = scalar_multi_vector_outer_product(_e4, _e5);
+    let _e7: MultiVector = multi_vector_attitude(_e6);
+    let _e8: Scalar = multi_vector_bulk_norm(_e7);
+    let _e9: Scalar = self_4681;
+    let _e10: MultiVector = other_4273;
+    let _e11: MultiVector = multi_vector_attitude(_e10);
+    let _e12: MultiVector = scalar_multi_vector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn homogeneous_magnitude_anti_scalar_distance(self_4682: HomogeneousMagnitude, other_4274: AntiScalar) -> HomogeneousMagnitude {
+    var self_4683: HomogeneousMagnitude;
+    var other_4275: AntiScalar;
+
+    self_4683 = self_4682;
+    other_4275 = other_4274;
+    let _e4: HomogeneousMagnitude = self_4683;
+    let _e5: AntiScalar = other_4275;
+    let _e6: AntiScalar = homogeneous_magnitude_anti_scalar_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: HomogeneousMagnitude = self_4683;
+    let _e10: AntiScalar = other_4275;
+    let _e11: Plane = anti_scalar_attitude(_e10);
+    let _e12: Plane = homogeneous_magnitude_plane_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn homogeneous_magnitude_homogeneous_magnitude_distance(self_4684: HomogeneousMagnitude, other_4276: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_4685: HomogeneousMagnitude;
+    var other_4277: HomogeneousMagnitude;
+
+    self_4685 = self_4684;
+    other_4277 = other_4276;
+    let _e4: HomogeneousMagnitude = self_4685;
+    let _e5: HomogeneousMagnitude = other_4277;
+    let _e6: HomogeneousMagnitude = homogeneous_magnitude_homogeneous_magnitude_outer_product(_e4, _e5);
+    let _e7: Plane = homogeneous_magnitude_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: HomogeneousMagnitude = self_4685;
+    let _e10: HomogeneousMagnitude = other_4277;
+    let _e11: Plane = homogeneous_magnitude_attitude(_e10);
+    let _e12: Plane = homogeneous_magnitude_plane_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn homogeneous_magnitude_line_distance(self_4686: HomogeneousMagnitude, other_4278: Line) -> HomogeneousMagnitude {
+    var self_4687: HomogeneousMagnitude;
+    var other_4279: Line;
+
+    self_4687 = self_4686;
+    other_4279 = other_4278;
+    let _e4: HomogeneousMagnitude = self_4687;
+    let _e5: Line = other_4279;
+    let _e6: Line = homogeneous_magnitude_line_outer_product(_e4, _e5);
+    let _e7: Point = line_attitude(_e6);
+    let _e8: Scalar = point_bulk_norm(_e7);
+    let _e9: HomogeneousMagnitude = self_4687;
+    let _e10: Line = other_4279;
+    let _e11: Point = line_attitude(_e10);
+    let _e12: Point = homogeneous_magnitude_point_outer_product(_e9, _e11);
+    let _e13: AntiScalar = point_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn homogeneous_magnitude_plane_distance(self_4688: HomogeneousMagnitude, other_4280: Plane) -> HomogeneousMagnitude {
+    var self_4689: HomogeneousMagnitude;
+    var other_4281: Plane;
+
+    self_4689 = self_4688;
+    other_4281 = other_4280;
+    let _e4: HomogeneousMagnitude = self_4689;
+    let _e5: Plane = other_4281;
+    let _e6: Plane = homogeneous_magnitude_plane_outer_product(_e4, _e5);
+    let _e7: Line = plane_attitude(_e6);
+    let _e8: Scalar = line_bulk_norm(_e7);
+    let _e9: HomogeneousMagnitude = self_4689;
+    let _e10: Plane = other_4281;
+    let _e11: Line = plane_attitude(_e10);
+    let _e12: Line = homogeneous_magnitude_line_outer_product(_e9, _e11);
+    let _e13: AntiScalar = line_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn homogeneous_magnitude_motor_distance(self_4690: HomogeneousMagnitude, other_4282: Motor) -> HomogeneousMagnitude {
+    var self_4691: HomogeneousMagnitude;
+    var other_4283: Motor;
+
+    self_4691 = self_4690;
+    other_4283 = other_4282;
+    let _e4: HomogeneousMagnitude = self_4691;
+    let _e5: Motor = other_4283;
+    let _e6: Motor = homogeneous_magnitude_motor_outer_product(_e4, _e5);
+    let _e7: Flector = motor_attitude(_e6);
+    let _e8: Scalar = flector_bulk_norm(_e7);
+    let _e9: HomogeneousMagnitude = self_4691;
+    let _e10: Motor = other_4283;
+    let _e11: Flector = motor_attitude(_e10);
+    let _e12: Flector = homogeneous_magnitude_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = flector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn homogeneous_magnitude_rotor_distance(self_4692: HomogeneousMagnitude, other_4284: Rotor) -> HomogeneousMagnitude {
+    var self_4693: HomogeneousMagnitude;
+    var other_4285: Rotor;
+
+    self_4693 = self_4692;
+    other_4285 = other_4284;
+    let _e4: HomogeneousMagnitude = self_4693;
+    let _e5: Rotor = other_4285;
+    let _e6: Rotor = homogeneous_magnitude_rotor_outer_product(_e4, _e5);
+    let _e7: Flector = rotor_attitude(_e6);
+    let _e8: Scalar = flector_bulk_norm(_e7);
+    let _e9: HomogeneousMagnitude = self_4693;
+    let _e10: Rotor = other_4285;
+    let _e11: Flector = rotor_attitude(_e10);
+    let _e12: Flector = homogeneous_magnitude_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = flector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn homogeneous_magnitude_translator_distance(self_4694: HomogeneousMagnitude, other_4286: Translator) -> HomogeneousMagnitude {
+    var self_4695: HomogeneousMagnitude;
+    var other_4287: Translator;
+
+    self_4695 = self_4694;
+    other_4287 = other_4286;
+    let _e4: HomogeneousMagnitude = self_4695;
+    let _e5: Translator = other_4287;
+    let _e6: Translator = homogeneous_magnitude_translator_outer_product(_e4, _e5);
+    let _e7: Flector = translator_attitude(_e6);
+    let _e8: Scalar = flector_bulk_norm(_e7);
+    let _e9: HomogeneousMagnitude = self_4695;
+    let _e10: Translator = other_4287;
+    let _e11: Flector = translator_attitude(_e10);
+    let _e12: Flector = homogeneous_magnitude_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = flector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn homogeneous_magnitude_flector_distance(self_4696: HomogeneousMagnitude, other_4288: Flector) -> HomogeneousMagnitude {
+    var self_4697: HomogeneousMagnitude;
+    var other_4289: Flector;
+
+    self_4697 = self_4696;
+    other_4289 = other_4288;
+    let _e4: HomogeneousMagnitude = self_4697;
+    let _e5: Flector = other_4289;
+    let _e6: Flector = homogeneous_magnitude_flector_outer_product(_e4, _e5);
+    let _e7: MultiVector = flector_attitude(_e6);
+    let _e8: Scalar = multi_vector_bulk_norm(_e7);
+    let _e9: HomogeneousMagnitude = self_4697;
+    let _e10: Flector = other_4289;
+    let _e11: MultiVector = flector_attitude(_e10);
+    let _e12: MultiVector = homogeneous_magnitude_multi_vector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn homogeneous_magnitude_multi_vector_distance(self_4698: HomogeneousMagnitude, other_4290: MultiVector) -> HomogeneousMagnitude {
+    var self_4699: HomogeneousMagnitude;
+    var other_4291: MultiVector;
+
+    self_4699 = self_4698;
+    other_4291 = other_4290;
+    let _e4: HomogeneousMagnitude = self_4699;
+    let _e5: MultiVector = other_4291;
+    let _e6: MultiVector = homogeneous_magnitude_multi_vector_outer_product(_e4, _e5);
+    let _e7: MultiVector = multi_vector_attitude(_e6);
+    let _e8: Scalar = multi_vector_bulk_norm(_e7);
+    let _e9: HomogeneousMagnitude = self_4699;
+    let _e10: MultiVector = other_4291;
+    let _e11: MultiVector = multi_vector_attitude(_e10);
+    let _e12: MultiVector = homogeneous_magnitude_multi_vector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn point_point_distance(self_4700: Point, other_4292: Point) -> HomogeneousMagnitude {
+    var self_4701: Point;
+    var other_4293: Point;
+
+    self_4701 = self_4700;
+    other_4293 = other_4292;
+    let _e4: Point = self_4701;
+    let _e5: Point = other_4293;
+    let _e6: Line = point_point_outer_product(_e4, _e5);
+    let _e7: Point = line_attitude(_e6);
+    let _e8: Scalar = point_bulk_norm(_e7);
+    let _e9: Point = self_4701;
+    let _e10: Point = other_4293;
+    let _e11: Scalar = point_attitude(_e10);
+    let _e12: Point = point_scalar_outer_product(_e9, _e11);
+    let _e13: AntiScalar = point_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn point_line_distance(self_4702: Point, other_4294: Line) -> HomogeneousMagnitude {
+    var self_4703: Point;
+    var other_4295: Line;
+
+    self_4703 = self_4702;
+    other_4295 = other_4294;
+    let _e4: Point = self_4703;
+    let _e5: Line = other_4295;
+    let _e6: Plane = point_line_outer_product(_e4, _e5);
+    let _e7: Line = plane_attitude(_e6);
+    let _e8: Scalar = line_bulk_norm(_e7);
+    let _e9: Point = self_4703;
+    let _e10: Line = other_4295;
+    let _e11: Point = line_attitude(_e10);
+    let _e12: Line = point_point_outer_product(_e9, _e11);
+    let _e13: AntiScalar = line_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn point_plane_distance(self_4704: Point, other_4296: Plane) -> HomogeneousMagnitude {
+    var self_4705: Point;
+    var other_4297: Plane;
+
+    self_4705 = self_4704;
+    other_4297 = other_4296;
+    let _e4: Point = self_4705;
+    let _e5: Plane = other_4297;
+    let _e6: AntiScalar = point_plane_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Point = self_4705;
+    let _e10: Plane = other_4297;
+    let _e11: Line = plane_attitude(_e10);
+    let _e12: Plane = point_line_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn point_motor_distance(self_4706: Point, other_4298: Motor) -> HomogeneousMagnitude {
+    var self_4707: Point;
+    var other_4299: Motor;
+
+    self_4707 = self_4706;
+    other_4299 = other_4298;
+    let _e4: Point = self_4707;
+    let _e5: Motor = other_4299;
+    let _e6: Plane = point_motor_outer_product(_e4, _e5);
+    let _e7: Line = plane_attitude(_e6);
+    let _e8: Scalar = line_bulk_norm(_e7);
+    let _e9: Point = self_4707;
+    let _e10: Motor = other_4299;
+    let _e11: Flector = motor_attitude(_e10);
+    let _e12: Motor = point_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = motor_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn point_rotor_distance(self_4708: Point, other_4300: Rotor) -> HomogeneousMagnitude {
+    var self_4709: Point;
+    var other_4301: Rotor;
+
+    self_4709 = self_4708;
+    other_4301 = other_4300;
+    let _e4: Point = self_4709;
+    let _e5: Rotor = other_4301;
+    let _e6: Plane = point_rotor_outer_product(_e4, _e5);
+    let _e7: Line = plane_attitude(_e6);
+    let _e8: Scalar = line_bulk_norm(_e7);
+    let _e9: Point = self_4709;
+    let _e10: Rotor = other_4301;
+    let _e11: Flector = rotor_attitude(_e10);
+    let _e12: Motor = point_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = motor_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn point_translator_distance(self_4710: Point, other_4302: Translator) -> HomogeneousMagnitude {
+    var self_4711: Point;
+    var other_4303: Translator;
+
+    self_4711 = self_4710;
+    other_4303 = other_4302;
+    let _e4: Point = self_4711;
+    let _e5: Translator = other_4303;
+    let _e6: Plane = point_translator_outer_product(_e4, _e5);
+    let _e7: Line = plane_attitude(_e6);
+    let _e8: Scalar = line_bulk_norm(_e7);
+    let _e9: Point = self_4711;
+    let _e10: Translator = other_4303;
+    let _e11: Flector = translator_attitude(_e10);
+    let _e12: Motor = point_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = motor_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn point_flector_distance(self_4712: Point, other_4304: Flector) -> HomogeneousMagnitude {
+    var self_4713: Point;
+    var other_4305: Flector;
+
+    self_4713 = self_4712;
+    other_4305 = other_4304;
+    let _e4: Point = self_4713;
+    let _e5: Flector = other_4305;
+    let _e6: Motor = point_flector_outer_product(_e4, _e5);
+    let _e7: Flector = motor_attitude(_e6);
+    let _e8: Scalar = flector_bulk_norm(_e7);
+    let _e9: Point = self_4713;
+    let _e10: Flector = other_4305;
+    let _e11: MultiVector = flector_attitude(_e10);
+    let _e12: MultiVector = point_multi_vector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn point_multi_vector_distance(self_4714: Point, other_4306: MultiVector) -> HomogeneousMagnitude {
+    var self_4715: Point;
+    var other_4307: MultiVector;
+
+    self_4715 = self_4714;
+    other_4307 = other_4306;
+    let _e4: Point = self_4715;
+    let _e5: MultiVector = other_4307;
+    let _e6: MultiVector = point_multi_vector_outer_product(_e4, _e5);
+    let _e7: MultiVector = multi_vector_attitude(_e6);
+    let _e8: Scalar = multi_vector_bulk_norm(_e7);
+    let _e9: Point = self_4715;
+    let _e10: MultiVector = other_4307;
+    let _e11: MultiVector = multi_vector_attitude(_e10);
+    let _e12: MultiVector = point_multi_vector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn line_point_distance(self_4716: Line, other_4308: Point) -> HomogeneousMagnitude {
+    var self_4717: Line;
+    var other_4309: Point;
+
+    self_4717 = self_4716;
+    other_4309 = other_4308;
+    let _e4: Line = self_4717;
+    let _e5: Point = other_4309;
+    let _e6: Plane = line_point_outer_product(_e4, _e5);
+    let _e7: Line = plane_attitude(_e6);
+    let _e8: Scalar = line_bulk_norm(_e7);
+    let _e9: Line = self_4717;
+    let _e10: Point = other_4309;
+    let _e11: Scalar = point_attitude(_e10);
+    let _e12: Line = line_scalar_outer_product(_e9, _e11);
+    let _e13: AntiScalar = line_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn line_line_distance(self_4718: Line, other_4310: Line) -> HomogeneousMagnitude {
+    var self_4719: Line;
+    var other_4311: Line;
 
     self_4719 = self_4718;
     other_4311 = other_4310;
-    let _e4: Translator = self_4719;
-    let _e5: Flector = other_4311;
-    let _e6: Plane = translator_flector_outer_product(_e4, _e5);
-    let _e7: Line = plane_attitude(_e6);
-    let _e8: Scalar = line_bulk_norm(_e7);
-    let _e9: Translator = self_4719;
-    let _e10: Flector = other_4311;
-    let _e11: MultiVector = flector_attitude(_e10);
-    let _e12: MultiVector = translator_multi_vector_outer_product(_e9, _e11);
-    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
+    let _e4: Line = self_4719;
+    let _e5: Line = other_4311;
+    let _e6: AntiScalar = line_line_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Line = self_4719;
+    let _e10: Line = other_4311;
+    let _e11: Point = line_attitude(_e10);
+    let _e12: Plane = line_point_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
     let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
     return _e14;
 }
 
-fn translator_line_distance(self_4720: Translator, other_4312: Line) -> HomogeneousMagnitude {
-    var self_4721: Translator;
-    var other_4313: Line;
+fn line_motor_distance(self_4720: Line, other_4312: Motor) -> HomogeneousMagnitude {
+    var self_4721: Line;
+    var other_4313: Motor;
 
     self_4721 = self_4720;
     other_4313 = other_4312;
-    let _e4: Translator = self_4721;
-    let _e5: Line = other_4313;
-    let _e6: AntiScalar = translator_line_outer_product(_e4, _e5);
+    let _e4: Line = self_4721;
+    let _e5: Motor = other_4313;
+    let _e6: AntiScalar = line_motor_outer_product(_e4, _e5);
     let _e7: Plane = anti_scalar_attitude(_e6);
     let _e8: Scalar = plane_bulk_norm(_e7);
-    let _e9: Translator = self_4721;
-    let _e10: Line = other_4313;
-    let _e11: Point = line_attitude(_e10);
-    let _e12: Plane = translator_point_outer_product(_e9, _e11);
+    let _e9: Line = self_4721;
+    let _e10: Motor = other_4313;
+    let _e11: Flector = motor_attitude(_e10);
+    let _e12: Plane = line_flector_outer_product(_e9, _e11);
     let _e13: AntiScalar = plane_weight_norm(_e12);
     let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
     return _e14;
 }
 
-fn translator_motor_distance(self_4722: Translator, other_4314: Motor) -> HomogeneousMagnitude {
-    var self_4723: Translator;
-    var other_4315: Motor;
+fn line_rotor_distance(self_4722: Line, other_4314: Rotor) -> HomogeneousMagnitude {
+    var self_4723: Line;
+    var other_4315: Rotor;
 
     self_4723 = self_4722;
     other_4315 = other_4314;
-    let _e4: Translator = self_4723;
-    let _e5: Motor = other_4315;
-    let _e6: AntiScalar = translator_motor_outer_product(_e4, _e5);
+    let _e4: Line = self_4723;
+    let _e5: Rotor = other_4315;
+    let _e6: AntiScalar = line_rotor_outer_product(_e4, _e5);
     let _e7: Plane = anti_scalar_attitude(_e6);
     let _e8: Scalar = plane_bulk_norm(_e7);
-    let _e9: Translator = self_4723;
-    let _e10: Motor = other_4315;
-    let _e11: Flector = motor_attitude(_e10);
-    let _e12: Plane = translator_flector_outer_product(_e9, _e11);
+    let _e9: Line = self_4723;
+    let _e10: Rotor = other_4315;
+    let _e11: Flector = rotor_attitude(_e10);
+    let _e12: Plane = line_flector_outer_product(_e9, _e11);
     let _e13: AntiScalar = plane_weight_norm(_e12);
     let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
     return _e14;
 }
 
-fn translator_multi_vector_distance(self_4724: Translator, other_4316: MultiVector) -> HomogeneousMagnitude {
-    var self_4725: Translator;
-    var other_4317: MultiVector;
+fn line_translator_distance(self_4724: Line, other_4316: Translator) -> HomogeneousMagnitude {
+    var self_4725: Line;
+    var other_4317: Translator;
 
     self_4725 = self_4724;
     other_4317 = other_4316;
-    let _e4: Translator = self_4725;
-    let _e5: MultiVector = other_4317;
-    let _e6: MultiVector = translator_multi_vector_outer_product(_e4, _e5);
-    let _e7: MultiVector = multi_vector_attitude(_e6);
-    let _e8: Scalar = multi_vector_bulk_norm(_e7);
-    let _e9: Translator = self_4725;
-    let _e10: MultiVector = other_4317;
-    let _e11: MultiVector = multi_vector_attitude(_e10);
-    let _e12: MultiVector = translator_multi_vector_outer_product(_e9, _e11);
+    let _e4: Line = self_4725;
+    let _e5: Translator = other_4317;
+    let _e6: AntiScalar = line_translator_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Line = self_4725;
+    let _e10: Translator = other_4317;
+    let _e11: Flector = translator_attitude(_e10);
+    let _e12: Plane = line_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn line_flector_distance(self_4726: Line, other_4318: Flector) -> HomogeneousMagnitude {
+    var self_4727: Line;
+    var other_4319: Flector;
+
+    self_4727 = self_4726;
+    other_4319 = other_4318;
+    let _e4: Line = self_4727;
+    let _e5: Flector = other_4319;
+    let _e6: Plane = line_flector_outer_product(_e4, _e5);
+    let _e7: Line = plane_attitude(_e6);
+    let _e8: Scalar = line_bulk_norm(_e7);
+    let _e9: Line = self_4727;
+    let _e10: Flector = other_4319;
+    let _e11: MultiVector = flector_attitude(_e10);
+    let _e12: MultiVector = line_multi_vector_outer_product(_e9, _e11);
     let _e13: AntiScalar = multi_vector_weight_norm(_e12);
     let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
     return _e14;
 }
 
-fn translator_point_distance(self_4726: Translator, other_4318: Point) -> HomogeneousMagnitude {
-    var self_4727: Translator;
-    var other_4319: Point;
+fn line_multi_vector_distance(self_4728: Line, other_4320: MultiVector) -> HomogeneousMagnitude {
+    var self_4729: Line;
+    var other_4321: MultiVector;
 
-    self_4727 = self_4726;
-    other_4319 = other_4318;
-    let _e4: Translator = self_4727;
-    let _e5: Point = other_4319;
+    self_4729 = self_4728;
+    other_4321 = other_4320;
+    let _e4: Line = self_4729;
+    let _e5: MultiVector = other_4321;
+    let _e6: MultiVector = line_multi_vector_outer_product(_e4, _e5);
+    let _e7: MultiVector = multi_vector_attitude(_e6);
+    let _e8: Scalar = multi_vector_bulk_norm(_e7);
+    let _e9: Line = self_4729;
+    let _e10: MultiVector = other_4321;
+    let _e11: MultiVector = multi_vector_attitude(_e10);
+    let _e12: MultiVector = line_multi_vector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn plane_point_distance(self_4730: Plane, other_4322: Point) -> HomogeneousMagnitude {
+    var self_4731: Plane;
+    var other_4323: Point;
+
+    self_4731 = self_4730;
+    other_4323 = other_4322;
+    let _e4: Plane = self_4731;
+    let _e5: Point = other_4323;
+    let _e6: AntiScalar = plane_point_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Plane = self_4731;
+    let _e10: Point = other_4323;
+    let _e11: Scalar = point_attitude(_e10);
+    let _e12: Plane = plane_scalar_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn plane_flector_distance(self_4732: Plane, other_4324: Flector) -> HomogeneousMagnitude {
+    var self_4733: Plane;
+    var other_4325: Flector;
+
+    self_4733 = self_4732;
+    other_4325 = other_4324;
+    let _e4: Plane = self_4733;
+    let _e5: Flector = other_4325;
+    let _e6: AntiScalar = plane_flector_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Plane = self_4733;
+    let _e10: Flector = other_4325;
+    let _e11: MultiVector = flector_attitude(_e10);
+    let _e12: MultiVector = plane_multi_vector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn plane_multi_vector_distance(self_4734: Plane, other_4326: MultiVector) -> HomogeneousMagnitude {
+    var self_4735: Plane;
+    var other_4327: MultiVector;
+
+    self_4735 = self_4734;
+    other_4327 = other_4326;
+    let _e4: Plane = self_4735;
+    let _e5: MultiVector = other_4327;
+    let _e6: MultiVector = plane_multi_vector_outer_product(_e4, _e5);
+    let _e7: MultiVector = multi_vector_attitude(_e6);
+    let _e8: Scalar = multi_vector_bulk_norm(_e7);
+    let _e9: Plane = self_4735;
+    let _e10: MultiVector = other_4327;
+    let _e11: MultiVector = multi_vector_attitude(_e10);
+    let _e12: MultiVector = plane_multi_vector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn motor_point_distance(self_4736: Motor, other_4328: Point) -> HomogeneousMagnitude {
+    var self_4737: Motor;
+    var other_4329: Point;
+
+    self_4737 = self_4736;
+    other_4329 = other_4328;
+    let _e4: Motor = self_4737;
+    let _e5: Point = other_4329;
+    let _e6: Plane = motor_point_outer_product(_e4, _e5);
+    let _e7: Line = plane_attitude(_e6);
+    let _e8: Scalar = line_bulk_norm(_e7);
+    let _e9: Motor = self_4737;
+    let _e10: Point = other_4329;
+    let _e11: Scalar = point_attitude(_e10);
+    let _e12: Motor = motor_scalar_outer_product(_e9, _e11);
+    let _e13: AntiScalar = motor_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn motor_line_distance(self_4738: Motor, other_4330: Line) -> HomogeneousMagnitude {
+    var self_4739: Motor;
+    var other_4331: Line;
+
+    self_4739 = self_4738;
+    other_4331 = other_4330;
+    let _e4: Motor = self_4739;
+    let _e5: Line = other_4331;
+    let _e6: AntiScalar = motor_line_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Motor = self_4739;
+    let _e10: Line = other_4331;
+    let _e11: Point = line_attitude(_e10);
+    let _e12: Plane = motor_point_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn motor_motor_distance(self_4740: Motor, other_4332: Motor) -> HomogeneousMagnitude {
+    var self_4741: Motor;
+    var other_4333: Motor;
+
+    self_4741 = self_4740;
+    other_4333 = other_4332;
+    let _e4: Motor = self_4741;
+    let _e5: Motor = other_4333;
+    let _e6: AntiScalar = motor_motor_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Motor = self_4741;
+    let _e10: Motor = other_4333;
+    let _e11: Flector = motor_attitude(_e10);
+    let _e12: Plane = motor_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn motor_rotor_distance(self_4742: Motor, other_4334: Rotor) -> HomogeneousMagnitude {
+    var self_4743: Motor;
+    var other_4335: Rotor;
+
+    self_4743 = self_4742;
+    other_4335 = other_4334;
+    let _e4: Motor = self_4743;
+    let _e5: Rotor = other_4335;
+    let _e6: AntiScalar = motor_rotor_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Motor = self_4743;
+    let _e10: Rotor = other_4335;
+    let _e11: Flector = rotor_attitude(_e10);
+    let _e12: Plane = motor_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn motor_translator_distance(self_4744: Motor, other_4336: Translator) -> HomogeneousMagnitude {
+    var self_4745: Motor;
+    var other_4337: Translator;
+
+    self_4745 = self_4744;
+    other_4337 = other_4336;
+    let _e4: Motor = self_4745;
+    let _e5: Translator = other_4337;
+    let _e6: AntiScalar = motor_translator_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Motor = self_4745;
+    let _e10: Translator = other_4337;
+    let _e11: Flector = translator_attitude(_e10);
+    let _e12: Plane = motor_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn motor_flector_distance(self_4746: Motor, other_4338: Flector) -> HomogeneousMagnitude {
+    var self_4747: Motor;
+    var other_4339: Flector;
+
+    self_4747 = self_4746;
+    other_4339 = other_4338;
+    let _e4: Motor = self_4747;
+    let _e5: Flector = other_4339;
+    let _e6: Plane = motor_flector_outer_product(_e4, _e5);
+    let _e7: Line = plane_attitude(_e6);
+    let _e8: Scalar = line_bulk_norm(_e7);
+    let _e9: Motor = self_4747;
+    let _e10: Flector = other_4339;
+    let _e11: MultiVector = flector_attitude(_e10);
+    let _e12: MultiVector = motor_multi_vector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn motor_multi_vector_distance(self_4748: Motor, other_4340: MultiVector) -> HomogeneousMagnitude {
+    var self_4749: Motor;
+    var other_4341: MultiVector;
+
+    self_4749 = self_4748;
+    other_4341 = other_4340;
+    let _e4: Motor = self_4749;
+    let _e5: MultiVector = other_4341;
+    let _e6: MultiVector = motor_multi_vector_outer_product(_e4, _e5);
+    let _e7: MultiVector = multi_vector_attitude(_e6);
+    let _e8: Scalar = multi_vector_bulk_norm(_e7);
+    let _e9: Motor = self_4749;
+    let _e10: MultiVector = other_4341;
+    let _e11: MultiVector = multi_vector_attitude(_e10);
+    let _e12: MultiVector = motor_multi_vector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn rotor_line_distance(self_4750: Rotor, other_4342: Line) -> HomogeneousMagnitude {
+    var self_4751: Rotor;
+    var other_4343: Line;
+
+    self_4751 = self_4750;
+    other_4343 = other_4342;
+    let _e4: Rotor = self_4751;
+    let _e5: Line = other_4343;
+    let _e6: AntiScalar = rotor_line_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Rotor = self_4751;
+    let _e10: Line = other_4343;
+    let _e11: Point = line_attitude(_e10);
+    let _e12: Plane = rotor_point_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn rotor_motor_distance(self_4752: Rotor, other_4344: Motor) -> HomogeneousMagnitude {
+    var self_4753: Rotor;
+    var other_4345: Motor;
+
+    self_4753 = self_4752;
+    other_4345 = other_4344;
+    let _e4: Rotor = self_4753;
+    let _e5: Motor = other_4345;
+    let _e6: AntiScalar = rotor_motor_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Rotor = self_4753;
+    let _e10: Motor = other_4345;
+    let _e11: Flector = motor_attitude(_e10);
+    let _e12: Plane = rotor_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn rotor_translator_distance(self_4754: Rotor, other_4346: Translator) -> HomogeneousMagnitude {
+    var self_4755: Rotor;
+    var other_4347: Translator;
+
+    self_4755 = self_4754;
+    other_4347 = other_4346;
+    let _e4: Rotor = self_4755;
+    let _e5: Translator = other_4347;
+    let _e6: AntiScalar = rotor_translator_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Rotor = self_4755;
+    let _e10: Translator = other_4347;
+    let _e11: Flector = translator_attitude(_e10);
+    let _e12: Plane = rotor_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn rotor_flector_distance(self_4756: Rotor, other_4348: Flector) -> HomogeneousMagnitude {
+    var self_4757: Rotor;
+    var other_4349: Flector;
+
+    self_4757 = self_4756;
+    other_4349 = other_4348;
+    let _e4: Rotor = self_4757;
+    let _e5: Flector = other_4349;
+    let _e6: Plane = rotor_flector_outer_product(_e4, _e5);
+    let _e7: Line = plane_attitude(_e6);
+    let _e8: Scalar = line_bulk_norm(_e7);
+    let _e9: Rotor = self_4757;
+    let _e10: Flector = other_4349;
+    let _e11: MultiVector = flector_attitude(_e10);
+    let _e12: MultiVector = rotor_multi_vector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn rotor_multi_vector_distance(self_4758: Rotor, other_4350: MultiVector) -> HomogeneousMagnitude {
+    var self_4759: Rotor;
+    var other_4351: MultiVector;
+
+    self_4759 = self_4758;
+    other_4351 = other_4350;
+    let _e4: Rotor = self_4759;
+    let _e5: MultiVector = other_4351;
+    let _e6: MultiVector = rotor_multi_vector_outer_product(_e4, _e5);
+    let _e7: MultiVector = multi_vector_attitude(_e6);
+    let _e8: Scalar = multi_vector_bulk_norm(_e7);
+    let _e9: Rotor = self_4759;
+    let _e10: MultiVector = other_4351;
+    let _e11: MultiVector = multi_vector_attitude(_e10);
+    let _e12: MultiVector = rotor_multi_vector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn translator_point_distance(self_4760: Translator, other_4352: Point) -> HomogeneousMagnitude {
+    var self_4761: Translator;
+    var other_4353: Point;
+
+    self_4761 = self_4760;
+    other_4353 = other_4352;
+    let _e4: Translator = self_4761;
+    let _e5: Point = other_4353;
     let _e6: Plane = translator_point_outer_product(_e4, _e5);
     let _e7: Line = plane_attitude(_e6);
     let _e8: Scalar = line_bulk_norm(_e7);
-    let _e9: Translator = self_4727;
-    let _e10: Point = other_4319;
+    let _e9: Translator = self_4761;
+    let _e10: Point = other_4353;
     let _e11: Scalar = point_attitude(_e10);
     let _e12: Translator = translator_scalar_outer_product(_e9, _e11);
     let _e13: AntiScalar = translator_weight_norm(_e12);
@@ -46319,22 +46464,462 @@ fn translator_point_distance(self_4726: Translator, other_4318: Point) -> Homoge
     return _e14;
 }
 
-fn translator_rotor_distance(self_4728: Translator, other_4320: Rotor) -> HomogeneousMagnitude {
-    var self_4729: Translator;
-    var other_4321: Rotor;
+fn translator_line_distance(self_4762: Translator, other_4354: Line) -> HomogeneousMagnitude {
+    var self_4763: Translator;
+    var other_4355: Line;
 
-    self_4729 = self_4728;
-    other_4321 = other_4320;
-    let _e4: Translator = self_4729;
-    let _e5: Rotor = other_4321;
+    self_4763 = self_4762;
+    other_4355 = other_4354;
+    let _e4: Translator = self_4763;
+    let _e5: Line = other_4355;
+    let _e6: AntiScalar = translator_line_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Translator = self_4763;
+    let _e10: Line = other_4355;
+    let _e11: Point = line_attitude(_e10);
+    let _e12: Plane = translator_point_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn translator_motor_distance(self_4764: Translator, other_4356: Motor) -> HomogeneousMagnitude {
+    var self_4765: Translator;
+    var other_4357: Motor;
+
+    self_4765 = self_4764;
+    other_4357 = other_4356;
+    let _e4: Translator = self_4765;
+    let _e5: Motor = other_4357;
+    let _e6: AntiScalar = translator_motor_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Translator = self_4765;
+    let _e10: Motor = other_4357;
+    let _e11: Flector = motor_attitude(_e10);
+    let _e12: Plane = translator_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn translator_rotor_distance(self_4766: Translator, other_4358: Rotor) -> HomogeneousMagnitude {
+    var self_4767: Translator;
+    var other_4359: Rotor;
+
+    self_4767 = self_4766;
+    other_4359 = other_4358;
+    let _e4: Translator = self_4767;
+    let _e5: Rotor = other_4359;
     let _e6: AntiScalar = translator_rotor_outer_product(_e4, _e5);
     let _e7: Plane = anti_scalar_attitude(_e6);
     let _e8: Scalar = plane_bulk_norm(_e7);
-    let _e9: Translator = self_4729;
-    let _e10: Rotor = other_4321;
+    let _e9: Translator = self_4767;
+    let _e10: Rotor = other_4359;
     let _e11: Flector = rotor_attitude(_e10);
     let _e12: Plane = translator_flector_outer_product(_e9, _e11);
     let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn translator_flector_distance(self_4768: Translator, other_4360: Flector) -> HomogeneousMagnitude {
+    var self_4769: Translator;
+    var other_4361: Flector;
+
+    self_4769 = self_4768;
+    other_4361 = other_4360;
+    let _e4: Translator = self_4769;
+    let _e5: Flector = other_4361;
+    let _e6: Plane = translator_flector_outer_product(_e4, _e5);
+    let _e7: Line = plane_attitude(_e6);
+    let _e8: Scalar = line_bulk_norm(_e7);
+    let _e9: Translator = self_4769;
+    let _e10: Flector = other_4361;
+    let _e11: MultiVector = flector_attitude(_e10);
+    let _e12: MultiVector = translator_multi_vector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn translator_multi_vector_distance(self_4770: Translator, other_4362: MultiVector) -> HomogeneousMagnitude {
+    var self_4771: Translator;
+    var other_4363: MultiVector;
+
+    self_4771 = self_4770;
+    other_4363 = other_4362;
+    let _e4: Translator = self_4771;
+    let _e5: MultiVector = other_4363;
+    let _e6: MultiVector = translator_multi_vector_outer_product(_e4, _e5);
+    let _e7: MultiVector = multi_vector_attitude(_e6);
+    let _e8: Scalar = multi_vector_bulk_norm(_e7);
+    let _e9: Translator = self_4771;
+    let _e10: MultiVector = other_4363;
+    let _e11: MultiVector = multi_vector_attitude(_e10);
+    let _e12: MultiVector = translator_multi_vector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn flector_point_distance(self_4772: Flector, other_4364: Point) -> HomogeneousMagnitude {
+    var self_4773: Flector;
+    var other_4365: Point;
+
+    self_4773 = self_4772;
+    other_4365 = other_4364;
+    let _e4: Flector = self_4773;
+    let _e5: Point = other_4365;
+    let _e6: Motor = flector_point_outer_product(_e4, _e5);
+    let _e7: Flector = motor_attitude(_e6);
+    let _e8: Scalar = flector_bulk_norm(_e7);
+    let _e9: Flector = self_4773;
+    let _e10: Point = other_4365;
+    let _e11: Scalar = point_attitude(_e10);
+    let _e12: Flector = flector_scalar_outer_product(_e9, _e11);
+    let _e13: AntiScalar = flector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn flector_line_distance(self_4774: Flector, other_4366: Line) -> HomogeneousMagnitude {
+    var self_4775: Flector;
+    var other_4367: Line;
+
+    self_4775 = self_4774;
+    other_4367 = other_4366;
+    let _e4: Flector = self_4775;
+    let _e5: Line = other_4367;
+    let _e6: Plane = flector_line_outer_product(_e4, _e5);
+    let _e7: Line = plane_attitude(_e6);
+    let _e8: Scalar = line_bulk_norm(_e7);
+    let _e9: Flector = self_4775;
+    let _e10: Line = other_4367;
+    let _e11: Point = line_attitude(_e10);
+    let _e12: Motor = flector_point_outer_product(_e9, _e11);
+    let _e13: AntiScalar = motor_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn flector_plane_distance(self_4776: Flector, other_4368: Plane) -> HomogeneousMagnitude {
+    var self_4777: Flector;
+    var other_4369: Plane;
+
+    self_4777 = self_4776;
+    other_4369 = other_4368;
+    let _e4: Flector = self_4777;
+    let _e5: Plane = other_4369;
+    let _e6: AntiScalar = flector_plane_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: Flector = self_4777;
+    let _e10: Plane = other_4369;
+    let _e11: Line = plane_attitude(_e10);
+    let _e12: Plane = flector_line_outer_product(_e9, _e11);
+    let _e13: AntiScalar = plane_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn flector_motor_distance(self_4778: Flector, other_4370: Motor) -> HomogeneousMagnitude {
+    var self_4779: Flector;
+    var other_4371: Motor;
+
+    self_4779 = self_4778;
+    other_4371 = other_4370;
+    let _e4: Flector = self_4779;
+    let _e5: Motor = other_4371;
+    let _e6: Plane = flector_motor_outer_product(_e4, _e5);
+    let _e7: Line = plane_attitude(_e6);
+    let _e8: Scalar = line_bulk_norm(_e7);
+    let _e9: Flector = self_4779;
+    let _e10: Motor = other_4371;
+    let _e11: Flector = motor_attitude(_e10);
+    let _e12: Motor = flector_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = motor_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn flector_rotor_distance(self_4780: Flector, other_4372: Rotor) -> HomogeneousMagnitude {
+    var self_4781: Flector;
+    var other_4373: Rotor;
+
+    self_4781 = self_4780;
+    other_4373 = other_4372;
+    let _e4: Flector = self_4781;
+    let _e5: Rotor = other_4373;
+    let _e6: Plane = flector_rotor_outer_product(_e4, _e5);
+    let _e7: Line = plane_attitude(_e6);
+    let _e8: Scalar = line_bulk_norm(_e7);
+    let _e9: Flector = self_4781;
+    let _e10: Rotor = other_4373;
+    let _e11: Flector = rotor_attitude(_e10);
+    let _e12: Motor = flector_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = motor_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn flector_translator_distance(self_4782: Flector, other_4374: Translator) -> HomogeneousMagnitude {
+    var self_4783: Flector;
+    var other_4375: Translator;
+
+    self_4783 = self_4782;
+    other_4375 = other_4374;
+    let _e4: Flector = self_4783;
+    let _e5: Translator = other_4375;
+    let _e6: Plane = flector_translator_outer_product(_e4, _e5);
+    let _e7: Line = plane_attitude(_e6);
+    let _e8: Scalar = line_bulk_norm(_e7);
+    let _e9: Flector = self_4783;
+    let _e10: Translator = other_4375;
+    let _e11: Flector = translator_attitude(_e10);
+    let _e12: Motor = flector_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = motor_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn flector_flector_distance(self_4784: Flector, other_4376: Flector) -> HomogeneousMagnitude {
+    var self_4785: Flector;
+    var other_4377: Flector;
+
+    self_4785 = self_4784;
+    other_4377 = other_4376;
+    let _e4: Flector = self_4785;
+    let _e5: Flector = other_4377;
+    let _e6: Motor = flector_flector_outer_product(_e4, _e5);
+    let _e7: Flector = motor_attitude(_e6);
+    let _e8: Scalar = flector_bulk_norm(_e7);
+    let _e9: Flector = self_4785;
+    let _e10: Flector = other_4377;
+    let _e11: MultiVector = flector_attitude(_e10);
+    let _e12: MultiVector = flector_multi_vector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn flector_multi_vector_distance(self_4786: Flector, other_4378: MultiVector) -> HomogeneousMagnitude {
+    var self_4787: Flector;
+    var other_4379: MultiVector;
+
+    self_4787 = self_4786;
+    other_4379 = other_4378;
+    let _e4: Flector = self_4787;
+    let _e5: MultiVector = other_4379;
+    let _e6: MultiVector = flector_multi_vector_outer_product(_e4, _e5);
+    let _e7: MultiVector = multi_vector_attitude(_e6);
+    let _e8: Scalar = multi_vector_bulk_norm(_e7);
+    let _e9: Flector = self_4787;
+    let _e10: MultiVector = other_4379;
+    let _e11: MultiVector = multi_vector_attitude(_e10);
+    let _e12: MultiVector = flector_multi_vector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn multi_vector_anti_scalar_distance(self_4788: MultiVector, other_4380: AntiScalar) -> HomogeneousMagnitude {
+    var self_4789: MultiVector;
+    var other_4381: AntiScalar;
+
+    self_4789 = self_4788;
+    other_4381 = other_4380;
+    let _e4: MultiVector = self_4789;
+    let _e5: AntiScalar = other_4381;
+    let _e6: AntiScalar = multi_vector_anti_scalar_outer_product(_e4, _e5);
+    let _e7: Plane = anti_scalar_attitude(_e6);
+    let _e8: Scalar = plane_bulk_norm(_e7);
+    let _e9: MultiVector = self_4789;
+    let _e10: AntiScalar = other_4381;
+    let _e11: Plane = anti_scalar_attitude(_e10);
+    let _e12: MultiVector = multi_vector_plane_outer_product(_e9, _e11);
+    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn multi_vector_homogeneous_magnitude_distance(self_4790: MultiVector, other_4382: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_4791: MultiVector;
+    var other_4383: HomogeneousMagnitude;
+
+    self_4791 = self_4790;
+    other_4383 = other_4382;
+    let _e4: MultiVector = self_4791;
+    let _e5: HomogeneousMagnitude = other_4383;
+    let _e6: MultiVector = multi_vector_homogeneous_magnitude_outer_product(_e4, _e5);
+    let _e7: MultiVector = multi_vector_attitude(_e6);
+    let _e8: Scalar = multi_vector_bulk_norm(_e7);
+    let _e9: MultiVector = self_4791;
+    let _e10: HomogeneousMagnitude = other_4383;
+    let _e11: Plane = homogeneous_magnitude_attitude(_e10);
+    let _e12: MultiVector = multi_vector_plane_outer_product(_e9, _e11);
+    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn multi_vector_point_distance(self_4792: MultiVector, other_4384: Point) -> HomogeneousMagnitude {
+    var self_4793: MultiVector;
+    var other_4385: Point;
+
+    self_4793 = self_4792;
+    other_4385 = other_4384;
+    let _e4: MultiVector = self_4793;
+    let _e5: Point = other_4385;
+    let _e6: MultiVector = multi_vector_point_outer_product(_e4, _e5);
+    let _e7: MultiVector = multi_vector_attitude(_e6);
+    let _e8: Scalar = multi_vector_bulk_norm(_e7);
+    let _e9: MultiVector = self_4793;
+    let _e10: Point = other_4385;
+    let _e11: Scalar = point_attitude(_e10);
+    let _e12: MultiVector = multi_vector_scalar_outer_product(_e9, _e11);
+    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn multi_vector_line_distance(self_4794: MultiVector, other_4386: Line) -> HomogeneousMagnitude {
+    var self_4795: MultiVector;
+    var other_4387: Line;
+
+    self_4795 = self_4794;
+    other_4387 = other_4386;
+    let _e4: MultiVector = self_4795;
+    let _e5: Line = other_4387;
+    let _e6: MultiVector = multi_vector_line_outer_product(_e4, _e5);
+    let _e7: MultiVector = multi_vector_attitude(_e6);
+    let _e8: Scalar = multi_vector_bulk_norm(_e7);
+    let _e9: MultiVector = self_4795;
+    let _e10: Line = other_4387;
+    let _e11: Point = line_attitude(_e10);
+    let _e12: MultiVector = multi_vector_point_outer_product(_e9, _e11);
+    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn multi_vector_plane_distance(self_4796: MultiVector, other_4388: Plane) -> HomogeneousMagnitude {
+    var self_4797: MultiVector;
+    var other_4389: Plane;
+
+    self_4797 = self_4796;
+    other_4389 = other_4388;
+    let _e4: MultiVector = self_4797;
+    let _e5: Plane = other_4389;
+    let _e6: MultiVector = multi_vector_plane_outer_product(_e4, _e5);
+    let _e7: MultiVector = multi_vector_attitude(_e6);
+    let _e8: Scalar = multi_vector_bulk_norm(_e7);
+    let _e9: MultiVector = self_4797;
+    let _e10: Plane = other_4389;
+    let _e11: Line = plane_attitude(_e10);
+    let _e12: MultiVector = multi_vector_line_outer_product(_e9, _e11);
+    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn multi_vector_motor_distance(self_4798: MultiVector, other_4390: Motor) -> HomogeneousMagnitude {
+    var self_4799: MultiVector;
+    var other_4391: Motor;
+
+    self_4799 = self_4798;
+    other_4391 = other_4390;
+    let _e4: MultiVector = self_4799;
+    let _e5: Motor = other_4391;
+    let _e6: MultiVector = multi_vector_motor_outer_product(_e4, _e5);
+    let _e7: MultiVector = multi_vector_attitude(_e6);
+    let _e8: Scalar = multi_vector_bulk_norm(_e7);
+    let _e9: MultiVector = self_4799;
+    let _e10: Motor = other_4391;
+    let _e11: Flector = motor_attitude(_e10);
+    let _e12: MultiVector = multi_vector_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn multi_vector_rotor_distance(self_4800: MultiVector, other_4392: Rotor) -> HomogeneousMagnitude {
+    var self_4801: MultiVector;
+    var other_4393: Rotor;
+
+    self_4801 = self_4800;
+    other_4393 = other_4392;
+    let _e4: MultiVector = self_4801;
+    let _e5: Rotor = other_4393;
+    let _e6: MultiVector = multi_vector_rotor_outer_product(_e4, _e5);
+    let _e7: MultiVector = multi_vector_attitude(_e6);
+    let _e8: Scalar = multi_vector_bulk_norm(_e7);
+    let _e9: MultiVector = self_4801;
+    let _e10: Rotor = other_4393;
+    let _e11: Flector = rotor_attitude(_e10);
+    let _e12: MultiVector = multi_vector_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn multi_vector_translator_distance(self_4802: MultiVector, other_4394: Translator) -> HomogeneousMagnitude {
+    var self_4803: MultiVector;
+    var other_4395: Translator;
+
+    self_4803 = self_4802;
+    other_4395 = other_4394;
+    let _e4: MultiVector = self_4803;
+    let _e5: Translator = other_4395;
+    let _e6: MultiVector = multi_vector_translator_outer_product(_e4, _e5);
+    let _e7: MultiVector = multi_vector_attitude(_e6);
+    let _e8: Scalar = multi_vector_bulk_norm(_e7);
+    let _e9: MultiVector = self_4803;
+    let _e10: Translator = other_4395;
+    let _e11: Flector = translator_attitude(_e10);
+    let _e12: MultiVector = multi_vector_flector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn multi_vector_flector_distance(self_4804: MultiVector, other_4396: Flector) -> HomogeneousMagnitude {
+    var self_4805: MultiVector;
+    var other_4397: Flector;
+
+    self_4805 = self_4804;
+    other_4397 = other_4396;
+    let _e4: MultiVector = self_4805;
+    let _e5: Flector = other_4397;
+    let _e6: MultiVector = multi_vector_flector_outer_product(_e4, _e5);
+    let _e7: MultiVector = multi_vector_attitude(_e6);
+    let _e8: Scalar = multi_vector_bulk_norm(_e7);
+    let _e9: MultiVector = self_4805;
+    let _e10: Flector = other_4397;
+    let _e11: MultiVector = flector_attitude(_e10);
+    let _e12: MultiVector = multi_vector_multi_vector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
+    let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
+    return _e14;
+}
+
+fn multi_vector_multi_vector_distance(self_4806: MultiVector, other_4398: MultiVector) -> HomogeneousMagnitude {
+    var self_4807: MultiVector;
+    var other_4399: MultiVector;
+
+    self_4807 = self_4806;
+    other_4399 = other_4398;
+    let _e4: MultiVector = self_4807;
+    let _e5: MultiVector = other_4399;
+    let _e6: MultiVector = multi_vector_multi_vector_outer_product(_e4, _e5);
+    let _e7: MultiVector = multi_vector_attitude(_e6);
+    let _e8: Scalar = multi_vector_bulk_norm(_e7);
+    let _e9: MultiVector = self_4807;
+    let _e10: MultiVector = other_4399;
+    let _e11: MultiVector = multi_vector_attitude(_e10);
+    let _e12: MultiVector = multi_vector_multi_vector_outer_product(_e9, _e11);
+    let _e13: AntiScalar = multi_vector_weight_norm(_e12);
     let _e14: HomogeneousMagnitude = scalar_anti_scalar_add(_e8, _e13);
     return _e14;
 }

@@ -8199,148 +8199,97 @@ MultiVector multi_vector_attitude(MultiVector self) {
     return multi_vector_plane_regressive_product(self, Plane(vec4(0.0, 0.0, 0.0, 1.0)));
 }
 
-Flector anti_scalar_flector_geometric_quotient(AntiScalar self, Flector other) {
-    return anti_scalar_flector_geometric_product(self, flector_inverse(other));
+Scalar scalar_powi(Scalar self, int exponent) {
+    if(exponent == 0) {
+        return scalar_one();
+    }
+    Scalar x = (exponent < 0) ? scalar_inverse(self) : self;
+    Scalar y = scalar_one();
+    int n = abs(exponent);
+    while(1 < n) {
+        if((n & 1) == 1) {
+            y = scalar_scalar_geometric_product(x, y);
+        }
+        x = scalar_scalar_geometric_product(x, x);
+        n = n >> 1;
+    }
+    return scalar_scalar_geometric_product(x, y);
 }
 
-Flector anti_scalar_flector_transformation(AntiScalar self, Flector other) {
-    return flector_anti_scalar_geometric_product(anti_scalar_flector_geometric_product(self, other), anti_scalar_reversal(self));
+Scalar scalar_scalar_geometric_quotient(Scalar self, Scalar other) {
+    return scalar_scalar_geometric_product(self, scalar_inverse(other));
 }
 
-AntiScalar anti_scalar_homogeneous_magnitude_geometric_quotient(AntiScalar self, HomogeneousMagnitude other) {
-    return anti_scalar_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
+HomogeneousMagnitude scalar_homogeneous_magnitude_geometric_quotient(Scalar self, HomogeneousMagnitude other) {
+    return scalar_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
 }
 
-Rotor anti_scalar_line_geometric_quotient(AntiScalar self, Line other) {
-    return anti_scalar_line_geometric_product(self, line_inverse(other));
+Point scalar_point_geometric_quotient(Scalar self, Point other) {
+    return scalar_point_geometric_product(self, point_inverse(other));
 }
 
-Rotor anti_scalar_motor_geometric_quotient(AntiScalar self, Motor other) {
-    return anti_scalar_motor_geometric_product(self, motor_inverse(other));
+Line scalar_line_geometric_quotient(Scalar self, Line other) {
+    return scalar_line_geometric_product(self, line_inverse(other));
 }
 
-MultiVector anti_scalar_multi_vector_geometric_quotient(AntiScalar self, MultiVector other) {
-    return anti_scalar_multi_vector_geometric_product(self, multi_vector_inverse(other));
+Plane scalar_plane_geometric_quotient(Scalar self, Plane other) {
+    return scalar_plane_geometric_product(self, plane_inverse(other));
 }
 
-MultiVector anti_scalar_multi_vector_transformation(AntiScalar self, MultiVector other) {
-    return multi_vector_anti_scalar_geometric_product(anti_scalar_multi_vector_geometric_product(self, other), anti_scalar_reversal(self));
+Motor scalar_motor_geometric_quotient(Scalar self, Motor other) {
+    return scalar_motor_geometric_product(self, motor_inverse(other));
 }
 
-Point anti_scalar_plane_geometric_quotient(AntiScalar self, Plane other) {
-    return anti_scalar_plane_geometric_product(self, plane_inverse(other));
+Translator scalar_translator_geometric_quotient(Scalar self, Translator other) {
+    return scalar_translator_geometric_product(self, translator_inverse(other));
 }
 
-Plane anti_scalar_plane_transformation(AntiScalar self, Plane other) {
-    return point_anti_scalar_geometric_product(anti_scalar_plane_geometric_product(self, other), anti_scalar_reversal(self));
+Flector scalar_flector_geometric_quotient(Scalar self, Flector other) {
+    return scalar_flector_geometric_product(self, flector_inverse(other));
 }
 
-Plane anti_scalar_point_geometric_quotient(AntiScalar self, Point other) {
-    return anti_scalar_point_geometric_product(self, point_inverse(other));
-}
-
-Point anti_scalar_point_transformation(AntiScalar self, Point other) {
-    return plane_anti_scalar_geometric_product(anti_scalar_point_geometric_product(self, other), anti_scalar_reversal(self));
+MultiVector scalar_multi_vector_geometric_quotient(Scalar self, MultiVector other) {
+    return scalar_multi_vector_geometric_product(self, multi_vector_inverse(other));
 }
 
 AntiScalar anti_scalar_scalar_geometric_quotient(AntiScalar self, Scalar other) {
     return anti_scalar_scalar_geometric_product(self, scalar_inverse(other));
 }
 
+AntiScalar anti_scalar_homogeneous_magnitude_geometric_quotient(AntiScalar self, HomogeneousMagnitude other) {
+    return anti_scalar_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
+}
+
+Plane anti_scalar_point_geometric_quotient(AntiScalar self, Point other) {
+    return anti_scalar_point_geometric_product(self, point_inverse(other));
+}
+
+Rotor anti_scalar_line_geometric_quotient(AntiScalar self, Line other) {
+    return anti_scalar_line_geometric_product(self, line_inverse(other));
+}
+
+Point anti_scalar_plane_geometric_quotient(AntiScalar self, Plane other) {
+    return anti_scalar_plane_geometric_product(self, plane_inverse(other));
+}
+
+Rotor anti_scalar_motor_geometric_quotient(AntiScalar self, Motor other) {
+    return anti_scalar_motor_geometric_product(self, motor_inverse(other));
+}
+
 Rotor anti_scalar_translator_geometric_quotient(AntiScalar self, Translator other) {
     return anti_scalar_translator_geometric_product(self, translator_inverse(other));
 }
 
-AntiScalar flector_anti_scalar_transformation(Flector self, AntiScalar other) {
-    return multi_vector_anti_scalar_into(flector_flector_geometric_product(flector_anti_scalar_geometric_product(self, other), flector_reversal(self)));
+Flector anti_scalar_flector_geometric_quotient(AntiScalar self, Flector other) {
+    return anti_scalar_flector_geometric_product(self, flector_inverse(other));
 }
 
-MultiVector flector_flector_geometric_quotient(Flector self, Flector other) {
-    return flector_flector_geometric_product(self, flector_inverse(other));
+MultiVector anti_scalar_multi_vector_geometric_quotient(AntiScalar self, MultiVector other) {
+    return anti_scalar_multi_vector_geometric_product(self, multi_vector_inverse(other));
 }
 
-Flector flector_flector_transformation(Flector self, Flector other) {
-    return multi_vector_flector_into(multi_vector_flector_geometric_product(flector_flector_geometric_product(self, other), flector_reversal(self)));
-}
-
-Flector flector_homogeneous_magnitude_geometric_quotient(Flector self, HomogeneousMagnitude other) {
-    return flector_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
-}
-
-HomogeneousMagnitude flector_homogeneous_magnitude_transformation(Flector self, HomogeneousMagnitude other) {
-    return multi_vector_homogeneous_magnitude_into(flector_flector_geometric_product(flector_homogeneous_magnitude_geometric_product(self, other), flector_reversal(self)));
-}
-
-Flector flector_line_geometric_quotient(Flector self, Line other) {
-    return flector_line_geometric_product(self, line_inverse(other));
-}
-
-Line flector_line_transformation(Flector self, Line other) {
-    return multi_vector_line_into(flector_flector_geometric_product(flector_line_geometric_product(self, other), flector_reversal(self)));
-}
-
-Flector flector_motor_geometric_quotient(Flector self, Motor other) {
-    return flector_motor_geometric_product(self, motor_inverse(other));
-}
-
-Motor flector_motor_transformation(Flector self, Motor other) {
-    return multi_vector_motor_into(flector_flector_geometric_product(flector_motor_geometric_product(self, other), flector_reversal(self)));
-}
-
-MultiVector flector_multi_vector_geometric_quotient(Flector self, MultiVector other) {
-    return flector_multi_vector_geometric_product(self, multi_vector_inverse(other));
-}
-
-MultiVector flector_multi_vector_transformation(Flector self, MultiVector other) {
-    return multi_vector_flector_geometric_product(flector_multi_vector_geometric_product(self, other), flector_reversal(self));
-}
-
-MultiVector flector_plane_geometric_quotient(Flector self, Plane other) {
-    return flector_plane_geometric_product(self, plane_inverse(other));
-}
-
-Plane flector_plane_transformation(Flector self, Plane other) {
-    return multi_vector_plane_into(multi_vector_flector_geometric_product(flector_plane_geometric_product(self, other), flector_reversal(self)));
-}
-
-MultiVector flector_point_geometric_quotient(Flector self, Point other) {
-    return flector_point_geometric_product(self, point_inverse(other));
-}
-
-Point flector_point_transformation(Flector self, Point other) {
-    return multi_vector_point_into(multi_vector_flector_geometric_product(flector_point_geometric_product(self, other), flector_reversal(self)));
-}
-
-Rotor flector_rotor_transformation(Flector self, Rotor other) {
-    return multi_vector_rotor_into(flector_flector_geometric_product(flector_rotor_geometric_product(self, other), flector_reversal(self)));
-}
-
-Flector flector_scalar_geometric_quotient(Flector self, Scalar other) {
-    return flector_scalar_geometric_product(self, scalar_inverse(other));
-}
-
-Scalar flector_scalar_transformation(Flector self, Scalar other) {
-    return multi_vector_scalar_into(flector_flector_geometric_product(flector_scalar_geometric_product(self, other), flector_reversal(self)));
-}
-
-Flector flector_translator_geometric_quotient(Flector self, Translator other) {
-    return flector_translator_geometric_product(self, translator_inverse(other));
-}
-
-Translator flector_translator_transformation(Flector self, Translator other) {
-    return multi_vector_translator_into(flector_flector_geometric_product(flector_translator_geometric_product(self, other), flector_reversal(self)));
-}
-
-AntiScalar homogeneous_magnitude_anti_scalar_transformation(HomogeneousMagnitude self, AntiScalar other) {
-    return anti_scalar_homogeneous_magnitude_geometric_product(homogeneous_magnitude_anti_scalar_geometric_product(self, other), homogeneous_magnitude_reversal(self));
-}
-
-Flector homogeneous_magnitude_flector_geometric_quotient(HomogeneousMagnitude self, Flector other) {
-    return homogeneous_magnitude_flector_geometric_product(self, flector_inverse(other));
-}
-
-Flector homogeneous_magnitude_flector_transformation(HomogeneousMagnitude self, Flector other) {
-    return flector_homogeneous_magnitude_geometric_product(homogeneous_magnitude_flector_geometric_product(self, other), homogeneous_magnitude_reversal(self));
+HomogeneousMagnitude homogeneous_magnitude_scalar_geometric_quotient(HomogeneousMagnitude self, Scalar other) {
+    return homogeneous_magnitude_scalar_geometric_product(self, scalar_inverse(other));
 }
 
 HomogeneousMagnitude homogeneous_magnitude_powi(HomogeneousMagnitude self, int exponent) {
@@ -8364,264 +8313,316 @@ HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_geometric_quoti
     return homogeneous_magnitude_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
 }
 
-HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_transformation(HomogeneousMagnitude self, HomogeneousMagnitude other) {
-    return homogeneous_magnitude_homogeneous_magnitude_geometric_product(homogeneous_magnitude_homogeneous_magnitude_geometric_product(self, other), homogeneous_magnitude_reversal(self));
+Flector homogeneous_magnitude_point_geometric_quotient(HomogeneousMagnitude self, Point other) {
+    return homogeneous_magnitude_point_geometric_product(self, point_inverse(other));
 }
 
 Line homogeneous_magnitude_line_geometric_quotient(HomogeneousMagnitude self, Line other) {
     return homogeneous_magnitude_line_geometric_product(self, line_inverse(other));
 }
 
-Line homogeneous_magnitude_line_transformation(HomogeneousMagnitude self, Line other) {
-    return line_homogeneous_magnitude_geometric_product(homogeneous_magnitude_line_geometric_product(self, other), homogeneous_magnitude_reversal(self));
+Flector homogeneous_magnitude_plane_geometric_quotient(HomogeneousMagnitude self, Plane other) {
+    return homogeneous_magnitude_plane_geometric_product(self, plane_inverse(other));
 }
 
 Motor homogeneous_magnitude_motor_geometric_quotient(HomogeneousMagnitude self, Motor other) {
     return homogeneous_magnitude_motor_geometric_product(self, motor_inverse(other));
 }
 
-Motor homogeneous_magnitude_motor_transformation(HomogeneousMagnitude self, Motor other) {
-    return motor_homogeneous_magnitude_geometric_product(homogeneous_magnitude_motor_geometric_product(self, other), homogeneous_magnitude_reversal(self));
+Motor homogeneous_magnitude_translator_geometric_quotient(HomogeneousMagnitude self, Translator other) {
+    return homogeneous_magnitude_translator_geometric_product(self, translator_inverse(other));
+}
+
+Flector homogeneous_magnitude_flector_geometric_quotient(HomogeneousMagnitude self, Flector other) {
+    return homogeneous_magnitude_flector_geometric_product(self, flector_inverse(other));
 }
 
 MultiVector homogeneous_magnitude_multi_vector_geometric_quotient(HomogeneousMagnitude self, MultiVector other) {
     return homogeneous_magnitude_multi_vector_geometric_product(self, multi_vector_inverse(other));
 }
 
-MultiVector homogeneous_magnitude_multi_vector_transformation(HomogeneousMagnitude self, MultiVector other) {
-    return multi_vector_homogeneous_magnitude_geometric_product(homogeneous_magnitude_multi_vector_geometric_product(self, other), homogeneous_magnitude_reversal(self));
+Point point_scalar_geometric_quotient(Point self, Scalar other) {
+    return point_scalar_geometric_product(self, scalar_inverse(other));
 }
 
-Flector homogeneous_magnitude_plane_geometric_quotient(HomogeneousMagnitude self, Plane other) {
-    return homogeneous_magnitude_plane_geometric_product(self, plane_inverse(other));
+Flector point_homogeneous_magnitude_geometric_quotient(Point self, HomogeneousMagnitude other) {
+    return point_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
 }
 
-Plane homogeneous_magnitude_plane_transformation(HomogeneousMagnitude self, Plane other) {
-    return flector_plane_into(flector_homogeneous_magnitude_geometric_product(homogeneous_magnitude_plane_geometric_product(self, other), homogeneous_magnitude_reversal(self)));
+MultiVector point_point_geometric_quotient(Point self, Point other) {
+    return point_point_geometric_product(self, point_inverse(other));
 }
 
-Flector homogeneous_magnitude_point_geometric_quotient(HomogeneousMagnitude self, Point other) {
-    return homogeneous_magnitude_point_geometric_product(self, point_inverse(other));
+Flector point_line_geometric_quotient(Point self, Line other) {
+    return point_line_geometric_product(self, line_inverse(other));
 }
 
-Point homogeneous_magnitude_point_transformation(HomogeneousMagnitude self, Point other) {
-    return flector_point_into(flector_homogeneous_magnitude_geometric_product(homogeneous_magnitude_point_geometric_product(self, other), homogeneous_magnitude_reversal(self)));
+Motor point_plane_geometric_quotient(Point self, Plane other) {
+    return point_plane_geometric_product(self, plane_inverse(other));
 }
 
-Rotor homogeneous_magnitude_rotor_transformation(HomogeneousMagnitude self, Rotor other) {
-    return rotor_homogeneous_magnitude_geometric_product(homogeneous_magnitude_rotor_geometric_product(self, other), homogeneous_magnitude_reversal(self));
+Flector point_motor_geometric_quotient(Point self, Motor other) {
+    return point_motor_geometric_product(self, motor_inverse(other));
 }
 
-HomogeneousMagnitude homogeneous_magnitude_scalar_geometric_quotient(HomogeneousMagnitude self, Scalar other) {
-    return homogeneous_magnitude_scalar_geometric_product(self, scalar_inverse(other));
+Flector point_translator_geometric_quotient(Point self, Translator other) {
+    return point_translator_geometric_product(self, translator_inverse(other));
 }
 
-Scalar homogeneous_magnitude_scalar_transformation(HomogeneousMagnitude self, Scalar other) {
-    return homogeneous_magnitude_scalar_into(homogeneous_magnitude_homogeneous_magnitude_geometric_product(homogeneous_magnitude_scalar_geometric_product(self, other), homogeneous_magnitude_reversal(self)));
+MultiVector point_flector_geometric_quotient(Point self, Flector other) {
+    return point_flector_geometric_product(self, flector_inverse(other));
 }
 
-Motor homogeneous_magnitude_translator_geometric_quotient(HomogeneousMagnitude self, Translator other) {
-    return homogeneous_magnitude_translator_geometric_product(self, translator_inverse(other));
-}
-
-Translator homogeneous_magnitude_translator_transformation(HomogeneousMagnitude self, Translator other) {
-    return motor_translator_into(motor_homogeneous_magnitude_geometric_product(homogeneous_magnitude_translator_geometric_product(self, other), homogeneous_magnitude_reversal(self)));
-}
-
-AntiScalar line_anti_scalar_transformation(Line self, AntiScalar other) {
-    return rotor_anti_scalar_into(rotor_line_geometric_product(line_anti_scalar_geometric_product(self, other), line_reversal(self)));
-}
-
-Flector line_flector_geometric_quotient(Line self, Flector other) {
-    return line_flector_geometric_product(self, flector_inverse(other));
-}
-
-Flector line_flector_transformation(Line self, Flector other) {
-    return flector_line_geometric_product(line_flector_geometric_product(self, other), line_reversal(self));
-}
-
-Line line_homogeneous_magnitude_geometric_quotient(Line self, HomogeneousMagnitude other) {
-    return line_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
-}
-
-HomogeneousMagnitude line_homogeneous_magnitude_transformation(Line self, HomogeneousMagnitude other) {
-    return multi_vector_homogeneous_magnitude_into(line_line_geometric_product(line_homogeneous_magnitude_geometric_product(self, other), line_reversal(self)));
-}
-
-MultiVector line_line_geometric_quotient(Line self, Line other) {
-    return line_line_geometric_product(self, line_inverse(other));
-}
-
-Line line_line_transformation(Line self, Line other) {
-    return multi_vector_line_into(multi_vector_line_geometric_product(line_line_geometric_product(self, other), line_reversal(self)));
-}
-
-MultiVector line_motor_geometric_quotient(Line self, Motor other) {
-    return line_motor_geometric_product(self, motor_inverse(other));
-}
-
-Motor line_motor_transformation(Line self, Motor other) {
-    return multi_vector_motor_into(multi_vector_line_geometric_product(line_motor_geometric_product(self, other), line_reversal(self)));
-}
-
-MultiVector line_multi_vector_geometric_quotient(Line self, MultiVector other) {
-    return line_multi_vector_geometric_product(self, multi_vector_inverse(other));
-}
-
-MultiVector line_multi_vector_transformation(Line self, MultiVector other) {
-    return multi_vector_line_geometric_product(line_multi_vector_geometric_product(self, other), line_reversal(self));
-}
-
-Flector line_plane_geometric_quotient(Line self, Plane other) {
-    return line_plane_geometric_product(self, plane_inverse(other));
-}
-
-Plane line_plane_transformation(Line self, Plane other) {
-    return flector_plane_into(flector_line_geometric_product(line_plane_geometric_product(self, other), line_reversal(self)));
-}
-
-Flector line_point_geometric_quotient(Line self, Point other) {
-    return line_point_geometric_product(self, point_inverse(other));
-}
-
-Point line_point_transformation(Line self, Point other) {
-    return flector_point_into(flector_line_geometric_product(line_point_geometric_product(self, other), line_reversal(self)));
-}
-
-Rotor line_rotor_transformation(Line self, Rotor other) {
-    return rotor_line_geometric_product(line_rotor_geometric_product(self, other), line_reversal(self));
+MultiVector point_multi_vector_geometric_quotient(Point self, MultiVector other) {
+    return point_multi_vector_geometric_product(self, multi_vector_inverse(other));
 }
 
 Line line_scalar_geometric_quotient(Line self, Scalar other) {
     return line_scalar_geometric_product(self, scalar_inverse(other));
 }
 
-Scalar line_scalar_transformation(Line self, Scalar other) {
-    return multi_vector_scalar_into(line_line_geometric_product(line_scalar_geometric_product(self, other), line_reversal(self)));
+Line line_homogeneous_magnitude_geometric_quotient(Line self, HomogeneousMagnitude other) {
+    return line_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
+}
+
+Flector line_point_geometric_quotient(Line self, Point other) {
+    return line_point_geometric_product(self, point_inverse(other));
+}
+
+MultiVector line_line_geometric_quotient(Line self, Line other) {
+    return line_line_geometric_product(self, line_inverse(other));
+}
+
+Flector line_plane_geometric_quotient(Line self, Plane other) {
+    return line_plane_geometric_product(self, plane_inverse(other));
+}
+
+MultiVector line_motor_geometric_quotient(Line self, Motor other) {
+    return line_motor_geometric_product(self, motor_inverse(other));
 }
 
 MultiVector line_translator_geometric_quotient(Line self, Translator other) {
     return line_translator_geometric_product(self, translator_inverse(other));
 }
 
-Translator line_translator_transformation(Line self, Translator other) {
-    return multi_vector_translator_into(multi_vector_line_geometric_product(line_translator_geometric_product(self, other), line_reversal(self)));
+Flector line_flector_geometric_quotient(Line self, Flector other) {
+    return line_flector_geometric_product(self, flector_inverse(other));
 }
 
-AntiScalar motor_anti_scalar_transformation(Motor self, AntiScalar other) {
-    return rotor_anti_scalar_into(rotor_motor_geometric_product(motor_anti_scalar_geometric_product(self, other), motor_reversal(self)));
+MultiVector line_multi_vector_geometric_quotient(Line self, MultiVector other) {
+    return line_multi_vector_geometric_product(self, multi_vector_inverse(other));
 }
 
-Flector motor_flector_geometric_quotient(Motor self, Flector other) {
-    return motor_flector_geometric_product(self, flector_inverse(other));
+Plane plane_scalar_geometric_quotient(Plane self, Scalar other) {
+    return plane_scalar_geometric_product(self, scalar_inverse(other));
 }
 
-Flector motor_flector_transformation(Motor self, Flector other) {
-    return flector_motor_geometric_product(motor_flector_geometric_product(self, other), motor_reversal(self));
+Flector plane_homogeneous_magnitude_geometric_quotient(Plane self, HomogeneousMagnitude other) {
+    return plane_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
 }
 
-Motor motor_homogeneous_magnitude_geometric_quotient(Motor self, HomogeneousMagnitude other) {
-    return motor_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
+Motor plane_point_geometric_quotient(Plane self, Point other) {
+    return plane_point_geometric_product(self, point_inverse(other));
 }
 
-HomogeneousMagnitude motor_homogeneous_magnitude_transformation(Motor self, HomogeneousMagnitude other) {
-    return multi_vector_homogeneous_magnitude_into(motor_motor_geometric_product(motor_homogeneous_magnitude_geometric_product(self, other), motor_reversal(self)));
+Flector plane_line_geometric_quotient(Plane self, Line other) {
+    return plane_line_geometric_product(self, line_inverse(other));
 }
 
-MultiVector motor_line_geometric_quotient(Motor self, Line other) {
-    return motor_line_geometric_product(self, line_inverse(other));
+MultiVector plane_plane_geometric_quotient(Plane self, Plane other) {
+    return plane_plane_geometric_product(self, plane_inverse(other));
 }
 
-Line motor_line_transformation(Motor self, Line other) {
-    return multi_vector_line_into(multi_vector_motor_geometric_product(motor_line_geometric_product(self, other), motor_reversal(self)));
+Flector plane_motor_geometric_quotient(Plane self, Motor other) {
+    return plane_motor_geometric_product(self, motor_inverse(other));
 }
 
-MultiVector motor_motor_geometric_quotient(Motor self, Motor other) {
-    return motor_motor_geometric_product(self, motor_inverse(other));
+Flector plane_translator_geometric_quotient(Plane self, Translator other) {
+    return plane_translator_geometric_product(self, translator_inverse(other));
 }
 
-Motor motor_motor_transformation(Motor self, Motor other) {
-    return multi_vector_motor_into(multi_vector_motor_geometric_product(motor_motor_geometric_product(self, other), motor_reversal(self)));
+MultiVector plane_flector_geometric_quotient(Plane self, Flector other) {
+    return plane_flector_geometric_product(self, flector_inverse(other));
 }
 
-MultiVector motor_multi_vector_geometric_quotient(Motor self, MultiVector other) {
-    return motor_multi_vector_geometric_product(self, multi_vector_inverse(other));
-}
-
-MultiVector motor_multi_vector_transformation(Motor self, MultiVector other) {
-    return multi_vector_motor_geometric_product(motor_multi_vector_geometric_product(self, other), motor_reversal(self));
-}
-
-Flector motor_plane_geometric_quotient(Motor self, Plane other) {
-    return motor_plane_geometric_product(self, plane_inverse(other));
-}
-
-Plane motor_plane_transformation(Motor self, Plane other) {
-    return flector_plane_into(flector_motor_geometric_product(motor_plane_geometric_product(self, other), motor_reversal(self)));
-}
-
-Flector motor_point_geometric_quotient(Motor self, Point other) {
-    return motor_point_geometric_product(self, point_inverse(other));
-}
-
-Point motor_point_transformation(Motor self, Point other) {
-    return flector_point_into(flector_motor_geometric_product(motor_point_geometric_product(self, other), motor_reversal(self)));
-}
-
-Rotor motor_rotor_transformation(Motor self, Rotor other) {
-    return rotor_motor_geometric_product(motor_rotor_geometric_product(self, other), motor_reversal(self));
+MultiVector plane_multi_vector_geometric_quotient(Plane self, MultiVector other) {
+    return plane_multi_vector_geometric_product(self, multi_vector_inverse(other));
 }
 
 Motor motor_scalar_geometric_quotient(Motor self, Scalar other) {
     return motor_scalar_geometric_product(self, scalar_inverse(other));
 }
 
-Scalar motor_scalar_transformation(Motor self, Scalar other) {
-    return multi_vector_scalar_into(motor_motor_geometric_product(motor_scalar_geometric_product(self, other), motor_reversal(self)));
+Motor motor_homogeneous_magnitude_geometric_quotient(Motor self, HomogeneousMagnitude other) {
+    return motor_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
+}
+
+Flector motor_point_geometric_quotient(Motor self, Point other) {
+    return motor_point_geometric_product(self, point_inverse(other));
+}
+
+MultiVector motor_line_geometric_quotient(Motor self, Line other) {
+    return motor_line_geometric_product(self, line_inverse(other));
+}
+
+Flector motor_plane_geometric_quotient(Motor self, Plane other) {
+    return motor_plane_geometric_product(self, plane_inverse(other));
+}
+
+MultiVector motor_motor_geometric_quotient(Motor self, Motor other) {
+    return motor_motor_geometric_product(self, motor_inverse(other));
 }
 
 MultiVector motor_translator_geometric_quotient(Motor self, Translator other) {
     return motor_translator_geometric_product(self, translator_inverse(other));
 }
 
-Translator motor_translator_transformation(Motor self, Translator other) {
-    return multi_vector_translator_into(multi_vector_motor_geometric_product(motor_translator_geometric_product(self, other), motor_reversal(self)));
+Flector motor_flector_geometric_quotient(Motor self, Flector other) {
+    return motor_flector_geometric_product(self, flector_inverse(other));
 }
 
-AntiScalar multi_vector_anti_scalar_transformation(MultiVector self, AntiScalar other) {
-    return multi_vector_anti_scalar_into(multi_vector_multi_vector_geometric_product(multi_vector_anti_scalar_geometric_product(self, other), multi_vector_reversal(self)));
+MultiVector motor_multi_vector_geometric_quotient(Motor self, MultiVector other) {
+    return motor_multi_vector_geometric_product(self, multi_vector_inverse(other));
 }
 
-MultiVector multi_vector_flector_geometric_quotient(MultiVector self, Flector other) {
-    return multi_vector_flector_geometric_product(self, flector_inverse(other));
+Rotor rotor_scalar_geometric_quotient(Rotor self, Scalar other) {
+    return rotor_scalar_geometric_product(self, scalar_inverse(other));
 }
 
-Flector multi_vector_flector_transformation(MultiVector self, Flector other) {
-    return multi_vector_flector_into(multi_vector_multi_vector_geometric_product(multi_vector_flector_geometric_product(self, other), multi_vector_reversal(self)));
+Rotor rotor_homogeneous_magnitude_geometric_quotient(Rotor self, HomogeneousMagnitude other) {
+    return rotor_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
+}
+
+Flector rotor_point_geometric_quotient(Rotor self, Point other) {
+    return rotor_point_geometric_product(self, point_inverse(other));
+}
+
+Rotor rotor_line_geometric_quotient(Rotor self, Line other) {
+    return rotor_line_geometric_product(self, line_inverse(other));
+}
+
+Flector rotor_plane_geometric_quotient(Rotor self, Plane other) {
+    return rotor_plane_geometric_product(self, plane_inverse(other));
+}
+
+Rotor rotor_motor_geometric_quotient(Rotor self, Motor other) {
+    return rotor_motor_geometric_product(self, motor_inverse(other));
+}
+
+Rotor rotor_translator_geometric_quotient(Rotor self, Translator other) {
+    return rotor_translator_geometric_product(self, translator_inverse(other));
+}
+
+Flector rotor_flector_geometric_quotient(Rotor self, Flector other) {
+    return rotor_flector_geometric_product(self, flector_inverse(other));
+}
+
+MultiVector rotor_multi_vector_geometric_quotient(Rotor self, MultiVector other) {
+    return rotor_multi_vector_geometric_product(self, multi_vector_inverse(other));
+}
+
+Translator translator_scalar_geometric_quotient(Translator self, Scalar other) {
+    return translator_scalar_geometric_product(self, scalar_inverse(other));
+}
+
+Motor translator_homogeneous_magnitude_geometric_quotient(Translator self, HomogeneousMagnitude other) {
+    return translator_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
+}
+
+Flector translator_point_geometric_quotient(Translator self, Point other) {
+    return translator_point_geometric_product(self, point_inverse(other));
+}
+
+MultiVector translator_line_geometric_quotient(Translator self, Line other) {
+    return translator_line_geometric_product(self, line_inverse(other));
+}
+
+Flector translator_plane_geometric_quotient(Translator self, Plane other) {
+    return translator_plane_geometric_product(self, plane_inverse(other));
+}
+
+MultiVector translator_motor_geometric_quotient(Translator self, Motor other) {
+    return translator_motor_geometric_product(self, motor_inverse(other));
+}
+
+MultiVector translator_translator_geometric_quotient(Translator self, Translator other) {
+    return translator_translator_geometric_product(self, translator_inverse(other));
+}
+
+Flector translator_flector_geometric_quotient(Translator self, Flector other) {
+    return translator_flector_geometric_product(self, flector_inverse(other));
+}
+
+MultiVector translator_multi_vector_geometric_quotient(Translator self, MultiVector other) {
+    return translator_multi_vector_geometric_product(self, multi_vector_inverse(other));
+}
+
+Flector flector_scalar_geometric_quotient(Flector self, Scalar other) {
+    return flector_scalar_geometric_product(self, scalar_inverse(other));
+}
+
+Flector flector_homogeneous_magnitude_geometric_quotient(Flector self, HomogeneousMagnitude other) {
+    return flector_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
+}
+
+MultiVector flector_point_geometric_quotient(Flector self, Point other) {
+    return flector_point_geometric_product(self, point_inverse(other));
+}
+
+Flector flector_line_geometric_quotient(Flector self, Line other) {
+    return flector_line_geometric_product(self, line_inverse(other));
+}
+
+MultiVector flector_plane_geometric_quotient(Flector self, Plane other) {
+    return flector_plane_geometric_product(self, plane_inverse(other));
+}
+
+Flector flector_motor_geometric_quotient(Flector self, Motor other) {
+    return flector_motor_geometric_product(self, motor_inverse(other));
+}
+
+Flector flector_translator_geometric_quotient(Flector self, Translator other) {
+    return flector_translator_geometric_product(self, translator_inverse(other));
+}
+
+MultiVector flector_flector_geometric_quotient(Flector self, Flector other) {
+    return flector_flector_geometric_product(self, flector_inverse(other));
+}
+
+MultiVector flector_multi_vector_geometric_quotient(Flector self, MultiVector other) {
+    return flector_multi_vector_geometric_product(self, multi_vector_inverse(other));
+}
+
+MultiVector multi_vector_scalar_geometric_quotient(MultiVector self, Scalar other) {
+    return multi_vector_scalar_geometric_product(self, scalar_inverse(other));
 }
 
 MultiVector multi_vector_homogeneous_magnitude_geometric_quotient(MultiVector self, HomogeneousMagnitude other) {
     return multi_vector_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
 }
 
-HomogeneousMagnitude multi_vector_homogeneous_magnitude_transformation(MultiVector self, HomogeneousMagnitude other) {
-    return multi_vector_homogeneous_magnitude_into(multi_vector_multi_vector_geometric_product(multi_vector_homogeneous_magnitude_geometric_product(self, other), multi_vector_reversal(self)));
+MultiVector multi_vector_point_geometric_quotient(MultiVector self, Point other) {
+    return multi_vector_point_geometric_product(self, point_inverse(other));
 }
 
 MultiVector multi_vector_line_geometric_quotient(MultiVector self, Line other) {
     return multi_vector_line_geometric_product(self, line_inverse(other));
 }
 
-Line multi_vector_line_transformation(MultiVector self, Line other) {
-    return multi_vector_line_into(multi_vector_multi_vector_geometric_product(multi_vector_line_geometric_product(self, other), multi_vector_reversal(self)));
+MultiVector multi_vector_plane_geometric_quotient(MultiVector self, Plane other) {
+    return multi_vector_plane_geometric_product(self, plane_inverse(other));
 }
 
 MultiVector multi_vector_motor_geometric_quotient(MultiVector self, Motor other) {
     return multi_vector_motor_geometric_product(self, motor_inverse(other));
 }
 
-Motor multi_vector_motor_transformation(MultiVector self, Motor other) {
-    return multi_vector_motor_into(multi_vector_multi_vector_geometric_product(multi_vector_motor_geometric_product(self, other), multi_vector_reversal(self)));
+MultiVector multi_vector_translator_geometric_quotient(MultiVector self, Translator other) {
+    return multi_vector_translator_geometric_product(self, translator_inverse(other));
+}
+
+MultiVector multi_vector_flector_geometric_quotient(MultiVector self, Flector other) {
+    return multi_vector_flector_geometric_product(self, flector_inverse(other));
 }
 
 MultiVector multi_vector_powi(MultiVector self, int exponent) {
@@ -8645,713 +8646,444 @@ MultiVector multi_vector_multi_vector_geometric_quotient(MultiVector self, Multi
     return multi_vector_multi_vector_geometric_product(self, multi_vector_inverse(other));
 }
 
-MultiVector multi_vector_multi_vector_transformation(MultiVector self, MultiVector other) {
-    return multi_vector_multi_vector_geometric_product(multi_vector_multi_vector_geometric_product(self, other), multi_vector_reversal(self));
-}
-
-MultiVector multi_vector_plane_geometric_quotient(MultiVector self, Plane other) {
-    return multi_vector_plane_geometric_product(self, plane_inverse(other));
-}
-
-Plane multi_vector_plane_transformation(MultiVector self, Plane other) {
-    return multi_vector_plane_into(multi_vector_multi_vector_geometric_product(multi_vector_plane_geometric_product(self, other), multi_vector_reversal(self)));
-}
-
-MultiVector multi_vector_point_geometric_quotient(MultiVector self, Point other) {
-    return multi_vector_point_geometric_product(self, point_inverse(other));
-}
-
-Point multi_vector_point_transformation(MultiVector self, Point other) {
-    return multi_vector_point_into(multi_vector_multi_vector_geometric_product(multi_vector_point_geometric_product(self, other), multi_vector_reversal(self)));
-}
-
-Rotor multi_vector_rotor_transformation(MultiVector self, Rotor other) {
-    return multi_vector_rotor_into(multi_vector_multi_vector_geometric_product(multi_vector_rotor_geometric_product(self, other), multi_vector_reversal(self)));
-}
-
-MultiVector multi_vector_scalar_geometric_quotient(MultiVector self, Scalar other) {
-    return multi_vector_scalar_geometric_product(self, scalar_inverse(other));
-}
-
-Scalar multi_vector_scalar_transformation(MultiVector self, Scalar other) {
-    return multi_vector_scalar_into(multi_vector_multi_vector_geometric_product(multi_vector_scalar_geometric_product(self, other), multi_vector_reversal(self)));
-}
-
-MultiVector multi_vector_translator_geometric_quotient(MultiVector self, Translator other) {
-    return multi_vector_translator_geometric_product(self, translator_inverse(other));
-}
-
-Translator multi_vector_translator_transformation(MultiVector self, Translator other) {
-    return multi_vector_translator_into(multi_vector_multi_vector_geometric_product(multi_vector_translator_geometric_product(self, other), multi_vector_reversal(self)));
-}
-
-AntiScalar plane_anti_scalar_transformation(Plane self, AntiScalar other) {
-    return motor_anti_scalar_into(point_plane_geometric_product(plane_anti_scalar_geometric_product(self, other), plane_reversal(self)));
-}
-
-MultiVector plane_flector_geometric_quotient(Plane self, Flector other) {
-    return plane_flector_geometric_product(self, flector_inverse(other));
-}
-
-Flector plane_flector_transformation(Plane self, Flector other) {
-    return multi_vector_flector_into(multi_vector_plane_geometric_product(plane_flector_geometric_product(self, other), plane_reversal(self)));
-}
-
-Flector plane_homogeneous_magnitude_geometric_quotient(Plane self, HomogeneousMagnitude other) {
-    return plane_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
-}
-
-HomogeneousMagnitude plane_homogeneous_magnitude_transformation(Plane self, HomogeneousMagnitude other) {
-    return multi_vector_homogeneous_magnitude_into(flector_plane_geometric_product(plane_homogeneous_magnitude_geometric_product(self, other), plane_reversal(self)));
-}
-
-Flector plane_line_geometric_quotient(Plane self, Line other) {
-    return plane_line_geometric_product(self, line_inverse(other));
-}
-
-Line plane_line_transformation(Plane self, Line other) {
-    return multi_vector_line_into(flector_plane_geometric_product(plane_line_geometric_product(self, other), plane_reversal(self)));
-}
-
-Flector plane_motor_geometric_quotient(Plane self, Motor other) {
-    return plane_motor_geometric_product(self, motor_inverse(other));
-}
-
-Motor plane_motor_transformation(Plane self, Motor other) {
-    return multi_vector_motor_into(flector_plane_geometric_product(plane_motor_geometric_product(self, other), plane_reversal(self)));
-}
-
-MultiVector plane_multi_vector_geometric_quotient(Plane self, MultiVector other) {
-    return plane_multi_vector_geometric_product(self, multi_vector_inverse(other));
-}
-
-MultiVector plane_multi_vector_transformation(Plane self, MultiVector other) {
-    return multi_vector_plane_geometric_product(plane_multi_vector_geometric_product(self, other), plane_reversal(self));
-}
-
-MultiVector plane_plane_geometric_quotient(Plane self, Plane other) {
-    return plane_plane_geometric_product(self, plane_inverse(other));
-}
-
-Plane plane_plane_transformation(Plane self, Plane other) {
-    return multi_vector_plane_into(multi_vector_plane_geometric_product(plane_plane_geometric_product(self, other), plane_reversal(self)));
-}
-
-Motor plane_point_geometric_quotient(Plane self, Point other) {
-    return plane_point_geometric_product(self, point_inverse(other));
-}
-
-Point plane_point_transformation(Plane self, Point other) {
-    return flector_point_into(motor_plane_geometric_product(plane_point_geometric_product(self, other), plane_reversal(self)));
-}
-
-Rotor plane_rotor_transformation(Plane self, Rotor other) {
-    return multi_vector_rotor_into(flector_plane_geometric_product(plane_rotor_geometric_product(self, other), plane_reversal(self)));
-}
-
-Plane plane_scalar_geometric_quotient(Plane self, Scalar other) {
-    return plane_scalar_geometric_product(self, scalar_inverse(other));
-}
-
-Scalar plane_scalar_transformation(Plane self, Scalar other) {
-    return multi_vector_scalar_into(plane_plane_geometric_product(plane_scalar_geometric_product(self, other), plane_reversal(self)));
-}
-
-Flector plane_translator_geometric_quotient(Plane self, Translator other) {
-    return plane_translator_geometric_product(self, translator_inverse(other));
-}
-
-Translator plane_translator_transformation(Plane self, Translator other) {
-    return multi_vector_translator_into(flector_plane_geometric_product(plane_translator_geometric_product(self, other), plane_reversal(self)));
-}
-
-AntiScalar point_anti_scalar_transformation(Point self, AntiScalar other) {
-    return motor_anti_scalar_into(plane_point_geometric_product(point_anti_scalar_geometric_product(self, other), point_reversal(self)));
-}
-
-MultiVector point_flector_geometric_quotient(Point self, Flector other) {
-    return point_flector_geometric_product(self, flector_inverse(other));
-}
-
-Flector point_flector_transformation(Point self, Flector other) {
-    return multi_vector_flector_into(multi_vector_point_geometric_product(point_flector_geometric_product(self, other), point_reversal(self)));
-}
-
-Flector point_homogeneous_magnitude_geometric_quotient(Point self, HomogeneousMagnitude other) {
-    return point_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
-}
-
-HomogeneousMagnitude point_homogeneous_magnitude_transformation(Point self, HomogeneousMagnitude other) {
-    return multi_vector_homogeneous_magnitude_into(flector_point_geometric_product(point_homogeneous_magnitude_geometric_product(self, other), point_reversal(self)));
-}
-
-Flector point_line_geometric_quotient(Point self, Line other) {
-    return point_line_geometric_product(self, line_inverse(other));
-}
-
-Line point_line_transformation(Point self, Line other) {
-    return multi_vector_line_into(flector_point_geometric_product(point_line_geometric_product(self, other), point_reversal(self)));
-}
-
-Flector point_motor_geometric_quotient(Point self, Motor other) {
-    return point_motor_geometric_product(self, motor_inverse(other));
-}
-
-Motor point_motor_transformation(Point self, Motor other) {
-    return multi_vector_motor_into(flector_point_geometric_product(point_motor_geometric_product(self, other), point_reversal(self)));
-}
-
-MultiVector point_multi_vector_geometric_quotient(Point self, MultiVector other) {
-    return point_multi_vector_geometric_product(self, multi_vector_inverse(other));
-}
-
-MultiVector point_multi_vector_transformation(Point self, MultiVector other) {
-    return multi_vector_point_geometric_product(point_multi_vector_geometric_product(self, other), point_reversal(self));
-}
-
-Motor point_plane_geometric_quotient(Point self, Plane other) {
-    return point_plane_geometric_product(self, plane_inverse(other));
-}
-
-Plane point_plane_transformation(Point self, Plane other) {
-    return flector_plane_into(motor_point_geometric_product(point_plane_geometric_product(self, other), point_reversal(self)));
-}
-
-MultiVector point_point_geometric_quotient(Point self, Point other) {
-    return point_point_geometric_product(self, point_inverse(other));
-}
-
-Point point_point_transformation(Point self, Point other) {
-    return multi_vector_point_into(multi_vector_point_geometric_product(point_point_geometric_product(self, other), point_reversal(self)));
-}
-
-Rotor point_rotor_transformation(Point self, Rotor other) {
-    return multi_vector_rotor_into(flector_point_geometric_product(point_rotor_geometric_product(self, other), point_reversal(self)));
-}
-
-Point point_scalar_geometric_quotient(Point self, Scalar other) {
-    return point_scalar_geometric_product(self, scalar_inverse(other));
-}
-
-Scalar point_scalar_transformation(Point self, Scalar other) {
-    return multi_vector_scalar_into(point_point_geometric_product(point_scalar_geometric_product(self, other), point_reversal(self)));
-}
-
-Flector point_translator_geometric_quotient(Point self, Translator other) {
-    return point_translator_geometric_product(self, translator_inverse(other));
-}
-
-Translator point_translator_transformation(Point self, Translator other) {
-    return multi_vector_translator_into(flector_point_geometric_product(point_translator_geometric_product(self, other), point_reversal(self)));
-}
-
-Flector rotor_flector_geometric_quotient(Rotor self, Flector other) {
-    return rotor_flector_geometric_product(self, flector_inverse(other));
-}
-
-Flector rotor_flector_transformation(Rotor self, Flector other) {
-    return flector_rotor_geometric_product(rotor_flector_geometric_product(self, other), rotor_reversal(self));
-}
-
-Rotor rotor_homogeneous_magnitude_geometric_quotient(Rotor self, HomogeneousMagnitude other) {
-    return rotor_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
-}
-
-Rotor rotor_line_geometric_quotient(Rotor self, Line other) {
-    return rotor_line_geometric_product(self, line_inverse(other));
-}
-
-Rotor rotor_motor_geometric_quotient(Rotor self, Motor other) {
-    return rotor_motor_geometric_product(self, motor_inverse(other));
-}
-
-MultiVector rotor_multi_vector_geometric_quotient(Rotor self, MultiVector other) {
-    return rotor_multi_vector_geometric_product(self, multi_vector_inverse(other));
-}
-
-MultiVector rotor_multi_vector_transformation(Rotor self, MultiVector other) {
-    return multi_vector_rotor_geometric_product(rotor_multi_vector_geometric_product(self, other), rotor_reversal(self));
-}
-
-Flector rotor_plane_geometric_quotient(Rotor self, Plane other) {
-    return rotor_plane_geometric_product(self, plane_inverse(other));
-}
-
-Plane rotor_plane_transformation(Rotor self, Plane other) {
-    return flector_plane_into(flector_rotor_geometric_product(rotor_plane_geometric_product(self, other), rotor_reversal(self)));
-}
-
-Flector rotor_point_geometric_quotient(Rotor self, Point other) {
-    return rotor_point_geometric_product(self, point_inverse(other));
-}
-
-Point rotor_point_transformation(Rotor self, Point other) {
-    return flector_point_into(flector_rotor_geometric_product(rotor_point_geometric_product(self, other), rotor_reversal(self)));
-}
-
-Rotor rotor_scalar_geometric_quotient(Rotor self, Scalar other) {
-    return rotor_scalar_geometric_product(self, scalar_inverse(other));
-}
-
-Rotor rotor_translator_geometric_quotient(Rotor self, Translator other) {
-    return rotor_translator_geometric_product(self, translator_inverse(other));
+Scalar scalar_scalar_transformation(Scalar self, Scalar other) {
+    return scalar_scalar_geometric_product(scalar_scalar_geometric_product(self, other), scalar_reversal(self));
 }
 
 AntiScalar scalar_anti_scalar_transformation(Scalar self, AntiScalar other) {
     return anti_scalar_scalar_geometric_product(scalar_anti_scalar_geometric_product(self, other), scalar_reversal(self));
 }
 
-Flector scalar_flector_geometric_quotient(Scalar self, Flector other) {
-    return scalar_flector_geometric_product(self, flector_inverse(other));
-}
-
-Flector scalar_flector_transformation(Scalar self, Flector other) {
-    return flector_scalar_geometric_product(scalar_flector_geometric_product(self, other), scalar_reversal(self));
-}
-
-HomogeneousMagnitude scalar_homogeneous_magnitude_geometric_quotient(Scalar self, HomogeneousMagnitude other) {
-    return scalar_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
-}
-
 HomogeneousMagnitude scalar_homogeneous_magnitude_transformation(Scalar self, HomogeneousMagnitude other) {
     return homogeneous_magnitude_scalar_geometric_product(scalar_homogeneous_magnitude_geometric_product(self, other), scalar_reversal(self));
-}
-
-Line scalar_line_geometric_quotient(Scalar self, Line other) {
-    return scalar_line_geometric_product(self, line_inverse(other));
-}
-
-Line scalar_line_transformation(Scalar self, Line other) {
-    return line_scalar_geometric_product(scalar_line_geometric_product(self, other), scalar_reversal(self));
-}
-
-Motor scalar_motor_geometric_quotient(Scalar self, Motor other) {
-    return scalar_motor_geometric_product(self, motor_inverse(other));
-}
-
-Motor scalar_motor_transformation(Scalar self, Motor other) {
-    return motor_scalar_geometric_product(scalar_motor_geometric_product(self, other), scalar_reversal(self));
-}
-
-MultiVector scalar_multi_vector_geometric_quotient(Scalar self, MultiVector other) {
-    return scalar_multi_vector_geometric_product(self, multi_vector_inverse(other));
-}
-
-MultiVector scalar_multi_vector_transformation(Scalar self, MultiVector other) {
-    return multi_vector_scalar_geometric_product(scalar_multi_vector_geometric_product(self, other), scalar_reversal(self));
-}
-
-Plane scalar_plane_geometric_quotient(Scalar self, Plane other) {
-    return scalar_plane_geometric_product(self, plane_inverse(other));
-}
-
-Plane scalar_plane_transformation(Scalar self, Plane other) {
-    return plane_scalar_geometric_product(scalar_plane_geometric_product(self, other), scalar_reversal(self));
-}
-
-Point scalar_point_geometric_quotient(Scalar self, Point other) {
-    return scalar_point_geometric_product(self, point_inverse(other));
 }
 
 Point scalar_point_transformation(Scalar self, Point other) {
     return point_scalar_geometric_product(scalar_point_geometric_product(self, other), scalar_reversal(self));
 }
 
+Line scalar_line_transformation(Scalar self, Line other) {
+    return line_scalar_geometric_product(scalar_line_geometric_product(self, other), scalar_reversal(self));
+}
+
+Plane scalar_plane_transformation(Scalar self, Plane other) {
+    return plane_scalar_geometric_product(scalar_plane_geometric_product(self, other), scalar_reversal(self));
+}
+
+Motor scalar_motor_transformation(Scalar self, Motor other) {
+    return motor_scalar_geometric_product(scalar_motor_geometric_product(self, other), scalar_reversal(self));
+}
+
 Rotor scalar_rotor_transformation(Scalar self, Rotor other) {
     return rotor_scalar_geometric_product(scalar_rotor_geometric_product(self, other), scalar_reversal(self));
-}
-
-Scalar scalar_powi(Scalar self, int exponent) {
-    if(exponent == 0) {
-        return scalar_one();
-    }
-    Scalar x = (exponent < 0) ? scalar_inverse(self) : self;
-    Scalar y = scalar_one();
-    int n = abs(exponent);
-    while(1 < n) {
-        if((n & 1) == 1) {
-            y = scalar_scalar_geometric_product(x, y);
-        }
-        x = scalar_scalar_geometric_product(x, x);
-        n = n >> 1;
-    }
-    return scalar_scalar_geometric_product(x, y);
-}
-
-Scalar scalar_scalar_geometric_quotient(Scalar self, Scalar other) {
-    return scalar_scalar_geometric_product(self, scalar_inverse(other));
-}
-
-Scalar scalar_scalar_transformation(Scalar self, Scalar other) {
-    return scalar_scalar_geometric_product(scalar_scalar_geometric_product(self, other), scalar_reversal(self));
-}
-
-Translator scalar_translator_geometric_quotient(Scalar self, Translator other) {
-    return scalar_translator_geometric_product(self, translator_inverse(other));
 }
 
 Translator scalar_translator_transformation(Scalar self, Translator other) {
     return translator_scalar_geometric_product(scalar_translator_geometric_product(self, other), scalar_reversal(self));
 }
 
-AntiScalar translator_anti_scalar_transformation(Translator self, AntiScalar other) {
-    return rotor_anti_scalar_into(rotor_translator_geometric_product(translator_anti_scalar_geometric_product(self, other), translator_reversal(self)));
+Flector scalar_flector_transformation(Scalar self, Flector other) {
+    return flector_scalar_geometric_product(scalar_flector_geometric_product(self, other), scalar_reversal(self));
 }
 
-Flector translator_flector_geometric_quotient(Translator self, Flector other) {
-    return translator_flector_geometric_product(self, flector_inverse(other));
+MultiVector scalar_multi_vector_transformation(Scalar self, MultiVector other) {
+    return multi_vector_scalar_geometric_product(scalar_multi_vector_geometric_product(self, other), scalar_reversal(self));
 }
 
-Flector translator_flector_transformation(Translator self, Flector other) {
-    return flector_translator_geometric_product(translator_flector_geometric_product(self, other), translator_reversal(self));
+Point anti_scalar_point_transformation(AntiScalar self, Point other) {
+    return plane_anti_scalar_geometric_product(anti_scalar_point_geometric_product(self, other), anti_scalar_reversal(self));
 }
 
-Motor translator_homogeneous_magnitude_geometric_quotient(Translator self, HomogeneousMagnitude other) {
-    return translator_homogeneous_magnitude_geometric_product(self, homogeneous_magnitude_inverse(other));
+Plane anti_scalar_plane_transformation(AntiScalar self, Plane other) {
+    return point_anti_scalar_geometric_product(anti_scalar_plane_geometric_product(self, other), anti_scalar_reversal(self));
 }
 
-HomogeneousMagnitude translator_homogeneous_magnitude_transformation(Translator self, HomogeneousMagnitude other) {
-    return multi_vector_homogeneous_magnitude_into(motor_translator_geometric_product(translator_homogeneous_magnitude_geometric_product(self, other), translator_reversal(self)));
+Flector anti_scalar_flector_transformation(AntiScalar self, Flector other) {
+    return flector_anti_scalar_geometric_product(anti_scalar_flector_geometric_product(self, other), anti_scalar_reversal(self));
 }
 
-MultiVector translator_line_geometric_quotient(Translator self, Line other) {
-    return translator_line_geometric_product(self, line_inverse(other));
+MultiVector anti_scalar_multi_vector_transformation(AntiScalar self, MultiVector other) {
+    return multi_vector_anti_scalar_geometric_product(anti_scalar_multi_vector_geometric_product(self, other), anti_scalar_reversal(self));
 }
 
-Line translator_line_transformation(Translator self, Line other) {
-    return multi_vector_line_into(multi_vector_translator_geometric_product(translator_line_geometric_product(self, other), translator_reversal(self)));
+Scalar homogeneous_magnitude_scalar_transformation(HomogeneousMagnitude self, Scalar other) {
+    return homogeneous_magnitude_scalar_into(homogeneous_magnitude_homogeneous_magnitude_geometric_product(homogeneous_magnitude_scalar_geometric_product(self, other), homogeneous_magnitude_reversal(self)));
 }
 
-MultiVector translator_motor_geometric_quotient(Translator self, Motor other) {
-    return translator_motor_geometric_product(self, motor_inverse(other));
+AntiScalar homogeneous_magnitude_anti_scalar_transformation(HomogeneousMagnitude self, AntiScalar other) {
+    return anti_scalar_homogeneous_magnitude_geometric_product(homogeneous_magnitude_anti_scalar_geometric_product(self, other), homogeneous_magnitude_reversal(self));
 }
 
-Motor translator_motor_transformation(Translator self, Motor other) {
-    return multi_vector_motor_into(multi_vector_translator_geometric_product(translator_motor_geometric_product(self, other), translator_reversal(self)));
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_transformation(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return homogeneous_magnitude_homogeneous_magnitude_geometric_product(homogeneous_magnitude_homogeneous_magnitude_geometric_product(self, other), homogeneous_magnitude_reversal(self));
 }
 
-MultiVector translator_multi_vector_geometric_quotient(Translator self, MultiVector other) {
-    return translator_multi_vector_geometric_product(self, multi_vector_inverse(other));
+Point homogeneous_magnitude_point_transformation(HomogeneousMagnitude self, Point other) {
+    return flector_point_into(flector_homogeneous_magnitude_geometric_product(homogeneous_magnitude_point_geometric_product(self, other), homogeneous_magnitude_reversal(self)));
 }
 
-MultiVector translator_multi_vector_transformation(Translator self, MultiVector other) {
-    return multi_vector_translator_geometric_product(translator_multi_vector_geometric_product(self, other), translator_reversal(self));
+Line homogeneous_magnitude_line_transformation(HomogeneousMagnitude self, Line other) {
+    return line_homogeneous_magnitude_geometric_product(homogeneous_magnitude_line_geometric_product(self, other), homogeneous_magnitude_reversal(self));
 }
 
-Flector translator_plane_geometric_quotient(Translator self, Plane other) {
-    return translator_plane_geometric_product(self, plane_inverse(other));
+Plane homogeneous_magnitude_plane_transformation(HomogeneousMagnitude self, Plane other) {
+    return flector_plane_into(flector_homogeneous_magnitude_geometric_product(homogeneous_magnitude_plane_geometric_product(self, other), homogeneous_magnitude_reversal(self)));
 }
 
-Plane translator_plane_transformation(Translator self, Plane other) {
-    return flector_plane_into(flector_translator_geometric_product(translator_plane_geometric_product(self, other), translator_reversal(self)));
+Motor homogeneous_magnitude_motor_transformation(HomogeneousMagnitude self, Motor other) {
+    return motor_homogeneous_magnitude_geometric_product(homogeneous_magnitude_motor_geometric_product(self, other), homogeneous_magnitude_reversal(self));
 }
 
-Flector translator_point_geometric_quotient(Translator self, Point other) {
-    return translator_point_geometric_product(self, point_inverse(other));
+Rotor homogeneous_magnitude_rotor_transformation(HomogeneousMagnitude self, Rotor other) {
+    return rotor_homogeneous_magnitude_geometric_product(homogeneous_magnitude_rotor_geometric_product(self, other), homogeneous_magnitude_reversal(self));
 }
 
-Point translator_point_transformation(Translator self, Point other) {
-    return flector_point_into(flector_translator_geometric_product(translator_point_geometric_product(self, other), translator_reversal(self)));
+Translator homogeneous_magnitude_translator_transformation(HomogeneousMagnitude self, Translator other) {
+    return motor_translator_into(motor_homogeneous_magnitude_geometric_product(homogeneous_magnitude_translator_geometric_product(self, other), homogeneous_magnitude_reversal(self)));
 }
 
-Rotor translator_rotor_transformation(Translator self, Rotor other) {
-    return rotor_translator_geometric_product(translator_rotor_geometric_product(self, other), translator_reversal(self));
+Flector homogeneous_magnitude_flector_transformation(HomogeneousMagnitude self, Flector other) {
+    return flector_homogeneous_magnitude_geometric_product(homogeneous_magnitude_flector_geometric_product(self, other), homogeneous_magnitude_reversal(self));
 }
 
-Translator translator_scalar_geometric_quotient(Translator self, Scalar other) {
-    return translator_scalar_geometric_product(self, scalar_inverse(other));
+MultiVector homogeneous_magnitude_multi_vector_transformation(HomogeneousMagnitude self, MultiVector other) {
+    return multi_vector_homogeneous_magnitude_geometric_product(homogeneous_magnitude_multi_vector_geometric_product(self, other), homogeneous_magnitude_reversal(self));
+}
+
+Scalar point_scalar_transformation(Point self, Scalar other) {
+    return multi_vector_scalar_into(point_point_geometric_product(point_scalar_geometric_product(self, other), point_reversal(self)));
+}
+
+AntiScalar point_anti_scalar_transformation(Point self, AntiScalar other) {
+    return motor_anti_scalar_into(plane_point_geometric_product(point_anti_scalar_geometric_product(self, other), point_reversal(self)));
+}
+
+HomogeneousMagnitude point_homogeneous_magnitude_transformation(Point self, HomogeneousMagnitude other) {
+    return multi_vector_homogeneous_magnitude_into(flector_point_geometric_product(point_homogeneous_magnitude_geometric_product(self, other), point_reversal(self)));
+}
+
+Point point_point_transformation(Point self, Point other) {
+    return multi_vector_point_into(multi_vector_point_geometric_product(point_point_geometric_product(self, other), point_reversal(self)));
+}
+
+Line point_line_transformation(Point self, Line other) {
+    return multi_vector_line_into(flector_point_geometric_product(point_line_geometric_product(self, other), point_reversal(self)));
+}
+
+Plane point_plane_transformation(Point self, Plane other) {
+    return flector_plane_into(motor_point_geometric_product(point_plane_geometric_product(self, other), point_reversal(self)));
+}
+
+Motor point_motor_transformation(Point self, Motor other) {
+    return multi_vector_motor_into(flector_point_geometric_product(point_motor_geometric_product(self, other), point_reversal(self)));
+}
+
+Rotor point_rotor_transformation(Point self, Rotor other) {
+    return multi_vector_rotor_into(flector_point_geometric_product(point_rotor_geometric_product(self, other), point_reversal(self)));
+}
+
+Translator point_translator_transformation(Point self, Translator other) {
+    return multi_vector_translator_into(flector_point_geometric_product(point_translator_geometric_product(self, other), point_reversal(self)));
+}
+
+Flector point_flector_transformation(Point self, Flector other) {
+    return multi_vector_flector_into(multi_vector_point_geometric_product(point_flector_geometric_product(self, other), point_reversal(self)));
+}
+
+MultiVector point_multi_vector_transformation(Point self, MultiVector other) {
+    return multi_vector_point_geometric_product(point_multi_vector_geometric_product(self, other), point_reversal(self));
+}
+
+Scalar line_scalar_transformation(Line self, Scalar other) {
+    return multi_vector_scalar_into(line_line_geometric_product(line_scalar_geometric_product(self, other), line_reversal(self)));
+}
+
+AntiScalar line_anti_scalar_transformation(Line self, AntiScalar other) {
+    return rotor_anti_scalar_into(rotor_line_geometric_product(line_anti_scalar_geometric_product(self, other), line_reversal(self)));
+}
+
+HomogeneousMagnitude line_homogeneous_magnitude_transformation(Line self, HomogeneousMagnitude other) {
+    return multi_vector_homogeneous_magnitude_into(line_line_geometric_product(line_homogeneous_magnitude_geometric_product(self, other), line_reversal(self)));
+}
+
+Point line_point_transformation(Line self, Point other) {
+    return flector_point_into(flector_line_geometric_product(line_point_geometric_product(self, other), line_reversal(self)));
+}
+
+Line line_line_transformation(Line self, Line other) {
+    return multi_vector_line_into(multi_vector_line_geometric_product(line_line_geometric_product(self, other), line_reversal(self)));
+}
+
+Plane line_plane_transformation(Line self, Plane other) {
+    return flector_plane_into(flector_line_geometric_product(line_plane_geometric_product(self, other), line_reversal(self)));
+}
+
+Motor line_motor_transformation(Line self, Motor other) {
+    return multi_vector_motor_into(multi_vector_line_geometric_product(line_motor_geometric_product(self, other), line_reversal(self)));
+}
+
+Rotor line_rotor_transformation(Line self, Rotor other) {
+    return rotor_line_geometric_product(line_rotor_geometric_product(self, other), line_reversal(self));
+}
+
+Translator line_translator_transformation(Line self, Translator other) {
+    return multi_vector_translator_into(multi_vector_line_geometric_product(line_translator_geometric_product(self, other), line_reversal(self)));
+}
+
+Flector line_flector_transformation(Line self, Flector other) {
+    return flector_line_geometric_product(line_flector_geometric_product(self, other), line_reversal(self));
+}
+
+MultiVector line_multi_vector_transformation(Line self, MultiVector other) {
+    return multi_vector_line_geometric_product(line_multi_vector_geometric_product(self, other), line_reversal(self));
+}
+
+Scalar plane_scalar_transformation(Plane self, Scalar other) {
+    return multi_vector_scalar_into(plane_plane_geometric_product(plane_scalar_geometric_product(self, other), plane_reversal(self)));
+}
+
+AntiScalar plane_anti_scalar_transformation(Plane self, AntiScalar other) {
+    return motor_anti_scalar_into(point_plane_geometric_product(plane_anti_scalar_geometric_product(self, other), plane_reversal(self)));
+}
+
+HomogeneousMagnitude plane_homogeneous_magnitude_transformation(Plane self, HomogeneousMagnitude other) {
+    return multi_vector_homogeneous_magnitude_into(flector_plane_geometric_product(plane_homogeneous_magnitude_geometric_product(self, other), plane_reversal(self)));
+}
+
+Point plane_point_transformation(Plane self, Point other) {
+    return flector_point_into(motor_plane_geometric_product(plane_point_geometric_product(self, other), plane_reversal(self)));
+}
+
+Line plane_line_transformation(Plane self, Line other) {
+    return multi_vector_line_into(flector_plane_geometric_product(plane_line_geometric_product(self, other), plane_reversal(self)));
+}
+
+Plane plane_plane_transformation(Plane self, Plane other) {
+    return multi_vector_plane_into(multi_vector_plane_geometric_product(plane_plane_geometric_product(self, other), plane_reversal(self)));
+}
+
+Motor plane_motor_transformation(Plane self, Motor other) {
+    return multi_vector_motor_into(flector_plane_geometric_product(plane_motor_geometric_product(self, other), plane_reversal(self)));
+}
+
+Rotor plane_rotor_transformation(Plane self, Rotor other) {
+    return multi_vector_rotor_into(flector_plane_geometric_product(plane_rotor_geometric_product(self, other), plane_reversal(self)));
+}
+
+Translator plane_translator_transformation(Plane self, Translator other) {
+    return multi_vector_translator_into(flector_plane_geometric_product(plane_translator_geometric_product(self, other), plane_reversal(self)));
+}
+
+Flector plane_flector_transformation(Plane self, Flector other) {
+    return multi_vector_flector_into(multi_vector_plane_geometric_product(plane_flector_geometric_product(self, other), plane_reversal(self)));
+}
+
+MultiVector plane_multi_vector_transformation(Plane self, MultiVector other) {
+    return multi_vector_plane_geometric_product(plane_multi_vector_geometric_product(self, other), plane_reversal(self));
+}
+
+Scalar motor_scalar_transformation(Motor self, Scalar other) {
+    return multi_vector_scalar_into(motor_motor_geometric_product(motor_scalar_geometric_product(self, other), motor_reversal(self)));
+}
+
+AntiScalar motor_anti_scalar_transformation(Motor self, AntiScalar other) {
+    return rotor_anti_scalar_into(rotor_motor_geometric_product(motor_anti_scalar_geometric_product(self, other), motor_reversal(self)));
+}
+
+HomogeneousMagnitude motor_homogeneous_magnitude_transformation(Motor self, HomogeneousMagnitude other) {
+    return multi_vector_homogeneous_magnitude_into(motor_motor_geometric_product(motor_homogeneous_magnitude_geometric_product(self, other), motor_reversal(self)));
+}
+
+Point motor_point_transformation(Motor self, Point other) {
+    return flector_point_into(flector_motor_geometric_product(motor_point_geometric_product(self, other), motor_reversal(self)));
+}
+
+Line motor_line_transformation(Motor self, Line other) {
+    return multi_vector_line_into(multi_vector_motor_geometric_product(motor_line_geometric_product(self, other), motor_reversal(self)));
+}
+
+Plane motor_plane_transformation(Motor self, Plane other) {
+    return flector_plane_into(flector_motor_geometric_product(motor_plane_geometric_product(self, other), motor_reversal(self)));
+}
+
+Motor motor_motor_transformation(Motor self, Motor other) {
+    return multi_vector_motor_into(multi_vector_motor_geometric_product(motor_motor_geometric_product(self, other), motor_reversal(self)));
+}
+
+Rotor motor_rotor_transformation(Motor self, Rotor other) {
+    return rotor_motor_geometric_product(motor_rotor_geometric_product(self, other), motor_reversal(self));
+}
+
+Translator motor_translator_transformation(Motor self, Translator other) {
+    return multi_vector_translator_into(multi_vector_motor_geometric_product(motor_translator_geometric_product(self, other), motor_reversal(self)));
+}
+
+Flector motor_flector_transformation(Motor self, Flector other) {
+    return flector_motor_geometric_product(motor_flector_geometric_product(self, other), motor_reversal(self));
+}
+
+MultiVector motor_multi_vector_transformation(Motor self, MultiVector other) {
+    return multi_vector_motor_geometric_product(motor_multi_vector_geometric_product(self, other), motor_reversal(self));
+}
+
+Point rotor_point_transformation(Rotor self, Point other) {
+    return flector_point_into(flector_rotor_geometric_product(rotor_point_geometric_product(self, other), rotor_reversal(self)));
+}
+
+Plane rotor_plane_transformation(Rotor self, Plane other) {
+    return flector_plane_into(flector_rotor_geometric_product(rotor_plane_geometric_product(self, other), rotor_reversal(self)));
+}
+
+Flector rotor_flector_transformation(Rotor self, Flector other) {
+    return flector_rotor_geometric_product(rotor_flector_geometric_product(self, other), rotor_reversal(self));
+}
+
+MultiVector rotor_multi_vector_transformation(Rotor self, MultiVector other) {
+    return multi_vector_rotor_geometric_product(rotor_multi_vector_geometric_product(self, other), rotor_reversal(self));
 }
 
 Scalar translator_scalar_transformation(Translator self, Scalar other) {
     return multi_vector_scalar_into(translator_translator_geometric_product(translator_scalar_geometric_product(self, other), translator_reversal(self)));
 }
 
-MultiVector translator_translator_geometric_quotient(Translator self, Translator other) {
-    return translator_translator_geometric_product(self, translator_inverse(other));
+AntiScalar translator_anti_scalar_transformation(Translator self, AntiScalar other) {
+    return rotor_anti_scalar_into(rotor_translator_geometric_product(translator_anti_scalar_geometric_product(self, other), translator_reversal(self)));
+}
+
+HomogeneousMagnitude translator_homogeneous_magnitude_transformation(Translator self, HomogeneousMagnitude other) {
+    return multi_vector_homogeneous_magnitude_into(motor_translator_geometric_product(translator_homogeneous_magnitude_geometric_product(self, other), translator_reversal(self)));
+}
+
+Point translator_point_transformation(Translator self, Point other) {
+    return flector_point_into(flector_translator_geometric_product(translator_point_geometric_product(self, other), translator_reversal(self)));
+}
+
+Line translator_line_transformation(Translator self, Line other) {
+    return multi_vector_line_into(multi_vector_translator_geometric_product(translator_line_geometric_product(self, other), translator_reversal(self)));
+}
+
+Plane translator_plane_transformation(Translator self, Plane other) {
+    return flector_plane_into(flector_translator_geometric_product(translator_plane_geometric_product(self, other), translator_reversal(self)));
+}
+
+Motor translator_motor_transformation(Translator self, Motor other) {
+    return multi_vector_motor_into(multi_vector_translator_geometric_product(translator_motor_geometric_product(self, other), translator_reversal(self)));
+}
+
+Rotor translator_rotor_transformation(Translator self, Rotor other) {
+    return rotor_translator_geometric_product(translator_rotor_geometric_product(self, other), translator_reversal(self));
 }
 
 Translator translator_translator_transformation(Translator self, Translator other) {
     return multi_vector_translator_into(multi_vector_translator_geometric_product(translator_translator_geometric_product(self, other), translator_reversal(self)));
 }
 
-AntiScalar flector_anti_scalar_sandwich(Flector self, AntiScalar other) {
-    return multi_vector_anti_scalar_into(flector_flector_geometric_anti_product(flector_anti_scalar_geometric_anti_product(self, other), flector_anti_reversal(self)));
+Flector translator_flector_transformation(Translator self, Flector other) {
+    return flector_translator_geometric_product(translator_flector_geometric_product(self, other), translator_reversal(self));
 }
 
-Flector flector_flector_sandwich(Flector self, Flector other) {
-    return multi_vector_flector_into(multi_vector_flector_geometric_anti_product(flector_flector_geometric_anti_product(self, other), flector_anti_reversal(self)));
+MultiVector translator_multi_vector_transformation(Translator self, MultiVector other) {
+    return multi_vector_translator_geometric_product(translator_multi_vector_geometric_product(self, other), translator_reversal(self));
 }
 
-HomogeneousMagnitude flector_homogeneous_magnitude_sandwich(Flector self, HomogeneousMagnitude other) {
-    return multi_vector_homogeneous_magnitude_into(flector_flector_geometric_anti_product(flector_homogeneous_magnitude_geometric_anti_product(self, other), flector_anti_reversal(self)));
+Scalar flector_scalar_transformation(Flector self, Scalar other) {
+    return multi_vector_scalar_into(flector_flector_geometric_product(flector_scalar_geometric_product(self, other), flector_reversal(self)));
 }
 
-Line flector_line_sandwich(Flector self, Line other) {
-    return multi_vector_line_into(flector_flector_geometric_anti_product(flector_line_geometric_anti_product(self, other), flector_anti_reversal(self)));
+AntiScalar flector_anti_scalar_transformation(Flector self, AntiScalar other) {
+    return multi_vector_anti_scalar_into(flector_flector_geometric_product(flector_anti_scalar_geometric_product(self, other), flector_reversal(self)));
 }
 
-Motor flector_motor_sandwich(Flector self, Motor other) {
-    return multi_vector_motor_into(flector_flector_geometric_anti_product(flector_motor_geometric_anti_product(self, other), flector_anti_reversal(self)));
+HomogeneousMagnitude flector_homogeneous_magnitude_transformation(Flector self, HomogeneousMagnitude other) {
+    return multi_vector_homogeneous_magnitude_into(flector_flector_geometric_product(flector_homogeneous_magnitude_geometric_product(self, other), flector_reversal(self)));
 }
 
-Plane flector_plane_sandwich(Flector self, Plane other) {
-    return multi_vector_plane_into(multi_vector_flector_geometric_anti_product(flector_plane_geometric_anti_product(self, other), flector_anti_reversal(self)));
+Point flector_point_transformation(Flector self, Point other) {
+    return multi_vector_point_into(multi_vector_flector_geometric_product(flector_point_geometric_product(self, other), flector_reversal(self)));
 }
 
-Point flector_point_sandwich(Flector self, Point other) {
-    return multi_vector_point_into(multi_vector_flector_geometric_anti_product(flector_point_geometric_anti_product(self, other), flector_anti_reversal(self)));
+Line flector_line_transformation(Flector self, Line other) {
+    return multi_vector_line_into(flector_flector_geometric_product(flector_line_geometric_product(self, other), flector_reversal(self)));
 }
 
-Rotor flector_rotor_sandwich(Flector self, Rotor other) {
-    return multi_vector_rotor_into(flector_flector_geometric_anti_product(flector_rotor_geometric_anti_product(self, other), flector_anti_reversal(self)));
+Plane flector_plane_transformation(Flector self, Plane other) {
+    return multi_vector_plane_into(multi_vector_flector_geometric_product(flector_plane_geometric_product(self, other), flector_reversal(self)));
 }
 
-Scalar flector_scalar_sandwich(Flector self, Scalar other) {
-    return multi_vector_scalar_into(flector_flector_geometric_anti_product(flector_scalar_geometric_anti_product(self, other), flector_anti_reversal(self)));
+Motor flector_motor_transformation(Flector self, Motor other) {
+    return multi_vector_motor_into(flector_flector_geometric_product(flector_motor_geometric_product(self, other), flector_reversal(self)));
 }
 
-Translator flector_translator_sandwich(Flector self, Translator other) {
-    return multi_vector_translator_into(flector_flector_geometric_anti_product(flector_translator_geometric_anti_product(self, other), flector_anti_reversal(self)));
+Rotor flector_rotor_transformation(Flector self, Rotor other) {
+    return multi_vector_rotor_into(flector_flector_geometric_product(flector_rotor_geometric_product(self, other), flector_reversal(self)));
 }
 
-AntiScalar homogeneous_magnitude_anti_scalar_sandwich(HomogeneousMagnitude self, AntiScalar other) {
-    return homogeneous_magnitude_anti_scalar_into(homogeneous_magnitude_homogeneous_magnitude_geometric_anti_product(homogeneous_magnitude_anti_scalar_geometric_anti_product(self, other), homogeneous_magnitude_anti_reversal(self)));
+Translator flector_translator_transformation(Flector self, Translator other) {
+    return multi_vector_translator_into(flector_flector_geometric_product(flector_translator_geometric_product(self, other), flector_reversal(self)));
 }
 
-Motor homogeneous_magnitude_motor_sandwich(HomogeneousMagnitude self, Motor other) {
-    return multi_vector_motor_into(multi_vector_homogeneous_magnitude_geometric_anti_product(homogeneous_magnitude_motor_geometric_anti_product(self, other), homogeneous_magnitude_anti_reversal(self)));
+Flector flector_flector_transformation(Flector self, Flector other) {
+    return multi_vector_flector_into(multi_vector_flector_geometric_product(flector_flector_geometric_product(self, other), flector_reversal(self)));
 }
 
-Plane homogeneous_magnitude_plane_sandwich(HomogeneousMagnitude self, Plane other) {
-    return flector_plane_into(flector_homogeneous_magnitude_geometric_anti_product(homogeneous_magnitude_plane_geometric_anti_product(self, other), homogeneous_magnitude_anti_reversal(self)));
+MultiVector flector_multi_vector_transformation(Flector self, MultiVector other) {
+    return multi_vector_flector_geometric_product(flector_multi_vector_geometric_product(self, other), flector_reversal(self));
 }
 
-Point homogeneous_magnitude_point_sandwich(HomogeneousMagnitude self, Point other) {
-    return flector_point_into(flector_homogeneous_magnitude_geometric_anti_product(homogeneous_magnitude_point_geometric_anti_product(self, other), homogeneous_magnitude_anti_reversal(self)));
+Scalar multi_vector_scalar_transformation(MultiVector self, Scalar other) {
+    return multi_vector_scalar_into(multi_vector_multi_vector_geometric_product(multi_vector_scalar_geometric_product(self, other), multi_vector_reversal(self)));
 }
 
-Rotor homogeneous_magnitude_rotor_sandwich(HomogeneousMagnitude self, Rotor other) {
-    return multi_vector_rotor_into(multi_vector_homogeneous_magnitude_geometric_anti_product(homogeneous_magnitude_rotor_geometric_anti_product(self, other), homogeneous_magnitude_anti_reversal(self)));
+AntiScalar multi_vector_anti_scalar_transformation(MultiVector self, AntiScalar other) {
+    return multi_vector_anti_scalar_into(multi_vector_multi_vector_geometric_product(multi_vector_anti_scalar_geometric_product(self, other), multi_vector_reversal(self)));
 }
 
-Translator homogeneous_magnitude_translator_sandwich(HomogeneousMagnitude self, Translator other) {
-    return multi_vector_translator_into(multi_vector_homogeneous_magnitude_geometric_anti_product(homogeneous_magnitude_translator_geometric_anti_product(self, other), homogeneous_magnitude_anti_reversal(self)));
+HomogeneousMagnitude multi_vector_homogeneous_magnitude_transformation(MultiVector self, HomogeneousMagnitude other) {
+    return multi_vector_homogeneous_magnitude_into(multi_vector_multi_vector_geometric_product(multi_vector_homogeneous_magnitude_geometric_product(self, other), multi_vector_reversal(self)));
 }
 
-AntiScalar line_anti_scalar_sandwich(Line self, AntiScalar other) {
-    return multi_vector_anti_scalar_into(line_line_geometric_anti_product(line_anti_scalar_geometric_anti_product(self, other), line_anti_reversal(self)));
+Point multi_vector_point_transformation(MultiVector self, Point other) {
+    return multi_vector_point_into(multi_vector_multi_vector_geometric_product(multi_vector_point_geometric_product(self, other), multi_vector_reversal(self)));
 }
 
-HomogeneousMagnitude line_homogeneous_magnitude_sandwich(Line self, HomogeneousMagnitude other) {
-    return multi_vector_homogeneous_magnitude_into(line_line_geometric_anti_product(line_homogeneous_magnitude_geometric_anti_product(self, other), line_anti_reversal(self)));
+Line multi_vector_line_transformation(MultiVector self, Line other) {
+    return multi_vector_line_into(multi_vector_multi_vector_geometric_product(multi_vector_line_geometric_product(self, other), multi_vector_reversal(self)));
 }
 
-Line line_line_sandwich(Line self, Line other) {
-    return multi_vector_line_into(multi_vector_line_geometric_anti_product(line_line_geometric_anti_product(self, other), line_anti_reversal(self)));
+Plane multi_vector_plane_transformation(MultiVector self, Plane other) {
+    return multi_vector_plane_into(multi_vector_multi_vector_geometric_product(multi_vector_plane_geometric_product(self, other), multi_vector_reversal(self)));
 }
 
-Motor line_motor_sandwich(Line self, Motor other) {
-    return multi_vector_motor_into(multi_vector_line_geometric_anti_product(line_motor_geometric_anti_product(self, other), line_anti_reversal(self)));
+Motor multi_vector_motor_transformation(MultiVector self, Motor other) {
+    return multi_vector_motor_into(multi_vector_multi_vector_geometric_product(multi_vector_motor_geometric_product(self, other), multi_vector_reversal(self)));
 }
 
-Plane line_plane_sandwich(Line self, Plane other) {
-    return flector_plane_into(flector_line_geometric_anti_product(line_plane_geometric_anti_product(self, other), line_anti_reversal(self)));
+Rotor multi_vector_rotor_transformation(MultiVector self, Rotor other) {
+    return multi_vector_rotor_into(multi_vector_multi_vector_geometric_product(multi_vector_rotor_geometric_product(self, other), multi_vector_reversal(self)));
 }
 
-Point line_point_sandwich(Line self, Point other) {
-    return flector_point_into(flector_line_geometric_anti_product(line_point_geometric_anti_product(self, other), line_anti_reversal(self)));
+Translator multi_vector_translator_transformation(MultiVector self, Translator other) {
+    return multi_vector_translator_into(multi_vector_multi_vector_geometric_product(multi_vector_translator_geometric_product(self, other), multi_vector_reversal(self)));
 }
 
-Rotor line_rotor_sandwich(Line self, Rotor other) {
-    return multi_vector_rotor_into(multi_vector_line_geometric_anti_product(line_rotor_geometric_anti_product(self, other), line_anti_reversal(self)));
+Flector multi_vector_flector_transformation(MultiVector self, Flector other) {
+    return multi_vector_flector_into(multi_vector_multi_vector_geometric_product(multi_vector_flector_geometric_product(self, other), multi_vector_reversal(self)));
 }
 
-Scalar line_scalar_sandwich(Line self, Scalar other) {
-    return multi_vector_scalar_into(translator_line_geometric_anti_product(line_scalar_geometric_anti_product(self, other), line_anti_reversal(self)));
+MultiVector multi_vector_multi_vector_transformation(MultiVector self, MultiVector other) {
+    return multi_vector_multi_vector_geometric_product(multi_vector_multi_vector_geometric_product(self, other), multi_vector_reversal(self));
 }
 
-Translator line_translator_sandwich(Line self, Translator other) {
-    return multi_vector_translator_into(multi_vector_line_geometric_anti_product(line_translator_geometric_anti_product(self, other), line_anti_reversal(self)));
+Point scalar_point_sandwich(Scalar self, Point other) {
+    return plane_scalar_geometric_anti_product(scalar_point_geometric_anti_product(self, other), scalar_anti_reversal(self));
 }
 
-AntiScalar motor_anti_scalar_sandwich(Motor self, AntiScalar other) {
-    return multi_vector_anti_scalar_into(motor_motor_geometric_anti_product(motor_anti_scalar_geometric_anti_product(self, other), motor_anti_reversal(self)));
+Scalar scalar_line_sandwich(Scalar self, Line other) {
+    return translator_scalar_geometric_anti_product(scalar_line_geometric_anti_product(self, other), scalar_anti_reversal(self));
 }
 
-HomogeneousMagnitude motor_homogeneous_magnitude_sandwich(Motor self, HomogeneousMagnitude other) {
-    return multi_vector_homogeneous_magnitude_into(multi_vector_motor_geometric_anti_product(motor_homogeneous_magnitude_geometric_anti_product(self, other), motor_anti_reversal(self)));
-}
-
-Line motor_line_sandwich(Motor self, Line other) {
-    return multi_vector_line_into(multi_vector_motor_geometric_anti_product(motor_line_geometric_anti_product(self, other), motor_anti_reversal(self)));
-}
-
-Motor motor_motor_sandwich(Motor self, Motor other) {
-    return multi_vector_motor_into(multi_vector_motor_geometric_anti_product(motor_motor_geometric_anti_product(self, other), motor_anti_reversal(self)));
-}
-
-Plane motor_plane_sandwich(Motor self, Plane other) {
-    return flector_plane_into(flector_motor_geometric_anti_product(motor_plane_geometric_anti_product(self, other), motor_anti_reversal(self)));
-}
-
-Point motor_point_sandwich(Motor self, Point other) {
-    return flector_point_into(flector_motor_geometric_anti_product(motor_point_geometric_anti_product(self, other), motor_anti_reversal(self)));
-}
-
-Rotor motor_rotor_sandwich(Motor self, Rotor other) {
-    return multi_vector_rotor_into(multi_vector_motor_geometric_anti_product(motor_rotor_geometric_anti_product(self, other), motor_anti_reversal(self)));
-}
-
-Scalar motor_scalar_sandwich(Motor self, Scalar other) {
-    return multi_vector_scalar_into(multi_vector_motor_geometric_anti_product(motor_scalar_geometric_anti_product(self, other), motor_anti_reversal(self)));
-}
-
-Translator motor_translator_sandwich(Motor self, Translator other) {
-    return multi_vector_translator_into(multi_vector_motor_geometric_anti_product(motor_translator_geometric_anti_product(self, other), motor_anti_reversal(self)));
-}
-
-AntiScalar multi_vector_anti_scalar_sandwich(MultiVector self, AntiScalar other) {
-    return multi_vector_anti_scalar_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_anti_scalar_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
-}
-
-Flector multi_vector_flector_sandwich(MultiVector self, Flector other) {
-    return multi_vector_flector_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_flector_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
-}
-
-HomogeneousMagnitude multi_vector_homogeneous_magnitude_sandwich(MultiVector self, HomogeneousMagnitude other) {
-    return multi_vector_homogeneous_magnitude_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_homogeneous_magnitude_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
-}
-
-Line multi_vector_line_sandwich(MultiVector self, Line other) {
-    return multi_vector_line_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_line_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
-}
-
-Motor multi_vector_motor_sandwich(MultiVector self, Motor other) {
-    return multi_vector_motor_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_motor_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
-}
-
-Plane multi_vector_plane_sandwich(MultiVector self, Plane other) {
-    return multi_vector_plane_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_plane_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
-}
-
-Point multi_vector_point_sandwich(MultiVector self, Point other) {
-    return multi_vector_point_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_point_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
-}
-
-Rotor multi_vector_rotor_sandwich(MultiVector self, Rotor other) {
-    return multi_vector_rotor_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_rotor_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
-}
-
-Scalar multi_vector_scalar_sandwich(MultiVector self, Scalar other) {
-    return multi_vector_scalar_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_scalar_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
-}
-
-Translator multi_vector_translator_sandwich(MultiVector self, Translator other) {
-    return multi_vector_translator_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_translator_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
-}
-
-AntiScalar plane_anti_scalar_sandwich(Plane self, AntiScalar other) {
-    return motor_anti_scalar_into(plane_plane_geometric_anti_product(plane_anti_scalar_geometric_anti_product(self, other), plane_anti_reversal(self)));
-}
-
-Flector plane_flector_sandwich(Plane self, Flector other) {
-    return multi_vector_flector_into(multi_vector_plane_geometric_anti_product(plane_flector_geometric_anti_product(self, other), plane_anti_reversal(self)));
-}
-
-HomogeneousMagnitude plane_homogeneous_magnitude_sandwich(Plane self, HomogeneousMagnitude other) {
-    return multi_vector_homogeneous_magnitude_into(flector_plane_geometric_anti_product(plane_homogeneous_magnitude_geometric_anti_product(self, other), plane_anti_reversal(self)));
-}
-
-Line plane_line_sandwich(Plane self, Line other) {
-    return multi_vector_line_into(flector_plane_geometric_anti_product(plane_line_geometric_anti_product(self, other), plane_anti_reversal(self)));
-}
-
-Motor plane_motor_sandwich(Plane self, Motor other) {
-    return multi_vector_motor_into(flector_plane_geometric_anti_product(plane_motor_geometric_anti_product(self, other), plane_anti_reversal(self)));
-}
-
-Plane plane_plane_sandwich(Plane self, Plane other) {
-    return flector_plane_into(motor_plane_geometric_anti_product(plane_plane_geometric_anti_product(self, other), plane_anti_reversal(self)));
-}
-
-Point plane_point_sandwich(Plane self, Point other) {
-    return multi_vector_point_into(multi_vector_plane_geometric_anti_product(plane_point_geometric_anti_product(self, other), plane_anti_reversal(self)));
-}
-
-Rotor plane_rotor_sandwich(Plane self, Rotor other) {
-    return multi_vector_rotor_into(flector_plane_geometric_anti_product(plane_rotor_geometric_anti_product(self, other), plane_anti_reversal(self)));
-}
-
-Scalar plane_scalar_sandwich(Plane self, Scalar other) {
-    return multi_vector_scalar_into(point_plane_geometric_anti_product(plane_scalar_geometric_anti_product(self, other), plane_anti_reversal(self)));
-}
-
-Translator plane_translator_sandwich(Plane self, Translator other) {
-    return multi_vector_translator_into(flector_plane_geometric_anti_product(plane_translator_geometric_anti_product(self, other), plane_anti_reversal(self)));
-}
-
-AntiScalar point_anti_scalar_sandwich(Point self, AntiScalar other) {
-    return translator_anti_scalar_into(point_point_geometric_anti_product(point_anti_scalar_geometric_anti_product(self, other), point_anti_reversal(self)));
-}
-
-Flector point_flector_sandwich(Point self, Flector other) {
-    return multi_vector_flector_into(multi_vector_point_geometric_anti_product(point_flector_geometric_anti_product(self, other), point_anti_reversal(self)));
-}
-
-HomogeneousMagnitude point_homogeneous_magnitude_sandwich(Point self, HomogeneousMagnitude other) {
-    return multi_vector_homogeneous_magnitude_into(flector_point_geometric_anti_product(point_homogeneous_magnitude_geometric_anti_product(self, other), point_anti_reversal(self)));
-}
-
-Line point_line_sandwich(Point self, Line other) {
-    return multi_vector_line_into(flector_point_geometric_anti_product(point_line_geometric_anti_product(self, other), point_anti_reversal(self)));
-}
-
-Motor point_motor_sandwich(Point self, Motor other) {
-    return multi_vector_motor_into(flector_point_geometric_anti_product(point_motor_geometric_anti_product(self, other), point_anti_reversal(self)));
-}
-
-Plane point_plane_sandwich(Point self, Plane other) {
-    return multi_vector_plane_into(multi_vector_point_geometric_anti_product(point_plane_geometric_anti_product(self, other), point_anti_reversal(self)));
-}
-
-Rotor point_rotor_sandwich(Point self, Rotor other) {
-    return multi_vector_rotor_into(flector_point_geometric_anti_product(point_rotor_geometric_anti_product(self, other), point_anti_reversal(self)));
-}
-
-Scalar point_scalar_sandwich(Point self, Scalar other) {
-    return multi_vector_scalar_into(plane_point_geometric_anti_product(point_scalar_geometric_anti_product(self, other), point_anti_reversal(self)));
-}
-
-AntiScalar rotor_anti_scalar_sandwich(Rotor self, AntiScalar other) {
-    return rotor_anti_scalar_into(rotor_rotor_geometric_anti_product(rotor_anti_scalar_geometric_anti_product(self, other), rotor_anti_reversal(self)));
-}
-
-HomogeneousMagnitude rotor_homogeneous_magnitude_sandwich(Rotor self, HomogeneousMagnitude other) {
-    return multi_vector_homogeneous_magnitude_into(multi_vector_rotor_geometric_anti_product(rotor_homogeneous_magnitude_geometric_anti_product(self, other), rotor_anti_reversal(self)));
-}
-
-Line rotor_line_sandwich(Rotor self, Line other) {
-    return multi_vector_line_into(multi_vector_rotor_geometric_anti_product(rotor_line_geometric_anti_product(self, other), rotor_anti_reversal(self)));
-}
-
-Motor rotor_motor_sandwich(Rotor self, Motor other) {
-    return multi_vector_motor_into(multi_vector_rotor_geometric_anti_product(rotor_motor_geometric_anti_product(self, other), rotor_anti_reversal(self)));
-}
-
-Plane rotor_plane_sandwich(Rotor self, Plane other) {
-    return flector_plane_into(flector_rotor_geometric_anti_product(rotor_plane_geometric_anti_product(self, other), rotor_anti_reversal(self)));
-}
-
-Point rotor_point_sandwich(Rotor self, Point other) {
-    return flector_point_into(flector_rotor_geometric_anti_product(rotor_point_geometric_anti_product(self, other), rotor_anti_reversal(self)));
-}
-
-Scalar rotor_scalar_sandwich(Rotor self, Scalar other) {
-    return multi_vector_scalar_into(multi_vector_rotor_geometric_anti_product(rotor_scalar_geometric_anti_product(self, other), rotor_anti_reversal(self)));
-}
-
-Translator rotor_translator_sandwich(Rotor self, Translator other) {
-    return multi_vector_translator_into(multi_vector_rotor_geometric_anti_product(rotor_translator_geometric_anti_product(self, other), rotor_anti_reversal(self)));
+Plane scalar_plane_sandwich(Scalar self, Plane other) {
+    return point_scalar_geometric_anti_product(scalar_plane_geometric_anti_product(self, other), scalar_anti_reversal(self));
 }
 
 Motor scalar_motor_sandwich(Scalar self, Motor other) {
@@ -9362,6 +9094,326 @@ Rotor scalar_rotor_sandwich(Scalar self, Rotor other) {
     return multi_vector_rotor_into(multi_vector_scalar_geometric_anti_product(scalar_rotor_geometric_anti_product(self, other), scalar_anti_reversal(self)));
 }
 
+Flector scalar_flector_sandwich(Scalar self, Flector other) {
+    return flector_scalar_geometric_anti_product(scalar_flector_geometric_anti_product(self, other), scalar_anti_reversal(self));
+}
+
+MultiVector scalar_multi_vector_sandwich(Scalar self, MultiVector other) {
+    return multi_vector_scalar_geometric_anti_product(scalar_multi_vector_geometric_anti_product(self, other), scalar_anti_reversal(self));
+}
+
+Scalar anti_scalar_scalar_sandwich(AntiScalar self, Scalar other) {
+    return scalar_anti_scalar_geometric_anti_product(anti_scalar_scalar_geometric_anti_product(self, other), anti_scalar_anti_reversal(self));
+}
+
+AntiScalar anti_scalar_anti_scalar_sandwich(AntiScalar self, AntiScalar other) {
+    return anti_scalar_anti_scalar_geometric_anti_product(anti_scalar_anti_scalar_geometric_anti_product(self, other), anti_scalar_anti_reversal(self));
+}
+
+HomogeneousMagnitude anti_scalar_homogeneous_magnitude_sandwich(AntiScalar self, HomogeneousMagnitude other) {
+    return homogeneous_magnitude_anti_scalar_geometric_anti_product(anti_scalar_homogeneous_magnitude_geometric_anti_product(self, other), anti_scalar_anti_reversal(self));
+}
+
+Point anti_scalar_point_sandwich(AntiScalar self, Point other) {
+    return point_anti_scalar_geometric_anti_product(anti_scalar_point_geometric_anti_product(self, other), anti_scalar_anti_reversal(self));
+}
+
+Line anti_scalar_line_sandwich(AntiScalar self, Line other) {
+    return line_anti_scalar_geometric_anti_product(anti_scalar_line_geometric_anti_product(self, other), anti_scalar_anti_reversal(self));
+}
+
+Plane anti_scalar_plane_sandwich(AntiScalar self, Plane other) {
+    return plane_anti_scalar_geometric_anti_product(anti_scalar_plane_geometric_anti_product(self, other), anti_scalar_anti_reversal(self));
+}
+
+Motor anti_scalar_motor_sandwich(AntiScalar self, Motor other) {
+    return motor_anti_scalar_geometric_anti_product(anti_scalar_motor_geometric_anti_product(self, other), anti_scalar_anti_reversal(self));
+}
+
+Rotor anti_scalar_rotor_sandwich(AntiScalar self, Rotor other) {
+    return rotor_anti_scalar_geometric_anti_product(anti_scalar_rotor_geometric_anti_product(self, other), anti_scalar_anti_reversal(self));
+}
+
+Translator anti_scalar_translator_sandwich(AntiScalar self, Translator other) {
+    return translator_anti_scalar_geometric_anti_product(anti_scalar_translator_geometric_anti_product(self, other), anti_scalar_anti_reversal(self));
+}
+
+Flector anti_scalar_flector_sandwich(AntiScalar self, Flector other) {
+    return flector_anti_scalar_geometric_anti_product(anti_scalar_flector_geometric_anti_product(self, other), anti_scalar_anti_reversal(self));
+}
+
+MultiVector anti_scalar_multi_vector_sandwich(AntiScalar self, MultiVector other) {
+    return multi_vector_anti_scalar_geometric_anti_product(anti_scalar_multi_vector_geometric_anti_product(self, other), anti_scalar_anti_reversal(self));
+}
+
+Scalar homogeneous_magnitude_scalar_sandwich(HomogeneousMagnitude self, Scalar other) {
+    return scalar_homogeneous_magnitude_geometric_anti_product(homogeneous_magnitude_scalar_geometric_anti_product(self, other), homogeneous_magnitude_anti_reversal(self));
+}
+
+AntiScalar homogeneous_magnitude_anti_scalar_sandwich(HomogeneousMagnitude self, AntiScalar other) {
+    return homogeneous_magnitude_anti_scalar_into(homogeneous_magnitude_homogeneous_magnitude_geometric_anti_product(homogeneous_magnitude_anti_scalar_geometric_anti_product(self, other), homogeneous_magnitude_anti_reversal(self)));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_sandwich(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return homogeneous_magnitude_homogeneous_magnitude_geometric_anti_product(homogeneous_magnitude_homogeneous_magnitude_geometric_anti_product(self, other), homogeneous_magnitude_anti_reversal(self));
+}
+
+Point homogeneous_magnitude_point_sandwich(HomogeneousMagnitude self, Point other) {
+    return flector_point_into(flector_homogeneous_magnitude_geometric_anti_product(homogeneous_magnitude_point_geometric_anti_product(self, other), homogeneous_magnitude_anti_reversal(self)));
+}
+
+Line homogeneous_magnitude_line_sandwich(HomogeneousMagnitude self, Line other) {
+    return line_homogeneous_magnitude_geometric_anti_product(homogeneous_magnitude_line_geometric_anti_product(self, other), homogeneous_magnitude_anti_reversal(self));
+}
+
+Plane homogeneous_magnitude_plane_sandwich(HomogeneousMagnitude self, Plane other) {
+    return flector_plane_into(flector_homogeneous_magnitude_geometric_anti_product(homogeneous_magnitude_plane_geometric_anti_product(self, other), homogeneous_magnitude_anti_reversal(self)));
+}
+
+Motor homogeneous_magnitude_motor_sandwich(HomogeneousMagnitude self, Motor other) {
+    return multi_vector_motor_into(multi_vector_homogeneous_magnitude_geometric_anti_product(homogeneous_magnitude_motor_geometric_anti_product(self, other), homogeneous_magnitude_anti_reversal(self)));
+}
+
+Rotor homogeneous_magnitude_rotor_sandwich(HomogeneousMagnitude self, Rotor other) {
+    return multi_vector_rotor_into(multi_vector_homogeneous_magnitude_geometric_anti_product(homogeneous_magnitude_rotor_geometric_anti_product(self, other), homogeneous_magnitude_anti_reversal(self)));
+}
+
+Translator homogeneous_magnitude_translator_sandwich(HomogeneousMagnitude self, Translator other) {
+    return multi_vector_translator_into(multi_vector_homogeneous_magnitude_geometric_anti_product(homogeneous_magnitude_translator_geometric_anti_product(self, other), homogeneous_magnitude_anti_reversal(self)));
+}
+
+Flector homogeneous_magnitude_flector_sandwich(HomogeneousMagnitude self, Flector other) {
+    return flector_homogeneous_magnitude_geometric_anti_product(homogeneous_magnitude_flector_geometric_anti_product(self, other), homogeneous_magnitude_anti_reversal(self));
+}
+
+MultiVector homogeneous_magnitude_multi_vector_sandwich(HomogeneousMagnitude self, MultiVector other) {
+    return multi_vector_homogeneous_magnitude_geometric_anti_product(homogeneous_magnitude_multi_vector_geometric_anti_product(self, other), homogeneous_magnitude_anti_reversal(self));
+}
+
+Scalar point_scalar_sandwich(Point self, Scalar other) {
+    return multi_vector_scalar_into(plane_point_geometric_anti_product(point_scalar_geometric_anti_product(self, other), point_anti_reversal(self)));
+}
+
+AntiScalar point_anti_scalar_sandwich(Point self, AntiScalar other) {
+    return translator_anti_scalar_into(point_point_geometric_anti_product(point_anti_scalar_geometric_anti_product(self, other), point_anti_reversal(self)));
+}
+
+HomogeneousMagnitude point_homogeneous_magnitude_sandwich(Point self, HomogeneousMagnitude other) {
+    return multi_vector_homogeneous_magnitude_into(flector_point_geometric_anti_product(point_homogeneous_magnitude_geometric_anti_product(self, other), point_anti_reversal(self)));
+}
+
+Point point_point_sandwich(Point self, Point other) {
+    return translator_point_geometric_anti_product(point_point_geometric_anti_product(self, other), point_anti_reversal(self));
+}
+
+Line point_line_sandwich(Point self, Line other) {
+    return multi_vector_line_into(flector_point_geometric_anti_product(point_line_geometric_anti_product(self, other), point_anti_reversal(self)));
+}
+
+Plane point_plane_sandwich(Point self, Plane other) {
+    return multi_vector_plane_into(multi_vector_point_geometric_anti_product(point_plane_geometric_anti_product(self, other), point_anti_reversal(self)));
+}
+
+Motor point_motor_sandwich(Point self, Motor other) {
+    return multi_vector_motor_into(flector_point_geometric_anti_product(point_motor_geometric_anti_product(self, other), point_anti_reversal(self)));
+}
+
+Rotor point_rotor_sandwich(Point self, Rotor other) {
+    return multi_vector_rotor_into(flector_point_geometric_anti_product(point_rotor_geometric_anti_product(self, other), point_anti_reversal(self)));
+}
+
+Translator point_translator_sandwich(Point self, Translator other) {
+    return point_point_geometric_anti_product(point_translator_geometric_anti_product(self, other), point_anti_reversal(self));
+}
+
+Flector point_flector_sandwich(Point self, Flector other) {
+    return multi_vector_flector_into(multi_vector_point_geometric_anti_product(point_flector_geometric_anti_product(self, other), point_anti_reversal(self)));
+}
+
+MultiVector point_multi_vector_sandwich(Point self, MultiVector other) {
+    return multi_vector_point_geometric_anti_product(point_multi_vector_geometric_anti_product(self, other), point_anti_reversal(self));
+}
+
+Scalar line_scalar_sandwich(Line self, Scalar other) {
+    return multi_vector_scalar_into(translator_line_geometric_anti_product(line_scalar_geometric_anti_product(self, other), line_anti_reversal(self)));
+}
+
+AntiScalar line_anti_scalar_sandwich(Line self, AntiScalar other) {
+    return multi_vector_anti_scalar_into(line_line_geometric_anti_product(line_anti_scalar_geometric_anti_product(self, other), line_anti_reversal(self)));
+}
+
+HomogeneousMagnitude line_homogeneous_magnitude_sandwich(Line self, HomogeneousMagnitude other) {
+    return multi_vector_homogeneous_magnitude_into(line_line_geometric_anti_product(line_homogeneous_magnitude_geometric_anti_product(self, other), line_anti_reversal(self)));
+}
+
+Point line_point_sandwich(Line self, Point other) {
+    return flector_point_into(flector_line_geometric_anti_product(line_point_geometric_anti_product(self, other), line_anti_reversal(self)));
+}
+
+Line line_line_sandwich(Line self, Line other) {
+    return multi_vector_line_into(multi_vector_line_geometric_anti_product(line_line_geometric_anti_product(self, other), line_anti_reversal(self)));
+}
+
+Plane line_plane_sandwich(Line self, Plane other) {
+    return flector_plane_into(flector_line_geometric_anti_product(line_plane_geometric_anti_product(self, other), line_anti_reversal(self)));
+}
+
+Motor line_motor_sandwich(Line self, Motor other) {
+    return multi_vector_motor_into(multi_vector_line_geometric_anti_product(line_motor_geometric_anti_product(self, other), line_anti_reversal(self)));
+}
+
+Rotor line_rotor_sandwich(Line self, Rotor other) {
+    return multi_vector_rotor_into(multi_vector_line_geometric_anti_product(line_rotor_geometric_anti_product(self, other), line_anti_reversal(self)));
+}
+
+Translator line_translator_sandwich(Line self, Translator other) {
+    return multi_vector_translator_into(multi_vector_line_geometric_anti_product(line_translator_geometric_anti_product(self, other), line_anti_reversal(self)));
+}
+
+Flector line_flector_sandwich(Line self, Flector other) {
+    return flector_line_geometric_anti_product(line_flector_geometric_anti_product(self, other), line_anti_reversal(self));
+}
+
+MultiVector line_multi_vector_sandwich(Line self, MultiVector other) {
+    return multi_vector_line_geometric_anti_product(line_multi_vector_geometric_anti_product(self, other), line_anti_reversal(self));
+}
+
+Scalar plane_scalar_sandwich(Plane self, Scalar other) {
+    return multi_vector_scalar_into(point_plane_geometric_anti_product(plane_scalar_geometric_anti_product(self, other), plane_anti_reversal(self)));
+}
+
+AntiScalar plane_anti_scalar_sandwich(Plane self, AntiScalar other) {
+    return motor_anti_scalar_into(plane_plane_geometric_anti_product(plane_anti_scalar_geometric_anti_product(self, other), plane_anti_reversal(self)));
+}
+
+HomogeneousMagnitude plane_homogeneous_magnitude_sandwich(Plane self, HomogeneousMagnitude other) {
+    return multi_vector_homogeneous_magnitude_into(flector_plane_geometric_anti_product(plane_homogeneous_magnitude_geometric_anti_product(self, other), plane_anti_reversal(self)));
+}
+
+Point plane_point_sandwich(Plane self, Point other) {
+    return multi_vector_point_into(multi_vector_plane_geometric_anti_product(plane_point_geometric_anti_product(self, other), plane_anti_reversal(self)));
+}
+
+Line plane_line_sandwich(Plane self, Line other) {
+    return multi_vector_line_into(flector_plane_geometric_anti_product(plane_line_geometric_anti_product(self, other), plane_anti_reversal(self)));
+}
+
+Plane plane_plane_sandwich(Plane self, Plane other) {
+    return flector_plane_into(motor_plane_geometric_anti_product(plane_plane_geometric_anti_product(self, other), plane_anti_reversal(self)));
+}
+
+Motor plane_motor_sandwich(Plane self, Motor other) {
+    return multi_vector_motor_into(flector_plane_geometric_anti_product(plane_motor_geometric_anti_product(self, other), plane_anti_reversal(self)));
+}
+
+Rotor plane_rotor_sandwich(Plane self, Rotor other) {
+    return multi_vector_rotor_into(flector_plane_geometric_anti_product(plane_rotor_geometric_anti_product(self, other), plane_anti_reversal(self)));
+}
+
+Translator plane_translator_sandwich(Plane self, Translator other) {
+    return multi_vector_translator_into(flector_plane_geometric_anti_product(plane_translator_geometric_anti_product(self, other), plane_anti_reversal(self)));
+}
+
+Flector plane_flector_sandwich(Plane self, Flector other) {
+    return multi_vector_flector_into(multi_vector_plane_geometric_anti_product(plane_flector_geometric_anti_product(self, other), plane_anti_reversal(self)));
+}
+
+MultiVector plane_multi_vector_sandwich(Plane self, MultiVector other) {
+    return multi_vector_plane_geometric_anti_product(plane_multi_vector_geometric_anti_product(self, other), plane_anti_reversal(self));
+}
+
+Scalar motor_scalar_sandwich(Motor self, Scalar other) {
+    return multi_vector_scalar_into(multi_vector_motor_geometric_anti_product(motor_scalar_geometric_anti_product(self, other), motor_anti_reversal(self)));
+}
+
+AntiScalar motor_anti_scalar_sandwich(Motor self, AntiScalar other) {
+    return multi_vector_anti_scalar_into(motor_motor_geometric_anti_product(motor_anti_scalar_geometric_anti_product(self, other), motor_anti_reversal(self)));
+}
+
+HomogeneousMagnitude motor_homogeneous_magnitude_sandwich(Motor self, HomogeneousMagnitude other) {
+    return multi_vector_homogeneous_magnitude_into(multi_vector_motor_geometric_anti_product(motor_homogeneous_magnitude_geometric_anti_product(self, other), motor_anti_reversal(self)));
+}
+
+Point motor_point_sandwich(Motor self, Point other) {
+    return flector_point_into(flector_motor_geometric_anti_product(motor_point_geometric_anti_product(self, other), motor_anti_reversal(self)));
+}
+
+Line motor_line_sandwich(Motor self, Line other) {
+    return multi_vector_line_into(multi_vector_motor_geometric_anti_product(motor_line_geometric_anti_product(self, other), motor_anti_reversal(self)));
+}
+
+Plane motor_plane_sandwich(Motor self, Plane other) {
+    return flector_plane_into(flector_motor_geometric_anti_product(motor_plane_geometric_anti_product(self, other), motor_anti_reversal(self)));
+}
+
+Motor motor_motor_sandwich(Motor self, Motor other) {
+    return multi_vector_motor_into(multi_vector_motor_geometric_anti_product(motor_motor_geometric_anti_product(self, other), motor_anti_reversal(self)));
+}
+
+Rotor motor_rotor_sandwich(Motor self, Rotor other) {
+    return multi_vector_rotor_into(multi_vector_motor_geometric_anti_product(motor_rotor_geometric_anti_product(self, other), motor_anti_reversal(self)));
+}
+
+Translator motor_translator_sandwich(Motor self, Translator other) {
+    return multi_vector_translator_into(multi_vector_motor_geometric_anti_product(motor_translator_geometric_anti_product(self, other), motor_anti_reversal(self)));
+}
+
+Flector motor_flector_sandwich(Motor self, Flector other) {
+    return flector_motor_geometric_anti_product(motor_flector_geometric_anti_product(self, other), motor_anti_reversal(self));
+}
+
+MultiVector motor_multi_vector_sandwich(Motor self, MultiVector other) {
+    return multi_vector_motor_geometric_anti_product(motor_multi_vector_geometric_anti_product(self, other), motor_anti_reversal(self));
+}
+
+Scalar rotor_scalar_sandwich(Rotor self, Scalar other) {
+    return multi_vector_scalar_into(multi_vector_rotor_geometric_anti_product(rotor_scalar_geometric_anti_product(self, other), rotor_anti_reversal(self)));
+}
+
+AntiScalar rotor_anti_scalar_sandwich(Rotor self, AntiScalar other) {
+    return rotor_anti_scalar_into(rotor_rotor_geometric_anti_product(rotor_anti_scalar_geometric_anti_product(self, other), rotor_anti_reversal(self)));
+}
+
+HomogeneousMagnitude rotor_homogeneous_magnitude_sandwich(Rotor self, HomogeneousMagnitude other) {
+    return multi_vector_homogeneous_magnitude_into(multi_vector_rotor_geometric_anti_product(rotor_homogeneous_magnitude_geometric_anti_product(self, other), rotor_anti_reversal(self)));
+}
+
+Point rotor_point_sandwich(Rotor self, Point other) {
+    return flector_point_into(flector_rotor_geometric_anti_product(rotor_point_geometric_anti_product(self, other), rotor_anti_reversal(self)));
+}
+
+Line rotor_line_sandwich(Rotor self, Line other) {
+    return multi_vector_line_into(multi_vector_rotor_geometric_anti_product(rotor_line_geometric_anti_product(self, other), rotor_anti_reversal(self)));
+}
+
+Plane rotor_plane_sandwich(Rotor self, Plane other) {
+    return flector_plane_into(flector_rotor_geometric_anti_product(rotor_plane_geometric_anti_product(self, other), rotor_anti_reversal(self)));
+}
+
+Motor rotor_motor_sandwich(Rotor self, Motor other) {
+    return multi_vector_motor_into(multi_vector_rotor_geometric_anti_product(rotor_motor_geometric_anti_product(self, other), rotor_anti_reversal(self)));
+}
+
+Rotor rotor_rotor_sandwich(Rotor self, Rotor other) {
+    return rotor_rotor_geometric_anti_product(rotor_rotor_geometric_anti_product(self, other), rotor_anti_reversal(self));
+}
+
+Translator rotor_translator_sandwich(Rotor self, Translator other) {
+    return multi_vector_translator_into(multi_vector_rotor_geometric_anti_product(rotor_translator_geometric_anti_product(self, other), rotor_anti_reversal(self)));
+}
+
+Flector rotor_flector_sandwich(Rotor self, Flector other) {
+    return flector_rotor_geometric_anti_product(rotor_flector_geometric_anti_product(self, other), rotor_anti_reversal(self));
+}
+
+MultiVector rotor_multi_vector_sandwich(Rotor self, MultiVector other) {
+    return multi_vector_rotor_geometric_anti_product(rotor_multi_vector_geometric_anti_product(self, other), rotor_anti_reversal(self));
+}
+
+Scalar translator_scalar_sandwich(Translator self, Scalar other) {
+    return scalar_translator_geometric_anti_product(translator_scalar_geometric_anti_product(self, other), translator_anti_reversal(self));
+}
+
 AntiScalar translator_anti_scalar_sandwich(Translator self, AntiScalar other) {
     return translator_anti_scalar_into(translator_translator_geometric_anti_product(translator_anti_scalar_geometric_anti_product(self, other), translator_anti_reversal(self)));
 }
@@ -9370,256 +9422,128 @@ HomogeneousMagnitude translator_homogeneous_magnitude_sandwich(Translator self, 
     return multi_vector_homogeneous_magnitude_into(multi_vector_translator_geometric_anti_product(translator_homogeneous_magnitude_geometric_anti_product(self, other), translator_anti_reversal(self)));
 }
 
-Line translator_line_sandwich(Translator self, Line other) {
-    return multi_vector_line_into(multi_vector_translator_geometric_anti_product(translator_line_geometric_anti_product(self, other), translator_anti_reversal(self)));
+Point translator_point_sandwich(Translator self, Point other) {
+    return point_translator_geometric_anti_product(translator_point_geometric_anti_product(self, other), translator_anti_reversal(self));
 }
 
-Motor translator_motor_sandwich(Translator self, Motor other) {
-    return multi_vector_motor_into(multi_vector_translator_geometric_anti_product(translator_motor_geometric_anti_product(self, other), translator_anti_reversal(self)));
+Line translator_line_sandwich(Translator self, Line other) {
+    return multi_vector_line_into(multi_vector_translator_geometric_anti_product(translator_line_geometric_anti_product(self, other), translator_anti_reversal(self)));
 }
 
 Plane translator_plane_sandwich(Translator self, Plane other) {
     return flector_plane_into(flector_translator_geometric_anti_product(translator_plane_geometric_anti_product(self, other), translator_anti_reversal(self)));
 }
 
+Motor translator_motor_sandwich(Translator self, Motor other) {
+    return multi_vector_motor_into(multi_vector_translator_geometric_anti_product(translator_motor_geometric_anti_product(self, other), translator_anti_reversal(self)));
+}
+
 Rotor translator_rotor_sandwich(Translator self, Rotor other) {
     return multi_vector_rotor_into(multi_vector_translator_geometric_anti_product(translator_rotor_geometric_anti_product(self, other), translator_anti_reversal(self)));
 }
 
-HomogeneousMagnitude flector_flector_distance(Flector self, Flector other) {
-    return scalar_anti_scalar_add(flector_bulk_norm(motor_attitude(flector_flector_outer_product(self, other))), multi_vector_weight_norm(flector_multi_vector_outer_product(self, flector_attitude(other))));
+Translator translator_translator_sandwich(Translator self, Translator other) {
+    return translator_translator_geometric_anti_product(translator_translator_geometric_anti_product(self, other), translator_anti_reversal(self));
 }
 
-HomogeneousMagnitude flector_line_distance(Flector self, Line other) {
-    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(flector_line_outer_product(self, other))), motor_weight_norm(flector_point_outer_product(self, line_attitude(other))));
+Flector translator_flector_sandwich(Translator self, Flector other) {
+    return flector_translator_geometric_anti_product(translator_flector_geometric_anti_product(self, other), translator_anti_reversal(self));
 }
 
-HomogeneousMagnitude flector_motor_distance(Flector self, Motor other) {
-    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(flector_motor_outer_product(self, other))), motor_weight_norm(flector_flector_outer_product(self, motor_attitude(other))));
+MultiVector translator_multi_vector_sandwich(Translator self, MultiVector other) {
+    return multi_vector_translator_geometric_anti_product(translator_multi_vector_geometric_anti_product(self, other), translator_anti_reversal(self));
 }
 
-HomogeneousMagnitude flector_multi_vector_distance(Flector self, MultiVector other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(flector_multi_vector_outer_product(self, other))), multi_vector_weight_norm(flector_multi_vector_outer_product(self, multi_vector_attitude(other))));
+Scalar flector_scalar_sandwich(Flector self, Scalar other) {
+    return multi_vector_scalar_into(flector_flector_geometric_anti_product(flector_scalar_geometric_anti_product(self, other), flector_anti_reversal(self)));
 }
 
-HomogeneousMagnitude flector_plane_distance(Flector self, Plane other) {
-    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(flector_plane_outer_product(self, other))), plane_weight_norm(flector_line_outer_product(self, plane_attitude(other))));
+AntiScalar flector_anti_scalar_sandwich(Flector self, AntiScalar other) {
+    return multi_vector_anti_scalar_into(flector_flector_geometric_anti_product(flector_anti_scalar_geometric_anti_product(self, other), flector_anti_reversal(self)));
 }
 
-HomogeneousMagnitude flector_point_distance(Flector self, Point other) {
-    return scalar_anti_scalar_add(flector_bulk_norm(motor_attitude(flector_point_outer_product(self, other))), flector_weight_norm(flector_scalar_outer_product(self, point_attitude(other))));
+HomogeneousMagnitude flector_homogeneous_magnitude_sandwich(Flector self, HomogeneousMagnitude other) {
+    return multi_vector_homogeneous_magnitude_into(flector_flector_geometric_anti_product(flector_homogeneous_magnitude_geometric_anti_product(self, other), flector_anti_reversal(self)));
 }
 
-HomogeneousMagnitude flector_rotor_distance(Flector self, Rotor other) {
-    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(flector_rotor_outer_product(self, other))), motor_weight_norm(flector_flector_outer_product(self, rotor_attitude(other))));
+Point flector_point_sandwich(Flector self, Point other) {
+    return multi_vector_point_into(multi_vector_flector_geometric_anti_product(flector_point_geometric_anti_product(self, other), flector_anti_reversal(self)));
 }
 
-HomogeneousMagnitude flector_translator_distance(Flector self, Translator other) {
-    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(flector_translator_outer_product(self, other))), motor_weight_norm(flector_flector_outer_product(self, translator_attitude(other))));
+Line flector_line_sandwich(Flector self, Line other) {
+    return multi_vector_line_into(flector_flector_geometric_anti_product(flector_line_geometric_anti_product(self, other), flector_anti_reversal(self)));
 }
 
-HomogeneousMagnitude homogeneous_magnitude_anti_scalar_distance(HomogeneousMagnitude self, AntiScalar other) {
-    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(homogeneous_magnitude_anti_scalar_outer_product(self, other))), plane_weight_norm(homogeneous_magnitude_plane_outer_product(self, anti_scalar_attitude(other))));
+Plane flector_plane_sandwich(Flector self, Plane other) {
+    return multi_vector_plane_into(multi_vector_flector_geometric_anti_product(flector_plane_geometric_anti_product(self, other), flector_anti_reversal(self)));
 }
 
-HomogeneousMagnitude homogeneous_magnitude_flector_distance(HomogeneousMagnitude self, Flector other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(flector_attitude(homogeneous_magnitude_flector_outer_product(self, other))), multi_vector_weight_norm(homogeneous_magnitude_multi_vector_outer_product(self, flector_attitude(other))));
+Motor flector_motor_sandwich(Flector self, Motor other) {
+    return multi_vector_motor_into(flector_flector_geometric_anti_product(flector_motor_geometric_anti_product(self, other), flector_anti_reversal(self)));
 }
 
-HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_distance(HomogeneousMagnitude self, HomogeneousMagnitude other) {
-    return scalar_anti_scalar_add(plane_bulk_norm(homogeneous_magnitude_attitude(homogeneous_magnitude_homogeneous_magnitude_outer_product(self, other))), plane_weight_norm(homogeneous_magnitude_plane_outer_product(self, homogeneous_magnitude_attitude(other))));
+Rotor flector_rotor_sandwich(Flector self, Rotor other) {
+    return multi_vector_rotor_into(flector_flector_geometric_anti_product(flector_rotor_geometric_anti_product(self, other), flector_anti_reversal(self)));
 }
 
-HomogeneousMagnitude homogeneous_magnitude_line_distance(HomogeneousMagnitude self, Line other) {
-    return scalar_anti_scalar_add(point_bulk_norm(line_attitude(homogeneous_magnitude_line_outer_product(self, other))), point_weight_norm(homogeneous_magnitude_point_outer_product(self, line_attitude(other))));
+Translator flector_translator_sandwich(Flector self, Translator other) {
+    return multi_vector_translator_into(flector_flector_geometric_anti_product(flector_translator_geometric_anti_product(self, other), flector_anti_reversal(self)));
 }
 
-HomogeneousMagnitude homogeneous_magnitude_motor_distance(HomogeneousMagnitude self, Motor other) {
-    return scalar_anti_scalar_add(flector_bulk_norm(motor_attitude(homogeneous_magnitude_motor_outer_product(self, other))), flector_weight_norm(homogeneous_magnitude_flector_outer_product(self, motor_attitude(other))));
+Flector flector_flector_sandwich(Flector self, Flector other) {
+    return multi_vector_flector_into(multi_vector_flector_geometric_anti_product(flector_flector_geometric_anti_product(self, other), flector_anti_reversal(self)));
 }
 
-HomogeneousMagnitude homogeneous_magnitude_multi_vector_distance(HomogeneousMagnitude self, MultiVector other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(homogeneous_magnitude_multi_vector_outer_product(self, other))), multi_vector_weight_norm(homogeneous_magnitude_multi_vector_outer_product(self, multi_vector_attitude(other))));
+MultiVector flector_multi_vector_sandwich(Flector self, MultiVector other) {
+    return multi_vector_flector_geometric_anti_product(flector_multi_vector_geometric_anti_product(self, other), flector_anti_reversal(self));
 }
 
-HomogeneousMagnitude homogeneous_magnitude_plane_distance(HomogeneousMagnitude self, Plane other) {
-    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(homogeneous_magnitude_plane_outer_product(self, other))), line_weight_norm(homogeneous_magnitude_line_outer_product(self, plane_attitude(other))));
+Scalar multi_vector_scalar_sandwich(MultiVector self, Scalar other) {
+    return multi_vector_scalar_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_scalar_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
 }
 
-HomogeneousMagnitude homogeneous_magnitude_rotor_distance(HomogeneousMagnitude self, Rotor other) {
-    return scalar_anti_scalar_add(flector_bulk_norm(rotor_attitude(homogeneous_magnitude_rotor_outer_product(self, other))), flector_weight_norm(homogeneous_magnitude_flector_outer_product(self, rotor_attitude(other))));
+AntiScalar multi_vector_anti_scalar_sandwich(MultiVector self, AntiScalar other) {
+    return multi_vector_anti_scalar_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_anti_scalar_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
 }
 
-HomogeneousMagnitude homogeneous_magnitude_translator_distance(HomogeneousMagnitude self, Translator other) {
-    return scalar_anti_scalar_add(flector_bulk_norm(translator_attitude(homogeneous_magnitude_translator_outer_product(self, other))), flector_weight_norm(homogeneous_magnitude_flector_outer_product(self, translator_attitude(other))));
+HomogeneousMagnitude multi_vector_homogeneous_magnitude_sandwich(MultiVector self, HomogeneousMagnitude other) {
+    return multi_vector_homogeneous_magnitude_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_homogeneous_magnitude_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
 }
 
-HomogeneousMagnitude line_flector_distance(Line self, Flector other) {
-    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(line_flector_outer_product(self, other))), multi_vector_weight_norm(line_multi_vector_outer_product(self, flector_attitude(other))));
+Point multi_vector_point_sandwich(MultiVector self, Point other) {
+    return multi_vector_point_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_point_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
 }
 
-HomogeneousMagnitude line_line_distance(Line self, Line other) {
-    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(line_line_outer_product(self, other))), plane_weight_norm(line_point_outer_product(self, line_attitude(other))));
+Line multi_vector_line_sandwich(MultiVector self, Line other) {
+    return multi_vector_line_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_line_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
 }
 
-HomogeneousMagnitude line_motor_distance(Line self, Motor other) {
-    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(line_motor_outer_product(self, other))), plane_weight_norm(line_flector_outer_product(self, motor_attitude(other))));
+Plane multi_vector_plane_sandwich(MultiVector self, Plane other) {
+    return multi_vector_plane_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_plane_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
 }
 
-HomogeneousMagnitude line_multi_vector_distance(Line self, MultiVector other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(line_multi_vector_outer_product(self, other))), multi_vector_weight_norm(line_multi_vector_outer_product(self, multi_vector_attitude(other))));
+Motor multi_vector_motor_sandwich(MultiVector self, Motor other) {
+    return multi_vector_motor_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_motor_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
 }
 
-HomogeneousMagnitude line_point_distance(Line self, Point other) {
-    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(line_point_outer_product(self, other))), line_weight_norm(line_scalar_outer_product(self, point_attitude(other))));
+Rotor multi_vector_rotor_sandwich(MultiVector self, Rotor other) {
+    return multi_vector_rotor_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_rotor_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
 }
 
-HomogeneousMagnitude line_rotor_distance(Line self, Rotor other) {
-    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(line_rotor_outer_product(self, other))), plane_weight_norm(line_flector_outer_product(self, rotor_attitude(other))));
+Translator multi_vector_translator_sandwich(MultiVector self, Translator other) {
+    return multi_vector_translator_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_translator_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
 }
 
-HomogeneousMagnitude line_translator_distance(Line self, Translator other) {
-    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(line_translator_outer_product(self, other))), plane_weight_norm(line_flector_outer_product(self, translator_attitude(other))));
+Flector multi_vector_flector_sandwich(MultiVector self, Flector other) {
+    return multi_vector_flector_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_flector_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
 }
 
-HomogeneousMagnitude motor_flector_distance(Motor self, Flector other) {
-    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(motor_flector_outer_product(self, other))), multi_vector_weight_norm(motor_multi_vector_outer_product(self, flector_attitude(other))));
-}
-
-HomogeneousMagnitude motor_line_distance(Motor self, Line other) {
-    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(motor_line_outer_product(self, other))), plane_weight_norm(motor_point_outer_product(self, line_attitude(other))));
-}
-
-HomogeneousMagnitude motor_motor_distance(Motor self, Motor other) {
-    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(motor_motor_outer_product(self, other))), plane_weight_norm(motor_flector_outer_product(self, motor_attitude(other))));
-}
-
-HomogeneousMagnitude motor_multi_vector_distance(Motor self, MultiVector other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(motor_multi_vector_outer_product(self, other))), multi_vector_weight_norm(motor_multi_vector_outer_product(self, multi_vector_attitude(other))));
-}
-
-HomogeneousMagnitude motor_point_distance(Motor self, Point other) {
-    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(motor_point_outer_product(self, other))), motor_weight_norm(motor_scalar_outer_product(self, point_attitude(other))));
-}
-
-HomogeneousMagnitude motor_rotor_distance(Motor self, Rotor other) {
-    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(motor_rotor_outer_product(self, other))), plane_weight_norm(motor_flector_outer_product(self, rotor_attitude(other))));
-}
-
-HomogeneousMagnitude motor_translator_distance(Motor self, Translator other) {
-    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(motor_translator_outer_product(self, other))), plane_weight_norm(motor_flector_outer_product(self, translator_attitude(other))));
-}
-
-HomogeneousMagnitude multi_vector_anti_scalar_distance(MultiVector self, AntiScalar other) {
-    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(multi_vector_anti_scalar_outer_product(self, other))), multi_vector_weight_norm(multi_vector_plane_outer_product(self, anti_scalar_attitude(other))));
-}
-
-HomogeneousMagnitude multi_vector_flector_distance(MultiVector self, Flector other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_flector_outer_product(self, other))), multi_vector_weight_norm(multi_vector_multi_vector_outer_product(self, flector_attitude(other))));
-}
-
-HomogeneousMagnitude multi_vector_homogeneous_magnitude_distance(MultiVector self, HomogeneousMagnitude other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_homogeneous_magnitude_outer_product(self, other))), multi_vector_weight_norm(multi_vector_plane_outer_product(self, homogeneous_magnitude_attitude(other))));
-}
-
-HomogeneousMagnitude multi_vector_line_distance(MultiVector self, Line other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_line_outer_product(self, other))), multi_vector_weight_norm(multi_vector_point_outer_product(self, line_attitude(other))));
-}
-
-HomogeneousMagnitude multi_vector_motor_distance(MultiVector self, Motor other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_motor_outer_product(self, other))), multi_vector_weight_norm(multi_vector_flector_outer_product(self, motor_attitude(other))));
-}
-
-HomogeneousMagnitude multi_vector_multi_vector_distance(MultiVector self, MultiVector other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_multi_vector_outer_product(self, other))), multi_vector_weight_norm(multi_vector_multi_vector_outer_product(self, multi_vector_attitude(other))));
-}
-
-HomogeneousMagnitude multi_vector_plane_distance(MultiVector self, Plane other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_plane_outer_product(self, other))), multi_vector_weight_norm(multi_vector_line_outer_product(self, plane_attitude(other))));
-}
-
-HomogeneousMagnitude multi_vector_point_distance(MultiVector self, Point other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_point_outer_product(self, other))), multi_vector_weight_norm(multi_vector_scalar_outer_product(self, point_attitude(other))));
-}
-
-HomogeneousMagnitude multi_vector_rotor_distance(MultiVector self, Rotor other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_rotor_outer_product(self, other))), multi_vector_weight_norm(multi_vector_flector_outer_product(self, rotor_attitude(other))));
-}
-
-HomogeneousMagnitude multi_vector_translator_distance(MultiVector self, Translator other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_translator_outer_product(self, other))), multi_vector_weight_norm(multi_vector_flector_outer_product(self, translator_attitude(other))));
-}
-
-HomogeneousMagnitude plane_flector_distance(Plane self, Flector other) {
-    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(plane_flector_outer_product(self, other))), multi_vector_weight_norm(plane_multi_vector_outer_product(self, flector_attitude(other))));
-}
-
-HomogeneousMagnitude plane_multi_vector_distance(Plane self, MultiVector other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(plane_multi_vector_outer_product(self, other))), multi_vector_weight_norm(plane_multi_vector_outer_product(self, multi_vector_attitude(other))));
-}
-
-HomogeneousMagnitude plane_point_distance(Plane self, Point other) {
-    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(plane_point_outer_product(self, other))), plane_weight_norm(plane_scalar_outer_product(self, point_attitude(other))));
-}
-
-HomogeneousMagnitude point_flector_distance(Point self, Flector other) {
-    return scalar_anti_scalar_add(flector_bulk_norm(motor_attitude(point_flector_outer_product(self, other))), multi_vector_weight_norm(point_multi_vector_outer_product(self, flector_attitude(other))));
-}
-
-HomogeneousMagnitude point_line_distance(Point self, Line other) {
-    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(point_line_outer_product(self, other))), line_weight_norm(point_point_outer_product(self, line_attitude(other))));
-}
-
-HomogeneousMagnitude point_motor_distance(Point self, Motor other) {
-    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(point_motor_outer_product(self, other))), motor_weight_norm(point_flector_outer_product(self, motor_attitude(other))));
-}
-
-HomogeneousMagnitude point_multi_vector_distance(Point self, MultiVector other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(point_multi_vector_outer_product(self, other))), multi_vector_weight_norm(point_multi_vector_outer_product(self, multi_vector_attitude(other))));
-}
-
-HomogeneousMagnitude point_plane_distance(Point self, Plane other) {
-    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(point_plane_outer_product(self, other))), plane_weight_norm(point_line_outer_product(self, plane_attitude(other))));
-}
-
-HomogeneousMagnitude point_point_distance(Point self, Point other) {
-    return scalar_anti_scalar_add(point_bulk_norm(line_attitude(point_point_outer_product(self, other))), point_weight_norm(point_scalar_outer_product(self, point_attitude(other))));
-}
-
-HomogeneousMagnitude point_rotor_distance(Point self, Rotor other) {
-    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(point_rotor_outer_product(self, other))), motor_weight_norm(point_flector_outer_product(self, rotor_attitude(other))));
-}
-
-HomogeneousMagnitude point_translator_distance(Point self, Translator other) {
-    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(point_translator_outer_product(self, other))), motor_weight_norm(point_flector_outer_product(self, translator_attitude(other))));
-}
-
-HomogeneousMagnitude rotor_flector_distance(Rotor self, Flector other) {
-    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(rotor_flector_outer_product(self, other))), multi_vector_weight_norm(rotor_multi_vector_outer_product(self, flector_attitude(other))));
-}
-
-HomogeneousMagnitude rotor_line_distance(Rotor self, Line other) {
-    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(rotor_line_outer_product(self, other))), plane_weight_norm(rotor_point_outer_product(self, line_attitude(other))));
-}
-
-HomogeneousMagnitude rotor_motor_distance(Rotor self, Motor other) {
-    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(rotor_motor_outer_product(self, other))), plane_weight_norm(rotor_flector_outer_product(self, motor_attitude(other))));
-}
-
-HomogeneousMagnitude rotor_multi_vector_distance(Rotor self, MultiVector other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(rotor_multi_vector_outer_product(self, other))), multi_vector_weight_norm(rotor_multi_vector_outer_product(self, multi_vector_attitude(other))));
-}
-
-HomogeneousMagnitude rotor_translator_distance(Rotor self, Translator other) {
-    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(rotor_translator_outer_product(self, other))), plane_weight_norm(rotor_flector_outer_product(self, translator_attitude(other))));
+MultiVector multi_vector_multi_vector_sandwich(MultiVector self, MultiVector other) {
+    return multi_vector_multi_vector_geometric_anti_product(multi_vector_multi_vector_geometric_anti_product(self, other), multi_vector_anti_reversal(self));
 }
 
 HomogeneousMagnitude scalar_anti_scalar_distance(Scalar self, AntiScalar other) {
     return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(scalar_anti_scalar_outer_product(self, other))), plane_weight_norm(scalar_plane_outer_product(self, anti_scalar_attitude(other))));
-}
-
-HomogeneousMagnitude scalar_flector_distance(Scalar self, Flector other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(flector_attitude(scalar_flector_outer_product(self, other))), multi_vector_weight_norm(scalar_multi_vector_outer_product(self, flector_attitude(other))));
 }
 
 HomogeneousMagnitude scalar_homogeneous_magnitude_distance(Scalar self, HomogeneousMagnitude other) {
@@ -9630,16 +9554,12 @@ HomogeneousMagnitude scalar_line_distance(Scalar self, Line other) {
     return scalar_anti_scalar_add(point_bulk_norm(line_attitude(scalar_line_outer_product(self, other))), point_weight_norm(scalar_point_outer_product(self, line_attitude(other))));
 }
 
-HomogeneousMagnitude scalar_motor_distance(Scalar self, Motor other) {
-    return scalar_anti_scalar_add(flector_bulk_norm(motor_attitude(scalar_motor_outer_product(self, other))), flector_weight_norm(scalar_flector_outer_product(self, motor_attitude(other))));
-}
-
-HomogeneousMagnitude scalar_multi_vector_distance(Scalar self, MultiVector other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(scalar_multi_vector_outer_product(self, other))), multi_vector_weight_norm(scalar_multi_vector_outer_product(self, multi_vector_attitude(other))));
-}
-
 HomogeneousMagnitude scalar_plane_distance(Scalar self, Plane other) {
     return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(scalar_plane_outer_product(self, other))), line_weight_norm(scalar_line_outer_product(self, plane_attitude(other))));
+}
+
+HomogeneousMagnitude scalar_motor_distance(Scalar self, Motor other) {
+    return scalar_anti_scalar_add(flector_bulk_norm(motor_attitude(scalar_motor_outer_product(self, other))), flector_weight_norm(scalar_flector_outer_product(self, motor_attitude(other))));
 }
 
 HomogeneousMagnitude scalar_rotor_distance(Scalar self, Rotor other) {
@@ -9650,8 +9570,172 @@ HomogeneousMagnitude scalar_translator_distance(Scalar self, Translator other) {
     return scalar_anti_scalar_add(flector_bulk_norm(translator_attitude(scalar_translator_outer_product(self, other))), flector_weight_norm(scalar_flector_outer_product(self, translator_attitude(other))));
 }
 
-HomogeneousMagnitude translator_flector_distance(Translator self, Flector other) {
-    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(translator_flector_outer_product(self, other))), multi_vector_weight_norm(translator_multi_vector_outer_product(self, flector_attitude(other))));
+HomogeneousMagnitude scalar_flector_distance(Scalar self, Flector other) {
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(flector_attitude(scalar_flector_outer_product(self, other))), multi_vector_weight_norm(scalar_multi_vector_outer_product(self, flector_attitude(other))));
+}
+
+HomogeneousMagnitude scalar_multi_vector_distance(Scalar self, MultiVector other) {
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(scalar_multi_vector_outer_product(self, other))), multi_vector_weight_norm(scalar_multi_vector_outer_product(self, multi_vector_attitude(other))));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_anti_scalar_distance(HomogeneousMagnitude self, AntiScalar other) {
+    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(homogeneous_magnitude_anti_scalar_outer_product(self, other))), plane_weight_norm(homogeneous_magnitude_plane_outer_product(self, anti_scalar_attitude(other))));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_distance(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return scalar_anti_scalar_add(plane_bulk_norm(homogeneous_magnitude_attitude(homogeneous_magnitude_homogeneous_magnitude_outer_product(self, other))), plane_weight_norm(homogeneous_magnitude_plane_outer_product(self, homogeneous_magnitude_attitude(other))));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_line_distance(HomogeneousMagnitude self, Line other) {
+    return scalar_anti_scalar_add(point_bulk_norm(line_attitude(homogeneous_magnitude_line_outer_product(self, other))), point_weight_norm(homogeneous_magnitude_point_outer_product(self, line_attitude(other))));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_plane_distance(HomogeneousMagnitude self, Plane other) {
+    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(homogeneous_magnitude_plane_outer_product(self, other))), line_weight_norm(homogeneous_magnitude_line_outer_product(self, plane_attitude(other))));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_motor_distance(HomogeneousMagnitude self, Motor other) {
+    return scalar_anti_scalar_add(flector_bulk_norm(motor_attitude(homogeneous_magnitude_motor_outer_product(self, other))), flector_weight_norm(homogeneous_magnitude_flector_outer_product(self, motor_attitude(other))));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_rotor_distance(HomogeneousMagnitude self, Rotor other) {
+    return scalar_anti_scalar_add(flector_bulk_norm(rotor_attitude(homogeneous_magnitude_rotor_outer_product(self, other))), flector_weight_norm(homogeneous_magnitude_flector_outer_product(self, rotor_attitude(other))));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_translator_distance(HomogeneousMagnitude self, Translator other) {
+    return scalar_anti_scalar_add(flector_bulk_norm(translator_attitude(homogeneous_magnitude_translator_outer_product(self, other))), flector_weight_norm(homogeneous_magnitude_flector_outer_product(self, translator_attitude(other))));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_flector_distance(HomogeneousMagnitude self, Flector other) {
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(flector_attitude(homogeneous_magnitude_flector_outer_product(self, other))), multi_vector_weight_norm(homogeneous_magnitude_multi_vector_outer_product(self, flector_attitude(other))));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_multi_vector_distance(HomogeneousMagnitude self, MultiVector other) {
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(homogeneous_magnitude_multi_vector_outer_product(self, other))), multi_vector_weight_norm(homogeneous_magnitude_multi_vector_outer_product(self, multi_vector_attitude(other))));
+}
+
+HomogeneousMagnitude point_point_distance(Point self, Point other) {
+    return scalar_anti_scalar_add(point_bulk_norm(line_attitude(point_point_outer_product(self, other))), point_weight_norm(point_scalar_outer_product(self, point_attitude(other))));
+}
+
+HomogeneousMagnitude point_line_distance(Point self, Line other) {
+    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(point_line_outer_product(self, other))), line_weight_norm(point_point_outer_product(self, line_attitude(other))));
+}
+
+HomogeneousMagnitude point_plane_distance(Point self, Plane other) {
+    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(point_plane_outer_product(self, other))), plane_weight_norm(point_line_outer_product(self, plane_attitude(other))));
+}
+
+HomogeneousMagnitude point_motor_distance(Point self, Motor other) {
+    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(point_motor_outer_product(self, other))), motor_weight_norm(point_flector_outer_product(self, motor_attitude(other))));
+}
+
+HomogeneousMagnitude point_rotor_distance(Point self, Rotor other) {
+    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(point_rotor_outer_product(self, other))), motor_weight_norm(point_flector_outer_product(self, rotor_attitude(other))));
+}
+
+HomogeneousMagnitude point_translator_distance(Point self, Translator other) {
+    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(point_translator_outer_product(self, other))), motor_weight_norm(point_flector_outer_product(self, translator_attitude(other))));
+}
+
+HomogeneousMagnitude point_flector_distance(Point self, Flector other) {
+    return scalar_anti_scalar_add(flector_bulk_norm(motor_attitude(point_flector_outer_product(self, other))), multi_vector_weight_norm(point_multi_vector_outer_product(self, flector_attitude(other))));
+}
+
+HomogeneousMagnitude point_multi_vector_distance(Point self, MultiVector other) {
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(point_multi_vector_outer_product(self, other))), multi_vector_weight_norm(point_multi_vector_outer_product(self, multi_vector_attitude(other))));
+}
+
+HomogeneousMagnitude line_point_distance(Line self, Point other) {
+    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(line_point_outer_product(self, other))), line_weight_norm(line_scalar_outer_product(self, point_attitude(other))));
+}
+
+HomogeneousMagnitude line_line_distance(Line self, Line other) {
+    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(line_line_outer_product(self, other))), plane_weight_norm(line_point_outer_product(self, line_attitude(other))));
+}
+
+HomogeneousMagnitude line_motor_distance(Line self, Motor other) {
+    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(line_motor_outer_product(self, other))), plane_weight_norm(line_flector_outer_product(self, motor_attitude(other))));
+}
+
+HomogeneousMagnitude line_rotor_distance(Line self, Rotor other) {
+    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(line_rotor_outer_product(self, other))), plane_weight_norm(line_flector_outer_product(self, rotor_attitude(other))));
+}
+
+HomogeneousMagnitude line_translator_distance(Line self, Translator other) {
+    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(line_translator_outer_product(self, other))), plane_weight_norm(line_flector_outer_product(self, translator_attitude(other))));
+}
+
+HomogeneousMagnitude line_flector_distance(Line self, Flector other) {
+    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(line_flector_outer_product(self, other))), multi_vector_weight_norm(line_multi_vector_outer_product(self, flector_attitude(other))));
+}
+
+HomogeneousMagnitude line_multi_vector_distance(Line self, MultiVector other) {
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(line_multi_vector_outer_product(self, other))), multi_vector_weight_norm(line_multi_vector_outer_product(self, multi_vector_attitude(other))));
+}
+
+HomogeneousMagnitude plane_point_distance(Plane self, Point other) {
+    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(plane_point_outer_product(self, other))), plane_weight_norm(plane_scalar_outer_product(self, point_attitude(other))));
+}
+
+HomogeneousMagnitude plane_flector_distance(Plane self, Flector other) {
+    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(plane_flector_outer_product(self, other))), multi_vector_weight_norm(plane_multi_vector_outer_product(self, flector_attitude(other))));
+}
+
+HomogeneousMagnitude plane_multi_vector_distance(Plane self, MultiVector other) {
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(plane_multi_vector_outer_product(self, other))), multi_vector_weight_norm(plane_multi_vector_outer_product(self, multi_vector_attitude(other))));
+}
+
+HomogeneousMagnitude motor_point_distance(Motor self, Point other) {
+    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(motor_point_outer_product(self, other))), motor_weight_norm(motor_scalar_outer_product(self, point_attitude(other))));
+}
+
+HomogeneousMagnitude motor_line_distance(Motor self, Line other) {
+    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(motor_line_outer_product(self, other))), plane_weight_norm(motor_point_outer_product(self, line_attitude(other))));
+}
+
+HomogeneousMagnitude motor_motor_distance(Motor self, Motor other) {
+    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(motor_motor_outer_product(self, other))), plane_weight_norm(motor_flector_outer_product(self, motor_attitude(other))));
+}
+
+HomogeneousMagnitude motor_rotor_distance(Motor self, Rotor other) {
+    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(motor_rotor_outer_product(self, other))), plane_weight_norm(motor_flector_outer_product(self, rotor_attitude(other))));
+}
+
+HomogeneousMagnitude motor_translator_distance(Motor self, Translator other) {
+    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(motor_translator_outer_product(self, other))), plane_weight_norm(motor_flector_outer_product(self, translator_attitude(other))));
+}
+
+HomogeneousMagnitude motor_flector_distance(Motor self, Flector other) {
+    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(motor_flector_outer_product(self, other))), multi_vector_weight_norm(motor_multi_vector_outer_product(self, flector_attitude(other))));
+}
+
+HomogeneousMagnitude motor_multi_vector_distance(Motor self, MultiVector other) {
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(motor_multi_vector_outer_product(self, other))), multi_vector_weight_norm(motor_multi_vector_outer_product(self, multi_vector_attitude(other))));
+}
+
+HomogeneousMagnitude rotor_line_distance(Rotor self, Line other) {
+    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(rotor_line_outer_product(self, other))), plane_weight_norm(rotor_point_outer_product(self, line_attitude(other))));
+}
+
+HomogeneousMagnitude rotor_motor_distance(Rotor self, Motor other) {
+    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(rotor_motor_outer_product(self, other))), plane_weight_norm(rotor_flector_outer_product(self, motor_attitude(other))));
+}
+
+HomogeneousMagnitude rotor_translator_distance(Rotor self, Translator other) {
+    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(rotor_translator_outer_product(self, other))), plane_weight_norm(rotor_flector_outer_product(self, translator_attitude(other))));
+}
+
+HomogeneousMagnitude rotor_flector_distance(Rotor self, Flector other) {
+    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(rotor_flector_outer_product(self, other))), multi_vector_weight_norm(rotor_multi_vector_outer_product(self, flector_attitude(other))));
+}
+
+HomogeneousMagnitude rotor_multi_vector_distance(Rotor self, MultiVector other) {
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(rotor_multi_vector_outer_product(self, other))), multi_vector_weight_norm(rotor_multi_vector_outer_product(self, multi_vector_attitude(other))));
+}
+
+HomogeneousMagnitude translator_point_distance(Translator self, Point other) {
+    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(translator_point_outer_product(self, other))), translator_weight_norm(translator_scalar_outer_product(self, point_attitude(other))));
 }
 
 HomogeneousMagnitude translator_line_distance(Translator self, Line other) {
@@ -9662,15 +9746,87 @@ HomogeneousMagnitude translator_motor_distance(Translator self, Motor other) {
     return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(translator_motor_outer_product(self, other))), plane_weight_norm(translator_flector_outer_product(self, motor_attitude(other))));
 }
 
+HomogeneousMagnitude translator_rotor_distance(Translator self, Rotor other) {
+    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(translator_rotor_outer_product(self, other))), plane_weight_norm(translator_flector_outer_product(self, rotor_attitude(other))));
+}
+
+HomogeneousMagnitude translator_flector_distance(Translator self, Flector other) {
+    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(translator_flector_outer_product(self, other))), multi_vector_weight_norm(translator_multi_vector_outer_product(self, flector_attitude(other))));
+}
+
 HomogeneousMagnitude translator_multi_vector_distance(Translator self, MultiVector other) {
     return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(translator_multi_vector_outer_product(self, other))), multi_vector_weight_norm(translator_multi_vector_outer_product(self, multi_vector_attitude(other))));
 }
 
-HomogeneousMagnitude translator_point_distance(Translator self, Point other) {
-    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(translator_point_outer_product(self, other))), translator_weight_norm(translator_scalar_outer_product(self, point_attitude(other))));
+HomogeneousMagnitude flector_point_distance(Flector self, Point other) {
+    return scalar_anti_scalar_add(flector_bulk_norm(motor_attitude(flector_point_outer_product(self, other))), flector_weight_norm(flector_scalar_outer_product(self, point_attitude(other))));
 }
 
-HomogeneousMagnitude translator_rotor_distance(Translator self, Rotor other) {
-    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(translator_rotor_outer_product(self, other))), plane_weight_norm(translator_flector_outer_product(self, rotor_attitude(other))));
+HomogeneousMagnitude flector_line_distance(Flector self, Line other) {
+    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(flector_line_outer_product(self, other))), motor_weight_norm(flector_point_outer_product(self, line_attitude(other))));
+}
+
+HomogeneousMagnitude flector_plane_distance(Flector self, Plane other) {
+    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(flector_plane_outer_product(self, other))), plane_weight_norm(flector_line_outer_product(self, plane_attitude(other))));
+}
+
+HomogeneousMagnitude flector_motor_distance(Flector self, Motor other) {
+    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(flector_motor_outer_product(self, other))), motor_weight_norm(flector_flector_outer_product(self, motor_attitude(other))));
+}
+
+HomogeneousMagnitude flector_rotor_distance(Flector self, Rotor other) {
+    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(flector_rotor_outer_product(self, other))), motor_weight_norm(flector_flector_outer_product(self, rotor_attitude(other))));
+}
+
+HomogeneousMagnitude flector_translator_distance(Flector self, Translator other) {
+    return scalar_anti_scalar_add(line_bulk_norm(plane_attitude(flector_translator_outer_product(self, other))), motor_weight_norm(flector_flector_outer_product(self, translator_attitude(other))));
+}
+
+HomogeneousMagnitude flector_flector_distance(Flector self, Flector other) {
+    return scalar_anti_scalar_add(flector_bulk_norm(motor_attitude(flector_flector_outer_product(self, other))), multi_vector_weight_norm(flector_multi_vector_outer_product(self, flector_attitude(other))));
+}
+
+HomogeneousMagnitude flector_multi_vector_distance(Flector self, MultiVector other) {
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(flector_multi_vector_outer_product(self, other))), multi_vector_weight_norm(flector_multi_vector_outer_product(self, multi_vector_attitude(other))));
+}
+
+HomogeneousMagnitude multi_vector_anti_scalar_distance(MultiVector self, AntiScalar other) {
+    return scalar_anti_scalar_add(plane_bulk_norm(anti_scalar_attitude(multi_vector_anti_scalar_outer_product(self, other))), multi_vector_weight_norm(multi_vector_plane_outer_product(self, anti_scalar_attitude(other))));
+}
+
+HomogeneousMagnitude multi_vector_homogeneous_magnitude_distance(MultiVector self, HomogeneousMagnitude other) {
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_homogeneous_magnitude_outer_product(self, other))), multi_vector_weight_norm(multi_vector_plane_outer_product(self, homogeneous_magnitude_attitude(other))));
+}
+
+HomogeneousMagnitude multi_vector_point_distance(MultiVector self, Point other) {
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_point_outer_product(self, other))), multi_vector_weight_norm(multi_vector_scalar_outer_product(self, point_attitude(other))));
+}
+
+HomogeneousMagnitude multi_vector_line_distance(MultiVector self, Line other) {
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_line_outer_product(self, other))), multi_vector_weight_norm(multi_vector_point_outer_product(self, line_attitude(other))));
+}
+
+HomogeneousMagnitude multi_vector_plane_distance(MultiVector self, Plane other) {
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_plane_outer_product(self, other))), multi_vector_weight_norm(multi_vector_line_outer_product(self, plane_attitude(other))));
+}
+
+HomogeneousMagnitude multi_vector_motor_distance(MultiVector self, Motor other) {
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_motor_outer_product(self, other))), multi_vector_weight_norm(multi_vector_flector_outer_product(self, motor_attitude(other))));
+}
+
+HomogeneousMagnitude multi_vector_rotor_distance(MultiVector self, Rotor other) {
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_rotor_outer_product(self, other))), multi_vector_weight_norm(multi_vector_flector_outer_product(self, rotor_attitude(other))));
+}
+
+HomogeneousMagnitude multi_vector_translator_distance(MultiVector self, Translator other) {
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_translator_outer_product(self, other))), multi_vector_weight_norm(multi_vector_flector_outer_product(self, translator_attitude(other))));
+}
+
+HomogeneousMagnitude multi_vector_flector_distance(MultiVector self, Flector other) {
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_flector_outer_product(self, other))), multi_vector_weight_norm(multi_vector_multi_vector_outer_product(self, flector_attitude(other))));
+}
+
+HomogeneousMagnitude multi_vector_multi_vector_distance(MultiVector self, MultiVector other) {
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_multi_vector_outer_product(self, other))), multi_vector_weight_norm(multi_vector_multi_vector_outer_product(self, multi_vector_attitude(other))));
 }
 

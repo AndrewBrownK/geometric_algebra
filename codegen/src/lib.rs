@@ -10,9 +10,9 @@ use std::io::{Read, Write};
 use std::path::PathBuf;
 use naga;
 use naga::back::wgsl::WriterFlags;
-use naga::{Module, ShaderStage};
+use naga::{ShaderStage};
 use naga::front::glsl::Error;
-use naga::valid::{Capabilities, ModuleInfo, ValidationFlags};
+use naga::valid::{Capabilities, ValidationFlags};
 use naga_oil::prune::PartReq;
 use crate::{
     algebra::{BasisElement, GeometricAlgebra, Involution, MultiVectorClass, MultiVectorClassRegistry, Product},
@@ -101,6 +101,75 @@ pub fn read_config_from_str(config: &str) -> AlgebraDescriptor {
     }
 }
 
+struct TraitImpls<'a> {
+    raw: BTreeMap<String, (Parameter<'a>, BTreeMap<String, AstNode<'a>>, BTreeMap<String, (Parameter<'a>, BTreeMap<String, AstNode<'a>>)>)>,
+    // TODO use these
+    singles: BTreeMap<(String, String), AstNode<'a>>,
+    pairs: BTreeMap<(String, String, String), AstNode<'a>>
+}
+
+impl<'a> TraitImpls<'a> {
+    fn new() -> Self {
+        TraitImpls {
+            raw: BTreeMap::new(),
+            singles: BTreeMap::new(),
+            pairs: BTreeMap::new(),
+        }
+    }
+
+    fn add_pair_impl(&mut self, name: &str, parameter_a: Parameter<'a>, parameter_b: Parameter<'a>, the_impl: AstNode<'a>) {
+        let a_name = parameter_a.multi_vector_class().class_name.clone();
+        let b_name = parameter_b.multi_vector_class().class_name.clone();
+        let (_, _, pairs) = self.raw.entry(a_name).or_insert((parameter_a, BTreeMap::new(), BTreeMap::new()));
+        let (_, pair_impls) = pairs.entry(b_name).or_insert((parameter_b, BTreeMap::new()));
+        pair_impls.insert(name.to_string(), the_impl);
+    }
+
+    fn add_single_impl(&mut self, name: &str, parameter_a: Parameter<'a>, the_impl: AstNode<'a>) {
+        let a_name = parameter_a.multi_vector_class().class_name.clone();
+        let (_, singles, _) = self.raw.entry(a_name).or_insert((parameter_a, BTreeMap::new(), BTreeMap::new()));
+        singles.insert(name.to_string(), the_impl);
+    }
+
+    fn get_pair_impl(&self, name: &str, parameter_a: &Parameter, parameter_b: &Parameter) -> Option<&AstNode<'a>> {
+        let (_, _, pairs) = self.raw.get(&parameter_a.multi_vector_class().class_name)?;
+        let (_, pair_impls) = pairs.get(&parameter_b.multi_vector_class().class_name)?;
+        let the_impl = pair_impls.get(name)?;
+        return Some(the_impl);
+    }
+
+    fn get_single_impl(&self, name: &str, parameter_a: &Parameter) -> Option<&AstNode<'a>> {
+        let (_, singles, _) = self.raw.get(&parameter_a.multi_vector_class().class_name)?;
+        let the_impl = singles.get(name)?;
+        return Some(the_impl);
+    }
+
+    fn get_pair_impl_and_result(&self, name: &str, parameter_a: &Parameter, parameter_b: &Parameter) -> Option<(&AstNode<'a>, &Parameter)> {
+        let (_, _, pairs) = self.raw.get(&parameter_a.multi_vector_class().class_name)?;
+        let (_, pair_impls) = pairs.get(&parameter_b.multi_vector_class().class_name)?;
+        let the_impl = pair_impls.get(name)?;
+        let result = result_of_trait!(the_impl);
+        return Some((the_impl, result));
+    }
+
+    fn get_single_impl_and_result(&self, name: &str, parameter_a: &Parameter) -> Option<(&AstNode<'a>, &Parameter)> {
+        let (_, singles, _) = self.raw.get(&parameter_a.multi_vector_class().class_name)?;
+        let the_impl = singles.get(name)?;
+        let result = result_of_trait!(the_impl);
+        return Some((the_impl, result));
+    }
+}
+
+macro_rules! questionable {
+    ($b:block) => {
+        // Implicit FnOnce() -> Option<()>
+        // Not explicit because then we need dyn, but then we need box, and it's annoying
+        #[allow(unused_mut)]
+        let mut thunk_optional = || $b;
+        let _ = thunk_optional().unwrap_or_default();
+    };
+}
+
 
 // TODO hack in cga stuff
 pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
@@ -128,18 +197,17 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
         emitter.emit(&AstNode::ClassDefinition { class }).unwrap();
     }
 
-    let mut trait_implementations = std::collections::BTreeMap::new();
+    let mut trait_impls = TraitImpls::new();
     for class_a in registry.classes.iter() {
         let parameter_a = Parameter {
             name: "self",
             data_type: DataType::MultiVector(class_a),
         };
-        let mut single_trait_implementations = std::collections::BTreeMap::new();
         for name in &["Zero", "One"] {
             let ast_node = class_a.constant(name);
             emitter.emit(&ast_node).unwrap();
             if ast_node != AstNode::None {
-                single_trait_implementations.insert(name.to_string(), ast_node);
+                trait_impls.add_single_impl(name, parameter_a.clone(), ast_node);
             }
         }
 
@@ -148,11 +216,11 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
                 let anti_grade = algebra.generator_squares.len() - grade;
                 let grade_impl = MultiVectorClass::derive_grade("Grade", &parameter_a, grade);
                 emitter.emit(&grade_impl).unwrap();
-                single_trait_implementations.insert(result_of_trait!(grade_impl).name.to_string(), grade_impl);
+                trait_impls.add_single_impl("Grade", parameter_a.clone(), grade_impl);
 
                 let anti_grade_impl = MultiVectorClass::derive_grade("AntiGrade", &parameter_a, anti_grade);
                 emitter.emit(&anti_grade_impl).unwrap();
-                single_trait_implementations.insert(result_of_trait!(anti_grade_impl).name.to_string(), anti_grade_impl);
+                trait_impls.add_single_impl("AntiGrade", parameter_a.clone(), anti_grade_impl);
             }
         }
 
@@ -164,12 +232,10 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
             let ast_node = MultiVectorClass::involution(name, involution, &parameter_a, &registry, false);
             emitter.emit(&ast_node).unwrap();
             if ast_node != AstNode::None {
-                single_trait_implementations.insert(name.to_string(), ast_node);
+                trait_impls.add_single_impl(name, parameter_a.clone(), ast_node);
             }
         }
-        let mut pair_trait_implementations = std::collections::BTreeMap::new();
         for class_b in registry.classes.iter() {
-            let mut trait_implementations = std::collections::BTreeMap::new();
             let parameter_b = Parameter {
                 name: "other",
                 data_type: DataType::MultiVector(class_b),
@@ -179,14 +245,14 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
                 let ast_node = MultiVectorClass::involution(name, &Involution::projection(class_b), &parameter_a, &registry, true);
                 emitter.emit(&ast_node).unwrap();
                 if ast_node != AstNode::None {
-                    trait_implementations.insert(name.to_string(), ast_node);
+                    trait_impls.add_pair_impl(name, parameter_a.clone(), parameter_b.clone(), ast_node);
                 }
             }
             for name in &["Add", "Sub"] {
                 let ast_node = MultiVectorClass::element_wise(*name, &parameter_a, &parameter_b, &registry);
                 emitter.emit(&ast_node).unwrap();
                 if ast_node != AstNode::None {
-                    trait_implementations.insert(name.to_string(), ast_node);
+                    trait_impls.add_pair_impl(name, parameter_a.clone(), parameter_b.clone(), ast_node);
                 }
             }
             if class_a == class_b {
@@ -194,7 +260,7 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
                     let ast_node = MultiVectorClass::element_wise(*name, &parameter_a, &parameter_b, &registry);
                     emitter.emit(&ast_node).unwrap();
                     if ast_node != AstNode::None {
-                        trait_implementations.insert(name.to_string(), ast_node);
+                        trait_impls.add_pair_impl(name, parameter_a.clone(), parameter_b.clone(), ast_node);
                     }
                 }
             }
@@ -209,24 +275,25 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
                 let ast_node = MultiVectorClass::product(name, product, &parameter_a, &parameter_b, &registry);
                 emitter.emit(&ast_node).unwrap();
                 if ast_node != AstNode::None {
-                    trait_implementations.insert(name.to_string(), ast_node);
+                    trait_impls.add_pair_impl(name, parameter_a.clone(), parameter_b.clone(), ast_node);
                 }
             }
-            pair_trait_implementations.insert(
-                parameter_b.multi_vector_class().class_name.clone(),
-                (parameter_b.clone(), trait_implementations),
-            );
         }
 
-        // Can implement more traits using existing traits
-        for (parameter_b, pair_trait_implementations) in pair_trait_implementations.values() {
 
+        for class_b in registry.classes.iter() {
+            let parameter_b = Parameter {
+                name: "other",
+                data_type: DataType::MultiVector(class_b),
+            };
             if parameter_a.multi_vector_class() != parameter_b.multi_vector_class() {
                 continue
             }
 
-            // If this type has a ScalarProduct and Reversal, then we can implement SquaredMagnitude and Magnitude
-            let (scalar_product, reversal) = match (pair_trait_implementations.get("ScalarProduct"), single_trait_implementations.get("Reversal")) {
+            let scalar_product = trait_impls.get_pair_impl("ScalarProduct", &parameter_a, &parameter_b);
+            let reversal = trait_impls.get_single_impl("Reversal", &parameter_a);
+
+            let (scalar_product, reversal) = match (scalar_product, reversal) {
                 (Some(sp), Some(r)) => (sp, r),
                 (_, _) => continue,
             };
@@ -238,10 +305,15 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
 
             let bulk_norm = MultiVectorClass::derive_magnitude("BulkNorm", &squared_magnitude, &parameter_a);
 
-            single_trait_implementations.insert(result_of_trait!(squared_magnitude).name.to_string(), squared_magnitude);
-            single_trait_implementations.insert(result_of_trait!(magnitude).name.to_string(), magnitude);
+            trait_impls.add_single_impl("SquaredMagnitude", parameter_a.clone(), squared_magnitude);
+            trait_impls.add_single_impl("Magnitude", parameter_a.clone(), magnitude);
 
-            let (anti_scalar_product, anti_reversal) = match (pair_trait_implementations.get("AntiScalarProduct"), single_trait_implementations.get("AntiReversal")) {
+
+
+            let anti_scalar_product = trait_impls.get_pair_impl("AntiScalarProduct", &parameter_a, &parameter_b);
+            let anti_reversal = trait_impls.get_single_impl("AntiReversal", &parameter_a);
+
+            let (anti_scalar_product, anti_reversal) = match (anti_scalar_product, anti_reversal) {
                 (Some(sp), Some(r)) => (sp, r),
                 (_, _) => continue,
             };
@@ -252,99 +324,98 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
             let weight_norm = MultiVectorClass::derive_magnitude("WeightNorm", &squared_anti_magnitude, &parameter_a);
             emitter.emit(&weight_norm).unwrap();
 
-
             let bulk_norm_result = result_of_trait!(bulk_norm);
             let weight_norm_result = result_of_trait!(weight_norm);
-            if let Some((_, _, scalar_pair_impls)) = trait_implementations.get(&bulk_norm_result.multi_vector_class().class_name) {
-                let scalar_pair_impls: &BTreeMap<String, (Parameter, BTreeMap<String, AstNode>)> = scalar_pair_impls;
-                if let Some((_, homogenous_pair_impls)) = scalar_pair_impls.get(&weight_norm_result.multi_vector_class().class_name) {
-                    if let Some(add) = homogenous_pair_impls.get("Add") {
-                        let geometric_norm = MultiVectorClass::derive_geometric_norm("GeometricNorm", &bulk_norm, &weight_norm, &registry, &parameter_a, &add);
-                        emitter.emit(&geometric_norm).unwrap();
-                        match &geometric_norm {
-                            AstNode::TraitImplementation { ref result, .. } => {
-                                single_trait_implementations.insert(result.name.to_string(), geometric_norm);
-                            },
-                            _ => {}
-                        }
-                    }
-                }
+
+            if let Some(add) = trait_impls.get_pair_impl("Add", bulk_norm_result, weight_norm_result) {
+                let geometric_norm = MultiVectorClass::derive_geometric_norm("GeometricNorm", &bulk_norm, &weight_norm, &registry, &parameter_a, &add);
+                emitter.emit(&geometric_norm).unwrap();
+                trait_impls.add_single_impl("GeometricNorm", parameter_a.clone(), geometric_norm);
             }
-
-            single_trait_implementations.insert(result_of_trait!(bulk_norm).name.to_string(), bulk_norm);
-            single_trait_implementations.insert(result_of_trait!(squared_anti_magnitude).name.to_string(), squared_anti_magnitude);
-            single_trait_implementations.insert(result_of_trait!(weight_norm).name.to_string(), weight_norm);
-
+            trait_impls.add_single_impl("BulkNorm", parameter_a.clone(), bulk_norm);
+            trait_impls.add_single_impl("SquaredAntiMagnitude", parameter_a.clone(), squared_anti_magnitude);
+            trait_impls.add_single_impl("WeightNorm", parameter_a.clone(), weight_norm);
         }
 
-        // Can implement even more traits using existing traits
-        for (parameter_b, pair_trait_implementations) in pair_trait_implementations.values() {
+        for class_b in registry.classes.iter() {
+            let parameter_b = Parameter {
+                name: "other",
+                data_type: DataType::MultiVector(class_b),
+            };
+
 
             if parameter_b.multi_vector_class().grouped_basis != vec![vec![BasisElement::from_index(0)]] {
                 continue;
             }
 
             // If this type has a GeometricProduct with scalar, then we can implement some extra stuff
-            let geometric_product = match pair_trait_implementations.get("GeometricProduct") {
+            let geometric_product = match trait_impls.get_pair_impl("GeometricProduct", &parameter_a, &parameter_b) {
                 Some(gp) => gp,
                 None => continue,
             };
 
             // If this type has a GeometricProduct, then we can implement Scale
-            let scale = MultiVectorClass::derive_scale("Scale", geometric_product, &parameter_a, parameter_b);
+            let scale = MultiVectorClass::derive_scale("Scale", geometric_product, &parameter_a, &parameter_b);
             emitter.emit(&scale).unwrap();
 
             // If this type also has a Magnitude, then we can implement Signum
-            if let Some(magnitude) = single_trait_implementations.get("Magnitude") {
+            if let Some(magnitude) = trait_impls.get_single_impl("Magnitude", &parameter_a) {
                 let signum = MultiVectorClass::derive_signum("Signum", geometric_product, magnitude, &parameter_a);
                 emitter.emit(&signum).unwrap();
-                single_trait_implementations.insert(result_of_trait!(signum).name.to_string(), signum);
+                trait_impls.add_single_impl("Signum", parameter_a.clone(), signum);
             }
 
+            // If this type has a GeometricProduct with scalar, then we can implement some extra stuff
+            let geometric_product = match trait_impls.get_pair_impl("GeometricProduct", &parameter_a, &parameter_b) {
+                Some(gp) => gp,
+                None => continue,
+            };
+
             // If this type also has a SquaredMagnitude and Reversal, then we can implement Inverse
-            if let Some(squared_magnitude) = single_trait_implementations.get("SquaredMagnitude") {
-                if let Some(reversal) = single_trait_implementations.get("Reversal") {
+            if let Some(squared_magnitude) = trait_impls.get_single_impl("SquaredMagnitude", &parameter_a) {
+                if let Some(reversal) = trait_impls.get_single_impl("Reversal", &parameter_a) {
                     let inverse = MultiVectorClass::derive_inverse("Inverse", geometric_product, squared_magnitude, reversal, &parameter_a);
                     emitter.emit(&inverse).unwrap();
-                    single_trait_implementations.insert(result_of_trait!(inverse).name.to_string(), inverse);
+                    trait_impls.add_single_impl("Inverse", parameter_a.clone(), inverse);
                 }
             }
         }
 
+        for class_b in registry.classes.iter() {
+            let parameter_b = Parameter {
+                name: "other",
+                data_type: DataType::MultiVector(class_b),
+            };
 
-        // Can implement even more traits using existing traits
-        for (parameter_b, pair_trait_implementations) in pair_trait_implementations.values() {
 
             if parameter_b.multi_vector_class().grouped_basis != vec![vec![BasisElement::from_index(0)]] {
                 continue;
             }
 
             // If this type has a GeometricProduct with scalar, then we can implement some extra stuff
-            let geometric_product = match pair_trait_implementations.get("GeometricProduct") {
+            let geometric_product = match trait_impls.get_pair_impl("GeometricProduct", &parameter_a, &parameter_b) {
                 Some(gp) => gp,
                 None => continue,
             };
 
-            if let Some(weight_norm) = single_trait_implementations.get("WeightNorm") {
+            if let Some(weight_norm) = trait_impls.get_single_impl("WeightNorm", &parameter_a) {
                 let unitize = MultiVectorClass::derive_unitize("Unitize", geometric_product, weight_norm, &parameter_a, &parameter_b);
                 emitter.emit(&unitize).unwrap();
-                single_trait_implementations.insert(result_of_trait!(unitize).name.to_string(), unitize);
+                trait_impls.add_single_impl("Unitize", parameter_a.clone(), unitize);
             }
         }
 
+        for class_b in registry.classes.iter() {
+            let parameter_b = Parameter {
+                name: "other",
+                data_type: DataType::MultiVector(class_b),
+            };
 
-
-        // panic!("Where is my panic!");
-
-
-        // Can implement even more traits using existing traits
-        for (parameter_b, pair_trait_implementations) in pair_trait_implementations.values() {
-
-
-            let anti_wedge_product = match pair_trait_implementations.get("RegressiveProduct") {
-                Some(p) => p,
+            let anti_wedge_product = match trait_impls.get_pair_impl("RegressiveProduct", &parameter_a, &parameter_b) {
+                Some(aw) => aw,
                 None => continue
             };
+
 
             let bases = parameter_b.multi_vector_class().flat_basis();
             let nzd = algebra.generator_squares.iter().filter(|it| **it != 0isize).count();
@@ -365,235 +436,156 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
                 &special_base
             );
             emitter.emit(&attitude).unwrap();
-            single_trait_implementations.insert(result_of_trait!(attitude).name.to_string(), attitude);
+            trait_impls.add_single_impl("Attitude", parameter_a.clone(), attitude);
         }
-
-
-        trait_implementations.insert(
-            parameter_a.multi_vector_class().class_name.clone(),
-            (parameter_a.clone(), single_trait_implementations, pair_trait_implementations),
-        );
     }
-    for (parameter_a, single_trait_implementations, pair_trait_implementations) in trait_implementations.values() {
-        for (parameter_b, pair_trait_implementations) in pair_trait_implementations.values() {
-            if let Some(geometric_product) = pair_trait_implementations.get("GeometricProduct") {
-                let geometric_product_result = result_of_trait!(geometric_product);
-                if parameter_a.multi_vector_class() == parameter_b.multi_vector_class()
-                    && geometric_product_result.multi_vector_class() == parameter_a.multi_vector_class()
-                {
-                    if let Some(constant_one) = single_trait_implementations.get("One") {
-                        if let Some(inverse) = single_trait_implementations.get("Inverse") {
-                            let power_of_integer = MultiVectorClass::derive_power_of_integer(
-                                "Powi",
-                                geometric_product,
-                                constant_one,
-                                inverse,
-                                parameter_a,
-                                &Parameter {
-                                    name: "exponent",
-                                    data_type: DataType::Integer,
-                                },
-                            );
-                            emitter.emit(&power_of_integer).unwrap();
-                        }
-                    }
+
+
+
+
+    for class_a in registry.classes.iter() {
+        let parameter_a = Parameter {
+            name: "self",
+            data_type: DataType::MultiVector(class_a),
+        };
+        for class_b in registry.classes.iter() {
+            let parameter_b = Parameter {
+                name: "other",
+                data_type: DataType::MultiVector(class_b),
+            };
+
+            let (geometric_product, geometric_product_result) = match trait_impls.get_pair_impl_and_result("GeometricProduct", &parameter_a, &parameter_b) {
+                Some(gp) => gp,
+                None => continue
+            };
+
+            if parameter_a.multi_vector_class() == parameter_b.multi_vector_class()
+                && geometric_product_result.multi_vector_class() == parameter_a.multi_vector_class()
+            {
+                //
+                let constant_one = trait_impls.get_single_impl("One", &parameter_a);
+                let inverse = trait_impls.get_single_impl("Inverse", &parameter_a);
+                if let (Some(constant_one), Some(inverse)) = (constant_one, inverse) {
+                    let power_of_integer = MultiVectorClass::derive_power_of_integer(
+                        "Powi",
+                        geometric_product,
+                        constant_one,
+                        inverse,
+                        &parameter_a,
+                        &Parameter {
+                            name: "exponent",
+                            data_type: DataType::Integer,
+                        },
+                    );
+                    emitter.emit(&power_of_integer).unwrap();
                 }
-                if let Some(b_trait_implementations) = trait_implementations.get(&parameter_b.multi_vector_class().class_name) {
-                    if let Some(inverse) = b_trait_implementations.1.get("Inverse") {
-                        let division = MultiVectorClass::derive_division("GeometricQuotient", geometric_product, inverse, parameter_a, parameter_b);
-                        emitter.emit(&division).unwrap();
-                    }
-                }
-                if let Some(reversal) = single_trait_implementations.get("Reversal") {
-                    if let Some(b_trait_implementations) = trait_implementations.get(&geometric_product_result.multi_vector_class().class_name) {
-                        if let Some(b_pair_trait_implementations) = b_trait_implementations.2.get(&parameter_a.multi_vector_class().class_name) {
-                            if let Some(geometric_product_2) = b_pair_trait_implementations.1.get("GeometricProduct") {
-                                let geometric_product_2_result = result_of_trait!(geometric_product_2);
-                                if let Some(c_trait_implementations) =
-                                    trait_implementations.get(&geometric_product_2_result.multi_vector_class().class_name)
-                                {
-                                    if let Some(c_pair_trait_implementations) =
-                                        c_trait_implementations.2.get(&parameter_b.multi_vector_class().class_name)
-                                    {
-                                        // TODO
-                                        let transformation = MultiVectorClass::derive_sandwich_product(
-                                            "Transformation",
-                                            geometric_product,
-                                            geometric_product_2,
-                                            reversal,
-                                            c_pair_trait_implementations.1.get("Into"),
-                                            parameter_a,
-                                            parameter_b,
-                                        );
-                                        emitter.emit(&transformation).unwrap();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+            }
+
+            if let Some(inverse) = trait_impls.get_single_impl("Inverse", &parameter_b) {
+                let division = MultiVectorClass::derive_division("GeometricQuotient", geometric_product, inverse, &parameter_a, &parameter_b);
+                emitter.emit(&division).unwrap();
             }
         }
     }
 
 
-    for (parameter_a, single_trait_implementations, pair_trait_implementations) in trait_implementations.values() {
-        for (parameter_b, pair_trait_implementations) in pair_trait_implementations.values() {
-            let geometric_anti_product_1 = match pair_trait_implementations.get("GeometricAntiProduct") {
-                None => continue,
-                Some(p) => p
-            };
-            let geometric_anti_product_result_1 = result_of_trait!(geometric_anti_product_1);
-            let anti_reversal = match single_trait_implementations.get("AntiReversal") {
-                None => continue,
-                Some(r) => r,
-            };
-            let anti_reversal_result = result_of_trait!(anti_reversal);
-            let geometric_anti_product_2 = match trait_implementations.get(&geometric_anti_product_result_1.multi_vector_class().class_name) {
-                None => continue,
-                Some((_, _, pair_impls)) => match pair_impls.get(&anti_reversal_result.multi_vector_class().class_name) {
-                    None => continue,
-                    Some((_, i)) => match i.get("GeometricAntiProduct") {
-                        None => continue,
-                        Some(p) => p,
-                    }
-                }
-            };
-            let geometric_anti_product_result_2 = result_of_trait!(geometric_anti_product_2);
-            let do_into = match trait_implementations.get(&geometric_anti_product_result_2.multi_vector_class().class_name) {
-                None => continue,
-                Some((_, _, pair_impls)) => match pair_impls.get(&parameter_b.multi_vector_class().class_name) {
-                    None => continue,
-                    Some((_, i)) => match i.get("Into") {
-                        None => continue,
-                        Some(i) => i,
-                    }
-                }
-            };
+    for (param_a, param_b) in registry.pair_parameters() {
+        questionable!({
+            let (gp, gp_r) = trait_impls.get_pair_impl_and_result("GeometricProduct", &param_a, &param_b)?;
+            let reversal = trait_impls.get_single_impl("Reversal", &param_a)?;
+            let (gp2, gp2_r) = trait_impls.get_pair_impl_and_result("GeometricProduct", &gp_r, &param_a)?;
+            let into = trait_impls.get_pair_impl("Into", &gp2_r, &param_b);
+            let transformation = MultiVectorClass::derive_sandwich_product(
+                "Transformation", gp, gp2, reversal, into, &param_a, &param_b
+            );
+            emitter.emit(&transformation).unwrap();
+            trait_impls.add_pair_impl("Transformation", param_a, param_b, transformation);
+            Some(())
+        });
+    }
+
+
+    // for (parameter_a, single_trait_implementations, pair_trait_implementations) in trait_implementations.values() {
+    //     for (parameter_b, pair_trait_implementations) in pair_trait_implementations.values() {
+    //         if let Some(geometric_product) = pair_trait_implementations.get("GeometricProduct") {
+    //             let geometric_product_result = result_of_trait!(geometric_product);
+    //             if let Some(reversal) = single_trait_implementations.get("Reversal") {
+    //                 if let Some(b_trait_implementations) = trait_implementations.get(&geometric_product_result.multi_vector_class().class_name) {
+    //                     if let Some(b_pair_trait_implementations) = b_trait_implementations.2.get(&parameter_a.multi_vector_class().class_name) {
+    //                         if let Some(geometric_product_2) = b_pair_trait_implementations.1.get("GeometricProduct") {
+    //                             let geometric_product_2_result = result_of_trait!(geometric_product_2);
+    //
+    //
+    //                             if let Some(c_trait_implementations) =
+    //                                 trait_implementations.get(&geometric_product_2_result.multi_vector_class().class_name)
+    //                             {
+    //                                 if let Some(c_pair_trait_implementations) =
+    //                                     c_trait_implementations.2.get(&parameter_b.multi_vector_class().class_name)
+    //                                 {
+    //                                     // TODO
+    //                                     let transformation = MultiVectorClass::derive_sandwich_product(
+    //                                         "Transformation",
+    //                                         geometric_product,
+    //                                         geometric_product_2,
+    //                                         reversal,
+    //                                         c_pair_trait_implementations.1.get("Into"),
+    //                                         parameter_a,
+    //                                         parameter_b,
+    //                                     );
+    //                                     emitter.emit(&transformation).unwrap();
+    //                                 }
+    //                             }
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+
+
+    for (param_a, param_b) in registry.pair_parameters() {
+        questionable!({
+            let (gp, gp_r) = trait_impls.get_pair_impl_and_result("GeometricAntiProduct", &param_a, &param_b)?;
+            let (reversal, reversal_r) = trait_impls.get_single_impl_and_result("AntiReversal", &param_a)?;
+            let (gp2, gp2_r) = trait_impls.get_pair_impl_and_result("GeometricAntiProduct", &gp_r, &reversal_r)?;
+            let into = trait_impls.get_pair_impl("Into", &gp2_r, &param_b);
             let sandwich = MultiVectorClass::derive_sandwich_product(
-                "Sandwich",
-                geometric_anti_product_1,
-                geometric_anti_product_2,
-                anti_reversal,
-                Some(do_into),
-                parameter_a,
-                parameter_b
+                "Sandwich", gp, gp2, reversal, into, &param_a, &param_b
             );
             emitter.emit(&sandwich).unwrap();
-        }
+            trait_impls.add_pair_impl("Sandwich", param_a, param_b, sandwich);
+            Some(())
+        });
+    }
+    for (param_a, param_b) in registry.pair_parameters() {
+        questionable!({
+            let ed = {
+                let (bulk_wedge, bw_r) = trait_impls.get_pair_impl_and_result("OuterProduct", &param_a, &param_b)?;
+                let (bulk_attitude, ba_r) = trait_impls.get_single_impl_and_result("Attitude", &bw_r)?;
+                let (weight_attitude, wa_r) = trait_impls.get_single_impl_and_result("Attitude", &param_b)?;
+                let (weight_wedge, ww_r) = trait_impls.get_pair_impl_and_result("OuterProduct", &param_a, &wa_r)?;
+                let (bulk_norm, bn_r) = trait_impls.get_single_impl_and_result("BulkNorm", &ba_r)?;
+                let (weight_norm, wn_r) = trait_impls.get_single_impl_and_result("WeightNorm", &ww_r)?;
+                let (add, add_r) = trait_impls.get_pair_impl_and_result("Add", &bn_r, &wn_r)?;
+                MultiVectorClass::derive_euclidean_distance(
+                    "Distance", &param_a, &param_b, &add_r, &bulk_wedge, &bulk_attitude,
+                    &bulk_norm, &weight_attitude, &weight_wedge, &weight_norm, &add
+                )
+            };
+            emitter.emit(&ed).unwrap();
+            // trait_impls.add_pair_impl("Distance", param_a, param_b, ed);
+            Some(())
+        });
     }
 
-    let param_pairs: Vec<_> = trait_implementations.iter().filter_map(|(_, (parameter_a, _, pair_trait_impls))| {
-        let parameter_bs = pair_trait_impls.values().filter_map(|(parameter_b, pair_trait_impls)| {
-            if pair_trait_impls.contains_key("OuterProduct") { Some(parameter_b.clone()) } else { None }
-        }).collect::<Vec<Parameter>>();
-
-        if parameter_bs.is_empty() { None } else {
-            Some(parameter_bs.into_iter().map(|b| (parameter_a.clone(), b)).collect::<Vec<_>>())
-        }
-    }).flatten().collect();
-
-    for (parameter_a, parameter_b) in param_pairs {
-
-        let bulk_wedge = match trait_implementations.get(&parameter_a.multi_vector_class().class_name) {
-            None => continue,
-            Some((a, _, stuff)) => match stuff.get(&parameter_b.multi_vector_class().class_name) {
-                None => continue,
-                Some((_, stuff)) => match stuff.get("OuterProduct") {
-                    None => continue,
-                    Some(wp) => wp
-                }
-            }
-        };
-        let bulk_wedge_result = result_of_trait!(bulk_wedge);
-
-        let bulk_attitude = match trait_implementations.get(&bulk_wedge_result.multi_vector_class().class_name) {
-            Some((_, singles, _)) => match singles.get("Attitude") {
-                Some(a) => a,
-                None => continue,
-            },
-            None => continue
-        };
-        let bulk_attitude_result = result_of_trait!(bulk_attitude);
-
-        let weight_attitude = match trait_implementations.get(&parameter_b.multi_vector_class().class_name) {
-            Some((_, singles, _)) => match singles.get("Attitude") {
-                Some(a) => a,
-                None => continue,
-            },
-            None => continue,
-        };
-        let weight_attitude_result = result_of_trait!(weight_attitude);
-
-
-
-
-        let weight_wedge = match trait_implementations.get(&parameter_a.multi_vector_class().class_name) {
-            None => continue,
-            Some((a, _, stuff)) => match stuff.get(&weight_attitude_result.multi_vector_class().class_name) {
-                None => continue,
-                Some((_, stuff)) => match stuff.get("OuterProduct") {
-                    None => continue,
-                    Some(wp) => wp
-                }
-            }
-        };
-        let weight_wedge_result = result_of_trait!(weight_wedge);
-
-
-        let bulk_norm = match trait_implementations.get(&bulk_attitude_result.multi_vector_class().class_name) {
-            Some((_, singles, _)) => match singles.get("BulkNorm") {
-                Some(bn) => bn,
-                None => continue,
-            },
-            None => continue
-        };
-
-        let weight_norm = match trait_implementations.get(&weight_wedge_result.multi_vector_class().class_name) {
-            Some((_, singles, _)) => match singles.get("WeightNorm") {
-                Some(wn) => wn,
-                None => continue,
-            },
-            None => continue
-        };
-
-        let bulk_norm_result = result_of_trait!(bulk_norm);
-        let weight_norm_result = result_of_trait!(weight_norm);
-        let final_add = match trait_implementations.get(&bulk_norm_result.multi_vector_class().class_name) {
-            Some((_, _, pairs)) => {
-                match pairs.get(&weight_norm_result.multi_vector_class().class_name) {
-                    Some((_, pair_trait_impls)) => match pair_trait_impls.get("Add") {
-                        Some(add) => add,
-                        None => continue
-                    },
-                    None => continue,
-                }
-            }
-            None => continue,
-        };
-        let final_result = result_of_trait!(final_add);
-
-        let ed = MultiVectorClass::derive_euclidean_distance(
-            "Distance",
-            &parameter_a,
-            &parameter_b,
-            &final_result,
-            &bulk_wedge,
-            &bulk_attitude,
-            &bulk_norm,
-            &weight_attitude,
-            &weight_wedge,
-            &weight_norm,
-            &final_add
-        );
-        emitter.emit(&ed).unwrap();
-
-        if let Some((_, _, pairs)) = trait_implementations.get_mut(&parameter_a.multi_vector_class().class_name) {
-            if let Some((_, pair_impls)) = pairs.get_mut(&parameter_b.multi_vector_class().class_name) {
-                pair_impls.insert("Distance".to_string(), ed);
-            }
-        }
-    }
+    //
+    //     if let Some((_, _, pairs)) = trait_implementations.get_mut(&parameter_a.multi_vector_class().class_name) {
+    //         if let Some((_, pair_impls)) = pairs.get_mut(&parameter_b.multi_vector_class().class_name) {
+    //             pair_impls.insert("Distance".to_string(), ed);
+    //         }
+    //     }
+    // }
 
     // TODO:
     //  - Inversion?
@@ -655,7 +647,7 @@ fn do_wgsl(algebra_name: &str, file_path: PathBuf) {
 
     // Write the wgsl
     wgsl_backend.write(&module, &module_info).unwrap();
-    let mut wgsl_contents = wgsl_backend.finish();
+    let wgsl_contents = wgsl_backend.finish();
     let mut wgsl_file = std::fs::File::create(file_path.with_extension("wgsl")).unwrap();
     wgsl_file.write(wgsl_contents.as_bytes()).unwrap();
 }

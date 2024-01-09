@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-use naga::MathFunction::Exp;
 use crate::{
     algebra::{BasisElement, BasisElementIndex, Involution, MultiVectorClass, MultiVectorClassRegistry, Product},
     ast::{AstNode, DataType, Expression, ExpressionContent, Parameter},

@@ -1,3 +1,5 @@
+use crate::ast::{DataType, Parameter};
+
 pub struct GeometricAlgebra<'a> {
     pub generator_squares: &'a [isize],
 }
@@ -317,6 +319,32 @@ impl Product {
 pub struct MultiVectorClassRegistry {
     pub classes: Vec<MultiVectorClass>,
     index_by_signature: std::collections::HashMap<Vec<BasisElementIndex>, usize>,
+}
+
+impl MultiVectorClassRegistry {
+    pub fn single_parameters(&self) -> impl Iterator<Item=Parameter> {
+        self.classes.iter().map(|class_a| {
+            Parameter {
+                name: "self",
+                data_type: DataType::MultiVector(class_a),
+            }
+        })
+    }
+    pub fn pair_parameters(&self) -> impl Iterator<Item=(Parameter, Parameter)> {
+        self.classes.iter().map(|class_a| {
+            let param_a = Parameter {
+                name: "self",
+                data_type: DataType::MultiVector(class_a),
+            };
+            self.classes.iter().map(move |class_b| {
+                let param_b = Parameter {
+                    name: "other",
+                    data_type: DataType::MultiVector(class_b),
+                };
+                (param_a.clone(), param_b)
+            })
+        }).flatten()
+    }
 }
 
 impl MultiVectorClassRegistry {
