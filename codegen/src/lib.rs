@@ -1,24 +1,28 @@
+#![feature(try_blocks)]
+
+use std::collections::{BTreeMap, HashMap};
+use std::io::{Read, Write};
+use std::path::PathBuf;
+
+use naga;
+use naga::back::wgsl::WriterFlags;
+use naga::front::glsl::Error;
+use naga::ShaderStage;
+use naga::valid::{Capabilities, ValidationFlags};
+use naga_oil::prune::PartReq;
+
+use crate::{
+    algebra::{BasisElement, GeometricAlgebra, Involution, MultiVectorClass, MultiVectorClassRegistry, Product},
+    ast::{AstNode, DataType, Parameter},
+    emit::Emitter,
+};
+
 pub mod algebra;
 mod ast;
 mod compile;
 mod emit;
 mod glsl;
 mod rust;
-
-use std::collections::{BTreeMap, HashMap};
-use std::io::{Read, Write};
-use std::path::PathBuf;
-use naga;
-use naga::back::wgsl::WriterFlags;
-use naga::{ShaderStage};
-use naga::front::glsl::Error;
-use naga::valid::{Capabilities, ValidationFlags};
-use naga_oil::prune::PartReq;
-use crate::{
-    algebra::{BasisElement, GeometricAlgebra, Involution, MultiVectorClass, MultiVectorClassRegistry, Product},
-    ast::{AstNode, DataType, Parameter},
-    emit::Emitter,
-};
 
 pub struct AlgebraDescriptor {
     pub algebra_name: String,
@@ -131,20 +135,20 @@ impl<'a> TraitImpls<'a> {
         singles.insert(name.to_string(), the_impl);
     }
 
-    fn get_pair_impl(&self, name: &str, parameter_a: &Parameter, parameter_b: &Parameter) -> Option<&AstNode<'a>> {
+    fn get_pair_impl(&self, name: &str, parameter_a: &Parameter<'a>, parameter_b: &Parameter<'a>) -> Option<&AstNode<'a>> {
         let (_, _, pairs) = self.raw.get(&parameter_a.multi_vector_class().class_name)?;
         let (_, pair_impls) = pairs.get(&parameter_b.multi_vector_class().class_name)?;
         let the_impl = pair_impls.get(name)?;
         return Some(the_impl);
     }
 
-    fn get_single_impl(&self, name: &str, parameter_a: &Parameter) -> Option<&AstNode<'a>> {
+    fn get_single_impl(&self, name: &str, parameter_a: &Parameter<'a>) -> Option<&AstNode<'a>> {
         let (_, singles, _) = self.raw.get(&parameter_a.multi_vector_class().class_name)?;
         let the_impl = singles.get(name)?;
         return Some(the_impl);
     }
 
-    fn get_pair_impl_and_result(&self, name: &str, parameter_a: &Parameter, parameter_b: &Parameter) -> Option<(&AstNode<'a>, &Parameter)> {
+    fn get_pair_impl_and_result(&self, name: &str, parameter_a: &Parameter<'a>, parameter_b: &Parameter<'a>) -> Option<(&AstNode<'a>, &Parameter<'a>)> {
         let (_, _, pairs) = self.raw.get(&parameter_a.multi_vector_class().class_name)?;
         let (_, pair_impls) = pairs.get(&parameter_b.multi_vector_class().class_name)?;
         let the_impl = pair_impls.get(name)?;
@@ -152,22 +156,12 @@ impl<'a> TraitImpls<'a> {
         return Some((the_impl, result));
     }
 
-    fn get_single_impl_and_result(&self, name: &str, parameter_a: &Parameter) -> Option<(&AstNode<'a>, &Parameter)> {
+    fn get_single_impl_and_result(&self, name: &str, parameter_a: &Parameter<'a>) -> Option<(&AstNode<'a>, &Parameter<'a>)> {
         let (_, singles, _) = self.raw.get(&parameter_a.multi_vector_class().class_name)?;
         let the_impl = singles.get(name)?;
         let result = result_of_trait!(the_impl);
         return Some((the_impl, result));
     }
-}
-
-macro_rules! questionable {
-    ($b:block) => {
-        // Implicit FnOnce() -> Option<()>
-        // Not explicit because then we need dyn, but then we need box, and it's annoying
-        #[allow(unused_mut)]
-        let mut thunk_optional = || $b;
-        let _ = thunk_optional().unwrap_or_default();
-    };
 }
 
 
@@ -490,7 +484,7 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
 
 
     for (param_a, param_b) in registry.pair_parameters() {
-        questionable!({
+        let _: Option<()> = try {
             let (gp, gp_r) = trait_impls.get_pair_impl_and_result("GeometricProduct", &param_a, &param_b)?;
             let reversal = trait_impls.get_single_impl("Reversal", &param_a)?;
             let (gp2, gp2_r) = trait_impls.get_pair_impl_and_result("GeometricProduct", &gp_r, &param_a)?;
@@ -500,52 +494,11 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
             );
             emitter.emit(&transformation).unwrap();
             trait_impls.add_pair_impl("Transformation", param_a, param_b, transformation);
-            Some(())
-        });
+        };
     }
 
-
-    // for (parameter_a, single_trait_implementations, pair_trait_implementations) in trait_implementations.values() {
-    //     for (parameter_b, pair_trait_implementations) in pair_trait_implementations.values() {
-    //         if let Some(geometric_product) = pair_trait_implementations.get("GeometricProduct") {
-    //             let geometric_product_result = result_of_trait!(geometric_product);
-    //             if let Some(reversal) = single_trait_implementations.get("Reversal") {
-    //                 if let Some(b_trait_implementations) = trait_implementations.get(&geometric_product_result.multi_vector_class().class_name) {
-    //                     if let Some(b_pair_trait_implementations) = b_trait_implementations.2.get(&parameter_a.multi_vector_class().class_name) {
-    //                         if let Some(geometric_product_2) = b_pair_trait_implementations.1.get("GeometricProduct") {
-    //                             let geometric_product_2_result = result_of_trait!(geometric_product_2);
-    //
-    //
-    //                             if let Some(c_trait_implementations) =
-    //                                 trait_implementations.get(&geometric_product_2_result.multi_vector_class().class_name)
-    //                             {
-    //                                 if let Some(c_pair_trait_implementations) =
-    //                                     c_trait_implementations.2.get(&parameter_b.multi_vector_class().class_name)
-    //                                 {
-    //                                     // TODO
-    //                                     let transformation = MultiVectorClass::derive_sandwich_product(
-    //                                         "Transformation",
-    //                                         geometric_product,
-    //                                         geometric_product_2,
-    //                                         reversal,
-    //                                         c_pair_trait_implementations.1.get("Into"),
-    //                                         parameter_a,
-    //                                         parameter_b,
-    //                                     );
-    //                                     emitter.emit(&transformation).unwrap();
-    //                                 }
-    //                             }
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-
-
     for (param_a, param_b) in registry.pair_parameters() {
-        questionable!({
+        let _: Option<()> = try {
             let (gp, gp_r) = trait_impls.get_pair_impl_and_result("GeometricAntiProduct", &param_a, &param_b)?;
             let (reversal, reversal_r) = trait_impls.get_single_impl_and_result("AntiReversal", &param_a)?;
             let (gp2, gp2_r) = trait_impls.get_pair_impl_and_result("GeometricAntiProduct", &gp_r, &reversal_r)?;
@@ -555,37 +508,26 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
             );
             emitter.emit(&sandwich).unwrap();
             trait_impls.add_pair_impl("Sandwich", param_a, param_b, sandwich);
-            Some(())
-        });
-    }
-    for (param_a, param_b) in registry.pair_parameters() {
-        questionable!({
-            let ed = {
-                let (bulk_wedge, bw_r) = trait_impls.get_pair_impl_and_result("OuterProduct", &param_a, &param_b)?;
-                let (bulk_attitude, ba_r) = trait_impls.get_single_impl_and_result("Attitude", &bw_r)?;
-                let (weight_attitude, wa_r) = trait_impls.get_single_impl_and_result("Attitude", &param_b)?;
-                let (weight_wedge, ww_r) = trait_impls.get_pair_impl_and_result("OuterProduct", &param_a, &wa_r)?;
-                let (bulk_norm, bn_r) = trait_impls.get_single_impl_and_result("BulkNorm", &ba_r)?;
-                let (weight_norm, wn_r) = trait_impls.get_single_impl_and_result("WeightNorm", &ww_r)?;
-                let (add, add_r) = trait_impls.get_pair_impl_and_result("Add", &bn_r, &wn_r)?;
-                MultiVectorClass::derive_euclidean_distance(
-                    "Distance", &param_a, &param_b, &add_r, &bulk_wedge, &bulk_attitude,
-                    &bulk_norm, &weight_attitude, &weight_wedge, &weight_norm, &add
-                )
-            };
-            emitter.emit(&ed).unwrap();
-            // trait_impls.add_pair_impl("Distance", param_a, param_b, ed);
-            Some(())
-        });
+        };
     }
 
-    //
-    //     if let Some((_, _, pairs)) = trait_implementations.get_mut(&parameter_a.multi_vector_class().class_name) {
-    //         if let Some((_, pair_impls)) = pairs.get_mut(&parameter_b.multi_vector_class().class_name) {
-    //             pair_impls.insert("Distance".to_string(), ed);
-    //         }
-    //     }
-    // }
+    for (param_a, param_b) in registry.pair_parameters() {
+        let _: Option<()> = try {
+            let (bulk_wedge, bw_r) = trait_impls.get_pair_impl_and_result("OuterProduct", &param_a, &param_b)?;
+            let (bulk_attitude, ba_r) = trait_impls.get_single_impl_and_result("Attitude", &bw_r)?;
+            let (weight_attitude, wa_r) = trait_impls.get_single_impl_and_result("Attitude", &param_b)?;
+            let (weight_wedge, ww_r) = trait_impls.get_pair_impl_and_result("OuterProduct", &param_a, &wa_r)?;
+            let (bulk_norm, bn_r) = trait_impls.get_single_impl_and_result("BulkNorm", &ba_r)?;
+            let (weight_norm, wn_r) = trait_impls.get_single_impl_and_result("WeightNorm", &ww_r)?;
+            let (add, add_r) = trait_impls.get_pair_impl_and_result("Add", &bn_r, &wn_r)?;
+            let ed = MultiVectorClass::derive_euclidean_distance(
+                "Distance", &param_a, &param_b, &add_r, &bulk_wedge, &bulk_attitude,
+                &bulk_norm, &weight_attitude, &weight_wedge, &weight_norm, &add
+            );
+            emitter.emit(&ed).unwrap();
+            trait_impls.add_pair_impl("Distance", param_a, param_b, ed);
+        };
+    }
 
     // TODO:
     //  - Inversion?

@@ -1485,6 +1485,7 @@ impl MultiVectorClass {
 
         final_add: &AstNode<'a>,
     ) -> AstNode<'a> {
+
         let bulk_wedge_result = result_of_trait!(bulk_wedge);
         let bulk_attitude_result = result_of_trait!(bulk_attitude);
         let bulk_norm_result = result_of_trait!(bulk_norm);
