@@ -192,29 +192,27 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
     }
 
     let mut trait_impls = TraitImpls::new();
-    for class_a in registry.classes.iter() {
-        let parameter_a = Parameter {
-            name: "self",
-            data_type: DataType::MultiVector(class_a),
-        };
+
+    for param_a in registry.single_parameters() {
+        let class_a = param_a.multi_vector_class();
         for name in &["Zero", "One"] {
             let ast_node = class_a.constant(name);
             emitter.emit(&ast_node).unwrap();
             if ast_node != AstNode::None {
-                trait_impls.add_single_impl(name, parameter_a.clone(), ast_node);
+                trait_impls.add_single_impl(name, param_a.clone(), ast_node);
             }
         }
 
         if let Some((grade, unanimous)) = class_a.flat_basis().iter().map(|a| (a.grade(), true)).reduce(|a, b| (a.0, a.0 == b.0 && a.1 && b.1)) {
             if unanimous {
                 let anti_grade = algebra.generator_squares.len() - grade;
-                let grade_impl = MultiVectorClass::derive_grade("Grade", &parameter_a, grade);
+                let grade_impl = MultiVectorClass::derive_grade("Grade", &param_a, grade);
                 emitter.emit(&grade_impl).unwrap();
-                trait_impls.add_single_impl("Grade", parameter_a.clone(), grade_impl);
+                trait_impls.add_single_impl("Grade", param_a.clone(), grade_impl);
 
-                let anti_grade_impl = MultiVectorClass::derive_grade("AntiGrade", &parameter_a, anti_grade);
+                let anti_grade_impl = MultiVectorClass::derive_grade("AntiGrade", &param_a, anti_grade);
                 emitter.emit(&anti_grade_impl).unwrap();
-                trait_impls.add_single_impl("AntiGrade", parameter_a.clone(), anti_grade_impl);
+                trait_impls.add_single_impl("AntiGrade", param_a.clone(), anti_grade_impl);
             }
         }
 
@@ -223,265 +221,204 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
         //  This is strange because some involutions are written, like Reversal.
         //  I am wondering if this is because of the extra projective dimension. Sheesh.
         for (name, involution) in involutions.iter() {
-            let ast_node = MultiVectorClass::involution(name, involution, &parameter_a, &registry, false);
+            let ast_node = MultiVectorClass::involution(name, involution, &param_a, &registry, false);
             emitter.emit(&ast_node).unwrap();
             if ast_node != AstNode::None {
-                trait_impls.add_single_impl(name, parameter_a.clone(), ast_node);
+                trait_impls.add_single_impl(name, param_a.clone(), ast_node);
             }
         }
-        for class_b in registry.classes.iter() {
-            let parameter_b = Parameter {
-                name: "other",
-                data_type: DataType::MultiVector(class_b),
-            };
-            if class_a != class_b {
-                let name = "Into";
-                let ast_node = MultiVectorClass::involution(name, &Involution::projection(class_b), &parameter_a, &registry, true);
-                emitter.emit(&ast_node).unwrap();
-                if ast_node != AstNode::None {
-                    trait_impls.add_pair_impl(name, parameter_a.clone(), parameter_b.clone(), ast_node);
-                }
-            }
-            for name in &["Add", "Sub"] {
-                let ast_node = MultiVectorClass::element_wise(*name, &parameter_a, &parameter_b, &registry);
-                emitter.emit(&ast_node).unwrap();
-                if ast_node != AstNode::None {
-                    trait_impls.add_pair_impl(name, parameter_a.clone(), parameter_b.clone(), ast_node);
-                }
-            }
-            if class_a == class_b {
-                for name in &["Mul", "Div"] {
-                    let ast_node = MultiVectorClass::element_wise(*name, &parameter_a, &parameter_b, &registry);
-                    emitter.emit(&ast_node).unwrap();
-                    if ast_node != AstNode::None {
-                        trait_impls.add_pair_impl(name, parameter_a.clone(), parameter_b.clone(), ast_node);
-                    }
-                }
-            }
+    }
 
-            // TODO I think here is the critical spot for CGA
-            //  hmm.. I'm looking at "impl GeometricProduct<Motor>" as a sanity test
-            //  So far it only exists for round objects, and does not output the object its transforming
-            //  You can see from this source that multiplying by e5 is the correct idea
-            //  https://conformalgeometricalgebra.com/wiki/index.php?title=Translation
-            //  So I bet it is my extra projective is throwing things off
-            for (name, product) in products.iter() {
-                let ast_node = MultiVectorClass::product(name, product, &parameter_a, &parameter_b, &registry);
+
+    for (param_a, param_b) in registry.pair_parameters() {
+        let class_a = param_a.multi_vector_class();
+        let class_b = param_b.multi_vector_class();
+
+        if class_a != class_b {
+            let ast_node = MultiVectorClass::involution("Into", &Involution::projection(param_b.multi_vector_class()), &param_a, &registry, true);
+            emitter.emit(&ast_node).unwrap();
+            if ast_node != AstNode::None {
+                trait_impls.add_pair_impl("Into", param_a.clone(), param_b.clone(), ast_node);
+            }
+        }
+        for name in &["Add", "Sub"] {
+            let ast_node = MultiVectorClass::element_wise(*name, &param_a, &param_b, &registry);
+            emitter.emit(&ast_node).unwrap();
+            if ast_node != AstNode::None {
+                trait_impls.add_pair_impl(name, param_a.clone(), param_b.clone(), ast_node);
+            }
+        }
+        if class_a == class_b {
+            for name in &["Mul", "Div"] {
+                let ast_node = MultiVectorClass::element_wise(*name, &param_a, &param_b, &registry);
                 emitter.emit(&ast_node).unwrap();
                 if ast_node != AstNode::None {
-                    trait_impls.add_pair_impl(name, parameter_a.clone(), parameter_b.clone(), ast_node);
+                    trait_impls.add_pair_impl(name, param_a.clone(), param_b.clone(), ast_node);
                 }
             }
         }
 
-
-        for class_b in registry.classes.iter() {
-            let parameter_b = Parameter {
-                name: "other",
-                data_type: DataType::MultiVector(class_b),
-            };
-            if parameter_a.multi_vector_class() != parameter_b.multi_vector_class() {
-                continue
+        // TODO I think here is the critical spot for CGA
+        //  hmm.. I'm looking at "impl GeometricProduct<Motor>" as a sanity test
+        //  So far it only exists for round objects, and does not output the object its transforming
+        //  You can see from this source that multiplying by e5 is the correct idea
+        //  https://conformalgeometricalgebra.com/wiki/index.php?title=Translation
+        //  So I bet it is my extra projective is throwing things off
+        for (name, product) in products.iter() {
+            let ast_node = MultiVectorClass::product(name, product, &param_a, &param_b, &registry);
+            emitter.emit(&ast_node).unwrap();
+            if ast_node != AstNode::None {
+                trait_impls.add_pair_impl(name, param_a.clone(), param_b.clone(), ast_node);
             }
+        }
+    }
 
-            let scalar_product = trait_impls.get_pair_impl("ScalarProduct", &parameter_a, &parameter_b);
-            let reversal = trait_impls.get_single_impl("Reversal", &parameter_a);
 
-            let (scalar_product, reversal) = match (scalar_product, reversal) {
-                (Some(sp), Some(r)) => (sp, r),
-                (_, _) => continue,
-            };
+    for (param_a, param_b) in registry.pair_parameters() {
+        if param_a.multi_vector_class() != param_b.multi_vector_class() {
+            continue
+        }
+        let _: Option<()> = try {
+            let scalar_product = trait_impls.get_pair_impl("ScalarProduct", &param_a, &param_b)?;
+            let reversal = trait_impls.get_single_impl("Reversal", &param_a)?;
 
-            let squared_magnitude = MultiVectorClass::derive_squared_magnitude("SquaredMagnitude", scalar_product, reversal, &parameter_a);
+            let squared_magnitude = MultiVectorClass::derive_squared_magnitude("SquaredMagnitude", scalar_product, reversal, &param_a);
+            let magnitude = MultiVectorClass::derive_magnitude("Magnitude", &squared_magnitude, &param_a);
+            let bulk_norm = MultiVectorClass::derive_magnitude("BulkNorm", &squared_magnitude, &param_a);
+
             emitter.emit(&squared_magnitude).unwrap();
-            let magnitude = MultiVectorClass::derive_magnitude("Magnitude", &squared_magnitude, &parameter_a);
             emitter.emit(&magnitude).unwrap();
-
-            let bulk_norm = MultiVectorClass::derive_magnitude("BulkNorm", &squared_magnitude, &parameter_a);
-
-            trait_impls.add_single_impl("SquaredMagnitude", parameter_a.clone(), squared_magnitude);
-            trait_impls.add_single_impl("Magnitude", parameter_a.clone(), magnitude);
-
-
-
-            let anti_scalar_product = trait_impls.get_pair_impl("AntiScalarProduct", &parameter_a, &parameter_b);
-            let anti_reversal = trait_impls.get_single_impl("AntiReversal", &parameter_a);
-
-            let (anti_scalar_product, anti_reversal) = match (anti_scalar_product, anti_reversal) {
-                (Some(sp), Some(r)) => (sp, r),
-                (_, _) => continue,
-            };
-
             emitter.emit(&bulk_norm).unwrap();
-            let squared_anti_magnitude = MultiVectorClass::derive_squared_magnitude("SquaredAntiMagnitude", anti_scalar_product, anti_reversal, &parameter_a);
-            emitter.emit(&squared_anti_magnitude).unwrap();
-            let weight_norm = MultiVectorClass::derive_magnitude("WeightNorm", &squared_anti_magnitude, &parameter_a);
-            emitter.emit(&weight_norm).unwrap();
 
-            let bulk_norm_result = result_of_trait!(bulk_norm);
+            trait_impls.add_single_impl("SquaredMagnitude", param_a.clone(), squared_magnitude);
+            trait_impls.add_single_impl("Magnitude", param_a.clone(), magnitude);
+            trait_impls.add_single_impl("BulkNorm", param_a.clone(), bulk_norm);
+        };
+    }
+
+    for (param_a, param_b) in registry.pair_parameters() {
+        if param_a.multi_vector_class() != param_b.multi_vector_class() {
+            continue
+        }
+        let _: Option<()> = try {
+            let (bulk_norm, bulk_norm_result) = trait_impls.get_single_impl_and_result("BulkNorm", &param_a)?;
+            let anti_scalar_product = trait_impls.get_pair_impl("AntiScalarProduct", &param_a, &param_b)?;
+            let anti_reversal = trait_impls.get_single_impl("AntiReversal", &param_a)?;
+
+            let squared_anti_magnitude = MultiVectorClass::derive_squared_magnitude("SquaredAntiMagnitude", anti_scalar_product, anti_reversal, &param_a);
+            let weight_norm = MultiVectorClass::derive_magnitude("WeightNorm", &squared_anti_magnitude, &param_a);
             let weight_norm_result = result_of_trait!(weight_norm);
+            let add = trait_impls.get_pair_impl("Add", bulk_norm_result, weight_norm_result)?;
+            let geometric_norm = MultiVectorClass::derive_geometric_norm("GeometricNorm", &bulk_norm, &weight_norm, &registry, &param_a, &add);
 
-            if let Some(add) = trait_impls.get_pair_impl("Add", bulk_norm_result, weight_norm_result) {
-                let geometric_norm = MultiVectorClass::derive_geometric_norm("GeometricNorm", &bulk_norm, &weight_norm, &registry, &parameter_a, &add);
-                emitter.emit(&geometric_norm).unwrap();
-                trait_impls.add_single_impl("GeometricNorm", parameter_a.clone(), geometric_norm);
-            }
-            trait_impls.add_single_impl("BulkNorm", parameter_a.clone(), bulk_norm);
-            trait_impls.add_single_impl("SquaredAntiMagnitude", parameter_a.clone(), squared_anti_magnitude);
-            trait_impls.add_single_impl("WeightNorm", parameter_a.clone(), weight_norm);
+            emitter.emit(&squared_anti_magnitude).unwrap();
+            emitter.emit(&weight_norm).unwrap();
+            emitter.emit(&geometric_norm).unwrap();
+
+            trait_impls.add_single_impl("SquaredAntiMagnitude", param_a.clone(), squared_anti_magnitude);
+            trait_impls.add_single_impl("WeightNorm", param_a.clone(), weight_norm);
+            trait_impls.add_single_impl("GeometricNorm", param_a.clone(), geometric_norm);
+        };
+    }
+
+
+    for (param_a, param_b) in registry.pair_parameters() {
+        if param_b.multi_vector_class().grouped_basis != vec![vec![BasisElement::from_index(0)]] {
+            continue;
         }
+        let _: Option<()> = try {
+            let gp = trait_impls.get_pair_impl("GeometricProduct", &param_a, &param_b)?;
+            let scale = MultiVectorClass::derive_scale("Scale", gp, &param_a, &param_b);
+            let magnitude = trait_impls.get_single_impl("Magnitude", &param_a)?;
+            let signum = MultiVectorClass::derive_signum("Signum", gp, magnitude, &param_a);
 
-        for class_b in registry.classes.iter() {
-            let parameter_b = Parameter {
-                name: "other",
-                data_type: DataType::MultiVector(class_b),
-            };
-
-
-            if parameter_b.multi_vector_class().grouped_basis != vec![vec![BasisElement::from_index(0)]] {
-                continue;
-            }
-
-            // If this type has a GeometricProduct with scalar, then we can implement some extra stuff
-            let geometric_product = match trait_impls.get_pair_impl("GeometricProduct", &parameter_a, &parameter_b) {
-                Some(gp) => gp,
-                None => continue,
-            };
-
-            // If this type has a GeometricProduct, then we can implement Scale
-            let scale = MultiVectorClass::derive_scale("Scale", geometric_product, &parameter_a, &parameter_b);
             emitter.emit(&scale).unwrap();
+            emitter.emit(&signum).unwrap();
 
-            // If this type also has a Magnitude, then we can implement Signum
-            if let Some(magnitude) = trait_impls.get_single_impl("Magnitude", &parameter_a) {
-                let signum = MultiVectorClass::derive_signum("Signum", geometric_product, magnitude, &parameter_a);
-                emitter.emit(&signum).unwrap();
-                trait_impls.add_single_impl("Signum", parameter_a.clone(), signum);
-            }
+            trait_impls.add_single_impl("Scale", param_a.clone(), scale);
+            trait_impls.add_single_impl("Signum", param_a.clone(), signum);
+        };
+    }
 
-            // If this type has a GeometricProduct with scalar, then we can implement some extra stuff
-            let geometric_product = match trait_impls.get_pair_impl("GeometricProduct", &parameter_a, &parameter_b) {
-                Some(gp) => gp,
-                None => continue,
-            };
-
-            // If this type also has a SquaredMagnitude and Reversal, then we can implement Inverse
-            if let Some(squared_magnitude) = trait_impls.get_single_impl("SquaredMagnitude", &parameter_a) {
-                if let Some(reversal) = trait_impls.get_single_impl("Reversal", &parameter_a) {
-                    let inverse = MultiVectorClass::derive_inverse("Inverse", geometric_product, squared_magnitude, reversal, &parameter_a);
-                    emitter.emit(&inverse).unwrap();
-                    trait_impls.add_single_impl("Inverse", parameter_a.clone(), inverse);
-                }
-            }
+    for (param_a, param_b) in registry.pair_parameters() {
+        if param_b.multi_vector_class().grouped_basis != vec![vec![BasisElement::from_index(0)]] {
+            continue;
         }
+        let _: Option<()> = try {
+            let gp = trait_impls.get_pair_impl("GeometricProduct", &param_a, &param_b)?;
+            let squared_magnitude = trait_impls.get_single_impl("SquaredMagnitude", &param_a)?;
+            let reversal = trait_impls.get_single_impl("Reversal", &param_a)?;
+            let inverse = MultiVectorClass::derive_inverse("Inverse", gp, squared_magnitude, reversal, &param_a);
+            emitter.emit(&inverse).unwrap();
+            trait_impls.add_single_impl("Inverse", param_a.clone(), inverse);
+        };
+    }
 
-        for class_b in registry.classes.iter() {
-            let parameter_b = Parameter {
-                name: "other",
-                data_type: DataType::MultiVector(class_b),
-            };
 
-
-            if parameter_b.multi_vector_class().grouped_basis != vec![vec![BasisElement::from_index(0)]] {
-                continue;
-            }
-
-            // If this type has a GeometricProduct with scalar, then we can implement some extra stuff
-            let geometric_product = match trait_impls.get_pair_impl("GeometricProduct", &parameter_a, &parameter_b) {
-                Some(gp) => gp,
-                None => continue,
-            };
-
-            if let Some(weight_norm) = trait_impls.get_single_impl("WeightNorm", &parameter_a) {
-                let unitize = MultiVectorClass::derive_unitize("Unitize", geometric_product, weight_norm, &parameter_a, &parameter_b);
-                emitter.emit(&unitize).unwrap();
-                trait_impls.add_single_impl("Unitize", parameter_a.clone(), unitize);
-            }
+    for (param_a, param_b) in registry.pair_parameters() {
+        if param_b.multi_vector_class().grouped_basis != vec![vec![BasisElement::from_index(0)]] {
+            continue;
         }
+        let _: Option<()> = try {
+            let gp = trait_impls.get_pair_impl("GeometricProduct", &param_a, &param_b)?;
+            let weight_norm = trait_impls.get_single_impl("WeightNorm", &param_a)?;
+            let unitize = MultiVectorClass::derive_unitize("Unitize", gp, weight_norm, &param_a, &param_b);
+            emitter.emit(&unitize).unwrap();
+            trait_impls.add_single_impl("Unitize", param_a.clone(), unitize);
+        };
+    }
 
-        for class_b in registry.classes.iter() {
-            let parameter_b = Parameter {
-                name: "other",
-                data_type: DataType::MultiVector(class_b),
-            };
-
-            let anti_wedge_product = match trait_impls.get_pair_impl("RegressiveProduct", &parameter_a, &parameter_b) {
-                Some(aw) => aw,
-                None => continue
-            };
-
-
-            let bases = parameter_b.multi_vector_class().flat_basis();
+    for (param_a, param_b) in registry.pair_parameters() {
+        let _: Option<()> = try {
+            let anti_wedge_product = trait_impls.get_pair_impl("RegressiveProduct", &param_a, &param_b)?;
+            let bases = param_b.multi_vector_class().flat_basis();
             let nzd = algebra.generator_squares.iter().filter(|it| **it != 0isize).count();
 
             if bases.iter().any(|it| it.grade() != nzd) {
                 continue
             }
-            let special_base = match bases.iter().find(|it| BasisElement::product(&it, &it, &algebra).scalar != 0) {
-                Some(b) => b,
-                None => continue,
-            };
+
+            let special_base = bases.iter().find(|it| BasisElement::product(&it, &it, &algebra).scalar != 0)?;
 
             let attitude = MultiVectorClass::derive_attitude(
-                "Attitude",
-                anti_wedge_product,
-                &parameter_a,
-                &parameter_b,
-                &special_base
+                "Attitude", anti_wedge_product, &param_a, &param_b, &special_base
             );
             emitter.emit(&attitude).unwrap();
-            trait_impls.add_single_impl("Attitude", parameter_a.clone(), attitude);
-        }
-    }
-
-
-
-
-    for class_a in registry.classes.iter() {
-        let parameter_a = Parameter {
-            name: "self",
-            data_type: DataType::MultiVector(class_a),
+            trait_impls.add_single_impl("Attitude", param_a.clone(), attitude);
         };
-        for class_b in registry.classes.iter() {
-            let parameter_b = Parameter {
-                name: "other",
-                data_type: DataType::MultiVector(class_b),
-            };
-
-            let (geometric_product, geometric_product_result) = match trait_impls.get_pair_impl_and_result("GeometricProduct", &parameter_a, &parameter_b) {
-                Some(gp) => gp,
-                None => continue
-            };
-
-            if parameter_a.multi_vector_class() == parameter_b.multi_vector_class()
-                && geometric_product_result.multi_vector_class() == parameter_a.multi_vector_class()
-            {
-                //
-                let constant_one = trait_impls.get_single_impl("One", &parameter_a);
-                let inverse = trait_impls.get_single_impl("Inverse", &parameter_a);
-                if let (Some(constant_one), Some(inverse)) = (constant_one, inverse) {
-                    let power_of_integer = MultiVectorClass::derive_power_of_integer(
-                        "Powi",
-                        geometric_product,
-                        constant_one,
-                        inverse,
-                        &parameter_a,
-                        &Parameter {
-                            name: "exponent",
-                            data_type: DataType::Integer,
-                        },
-                    );
-                    emitter.emit(&power_of_integer).unwrap();
-                }
-            }
-
-            if let Some(inverse) = trait_impls.get_single_impl("Inverse", &parameter_b) {
-                let division = MultiVectorClass::derive_division("GeometricQuotient", geometric_product, inverse, &parameter_a, &parameter_b);
-                emitter.emit(&division).unwrap();
-            }
-        }
     }
 
+    for (param_a, param_b) in registry.pair_parameters() {
+        if param_a.multi_vector_class() != param_b.multi_vector_class() {
+            continue
+        }
+        let _: Option<()> = try {
+            let (gp, gp_r) = trait_impls.get_pair_impl_and_result("GeometricProduct", &param_a, &param_b)?;
+            if gp_r.multi_vector_class() != param_a.multi_vector_class() {
+                continue
+            }
+            let constant_one = trait_impls.get_single_impl("One", &param_a)?;
+            let inverse = trait_impls.get_single_impl("Inverse", &param_a)?;
+            let exponent = Parameter {
+                name: "exponent",
+                data_type: DataType::Integer,
+            };
+            let power_of_integer = MultiVectorClass::derive_power_of_integer(
+                "Powi", gp, constant_one, inverse, &param_a, &exponent,
+            );
+            emitter.emit(&power_of_integer).unwrap();
+        };
+    }
+
+    for (param_a, param_b) in registry.pair_parameters() {
+        let _: Option<()> = try {
+            let gp = trait_impls.get_pair_impl("GeometricProduct", &param_a, &param_b)?;
+            let inverse = trait_impls.get_single_impl("Inverse", &param_b)?;
+            let division = MultiVectorClass::derive_division("GeometricQuotient", gp, inverse, &param_a, &param_b);
+            emitter.emit(&division).unwrap();
+            trait_impls.add_pair_impl("GeometricQuotient", param_a, param_b, division);
+        };
+    }
 
     for (param_a, param_b) in registry.pair_parameters() {
         let _: Option<()> = try {

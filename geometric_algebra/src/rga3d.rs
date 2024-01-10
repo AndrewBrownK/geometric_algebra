@@ -966,6 +966,838 @@ impl DoubleComplement for Scalar {
     }
 }
 
+impl Zero for AntiScalar {
+    fn zero() -> Self {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 } }
+    }
+}
+
+impl One for AntiScalar {
+    fn one() -> Self {
+        AntiScalar { groups: AntiScalarGroups { g0: 0.0 } }
+    }
+}
+
+impl Grade for AntiScalar {
+    type Output = isize;
+
+    fn grade(self) -> isize {
+        4
+    }
+}
+
+impl AntiGrade for AntiScalar {
+    type Output = isize;
+
+    fn anti_grade(self) -> isize {
+        0
+    }
+}
+
+impl Neg for AntiScalar {
+    type Output = AntiScalar;
+
+    fn neg(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * -1.0 } }
+    }
+}
+
+impl Automorphism for AntiScalar {
+    type Output = AntiScalar;
+
+    fn automorphism(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() } }
+    }
+}
+
+impl Reversal for AntiScalar {
+    type Output = AntiScalar;
+
+    fn reversal(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() } }
+    }
+}
+
+impl Conjugation for AntiScalar {
+    type Output = AntiScalar;
+
+    fn conjugation(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() } }
+    }
+}
+
+impl Dual for AntiScalar {
+    type Output = Scalar;
+
+    fn dual(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() } }
+    }
+}
+
+impl AntiReversal for AntiScalar {
+    type Output = AntiScalar;
+
+    fn anti_reversal(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() } }
+    }
+}
+
+impl RightComplement for AntiScalar {
+    type Output = Scalar;
+
+    fn right_complement(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() } }
+    }
+}
+
+impl LeftComplement for AntiScalar {
+    type Output = Scalar;
+
+    fn left_complement(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() } }
+    }
+}
+
+impl DoubleComplement for AntiScalar {
+    type Output = AntiScalar;
+
+    fn double_complement(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() } }
+    }
+}
+
+impl Zero for HomogeneousMagnitude {
+    fn zero() -> Self {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(0.0) } }
+    }
+}
+
+impl One for HomogeneousMagnitude {
+    fn one() -> Self {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from([1.0, 0.0]) } }
+    }
+}
+
+impl Neg for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn neg(self) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() * Simd32x2::from(-1.0) } }
+    }
+}
+
+impl Automorphism for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn automorphism(self) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() } }
+    }
+}
+
+impl Reversal for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn reversal(self) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() } }
+    }
+}
+
+impl Conjugation for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn conjugation(self) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() } }
+    }
+}
+
+impl Dual for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn dual(self) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: swizzle!(self.group0(), 1, 0) } }
+    }
+}
+
+impl AntiReversal for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn anti_reversal(self) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() } }
+    }
+}
+
+impl RightComplement for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn right_complement(self) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: swizzle!(self.group0(), 1, 0) } }
+    }
+}
+
+impl LeftComplement for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn left_complement(self) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: swizzle!(self.group0(), 1, 0) } }
+    }
+}
+
+impl DoubleComplement for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn double_complement(self) -> HomogeneousMagnitude {
+        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() } }
+    }
+}
+
+impl Zero for Point {
+    fn zero() -> Self {
+        Point { groups: PointGroups { g0: Simd32x4::from(0.0) } }
+    }
+}
+
+impl One for Point {
+    fn one() -> Self {
+        Point { groups: PointGroups { g0: Simd32x4::from(0.0) } }
+    }
+}
+
+impl Grade for Point {
+    type Output = isize;
+
+    fn grade(self) -> isize {
+        1
+    }
+}
+
+impl AntiGrade for Point {
+    type Output = isize;
+
+    fn anti_grade(self) -> isize {
+        3
+    }
+}
+
+impl Neg for Point {
+    type Output = Point;
+
+    fn neg(self) -> Point {
+        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl Automorphism for Point {
+    type Output = Point;
+
+    fn automorphism(self) -> Point {
+        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl Reversal for Point {
+    type Output = Point;
+
+    fn reversal(self) -> Point {
+        Point { groups: PointGroups { g0: self.group0() } }
+    }
+}
+
+impl Conjugation for Point {
+    type Output = Point;
+
+    fn conjugation(self) -> Point {
+        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl Dual for Point {
+    type Output = Plane;
+
+    fn dual(self) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() } }
+    }
+}
+
+impl AntiReversal for Point {
+    type Output = Point;
+
+    fn anti_reversal(self) -> Point {
+        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl RightComplement for Point {
+    type Output = Plane;
+
+    fn right_complement(self) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() } }
+    }
+}
+
+impl LeftComplement for Point {
+    type Output = Plane;
+
+    fn left_complement(self) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl DoubleComplement for Point {
+    type Output = Point;
+
+    fn double_complement(self) -> Point {
+        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl Zero for Line {
+    fn zero() -> Self {
+        Line { groups: LineGroups { g0: Simd32x3::from(0.0), g1: Simd32x3::from(0.0) } }
+    }
+}
+
+impl One for Line {
+    fn one() -> Self {
+        Line { groups: LineGroups { g0: Simd32x3::from(0.0), g1: Simd32x3::from(0.0) } }
+    }
+}
+
+impl Grade for Line {
+    type Output = isize;
+
+    fn grade(self) -> isize {
+        2
+    }
+}
+
+impl AntiGrade for Line {
+    type Output = isize;
+
+    fn anti_grade(self) -> isize {
+        2
+    }
+}
+
+impl Neg for Line {
+    type Output = Line;
+
+    fn neg(self) -> Line {
+        Line { groups: LineGroups { g0: self.group0() * Simd32x3::from(-1.0), g1: self.group1() * Simd32x3::from(-1.0) } }
+    }
+}
+
+impl Automorphism for Line {
+    type Output = Line;
+
+    fn automorphism(self) -> Line {
+        Line { groups: LineGroups { g0: self.group0(), g1: self.group1() } }
+    }
+}
+
+impl Reversal for Line {
+    type Output = Line;
+
+    fn reversal(self) -> Line {
+        Line { groups: LineGroups { g0: self.group0() * Simd32x3::from(-1.0), g1: self.group1() * Simd32x3::from(-1.0) } }
+    }
+}
+
+impl Conjugation for Line {
+    type Output = Line;
+
+    fn conjugation(self) -> Line {
+        Line { groups: LineGroups { g0: self.group0() * Simd32x3::from(-1.0), g1: self.group1() * Simd32x3::from(-1.0) } }
+    }
+}
+
+impl Dual for Line {
+    type Output = Line;
+
+    fn dual(self) -> Line {
+        Line { groups: LineGroups { g0: self.group1() * Simd32x3::from(-1.0), g1: self.group0() * Simd32x3::from(-1.0) } }
+    }
+}
+
+impl AntiReversal for Line {
+    type Output = Line;
+
+    fn anti_reversal(self) -> Line {
+        Line { groups: LineGroups { g0: self.group0() * Simd32x3::from(-1.0), g1: self.group1() * Simd32x3::from(-1.0) } }
+    }
+}
+
+impl RightComplement for Line {
+    type Output = Line;
+
+    fn right_complement(self) -> Line {
+        Line { groups: LineGroups { g0: self.group1() * Simd32x3::from(-1.0), g1: self.group0() * Simd32x3::from(-1.0) } }
+    }
+}
+
+impl LeftComplement for Line {
+    type Output = Line;
+
+    fn left_complement(self) -> Line {
+        Line { groups: LineGroups { g0: self.group1() * Simd32x3::from(-1.0), g1: self.group0() * Simd32x3::from(-1.0) } }
+    }
+}
+
+impl DoubleComplement for Line {
+    type Output = Line;
+
+    fn double_complement(self) -> Line {
+        Line { groups: LineGroups { g0: self.group0(), g1: self.group1() } }
+    }
+}
+
+impl Zero for Plane {
+    fn zero() -> Self {
+        Plane { groups: PlaneGroups { g0: Simd32x4::from(0.0) } }
+    }
+}
+
+impl One for Plane {
+    fn one() -> Self {
+        Plane { groups: PlaneGroups { g0: Simd32x4::from(0.0) } }
+    }
+}
+
+impl Grade for Plane {
+    type Output = isize;
+
+    fn grade(self) -> isize {
+        3
+    }
+}
+
+impl AntiGrade for Plane {
+    type Output = isize;
+
+    fn anti_grade(self) -> isize {
+        1
+    }
+}
+
+impl Neg for Plane {
+    type Output = Plane;
+
+    fn neg(self) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl Automorphism for Plane {
+    type Output = Plane;
+
+    fn automorphism(self) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl Reversal for Plane {
+    type Output = Plane;
+
+    fn reversal(self) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl Conjugation for Plane {
+    type Output = Plane;
+
+    fn conjugation(self) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() } }
+    }
+}
+
+impl Dual for Plane {
+    type Output = Point;
+
+    fn dual(self) -> Point {
+        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl AntiReversal for Plane {
+    type Output = Plane;
+
+    fn anti_reversal(self) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() } }
+    }
+}
+
+impl RightComplement for Plane {
+    type Output = Point;
+
+    fn right_complement(self) -> Point {
+        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl LeftComplement for Plane {
+    type Output = Point;
+
+    fn left_complement(self) -> Point {
+        Point { groups: PointGroups { g0: self.group0() } }
+    }
+}
+
+impl DoubleComplement for Plane {
+    type Output = Plane;
+
+    fn double_complement(self) -> Plane {
+        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl Zero for Motor {
+    fn zero() -> Self {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(0.0), g1: Simd32x3::from(0.0) } }
+    }
+}
+
+impl One for Motor {
+    fn one() -> Self {
+        Motor { groups: MotorGroups { g0: Simd32x4::from(0.0), g1: Simd32x3::from(0.0) } }
+    }
+}
+
+impl Neg for Motor {
+    type Output = Motor;
+
+    fn neg(self) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group0() * Simd32x4::from(-1.0), g1: self.group1() * Simd32x3::from(-1.0) } }
+    }
+}
+
+impl Automorphism for Motor {
+    type Output = Motor;
+
+    fn automorphism(self) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group0(), g1: self.group1() } }
+    }
+}
+
+impl Reversal for Motor {
+    type Output = Motor;
+
+    fn reversal(self) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]), g1: self.group1() * Simd32x3::from(-1.0) } }
+    }
+}
+
+impl Conjugation for Motor {
+    type Output = Motor;
+
+    fn conjugation(self) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]), g1: self.group1() * Simd32x3::from(-1.0) } }
+    }
+}
+
+impl AntiReversal for Motor {
+    type Output = Motor;
+
+    fn anti_reversal(self) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]), g1: self.group1() * Simd32x3::from(-1.0) } }
+    }
+}
+
+impl DoubleComplement for Motor {
+    type Output = Motor;
+
+    fn double_complement(self) -> Motor {
+        Motor { groups: MotorGroups { g0: self.group0(), g1: self.group1() } }
+    }
+}
+
+impl Zero for Rotor {
+    fn zero() -> Self {
+        Rotor { groups: RotorGroups { g0: Simd32x4::from(0.0) } }
+    }
+}
+
+impl One for Rotor {
+    fn one() -> Self {
+        Rotor { groups: RotorGroups { g0: Simd32x4::from(0.0) } }
+    }
+}
+
+impl Neg for Rotor {
+    type Output = Rotor;
+
+    fn neg(self) -> Rotor {
+        Rotor { groups: RotorGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl Automorphism for Rotor {
+    type Output = Rotor;
+
+    fn automorphism(self) -> Rotor {
+        Rotor { groups: RotorGroups { g0: self.group0() } }
+    }
+}
+
+impl Reversal for Rotor {
+    type Output = Rotor;
+
+    fn reversal(self) -> Rotor {
+        Rotor { groups: RotorGroups { g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) } }
+    }
+}
+
+impl Conjugation for Rotor {
+    type Output = Rotor;
+
+    fn conjugation(self) -> Rotor {
+        Rotor { groups: RotorGroups { g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) } }
+    }
+}
+
+impl AntiReversal for Rotor {
+    type Output = Rotor;
+
+    fn anti_reversal(self) -> Rotor {
+        Rotor { groups: RotorGroups { g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) } }
+    }
+}
+
+impl DoubleComplement for Rotor {
+    type Output = Rotor;
+
+    fn double_complement(self) -> Rotor {
+        Rotor { groups: RotorGroups { g0: self.group0() } }
+    }
+}
+
+impl Zero for Translator {
+    fn zero() -> Self {
+        Translator { groups: TranslatorGroups { g0: Simd32x4::from(0.0) } }
+    }
+}
+
+impl One for Translator {
+    fn one() -> Self {
+        Translator { groups: TranslatorGroups { g0: Simd32x4::from(0.0) } }
+    }
+}
+
+impl Neg for Translator {
+    type Output = Translator;
+
+    fn neg(self) -> Translator {
+        Translator { groups: TranslatorGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl Automorphism for Translator {
+    type Output = Translator;
+
+    fn automorphism(self) -> Translator {
+        Translator { groups: TranslatorGroups { g0: self.group0() } }
+    }
+}
+
+impl Reversal for Translator {
+    type Output = Translator;
+
+    fn reversal(self) -> Translator {
+        Translator { groups: TranslatorGroups { g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) } }
+    }
+}
+
+impl Conjugation for Translator {
+    type Output = Translator;
+
+    fn conjugation(self) -> Translator {
+        Translator { groups: TranslatorGroups { g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) } }
+    }
+}
+
+impl AntiReversal for Translator {
+    type Output = Translator;
+
+    fn anti_reversal(self) -> Translator {
+        Translator { groups: TranslatorGroups { g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) } }
+    }
+}
+
+impl DoubleComplement for Translator {
+    type Output = Translator;
+
+    fn double_complement(self) -> Translator {
+        Translator { groups: TranslatorGroups { g0: self.group0() } }
+    }
+}
+
+impl Zero for Flector {
+    fn zero() -> Self {
+        Flector { groups: FlectorGroups { g0: Simd32x4::from(0.0), g1: Simd32x4::from(0.0) } }
+    }
+}
+
+impl One for Flector {
+    fn one() -> Self {
+        Flector { groups: FlectorGroups { g0: Simd32x4::from(0.0), g1: Simd32x4::from(0.0) } }
+    }
+}
+
+impl Neg for Flector {
+    type Output = Flector;
+
+    fn neg(self) -> Flector {
+        Flector { groups: FlectorGroups { g0: self.group0() * Simd32x4::from(-1.0), g1: self.group1() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl Automorphism for Flector {
+    type Output = Flector;
+
+    fn automorphism(self) -> Flector {
+        Flector { groups: FlectorGroups { g0: self.group0() * Simd32x4::from(-1.0), g1: self.group1() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl Reversal for Flector {
+    type Output = Flector;
+
+    fn reversal(self) -> Flector {
+        Flector { groups: FlectorGroups { g0: self.group0(), g1: self.group1() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl Conjugation for Flector {
+    type Output = Flector;
+
+    fn conjugation(self) -> Flector {
+        Flector { groups: FlectorGroups { g0: self.group0() * Simd32x4::from(-1.0), g1: self.group1() } }
+    }
+}
+
+impl Dual for Flector {
+    type Output = Flector;
+
+    fn dual(self) -> Flector {
+        Flector { groups: FlectorGroups { g0: self.group1() * Simd32x4::from(-1.0), g1: self.group0() } }
+    }
+}
+
+impl AntiReversal for Flector {
+    type Output = Flector;
+
+    fn anti_reversal(self) -> Flector {
+        Flector { groups: FlectorGroups { g0: self.group0() * Simd32x4::from(-1.0), g1: self.group1() } }
+    }
+}
+
+impl RightComplement for Flector {
+    type Output = Flector;
+
+    fn right_complement(self) -> Flector {
+        Flector { groups: FlectorGroups { g0: self.group1() * Simd32x4::from(-1.0), g1: self.group0() } }
+    }
+}
+
+impl LeftComplement for Flector {
+    type Output = Flector;
+
+    fn left_complement(self) -> Flector {
+        Flector { groups: FlectorGroups { g0: self.group1(), g1: self.group0() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl DoubleComplement for Flector {
+    type Output = Flector;
+
+    fn double_complement(self) -> Flector {
+        Flector { groups: FlectorGroups { g0: self.group0() * Simd32x4::from(-1.0), g1: self.group1() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl Zero for MultiVector {
+    fn zero() -> Self {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x2::from(0.0), g1: Simd32x4::from(0.0), g2: Simd32x3::from(0.0), g3: Simd32x3::from(0.0), g4: Simd32x4::from(0.0) } }
+    }
+}
+
+impl One for MultiVector {
+    fn one() -> Self {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x2::from([1.0, 0.0]), g1: Simd32x4::from(0.0), g2: Simd32x3::from(0.0), g3: Simd32x3::from(0.0), g4: Simd32x4::from(0.0) } }
+    }
+}
+
+impl Neg for MultiVector {
+    type Output = MultiVector;
+
+    fn neg(self) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: self.group0() * Simd32x2::from(-1.0), g1: self.group1() * Simd32x4::from(-1.0), g2: self.group2() * Simd32x3::from(-1.0), g3: self.group3() * Simd32x3::from(-1.0), g4: self.group4() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl Automorphism for MultiVector {
+    type Output = MultiVector;
+
+    fn automorphism(self) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: self.group0(), g1: self.group1() * Simd32x4::from(-1.0), g2: self.group2(), g3: self.group3(), g4: self.group4() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl Reversal for MultiVector {
+    type Output = MultiVector;
+
+    fn reversal(self) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: self.group0(), g1: self.group1(), g2: self.group2() * Simd32x3::from(-1.0), g3: self.group3() * Simd32x3::from(-1.0), g4: self.group4() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl Conjugation for MultiVector {
+    type Output = MultiVector;
+
+    fn conjugation(self) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: self.group0(), g1: self.group1() * Simd32x4::from(-1.0), g2: self.group2() * Simd32x3::from(-1.0), g3: self.group3() * Simd32x3::from(-1.0), g4: self.group4() } }
+    }
+}
+
+impl Dual for MultiVector {
+    type Output = MultiVector;
+
+    fn dual(self) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: swizzle!(self.group0(), 1, 0), g1: self.group4() * Simd32x4::from(-1.0), g2: self.group3() * Simd32x3::from(-1.0), g3: self.group2() * Simd32x3::from(-1.0), g4: self.group1() } }
+    }
+}
+
+impl AntiReversal for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_reversal(self) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: self.group0(), g1: self.group1() * Simd32x4::from(-1.0), g2: self.group2() * Simd32x3::from(-1.0), g3: self.group3() * Simd32x3::from(-1.0), g4: self.group4() } }
+    }
+}
+
+impl RightComplement for MultiVector {
+    type Output = MultiVector;
+
+    fn right_complement(self) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: swizzle!(self.group0(), 1, 0), g1: self.group4() * Simd32x4::from(-1.0), g2: self.group3() * Simd32x3::from(-1.0), g3: self.group2() * Simd32x3::from(-1.0), g4: self.group1() } }
+    }
+}
+
+impl LeftComplement for MultiVector {
+    type Output = MultiVector;
+
+    fn left_complement(self) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: swizzle!(self.group0(), 1, 0), g1: self.group4(), g2: self.group3() * Simd32x3::from(-1.0), g3: self.group2() * Simd32x3::from(-1.0), g4: self.group1() * Simd32x4::from(-1.0) } }
+    }
+}
+
+impl DoubleComplement for MultiVector {
+    type Output = MultiVector;
+
+    fn double_complement(self) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: self.group0(), g1: self.group1() * Simd32x4::from(-1.0), g2: self.group2(), g3: self.group3(), g4: self.group4() * Simd32x4::from(-1.0) } }
+    }
+}
+
 impl Add<Scalar> for Scalar {
     type Output = Scalar;
 
@@ -2051,146 +2883,6 @@ impl Dot<MultiVector> for Scalar {
 
     fn dot(self, other: MultiVector) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0() * other.group0()[0] } }
-    }
-}
-
-impl SquaredMagnitude for Scalar {
-    type Output = Scalar;
-
-    fn squared_magnitude(self) -> Scalar {
-        self.scalar_product(self.reversal())
-    }
-}
-
-impl Magnitude for Scalar {
-    type Output = Scalar;
-
-    fn magnitude(self) -> Scalar {
-        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
-    }
-}
-
-impl Scale for Scalar {
-    type Output = Scalar;
-
-    fn scale(self, other: f32) -> Scalar {
-        self.geometric_product(Scalar { groups: ScalarGroups { g0: other } })
-    }
-}
-
-impl Signum for Scalar {
-    type Output = Scalar;
-
-    fn signum(self) -> Scalar {
-        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.magnitude().group0() } })
-    }
-}
-
-impl Inverse for Scalar {
-    type Output = Scalar;
-
-    fn inverse(self) -> Scalar {
-        self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
-    }
-}
-
-impl Zero for AntiScalar {
-    fn zero() -> Self {
-        AntiScalar { groups: AntiScalarGroups { g0: 0.0 } }
-    }
-}
-
-impl One for AntiScalar {
-    fn one() -> Self {
-        AntiScalar { groups: AntiScalarGroups { g0: 0.0 } }
-    }
-}
-
-impl Grade for AntiScalar {
-    type Output = isize;
-
-    fn grade(self) -> isize {
-        4
-    }
-}
-
-impl AntiGrade for AntiScalar {
-    type Output = isize;
-
-    fn anti_grade(self) -> isize {
-        0
-    }
-}
-
-impl Neg for AntiScalar {
-    type Output = AntiScalar;
-
-    fn neg(self) -> AntiScalar {
-        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * -1.0 } }
-    }
-}
-
-impl Automorphism for AntiScalar {
-    type Output = AntiScalar;
-
-    fn automorphism(self) -> AntiScalar {
-        AntiScalar { groups: AntiScalarGroups { g0: self.group0() } }
-    }
-}
-
-impl Reversal for AntiScalar {
-    type Output = AntiScalar;
-
-    fn reversal(self) -> AntiScalar {
-        AntiScalar { groups: AntiScalarGroups { g0: self.group0() } }
-    }
-}
-
-impl Conjugation for AntiScalar {
-    type Output = AntiScalar;
-
-    fn conjugation(self) -> AntiScalar {
-        AntiScalar { groups: AntiScalarGroups { g0: self.group0() } }
-    }
-}
-
-impl Dual for AntiScalar {
-    type Output = Scalar;
-
-    fn dual(self) -> Scalar {
-        Scalar { groups: ScalarGroups { g0: self.group0() } }
-    }
-}
-
-impl AntiReversal for AntiScalar {
-    type Output = AntiScalar;
-
-    fn anti_reversal(self) -> AntiScalar {
-        AntiScalar { groups: AntiScalarGroups { g0: self.group0() } }
-    }
-}
-
-impl RightComplement for AntiScalar {
-    type Output = Scalar;
-
-    fn right_complement(self) -> Scalar {
-        Scalar { groups: ScalarGroups { g0: self.group0() } }
-    }
-}
-
-impl LeftComplement for AntiScalar {
-    type Output = Scalar;
-
-    fn left_complement(self) -> Scalar {
-        Scalar { groups: ScalarGroups { g0: self.group0() } }
-    }
-}
-
-impl DoubleComplement for AntiScalar {
-    type Output = AntiScalar;
-
-    fn double_complement(self) -> AntiScalar {
-        AntiScalar { groups: AntiScalarGroups { g0: self.group0() } }
     }
 }
 
@@ -3319,106 +4011,6 @@ impl AntiDot<MultiVector> for AntiScalar {
 
     fn anti_dot(self, other: MultiVector) -> AntiScalar {
         AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0()[1] } }
-    }
-}
-
-impl Scale for AntiScalar {
-    type Output = AntiScalar;
-
-    fn scale(self, other: f32) -> AntiScalar {
-        self.geometric_product(Scalar { groups: ScalarGroups { g0: other } })
-    }
-}
-
-impl Attitude for AntiScalar {
-    type Output = Plane;
-
-    fn attitude(self) -> Plane {
-        self.regressive_product(Plane { groups: PlaneGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } })
-    }
-}
-
-impl Zero for HomogeneousMagnitude {
-    fn zero() -> Self {
-        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from(0.0) } }
-    }
-}
-
-impl One for HomogeneousMagnitude {
-    fn one() -> Self {
-        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: Simd32x2::from([1.0, 0.0]) } }
-    }
-}
-
-impl Neg for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
-
-    fn neg(self) -> HomogeneousMagnitude {
-        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() * Simd32x2::from(-1.0) } }
-    }
-}
-
-impl Automorphism for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
-
-    fn automorphism(self) -> HomogeneousMagnitude {
-        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() } }
-    }
-}
-
-impl Reversal for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
-
-    fn reversal(self) -> HomogeneousMagnitude {
-        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() } }
-    }
-}
-
-impl Conjugation for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
-
-    fn conjugation(self) -> HomogeneousMagnitude {
-        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() } }
-    }
-}
-
-impl Dual for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
-
-    fn dual(self) -> HomogeneousMagnitude {
-        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: swizzle!(self.group0(), 1, 0) } }
-    }
-}
-
-impl AntiReversal for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
-
-    fn anti_reversal(self) -> HomogeneousMagnitude {
-        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() } }
-    }
-}
-
-impl RightComplement for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
-
-    fn right_complement(self) -> HomogeneousMagnitude {
-        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: swizzle!(self.group0(), 1, 0) } }
-    }
-}
-
-impl LeftComplement for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
-
-    fn left_complement(self) -> HomogeneousMagnitude {
-        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: swizzle!(self.group0(), 1, 0) } }
-    }
-}
-
-impl DoubleComplement for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
-
-    fn double_complement(self) -> HomogeneousMagnitude {
-        HomogeneousMagnitude { groups: HomogeneousMagnitudeGroups { g0: self.group0() } }
     }
 }
 
@@ -4914,194 +5506,6 @@ impl AntiDot<MultiVector> for HomogeneousMagnitude {
     }
 }
 
-impl SquaredMagnitude for HomogeneousMagnitude {
-    type Output = Scalar;
-
-    fn squared_magnitude(self) -> Scalar {
-        self.scalar_product(self.reversal())
-    }
-}
-
-impl Magnitude for HomogeneousMagnitude {
-    type Output = Scalar;
-
-    fn magnitude(self) -> Scalar {
-        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
-    }
-}
-
-impl BulkNorm for HomogeneousMagnitude {
-    type Output = Scalar;
-
-    fn bulk_norm(self) -> Scalar {
-        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
-    }
-}
-
-impl SquaredAntiMagnitude for HomogeneousMagnitude {
-    type Output = AntiScalar;
-
-    fn squared_anti_magnitude(self) -> AntiScalar {
-        self.anti_scalar_product(self.anti_reversal())
-    }
-}
-
-impl WeightNorm for HomogeneousMagnitude {
-    type Output = AntiScalar;
-
-    fn weight_norm(self) -> AntiScalar {
-        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
-    }
-}
-
-impl GeometricNorm for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
-
-    fn geometric_norm(self) -> HomogeneousMagnitude {
-        self.bulk_norm().add(self.weight_norm())
-    }
-}
-
-impl Scale for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
-
-    fn scale(self, other: f32) -> HomogeneousMagnitude {
-        self.geometric_product(Scalar { groups: ScalarGroups { g0: other } })
-    }
-}
-
-impl Signum for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
-
-    fn signum(self) -> HomogeneousMagnitude {
-        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.magnitude().group0() } })
-    }
-}
-
-impl Inverse for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
-
-    fn inverse(self) -> HomogeneousMagnitude {
-        self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
-    }
-}
-
-impl Unitize for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
-
-    fn unitize(self) -> HomogeneousMagnitude {
-        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
-    }
-}
-
-impl Attitude for HomogeneousMagnitude {
-    type Output = Plane;
-
-    fn attitude(self) -> Plane {
-        self.regressive_product(Plane { groups: PlaneGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } })
-    }
-}
-
-impl Zero for Point {
-    fn zero() -> Self {
-        Point { groups: PointGroups { g0: Simd32x4::from(0.0) } }
-    }
-}
-
-impl One for Point {
-    fn one() -> Self {
-        Point { groups: PointGroups { g0: Simd32x4::from(0.0) } }
-    }
-}
-
-impl Grade for Point {
-    type Output = isize;
-
-    fn grade(self) -> isize {
-        1
-    }
-}
-
-impl AntiGrade for Point {
-    type Output = isize;
-
-    fn anti_grade(self) -> isize {
-        3
-    }
-}
-
-impl Neg for Point {
-    type Output = Point;
-
-    fn neg(self) -> Point {
-        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
-    }
-}
-
-impl Automorphism for Point {
-    type Output = Point;
-
-    fn automorphism(self) -> Point {
-        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
-    }
-}
-
-impl Reversal for Point {
-    type Output = Point;
-
-    fn reversal(self) -> Point {
-        Point { groups: PointGroups { g0: self.group0() } }
-    }
-}
-
-impl Conjugation for Point {
-    type Output = Point;
-
-    fn conjugation(self) -> Point {
-        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
-    }
-}
-
-impl Dual for Point {
-    type Output = Plane;
-
-    fn dual(self) -> Plane {
-        Plane { groups: PlaneGroups { g0: self.group0() } }
-    }
-}
-
-impl AntiReversal for Point {
-    type Output = Point;
-
-    fn anti_reversal(self) -> Point {
-        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
-    }
-}
-
-impl RightComplement for Point {
-    type Output = Plane;
-
-    fn right_complement(self) -> Plane {
-        Plane { groups: PlaneGroups { g0: self.group0() } }
-    }
-}
-
-impl LeftComplement for Point {
-    type Output = Plane;
-
-    fn left_complement(self) -> Plane {
-        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
-    }
-}
-
-impl DoubleComplement for Point {
-    type Output = Point;
-
-    fn double_complement(self) -> Point {
-        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
-    }
-}
-
 impl GeometricProduct<Scalar> for Point {
     type Output = Point;
 
@@ -6323,194 +6727,6 @@ impl AntiDot<MultiVector> for Point {
 
     fn anti_dot(self, other: MultiVector) -> AntiScalar {
         AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[3] * other.group1()[3] } }
-    }
-}
-
-impl SquaredMagnitude for Point {
-    type Output = Scalar;
-
-    fn squared_magnitude(self) -> Scalar {
-        self.scalar_product(self.reversal())
-    }
-}
-
-impl Magnitude for Point {
-    type Output = Scalar;
-
-    fn magnitude(self) -> Scalar {
-        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
-    }
-}
-
-impl BulkNorm for Point {
-    type Output = Scalar;
-
-    fn bulk_norm(self) -> Scalar {
-        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
-    }
-}
-
-impl SquaredAntiMagnitude for Point {
-    type Output = AntiScalar;
-
-    fn squared_anti_magnitude(self) -> AntiScalar {
-        self.anti_scalar_product(self.anti_reversal())
-    }
-}
-
-impl WeightNorm for Point {
-    type Output = AntiScalar;
-
-    fn weight_norm(self) -> AntiScalar {
-        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
-    }
-}
-
-impl GeometricNorm for Point {
-    type Output = HomogeneousMagnitude;
-
-    fn geometric_norm(self) -> HomogeneousMagnitude {
-        self.bulk_norm().add(self.weight_norm())
-    }
-}
-
-impl Scale for Point {
-    type Output = Point;
-
-    fn scale(self, other: f32) -> Point {
-        self.geometric_product(Scalar { groups: ScalarGroups { g0: other } })
-    }
-}
-
-impl Signum for Point {
-    type Output = Point;
-
-    fn signum(self) -> Point {
-        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.magnitude().group0() } })
-    }
-}
-
-impl Inverse for Point {
-    type Output = Point;
-
-    fn inverse(self) -> Point {
-        self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
-    }
-}
-
-impl Unitize for Point {
-    type Output = Point;
-
-    fn unitize(self) -> Point {
-        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
-    }
-}
-
-impl Attitude for Point {
-    type Output = Scalar;
-
-    fn attitude(self) -> Scalar {
-        self.regressive_product(Plane { groups: PlaneGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } })
-    }
-}
-
-impl Zero for Line {
-    fn zero() -> Self {
-        Line { groups: LineGroups { g0: Simd32x3::from(0.0), g1: Simd32x3::from(0.0) } }
-    }
-}
-
-impl One for Line {
-    fn one() -> Self {
-        Line { groups: LineGroups { g0: Simd32x3::from(0.0), g1: Simd32x3::from(0.0) } }
-    }
-}
-
-impl Grade for Line {
-    type Output = isize;
-
-    fn grade(self) -> isize {
-        2
-    }
-}
-
-impl AntiGrade for Line {
-    type Output = isize;
-
-    fn anti_grade(self) -> isize {
-        2
-    }
-}
-
-impl Neg for Line {
-    type Output = Line;
-
-    fn neg(self) -> Line {
-        Line { groups: LineGroups { g0: self.group0() * Simd32x3::from(-1.0), g1: self.group1() * Simd32x3::from(-1.0) } }
-    }
-}
-
-impl Automorphism for Line {
-    type Output = Line;
-
-    fn automorphism(self) -> Line {
-        Line { groups: LineGroups { g0: self.group0(), g1: self.group1() } }
-    }
-}
-
-impl Reversal for Line {
-    type Output = Line;
-
-    fn reversal(self) -> Line {
-        Line { groups: LineGroups { g0: self.group0() * Simd32x3::from(-1.0), g1: self.group1() * Simd32x3::from(-1.0) } }
-    }
-}
-
-impl Conjugation for Line {
-    type Output = Line;
-
-    fn conjugation(self) -> Line {
-        Line { groups: LineGroups { g0: self.group0() * Simd32x3::from(-1.0), g1: self.group1() * Simd32x3::from(-1.0) } }
-    }
-}
-
-impl Dual for Line {
-    type Output = Line;
-
-    fn dual(self) -> Line {
-        Line { groups: LineGroups { g0: self.group1() * Simd32x3::from(-1.0), g1: self.group0() * Simd32x3::from(-1.0) } }
-    }
-}
-
-impl AntiReversal for Line {
-    type Output = Line;
-
-    fn anti_reversal(self) -> Line {
-        Line { groups: LineGroups { g0: self.group0() * Simd32x3::from(-1.0), g1: self.group1() * Simd32x3::from(-1.0) } }
-    }
-}
-
-impl RightComplement for Line {
-    type Output = Line;
-
-    fn right_complement(self) -> Line {
-        Line { groups: LineGroups { g0: self.group1() * Simd32x3::from(-1.0), g1: self.group0() * Simd32x3::from(-1.0) } }
-    }
-}
-
-impl LeftComplement for Line {
-    type Output = Line;
-
-    fn left_complement(self) -> Line {
-        Line { groups: LineGroups { g0: self.group1() * Simd32x3::from(-1.0), g1: self.group0() * Simd32x3::from(-1.0) } }
-    }
-}
-
-impl DoubleComplement for Line {
-    type Output = Line;
-
-    fn double_complement(self) -> Line {
-        Line { groups: LineGroups { g0: self.group0(), g1: self.group1() } }
     }
 }
 
@@ -7834,194 +8050,6 @@ impl AntiDot<MultiVector> for Line {
     }
 }
 
-impl SquaredMagnitude for Line {
-    type Output = Scalar;
-
-    fn squared_magnitude(self) -> Scalar {
-        self.scalar_product(self.reversal())
-    }
-}
-
-impl Magnitude for Line {
-    type Output = Scalar;
-
-    fn magnitude(self) -> Scalar {
-        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
-    }
-}
-
-impl BulkNorm for Line {
-    type Output = Scalar;
-
-    fn bulk_norm(self) -> Scalar {
-        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
-    }
-}
-
-impl SquaredAntiMagnitude for Line {
-    type Output = AntiScalar;
-
-    fn squared_anti_magnitude(self) -> AntiScalar {
-        self.anti_scalar_product(self.anti_reversal())
-    }
-}
-
-impl WeightNorm for Line {
-    type Output = AntiScalar;
-
-    fn weight_norm(self) -> AntiScalar {
-        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
-    }
-}
-
-impl GeometricNorm for Line {
-    type Output = HomogeneousMagnitude;
-
-    fn geometric_norm(self) -> HomogeneousMagnitude {
-        self.bulk_norm().add(self.weight_norm())
-    }
-}
-
-impl Scale for Line {
-    type Output = Line;
-
-    fn scale(self, other: f32) -> Line {
-        self.geometric_product(Scalar { groups: ScalarGroups { g0: other } })
-    }
-}
-
-impl Signum for Line {
-    type Output = Line;
-
-    fn signum(self) -> Line {
-        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.magnitude().group0() } })
-    }
-}
-
-impl Inverse for Line {
-    type Output = Line;
-
-    fn inverse(self) -> Line {
-        self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
-    }
-}
-
-impl Unitize for Line {
-    type Output = Line;
-
-    fn unitize(self) -> Line {
-        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
-    }
-}
-
-impl Attitude for Line {
-    type Output = Point;
-
-    fn attitude(self) -> Point {
-        self.regressive_product(Plane { groups: PlaneGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } })
-    }
-}
-
-impl Zero for Plane {
-    fn zero() -> Self {
-        Plane { groups: PlaneGroups { g0: Simd32x4::from(0.0) } }
-    }
-}
-
-impl One for Plane {
-    fn one() -> Self {
-        Plane { groups: PlaneGroups { g0: Simd32x4::from(0.0) } }
-    }
-}
-
-impl Grade for Plane {
-    type Output = isize;
-
-    fn grade(self) -> isize {
-        3
-    }
-}
-
-impl AntiGrade for Plane {
-    type Output = isize;
-
-    fn anti_grade(self) -> isize {
-        1
-    }
-}
-
-impl Neg for Plane {
-    type Output = Plane;
-
-    fn neg(self) -> Plane {
-        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
-    }
-}
-
-impl Automorphism for Plane {
-    type Output = Plane;
-
-    fn automorphism(self) -> Plane {
-        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
-    }
-}
-
-impl Reversal for Plane {
-    type Output = Plane;
-
-    fn reversal(self) -> Plane {
-        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
-    }
-}
-
-impl Conjugation for Plane {
-    type Output = Plane;
-
-    fn conjugation(self) -> Plane {
-        Plane { groups: PlaneGroups { g0: self.group0() } }
-    }
-}
-
-impl Dual for Plane {
-    type Output = Point;
-
-    fn dual(self) -> Point {
-        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
-    }
-}
-
-impl AntiReversal for Plane {
-    type Output = Plane;
-
-    fn anti_reversal(self) -> Plane {
-        Plane { groups: PlaneGroups { g0: self.group0() } }
-    }
-}
-
-impl RightComplement for Plane {
-    type Output = Point;
-
-    fn right_complement(self) -> Point {
-        Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
-    }
-}
-
-impl LeftComplement for Plane {
-    type Output = Point;
-
-    fn left_complement(self) -> Point {
-        Point { groups: PointGroups { g0: self.group0() } }
-    }
-}
-
-impl DoubleComplement for Plane {
-    type Output = Plane;
-
-    fn double_complement(self) -> Plane {
-        Plane { groups: PlaneGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
-    }
-}
-
 impl GeometricProduct<Scalar> for Plane {
     type Output = Plane;
 
@@ -9211,154 +9239,6 @@ impl AntiDot<MultiVector> for Plane {
 
     fn anti_dot(self, other: MultiVector) -> AntiScalar {
         AntiScalar { groups: AntiScalarGroups { g0: self.group0()[0] * other.group4()[0] + self.group0()[1] * other.group4()[1] + self.group0()[2] * other.group4()[2] } }
-    }
-}
-
-impl SquaredMagnitude for Plane {
-    type Output = Scalar;
-
-    fn squared_magnitude(self) -> Scalar {
-        self.scalar_product(self.reversal())
-    }
-}
-
-impl Magnitude for Plane {
-    type Output = Scalar;
-
-    fn magnitude(self) -> Scalar {
-        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
-    }
-}
-
-impl BulkNorm for Plane {
-    type Output = Scalar;
-
-    fn bulk_norm(self) -> Scalar {
-        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
-    }
-}
-
-impl SquaredAntiMagnitude for Plane {
-    type Output = AntiScalar;
-
-    fn squared_anti_magnitude(self) -> AntiScalar {
-        self.anti_scalar_product(self.anti_reversal())
-    }
-}
-
-impl WeightNorm for Plane {
-    type Output = AntiScalar;
-
-    fn weight_norm(self) -> AntiScalar {
-        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
-    }
-}
-
-impl GeometricNorm for Plane {
-    type Output = HomogeneousMagnitude;
-
-    fn geometric_norm(self) -> HomogeneousMagnitude {
-        self.bulk_norm().add(self.weight_norm())
-    }
-}
-
-impl Scale for Plane {
-    type Output = Plane;
-
-    fn scale(self, other: f32) -> Plane {
-        self.geometric_product(Scalar { groups: ScalarGroups { g0: other } })
-    }
-}
-
-impl Signum for Plane {
-    type Output = Plane;
-
-    fn signum(self) -> Plane {
-        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.magnitude().group0() } })
-    }
-}
-
-impl Inverse for Plane {
-    type Output = Plane;
-
-    fn inverse(self) -> Plane {
-        self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
-    }
-}
-
-impl Unitize for Plane {
-    type Output = Plane;
-
-    fn unitize(self) -> Plane {
-        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
-    }
-}
-
-impl Attitude for Plane {
-    type Output = Line;
-
-    fn attitude(self) -> Line {
-        self.regressive_product(Plane { groups: PlaneGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } })
-    }
-}
-
-impl Zero for Motor {
-    fn zero() -> Self {
-        Motor { groups: MotorGroups { g0: Simd32x4::from(0.0), g1: Simd32x3::from(0.0) } }
-    }
-}
-
-impl One for Motor {
-    fn one() -> Self {
-        Motor { groups: MotorGroups { g0: Simd32x4::from(0.0), g1: Simd32x3::from(0.0) } }
-    }
-}
-
-impl Neg for Motor {
-    type Output = Motor;
-
-    fn neg(self) -> Motor {
-        Motor { groups: MotorGroups { g0: self.group0() * Simd32x4::from(-1.0), g1: self.group1() * Simd32x3::from(-1.0) } }
-    }
-}
-
-impl Automorphism for Motor {
-    type Output = Motor;
-
-    fn automorphism(self) -> Motor {
-        Motor { groups: MotorGroups { g0: self.group0(), g1: self.group1() } }
-    }
-}
-
-impl Reversal for Motor {
-    type Output = Motor;
-
-    fn reversal(self) -> Motor {
-        Motor { groups: MotorGroups { g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]), g1: self.group1() * Simd32x3::from(-1.0) } }
-    }
-}
-
-impl Conjugation for Motor {
-    type Output = Motor;
-
-    fn conjugation(self) -> Motor {
-        Motor { groups: MotorGroups { g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]), g1: self.group1() * Simd32x3::from(-1.0) } }
-    }
-}
-
-impl AntiReversal for Motor {
-    type Output = Motor;
-
-    fn anti_reversal(self) -> Motor {
-        Motor { groups: MotorGroups { g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]), g1: self.group1() * Simd32x3::from(-1.0) } }
-    }
-}
-
-impl DoubleComplement for Motor {
-    type Output = Motor;
-
-    fn double_complement(self) -> Motor {
-        Motor { groups: MotorGroups { g0: self.group0(), g1: self.group1() } }
     }
 }
 
@@ -10882,154 +10762,6 @@ impl AntiDot<MultiVector> for Motor {
     }
 }
 
-impl SquaredMagnitude for Motor {
-    type Output = Scalar;
-
-    fn squared_magnitude(self) -> Scalar {
-        self.scalar_product(self.reversal())
-    }
-}
-
-impl Magnitude for Motor {
-    type Output = Scalar;
-
-    fn magnitude(self) -> Scalar {
-        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
-    }
-}
-
-impl BulkNorm for Motor {
-    type Output = Scalar;
-
-    fn bulk_norm(self) -> Scalar {
-        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
-    }
-}
-
-impl SquaredAntiMagnitude for Motor {
-    type Output = AntiScalar;
-
-    fn squared_anti_magnitude(self) -> AntiScalar {
-        self.anti_scalar_product(self.anti_reversal())
-    }
-}
-
-impl WeightNorm for Motor {
-    type Output = AntiScalar;
-
-    fn weight_norm(self) -> AntiScalar {
-        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
-    }
-}
-
-impl GeometricNorm for Motor {
-    type Output = HomogeneousMagnitude;
-
-    fn geometric_norm(self) -> HomogeneousMagnitude {
-        self.bulk_norm().add(self.weight_norm())
-    }
-}
-
-impl Scale for Motor {
-    type Output = Motor;
-
-    fn scale(self, other: f32) -> Motor {
-        self.geometric_product(Scalar { groups: ScalarGroups { g0: other } })
-    }
-}
-
-impl Signum for Motor {
-    type Output = Motor;
-
-    fn signum(self) -> Motor {
-        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.magnitude().group0() } })
-    }
-}
-
-impl Inverse for Motor {
-    type Output = Motor;
-
-    fn inverse(self) -> Motor {
-        self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
-    }
-}
-
-impl Unitize for Motor {
-    type Output = Motor;
-
-    fn unitize(self) -> Motor {
-        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
-    }
-}
-
-impl Attitude for Motor {
-    type Output = Flector;
-
-    fn attitude(self) -> Flector {
-        self.regressive_product(Plane { groups: PlaneGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } })
-    }
-}
-
-impl Zero for Rotor {
-    fn zero() -> Self {
-        Rotor { groups: RotorGroups { g0: Simd32x4::from(0.0) } }
-    }
-}
-
-impl One for Rotor {
-    fn one() -> Self {
-        Rotor { groups: RotorGroups { g0: Simd32x4::from(0.0) } }
-    }
-}
-
-impl Neg for Rotor {
-    type Output = Rotor;
-
-    fn neg(self) -> Rotor {
-        Rotor { groups: RotorGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
-    }
-}
-
-impl Automorphism for Rotor {
-    type Output = Rotor;
-
-    fn automorphism(self) -> Rotor {
-        Rotor { groups: RotorGroups { g0: self.group0() } }
-    }
-}
-
-impl Reversal for Rotor {
-    type Output = Rotor;
-
-    fn reversal(self) -> Rotor {
-        Rotor { groups: RotorGroups { g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) } }
-    }
-}
-
-impl Conjugation for Rotor {
-    type Output = Rotor;
-
-    fn conjugation(self) -> Rotor {
-        Rotor { groups: RotorGroups { g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) } }
-    }
-}
-
-impl AntiReversal for Rotor {
-    type Output = Rotor;
-
-    fn anti_reversal(self) -> Rotor {
-        Rotor { groups: RotorGroups { g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) } }
-    }
-}
-
-impl DoubleComplement for Rotor {
-    type Output = Rotor;
-
-    fn double_complement(self) -> Rotor {
-        Rotor { groups: RotorGroups { g0: self.group0() } }
-    }
-}
-
 impl GeometricProduct<Scalar> for Rotor {
     type Output = Rotor;
 
@@ -12301,82 +12033,6 @@ impl AntiDot<MultiVector> for Rotor {
 
     fn anti_dot(self, other: MultiVector) -> AntiScalar {
         AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[0] * other.group2()[0] - self.group0()[1] * other.group2()[1] - self.group0()[2] * other.group2()[2] + self.group0()[3] * other.group0()[1] } }
-    }
-}
-
-impl Scale for Rotor {
-    type Output = Rotor;
-
-    fn scale(self, other: f32) -> Rotor {
-        self.geometric_product(Scalar { groups: ScalarGroups { g0: other } })
-    }
-}
-
-impl Attitude for Rotor {
-    type Output = Flector;
-
-    fn attitude(self) -> Flector {
-        self.regressive_product(Plane { groups: PlaneGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } })
-    }
-}
-
-impl Zero for Translator {
-    fn zero() -> Self {
-        Translator { groups: TranslatorGroups { g0: Simd32x4::from(0.0) } }
-    }
-}
-
-impl One for Translator {
-    fn one() -> Self {
-        Translator { groups: TranslatorGroups { g0: Simd32x4::from(0.0) } }
-    }
-}
-
-impl Neg for Translator {
-    type Output = Translator;
-
-    fn neg(self) -> Translator {
-        Translator { groups: TranslatorGroups { g0: self.group0() * Simd32x4::from(-1.0) } }
-    }
-}
-
-impl Automorphism for Translator {
-    type Output = Translator;
-
-    fn automorphism(self) -> Translator {
-        Translator { groups: TranslatorGroups { g0: self.group0() } }
-    }
-}
-
-impl Reversal for Translator {
-    type Output = Translator;
-
-    fn reversal(self) -> Translator {
-        Translator { groups: TranslatorGroups { g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) } }
-    }
-}
-
-impl Conjugation for Translator {
-    type Output = Translator;
-
-    fn conjugation(self) -> Translator {
-        Translator { groups: TranslatorGroups { g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) } }
-    }
-}
-
-impl AntiReversal for Translator {
-    type Output = Translator;
-
-    fn anti_reversal(self) -> Translator {
-        Translator { groups: TranslatorGroups { g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) } }
-    }
-}
-
-impl DoubleComplement for Translator {
-    type Output = Translator;
-
-    fn double_complement(self) -> Translator {
-        Translator { groups: TranslatorGroups { g0: self.group0() } }
     }
 }
 
@@ -13798,178 +13454,6 @@ impl AntiDot<MultiVector> for Translator {
     }
 }
 
-impl SquaredMagnitude for Translator {
-    type Output = Scalar;
-
-    fn squared_magnitude(self) -> Scalar {
-        self.scalar_product(self.reversal())
-    }
-}
-
-impl Magnitude for Translator {
-    type Output = Scalar;
-
-    fn magnitude(self) -> Scalar {
-        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
-    }
-}
-
-impl BulkNorm for Translator {
-    type Output = Scalar;
-
-    fn bulk_norm(self) -> Scalar {
-        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
-    }
-}
-
-impl SquaredAntiMagnitude for Translator {
-    type Output = AntiScalar;
-
-    fn squared_anti_magnitude(self) -> AntiScalar {
-        self.anti_scalar_product(self.anti_reversal())
-    }
-}
-
-impl WeightNorm for Translator {
-    type Output = AntiScalar;
-
-    fn weight_norm(self) -> AntiScalar {
-        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
-    }
-}
-
-impl GeometricNorm for Translator {
-    type Output = HomogeneousMagnitude;
-
-    fn geometric_norm(self) -> HomogeneousMagnitude {
-        self.bulk_norm().add(self.weight_norm())
-    }
-}
-
-impl Scale for Translator {
-    type Output = Translator;
-
-    fn scale(self, other: f32) -> Translator {
-        self.geometric_product(Scalar { groups: ScalarGroups { g0: other } })
-    }
-}
-
-impl Signum for Translator {
-    type Output = Translator;
-
-    fn signum(self) -> Translator {
-        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.magnitude().group0() } })
-    }
-}
-
-impl Inverse for Translator {
-    type Output = Translator;
-
-    fn inverse(self) -> Translator {
-        self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
-    }
-}
-
-impl Unitize for Translator {
-    type Output = Translator;
-
-    fn unitize(self) -> Translator {
-        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
-    }
-}
-
-impl Attitude for Translator {
-    type Output = Flector;
-
-    fn attitude(self) -> Flector {
-        self.regressive_product(Plane { groups: PlaneGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } })
-    }
-}
-
-impl Zero for Flector {
-    fn zero() -> Self {
-        Flector { groups: FlectorGroups { g0: Simd32x4::from(0.0), g1: Simd32x4::from(0.0) } }
-    }
-}
-
-impl One for Flector {
-    fn one() -> Self {
-        Flector { groups: FlectorGroups { g0: Simd32x4::from(0.0), g1: Simd32x4::from(0.0) } }
-    }
-}
-
-impl Neg for Flector {
-    type Output = Flector;
-
-    fn neg(self) -> Flector {
-        Flector { groups: FlectorGroups { g0: self.group0() * Simd32x4::from(-1.0), g1: self.group1() * Simd32x4::from(-1.0) } }
-    }
-}
-
-impl Automorphism for Flector {
-    type Output = Flector;
-
-    fn automorphism(self) -> Flector {
-        Flector { groups: FlectorGroups { g0: self.group0() * Simd32x4::from(-1.0), g1: self.group1() * Simd32x4::from(-1.0) } }
-    }
-}
-
-impl Reversal for Flector {
-    type Output = Flector;
-
-    fn reversal(self) -> Flector {
-        Flector { groups: FlectorGroups { g0: self.group0(), g1: self.group1() * Simd32x4::from(-1.0) } }
-    }
-}
-
-impl Conjugation for Flector {
-    type Output = Flector;
-
-    fn conjugation(self) -> Flector {
-        Flector { groups: FlectorGroups { g0: self.group0() * Simd32x4::from(-1.0), g1: self.group1() } }
-    }
-}
-
-impl Dual for Flector {
-    type Output = Flector;
-
-    fn dual(self) -> Flector {
-        Flector { groups: FlectorGroups { g0: self.group1() * Simd32x4::from(-1.0), g1: self.group0() } }
-    }
-}
-
-impl AntiReversal for Flector {
-    type Output = Flector;
-
-    fn anti_reversal(self) -> Flector {
-        Flector { groups: FlectorGroups { g0: self.group0() * Simd32x4::from(-1.0), g1: self.group1() } }
-    }
-}
-
-impl RightComplement for Flector {
-    type Output = Flector;
-
-    fn right_complement(self) -> Flector {
-        Flector { groups: FlectorGroups { g0: self.group1() * Simd32x4::from(-1.0), g1: self.group0() } }
-    }
-}
-
-impl LeftComplement for Flector {
-    type Output = Flector;
-
-    fn left_complement(self) -> Flector {
-        Flector { groups: FlectorGroups { g0: self.group1(), g1: self.group0() * Simd32x4::from(-1.0) } }
-    }
-}
-
-impl DoubleComplement for Flector {
-    type Output = Flector;
-
-    fn double_complement(self) -> Flector {
-        Flector { groups: FlectorGroups { g0: self.group0() * Simd32x4::from(-1.0), g1: self.group1() * Simd32x4::from(-1.0) } }
-    }
-}
-
 impl GeometricProduct<Scalar> for Flector {
     type Output = Flector;
 
@@ -15379,178 +14863,6 @@ impl AntiDot<MultiVector> for Flector {
 
     fn anti_dot(self, other: MultiVector) -> AntiScalar {
         AntiScalar { groups: AntiScalarGroups { g0: 0.0 - self.group0()[3] * other.group1()[3] + self.group1()[0] * other.group4()[0] + self.group1()[1] * other.group4()[1] + self.group1()[2] * other.group4()[2] } }
-    }
-}
-
-impl SquaredMagnitude for Flector {
-    type Output = Scalar;
-
-    fn squared_magnitude(self) -> Scalar {
-        self.scalar_product(self.reversal())
-    }
-}
-
-impl Magnitude for Flector {
-    type Output = Scalar;
-
-    fn magnitude(self) -> Scalar {
-        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
-    }
-}
-
-impl BulkNorm for Flector {
-    type Output = Scalar;
-
-    fn bulk_norm(self) -> Scalar {
-        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
-    }
-}
-
-impl SquaredAntiMagnitude for Flector {
-    type Output = AntiScalar;
-
-    fn squared_anti_magnitude(self) -> AntiScalar {
-        self.anti_scalar_product(self.anti_reversal())
-    }
-}
-
-impl WeightNorm for Flector {
-    type Output = AntiScalar;
-
-    fn weight_norm(self) -> AntiScalar {
-        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
-    }
-}
-
-impl GeometricNorm for Flector {
-    type Output = HomogeneousMagnitude;
-
-    fn geometric_norm(self) -> HomogeneousMagnitude {
-        self.bulk_norm().add(self.weight_norm())
-    }
-}
-
-impl Scale for Flector {
-    type Output = Flector;
-
-    fn scale(self, other: f32) -> Flector {
-        self.geometric_product(Scalar { groups: ScalarGroups { g0: other } })
-    }
-}
-
-impl Signum for Flector {
-    type Output = Flector;
-
-    fn signum(self) -> Flector {
-        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.magnitude().group0() } })
-    }
-}
-
-impl Inverse for Flector {
-    type Output = Flector;
-
-    fn inverse(self) -> Flector {
-        self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
-    }
-}
-
-impl Unitize for Flector {
-    type Output = Flector;
-
-    fn unitize(self) -> Flector {
-        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
-    }
-}
-
-impl Attitude for Flector {
-    type Output = MultiVector;
-
-    fn attitude(self) -> MultiVector {
-        self.regressive_product(Plane { groups: PlaneGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } })
-    }
-}
-
-impl Zero for MultiVector {
-    fn zero() -> Self {
-        MultiVector { groups: MultiVectorGroups { g0: Simd32x2::from(0.0), g1: Simd32x4::from(0.0), g2: Simd32x3::from(0.0), g3: Simd32x3::from(0.0), g4: Simd32x4::from(0.0) } }
-    }
-}
-
-impl One for MultiVector {
-    fn one() -> Self {
-        MultiVector { groups: MultiVectorGroups { g0: Simd32x2::from([1.0, 0.0]), g1: Simd32x4::from(0.0), g2: Simd32x3::from(0.0), g3: Simd32x3::from(0.0), g4: Simd32x4::from(0.0) } }
-    }
-}
-
-impl Neg for MultiVector {
-    type Output = MultiVector;
-
-    fn neg(self) -> MultiVector {
-        MultiVector { groups: MultiVectorGroups { g0: self.group0() * Simd32x2::from(-1.0), g1: self.group1() * Simd32x4::from(-1.0), g2: self.group2() * Simd32x3::from(-1.0), g3: self.group3() * Simd32x3::from(-1.0), g4: self.group4() * Simd32x4::from(-1.0) } }
-    }
-}
-
-impl Automorphism for MultiVector {
-    type Output = MultiVector;
-
-    fn automorphism(self) -> MultiVector {
-        MultiVector { groups: MultiVectorGroups { g0: self.group0(), g1: self.group1() * Simd32x4::from(-1.0), g2: self.group2(), g3: self.group3(), g4: self.group4() * Simd32x4::from(-1.0) } }
-    }
-}
-
-impl Reversal for MultiVector {
-    type Output = MultiVector;
-
-    fn reversal(self) -> MultiVector {
-        MultiVector { groups: MultiVectorGroups { g0: self.group0(), g1: self.group1(), g2: self.group2() * Simd32x3::from(-1.0), g3: self.group3() * Simd32x3::from(-1.0), g4: self.group4() * Simd32x4::from(-1.0) } }
-    }
-}
-
-impl Conjugation for MultiVector {
-    type Output = MultiVector;
-
-    fn conjugation(self) -> MultiVector {
-        MultiVector { groups: MultiVectorGroups { g0: self.group0(), g1: self.group1() * Simd32x4::from(-1.0), g2: self.group2() * Simd32x3::from(-1.0), g3: self.group3() * Simd32x3::from(-1.0), g4: self.group4() } }
-    }
-}
-
-impl Dual for MultiVector {
-    type Output = MultiVector;
-
-    fn dual(self) -> MultiVector {
-        MultiVector { groups: MultiVectorGroups { g0: swizzle!(self.group0(), 1, 0), g1: self.group4() * Simd32x4::from(-1.0), g2: self.group3() * Simd32x3::from(-1.0), g3: self.group2() * Simd32x3::from(-1.0), g4: self.group1() } }
-    }
-}
-
-impl AntiReversal for MultiVector {
-    type Output = MultiVector;
-
-    fn anti_reversal(self) -> MultiVector {
-        MultiVector { groups: MultiVectorGroups { g0: self.group0(), g1: self.group1() * Simd32x4::from(-1.0), g2: self.group2() * Simd32x3::from(-1.0), g3: self.group3() * Simd32x3::from(-1.0), g4: self.group4() } }
-    }
-}
-
-impl RightComplement for MultiVector {
-    type Output = MultiVector;
-
-    fn right_complement(self) -> MultiVector {
-        MultiVector { groups: MultiVectorGroups { g0: swizzle!(self.group0(), 1, 0), g1: self.group4() * Simd32x4::from(-1.0), g2: self.group3() * Simd32x3::from(-1.0), g3: self.group2() * Simd32x3::from(-1.0), g4: self.group1() } }
-    }
-}
-
-impl LeftComplement for MultiVector {
-    type Output = MultiVector;
-
-    fn left_complement(self) -> MultiVector {
-        MultiVector { groups: MultiVectorGroups { g0: swizzle!(self.group0(), 1, 0), g1: self.group4(), g2: self.group3() * Simd32x3::from(-1.0), g3: self.group2() * Simd32x3::from(-1.0), g4: self.group1() * Simd32x4::from(-1.0) } }
-    }
-}
-
-impl DoubleComplement for MultiVector {
-    type Output = MultiVector;
-
-    fn double_complement(self) -> MultiVector {
-        MultiVector { groups: MultiVectorGroups { g0: self.group0(), g1: self.group1() * Simd32x4::from(-1.0), g2: self.group2(), g3: self.group3(), g4: self.group4() * Simd32x4::from(-1.0) } }
     }
 }
 
@@ -17462,6 +16774,198 @@ impl AntiDot<MultiVector> for MultiVector {
     }
 }
 
+impl SquaredMagnitude for Scalar {
+    type Output = Scalar;
+
+    fn squared_magnitude(self) -> Scalar {
+        self.scalar_product(self.reversal())
+    }
+}
+
+impl Magnitude for Scalar {
+    type Output = Scalar;
+
+    fn magnitude(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl BulkNorm for Scalar {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl SquaredMagnitude for HomogeneousMagnitude {
+    type Output = Scalar;
+
+    fn squared_magnitude(self) -> Scalar {
+        self.scalar_product(self.reversal())
+    }
+}
+
+impl Magnitude for HomogeneousMagnitude {
+    type Output = Scalar;
+
+    fn magnitude(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl BulkNorm for HomogeneousMagnitude {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl SquaredMagnitude for Point {
+    type Output = Scalar;
+
+    fn squared_magnitude(self) -> Scalar {
+        self.scalar_product(self.reversal())
+    }
+}
+
+impl Magnitude for Point {
+    type Output = Scalar;
+
+    fn magnitude(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl BulkNorm for Point {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl SquaredMagnitude for Line {
+    type Output = Scalar;
+
+    fn squared_magnitude(self) -> Scalar {
+        self.scalar_product(self.reversal())
+    }
+}
+
+impl Magnitude for Line {
+    type Output = Scalar;
+
+    fn magnitude(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl BulkNorm for Line {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl SquaredMagnitude for Plane {
+    type Output = Scalar;
+
+    fn squared_magnitude(self) -> Scalar {
+        self.scalar_product(self.reversal())
+    }
+}
+
+impl Magnitude for Plane {
+    type Output = Scalar;
+
+    fn magnitude(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl BulkNorm for Plane {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl SquaredMagnitude for Motor {
+    type Output = Scalar;
+
+    fn squared_magnitude(self) -> Scalar {
+        self.scalar_product(self.reversal())
+    }
+}
+
+impl Magnitude for Motor {
+    type Output = Scalar;
+
+    fn magnitude(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl BulkNorm for Motor {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl SquaredMagnitude for Translator {
+    type Output = Scalar;
+
+    fn squared_magnitude(self) -> Scalar {
+        self.scalar_product(self.reversal())
+    }
+}
+
+impl Magnitude for Translator {
+    type Output = Scalar;
+
+    fn magnitude(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl BulkNorm for Translator {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl SquaredMagnitude for Flector {
+    type Output = Scalar;
+
+    fn squared_magnitude(self) -> Scalar {
+        self.scalar_product(self.reversal())
+    }
+}
+
+impl Magnitude for Flector {
+    type Output = Scalar;
+
+    fn magnitude(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl BulkNorm for Flector {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
 impl SquaredMagnitude for MultiVector {
     type Output = Scalar;
 
@@ -17483,6 +16987,174 @@ impl BulkNorm for MultiVector {
 
     fn bulk_norm(self) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.squared_magnitude().group0().sqrt() } }
+    }
+}
+
+impl SquaredAntiMagnitude for HomogeneousMagnitude {
+    type Output = AntiScalar;
+
+    fn squared_anti_magnitude(self) -> AntiScalar {
+        self.anti_scalar_product(self.anti_reversal())
+    }
+}
+
+impl WeightNorm for HomogeneousMagnitude {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
+    }
+}
+
+impl GeometricNorm for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn geometric_norm(self) -> HomogeneousMagnitude {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl SquaredAntiMagnitude for Point {
+    type Output = AntiScalar;
+
+    fn squared_anti_magnitude(self) -> AntiScalar {
+        self.anti_scalar_product(self.anti_reversal())
+    }
+}
+
+impl WeightNorm for Point {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
+    }
+}
+
+impl GeometricNorm for Point {
+    type Output = HomogeneousMagnitude;
+
+    fn geometric_norm(self) -> HomogeneousMagnitude {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl SquaredAntiMagnitude for Line {
+    type Output = AntiScalar;
+
+    fn squared_anti_magnitude(self) -> AntiScalar {
+        self.anti_scalar_product(self.anti_reversal())
+    }
+}
+
+impl WeightNorm for Line {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
+    }
+}
+
+impl GeometricNorm for Line {
+    type Output = HomogeneousMagnitude;
+
+    fn geometric_norm(self) -> HomogeneousMagnitude {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl SquaredAntiMagnitude for Plane {
+    type Output = AntiScalar;
+
+    fn squared_anti_magnitude(self) -> AntiScalar {
+        self.anti_scalar_product(self.anti_reversal())
+    }
+}
+
+impl WeightNorm for Plane {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
+    }
+}
+
+impl GeometricNorm for Plane {
+    type Output = HomogeneousMagnitude;
+
+    fn geometric_norm(self) -> HomogeneousMagnitude {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl SquaredAntiMagnitude for Motor {
+    type Output = AntiScalar;
+
+    fn squared_anti_magnitude(self) -> AntiScalar {
+        self.anti_scalar_product(self.anti_reversal())
+    }
+}
+
+impl WeightNorm for Motor {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
+    }
+}
+
+impl GeometricNorm for Motor {
+    type Output = HomogeneousMagnitude;
+
+    fn geometric_norm(self) -> HomogeneousMagnitude {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl SquaredAntiMagnitude for Translator {
+    type Output = AntiScalar;
+
+    fn squared_anti_magnitude(self) -> AntiScalar {
+        self.anti_scalar_product(self.anti_reversal())
+    }
+}
+
+impl WeightNorm for Translator {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
+    }
+}
+
+impl GeometricNorm for Translator {
+    type Output = HomogeneousMagnitude;
+
+    fn geometric_norm(self) -> HomogeneousMagnitude {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl SquaredAntiMagnitude for Flector {
+    type Output = AntiScalar;
+
+    fn squared_anti_magnitude(self) -> AntiScalar {
+        self.anti_scalar_product(self.anti_reversal())
+    }
+}
+
+impl WeightNorm for Flector {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.squared_anti_magnitude().group0().sqrt() } }
+    }
+}
+
+impl GeometricNorm for Flector {
+    type Output = HomogeneousMagnitude;
+
+    fn geometric_norm(self) -> HomogeneousMagnitude {
+        self.bulk_norm().add(self.weight_norm())
     }
 }
 
@@ -17510,6 +17182,134 @@ impl GeometricNorm for MultiVector {
     }
 }
 
+impl Scale for Scalar {
+    type Output = Scalar;
+
+    fn scale(self, other: f32) -> Scalar {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: other } })
+    }
+}
+
+impl Signum for Scalar {
+    type Output = Scalar;
+
+    fn signum(self) -> Scalar {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.magnitude().group0() } })
+    }
+}
+
+impl Scale for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn scale(self, other: f32) -> HomogeneousMagnitude {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: other } })
+    }
+}
+
+impl Signum for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn signum(self) -> HomogeneousMagnitude {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.magnitude().group0() } })
+    }
+}
+
+impl Scale for Point {
+    type Output = Point;
+
+    fn scale(self, other: f32) -> Point {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: other } })
+    }
+}
+
+impl Signum for Point {
+    type Output = Point;
+
+    fn signum(self) -> Point {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.magnitude().group0() } })
+    }
+}
+
+impl Scale for Line {
+    type Output = Line;
+
+    fn scale(self, other: f32) -> Line {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: other } })
+    }
+}
+
+impl Signum for Line {
+    type Output = Line;
+
+    fn signum(self) -> Line {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.magnitude().group0() } })
+    }
+}
+
+impl Scale for Plane {
+    type Output = Plane;
+
+    fn scale(self, other: f32) -> Plane {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: other } })
+    }
+}
+
+impl Signum for Plane {
+    type Output = Plane;
+
+    fn signum(self) -> Plane {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.magnitude().group0() } })
+    }
+}
+
+impl Scale for Motor {
+    type Output = Motor;
+
+    fn scale(self, other: f32) -> Motor {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: other } })
+    }
+}
+
+impl Signum for Motor {
+    type Output = Motor;
+
+    fn signum(self) -> Motor {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.magnitude().group0() } })
+    }
+}
+
+impl Scale for Translator {
+    type Output = Translator;
+
+    fn scale(self, other: f32) -> Translator {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: other } })
+    }
+}
+
+impl Signum for Translator {
+    type Output = Translator;
+
+    fn signum(self) -> Translator {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.magnitude().group0() } })
+    }
+}
+
+impl Scale for Flector {
+    type Output = Flector;
+
+    fn scale(self, other: f32) -> Flector {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: other } })
+    }
+}
+
+impl Signum for Flector {
+    type Output = Flector;
+
+    fn signum(self) -> Flector {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.magnitude().group0() } })
+    }
+}
+
 impl Scale for MultiVector {
     type Output = MultiVector;
 
@@ -17526,6 +17326,70 @@ impl Signum for MultiVector {
     }
 }
 
+impl Inverse for Scalar {
+    type Output = Scalar;
+
+    fn inverse(self) -> Scalar {
+        self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
+impl Inverse for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn inverse(self) -> HomogeneousMagnitude {
+        self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
+impl Inverse for Point {
+    type Output = Point;
+
+    fn inverse(self) -> Point {
+        self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
+impl Inverse for Line {
+    type Output = Line;
+
+    fn inverse(self) -> Line {
+        self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
+impl Inverse for Plane {
+    type Output = Plane;
+
+    fn inverse(self) -> Plane {
+        self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
+impl Inverse for Motor {
+    type Output = Motor;
+
+    fn inverse(self) -> Motor {
+        self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
+impl Inverse for Translator {
+    type Output = Translator;
+
+    fn inverse(self) -> Translator {
+        self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
+impl Inverse for Flector {
+    type Output = Flector;
+
+    fn inverse(self) -> Flector {
+        self.reversal().geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.squared_magnitude().group0() } })
+    }
+}
+
 impl Inverse for MultiVector {
     type Output = MultiVector;
 
@@ -17534,11 +17398,139 @@ impl Inverse for MultiVector {
     }
 }
 
+impl Unitize for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn unitize(self) -> HomogeneousMagnitude {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
+    }
+}
+
+impl Unitize for Point {
+    type Output = Point;
+
+    fn unitize(self) -> Point {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
+    }
+}
+
+impl Unitize for Line {
+    type Output = Line;
+
+    fn unitize(self) -> Line {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
+    }
+}
+
+impl Unitize for Plane {
+    type Output = Plane;
+
+    fn unitize(self) -> Plane {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
+    }
+}
+
+impl Unitize for Motor {
+    type Output = Motor;
+
+    fn unitize(self) -> Motor {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
+    }
+}
+
+impl Unitize for Translator {
+    type Output = Translator;
+
+    fn unitize(self) -> Translator {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
+    }
+}
+
+impl Unitize for Flector {
+    type Output = Flector;
+
+    fn unitize(self) -> Flector {
+        self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
+    }
+}
+
 impl Unitize for MultiVector {
     type Output = MultiVector;
 
     fn unitize(self) -> MultiVector {
         self.geometric_product(Scalar { groups: ScalarGroups { g0: 1.0 / self.weight_norm().group0() } })
+    }
+}
+
+impl Attitude for AntiScalar {
+    type Output = Plane;
+
+    fn attitude(self) -> Plane {
+        self.regressive_product(Plane { groups: PlaneGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } })
+    }
+}
+
+impl Attitude for HomogeneousMagnitude {
+    type Output = Plane;
+
+    fn attitude(self) -> Plane {
+        self.regressive_product(Plane { groups: PlaneGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } })
+    }
+}
+
+impl Attitude for Point {
+    type Output = Scalar;
+
+    fn attitude(self) -> Scalar {
+        self.regressive_product(Plane { groups: PlaneGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } })
+    }
+}
+
+impl Attitude for Line {
+    type Output = Point;
+
+    fn attitude(self) -> Point {
+        self.regressive_product(Plane { groups: PlaneGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } })
+    }
+}
+
+impl Attitude for Plane {
+    type Output = Line;
+
+    fn attitude(self) -> Line {
+        self.regressive_product(Plane { groups: PlaneGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } })
+    }
+}
+
+impl Attitude for Motor {
+    type Output = Flector;
+
+    fn attitude(self) -> Flector {
+        self.regressive_product(Plane { groups: PlaneGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } })
+    }
+}
+
+impl Attitude for Rotor {
+    type Output = Flector;
+
+    fn attitude(self) -> Flector {
+        self.regressive_product(Plane { groups: PlaneGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } })
+    }
+}
+
+impl Attitude for Translator {
+    type Output = Flector;
+
+    fn attitude(self) -> Flector {
+        self.regressive_product(Plane { groups: PlaneGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } })
+    }
+}
+
+impl Attitude for Flector {
+    type Output = MultiVector;
+
+    fn attitude(self) -> MultiVector {
+        self.regressive_product(Plane { groups: PlaneGroups { g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } })
     }
 }
 
@@ -17559,6 +17551,48 @@ impl Powi for Scalar {
         }
         let mut x: Scalar = if exponent < 0 { self.inverse() } else { self };
         let mut y: Scalar = Scalar::one();
+        let mut n: isize = exponent.abs();
+        while 1 < n {
+            if n & 1 == 1 {
+                y = x.geometric_product(y);
+            }
+            x = x.geometric_product(x);
+            n = n >> 1;
+        }
+        x.geometric_product(y)
+    }
+}
+
+impl Powi for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn powi(self, exponent: isize) -> HomogeneousMagnitude {
+        if exponent == 0 {
+            return HomogeneousMagnitude::one();
+        }
+        let mut x: HomogeneousMagnitude = if exponent < 0 { self.inverse() } else { self };
+        let mut y: HomogeneousMagnitude = HomogeneousMagnitude::one();
+        let mut n: isize = exponent.abs();
+        while 1 < n {
+            if n & 1 == 1 {
+                y = x.geometric_product(y);
+            }
+            x = x.geometric_product(x);
+            n = n >> 1;
+        }
+        x.geometric_product(y)
+    }
+}
+
+impl Powi for MultiVector {
+    type Output = MultiVector;
+
+    fn powi(self, exponent: isize) -> MultiVector {
+        if exponent == 0 {
+            return MultiVector::one();
+        }
+        let mut x: MultiVector = if exponent < 0 { self.inverse() } else { self };
+        let mut y: MultiVector = MultiVector::one();
         let mut n: isize = exponent.abs();
         while 1 < n {
             if n & 1 == 1 {
@@ -17720,27 +17754,6 @@ impl GeometricQuotient<Scalar> for HomogeneousMagnitude {
 
     fn geometric_quotient(self, other: Scalar) -> HomogeneousMagnitude {
         self.geometric_product(other.inverse())
-    }
-}
-
-impl Powi for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
-
-    fn powi(self, exponent: isize) -> HomogeneousMagnitude {
-        if exponent == 0 {
-            return HomogeneousMagnitude::one();
-        }
-        let mut x: HomogeneousMagnitude = if exponent < 0 { self.inverse() } else { self };
-        let mut y: HomogeneousMagnitude = HomogeneousMagnitude::one();
-        let mut n: isize = exponent.abs();
-        while 1 < n {
-            if n & 1 == 1 {
-                y = x.geometric_product(y);
-            }
-            x = x.geometric_product(x);
-            n = n >> 1;
-        }
-        x.geometric_product(y)
     }
 }
 
@@ -18373,27 +18386,6 @@ impl GeometricQuotient<Flector> for MultiVector {
 
     fn geometric_quotient(self, other: Flector) -> MultiVector {
         self.geometric_product(other.inverse())
-    }
-}
-
-impl Powi for MultiVector {
-    type Output = MultiVector;
-
-    fn powi(self, exponent: isize) -> MultiVector {
-        if exponent == 0 {
-            return MultiVector::one();
-        }
-        let mut x: MultiVector = if exponent < 0 { self.inverse() } else { self };
-        let mut y: MultiVector = MultiVector::one();
-        let mut n: isize = exponent.abs();
-        while 1 < n {
-            if n & 1 == 1 {
-                y = x.geometric_product(y);
-            }
-            x = x.geometric_product(x);
-            n = n >> 1;
-        }
-        x.geometric_product(y)
     }
 }
 
@@ -20281,6 +20273,14 @@ impl Distance<HomogeneousMagnitude> for HomogeneousMagnitude {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Point> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn distance(self, other: Point) -> HomogeneousMagnitude {
         self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
     }
 }
