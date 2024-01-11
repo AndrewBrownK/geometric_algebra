@@ -571,6 +571,26 @@ pub trait Unitize {
 }
 
 
+/// Invert (Inversion)
+/// An improper isometry that performs an inversion through a point.
+/// Be careful not to confuse with `Inverse`, which raises a number to the power of `-1.0`.
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Inversion
+pub trait Invert<T> {
+    type Output;
+    fn invert(self, other: T) -> Self::Output;
+}
+
+
+/// Reflection
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Reflection
+pub trait Reflect<T> {
+    type Output;
+    fn reflect(self, other: T) -> Self::Output;
+}
+
+
+
+
 // TODO generate implementations
 // /// Dilation is a conformal transformation
 // /// https://conformalgeometricalgebra.com/wiki/index.php?title=Dilation

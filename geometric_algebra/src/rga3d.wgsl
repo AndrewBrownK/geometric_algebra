@@ -46929,3 +46929,289 @@ fn multi_vector_multi_vector_distance(self_4806: MultiVector, other_4396: MultiV
     return _e14;
 }
 
+fn point_scalar_invert(self_4808: Point, other_4398: Scalar) -> Scalar {
+    var self_4809: Point;
+    var other_4399: Scalar;
+
+    self_4809 = self_4808;
+    other_4399 = other_4398;
+    let _e4: Point = self_4809;
+    let _e5: Point = point_unitize(_e4);
+    let _e6: Scalar = other_4399;
+    let _e7: Scalar = point_scalar_sandwich(_e5, _e6);
+    return _e7;
+}
+
+fn point_anti_scalar_invert(self_4810: Point, other_4400: AntiScalar) -> AntiScalar {
+    var self_4811: Point;
+    var other_4401: AntiScalar;
+
+    self_4811 = self_4810;
+    other_4401 = other_4400;
+    let _e4: Point = self_4811;
+    let _e5: Point = point_unitize(_e4);
+    let _e6: AntiScalar = other_4401;
+    let _e7: AntiScalar = point_anti_scalar_sandwich(_e5, _e6);
+    return _e7;
+}
+
+fn point_homogeneous_magnitude_invert(self_4812: Point, other_4402: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_4813: Point;
+    var other_4403: HomogeneousMagnitude;
+
+    self_4813 = self_4812;
+    other_4403 = other_4402;
+    let _e4: Point = self_4813;
+    let _e5: Point = point_unitize(_e4);
+    let _e6: HomogeneousMagnitude = other_4403;
+    let _e7: HomogeneousMagnitude = point_homogeneous_magnitude_sandwich(_e5, _e6);
+    return _e7;
+}
+
+fn point_point_invert(self_4814: Point, other_4404: Point) -> Point {
+    var self_4815: Point;
+    var other_4405: Point;
+
+    self_4815 = self_4814;
+    other_4405 = other_4404;
+    let _e4: Point = self_4815;
+    let _e5: Point = point_unitize(_e4);
+    let _e6: Point = other_4405;
+    let _e7: Point = point_point_sandwich(_e5, _e6);
+    return _e7;
+}
+
+fn point_line_invert(self_4816: Point, other_4406: Line) -> Line {
+    var self_4817: Point;
+    var other_4407: Line;
+
+    self_4817 = self_4816;
+    other_4407 = other_4406;
+    let _e4: Point = self_4817;
+    let _e5: Point = point_unitize(_e4);
+    let _e6: Line = other_4407;
+    let _e7: Line = point_line_sandwich(_e5, _e6);
+    return _e7;
+}
+
+fn point_plane_invert(self_4818: Point, other_4408: Plane) -> Plane {
+    var self_4819: Point;
+    var other_4409: Plane;
+
+    self_4819 = self_4818;
+    other_4409 = other_4408;
+    let _e4: Point = self_4819;
+    let _e5: Point = point_unitize(_e4);
+    let _e6: Plane = other_4409;
+    let _e7: Plane = point_plane_sandwich(_e5, _e6);
+    return _e7;
+}
+
+fn point_motor_invert(self_4820: Point, other_4410: Motor) -> Motor {
+    var self_4821: Point;
+    var other_4411: Motor;
+
+    self_4821 = self_4820;
+    other_4411 = other_4410;
+    let _e4: Point = self_4821;
+    let _e5: Point = point_unitize(_e4);
+    let _e6: Motor = other_4411;
+    let _e7: Motor = point_motor_sandwich(_e5, _e6);
+    return _e7;
+}
+
+fn point_rotor_invert(self_4822: Point, other_4412: Rotor) -> Rotor {
+    var self_4823: Point;
+    var other_4413: Rotor;
+
+    self_4823 = self_4822;
+    other_4413 = other_4412;
+    let _e4: Point = self_4823;
+    let _e5: Point = point_unitize(_e4);
+    let _e6: Rotor = other_4413;
+    let _e7: Rotor = point_rotor_sandwich(_e5, _e6);
+    return _e7;
+}
+
+fn point_translator_invert(self_4824: Point, other_4414: Translator) -> Translator {
+    var self_4825: Point;
+    var other_4415: Translator;
+
+    self_4825 = self_4824;
+    other_4415 = other_4414;
+    let _e4: Point = self_4825;
+    let _e5: Point = point_unitize(_e4);
+    let _e6: Translator = other_4415;
+    let _e7: Translator = point_translator_sandwich(_e5, _e6);
+    return _e7;
+}
+
+fn point_flector_invert(self_4826: Point, other_4416: Flector) -> Flector {
+    var self_4827: Point;
+    var other_4417: Flector;
+
+    self_4827 = self_4826;
+    other_4417 = other_4416;
+    let _e4: Point = self_4827;
+    let _e5: Point = point_unitize(_e4);
+    let _e6: Flector = other_4417;
+    let _e7: Flector = point_flector_sandwich(_e5, _e6);
+    return _e7;
+}
+
+fn point_multi_vector_invert(self_4828: Point, other_4418: MultiVector) -> MultiVector {
+    var self_4829: Point;
+    var other_4419: MultiVector;
+
+    self_4829 = self_4828;
+    other_4419 = other_4418;
+    let _e4: Point = self_4829;
+    let _e5: Point = point_unitize(_e4);
+    let _e6: MultiVector = other_4419;
+    let _e7: MultiVector = point_multi_vector_sandwich(_e5, _e6);
+    return _e7;
+}
+
+fn plane_scalar_reflect(self_4830: Plane, other_4420: Scalar) -> Scalar {
+    var self_4831: Plane;
+    var other_4421: Scalar;
+
+    self_4831 = self_4830;
+    other_4421 = other_4420;
+    let _e4: Plane = self_4831;
+    let _e5: Plane = plane_unitize(_e4);
+    let _e6: Scalar = other_4421;
+    let _e7: Scalar = plane_scalar_sandwich(_e5, _e6);
+    return _e7;
+}
+
+fn plane_anti_scalar_reflect(self_4832: Plane, other_4422: AntiScalar) -> AntiScalar {
+    var self_4833: Plane;
+    var other_4423: AntiScalar;
+
+    self_4833 = self_4832;
+    other_4423 = other_4422;
+    let _e4: Plane = self_4833;
+    let _e5: Plane = plane_unitize(_e4);
+    let _e6: AntiScalar = other_4423;
+    let _e7: AntiScalar = plane_anti_scalar_sandwich(_e5, _e6);
+    return _e7;
+}
+
+fn plane_homogeneous_magnitude_reflect(self_4834: Plane, other_4424: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_4835: Plane;
+    var other_4425: HomogeneousMagnitude;
+
+    self_4835 = self_4834;
+    other_4425 = other_4424;
+    let _e4: Plane = self_4835;
+    let _e5: Plane = plane_unitize(_e4);
+    let _e6: HomogeneousMagnitude = other_4425;
+    let _e7: HomogeneousMagnitude = plane_homogeneous_magnitude_sandwich(_e5, _e6);
+    return _e7;
+}
+
+fn plane_point_reflect(self_4836: Plane, other_4426: Point) -> Point {
+    var self_4837: Plane;
+    var other_4427: Point;
+
+    self_4837 = self_4836;
+    other_4427 = other_4426;
+    let _e4: Plane = self_4837;
+    let _e5: Plane = plane_unitize(_e4);
+    let _e6: Point = other_4427;
+    let _e7: Point = plane_point_sandwich(_e5, _e6);
+    return _e7;
+}
+
+fn plane_line_reflect(self_4838: Plane, other_4428: Line) -> Line {
+    var self_4839: Plane;
+    var other_4429: Line;
+
+    self_4839 = self_4838;
+    other_4429 = other_4428;
+    let _e4: Plane = self_4839;
+    let _e5: Plane = plane_unitize(_e4);
+    let _e6: Line = other_4429;
+    let _e7: Line = plane_line_sandwich(_e5, _e6);
+    return _e7;
+}
+
+fn plane_plane_reflect(self_4840: Plane, other_4430: Plane) -> Plane {
+    var self_4841: Plane;
+    var other_4431: Plane;
+
+    self_4841 = self_4840;
+    other_4431 = other_4430;
+    let _e4: Plane = self_4841;
+    let _e5: Plane = plane_unitize(_e4);
+    let _e6: Plane = other_4431;
+    let _e7: Plane = plane_plane_sandwich(_e5, _e6);
+    return _e7;
+}
+
+fn plane_motor_reflect(self_4842: Plane, other_4432: Motor) -> Motor {
+    var self_4843: Plane;
+    var other_4433: Motor;
+
+    self_4843 = self_4842;
+    other_4433 = other_4432;
+    let _e4: Plane = self_4843;
+    let _e5: Plane = plane_unitize(_e4);
+    let _e6: Motor = other_4433;
+    let _e7: Motor = plane_motor_sandwich(_e5, _e6);
+    return _e7;
+}
+
+fn plane_rotor_reflect(self_4844: Plane, other_4434: Rotor) -> Rotor {
+    var self_4845: Plane;
+    var other_4435: Rotor;
+
+    self_4845 = self_4844;
+    other_4435 = other_4434;
+    let _e4: Plane = self_4845;
+    let _e5: Plane = plane_unitize(_e4);
+    let _e6: Rotor = other_4435;
+    let _e7: Rotor = plane_rotor_sandwich(_e5, _e6);
+    return _e7;
+}
+
+fn plane_translator_reflect(self_4846: Plane, other_4436: Translator) -> Translator {
+    var self_4847: Plane;
+    var other_4437: Translator;
+
+    self_4847 = self_4846;
+    other_4437 = other_4436;
+    let _e4: Plane = self_4847;
+    let _e5: Plane = plane_unitize(_e4);
+    let _e6: Translator = other_4437;
+    let _e7: Translator = plane_translator_sandwich(_e5, _e6);
+    return _e7;
+}
+
+fn plane_flector_reflect(self_4848: Plane, other_4438: Flector) -> Flector {
+    var self_4849: Plane;
+    var other_4439: Flector;
+
+    self_4849 = self_4848;
+    other_4439 = other_4438;
+    let _e4: Plane = self_4849;
+    let _e5: Plane = plane_unitize(_e4);
+    let _e6: Flector = other_4439;
+    let _e7: Flector = plane_flector_sandwich(_e5, _e6);
+    return _e7;
+}
+
+fn plane_multi_vector_reflect(self_4850: Plane, other_4440: MultiVector) -> MultiVector {
+    var self_4851: Plane;
+    var other_4441: MultiVector;
+
+    self_4851 = self_4850;
+    other_4441 = other_4440;
+    let _e4: Plane = self_4851;
+    let _e5: Plane = plane_unitize(_e4);
+    let _e6: MultiVector = other_4441;
+    let _e7: MultiVector = plane_multi_vector_sandwich(_e5, _e6);
+    return _e7;
+}
+

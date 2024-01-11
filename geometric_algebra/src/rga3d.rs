@@ -20773,3 +20773,179 @@ impl Distance<MultiVector> for MultiVector {
     }
 }
 
+impl Invert<Scalar> for Point {
+    type Output = Scalar;
+
+    fn invert(self, other: Scalar) -> Scalar {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Invert<AntiScalar> for Point {
+    type Output = AntiScalar;
+
+    fn invert(self, other: AntiScalar) -> AntiScalar {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Invert<HomogeneousMagnitude> for Point {
+    type Output = HomogeneousMagnitude;
+
+    fn invert(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Invert<Point> for Point {
+    type Output = Point;
+
+    fn invert(self, other: Point) -> Point {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Invert<Line> for Point {
+    type Output = Line;
+
+    fn invert(self, other: Line) -> Line {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Invert<Plane> for Point {
+    type Output = Plane;
+
+    fn invert(self, other: Plane) -> Plane {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Invert<Motor> for Point {
+    type Output = Motor;
+
+    fn invert(self, other: Motor) -> Motor {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Invert<Rotor> for Point {
+    type Output = Rotor;
+
+    fn invert(self, other: Rotor) -> Rotor {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Invert<Translator> for Point {
+    type Output = Translator;
+
+    fn invert(self, other: Translator) -> Translator {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Invert<Flector> for Point {
+    type Output = Flector;
+
+    fn invert(self, other: Flector) -> Flector {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Invert<MultiVector> for Point {
+    type Output = MultiVector;
+
+    fn invert(self, other: MultiVector) -> MultiVector {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Scalar> for Plane {
+    type Output = Scalar;
+
+    fn reflect(self, other: Scalar) -> Scalar {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<AntiScalar> for Plane {
+    type Output = AntiScalar;
+
+    fn reflect(self, other: AntiScalar) -> AntiScalar {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<HomogeneousMagnitude> for Plane {
+    type Output = HomogeneousMagnitude;
+
+    fn reflect(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Point> for Plane {
+    type Output = Point;
+
+    fn reflect(self, other: Point) -> Point {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Line> for Plane {
+    type Output = Line;
+
+    fn reflect(self, other: Line) -> Line {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Plane> for Plane {
+    type Output = Plane;
+
+    fn reflect(self, other: Plane) -> Plane {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Motor> for Plane {
+    type Output = Motor;
+
+    fn reflect(self, other: Motor) -> Motor {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Rotor> for Plane {
+    type Output = Rotor;
+
+    fn reflect(self, other: Rotor) -> Rotor {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Translator> for Plane {
+    type Output = Translator;
+
+    fn reflect(self, other: Translator) -> Translator {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Flector> for Plane {
+    type Output = Flector;
+
+    fn reflect(self, other: Flector) -> Flector {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<MultiVector> for Plane {
+    type Output = MultiVector;
+
+    fn reflect(self, other: MultiVector) -> MultiVector {
+        self.unitize().sandwich(other)
+    }
+}
+

@@ -9830,3 +9830,91 @@ HomogeneousMagnitude multi_vector_multi_vector_distance(MultiVector self, MultiV
     return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_multi_vector_outer_product(self, other))), multi_vector_weight_norm(multi_vector_multi_vector_outer_product(self, multi_vector_attitude(other))));
 }
 
+Scalar point_scalar_invert(Point self, Scalar other) {
+    return point_scalar_sandwich(point_unitize(self), other);
+}
+
+AntiScalar point_anti_scalar_invert(Point self, AntiScalar other) {
+    return point_anti_scalar_sandwich(point_unitize(self), other);
+}
+
+HomogeneousMagnitude point_homogeneous_magnitude_invert(Point self, HomogeneousMagnitude other) {
+    return point_homogeneous_magnitude_sandwich(point_unitize(self), other);
+}
+
+Point point_point_invert(Point self, Point other) {
+    return point_point_sandwich(point_unitize(self), other);
+}
+
+Line point_line_invert(Point self, Line other) {
+    return point_line_sandwich(point_unitize(self), other);
+}
+
+Plane point_plane_invert(Point self, Plane other) {
+    return point_plane_sandwich(point_unitize(self), other);
+}
+
+Motor point_motor_invert(Point self, Motor other) {
+    return point_motor_sandwich(point_unitize(self), other);
+}
+
+Rotor point_rotor_invert(Point self, Rotor other) {
+    return point_rotor_sandwich(point_unitize(self), other);
+}
+
+Translator point_translator_invert(Point self, Translator other) {
+    return point_translator_sandwich(point_unitize(self), other);
+}
+
+Flector point_flector_invert(Point self, Flector other) {
+    return point_flector_sandwich(point_unitize(self), other);
+}
+
+MultiVector point_multi_vector_invert(Point self, MultiVector other) {
+    return point_multi_vector_sandwich(point_unitize(self), other);
+}
+
+Scalar plane_scalar_reflect(Plane self, Scalar other) {
+    return plane_scalar_sandwich(plane_unitize(self), other);
+}
+
+AntiScalar plane_anti_scalar_reflect(Plane self, AntiScalar other) {
+    return plane_anti_scalar_sandwich(plane_unitize(self), other);
+}
+
+HomogeneousMagnitude plane_homogeneous_magnitude_reflect(Plane self, HomogeneousMagnitude other) {
+    return plane_homogeneous_magnitude_sandwich(plane_unitize(self), other);
+}
+
+Point plane_point_reflect(Plane self, Point other) {
+    return plane_point_sandwich(plane_unitize(self), other);
+}
+
+Line plane_line_reflect(Plane self, Line other) {
+    return plane_line_sandwich(plane_unitize(self), other);
+}
+
+Plane plane_plane_reflect(Plane self, Plane other) {
+    return plane_plane_sandwich(plane_unitize(self), other);
+}
+
+Motor plane_motor_reflect(Plane self, Motor other) {
+    return plane_motor_sandwich(plane_unitize(self), other);
+}
+
+Rotor plane_rotor_reflect(Plane self, Rotor other) {
+    return plane_rotor_sandwich(plane_unitize(self), other);
+}
+
+Translator plane_translator_reflect(Plane self, Translator other) {
+    return plane_translator_sandwich(plane_unitize(self), other);
+}
+
+Flector plane_flector_reflect(Plane self, Flector other) {
+    return plane_flector_sandwich(plane_unitize(self), other);
+}
+
+MultiVector plane_multi_vector_reflect(Plane self, MultiVector other) {
+    return plane_multi_vector_sandwich(plane_unitize(self), other);
+}
+

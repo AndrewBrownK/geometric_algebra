@@ -1580,4 +1580,53 @@ impl MultiVectorClass {
             }],
         }
     }
+
+    // https://rigidgeometricalgebra.org/wiki/index.php?title=Inversion
+    pub fn derive_some_unitized_sandwich<'a>(
+        name: &'static str,
+
+        parameter_a: &Parameter<'a>,
+        parameter_b: &Parameter<'a>,
+        result: &Parameter<'a>,
+
+        unitize: &AstNode<'a>,
+        unitize_result: &Parameter<'a>,
+        sandwich: &AstNode<'a>,
+        sandwich_result: &Parameter<'a>,
+    ) -> AstNode<'a> {
+
+        // InvokeInstanceMethod:
+        // - Class implementing trait
+        // - Inner expression
+        // - Method name
+        // - Arguments
+
+        let do_unitize = Expression {
+            size: 1,
+            content: ExpressionContent::InvokeInstanceMethod(
+                parameter_a.data_type.clone(),
+                Box::new(Expression { size: 1, content: ExpressionContent::Variable(parameter_a.name) }),
+                unitize_result.name,
+                vec![]
+            )
+        };
+
+        let do_sandwich = Expression {
+            size: 1,
+            content: ExpressionContent::InvokeInstanceMethod(
+                unitize_result.data_type.clone(),
+                Box::new(do_unitize),
+                sandwich_result.name,
+                vec![(parameter_b.data_type.clone(), Expression { size: 1, content: ExpressionContent::Variable(parameter_b.name) })]
+            )
+        };
+
+        AstNode::TraitImplementation {
+            result: Parameter { name, data_type: result.data_type.clone() },
+            parameters: vec![parameter_a.clone(), parameter_b.clone()],
+            body: vec![AstNode::ReturnStatement {
+                expression: Box::new(do_sandwich)
+            }]
+        }
+    }
 }

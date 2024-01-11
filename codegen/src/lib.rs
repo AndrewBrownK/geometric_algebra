@@ -466,13 +466,54 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
         };
     }
 
+    for (param_a, param_b) in registry.pair_parameters() {
+        // Invert (Inversion)
+        // https://rigidgeometricalgebra.org/wiki/index.php?title=Inversion
+        // The choice of what class should constitute a "Point" is somewhat contrived.
+        // It will need extra consideration for CGA.
+        if param_a.multi_vector_class().class_name != "Point" {
+            continue
+        }
+        let _: Option<()> = try {
+            let (unitize, u_r) = trait_impls.get_single_impl_and_result("Unitize", &param_a)?;
+            let (sandwich, s_r) = trait_impls.get_pair_impl_and_result("Sandwich", &u_r, &param_b)?;
+            let i = MultiVectorClass::derive_some_unitized_sandwich(
+                "Invert", &param_a, &param_b, &param_b, unitize, u_r, sandwich, s_r
+            );
+            emitter.emit(&i).unwrap();
+            trait_impls.add_pair_impl("Invert", param_a, param_b, i);
+        };
+    }
+
+    for (param_a, param_b) in registry.pair_parameters() {
+        // Reflect (Reflection)
+        // https://rigidgeometricalgebra.org/wiki/index.php?title=Reflection
+        // The choice of what class should constitute a "Plane" is somewhat contrived.
+        // It will need extra consideration for CGA.
+        if param_a.multi_vector_class().class_name != "Plane" {
+            continue
+        }
+        let _: Option<()> = try {
+            let (unitize, u_r) = trait_impls.get_single_impl_and_result("Unitize", &param_a)?;
+            let (sandwich, s_r) = trait_impls.get_pair_impl_and_result("Sandwich", &u_r, &param_b)?;
+            let i = MultiVectorClass::derive_some_unitized_sandwich(
+                "Reflect", &param_a, &param_b, &param_b, unitize, u_r, sandwich, s_r
+            );
+            emitter.emit(&i).unwrap();
+            trait_impls.add_pair_impl("Reflect", param_a, param_b, i);
+        };
+    }
+
+    // Transflection?
+    // https://rigidgeometricalgebra.org/wiki/index.php?title=Transflection
+    // This is a sandwich operation of a special type of flector.
+    // We're not really motivated to create an additional trait that is only valid on a data condition rather than a
+    // typed representation. A better approach to this might be.... a "CanTransflect" trait or method
+    // on Flectors that returns Option<Flector> which is just Some(self) if it fulfills both the geometric
+    // property and the other flector requirement to be a transflection. In any case such methods do not seem
+    // incredibly necessary at this time, at least not yet.
+
     // TODO:
-    //  - Inversion?
-    //    https://rigidgeometricalgebra.org/wiki/index.php?title=Inversion
-    //  - Transflection?
-    //    https://rigidgeometricalgebra.org/wiki/index.php?title=Transflection
-    //  - Reflection?
-    //    https://rigidgeometricalgebra.org/wiki/index.php?title=Reflection
     //  - Projection? requires "weight expansion"?
     //    https://rigidgeometricalgebra.org/wiki/index.php?title=Projections
     //  - Commutators?
