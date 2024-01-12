@@ -41,6 +41,7 @@ impl<W: std::io::Write> Emitter<W> {
     pub fn emit(&mut self, ast_node: &AstNode) -> std::io::Result<()> {
         rust::emit_code(&mut self.rust_collector, ast_node, 0)?;
         glsl::emit_code(&mut self.glsl_collector, ast_node, 0)?;
+        // TODO maybe I'd rather put the wgsl stuff here?
         Ok(())
     }
 }

@@ -588,6 +588,61 @@ pub trait Reflect<T> {
     fn reflect(self, other: T) -> Self::Output;
 }
 
+/// Right Bulk Dual
+/// https://projectivegeometricalgebra.org/projgeomalg.pdf
+pub trait RightBulkDual {
+    type Output;
+    fn right_bulk_dual(self) -> Self::Output;
+}
+
+/// Right Weight Dual
+/// https://projectivegeometricalgebra.org/projgeomalg.pdf
+pub trait RightWeightDual {
+    type Output;
+    fn right_weight_dual(self) -> Self::Output;
+}
+
+/// Left Bulk Dual
+/// https://projectivegeometricalgebra.org/projgeomalg.pdf
+pub trait LeftBulkDual {
+    type Output;
+    fn left_bulk_dual(self) -> Self::Output;
+}
+
+/// Left Weight Dual
+/// https://projectivegeometricalgebra.org/projgeomalg.pdf
+pub trait LeftWeightDual {
+    type Output;
+    fn left_weight_dual(self) -> Self::Output;
+}
+
+/// Bulk Contraction
+/// https://projectivegeometricalgebra.org/projgeomalg.pdf
+pub trait BulkContraction<T> {
+    type Output;
+    fn bulk_contraction(self, other: T) -> Self::Output;
+}
+
+/// Weight Contraction
+/// https://projectivegeometricalgebra.org/projgeomalg.pdf
+pub trait WeightContraction<T> {
+    type Output;
+    fn weight_contraction(self, other: T) -> Self::Output;
+}
+
+/// Bulk Expansion
+/// https://projectivegeometricalgebra.org/projgeomalg.pdf
+pub trait BulkExpansion<T> {
+    type Output;
+    fn bulk_expansion(self, other: T) -> Self::Output;
+}
+
+/// Weight Expansion
+/// https://projectivegeometricalgebra.org/projgeomalg.pdf
+pub trait WeightExpansion<T> {
+    type Output;
+    fn weight_expansion(self, other: T) -> Self::Output;
+}
 
 
 

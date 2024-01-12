@@ -478,7 +478,7 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
             let (unitize, u_r) = trait_impls.get_single_impl_and_result("Unitize", &param_a)?;
             let (sandwich, s_r) = trait_impls.get_pair_impl_and_result("Sandwich", &u_r, &param_b)?;
             let i = MultiVectorClass::derive_some_unitized_sandwich(
-                "Invert", &param_a, &param_b, &param_b, unitize, u_r, sandwich, s_r
+                "Invert", &param_a, &param_b, &s_r, unitize, sandwich
             );
             emitter.emit(&i).unwrap();
             trait_impls.add_pair_impl("Invert", param_a, param_b, i);
@@ -497,12 +497,132 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
             let (unitize, u_r) = trait_impls.get_single_impl_and_result("Unitize", &param_a)?;
             let (sandwich, s_r) = trait_impls.get_pair_impl_and_result("Sandwich", &u_r, &param_b)?;
             let i = MultiVectorClass::derive_some_unitized_sandwich(
-                "Reflect", &param_a, &param_b, &param_b, unitize, u_r, sandwich, s_r
+                "Reflect", &param_a, &param_b, &s_r, unitize, sandwich,
             );
             emitter.emit(&i).unwrap();
             trait_impls.add_pair_impl("Reflect", param_a, param_b, i);
         };
     }
+
+    for param_a in registry.single_parameters() {
+        let projective_basis = if desc.algebra_name == "rga3d" {
+            BasisElement::parse("e3", &algebra)
+        } else {
+            break
+        };
+
+        let bulk = MultiVectorClass::derive_bulk_or_weight(
+            "Bulk", &param_a, &projective_basis, false, &algebra, &registry
+        );
+        emitter.emit(&bulk).unwrap();
+        trait_impls.add_single_impl("Bulk", param_a.clone(), bulk);
+
+        let weight = MultiVectorClass::derive_bulk_or_weight(
+            "Weight", &param_a, &projective_basis, true, &algebra, &registry
+        );
+        emitter.emit(&weight).unwrap();
+        trait_impls.add_single_impl("Weight", param_a, weight);
+    }
+
+
+    for param_a in registry.single_parameters() {
+        let _: Option<()> = try {
+            // Right bulk dual is right complement of bulk
+            let (bulk, b_r) = trait_impls.get_single_impl_and_result("Bulk", &param_a)?;
+            let (right_comp, rc_r) = trait_impls.get_single_impl_and_result("RightComplement", &b_r)?;
+            let rbd = MultiVectorClass::derive_partial_complement("RightBulkDual", &param_a, &rc_r, &bulk, &right_comp);
+            emitter.emit(&rbd).unwrap();
+            trait_impls.add_single_impl("RightBulkDual", param_a, rbd);
+        };
+    }
+    for param_a in registry.single_parameters() {
+        let _: Option<()> = try {
+            // Right weight dual is right complement of weight
+            let (weight, w_r) = trait_impls.get_single_impl_and_result("Weight", &param_a)?;
+            let (right_comp, rc_r) = trait_impls.get_single_impl_and_result("RightComplement", &w_r)?;
+            let rwd = MultiVectorClass::derive_partial_complement("RightWeightDual", &param_a, &rc_r, &weight, &right_comp);
+            emitter.emit(&rwd).unwrap();
+            trait_impls.add_single_impl("RightWeightDual", param_a, rwd);
+        };
+    }
+    for param_a in registry.single_parameters() {
+        let _: Option<()> = try {
+            // Left bulk dual is left complement of bulk
+            let (bulk, b_r) = trait_impls.get_single_impl_and_result("Bulk", &param_a)?;
+            let (left_comp, lc_r) = trait_impls.get_single_impl_and_result("LeftComplement", &b_r)?;
+            let lbd = MultiVectorClass::derive_partial_complement("LeftBulkDual", &param_a, &lc_r, &bulk, &left_comp);
+            emitter.emit(&lbd).unwrap();
+            trait_impls.add_single_impl("LeftBulkDual", param_a, lbd);
+        };
+    }
+    for param_a in registry.single_parameters() {
+        let _: Option<()> = try {
+            // Left weight dual is left complement of weight
+            let (weight, w_r) = trait_impls.get_single_impl_and_result("Weight", &param_a)?;
+            let (left_comp, rc_r) = trait_impls.get_single_impl_and_result("LeftComplement", &w_r)?;
+            let lwd = MultiVectorClass::derive_partial_complement("LeftWeightDual", &param_a, &rc_r, &weight, &left_comp);
+            emitter.emit(&lwd).unwrap();
+            trait_impls.add_single_impl("LeftWeightDual", param_a, lwd);
+        };
+    }
+
+    for (param_a, param_b) in registry.pair_parameters() {
+        let _: Option<()> = try {
+            // Bulk contraction is the antiwedge on a right bulk dual
+            let (rbd, rbd_r) = trait_impls.get_single_impl_and_result("RightBulkDual", &param_b)?;
+            let (aw, aw_r) = trait_impls.get_pair_impl_and_result("AntiWedge", &param_a, &rbd_r)?;
+            let bc = MultiVectorClass::derive_contraction_or_expansion(
+                "BulkContraction", &param_a, &param_b, &aw_r, &rbd, &aw
+            );
+            emitter.emit(&bc).unwrap();
+            trait_impls.add_pair_impl("BulkContraction", param_a, param_b, bc);
+        };
+    }
+
+    for (param_a, param_b) in registry.pair_parameters() {
+        let _: Option<()> = try {
+            // Weight contraction is the antiwedge on a right weight dual
+            let (rwd, rwd_r) = trait_impls.get_single_impl_and_result("RightWeightDual", &param_b)?;
+            let (aw, aw_r) = trait_impls.get_pair_impl_and_result("AntiWedge", &param_a, &rwd_r)?;
+            let wc = MultiVectorClass::derive_contraction_or_expansion(
+                "WeightContraction", &param_a, &param_b, &aw_r, &rwd, &aw
+            );
+            emitter.emit(&wc).unwrap();
+            trait_impls.add_pair_impl("WeightContraction", param_a, param_b, wc);
+        };
+    }
+
+    for (param_a, param_b) in registry.pair_parameters() {
+        let _: Option<()> = try {
+            // Bulk expansion is the wedge on a right bulk dual
+            let (rbd, rbd_r) = trait_impls.get_single_impl_and_result("RightBulkDual", &param_b)?;
+            let (w, w_r) = trait_impls.get_pair_impl_and_result("Wedge", &param_a, &rbd_r)?;
+            let be = MultiVectorClass::derive_contraction_or_expansion(
+                "BulkExpansion", &param_a, &param_b, &w_r, &rbd, &w
+            );
+            emitter.emit(&be).unwrap();
+            trait_impls.add_pair_impl("BulkExpansion", param_a, param_b, be);
+        };
+    }
+
+    for (param_a, param_b) in registry.pair_parameters() {
+        let _: Option<()> = try {
+            // Weight expansion is the wedge on a right weight dual
+            let (rwd, rwd_r) = trait_impls.get_single_impl_and_result("RightWeightDual", &param_b)?;
+            let (w, w_r) = trait_impls.get_pair_impl_and_result("Wedge", &param_a, &rwd_r)?;
+            let we = MultiVectorClass::derive_contraction_or_expansion(
+                "WeightExpansion", &param_a, &param_b, &w_r, &rwd, &w
+            );
+            emitter.emit(&we).unwrap();
+            trait_impls.add_pair_impl("WeightExpansion", param_a, param_b, we);
+        };
+    }
+
+    // for (param_a, param_b) in registry.pair_parameters() {
+    //     let _: Option<()> = try {
+    //
+    //     };
+    // }
 
     // Transflection?
     // https://rigidgeometricalgebra.org/wiki/index.php?title=Transflection

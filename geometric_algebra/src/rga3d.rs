@@ -20949,3 +20949,2819 @@ impl Reflect<MultiVector> for Plane {
     }
 }
 
+impl Bulk for Scalar {
+    type Output = Scalar;
+
+    fn bulk(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() * 1.0 } }
+    }
+}
+
+impl Weight for Scalar {
+    type Output = Scalar;
+
+    fn weight(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0() * 0.0 } }
+    }
+}
+
+impl Bulk for AntiScalar {
+    type Output = AntiScalar;
+
+    fn bulk(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * 0.0 } }
+    }
+}
+
+impl Weight for AntiScalar {
+    type Output = AntiScalar;
+
+    fn weight(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * 1.0 } }
+    }
+}
+
+impl Bulk for HomogeneousMagnitude {
+    type Output = Scalar;
+
+    fn bulk(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0()[0] * 1.0 } }
+    }
+}
+
+impl Weight for HomogeneousMagnitude {
+    type Output = AntiScalar;
+
+    fn weight(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[1] * 1.0 } }
+    }
+}
+
+impl Bulk for Point {
+    type Output = Point;
+
+    fn bulk(self) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]) } }
+    }
+}
+
+impl Weight for Point {
+    type Output = Point;
+
+    fn weight(self) -> Point {
+        Point { groups: PointGroups { g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
+    }
+}
+
+impl Bulk for Line {
+    type Output = Line;
+
+    fn bulk(self) -> Line {
+        Line { groups: LineGroups { g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([0.0, 0.0, 0.0]), g1: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from([1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl Weight for Line {
+    type Output = Line;
+
+    fn weight(self) -> Line {
+        Line { groups: LineGroups { g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0]), g1: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from([0.0, 0.0, 0.0]) } }
+    }
+}
+
+impl Bulk for Plane {
+    type Output = Plane;
+
+    fn bulk(self) -> Plane {
+        Plane { groups: PlaneGroups { g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
+    }
+}
+
+impl Weight for Plane {
+    type Output = Plane;
+
+    fn weight(self) -> Plane {
+        Plane { groups: PlaneGroups { g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]) } }
+    }
+}
+
+impl Bulk for Motor {
+    type Output = Translator;
+
+    fn bulk(self) -> Translator {
+        Translator { groups: TranslatorGroups { g0: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group0()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]) } }
+    }
+}
+
+impl Weight for Motor {
+    type Output = Rotor;
+
+    fn weight(self) -> Rotor {
+        Rotor { groups: RotorGroups { g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl Bulk for Rotor {
+    type Output = Rotor;
+
+    fn bulk(self) -> Rotor {
+        Rotor { groups: RotorGroups { g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([0.0, 0.0, 0.0, 0.0]) } }
+    }
+}
+
+impl Weight for Rotor {
+    type Output = Rotor;
+
+    fn weight(self) -> Rotor {
+        Rotor { groups: RotorGroups { g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 1.0]) } }
+    }
+}
+
+impl Bulk for Translator {
+    type Output = Translator;
+
+    fn bulk(self) -> Translator {
+        Translator { groups: TranslatorGroups { g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]) } }
+    }
+}
+
+impl Weight for Translator {
+    type Output = AntiScalar;
+
+    fn weight(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0()[3] * 1.0 } }
+    }
+}
+
+impl Bulk for Flector {
+    type Output = Flector;
+
+    fn bulk(self) -> Flector {
+        Flector { groups: FlectorGroups { g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]), g1: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3]]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
+    }
+}
+
+impl Weight for Flector {
+    type Output = Flector;
+
+    fn weight(self) -> Flector {
+        Flector { groups: FlectorGroups { g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]), g1: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]) } }
+    }
+}
+
+impl Bulk for MultiVector {
+    type Output = MultiVector;
+
+    fn bulk(self) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x2::from([self.group0()[0], self.group0()[1]]) * Simd32x2::from([1.0, 0.0]), g1: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]), g2: Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]) * Simd32x3::from([0.0, 0.0, 0.0]), g3: Simd32x3::from([self.group3()[0], self.group3()[1], self.group3()[2]]) * Simd32x3::from([1.0, 1.0, 1.0]), g4: Simd32x4::from([self.group4()[0], self.group4()[1], self.group4()[2], self.group4()[3]]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
+    }
+}
+
+impl Weight for MultiVector {
+    type Output = MultiVector;
+
+    fn weight(self) -> MultiVector {
+        MultiVector { groups: MultiVectorGroups { g0: Simd32x2::from([self.group0()[0], self.group0()[1]]) * Simd32x2::from([0.0, 1.0]), g1: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3]]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]), g2: Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]) * Simd32x3::from([1.0, 1.0, 1.0]), g3: Simd32x3::from([self.group3()[0], self.group3()[1], self.group3()[2]]) * Simd32x3::from([0.0, 0.0, 0.0]), g4: Simd32x4::from([self.group4()[0], self.group4()[1], self.group4()[2], self.group4()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]) } }
+    }
+}
+
+impl RightBulkDual for Scalar {
+    type Output = AntiScalar;
+
+    fn right_bulk_dual(self) -> AntiScalar {
+        self.bulk().right_complement()
+    }
+}
+
+impl RightBulkDual for AntiScalar {
+    type Output = Scalar;
+
+    fn right_bulk_dual(self) -> Scalar {
+        self.bulk().right_complement()
+    }
+}
+
+impl RightBulkDual for HomogeneousMagnitude {
+    type Output = AntiScalar;
+
+    fn right_bulk_dual(self) -> AntiScalar {
+        self.bulk().right_complement()
+    }
+}
+
+impl RightBulkDual for Point {
+    type Output = Plane;
+
+    fn right_bulk_dual(self) -> Plane {
+        self.bulk().right_complement()
+    }
+}
+
+impl RightBulkDual for Line {
+    type Output = Line;
+
+    fn right_bulk_dual(self) -> Line {
+        self.bulk().right_complement()
+    }
+}
+
+impl RightBulkDual for Plane {
+    type Output = Point;
+
+    fn right_bulk_dual(self) -> Point {
+        self.bulk().right_complement()
+    }
+}
+
+impl RightBulkDual for Flector {
+    type Output = Flector;
+
+    fn right_bulk_dual(self) -> Flector {
+        self.bulk().right_complement()
+    }
+}
+
+impl RightBulkDual for MultiVector {
+    type Output = MultiVector;
+
+    fn right_bulk_dual(self) -> MultiVector {
+        self.bulk().right_complement()
+    }
+}
+
+impl RightWeightDual for Scalar {
+    type Output = AntiScalar;
+
+    fn right_weight_dual(self) -> AntiScalar {
+        self.weight().right_complement()
+    }
+}
+
+impl RightWeightDual for AntiScalar {
+    type Output = Scalar;
+
+    fn right_weight_dual(self) -> Scalar {
+        self.weight().right_complement()
+    }
+}
+
+impl RightWeightDual for HomogeneousMagnitude {
+    type Output = Scalar;
+
+    fn right_weight_dual(self) -> Scalar {
+        self.weight().right_complement()
+    }
+}
+
+impl RightWeightDual for Point {
+    type Output = Plane;
+
+    fn right_weight_dual(self) -> Plane {
+        self.weight().right_complement()
+    }
+}
+
+impl RightWeightDual for Line {
+    type Output = Line;
+
+    fn right_weight_dual(self) -> Line {
+        self.weight().right_complement()
+    }
+}
+
+impl RightWeightDual for Plane {
+    type Output = Point;
+
+    fn right_weight_dual(self) -> Point {
+        self.weight().right_complement()
+    }
+}
+
+impl RightWeightDual for Translator {
+    type Output = Scalar;
+
+    fn right_weight_dual(self) -> Scalar {
+        self.weight().right_complement()
+    }
+}
+
+impl RightWeightDual for Flector {
+    type Output = Flector;
+
+    fn right_weight_dual(self) -> Flector {
+        self.weight().right_complement()
+    }
+}
+
+impl RightWeightDual for MultiVector {
+    type Output = MultiVector;
+
+    fn right_weight_dual(self) -> MultiVector {
+        self.weight().right_complement()
+    }
+}
+
+impl LeftBulkDual for Scalar {
+    type Output = AntiScalar;
+
+    fn left_bulk_dual(self) -> AntiScalar {
+        self.bulk().left_complement()
+    }
+}
+
+impl LeftBulkDual for AntiScalar {
+    type Output = Scalar;
+
+    fn left_bulk_dual(self) -> Scalar {
+        self.bulk().left_complement()
+    }
+}
+
+impl LeftBulkDual for HomogeneousMagnitude {
+    type Output = AntiScalar;
+
+    fn left_bulk_dual(self) -> AntiScalar {
+        self.bulk().left_complement()
+    }
+}
+
+impl LeftBulkDual for Point {
+    type Output = Plane;
+
+    fn left_bulk_dual(self) -> Plane {
+        self.bulk().left_complement()
+    }
+}
+
+impl LeftBulkDual for Line {
+    type Output = Line;
+
+    fn left_bulk_dual(self) -> Line {
+        self.bulk().left_complement()
+    }
+}
+
+impl LeftBulkDual for Plane {
+    type Output = Point;
+
+    fn left_bulk_dual(self) -> Point {
+        self.bulk().left_complement()
+    }
+}
+
+impl LeftBulkDual for Flector {
+    type Output = Flector;
+
+    fn left_bulk_dual(self) -> Flector {
+        self.bulk().left_complement()
+    }
+}
+
+impl LeftBulkDual for MultiVector {
+    type Output = MultiVector;
+
+    fn left_bulk_dual(self) -> MultiVector {
+        self.bulk().left_complement()
+    }
+}
+
+impl LeftWeightDual for Scalar {
+    type Output = AntiScalar;
+
+    fn left_weight_dual(self) -> AntiScalar {
+        self.weight().left_complement()
+    }
+}
+
+impl LeftWeightDual for AntiScalar {
+    type Output = Scalar;
+
+    fn left_weight_dual(self) -> Scalar {
+        self.weight().left_complement()
+    }
+}
+
+impl LeftWeightDual for HomogeneousMagnitude {
+    type Output = Scalar;
+
+    fn left_weight_dual(self) -> Scalar {
+        self.weight().left_complement()
+    }
+}
+
+impl LeftWeightDual for Point {
+    type Output = Plane;
+
+    fn left_weight_dual(self) -> Plane {
+        self.weight().left_complement()
+    }
+}
+
+impl LeftWeightDual for Line {
+    type Output = Line;
+
+    fn left_weight_dual(self) -> Line {
+        self.weight().left_complement()
+    }
+}
+
+impl LeftWeightDual for Plane {
+    type Output = Point;
+
+    fn left_weight_dual(self) -> Point {
+        self.weight().left_complement()
+    }
+}
+
+impl LeftWeightDual for Translator {
+    type Output = Scalar;
+
+    fn left_weight_dual(self) -> Scalar {
+        self.weight().left_complement()
+    }
+}
+
+impl LeftWeightDual for Flector {
+    type Output = Flector;
+
+    fn left_weight_dual(self) -> Flector {
+        self.weight().left_complement()
+    }
+}
+
+impl LeftWeightDual for MultiVector {
+    type Output = MultiVector;
+
+    fn left_weight_dual(self) -> MultiVector {
+        self.weight().left_complement()
+    }
+}
+
+impl BulkContraction<Scalar> for Scalar {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: Scalar) -> Scalar {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<HomogeneousMagnitude> for Scalar {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: HomogeneousMagnitude) -> Scalar {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<MultiVector> for Scalar {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: MultiVector) -> Scalar {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Scalar> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn bulk_contraction(self, other: Scalar) -> AntiScalar {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<AntiScalar> for AntiScalar {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: AntiScalar) -> Scalar {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<HomogeneousMagnitude> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn bulk_contraction(self, other: HomogeneousMagnitude) -> AntiScalar {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Point> for AntiScalar {
+    type Output = Plane;
+
+    fn bulk_contraction(self, other: Point) -> Plane {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Line> for AntiScalar {
+    type Output = Line;
+
+    fn bulk_contraction(self, other: Line) -> Line {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Plane> for AntiScalar {
+    type Output = Point;
+
+    fn bulk_contraction(self, other: Plane) -> Point {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Flector> for AntiScalar {
+    type Output = Flector;
+
+    fn bulk_contraction(self, other: Flector) -> Flector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<MultiVector> for AntiScalar {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Scalar> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn bulk_contraction(self, other: Scalar) -> HomogeneousMagnitude {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<AntiScalar> for HomogeneousMagnitude {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: AntiScalar) -> Scalar {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<HomogeneousMagnitude> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn bulk_contraction(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Point> for HomogeneousMagnitude {
+    type Output = Plane;
+
+    fn bulk_contraction(self, other: Point) -> Plane {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Line> for HomogeneousMagnitude {
+    type Output = Line;
+
+    fn bulk_contraction(self, other: Line) -> Line {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Plane> for HomogeneousMagnitude {
+    type Output = Point;
+
+    fn bulk_contraction(self, other: Plane) -> Point {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Flector> for HomogeneousMagnitude {
+    type Output = Flector;
+
+    fn bulk_contraction(self, other: Flector) -> Flector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<MultiVector> for HomogeneousMagnitude {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Scalar> for Point {
+    type Output = Point;
+
+    fn bulk_contraction(self, other: Scalar) -> Point {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<HomogeneousMagnitude> for Point {
+    type Output = Point;
+
+    fn bulk_contraction(self, other: HomogeneousMagnitude) -> Point {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Point> for Point {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: Point) -> Scalar {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Flector> for Point {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: Flector) -> Scalar {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<MultiVector> for Point {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Scalar> for Line {
+    type Output = Line;
+
+    fn bulk_contraction(self, other: Scalar) -> Line {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<HomogeneousMagnitude> for Line {
+    type Output = Line;
+
+    fn bulk_contraction(self, other: HomogeneousMagnitude) -> Line {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Point> for Line {
+    type Output = Point;
+
+    fn bulk_contraction(self, other: Point) -> Point {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Line> for Line {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: Line) -> Scalar {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Flector> for Line {
+    type Output = Point;
+
+    fn bulk_contraction(self, other: Flector) -> Point {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<MultiVector> for Line {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Scalar> for Plane {
+    type Output = Plane;
+
+    fn bulk_contraction(self, other: Scalar) -> Plane {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<HomogeneousMagnitude> for Plane {
+    type Output = Plane;
+
+    fn bulk_contraction(self, other: HomogeneousMagnitude) -> Plane {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Point> for Plane {
+    type Output = Line;
+
+    fn bulk_contraction(self, other: Point) -> Line {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Line> for Plane {
+    type Output = Point;
+
+    fn bulk_contraction(self, other: Line) -> Point {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Plane> for Plane {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: Plane) -> Scalar {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Flector> for Plane {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<MultiVector> for Plane {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Scalar> for Motor {
+    type Output = Motor;
+
+    fn bulk_contraction(self, other: Scalar) -> Motor {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<AntiScalar> for Motor {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: AntiScalar) -> Scalar {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<HomogeneousMagnitude> for Motor {
+    type Output = Motor;
+
+    fn bulk_contraction(self, other: HomogeneousMagnitude) -> Motor {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Point> for Motor {
+    type Output = Flector;
+
+    fn bulk_contraction(self, other: Point) -> Flector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Line> for Motor {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: Line) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Plane> for Motor {
+    type Output = Point;
+
+    fn bulk_contraction(self, other: Plane) -> Point {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Flector> for Motor {
+    type Output = Flector;
+
+    fn bulk_contraction(self, other: Flector) -> Flector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<MultiVector> for Motor {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Scalar> for Rotor {
+    type Output = Rotor;
+
+    fn bulk_contraction(self, other: Scalar) -> Rotor {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<AntiScalar> for Rotor {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: AntiScalar) -> Scalar {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<HomogeneousMagnitude> for Rotor {
+    type Output = Rotor;
+
+    fn bulk_contraction(self, other: HomogeneousMagnitude) -> Rotor {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Point> for Rotor {
+    type Output = Flector;
+
+    fn bulk_contraction(self, other: Point) -> Flector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Line> for Rotor {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: Line) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Plane> for Rotor {
+    type Output = Point;
+
+    fn bulk_contraction(self, other: Plane) -> Point {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Flector> for Rotor {
+    type Output = Flector;
+
+    fn bulk_contraction(self, other: Flector) -> Flector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<MultiVector> for Rotor {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Scalar> for Translator {
+    type Output = Translator;
+
+    fn bulk_contraction(self, other: Scalar) -> Translator {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<AntiScalar> for Translator {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: AntiScalar) -> Scalar {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<HomogeneousMagnitude> for Translator {
+    type Output = Translator;
+
+    fn bulk_contraction(self, other: HomogeneousMagnitude) -> Translator {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Point> for Translator {
+    type Output = Flector;
+
+    fn bulk_contraction(self, other: Point) -> Flector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Line> for Translator {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: Line) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Plane> for Translator {
+    type Output = Point;
+
+    fn bulk_contraction(self, other: Plane) -> Point {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Flector> for Translator {
+    type Output = Flector;
+
+    fn bulk_contraction(self, other: Flector) -> Flector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<MultiVector> for Translator {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Scalar> for Flector {
+    type Output = Flector;
+
+    fn bulk_contraction(self, other: Scalar) -> Flector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<HomogeneousMagnitude> for Flector {
+    type Output = Flector;
+
+    fn bulk_contraction(self, other: HomogeneousMagnitude) -> Flector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Point> for Flector {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: Point) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Line> for Flector {
+    type Output = Point;
+
+    fn bulk_contraction(self, other: Line) -> Point {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Plane> for Flector {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: Plane) -> Scalar {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Flector> for Flector {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<MultiVector> for Flector {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Scalar> for MultiVector {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: Scalar) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<AntiScalar> for MultiVector {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: AntiScalar) -> Scalar {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<HomogeneousMagnitude> for MultiVector {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: HomogeneousMagnitude) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Point> for MultiVector {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: Point) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Line> for MultiVector {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: Line) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Plane> for MultiVector {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: Plane) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Flector> for MultiVector {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<MultiVector> for MultiVector {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl WeightContraction<Scalar> for Scalar {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: Scalar) -> Scalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<MultiVector> for Scalar {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: MultiVector) -> Scalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Scalar> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn weight_contraction(self, other: Scalar) -> AntiScalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<AntiScalar> for AntiScalar {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: AntiScalar) -> Scalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<HomogeneousMagnitude> for AntiScalar {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: HomogeneousMagnitude) -> Scalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Point> for AntiScalar {
+    type Output = Plane;
+
+    fn weight_contraction(self, other: Point) -> Plane {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Line> for AntiScalar {
+    type Output = Line;
+
+    fn weight_contraction(self, other: Line) -> Line {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Plane> for AntiScalar {
+    type Output = Point;
+
+    fn weight_contraction(self, other: Plane) -> Point {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Translator> for AntiScalar {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: Translator) -> Scalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Flector> for AntiScalar {
+    type Output = Flector;
+
+    fn weight_contraction(self, other: Flector) -> Flector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<MultiVector> for AntiScalar {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Scalar> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn weight_contraction(self, other: Scalar) -> HomogeneousMagnitude {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<AntiScalar> for HomogeneousMagnitude {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: AntiScalar) -> Scalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<HomogeneousMagnitude> for HomogeneousMagnitude {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: HomogeneousMagnitude) -> Scalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Point> for HomogeneousMagnitude {
+    type Output = Plane;
+
+    fn weight_contraction(self, other: Point) -> Plane {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Line> for HomogeneousMagnitude {
+    type Output = Line;
+
+    fn weight_contraction(self, other: Line) -> Line {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Plane> for HomogeneousMagnitude {
+    type Output = Point;
+
+    fn weight_contraction(self, other: Plane) -> Point {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Translator> for HomogeneousMagnitude {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: Translator) -> Scalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Flector> for HomogeneousMagnitude {
+    type Output = Flector;
+
+    fn weight_contraction(self, other: Flector) -> Flector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<MultiVector> for HomogeneousMagnitude {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Scalar> for Point {
+    type Output = Point;
+
+    fn weight_contraction(self, other: Scalar) -> Point {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Point> for Point {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: Point) -> Scalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Flector> for Point {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: Flector) -> Scalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<MultiVector> for Point {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Scalar> for Line {
+    type Output = Line;
+
+    fn weight_contraction(self, other: Scalar) -> Line {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Point> for Line {
+    type Output = Point;
+
+    fn weight_contraction(self, other: Point) -> Point {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Line> for Line {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: Line) -> Scalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Flector> for Line {
+    type Output = Point;
+
+    fn weight_contraction(self, other: Flector) -> Point {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<MultiVector> for Line {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Scalar> for Plane {
+    type Output = Plane;
+
+    fn weight_contraction(self, other: Scalar) -> Plane {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Point> for Plane {
+    type Output = Line;
+
+    fn weight_contraction(self, other: Point) -> Line {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Line> for Plane {
+    type Output = Point;
+
+    fn weight_contraction(self, other: Line) -> Point {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Plane> for Plane {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: Plane) -> Scalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Flector> for Plane {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<MultiVector> for Plane {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Scalar> for Motor {
+    type Output = Motor;
+
+    fn weight_contraction(self, other: Scalar) -> Motor {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<AntiScalar> for Motor {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: AntiScalar) -> Scalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<HomogeneousMagnitude> for Motor {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: HomogeneousMagnitude) -> Scalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Point> for Motor {
+    type Output = Flector;
+
+    fn weight_contraction(self, other: Point) -> Flector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Line> for Motor {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Line) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Plane> for Motor {
+    type Output = Point;
+
+    fn weight_contraction(self, other: Plane) -> Point {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Translator> for Motor {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: Translator) -> Scalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Flector> for Motor {
+    type Output = Flector;
+
+    fn weight_contraction(self, other: Flector) -> Flector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<MultiVector> for Motor {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Scalar> for Rotor {
+    type Output = Rotor;
+
+    fn weight_contraction(self, other: Scalar) -> Rotor {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<AntiScalar> for Rotor {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: AntiScalar) -> Scalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<HomogeneousMagnitude> for Rotor {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: HomogeneousMagnitude) -> Scalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Point> for Rotor {
+    type Output = Flector;
+
+    fn weight_contraction(self, other: Point) -> Flector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Line> for Rotor {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Line) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Plane> for Rotor {
+    type Output = Point;
+
+    fn weight_contraction(self, other: Plane) -> Point {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Translator> for Rotor {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: Translator) -> Scalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Flector> for Rotor {
+    type Output = Flector;
+
+    fn weight_contraction(self, other: Flector) -> Flector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<MultiVector> for Rotor {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Scalar> for Translator {
+    type Output = Translator;
+
+    fn weight_contraction(self, other: Scalar) -> Translator {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<AntiScalar> for Translator {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: AntiScalar) -> Scalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<HomogeneousMagnitude> for Translator {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: HomogeneousMagnitude) -> Scalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Point> for Translator {
+    type Output = Flector;
+
+    fn weight_contraction(self, other: Point) -> Flector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Line> for Translator {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Line) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Plane> for Translator {
+    type Output = Point;
+
+    fn weight_contraction(self, other: Plane) -> Point {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Translator> for Translator {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: Translator) -> Scalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Flector> for Translator {
+    type Output = Flector;
+
+    fn weight_contraction(self, other: Flector) -> Flector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<MultiVector> for Translator {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Scalar> for Flector {
+    type Output = Flector;
+
+    fn weight_contraction(self, other: Scalar) -> Flector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Point> for Flector {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Point) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Line> for Flector {
+    type Output = Point;
+
+    fn weight_contraction(self, other: Line) -> Point {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Plane> for Flector {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: Plane) -> Scalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Flector> for Flector {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<MultiVector> for Flector {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Scalar> for MultiVector {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Scalar) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<AntiScalar> for MultiVector {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: AntiScalar) -> Scalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<HomogeneousMagnitude> for MultiVector {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: HomogeneousMagnitude) -> Scalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Point> for MultiVector {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Point) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Line> for MultiVector {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Line) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Plane> for MultiVector {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Plane) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Translator> for MultiVector {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: Translator) -> Scalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Flector> for MultiVector {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<MultiVector> for MultiVector {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl BulkExpansion<Scalar> for Scalar {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: Scalar) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<AntiScalar> for Scalar {
+    type Output = Scalar;
+
+    fn bulk_expansion(self, other: AntiScalar) -> Scalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<HomogeneousMagnitude> for Scalar {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: HomogeneousMagnitude) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Point> for Scalar {
+    type Output = Plane;
+
+    fn bulk_expansion(self, other: Point) -> Plane {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Line> for Scalar {
+    type Output = Line;
+
+    fn bulk_expansion(self, other: Line) -> Line {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Plane> for Scalar {
+    type Output = Point;
+
+    fn bulk_expansion(self, other: Plane) -> Point {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Flector> for Scalar {
+    type Output = Flector;
+
+    fn bulk_expansion(self, other: Flector) -> Flector {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<MultiVector> for Scalar {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<AntiScalar> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: AntiScalar) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<MultiVector> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: MultiVector) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Scalar> for HomogeneousMagnitude {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: Scalar) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<AntiScalar> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn bulk_expansion(self, other: AntiScalar) -> HomogeneousMagnitude {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<HomogeneousMagnitude> for HomogeneousMagnitude {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: HomogeneousMagnitude) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Point> for HomogeneousMagnitude {
+    type Output = Plane;
+
+    fn bulk_expansion(self, other: Point) -> Plane {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Line> for HomogeneousMagnitude {
+    type Output = Line;
+
+    fn bulk_expansion(self, other: Line) -> Line {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Plane> for HomogeneousMagnitude {
+    type Output = Point;
+
+    fn bulk_expansion(self, other: Plane) -> Point {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Flector> for HomogeneousMagnitude {
+    type Output = Flector;
+
+    fn bulk_expansion(self, other: Flector) -> Flector {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<MultiVector> for HomogeneousMagnitude {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<AntiScalar> for Point {
+    type Output = Point;
+
+    fn bulk_expansion(self, other: AntiScalar) -> Point {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Point> for Point {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: Point) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Line> for Point {
+    type Output = Plane;
+
+    fn bulk_expansion(self, other: Line) -> Plane {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Plane> for Point {
+    type Output = Line;
+
+    fn bulk_expansion(self, other: Plane) -> Line {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Flector> for Point {
+    type Output = Motor;
+
+    fn bulk_expansion(self, other: Flector) -> Motor {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<MultiVector> for Point {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<AntiScalar> for Line {
+    type Output = Line;
+
+    fn bulk_expansion(self, other: AntiScalar) -> Line {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Line> for Line {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: Line) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Plane> for Line {
+    type Output = Plane;
+
+    fn bulk_expansion(self, other: Plane) -> Plane {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Flector> for Line {
+    type Output = Plane;
+
+    fn bulk_expansion(self, other: Flector) -> Plane {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<MultiVector> for Line {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<AntiScalar> for Plane {
+    type Output = Plane;
+
+    fn bulk_expansion(self, other: AntiScalar) -> Plane {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Plane> for Plane {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: Plane) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Flector> for Plane {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: Flector) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<MultiVector> for Plane {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<AntiScalar> for Motor {
+    type Output = Motor;
+
+    fn bulk_expansion(self, other: AntiScalar) -> Motor {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Line> for Motor {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: Line) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Plane> for Motor {
+    type Output = Plane;
+
+    fn bulk_expansion(self, other: Plane) -> Plane {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Flector> for Motor {
+    type Output = Plane;
+
+    fn bulk_expansion(self, other: Flector) -> Plane {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<MultiVector> for Motor {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<AntiScalar> for Rotor {
+    type Output = Rotor;
+
+    fn bulk_expansion(self, other: AntiScalar) -> Rotor {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Line> for Rotor {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: Line) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Plane> for Rotor {
+    type Output = Plane;
+
+    fn bulk_expansion(self, other: Plane) -> Plane {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Flector> for Rotor {
+    type Output = Plane;
+
+    fn bulk_expansion(self, other: Flector) -> Plane {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<MultiVector> for Rotor {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<AntiScalar> for Translator {
+    type Output = Translator;
+
+    fn bulk_expansion(self, other: AntiScalar) -> Translator {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Line> for Translator {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: Line) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Plane> for Translator {
+    type Output = Plane;
+
+    fn bulk_expansion(self, other: Plane) -> Plane {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Flector> for Translator {
+    type Output = Plane;
+
+    fn bulk_expansion(self, other: Flector) -> Plane {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<MultiVector> for Translator {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<AntiScalar> for Flector {
+    type Output = Flector;
+
+    fn bulk_expansion(self, other: AntiScalar) -> Flector {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Point> for Flector {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: Point) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Line> for Flector {
+    type Output = Plane;
+
+    fn bulk_expansion(self, other: Line) -> Plane {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Plane> for Flector {
+    type Output = Motor;
+
+    fn bulk_expansion(self, other: Plane) -> Motor {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Flector> for Flector {
+    type Output = Motor;
+
+    fn bulk_expansion(self, other: Flector) -> Motor {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<MultiVector> for Flector {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Scalar> for MultiVector {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: Scalar) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<AntiScalar> for MultiVector {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: AntiScalar) -> MultiVector {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<HomogeneousMagnitude> for MultiVector {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: HomogeneousMagnitude) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Point> for MultiVector {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: Point) -> MultiVector {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Line> for MultiVector {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: Line) -> MultiVector {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Plane> for MultiVector {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: Plane) -> MultiVector {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Flector> for MultiVector {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: Flector) -> MultiVector {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<MultiVector> for MultiVector {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl WeightExpansion<Scalar> for Scalar {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: Scalar) -> AntiScalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<AntiScalar> for Scalar {
+    type Output = Scalar;
+
+    fn weight_expansion(self, other: AntiScalar) -> Scalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<HomogeneousMagnitude> for Scalar {
+    type Output = Scalar;
+
+    fn weight_expansion(self, other: HomogeneousMagnitude) -> Scalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Point> for Scalar {
+    type Output = Plane;
+
+    fn weight_expansion(self, other: Point) -> Plane {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Line> for Scalar {
+    type Output = Line;
+
+    fn weight_expansion(self, other: Line) -> Line {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Plane> for Scalar {
+    type Output = Point;
+
+    fn weight_expansion(self, other: Plane) -> Point {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Translator> for Scalar {
+    type Output = Scalar;
+
+    fn weight_expansion(self, other: Translator) -> Scalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Flector> for Scalar {
+    type Output = Flector;
+
+    fn weight_expansion(self, other: Flector) -> Flector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVector> for Scalar {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<AntiScalar> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: AntiScalar) -> AntiScalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<HomogeneousMagnitude> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: HomogeneousMagnitude) -> AntiScalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Translator> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: Translator) -> AntiScalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVector> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: MultiVector) -> AntiScalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Scalar> for HomogeneousMagnitude {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: Scalar) -> AntiScalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<AntiScalar> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn weight_expansion(self, other: AntiScalar) -> HomogeneousMagnitude {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<HomogeneousMagnitude> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn weight_expansion(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Point> for HomogeneousMagnitude {
+    type Output = Plane;
+
+    fn weight_expansion(self, other: Point) -> Plane {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Line> for HomogeneousMagnitude {
+    type Output = Line;
+
+    fn weight_expansion(self, other: Line) -> Line {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Plane> for HomogeneousMagnitude {
+    type Output = Point;
+
+    fn weight_expansion(self, other: Plane) -> Point {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Translator> for HomogeneousMagnitude {
+    type Output = HomogeneousMagnitude;
+
+    fn weight_expansion(self, other: Translator) -> HomogeneousMagnitude {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Flector> for HomogeneousMagnitude {
+    type Output = Flector;
+
+    fn weight_expansion(self, other: Flector) -> Flector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVector> for HomogeneousMagnitude {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<AntiScalar> for Point {
+    type Output = Point;
+
+    fn weight_expansion(self, other: AntiScalar) -> Point {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<HomogeneousMagnitude> for Point {
+    type Output = Point;
+
+    fn weight_expansion(self, other: HomogeneousMagnitude) -> Point {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Point> for Point {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: Point) -> AntiScalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Line> for Point {
+    type Output = Plane;
+
+    fn weight_expansion(self, other: Line) -> Plane {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Plane> for Point {
+    type Output = Line;
+
+    fn weight_expansion(self, other: Plane) -> Line {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Translator> for Point {
+    type Output = Point;
+
+    fn weight_expansion(self, other: Translator) -> Point {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Flector> for Point {
+    type Output = Motor;
+
+    fn weight_expansion(self, other: Flector) -> Motor {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVector> for Point {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<AntiScalar> for Line {
+    type Output = Line;
+
+    fn weight_expansion(self, other: AntiScalar) -> Line {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<HomogeneousMagnitude> for Line {
+    type Output = Line;
+
+    fn weight_expansion(self, other: HomogeneousMagnitude) -> Line {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Line> for Line {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: Line) -> AntiScalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Plane> for Line {
+    type Output = Plane;
+
+    fn weight_expansion(self, other: Plane) -> Plane {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Translator> for Line {
+    type Output = Line;
+
+    fn weight_expansion(self, other: Translator) -> Line {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Flector> for Line {
+    type Output = Plane;
+
+    fn weight_expansion(self, other: Flector) -> Plane {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVector> for Line {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<AntiScalar> for Plane {
+    type Output = Plane;
+
+    fn weight_expansion(self, other: AntiScalar) -> Plane {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<HomogeneousMagnitude> for Plane {
+    type Output = Plane;
+
+    fn weight_expansion(self, other: HomogeneousMagnitude) -> Plane {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Plane> for Plane {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: Plane) -> AntiScalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Translator> for Plane {
+    type Output = Plane;
+
+    fn weight_expansion(self, other: Translator) -> Plane {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Flector> for Plane {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: Flector) -> AntiScalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVector> for Plane {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<AntiScalar> for Motor {
+    type Output = Motor;
+
+    fn weight_expansion(self, other: AntiScalar) -> Motor {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<HomogeneousMagnitude> for Motor {
+    type Output = Motor;
+
+    fn weight_expansion(self, other: HomogeneousMagnitude) -> Motor {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Line> for Motor {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: Line) -> AntiScalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Plane> for Motor {
+    type Output = Plane;
+
+    fn weight_expansion(self, other: Plane) -> Plane {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Translator> for Motor {
+    type Output = Motor;
+
+    fn weight_expansion(self, other: Translator) -> Motor {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Flector> for Motor {
+    type Output = Plane;
+
+    fn weight_expansion(self, other: Flector) -> Plane {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVector> for Motor {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<AntiScalar> for Rotor {
+    type Output = Rotor;
+
+    fn weight_expansion(self, other: AntiScalar) -> Rotor {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<HomogeneousMagnitude> for Rotor {
+    type Output = Rotor;
+
+    fn weight_expansion(self, other: HomogeneousMagnitude) -> Rotor {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Line> for Rotor {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: Line) -> AntiScalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Plane> for Rotor {
+    type Output = Plane;
+
+    fn weight_expansion(self, other: Plane) -> Plane {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Translator> for Rotor {
+    type Output = Rotor;
+
+    fn weight_expansion(self, other: Translator) -> Rotor {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Flector> for Rotor {
+    type Output = Plane;
+
+    fn weight_expansion(self, other: Flector) -> Plane {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVector> for Rotor {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<AntiScalar> for Translator {
+    type Output = Translator;
+
+    fn weight_expansion(self, other: AntiScalar) -> Translator {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<HomogeneousMagnitude> for Translator {
+    type Output = Translator;
+
+    fn weight_expansion(self, other: HomogeneousMagnitude) -> Translator {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Line> for Translator {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: Line) -> AntiScalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Plane> for Translator {
+    type Output = Plane;
+
+    fn weight_expansion(self, other: Plane) -> Plane {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Translator> for Translator {
+    type Output = Translator;
+
+    fn weight_expansion(self, other: Translator) -> Translator {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Flector> for Translator {
+    type Output = Plane;
+
+    fn weight_expansion(self, other: Flector) -> Plane {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVector> for Translator {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<AntiScalar> for Flector {
+    type Output = Flector;
+
+    fn weight_expansion(self, other: AntiScalar) -> Flector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<HomogeneousMagnitude> for Flector {
+    type Output = Flector;
+
+    fn weight_expansion(self, other: HomogeneousMagnitude) -> Flector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Point> for Flector {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: Point) -> AntiScalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Line> for Flector {
+    type Output = Plane;
+
+    fn weight_expansion(self, other: Line) -> Plane {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Plane> for Flector {
+    type Output = Motor;
+
+    fn weight_expansion(self, other: Plane) -> Motor {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Translator> for Flector {
+    type Output = Flector;
+
+    fn weight_expansion(self, other: Translator) -> Flector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Flector> for Flector {
+    type Output = Motor;
+
+    fn weight_expansion(self, other: Flector) -> Motor {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVector> for Flector {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Scalar> for MultiVector {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: Scalar) -> AntiScalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<AntiScalar> for MultiVector {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: AntiScalar) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<HomogeneousMagnitude> for MultiVector {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: HomogeneousMagnitude) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Point> for MultiVector {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: Point) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Line> for MultiVector {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: Line) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Plane> for MultiVector {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: Plane) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Translator> for MultiVector {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: Translator) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Flector> for MultiVector {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: Flector) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVector> for MultiVector {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+

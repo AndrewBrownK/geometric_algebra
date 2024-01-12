@@ -9918,3 +9918,1411 @@ MultiVector plane_multi_vector_reflect(Plane self, MultiVector other) {
     return plane_multi_vector_sandwich(plane_unitize(self), other);
 }
 
+Scalar scalar_bulk(Scalar self) {
+    return Scalar(self.g0 * 1.0);
+}
+
+Scalar scalar_weight(Scalar self) {
+    return Scalar(self.g0 * 0.0);
+}
+
+AntiScalar anti_scalar_bulk(AntiScalar self) {
+    return AntiScalar(self.g0 * 0.0);
+}
+
+AntiScalar anti_scalar_weight(AntiScalar self) {
+    return AntiScalar(self.g0 * 1.0);
+}
+
+Scalar homogeneous_magnitude_bulk(HomogeneousMagnitude self) {
+    return Scalar(self.g0.x * 1.0);
+}
+
+AntiScalar homogeneous_magnitude_weight(HomogeneousMagnitude self) {
+    return AntiScalar(self.g0.y * 1.0);
+}
+
+Point point_bulk(Point self) {
+    return Point(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.w) * vec4(1.0, 1.0, 1.0, 0.0));
+}
+
+Point point_weight(Point self) {
+    return Point(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.w) * vec4(0.0, 0.0, 0.0, 1.0));
+}
+
+Line line_bulk(Line self) {
+    return Line(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(0.0, 0.0, 0.0), vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(1.0, 1.0, 1.0));
+}
+
+Line line_weight(Line self) {
+    return Line(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(1.0, 1.0, 1.0), vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(0.0, 0.0, 0.0));
+}
+
+Plane plane_bulk(Plane self) {
+    return Plane(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.w) * vec4(0.0, 0.0, 0.0, 1.0));
+}
+
+Plane plane_weight(Plane self) {
+    return Plane(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.w) * vec4(1.0, 1.0, 1.0, 0.0));
+}
+
+Translator motor_bulk(Motor self) {
+    return Translator(vec4(self.g1.x, self.g1.y, self.g1.z, self.g0.w) * vec4(1.0, 1.0, 1.0, 0.0));
+}
+
+Rotor motor_weight(Motor self) {
+    return Rotor(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.w) * vec4(1.0, 1.0, 1.0, 1.0));
+}
+
+Rotor rotor_bulk(Rotor self) {
+    return Rotor(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.w) * vec4(0.0, 0.0, 0.0, 0.0));
+}
+
+Rotor rotor_weight(Rotor self) {
+    return Rotor(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.w) * vec4(1.0, 1.0, 1.0, 1.0));
+}
+
+Translator translator_bulk(Translator self) {
+    return Translator(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.w) * vec4(1.0, 1.0, 1.0, 0.0));
+}
+
+AntiScalar translator_weight(Translator self) {
+    return AntiScalar(self.g0.w * 1.0);
+}
+
+Flector flector_bulk(Flector self) {
+    return Flector(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.w) * vec4(1.0, 1.0, 1.0, 0.0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.w) * vec4(0.0, 0.0, 0.0, 1.0));
+}
+
+Flector flector_weight(Flector self) {
+    return Flector(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.w) * vec4(0.0, 0.0, 0.0, 1.0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.w) * vec4(1.0, 1.0, 1.0, 0.0));
+}
+
+MultiVector multi_vector_bulk(MultiVector self) {
+    return MultiVector(vec2(self.g0.x, self.g0.y) * vec2(1.0, 0.0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.w) * vec4(1.0, 1.0, 1.0, 0.0), vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(0.0, 0.0, 0.0), vec3(self.g3.x, self.g3.y, self.g3.z) * vec3(1.0, 1.0, 1.0), vec4(self.g4.x, self.g4.y, self.g4.z, self.g4.w) * vec4(0.0, 0.0, 0.0, 1.0));
+}
+
+MultiVector multi_vector_weight(MultiVector self) {
+    return MultiVector(vec2(self.g0.x, self.g0.y) * vec2(0.0, 1.0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.w) * vec4(0.0, 0.0, 0.0, 1.0), vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(1.0, 1.0, 1.0), vec3(self.g3.x, self.g3.y, self.g3.z) * vec3(0.0, 0.0, 0.0), vec4(self.g4.x, self.g4.y, self.g4.z, self.g4.w) * vec4(1.0, 1.0, 1.0, 0.0));
+}
+
+AntiScalar scalar_right_bulk_dual(Scalar self) {
+    return scalar_right_complement(scalar_bulk(self));
+}
+
+Scalar anti_scalar_right_bulk_dual(AntiScalar self) {
+    return anti_scalar_right_complement(anti_scalar_bulk(self));
+}
+
+AntiScalar homogeneous_magnitude_right_bulk_dual(HomogeneousMagnitude self) {
+    return scalar_right_complement(homogeneous_magnitude_bulk(self));
+}
+
+Plane point_right_bulk_dual(Point self) {
+    return point_right_complement(point_bulk(self));
+}
+
+Line line_right_bulk_dual(Line self) {
+    return line_right_complement(line_bulk(self));
+}
+
+Point plane_right_bulk_dual(Plane self) {
+    return plane_right_complement(plane_bulk(self));
+}
+
+Flector flector_right_bulk_dual(Flector self) {
+    return flector_right_complement(flector_bulk(self));
+}
+
+MultiVector multi_vector_right_bulk_dual(MultiVector self) {
+    return multi_vector_right_complement(multi_vector_bulk(self));
+}
+
+AntiScalar scalar_right_weight_dual(Scalar self) {
+    return scalar_right_complement(scalar_weight(self));
+}
+
+Scalar anti_scalar_right_weight_dual(AntiScalar self) {
+    return anti_scalar_right_complement(anti_scalar_weight(self));
+}
+
+Scalar homogeneous_magnitude_right_weight_dual(HomogeneousMagnitude self) {
+    return anti_scalar_right_complement(homogeneous_magnitude_weight(self));
+}
+
+Plane point_right_weight_dual(Point self) {
+    return point_right_complement(point_weight(self));
+}
+
+Line line_right_weight_dual(Line self) {
+    return line_right_complement(line_weight(self));
+}
+
+Point plane_right_weight_dual(Plane self) {
+    return plane_right_complement(plane_weight(self));
+}
+
+Scalar translator_right_weight_dual(Translator self) {
+    return anti_scalar_right_complement(translator_weight(self));
+}
+
+Flector flector_right_weight_dual(Flector self) {
+    return flector_right_complement(flector_weight(self));
+}
+
+MultiVector multi_vector_right_weight_dual(MultiVector self) {
+    return multi_vector_right_complement(multi_vector_weight(self));
+}
+
+AntiScalar scalar_left_bulk_dual(Scalar self) {
+    return scalar_left_complement(scalar_bulk(self));
+}
+
+Scalar anti_scalar_left_bulk_dual(AntiScalar self) {
+    return anti_scalar_left_complement(anti_scalar_bulk(self));
+}
+
+AntiScalar homogeneous_magnitude_left_bulk_dual(HomogeneousMagnitude self) {
+    return scalar_left_complement(homogeneous_magnitude_bulk(self));
+}
+
+Plane point_left_bulk_dual(Point self) {
+    return point_left_complement(point_bulk(self));
+}
+
+Line line_left_bulk_dual(Line self) {
+    return line_left_complement(line_bulk(self));
+}
+
+Point plane_left_bulk_dual(Plane self) {
+    return plane_left_complement(plane_bulk(self));
+}
+
+Flector flector_left_bulk_dual(Flector self) {
+    return flector_left_complement(flector_bulk(self));
+}
+
+MultiVector multi_vector_left_bulk_dual(MultiVector self) {
+    return multi_vector_left_complement(multi_vector_bulk(self));
+}
+
+AntiScalar scalar_left_weight_dual(Scalar self) {
+    return scalar_left_complement(scalar_weight(self));
+}
+
+Scalar anti_scalar_left_weight_dual(AntiScalar self) {
+    return anti_scalar_left_complement(anti_scalar_weight(self));
+}
+
+Scalar homogeneous_magnitude_left_weight_dual(HomogeneousMagnitude self) {
+    return anti_scalar_left_complement(homogeneous_magnitude_weight(self));
+}
+
+Plane point_left_weight_dual(Point self) {
+    return point_left_complement(point_weight(self));
+}
+
+Line line_left_weight_dual(Line self) {
+    return line_left_complement(line_weight(self));
+}
+
+Point plane_left_weight_dual(Plane self) {
+    return plane_left_complement(plane_weight(self));
+}
+
+Scalar translator_left_weight_dual(Translator self) {
+    return anti_scalar_left_complement(translator_weight(self));
+}
+
+Flector flector_left_weight_dual(Flector self) {
+    return flector_left_complement(flector_weight(self));
+}
+
+MultiVector multi_vector_left_weight_dual(MultiVector self) {
+    return multi_vector_left_complement(multi_vector_weight(self));
+}
+
+Scalar scalar_scalar_bulk_contraction(Scalar self, Scalar other) {
+    return scalar_anti_scalar_anti_wedge(self, scalar_right_bulk_dual(other));
+}
+
+Scalar scalar_homogeneous_magnitude_bulk_contraction(Scalar self, HomogeneousMagnitude other) {
+    return scalar_anti_scalar_anti_wedge(self, homogeneous_magnitude_right_bulk_dual(other));
+}
+
+Scalar scalar_multi_vector_bulk_contraction(Scalar self, MultiVector other) {
+    return scalar_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
+}
+
+AntiScalar anti_scalar_scalar_bulk_contraction(AntiScalar self, Scalar other) {
+    return anti_scalar_anti_scalar_anti_wedge(self, scalar_right_bulk_dual(other));
+}
+
+Scalar anti_scalar_anti_scalar_bulk_contraction(AntiScalar self, AntiScalar other) {
+    return anti_scalar_scalar_anti_wedge(self, anti_scalar_right_bulk_dual(other));
+}
+
+AntiScalar anti_scalar_homogeneous_magnitude_bulk_contraction(AntiScalar self, HomogeneousMagnitude other) {
+    return anti_scalar_anti_scalar_anti_wedge(self, homogeneous_magnitude_right_bulk_dual(other));
+}
+
+Plane anti_scalar_point_bulk_contraction(AntiScalar self, Point other) {
+    return anti_scalar_plane_anti_wedge(self, point_right_bulk_dual(other));
+}
+
+Line anti_scalar_line_bulk_contraction(AntiScalar self, Line other) {
+    return anti_scalar_line_anti_wedge(self, line_right_bulk_dual(other));
+}
+
+Point anti_scalar_plane_bulk_contraction(AntiScalar self, Plane other) {
+    return anti_scalar_point_anti_wedge(self, plane_right_bulk_dual(other));
+}
+
+Flector anti_scalar_flector_bulk_contraction(AntiScalar self, Flector other) {
+    return anti_scalar_flector_anti_wedge(self, flector_right_bulk_dual(other));
+}
+
+MultiVector anti_scalar_multi_vector_bulk_contraction(AntiScalar self, MultiVector other) {
+    return anti_scalar_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_scalar_bulk_contraction(HomogeneousMagnitude self, Scalar other) {
+    return homogeneous_magnitude_anti_scalar_anti_wedge(self, scalar_right_bulk_dual(other));
+}
+
+Scalar homogeneous_magnitude_anti_scalar_bulk_contraction(HomogeneousMagnitude self, AntiScalar other) {
+    return homogeneous_magnitude_scalar_anti_wedge(self, anti_scalar_right_bulk_dual(other));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_bulk_contraction(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return homogeneous_magnitude_anti_scalar_anti_wedge(self, homogeneous_magnitude_right_bulk_dual(other));
+}
+
+Plane homogeneous_magnitude_point_bulk_contraction(HomogeneousMagnitude self, Point other) {
+    return homogeneous_magnitude_plane_anti_wedge(self, point_right_bulk_dual(other));
+}
+
+Line homogeneous_magnitude_line_bulk_contraction(HomogeneousMagnitude self, Line other) {
+    return homogeneous_magnitude_line_anti_wedge(self, line_right_bulk_dual(other));
+}
+
+Point homogeneous_magnitude_plane_bulk_contraction(HomogeneousMagnitude self, Plane other) {
+    return homogeneous_magnitude_point_anti_wedge(self, plane_right_bulk_dual(other));
+}
+
+Flector homogeneous_magnitude_flector_bulk_contraction(HomogeneousMagnitude self, Flector other) {
+    return homogeneous_magnitude_flector_anti_wedge(self, flector_right_bulk_dual(other));
+}
+
+MultiVector homogeneous_magnitude_multi_vector_bulk_contraction(HomogeneousMagnitude self, MultiVector other) {
+    return homogeneous_magnitude_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
+}
+
+Point point_scalar_bulk_contraction(Point self, Scalar other) {
+    return point_anti_scalar_anti_wedge(self, scalar_right_bulk_dual(other));
+}
+
+Point point_homogeneous_magnitude_bulk_contraction(Point self, HomogeneousMagnitude other) {
+    return point_anti_scalar_anti_wedge(self, homogeneous_magnitude_right_bulk_dual(other));
+}
+
+Scalar point_point_bulk_contraction(Point self, Point other) {
+    return point_plane_anti_wedge(self, point_right_bulk_dual(other));
+}
+
+Scalar point_flector_bulk_contraction(Point self, Flector other) {
+    return point_flector_anti_wedge(self, flector_right_bulk_dual(other));
+}
+
+MultiVector point_multi_vector_bulk_contraction(Point self, MultiVector other) {
+    return point_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
+}
+
+Line line_scalar_bulk_contraction(Line self, Scalar other) {
+    return line_anti_scalar_anti_wedge(self, scalar_right_bulk_dual(other));
+}
+
+Line line_homogeneous_magnitude_bulk_contraction(Line self, HomogeneousMagnitude other) {
+    return line_anti_scalar_anti_wedge(self, homogeneous_magnitude_right_bulk_dual(other));
+}
+
+Point line_point_bulk_contraction(Line self, Point other) {
+    return line_plane_anti_wedge(self, point_right_bulk_dual(other));
+}
+
+Scalar line_line_bulk_contraction(Line self, Line other) {
+    return line_line_anti_wedge(self, line_right_bulk_dual(other));
+}
+
+Point line_flector_bulk_contraction(Line self, Flector other) {
+    return line_flector_anti_wedge(self, flector_right_bulk_dual(other));
+}
+
+MultiVector line_multi_vector_bulk_contraction(Line self, MultiVector other) {
+    return line_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
+}
+
+Plane plane_scalar_bulk_contraction(Plane self, Scalar other) {
+    return plane_anti_scalar_anti_wedge(self, scalar_right_bulk_dual(other));
+}
+
+Plane plane_homogeneous_magnitude_bulk_contraction(Plane self, HomogeneousMagnitude other) {
+    return plane_anti_scalar_anti_wedge(self, homogeneous_magnitude_right_bulk_dual(other));
+}
+
+Line plane_point_bulk_contraction(Plane self, Point other) {
+    return plane_plane_anti_wedge(self, point_right_bulk_dual(other));
+}
+
+Point plane_line_bulk_contraction(Plane self, Line other) {
+    return plane_line_anti_wedge(self, line_right_bulk_dual(other));
+}
+
+Scalar plane_plane_bulk_contraction(Plane self, Plane other) {
+    return plane_point_anti_wedge(self, plane_right_bulk_dual(other));
+}
+
+MultiVector plane_flector_bulk_contraction(Plane self, Flector other) {
+    return plane_flector_anti_wedge(self, flector_right_bulk_dual(other));
+}
+
+MultiVector plane_multi_vector_bulk_contraction(Plane self, MultiVector other) {
+    return plane_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
+}
+
+Motor motor_scalar_bulk_contraction(Motor self, Scalar other) {
+    return motor_anti_scalar_anti_wedge(self, scalar_right_bulk_dual(other));
+}
+
+Scalar motor_anti_scalar_bulk_contraction(Motor self, AntiScalar other) {
+    return motor_scalar_anti_wedge(self, anti_scalar_right_bulk_dual(other));
+}
+
+Motor motor_homogeneous_magnitude_bulk_contraction(Motor self, HomogeneousMagnitude other) {
+    return motor_anti_scalar_anti_wedge(self, homogeneous_magnitude_right_bulk_dual(other));
+}
+
+Flector motor_point_bulk_contraction(Motor self, Point other) {
+    return motor_plane_anti_wedge(self, point_right_bulk_dual(other));
+}
+
+MultiVector motor_line_bulk_contraction(Motor self, Line other) {
+    return motor_line_anti_wedge(self, line_right_bulk_dual(other));
+}
+
+Point motor_plane_bulk_contraction(Motor self, Plane other) {
+    return motor_point_anti_wedge(self, plane_right_bulk_dual(other));
+}
+
+Flector motor_flector_bulk_contraction(Motor self, Flector other) {
+    return motor_flector_anti_wedge(self, flector_right_bulk_dual(other));
+}
+
+MultiVector motor_multi_vector_bulk_contraction(Motor self, MultiVector other) {
+    return motor_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
+}
+
+Rotor rotor_scalar_bulk_contraction(Rotor self, Scalar other) {
+    return rotor_anti_scalar_anti_wedge(self, scalar_right_bulk_dual(other));
+}
+
+Scalar rotor_anti_scalar_bulk_contraction(Rotor self, AntiScalar other) {
+    return rotor_scalar_anti_wedge(self, anti_scalar_right_bulk_dual(other));
+}
+
+Rotor rotor_homogeneous_magnitude_bulk_contraction(Rotor self, HomogeneousMagnitude other) {
+    return rotor_anti_scalar_anti_wedge(self, homogeneous_magnitude_right_bulk_dual(other));
+}
+
+Flector rotor_point_bulk_contraction(Rotor self, Point other) {
+    return rotor_plane_anti_wedge(self, point_right_bulk_dual(other));
+}
+
+MultiVector rotor_line_bulk_contraction(Rotor self, Line other) {
+    return rotor_line_anti_wedge(self, line_right_bulk_dual(other));
+}
+
+Point rotor_plane_bulk_contraction(Rotor self, Plane other) {
+    return rotor_point_anti_wedge(self, plane_right_bulk_dual(other));
+}
+
+Flector rotor_flector_bulk_contraction(Rotor self, Flector other) {
+    return rotor_flector_anti_wedge(self, flector_right_bulk_dual(other));
+}
+
+MultiVector rotor_multi_vector_bulk_contraction(Rotor self, MultiVector other) {
+    return rotor_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
+}
+
+Translator translator_scalar_bulk_contraction(Translator self, Scalar other) {
+    return translator_anti_scalar_anti_wedge(self, scalar_right_bulk_dual(other));
+}
+
+Scalar translator_anti_scalar_bulk_contraction(Translator self, AntiScalar other) {
+    return translator_scalar_anti_wedge(self, anti_scalar_right_bulk_dual(other));
+}
+
+Translator translator_homogeneous_magnitude_bulk_contraction(Translator self, HomogeneousMagnitude other) {
+    return translator_anti_scalar_anti_wedge(self, homogeneous_magnitude_right_bulk_dual(other));
+}
+
+Flector translator_point_bulk_contraction(Translator self, Point other) {
+    return translator_plane_anti_wedge(self, point_right_bulk_dual(other));
+}
+
+MultiVector translator_line_bulk_contraction(Translator self, Line other) {
+    return translator_line_anti_wedge(self, line_right_bulk_dual(other));
+}
+
+Point translator_plane_bulk_contraction(Translator self, Plane other) {
+    return translator_point_anti_wedge(self, plane_right_bulk_dual(other));
+}
+
+Flector translator_flector_bulk_contraction(Translator self, Flector other) {
+    return translator_flector_anti_wedge(self, flector_right_bulk_dual(other));
+}
+
+MultiVector translator_multi_vector_bulk_contraction(Translator self, MultiVector other) {
+    return translator_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
+}
+
+Flector flector_scalar_bulk_contraction(Flector self, Scalar other) {
+    return flector_anti_scalar_anti_wedge(self, scalar_right_bulk_dual(other));
+}
+
+Flector flector_homogeneous_magnitude_bulk_contraction(Flector self, HomogeneousMagnitude other) {
+    return flector_anti_scalar_anti_wedge(self, homogeneous_magnitude_right_bulk_dual(other));
+}
+
+MultiVector flector_point_bulk_contraction(Flector self, Point other) {
+    return flector_plane_anti_wedge(self, point_right_bulk_dual(other));
+}
+
+Point flector_line_bulk_contraction(Flector self, Line other) {
+    return flector_line_anti_wedge(self, line_right_bulk_dual(other));
+}
+
+Scalar flector_plane_bulk_contraction(Flector self, Plane other) {
+    return flector_point_anti_wedge(self, plane_right_bulk_dual(other));
+}
+
+MultiVector flector_flector_bulk_contraction(Flector self, Flector other) {
+    return flector_flector_anti_wedge(self, flector_right_bulk_dual(other));
+}
+
+MultiVector flector_multi_vector_bulk_contraction(Flector self, MultiVector other) {
+    return flector_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
+}
+
+MultiVector multi_vector_scalar_bulk_contraction(MultiVector self, Scalar other) {
+    return multi_vector_anti_scalar_anti_wedge(self, scalar_right_bulk_dual(other));
+}
+
+Scalar multi_vector_anti_scalar_bulk_contraction(MultiVector self, AntiScalar other) {
+    return multi_vector_scalar_anti_wedge(self, anti_scalar_right_bulk_dual(other));
+}
+
+MultiVector multi_vector_homogeneous_magnitude_bulk_contraction(MultiVector self, HomogeneousMagnitude other) {
+    return multi_vector_anti_scalar_anti_wedge(self, homogeneous_magnitude_right_bulk_dual(other));
+}
+
+MultiVector multi_vector_point_bulk_contraction(MultiVector self, Point other) {
+    return multi_vector_plane_anti_wedge(self, point_right_bulk_dual(other));
+}
+
+MultiVector multi_vector_line_bulk_contraction(MultiVector self, Line other) {
+    return multi_vector_line_anti_wedge(self, line_right_bulk_dual(other));
+}
+
+MultiVector multi_vector_plane_bulk_contraction(MultiVector self, Plane other) {
+    return multi_vector_point_anti_wedge(self, plane_right_bulk_dual(other));
+}
+
+MultiVector multi_vector_flector_bulk_contraction(MultiVector self, Flector other) {
+    return multi_vector_flector_anti_wedge(self, flector_right_bulk_dual(other));
+}
+
+MultiVector multi_vector_multi_vector_bulk_contraction(MultiVector self, MultiVector other) {
+    return multi_vector_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
+}
+
+Scalar scalar_scalar_weight_contraction(Scalar self, Scalar other) {
+    return scalar_anti_scalar_anti_wedge(self, scalar_right_weight_dual(other));
+}
+
+Scalar scalar_multi_vector_weight_contraction(Scalar self, MultiVector other) {
+    return scalar_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
+}
+
+AntiScalar anti_scalar_scalar_weight_contraction(AntiScalar self, Scalar other) {
+    return anti_scalar_anti_scalar_anti_wedge(self, scalar_right_weight_dual(other));
+}
+
+Scalar anti_scalar_anti_scalar_weight_contraction(AntiScalar self, AntiScalar other) {
+    return anti_scalar_scalar_anti_wedge(self, anti_scalar_right_weight_dual(other));
+}
+
+Scalar anti_scalar_homogeneous_magnitude_weight_contraction(AntiScalar self, HomogeneousMagnitude other) {
+    return anti_scalar_scalar_anti_wedge(self, homogeneous_magnitude_right_weight_dual(other));
+}
+
+Plane anti_scalar_point_weight_contraction(AntiScalar self, Point other) {
+    return anti_scalar_plane_anti_wedge(self, point_right_weight_dual(other));
+}
+
+Line anti_scalar_line_weight_contraction(AntiScalar self, Line other) {
+    return anti_scalar_line_anti_wedge(self, line_right_weight_dual(other));
+}
+
+Point anti_scalar_plane_weight_contraction(AntiScalar self, Plane other) {
+    return anti_scalar_point_anti_wedge(self, plane_right_weight_dual(other));
+}
+
+Scalar anti_scalar_translator_weight_contraction(AntiScalar self, Translator other) {
+    return anti_scalar_scalar_anti_wedge(self, translator_right_weight_dual(other));
+}
+
+Flector anti_scalar_flector_weight_contraction(AntiScalar self, Flector other) {
+    return anti_scalar_flector_anti_wedge(self, flector_right_weight_dual(other));
+}
+
+MultiVector anti_scalar_multi_vector_weight_contraction(AntiScalar self, MultiVector other) {
+    return anti_scalar_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_scalar_weight_contraction(HomogeneousMagnitude self, Scalar other) {
+    return homogeneous_magnitude_anti_scalar_anti_wedge(self, scalar_right_weight_dual(other));
+}
+
+Scalar homogeneous_magnitude_anti_scalar_weight_contraction(HomogeneousMagnitude self, AntiScalar other) {
+    return homogeneous_magnitude_scalar_anti_wedge(self, anti_scalar_right_weight_dual(other));
+}
+
+Scalar homogeneous_magnitude_homogeneous_magnitude_weight_contraction(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return homogeneous_magnitude_scalar_anti_wedge(self, homogeneous_magnitude_right_weight_dual(other));
+}
+
+Plane homogeneous_magnitude_point_weight_contraction(HomogeneousMagnitude self, Point other) {
+    return homogeneous_magnitude_plane_anti_wedge(self, point_right_weight_dual(other));
+}
+
+Line homogeneous_magnitude_line_weight_contraction(HomogeneousMagnitude self, Line other) {
+    return homogeneous_magnitude_line_anti_wedge(self, line_right_weight_dual(other));
+}
+
+Point homogeneous_magnitude_plane_weight_contraction(HomogeneousMagnitude self, Plane other) {
+    return homogeneous_magnitude_point_anti_wedge(self, plane_right_weight_dual(other));
+}
+
+Scalar homogeneous_magnitude_translator_weight_contraction(HomogeneousMagnitude self, Translator other) {
+    return homogeneous_magnitude_scalar_anti_wedge(self, translator_right_weight_dual(other));
+}
+
+Flector homogeneous_magnitude_flector_weight_contraction(HomogeneousMagnitude self, Flector other) {
+    return homogeneous_magnitude_flector_anti_wedge(self, flector_right_weight_dual(other));
+}
+
+MultiVector homogeneous_magnitude_multi_vector_weight_contraction(HomogeneousMagnitude self, MultiVector other) {
+    return homogeneous_magnitude_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
+}
+
+Point point_scalar_weight_contraction(Point self, Scalar other) {
+    return point_anti_scalar_anti_wedge(self, scalar_right_weight_dual(other));
+}
+
+Scalar point_point_weight_contraction(Point self, Point other) {
+    return point_plane_anti_wedge(self, point_right_weight_dual(other));
+}
+
+Scalar point_flector_weight_contraction(Point self, Flector other) {
+    return point_flector_anti_wedge(self, flector_right_weight_dual(other));
+}
+
+MultiVector point_multi_vector_weight_contraction(Point self, MultiVector other) {
+    return point_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
+}
+
+Line line_scalar_weight_contraction(Line self, Scalar other) {
+    return line_anti_scalar_anti_wedge(self, scalar_right_weight_dual(other));
+}
+
+Point line_point_weight_contraction(Line self, Point other) {
+    return line_plane_anti_wedge(self, point_right_weight_dual(other));
+}
+
+Scalar line_line_weight_contraction(Line self, Line other) {
+    return line_line_anti_wedge(self, line_right_weight_dual(other));
+}
+
+Point line_flector_weight_contraction(Line self, Flector other) {
+    return line_flector_anti_wedge(self, flector_right_weight_dual(other));
+}
+
+MultiVector line_multi_vector_weight_contraction(Line self, MultiVector other) {
+    return line_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
+}
+
+Plane plane_scalar_weight_contraction(Plane self, Scalar other) {
+    return plane_anti_scalar_anti_wedge(self, scalar_right_weight_dual(other));
+}
+
+Line plane_point_weight_contraction(Plane self, Point other) {
+    return plane_plane_anti_wedge(self, point_right_weight_dual(other));
+}
+
+Point plane_line_weight_contraction(Plane self, Line other) {
+    return plane_line_anti_wedge(self, line_right_weight_dual(other));
+}
+
+Scalar plane_plane_weight_contraction(Plane self, Plane other) {
+    return plane_point_anti_wedge(self, plane_right_weight_dual(other));
+}
+
+MultiVector plane_flector_weight_contraction(Plane self, Flector other) {
+    return plane_flector_anti_wedge(self, flector_right_weight_dual(other));
+}
+
+MultiVector plane_multi_vector_weight_contraction(Plane self, MultiVector other) {
+    return plane_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
+}
+
+Motor motor_scalar_weight_contraction(Motor self, Scalar other) {
+    return motor_anti_scalar_anti_wedge(self, scalar_right_weight_dual(other));
+}
+
+Scalar motor_anti_scalar_weight_contraction(Motor self, AntiScalar other) {
+    return motor_scalar_anti_wedge(self, anti_scalar_right_weight_dual(other));
+}
+
+Scalar motor_homogeneous_magnitude_weight_contraction(Motor self, HomogeneousMagnitude other) {
+    return motor_scalar_anti_wedge(self, homogeneous_magnitude_right_weight_dual(other));
+}
+
+Flector motor_point_weight_contraction(Motor self, Point other) {
+    return motor_plane_anti_wedge(self, point_right_weight_dual(other));
+}
+
+MultiVector motor_line_weight_contraction(Motor self, Line other) {
+    return motor_line_anti_wedge(self, line_right_weight_dual(other));
+}
+
+Point motor_plane_weight_contraction(Motor self, Plane other) {
+    return motor_point_anti_wedge(self, plane_right_weight_dual(other));
+}
+
+Scalar motor_translator_weight_contraction(Motor self, Translator other) {
+    return motor_scalar_anti_wedge(self, translator_right_weight_dual(other));
+}
+
+Flector motor_flector_weight_contraction(Motor self, Flector other) {
+    return motor_flector_anti_wedge(self, flector_right_weight_dual(other));
+}
+
+MultiVector motor_multi_vector_weight_contraction(Motor self, MultiVector other) {
+    return motor_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
+}
+
+Rotor rotor_scalar_weight_contraction(Rotor self, Scalar other) {
+    return rotor_anti_scalar_anti_wedge(self, scalar_right_weight_dual(other));
+}
+
+Scalar rotor_anti_scalar_weight_contraction(Rotor self, AntiScalar other) {
+    return rotor_scalar_anti_wedge(self, anti_scalar_right_weight_dual(other));
+}
+
+Scalar rotor_homogeneous_magnitude_weight_contraction(Rotor self, HomogeneousMagnitude other) {
+    return rotor_scalar_anti_wedge(self, homogeneous_magnitude_right_weight_dual(other));
+}
+
+Flector rotor_point_weight_contraction(Rotor self, Point other) {
+    return rotor_plane_anti_wedge(self, point_right_weight_dual(other));
+}
+
+MultiVector rotor_line_weight_contraction(Rotor self, Line other) {
+    return rotor_line_anti_wedge(self, line_right_weight_dual(other));
+}
+
+Point rotor_plane_weight_contraction(Rotor self, Plane other) {
+    return rotor_point_anti_wedge(self, plane_right_weight_dual(other));
+}
+
+Scalar rotor_translator_weight_contraction(Rotor self, Translator other) {
+    return rotor_scalar_anti_wedge(self, translator_right_weight_dual(other));
+}
+
+Flector rotor_flector_weight_contraction(Rotor self, Flector other) {
+    return rotor_flector_anti_wedge(self, flector_right_weight_dual(other));
+}
+
+MultiVector rotor_multi_vector_weight_contraction(Rotor self, MultiVector other) {
+    return rotor_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
+}
+
+Translator translator_scalar_weight_contraction(Translator self, Scalar other) {
+    return translator_anti_scalar_anti_wedge(self, scalar_right_weight_dual(other));
+}
+
+Scalar translator_anti_scalar_weight_contraction(Translator self, AntiScalar other) {
+    return translator_scalar_anti_wedge(self, anti_scalar_right_weight_dual(other));
+}
+
+Scalar translator_homogeneous_magnitude_weight_contraction(Translator self, HomogeneousMagnitude other) {
+    return translator_scalar_anti_wedge(self, homogeneous_magnitude_right_weight_dual(other));
+}
+
+Flector translator_point_weight_contraction(Translator self, Point other) {
+    return translator_plane_anti_wedge(self, point_right_weight_dual(other));
+}
+
+MultiVector translator_line_weight_contraction(Translator self, Line other) {
+    return translator_line_anti_wedge(self, line_right_weight_dual(other));
+}
+
+Point translator_plane_weight_contraction(Translator self, Plane other) {
+    return translator_point_anti_wedge(self, plane_right_weight_dual(other));
+}
+
+Scalar translator_translator_weight_contraction(Translator self, Translator other) {
+    return translator_scalar_anti_wedge(self, translator_right_weight_dual(other));
+}
+
+Flector translator_flector_weight_contraction(Translator self, Flector other) {
+    return translator_flector_anti_wedge(self, flector_right_weight_dual(other));
+}
+
+MultiVector translator_multi_vector_weight_contraction(Translator self, MultiVector other) {
+    return translator_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
+}
+
+Flector flector_scalar_weight_contraction(Flector self, Scalar other) {
+    return flector_anti_scalar_anti_wedge(self, scalar_right_weight_dual(other));
+}
+
+MultiVector flector_point_weight_contraction(Flector self, Point other) {
+    return flector_plane_anti_wedge(self, point_right_weight_dual(other));
+}
+
+Point flector_line_weight_contraction(Flector self, Line other) {
+    return flector_line_anti_wedge(self, line_right_weight_dual(other));
+}
+
+Scalar flector_plane_weight_contraction(Flector self, Plane other) {
+    return flector_point_anti_wedge(self, plane_right_weight_dual(other));
+}
+
+MultiVector flector_flector_weight_contraction(Flector self, Flector other) {
+    return flector_flector_anti_wedge(self, flector_right_weight_dual(other));
+}
+
+MultiVector flector_multi_vector_weight_contraction(Flector self, MultiVector other) {
+    return flector_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
+}
+
+MultiVector multi_vector_scalar_weight_contraction(MultiVector self, Scalar other) {
+    return multi_vector_anti_scalar_anti_wedge(self, scalar_right_weight_dual(other));
+}
+
+Scalar multi_vector_anti_scalar_weight_contraction(MultiVector self, AntiScalar other) {
+    return multi_vector_scalar_anti_wedge(self, anti_scalar_right_weight_dual(other));
+}
+
+Scalar multi_vector_homogeneous_magnitude_weight_contraction(MultiVector self, HomogeneousMagnitude other) {
+    return multi_vector_scalar_anti_wedge(self, homogeneous_magnitude_right_weight_dual(other));
+}
+
+MultiVector multi_vector_point_weight_contraction(MultiVector self, Point other) {
+    return multi_vector_plane_anti_wedge(self, point_right_weight_dual(other));
+}
+
+MultiVector multi_vector_line_weight_contraction(MultiVector self, Line other) {
+    return multi_vector_line_anti_wedge(self, line_right_weight_dual(other));
+}
+
+MultiVector multi_vector_plane_weight_contraction(MultiVector self, Plane other) {
+    return multi_vector_point_anti_wedge(self, plane_right_weight_dual(other));
+}
+
+Scalar multi_vector_translator_weight_contraction(MultiVector self, Translator other) {
+    return multi_vector_scalar_anti_wedge(self, translator_right_weight_dual(other));
+}
+
+MultiVector multi_vector_flector_weight_contraction(MultiVector self, Flector other) {
+    return multi_vector_flector_anti_wedge(self, flector_right_weight_dual(other));
+}
+
+MultiVector multi_vector_multi_vector_weight_contraction(MultiVector self, MultiVector other) {
+    return multi_vector_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
+}
+
+AntiScalar scalar_scalar_bulk_expansion(Scalar self, Scalar other) {
+    return scalar_anti_scalar_wedge(self, scalar_right_bulk_dual(other));
+}
+
+Scalar scalar_anti_scalar_bulk_expansion(Scalar self, AntiScalar other) {
+    return scalar_scalar_wedge(self, anti_scalar_right_bulk_dual(other));
+}
+
+AntiScalar scalar_homogeneous_magnitude_bulk_expansion(Scalar self, HomogeneousMagnitude other) {
+    return scalar_anti_scalar_wedge(self, homogeneous_magnitude_right_bulk_dual(other));
+}
+
+Plane scalar_point_bulk_expansion(Scalar self, Point other) {
+    return scalar_plane_wedge(self, point_right_bulk_dual(other));
+}
+
+Line scalar_line_bulk_expansion(Scalar self, Line other) {
+    return scalar_line_wedge(self, line_right_bulk_dual(other));
+}
+
+Point scalar_plane_bulk_expansion(Scalar self, Plane other) {
+    return scalar_point_wedge(self, plane_right_bulk_dual(other));
+}
+
+Flector scalar_flector_bulk_expansion(Scalar self, Flector other) {
+    return scalar_flector_wedge(self, flector_right_bulk_dual(other));
+}
+
+MultiVector scalar_multi_vector_bulk_expansion(Scalar self, MultiVector other) {
+    return scalar_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
+}
+
+AntiScalar anti_scalar_anti_scalar_bulk_expansion(AntiScalar self, AntiScalar other) {
+    return anti_scalar_scalar_wedge(self, anti_scalar_right_bulk_dual(other));
+}
+
+AntiScalar anti_scalar_multi_vector_bulk_expansion(AntiScalar self, MultiVector other) {
+    return anti_scalar_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
+}
+
+AntiScalar homogeneous_magnitude_scalar_bulk_expansion(HomogeneousMagnitude self, Scalar other) {
+    return homogeneous_magnitude_anti_scalar_wedge(self, scalar_right_bulk_dual(other));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_anti_scalar_bulk_expansion(HomogeneousMagnitude self, AntiScalar other) {
+    return homogeneous_magnitude_scalar_wedge(self, anti_scalar_right_bulk_dual(other));
+}
+
+AntiScalar homogeneous_magnitude_homogeneous_magnitude_bulk_expansion(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return homogeneous_magnitude_anti_scalar_wedge(self, homogeneous_magnitude_right_bulk_dual(other));
+}
+
+Plane homogeneous_magnitude_point_bulk_expansion(HomogeneousMagnitude self, Point other) {
+    return homogeneous_magnitude_plane_wedge(self, point_right_bulk_dual(other));
+}
+
+Line homogeneous_magnitude_line_bulk_expansion(HomogeneousMagnitude self, Line other) {
+    return homogeneous_magnitude_line_wedge(self, line_right_bulk_dual(other));
+}
+
+Point homogeneous_magnitude_plane_bulk_expansion(HomogeneousMagnitude self, Plane other) {
+    return homogeneous_magnitude_point_wedge(self, plane_right_bulk_dual(other));
+}
+
+Flector homogeneous_magnitude_flector_bulk_expansion(HomogeneousMagnitude self, Flector other) {
+    return homogeneous_magnitude_flector_wedge(self, flector_right_bulk_dual(other));
+}
+
+MultiVector homogeneous_magnitude_multi_vector_bulk_expansion(HomogeneousMagnitude self, MultiVector other) {
+    return homogeneous_magnitude_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
+}
+
+Point point_anti_scalar_bulk_expansion(Point self, AntiScalar other) {
+    return point_scalar_wedge(self, anti_scalar_right_bulk_dual(other));
+}
+
+AntiScalar point_point_bulk_expansion(Point self, Point other) {
+    return point_plane_wedge(self, point_right_bulk_dual(other));
+}
+
+Plane point_line_bulk_expansion(Point self, Line other) {
+    return point_line_wedge(self, line_right_bulk_dual(other));
+}
+
+Line point_plane_bulk_expansion(Point self, Plane other) {
+    return point_point_wedge(self, plane_right_bulk_dual(other));
+}
+
+Motor point_flector_bulk_expansion(Point self, Flector other) {
+    return point_flector_wedge(self, flector_right_bulk_dual(other));
+}
+
+MultiVector point_multi_vector_bulk_expansion(Point self, MultiVector other) {
+    return point_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
+}
+
+Line line_anti_scalar_bulk_expansion(Line self, AntiScalar other) {
+    return line_scalar_wedge(self, anti_scalar_right_bulk_dual(other));
+}
+
+AntiScalar line_line_bulk_expansion(Line self, Line other) {
+    return line_line_wedge(self, line_right_bulk_dual(other));
+}
+
+Plane line_plane_bulk_expansion(Line self, Plane other) {
+    return line_point_wedge(self, plane_right_bulk_dual(other));
+}
+
+Plane line_flector_bulk_expansion(Line self, Flector other) {
+    return line_flector_wedge(self, flector_right_bulk_dual(other));
+}
+
+MultiVector line_multi_vector_bulk_expansion(Line self, MultiVector other) {
+    return line_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
+}
+
+Plane plane_anti_scalar_bulk_expansion(Plane self, AntiScalar other) {
+    return plane_scalar_wedge(self, anti_scalar_right_bulk_dual(other));
+}
+
+AntiScalar plane_plane_bulk_expansion(Plane self, Plane other) {
+    return plane_point_wedge(self, plane_right_bulk_dual(other));
+}
+
+AntiScalar plane_flector_bulk_expansion(Plane self, Flector other) {
+    return plane_flector_wedge(self, flector_right_bulk_dual(other));
+}
+
+MultiVector plane_multi_vector_bulk_expansion(Plane self, MultiVector other) {
+    return plane_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
+}
+
+Motor motor_anti_scalar_bulk_expansion(Motor self, AntiScalar other) {
+    return motor_scalar_wedge(self, anti_scalar_right_bulk_dual(other));
+}
+
+AntiScalar motor_line_bulk_expansion(Motor self, Line other) {
+    return motor_line_wedge(self, line_right_bulk_dual(other));
+}
+
+Plane motor_plane_bulk_expansion(Motor self, Plane other) {
+    return motor_point_wedge(self, plane_right_bulk_dual(other));
+}
+
+Plane motor_flector_bulk_expansion(Motor self, Flector other) {
+    return motor_flector_wedge(self, flector_right_bulk_dual(other));
+}
+
+MultiVector motor_multi_vector_bulk_expansion(Motor self, MultiVector other) {
+    return motor_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
+}
+
+Rotor rotor_anti_scalar_bulk_expansion(Rotor self, AntiScalar other) {
+    return rotor_scalar_wedge(self, anti_scalar_right_bulk_dual(other));
+}
+
+AntiScalar rotor_line_bulk_expansion(Rotor self, Line other) {
+    return rotor_line_wedge(self, line_right_bulk_dual(other));
+}
+
+Plane rotor_plane_bulk_expansion(Rotor self, Plane other) {
+    return rotor_point_wedge(self, plane_right_bulk_dual(other));
+}
+
+Plane rotor_flector_bulk_expansion(Rotor self, Flector other) {
+    return rotor_flector_wedge(self, flector_right_bulk_dual(other));
+}
+
+MultiVector rotor_multi_vector_bulk_expansion(Rotor self, MultiVector other) {
+    return rotor_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
+}
+
+Translator translator_anti_scalar_bulk_expansion(Translator self, AntiScalar other) {
+    return translator_scalar_wedge(self, anti_scalar_right_bulk_dual(other));
+}
+
+AntiScalar translator_line_bulk_expansion(Translator self, Line other) {
+    return translator_line_wedge(self, line_right_bulk_dual(other));
+}
+
+Plane translator_plane_bulk_expansion(Translator self, Plane other) {
+    return translator_point_wedge(self, plane_right_bulk_dual(other));
+}
+
+Plane translator_flector_bulk_expansion(Translator self, Flector other) {
+    return translator_flector_wedge(self, flector_right_bulk_dual(other));
+}
+
+MultiVector translator_multi_vector_bulk_expansion(Translator self, MultiVector other) {
+    return translator_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
+}
+
+Flector flector_anti_scalar_bulk_expansion(Flector self, AntiScalar other) {
+    return flector_scalar_wedge(self, anti_scalar_right_bulk_dual(other));
+}
+
+AntiScalar flector_point_bulk_expansion(Flector self, Point other) {
+    return flector_plane_wedge(self, point_right_bulk_dual(other));
+}
+
+Plane flector_line_bulk_expansion(Flector self, Line other) {
+    return flector_line_wedge(self, line_right_bulk_dual(other));
+}
+
+Motor flector_plane_bulk_expansion(Flector self, Plane other) {
+    return flector_point_wedge(self, plane_right_bulk_dual(other));
+}
+
+Motor flector_flector_bulk_expansion(Flector self, Flector other) {
+    return flector_flector_wedge(self, flector_right_bulk_dual(other));
+}
+
+MultiVector flector_multi_vector_bulk_expansion(Flector self, MultiVector other) {
+    return flector_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
+}
+
+AntiScalar multi_vector_scalar_bulk_expansion(MultiVector self, Scalar other) {
+    return multi_vector_anti_scalar_wedge(self, scalar_right_bulk_dual(other));
+}
+
+MultiVector multi_vector_anti_scalar_bulk_expansion(MultiVector self, AntiScalar other) {
+    return multi_vector_scalar_wedge(self, anti_scalar_right_bulk_dual(other));
+}
+
+AntiScalar multi_vector_homogeneous_magnitude_bulk_expansion(MultiVector self, HomogeneousMagnitude other) {
+    return multi_vector_anti_scalar_wedge(self, homogeneous_magnitude_right_bulk_dual(other));
+}
+
+MultiVector multi_vector_point_bulk_expansion(MultiVector self, Point other) {
+    return multi_vector_plane_wedge(self, point_right_bulk_dual(other));
+}
+
+MultiVector multi_vector_line_bulk_expansion(MultiVector self, Line other) {
+    return multi_vector_line_wedge(self, line_right_bulk_dual(other));
+}
+
+MultiVector multi_vector_plane_bulk_expansion(MultiVector self, Plane other) {
+    return multi_vector_point_wedge(self, plane_right_bulk_dual(other));
+}
+
+MultiVector multi_vector_flector_bulk_expansion(MultiVector self, Flector other) {
+    return multi_vector_flector_wedge(self, flector_right_bulk_dual(other));
+}
+
+MultiVector multi_vector_multi_vector_bulk_expansion(MultiVector self, MultiVector other) {
+    return multi_vector_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
+}
+
+AntiScalar scalar_scalar_weight_expansion(Scalar self, Scalar other) {
+    return scalar_anti_scalar_wedge(self, scalar_right_weight_dual(other));
+}
+
+Scalar scalar_anti_scalar_weight_expansion(Scalar self, AntiScalar other) {
+    return scalar_scalar_wedge(self, anti_scalar_right_weight_dual(other));
+}
+
+Scalar scalar_homogeneous_magnitude_weight_expansion(Scalar self, HomogeneousMagnitude other) {
+    return scalar_scalar_wedge(self, homogeneous_magnitude_right_weight_dual(other));
+}
+
+Plane scalar_point_weight_expansion(Scalar self, Point other) {
+    return scalar_plane_wedge(self, point_right_weight_dual(other));
+}
+
+Line scalar_line_weight_expansion(Scalar self, Line other) {
+    return scalar_line_wedge(self, line_right_weight_dual(other));
+}
+
+Point scalar_plane_weight_expansion(Scalar self, Plane other) {
+    return scalar_point_wedge(self, plane_right_weight_dual(other));
+}
+
+Scalar scalar_translator_weight_expansion(Scalar self, Translator other) {
+    return scalar_scalar_wedge(self, translator_right_weight_dual(other));
+}
+
+Flector scalar_flector_weight_expansion(Scalar self, Flector other) {
+    return scalar_flector_wedge(self, flector_right_weight_dual(other));
+}
+
+MultiVector scalar_multi_vector_weight_expansion(Scalar self, MultiVector other) {
+    return scalar_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
+}
+
+AntiScalar anti_scalar_anti_scalar_weight_expansion(AntiScalar self, AntiScalar other) {
+    return anti_scalar_scalar_wedge(self, anti_scalar_right_weight_dual(other));
+}
+
+AntiScalar anti_scalar_homogeneous_magnitude_weight_expansion(AntiScalar self, HomogeneousMagnitude other) {
+    return anti_scalar_scalar_wedge(self, homogeneous_magnitude_right_weight_dual(other));
+}
+
+AntiScalar anti_scalar_translator_weight_expansion(AntiScalar self, Translator other) {
+    return anti_scalar_scalar_wedge(self, translator_right_weight_dual(other));
+}
+
+AntiScalar anti_scalar_multi_vector_weight_expansion(AntiScalar self, MultiVector other) {
+    return anti_scalar_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
+}
+
+AntiScalar homogeneous_magnitude_scalar_weight_expansion(HomogeneousMagnitude self, Scalar other) {
+    return homogeneous_magnitude_anti_scalar_wedge(self, scalar_right_weight_dual(other));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_anti_scalar_weight_expansion(HomogeneousMagnitude self, AntiScalar other) {
+    return homogeneous_magnitude_scalar_wedge(self, anti_scalar_right_weight_dual(other));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_weight_expansion(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return homogeneous_magnitude_scalar_wedge(self, homogeneous_magnitude_right_weight_dual(other));
+}
+
+Plane homogeneous_magnitude_point_weight_expansion(HomogeneousMagnitude self, Point other) {
+    return homogeneous_magnitude_plane_wedge(self, point_right_weight_dual(other));
+}
+
+Line homogeneous_magnitude_line_weight_expansion(HomogeneousMagnitude self, Line other) {
+    return homogeneous_magnitude_line_wedge(self, line_right_weight_dual(other));
+}
+
+Point homogeneous_magnitude_plane_weight_expansion(HomogeneousMagnitude self, Plane other) {
+    return homogeneous_magnitude_point_wedge(self, plane_right_weight_dual(other));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_translator_weight_expansion(HomogeneousMagnitude self, Translator other) {
+    return homogeneous_magnitude_scalar_wedge(self, translator_right_weight_dual(other));
+}
+
+Flector homogeneous_magnitude_flector_weight_expansion(HomogeneousMagnitude self, Flector other) {
+    return homogeneous_magnitude_flector_wedge(self, flector_right_weight_dual(other));
+}
+
+MultiVector homogeneous_magnitude_multi_vector_weight_expansion(HomogeneousMagnitude self, MultiVector other) {
+    return homogeneous_magnitude_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
+}
+
+Point point_anti_scalar_weight_expansion(Point self, AntiScalar other) {
+    return point_scalar_wedge(self, anti_scalar_right_weight_dual(other));
+}
+
+Point point_homogeneous_magnitude_weight_expansion(Point self, HomogeneousMagnitude other) {
+    return point_scalar_wedge(self, homogeneous_magnitude_right_weight_dual(other));
+}
+
+AntiScalar point_point_weight_expansion(Point self, Point other) {
+    return point_plane_wedge(self, point_right_weight_dual(other));
+}
+
+Plane point_line_weight_expansion(Point self, Line other) {
+    return point_line_wedge(self, line_right_weight_dual(other));
+}
+
+Line point_plane_weight_expansion(Point self, Plane other) {
+    return point_point_wedge(self, plane_right_weight_dual(other));
+}
+
+Point point_translator_weight_expansion(Point self, Translator other) {
+    return point_scalar_wedge(self, translator_right_weight_dual(other));
+}
+
+Motor point_flector_weight_expansion(Point self, Flector other) {
+    return point_flector_wedge(self, flector_right_weight_dual(other));
+}
+
+MultiVector point_multi_vector_weight_expansion(Point self, MultiVector other) {
+    return point_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
+}
+
+Line line_anti_scalar_weight_expansion(Line self, AntiScalar other) {
+    return line_scalar_wedge(self, anti_scalar_right_weight_dual(other));
+}
+
+Line line_homogeneous_magnitude_weight_expansion(Line self, HomogeneousMagnitude other) {
+    return line_scalar_wedge(self, homogeneous_magnitude_right_weight_dual(other));
+}
+
+AntiScalar line_line_weight_expansion(Line self, Line other) {
+    return line_line_wedge(self, line_right_weight_dual(other));
+}
+
+Plane line_plane_weight_expansion(Line self, Plane other) {
+    return line_point_wedge(self, plane_right_weight_dual(other));
+}
+
+Line line_translator_weight_expansion(Line self, Translator other) {
+    return line_scalar_wedge(self, translator_right_weight_dual(other));
+}
+
+Plane line_flector_weight_expansion(Line self, Flector other) {
+    return line_flector_wedge(self, flector_right_weight_dual(other));
+}
+
+MultiVector line_multi_vector_weight_expansion(Line self, MultiVector other) {
+    return line_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
+}
+
+Plane plane_anti_scalar_weight_expansion(Plane self, AntiScalar other) {
+    return plane_scalar_wedge(self, anti_scalar_right_weight_dual(other));
+}
+
+Plane plane_homogeneous_magnitude_weight_expansion(Plane self, HomogeneousMagnitude other) {
+    return plane_scalar_wedge(self, homogeneous_magnitude_right_weight_dual(other));
+}
+
+AntiScalar plane_plane_weight_expansion(Plane self, Plane other) {
+    return plane_point_wedge(self, plane_right_weight_dual(other));
+}
+
+Plane plane_translator_weight_expansion(Plane self, Translator other) {
+    return plane_scalar_wedge(self, translator_right_weight_dual(other));
+}
+
+AntiScalar plane_flector_weight_expansion(Plane self, Flector other) {
+    return plane_flector_wedge(self, flector_right_weight_dual(other));
+}
+
+MultiVector plane_multi_vector_weight_expansion(Plane self, MultiVector other) {
+    return plane_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
+}
+
+Motor motor_anti_scalar_weight_expansion(Motor self, AntiScalar other) {
+    return motor_scalar_wedge(self, anti_scalar_right_weight_dual(other));
+}
+
+Motor motor_homogeneous_magnitude_weight_expansion(Motor self, HomogeneousMagnitude other) {
+    return motor_scalar_wedge(self, homogeneous_magnitude_right_weight_dual(other));
+}
+
+AntiScalar motor_line_weight_expansion(Motor self, Line other) {
+    return motor_line_wedge(self, line_right_weight_dual(other));
+}
+
+Plane motor_plane_weight_expansion(Motor self, Plane other) {
+    return motor_point_wedge(self, plane_right_weight_dual(other));
+}
+
+Motor motor_translator_weight_expansion(Motor self, Translator other) {
+    return motor_scalar_wedge(self, translator_right_weight_dual(other));
+}
+
+Plane motor_flector_weight_expansion(Motor self, Flector other) {
+    return motor_flector_wedge(self, flector_right_weight_dual(other));
+}
+
+MultiVector motor_multi_vector_weight_expansion(Motor self, MultiVector other) {
+    return motor_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
+}
+
+Rotor rotor_anti_scalar_weight_expansion(Rotor self, AntiScalar other) {
+    return rotor_scalar_wedge(self, anti_scalar_right_weight_dual(other));
+}
+
+Rotor rotor_homogeneous_magnitude_weight_expansion(Rotor self, HomogeneousMagnitude other) {
+    return rotor_scalar_wedge(self, homogeneous_magnitude_right_weight_dual(other));
+}
+
+AntiScalar rotor_line_weight_expansion(Rotor self, Line other) {
+    return rotor_line_wedge(self, line_right_weight_dual(other));
+}
+
+Plane rotor_plane_weight_expansion(Rotor self, Plane other) {
+    return rotor_point_wedge(self, plane_right_weight_dual(other));
+}
+
+Rotor rotor_translator_weight_expansion(Rotor self, Translator other) {
+    return rotor_scalar_wedge(self, translator_right_weight_dual(other));
+}
+
+Plane rotor_flector_weight_expansion(Rotor self, Flector other) {
+    return rotor_flector_wedge(self, flector_right_weight_dual(other));
+}
+
+MultiVector rotor_multi_vector_weight_expansion(Rotor self, MultiVector other) {
+    return rotor_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
+}
+
+Translator translator_anti_scalar_weight_expansion(Translator self, AntiScalar other) {
+    return translator_scalar_wedge(self, anti_scalar_right_weight_dual(other));
+}
+
+Translator translator_homogeneous_magnitude_weight_expansion(Translator self, HomogeneousMagnitude other) {
+    return translator_scalar_wedge(self, homogeneous_magnitude_right_weight_dual(other));
+}
+
+AntiScalar translator_line_weight_expansion(Translator self, Line other) {
+    return translator_line_wedge(self, line_right_weight_dual(other));
+}
+
+Plane translator_plane_weight_expansion(Translator self, Plane other) {
+    return translator_point_wedge(self, plane_right_weight_dual(other));
+}
+
+Translator translator_translator_weight_expansion(Translator self, Translator other) {
+    return translator_scalar_wedge(self, translator_right_weight_dual(other));
+}
+
+Plane translator_flector_weight_expansion(Translator self, Flector other) {
+    return translator_flector_wedge(self, flector_right_weight_dual(other));
+}
+
+MultiVector translator_multi_vector_weight_expansion(Translator self, MultiVector other) {
+    return translator_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
+}
+
+Flector flector_anti_scalar_weight_expansion(Flector self, AntiScalar other) {
+    return flector_scalar_wedge(self, anti_scalar_right_weight_dual(other));
+}
+
+Flector flector_homogeneous_magnitude_weight_expansion(Flector self, HomogeneousMagnitude other) {
+    return flector_scalar_wedge(self, homogeneous_magnitude_right_weight_dual(other));
+}
+
+AntiScalar flector_point_weight_expansion(Flector self, Point other) {
+    return flector_plane_wedge(self, point_right_weight_dual(other));
+}
+
+Plane flector_line_weight_expansion(Flector self, Line other) {
+    return flector_line_wedge(self, line_right_weight_dual(other));
+}
+
+Motor flector_plane_weight_expansion(Flector self, Plane other) {
+    return flector_point_wedge(self, plane_right_weight_dual(other));
+}
+
+Flector flector_translator_weight_expansion(Flector self, Translator other) {
+    return flector_scalar_wedge(self, translator_right_weight_dual(other));
+}
+
+Motor flector_flector_weight_expansion(Flector self, Flector other) {
+    return flector_flector_wedge(self, flector_right_weight_dual(other));
+}
+
+MultiVector flector_multi_vector_weight_expansion(Flector self, MultiVector other) {
+    return flector_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
+}
+
+AntiScalar multi_vector_scalar_weight_expansion(MultiVector self, Scalar other) {
+    return multi_vector_anti_scalar_wedge(self, scalar_right_weight_dual(other));
+}
+
+MultiVector multi_vector_anti_scalar_weight_expansion(MultiVector self, AntiScalar other) {
+    return multi_vector_scalar_wedge(self, anti_scalar_right_weight_dual(other));
+}
+
+MultiVector multi_vector_homogeneous_magnitude_weight_expansion(MultiVector self, HomogeneousMagnitude other) {
+    return multi_vector_scalar_wedge(self, homogeneous_magnitude_right_weight_dual(other));
+}
+
+MultiVector multi_vector_point_weight_expansion(MultiVector self, Point other) {
+    return multi_vector_plane_wedge(self, point_right_weight_dual(other));
+}
+
+MultiVector multi_vector_line_weight_expansion(MultiVector self, Line other) {
+    return multi_vector_line_wedge(self, line_right_weight_dual(other));
+}
+
+MultiVector multi_vector_plane_weight_expansion(MultiVector self, Plane other) {
+    return multi_vector_point_wedge(self, plane_right_weight_dual(other));
+}
+
+MultiVector multi_vector_translator_weight_expansion(MultiVector self, Translator other) {
+    return multi_vector_scalar_wedge(self, translator_right_weight_dual(other));
+}
+
+MultiVector multi_vector_flector_weight_expansion(MultiVector self, Flector other) {
+    return multi_vector_flector_wedge(self, flector_right_weight_dual(other));
+}
+
+MultiVector multi_vector_multi_vector_weight_expansion(MultiVector self, MultiVector other) {
+    return multi_vector_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
+}
+

@@ -2,6 +2,7 @@ use crate::{
     algebra::{BasisElement, BasisElementIndex, Involution, MultiVectorClass, MultiVectorClassRegistry, Product},
     ast::{AstNode, DataType, Expression, ExpressionContent, Parameter},
 };
+use crate::algebra::GeometricAlgebra;
 
 #[macro_export]
 macro_rules! result_of_trait {
@@ -1467,6 +1468,120 @@ impl MultiVectorClass {
         }
     }
 
+    pub fn derive_bulk_or_weight<'a>(
+        name: &'static str,
+        parameter_a: &Parameter<'a>,
+        projective_basis: &BasisElement,
+        is_projective: bool,
+        algebra: &GeometricAlgebra,
+        registry: &'a MultiVectorClassRegistry,
+    ) -> AstNode<'a> {
+        // TODO CONSIDER THE FOLLOWING
+        //  current implementation is pretty cool
+        //      Motor.bulk -> Translator
+        //      Motor.weight -> Rotor
+        //  very cool
+        //  However....
+        //      Rotor.bulk -> Rotor (multiply by 1)
+        //      Rotor.weight -> Rotor (multiply by 0)
+        //      Translator.bulk -> Translator (multiply by 1)
+        //      Translator.weight -> AntiScalar (of 1)
+        //  It seems/feels like it should be more symmetrical, and/or simplified.
+        //  If I can get rid of the redundant "multiply whole thing by 1 or 0" then that would be nice.
+
+
+
+        let mut result_signature = Vec::new();
+        let a_flat_basis = parameter_a.multi_vector_class().flat_basis();
+        for a_element in a_flat_basis.iter() {
+            let product_scalar = BasisElement::product(projective_basis, a_element, algebra).scalar;
+            if is_projective && product_scalar == 0isize {
+                result_signature.push(a_element.index)
+            } else if !is_projective && product_scalar != 0isize {
+                result_signature.push(a_element.index)
+            } else {
+                continue
+            }
+        }
+        result_signature.sort_unstable();
+
+
+        // Most objects have bulk and weight.
+        // We'll try to find an exact match for the result class.
+        // If there is no exact match, we'll try to find the closest match.
+        // If nothing else, the starting class should always suffice.
+
+        let mut result_class = registry.get(&result_signature);
+        if result_class.is_none() && !result_signature.is_empty() {
+            let mut viable_classes: Vec<_> = registry.classes.iter().filter(|it| {
+                let sig = it.signature();
+                result_signature.iter().all(|it| sig.contains(it)) &&
+                    // Bulk of Line could be represented as Translator with zero anti-scalar, but that is weird
+                    sig.iter().all(|it| parameter_a.multi_vector_class().signature().contains(it))
+            }).collect();
+            viable_classes.sort_by_key(|it| it.signature().len());
+            result_class = viable_classes.first().map(|it| *it);
+        }
+        let result_class = result_class.unwrap_or_else(|| parameter_a.multi_vector_class());
+
+        let result_flat_basis = result_class.flat_basis();
+        let mut base_index = 0;
+        let mut body = Vec::new();
+        for result_group in result_class.grouped_basis.iter() {
+            let size = result_group.len();
+
+            let (factors, a_indices): (Vec<_>, Vec<_>) = (0..size)
+                .map(|index_in_group| {
+                    let result_element = &result_flat_basis[base_index + index_in_group];
+                    let index_in_a = a_flat_basis.iter().position(|a_element| a_element == result_element).unwrap();
+                    let result_element_is_projective = BasisElement::product(projective_basis, result_element, algebra).scalar == 0isize;
+                    let scalar = if is_projective == result_element_is_projective {
+                            1isize
+                        } else {
+                            0isize
+                        };
+                    let a_index = parameter_a.multi_vector_class().index_in_group(index_in_a);
+                    (scalar, a_index)
+                })
+                .unzip();
+
+
+            let a_group_index = a_indices[0].0;
+            let expression = Expression {
+                size,
+                content: ExpressionContent::Multiply(
+                    Box::new(Expression {
+                        size,
+                        content: ExpressionContent::Gather(
+                            Box::new(Expression {
+                                size: parameter_a.multi_vector_class().grouped_basis[a_group_index].len(),
+                                content: ExpressionContent::Variable(parameter_a.name),
+                            }),
+                            a_indices,
+                        ),
+                    }),
+                    Box::new(Expression {
+                        size,
+                        content: ExpressionContent::Constant(DataType::SimdVector(size), factors),
+                    }),
+                ),
+            };
+            // body.push((DataType::SimdVector(size), *simplify_and_legalize(Box::new(expression))));
+            body.push((DataType::SimdVector(size), expression));
+            base_index += size;
+        }
+        AstNode::TraitImplementation {
+            result: Parameter { name, data_type: DataType::MultiVector(result_class) },
+            parameters: vec![parameter_a.clone()],
+            body: vec![AstNode::ReturnStatement {
+                expression: Box::new(Expression {
+                    size: 1,
+                    content: ExpressionContent::InvokeClassMethod(result_class, "Constructor", body),
+                }),
+            }],
+        }
+    }
+
     // https://rigidgeometricalgebra.org/wiki/index.php?title=Euclidean_distance
     pub fn derive_euclidean_distance<'a>(
         name: &'static str,
@@ -1590,10 +1705,10 @@ impl MultiVectorClass {
         result: &Parameter<'a>,
 
         unitize: &AstNode<'a>,
-        unitize_result: &Parameter<'a>,
         sandwich: &AstNode<'a>,
-        sandwich_result: &Parameter<'a>,
     ) -> AstNode<'a> {
+        let unitize_result = result_of_trait!(unitize);
+        let sandwich_result = result_of_trait!(sandwich);
 
         // InvokeInstanceMethod:
         // - Class implementing trait
@@ -1626,6 +1741,95 @@ impl MultiVectorClass {
             parameters: vec![parameter_a.clone(), parameter_b.clone()],
             body: vec![AstNode::ReturnStatement {
                 expression: Box::new(do_sandwich)
+            }]
+        }
+    }
+
+    pub fn derive_partial_complement<'a>(
+        name: &'static str,
+
+        parameter_a: &Parameter<'a>,
+        result: &Parameter<'a>,
+
+        part: &AstNode<'a>,
+        complement: &AstNode<'a>,
+    ) -> AstNode<'a> {
+        let part_result = result_of_trait!(part);
+        let complement_result = result_of_trait!(complement);
+
+        let do_part = Expression {
+            size: 1,
+            content: ExpressionContent::InvokeInstanceMethod(
+                parameter_a.data_type.clone(),
+                Box::new(Expression { size: 1, content: ExpressionContent::Variable(parameter_a.name) }),
+                part_result.name,
+                vec![]
+            )
+        };
+
+        let do_complement = Expression {
+            size: 1,
+            content: ExpressionContent::InvokeInstanceMethod(
+                part_result.data_type.clone(),
+                Box::new(do_part),
+                complement_result.name,
+                vec![]
+            )
+        };
+
+        AstNode::TraitImplementation {
+            result: Parameter { name, data_type: result.data_type.clone() },
+            parameters: vec![parameter_a.clone()],
+            body: vec![AstNode::ReturnStatement {
+                expression: Box::new(do_complement)
+            }]
+        }
+    }
+
+    pub fn derive_contraction_or_expansion<'a>(
+        name: &'static str,
+
+        parameter_a: &Parameter<'a>,
+        parameter_b: &Parameter<'a>,
+        result: &Parameter<'a>,
+
+        part: &AstNode<'a>,
+        product: &AstNode<'a>,
+    ) -> AstNode<'a> {
+        let part_result = result_of_trait!(part);
+        let product_result = result_of_trait!(product);
+
+        // InvokeInstanceMethod:
+        // - Class implementing trait
+        // - Inner expression
+        // - Method name
+        // - Arguments
+
+        let do_part = Expression {
+            size: 1,
+            content: ExpressionContent::InvokeInstanceMethod(
+                parameter_b.data_type.clone(),
+                Box::new(Expression { size: 1, content: ExpressionContent::Variable(parameter_b.name) }),
+                part_result.name,
+                vec![]
+            )
+        };
+
+        let do_product = Expression {
+            size: 1,
+            content: ExpressionContent::InvokeInstanceMethod(
+                parameter_a.data_type.clone(),
+                Box::new(Expression { size: 1, content: ExpressionContent::Variable(parameter_a.name) }),
+                product_result.name,
+                vec![(part_result.data_type.clone(), do_part)]
+            )
+        };
+
+        AstNode::TraitImplementation {
+            result: Parameter { name, data_type: result.data_type.clone() },
+            parameters: vec![parameter_a.clone(), parameter_b.clone()],
+            body: vec![AstNode::ReturnStatement {
+                expression: Box::new(do_product)
             }]
         }
     }

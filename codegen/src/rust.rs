@@ -23,7 +23,7 @@ fn get_data_type(data_type: &DataType) -> String {
 
 fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression) -> std::io::Result<()> {
     match &expression.content {
-        ExpressionContent::None => unreachable!(),
+        ExpressionContent::None => unreachable!("cannot emit ExpressionContent::None in rust"),
         ExpressionContent::Variable(name) => {
             collector.write_all(name.bytes().collect::<Vec<_>>().as_slice())?;
         }

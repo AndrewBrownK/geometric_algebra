@@ -47215,3 +47215,4448 @@ fn plane_multi_vector_reflect(self_4850: Plane, other_4440: MultiVector) -> Mult
     return _e7;
 }
 
+fn scalar_bulk(self_4852: Scalar) -> Scalar {
+    var self_4853: Scalar;
+
+    self_4853 = self_4852;
+    let _e2: Scalar = self_4853;
+    return Scalar((_e2.g0_ * 1.0));
+}
+
+fn scalar_weight(self_4854: Scalar) -> Scalar {
+    var self_4855: Scalar;
+
+    self_4855 = self_4854;
+    let _e2: Scalar = self_4855;
+    return Scalar((_e2.g0_ * 0.0));
+}
+
+fn anti_scalar_bulk(self_4856: AntiScalar) -> AntiScalar {
+    var self_4857: AntiScalar;
+
+    self_4857 = self_4856;
+    let _e2: AntiScalar = self_4857;
+    return AntiScalar((_e2.g0_ * 0.0));
+}
+
+fn anti_scalar_weight(self_4858: AntiScalar) -> AntiScalar {
+    var self_4859: AntiScalar;
+
+    self_4859 = self_4858;
+    let _e2: AntiScalar = self_4859;
+    return AntiScalar((_e2.g0_ * 1.0));
+}
+
+fn homogeneous_magnitude_bulk(self_4860: HomogeneousMagnitude) -> Scalar {
+    var self_4861: HomogeneousMagnitude;
+
+    self_4861 = self_4860;
+    let _e2: HomogeneousMagnitude = self_4861;
+    return Scalar((_e2.g0_.x * 1.0));
+}
+
+fn homogeneous_magnitude_weight(self_4862: HomogeneousMagnitude) -> AntiScalar {
+    var self_4863: HomogeneousMagnitude;
+
+    self_4863 = self_4862;
+    let _e2: HomogeneousMagnitude = self_4863;
+    return AntiScalar((_e2.g0_.y * 1.0));
+}
+
+fn point_bulk(self_4864: Point) -> Point {
+    var self_4865: Point;
+
+    self_4865 = self_4864;
+    let _e2: Point = self_4865;
+    let _e5: Point = self_4865;
+    let _e8: Point = self_4865;
+    let _e11: Point = self_4865;
+    return Point((vec4<f32>(_e2.g0_.x, _e5.g0_.y, _e8.g0_.z, _e11.g0_.w) * vec4<f32>(1.0, 1.0, 1.0, 0.0)));
+}
+
+fn point_weight(self_4866: Point) -> Point {
+    var self_4867: Point;
+
+    self_4867 = self_4866;
+    let _e2: Point = self_4867;
+    let _e5: Point = self_4867;
+    let _e8: Point = self_4867;
+    let _e11: Point = self_4867;
+    return Point((vec4<f32>(_e2.g0_.x, _e5.g0_.y, _e8.g0_.z, _e11.g0_.w) * vec4<f32>(0.0, 0.0, 0.0, 1.0)));
+}
+
+fn line_bulk(self_4868: Line) -> Line {
+    var self_4869: Line;
+
+    self_4869 = self_4868;
+    let _e2: Line = self_4869;
+    let _e5: Line = self_4869;
+    let _e8: Line = self_4869;
+    let _e17: Line = self_4869;
+    let _e20: Line = self_4869;
+    let _e23: Line = self_4869;
+    return Line((vec3<f32>(_e2.g0_.x, _e5.g0_.y, _e8.g0_.z) * vec3<f32>(0.0, 0.0, 0.0)), (vec3<f32>(_e17.g1_.x, _e20.g1_.y, _e23.g1_.z) * vec3<f32>(1.0, 1.0, 1.0)));
+}
+
+fn line_weight(self_4870: Line) -> Line {
+    var self_4871: Line;
+
+    self_4871 = self_4870;
+    let _e2: Line = self_4871;
+    let _e5: Line = self_4871;
+    let _e8: Line = self_4871;
+    let _e17: Line = self_4871;
+    let _e20: Line = self_4871;
+    let _e23: Line = self_4871;
+    return Line((vec3<f32>(_e2.g0_.x, _e5.g0_.y, _e8.g0_.z) * vec3<f32>(1.0, 1.0, 1.0)), (vec3<f32>(_e17.g1_.x, _e20.g1_.y, _e23.g1_.z) * vec3<f32>(0.0, 0.0, 0.0)));
+}
+
+fn plane_bulk(self_4872: Plane) -> Plane {
+    var self_4873: Plane;
+
+    self_4873 = self_4872;
+    let _e2: Plane = self_4873;
+    let _e5: Plane = self_4873;
+    let _e8: Plane = self_4873;
+    let _e11: Plane = self_4873;
+    return Plane((vec4<f32>(_e2.g0_.x, _e5.g0_.y, _e8.g0_.z, _e11.g0_.w) * vec4<f32>(0.0, 0.0, 0.0, 1.0)));
+}
+
+fn plane_weight(self_4874: Plane) -> Plane {
+    var self_4875: Plane;
+
+    self_4875 = self_4874;
+    let _e2: Plane = self_4875;
+    let _e5: Plane = self_4875;
+    let _e8: Plane = self_4875;
+    let _e11: Plane = self_4875;
+    return Plane((vec4<f32>(_e2.g0_.x, _e5.g0_.y, _e8.g0_.z, _e11.g0_.w) * vec4<f32>(1.0, 1.0, 1.0, 0.0)));
+}
+
+fn motor_bulk(self_4876: Motor) -> Translator {
+    var self_4877: Motor;
+
+    self_4877 = self_4876;
+    let _e2: Motor = self_4877;
+    let _e5: Motor = self_4877;
+    let _e8: Motor = self_4877;
+    let _e11: Motor = self_4877;
+    return Translator((vec4<f32>(_e2.g1_.x, _e5.g1_.y, _e8.g1_.z, _e11.g0_.w) * vec4<f32>(1.0, 1.0, 1.0, 0.0)));
+}
+
+fn motor_weight(self_4878: Motor) -> Rotor {
+    var self_4879: Motor;
+
+    self_4879 = self_4878;
+    let _e2: Motor = self_4879;
+    let _e5: Motor = self_4879;
+    let _e8: Motor = self_4879;
+    let _e11: Motor = self_4879;
+    return Rotor((vec4<f32>(_e2.g0_.x, _e5.g0_.y, _e8.g0_.z, _e11.g0_.w) * vec4<f32>(1.0, 1.0, 1.0, 1.0)));
+}
+
+fn rotor_bulk(self_4880: Rotor) -> Rotor {
+    var self_4881: Rotor;
+
+    self_4881 = self_4880;
+    let _e2: Rotor = self_4881;
+    let _e5: Rotor = self_4881;
+    let _e8: Rotor = self_4881;
+    let _e11: Rotor = self_4881;
+    return Rotor((vec4<f32>(_e2.g0_.x, _e5.g0_.y, _e8.g0_.z, _e11.g0_.w) * vec4<f32>(0.0, 0.0, 0.0, 0.0)));
+}
+
+fn rotor_weight(self_4882: Rotor) -> Rotor {
+    var self_4883: Rotor;
+
+    self_4883 = self_4882;
+    let _e2: Rotor = self_4883;
+    let _e5: Rotor = self_4883;
+    let _e8: Rotor = self_4883;
+    let _e11: Rotor = self_4883;
+    return Rotor((vec4<f32>(_e2.g0_.x, _e5.g0_.y, _e8.g0_.z, _e11.g0_.w) * vec4<f32>(1.0, 1.0, 1.0, 1.0)));
+}
+
+fn translator_bulk(self_4884: Translator) -> Translator {
+    var self_4885: Translator;
+
+    self_4885 = self_4884;
+    let _e2: Translator = self_4885;
+    let _e5: Translator = self_4885;
+    let _e8: Translator = self_4885;
+    let _e11: Translator = self_4885;
+    return Translator((vec4<f32>(_e2.g0_.x, _e5.g0_.y, _e8.g0_.z, _e11.g0_.w) * vec4<f32>(1.0, 1.0, 1.0, 0.0)));
+}
+
+fn translator_weight(self_4886: Translator) -> AntiScalar {
+    var self_4887: Translator;
+
+    self_4887 = self_4886;
+    let _e2: Translator = self_4887;
+    return AntiScalar((_e2.g0_.w * 1.0));
+}
+
+fn flector_bulk(self_4888: Flector) -> Flector {
+    var self_4889: Flector;
+
+    self_4889 = self_4888;
+    let _e2: Flector = self_4889;
+    let _e5: Flector = self_4889;
+    let _e8: Flector = self_4889;
+    let _e11: Flector = self_4889;
+    let _e21: Flector = self_4889;
+    let _e24: Flector = self_4889;
+    let _e27: Flector = self_4889;
+    let _e30: Flector = self_4889;
+    return Flector((vec4<f32>(_e2.g0_.x, _e5.g0_.y, _e8.g0_.z, _e11.g0_.w) * vec4<f32>(1.0, 1.0, 1.0, 0.0)), (vec4<f32>(_e21.g1_.x, _e24.g1_.y, _e27.g1_.z, _e30.g1_.w) * vec4<f32>(0.0, 0.0, 0.0, 1.0)));
+}
+
+fn flector_weight(self_4890: Flector) -> Flector {
+    var self_4891: Flector;
+
+    self_4891 = self_4890;
+    let _e2: Flector = self_4891;
+    let _e5: Flector = self_4891;
+    let _e8: Flector = self_4891;
+    let _e11: Flector = self_4891;
+    let _e21: Flector = self_4891;
+    let _e24: Flector = self_4891;
+    let _e27: Flector = self_4891;
+    let _e30: Flector = self_4891;
+    return Flector((vec4<f32>(_e2.g0_.x, _e5.g0_.y, _e8.g0_.z, _e11.g0_.w) * vec4<f32>(0.0, 0.0, 0.0, 1.0)), (vec4<f32>(_e21.g1_.x, _e24.g1_.y, _e27.g1_.z, _e30.g1_.w) * vec4<f32>(1.0, 1.0, 1.0, 0.0)));
+}
+
+fn multi_vector_bulk(self_4892: MultiVector) -> MultiVector {
+    var self_4893: MultiVector;
+
+    self_4893 = self_4892;
+    let _e2: MultiVector = self_4893;
+    let _e5: MultiVector = self_4893;
+    let _e13: MultiVector = self_4893;
+    let _e16: MultiVector = self_4893;
+    let _e19: MultiVector = self_4893;
+    let _e22: MultiVector = self_4893;
+    let _e32: MultiVector = self_4893;
+    let _e35: MultiVector = self_4893;
+    let _e38: MultiVector = self_4893;
+    let _e47: MultiVector = self_4893;
+    let _e50: MultiVector = self_4893;
+    let _e53: MultiVector = self_4893;
+    let _e62: MultiVector = self_4893;
+    let _e65: MultiVector = self_4893;
+    let _e68: MultiVector = self_4893;
+    let _e71: MultiVector = self_4893;
+    return MultiVector((vec2<f32>(_e2.g0_.x, _e5.g0_.y) * vec2<f32>(1.0, 0.0)), (vec4<f32>(_e13.g1_.x, _e16.g1_.y, _e19.g1_.z, _e22.g1_.w) * vec4<f32>(1.0, 1.0, 1.0, 0.0)), (vec3<f32>(_e32.g2_.x, _e35.g2_.y, _e38.g2_.z) * vec3<f32>(0.0, 0.0, 0.0)), (vec3<f32>(_e47.g3_.x, _e50.g3_.y, _e53.g3_.z) * vec3<f32>(1.0, 1.0, 1.0)), (vec4<f32>(_e62.g4_.x, _e65.g4_.y, _e68.g4_.z, _e71.g4_.w) * vec4<f32>(0.0, 0.0, 0.0, 1.0)));
+}
+
+fn multi_vector_weight(self_4894: MultiVector) -> MultiVector {
+    var self_4895: MultiVector;
+
+    self_4895 = self_4894;
+    let _e2: MultiVector = self_4895;
+    let _e5: MultiVector = self_4895;
+    let _e13: MultiVector = self_4895;
+    let _e16: MultiVector = self_4895;
+    let _e19: MultiVector = self_4895;
+    let _e22: MultiVector = self_4895;
+    let _e32: MultiVector = self_4895;
+    let _e35: MultiVector = self_4895;
+    let _e38: MultiVector = self_4895;
+    let _e47: MultiVector = self_4895;
+    let _e50: MultiVector = self_4895;
+    let _e53: MultiVector = self_4895;
+    let _e62: MultiVector = self_4895;
+    let _e65: MultiVector = self_4895;
+    let _e68: MultiVector = self_4895;
+    let _e71: MultiVector = self_4895;
+    return MultiVector((vec2<f32>(_e2.g0_.x, _e5.g0_.y) * vec2<f32>(0.0, 1.0)), (vec4<f32>(_e13.g1_.x, _e16.g1_.y, _e19.g1_.z, _e22.g1_.w) * vec4<f32>(0.0, 0.0, 0.0, 1.0)), (vec3<f32>(_e32.g2_.x, _e35.g2_.y, _e38.g2_.z) * vec3<f32>(1.0, 1.0, 1.0)), (vec3<f32>(_e47.g3_.x, _e50.g3_.y, _e53.g3_.z) * vec3<f32>(0.0, 0.0, 0.0)), (vec4<f32>(_e62.g4_.x, _e65.g4_.y, _e68.g4_.z, _e71.g4_.w) * vec4<f32>(1.0, 1.0, 1.0, 0.0)));
+}
+
+fn scalar_right_bulk_dual(self_4896: Scalar) -> AntiScalar {
+    var self_4897: Scalar;
+
+    self_4897 = self_4896;
+    let _e2: Scalar = self_4897;
+    let _e3: Scalar = scalar_bulk(_e2);
+    let _e4: AntiScalar = scalar_right_complement(_e3);
+    return _e4;
+}
+
+fn anti_scalar_right_bulk_dual(self_4898: AntiScalar) -> Scalar {
+    var self_4899: AntiScalar;
+
+    self_4899 = self_4898;
+    let _e2: AntiScalar = self_4899;
+    let _e3: AntiScalar = anti_scalar_bulk(_e2);
+    let _e4: Scalar = anti_scalar_right_complement(_e3);
+    return _e4;
+}
+
+fn homogeneous_magnitude_right_bulk_dual(self_4900: HomogeneousMagnitude) -> AntiScalar {
+    var self_4901: HomogeneousMagnitude;
+
+    self_4901 = self_4900;
+    let _e2: HomogeneousMagnitude = self_4901;
+    let _e3: Scalar = homogeneous_magnitude_bulk(_e2);
+    let _e4: AntiScalar = scalar_right_complement(_e3);
+    return _e4;
+}
+
+fn point_right_bulk_dual(self_4902: Point) -> Plane {
+    var self_4903: Point;
+
+    self_4903 = self_4902;
+    let _e2: Point = self_4903;
+    let _e3: Point = point_bulk(_e2);
+    let _e4: Plane = point_right_complement(_e3);
+    return _e4;
+}
+
+fn line_right_bulk_dual(self_4904: Line) -> Line {
+    var self_4905: Line;
+
+    self_4905 = self_4904;
+    let _e2: Line = self_4905;
+    let _e3: Line = line_bulk(_e2);
+    let _e4: Line = line_right_complement(_e3);
+    return _e4;
+}
+
+fn plane_right_bulk_dual(self_4906: Plane) -> Point {
+    var self_4907: Plane;
+
+    self_4907 = self_4906;
+    let _e2: Plane = self_4907;
+    let _e3: Plane = plane_bulk(_e2);
+    let _e4: Point = plane_right_complement(_e3);
+    return _e4;
+}
+
+fn flector_right_bulk_dual(self_4908: Flector) -> Flector {
+    var self_4909: Flector;
+
+    self_4909 = self_4908;
+    let _e2: Flector = self_4909;
+    let _e3: Flector = flector_bulk(_e2);
+    let _e4: Flector = flector_right_complement(_e3);
+    return _e4;
+}
+
+fn multi_vector_right_bulk_dual(self_4910: MultiVector) -> MultiVector {
+    var self_4911: MultiVector;
+
+    self_4911 = self_4910;
+    let _e2: MultiVector = self_4911;
+    let _e3: MultiVector = multi_vector_bulk(_e2);
+    let _e4: MultiVector = multi_vector_right_complement(_e3);
+    return _e4;
+}
+
+fn scalar_right_weight_dual(self_4912: Scalar) -> AntiScalar {
+    var self_4913: Scalar;
+
+    self_4913 = self_4912;
+    let _e2: Scalar = self_4913;
+    let _e3: Scalar = scalar_weight(_e2);
+    let _e4: AntiScalar = scalar_right_complement(_e3);
+    return _e4;
+}
+
+fn anti_scalar_right_weight_dual(self_4914: AntiScalar) -> Scalar {
+    var self_4915: AntiScalar;
+
+    self_4915 = self_4914;
+    let _e2: AntiScalar = self_4915;
+    let _e3: AntiScalar = anti_scalar_weight(_e2);
+    let _e4: Scalar = anti_scalar_right_complement(_e3);
+    return _e4;
+}
+
+fn homogeneous_magnitude_right_weight_dual(self_4916: HomogeneousMagnitude) -> Scalar {
+    var self_4917: HomogeneousMagnitude;
+
+    self_4917 = self_4916;
+    let _e2: HomogeneousMagnitude = self_4917;
+    let _e3: AntiScalar = homogeneous_magnitude_weight(_e2);
+    let _e4: Scalar = anti_scalar_right_complement(_e3);
+    return _e4;
+}
+
+fn point_right_weight_dual(self_4918: Point) -> Plane {
+    var self_4919: Point;
+
+    self_4919 = self_4918;
+    let _e2: Point = self_4919;
+    let _e3: Point = point_weight(_e2);
+    let _e4: Plane = point_right_complement(_e3);
+    return _e4;
+}
+
+fn line_right_weight_dual(self_4920: Line) -> Line {
+    var self_4921: Line;
+
+    self_4921 = self_4920;
+    let _e2: Line = self_4921;
+    let _e3: Line = line_weight(_e2);
+    let _e4: Line = line_right_complement(_e3);
+    return _e4;
+}
+
+fn plane_right_weight_dual(self_4922: Plane) -> Point {
+    var self_4923: Plane;
+
+    self_4923 = self_4922;
+    let _e2: Plane = self_4923;
+    let _e3: Plane = plane_weight(_e2);
+    let _e4: Point = plane_right_complement(_e3);
+    return _e4;
+}
+
+fn translator_right_weight_dual(self_4924: Translator) -> Scalar {
+    var self_4925: Translator;
+
+    self_4925 = self_4924;
+    let _e2: Translator = self_4925;
+    let _e3: AntiScalar = translator_weight(_e2);
+    let _e4: Scalar = anti_scalar_right_complement(_e3);
+    return _e4;
+}
+
+fn flector_right_weight_dual(self_4926: Flector) -> Flector {
+    var self_4927: Flector;
+
+    self_4927 = self_4926;
+    let _e2: Flector = self_4927;
+    let _e3: Flector = flector_weight(_e2);
+    let _e4: Flector = flector_right_complement(_e3);
+    return _e4;
+}
+
+fn multi_vector_right_weight_dual(self_4928: MultiVector) -> MultiVector {
+    var self_4929: MultiVector;
+
+    self_4929 = self_4928;
+    let _e2: MultiVector = self_4929;
+    let _e3: MultiVector = multi_vector_weight(_e2);
+    let _e4: MultiVector = multi_vector_right_complement(_e3);
+    return _e4;
+}
+
+fn scalar_left_bulk_dual(self_4930: Scalar) -> AntiScalar {
+    var self_4931: Scalar;
+
+    self_4931 = self_4930;
+    let _e2: Scalar = self_4931;
+    let _e3: Scalar = scalar_bulk(_e2);
+    let _e4: AntiScalar = scalar_left_complement(_e3);
+    return _e4;
+}
+
+fn anti_scalar_left_bulk_dual(self_4932: AntiScalar) -> Scalar {
+    var self_4933: AntiScalar;
+
+    self_4933 = self_4932;
+    let _e2: AntiScalar = self_4933;
+    let _e3: AntiScalar = anti_scalar_bulk(_e2);
+    let _e4: Scalar = anti_scalar_left_complement(_e3);
+    return _e4;
+}
+
+fn homogeneous_magnitude_left_bulk_dual(self_4934: HomogeneousMagnitude) -> AntiScalar {
+    var self_4935: HomogeneousMagnitude;
+
+    self_4935 = self_4934;
+    let _e2: HomogeneousMagnitude = self_4935;
+    let _e3: Scalar = homogeneous_magnitude_bulk(_e2);
+    let _e4: AntiScalar = scalar_left_complement(_e3);
+    return _e4;
+}
+
+fn point_left_bulk_dual(self_4936: Point) -> Plane {
+    var self_4937: Point;
+
+    self_4937 = self_4936;
+    let _e2: Point = self_4937;
+    let _e3: Point = point_bulk(_e2);
+    let _e4: Plane = point_left_complement(_e3);
+    return _e4;
+}
+
+fn line_left_bulk_dual(self_4938: Line) -> Line {
+    var self_4939: Line;
+
+    self_4939 = self_4938;
+    let _e2: Line = self_4939;
+    let _e3: Line = line_bulk(_e2);
+    let _e4: Line = line_left_complement(_e3);
+    return _e4;
+}
+
+fn plane_left_bulk_dual(self_4940: Plane) -> Point {
+    var self_4941: Plane;
+
+    self_4941 = self_4940;
+    let _e2: Plane = self_4941;
+    let _e3: Plane = plane_bulk(_e2);
+    let _e4: Point = plane_left_complement(_e3);
+    return _e4;
+}
+
+fn flector_left_bulk_dual(self_4942: Flector) -> Flector {
+    var self_4943: Flector;
+
+    self_4943 = self_4942;
+    let _e2: Flector = self_4943;
+    let _e3: Flector = flector_bulk(_e2);
+    let _e4: Flector = flector_left_complement(_e3);
+    return _e4;
+}
+
+fn multi_vector_left_bulk_dual(self_4944: MultiVector) -> MultiVector {
+    var self_4945: MultiVector;
+
+    self_4945 = self_4944;
+    let _e2: MultiVector = self_4945;
+    let _e3: MultiVector = multi_vector_bulk(_e2);
+    let _e4: MultiVector = multi_vector_left_complement(_e3);
+    return _e4;
+}
+
+fn scalar_left_weight_dual(self_4946: Scalar) -> AntiScalar {
+    var self_4947: Scalar;
+
+    self_4947 = self_4946;
+    let _e2: Scalar = self_4947;
+    let _e3: Scalar = scalar_weight(_e2);
+    let _e4: AntiScalar = scalar_left_complement(_e3);
+    return _e4;
+}
+
+fn anti_scalar_left_weight_dual(self_4948: AntiScalar) -> Scalar {
+    var self_4949: AntiScalar;
+
+    self_4949 = self_4948;
+    let _e2: AntiScalar = self_4949;
+    let _e3: AntiScalar = anti_scalar_weight(_e2);
+    let _e4: Scalar = anti_scalar_left_complement(_e3);
+    return _e4;
+}
+
+fn homogeneous_magnitude_left_weight_dual(self_4950: HomogeneousMagnitude) -> Scalar {
+    var self_4951: HomogeneousMagnitude;
+
+    self_4951 = self_4950;
+    let _e2: HomogeneousMagnitude = self_4951;
+    let _e3: AntiScalar = homogeneous_magnitude_weight(_e2);
+    let _e4: Scalar = anti_scalar_left_complement(_e3);
+    return _e4;
+}
+
+fn point_left_weight_dual(self_4952: Point) -> Plane {
+    var self_4953: Point;
+
+    self_4953 = self_4952;
+    let _e2: Point = self_4953;
+    let _e3: Point = point_weight(_e2);
+    let _e4: Plane = point_left_complement(_e3);
+    return _e4;
+}
+
+fn line_left_weight_dual(self_4954: Line) -> Line {
+    var self_4955: Line;
+
+    self_4955 = self_4954;
+    let _e2: Line = self_4955;
+    let _e3: Line = line_weight(_e2);
+    let _e4: Line = line_left_complement(_e3);
+    return _e4;
+}
+
+fn plane_left_weight_dual(self_4956: Plane) -> Point {
+    var self_4957: Plane;
+
+    self_4957 = self_4956;
+    let _e2: Plane = self_4957;
+    let _e3: Plane = plane_weight(_e2);
+    let _e4: Point = plane_left_complement(_e3);
+    return _e4;
+}
+
+fn translator_left_weight_dual(self_4958: Translator) -> Scalar {
+    var self_4959: Translator;
+
+    self_4959 = self_4958;
+    let _e2: Translator = self_4959;
+    let _e3: AntiScalar = translator_weight(_e2);
+    let _e4: Scalar = anti_scalar_left_complement(_e3);
+    return _e4;
+}
+
+fn flector_left_weight_dual(self_4960: Flector) -> Flector {
+    var self_4961: Flector;
+
+    self_4961 = self_4960;
+    let _e2: Flector = self_4961;
+    let _e3: Flector = flector_weight(_e2);
+    let _e4: Flector = flector_left_complement(_e3);
+    return _e4;
+}
+
+fn multi_vector_left_weight_dual(self_4962: MultiVector) -> MultiVector {
+    var self_4963: MultiVector;
+
+    self_4963 = self_4962;
+    let _e2: MultiVector = self_4963;
+    let _e3: MultiVector = multi_vector_weight(_e2);
+    let _e4: MultiVector = multi_vector_left_complement(_e3);
+    return _e4;
+}
+
+fn scalar_scalar_bulk_contraction(self_4964: Scalar, other_4442: Scalar) -> Scalar {
+    var self_4965: Scalar;
+    var other_4443: Scalar;
+
+    self_4965 = self_4964;
+    other_4443 = other_4442;
+    let _e4: Scalar = self_4965;
+    let _e5: Scalar = other_4443;
+    let _e6: AntiScalar = scalar_right_bulk_dual(_e5);
+    let _e7: Scalar = scalar_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn scalar_homogeneous_magnitude_bulk_contraction(self_4966: Scalar, other_4444: HomogeneousMagnitude) -> Scalar {
+    var self_4967: Scalar;
+    var other_4445: HomogeneousMagnitude;
+
+    self_4967 = self_4966;
+    other_4445 = other_4444;
+    let _e4: Scalar = self_4967;
+    let _e5: HomogeneousMagnitude = other_4445;
+    let _e6: AntiScalar = homogeneous_magnitude_right_bulk_dual(_e5);
+    let _e7: Scalar = scalar_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn scalar_multi_vector_bulk_contraction(self_4968: Scalar, other_4446: MultiVector) -> Scalar {
+    var self_4969: Scalar;
+    var other_4447: MultiVector;
+
+    self_4969 = self_4968;
+    other_4447 = other_4446;
+    let _e4: Scalar = self_4969;
+    let _e5: MultiVector = other_4447;
+    let _e6: MultiVector = multi_vector_right_bulk_dual(_e5);
+    let _e7: Scalar = scalar_multi_vector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_scalar_bulk_contraction(self_4970: AntiScalar, other_4448: Scalar) -> AntiScalar {
+    var self_4971: AntiScalar;
+    var other_4449: Scalar;
+
+    self_4971 = self_4970;
+    other_4449 = other_4448;
+    let _e4: AntiScalar = self_4971;
+    let _e5: Scalar = other_4449;
+    let _e6: AntiScalar = scalar_right_bulk_dual(_e5);
+    let _e7: AntiScalar = anti_scalar_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_anti_scalar_bulk_contraction(self_4972: AntiScalar, other_4450: AntiScalar) -> Scalar {
+    var self_4973: AntiScalar;
+    var other_4451: AntiScalar;
+
+    self_4973 = self_4972;
+    other_4451 = other_4450;
+    let _e4: AntiScalar = self_4973;
+    let _e5: AntiScalar = other_4451;
+    let _e6: Scalar = anti_scalar_right_bulk_dual(_e5);
+    let _e7: Scalar = anti_scalar_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_homogeneous_magnitude_bulk_contraction(self_4974: AntiScalar, other_4452: HomogeneousMagnitude) -> AntiScalar {
+    var self_4975: AntiScalar;
+    var other_4453: HomogeneousMagnitude;
+
+    self_4975 = self_4974;
+    other_4453 = other_4452;
+    let _e4: AntiScalar = self_4975;
+    let _e5: HomogeneousMagnitude = other_4453;
+    let _e6: AntiScalar = homogeneous_magnitude_right_bulk_dual(_e5);
+    let _e7: AntiScalar = anti_scalar_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_point_bulk_contraction(self_4976: AntiScalar, other_4454: Point) -> Plane {
+    var self_4977: AntiScalar;
+    var other_4455: Point;
+
+    self_4977 = self_4976;
+    other_4455 = other_4454;
+    let _e4: AntiScalar = self_4977;
+    let _e5: Point = other_4455;
+    let _e6: Plane = point_right_bulk_dual(_e5);
+    let _e7: Plane = anti_scalar_plane_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_line_bulk_contraction(self_4978: AntiScalar, other_4456: Line) -> Line {
+    var self_4979: AntiScalar;
+    var other_4457: Line;
+
+    self_4979 = self_4978;
+    other_4457 = other_4456;
+    let _e4: AntiScalar = self_4979;
+    let _e5: Line = other_4457;
+    let _e6: Line = line_right_bulk_dual(_e5);
+    let _e7: Line = anti_scalar_line_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_plane_bulk_contraction(self_4980: AntiScalar, other_4458: Plane) -> Point {
+    var self_4981: AntiScalar;
+    var other_4459: Plane;
+
+    self_4981 = self_4980;
+    other_4459 = other_4458;
+    let _e4: AntiScalar = self_4981;
+    let _e5: Plane = other_4459;
+    let _e6: Point = plane_right_bulk_dual(_e5);
+    let _e7: Point = anti_scalar_point_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_flector_bulk_contraction(self_4982: AntiScalar, other_4460: Flector) -> Flector {
+    var self_4983: AntiScalar;
+    var other_4461: Flector;
+
+    self_4983 = self_4982;
+    other_4461 = other_4460;
+    let _e4: AntiScalar = self_4983;
+    let _e5: Flector = other_4461;
+    let _e6: Flector = flector_right_bulk_dual(_e5);
+    let _e7: Flector = anti_scalar_flector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_multi_vector_bulk_contraction(self_4984: AntiScalar, other_4462: MultiVector) -> MultiVector {
+    var self_4985: AntiScalar;
+    var other_4463: MultiVector;
+
+    self_4985 = self_4984;
+    other_4463 = other_4462;
+    let _e4: AntiScalar = self_4985;
+    let _e5: MultiVector = other_4463;
+    let _e6: MultiVector = multi_vector_right_bulk_dual(_e5);
+    let _e7: MultiVector = anti_scalar_multi_vector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_scalar_bulk_contraction(self_4986: HomogeneousMagnitude, other_4464: Scalar) -> HomogeneousMagnitude {
+    var self_4987: HomogeneousMagnitude;
+    var other_4465: Scalar;
+
+    self_4987 = self_4986;
+    other_4465 = other_4464;
+    let _e4: HomogeneousMagnitude = self_4987;
+    let _e5: Scalar = other_4465;
+    let _e6: AntiScalar = scalar_right_bulk_dual(_e5);
+    let _e7: HomogeneousMagnitude = homogeneous_magnitude_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_anti_scalar_bulk_contraction(self_4988: HomogeneousMagnitude, other_4466: AntiScalar) -> Scalar {
+    var self_4989: HomogeneousMagnitude;
+    var other_4467: AntiScalar;
+
+    self_4989 = self_4988;
+    other_4467 = other_4466;
+    let _e4: HomogeneousMagnitude = self_4989;
+    let _e5: AntiScalar = other_4467;
+    let _e6: Scalar = anti_scalar_right_bulk_dual(_e5);
+    let _e7: Scalar = homogeneous_magnitude_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_homogeneous_magnitude_bulk_contraction(self_4990: HomogeneousMagnitude, other_4468: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_4991: HomogeneousMagnitude;
+    var other_4469: HomogeneousMagnitude;
+
+    self_4991 = self_4990;
+    other_4469 = other_4468;
+    let _e4: HomogeneousMagnitude = self_4991;
+    let _e5: HomogeneousMagnitude = other_4469;
+    let _e6: AntiScalar = homogeneous_magnitude_right_bulk_dual(_e5);
+    let _e7: HomogeneousMagnitude = homogeneous_magnitude_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_point_bulk_contraction(self_4992: HomogeneousMagnitude, other_4470: Point) -> Plane {
+    var self_4993: HomogeneousMagnitude;
+    var other_4471: Point;
+
+    self_4993 = self_4992;
+    other_4471 = other_4470;
+    let _e4: HomogeneousMagnitude = self_4993;
+    let _e5: Point = other_4471;
+    let _e6: Plane = point_right_bulk_dual(_e5);
+    let _e7: Plane = homogeneous_magnitude_plane_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_line_bulk_contraction(self_4994: HomogeneousMagnitude, other_4472: Line) -> Line {
+    var self_4995: HomogeneousMagnitude;
+    var other_4473: Line;
+
+    self_4995 = self_4994;
+    other_4473 = other_4472;
+    let _e4: HomogeneousMagnitude = self_4995;
+    let _e5: Line = other_4473;
+    let _e6: Line = line_right_bulk_dual(_e5);
+    let _e7: Line = homogeneous_magnitude_line_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_plane_bulk_contraction(self_4996: HomogeneousMagnitude, other_4474: Plane) -> Point {
+    var self_4997: HomogeneousMagnitude;
+    var other_4475: Plane;
+
+    self_4997 = self_4996;
+    other_4475 = other_4474;
+    let _e4: HomogeneousMagnitude = self_4997;
+    let _e5: Plane = other_4475;
+    let _e6: Point = plane_right_bulk_dual(_e5);
+    let _e7: Point = homogeneous_magnitude_point_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_flector_bulk_contraction(self_4998: HomogeneousMagnitude, other_4476: Flector) -> Flector {
+    var self_4999: HomogeneousMagnitude;
+    var other_4477: Flector;
+
+    self_4999 = self_4998;
+    other_4477 = other_4476;
+    let _e4: HomogeneousMagnitude = self_4999;
+    let _e5: Flector = other_4477;
+    let _e6: Flector = flector_right_bulk_dual(_e5);
+    let _e7: Flector = homogeneous_magnitude_flector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_multi_vector_bulk_contraction(self_5000: HomogeneousMagnitude, other_4478: MultiVector) -> MultiVector {
+    var self_5001: HomogeneousMagnitude;
+    var other_4479: MultiVector;
+
+    self_5001 = self_5000;
+    other_4479 = other_4478;
+    let _e4: HomogeneousMagnitude = self_5001;
+    let _e5: MultiVector = other_4479;
+    let _e6: MultiVector = multi_vector_right_bulk_dual(_e5);
+    let _e7: MultiVector = homogeneous_magnitude_multi_vector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn point_scalar_bulk_contraction(self_5002: Point, other_4480: Scalar) -> Point {
+    var self_5003: Point;
+    var other_4481: Scalar;
+
+    self_5003 = self_5002;
+    other_4481 = other_4480;
+    let _e4: Point = self_5003;
+    let _e5: Scalar = other_4481;
+    let _e6: AntiScalar = scalar_right_bulk_dual(_e5);
+    let _e7: Point = point_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn point_homogeneous_magnitude_bulk_contraction(self_5004: Point, other_4482: HomogeneousMagnitude) -> Point {
+    var self_5005: Point;
+    var other_4483: HomogeneousMagnitude;
+
+    self_5005 = self_5004;
+    other_4483 = other_4482;
+    let _e4: Point = self_5005;
+    let _e5: HomogeneousMagnitude = other_4483;
+    let _e6: AntiScalar = homogeneous_magnitude_right_bulk_dual(_e5);
+    let _e7: Point = point_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn point_point_bulk_contraction(self_5006: Point, other_4484: Point) -> Scalar {
+    var self_5007: Point;
+    var other_4485: Point;
+
+    self_5007 = self_5006;
+    other_4485 = other_4484;
+    let _e4: Point = self_5007;
+    let _e5: Point = other_4485;
+    let _e6: Plane = point_right_bulk_dual(_e5);
+    let _e7: Scalar = point_plane_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn point_flector_bulk_contraction(self_5008: Point, other_4486: Flector) -> Scalar {
+    var self_5009: Point;
+    var other_4487: Flector;
+
+    self_5009 = self_5008;
+    other_4487 = other_4486;
+    let _e4: Point = self_5009;
+    let _e5: Flector = other_4487;
+    let _e6: Flector = flector_right_bulk_dual(_e5);
+    let _e7: Scalar = point_flector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn point_multi_vector_bulk_contraction(self_5010: Point, other_4488: MultiVector) -> MultiVector {
+    var self_5011: Point;
+    var other_4489: MultiVector;
+
+    self_5011 = self_5010;
+    other_4489 = other_4488;
+    let _e4: Point = self_5011;
+    let _e5: MultiVector = other_4489;
+    let _e6: MultiVector = multi_vector_right_bulk_dual(_e5);
+    let _e7: MultiVector = point_multi_vector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn line_scalar_bulk_contraction(self_5012: Line, other_4490: Scalar) -> Line {
+    var self_5013: Line;
+    var other_4491: Scalar;
+
+    self_5013 = self_5012;
+    other_4491 = other_4490;
+    let _e4: Line = self_5013;
+    let _e5: Scalar = other_4491;
+    let _e6: AntiScalar = scalar_right_bulk_dual(_e5);
+    let _e7: Line = line_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn line_homogeneous_magnitude_bulk_contraction(self_5014: Line, other_4492: HomogeneousMagnitude) -> Line {
+    var self_5015: Line;
+    var other_4493: HomogeneousMagnitude;
+
+    self_5015 = self_5014;
+    other_4493 = other_4492;
+    let _e4: Line = self_5015;
+    let _e5: HomogeneousMagnitude = other_4493;
+    let _e6: AntiScalar = homogeneous_magnitude_right_bulk_dual(_e5);
+    let _e7: Line = line_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn line_point_bulk_contraction(self_5016: Line, other_4494: Point) -> Point {
+    var self_5017: Line;
+    var other_4495: Point;
+
+    self_5017 = self_5016;
+    other_4495 = other_4494;
+    let _e4: Line = self_5017;
+    let _e5: Point = other_4495;
+    let _e6: Plane = point_right_bulk_dual(_e5);
+    let _e7: Point = line_plane_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn line_line_bulk_contraction(self_5018: Line, other_4496: Line) -> Scalar {
+    var self_5019: Line;
+    var other_4497: Line;
+
+    self_5019 = self_5018;
+    other_4497 = other_4496;
+    let _e4: Line = self_5019;
+    let _e5: Line = other_4497;
+    let _e6: Line = line_right_bulk_dual(_e5);
+    let _e7: Scalar = line_line_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn line_flector_bulk_contraction(self_5020: Line, other_4498: Flector) -> Point {
+    var self_5021: Line;
+    var other_4499: Flector;
+
+    self_5021 = self_5020;
+    other_4499 = other_4498;
+    let _e4: Line = self_5021;
+    let _e5: Flector = other_4499;
+    let _e6: Flector = flector_right_bulk_dual(_e5);
+    let _e7: Point = line_flector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn line_multi_vector_bulk_contraction(self_5022: Line, other_4500: MultiVector) -> MultiVector {
+    var self_5023: Line;
+    var other_4501: MultiVector;
+
+    self_5023 = self_5022;
+    other_4501 = other_4500;
+    let _e4: Line = self_5023;
+    let _e5: MultiVector = other_4501;
+    let _e6: MultiVector = multi_vector_right_bulk_dual(_e5);
+    let _e7: MultiVector = line_multi_vector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn plane_scalar_bulk_contraction(self_5024: Plane, other_4502: Scalar) -> Plane {
+    var self_5025: Plane;
+    var other_4503: Scalar;
+
+    self_5025 = self_5024;
+    other_4503 = other_4502;
+    let _e4: Plane = self_5025;
+    let _e5: Scalar = other_4503;
+    let _e6: AntiScalar = scalar_right_bulk_dual(_e5);
+    let _e7: Plane = plane_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn plane_homogeneous_magnitude_bulk_contraction(self_5026: Plane, other_4504: HomogeneousMagnitude) -> Plane {
+    var self_5027: Plane;
+    var other_4505: HomogeneousMagnitude;
+
+    self_5027 = self_5026;
+    other_4505 = other_4504;
+    let _e4: Plane = self_5027;
+    let _e5: HomogeneousMagnitude = other_4505;
+    let _e6: AntiScalar = homogeneous_magnitude_right_bulk_dual(_e5);
+    let _e7: Plane = plane_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn plane_point_bulk_contraction(self_5028: Plane, other_4506: Point) -> Line {
+    var self_5029: Plane;
+    var other_4507: Point;
+
+    self_5029 = self_5028;
+    other_4507 = other_4506;
+    let _e4: Plane = self_5029;
+    let _e5: Point = other_4507;
+    let _e6: Plane = point_right_bulk_dual(_e5);
+    let _e7: Line = plane_plane_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn plane_line_bulk_contraction(self_5030: Plane, other_4508: Line) -> Point {
+    var self_5031: Plane;
+    var other_4509: Line;
+
+    self_5031 = self_5030;
+    other_4509 = other_4508;
+    let _e4: Plane = self_5031;
+    let _e5: Line = other_4509;
+    let _e6: Line = line_right_bulk_dual(_e5);
+    let _e7: Point = plane_line_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn plane_plane_bulk_contraction(self_5032: Plane, other_4510: Plane) -> Scalar {
+    var self_5033: Plane;
+    var other_4511: Plane;
+
+    self_5033 = self_5032;
+    other_4511 = other_4510;
+    let _e4: Plane = self_5033;
+    let _e5: Plane = other_4511;
+    let _e6: Point = plane_right_bulk_dual(_e5);
+    let _e7: Scalar = plane_point_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn plane_flector_bulk_contraction(self_5034: Plane, other_4512: Flector) -> MultiVector {
+    var self_5035: Plane;
+    var other_4513: Flector;
+
+    self_5035 = self_5034;
+    other_4513 = other_4512;
+    let _e4: Plane = self_5035;
+    let _e5: Flector = other_4513;
+    let _e6: Flector = flector_right_bulk_dual(_e5);
+    let _e7: MultiVector = plane_flector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn plane_multi_vector_bulk_contraction(self_5036: Plane, other_4514: MultiVector) -> MultiVector {
+    var self_5037: Plane;
+    var other_4515: MultiVector;
+
+    self_5037 = self_5036;
+    other_4515 = other_4514;
+    let _e4: Plane = self_5037;
+    let _e5: MultiVector = other_4515;
+    let _e6: MultiVector = multi_vector_right_bulk_dual(_e5);
+    let _e7: MultiVector = plane_multi_vector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_scalar_bulk_contraction(self_5038: Motor, other_4516: Scalar) -> Motor {
+    var self_5039: Motor;
+    var other_4517: Scalar;
+
+    self_5039 = self_5038;
+    other_4517 = other_4516;
+    let _e4: Motor = self_5039;
+    let _e5: Scalar = other_4517;
+    let _e6: AntiScalar = scalar_right_bulk_dual(_e5);
+    let _e7: Motor = motor_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_anti_scalar_bulk_contraction(self_5040: Motor, other_4518: AntiScalar) -> Scalar {
+    var self_5041: Motor;
+    var other_4519: AntiScalar;
+
+    self_5041 = self_5040;
+    other_4519 = other_4518;
+    let _e4: Motor = self_5041;
+    let _e5: AntiScalar = other_4519;
+    let _e6: Scalar = anti_scalar_right_bulk_dual(_e5);
+    let _e7: Scalar = motor_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_homogeneous_magnitude_bulk_contraction(self_5042: Motor, other_4520: HomogeneousMagnitude) -> Motor {
+    var self_5043: Motor;
+    var other_4521: HomogeneousMagnitude;
+
+    self_5043 = self_5042;
+    other_4521 = other_4520;
+    let _e4: Motor = self_5043;
+    let _e5: HomogeneousMagnitude = other_4521;
+    let _e6: AntiScalar = homogeneous_magnitude_right_bulk_dual(_e5);
+    let _e7: Motor = motor_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_point_bulk_contraction(self_5044: Motor, other_4522: Point) -> Flector {
+    var self_5045: Motor;
+    var other_4523: Point;
+
+    self_5045 = self_5044;
+    other_4523 = other_4522;
+    let _e4: Motor = self_5045;
+    let _e5: Point = other_4523;
+    let _e6: Plane = point_right_bulk_dual(_e5);
+    let _e7: Flector = motor_plane_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_line_bulk_contraction(self_5046: Motor, other_4524: Line) -> MultiVector {
+    var self_5047: Motor;
+    var other_4525: Line;
+
+    self_5047 = self_5046;
+    other_4525 = other_4524;
+    let _e4: Motor = self_5047;
+    let _e5: Line = other_4525;
+    let _e6: Line = line_right_bulk_dual(_e5);
+    let _e7: MultiVector = motor_line_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_plane_bulk_contraction(self_5048: Motor, other_4526: Plane) -> Point {
+    var self_5049: Motor;
+    var other_4527: Plane;
+
+    self_5049 = self_5048;
+    other_4527 = other_4526;
+    let _e4: Motor = self_5049;
+    let _e5: Plane = other_4527;
+    let _e6: Point = plane_right_bulk_dual(_e5);
+    let _e7: Point = motor_point_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_flector_bulk_contraction(self_5050: Motor, other_4528: Flector) -> Flector {
+    var self_5051: Motor;
+    var other_4529: Flector;
+
+    self_5051 = self_5050;
+    other_4529 = other_4528;
+    let _e4: Motor = self_5051;
+    let _e5: Flector = other_4529;
+    let _e6: Flector = flector_right_bulk_dual(_e5);
+    let _e7: Flector = motor_flector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_multi_vector_bulk_contraction(self_5052: Motor, other_4530: MultiVector) -> MultiVector {
+    var self_5053: Motor;
+    var other_4531: MultiVector;
+
+    self_5053 = self_5052;
+    other_4531 = other_4530;
+    let _e4: Motor = self_5053;
+    let _e5: MultiVector = other_4531;
+    let _e6: MultiVector = multi_vector_right_bulk_dual(_e5);
+    let _e7: MultiVector = motor_multi_vector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_scalar_bulk_contraction(self_5054: Rotor, other_4532: Scalar) -> Rotor {
+    var self_5055: Rotor;
+    var other_4533: Scalar;
+
+    self_5055 = self_5054;
+    other_4533 = other_4532;
+    let _e4: Rotor = self_5055;
+    let _e5: Scalar = other_4533;
+    let _e6: AntiScalar = scalar_right_bulk_dual(_e5);
+    let _e7: Rotor = rotor_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_anti_scalar_bulk_contraction(self_5056: Rotor, other_4534: AntiScalar) -> Scalar {
+    var self_5057: Rotor;
+    var other_4535: AntiScalar;
+
+    self_5057 = self_5056;
+    other_4535 = other_4534;
+    let _e4: Rotor = self_5057;
+    let _e5: AntiScalar = other_4535;
+    let _e6: Scalar = anti_scalar_right_bulk_dual(_e5);
+    let _e7: Scalar = rotor_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_homogeneous_magnitude_bulk_contraction(self_5058: Rotor, other_4536: HomogeneousMagnitude) -> Rotor {
+    var self_5059: Rotor;
+    var other_4537: HomogeneousMagnitude;
+
+    self_5059 = self_5058;
+    other_4537 = other_4536;
+    let _e4: Rotor = self_5059;
+    let _e5: HomogeneousMagnitude = other_4537;
+    let _e6: AntiScalar = homogeneous_magnitude_right_bulk_dual(_e5);
+    let _e7: Rotor = rotor_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_point_bulk_contraction(self_5060: Rotor, other_4538: Point) -> Flector {
+    var self_5061: Rotor;
+    var other_4539: Point;
+
+    self_5061 = self_5060;
+    other_4539 = other_4538;
+    let _e4: Rotor = self_5061;
+    let _e5: Point = other_4539;
+    let _e6: Plane = point_right_bulk_dual(_e5);
+    let _e7: Flector = rotor_plane_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_line_bulk_contraction(self_5062: Rotor, other_4540: Line) -> MultiVector {
+    var self_5063: Rotor;
+    var other_4541: Line;
+
+    self_5063 = self_5062;
+    other_4541 = other_4540;
+    let _e4: Rotor = self_5063;
+    let _e5: Line = other_4541;
+    let _e6: Line = line_right_bulk_dual(_e5);
+    let _e7: MultiVector = rotor_line_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_plane_bulk_contraction(self_5064: Rotor, other_4542: Plane) -> Point {
+    var self_5065: Rotor;
+    var other_4543: Plane;
+
+    self_5065 = self_5064;
+    other_4543 = other_4542;
+    let _e4: Rotor = self_5065;
+    let _e5: Plane = other_4543;
+    let _e6: Point = plane_right_bulk_dual(_e5);
+    let _e7: Point = rotor_point_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_flector_bulk_contraction(self_5066: Rotor, other_4544: Flector) -> Flector {
+    var self_5067: Rotor;
+    var other_4545: Flector;
+
+    self_5067 = self_5066;
+    other_4545 = other_4544;
+    let _e4: Rotor = self_5067;
+    let _e5: Flector = other_4545;
+    let _e6: Flector = flector_right_bulk_dual(_e5);
+    let _e7: Flector = rotor_flector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_multi_vector_bulk_contraction(self_5068: Rotor, other_4546: MultiVector) -> MultiVector {
+    var self_5069: Rotor;
+    var other_4547: MultiVector;
+
+    self_5069 = self_5068;
+    other_4547 = other_4546;
+    let _e4: Rotor = self_5069;
+    let _e5: MultiVector = other_4547;
+    let _e6: MultiVector = multi_vector_right_bulk_dual(_e5);
+    let _e7: MultiVector = rotor_multi_vector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_scalar_bulk_contraction(self_5070: Translator, other_4548: Scalar) -> Translator {
+    var self_5071: Translator;
+    var other_4549: Scalar;
+
+    self_5071 = self_5070;
+    other_4549 = other_4548;
+    let _e4: Translator = self_5071;
+    let _e5: Scalar = other_4549;
+    let _e6: AntiScalar = scalar_right_bulk_dual(_e5);
+    let _e7: Translator = translator_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_anti_scalar_bulk_contraction(self_5072: Translator, other_4550: AntiScalar) -> Scalar {
+    var self_5073: Translator;
+    var other_4551: AntiScalar;
+
+    self_5073 = self_5072;
+    other_4551 = other_4550;
+    let _e4: Translator = self_5073;
+    let _e5: AntiScalar = other_4551;
+    let _e6: Scalar = anti_scalar_right_bulk_dual(_e5);
+    let _e7: Scalar = translator_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_homogeneous_magnitude_bulk_contraction(self_5074: Translator, other_4552: HomogeneousMagnitude) -> Translator {
+    var self_5075: Translator;
+    var other_4553: HomogeneousMagnitude;
+
+    self_5075 = self_5074;
+    other_4553 = other_4552;
+    let _e4: Translator = self_5075;
+    let _e5: HomogeneousMagnitude = other_4553;
+    let _e6: AntiScalar = homogeneous_magnitude_right_bulk_dual(_e5);
+    let _e7: Translator = translator_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_point_bulk_contraction(self_5076: Translator, other_4554: Point) -> Flector {
+    var self_5077: Translator;
+    var other_4555: Point;
+
+    self_5077 = self_5076;
+    other_4555 = other_4554;
+    let _e4: Translator = self_5077;
+    let _e5: Point = other_4555;
+    let _e6: Plane = point_right_bulk_dual(_e5);
+    let _e7: Flector = translator_plane_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_line_bulk_contraction(self_5078: Translator, other_4556: Line) -> MultiVector {
+    var self_5079: Translator;
+    var other_4557: Line;
+
+    self_5079 = self_5078;
+    other_4557 = other_4556;
+    let _e4: Translator = self_5079;
+    let _e5: Line = other_4557;
+    let _e6: Line = line_right_bulk_dual(_e5);
+    let _e7: MultiVector = translator_line_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_plane_bulk_contraction(self_5080: Translator, other_4558: Plane) -> Point {
+    var self_5081: Translator;
+    var other_4559: Plane;
+
+    self_5081 = self_5080;
+    other_4559 = other_4558;
+    let _e4: Translator = self_5081;
+    let _e5: Plane = other_4559;
+    let _e6: Point = plane_right_bulk_dual(_e5);
+    let _e7: Point = translator_point_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_flector_bulk_contraction(self_5082: Translator, other_4560: Flector) -> Flector {
+    var self_5083: Translator;
+    var other_4561: Flector;
+
+    self_5083 = self_5082;
+    other_4561 = other_4560;
+    let _e4: Translator = self_5083;
+    let _e5: Flector = other_4561;
+    let _e6: Flector = flector_right_bulk_dual(_e5);
+    let _e7: Flector = translator_flector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_multi_vector_bulk_contraction(self_5084: Translator, other_4562: MultiVector) -> MultiVector {
+    var self_5085: Translator;
+    var other_4563: MultiVector;
+
+    self_5085 = self_5084;
+    other_4563 = other_4562;
+    let _e4: Translator = self_5085;
+    let _e5: MultiVector = other_4563;
+    let _e6: MultiVector = multi_vector_right_bulk_dual(_e5);
+    let _e7: MultiVector = translator_multi_vector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn flector_scalar_bulk_contraction(self_5086: Flector, other_4564: Scalar) -> Flector {
+    var self_5087: Flector;
+    var other_4565: Scalar;
+
+    self_5087 = self_5086;
+    other_4565 = other_4564;
+    let _e4: Flector = self_5087;
+    let _e5: Scalar = other_4565;
+    let _e6: AntiScalar = scalar_right_bulk_dual(_e5);
+    let _e7: Flector = flector_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn flector_homogeneous_magnitude_bulk_contraction(self_5088: Flector, other_4566: HomogeneousMagnitude) -> Flector {
+    var self_5089: Flector;
+    var other_4567: HomogeneousMagnitude;
+
+    self_5089 = self_5088;
+    other_4567 = other_4566;
+    let _e4: Flector = self_5089;
+    let _e5: HomogeneousMagnitude = other_4567;
+    let _e6: AntiScalar = homogeneous_magnitude_right_bulk_dual(_e5);
+    let _e7: Flector = flector_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn flector_point_bulk_contraction(self_5090: Flector, other_4568: Point) -> MultiVector {
+    var self_5091: Flector;
+    var other_4569: Point;
+
+    self_5091 = self_5090;
+    other_4569 = other_4568;
+    let _e4: Flector = self_5091;
+    let _e5: Point = other_4569;
+    let _e6: Plane = point_right_bulk_dual(_e5);
+    let _e7: MultiVector = flector_plane_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn flector_line_bulk_contraction(self_5092: Flector, other_4570: Line) -> Point {
+    var self_5093: Flector;
+    var other_4571: Line;
+
+    self_5093 = self_5092;
+    other_4571 = other_4570;
+    let _e4: Flector = self_5093;
+    let _e5: Line = other_4571;
+    let _e6: Line = line_right_bulk_dual(_e5);
+    let _e7: Point = flector_line_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn flector_plane_bulk_contraction(self_5094: Flector, other_4572: Plane) -> Scalar {
+    var self_5095: Flector;
+    var other_4573: Plane;
+
+    self_5095 = self_5094;
+    other_4573 = other_4572;
+    let _e4: Flector = self_5095;
+    let _e5: Plane = other_4573;
+    let _e6: Point = plane_right_bulk_dual(_e5);
+    let _e7: Scalar = flector_point_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn flector_flector_bulk_contraction(self_5096: Flector, other_4574: Flector) -> MultiVector {
+    var self_5097: Flector;
+    var other_4575: Flector;
+
+    self_5097 = self_5096;
+    other_4575 = other_4574;
+    let _e4: Flector = self_5097;
+    let _e5: Flector = other_4575;
+    let _e6: Flector = flector_right_bulk_dual(_e5);
+    let _e7: MultiVector = flector_flector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn flector_multi_vector_bulk_contraction(self_5098: Flector, other_4576: MultiVector) -> MultiVector {
+    var self_5099: Flector;
+    var other_4577: MultiVector;
+
+    self_5099 = self_5098;
+    other_4577 = other_4576;
+    let _e4: Flector = self_5099;
+    let _e5: MultiVector = other_4577;
+    let _e6: MultiVector = multi_vector_right_bulk_dual(_e5);
+    let _e7: MultiVector = flector_multi_vector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_scalar_bulk_contraction(self_5100: MultiVector, other_4578: Scalar) -> MultiVector {
+    var self_5101: MultiVector;
+    var other_4579: Scalar;
+
+    self_5101 = self_5100;
+    other_4579 = other_4578;
+    let _e4: MultiVector = self_5101;
+    let _e5: Scalar = other_4579;
+    let _e6: AntiScalar = scalar_right_bulk_dual(_e5);
+    let _e7: MultiVector = multi_vector_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_anti_scalar_bulk_contraction(self_5102: MultiVector, other_4580: AntiScalar) -> Scalar {
+    var self_5103: MultiVector;
+    var other_4581: AntiScalar;
+
+    self_5103 = self_5102;
+    other_4581 = other_4580;
+    let _e4: MultiVector = self_5103;
+    let _e5: AntiScalar = other_4581;
+    let _e6: Scalar = anti_scalar_right_bulk_dual(_e5);
+    let _e7: Scalar = multi_vector_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_homogeneous_magnitude_bulk_contraction(self_5104: MultiVector, other_4582: HomogeneousMagnitude) -> MultiVector {
+    var self_5105: MultiVector;
+    var other_4583: HomogeneousMagnitude;
+
+    self_5105 = self_5104;
+    other_4583 = other_4582;
+    let _e4: MultiVector = self_5105;
+    let _e5: HomogeneousMagnitude = other_4583;
+    let _e6: AntiScalar = homogeneous_magnitude_right_bulk_dual(_e5);
+    let _e7: MultiVector = multi_vector_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_point_bulk_contraction(self_5106: MultiVector, other_4584: Point) -> MultiVector {
+    var self_5107: MultiVector;
+    var other_4585: Point;
+
+    self_5107 = self_5106;
+    other_4585 = other_4584;
+    let _e4: MultiVector = self_5107;
+    let _e5: Point = other_4585;
+    let _e6: Plane = point_right_bulk_dual(_e5);
+    let _e7: MultiVector = multi_vector_plane_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_line_bulk_contraction(self_5108: MultiVector, other_4586: Line) -> MultiVector {
+    var self_5109: MultiVector;
+    var other_4587: Line;
+
+    self_5109 = self_5108;
+    other_4587 = other_4586;
+    let _e4: MultiVector = self_5109;
+    let _e5: Line = other_4587;
+    let _e6: Line = line_right_bulk_dual(_e5);
+    let _e7: MultiVector = multi_vector_line_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_plane_bulk_contraction(self_5110: MultiVector, other_4588: Plane) -> MultiVector {
+    var self_5111: MultiVector;
+    var other_4589: Plane;
+
+    self_5111 = self_5110;
+    other_4589 = other_4588;
+    let _e4: MultiVector = self_5111;
+    let _e5: Plane = other_4589;
+    let _e6: Point = plane_right_bulk_dual(_e5);
+    let _e7: MultiVector = multi_vector_point_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_flector_bulk_contraction(self_5112: MultiVector, other_4590: Flector) -> MultiVector {
+    var self_5113: MultiVector;
+    var other_4591: Flector;
+
+    self_5113 = self_5112;
+    other_4591 = other_4590;
+    let _e4: MultiVector = self_5113;
+    let _e5: Flector = other_4591;
+    let _e6: Flector = flector_right_bulk_dual(_e5);
+    let _e7: MultiVector = multi_vector_flector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_multi_vector_bulk_contraction(self_5114: MultiVector, other_4592: MultiVector) -> MultiVector {
+    var self_5115: MultiVector;
+    var other_4593: MultiVector;
+
+    self_5115 = self_5114;
+    other_4593 = other_4592;
+    let _e4: MultiVector = self_5115;
+    let _e5: MultiVector = other_4593;
+    let _e6: MultiVector = multi_vector_right_bulk_dual(_e5);
+    let _e7: MultiVector = multi_vector_multi_vector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn scalar_scalar_weight_contraction(self_5116: Scalar, other_4594: Scalar) -> Scalar {
+    var self_5117: Scalar;
+    var other_4595: Scalar;
+
+    self_5117 = self_5116;
+    other_4595 = other_4594;
+    let _e4: Scalar = self_5117;
+    let _e5: Scalar = other_4595;
+    let _e6: AntiScalar = scalar_right_weight_dual(_e5);
+    let _e7: Scalar = scalar_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn scalar_multi_vector_weight_contraction(self_5118: Scalar, other_4596: MultiVector) -> Scalar {
+    var self_5119: Scalar;
+    var other_4597: MultiVector;
+
+    self_5119 = self_5118;
+    other_4597 = other_4596;
+    let _e4: Scalar = self_5119;
+    let _e5: MultiVector = other_4597;
+    let _e6: MultiVector = multi_vector_right_weight_dual(_e5);
+    let _e7: Scalar = scalar_multi_vector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_scalar_weight_contraction(self_5120: AntiScalar, other_4598: Scalar) -> AntiScalar {
+    var self_5121: AntiScalar;
+    var other_4599: Scalar;
+
+    self_5121 = self_5120;
+    other_4599 = other_4598;
+    let _e4: AntiScalar = self_5121;
+    let _e5: Scalar = other_4599;
+    let _e6: AntiScalar = scalar_right_weight_dual(_e5);
+    let _e7: AntiScalar = anti_scalar_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_anti_scalar_weight_contraction(self_5122: AntiScalar, other_4600: AntiScalar) -> Scalar {
+    var self_5123: AntiScalar;
+    var other_4601: AntiScalar;
+
+    self_5123 = self_5122;
+    other_4601 = other_4600;
+    let _e4: AntiScalar = self_5123;
+    let _e5: AntiScalar = other_4601;
+    let _e6: Scalar = anti_scalar_right_weight_dual(_e5);
+    let _e7: Scalar = anti_scalar_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_homogeneous_magnitude_weight_contraction(self_5124: AntiScalar, other_4602: HomogeneousMagnitude) -> Scalar {
+    var self_5125: AntiScalar;
+    var other_4603: HomogeneousMagnitude;
+
+    self_5125 = self_5124;
+    other_4603 = other_4602;
+    let _e4: AntiScalar = self_5125;
+    let _e5: HomogeneousMagnitude = other_4603;
+    let _e6: Scalar = homogeneous_magnitude_right_weight_dual(_e5);
+    let _e7: Scalar = anti_scalar_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_point_weight_contraction(self_5126: AntiScalar, other_4604: Point) -> Plane {
+    var self_5127: AntiScalar;
+    var other_4605: Point;
+
+    self_5127 = self_5126;
+    other_4605 = other_4604;
+    let _e4: AntiScalar = self_5127;
+    let _e5: Point = other_4605;
+    let _e6: Plane = point_right_weight_dual(_e5);
+    let _e7: Plane = anti_scalar_plane_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_line_weight_contraction(self_5128: AntiScalar, other_4606: Line) -> Line {
+    var self_5129: AntiScalar;
+    var other_4607: Line;
+
+    self_5129 = self_5128;
+    other_4607 = other_4606;
+    let _e4: AntiScalar = self_5129;
+    let _e5: Line = other_4607;
+    let _e6: Line = line_right_weight_dual(_e5);
+    let _e7: Line = anti_scalar_line_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_plane_weight_contraction(self_5130: AntiScalar, other_4608: Plane) -> Point {
+    var self_5131: AntiScalar;
+    var other_4609: Plane;
+
+    self_5131 = self_5130;
+    other_4609 = other_4608;
+    let _e4: AntiScalar = self_5131;
+    let _e5: Plane = other_4609;
+    let _e6: Point = plane_right_weight_dual(_e5);
+    let _e7: Point = anti_scalar_point_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_translator_weight_contraction(self_5132: AntiScalar, other_4610: Translator) -> Scalar {
+    var self_5133: AntiScalar;
+    var other_4611: Translator;
+
+    self_5133 = self_5132;
+    other_4611 = other_4610;
+    let _e4: AntiScalar = self_5133;
+    let _e5: Translator = other_4611;
+    let _e6: Scalar = translator_right_weight_dual(_e5);
+    let _e7: Scalar = anti_scalar_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_flector_weight_contraction(self_5134: AntiScalar, other_4612: Flector) -> Flector {
+    var self_5135: AntiScalar;
+    var other_4613: Flector;
+
+    self_5135 = self_5134;
+    other_4613 = other_4612;
+    let _e4: AntiScalar = self_5135;
+    let _e5: Flector = other_4613;
+    let _e6: Flector = flector_right_weight_dual(_e5);
+    let _e7: Flector = anti_scalar_flector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_multi_vector_weight_contraction(self_5136: AntiScalar, other_4614: MultiVector) -> MultiVector {
+    var self_5137: AntiScalar;
+    var other_4615: MultiVector;
+
+    self_5137 = self_5136;
+    other_4615 = other_4614;
+    let _e4: AntiScalar = self_5137;
+    let _e5: MultiVector = other_4615;
+    let _e6: MultiVector = multi_vector_right_weight_dual(_e5);
+    let _e7: MultiVector = anti_scalar_multi_vector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_scalar_weight_contraction(self_5138: HomogeneousMagnitude, other_4616: Scalar) -> HomogeneousMagnitude {
+    var self_5139: HomogeneousMagnitude;
+    var other_4617: Scalar;
+
+    self_5139 = self_5138;
+    other_4617 = other_4616;
+    let _e4: HomogeneousMagnitude = self_5139;
+    let _e5: Scalar = other_4617;
+    let _e6: AntiScalar = scalar_right_weight_dual(_e5);
+    let _e7: HomogeneousMagnitude = homogeneous_magnitude_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_anti_scalar_weight_contraction(self_5140: HomogeneousMagnitude, other_4618: AntiScalar) -> Scalar {
+    var self_5141: HomogeneousMagnitude;
+    var other_4619: AntiScalar;
+
+    self_5141 = self_5140;
+    other_4619 = other_4618;
+    let _e4: HomogeneousMagnitude = self_5141;
+    let _e5: AntiScalar = other_4619;
+    let _e6: Scalar = anti_scalar_right_weight_dual(_e5);
+    let _e7: Scalar = homogeneous_magnitude_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_homogeneous_magnitude_weight_contraction(self_5142: HomogeneousMagnitude, other_4620: HomogeneousMagnitude) -> Scalar {
+    var self_5143: HomogeneousMagnitude;
+    var other_4621: HomogeneousMagnitude;
+
+    self_5143 = self_5142;
+    other_4621 = other_4620;
+    let _e4: HomogeneousMagnitude = self_5143;
+    let _e5: HomogeneousMagnitude = other_4621;
+    let _e6: Scalar = homogeneous_magnitude_right_weight_dual(_e5);
+    let _e7: Scalar = homogeneous_magnitude_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_point_weight_contraction(self_5144: HomogeneousMagnitude, other_4622: Point) -> Plane {
+    var self_5145: HomogeneousMagnitude;
+    var other_4623: Point;
+
+    self_5145 = self_5144;
+    other_4623 = other_4622;
+    let _e4: HomogeneousMagnitude = self_5145;
+    let _e5: Point = other_4623;
+    let _e6: Plane = point_right_weight_dual(_e5);
+    let _e7: Plane = homogeneous_magnitude_plane_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_line_weight_contraction(self_5146: HomogeneousMagnitude, other_4624: Line) -> Line {
+    var self_5147: HomogeneousMagnitude;
+    var other_4625: Line;
+
+    self_5147 = self_5146;
+    other_4625 = other_4624;
+    let _e4: HomogeneousMagnitude = self_5147;
+    let _e5: Line = other_4625;
+    let _e6: Line = line_right_weight_dual(_e5);
+    let _e7: Line = homogeneous_magnitude_line_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_plane_weight_contraction(self_5148: HomogeneousMagnitude, other_4626: Plane) -> Point {
+    var self_5149: HomogeneousMagnitude;
+    var other_4627: Plane;
+
+    self_5149 = self_5148;
+    other_4627 = other_4626;
+    let _e4: HomogeneousMagnitude = self_5149;
+    let _e5: Plane = other_4627;
+    let _e6: Point = plane_right_weight_dual(_e5);
+    let _e7: Point = homogeneous_magnitude_point_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_translator_weight_contraction(self_5150: HomogeneousMagnitude, other_4628: Translator) -> Scalar {
+    var self_5151: HomogeneousMagnitude;
+    var other_4629: Translator;
+
+    self_5151 = self_5150;
+    other_4629 = other_4628;
+    let _e4: HomogeneousMagnitude = self_5151;
+    let _e5: Translator = other_4629;
+    let _e6: Scalar = translator_right_weight_dual(_e5);
+    let _e7: Scalar = homogeneous_magnitude_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_flector_weight_contraction(self_5152: HomogeneousMagnitude, other_4630: Flector) -> Flector {
+    var self_5153: HomogeneousMagnitude;
+    var other_4631: Flector;
+
+    self_5153 = self_5152;
+    other_4631 = other_4630;
+    let _e4: HomogeneousMagnitude = self_5153;
+    let _e5: Flector = other_4631;
+    let _e6: Flector = flector_right_weight_dual(_e5);
+    let _e7: Flector = homogeneous_magnitude_flector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_multi_vector_weight_contraction(self_5154: HomogeneousMagnitude, other_4632: MultiVector) -> MultiVector {
+    var self_5155: HomogeneousMagnitude;
+    var other_4633: MultiVector;
+
+    self_5155 = self_5154;
+    other_4633 = other_4632;
+    let _e4: HomogeneousMagnitude = self_5155;
+    let _e5: MultiVector = other_4633;
+    let _e6: MultiVector = multi_vector_right_weight_dual(_e5);
+    let _e7: MultiVector = homogeneous_magnitude_multi_vector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn point_scalar_weight_contraction(self_5156: Point, other_4634: Scalar) -> Point {
+    var self_5157: Point;
+    var other_4635: Scalar;
+
+    self_5157 = self_5156;
+    other_4635 = other_4634;
+    let _e4: Point = self_5157;
+    let _e5: Scalar = other_4635;
+    let _e6: AntiScalar = scalar_right_weight_dual(_e5);
+    let _e7: Point = point_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn point_point_weight_contraction(self_5158: Point, other_4636: Point) -> Scalar {
+    var self_5159: Point;
+    var other_4637: Point;
+
+    self_5159 = self_5158;
+    other_4637 = other_4636;
+    let _e4: Point = self_5159;
+    let _e5: Point = other_4637;
+    let _e6: Plane = point_right_weight_dual(_e5);
+    let _e7: Scalar = point_plane_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn point_flector_weight_contraction(self_5160: Point, other_4638: Flector) -> Scalar {
+    var self_5161: Point;
+    var other_4639: Flector;
+
+    self_5161 = self_5160;
+    other_4639 = other_4638;
+    let _e4: Point = self_5161;
+    let _e5: Flector = other_4639;
+    let _e6: Flector = flector_right_weight_dual(_e5);
+    let _e7: Scalar = point_flector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn point_multi_vector_weight_contraction(self_5162: Point, other_4640: MultiVector) -> MultiVector {
+    var self_5163: Point;
+    var other_4641: MultiVector;
+
+    self_5163 = self_5162;
+    other_4641 = other_4640;
+    let _e4: Point = self_5163;
+    let _e5: MultiVector = other_4641;
+    let _e6: MultiVector = multi_vector_right_weight_dual(_e5);
+    let _e7: MultiVector = point_multi_vector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn line_scalar_weight_contraction(self_5164: Line, other_4642: Scalar) -> Line {
+    var self_5165: Line;
+    var other_4643: Scalar;
+
+    self_5165 = self_5164;
+    other_4643 = other_4642;
+    let _e4: Line = self_5165;
+    let _e5: Scalar = other_4643;
+    let _e6: AntiScalar = scalar_right_weight_dual(_e5);
+    let _e7: Line = line_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn line_point_weight_contraction(self_5166: Line, other_4644: Point) -> Point {
+    var self_5167: Line;
+    var other_4645: Point;
+
+    self_5167 = self_5166;
+    other_4645 = other_4644;
+    let _e4: Line = self_5167;
+    let _e5: Point = other_4645;
+    let _e6: Plane = point_right_weight_dual(_e5);
+    let _e7: Point = line_plane_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn line_line_weight_contraction(self_5168: Line, other_4646: Line) -> Scalar {
+    var self_5169: Line;
+    var other_4647: Line;
+
+    self_5169 = self_5168;
+    other_4647 = other_4646;
+    let _e4: Line = self_5169;
+    let _e5: Line = other_4647;
+    let _e6: Line = line_right_weight_dual(_e5);
+    let _e7: Scalar = line_line_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn line_flector_weight_contraction(self_5170: Line, other_4648: Flector) -> Point {
+    var self_5171: Line;
+    var other_4649: Flector;
+
+    self_5171 = self_5170;
+    other_4649 = other_4648;
+    let _e4: Line = self_5171;
+    let _e5: Flector = other_4649;
+    let _e6: Flector = flector_right_weight_dual(_e5);
+    let _e7: Point = line_flector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn line_multi_vector_weight_contraction(self_5172: Line, other_4650: MultiVector) -> MultiVector {
+    var self_5173: Line;
+    var other_4651: MultiVector;
+
+    self_5173 = self_5172;
+    other_4651 = other_4650;
+    let _e4: Line = self_5173;
+    let _e5: MultiVector = other_4651;
+    let _e6: MultiVector = multi_vector_right_weight_dual(_e5);
+    let _e7: MultiVector = line_multi_vector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn plane_scalar_weight_contraction(self_5174: Plane, other_4652: Scalar) -> Plane {
+    var self_5175: Plane;
+    var other_4653: Scalar;
+
+    self_5175 = self_5174;
+    other_4653 = other_4652;
+    let _e4: Plane = self_5175;
+    let _e5: Scalar = other_4653;
+    let _e6: AntiScalar = scalar_right_weight_dual(_e5);
+    let _e7: Plane = plane_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn plane_point_weight_contraction(self_5176: Plane, other_4654: Point) -> Line {
+    var self_5177: Plane;
+    var other_4655: Point;
+
+    self_5177 = self_5176;
+    other_4655 = other_4654;
+    let _e4: Plane = self_5177;
+    let _e5: Point = other_4655;
+    let _e6: Plane = point_right_weight_dual(_e5);
+    let _e7: Line = plane_plane_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn plane_line_weight_contraction(self_5178: Plane, other_4656: Line) -> Point {
+    var self_5179: Plane;
+    var other_4657: Line;
+
+    self_5179 = self_5178;
+    other_4657 = other_4656;
+    let _e4: Plane = self_5179;
+    let _e5: Line = other_4657;
+    let _e6: Line = line_right_weight_dual(_e5);
+    let _e7: Point = plane_line_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn plane_plane_weight_contraction(self_5180: Plane, other_4658: Plane) -> Scalar {
+    var self_5181: Plane;
+    var other_4659: Plane;
+
+    self_5181 = self_5180;
+    other_4659 = other_4658;
+    let _e4: Plane = self_5181;
+    let _e5: Plane = other_4659;
+    let _e6: Point = plane_right_weight_dual(_e5);
+    let _e7: Scalar = plane_point_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn plane_flector_weight_contraction(self_5182: Plane, other_4660: Flector) -> MultiVector {
+    var self_5183: Plane;
+    var other_4661: Flector;
+
+    self_5183 = self_5182;
+    other_4661 = other_4660;
+    let _e4: Plane = self_5183;
+    let _e5: Flector = other_4661;
+    let _e6: Flector = flector_right_weight_dual(_e5);
+    let _e7: MultiVector = plane_flector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn plane_multi_vector_weight_contraction(self_5184: Plane, other_4662: MultiVector) -> MultiVector {
+    var self_5185: Plane;
+    var other_4663: MultiVector;
+
+    self_5185 = self_5184;
+    other_4663 = other_4662;
+    let _e4: Plane = self_5185;
+    let _e5: MultiVector = other_4663;
+    let _e6: MultiVector = multi_vector_right_weight_dual(_e5);
+    let _e7: MultiVector = plane_multi_vector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_scalar_weight_contraction(self_5186: Motor, other_4664: Scalar) -> Motor {
+    var self_5187: Motor;
+    var other_4665: Scalar;
+
+    self_5187 = self_5186;
+    other_4665 = other_4664;
+    let _e4: Motor = self_5187;
+    let _e5: Scalar = other_4665;
+    let _e6: AntiScalar = scalar_right_weight_dual(_e5);
+    let _e7: Motor = motor_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_anti_scalar_weight_contraction(self_5188: Motor, other_4666: AntiScalar) -> Scalar {
+    var self_5189: Motor;
+    var other_4667: AntiScalar;
+
+    self_5189 = self_5188;
+    other_4667 = other_4666;
+    let _e4: Motor = self_5189;
+    let _e5: AntiScalar = other_4667;
+    let _e6: Scalar = anti_scalar_right_weight_dual(_e5);
+    let _e7: Scalar = motor_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_homogeneous_magnitude_weight_contraction(self_5190: Motor, other_4668: HomogeneousMagnitude) -> Scalar {
+    var self_5191: Motor;
+    var other_4669: HomogeneousMagnitude;
+
+    self_5191 = self_5190;
+    other_4669 = other_4668;
+    let _e4: Motor = self_5191;
+    let _e5: HomogeneousMagnitude = other_4669;
+    let _e6: Scalar = homogeneous_magnitude_right_weight_dual(_e5);
+    let _e7: Scalar = motor_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_point_weight_contraction(self_5192: Motor, other_4670: Point) -> Flector {
+    var self_5193: Motor;
+    var other_4671: Point;
+
+    self_5193 = self_5192;
+    other_4671 = other_4670;
+    let _e4: Motor = self_5193;
+    let _e5: Point = other_4671;
+    let _e6: Plane = point_right_weight_dual(_e5);
+    let _e7: Flector = motor_plane_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_line_weight_contraction(self_5194: Motor, other_4672: Line) -> MultiVector {
+    var self_5195: Motor;
+    var other_4673: Line;
+
+    self_5195 = self_5194;
+    other_4673 = other_4672;
+    let _e4: Motor = self_5195;
+    let _e5: Line = other_4673;
+    let _e6: Line = line_right_weight_dual(_e5);
+    let _e7: MultiVector = motor_line_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_plane_weight_contraction(self_5196: Motor, other_4674: Plane) -> Point {
+    var self_5197: Motor;
+    var other_4675: Plane;
+
+    self_5197 = self_5196;
+    other_4675 = other_4674;
+    let _e4: Motor = self_5197;
+    let _e5: Plane = other_4675;
+    let _e6: Point = plane_right_weight_dual(_e5);
+    let _e7: Point = motor_point_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_translator_weight_contraction(self_5198: Motor, other_4676: Translator) -> Scalar {
+    var self_5199: Motor;
+    var other_4677: Translator;
+
+    self_5199 = self_5198;
+    other_4677 = other_4676;
+    let _e4: Motor = self_5199;
+    let _e5: Translator = other_4677;
+    let _e6: Scalar = translator_right_weight_dual(_e5);
+    let _e7: Scalar = motor_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_flector_weight_contraction(self_5200: Motor, other_4678: Flector) -> Flector {
+    var self_5201: Motor;
+    var other_4679: Flector;
+
+    self_5201 = self_5200;
+    other_4679 = other_4678;
+    let _e4: Motor = self_5201;
+    let _e5: Flector = other_4679;
+    let _e6: Flector = flector_right_weight_dual(_e5);
+    let _e7: Flector = motor_flector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_multi_vector_weight_contraction(self_5202: Motor, other_4680: MultiVector) -> MultiVector {
+    var self_5203: Motor;
+    var other_4681: MultiVector;
+
+    self_5203 = self_5202;
+    other_4681 = other_4680;
+    let _e4: Motor = self_5203;
+    let _e5: MultiVector = other_4681;
+    let _e6: MultiVector = multi_vector_right_weight_dual(_e5);
+    let _e7: MultiVector = motor_multi_vector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_scalar_weight_contraction(self_5204: Rotor, other_4682: Scalar) -> Rotor {
+    var self_5205: Rotor;
+    var other_4683: Scalar;
+
+    self_5205 = self_5204;
+    other_4683 = other_4682;
+    let _e4: Rotor = self_5205;
+    let _e5: Scalar = other_4683;
+    let _e6: AntiScalar = scalar_right_weight_dual(_e5);
+    let _e7: Rotor = rotor_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_anti_scalar_weight_contraction(self_5206: Rotor, other_4684: AntiScalar) -> Scalar {
+    var self_5207: Rotor;
+    var other_4685: AntiScalar;
+
+    self_5207 = self_5206;
+    other_4685 = other_4684;
+    let _e4: Rotor = self_5207;
+    let _e5: AntiScalar = other_4685;
+    let _e6: Scalar = anti_scalar_right_weight_dual(_e5);
+    let _e7: Scalar = rotor_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_homogeneous_magnitude_weight_contraction(self_5208: Rotor, other_4686: HomogeneousMagnitude) -> Scalar {
+    var self_5209: Rotor;
+    var other_4687: HomogeneousMagnitude;
+
+    self_5209 = self_5208;
+    other_4687 = other_4686;
+    let _e4: Rotor = self_5209;
+    let _e5: HomogeneousMagnitude = other_4687;
+    let _e6: Scalar = homogeneous_magnitude_right_weight_dual(_e5);
+    let _e7: Scalar = rotor_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_point_weight_contraction(self_5210: Rotor, other_4688: Point) -> Flector {
+    var self_5211: Rotor;
+    var other_4689: Point;
+
+    self_5211 = self_5210;
+    other_4689 = other_4688;
+    let _e4: Rotor = self_5211;
+    let _e5: Point = other_4689;
+    let _e6: Plane = point_right_weight_dual(_e5);
+    let _e7: Flector = rotor_plane_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_line_weight_contraction(self_5212: Rotor, other_4690: Line) -> MultiVector {
+    var self_5213: Rotor;
+    var other_4691: Line;
+
+    self_5213 = self_5212;
+    other_4691 = other_4690;
+    let _e4: Rotor = self_5213;
+    let _e5: Line = other_4691;
+    let _e6: Line = line_right_weight_dual(_e5);
+    let _e7: MultiVector = rotor_line_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_plane_weight_contraction(self_5214: Rotor, other_4692: Plane) -> Point {
+    var self_5215: Rotor;
+    var other_4693: Plane;
+
+    self_5215 = self_5214;
+    other_4693 = other_4692;
+    let _e4: Rotor = self_5215;
+    let _e5: Plane = other_4693;
+    let _e6: Point = plane_right_weight_dual(_e5);
+    let _e7: Point = rotor_point_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_translator_weight_contraction(self_5216: Rotor, other_4694: Translator) -> Scalar {
+    var self_5217: Rotor;
+    var other_4695: Translator;
+
+    self_5217 = self_5216;
+    other_4695 = other_4694;
+    let _e4: Rotor = self_5217;
+    let _e5: Translator = other_4695;
+    let _e6: Scalar = translator_right_weight_dual(_e5);
+    let _e7: Scalar = rotor_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_flector_weight_contraction(self_5218: Rotor, other_4696: Flector) -> Flector {
+    var self_5219: Rotor;
+    var other_4697: Flector;
+
+    self_5219 = self_5218;
+    other_4697 = other_4696;
+    let _e4: Rotor = self_5219;
+    let _e5: Flector = other_4697;
+    let _e6: Flector = flector_right_weight_dual(_e5);
+    let _e7: Flector = rotor_flector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_multi_vector_weight_contraction(self_5220: Rotor, other_4698: MultiVector) -> MultiVector {
+    var self_5221: Rotor;
+    var other_4699: MultiVector;
+
+    self_5221 = self_5220;
+    other_4699 = other_4698;
+    let _e4: Rotor = self_5221;
+    let _e5: MultiVector = other_4699;
+    let _e6: MultiVector = multi_vector_right_weight_dual(_e5);
+    let _e7: MultiVector = rotor_multi_vector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_scalar_weight_contraction(self_5222: Translator, other_4700: Scalar) -> Translator {
+    var self_5223: Translator;
+    var other_4701: Scalar;
+
+    self_5223 = self_5222;
+    other_4701 = other_4700;
+    let _e4: Translator = self_5223;
+    let _e5: Scalar = other_4701;
+    let _e6: AntiScalar = scalar_right_weight_dual(_e5);
+    let _e7: Translator = translator_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_anti_scalar_weight_contraction(self_5224: Translator, other_4702: AntiScalar) -> Scalar {
+    var self_5225: Translator;
+    var other_4703: AntiScalar;
+
+    self_5225 = self_5224;
+    other_4703 = other_4702;
+    let _e4: Translator = self_5225;
+    let _e5: AntiScalar = other_4703;
+    let _e6: Scalar = anti_scalar_right_weight_dual(_e5);
+    let _e7: Scalar = translator_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_homogeneous_magnitude_weight_contraction(self_5226: Translator, other_4704: HomogeneousMagnitude) -> Scalar {
+    var self_5227: Translator;
+    var other_4705: HomogeneousMagnitude;
+
+    self_5227 = self_5226;
+    other_4705 = other_4704;
+    let _e4: Translator = self_5227;
+    let _e5: HomogeneousMagnitude = other_4705;
+    let _e6: Scalar = homogeneous_magnitude_right_weight_dual(_e5);
+    let _e7: Scalar = translator_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_point_weight_contraction(self_5228: Translator, other_4706: Point) -> Flector {
+    var self_5229: Translator;
+    var other_4707: Point;
+
+    self_5229 = self_5228;
+    other_4707 = other_4706;
+    let _e4: Translator = self_5229;
+    let _e5: Point = other_4707;
+    let _e6: Plane = point_right_weight_dual(_e5);
+    let _e7: Flector = translator_plane_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_line_weight_contraction(self_5230: Translator, other_4708: Line) -> MultiVector {
+    var self_5231: Translator;
+    var other_4709: Line;
+
+    self_5231 = self_5230;
+    other_4709 = other_4708;
+    let _e4: Translator = self_5231;
+    let _e5: Line = other_4709;
+    let _e6: Line = line_right_weight_dual(_e5);
+    let _e7: MultiVector = translator_line_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_plane_weight_contraction(self_5232: Translator, other_4710: Plane) -> Point {
+    var self_5233: Translator;
+    var other_4711: Plane;
+
+    self_5233 = self_5232;
+    other_4711 = other_4710;
+    let _e4: Translator = self_5233;
+    let _e5: Plane = other_4711;
+    let _e6: Point = plane_right_weight_dual(_e5);
+    let _e7: Point = translator_point_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_translator_weight_contraction(self_5234: Translator, other_4712: Translator) -> Scalar {
+    var self_5235: Translator;
+    var other_4713: Translator;
+
+    self_5235 = self_5234;
+    other_4713 = other_4712;
+    let _e4: Translator = self_5235;
+    let _e5: Translator = other_4713;
+    let _e6: Scalar = translator_right_weight_dual(_e5);
+    let _e7: Scalar = translator_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_flector_weight_contraction(self_5236: Translator, other_4714: Flector) -> Flector {
+    var self_5237: Translator;
+    var other_4715: Flector;
+
+    self_5237 = self_5236;
+    other_4715 = other_4714;
+    let _e4: Translator = self_5237;
+    let _e5: Flector = other_4715;
+    let _e6: Flector = flector_right_weight_dual(_e5);
+    let _e7: Flector = translator_flector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_multi_vector_weight_contraction(self_5238: Translator, other_4716: MultiVector) -> MultiVector {
+    var self_5239: Translator;
+    var other_4717: MultiVector;
+
+    self_5239 = self_5238;
+    other_4717 = other_4716;
+    let _e4: Translator = self_5239;
+    let _e5: MultiVector = other_4717;
+    let _e6: MultiVector = multi_vector_right_weight_dual(_e5);
+    let _e7: MultiVector = translator_multi_vector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn flector_scalar_weight_contraction(self_5240: Flector, other_4718: Scalar) -> Flector {
+    var self_5241: Flector;
+    var other_4719: Scalar;
+
+    self_5241 = self_5240;
+    other_4719 = other_4718;
+    let _e4: Flector = self_5241;
+    let _e5: Scalar = other_4719;
+    let _e6: AntiScalar = scalar_right_weight_dual(_e5);
+    let _e7: Flector = flector_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn flector_point_weight_contraction(self_5242: Flector, other_4720: Point) -> MultiVector {
+    var self_5243: Flector;
+    var other_4721: Point;
+
+    self_5243 = self_5242;
+    other_4721 = other_4720;
+    let _e4: Flector = self_5243;
+    let _e5: Point = other_4721;
+    let _e6: Plane = point_right_weight_dual(_e5);
+    let _e7: MultiVector = flector_plane_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn flector_line_weight_contraction(self_5244: Flector, other_4722: Line) -> Point {
+    var self_5245: Flector;
+    var other_4723: Line;
+
+    self_5245 = self_5244;
+    other_4723 = other_4722;
+    let _e4: Flector = self_5245;
+    let _e5: Line = other_4723;
+    let _e6: Line = line_right_weight_dual(_e5);
+    let _e7: Point = flector_line_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn flector_plane_weight_contraction(self_5246: Flector, other_4724: Plane) -> Scalar {
+    var self_5247: Flector;
+    var other_4725: Plane;
+
+    self_5247 = self_5246;
+    other_4725 = other_4724;
+    let _e4: Flector = self_5247;
+    let _e5: Plane = other_4725;
+    let _e6: Point = plane_right_weight_dual(_e5);
+    let _e7: Scalar = flector_point_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn flector_flector_weight_contraction(self_5248: Flector, other_4726: Flector) -> MultiVector {
+    var self_5249: Flector;
+    var other_4727: Flector;
+
+    self_5249 = self_5248;
+    other_4727 = other_4726;
+    let _e4: Flector = self_5249;
+    let _e5: Flector = other_4727;
+    let _e6: Flector = flector_right_weight_dual(_e5);
+    let _e7: MultiVector = flector_flector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn flector_multi_vector_weight_contraction(self_5250: Flector, other_4728: MultiVector) -> MultiVector {
+    var self_5251: Flector;
+    var other_4729: MultiVector;
+
+    self_5251 = self_5250;
+    other_4729 = other_4728;
+    let _e4: Flector = self_5251;
+    let _e5: MultiVector = other_4729;
+    let _e6: MultiVector = multi_vector_right_weight_dual(_e5);
+    let _e7: MultiVector = flector_multi_vector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_scalar_weight_contraction(self_5252: MultiVector, other_4730: Scalar) -> MultiVector {
+    var self_5253: MultiVector;
+    var other_4731: Scalar;
+
+    self_5253 = self_5252;
+    other_4731 = other_4730;
+    let _e4: MultiVector = self_5253;
+    let _e5: Scalar = other_4731;
+    let _e6: AntiScalar = scalar_right_weight_dual(_e5);
+    let _e7: MultiVector = multi_vector_anti_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_anti_scalar_weight_contraction(self_5254: MultiVector, other_4732: AntiScalar) -> Scalar {
+    var self_5255: MultiVector;
+    var other_4733: AntiScalar;
+
+    self_5255 = self_5254;
+    other_4733 = other_4732;
+    let _e4: MultiVector = self_5255;
+    let _e5: AntiScalar = other_4733;
+    let _e6: Scalar = anti_scalar_right_weight_dual(_e5);
+    let _e7: Scalar = multi_vector_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_homogeneous_magnitude_weight_contraction(self_5256: MultiVector, other_4734: HomogeneousMagnitude) -> Scalar {
+    var self_5257: MultiVector;
+    var other_4735: HomogeneousMagnitude;
+
+    self_5257 = self_5256;
+    other_4735 = other_4734;
+    let _e4: MultiVector = self_5257;
+    let _e5: HomogeneousMagnitude = other_4735;
+    let _e6: Scalar = homogeneous_magnitude_right_weight_dual(_e5);
+    let _e7: Scalar = multi_vector_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_point_weight_contraction(self_5258: MultiVector, other_4736: Point) -> MultiVector {
+    var self_5259: MultiVector;
+    var other_4737: Point;
+
+    self_5259 = self_5258;
+    other_4737 = other_4736;
+    let _e4: MultiVector = self_5259;
+    let _e5: Point = other_4737;
+    let _e6: Plane = point_right_weight_dual(_e5);
+    let _e7: MultiVector = multi_vector_plane_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_line_weight_contraction(self_5260: MultiVector, other_4738: Line) -> MultiVector {
+    var self_5261: MultiVector;
+    var other_4739: Line;
+
+    self_5261 = self_5260;
+    other_4739 = other_4738;
+    let _e4: MultiVector = self_5261;
+    let _e5: Line = other_4739;
+    let _e6: Line = line_right_weight_dual(_e5);
+    let _e7: MultiVector = multi_vector_line_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_plane_weight_contraction(self_5262: MultiVector, other_4740: Plane) -> MultiVector {
+    var self_5263: MultiVector;
+    var other_4741: Plane;
+
+    self_5263 = self_5262;
+    other_4741 = other_4740;
+    let _e4: MultiVector = self_5263;
+    let _e5: Plane = other_4741;
+    let _e6: Point = plane_right_weight_dual(_e5);
+    let _e7: MultiVector = multi_vector_point_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_translator_weight_contraction(self_5264: MultiVector, other_4742: Translator) -> Scalar {
+    var self_5265: MultiVector;
+    var other_4743: Translator;
+
+    self_5265 = self_5264;
+    other_4743 = other_4742;
+    let _e4: MultiVector = self_5265;
+    let _e5: Translator = other_4743;
+    let _e6: Scalar = translator_right_weight_dual(_e5);
+    let _e7: Scalar = multi_vector_scalar_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_flector_weight_contraction(self_5266: MultiVector, other_4744: Flector) -> MultiVector {
+    var self_5267: MultiVector;
+    var other_4745: Flector;
+
+    self_5267 = self_5266;
+    other_4745 = other_4744;
+    let _e4: MultiVector = self_5267;
+    let _e5: Flector = other_4745;
+    let _e6: Flector = flector_right_weight_dual(_e5);
+    let _e7: MultiVector = multi_vector_flector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_multi_vector_weight_contraction(self_5268: MultiVector, other_4746: MultiVector) -> MultiVector {
+    var self_5269: MultiVector;
+    var other_4747: MultiVector;
+
+    self_5269 = self_5268;
+    other_4747 = other_4746;
+    let _e4: MultiVector = self_5269;
+    let _e5: MultiVector = other_4747;
+    let _e6: MultiVector = multi_vector_right_weight_dual(_e5);
+    let _e7: MultiVector = multi_vector_multi_vector_anti_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn scalar_scalar_bulk_expansion(self_5270: Scalar, other_4748: Scalar) -> AntiScalar {
+    var self_5271: Scalar;
+    var other_4749: Scalar;
+
+    self_5271 = self_5270;
+    other_4749 = other_4748;
+    let _e4: Scalar = self_5271;
+    let _e5: Scalar = other_4749;
+    let _e6: AntiScalar = scalar_right_bulk_dual(_e5);
+    let _e7: AntiScalar = scalar_anti_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn scalar_anti_scalar_bulk_expansion(self_5272: Scalar, other_4750: AntiScalar) -> Scalar {
+    var self_5273: Scalar;
+    var other_4751: AntiScalar;
+
+    self_5273 = self_5272;
+    other_4751 = other_4750;
+    let _e4: Scalar = self_5273;
+    let _e5: AntiScalar = other_4751;
+    let _e6: Scalar = anti_scalar_right_bulk_dual(_e5);
+    let _e7: Scalar = scalar_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn scalar_homogeneous_magnitude_bulk_expansion(self_5274: Scalar, other_4752: HomogeneousMagnitude) -> AntiScalar {
+    var self_5275: Scalar;
+    var other_4753: HomogeneousMagnitude;
+
+    self_5275 = self_5274;
+    other_4753 = other_4752;
+    let _e4: Scalar = self_5275;
+    let _e5: HomogeneousMagnitude = other_4753;
+    let _e6: AntiScalar = homogeneous_magnitude_right_bulk_dual(_e5);
+    let _e7: AntiScalar = scalar_anti_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn scalar_point_bulk_expansion(self_5276: Scalar, other_4754: Point) -> Plane {
+    var self_5277: Scalar;
+    var other_4755: Point;
+
+    self_5277 = self_5276;
+    other_4755 = other_4754;
+    let _e4: Scalar = self_5277;
+    let _e5: Point = other_4755;
+    let _e6: Plane = point_right_bulk_dual(_e5);
+    let _e7: Plane = scalar_plane_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn scalar_line_bulk_expansion(self_5278: Scalar, other_4756: Line) -> Line {
+    var self_5279: Scalar;
+    var other_4757: Line;
+
+    self_5279 = self_5278;
+    other_4757 = other_4756;
+    let _e4: Scalar = self_5279;
+    let _e5: Line = other_4757;
+    let _e6: Line = line_right_bulk_dual(_e5);
+    let _e7: Line = scalar_line_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn scalar_plane_bulk_expansion(self_5280: Scalar, other_4758: Plane) -> Point {
+    var self_5281: Scalar;
+    var other_4759: Plane;
+
+    self_5281 = self_5280;
+    other_4759 = other_4758;
+    let _e4: Scalar = self_5281;
+    let _e5: Plane = other_4759;
+    let _e6: Point = plane_right_bulk_dual(_e5);
+    let _e7: Point = scalar_point_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn scalar_flector_bulk_expansion(self_5282: Scalar, other_4760: Flector) -> Flector {
+    var self_5283: Scalar;
+    var other_4761: Flector;
+
+    self_5283 = self_5282;
+    other_4761 = other_4760;
+    let _e4: Scalar = self_5283;
+    let _e5: Flector = other_4761;
+    let _e6: Flector = flector_right_bulk_dual(_e5);
+    let _e7: Flector = scalar_flector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn scalar_multi_vector_bulk_expansion(self_5284: Scalar, other_4762: MultiVector) -> MultiVector {
+    var self_5285: Scalar;
+    var other_4763: MultiVector;
+
+    self_5285 = self_5284;
+    other_4763 = other_4762;
+    let _e4: Scalar = self_5285;
+    let _e5: MultiVector = other_4763;
+    let _e6: MultiVector = multi_vector_right_bulk_dual(_e5);
+    let _e7: MultiVector = scalar_multi_vector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_anti_scalar_bulk_expansion(self_5286: AntiScalar, other_4764: AntiScalar) -> AntiScalar {
+    var self_5287: AntiScalar;
+    var other_4765: AntiScalar;
+
+    self_5287 = self_5286;
+    other_4765 = other_4764;
+    let _e4: AntiScalar = self_5287;
+    let _e5: AntiScalar = other_4765;
+    let _e6: Scalar = anti_scalar_right_bulk_dual(_e5);
+    let _e7: AntiScalar = anti_scalar_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_multi_vector_bulk_expansion(self_5288: AntiScalar, other_4766: MultiVector) -> AntiScalar {
+    var self_5289: AntiScalar;
+    var other_4767: MultiVector;
+
+    self_5289 = self_5288;
+    other_4767 = other_4766;
+    let _e4: AntiScalar = self_5289;
+    let _e5: MultiVector = other_4767;
+    let _e6: MultiVector = multi_vector_right_bulk_dual(_e5);
+    let _e7: AntiScalar = anti_scalar_multi_vector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_scalar_bulk_expansion(self_5290: HomogeneousMagnitude, other_4768: Scalar) -> AntiScalar {
+    var self_5291: HomogeneousMagnitude;
+    var other_4769: Scalar;
+
+    self_5291 = self_5290;
+    other_4769 = other_4768;
+    let _e4: HomogeneousMagnitude = self_5291;
+    let _e5: Scalar = other_4769;
+    let _e6: AntiScalar = scalar_right_bulk_dual(_e5);
+    let _e7: AntiScalar = homogeneous_magnitude_anti_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_anti_scalar_bulk_expansion(self_5292: HomogeneousMagnitude, other_4770: AntiScalar) -> HomogeneousMagnitude {
+    var self_5293: HomogeneousMagnitude;
+    var other_4771: AntiScalar;
+
+    self_5293 = self_5292;
+    other_4771 = other_4770;
+    let _e4: HomogeneousMagnitude = self_5293;
+    let _e5: AntiScalar = other_4771;
+    let _e6: Scalar = anti_scalar_right_bulk_dual(_e5);
+    let _e7: HomogeneousMagnitude = homogeneous_magnitude_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_homogeneous_magnitude_bulk_expansion(self_5294: HomogeneousMagnitude, other_4772: HomogeneousMagnitude) -> AntiScalar {
+    var self_5295: HomogeneousMagnitude;
+    var other_4773: HomogeneousMagnitude;
+
+    self_5295 = self_5294;
+    other_4773 = other_4772;
+    let _e4: HomogeneousMagnitude = self_5295;
+    let _e5: HomogeneousMagnitude = other_4773;
+    let _e6: AntiScalar = homogeneous_magnitude_right_bulk_dual(_e5);
+    let _e7: AntiScalar = homogeneous_magnitude_anti_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_point_bulk_expansion(self_5296: HomogeneousMagnitude, other_4774: Point) -> Plane {
+    var self_5297: HomogeneousMagnitude;
+    var other_4775: Point;
+
+    self_5297 = self_5296;
+    other_4775 = other_4774;
+    let _e4: HomogeneousMagnitude = self_5297;
+    let _e5: Point = other_4775;
+    let _e6: Plane = point_right_bulk_dual(_e5);
+    let _e7: Plane = homogeneous_magnitude_plane_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_line_bulk_expansion(self_5298: HomogeneousMagnitude, other_4776: Line) -> Line {
+    var self_5299: HomogeneousMagnitude;
+    var other_4777: Line;
+
+    self_5299 = self_5298;
+    other_4777 = other_4776;
+    let _e4: HomogeneousMagnitude = self_5299;
+    let _e5: Line = other_4777;
+    let _e6: Line = line_right_bulk_dual(_e5);
+    let _e7: Line = homogeneous_magnitude_line_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_plane_bulk_expansion(self_5300: HomogeneousMagnitude, other_4778: Plane) -> Point {
+    var self_5301: HomogeneousMagnitude;
+    var other_4779: Plane;
+
+    self_5301 = self_5300;
+    other_4779 = other_4778;
+    let _e4: HomogeneousMagnitude = self_5301;
+    let _e5: Plane = other_4779;
+    let _e6: Point = plane_right_bulk_dual(_e5);
+    let _e7: Point = homogeneous_magnitude_point_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_flector_bulk_expansion(self_5302: HomogeneousMagnitude, other_4780: Flector) -> Flector {
+    var self_5303: HomogeneousMagnitude;
+    var other_4781: Flector;
+
+    self_5303 = self_5302;
+    other_4781 = other_4780;
+    let _e4: HomogeneousMagnitude = self_5303;
+    let _e5: Flector = other_4781;
+    let _e6: Flector = flector_right_bulk_dual(_e5);
+    let _e7: Flector = homogeneous_magnitude_flector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_multi_vector_bulk_expansion(self_5304: HomogeneousMagnitude, other_4782: MultiVector) -> MultiVector {
+    var self_5305: HomogeneousMagnitude;
+    var other_4783: MultiVector;
+
+    self_5305 = self_5304;
+    other_4783 = other_4782;
+    let _e4: HomogeneousMagnitude = self_5305;
+    let _e5: MultiVector = other_4783;
+    let _e6: MultiVector = multi_vector_right_bulk_dual(_e5);
+    let _e7: MultiVector = homogeneous_magnitude_multi_vector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn point_anti_scalar_bulk_expansion(self_5306: Point, other_4784: AntiScalar) -> Point {
+    var self_5307: Point;
+    var other_4785: AntiScalar;
+
+    self_5307 = self_5306;
+    other_4785 = other_4784;
+    let _e4: Point = self_5307;
+    let _e5: AntiScalar = other_4785;
+    let _e6: Scalar = anti_scalar_right_bulk_dual(_e5);
+    let _e7: Point = point_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn point_point_bulk_expansion(self_5308: Point, other_4786: Point) -> AntiScalar {
+    var self_5309: Point;
+    var other_4787: Point;
+
+    self_5309 = self_5308;
+    other_4787 = other_4786;
+    let _e4: Point = self_5309;
+    let _e5: Point = other_4787;
+    let _e6: Plane = point_right_bulk_dual(_e5);
+    let _e7: AntiScalar = point_plane_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn point_line_bulk_expansion(self_5310: Point, other_4788: Line) -> Plane {
+    var self_5311: Point;
+    var other_4789: Line;
+
+    self_5311 = self_5310;
+    other_4789 = other_4788;
+    let _e4: Point = self_5311;
+    let _e5: Line = other_4789;
+    let _e6: Line = line_right_bulk_dual(_e5);
+    let _e7: Plane = point_line_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn point_plane_bulk_expansion(self_5312: Point, other_4790: Plane) -> Line {
+    var self_5313: Point;
+    var other_4791: Plane;
+
+    self_5313 = self_5312;
+    other_4791 = other_4790;
+    let _e4: Point = self_5313;
+    let _e5: Plane = other_4791;
+    let _e6: Point = plane_right_bulk_dual(_e5);
+    let _e7: Line = point_point_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn point_flector_bulk_expansion(self_5314: Point, other_4792: Flector) -> Motor {
+    var self_5315: Point;
+    var other_4793: Flector;
+
+    self_5315 = self_5314;
+    other_4793 = other_4792;
+    let _e4: Point = self_5315;
+    let _e5: Flector = other_4793;
+    let _e6: Flector = flector_right_bulk_dual(_e5);
+    let _e7: Motor = point_flector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn point_multi_vector_bulk_expansion(self_5316: Point, other_4794: MultiVector) -> MultiVector {
+    var self_5317: Point;
+    var other_4795: MultiVector;
+
+    self_5317 = self_5316;
+    other_4795 = other_4794;
+    let _e4: Point = self_5317;
+    let _e5: MultiVector = other_4795;
+    let _e6: MultiVector = multi_vector_right_bulk_dual(_e5);
+    let _e7: MultiVector = point_multi_vector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn line_anti_scalar_bulk_expansion(self_5318: Line, other_4796: AntiScalar) -> Line {
+    var self_5319: Line;
+    var other_4797: AntiScalar;
+
+    self_5319 = self_5318;
+    other_4797 = other_4796;
+    let _e4: Line = self_5319;
+    let _e5: AntiScalar = other_4797;
+    let _e6: Scalar = anti_scalar_right_bulk_dual(_e5);
+    let _e7: Line = line_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn line_line_bulk_expansion(self_5320: Line, other_4798: Line) -> AntiScalar {
+    var self_5321: Line;
+    var other_4799: Line;
+
+    self_5321 = self_5320;
+    other_4799 = other_4798;
+    let _e4: Line = self_5321;
+    let _e5: Line = other_4799;
+    let _e6: Line = line_right_bulk_dual(_e5);
+    let _e7: AntiScalar = line_line_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn line_plane_bulk_expansion(self_5322: Line, other_4800: Plane) -> Plane {
+    var self_5323: Line;
+    var other_4801: Plane;
+
+    self_5323 = self_5322;
+    other_4801 = other_4800;
+    let _e4: Line = self_5323;
+    let _e5: Plane = other_4801;
+    let _e6: Point = plane_right_bulk_dual(_e5);
+    let _e7: Plane = line_point_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn line_flector_bulk_expansion(self_5324: Line, other_4802: Flector) -> Plane {
+    var self_5325: Line;
+    var other_4803: Flector;
+
+    self_5325 = self_5324;
+    other_4803 = other_4802;
+    let _e4: Line = self_5325;
+    let _e5: Flector = other_4803;
+    let _e6: Flector = flector_right_bulk_dual(_e5);
+    let _e7: Plane = line_flector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn line_multi_vector_bulk_expansion(self_5326: Line, other_4804: MultiVector) -> MultiVector {
+    var self_5327: Line;
+    var other_4805: MultiVector;
+
+    self_5327 = self_5326;
+    other_4805 = other_4804;
+    let _e4: Line = self_5327;
+    let _e5: MultiVector = other_4805;
+    let _e6: MultiVector = multi_vector_right_bulk_dual(_e5);
+    let _e7: MultiVector = line_multi_vector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn plane_anti_scalar_bulk_expansion(self_5328: Plane, other_4806: AntiScalar) -> Plane {
+    var self_5329: Plane;
+    var other_4807: AntiScalar;
+
+    self_5329 = self_5328;
+    other_4807 = other_4806;
+    let _e4: Plane = self_5329;
+    let _e5: AntiScalar = other_4807;
+    let _e6: Scalar = anti_scalar_right_bulk_dual(_e5);
+    let _e7: Plane = plane_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn plane_plane_bulk_expansion(self_5330: Plane, other_4808: Plane) -> AntiScalar {
+    var self_5331: Plane;
+    var other_4809: Plane;
+
+    self_5331 = self_5330;
+    other_4809 = other_4808;
+    let _e4: Plane = self_5331;
+    let _e5: Plane = other_4809;
+    let _e6: Point = plane_right_bulk_dual(_e5);
+    let _e7: AntiScalar = plane_point_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn plane_flector_bulk_expansion(self_5332: Plane, other_4810: Flector) -> AntiScalar {
+    var self_5333: Plane;
+    var other_4811: Flector;
+
+    self_5333 = self_5332;
+    other_4811 = other_4810;
+    let _e4: Plane = self_5333;
+    let _e5: Flector = other_4811;
+    let _e6: Flector = flector_right_bulk_dual(_e5);
+    let _e7: AntiScalar = plane_flector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn plane_multi_vector_bulk_expansion(self_5334: Plane, other_4812: MultiVector) -> MultiVector {
+    var self_5335: Plane;
+    var other_4813: MultiVector;
+
+    self_5335 = self_5334;
+    other_4813 = other_4812;
+    let _e4: Plane = self_5335;
+    let _e5: MultiVector = other_4813;
+    let _e6: MultiVector = multi_vector_right_bulk_dual(_e5);
+    let _e7: MultiVector = plane_multi_vector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_anti_scalar_bulk_expansion(self_5336: Motor, other_4814: AntiScalar) -> Motor {
+    var self_5337: Motor;
+    var other_4815: AntiScalar;
+
+    self_5337 = self_5336;
+    other_4815 = other_4814;
+    let _e4: Motor = self_5337;
+    let _e5: AntiScalar = other_4815;
+    let _e6: Scalar = anti_scalar_right_bulk_dual(_e5);
+    let _e7: Motor = motor_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_line_bulk_expansion(self_5338: Motor, other_4816: Line) -> AntiScalar {
+    var self_5339: Motor;
+    var other_4817: Line;
+
+    self_5339 = self_5338;
+    other_4817 = other_4816;
+    let _e4: Motor = self_5339;
+    let _e5: Line = other_4817;
+    let _e6: Line = line_right_bulk_dual(_e5);
+    let _e7: AntiScalar = motor_line_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_plane_bulk_expansion(self_5340: Motor, other_4818: Plane) -> Plane {
+    var self_5341: Motor;
+    var other_4819: Plane;
+
+    self_5341 = self_5340;
+    other_4819 = other_4818;
+    let _e4: Motor = self_5341;
+    let _e5: Plane = other_4819;
+    let _e6: Point = plane_right_bulk_dual(_e5);
+    let _e7: Plane = motor_point_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_flector_bulk_expansion(self_5342: Motor, other_4820: Flector) -> Plane {
+    var self_5343: Motor;
+    var other_4821: Flector;
+
+    self_5343 = self_5342;
+    other_4821 = other_4820;
+    let _e4: Motor = self_5343;
+    let _e5: Flector = other_4821;
+    let _e6: Flector = flector_right_bulk_dual(_e5);
+    let _e7: Plane = motor_flector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_multi_vector_bulk_expansion(self_5344: Motor, other_4822: MultiVector) -> MultiVector {
+    var self_5345: Motor;
+    var other_4823: MultiVector;
+
+    self_5345 = self_5344;
+    other_4823 = other_4822;
+    let _e4: Motor = self_5345;
+    let _e5: MultiVector = other_4823;
+    let _e6: MultiVector = multi_vector_right_bulk_dual(_e5);
+    let _e7: MultiVector = motor_multi_vector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_anti_scalar_bulk_expansion(self_5346: Rotor, other_4824: AntiScalar) -> Rotor {
+    var self_5347: Rotor;
+    var other_4825: AntiScalar;
+
+    self_5347 = self_5346;
+    other_4825 = other_4824;
+    let _e4: Rotor = self_5347;
+    let _e5: AntiScalar = other_4825;
+    let _e6: Scalar = anti_scalar_right_bulk_dual(_e5);
+    let _e7: Rotor = rotor_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_line_bulk_expansion(self_5348: Rotor, other_4826: Line) -> AntiScalar {
+    var self_5349: Rotor;
+    var other_4827: Line;
+
+    self_5349 = self_5348;
+    other_4827 = other_4826;
+    let _e4: Rotor = self_5349;
+    let _e5: Line = other_4827;
+    let _e6: Line = line_right_bulk_dual(_e5);
+    let _e7: AntiScalar = rotor_line_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_plane_bulk_expansion(self_5350: Rotor, other_4828: Plane) -> Plane {
+    var self_5351: Rotor;
+    var other_4829: Plane;
+
+    self_5351 = self_5350;
+    other_4829 = other_4828;
+    let _e4: Rotor = self_5351;
+    let _e5: Plane = other_4829;
+    let _e6: Point = plane_right_bulk_dual(_e5);
+    let _e7: Plane = rotor_point_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_flector_bulk_expansion(self_5352: Rotor, other_4830: Flector) -> Plane {
+    var self_5353: Rotor;
+    var other_4831: Flector;
+
+    self_5353 = self_5352;
+    other_4831 = other_4830;
+    let _e4: Rotor = self_5353;
+    let _e5: Flector = other_4831;
+    let _e6: Flector = flector_right_bulk_dual(_e5);
+    let _e7: Plane = rotor_flector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_multi_vector_bulk_expansion(self_5354: Rotor, other_4832: MultiVector) -> MultiVector {
+    var self_5355: Rotor;
+    var other_4833: MultiVector;
+
+    self_5355 = self_5354;
+    other_4833 = other_4832;
+    let _e4: Rotor = self_5355;
+    let _e5: MultiVector = other_4833;
+    let _e6: MultiVector = multi_vector_right_bulk_dual(_e5);
+    let _e7: MultiVector = rotor_multi_vector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_anti_scalar_bulk_expansion(self_5356: Translator, other_4834: AntiScalar) -> Translator {
+    var self_5357: Translator;
+    var other_4835: AntiScalar;
+
+    self_5357 = self_5356;
+    other_4835 = other_4834;
+    let _e4: Translator = self_5357;
+    let _e5: AntiScalar = other_4835;
+    let _e6: Scalar = anti_scalar_right_bulk_dual(_e5);
+    let _e7: Translator = translator_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_line_bulk_expansion(self_5358: Translator, other_4836: Line) -> AntiScalar {
+    var self_5359: Translator;
+    var other_4837: Line;
+
+    self_5359 = self_5358;
+    other_4837 = other_4836;
+    let _e4: Translator = self_5359;
+    let _e5: Line = other_4837;
+    let _e6: Line = line_right_bulk_dual(_e5);
+    let _e7: AntiScalar = translator_line_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_plane_bulk_expansion(self_5360: Translator, other_4838: Plane) -> Plane {
+    var self_5361: Translator;
+    var other_4839: Plane;
+
+    self_5361 = self_5360;
+    other_4839 = other_4838;
+    let _e4: Translator = self_5361;
+    let _e5: Plane = other_4839;
+    let _e6: Point = plane_right_bulk_dual(_e5);
+    let _e7: Plane = translator_point_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_flector_bulk_expansion(self_5362: Translator, other_4840: Flector) -> Plane {
+    var self_5363: Translator;
+    var other_4841: Flector;
+
+    self_5363 = self_5362;
+    other_4841 = other_4840;
+    let _e4: Translator = self_5363;
+    let _e5: Flector = other_4841;
+    let _e6: Flector = flector_right_bulk_dual(_e5);
+    let _e7: Plane = translator_flector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_multi_vector_bulk_expansion(self_5364: Translator, other_4842: MultiVector) -> MultiVector {
+    var self_5365: Translator;
+    var other_4843: MultiVector;
+
+    self_5365 = self_5364;
+    other_4843 = other_4842;
+    let _e4: Translator = self_5365;
+    let _e5: MultiVector = other_4843;
+    let _e6: MultiVector = multi_vector_right_bulk_dual(_e5);
+    let _e7: MultiVector = translator_multi_vector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn flector_anti_scalar_bulk_expansion(self_5366: Flector, other_4844: AntiScalar) -> Flector {
+    var self_5367: Flector;
+    var other_4845: AntiScalar;
+
+    self_5367 = self_5366;
+    other_4845 = other_4844;
+    let _e4: Flector = self_5367;
+    let _e5: AntiScalar = other_4845;
+    let _e6: Scalar = anti_scalar_right_bulk_dual(_e5);
+    let _e7: Flector = flector_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn flector_point_bulk_expansion(self_5368: Flector, other_4846: Point) -> AntiScalar {
+    var self_5369: Flector;
+    var other_4847: Point;
+
+    self_5369 = self_5368;
+    other_4847 = other_4846;
+    let _e4: Flector = self_5369;
+    let _e5: Point = other_4847;
+    let _e6: Plane = point_right_bulk_dual(_e5);
+    let _e7: AntiScalar = flector_plane_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn flector_line_bulk_expansion(self_5370: Flector, other_4848: Line) -> Plane {
+    var self_5371: Flector;
+    var other_4849: Line;
+
+    self_5371 = self_5370;
+    other_4849 = other_4848;
+    let _e4: Flector = self_5371;
+    let _e5: Line = other_4849;
+    let _e6: Line = line_right_bulk_dual(_e5);
+    let _e7: Plane = flector_line_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn flector_plane_bulk_expansion(self_5372: Flector, other_4850: Plane) -> Motor {
+    var self_5373: Flector;
+    var other_4851: Plane;
+
+    self_5373 = self_5372;
+    other_4851 = other_4850;
+    let _e4: Flector = self_5373;
+    let _e5: Plane = other_4851;
+    let _e6: Point = plane_right_bulk_dual(_e5);
+    let _e7: Motor = flector_point_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn flector_flector_bulk_expansion(self_5374: Flector, other_4852: Flector) -> Motor {
+    var self_5375: Flector;
+    var other_4853: Flector;
+
+    self_5375 = self_5374;
+    other_4853 = other_4852;
+    let _e4: Flector = self_5375;
+    let _e5: Flector = other_4853;
+    let _e6: Flector = flector_right_bulk_dual(_e5);
+    let _e7: Motor = flector_flector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn flector_multi_vector_bulk_expansion(self_5376: Flector, other_4854: MultiVector) -> MultiVector {
+    var self_5377: Flector;
+    var other_4855: MultiVector;
+
+    self_5377 = self_5376;
+    other_4855 = other_4854;
+    let _e4: Flector = self_5377;
+    let _e5: MultiVector = other_4855;
+    let _e6: MultiVector = multi_vector_right_bulk_dual(_e5);
+    let _e7: MultiVector = flector_multi_vector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_scalar_bulk_expansion(self_5378: MultiVector, other_4856: Scalar) -> AntiScalar {
+    var self_5379: MultiVector;
+    var other_4857: Scalar;
+
+    self_5379 = self_5378;
+    other_4857 = other_4856;
+    let _e4: MultiVector = self_5379;
+    let _e5: Scalar = other_4857;
+    let _e6: AntiScalar = scalar_right_bulk_dual(_e5);
+    let _e7: AntiScalar = multi_vector_anti_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_anti_scalar_bulk_expansion(self_5380: MultiVector, other_4858: AntiScalar) -> MultiVector {
+    var self_5381: MultiVector;
+    var other_4859: AntiScalar;
+
+    self_5381 = self_5380;
+    other_4859 = other_4858;
+    let _e4: MultiVector = self_5381;
+    let _e5: AntiScalar = other_4859;
+    let _e6: Scalar = anti_scalar_right_bulk_dual(_e5);
+    let _e7: MultiVector = multi_vector_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_homogeneous_magnitude_bulk_expansion(self_5382: MultiVector, other_4860: HomogeneousMagnitude) -> AntiScalar {
+    var self_5383: MultiVector;
+    var other_4861: HomogeneousMagnitude;
+
+    self_5383 = self_5382;
+    other_4861 = other_4860;
+    let _e4: MultiVector = self_5383;
+    let _e5: HomogeneousMagnitude = other_4861;
+    let _e6: AntiScalar = homogeneous_magnitude_right_bulk_dual(_e5);
+    let _e7: AntiScalar = multi_vector_anti_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_point_bulk_expansion(self_5384: MultiVector, other_4862: Point) -> MultiVector {
+    var self_5385: MultiVector;
+    var other_4863: Point;
+
+    self_5385 = self_5384;
+    other_4863 = other_4862;
+    let _e4: MultiVector = self_5385;
+    let _e5: Point = other_4863;
+    let _e6: Plane = point_right_bulk_dual(_e5);
+    let _e7: MultiVector = multi_vector_plane_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_line_bulk_expansion(self_5386: MultiVector, other_4864: Line) -> MultiVector {
+    var self_5387: MultiVector;
+    var other_4865: Line;
+
+    self_5387 = self_5386;
+    other_4865 = other_4864;
+    let _e4: MultiVector = self_5387;
+    let _e5: Line = other_4865;
+    let _e6: Line = line_right_bulk_dual(_e5);
+    let _e7: MultiVector = multi_vector_line_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_plane_bulk_expansion(self_5388: MultiVector, other_4866: Plane) -> MultiVector {
+    var self_5389: MultiVector;
+    var other_4867: Plane;
+
+    self_5389 = self_5388;
+    other_4867 = other_4866;
+    let _e4: MultiVector = self_5389;
+    let _e5: Plane = other_4867;
+    let _e6: Point = plane_right_bulk_dual(_e5);
+    let _e7: MultiVector = multi_vector_point_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_flector_bulk_expansion(self_5390: MultiVector, other_4868: Flector) -> MultiVector {
+    var self_5391: MultiVector;
+    var other_4869: Flector;
+
+    self_5391 = self_5390;
+    other_4869 = other_4868;
+    let _e4: MultiVector = self_5391;
+    let _e5: Flector = other_4869;
+    let _e6: Flector = flector_right_bulk_dual(_e5);
+    let _e7: MultiVector = multi_vector_flector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_multi_vector_bulk_expansion(self_5392: MultiVector, other_4870: MultiVector) -> MultiVector {
+    var self_5393: MultiVector;
+    var other_4871: MultiVector;
+
+    self_5393 = self_5392;
+    other_4871 = other_4870;
+    let _e4: MultiVector = self_5393;
+    let _e5: MultiVector = other_4871;
+    let _e6: MultiVector = multi_vector_right_bulk_dual(_e5);
+    let _e7: MultiVector = multi_vector_multi_vector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn scalar_scalar_weight_expansion(self_5394: Scalar, other_4872: Scalar) -> AntiScalar {
+    var self_5395: Scalar;
+    var other_4873: Scalar;
+
+    self_5395 = self_5394;
+    other_4873 = other_4872;
+    let _e4: Scalar = self_5395;
+    let _e5: Scalar = other_4873;
+    let _e6: AntiScalar = scalar_right_weight_dual(_e5);
+    let _e7: AntiScalar = scalar_anti_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn scalar_anti_scalar_weight_expansion(self_5396: Scalar, other_4874: AntiScalar) -> Scalar {
+    var self_5397: Scalar;
+    var other_4875: AntiScalar;
+
+    self_5397 = self_5396;
+    other_4875 = other_4874;
+    let _e4: Scalar = self_5397;
+    let _e5: AntiScalar = other_4875;
+    let _e6: Scalar = anti_scalar_right_weight_dual(_e5);
+    let _e7: Scalar = scalar_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn scalar_homogeneous_magnitude_weight_expansion(self_5398: Scalar, other_4876: HomogeneousMagnitude) -> Scalar {
+    var self_5399: Scalar;
+    var other_4877: HomogeneousMagnitude;
+
+    self_5399 = self_5398;
+    other_4877 = other_4876;
+    let _e4: Scalar = self_5399;
+    let _e5: HomogeneousMagnitude = other_4877;
+    let _e6: Scalar = homogeneous_magnitude_right_weight_dual(_e5);
+    let _e7: Scalar = scalar_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn scalar_point_weight_expansion(self_5400: Scalar, other_4878: Point) -> Plane {
+    var self_5401: Scalar;
+    var other_4879: Point;
+
+    self_5401 = self_5400;
+    other_4879 = other_4878;
+    let _e4: Scalar = self_5401;
+    let _e5: Point = other_4879;
+    let _e6: Plane = point_right_weight_dual(_e5);
+    let _e7: Plane = scalar_plane_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn scalar_line_weight_expansion(self_5402: Scalar, other_4880: Line) -> Line {
+    var self_5403: Scalar;
+    var other_4881: Line;
+
+    self_5403 = self_5402;
+    other_4881 = other_4880;
+    let _e4: Scalar = self_5403;
+    let _e5: Line = other_4881;
+    let _e6: Line = line_right_weight_dual(_e5);
+    let _e7: Line = scalar_line_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn scalar_plane_weight_expansion(self_5404: Scalar, other_4882: Plane) -> Point {
+    var self_5405: Scalar;
+    var other_4883: Plane;
+
+    self_5405 = self_5404;
+    other_4883 = other_4882;
+    let _e4: Scalar = self_5405;
+    let _e5: Plane = other_4883;
+    let _e6: Point = plane_right_weight_dual(_e5);
+    let _e7: Point = scalar_point_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn scalar_translator_weight_expansion(self_5406: Scalar, other_4884: Translator) -> Scalar {
+    var self_5407: Scalar;
+    var other_4885: Translator;
+
+    self_5407 = self_5406;
+    other_4885 = other_4884;
+    let _e4: Scalar = self_5407;
+    let _e5: Translator = other_4885;
+    let _e6: Scalar = translator_right_weight_dual(_e5);
+    let _e7: Scalar = scalar_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn scalar_flector_weight_expansion(self_5408: Scalar, other_4886: Flector) -> Flector {
+    var self_5409: Scalar;
+    var other_4887: Flector;
+
+    self_5409 = self_5408;
+    other_4887 = other_4886;
+    let _e4: Scalar = self_5409;
+    let _e5: Flector = other_4887;
+    let _e6: Flector = flector_right_weight_dual(_e5);
+    let _e7: Flector = scalar_flector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn scalar_multi_vector_weight_expansion(self_5410: Scalar, other_4888: MultiVector) -> MultiVector {
+    var self_5411: Scalar;
+    var other_4889: MultiVector;
+
+    self_5411 = self_5410;
+    other_4889 = other_4888;
+    let _e4: Scalar = self_5411;
+    let _e5: MultiVector = other_4889;
+    let _e6: MultiVector = multi_vector_right_weight_dual(_e5);
+    let _e7: MultiVector = scalar_multi_vector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_anti_scalar_weight_expansion(self_5412: AntiScalar, other_4890: AntiScalar) -> AntiScalar {
+    var self_5413: AntiScalar;
+    var other_4891: AntiScalar;
+
+    self_5413 = self_5412;
+    other_4891 = other_4890;
+    let _e4: AntiScalar = self_5413;
+    let _e5: AntiScalar = other_4891;
+    let _e6: Scalar = anti_scalar_right_weight_dual(_e5);
+    let _e7: AntiScalar = anti_scalar_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_homogeneous_magnitude_weight_expansion(self_5414: AntiScalar, other_4892: HomogeneousMagnitude) -> AntiScalar {
+    var self_5415: AntiScalar;
+    var other_4893: HomogeneousMagnitude;
+
+    self_5415 = self_5414;
+    other_4893 = other_4892;
+    let _e4: AntiScalar = self_5415;
+    let _e5: HomogeneousMagnitude = other_4893;
+    let _e6: Scalar = homogeneous_magnitude_right_weight_dual(_e5);
+    let _e7: AntiScalar = anti_scalar_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_translator_weight_expansion(self_5416: AntiScalar, other_4894: Translator) -> AntiScalar {
+    var self_5417: AntiScalar;
+    var other_4895: Translator;
+
+    self_5417 = self_5416;
+    other_4895 = other_4894;
+    let _e4: AntiScalar = self_5417;
+    let _e5: Translator = other_4895;
+    let _e6: Scalar = translator_right_weight_dual(_e5);
+    let _e7: AntiScalar = anti_scalar_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn anti_scalar_multi_vector_weight_expansion(self_5418: AntiScalar, other_4896: MultiVector) -> AntiScalar {
+    var self_5419: AntiScalar;
+    var other_4897: MultiVector;
+
+    self_5419 = self_5418;
+    other_4897 = other_4896;
+    let _e4: AntiScalar = self_5419;
+    let _e5: MultiVector = other_4897;
+    let _e6: MultiVector = multi_vector_right_weight_dual(_e5);
+    let _e7: AntiScalar = anti_scalar_multi_vector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_scalar_weight_expansion(self_5420: HomogeneousMagnitude, other_4898: Scalar) -> AntiScalar {
+    var self_5421: HomogeneousMagnitude;
+    var other_4899: Scalar;
+
+    self_5421 = self_5420;
+    other_4899 = other_4898;
+    let _e4: HomogeneousMagnitude = self_5421;
+    let _e5: Scalar = other_4899;
+    let _e6: AntiScalar = scalar_right_weight_dual(_e5);
+    let _e7: AntiScalar = homogeneous_magnitude_anti_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_anti_scalar_weight_expansion(self_5422: HomogeneousMagnitude, other_4900: AntiScalar) -> HomogeneousMagnitude {
+    var self_5423: HomogeneousMagnitude;
+    var other_4901: AntiScalar;
+
+    self_5423 = self_5422;
+    other_4901 = other_4900;
+    let _e4: HomogeneousMagnitude = self_5423;
+    let _e5: AntiScalar = other_4901;
+    let _e6: Scalar = anti_scalar_right_weight_dual(_e5);
+    let _e7: HomogeneousMagnitude = homogeneous_magnitude_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_homogeneous_magnitude_weight_expansion(self_5424: HomogeneousMagnitude, other_4902: HomogeneousMagnitude) -> HomogeneousMagnitude {
+    var self_5425: HomogeneousMagnitude;
+    var other_4903: HomogeneousMagnitude;
+
+    self_5425 = self_5424;
+    other_4903 = other_4902;
+    let _e4: HomogeneousMagnitude = self_5425;
+    let _e5: HomogeneousMagnitude = other_4903;
+    let _e6: Scalar = homogeneous_magnitude_right_weight_dual(_e5);
+    let _e7: HomogeneousMagnitude = homogeneous_magnitude_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_point_weight_expansion(self_5426: HomogeneousMagnitude, other_4904: Point) -> Plane {
+    var self_5427: HomogeneousMagnitude;
+    var other_4905: Point;
+
+    self_5427 = self_5426;
+    other_4905 = other_4904;
+    let _e4: HomogeneousMagnitude = self_5427;
+    let _e5: Point = other_4905;
+    let _e6: Plane = point_right_weight_dual(_e5);
+    let _e7: Plane = homogeneous_magnitude_plane_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_line_weight_expansion(self_5428: HomogeneousMagnitude, other_4906: Line) -> Line {
+    var self_5429: HomogeneousMagnitude;
+    var other_4907: Line;
+
+    self_5429 = self_5428;
+    other_4907 = other_4906;
+    let _e4: HomogeneousMagnitude = self_5429;
+    let _e5: Line = other_4907;
+    let _e6: Line = line_right_weight_dual(_e5);
+    let _e7: Line = homogeneous_magnitude_line_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_plane_weight_expansion(self_5430: HomogeneousMagnitude, other_4908: Plane) -> Point {
+    var self_5431: HomogeneousMagnitude;
+    var other_4909: Plane;
+
+    self_5431 = self_5430;
+    other_4909 = other_4908;
+    let _e4: HomogeneousMagnitude = self_5431;
+    let _e5: Plane = other_4909;
+    let _e6: Point = plane_right_weight_dual(_e5);
+    let _e7: Point = homogeneous_magnitude_point_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_translator_weight_expansion(self_5432: HomogeneousMagnitude, other_4910: Translator) -> HomogeneousMagnitude {
+    var self_5433: HomogeneousMagnitude;
+    var other_4911: Translator;
+
+    self_5433 = self_5432;
+    other_4911 = other_4910;
+    let _e4: HomogeneousMagnitude = self_5433;
+    let _e5: Translator = other_4911;
+    let _e6: Scalar = translator_right_weight_dual(_e5);
+    let _e7: HomogeneousMagnitude = homogeneous_magnitude_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_flector_weight_expansion(self_5434: HomogeneousMagnitude, other_4912: Flector) -> Flector {
+    var self_5435: HomogeneousMagnitude;
+    var other_4913: Flector;
+
+    self_5435 = self_5434;
+    other_4913 = other_4912;
+    let _e4: HomogeneousMagnitude = self_5435;
+    let _e5: Flector = other_4913;
+    let _e6: Flector = flector_right_weight_dual(_e5);
+    let _e7: Flector = homogeneous_magnitude_flector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn homogeneous_magnitude_multi_vector_weight_expansion(self_5436: HomogeneousMagnitude, other_4914: MultiVector) -> MultiVector {
+    var self_5437: HomogeneousMagnitude;
+    var other_4915: MultiVector;
+
+    self_5437 = self_5436;
+    other_4915 = other_4914;
+    let _e4: HomogeneousMagnitude = self_5437;
+    let _e5: MultiVector = other_4915;
+    let _e6: MultiVector = multi_vector_right_weight_dual(_e5);
+    let _e7: MultiVector = homogeneous_magnitude_multi_vector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn point_anti_scalar_weight_expansion(self_5438: Point, other_4916: AntiScalar) -> Point {
+    var self_5439: Point;
+    var other_4917: AntiScalar;
+
+    self_5439 = self_5438;
+    other_4917 = other_4916;
+    let _e4: Point = self_5439;
+    let _e5: AntiScalar = other_4917;
+    let _e6: Scalar = anti_scalar_right_weight_dual(_e5);
+    let _e7: Point = point_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn point_homogeneous_magnitude_weight_expansion(self_5440: Point, other_4918: HomogeneousMagnitude) -> Point {
+    var self_5441: Point;
+    var other_4919: HomogeneousMagnitude;
+
+    self_5441 = self_5440;
+    other_4919 = other_4918;
+    let _e4: Point = self_5441;
+    let _e5: HomogeneousMagnitude = other_4919;
+    let _e6: Scalar = homogeneous_magnitude_right_weight_dual(_e5);
+    let _e7: Point = point_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn point_point_weight_expansion(self_5442: Point, other_4920: Point) -> AntiScalar {
+    var self_5443: Point;
+    var other_4921: Point;
+
+    self_5443 = self_5442;
+    other_4921 = other_4920;
+    let _e4: Point = self_5443;
+    let _e5: Point = other_4921;
+    let _e6: Plane = point_right_weight_dual(_e5);
+    let _e7: AntiScalar = point_plane_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn point_line_weight_expansion(self_5444: Point, other_4922: Line) -> Plane {
+    var self_5445: Point;
+    var other_4923: Line;
+
+    self_5445 = self_5444;
+    other_4923 = other_4922;
+    let _e4: Point = self_5445;
+    let _e5: Line = other_4923;
+    let _e6: Line = line_right_weight_dual(_e5);
+    let _e7: Plane = point_line_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn point_plane_weight_expansion(self_5446: Point, other_4924: Plane) -> Line {
+    var self_5447: Point;
+    var other_4925: Plane;
+
+    self_5447 = self_5446;
+    other_4925 = other_4924;
+    let _e4: Point = self_5447;
+    let _e5: Plane = other_4925;
+    let _e6: Point = plane_right_weight_dual(_e5);
+    let _e7: Line = point_point_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn point_translator_weight_expansion(self_5448: Point, other_4926: Translator) -> Point {
+    var self_5449: Point;
+    var other_4927: Translator;
+
+    self_5449 = self_5448;
+    other_4927 = other_4926;
+    let _e4: Point = self_5449;
+    let _e5: Translator = other_4927;
+    let _e6: Scalar = translator_right_weight_dual(_e5);
+    let _e7: Point = point_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn point_flector_weight_expansion(self_5450: Point, other_4928: Flector) -> Motor {
+    var self_5451: Point;
+    var other_4929: Flector;
+
+    self_5451 = self_5450;
+    other_4929 = other_4928;
+    let _e4: Point = self_5451;
+    let _e5: Flector = other_4929;
+    let _e6: Flector = flector_right_weight_dual(_e5);
+    let _e7: Motor = point_flector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn point_multi_vector_weight_expansion(self_5452: Point, other_4930: MultiVector) -> MultiVector {
+    var self_5453: Point;
+    var other_4931: MultiVector;
+
+    self_5453 = self_5452;
+    other_4931 = other_4930;
+    let _e4: Point = self_5453;
+    let _e5: MultiVector = other_4931;
+    let _e6: MultiVector = multi_vector_right_weight_dual(_e5);
+    let _e7: MultiVector = point_multi_vector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn line_anti_scalar_weight_expansion(self_5454: Line, other_4932: AntiScalar) -> Line {
+    var self_5455: Line;
+    var other_4933: AntiScalar;
+
+    self_5455 = self_5454;
+    other_4933 = other_4932;
+    let _e4: Line = self_5455;
+    let _e5: AntiScalar = other_4933;
+    let _e6: Scalar = anti_scalar_right_weight_dual(_e5);
+    let _e7: Line = line_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn line_homogeneous_magnitude_weight_expansion(self_5456: Line, other_4934: HomogeneousMagnitude) -> Line {
+    var self_5457: Line;
+    var other_4935: HomogeneousMagnitude;
+
+    self_5457 = self_5456;
+    other_4935 = other_4934;
+    let _e4: Line = self_5457;
+    let _e5: HomogeneousMagnitude = other_4935;
+    let _e6: Scalar = homogeneous_magnitude_right_weight_dual(_e5);
+    let _e7: Line = line_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn line_line_weight_expansion(self_5458: Line, other_4936: Line) -> AntiScalar {
+    var self_5459: Line;
+    var other_4937: Line;
+
+    self_5459 = self_5458;
+    other_4937 = other_4936;
+    let _e4: Line = self_5459;
+    let _e5: Line = other_4937;
+    let _e6: Line = line_right_weight_dual(_e5);
+    let _e7: AntiScalar = line_line_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn line_plane_weight_expansion(self_5460: Line, other_4938: Plane) -> Plane {
+    var self_5461: Line;
+    var other_4939: Plane;
+
+    self_5461 = self_5460;
+    other_4939 = other_4938;
+    let _e4: Line = self_5461;
+    let _e5: Plane = other_4939;
+    let _e6: Point = plane_right_weight_dual(_e5);
+    let _e7: Plane = line_point_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn line_translator_weight_expansion(self_5462: Line, other_4940: Translator) -> Line {
+    var self_5463: Line;
+    var other_4941: Translator;
+
+    self_5463 = self_5462;
+    other_4941 = other_4940;
+    let _e4: Line = self_5463;
+    let _e5: Translator = other_4941;
+    let _e6: Scalar = translator_right_weight_dual(_e5);
+    let _e7: Line = line_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn line_flector_weight_expansion(self_5464: Line, other_4942: Flector) -> Plane {
+    var self_5465: Line;
+    var other_4943: Flector;
+
+    self_5465 = self_5464;
+    other_4943 = other_4942;
+    let _e4: Line = self_5465;
+    let _e5: Flector = other_4943;
+    let _e6: Flector = flector_right_weight_dual(_e5);
+    let _e7: Plane = line_flector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn line_multi_vector_weight_expansion(self_5466: Line, other_4944: MultiVector) -> MultiVector {
+    var self_5467: Line;
+    var other_4945: MultiVector;
+
+    self_5467 = self_5466;
+    other_4945 = other_4944;
+    let _e4: Line = self_5467;
+    let _e5: MultiVector = other_4945;
+    let _e6: MultiVector = multi_vector_right_weight_dual(_e5);
+    let _e7: MultiVector = line_multi_vector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn plane_anti_scalar_weight_expansion(self_5468: Plane, other_4946: AntiScalar) -> Plane {
+    var self_5469: Plane;
+    var other_4947: AntiScalar;
+
+    self_5469 = self_5468;
+    other_4947 = other_4946;
+    let _e4: Plane = self_5469;
+    let _e5: AntiScalar = other_4947;
+    let _e6: Scalar = anti_scalar_right_weight_dual(_e5);
+    let _e7: Plane = plane_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn plane_homogeneous_magnitude_weight_expansion(self_5470: Plane, other_4948: HomogeneousMagnitude) -> Plane {
+    var self_5471: Plane;
+    var other_4949: HomogeneousMagnitude;
+
+    self_5471 = self_5470;
+    other_4949 = other_4948;
+    let _e4: Plane = self_5471;
+    let _e5: HomogeneousMagnitude = other_4949;
+    let _e6: Scalar = homogeneous_magnitude_right_weight_dual(_e5);
+    let _e7: Plane = plane_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn plane_plane_weight_expansion(self_5472: Plane, other_4950: Plane) -> AntiScalar {
+    var self_5473: Plane;
+    var other_4951: Plane;
+
+    self_5473 = self_5472;
+    other_4951 = other_4950;
+    let _e4: Plane = self_5473;
+    let _e5: Plane = other_4951;
+    let _e6: Point = plane_right_weight_dual(_e5);
+    let _e7: AntiScalar = plane_point_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn plane_translator_weight_expansion(self_5474: Plane, other_4952: Translator) -> Plane {
+    var self_5475: Plane;
+    var other_4953: Translator;
+
+    self_5475 = self_5474;
+    other_4953 = other_4952;
+    let _e4: Plane = self_5475;
+    let _e5: Translator = other_4953;
+    let _e6: Scalar = translator_right_weight_dual(_e5);
+    let _e7: Plane = plane_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn plane_flector_weight_expansion(self_5476: Plane, other_4954: Flector) -> AntiScalar {
+    var self_5477: Plane;
+    var other_4955: Flector;
+
+    self_5477 = self_5476;
+    other_4955 = other_4954;
+    let _e4: Plane = self_5477;
+    let _e5: Flector = other_4955;
+    let _e6: Flector = flector_right_weight_dual(_e5);
+    let _e7: AntiScalar = plane_flector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn plane_multi_vector_weight_expansion(self_5478: Plane, other_4956: MultiVector) -> MultiVector {
+    var self_5479: Plane;
+    var other_4957: MultiVector;
+
+    self_5479 = self_5478;
+    other_4957 = other_4956;
+    let _e4: Plane = self_5479;
+    let _e5: MultiVector = other_4957;
+    let _e6: MultiVector = multi_vector_right_weight_dual(_e5);
+    let _e7: MultiVector = plane_multi_vector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_anti_scalar_weight_expansion(self_5480: Motor, other_4958: AntiScalar) -> Motor {
+    var self_5481: Motor;
+    var other_4959: AntiScalar;
+
+    self_5481 = self_5480;
+    other_4959 = other_4958;
+    let _e4: Motor = self_5481;
+    let _e5: AntiScalar = other_4959;
+    let _e6: Scalar = anti_scalar_right_weight_dual(_e5);
+    let _e7: Motor = motor_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_homogeneous_magnitude_weight_expansion(self_5482: Motor, other_4960: HomogeneousMagnitude) -> Motor {
+    var self_5483: Motor;
+    var other_4961: HomogeneousMagnitude;
+
+    self_5483 = self_5482;
+    other_4961 = other_4960;
+    let _e4: Motor = self_5483;
+    let _e5: HomogeneousMagnitude = other_4961;
+    let _e6: Scalar = homogeneous_magnitude_right_weight_dual(_e5);
+    let _e7: Motor = motor_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_line_weight_expansion(self_5484: Motor, other_4962: Line) -> AntiScalar {
+    var self_5485: Motor;
+    var other_4963: Line;
+
+    self_5485 = self_5484;
+    other_4963 = other_4962;
+    let _e4: Motor = self_5485;
+    let _e5: Line = other_4963;
+    let _e6: Line = line_right_weight_dual(_e5);
+    let _e7: AntiScalar = motor_line_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_plane_weight_expansion(self_5486: Motor, other_4964: Plane) -> Plane {
+    var self_5487: Motor;
+    var other_4965: Plane;
+
+    self_5487 = self_5486;
+    other_4965 = other_4964;
+    let _e4: Motor = self_5487;
+    let _e5: Plane = other_4965;
+    let _e6: Point = plane_right_weight_dual(_e5);
+    let _e7: Plane = motor_point_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_translator_weight_expansion(self_5488: Motor, other_4966: Translator) -> Motor {
+    var self_5489: Motor;
+    var other_4967: Translator;
+
+    self_5489 = self_5488;
+    other_4967 = other_4966;
+    let _e4: Motor = self_5489;
+    let _e5: Translator = other_4967;
+    let _e6: Scalar = translator_right_weight_dual(_e5);
+    let _e7: Motor = motor_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_flector_weight_expansion(self_5490: Motor, other_4968: Flector) -> Plane {
+    var self_5491: Motor;
+    var other_4969: Flector;
+
+    self_5491 = self_5490;
+    other_4969 = other_4968;
+    let _e4: Motor = self_5491;
+    let _e5: Flector = other_4969;
+    let _e6: Flector = flector_right_weight_dual(_e5);
+    let _e7: Plane = motor_flector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn motor_multi_vector_weight_expansion(self_5492: Motor, other_4970: MultiVector) -> MultiVector {
+    var self_5493: Motor;
+    var other_4971: MultiVector;
+
+    self_5493 = self_5492;
+    other_4971 = other_4970;
+    let _e4: Motor = self_5493;
+    let _e5: MultiVector = other_4971;
+    let _e6: MultiVector = multi_vector_right_weight_dual(_e5);
+    let _e7: MultiVector = motor_multi_vector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_anti_scalar_weight_expansion(self_5494: Rotor, other_4972: AntiScalar) -> Rotor {
+    var self_5495: Rotor;
+    var other_4973: AntiScalar;
+
+    self_5495 = self_5494;
+    other_4973 = other_4972;
+    let _e4: Rotor = self_5495;
+    let _e5: AntiScalar = other_4973;
+    let _e6: Scalar = anti_scalar_right_weight_dual(_e5);
+    let _e7: Rotor = rotor_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_homogeneous_magnitude_weight_expansion(self_5496: Rotor, other_4974: HomogeneousMagnitude) -> Rotor {
+    var self_5497: Rotor;
+    var other_4975: HomogeneousMagnitude;
+
+    self_5497 = self_5496;
+    other_4975 = other_4974;
+    let _e4: Rotor = self_5497;
+    let _e5: HomogeneousMagnitude = other_4975;
+    let _e6: Scalar = homogeneous_magnitude_right_weight_dual(_e5);
+    let _e7: Rotor = rotor_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_line_weight_expansion(self_5498: Rotor, other_4976: Line) -> AntiScalar {
+    var self_5499: Rotor;
+    var other_4977: Line;
+
+    self_5499 = self_5498;
+    other_4977 = other_4976;
+    let _e4: Rotor = self_5499;
+    let _e5: Line = other_4977;
+    let _e6: Line = line_right_weight_dual(_e5);
+    let _e7: AntiScalar = rotor_line_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_plane_weight_expansion(self_5500: Rotor, other_4978: Plane) -> Plane {
+    var self_5501: Rotor;
+    var other_4979: Plane;
+
+    self_5501 = self_5500;
+    other_4979 = other_4978;
+    let _e4: Rotor = self_5501;
+    let _e5: Plane = other_4979;
+    let _e6: Point = plane_right_weight_dual(_e5);
+    let _e7: Plane = rotor_point_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_translator_weight_expansion(self_5502: Rotor, other_4980: Translator) -> Rotor {
+    var self_5503: Rotor;
+    var other_4981: Translator;
+
+    self_5503 = self_5502;
+    other_4981 = other_4980;
+    let _e4: Rotor = self_5503;
+    let _e5: Translator = other_4981;
+    let _e6: Scalar = translator_right_weight_dual(_e5);
+    let _e7: Rotor = rotor_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_flector_weight_expansion(self_5504: Rotor, other_4982: Flector) -> Plane {
+    var self_5505: Rotor;
+    var other_4983: Flector;
+
+    self_5505 = self_5504;
+    other_4983 = other_4982;
+    let _e4: Rotor = self_5505;
+    let _e5: Flector = other_4983;
+    let _e6: Flector = flector_right_weight_dual(_e5);
+    let _e7: Plane = rotor_flector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn rotor_multi_vector_weight_expansion(self_5506: Rotor, other_4984: MultiVector) -> MultiVector {
+    var self_5507: Rotor;
+    var other_4985: MultiVector;
+
+    self_5507 = self_5506;
+    other_4985 = other_4984;
+    let _e4: Rotor = self_5507;
+    let _e5: MultiVector = other_4985;
+    let _e6: MultiVector = multi_vector_right_weight_dual(_e5);
+    let _e7: MultiVector = rotor_multi_vector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_anti_scalar_weight_expansion(self_5508: Translator, other_4986: AntiScalar) -> Translator {
+    var self_5509: Translator;
+    var other_4987: AntiScalar;
+
+    self_5509 = self_5508;
+    other_4987 = other_4986;
+    let _e4: Translator = self_5509;
+    let _e5: AntiScalar = other_4987;
+    let _e6: Scalar = anti_scalar_right_weight_dual(_e5);
+    let _e7: Translator = translator_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_homogeneous_magnitude_weight_expansion(self_5510: Translator, other_4988: HomogeneousMagnitude) -> Translator {
+    var self_5511: Translator;
+    var other_4989: HomogeneousMagnitude;
+
+    self_5511 = self_5510;
+    other_4989 = other_4988;
+    let _e4: Translator = self_5511;
+    let _e5: HomogeneousMagnitude = other_4989;
+    let _e6: Scalar = homogeneous_magnitude_right_weight_dual(_e5);
+    let _e7: Translator = translator_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_line_weight_expansion(self_5512: Translator, other_4990: Line) -> AntiScalar {
+    var self_5513: Translator;
+    var other_4991: Line;
+
+    self_5513 = self_5512;
+    other_4991 = other_4990;
+    let _e4: Translator = self_5513;
+    let _e5: Line = other_4991;
+    let _e6: Line = line_right_weight_dual(_e5);
+    let _e7: AntiScalar = translator_line_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_plane_weight_expansion(self_5514: Translator, other_4992: Plane) -> Plane {
+    var self_5515: Translator;
+    var other_4993: Plane;
+
+    self_5515 = self_5514;
+    other_4993 = other_4992;
+    let _e4: Translator = self_5515;
+    let _e5: Plane = other_4993;
+    let _e6: Point = plane_right_weight_dual(_e5);
+    let _e7: Plane = translator_point_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_translator_weight_expansion(self_5516: Translator, other_4994: Translator) -> Translator {
+    var self_5517: Translator;
+    var other_4995: Translator;
+
+    self_5517 = self_5516;
+    other_4995 = other_4994;
+    let _e4: Translator = self_5517;
+    let _e5: Translator = other_4995;
+    let _e6: Scalar = translator_right_weight_dual(_e5);
+    let _e7: Translator = translator_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_flector_weight_expansion(self_5518: Translator, other_4996: Flector) -> Plane {
+    var self_5519: Translator;
+    var other_4997: Flector;
+
+    self_5519 = self_5518;
+    other_4997 = other_4996;
+    let _e4: Translator = self_5519;
+    let _e5: Flector = other_4997;
+    let _e6: Flector = flector_right_weight_dual(_e5);
+    let _e7: Plane = translator_flector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn translator_multi_vector_weight_expansion(self_5520: Translator, other_4998: MultiVector) -> MultiVector {
+    var self_5521: Translator;
+    var other_4999: MultiVector;
+
+    self_5521 = self_5520;
+    other_4999 = other_4998;
+    let _e4: Translator = self_5521;
+    let _e5: MultiVector = other_4999;
+    let _e6: MultiVector = multi_vector_right_weight_dual(_e5);
+    let _e7: MultiVector = translator_multi_vector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn flector_anti_scalar_weight_expansion(self_5522: Flector, other_5000: AntiScalar) -> Flector {
+    var self_5523: Flector;
+    var other_5001: AntiScalar;
+
+    self_5523 = self_5522;
+    other_5001 = other_5000;
+    let _e4: Flector = self_5523;
+    let _e5: AntiScalar = other_5001;
+    let _e6: Scalar = anti_scalar_right_weight_dual(_e5);
+    let _e7: Flector = flector_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn flector_homogeneous_magnitude_weight_expansion(self_5524: Flector, other_5002: HomogeneousMagnitude) -> Flector {
+    var self_5525: Flector;
+    var other_5003: HomogeneousMagnitude;
+
+    self_5525 = self_5524;
+    other_5003 = other_5002;
+    let _e4: Flector = self_5525;
+    let _e5: HomogeneousMagnitude = other_5003;
+    let _e6: Scalar = homogeneous_magnitude_right_weight_dual(_e5);
+    let _e7: Flector = flector_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn flector_point_weight_expansion(self_5526: Flector, other_5004: Point) -> AntiScalar {
+    var self_5527: Flector;
+    var other_5005: Point;
+
+    self_5527 = self_5526;
+    other_5005 = other_5004;
+    let _e4: Flector = self_5527;
+    let _e5: Point = other_5005;
+    let _e6: Plane = point_right_weight_dual(_e5);
+    let _e7: AntiScalar = flector_plane_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn flector_line_weight_expansion(self_5528: Flector, other_5006: Line) -> Plane {
+    var self_5529: Flector;
+    var other_5007: Line;
+
+    self_5529 = self_5528;
+    other_5007 = other_5006;
+    let _e4: Flector = self_5529;
+    let _e5: Line = other_5007;
+    let _e6: Line = line_right_weight_dual(_e5);
+    let _e7: Plane = flector_line_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn flector_plane_weight_expansion(self_5530: Flector, other_5008: Plane) -> Motor {
+    var self_5531: Flector;
+    var other_5009: Plane;
+
+    self_5531 = self_5530;
+    other_5009 = other_5008;
+    let _e4: Flector = self_5531;
+    let _e5: Plane = other_5009;
+    let _e6: Point = plane_right_weight_dual(_e5);
+    let _e7: Motor = flector_point_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn flector_translator_weight_expansion(self_5532: Flector, other_5010: Translator) -> Flector {
+    var self_5533: Flector;
+    var other_5011: Translator;
+
+    self_5533 = self_5532;
+    other_5011 = other_5010;
+    let _e4: Flector = self_5533;
+    let _e5: Translator = other_5011;
+    let _e6: Scalar = translator_right_weight_dual(_e5);
+    let _e7: Flector = flector_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn flector_flector_weight_expansion(self_5534: Flector, other_5012: Flector) -> Motor {
+    var self_5535: Flector;
+    var other_5013: Flector;
+
+    self_5535 = self_5534;
+    other_5013 = other_5012;
+    let _e4: Flector = self_5535;
+    let _e5: Flector = other_5013;
+    let _e6: Flector = flector_right_weight_dual(_e5);
+    let _e7: Motor = flector_flector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn flector_multi_vector_weight_expansion(self_5536: Flector, other_5014: MultiVector) -> MultiVector {
+    var self_5537: Flector;
+    var other_5015: MultiVector;
+
+    self_5537 = self_5536;
+    other_5015 = other_5014;
+    let _e4: Flector = self_5537;
+    let _e5: MultiVector = other_5015;
+    let _e6: MultiVector = multi_vector_right_weight_dual(_e5);
+    let _e7: MultiVector = flector_multi_vector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_scalar_weight_expansion(self_5538: MultiVector, other_5016: Scalar) -> AntiScalar {
+    var self_5539: MultiVector;
+    var other_5017: Scalar;
+
+    self_5539 = self_5538;
+    other_5017 = other_5016;
+    let _e4: MultiVector = self_5539;
+    let _e5: Scalar = other_5017;
+    let _e6: AntiScalar = scalar_right_weight_dual(_e5);
+    let _e7: AntiScalar = multi_vector_anti_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_anti_scalar_weight_expansion(self_5540: MultiVector, other_5018: AntiScalar) -> MultiVector {
+    var self_5541: MultiVector;
+    var other_5019: AntiScalar;
+
+    self_5541 = self_5540;
+    other_5019 = other_5018;
+    let _e4: MultiVector = self_5541;
+    let _e5: AntiScalar = other_5019;
+    let _e6: Scalar = anti_scalar_right_weight_dual(_e5);
+    let _e7: MultiVector = multi_vector_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_homogeneous_magnitude_weight_expansion(self_5542: MultiVector, other_5020: HomogeneousMagnitude) -> MultiVector {
+    var self_5543: MultiVector;
+    var other_5021: HomogeneousMagnitude;
+
+    self_5543 = self_5542;
+    other_5021 = other_5020;
+    let _e4: MultiVector = self_5543;
+    let _e5: HomogeneousMagnitude = other_5021;
+    let _e6: Scalar = homogeneous_magnitude_right_weight_dual(_e5);
+    let _e7: MultiVector = multi_vector_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_point_weight_expansion(self_5544: MultiVector, other_5022: Point) -> MultiVector {
+    var self_5545: MultiVector;
+    var other_5023: Point;
+
+    self_5545 = self_5544;
+    other_5023 = other_5022;
+    let _e4: MultiVector = self_5545;
+    let _e5: Point = other_5023;
+    let _e6: Plane = point_right_weight_dual(_e5);
+    let _e7: MultiVector = multi_vector_plane_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_line_weight_expansion(self_5546: MultiVector, other_5024: Line) -> MultiVector {
+    var self_5547: MultiVector;
+    var other_5025: Line;
+
+    self_5547 = self_5546;
+    other_5025 = other_5024;
+    let _e4: MultiVector = self_5547;
+    let _e5: Line = other_5025;
+    let _e6: Line = line_right_weight_dual(_e5);
+    let _e7: MultiVector = multi_vector_line_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_plane_weight_expansion(self_5548: MultiVector, other_5026: Plane) -> MultiVector {
+    var self_5549: MultiVector;
+    var other_5027: Plane;
+
+    self_5549 = self_5548;
+    other_5027 = other_5026;
+    let _e4: MultiVector = self_5549;
+    let _e5: Plane = other_5027;
+    let _e6: Point = plane_right_weight_dual(_e5);
+    let _e7: MultiVector = multi_vector_point_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_translator_weight_expansion(self_5550: MultiVector, other_5028: Translator) -> MultiVector {
+    var self_5551: MultiVector;
+    var other_5029: Translator;
+
+    self_5551 = self_5550;
+    other_5029 = other_5028;
+    let _e4: MultiVector = self_5551;
+    let _e5: Translator = other_5029;
+    let _e6: Scalar = translator_right_weight_dual(_e5);
+    let _e7: MultiVector = multi_vector_scalar_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_flector_weight_expansion(self_5552: MultiVector, other_5030: Flector) -> MultiVector {
+    var self_5553: MultiVector;
+    var other_5031: Flector;
+
+    self_5553 = self_5552;
+    other_5031 = other_5030;
+    let _e4: MultiVector = self_5553;
+    let _e5: Flector = other_5031;
+    let _e6: Flector = flector_right_weight_dual(_e5);
+    let _e7: MultiVector = multi_vector_flector_wedge(_e4, _e6);
+    return _e7;
+}
+
+fn multi_vector_multi_vector_weight_expansion(self_5554: MultiVector, other_5032: MultiVector) -> MultiVector {
+    var self_5555: MultiVector;
+    var other_5033: MultiVector;
+
+    self_5555 = self_5554;
+    other_5033 = other_5032;
+    let _e4: MultiVector = self_5555;
+    let _e5: MultiVector = other_5033;
+    let _e6: MultiVector = multi_vector_right_weight_dual(_e5);
+    let _e7: MultiVector = multi_vector_multi_vector_wedge(_e4, _e6);
+    return _e7;
+}
+
