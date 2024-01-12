@@ -632,10 +632,10 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
             let (we, we_r) = trait_impls.get_pair_impl_and_result("WeightExpansion", &param_a, &param_b)?;
             let (anti_wedge, anti_wedge_r) = trait_impls.get_pair_impl_and_result("AntiWedge", &param_b, &we_r)?;
             let po = MultiVectorClass::derive_projection(
-                "ProjectOnto", &param_a, &param_b, anti_wedge_r, we, anti_wedge
+                "ProjectOrthogonallyOnto", &param_a, &param_b, anti_wedge_r, we, anti_wedge
             );
             emitter.emit(&po).unwrap();
-            trait_impls.add_pair_impl("ProjectOnto", param_a, param_b, po);
+            trait_impls.add_pair_impl("ProjectOrthogonallyOnto", param_a, param_b, po);
         };
     }
 
@@ -644,12 +644,38 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
             let (wc, wc_r) = trait_impls.get_pair_impl_and_result("WeightContraction", &param_a, &param_b)?;
             let (wedge, wedge_r) = trait_impls.get_pair_impl_and_result("Wedge", &param_b, &wc_r)?;
             let apo = MultiVectorClass::derive_projection(
-                "AntiProjectOnto", &param_a, &param_b, wedge_r, wc, wedge
+                "AntiProjectOrthogonallyOnto", &param_a, &param_b, wedge_r, wc, wedge
             );
             emitter.emit(&apo).unwrap();
-            trait_impls.add_pair_impl("AntiProjectOnto", param_a, param_b, apo);
+            trait_impls.add_pair_impl("AntiProjectOrthogonallyOnto", param_a, param_b, apo);
         };
     }
+
+    for (param_a, param_b) in registry.pair_parameters() {
+        let _: Option<()> = try {
+            let (we, we_r) = trait_impls.get_pair_impl_and_result("BulkExpansion", &param_a, &param_b)?;
+            let (anti_wedge, anti_wedge_r) = trait_impls.get_pair_impl_and_result("AntiWedge", &param_b, &we_r)?;
+            let po = MultiVectorClass::derive_projection(
+                "ProjectThroughOriginOnto", &param_a, &param_b, anti_wedge_r, we, anti_wedge
+            );
+            emitter.emit(&po).unwrap();
+            trait_impls.add_pair_impl("ProjectThroughOriginOnto", param_a, param_b, po);
+        };
+    }
+
+    for (param_a, param_b) in registry.pair_parameters() {
+        let _: Option<()> = try {
+            let (wc, wc_r) = trait_impls.get_pair_impl_and_result("BulkContraction", &param_a, &param_b)?;
+            let (wedge, wedge_r) = trait_impls.get_pair_impl_and_result("Wedge", &param_b, &wc_r)?;
+            let apo = MultiVectorClass::derive_projection(
+                "AntiProjectThroughOriginOnto", &param_a, &param_b, wedge_r, wc, wedge
+            );
+            emitter.emit(&apo).unwrap();
+            trait_impls.add_pair_impl("AntiProjectThroughOriginOnto", param_a, param_b, apo);
+        };
+    }
+
+    // TODO cosine of angle between objects
 
     // for (param_a, param_b) in registry.pair_parameters() {
     //     let _: Option<()> = try {

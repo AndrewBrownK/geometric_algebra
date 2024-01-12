@@ -642,21 +642,39 @@ pub trait WeightExpansion<T> {
     fn weight_expansion(self, other: T) -> Self::Output;
 }
 
-/// Projection
+/// Orthogonal Projection
 /// Typically involves bringing a lower dimensional object to a higher dimensional object
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Projections
-pub trait ProjectOnto<T> {
+/// https://projectivegeometricalgebra.org/projgeomalg.pdf
+pub trait ProjectOrthogonallyOnto<T> {
     type Output;
-    fn project_onto(self, other: T) -> Self::Output;
+    fn project_orthogonally_onto(self, other: T) -> Self::Output;
 }
 
-/// AntiProjection
+/// Orthogonal AntiProjection
 /// Typically involves bringing a higher dimensional object to a lower dimensional object.
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Projections
-pub trait AntiProjectOnto<T> {
+/// https://projectivegeometricalgebra.org/projgeomalg.pdf
+pub trait AntiProjectOrthogonallyOnto<T> {
     type Output;
-    fn anti_project_onto(self, other: T) -> Self::Output;
+    fn anti_project_orthogonally_onto(self, other: T) -> Self::Output;
 }
+
+/// Central (to origin) Projection
+/// https://projectivegeometricalgebra.org/projgeomalg.pdf
+pub trait ProjectThroughOriginOnto<T> {
+    type Output;
+    fn project_through_origin_onto(self, other: T) -> Self::Output;
+}
+
+/// Central (to origin) AntiProjection
+/// Not documented on the wiki yet, but it could be a thing, right?
+pub trait AntiProjectThroughOriginOnto<T> {
+    type Output;
+    fn anti_project_through_origin_onto(self, other: T) -> Self::Output;
+}
+
+
 
 
 // TODO generate implementations

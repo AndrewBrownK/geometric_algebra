@@ -11326,635 +11326,1187 @@ MultiVector multi_vector_multi_vector_weight_expansion(MultiVector self, MultiVe
     return multi_vector_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-Scalar scalar_scalar_project_onto(Scalar self, Scalar other) {
+Scalar scalar_scalar_project_orthogonally_onto(Scalar self, Scalar other) {
     return scalar_anti_scalar_anti_wedge(other, scalar_scalar_weight_expansion(self, other));
 }
 
-Scalar scalar_anti_scalar_project_onto(Scalar self, AntiScalar other) {
+Scalar scalar_anti_scalar_project_orthogonally_onto(Scalar self, AntiScalar other) {
     return anti_scalar_scalar_anti_wedge(other, scalar_anti_scalar_weight_expansion(self, other));
 }
 
-Scalar scalar_homogeneous_magnitude_project_onto(Scalar self, HomogeneousMagnitude other) {
+Scalar scalar_homogeneous_magnitude_project_orthogonally_onto(Scalar self, HomogeneousMagnitude other) {
     return homogeneous_magnitude_scalar_anti_wedge(other, scalar_homogeneous_magnitude_weight_expansion(self, other));
 }
 
-Scalar scalar_point_project_onto(Scalar self, Point other) {
+Scalar scalar_point_project_orthogonally_onto(Scalar self, Point other) {
     return point_plane_anti_wedge(other, scalar_point_weight_expansion(self, other));
 }
 
-Scalar scalar_line_project_onto(Scalar self, Line other) {
+Scalar scalar_line_project_orthogonally_onto(Scalar self, Line other) {
     return line_line_anti_wedge(other, scalar_line_weight_expansion(self, other));
 }
 
-Scalar scalar_plane_project_onto(Scalar self, Plane other) {
+Scalar scalar_plane_project_orthogonally_onto(Scalar self, Plane other) {
     return plane_point_anti_wedge(other, scalar_plane_weight_expansion(self, other));
 }
 
-Scalar scalar_translator_project_onto(Scalar self, Translator other) {
+Scalar scalar_translator_project_orthogonally_onto(Scalar self, Translator other) {
     return translator_scalar_anti_wedge(other, scalar_translator_weight_expansion(self, other));
 }
 
-MultiVector scalar_flector_project_onto(Scalar self, Flector other) {
+MultiVector scalar_flector_project_orthogonally_onto(Scalar self, Flector other) {
     return flector_flector_anti_wedge(other, scalar_flector_weight_expansion(self, other));
 }
 
-MultiVector scalar_multi_vector_project_onto(Scalar self, MultiVector other) {
+MultiVector scalar_multi_vector_project_orthogonally_onto(Scalar self, MultiVector other) {
     return multi_vector_multi_vector_anti_wedge(other, scalar_multi_vector_weight_expansion(self, other));
 }
 
-AntiScalar anti_scalar_anti_scalar_project_onto(AntiScalar self, AntiScalar other) {
+AntiScalar anti_scalar_anti_scalar_project_orthogonally_onto(AntiScalar self, AntiScalar other) {
     return anti_scalar_anti_scalar_anti_wedge(other, anti_scalar_anti_scalar_weight_expansion(self, other));
 }
 
-HomogeneousMagnitude anti_scalar_homogeneous_magnitude_project_onto(AntiScalar self, HomogeneousMagnitude other) {
+HomogeneousMagnitude anti_scalar_homogeneous_magnitude_project_orthogonally_onto(AntiScalar self, HomogeneousMagnitude other) {
     return homogeneous_magnitude_anti_scalar_anti_wedge(other, anti_scalar_homogeneous_magnitude_weight_expansion(self, other));
 }
 
-Translator anti_scalar_translator_project_onto(AntiScalar self, Translator other) {
+Translator anti_scalar_translator_project_orthogonally_onto(AntiScalar self, Translator other) {
     return translator_anti_scalar_anti_wedge(other, anti_scalar_translator_weight_expansion(self, other));
 }
 
-MultiVector anti_scalar_multi_vector_project_onto(AntiScalar self, MultiVector other) {
+MultiVector anti_scalar_multi_vector_project_orthogonally_onto(AntiScalar self, MultiVector other) {
     return multi_vector_anti_scalar_anti_wedge(other, anti_scalar_multi_vector_weight_expansion(self, other));
 }
 
-Scalar homogeneous_magnitude_scalar_project_onto(HomogeneousMagnitude self, Scalar other) {
+Scalar homogeneous_magnitude_scalar_project_orthogonally_onto(HomogeneousMagnitude self, Scalar other) {
     return scalar_anti_scalar_anti_wedge(other, homogeneous_magnitude_scalar_weight_expansion(self, other));
 }
 
-HomogeneousMagnitude homogeneous_magnitude_anti_scalar_project_onto(HomogeneousMagnitude self, AntiScalar other) {
+HomogeneousMagnitude homogeneous_magnitude_anti_scalar_project_orthogonally_onto(HomogeneousMagnitude self, AntiScalar other) {
     return anti_scalar_homogeneous_magnitude_anti_wedge(other, homogeneous_magnitude_anti_scalar_weight_expansion(self, other));
 }
 
-HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_project_onto(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_project_orthogonally_onto(HomogeneousMagnitude self, HomogeneousMagnitude other) {
     return homogeneous_magnitude_homogeneous_magnitude_anti_wedge(other, homogeneous_magnitude_homogeneous_magnitude_weight_expansion(self, other));
 }
 
-Scalar homogeneous_magnitude_point_project_onto(HomogeneousMagnitude self, Point other) {
+Scalar homogeneous_magnitude_point_project_orthogonally_onto(HomogeneousMagnitude self, Point other) {
     return point_plane_anti_wedge(other, homogeneous_magnitude_point_weight_expansion(self, other));
 }
 
-Scalar homogeneous_magnitude_line_project_onto(HomogeneousMagnitude self, Line other) {
+Scalar homogeneous_magnitude_line_project_orthogonally_onto(HomogeneousMagnitude self, Line other) {
     return line_line_anti_wedge(other, homogeneous_magnitude_line_weight_expansion(self, other));
 }
 
-Scalar homogeneous_magnitude_plane_project_onto(HomogeneousMagnitude self, Plane other) {
+Scalar homogeneous_magnitude_plane_project_orthogonally_onto(HomogeneousMagnitude self, Plane other) {
     return plane_point_anti_wedge(other, homogeneous_magnitude_plane_weight_expansion(self, other));
 }
 
-MultiVector homogeneous_magnitude_translator_project_onto(HomogeneousMagnitude self, Translator other) {
+MultiVector homogeneous_magnitude_translator_project_orthogonally_onto(HomogeneousMagnitude self, Translator other) {
     return translator_homogeneous_magnitude_anti_wedge(other, homogeneous_magnitude_translator_weight_expansion(self, other));
 }
 
-MultiVector homogeneous_magnitude_flector_project_onto(HomogeneousMagnitude self, Flector other) {
+MultiVector homogeneous_magnitude_flector_project_orthogonally_onto(HomogeneousMagnitude self, Flector other) {
     return flector_flector_anti_wedge(other, homogeneous_magnitude_flector_weight_expansion(self, other));
 }
 
-MultiVector homogeneous_magnitude_multi_vector_project_onto(HomogeneousMagnitude self, MultiVector other) {
+MultiVector homogeneous_magnitude_multi_vector_project_orthogonally_onto(HomogeneousMagnitude self, MultiVector other) {
     return multi_vector_multi_vector_anti_wedge(other, homogeneous_magnitude_multi_vector_weight_expansion(self, other));
 }
 
-Point point_anti_scalar_project_onto(Point self, AntiScalar other) {
+Point point_anti_scalar_project_orthogonally_onto(Point self, AntiScalar other) {
     return anti_scalar_point_anti_wedge(other, point_anti_scalar_weight_expansion(self, other));
 }
 
-Point point_homogeneous_magnitude_project_onto(Point self, HomogeneousMagnitude other) {
+Point point_homogeneous_magnitude_project_orthogonally_onto(Point self, HomogeneousMagnitude other) {
     return homogeneous_magnitude_point_anti_wedge(other, point_homogeneous_magnitude_weight_expansion(self, other));
 }
 
-Point point_point_project_onto(Point self, Point other) {
+Point point_point_project_orthogonally_onto(Point self, Point other) {
     return point_anti_scalar_anti_wedge(other, point_point_weight_expansion(self, other));
 }
 
-Point point_line_project_onto(Point self, Line other) {
+Point point_line_project_orthogonally_onto(Point self, Line other) {
     return line_plane_anti_wedge(other, point_line_weight_expansion(self, other));
 }
 
-Point point_plane_project_onto(Point self, Plane other) {
+Point point_plane_project_orthogonally_onto(Point self, Plane other) {
     return plane_line_anti_wedge(other, point_plane_weight_expansion(self, other));
 }
 
-Point point_translator_project_onto(Point self, Translator other) {
+Point point_translator_project_orthogonally_onto(Point self, Translator other) {
     return translator_point_anti_wedge(other, point_translator_weight_expansion(self, other));
 }
 
-Flector point_flector_project_onto(Point self, Flector other) {
+Flector point_flector_project_orthogonally_onto(Point self, Flector other) {
     return flector_motor_anti_wedge(other, point_flector_weight_expansion(self, other));
 }
 
-MultiVector point_multi_vector_project_onto(Point self, MultiVector other) {
+MultiVector point_multi_vector_project_orthogonally_onto(Point self, MultiVector other) {
     return multi_vector_multi_vector_anti_wedge(other, point_multi_vector_weight_expansion(self, other));
 }
 
-Line line_anti_scalar_project_onto(Line self, AntiScalar other) {
+Line line_anti_scalar_project_orthogonally_onto(Line self, AntiScalar other) {
     return anti_scalar_line_anti_wedge(other, line_anti_scalar_weight_expansion(self, other));
 }
 
-Line line_homogeneous_magnitude_project_onto(Line self, HomogeneousMagnitude other) {
+Line line_homogeneous_magnitude_project_orthogonally_onto(Line self, HomogeneousMagnitude other) {
     return homogeneous_magnitude_line_anti_wedge(other, line_homogeneous_magnitude_weight_expansion(self, other));
 }
 
-Line line_line_project_onto(Line self, Line other) {
+Line line_line_project_orthogonally_onto(Line self, Line other) {
     return line_anti_scalar_anti_wedge(other, line_line_weight_expansion(self, other));
 }
 
-Line line_plane_project_onto(Line self, Plane other) {
+Line line_plane_project_orthogonally_onto(Line self, Plane other) {
     return plane_plane_anti_wedge(other, line_plane_weight_expansion(self, other));
 }
 
-MultiVector line_translator_project_onto(Line self, Translator other) {
+MultiVector line_translator_project_orthogonally_onto(Line self, Translator other) {
     return translator_line_anti_wedge(other, line_translator_weight_expansion(self, other));
 }
 
-MultiVector line_flector_project_onto(Line self, Flector other) {
+MultiVector line_flector_project_orthogonally_onto(Line self, Flector other) {
     return flector_plane_anti_wedge(other, line_flector_weight_expansion(self, other));
 }
 
-MultiVector line_multi_vector_project_onto(Line self, MultiVector other) {
+MultiVector line_multi_vector_project_orthogonally_onto(Line self, MultiVector other) {
     return multi_vector_multi_vector_anti_wedge(other, line_multi_vector_weight_expansion(self, other));
 }
 
-Plane plane_anti_scalar_project_onto(Plane self, AntiScalar other) {
+Plane plane_anti_scalar_project_orthogonally_onto(Plane self, AntiScalar other) {
     return anti_scalar_plane_anti_wedge(other, plane_anti_scalar_weight_expansion(self, other));
 }
 
-Plane plane_homogeneous_magnitude_project_onto(Plane self, HomogeneousMagnitude other) {
+Plane plane_homogeneous_magnitude_project_orthogonally_onto(Plane self, HomogeneousMagnitude other) {
     return homogeneous_magnitude_plane_anti_wedge(other, plane_homogeneous_magnitude_weight_expansion(self, other));
 }
 
-Plane plane_plane_project_onto(Plane self, Plane other) {
+Plane plane_plane_project_orthogonally_onto(Plane self, Plane other) {
     return plane_anti_scalar_anti_wedge(other, plane_plane_weight_expansion(self, other));
 }
 
-Flector plane_translator_project_onto(Plane self, Translator other) {
+Flector plane_translator_project_orthogonally_onto(Plane self, Translator other) {
     return translator_plane_anti_wedge(other, plane_translator_weight_expansion(self, other));
 }
 
-Flector plane_flector_project_onto(Plane self, Flector other) {
+Flector plane_flector_project_orthogonally_onto(Plane self, Flector other) {
     return flector_anti_scalar_anti_wedge(other, plane_flector_weight_expansion(self, other));
 }
 
-MultiVector plane_multi_vector_project_onto(Plane self, MultiVector other) {
+MultiVector plane_multi_vector_project_orthogonally_onto(Plane self, MultiVector other) {
     return multi_vector_multi_vector_anti_wedge(other, plane_multi_vector_weight_expansion(self, other));
 }
 
-Motor motor_anti_scalar_project_onto(Motor self, AntiScalar other) {
+Motor motor_anti_scalar_project_orthogonally_onto(Motor self, AntiScalar other) {
     return anti_scalar_motor_anti_wedge(other, motor_anti_scalar_weight_expansion(self, other));
 }
 
-MultiVector motor_homogeneous_magnitude_project_onto(Motor self, HomogeneousMagnitude other) {
+MultiVector motor_homogeneous_magnitude_project_orthogonally_onto(Motor self, HomogeneousMagnitude other) {
     return homogeneous_magnitude_motor_anti_wedge(other, motor_homogeneous_magnitude_weight_expansion(self, other));
 }
 
-Line motor_line_project_onto(Motor self, Line other) {
+Line motor_line_project_orthogonally_onto(Motor self, Line other) {
     return line_anti_scalar_anti_wedge(other, motor_line_weight_expansion(self, other));
 }
 
-Line motor_plane_project_onto(Motor self, Plane other) {
+Line motor_plane_project_orthogonally_onto(Motor self, Plane other) {
     return plane_plane_anti_wedge(other, motor_plane_weight_expansion(self, other));
 }
 
-MultiVector motor_translator_project_onto(Motor self, Translator other) {
+MultiVector motor_translator_project_orthogonally_onto(Motor self, Translator other) {
     return translator_motor_anti_wedge(other, motor_translator_weight_expansion(self, other));
 }
 
-MultiVector motor_flector_project_onto(Motor self, Flector other) {
+MultiVector motor_flector_project_orthogonally_onto(Motor self, Flector other) {
     return flector_plane_anti_wedge(other, motor_flector_weight_expansion(self, other));
 }
 
-MultiVector motor_multi_vector_project_onto(Motor self, MultiVector other) {
+MultiVector motor_multi_vector_project_orthogonally_onto(Motor self, MultiVector other) {
     return multi_vector_multi_vector_anti_wedge(other, motor_multi_vector_weight_expansion(self, other));
 }
 
-Rotor rotor_anti_scalar_project_onto(Rotor self, AntiScalar other) {
+Rotor rotor_anti_scalar_project_orthogonally_onto(Rotor self, AntiScalar other) {
     return anti_scalar_rotor_anti_wedge(other, rotor_anti_scalar_weight_expansion(self, other));
 }
 
-MultiVector rotor_homogeneous_magnitude_project_onto(Rotor self, HomogeneousMagnitude other) {
+MultiVector rotor_homogeneous_magnitude_project_orthogonally_onto(Rotor self, HomogeneousMagnitude other) {
     return homogeneous_magnitude_rotor_anti_wedge(other, rotor_homogeneous_magnitude_weight_expansion(self, other));
 }
 
-Line rotor_line_project_onto(Rotor self, Line other) {
+Line rotor_line_project_orthogonally_onto(Rotor self, Line other) {
     return line_anti_scalar_anti_wedge(other, rotor_line_weight_expansion(self, other));
 }
 
-Line rotor_plane_project_onto(Rotor self, Plane other) {
+Line rotor_plane_project_orthogonally_onto(Rotor self, Plane other) {
     return plane_plane_anti_wedge(other, rotor_plane_weight_expansion(self, other));
 }
 
-MultiVector rotor_translator_project_onto(Rotor self, Translator other) {
+MultiVector rotor_translator_project_orthogonally_onto(Rotor self, Translator other) {
     return translator_rotor_anti_wedge(other, rotor_translator_weight_expansion(self, other));
 }
 
-MultiVector rotor_flector_project_onto(Rotor self, Flector other) {
+MultiVector rotor_flector_project_orthogonally_onto(Rotor self, Flector other) {
     return flector_plane_anti_wedge(other, rotor_flector_weight_expansion(self, other));
 }
 
-MultiVector rotor_multi_vector_project_onto(Rotor self, MultiVector other) {
+MultiVector rotor_multi_vector_project_orthogonally_onto(Rotor self, MultiVector other) {
     return multi_vector_multi_vector_anti_wedge(other, rotor_multi_vector_weight_expansion(self, other));
 }
 
-Translator translator_anti_scalar_project_onto(Translator self, AntiScalar other) {
+Translator translator_anti_scalar_project_orthogonally_onto(Translator self, AntiScalar other) {
     return anti_scalar_translator_anti_wedge(other, translator_anti_scalar_weight_expansion(self, other));
 }
 
-MultiVector translator_homogeneous_magnitude_project_onto(Translator self, HomogeneousMagnitude other) {
+MultiVector translator_homogeneous_magnitude_project_orthogonally_onto(Translator self, HomogeneousMagnitude other) {
     return homogeneous_magnitude_translator_anti_wedge(other, translator_homogeneous_magnitude_weight_expansion(self, other));
 }
 
-Line translator_line_project_onto(Translator self, Line other) {
+Line translator_line_project_orthogonally_onto(Translator self, Line other) {
     return line_anti_scalar_anti_wedge(other, translator_line_weight_expansion(self, other));
 }
 
-Line translator_plane_project_onto(Translator self, Plane other) {
+Line translator_plane_project_orthogonally_onto(Translator self, Plane other) {
     return plane_plane_anti_wedge(other, translator_plane_weight_expansion(self, other));
 }
 
-Translator translator_translator_project_onto(Translator self, Translator other) {
+Translator translator_translator_project_orthogonally_onto(Translator self, Translator other) {
     return translator_translator_anti_wedge(other, translator_translator_weight_expansion(self, other));
 }
 
-MultiVector translator_flector_project_onto(Translator self, Flector other) {
+MultiVector translator_flector_project_orthogonally_onto(Translator self, Flector other) {
     return flector_plane_anti_wedge(other, translator_flector_weight_expansion(self, other));
 }
 
-MultiVector translator_multi_vector_project_onto(Translator self, MultiVector other) {
+MultiVector translator_multi_vector_project_orthogonally_onto(Translator self, MultiVector other) {
     return multi_vector_multi_vector_anti_wedge(other, translator_multi_vector_weight_expansion(self, other));
 }
 
-Flector flector_anti_scalar_project_onto(Flector self, AntiScalar other) {
+Flector flector_anti_scalar_project_orthogonally_onto(Flector self, AntiScalar other) {
     return anti_scalar_flector_anti_wedge(other, flector_anti_scalar_weight_expansion(self, other));
 }
 
-Flector flector_homogeneous_magnitude_project_onto(Flector self, HomogeneousMagnitude other) {
+Flector flector_homogeneous_magnitude_project_orthogonally_onto(Flector self, HomogeneousMagnitude other) {
     return homogeneous_magnitude_flector_anti_wedge(other, flector_homogeneous_magnitude_weight_expansion(self, other));
 }
 
-Point flector_point_project_onto(Flector self, Point other) {
+Point flector_point_project_orthogonally_onto(Flector self, Point other) {
     return point_anti_scalar_anti_wedge(other, flector_point_weight_expansion(self, other));
 }
 
-Point flector_line_project_onto(Flector self, Line other) {
+Point flector_line_project_orthogonally_onto(Flector self, Line other) {
     return line_plane_anti_wedge(other, flector_line_weight_expansion(self, other));
 }
 
-Flector flector_plane_project_onto(Flector self, Plane other) {
+Flector flector_plane_project_orthogonally_onto(Flector self, Plane other) {
     return plane_motor_anti_wedge(other, flector_plane_weight_expansion(self, other));
 }
 
-Flector flector_translator_project_onto(Flector self, Translator other) {
+Flector flector_translator_project_orthogonally_onto(Flector self, Translator other) {
     return translator_flector_anti_wedge(other, flector_translator_weight_expansion(self, other));
 }
 
-Flector flector_flector_project_onto(Flector self, Flector other) {
+Flector flector_flector_project_orthogonally_onto(Flector self, Flector other) {
     return flector_motor_anti_wedge(other, flector_flector_weight_expansion(self, other));
 }
 
-MultiVector flector_multi_vector_project_onto(Flector self, MultiVector other) {
+MultiVector flector_multi_vector_project_orthogonally_onto(Flector self, MultiVector other) {
     return multi_vector_multi_vector_anti_wedge(other, flector_multi_vector_weight_expansion(self, other));
 }
 
-Scalar multi_vector_scalar_project_onto(MultiVector self, Scalar other) {
+Scalar multi_vector_scalar_project_orthogonally_onto(MultiVector self, Scalar other) {
     return scalar_anti_scalar_anti_wedge(other, multi_vector_scalar_weight_expansion(self, other));
 }
 
-MultiVector multi_vector_anti_scalar_project_onto(MultiVector self, AntiScalar other) {
+MultiVector multi_vector_anti_scalar_project_orthogonally_onto(MultiVector self, AntiScalar other) {
     return anti_scalar_multi_vector_anti_wedge(other, multi_vector_anti_scalar_weight_expansion(self, other));
 }
 
-MultiVector multi_vector_homogeneous_magnitude_project_onto(MultiVector self, HomogeneousMagnitude other) {
+MultiVector multi_vector_homogeneous_magnitude_project_orthogonally_onto(MultiVector self, HomogeneousMagnitude other) {
     return homogeneous_magnitude_multi_vector_anti_wedge(other, multi_vector_homogeneous_magnitude_weight_expansion(self, other));
 }
 
-MultiVector multi_vector_point_project_onto(MultiVector self, Point other) {
+MultiVector multi_vector_point_project_orthogonally_onto(MultiVector self, Point other) {
     return point_multi_vector_anti_wedge(other, multi_vector_point_weight_expansion(self, other));
 }
 
-MultiVector multi_vector_line_project_onto(MultiVector self, Line other) {
+MultiVector multi_vector_line_project_orthogonally_onto(MultiVector self, Line other) {
     return line_multi_vector_anti_wedge(other, multi_vector_line_weight_expansion(self, other));
 }
 
-MultiVector multi_vector_plane_project_onto(MultiVector self, Plane other) {
+MultiVector multi_vector_plane_project_orthogonally_onto(MultiVector self, Plane other) {
     return plane_multi_vector_anti_wedge(other, multi_vector_plane_weight_expansion(self, other));
 }
 
-MultiVector multi_vector_translator_project_onto(MultiVector self, Translator other) {
+MultiVector multi_vector_translator_project_orthogonally_onto(MultiVector self, Translator other) {
     return translator_multi_vector_anti_wedge(other, multi_vector_translator_weight_expansion(self, other));
 }
 
-MultiVector multi_vector_flector_project_onto(MultiVector self, Flector other) {
+MultiVector multi_vector_flector_project_orthogonally_onto(MultiVector self, Flector other) {
     return flector_multi_vector_anti_wedge(other, multi_vector_flector_weight_expansion(self, other));
 }
 
-MultiVector multi_vector_multi_vector_project_onto(MultiVector self, MultiVector other) {
+MultiVector multi_vector_multi_vector_project_orthogonally_onto(MultiVector self, MultiVector other) {
     return multi_vector_multi_vector_anti_wedge(other, multi_vector_multi_vector_weight_expansion(self, other));
 }
 
-Scalar scalar_scalar_anti_project_onto(Scalar self, Scalar other) {
+Scalar scalar_scalar_anti_project_orthogonally_onto(Scalar self, Scalar other) {
     return scalar_scalar_wedge(other, scalar_scalar_weight_contraction(self, other));
 }
 
-MultiVector scalar_multi_vector_anti_project_onto(Scalar self, MultiVector other) {
+MultiVector scalar_multi_vector_anti_project_orthogonally_onto(Scalar self, MultiVector other) {
     return multi_vector_scalar_wedge(other, scalar_multi_vector_weight_contraction(self, other));
 }
 
-AntiScalar anti_scalar_scalar_anti_project_onto(AntiScalar self, Scalar other) {
+AntiScalar anti_scalar_scalar_anti_project_orthogonally_onto(AntiScalar self, Scalar other) {
     return scalar_anti_scalar_wedge(other, anti_scalar_scalar_weight_contraction(self, other));
 }
 
-AntiScalar anti_scalar_anti_scalar_anti_project_onto(AntiScalar self, AntiScalar other) {
+AntiScalar anti_scalar_anti_scalar_anti_project_orthogonally_onto(AntiScalar self, AntiScalar other) {
     return anti_scalar_scalar_wedge(other, anti_scalar_anti_scalar_weight_contraction(self, other));
 }
 
-HomogeneousMagnitude anti_scalar_homogeneous_magnitude_anti_project_onto(AntiScalar self, HomogeneousMagnitude other) {
+HomogeneousMagnitude anti_scalar_homogeneous_magnitude_anti_project_orthogonally_onto(AntiScalar self, HomogeneousMagnitude other) {
     return homogeneous_magnitude_scalar_wedge(other, anti_scalar_homogeneous_magnitude_weight_contraction(self, other));
 }
 
-AntiScalar anti_scalar_point_anti_project_onto(AntiScalar self, Point other) {
+AntiScalar anti_scalar_point_anti_project_orthogonally_onto(AntiScalar self, Point other) {
     return point_plane_wedge(other, anti_scalar_point_weight_contraction(self, other));
 }
 
-AntiScalar anti_scalar_line_anti_project_onto(AntiScalar self, Line other) {
+AntiScalar anti_scalar_line_anti_project_orthogonally_onto(AntiScalar self, Line other) {
     return line_line_wedge(other, anti_scalar_line_weight_contraction(self, other));
 }
 
-AntiScalar anti_scalar_plane_anti_project_onto(AntiScalar self, Plane other) {
+AntiScalar anti_scalar_plane_anti_project_orthogonally_onto(AntiScalar self, Plane other) {
     return plane_point_wedge(other, anti_scalar_plane_weight_contraction(self, other));
 }
 
-Translator anti_scalar_translator_anti_project_onto(AntiScalar self, Translator other) {
+Translator anti_scalar_translator_anti_project_orthogonally_onto(AntiScalar self, Translator other) {
     return translator_scalar_wedge(other, anti_scalar_translator_weight_contraction(self, other));
 }
 
-Motor anti_scalar_flector_anti_project_onto(AntiScalar self, Flector other) {
+Motor anti_scalar_flector_anti_project_orthogonally_onto(AntiScalar self, Flector other) {
     return flector_flector_wedge(other, anti_scalar_flector_weight_contraction(self, other));
 }
 
-MultiVector anti_scalar_multi_vector_anti_project_onto(AntiScalar self, MultiVector other) {
+MultiVector anti_scalar_multi_vector_anti_project_orthogonally_onto(AntiScalar self, MultiVector other) {
     return multi_vector_multi_vector_wedge(other, anti_scalar_multi_vector_weight_contraction(self, other));
 }
 
-HomogeneousMagnitude homogeneous_magnitude_scalar_anti_project_onto(HomogeneousMagnitude self, Scalar other) {
+HomogeneousMagnitude homogeneous_magnitude_scalar_anti_project_orthogonally_onto(HomogeneousMagnitude self, Scalar other) {
     return scalar_homogeneous_magnitude_wedge(other, homogeneous_magnitude_scalar_weight_contraction(self, other));
 }
 
-AntiScalar homogeneous_magnitude_anti_scalar_anti_project_onto(HomogeneousMagnitude self, AntiScalar other) {
+AntiScalar homogeneous_magnitude_anti_scalar_anti_project_orthogonally_onto(HomogeneousMagnitude self, AntiScalar other) {
     return anti_scalar_scalar_wedge(other, homogeneous_magnitude_anti_scalar_weight_contraction(self, other));
 }
 
-HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_anti_project_onto(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_anti_project_orthogonally_onto(HomogeneousMagnitude self, HomogeneousMagnitude other) {
     return homogeneous_magnitude_scalar_wedge(other, homogeneous_magnitude_homogeneous_magnitude_weight_contraction(self, other));
 }
 
-AntiScalar homogeneous_magnitude_point_anti_project_onto(HomogeneousMagnitude self, Point other) {
+AntiScalar homogeneous_magnitude_point_anti_project_orthogonally_onto(HomogeneousMagnitude self, Point other) {
     return point_plane_wedge(other, homogeneous_magnitude_point_weight_contraction(self, other));
 }
 
-AntiScalar homogeneous_magnitude_line_anti_project_onto(HomogeneousMagnitude self, Line other) {
+AntiScalar homogeneous_magnitude_line_anti_project_orthogonally_onto(HomogeneousMagnitude self, Line other) {
     return line_line_wedge(other, homogeneous_magnitude_line_weight_contraction(self, other));
 }
 
-AntiScalar homogeneous_magnitude_plane_anti_project_onto(HomogeneousMagnitude self, Plane other) {
+AntiScalar homogeneous_magnitude_plane_anti_project_orthogonally_onto(HomogeneousMagnitude self, Plane other) {
     return plane_point_wedge(other, homogeneous_magnitude_plane_weight_contraction(self, other));
 }
 
-Translator homogeneous_magnitude_translator_anti_project_onto(HomogeneousMagnitude self, Translator other) {
+Translator homogeneous_magnitude_translator_anti_project_orthogonally_onto(HomogeneousMagnitude self, Translator other) {
     return translator_scalar_wedge(other, homogeneous_magnitude_translator_weight_contraction(self, other));
 }
 
-Motor homogeneous_magnitude_flector_anti_project_onto(HomogeneousMagnitude self, Flector other) {
+Motor homogeneous_magnitude_flector_anti_project_orthogonally_onto(HomogeneousMagnitude self, Flector other) {
     return flector_flector_wedge(other, homogeneous_magnitude_flector_weight_contraction(self, other));
 }
 
-MultiVector homogeneous_magnitude_multi_vector_anti_project_onto(HomogeneousMagnitude self, MultiVector other) {
+MultiVector homogeneous_magnitude_multi_vector_anti_project_orthogonally_onto(HomogeneousMagnitude self, MultiVector other) {
     return multi_vector_multi_vector_wedge(other, homogeneous_magnitude_multi_vector_weight_contraction(self, other));
 }
 
-Point point_scalar_anti_project_onto(Point self, Scalar other) {
+Point point_scalar_anti_project_orthogonally_onto(Point self, Scalar other) {
     return scalar_point_wedge(other, point_scalar_weight_contraction(self, other));
 }
 
-Point point_point_anti_project_onto(Point self, Point other) {
+Point point_point_anti_project_orthogonally_onto(Point self, Point other) {
     return point_scalar_wedge(other, point_point_weight_contraction(self, other));
 }
 
-Flector point_flector_anti_project_onto(Point self, Flector other) {
+Flector point_flector_anti_project_orthogonally_onto(Point self, Flector other) {
     return flector_scalar_wedge(other, point_flector_weight_contraction(self, other));
 }
 
-MultiVector point_multi_vector_anti_project_onto(Point self, MultiVector other) {
+MultiVector point_multi_vector_anti_project_orthogonally_onto(Point self, MultiVector other) {
     return multi_vector_multi_vector_wedge(other, point_multi_vector_weight_contraction(self, other));
 }
 
-Line line_scalar_anti_project_onto(Line self, Scalar other) {
+Line line_scalar_anti_project_orthogonally_onto(Line self, Scalar other) {
     return scalar_line_wedge(other, line_scalar_weight_contraction(self, other));
 }
 
-Line line_point_anti_project_onto(Line self, Point other) {
+Line line_point_anti_project_orthogonally_onto(Line self, Point other) {
     return point_point_wedge(other, line_point_weight_contraction(self, other));
 }
 
-Line line_line_anti_project_onto(Line self, Line other) {
+Line line_line_anti_project_orthogonally_onto(Line self, Line other) {
     return line_scalar_wedge(other, line_line_weight_contraction(self, other));
 }
 
-Motor line_flector_anti_project_onto(Line self, Flector other) {
+Motor line_flector_anti_project_orthogonally_onto(Line self, Flector other) {
     return flector_point_wedge(other, line_flector_weight_contraction(self, other));
 }
 
-MultiVector line_multi_vector_anti_project_onto(Line self, MultiVector other) {
+MultiVector line_multi_vector_anti_project_orthogonally_onto(Line self, MultiVector other) {
     return multi_vector_multi_vector_wedge(other, line_multi_vector_weight_contraction(self, other));
 }
 
-Plane plane_scalar_anti_project_onto(Plane self, Scalar other) {
+Plane plane_scalar_anti_project_orthogonally_onto(Plane self, Scalar other) {
     return scalar_plane_wedge(other, plane_scalar_weight_contraction(self, other));
 }
 
-Plane plane_point_anti_project_onto(Plane self, Point other) {
+Plane plane_point_anti_project_orthogonally_onto(Plane self, Point other) {
     return point_line_wedge(other, plane_point_weight_contraction(self, other));
 }
 
-Plane plane_line_anti_project_onto(Plane self, Line other) {
+Plane plane_line_anti_project_orthogonally_onto(Plane self, Line other) {
     return line_point_wedge(other, plane_line_weight_contraction(self, other));
 }
 
-Plane plane_plane_anti_project_onto(Plane self, Plane other) {
+Plane plane_plane_anti_project_orthogonally_onto(Plane self, Plane other) {
     return plane_scalar_wedge(other, plane_plane_weight_contraction(self, other));
 }
 
-MultiVector plane_flector_anti_project_onto(Plane self, Flector other) {
+MultiVector plane_flector_anti_project_orthogonally_onto(Plane self, Flector other) {
     return flector_multi_vector_wedge(other, plane_flector_weight_contraction(self, other));
 }
 
-MultiVector plane_multi_vector_anti_project_onto(Plane self, MultiVector other) {
+MultiVector plane_multi_vector_anti_project_orthogonally_onto(Plane self, MultiVector other) {
     return multi_vector_multi_vector_wedge(other, plane_multi_vector_weight_contraction(self, other));
 }
 
-Motor motor_scalar_anti_project_onto(Motor self, Scalar other) {
+Motor motor_scalar_anti_project_orthogonally_onto(Motor self, Scalar other) {
     return scalar_motor_wedge(other, motor_scalar_weight_contraction(self, other));
 }
 
-AntiScalar motor_anti_scalar_anti_project_onto(Motor self, AntiScalar other) {
+AntiScalar motor_anti_scalar_anti_project_orthogonally_onto(Motor self, AntiScalar other) {
     return anti_scalar_scalar_wedge(other, motor_anti_scalar_weight_contraction(self, other));
 }
 
-HomogeneousMagnitude motor_homogeneous_magnitude_anti_project_onto(Motor self, HomogeneousMagnitude other) {
+HomogeneousMagnitude motor_homogeneous_magnitude_anti_project_orthogonally_onto(Motor self, HomogeneousMagnitude other) {
     return homogeneous_magnitude_scalar_wedge(other, motor_homogeneous_magnitude_weight_contraction(self, other));
 }
 
-Motor motor_point_anti_project_onto(Motor self, Point other) {
+Motor motor_point_anti_project_orthogonally_onto(Motor self, Point other) {
     return point_flector_wedge(other, motor_point_weight_contraction(self, other));
 }
 
-MultiVector motor_line_anti_project_onto(Motor self, Line other) {
+MultiVector motor_line_anti_project_orthogonally_onto(Motor self, Line other) {
     return line_multi_vector_wedge(other, motor_line_weight_contraction(self, other));
 }
 
-AntiScalar motor_plane_anti_project_onto(Motor self, Plane other) {
+AntiScalar motor_plane_anti_project_orthogonally_onto(Motor self, Plane other) {
     return plane_point_wedge(other, motor_plane_weight_contraction(self, other));
 }
 
-Translator motor_translator_anti_project_onto(Motor self, Translator other) {
+Translator motor_translator_anti_project_orthogonally_onto(Motor self, Translator other) {
     return translator_scalar_wedge(other, motor_translator_weight_contraction(self, other));
 }
 
-Motor motor_flector_anti_project_onto(Motor self, Flector other) {
+Motor motor_flector_anti_project_orthogonally_onto(Motor self, Flector other) {
     return flector_flector_wedge(other, motor_flector_weight_contraction(self, other));
 }
 
-MultiVector motor_multi_vector_anti_project_onto(Motor self, MultiVector other) {
+MultiVector motor_multi_vector_anti_project_orthogonally_onto(Motor self, MultiVector other) {
     return multi_vector_multi_vector_wedge(other, motor_multi_vector_weight_contraction(self, other));
 }
 
-Rotor rotor_scalar_anti_project_onto(Rotor self, Scalar other) {
+Rotor rotor_scalar_anti_project_orthogonally_onto(Rotor self, Scalar other) {
     return scalar_rotor_wedge(other, rotor_scalar_weight_contraction(self, other));
 }
 
-AntiScalar rotor_anti_scalar_anti_project_onto(Rotor self, AntiScalar other) {
+AntiScalar rotor_anti_scalar_anti_project_orthogonally_onto(Rotor self, AntiScalar other) {
     return anti_scalar_scalar_wedge(other, rotor_anti_scalar_weight_contraction(self, other));
 }
 
-HomogeneousMagnitude rotor_homogeneous_magnitude_anti_project_onto(Rotor self, HomogeneousMagnitude other) {
+HomogeneousMagnitude rotor_homogeneous_magnitude_anti_project_orthogonally_onto(Rotor self, HomogeneousMagnitude other) {
     return homogeneous_magnitude_scalar_wedge(other, rotor_homogeneous_magnitude_weight_contraction(self, other));
 }
 
-Motor rotor_point_anti_project_onto(Rotor self, Point other) {
+Motor rotor_point_anti_project_orthogonally_onto(Rotor self, Point other) {
     return point_flector_wedge(other, rotor_point_weight_contraction(self, other));
 }
 
-MultiVector rotor_line_anti_project_onto(Rotor self, Line other) {
+MultiVector rotor_line_anti_project_orthogonally_onto(Rotor self, Line other) {
     return line_multi_vector_wedge(other, rotor_line_weight_contraction(self, other));
 }
 
-AntiScalar rotor_plane_anti_project_onto(Rotor self, Plane other) {
+AntiScalar rotor_plane_anti_project_orthogonally_onto(Rotor self, Plane other) {
     return plane_point_wedge(other, rotor_plane_weight_contraction(self, other));
 }
 
-Translator rotor_translator_anti_project_onto(Rotor self, Translator other) {
+Translator rotor_translator_anti_project_orthogonally_onto(Rotor self, Translator other) {
     return translator_scalar_wedge(other, rotor_translator_weight_contraction(self, other));
 }
 
-Motor rotor_flector_anti_project_onto(Rotor self, Flector other) {
+Motor rotor_flector_anti_project_orthogonally_onto(Rotor self, Flector other) {
     return flector_flector_wedge(other, rotor_flector_weight_contraction(self, other));
 }
 
-MultiVector rotor_multi_vector_anti_project_onto(Rotor self, MultiVector other) {
+MultiVector rotor_multi_vector_anti_project_orthogonally_onto(Rotor self, MultiVector other) {
     return multi_vector_multi_vector_wedge(other, rotor_multi_vector_weight_contraction(self, other));
 }
 
-Translator translator_scalar_anti_project_onto(Translator self, Scalar other) {
+Translator translator_scalar_anti_project_orthogonally_onto(Translator self, Scalar other) {
     return scalar_translator_wedge(other, translator_scalar_weight_contraction(self, other));
 }
 
-AntiScalar translator_anti_scalar_anti_project_onto(Translator self, AntiScalar other) {
+AntiScalar translator_anti_scalar_anti_project_orthogonally_onto(Translator self, AntiScalar other) {
     return anti_scalar_scalar_wedge(other, translator_anti_scalar_weight_contraction(self, other));
 }
 
-HomogeneousMagnitude translator_homogeneous_magnitude_anti_project_onto(Translator self, HomogeneousMagnitude other) {
+HomogeneousMagnitude translator_homogeneous_magnitude_anti_project_orthogonally_onto(Translator self, HomogeneousMagnitude other) {
     return homogeneous_magnitude_scalar_wedge(other, translator_homogeneous_magnitude_weight_contraction(self, other));
 }
 
-Motor translator_point_anti_project_onto(Translator self, Point other) {
+Motor translator_point_anti_project_orthogonally_onto(Translator self, Point other) {
     return point_flector_wedge(other, translator_point_weight_contraction(self, other));
 }
 
-MultiVector translator_line_anti_project_onto(Translator self, Line other) {
+MultiVector translator_line_anti_project_orthogonally_onto(Translator self, Line other) {
     return line_multi_vector_wedge(other, translator_line_weight_contraction(self, other));
 }
 
-AntiScalar translator_plane_anti_project_onto(Translator self, Plane other) {
+AntiScalar translator_plane_anti_project_orthogonally_onto(Translator self, Plane other) {
     return plane_point_wedge(other, translator_plane_weight_contraction(self, other));
 }
 
-Translator translator_translator_anti_project_onto(Translator self, Translator other) {
+Translator translator_translator_anti_project_orthogonally_onto(Translator self, Translator other) {
     return translator_scalar_wedge(other, translator_translator_weight_contraction(self, other));
 }
 
-Motor translator_flector_anti_project_onto(Translator self, Flector other) {
+Motor translator_flector_anti_project_orthogonally_onto(Translator self, Flector other) {
     return flector_flector_wedge(other, translator_flector_weight_contraction(self, other));
 }
 
-MultiVector translator_multi_vector_anti_project_onto(Translator self, MultiVector other) {
+MultiVector translator_multi_vector_anti_project_orthogonally_onto(Translator self, MultiVector other) {
     return multi_vector_multi_vector_wedge(other, translator_multi_vector_weight_contraction(self, other));
 }
 
-Flector flector_scalar_anti_project_onto(Flector self, Scalar other) {
+Flector flector_scalar_anti_project_orthogonally_onto(Flector self, Scalar other) {
     return scalar_flector_wedge(other, flector_scalar_weight_contraction(self, other));
 }
 
-MultiVector flector_point_anti_project_onto(Flector self, Point other) {
+MultiVector flector_point_anti_project_orthogonally_onto(Flector self, Point other) {
     return point_multi_vector_wedge(other, flector_point_weight_contraction(self, other));
 }
 
-Plane flector_line_anti_project_onto(Flector self, Line other) {
+Plane flector_line_anti_project_orthogonally_onto(Flector self, Line other) {
     return line_point_wedge(other, flector_line_weight_contraction(self, other));
 }
 
-Plane flector_plane_anti_project_onto(Flector self, Plane other) {
+Plane flector_plane_anti_project_orthogonally_onto(Flector self, Plane other) {
     return plane_scalar_wedge(other, flector_plane_weight_contraction(self, other));
 }
 
-MultiVector flector_flector_anti_project_onto(Flector self, Flector other) {
+MultiVector flector_flector_anti_project_orthogonally_onto(Flector self, Flector other) {
     return flector_multi_vector_wedge(other, flector_flector_weight_contraction(self, other));
 }
 
-MultiVector flector_multi_vector_anti_project_onto(Flector self, MultiVector other) {
+MultiVector flector_multi_vector_anti_project_orthogonally_onto(Flector self, MultiVector other) {
     return multi_vector_multi_vector_wedge(other, flector_multi_vector_weight_contraction(self, other));
 }
 
-MultiVector multi_vector_scalar_anti_project_onto(MultiVector self, Scalar other) {
+MultiVector multi_vector_scalar_anti_project_orthogonally_onto(MultiVector self, Scalar other) {
     return scalar_multi_vector_wedge(other, multi_vector_scalar_weight_contraction(self, other));
 }
 
-AntiScalar multi_vector_anti_scalar_anti_project_onto(MultiVector self, AntiScalar other) {
+AntiScalar multi_vector_anti_scalar_anti_project_orthogonally_onto(MultiVector self, AntiScalar other) {
     return anti_scalar_scalar_wedge(other, multi_vector_anti_scalar_weight_contraction(self, other));
 }
 
-HomogeneousMagnitude multi_vector_homogeneous_magnitude_anti_project_onto(MultiVector self, HomogeneousMagnitude other) {
+HomogeneousMagnitude multi_vector_homogeneous_magnitude_anti_project_orthogonally_onto(MultiVector self, HomogeneousMagnitude other) {
     return homogeneous_magnitude_scalar_wedge(other, multi_vector_homogeneous_magnitude_weight_contraction(self, other));
 }
 
-MultiVector multi_vector_point_anti_project_onto(MultiVector self, Point other) {
+MultiVector multi_vector_point_anti_project_orthogonally_onto(MultiVector self, Point other) {
     return point_multi_vector_wedge(other, multi_vector_point_weight_contraction(self, other));
 }
 
-MultiVector multi_vector_line_anti_project_onto(MultiVector self, Line other) {
+MultiVector multi_vector_line_anti_project_orthogonally_onto(MultiVector self, Line other) {
     return line_multi_vector_wedge(other, multi_vector_line_weight_contraction(self, other));
 }
 
-MultiVector multi_vector_plane_anti_project_onto(MultiVector self, Plane other) {
+MultiVector multi_vector_plane_anti_project_orthogonally_onto(MultiVector self, Plane other) {
     return plane_multi_vector_wedge(other, multi_vector_plane_weight_contraction(self, other));
 }
 
-Translator multi_vector_translator_anti_project_onto(MultiVector self, Translator other) {
+Translator multi_vector_translator_anti_project_orthogonally_onto(MultiVector self, Translator other) {
     return translator_scalar_wedge(other, multi_vector_translator_weight_contraction(self, other));
 }
 
-MultiVector multi_vector_flector_anti_project_onto(MultiVector self, Flector other) {
+MultiVector multi_vector_flector_anti_project_orthogonally_onto(MultiVector self, Flector other) {
     return flector_multi_vector_wedge(other, multi_vector_flector_weight_contraction(self, other));
 }
 
-MultiVector multi_vector_multi_vector_anti_project_onto(MultiVector self, MultiVector other) {
+MultiVector multi_vector_multi_vector_anti_project_orthogonally_onto(MultiVector self, MultiVector other) {
     return multi_vector_multi_vector_wedge(other, multi_vector_multi_vector_weight_contraction(self, other));
+}
+
+Scalar scalar_scalar_project_through_origin_onto(Scalar self, Scalar other) {
+    return scalar_anti_scalar_anti_wedge(other, scalar_scalar_bulk_expansion(self, other));
+}
+
+Scalar scalar_anti_scalar_project_through_origin_onto(Scalar self, AntiScalar other) {
+    return anti_scalar_scalar_anti_wedge(other, scalar_anti_scalar_bulk_expansion(self, other));
+}
+
+HomogeneousMagnitude scalar_homogeneous_magnitude_project_through_origin_onto(Scalar self, HomogeneousMagnitude other) {
+    return homogeneous_magnitude_anti_scalar_anti_wedge(other, scalar_homogeneous_magnitude_bulk_expansion(self, other));
+}
+
+Scalar scalar_point_project_through_origin_onto(Scalar self, Point other) {
+    return point_plane_anti_wedge(other, scalar_point_bulk_expansion(self, other));
+}
+
+Scalar scalar_line_project_through_origin_onto(Scalar self, Line other) {
+    return line_line_anti_wedge(other, scalar_line_bulk_expansion(self, other));
+}
+
+Scalar scalar_plane_project_through_origin_onto(Scalar self, Plane other) {
+    return plane_point_anti_wedge(other, scalar_plane_bulk_expansion(self, other));
+}
+
+MultiVector scalar_flector_project_through_origin_onto(Scalar self, Flector other) {
+    return flector_flector_anti_wedge(other, scalar_flector_bulk_expansion(self, other));
+}
+
+MultiVector scalar_multi_vector_project_through_origin_onto(Scalar self, MultiVector other) {
+    return multi_vector_multi_vector_anti_wedge(other, scalar_multi_vector_bulk_expansion(self, other));
+}
+
+AntiScalar anti_scalar_anti_scalar_project_through_origin_onto(AntiScalar self, AntiScalar other) {
+    return anti_scalar_anti_scalar_anti_wedge(other, anti_scalar_anti_scalar_bulk_expansion(self, other));
+}
+
+MultiVector anti_scalar_multi_vector_project_through_origin_onto(AntiScalar self, MultiVector other) {
+    return multi_vector_anti_scalar_anti_wedge(other, anti_scalar_multi_vector_bulk_expansion(self, other));
+}
+
+Scalar homogeneous_magnitude_scalar_project_through_origin_onto(HomogeneousMagnitude self, Scalar other) {
+    return scalar_anti_scalar_anti_wedge(other, homogeneous_magnitude_scalar_bulk_expansion(self, other));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_anti_scalar_project_through_origin_onto(HomogeneousMagnitude self, AntiScalar other) {
+    return anti_scalar_homogeneous_magnitude_anti_wedge(other, homogeneous_magnitude_anti_scalar_bulk_expansion(self, other));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_project_through_origin_onto(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return homogeneous_magnitude_anti_scalar_anti_wedge(other, homogeneous_magnitude_homogeneous_magnitude_bulk_expansion(self, other));
+}
+
+Scalar homogeneous_magnitude_point_project_through_origin_onto(HomogeneousMagnitude self, Point other) {
+    return point_plane_anti_wedge(other, homogeneous_magnitude_point_bulk_expansion(self, other));
+}
+
+Scalar homogeneous_magnitude_line_project_through_origin_onto(HomogeneousMagnitude self, Line other) {
+    return line_line_anti_wedge(other, homogeneous_magnitude_line_bulk_expansion(self, other));
+}
+
+Scalar homogeneous_magnitude_plane_project_through_origin_onto(HomogeneousMagnitude self, Plane other) {
+    return plane_point_anti_wedge(other, homogeneous_magnitude_plane_bulk_expansion(self, other));
+}
+
+MultiVector homogeneous_magnitude_flector_project_through_origin_onto(HomogeneousMagnitude self, Flector other) {
+    return flector_flector_anti_wedge(other, homogeneous_magnitude_flector_bulk_expansion(self, other));
+}
+
+MultiVector homogeneous_magnitude_multi_vector_project_through_origin_onto(HomogeneousMagnitude self, MultiVector other) {
+    return multi_vector_multi_vector_anti_wedge(other, homogeneous_magnitude_multi_vector_bulk_expansion(self, other));
+}
+
+Point point_anti_scalar_project_through_origin_onto(Point self, AntiScalar other) {
+    return anti_scalar_point_anti_wedge(other, point_anti_scalar_bulk_expansion(self, other));
+}
+
+Point point_point_project_through_origin_onto(Point self, Point other) {
+    return point_anti_scalar_anti_wedge(other, point_point_bulk_expansion(self, other));
+}
+
+Point point_line_project_through_origin_onto(Point self, Line other) {
+    return line_plane_anti_wedge(other, point_line_bulk_expansion(self, other));
+}
+
+Point point_plane_project_through_origin_onto(Point self, Plane other) {
+    return plane_line_anti_wedge(other, point_plane_bulk_expansion(self, other));
+}
+
+Flector point_flector_project_through_origin_onto(Point self, Flector other) {
+    return flector_motor_anti_wedge(other, point_flector_bulk_expansion(self, other));
+}
+
+MultiVector point_multi_vector_project_through_origin_onto(Point self, MultiVector other) {
+    return multi_vector_multi_vector_anti_wedge(other, point_multi_vector_bulk_expansion(self, other));
+}
+
+Line line_anti_scalar_project_through_origin_onto(Line self, AntiScalar other) {
+    return anti_scalar_line_anti_wedge(other, line_anti_scalar_bulk_expansion(self, other));
+}
+
+Line line_line_project_through_origin_onto(Line self, Line other) {
+    return line_anti_scalar_anti_wedge(other, line_line_bulk_expansion(self, other));
+}
+
+Line line_plane_project_through_origin_onto(Line self, Plane other) {
+    return plane_plane_anti_wedge(other, line_plane_bulk_expansion(self, other));
+}
+
+MultiVector line_flector_project_through_origin_onto(Line self, Flector other) {
+    return flector_plane_anti_wedge(other, line_flector_bulk_expansion(self, other));
+}
+
+MultiVector line_multi_vector_project_through_origin_onto(Line self, MultiVector other) {
+    return multi_vector_multi_vector_anti_wedge(other, line_multi_vector_bulk_expansion(self, other));
+}
+
+Plane plane_anti_scalar_project_through_origin_onto(Plane self, AntiScalar other) {
+    return anti_scalar_plane_anti_wedge(other, plane_anti_scalar_bulk_expansion(self, other));
+}
+
+Plane plane_plane_project_through_origin_onto(Plane self, Plane other) {
+    return plane_anti_scalar_anti_wedge(other, plane_plane_bulk_expansion(self, other));
+}
+
+Flector plane_flector_project_through_origin_onto(Plane self, Flector other) {
+    return flector_anti_scalar_anti_wedge(other, plane_flector_bulk_expansion(self, other));
+}
+
+MultiVector plane_multi_vector_project_through_origin_onto(Plane self, MultiVector other) {
+    return multi_vector_multi_vector_anti_wedge(other, plane_multi_vector_bulk_expansion(self, other));
+}
+
+Motor motor_anti_scalar_project_through_origin_onto(Motor self, AntiScalar other) {
+    return anti_scalar_motor_anti_wedge(other, motor_anti_scalar_bulk_expansion(self, other));
+}
+
+Line motor_line_project_through_origin_onto(Motor self, Line other) {
+    return line_anti_scalar_anti_wedge(other, motor_line_bulk_expansion(self, other));
+}
+
+Line motor_plane_project_through_origin_onto(Motor self, Plane other) {
+    return plane_plane_anti_wedge(other, motor_plane_bulk_expansion(self, other));
+}
+
+MultiVector motor_flector_project_through_origin_onto(Motor self, Flector other) {
+    return flector_plane_anti_wedge(other, motor_flector_bulk_expansion(self, other));
+}
+
+MultiVector motor_multi_vector_project_through_origin_onto(Motor self, MultiVector other) {
+    return multi_vector_multi_vector_anti_wedge(other, motor_multi_vector_bulk_expansion(self, other));
+}
+
+Rotor rotor_anti_scalar_project_through_origin_onto(Rotor self, AntiScalar other) {
+    return anti_scalar_rotor_anti_wedge(other, rotor_anti_scalar_bulk_expansion(self, other));
+}
+
+Line rotor_line_project_through_origin_onto(Rotor self, Line other) {
+    return line_anti_scalar_anti_wedge(other, rotor_line_bulk_expansion(self, other));
+}
+
+Line rotor_plane_project_through_origin_onto(Rotor self, Plane other) {
+    return plane_plane_anti_wedge(other, rotor_plane_bulk_expansion(self, other));
+}
+
+MultiVector rotor_flector_project_through_origin_onto(Rotor self, Flector other) {
+    return flector_plane_anti_wedge(other, rotor_flector_bulk_expansion(self, other));
+}
+
+MultiVector rotor_multi_vector_project_through_origin_onto(Rotor self, MultiVector other) {
+    return multi_vector_multi_vector_anti_wedge(other, rotor_multi_vector_bulk_expansion(self, other));
+}
+
+Translator translator_anti_scalar_project_through_origin_onto(Translator self, AntiScalar other) {
+    return anti_scalar_translator_anti_wedge(other, translator_anti_scalar_bulk_expansion(self, other));
+}
+
+Line translator_line_project_through_origin_onto(Translator self, Line other) {
+    return line_anti_scalar_anti_wedge(other, translator_line_bulk_expansion(self, other));
+}
+
+Line translator_plane_project_through_origin_onto(Translator self, Plane other) {
+    return plane_plane_anti_wedge(other, translator_plane_bulk_expansion(self, other));
+}
+
+MultiVector translator_flector_project_through_origin_onto(Translator self, Flector other) {
+    return flector_plane_anti_wedge(other, translator_flector_bulk_expansion(self, other));
+}
+
+MultiVector translator_multi_vector_project_through_origin_onto(Translator self, MultiVector other) {
+    return multi_vector_multi_vector_anti_wedge(other, translator_multi_vector_bulk_expansion(self, other));
+}
+
+Flector flector_anti_scalar_project_through_origin_onto(Flector self, AntiScalar other) {
+    return anti_scalar_flector_anti_wedge(other, flector_anti_scalar_bulk_expansion(self, other));
+}
+
+Point flector_point_project_through_origin_onto(Flector self, Point other) {
+    return point_anti_scalar_anti_wedge(other, flector_point_bulk_expansion(self, other));
+}
+
+Point flector_line_project_through_origin_onto(Flector self, Line other) {
+    return line_plane_anti_wedge(other, flector_line_bulk_expansion(self, other));
+}
+
+Flector flector_plane_project_through_origin_onto(Flector self, Plane other) {
+    return plane_motor_anti_wedge(other, flector_plane_bulk_expansion(self, other));
+}
+
+Flector flector_flector_project_through_origin_onto(Flector self, Flector other) {
+    return flector_motor_anti_wedge(other, flector_flector_bulk_expansion(self, other));
+}
+
+MultiVector flector_multi_vector_project_through_origin_onto(Flector self, MultiVector other) {
+    return multi_vector_multi_vector_anti_wedge(other, flector_multi_vector_bulk_expansion(self, other));
+}
+
+Scalar multi_vector_scalar_project_through_origin_onto(MultiVector self, Scalar other) {
+    return scalar_anti_scalar_anti_wedge(other, multi_vector_scalar_bulk_expansion(self, other));
+}
+
+MultiVector multi_vector_anti_scalar_project_through_origin_onto(MultiVector self, AntiScalar other) {
+    return anti_scalar_multi_vector_anti_wedge(other, multi_vector_anti_scalar_bulk_expansion(self, other));
+}
+
+HomogeneousMagnitude multi_vector_homogeneous_magnitude_project_through_origin_onto(MultiVector self, HomogeneousMagnitude other) {
+    return homogeneous_magnitude_anti_scalar_anti_wedge(other, multi_vector_homogeneous_magnitude_bulk_expansion(self, other));
+}
+
+MultiVector multi_vector_point_project_through_origin_onto(MultiVector self, Point other) {
+    return point_multi_vector_anti_wedge(other, multi_vector_point_bulk_expansion(self, other));
+}
+
+MultiVector multi_vector_line_project_through_origin_onto(MultiVector self, Line other) {
+    return line_multi_vector_anti_wedge(other, multi_vector_line_bulk_expansion(self, other));
+}
+
+MultiVector multi_vector_plane_project_through_origin_onto(MultiVector self, Plane other) {
+    return plane_multi_vector_anti_wedge(other, multi_vector_plane_bulk_expansion(self, other));
+}
+
+MultiVector multi_vector_flector_project_through_origin_onto(MultiVector self, Flector other) {
+    return flector_multi_vector_anti_wedge(other, multi_vector_flector_bulk_expansion(self, other));
+}
+
+MultiVector multi_vector_multi_vector_project_through_origin_onto(MultiVector self, MultiVector other) {
+    return multi_vector_multi_vector_anti_wedge(other, multi_vector_multi_vector_bulk_expansion(self, other));
+}
+
+Scalar scalar_scalar_anti_project_through_origin_onto(Scalar self, Scalar other) {
+    return scalar_scalar_wedge(other, scalar_scalar_bulk_contraction(self, other));
+}
+
+HomogeneousMagnitude scalar_homogeneous_magnitude_anti_project_through_origin_onto(Scalar self, HomogeneousMagnitude other) {
+    return homogeneous_magnitude_scalar_wedge(other, scalar_homogeneous_magnitude_bulk_contraction(self, other));
+}
+
+MultiVector scalar_multi_vector_anti_project_through_origin_onto(Scalar self, MultiVector other) {
+    return multi_vector_scalar_wedge(other, scalar_multi_vector_bulk_contraction(self, other));
+}
+
+AntiScalar anti_scalar_scalar_anti_project_through_origin_onto(AntiScalar self, Scalar other) {
+    return scalar_anti_scalar_wedge(other, anti_scalar_scalar_bulk_contraction(self, other));
+}
+
+AntiScalar anti_scalar_anti_scalar_anti_project_through_origin_onto(AntiScalar self, AntiScalar other) {
+    return anti_scalar_scalar_wedge(other, anti_scalar_anti_scalar_bulk_contraction(self, other));
+}
+
+AntiScalar anti_scalar_homogeneous_magnitude_anti_project_through_origin_onto(AntiScalar self, HomogeneousMagnitude other) {
+    return homogeneous_magnitude_anti_scalar_wedge(other, anti_scalar_homogeneous_magnitude_bulk_contraction(self, other));
+}
+
+AntiScalar anti_scalar_point_anti_project_through_origin_onto(AntiScalar self, Point other) {
+    return point_plane_wedge(other, anti_scalar_point_bulk_contraction(self, other));
+}
+
+AntiScalar anti_scalar_line_anti_project_through_origin_onto(AntiScalar self, Line other) {
+    return line_line_wedge(other, anti_scalar_line_bulk_contraction(self, other));
+}
+
+AntiScalar anti_scalar_plane_anti_project_through_origin_onto(AntiScalar self, Plane other) {
+    return plane_point_wedge(other, anti_scalar_plane_bulk_contraction(self, other));
+}
+
+Motor anti_scalar_flector_anti_project_through_origin_onto(AntiScalar self, Flector other) {
+    return flector_flector_wedge(other, anti_scalar_flector_bulk_contraction(self, other));
+}
+
+MultiVector anti_scalar_multi_vector_anti_project_through_origin_onto(AntiScalar self, MultiVector other) {
+    return multi_vector_multi_vector_wedge(other, anti_scalar_multi_vector_bulk_contraction(self, other));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_scalar_anti_project_through_origin_onto(HomogeneousMagnitude self, Scalar other) {
+    return scalar_homogeneous_magnitude_wedge(other, homogeneous_magnitude_scalar_bulk_contraction(self, other));
+}
+
+AntiScalar homogeneous_magnitude_anti_scalar_anti_project_through_origin_onto(HomogeneousMagnitude self, AntiScalar other) {
+    return anti_scalar_scalar_wedge(other, homogeneous_magnitude_anti_scalar_bulk_contraction(self, other));
+}
+
+HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_anti_project_through_origin_onto(HomogeneousMagnitude self, HomogeneousMagnitude other) {
+    return homogeneous_magnitude_homogeneous_magnitude_wedge(other, homogeneous_magnitude_homogeneous_magnitude_bulk_contraction(self, other));
+}
+
+AntiScalar homogeneous_magnitude_point_anti_project_through_origin_onto(HomogeneousMagnitude self, Point other) {
+    return point_plane_wedge(other, homogeneous_magnitude_point_bulk_contraction(self, other));
+}
+
+AntiScalar homogeneous_magnitude_line_anti_project_through_origin_onto(HomogeneousMagnitude self, Line other) {
+    return line_line_wedge(other, homogeneous_magnitude_line_bulk_contraction(self, other));
+}
+
+AntiScalar homogeneous_magnitude_plane_anti_project_through_origin_onto(HomogeneousMagnitude self, Plane other) {
+    return plane_point_wedge(other, homogeneous_magnitude_plane_bulk_contraction(self, other));
+}
+
+Motor homogeneous_magnitude_flector_anti_project_through_origin_onto(HomogeneousMagnitude self, Flector other) {
+    return flector_flector_wedge(other, homogeneous_magnitude_flector_bulk_contraction(self, other));
+}
+
+MultiVector homogeneous_magnitude_multi_vector_anti_project_through_origin_onto(HomogeneousMagnitude self, MultiVector other) {
+    return multi_vector_multi_vector_wedge(other, homogeneous_magnitude_multi_vector_bulk_contraction(self, other));
+}
+
+Point point_scalar_anti_project_through_origin_onto(Point self, Scalar other) {
+    return scalar_point_wedge(other, point_scalar_bulk_contraction(self, other));
+}
+
+Point point_homogeneous_magnitude_anti_project_through_origin_onto(Point self, HomogeneousMagnitude other) {
+    return homogeneous_magnitude_point_wedge(other, point_homogeneous_magnitude_bulk_contraction(self, other));
+}
+
+Point point_point_anti_project_through_origin_onto(Point self, Point other) {
+    return point_scalar_wedge(other, point_point_bulk_contraction(self, other));
+}
+
+Flector point_flector_anti_project_through_origin_onto(Point self, Flector other) {
+    return flector_scalar_wedge(other, point_flector_bulk_contraction(self, other));
+}
+
+MultiVector point_multi_vector_anti_project_through_origin_onto(Point self, MultiVector other) {
+    return multi_vector_multi_vector_wedge(other, point_multi_vector_bulk_contraction(self, other));
+}
+
+Line line_scalar_anti_project_through_origin_onto(Line self, Scalar other) {
+    return scalar_line_wedge(other, line_scalar_bulk_contraction(self, other));
+}
+
+Line line_homogeneous_magnitude_anti_project_through_origin_onto(Line self, HomogeneousMagnitude other) {
+    return homogeneous_magnitude_line_wedge(other, line_homogeneous_magnitude_bulk_contraction(self, other));
+}
+
+Line line_point_anti_project_through_origin_onto(Line self, Point other) {
+    return point_point_wedge(other, line_point_bulk_contraction(self, other));
+}
+
+Line line_line_anti_project_through_origin_onto(Line self, Line other) {
+    return line_scalar_wedge(other, line_line_bulk_contraction(self, other));
+}
+
+Motor line_flector_anti_project_through_origin_onto(Line self, Flector other) {
+    return flector_point_wedge(other, line_flector_bulk_contraction(self, other));
+}
+
+MultiVector line_multi_vector_anti_project_through_origin_onto(Line self, MultiVector other) {
+    return multi_vector_multi_vector_wedge(other, line_multi_vector_bulk_contraction(self, other));
+}
+
+Plane plane_scalar_anti_project_through_origin_onto(Plane self, Scalar other) {
+    return scalar_plane_wedge(other, plane_scalar_bulk_contraction(self, other));
+}
+
+Plane plane_homogeneous_magnitude_anti_project_through_origin_onto(Plane self, HomogeneousMagnitude other) {
+    return homogeneous_magnitude_plane_wedge(other, plane_homogeneous_magnitude_bulk_contraction(self, other));
+}
+
+Plane plane_point_anti_project_through_origin_onto(Plane self, Point other) {
+    return point_line_wedge(other, plane_point_bulk_contraction(self, other));
+}
+
+Plane plane_line_anti_project_through_origin_onto(Plane self, Line other) {
+    return line_point_wedge(other, plane_line_bulk_contraction(self, other));
+}
+
+Plane plane_plane_anti_project_through_origin_onto(Plane self, Plane other) {
+    return plane_scalar_wedge(other, plane_plane_bulk_contraction(self, other));
+}
+
+MultiVector plane_flector_anti_project_through_origin_onto(Plane self, Flector other) {
+    return flector_multi_vector_wedge(other, plane_flector_bulk_contraction(self, other));
+}
+
+MultiVector plane_multi_vector_anti_project_through_origin_onto(Plane self, MultiVector other) {
+    return multi_vector_multi_vector_wedge(other, plane_multi_vector_bulk_contraction(self, other));
+}
+
+Motor motor_scalar_anti_project_through_origin_onto(Motor self, Scalar other) {
+    return scalar_motor_wedge(other, motor_scalar_bulk_contraction(self, other));
+}
+
+AntiScalar motor_anti_scalar_anti_project_through_origin_onto(Motor self, AntiScalar other) {
+    return anti_scalar_scalar_wedge(other, motor_anti_scalar_bulk_contraction(self, other));
+}
+
+Motor motor_homogeneous_magnitude_anti_project_through_origin_onto(Motor self, HomogeneousMagnitude other) {
+    return homogeneous_magnitude_motor_wedge(other, motor_homogeneous_magnitude_bulk_contraction(self, other));
+}
+
+Motor motor_point_anti_project_through_origin_onto(Motor self, Point other) {
+    return point_flector_wedge(other, motor_point_bulk_contraction(self, other));
+}
+
+MultiVector motor_line_anti_project_through_origin_onto(Motor self, Line other) {
+    return line_multi_vector_wedge(other, motor_line_bulk_contraction(self, other));
+}
+
+AntiScalar motor_plane_anti_project_through_origin_onto(Motor self, Plane other) {
+    return plane_point_wedge(other, motor_plane_bulk_contraction(self, other));
+}
+
+Motor motor_flector_anti_project_through_origin_onto(Motor self, Flector other) {
+    return flector_flector_wedge(other, motor_flector_bulk_contraction(self, other));
+}
+
+MultiVector motor_multi_vector_anti_project_through_origin_onto(Motor self, MultiVector other) {
+    return multi_vector_multi_vector_wedge(other, motor_multi_vector_bulk_contraction(self, other));
+}
+
+Rotor rotor_scalar_anti_project_through_origin_onto(Rotor self, Scalar other) {
+    return scalar_rotor_wedge(other, rotor_scalar_bulk_contraction(self, other));
+}
+
+AntiScalar rotor_anti_scalar_anti_project_through_origin_onto(Rotor self, AntiScalar other) {
+    return anti_scalar_scalar_wedge(other, rotor_anti_scalar_bulk_contraction(self, other));
+}
+
+Rotor rotor_homogeneous_magnitude_anti_project_through_origin_onto(Rotor self, HomogeneousMagnitude other) {
+    return homogeneous_magnitude_rotor_wedge(other, rotor_homogeneous_magnitude_bulk_contraction(self, other));
+}
+
+Motor rotor_point_anti_project_through_origin_onto(Rotor self, Point other) {
+    return point_flector_wedge(other, rotor_point_bulk_contraction(self, other));
+}
+
+MultiVector rotor_line_anti_project_through_origin_onto(Rotor self, Line other) {
+    return line_multi_vector_wedge(other, rotor_line_bulk_contraction(self, other));
+}
+
+AntiScalar rotor_plane_anti_project_through_origin_onto(Rotor self, Plane other) {
+    return plane_point_wedge(other, rotor_plane_bulk_contraction(self, other));
+}
+
+Motor rotor_flector_anti_project_through_origin_onto(Rotor self, Flector other) {
+    return flector_flector_wedge(other, rotor_flector_bulk_contraction(self, other));
+}
+
+MultiVector rotor_multi_vector_anti_project_through_origin_onto(Rotor self, MultiVector other) {
+    return multi_vector_multi_vector_wedge(other, rotor_multi_vector_bulk_contraction(self, other));
+}
+
+Translator translator_scalar_anti_project_through_origin_onto(Translator self, Scalar other) {
+    return scalar_translator_wedge(other, translator_scalar_bulk_contraction(self, other));
+}
+
+AntiScalar translator_anti_scalar_anti_project_through_origin_onto(Translator self, AntiScalar other) {
+    return anti_scalar_scalar_wedge(other, translator_anti_scalar_bulk_contraction(self, other));
+}
+
+Translator translator_homogeneous_magnitude_anti_project_through_origin_onto(Translator self, HomogeneousMagnitude other) {
+    return homogeneous_magnitude_translator_wedge(other, translator_homogeneous_magnitude_bulk_contraction(self, other));
+}
+
+Motor translator_point_anti_project_through_origin_onto(Translator self, Point other) {
+    return point_flector_wedge(other, translator_point_bulk_contraction(self, other));
+}
+
+MultiVector translator_line_anti_project_through_origin_onto(Translator self, Line other) {
+    return line_multi_vector_wedge(other, translator_line_bulk_contraction(self, other));
+}
+
+AntiScalar translator_plane_anti_project_through_origin_onto(Translator self, Plane other) {
+    return plane_point_wedge(other, translator_plane_bulk_contraction(self, other));
+}
+
+Motor translator_flector_anti_project_through_origin_onto(Translator self, Flector other) {
+    return flector_flector_wedge(other, translator_flector_bulk_contraction(self, other));
+}
+
+MultiVector translator_multi_vector_anti_project_through_origin_onto(Translator self, MultiVector other) {
+    return multi_vector_multi_vector_wedge(other, translator_multi_vector_bulk_contraction(self, other));
+}
+
+Flector flector_scalar_anti_project_through_origin_onto(Flector self, Scalar other) {
+    return scalar_flector_wedge(other, flector_scalar_bulk_contraction(self, other));
+}
+
+Flector flector_homogeneous_magnitude_anti_project_through_origin_onto(Flector self, HomogeneousMagnitude other) {
+    return homogeneous_magnitude_flector_wedge(other, flector_homogeneous_magnitude_bulk_contraction(self, other));
+}
+
+MultiVector flector_point_anti_project_through_origin_onto(Flector self, Point other) {
+    return point_multi_vector_wedge(other, flector_point_bulk_contraction(self, other));
+}
+
+Plane flector_line_anti_project_through_origin_onto(Flector self, Line other) {
+    return line_point_wedge(other, flector_line_bulk_contraction(self, other));
+}
+
+Plane flector_plane_anti_project_through_origin_onto(Flector self, Plane other) {
+    return plane_scalar_wedge(other, flector_plane_bulk_contraction(self, other));
+}
+
+MultiVector flector_flector_anti_project_through_origin_onto(Flector self, Flector other) {
+    return flector_multi_vector_wedge(other, flector_flector_bulk_contraction(self, other));
+}
+
+MultiVector flector_multi_vector_anti_project_through_origin_onto(Flector self, MultiVector other) {
+    return multi_vector_multi_vector_wedge(other, flector_multi_vector_bulk_contraction(self, other));
+}
+
+MultiVector multi_vector_scalar_anti_project_through_origin_onto(MultiVector self, Scalar other) {
+    return scalar_multi_vector_wedge(other, multi_vector_scalar_bulk_contraction(self, other));
+}
+
+AntiScalar multi_vector_anti_scalar_anti_project_through_origin_onto(MultiVector self, AntiScalar other) {
+    return anti_scalar_scalar_wedge(other, multi_vector_anti_scalar_bulk_contraction(self, other));
+}
+
+MultiVector multi_vector_homogeneous_magnitude_anti_project_through_origin_onto(MultiVector self, HomogeneousMagnitude other) {
+    return homogeneous_magnitude_multi_vector_wedge(other, multi_vector_homogeneous_magnitude_bulk_contraction(self, other));
+}
+
+MultiVector multi_vector_point_anti_project_through_origin_onto(MultiVector self, Point other) {
+    return point_multi_vector_wedge(other, multi_vector_point_bulk_contraction(self, other));
+}
+
+MultiVector multi_vector_line_anti_project_through_origin_onto(MultiVector self, Line other) {
+    return line_multi_vector_wedge(other, multi_vector_line_bulk_contraction(self, other));
+}
+
+MultiVector multi_vector_plane_anti_project_through_origin_onto(MultiVector self, Plane other) {
+    return plane_multi_vector_wedge(other, multi_vector_plane_bulk_contraction(self, other));
+}
+
+MultiVector multi_vector_flector_anti_project_through_origin_onto(MultiVector self, Flector other) {
+    return flector_multi_vector_wedge(other, multi_vector_flector_bulk_contraction(self, other));
+}
+
+MultiVector multi_vector_multi_vector_anti_project_through_origin_onto(MultiVector self, MultiVector other) {
+    return multi_vector_multi_vector_wedge(other, multi_vector_multi_vector_bulk_contraction(self, other));
 }
 
