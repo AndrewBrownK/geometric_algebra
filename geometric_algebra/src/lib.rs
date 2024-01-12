@@ -518,7 +518,6 @@ pub trait Attitude {
     fn attitude(self) -> Self::Output;
 }
 
-// TODO generate implementations
 /// The Bulk of an object usually describes the object's relationship with the origin.
 /// An object with a Bulk of zero contains the origin.
 /// http://rigidgeometricalgebra.org/wiki/index.php?title=Bulk_and_weight
@@ -527,7 +526,6 @@ pub trait Bulk {
     fn bulk(self) -> Self::Output;
 }
 
-// TODO generate implementations
 /// The Weight of an object usually describes the object's attitude and orientation.
 /// An object with zero weight is contained by the horizon.
 ///
@@ -644,6 +642,21 @@ pub trait WeightExpansion<T> {
     fn weight_expansion(self, other: T) -> Self::Output;
 }
 
+/// Projection
+/// Typically involves bringing a lower dimensional object to a higher dimensional object
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Projections
+pub trait ProjectOnto<T> {
+    type Output;
+    fn project_onto(self, other: T) -> Self::Output;
+}
+
+/// AntiProjection
+/// Typically involves bringing a higher dimensional object to a lower dimensional object.
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Projections
+pub trait AntiProjectOnto<T> {
+    type Output;
+    fn anti_project_onto(self, other: T) -> Self::Output;
+}
 
 
 // TODO generate implementations

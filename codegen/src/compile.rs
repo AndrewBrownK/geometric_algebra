@@ -1833,4 +1833,52 @@ impl MultiVectorClass {
             }]
         }
     }
+
+    pub fn derive_projection<'a>(
+        name: &'static str,
+
+        parameter_a: &Parameter<'a>,
+        parameter_b: &Parameter<'a>,
+        result: &Parameter<'a>,
+
+        weight_operation: &AstNode<'a>,
+        product: &AstNode<'a>,
+    ) -> AstNode<'a> {
+        let weight_operation_result = result_of_trait!(weight_operation);
+        let product_result = result_of_trait!(product);
+
+        // InvokeInstanceMethod:
+        // - Class implementing trait
+        // - Inner expression
+        // - Method name
+        // - Arguments
+
+        let do_weight_operation = Expression {
+            size: 1,
+            content: ExpressionContent::InvokeInstanceMethod(
+                parameter_a.data_type.clone(),
+                Box::new(Expression { size: 1, content: ExpressionContent::Variable(parameter_a.name) }),
+                weight_operation_result.name,
+                vec![(parameter_b.data_type.clone(), Expression { size: 1, content: ExpressionContent::Variable(parameter_b.name) })]
+            )
+        };
+
+        let do_product = Expression {
+            size: 1,
+            content: ExpressionContent::InvokeInstanceMethod(
+                parameter_b.data_type.clone(),
+                Box::new(Expression { size: 1, content: ExpressionContent::Variable(parameter_b.name) }),
+                product_result.name,
+                vec![(weight_operation_result.data_type.clone(), do_weight_operation)]
+            )
+        };
+
+        AstNode::TraitImplementation {
+            result: Parameter { name, data_type: result.data_type.clone() },
+            parameters: vec![parameter_a.clone(), parameter_b.clone()],
+            body: vec![
+                AstNode::ReturnStatement { expression: Box::new(do_product)}
+            ]
+        }
+    }
 }

@@ -618,6 +618,39 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
         };
     }
 
+    // TODO I feel like (but am not sure) there might be excess implementations of ProjectOnto and AntiProjectOnto.
+    //  https://rigidgeometricalgebra.org/wiki/index.php?title=Projections
+    //  The article shows a clear pattern of projecting lower dimensions onto higher dimensions, and vice versa
+    //  for anti-projection. Currently I am getting impls for all kinds of combinations that violate that pattern.
+    //  Such as for example projecting a scalar onto a line. I don't even know what that means.
+    //  It might be the case that these implementations really do stuff, and we just don't know what it means yet.
+    //  Or it is possible that these implementations are degenerate cases and we'd rather omit them.
+    //  I'll have to play around and test to find out.
+
+    for (param_a, param_b) in registry.pair_parameters() {
+        let _: Option<()> = try {
+            let (we, we_r) = trait_impls.get_pair_impl_and_result("WeightExpansion", &param_a, &param_b)?;
+            let (anti_wedge, anti_wedge_r) = trait_impls.get_pair_impl_and_result("AntiWedge", &param_b, &we_r)?;
+            let po = MultiVectorClass::derive_projection(
+                "ProjectOnto", &param_a, &param_b, anti_wedge_r, we, anti_wedge
+            );
+            emitter.emit(&po).unwrap();
+            trait_impls.add_pair_impl("ProjectOnto", param_a, param_b, po);
+        };
+    }
+
+    for (param_a, param_b) in registry.pair_parameters() {
+        let _: Option<()> = try {
+            let (wc, wc_r) = trait_impls.get_pair_impl_and_result("WeightContraction", &param_a, &param_b)?;
+            let (wedge, wedge_r) = trait_impls.get_pair_impl_and_result("Wedge", &param_b, &wc_r)?;
+            let apo = MultiVectorClass::derive_projection(
+                "AntiProjectOnto", &param_a, &param_b, wedge_r, wc, wedge
+            );
+            emitter.emit(&apo).unwrap();
+            trait_impls.add_pair_impl("AntiProjectOnto", param_a, param_b, apo);
+        };
+    }
+
     // for (param_a, param_b) in registry.pair_parameters() {
     //     let _: Option<()> = try {
     //
