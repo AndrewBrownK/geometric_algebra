@@ -34,6 +34,7 @@ pub enum ExpressionContent<'a> {
 pub struct Expression<'a> {
     pub size: usize,
     pub content: ExpressionContent<'a>,
+    pub data_type_hint: Option<DataType<'a>>,
 }
 
 #[derive(PartialEq, Eq, Clone, Debug)]

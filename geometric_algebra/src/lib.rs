@@ -674,6 +674,12 @@ pub trait AntiProjectThroughOriginOnto<T> {
     fn anti_project_through_origin_onto(self, other: T) -> Self::Output;
 }
 
+/// The cosine of the angle between two objects.
+/// https://projectivegeometricalgebra.org/projgeomalg.pdf
+pub trait CosineAngle<T> {
+    type Output;
+    fn cosine_angle(self, other: T) -> Self::Output;
+}
 
 
 

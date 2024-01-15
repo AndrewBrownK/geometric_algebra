@@ -16,6 +16,8 @@ use crate::{
     ast::{AstNode, DataType, Parameter},
     emit::Emitter,
 };
+use crate::ast::{Expression, ExpressionContent};
+use crate::compile::{single_expression_pair_trait_impl, variable};
 
 pub mod algebra;
 mod ast;
@@ -161,6 +163,67 @@ impl<'a> TraitImpls<'a> {
         let the_impl = singles.get(name)?;
         let result = result_of_trait!(the_impl);
         return Some((the_impl, result));
+    }
+
+    fn get_pair_invocation(&self, name: &str, a: Expression<'a>, b: Expression<'a>) -> Option<Expression<'a>> {
+        // InvokeInstanceMethod:
+        // - Class implementing trait
+        // - Inner expression
+        // - Method name
+        // - Arguments
+
+        let class_a = match a.data_type_hint {
+            Some(DataType::MultiVector(c)) => c,
+            _ => panic!("TraitImpls.get_pair_invocation for {name} requires MultiVectorClass data_type_hints on \"a\" {a:?}"),
+        };
+        let class_b = match b.data_type_hint {
+            Some(DataType::MultiVector(c)) => c,
+            _ => panic!("TraitImpls.get_pair_invocation for {name} requires MultiVectorClass data_type_hints on \"b\" {b:?}"),
+        };
+        let (_, _, pairs) = self.raw.get(&class_a.class_name)?;
+        let (_, pair_impls) = pairs.get(&class_b.class_name)?;
+        let the_impl = pair_impls.get(name)?;
+        let result = result_of_trait!(the_impl);
+
+        Some(Expression {
+            size: 1,
+            data_type_hint: Some(result.data_type.clone()),
+            content: ExpressionContent::InvokeInstanceMethod(
+                DataType::MultiVector(class_a),
+                Box::new(a),
+                result.name,
+                vec![
+                    (DataType::MultiVector(class_b), b)
+                ]
+            ),
+        })
+    }
+
+    fn get_single_invocation(&self, name: &str, a: Expression<'a>) -> Option<Expression<'a>> {
+        // InvokeInstanceMethod:
+        // - Class implementing trait
+        // - Inner expression
+        // - Method name
+        // - Arguments
+
+        let class_a = match a.data_type_hint {
+            Some(DataType::MultiVector(c)) => c,
+            _ => panic!("TraitImpls.get_single_invocation for {name} requires MultiVectorClass data_type_hints on \"a\" {a:?}"),
+        };
+        let (_, singles, _) = self.raw.get(&class_a.class_name)?;
+        let the_impl = singles.get(name)?;
+        let result = result_of_trait!(the_impl);
+
+        Some(Expression {
+            size: 1,
+            data_type_hint: Some(result.data_type.clone()),
+            content: ExpressionContent::InvokeInstanceMethod(
+                DataType::MultiVector(class_a),
+                Box::new(a),
+                result.name,
+                vec![]
+            ),
+        })
     }
 }
 
@@ -653,10 +716,10 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
 
     for (param_a, param_b) in registry.pair_parameters() {
         let _: Option<()> = try {
-            let (we, we_r) = trait_impls.get_pair_impl_and_result("BulkExpansion", &param_a, &param_b)?;
-            let (anti_wedge, anti_wedge_r) = trait_impls.get_pair_impl_and_result("AntiWedge", &param_b, &we_r)?;
+            let (be, be_r) = trait_impls.get_pair_impl_and_result("BulkExpansion", &param_a, &param_b)?;
+            let (anti_wedge, anti_wedge_r) = trait_impls.get_pair_impl_and_result("AntiWedge", &param_b, &be_r)?;
             let po = MultiVectorClass::derive_projection(
-                "ProjectThroughOriginOnto", &param_a, &param_b, anti_wedge_r, we, anti_wedge
+                "ProjectThroughOriginOnto", &param_a, &param_b, anti_wedge_r, be, anti_wedge
             );
             emitter.emit(&po).unwrap();
             trait_impls.add_pair_impl("ProjectThroughOriginOnto", param_a, param_b, po);
@@ -665,17 +728,32 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
 
     for (param_a, param_b) in registry.pair_parameters() {
         let _: Option<()> = try {
-            let (wc, wc_r) = trait_impls.get_pair_impl_and_result("BulkContraction", &param_a, &param_b)?;
-            let (wedge, wedge_r) = trait_impls.get_pair_impl_and_result("Wedge", &param_b, &wc_r)?;
+            let (bc, bc_r) = trait_impls.get_pair_impl_and_result("BulkContraction", &param_a, &param_b)?;
+            let (wedge, wedge_r) = trait_impls.get_pair_impl_and_result("Wedge", &param_b, &bc_r)?;
             let apo = MultiVectorClass::derive_projection(
-                "AntiProjectThroughOriginOnto", &param_a, &param_b, wedge_r, wc, wedge
+                "AntiProjectThroughOriginOnto", &param_a, &param_b, wedge_r, bc, wedge
             );
             emitter.emit(&apo).unwrap();
             trait_impls.add_pair_impl("AntiProjectThroughOriginOnto", param_a, param_b, apo);
         };
     }
 
-    // TODO cosine of angle between objects
+    // TODO I'm concerned about excess implementations of CosineAngle. HomogeneousMagnitude has angles with
+    //  respect to stuff apparently. Or allegedly. I guess it's better than a plain Scalar or AntiScalar impl... maybe..
+
+    for (param_a, param_b) in registry.pair_parameters() {
+        let _: Option<()> = try {
+            let wc = trait_impls.get_pair_invocation("WeightContraction", variable(&param_a), variable(&param_b))?;
+            let bn = trait_impls.get_single_invocation("BulkNorm", wc)?;
+            let a_wn = trait_impls.get_single_invocation("WeightNorm", variable(&param_a))?;
+            let b_wn = trait_impls.get_single_invocation("WeightNorm", variable(&param_b))?;
+            let wn_mul = trait_impls.get_pair_invocation("Mul", a_wn, b_wn)?;
+            let add = trait_impls.get_pair_invocation("Add", bn, wn_mul)?;
+            let cosine = single_expression_pair_trait_impl("CosineAngle", &param_a, &param_b, add);
+            emitter.emit(&cosine).unwrap();
+            trait_impls.add_pair_impl("CosineAngle", param_a, param_b, cosine);
+        };
+    }
 
     // for (param_a, param_b) in registry.pair_parameters() {
     //     let _: Option<()> = try {
