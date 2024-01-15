@@ -630,54 +630,50 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
     }
 
     for (param_a, param_b) in registry.pair_parameters() {
+        let name = "BulkContraction";
         let _: Option<()> = try {
             // Bulk contraction is the antiwedge on a right bulk dual
-            let (rbd, rbd_r) = trait_impls.get_single_impl_and_result("RightBulkDual", &param_b)?;
-            let (aw, aw_r) = trait_impls.get_pair_impl_and_result("AntiWedge", &param_a, &rbd_r)?;
-            let bc = MultiVectorClass::derive_contraction_or_expansion(
-                "BulkContraction", &param_a, &param_b, &aw_r, &rbd, &aw
-            );
+            let rbd = trait_impls.get_single_invocation("RightBulkDual", variable(&param_b))?;
+            let aw = trait_impls.get_pair_invocation("AntiWedge", variable(&param_a), rbd)?;
+            let bc = single_expression_pair_trait_impl(name, &param_a, &param_b, aw);
             emitter.emit(&bc).unwrap();
-            trait_impls.add_pair_impl("BulkContraction", param_a, param_b, bc);
+            trait_impls.add_pair_impl(name, param_a, param_b, bc);
         };
     }
 
     for (param_a, param_b) in registry.pair_parameters() {
+        let name = "WeightContraction";
         let _: Option<()> = try {
             // Weight contraction is the antiwedge on a right weight dual
-            let (rwd, rwd_r) = trait_impls.get_single_impl_and_result("RightWeightDual", &param_b)?;
-            let (aw, aw_r) = trait_impls.get_pair_impl_and_result("AntiWedge", &param_a, &rwd_r)?;
-            let wc = MultiVectorClass::derive_contraction_or_expansion(
-                "WeightContraction", &param_a, &param_b, &aw_r, &rwd, &aw
-            );
+            let rwd = trait_impls.get_single_invocation("RightWeightDual", variable(&param_b))?;
+            let aw = trait_impls.get_pair_invocation("AntiWedge", variable(&param_a), rwd)?;
+            let wc = single_expression_pair_trait_impl(name, &param_a, &param_b, aw);
             emitter.emit(&wc).unwrap();
-            trait_impls.add_pair_impl("WeightContraction", param_a, param_b, wc);
+            trait_impls.add_pair_impl(name, param_a, param_b, wc);
         };
     }
 
     for (param_a, param_b) in registry.pair_parameters() {
+        let name = "BulkExpansion";
         let _: Option<()> = try {
             // Bulk expansion is the wedge on a right bulk dual
-            let (rbd, rbd_r) = trait_impls.get_single_impl_and_result("RightBulkDual", &param_b)?;
-            let (w, w_r) = trait_impls.get_pair_impl_and_result("Wedge", &param_a, &rbd_r)?;
-            let be = MultiVectorClass::derive_contraction_or_expansion(
-                "BulkExpansion", &param_a, &param_b, &w_r, &rbd, &w
-            );
+            let rbd = trait_impls.get_single_invocation("RightBulkDual", variable(&param_b))?;
+            let w = trait_impls.get_pair_invocation("Wedge", variable(&param_a), rbd)?;
+            let be = single_expression_pair_trait_impl(name, &param_a, &param_b, w);
             emitter.emit(&be).unwrap();
-            trait_impls.add_pair_impl("BulkExpansion", param_a, param_b, be);
+            trait_impls.add_pair_impl(name, param_a, param_b, be);
         };
     }
 
     for (param_a, param_b) in registry.pair_parameters() {
+        let name = "WeightExpansion";
         let _: Option<()> = try {
             // Weight expansion is the wedge on a right weight dual
-            let (rwd, rwd_r) = trait_impls.get_single_impl_and_result("RightWeightDual", &param_b)?;
-            let (w, w_r) = trait_impls.get_pair_impl_and_result("Wedge", &param_a, &rwd_r)?;
-            let we = MultiVectorClass::derive_contraction_or_expansion(
-                "WeightExpansion", &param_a, &param_b, &w_r, &rwd, &w
-            );
+            let rwd = trait_impls.get_single_invocation("RightWeightDual", variable(&param_b))?;
+            let w = trait_impls.get_pair_invocation("Wedge", variable(&param_a), rwd)?;
+            let we = single_expression_pair_trait_impl(name, &param_a, &param_b, w);
             emitter.emit(&we).unwrap();
-            trait_impls.add_pair_impl("WeightExpansion", param_a, param_b, we);
+            trait_impls.add_pair_impl(name, param_a, param_b, we);
         };
     }
 

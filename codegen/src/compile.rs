@@ -1974,64 +1974,6 @@ impl MultiVectorClass {
             }]
         }
     }
-
-    pub fn derive_contraction_or_expansion<'a>(
-        name: &'static str,
-
-        parameter_a: &Parameter<'a>,
-        parameter_b: &Parameter<'a>,
-        result: &Parameter<'a>,
-
-        part: &AstNode<'a>,
-        product: &AstNode<'a>,
-    ) -> AstNode<'a> {
-        let part_result = result_of_trait!(part);
-        let product_result = result_of_trait!(product);
-
-        // InvokeInstanceMethod:
-        // - Class implementing trait
-        // - Inner expression
-        // - Method name
-        // - Arguments
-
-        let do_part = Expression {
-            size: 1,
-            data_type_hint: Some(part_result.data_type.clone()),
-            content: ExpressionContent::InvokeInstanceMethod(
-                parameter_b.data_type.clone(),
-                Box::new(Expression {
-                    size: 1,
-                    data_type_hint: Some(parameter_b.data_type.clone()),
-                    content: ExpressionContent::Variable(parameter_b.name)
-                }),
-                part_result.name,
-                vec![]
-            )
-        };
-
-        let do_product = Expression {
-            size: 1,
-            data_type_hint: Some(product_result.data_type.clone()),
-            content: ExpressionContent::InvokeInstanceMethod(
-                parameter_a.data_type.clone(),
-                Box::new(Expression {
-                    size: 1,
-                    data_type_hint: Some(parameter_a.data_type.clone()),
-                    content: ExpressionContent::Variable(parameter_a.name)
-                }),
-                product_result.name,
-                vec![(part_result.data_type.clone(), do_part)]
-            )
-        };
-
-        AstNode::TraitImplementation {
-            result: Parameter { name, data_type: result.data_type.clone() },
-            parameters: vec![parameter_a.clone(), parameter_b.clone()],
-            body: vec![AstNode::ReturnStatement {
-                expression: Box::new(do_product)
-            }]
-        }
-    }
 }
 
 
