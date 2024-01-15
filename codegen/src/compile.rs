@@ -1927,53 +1927,6 @@ impl MultiVectorClass {
             }]
         }
     }
-
-    pub fn derive_partial_complement<'a>(
-        name: &'static str,
-
-        parameter_a: &Parameter<'a>,
-        result: &Parameter<'a>,
-
-        part: &AstNode<'a>,
-        complement: &AstNode<'a>,
-    ) -> AstNode<'a> {
-        let part_result = result_of_trait!(part);
-        let complement_result = result_of_trait!(complement);
-
-        let do_part = Expression {
-            size: 1,
-            data_type_hint: Some(part_result.data_type.clone()),
-            content: ExpressionContent::InvokeInstanceMethod(
-                parameter_a.data_type.clone(),
-                Box::new(Expression {
-                    size: 1,
-                    data_type_hint: Some(parameter_a.data_type.clone()),
-                    content: ExpressionContent::Variable(parameter_a.name)
-                }),
-                part_result.name,
-                vec![]
-            )
-        };
-
-        let do_complement = Expression {
-            size: 1,
-            data_type_hint: Some(complement_result.data_type.clone()),
-            content: ExpressionContent::InvokeInstanceMethod(
-                part_result.data_type.clone(),
-                Box::new(do_part),
-                complement_result.name,
-                vec![]
-            )
-        };
-
-        AstNode::TraitImplementation {
-            result: Parameter { name, data_type: result.data_type.clone() },
-            parameters: vec![parameter_a.clone()],
-            body: vec![AstNode::ReturnStatement {
-                expression: Box::new(do_complement)
-            }]
-        }
-    }
 }
 
 

@@ -17,7 +17,7 @@ use crate::{
     emit::Emitter,
 };
 use crate::ast::{Expression, ExpressionContent};
-use crate::compile::{single_expression_pair_trait_impl, variable};
+use crate::compile::{single_expression_pair_trait_impl, single_expression_single_trait_impl, variable};
 
 pub mod algebra;
 mod ast;
@@ -588,46 +588,58 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
     }
 
 
+
+
+
     for param_a in registry.single_parameters() {
+        let name = "RightBulkDual";
         let _: Option<()> = try {
             // Right bulk dual is right complement of bulk
-            let (bulk, b_r) = trait_impls.get_single_impl_and_result("Bulk", &param_a)?;
-            let (right_comp, rc_r) = trait_impls.get_single_impl_and_result("RightComplement", &b_r)?;
-            let rbd = MultiVectorClass::derive_partial_complement("RightBulkDual", &param_a, &rc_r, &bulk, &right_comp);
+            let bulk = trait_impls.get_single_invocation("Bulk", variable(&param_a))?;
+            let right_comp = trait_impls.get_single_invocation("RightComplement", bulk)?;
+            let rbd = single_expression_single_trait_impl(name, &param_a, right_comp);
             emitter.emit(&rbd).unwrap();
-            trait_impls.add_single_impl("RightBulkDual", param_a, rbd);
+            trait_impls.add_single_impl(name, param_a, rbd);
         };
     }
     for param_a in registry.single_parameters() {
+        let name = "RightWeightDual";
         let _: Option<()> = try {
             // Right weight dual is right complement of weight
-            let (weight, w_r) = trait_impls.get_single_impl_and_result("Weight", &param_a)?;
-            let (right_comp, rc_r) = trait_impls.get_single_impl_and_result("RightComplement", &w_r)?;
-            let rwd = MultiVectorClass::derive_partial_complement("RightWeightDual", &param_a, &rc_r, &weight, &right_comp);
+            let weight = trait_impls.get_single_invocation("Weight", variable(&param_a))?;
+            let right_comp = trait_impls.get_single_invocation("RightComplement", weight)?;
+            let rwd = single_expression_single_trait_impl(name, &param_a, right_comp);
             emitter.emit(&rwd).unwrap();
-            trait_impls.add_single_impl("RightWeightDual", param_a, rwd);
+            trait_impls.add_single_impl(name, param_a, rwd);
         };
     }
     for param_a in registry.single_parameters() {
+        let name = "LeftBulkDual";
         let _: Option<()> = try {
             // Left bulk dual is left complement of bulk
-            let (bulk, b_r) = trait_impls.get_single_impl_and_result("Bulk", &param_a)?;
-            let (left_comp, lc_r) = trait_impls.get_single_impl_and_result("LeftComplement", &b_r)?;
-            let lbd = MultiVectorClass::derive_partial_complement("LeftBulkDual", &param_a, &lc_r, &bulk, &left_comp);
+            let bulk = trait_impls.get_single_invocation("Bulk", variable(&param_a))?;
+            let left_comp = trait_impls.get_single_invocation("LeftComplement", bulk)?;
+            let lbd = single_expression_single_trait_impl(name, &param_a, left_comp);
             emitter.emit(&lbd).unwrap();
-            trait_impls.add_single_impl("LeftBulkDual", param_a, lbd);
+            trait_impls.add_single_impl(name, param_a, lbd);
         };
     }
     for param_a in registry.single_parameters() {
+        let name = "LeftWeightDual";
         let _: Option<()> = try {
             // Left weight dual is left complement of weight
-            let (weight, w_r) = trait_impls.get_single_impl_and_result("Weight", &param_a)?;
-            let (left_comp, rc_r) = trait_impls.get_single_impl_and_result("LeftComplement", &w_r)?;
-            let lwd = MultiVectorClass::derive_partial_complement("LeftWeightDual", &param_a, &rc_r, &weight, &left_comp);
+            let weight = trait_impls.get_single_invocation("Weight", variable(&param_a))?;
+            let left_comp = trait_impls.get_single_invocation("LeftComplement", weight)?;
+            let lwd = single_expression_single_trait_impl(name, &param_a, left_comp);
             emitter.emit(&lwd).unwrap();
-            trait_impls.add_single_impl("LeftWeightDual", param_a, lwd);
+            trait_impls.add_single_impl(name, param_a, lwd);
         };
     }
+
+
+
+
+
 
     for (param_a, param_b) in registry.pair_parameters() {
         let name = "BulkContraction";
@@ -676,6 +688,9 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
             trait_impls.add_pair_impl(name, param_a, param_b, we);
         };
     }
+
+
+
 
     // TODO I feel like (but am not sure) there might be excess implementations of ProjectOnto and AntiProjectOnto.
     //  https://rigidgeometricalgebra.org/wiki/index.php?title=Projections
