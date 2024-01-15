@@ -68,6 +68,7 @@ fn main() {
         //         e312,e320,e301,e210|\
         //         e3124,e3204,e3014,e2104",
 
+        // TODO should I rename HomogeousMagnitude to ComplexNumber? maybe a type alias would be fine
         "rga3d:1,1,1,0;\
             Scalar:1;\
             AntiScalar:e0123;\

@@ -512,20 +512,19 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
     }
 
     for (param_a, param_b) in registry.pair_parameters() {
+        // https://rigidgeometricalgebra.org/wiki/index.php?title=Euclidean_distance
+        let name = "Distance";
         let _: Option<()> = try {
-            let (bulk_wedge, bw_r) = trait_impls.get_pair_impl_and_result("OuterProduct", &param_a, &param_b)?;
-            let (bulk_attitude, ba_r) = trait_impls.get_single_impl_and_result("Attitude", &bw_r)?;
-            let (weight_attitude, wa_r) = trait_impls.get_single_impl_and_result("Attitude", &param_b)?;
-            let (weight_wedge, ww_r) = trait_impls.get_pair_impl_and_result("OuterProduct", &param_a, &wa_r)?;
-            let (bulk_norm, bn_r) = trait_impls.get_single_impl_and_result("BulkNorm", &ba_r)?;
-            let (weight_norm, wn_r) = trait_impls.get_single_impl_and_result("WeightNorm", &ww_r)?;
-            let (add, add_r) = trait_impls.get_pair_impl_and_result("Add", &bn_r, &wn_r)?;
-            let ed = MultiVectorClass::derive_euclidean_distance(
-                "Distance", &param_a, &param_b, &add_r, &bulk_wedge, &bulk_attitude,
-                &bulk_norm, &weight_attitude, &weight_wedge, &weight_norm, &add
-            );
+            let bulk_wedge = trait_impls.get_pair_invocation("Wedge", variable(&param_a), variable(&param_b))?;
+            let bulk_attitude = trait_impls.get_single_invocation("Attitude", bulk_wedge)?;
+            let weight_attitude = trait_impls.get_single_invocation("Attitude", variable(&param_b))?;
+            let weight_wedge = trait_impls.get_pair_invocation("Wedge", variable(&param_a), weight_attitude)?;
+            let bulk_norm = trait_impls.get_single_invocation("BulkNorm", bulk_attitude)?;
+            let weight_norm = trait_impls.get_single_invocation("WeightNorm", weight_wedge)?;
+            let add = trait_impls.get_pair_invocation("Add", bulk_norm, weight_norm)?;
+            let ed = single_expression_pair_trait_impl(name, &param_a, &param_b, add);
             emitter.emit(&ed).unwrap();
-            trait_impls.add_pair_impl("Distance", param_a, param_b, ed);
+            trait_impls.add_pair_impl(name, param_a, param_b, ed);
         };
     }
 
@@ -537,14 +536,13 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
         if param_a.multi_vector_class().class_name != "Point" {
             continue
         }
+        let name = "Invert";
         let _: Option<()> = try {
-            let (unitize, u_r) = trait_impls.get_single_impl_and_result("Unitize", &param_a)?;
-            let (sandwich, s_r) = trait_impls.get_pair_impl_and_result("Sandwich", &u_r, &param_b)?;
-            let i = MultiVectorClass::derive_some_unitized_sandwich(
-                "Invert", &param_a, &param_b, &s_r, unitize, sandwich
-            );
+            let unitize = trait_impls.get_single_invocation("Unitize", variable(&param_a))?;
+            let sandwich = trait_impls.get_pair_invocation("Sandwich", unitize, variable(&param_b))?;
+            let i = single_expression_pair_trait_impl(name, &param_a, &param_b, sandwich);
             emitter.emit(&i).unwrap();
-            trait_impls.add_pair_impl("Invert", param_a, param_b, i);
+            trait_impls.add_pair_impl(name, param_a, param_b, i);
         };
     }
 
@@ -556,14 +554,13 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
         if param_a.multi_vector_class().class_name != "Plane" {
             continue
         }
+        let name = "Reflect";
         let _: Option<()> = try {
-            let (unitize, u_r) = trait_impls.get_single_impl_and_result("Unitize", &param_a)?;
-            let (sandwich, s_r) = trait_impls.get_pair_impl_and_result("Sandwich", &u_r, &param_b)?;
-            let i = MultiVectorClass::derive_some_unitized_sandwich(
-                "Reflect", &param_a, &param_b, &s_r, unitize, sandwich,
-            );
+            let unitize = trait_impls.get_single_invocation("Unitize", variable(&param_a))?;
+            let sandwich = trait_impls.get_pair_invocation("Sandwich", unitize, variable(&param_b))?;
+            let i = single_expression_pair_trait_impl(name, &param_a, &param_b, sandwich);
             emitter.emit(&i).unwrap();
-            trait_impls.add_pair_impl("Reflect", param_a, param_b, i);
+            trait_impls.add_pair_impl(name, param_a, param_b, i);
         };
     }
 
@@ -652,7 +649,6 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
             trait_impls.add_pair_impl(name, param_a, param_b, bc);
         };
     }
-
     for (param_a, param_b) in registry.pair_parameters() {
         let name = "WeightContraction";
         let _: Option<()> = try {
@@ -664,7 +660,6 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
             trait_impls.add_pair_impl(name, param_a, param_b, wc);
         };
     }
-
     for (param_a, param_b) in registry.pair_parameters() {
         let name = "BulkExpansion";
         let _: Option<()> = try {
@@ -676,7 +671,6 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
             trait_impls.add_pair_impl(name, param_a, param_b, be);
         };
     }
-
     for (param_a, param_b) in registry.pair_parameters() {
         let name = "WeightExpansion";
         let _: Option<()> = try {
@@ -711,7 +705,6 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
             trait_impls.add_pair_impl(name, param_a, param_b, po);
         };
     }
-
     for (param_a, param_b) in registry.pair_parameters() {
         let name = "AntiProjectOrthogonallyOnto";
         let _: Option<()> = try {
@@ -722,7 +715,6 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
             trait_impls.add_pair_impl(name, param_a, param_b, apo);
         };
     }
-
     for (param_a, param_b) in registry.pair_parameters() {
         let name = "ProjectThroughOriginOnto";
         let _: Option<()> = try {
@@ -733,7 +725,6 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
             trait_impls.add_pair_impl(name, param_a, param_b, po);
         };
     }
-
     for (param_a, param_b) in registry.pair_parameters() {
         let name = "AntiProjectThroughOriginOnto";
         let _: Option<()> = try {
@@ -749,6 +740,7 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
     //  respect to stuff apparently. Or allegedly. I guess it's better than a plain Scalar or AntiScalar impl... maybe..
 
     for (param_a, param_b) in registry.pair_parameters() {
+        let name = "CosineAngle";
         let _: Option<()> = try {
             let wc = trait_impls.get_pair_invocation("WeightContraction", variable(&param_a), variable(&param_b))?;
             let bn = trait_impls.get_single_invocation("BulkNorm", wc)?;
@@ -756,9 +748,9 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
             let b_wn = trait_impls.get_single_invocation("WeightNorm", variable(&param_b))?;
             let wn_mul = trait_impls.get_pair_invocation("Mul", a_wn, b_wn)?;
             let add = trait_impls.get_pair_invocation("Add", bn, wn_mul)?;
-            let cosine = single_expression_pair_trait_impl("CosineAngle", &param_a, &param_b, add);
+            let cosine = single_expression_pair_trait_impl(name, &param_a, &param_b, add);
             emitter.emit(&cosine).unwrap();
-            trait_impls.add_pair_impl("CosineAngle", param_a, param_b, cosine);
+            trait_impls.add_pair_impl(name, param_a, param_b, cosine);
         };
     }
 

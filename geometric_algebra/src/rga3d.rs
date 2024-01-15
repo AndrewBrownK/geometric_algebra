@@ -20193,7 +20193,7 @@ impl Distance<AntiScalar> for Scalar {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: AntiScalar) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20201,7 +20201,7 @@ impl Distance<HomogeneousMagnitude> for Scalar {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20209,7 +20209,7 @@ impl Distance<Line> for Scalar {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Line) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20217,7 +20217,7 @@ impl Distance<Plane> for Scalar {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Plane) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20225,7 +20225,7 @@ impl Distance<Motor> for Scalar {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Motor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20233,7 +20233,7 @@ impl Distance<Rotor> for Scalar {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Rotor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20241,7 +20241,7 @@ impl Distance<Translator> for Scalar {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Translator) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20249,7 +20249,7 @@ impl Distance<Flector> for Scalar {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Flector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20257,7 +20257,7 @@ impl Distance<MultiVector> for Scalar {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: MultiVector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20265,7 +20265,7 @@ impl Distance<AntiScalar> for HomogeneousMagnitude {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: AntiScalar) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20273,7 +20273,7 @@ impl Distance<HomogeneousMagnitude> for HomogeneousMagnitude {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20281,7 +20281,7 @@ impl Distance<Point> for HomogeneousMagnitude {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Point) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20289,7 +20289,7 @@ impl Distance<Line> for HomogeneousMagnitude {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Line) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20297,7 +20297,7 @@ impl Distance<Plane> for HomogeneousMagnitude {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Plane) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20305,7 +20305,7 @@ impl Distance<Motor> for HomogeneousMagnitude {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Motor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20313,7 +20313,7 @@ impl Distance<Rotor> for HomogeneousMagnitude {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Rotor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20321,7 +20321,7 @@ impl Distance<Translator> for HomogeneousMagnitude {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Translator) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20329,7 +20329,7 @@ impl Distance<Flector> for HomogeneousMagnitude {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Flector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20337,7 +20337,7 @@ impl Distance<MultiVector> for HomogeneousMagnitude {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: MultiVector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20345,7 +20345,7 @@ impl Distance<Point> for Point {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Point) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20353,7 +20353,7 @@ impl Distance<Line> for Point {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Line) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20361,7 +20361,7 @@ impl Distance<Plane> for Point {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Plane) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20369,7 +20369,7 @@ impl Distance<Motor> for Point {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Motor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20377,7 +20377,7 @@ impl Distance<Rotor> for Point {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Rotor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20385,7 +20385,7 @@ impl Distance<Translator> for Point {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Translator) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20393,7 +20393,7 @@ impl Distance<Flector> for Point {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Flector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20401,7 +20401,7 @@ impl Distance<MultiVector> for Point {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: MultiVector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20409,7 +20409,7 @@ impl Distance<Point> for Line {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Point) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20417,7 +20417,7 @@ impl Distance<Line> for Line {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Line) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20425,7 +20425,7 @@ impl Distance<Motor> for Line {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Motor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20433,7 +20433,7 @@ impl Distance<Rotor> for Line {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Rotor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20441,7 +20441,7 @@ impl Distance<Translator> for Line {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Translator) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20449,7 +20449,7 @@ impl Distance<Flector> for Line {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Flector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20457,7 +20457,7 @@ impl Distance<MultiVector> for Line {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: MultiVector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20465,7 +20465,7 @@ impl Distance<Point> for Plane {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Point) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20473,7 +20473,7 @@ impl Distance<Flector> for Plane {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Flector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20481,7 +20481,7 @@ impl Distance<MultiVector> for Plane {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: MultiVector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20489,7 +20489,7 @@ impl Distance<Point> for Motor {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Point) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20497,7 +20497,7 @@ impl Distance<Line> for Motor {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Line) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20505,7 +20505,7 @@ impl Distance<Motor> for Motor {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Motor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20513,7 +20513,7 @@ impl Distance<Rotor> for Motor {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Rotor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20521,7 +20521,7 @@ impl Distance<Translator> for Motor {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Translator) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20529,7 +20529,7 @@ impl Distance<Flector> for Motor {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Flector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20537,7 +20537,7 @@ impl Distance<MultiVector> for Motor {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: MultiVector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20545,7 +20545,7 @@ impl Distance<Line> for Rotor {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Line) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20553,7 +20553,7 @@ impl Distance<Motor> for Rotor {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Motor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20561,7 +20561,7 @@ impl Distance<Translator> for Rotor {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Translator) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20569,7 +20569,7 @@ impl Distance<Flector> for Rotor {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Flector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20577,7 +20577,7 @@ impl Distance<MultiVector> for Rotor {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: MultiVector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20585,7 +20585,7 @@ impl Distance<Point> for Translator {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Point) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20593,7 +20593,7 @@ impl Distance<Line> for Translator {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Line) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20601,7 +20601,7 @@ impl Distance<Motor> for Translator {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Motor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20609,7 +20609,7 @@ impl Distance<Rotor> for Translator {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Rotor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20617,7 +20617,7 @@ impl Distance<Flector> for Translator {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Flector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20625,7 +20625,7 @@ impl Distance<MultiVector> for Translator {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: MultiVector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20633,7 +20633,7 @@ impl Distance<Point> for Flector {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Point) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20641,7 +20641,7 @@ impl Distance<Line> for Flector {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Line) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20649,7 +20649,7 @@ impl Distance<Plane> for Flector {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Plane) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20657,7 +20657,7 @@ impl Distance<Motor> for Flector {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Motor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20665,7 +20665,7 @@ impl Distance<Rotor> for Flector {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Rotor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20673,7 +20673,7 @@ impl Distance<Translator> for Flector {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Translator) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20681,7 +20681,7 @@ impl Distance<Flector> for Flector {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Flector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20689,7 +20689,7 @@ impl Distance<MultiVector> for Flector {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: MultiVector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20697,7 +20697,7 @@ impl Distance<AntiScalar> for MultiVector {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: AntiScalar) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20705,7 +20705,7 @@ impl Distance<HomogeneousMagnitude> for MultiVector {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20713,7 +20713,7 @@ impl Distance<Point> for MultiVector {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Point) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20721,7 +20721,7 @@ impl Distance<Line> for MultiVector {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Line) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20729,7 +20729,7 @@ impl Distance<Plane> for MultiVector {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Plane) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20737,7 +20737,7 @@ impl Distance<Motor> for MultiVector {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Motor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20745,7 +20745,7 @@ impl Distance<Rotor> for MultiVector {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Rotor) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20753,7 +20753,7 @@ impl Distance<Translator> for MultiVector {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Translator) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20761,7 +20761,7 @@ impl Distance<Flector> for MultiVector {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: Flector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -20769,7 +20769,7 @@ impl Distance<MultiVector> for MultiVector {
     type Output = HomogeneousMagnitude;
 
     fn distance(self, other: MultiVector) -> HomogeneousMagnitude {
-        self.outer_product(other).attitude().bulk_norm().add(self.outer_product(other.attitude()).weight_norm())
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
