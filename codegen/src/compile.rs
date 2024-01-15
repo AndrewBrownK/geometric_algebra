@@ -2032,97 +2032,9 @@ impl MultiVectorClass {
             }]
         }
     }
-
-    pub fn derive_projection<'a>(
-        name: &'static str,
-
-        parameter_a: &Parameter<'a>,
-        parameter_b: &Parameter<'a>,
-        result: &Parameter<'a>,
-
-        weight_operation: &AstNode<'a>,
-        product: &AstNode<'a>,
-    ) -> AstNode<'a> {
-        let weight_operation_result = result_of_trait!(weight_operation);
-        let product_result = result_of_trait!(product);
-
-        // InvokeInstanceMethod:
-        // - Class implementing trait
-        // - Inner expression
-        // - Method name
-        // - Arguments
-
-        let do_weight_operation = Expression {
-            size: 1,
-            data_type_hint: Some(weight_operation_result.data_type.clone()),
-            content: ExpressionContent::InvokeInstanceMethod(
-                parameter_a.data_type.clone(),
-                Box::new(Expression {
-                    size: 1,
-                    data_type_hint: Some(parameter_a.data_type.clone()),
-                    content: ExpressionContent::Variable(parameter_a.name)
-                }),
-                weight_operation_result.name,
-                vec![(parameter_b.data_type.clone(), Expression {
-                    size: 1,
-                    data_type_hint: Some(parameter_b.data_type.clone()),
-                    content: ExpressionContent::Variable(parameter_b.name)
-                })]
-            )
-        };
-
-        let do_product = Expression {
-            size: 1,
-            data_type_hint: Some(product_result.data_type.clone()),
-            content: ExpressionContent::InvokeInstanceMethod(
-                parameter_b.data_type.clone(),
-                Box::new(Expression {
-                    size: 1,
-                    data_type_hint: Some(parameter_b.data_type.clone()),
-                    content: ExpressionContent::Variable(parameter_b.name)
-                }),
-                product_result.name,
-                vec![(weight_operation_result.data_type.clone(), do_weight_operation)]
-            )
-        };
-
-        AstNode::TraitImplementation {
-            result: Parameter { name, data_type: result.data_type.clone() },
-            parameters: vec![parameter_a.clone(), parameter_b.clone()],
-            body: vec![
-                AstNode::ReturnStatement { expression: Box::new(do_product)}
-            ]
-        }
-    }
-
-    // pub fn derive_trig<'a>(
-    //     name: &'static str,
-    //
-    //     parameter_a: &Parameter<'a>,
-    //     parameter_b: &Parameter<'a>,
-    //     result: &Parameter<'a>,
-    // ) -> AstNode<'a> {
-    //
-    //     let do_add = Expression {
-    //         size: 1,
-    //         content: ExpressionContent::InvokeInstanceMethod(
-    //
-    //         )
-    //     }
-    //
-    //     AstNode::TraitImplementation {
-    //         result: Parameter { name, data_type: result.data_type.clone() },
-    //         parameters: vec![parameter_a.clone(), parameter_b.clone()],
-    //         body: vec![
-    //             AstNode::ReturnStatement { expression: Box::new(do_add) }
-    //         ]
-    //     }
-    // }
 }
 
 
-
-// TODO hmm.. not happy with these yet....
 
 pub fn variable<'a>(param: &Parameter<'a>) -> Expression<'a> {
     Expression { size: 1, content: ExpressionContent::Variable(param.name), data_type_hint: Some(param.data_type.clone()) }
@@ -2142,6 +2054,25 @@ pub fn single_expression_pair_trait_impl<'a>(
     AstNode::TraitImplementation {
         result: Parameter { name, data_type },
         parameters: vec![parameter_a.clone(), parameter_b.clone()],
+        body: vec![
+            AstNode::ReturnStatement { expression: Box::new(expression) }
+        ]
+    }
+}
+
+pub fn single_expression_single_trait_impl<'a>(
+    name: &'static str,
+
+    parameter_a: &Parameter<'a>,
+    expression: Expression<'a>
+) -> AstNode<'a> {
+    let data_type = match &expression.data_type_hint {
+        Some(dt) => dt.clone(),
+        _ => panic!("single_expression_single_trait_impl for {name} requires data_type_hint on \"expression\" {expression:?}"),
+    };
+    AstNode::TraitImplementation {
+        result: Parameter { name, data_type },
+        parameters: vec![parameter_a.clone()],
         body: vec![
             AstNode::ReturnStatement { expression: Box::new(expression) }
         ]
