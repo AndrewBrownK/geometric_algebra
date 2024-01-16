@@ -108,8 +108,6 @@ pub fn read_config_from_str(config: &str) -> AlgebraDescriptor {
 }
 
 struct TraitImpls<'a> {
-    raw: BTreeMap<String, (Parameter<'a>, BTreeMap<String, AstNode<'a>>, BTreeMap<String, (Parameter<'a>, BTreeMap<String, AstNode<'a>>)>)>,
-    // TODO use these
     singles: BTreeMap<(String, String), AstNode<'a>>,
     pairs: BTreeMap<(String, String, String), AstNode<'a>>
 }
@@ -117,7 +115,6 @@ struct TraitImpls<'a> {
 impl<'a> TraitImpls<'a> {
     fn new() -> Self {
         TraitImpls {
-            raw: BTreeMap::new(),
             singles: BTreeMap::new(),
             pairs: BTreeMap::new(),
         }
@@ -126,52 +123,41 @@ impl<'a> TraitImpls<'a> {
     fn add_pair_impl(&mut self, name: &str, parameter_a: Parameter<'a>, parameter_b: Parameter<'a>, the_impl: AstNode<'a>) {
         let a_name = parameter_a.multi_vector_class().class_name.clone();
         let b_name = parameter_b.multi_vector_class().class_name.clone();
-        let (_, _, pairs) = self.raw.entry(a_name).or_insert((parameter_a, BTreeMap::new(), BTreeMap::new()));
-        let (_, pair_impls) = pairs.entry(b_name).or_insert((parameter_b, BTreeMap::new()));
-        pair_impls.insert(name.to_string(), the_impl);
+        self.pairs.insert((name.to_string(), a_name.to_string(), b_name.to_string()), the_impl);
     }
 
     fn add_single_impl(&mut self, name: &str, parameter_a: Parameter<'a>, the_impl: AstNode<'a>) {
         let a_name = parameter_a.multi_vector_class().class_name.clone();
-        let (_, singles, _) = self.raw.entry(a_name).or_insert((parameter_a, BTreeMap::new(), BTreeMap::new()));
-        singles.insert(name.to_string(), the_impl);
+        self.singles.insert((name.to_string(), a_name.to_string()), the_impl);
     }
 
     fn get_pair_impl(&self, name: &str, parameter_a: &Parameter<'a>, parameter_b: &Parameter<'a>) -> Option<&AstNode<'a>> {
-        let (_, _, pairs) = self.raw.get(&parameter_a.multi_vector_class().class_name)?;
-        let (_, pair_impls) = pairs.get(&parameter_b.multi_vector_class().class_name)?;
-        let the_impl = pair_impls.get(name)?;
-        return Some(the_impl);
+        let a_name = parameter_a.multi_vector_class().class_name.clone();
+        let b_name = parameter_b.multi_vector_class().class_name.clone();
+        return self.pairs.get(&(name.to_string(), a_name, b_name));
     }
 
     fn get_single_impl(&self, name: &str, parameter_a: &Parameter<'a>) -> Option<&AstNode<'a>> {
-        let (_, singles, _) = self.raw.get(&parameter_a.multi_vector_class().class_name)?;
-        let the_impl = singles.get(name)?;
-        return Some(the_impl);
+        let a_name = parameter_a.multi_vector_class().class_name.clone();
+        return self.singles.get(&(name.to_string(), a_name));
     }
 
     fn get_pair_impl_and_result(&self, name: &str, parameter_a: &Parameter<'a>, parameter_b: &Parameter<'a>) -> Option<(&AstNode<'a>, &Parameter<'a>)> {
-        let (_, _, pairs) = self.raw.get(&parameter_a.multi_vector_class().class_name)?;
-        let (_, pair_impls) = pairs.get(&parameter_b.multi_vector_class().class_name)?;
-        let the_impl = pair_impls.get(name)?;
+        let a_name = parameter_a.multi_vector_class().class_name.clone();
+        let b_name = parameter_b.multi_vector_class().class_name.clone();
+        let the_impl = self.pairs.get(&(name.to_string(), a_name, b_name))?;
         let result = result_of_trait!(the_impl);
         return Some((the_impl, result));
     }
 
     fn get_single_impl_and_result(&self, name: &str, parameter_a: &Parameter<'a>) -> Option<(&AstNode<'a>, &Parameter<'a>)> {
-        let (_, singles, _) = self.raw.get(&parameter_a.multi_vector_class().class_name)?;
-        let the_impl = singles.get(name)?;
+        let a_name = parameter_a.multi_vector_class().class_name.clone();
+        let the_impl = self.singles.get(&(name.to_string(), a_name))?;
         let result = result_of_trait!(the_impl);
         return Some((the_impl, result));
     }
 
     fn get_pair_invocation(&self, name: &str, a: Expression<'a>, b: Expression<'a>) -> Option<Expression<'a>> {
-        // InvokeInstanceMethod:
-        // - Class implementing trait
-        // - Inner expression
-        // - Method name
-        // - Arguments
-
         let class_a = match a.data_type_hint {
             Some(DataType::MultiVector(c)) => c,
             _ => panic!("TraitImpls.get_pair_invocation for {name} requires MultiVectorClass data_type_hints on \"a\" {a:?}"),
@@ -180,10 +166,16 @@ impl<'a> TraitImpls<'a> {
             Some(DataType::MultiVector(c)) => c,
             _ => panic!("TraitImpls.get_pair_invocation for {name} requires MultiVectorClass data_type_hints on \"b\" {b:?}"),
         };
-        let (_, _, pairs) = self.raw.get(&class_a.class_name)?;
-        let (_, pair_impls) = pairs.get(&class_b.class_name)?;
-        let the_impl = pair_impls.get(name)?;
+        let a_name = class_a.class_name.clone();
+        let b_name = class_b.class_name.clone();
+        let the_impl = self.pairs.get(&(name.to_string(), a_name, b_name))?;
         let result = result_of_trait!(the_impl);
+
+        // InvokeInstanceMethod:
+        // - Class implementing trait
+        // - Inner expression
+        // - Method name
+        // - Arguments
 
         Some(Expression {
             size: 1,
@@ -200,19 +192,19 @@ impl<'a> TraitImpls<'a> {
     }
 
     fn get_single_invocation(&self, name: &str, a: Expression<'a>) -> Option<Expression<'a>> {
+        let class_a = match a.data_type_hint {
+            Some(DataType::MultiVector(c)) => c,
+            _ => panic!("TraitImpls.get_single_invocation for {name} requires MultiVectorClass data_type_hints on \"a\" {a:?}"),
+        };
+        let a_name = class_a.class_name.clone();
+        let the_impl = self.singles.get(&(name.to_string(), a_name))?;
+        let result = result_of_trait!(the_impl);
+
         // InvokeInstanceMethod:
         // - Class implementing trait
         // - Inner expression
         // - Method name
         // - Arguments
-
-        let class_a = match a.data_type_hint {
-            Some(DataType::MultiVector(c)) => c,
-            _ => panic!("TraitImpls.get_single_invocation for {name} requires MultiVectorClass data_type_hints on \"a\" {a:?}"),
-        };
-        let (_, singles, _) = self.raw.get(&class_a.class_name)?;
-        let the_impl = singles.get(name)?;
-        let result = result_of_trait!(the_impl);
 
         Some(Expression {
             size: 1,
@@ -566,6 +558,7 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
 
     for param_a in registry.single_parameters() {
         let projective_basis = if desc.algebra_name == "rga3d" {
+            // TODO rename to e4 when the time is right
             BasisElement::parse("e3", &algebra)
         } else {
             break
@@ -739,6 +732,10 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
     // TODO I'm concerned about excess implementations of CosineAngle. HomogeneousMagnitude has angles with
     //  respect to stuff apparently. Or allegedly. I guess it's better than a plain Scalar or AntiScalar impl... maybe..
 
+    // TODO and what about SineAngle or TangentAngle? In fact... since this returns a HomogenousMagnitude... isn't that
+    //  the exact same thing as a complex number? And so if the ComplexNumber result ACTUALLY represents the angle between
+    //  the geometric objects, then OF COURSE the real part is the cosine.... so is the sine already there?? the antiscalar part?
+
     for (param_a, param_b) in registry.pair_parameters() {
         let name = "CosineAngle";
         let _: Option<()> = try {
@@ -769,15 +766,20 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
     // property and the other flector requirement to be a transflection. In any case such methods do not seem
     // incredibly necessary at this time, at least not yet.
 
-    // TODO:
-    //  - Projection? requires "weight expansion"?
-    //    https://rigidgeometricalgebra.org/wiki/index.php?title=Projections
-    //  - Commutators?
-    //    https://rigidgeometricalgebra.org/wiki/index.php?title=Commutators
-    //  - Geometric Property?
-    //    https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_property
+    // Commutators?
+    // https://rigidgeometricalgebra.org/wiki/index.php?title=Commutators
+    // Doesn't seem to have a first-order purpose, and we already have implementations of the stuff it is useful for.
 
-    // TODO aha: https://projectivegeometricalgebra.org/projgeomalg.pdf
+    // Geometric Property?
+    // https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_property
+    // It would seem this amounts to a boolean/predicate. There could be an argument for making a trait out of this...
+    // but under normal circumstances, it's kind of like.... if you violate the geometric property, that's kind of like
+    // falling into an Option::None or Result::Err. So under "normal circumstances" and "the happy path", the operations
+    // and stuff you are doing to your geometric objects should ideally not violate the geometric property to begin with,
+    // and you probably have a bug, rather than wanting to know if the geometric property is satisfied for some
+    // non-bug-detecting purpose. Anyway, it could be useful, and might even be somewhat ergonomic in Rust, but it would
+    // be much more annoying in glsl or wgsl since branching is kind of discouraged on GPUs and they don't support
+    // proper sum types (enums) like Rust (as far as I know anyway).
 
     do_wgsl(algebra_name, file_path);
 }
