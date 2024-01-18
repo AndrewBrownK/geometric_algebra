@@ -26133,363 +26133,51 @@ impl AntiProjectThroughOriginOnto<MultiVector> for MultiVector {
     }
 }
 
-impl CosineAngle<HomogeneousMagnitude> for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<Point> for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: Point) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<Line> for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: Line) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<Plane> for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: Plane) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<Translator> for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: Translator) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<Flector> for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: Flector) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<MultiVector> for HomogeneousMagnitude {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: MultiVector) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
 impl CosineAngle<Point> for Point {
-    type Output = HomogeneousMagnitude;
+    type Output = Scalar;
 
-    fn cosine_angle(self, other: Point) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<Flector> for Point {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: Flector) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<MultiVector> for Point {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: MultiVector) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
+    fn cosine_angle(self, other: Point) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
     }
 }
 
 impl CosineAngle<Point> for Line {
-    type Output = HomogeneousMagnitude;
+    type Output = Scalar;
 
-    fn cosine_angle(self, other: Point) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
+    fn cosine_angle(self, other: Point) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
     }
 }
 
 impl CosineAngle<Line> for Line {
-    type Output = HomogeneousMagnitude;
+    type Output = Scalar;
 
-    fn cosine_angle(self, other: Line) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<Flector> for Line {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: Flector) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<MultiVector> for Line {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: MultiVector) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
+    fn cosine_angle(self, other: Line) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
     }
 }
 
 impl CosineAngle<Point> for Plane {
-    type Output = HomogeneousMagnitude;
+    type Output = Scalar;
 
-    fn cosine_angle(self, other: Point) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
+    fn cosine_angle(self, other: Point) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
     }
 }
 
 impl CosineAngle<Line> for Plane {
-    type Output = HomogeneousMagnitude;
+    type Output = Scalar;
 
-    fn cosine_angle(self, other: Line) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
+    fn cosine_angle(self, other: Line) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
     }
 }
 
 impl CosineAngle<Plane> for Plane {
-    type Output = HomogeneousMagnitude;
+    type Output = Scalar;
 
-    fn cosine_angle(self, other: Plane) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<Flector> for Plane {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: Flector) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<MultiVector> for Plane {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: MultiVector) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<HomogeneousMagnitude> for Motor {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<Point> for Motor {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: Point) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<Line> for Motor {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: Line) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<Plane> for Motor {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: Plane) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<Translator> for Motor {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: Translator) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<Flector> for Motor {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: Flector) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<MultiVector> for Motor {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: MultiVector) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<HomogeneousMagnitude> for Translator {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<Point> for Translator {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: Point) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<Line> for Translator {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: Line) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<Plane> for Translator {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: Plane) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<Translator> for Translator {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: Translator) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<Flector> for Translator {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: Flector) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<MultiVector> for Translator {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: MultiVector) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<Point> for Flector {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: Point) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<Line> for Flector {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: Line) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<Plane> for Flector {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: Plane) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<Flector> for Flector {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: Flector) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<MultiVector> for Flector {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: MultiVector) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<HomogeneousMagnitude> for MultiVector {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: HomogeneousMagnitude) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<Point> for MultiVector {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: Point) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<Line> for MultiVector {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: Line) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<Plane> for MultiVector {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: Plane) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<Translator> for MultiVector {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: Translator) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<Flector> for MultiVector {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: Flector) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<MultiVector> for MultiVector {
-    type Output = HomogeneousMagnitude;
-
-    fn cosine_angle(self, other: MultiVector) -> HomogeneousMagnitude {
-        self.weight_contraction(other).bulk_norm().add(self.weight_norm().mul(other.weight_norm()))
+    fn cosine_angle(self, other: Plane) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
     }
 }
 

@@ -55804,858 +55804,93 @@ fn multi_vector_multi_vector_anti_project_through_origin_onto(self_6146: MultiVe
     return _e8;
 }
 
-fn homogeneous_magnitude_homogeneous_magnitude_cosine_angle(self_6148: HomogeneousMagnitude, other_5626: HomogeneousMagnitude) -> HomogeneousMagnitude {
-    var self_6149: HomogeneousMagnitude;
-    var other_5627: HomogeneousMagnitude;
+fn point_point_cosine_angle(self_6148: Point, other_5626: Point) -> Scalar {
+    var self_6149: Point;
+    var other_5627: Point;
 
     self_6149 = self_6148;
     other_5627 = other_5626;
-    let _e4: HomogeneousMagnitude = self_6149;
-    let _e5: HomogeneousMagnitude = other_5627;
-    let _e6: Scalar = homogeneous_magnitude_homogeneous_magnitude_weight_contraction(_e4, _e5);
-    let _e7: Scalar = scalar_bulk_norm(_e6);
-    let _e8: HomogeneousMagnitude = self_6149;
-    let _e9: AntiScalar = homogeneous_magnitude_weight_norm(_e8);
-    let _e10: HomogeneousMagnitude = other_5627;
-    let _e11: AntiScalar = homogeneous_magnitude_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
+    let _e4: Point = self_6149;
+    let _e5: Point = point_unitize(_e4);
+    let _e6: Point = other_5627;
+    let _e7: Point = point_unitize(_e6);
+    let _e8: Scalar = point_point_weight_contraction(_e5, _e7);
+    let _e9: Scalar = scalar_bulk_norm(_e8);
+    return _e9;
 }
 
-fn homogeneous_magnitude_point_cosine_angle(self_6150: HomogeneousMagnitude, other_5628: Point) -> HomogeneousMagnitude {
-    var self_6151: HomogeneousMagnitude;
+fn line_point_cosine_angle(self_6150: Line, other_5628: Point) -> Scalar {
+    var self_6151: Line;
     var other_5629: Point;
 
     self_6151 = self_6150;
     other_5629 = other_5628;
-    let _e4: HomogeneousMagnitude = self_6151;
-    let _e5: Point = other_5629;
-    let _e6: Plane = homogeneous_magnitude_point_weight_contraction(_e4, _e5);
-    let _e7: Scalar = plane_bulk_norm(_e6);
-    let _e8: HomogeneousMagnitude = self_6151;
-    let _e9: AntiScalar = homogeneous_magnitude_weight_norm(_e8);
-    let _e10: Point = other_5629;
-    let _e11: AntiScalar = point_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
+    let _e4: Line = self_6151;
+    let _e5: Line = line_unitize(_e4);
+    let _e6: Point = other_5629;
+    let _e7: Point = point_unitize(_e6);
+    let _e8: Point = line_point_weight_contraction(_e5, _e7);
+    let _e9: Scalar = point_bulk_norm(_e8);
+    return _e9;
 }
 
-fn homogeneous_magnitude_line_cosine_angle(self_6152: HomogeneousMagnitude, other_5630: Line) -> HomogeneousMagnitude {
-    var self_6153: HomogeneousMagnitude;
+fn line_line_cosine_angle(self_6152: Line, other_5630: Line) -> Scalar {
+    var self_6153: Line;
     var other_5631: Line;
 
     self_6153 = self_6152;
     other_5631 = other_5630;
-    let _e4: HomogeneousMagnitude = self_6153;
-    let _e5: Line = other_5631;
-    let _e6: Line = homogeneous_magnitude_line_weight_contraction(_e4, _e5);
-    let _e7: Scalar = line_bulk_norm(_e6);
-    let _e8: HomogeneousMagnitude = self_6153;
-    let _e9: AntiScalar = homogeneous_magnitude_weight_norm(_e8);
-    let _e10: Line = other_5631;
-    let _e11: AntiScalar = line_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
+    let _e4: Line = self_6153;
+    let _e5: Line = line_unitize(_e4);
+    let _e6: Line = other_5631;
+    let _e7: Line = line_unitize(_e6);
+    let _e8: Scalar = line_line_weight_contraction(_e5, _e7);
+    let _e9: Scalar = scalar_bulk_norm(_e8);
+    return _e9;
 }
 
-fn homogeneous_magnitude_plane_cosine_angle(self_6154: HomogeneousMagnitude, other_5632: Plane) -> HomogeneousMagnitude {
-    var self_6155: HomogeneousMagnitude;
-    var other_5633: Plane;
+fn plane_point_cosine_angle(self_6154: Plane, other_5632: Point) -> Scalar {
+    var self_6155: Plane;
+    var other_5633: Point;
 
     self_6155 = self_6154;
     other_5633 = other_5632;
-    let _e4: HomogeneousMagnitude = self_6155;
-    let _e5: Plane = other_5633;
-    let _e6: Point = homogeneous_magnitude_plane_weight_contraction(_e4, _e5);
-    let _e7: Scalar = point_bulk_norm(_e6);
-    let _e8: HomogeneousMagnitude = self_6155;
-    let _e9: AntiScalar = homogeneous_magnitude_weight_norm(_e8);
-    let _e10: Plane = other_5633;
-    let _e11: AntiScalar = plane_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
+    let _e4: Plane = self_6155;
+    let _e5: Plane = plane_unitize(_e4);
+    let _e6: Point = other_5633;
+    let _e7: Point = point_unitize(_e6);
+    let _e8: Line = plane_point_weight_contraction(_e5, _e7);
+    let _e9: Scalar = line_bulk_norm(_e8);
+    return _e9;
 }
 
-fn homogeneous_magnitude_translator_cosine_angle(self_6156: HomogeneousMagnitude, other_5634: Translator) -> HomogeneousMagnitude {
-    var self_6157: HomogeneousMagnitude;
-    var other_5635: Translator;
+fn plane_line_cosine_angle(self_6156: Plane, other_5634: Line) -> Scalar {
+    var self_6157: Plane;
+    var other_5635: Line;
 
     self_6157 = self_6156;
     other_5635 = other_5634;
-    let _e4: HomogeneousMagnitude = self_6157;
-    let _e5: Translator = other_5635;
-    let _e6: Scalar = homogeneous_magnitude_translator_weight_contraction(_e4, _e5);
-    let _e7: Scalar = scalar_bulk_norm(_e6);
-    let _e8: HomogeneousMagnitude = self_6157;
-    let _e9: AntiScalar = homogeneous_magnitude_weight_norm(_e8);
-    let _e10: Translator = other_5635;
-    let _e11: AntiScalar = translator_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
+    let _e4: Plane = self_6157;
+    let _e5: Plane = plane_unitize(_e4);
+    let _e6: Line = other_5635;
+    let _e7: Line = line_unitize(_e6);
+    let _e8: Point = plane_line_weight_contraction(_e5, _e7);
+    let _e9: Scalar = point_bulk_norm(_e8);
+    return _e9;
 }
 
-fn homogeneous_magnitude_flector_cosine_angle(self_6158: HomogeneousMagnitude, other_5636: Flector) -> HomogeneousMagnitude {
-    var self_6159: HomogeneousMagnitude;
-    var other_5637: Flector;
+fn plane_plane_cosine_angle(self_6158: Plane, other_5636: Plane) -> Scalar {
+    var self_6159: Plane;
+    var other_5637: Plane;
 
     self_6159 = self_6158;
     other_5637 = other_5636;
-    let _e4: HomogeneousMagnitude = self_6159;
-    let _e5: Flector = other_5637;
-    let _e6: Flector = homogeneous_magnitude_flector_weight_contraction(_e4, _e5);
-    let _e7: Scalar = flector_bulk_norm(_e6);
-    let _e8: HomogeneousMagnitude = self_6159;
-    let _e9: AntiScalar = homogeneous_magnitude_weight_norm(_e8);
-    let _e10: Flector = other_5637;
-    let _e11: AntiScalar = flector_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn homogeneous_magnitude_multi_vector_cosine_angle(self_6160: HomogeneousMagnitude, other_5638: MultiVector) -> HomogeneousMagnitude {
-    var self_6161: HomogeneousMagnitude;
-    var other_5639: MultiVector;
-
-    self_6161 = self_6160;
-    other_5639 = other_5638;
-    let _e4: HomogeneousMagnitude = self_6161;
-    let _e5: MultiVector = other_5639;
-    let _e6: MultiVector = homogeneous_magnitude_multi_vector_weight_contraction(_e4, _e5);
-    let _e7: Scalar = multi_vector_bulk_norm(_e6);
-    let _e8: HomogeneousMagnitude = self_6161;
-    let _e9: AntiScalar = homogeneous_magnitude_weight_norm(_e8);
-    let _e10: MultiVector = other_5639;
-    let _e11: AntiScalar = multi_vector_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn point_point_cosine_angle(self_6162: Point, other_5640: Point) -> HomogeneousMagnitude {
-    var self_6163: Point;
-    var other_5641: Point;
-
-    self_6163 = self_6162;
-    other_5641 = other_5640;
-    let _e4: Point = self_6163;
-    let _e5: Point = other_5641;
-    let _e6: Scalar = point_point_weight_contraction(_e4, _e5);
-    let _e7: Scalar = scalar_bulk_norm(_e6);
-    let _e8: Point = self_6163;
-    let _e9: AntiScalar = point_weight_norm(_e8);
-    let _e10: Point = other_5641;
-    let _e11: AntiScalar = point_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn point_flector_cosine_angle(self_6164: Point, other_5642: Flector) -> HomogeneousMagnitude {
-    var self_6165: Point;
-    var other_5643: Flector;
-
-    self_6165 = self_6164;
-    other_5643 = other_5642;
-    let _e4: Point = self_6165;
-    let _e5: Flector = other_5643;
-    let _e6: Scalar = point_flector_weight_contraction(_e4, _e5);
-    let _e7: Scalar = scalar_bulk_norm(_e6);
-    let _e8: Point = self_6165;
-    let _e9: AntiScalar = point_weight_norm(_e8);
-    let _e10: Flector = other_5643;
-    let _e11: AntiScalar = flector_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn point_multi_vector_cosine_angle(self_6166: Point, other_5644: MultiVector) -> HomogeneousMagnitude {
-    var self_6167: Point;
-    var other_5645: MultiVector;
-
-    self_6167 = self_6166;
-    other_5645 = other_5644;
-    let _e4: Point = self_6167;
-    let _e5: MultiVector = other_5645;
-    let _e6: MultiVector = point_multi_vector_weight_contraction(_e4, _e5);
-    let _e7: Scalar = multi_vector_bulk_norm(_e6);
-    let _e8: Point = self_6167;
-    let _e9: AntiScalar = point_weight_norm(_e8);
-    let _e10: MultiVector = other_5645;
-    let _e11: AntiScalar = multi_vector_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn line_point_cosine_angle(self_6168: Line, other_5646: Point) -> HomogeneousMagnitude {
-    var self_6169: Line;
-    var other_5647: Point;
-
-    self_6169 = self_6168;
-    other_5647 = other_5646;
-    let _e4: Line = self_6169;
-    let _e5: Point = other_5647;
-    let _e6: Point = line_point_weight_contraction(_e4, _e5);
-    let _e7: Scalar = point_bulk_norm(_e6);
-    let _e8: Line = self_6169;
-    let _e9: AntiScalar = line_weight_norm(_e8);
-    let _e10: Point = other_5647;
-    let _e11: AntiScalar = point_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn line_line_cosine_angle(self_6170: Line, other_5648: Line) -> HomogeneousMagnitude {
-    var self_6171: Line;
-    var other_5649: Line;
-
-    self_6171 = self_6170;
-    other_5649 = other_5648;
-    let _e4: Line = self_6171;
-    let _e5: Line = other_5649;
-    let _e6: Scalar = line_line_weight_contraction(_e4, _e5);
-    let _e7: Scalar = scalar_bulk_norm(_e6);
-    let _e8: Line = self_6171;
-    let _e9: AntiScalar = line_weight_norm(_e8);
-    let _e10: Line = other_5649;
-    let _e11: AntiScalar = line_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn line_flector_cosine_angle(self_6172: Line, other_5650: Flector) -> HomogeneousMagnitude {
-    var self_6173: Line;
-    var other_5651: Flector;
-
-    self_6173 = self_6172;
-    other_5651 = other_5650;
-    let _e4: Line = self_6173;
-    let _e5: Flector = other_5651;
-    let _e6: Point = line_flector_weight_contraction(_e4, _e5);
-    let _e7: Scalar = point_bulk_norm(_e6);
-    let _e8: Line = self_6173;
-    let _e9: AntiScalar = line_weight_norm(_e8);
-    let _e10: Flector = other_5651;
-    let _e11: AntiScalar = flector_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn line_multi_vector_cosine_angle(self_6174: Line, other_5652: MultiVector) -> HomogeneousMagnitude {
-    var self_6175: Line;
-    var other_5653: MultiVector;
-
-    self_6175 = self_6174;
-    other_5653 = other_5652;
-    let _e4: Line = self_6175;
-    let _e5: MultiVector = other_5653;
-    let _e6: MultiVector = line_multi_vector_weight_contraction(_e4, _e5);
-    let _e7: Scalar = multi_vector_bulk_norm(_e6);
-    let _e8: Line = self_6175;
-    let _e9: AntiScalar = line_weight_norm(_e8);
-    let _e10: MultiVector = other_5653;
-    let _e11: AntiScalar = multi_vector_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn plane_point_cosine_angle(self_6176: Plane, other_5654: Point) -> HomogeneousMagnitude {
-    var self_6177: Plane;
-    var other_5655: Point;
-
-    self_6177 = self_6176;
-    other_5655 = other_5654;
-    let _e4: Plane = self_6177;
-    let _e5: Point = other_5655;
-    let _e6: Line = plane_point_weight_contraction(_e4, _e5);
-    let _e7: Scalar = line_bulk_norm(_e6);
-    let _e8: Plane = self_6177;
-    let _e9: AntiScalar = plane_weight_norm(_e8);
-    let _e10: Point = other_5655;
-    let _e11: AntiScalar = point_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn plane_line_cosine_angle(self_6178: Plane, other_5656: Line) -> HomogeneousMagnitude {
-    var self_6179: Plane;
-    var other_5657: Line;
-
-    self_6179 = self_6178;
-    other_5657 = other_5656;
-    let _e4: Plane = self_6179;
-    let _e5: Line = other_5657;
-    let _e6: Point = plane_line_weight_contraction(_e4, _e5);
-    let _e7: Scalar = point_bulk_norm(_e6);
-    let _e8: Plane = self_6179;
-    let _e9: AntiScalar = plane_weight_norm(_e8);
-    let _e10: Line = other_5657;
-    let _e11: AntiScalar = line_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn plane_plane_cosine_angle(self_6180: Plane, other_5658: Plane) -> HomogeneousMagnitude {
-    var self_6181: Plane;
-    var other_5659: Plane;
-
-    self_6181 = self_6180;
-    other_5659 = other_5658;
-    let _e4: Plane = self_6181;
-    let _e5: Plane = other_5659;
-    let _e6: Scalar = plane_plane_weight_contraction(_e4, _e5);
-    let _e7: Scalar = scalar_bulk_norm(_e6);
-    let _e8: Plane = self_6181;
-    let _e9: AntiScalar = plane_weight_norm(_e8);
-    let _e10: Plane = other_5659;
-    let _e11: AntiScalar = plane_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn plane_flector_cosine_angle(self_6182: Plane, other_5660: Flector) -> HomogeneousMagnitude {
-    var self_6183: Plane;
-    var other_5661: Flector;
-
-    self_6183 = self_6182;
-    other_5661 = other_5660;
-    let _e4: Plane = self_6183;
-    let _e5: Flector = other_5661;
-    let _e6: MultiVector = plane_flector_weight_contraction(_e4, _e5);
-    let _e7: Scalar = multi_vector_bulk_norm(_e6);
-    let _e8: Plane = self_6183;
-    let _e9: AntiScalar = plane_weight_norm(_e8);
-    let _e10: Flector = other_5661;
-    let _e11: AntiScalar = flector_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn plane_multi_vector_cosine_angle(self_6184: Plane, other_5662: MultiVector) -> HomogeneousMagnitude {
-    var self_6185: Plane;
-    var other_5663: MultiVector;
-
-    self_6185 = self_6184;
-    other_5663 = other_5662;
-    let _e4: Plane = self_6185;
-    let _e5: MultiVector = other_5663;
-    let _e6: MultiVector = plane_multi_vector_weight_contraction(_e4, _e5);
-    let _e7: Scalar = multi_vector_bulk_norm(_e6);
-    let _e8: Plane = self_6185;
-    let _e9: AntiScalar = plane_weight_norm(_e8);
-    let _e10: MultiVector = other_5663;
-    let _e11: AntiScalar = multi_vector_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn motor_homogeneous_magnitude_cosine_angle(self_6186: Motor, other_5664: HomogeneousMagnitude) -> HomogeneousMagnitude {
-    var self_6187: Motor;
-    var other_5665: HomogeneousMagnitude;
-
-    self_6187 = self_6186;
-    other_5665 = other_5664;
-    let _e4: Motor = self_6187;
-    let _e5: HomogeneousMagnitude = other_5665;
-    let _e6: Scalar = motor_homogeneous_magnitude_weight_contraction(_e4, _e5);
-    let _e7: Scalar = scalar_bulk_norm(_e6);
-    let _e8: Motor = self_6187;
-    let _e9: AntiScalar = motor_weight_norm(_e8);
-    let _e10: HomogeneousMagnitude = other_5665;
-    let _e11: AntiScalar = homogeneous_magnitude_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn motor_point_cosine_angle(self_6188: Motor, other_5666: Point) -> HomogeneousMagnitude {
-    var self_6189: Motor;
-    var other_5667: Point;
-
-    self_6189 = self_6188;
-    other_5667 = other_5666;
-    let _e4: Motor = self_6189;
-    let _e5: Point = other_5667;
-    let _e6: Flector = motor_point_weight_contraction(_e4, _e5);
-    let _e7: Scalar = flector_bulk_norm(_e6);
-    let _e8: Motor = self_6189;
-    let _e9: AntiScalar = motor_weight_norm(_e8);
-    let _e10: Point = other_5667;
-    let _e11: AntiScalar = point_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn motor_line_cosine_angle(self_6190: Motor, other_5668: Line) -> HomogeneousMagnitude {
-    var self_6191: Motor;
-    var other_5669: Line;
-
-    self_6191 = self_6190;
-    other_5669 = other_5668;
-    let _e4: Motor = self_6191;
-    let _e5: Line = other_5669;
-    let _e6: MultiVector = motor_line_weight_contraction(_e4, _e5);
-    let _e7: Scalar = multi_vector_bulk_norm(_e6);
-    let _e8: Motor = self_6191;
-    let _e9: AntiScalar = motor_weight_norm(_e8);
-    let _e10: Line = other_5669;
-    let _e11: AntiScalar = line_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn motor_plane_cosine_angle(self_6192: Motor, other_5670: Plane) -> HomogeneousMagnitude {
-    var self_6193: Motor;
-    var other_5671: Plane;
-
-    self_6193 = self_6192;
-    other_5671 = other_5670;
-    let _e4: Motor = self_6193;
-    let _e5: Plane = other_5671;
-    let _e6: Point = motor_plane_weight_contraction(_e4, _e5);
-    let _e7: Scalar = point_bulk_norm(_e6);
-    let _e8: Motor = self_6193;
-    let _e9: AntiScalar = motor_weight_norm(_e8);
-    let _e10: Plane = other_5671;
-    let _e11: AntiScalar = plane_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn motor_translator_cosine_angle(self_6194: Motor, other_5672: Translator) -> HomogeneousMagnitude {
-    var self_6195: Motor;
-    var other_5673: Translator;
-
-    self_6195 = self_6194;
-    other_5673 = other_5672;
-    let _e4: Motor = self_6195;
-    let _e5: Translator = other_5673;
-    let _e6: Scalar = motor_translator_weight_contraction(_e4, _e5);
-    let _e7: Scalar = scalar_bulk_norm(_e6);
-    let _e8: Motor = self_6195;
-    let _e9: AntiScalar = motor_weight_norm(_e8);
-    let _e10: Translator = other_5673;
-    let _e11: AntiScalar = translator_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn motor_flector_cosine_angle(self_6196: Motor, other_5674: Flector) -> HomogeneousMagnitude {
-    var self_6197: Motor;
-    var other_5675: Flector;
-
-    self_6197 = self_6196;
-    other_5675 = other_5674;
-    let _e4: Motor = self_6197;
-    let _e5: Flector = other_5675;
-    let _e6: Flector = motor_flector_weight_contraction(_e4, _e5);
-    let _e7: Scalar = flector_bulk_norm(_e6);
-    let _e8: Motor = self_6197;
-    let _e9: AntiScalar = motor_weight_norm(_e8);
-    let _e10: Flector = other_5675;
-    let _e11: AntiScalar = flector_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn motor_multi_vector_cosine_angle(self_6198: Motor, other_5676: MultiVector) -> HomogeneousMagnitude {
-    var self_6199: Motor;
-    var other_5677: MultiVector;
-
-    self_6199 = self_6198;
-    other_5677 = other_5676;
-    let _e4: Motor = self_6199;
-    let _e5: MultiVector = other_5677;
-    let _e6: MultiVector = motor_multi_vector_weight_contraction(_e4, _e5);
-    let _e7: Scalar = multi_vector_bulk_norm(_e6);
-    let _e8: Motor = self_6199;
-    let _e9: AntiScalar = motor_weight_norm(_e8);
-    let _e10: MultiVector = other_5677;
-    let _e11: AntiScalar = multi_vector_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn translator_homogeneous_magnitude_cosine_angle(self_6200: Translator, other_5678: HomogeneousMagnitude) -> HomogeneousMagnitude {
-    var self_6201: Translator;
-    var other_5679: HomogeneousMagnitude;
-
-    self_6201 = self_6200;
-    other_5679 = other_5678;
-    let _e4: Translator = self_6201;
-    let _e5: HomogeneousMagnitude = other_5679;
-    let _e6: Scalar = translator_homogeneous_magnitude_weight_contraction(_e4, _e5);
-    let _e7: Scalar = scalar_bulk_norm(_e6);
-    let _e8: Translator = self_6201;
-    let _e9: AntiScalar = translator_weight_norm(_e8);
-    let _e10: HomogeneousMagnitude = other_5679;
-    let _e11: AntiScalar = homogeneous_magnitude_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn translator_point_cosine_angle(self_6202: Translator, other_5680: Point) -> HomogeneousMagnitude {
-    var self_6203: Translator;
-    var other_5681: Point;
-
-    self_6203 = self_6202;
-    other_5681 = other_5680;
-    let _e4: Translator = self_6203;
-    let _e5: Point = other_5681;
-    let _e6: Flector = translator_point_weight_contraction(_e4, _e5);
-    let _e7: Scalar = flector_bulk_norm(_e6);
-    let _e8: Translator = self_6203;
-    let _e9: AntiScalar = translator_weight_norm(_e8);
-    let _e10: Point = other_5681;
-    let _e11: AntiScalar = point_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn translator_line_cosine_angle(self_6204: Translator, other_5682: Line) -> HomogeneousMagnitude {
-    var self_6205: Translator;
-    var other_5683: Line;
-
-    self_6205 = self_6204;
-    other_5683 = other_5682;
-    let _e4: Translator = self_6205;
-    let _e5: Line = other_5683;
-    let _e6: MultiVector = translator_line_weight_contraction(_e4, _e5);
-    let _e7: Scalar = multi_vector_bulk_norm(_e6);
-    let _e8: Translator = self_6205;
-    let _e9: AntiScalar = translator_weight_norm(_e8);
-    let _e10: Line = other_5683;
-    let _e11: AntiScalar = line_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn translator_plane_cosine_angle(self_6206: Translator, other_5684: Plane) -> HomogeneousMagnitude {
-    var self_6207: Translator;
-    var other_5685: Plane;
-
-    self_6207 = self_6206;
-    other_5685 = other_5684;
-    let _e4: Translator = self_6207;
-    let _e5: Plane = other_5685;
-    let _e6: Point = translator_plane_weight_contraction(_e4, _e5);
-    let _e7: Scalar = point_bulk_norm(_e6);
-    let _e8: Translator = self_6207;
-    let _e9: AntiScalar = translator_weight_norm(_e8);
-    let _e10: Plane = other_5685;
-    let _e11: AntiScalar = plane_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn translator_translator_cosine_angle(self_6208: Translator, other_5686: Translator) -> HomogeneousMagnitude {
-    var self_6209: Translator;
-    var other_5687: Translator;
-
-    self_6209 = self_6208;
-    other_5687 = other_5686;
-    let _e4: Translator = self_6209;
-    let _e5: Translator = other_5687;
-    let _e6: Scalar = translator_translator_weight_contraction(_e4, _e5);
-    let _e7: Scalar = scalar_bulk_norm(_e6);
-    let _e8: Translator = self_6209;
-    let _e9: AntiScalar = translator_weight_norm(_e8);
-    let _e10: Translator = other_5687;
-    let _e11: AntiScalar = translator_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn translator_flector_cosine_angle(self_6210: Translator, other_5688: Flector) -> HomogeneousMagnitude {
-    var self_6211: Translator;
-    var other_5689: Flector;
-
-    self_6211 = self_6210;
-    other_5689 = other_5688;
-    let _e4: Translator = self_6211;
-    let _e5: Flector = other_5689;
-    let _e6: Flector = translator_flector_weight_contraction(_e4, _e5);
-    let _e7: Scalar = flector_bulk_norm(_e6);
-    let _e8: Translator = self_6211;
-    let _e9: AntiScalar = translator_weight_norm(_e8);
-    let _e10: Flector = other_5689;
-    let _e11: AntiScalar = flector_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn translator_multi_vector_cosine_angle(self_6212: Translator, other_5690: MultiVector) -> HomogeneousMagnitude {
-    var self_6213: Translator;
-    var other_5691: MultiVector;
-
-    self_6213 = self_6212;
-    other_5691 = other_5690;
-    let _e4: Translator = self_6213;
-    let _e5: MultiVector = other_5691;
-    let _e6: MultiVector = translator_multi_vector_weight_contraction(_e4, _e5);
-    let _e7: Scalar = multi_vector_bulk_norm(_e6);
-    let _e8: Translator = self_6213;
-    let _e9: AntiScalar = translator_weight_norm(_e8);
-    let _e10: MultiVector = other_5691;
-    let _e11: AntiScalar = multi_vector_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn flector_point_cosine_angle(self_6214: Flector, other_5692: Point) -> HomogeneousMagnitude {
-    var self_6215: Flector;
-    var other_5693: Point;
-
-    self_6215 = self_6214;
-    other_5693 = other_5692;
-    let _e4: Flector = self_6215;
-    let _e5: Point = other_5693;
-    let _e6: MultiVector = flector_point_weight_contraction(_e4, _e5);
-    let _e7: Scalar = multi_vector_bulk_norm(_e6);
-    let _e8: Flector = self_6215;
-    let _e9: AntiScalar = flector_weight_norm(_e8);
-    let _e10: Point = other_5693;
-    let _e11: AntiScalar = point_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn flector_line_cosine_angle(self_6216: Flector, other_5694: Line) -> HomogeneousMagnitude {
-    var self_6217: Flector;
-    var other_5695: Line;
-
-    self_6217 = self_6216;
-    other_5695 = other_5694;
-    let _e4: Flector = self_6217;
-    let _e5: Line = other_5695;
-    let _e6: Point = flector_line_weight_contraction(_e4, _e5);
-    let _e7: Scalar = point_bulk_norm(_e6);
-    let _e8: Flector = self_6217;
-    let _e9: AntiScalar = flector_weight_norm(_e8);
-    let _e10: Line = other_5695;
-    let _e11: AntiScalar = line_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn flector_plane_cosine_angle(self_6218: Flector, other_5696: Plane) -> HomogeneousMagnitude {
-    var self_6219: Flector;
-    var other_5697: Plane;
-
-    self_6219 = self_6218;
-    other_5697 = other_5696;
-    let _e4: Flector = self_6219;
-    let _e5: Plane = other_5697;
-    let _e6: Scalar = flector_plane_weight_contraction(_e4, _e5);
-    let _e7: Scalar = scalar_bulk_norm(_e6);
-    let _e8: Flector = self_6219;
-    let _e9: AntiScalar = flector_weight_norm(_e8);
-    let _e10: Plane = other_5697;
-    let _e11: AntiScalar = plane_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn flector_flector_cosine_angle(self_6220: Flector, other_5698: Flector) -> HomogeneousMagnitude {
-    var self_6221: Flector;
-    var other_5699: Flector;
-
-    self_6221 = self_6220;
-    other_5699 = other_5698;
-    let _e4: Flector = self_6221;
-    let _e5: Flector = other_5699;
-    let _e6: MultiVector = flector_flector_weight_contraction(_e4, _e5);
-    let _e7: Scalar = multi_vector_bulk_norm(_e6);
-    let _e8: Flector = self_6221;
-    let _e9: AntiScalar = flector_weight_norm(_e8);
-    let _e10: Flector = other_5699;
-    let _e11: AntiScalar = flector_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn flector_multi_vector_cosine_angle(self_6222: Flector, other_5700: MultiVector) -> HomogeneousMagnitude {
-    var self_6223: Flector;
-    var other_5701: MultiVector;
-
-    self_6223 = self_6222;
-    other_5701 = other_5700;
-    let _e4: Flector = self_6223;
-    let _e5: MultiVector = other_5701;
-    let _e6: MultiVector = flector_multi_vector_weight_contraction(_e4, _e5);
-    let _e7: Scalar = multi_vector_bulk_norm(_e6);
-    let _e8: Flector = self_6223;
-    let _e9: AntiScalar = flector_weight_norm(_e8);
-    let _e10: MultiVector = other_5701;
-    let _e11: AntiScalar = multi_vector_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn multi_vector_homogeneous_magnitude_cosine_angle(self_6224: MultiVector, other_5702: HomogeneousMagnitude) -> HomogeneousMagnitude {
-    var self_6225: MultiVector;
-    var other_5703: HomogeneousMagnitude;
-
-    self_6225 = self_6224;
-    other_5703 = other_5702;
-    let _e4: MultiVector = self_6225;
-    let _e5: HomogeneousMagnitude = other_5703;
-    let _e6: Scalar = multi_vector_homogeneous_magnitude_weight_contraction(_e4, _e5);
-    let _e7: Scalar = scalar_bulk_norm(_e6);
-    let _e8: MultiVector = self_6225;
-    let _e9: AntiScalar = multi_vector_weight_norm(_e8);
-    let _e10: HomogeneousMagnitude = other_5703;
-    let _e11: AntiScalar = homogeneous_magnitude_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn multi_vector_point_cosine_angle(self_6226: MultiVector, other_5704: Point) -> HomogeneousMagnitude {
-    var self_6227: MultiVector;
-    var other_5705: Point;
-
-    self_6227 = self_6226;
-    other_5705 = other_5704;
-    let _e4: MultiVector = self_6227;
-    let _e5: Point = other_5705;
-    let _e6: MultiVector = multi_vector_point_weight_contraction(_e4, _e5);
-    let _e7: Scalar = multi_vector_bulk_norm(_e6);
-    let _e8: MultiVector = self_6227;
-    let _e9: AntiScalar = multi_vector_weight_norm(_e8);
-    let _e10: Point = other_5705;
-    let _e11: AntiScalar = point_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn multi_vector_line_cosine_angle(self_6228: MultiVector, other_5706: Line) -> HomogeneousMagnitude {
-    var self_6229: MultiVector;
-    var other_5707: Line;
-
-    self_6229 = self_6228;
-    other_5707 = other_5706;
-    let _e4: MultiVector = self_6229;
-    let _e5: Line = other_5707;
-    let _e6: MultiVector = multi_vector_line_weight_contraction(_e4, _e5);
-    let _e7: Scalar = multi_vector_bulk_norm(_e6);
-    let _e8: MultiVector = self_6229;
-    let _e9: AntiScalar = multi_vector_weight_norm(_e8);
-    let _e10: Line = other_5707;
-    let _e11: AntiScalar = line_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn multi_vector_plane_cosine_angle(self_6230: MultiVector, other_5708: Plane) -> HomogeneousMagnitude {
-    var self_6231: MultiVector;
-    var other_5709: Plane;
-
-    self_6231 = self_6230;
-    other_5709 = other_5708;
-    let _e4: MultiVector = self_6231;
-    let _e5: Plane = other_5709;
-    let _e6: MultiVector = multi_vector_plane_weight_contraction(_e4, _e5);
-    let _e7: Scalar = multi_vector_bulk_norm(_e6);
-    let _e8: MultiVector = self_6231;
-    let _e9: AntiScalar = multi_vector_weight_norm(_e8);
-    let _e10: Plane = other_5709;
-    let _e11: AntiScalar = plane_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn multi_vector_translator_cosine_angle(self_6232: MultiVector, other_5710: Translator) -> HomogeneousMagnitude {
-    var self_6233: MultiVector;
-    var other_5711: Translator;
-
-    self_6233 = self_6232;
-    other_5711 = other_5710;
-    let _e4: MultiVector = self_6233;
-    let _e5: Translator = other_5711;
-    let _e6: Scalar = multi_vector_translator_weight_contraction(_e4, _e5);
-    let _e7: Scalar = scalar_bulk_norm(_e6);
-    let _e8: MultiVector = self_6233;
-    let _e9: AntiScalar = multi_vector_weight_norm(_e8);
-    let _e10: Translator = other_5711;
-    let _e11: AntiScalar = translator_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn multi_vector_flector_cosine_angle(self_6234: MultiVector, other_5712: Flector) -> HomogeneousMagnitude {
-    var self_6235: MultiVector;
-    var other_5713: Flector;
-
-    self_6235 = self_6234;
-    other_5713 = other_5712;
-    let _e4: MultiVector = self_6235;
-    let _e5: Flector = other_5713;
-    let _e6: MultiVector = multi_vector_flector_weight_contraction(_e4, _e5);
-    let _e7: Scalar = multi_vector_bulk_norm(_e6);
-    let _e8: MultiVector = self_6235;
-    let _e9: AntiScalar = multi_vector_weight_norm(_e8);
-    let _e10: Flector = other_5713;
-    let _e11: AntiScalar = flector_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
-}
-
-fn multi_vector_multi_vector_cosine_angle(self_6236: MultiVector, other_5714: MultiVector) -> HomogeneousMagnitude {
-    var self_6237: MultiVector;
-    var other_5715: MultiVector;
-
-    self_6237 = self_6236;
-    other_5715 = other_5714;
-    let _e4: MultiVector = self_6237;
-    let _e5: MultiVector = other_5715;
-    let _e6: MultiVector = multi_vector_multi_vector_weight_contraction(_e4, _e5);
-    let _e7: Scalar = multi_vector_bulk_norm(_e6);
-    let _e8: MultiVector = self_6237;
-    let _e9: AntiScalar = multi_vector_weight_norm(_e8);
-    let _e10: MultiVector = other_5715;
-    let _e11: AntiScalar = multi_vector_weight_norm(_e10);
-    let _e12: AntiScalar = anti_scalar_anti_scalar_mul(_e9, _e11);
-    let _e13: HomogeneousMagnitude = scalar_anti_scalar_add(_e7, _e12);
-    return _e13;
+    let _e4: Plane = self_6159;
+    let _e5: Plane = plane_unitize(_e4);
+    let _e6: Plane = other_5637;
+    let _e7: Plane = plane_unitize(_e6);
+    let _e8: Scalar = plane_plane_weight_contraction(_e5, _e7);
+    let _e9: Scalar = scalar_bulk_norm(_e8);
+    return _e9;
 }
 

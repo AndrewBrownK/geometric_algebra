@@ -729,23 +729,68 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
         };
     }
 
-    // TODO I'm concerned about excess implementations of CosineAngle. HomogeneousMagnitude has angles with
-    //  respect to stuff apparently. Or allegedly. I guess it's better than a plain Scalar or AntiScalar impl... maybe..
+    /*
+     To understand the CosineAngle operation, let's walk through a few examples
+     See this chart for various stuff:
+     https://projectivegeometricalgebra.org/projgeomalg.pdf
+     And AntiWedge Product results:
+     https://rigidgeometricalgebra.org/wiki/index.php?title=Exterior_products
 
-    // TODO and what about SineAngle or TangentAngle? In fact... since this returns a HomogenousMagnitude... isn't that
-    //  the exact same thing as a complex number? And so if the ComplexNumber result ACTUALLY represents the angle between
-    //  the geometric objects, then OF COURSE the real part is the cosine.... so is the sine already there?? the antiscalar part?
+     In all examples, lets assume the objects are unitized. That means the weight norm of each object is 1, and
+     as you can see by the formula, the weight norm of the result is also 1. That is, the result will also be unitized.
+     This lets us focus our attention on the bulk part, which must be where the cosine behavior takes place.
+
+     Plane vs Plane
+     Planes can be understood with a normal vector and "position" which is the distance from the origin.
+     The normal vector has the projective components, and so is the weight. Which makes sense, since it is about
+     orientation. So when the plane is unitized, the normal vector is magnitude 1. You can alternatively consider a
+     non-unitized normal vector that actually reaches from the origin to the plane, and the positional element would be
+     1 instead. However that would be the inverse of unitized, so to speak. Anyway.... looking at the chart you can see
+     the weight dual of a plane is actually (the negative of) that point. So now we look at the results of an
+     anti_wedge(plane, point), and see there are mostly zeros, and then some negative 1s. The negative 1 results
+     counter the negative 1s of the weight dual. Then ultimately the factors that remain basically got dot-producted,
+     with no basis interference in the result (it is just a scalar). So long story short, if you unitize the planes
+     before seeking their angle, then the normal vectors are unit vectors, so you can just dot product those normal
+     vectors to get the cosine of the angle between them.
+
+     Point vs Point
+     But how can it be? What does it even mean to take the angle between two points?? Well why not find out?
+     The weight dual of a point is just its weight factor e321. However again we assume the points are unitized. So
+     this factor is simply 1. Then we AntiWedge a whole point with e321. All the factors are 0 except antiwedge(e4, e321),
+     for which the unit is scalar 1. So basically the result of CosineAngle on two unitized points is to say "hey
+     both of their weights are 1 because they are unitized, so lets do Scalar(1*1) + AntiScalar(1*1) and that is your
+     HomogeneousMagnitude result, in other words 1. And what is the angle such that cosine(angle)=1? Well 0 of course.
+     So the angle between two points is zero.
+
+     Line vs Line
+     Similar to plane, you gotta really understand the bulk vs weight aspects of lines. The bulk is the distance from
+     the origin, in other words the factors in the bulk correspond to the factors for a point/vector from origin to the
+     line (at the point of the line closest to origin). Then the weight helps distinguish the direction of the line
+     intersecting that point, but it is not arbitrary. In order to fulfill the geometric property it must be orthogonal
+     to the bulk. Anyway if the weight is normalized, then it is just a unit vector to tell the direction. So...
+     The weight dual of the line is the (negated) coefficients of the weight but the bases of the bulk. Now looking at
+     anti_wedge(bivector, bivector) results.... Mostly 0s and -1s again. Each only works with its opposite. So this
+     results in the weight of one line getting dot-producted with the weight of the other line. Fascinating.
+
+     So for Plane vs Plane and Line vs Line you can see how we get the more specific angle formulas to the right
+     in the big chart.
+     */
 
     for (param_a, param_b) in registry.pair_parameters() {
         let name = "CosineAngle";
         let _: Option<()> = try {
-            let wc = trait_impls.get_pair_invocation("WeightContraction", variable(&param_a), variable(&param_b))?;
+            // Only allow angle between uniform Grade MultiVectorClasses.
+            let _ = trait_impls.get_single_impl("Grade", &param_a)?;
+            let _ = trait_impls.get_single_impl("Grade", &param_b)?;
+
+            // We can return a Scalar and ignore the HomogeneousMagnitude fluff if we Unitize up front
+            let a_unitize = trait_impls.get_single_invocation("Unitize", variable(&param_a))?;
+            let b_unitize = trait_impls.get_single_invocation("Unitize", variable(&param_b))?;
+
+            // The actual cosine part of the definition
+            let wc = trait_impls.get_pair_invocation("WeightContraction", a_unitize, b_unitize)?;
             let bn = trait_impls.get_single_invocation("BulkNorm", wc)?;
-            let a_wn = trait_impls.get_single_invocation("WeightNorm", variable(&param_a))?;
-            let b_wn = trait_impls.get_single_invocation("WeightNorm", variable(&param_b))?;
-            let wn_mul = trait_impls.get_pair_invocation("Mul", a_wn, b_wn)?;
-            let add = trait_impls.get_pair_invocation("Add", bn, wn_mul)?;
-            let cosine = single_expression_pair_trait_impl(name, &param_a, &param_b, add);
+            let cosine = single_expression_pair_trait_impl(name, &param_a, &param_b, bn);
             emitter.emit(&cosine).unwrap();
             trait_impls.add_pair_impl(name, param_a, param_b, cosine);
         };

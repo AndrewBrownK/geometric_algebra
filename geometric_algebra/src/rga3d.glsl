@@ -12510,183 +12510,27 @@ MultiVector multi_vector_multi_vector_anti_project_through_origin_onto(MultiVect
     return multi_vector_multi_vector_wedge(other, multi_vector_multi_vector_bulk_contraction(self, other));
 }
 
-HomogeneousMagnitude homogeneous_magnitude_homogeneous_magnitude_cosine_angle(HomogeneousMagnitude self, HomogeneousMagnitude other) {
-    return scalar_anti_scalar_add(scalar_bulk_norm(homogeneous_magnitude_homogeneous_magnitude_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(homogeneous_magnitude_weight_norm(self), homogeneous_magnitude_weight_norm(other)));
+Scalar point_point_cosine_angle(Point self, Point other) {
+    return scalar_bulk_norm(point_point_weight_contraction(point_unitize(self), point_unitize(other)));
 }
 
-HomogeneousMagnitude homogeneous_magnitude_point_cosine_angle(HomogeneousMagnitude self, Point other) {
-    return scalar_anti_scalar_add(plane_bulk_norm(homogeneous_magnitude_point_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(homogeneous_magnitude_weight_norm(self), point_weight_norm(other)));
+Scalar line_point_cosine_angle(Line self, Point other) {
+    return point_bulk_norm(line_point_weight_contraction(line_unitize(self), point_unitize(other)));
 }
 
-HomogeneousMagnitude homogeneous_magnitude_line_cosine_angle(HomogeneousMagnitude self, Line other) {
-    return scalar_anti_scalar_add(line_bulk_norm(homogeneous_magnitude_line_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(homogeneous_magnitude_weight_norm(self), line_weight_norm(other)));
+Scalar line_line_cosine_angle(Line self, Line other) {
+    return scalar_bulk_norm(line_line_weight_contraction(line_unitize(self), line_unitize(other)));
 }
 
-HomogeneousMagnitude homogeneous_magnitude_plane_cosine_angle(HomogeneousMagnitude self, Plane other) {
-    return scalar_anti_scalar_add(point_bulk_norm(homogeneous_magnitude_plane_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(homogeneous_magnitude_weight_norm(self), plane_weight_norm(other)));
+Scalar plane_point_cosine_angle(Plane self, Point other) {
+    return line_bulk_norm(plane_point_weight_contraction(plane_unitize(self), point_unitize(other)));
 }
 
-HomogeneousMagnitude homogeneous_magnitude_translator_cosine_angle(HomogeneousMagnitude self, Translator other) {
-    return scalar_anti_scalar_add(scalar_bulk_norm(homogeneous_magnitude_translator_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(homogeneous_magnitude_weight_norm(self), translator_weight_norm(other)));
+Scalar plane_line_cosine_angle(Plane self, Line other) {
+    return point_bulk_norm(plane_line_weight_contraction(plane_unitize(self), line_unitize(other)));
 }
 
-HomogeneousMagnitude homogeneous_magnitude_flector_cosine_angle(HomogeneousMagnitude self, Flector other) {
-    return scalar_anti_scalar_add(flector_bulk_norm(homogeneous_magnitude_flector_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(homogeneous_magnitude_weight_norm(self), flector_weight_norm(other)));
-}
-
-HomogeneousMagnitude homogeneous_magnitude_multi_vector_cosine_angle(HomogeneousMagnitude self, MultiVector other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(homogeneous_magnitude_multi_vector_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(homogeneous_magnitude_weight_norm(self), multi_vector_weight_norm(other)));
-}
-
-HomogeneousMagnitude point_point_cosine_angle(Point self, Point other) {
-    return scalar_anti_scalar_add(scalar_bulk_norm(point_point_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(point_weight_norm(self), point_weight_norm(other)));
-}
-
-HomogeneousMagnitude point_flector_cosine_angle(Point self, Flector other) {
-    return scalar_anti_scalar_add(scalar_bulk_norm(point_flector_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(point_weight_norm(self), flector_weight_norm(other)));
-}
-
-HomogeneousMagnitude point_multi_vector_cosine_angle(Point self, MultiVector other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(point_multi_vector_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(point_weight_norm(self), multi_vector_weight_norm(other)));
-}
-
-HomogeneousMagnitude line_point_cosine_angle(Line self, Point other) {
-    return scalar_anti_scalar_add(point_bulk_norm(line_point_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(line_weight_norm(self), point_weight_norm(other)));
-}
-
-HomogeneousMagnitude line_line_cosine_angle(Line self, Line other) {
-    return scalar_anti_scalar_add(scalar_bulk_norm(line_line_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(line_weight_norm(self), line_weight_norm(other)));
-}
-
-HomogeneousMagnitude line_flector_cosine_angle(Line self, Flector other) {
-    return scalar_anti_scalar_add(point_bulk_norm(line_flector_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(line_weight_norm(self), flector_weight_norm(other)));
-}
-
-HomogeneousMagnitude line_multi_vector_cosine_angle(Line self, MultiVector other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(line_multi_vector_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(line_weight_norm(self), multi_vector_weight_norm(other)));
-}
-
-HomogeneousMagnitude plane_point_cosine_angle(Plane self, Point other) {
-    return scalar_anti_scalar_add(line_bulk_norm(plane_point_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(plane_weight_norm(self), point_weight_norm(other)));
-}
-
-HomogeneousMagnitude plane_line_cosine_angle(Plane self, Line other) {
-    return scalar_anti_scalar_add(point_bulk_norm(plane_line_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(plane_weight_norm(self), line_weight_norm(other)));
-}
-
-HomogeneousMagnitude plane_plane_cosine_angle(Plane self, Plane other) {
-    return scalar_anti_scalar_add(scalar_bulk_norm(plane_plane_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(plane_weight_norm(self), plane_weight_norm(other)));
-}
-
-HomogeneousMagnitude plane_flector_cosine_angle(Plane self, Flector other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(plane_flector_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(plane_weight_norm(self), flector_weight_norm(other)));
-}
-
-HomogeneousMagnitude plane_multi_vector_cosine_angle(Plane self, MultiVector other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(plane_multi_vector_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(plane_weight_norm(self), multi_vector_weight_norm(other)));
-}
-
-HomogeneousMagnitude motor_homogeneous_magnitude_cosine_angle(Motor self, HomogeneousMagnitude other) {
-    return scalar_anti_scalar_add(scalar_bulk_norm(motor_homogeneous_magnitude_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(motor_weight_norm(self), homogeneous_magnitude_weight_norm(other)));
-}
-
-HomogeneousMagnitude motor_point_cosine_angle(Motor self, Point other) {
-    return scalar_anti_scalar_add(flector_bulk_norm(motor_point_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(motor_weight_norm(self), point_weight_norm(other)));
-}
-
-HomogeneousMagnitude motor_line_cosine_angle(Motor self, Line other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(motor_line_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(motor_weight_norm(self), line_weight_norm(other)));
-}
-
-HomogeneousMagnitude motor_plane_cosine_angle(Motor self, Plane other) {
-    return scalar_anti_scalar_add(point_bulk_norm(motor_plane_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(motor_weight_norm(self), plane_weight_norm(other)));
-}
-
-HomogeneousMagnitude motor_translator_cosine_angle(Motor self, Translator other) {
-    return scalar_anti_scalar_add(scalar_bulk_norm(motor_translator_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(motor_weight_norm(self), translator_weight_norm(other)));
-}
-
-HomogeneousMagnitude motor_flector_cosine_angle(Motor self, Flector other) {
-    return scalar_anti_scalar_add(flector_bulk_norm(motor_flector_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(motor_weight_norm(self), flector_weight_norm(other)));
-}
-
-HomogeneousMagnitude motor_multi_vector_cosine_angle(Motor self, MultiVector other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(motor_multi_vector_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(motor_weight_norm(self), multi_vector_weight_norm(other)));
-}
-
-HomogeneousMagnitude translator_homogeneous_magnitude_cosine_angle(Translator self, HomogeneousMagnitude other) {
-    return scalar_anti_scalar_add(scalar_bulk_norm(translator_homogeneous_magnitude_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(translator_weight_norm(self), homogeneous_magnitude_weight_norm(other)));
-}
-
-HomogeneousMagnitude translator_point_cosine_angle(Translator self, Point other) {
-    return scalar_anti_scalar_add(flector_bulk_norm(translator_point_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(translator_weight_norm(self), point_weight_norm(other)));
-}
-
-HomogeneousMagnitude translator_line_cosine_angle(Translator self, Line other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(translator_line_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(translator_weight_norm(self), line_weight_norm(other)));
-}
-
-HomogeneousMagnitude translator_plane_cosine_angle(Translator self, Plane other) {
-    return scalar_anti_scalar_add(point_bulk_norm(translator_plane_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(translator_weight_norm(self), plane_weight_norm(other)));
-}
-
-HomogeneousMagnitude translator_translator_cosine_angle(Translator self, Translator other) {
-    return scalar_anti_scalar_add(scalar_bulk_norm(translator_translator_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(translator_weight_norm(self), translator_weight_norm(other)));
-}
-
-HomogeneousMagnitude translator_flector_cosine_angle(Translator self, Flector other) {
-    return scalar_anti_scalar_add(flector_bulk_norm(translator_flector_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(translator_weight_norm(self), flector_weight_norm(other)));
-}
-
-HomogeneousMagnitude translator_multi_vector_cosine_angle(Translator self, MultiVector other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(translator_multi_vector_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(translator_weight_norm(self), multi_vector_weight_norm(other)));
-}
-
-HomogeneousMagnitude flector_point_cosine_angle(Flector self, Point other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(flector_point_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(flector_weight_norm(self), point_weight_norm(other)));
-}
-
-HomogeneousMagnitude flector_line_cosine_angle(Flector self, Line other) {
-    return scalar_anti_scalar_add(point_bulk_norm(flector_line_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(flector_weight_norm(self), line_weight_norm(other)));
-}
-
-HomogeneousMagnitude flector_plane_cosine_angle(Flector self, Plane other) {
-    return scalar_anti_scalar_add(scalar_bulk_norm(flector_plane_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(flector_weight_norm(self), plane_weight_norm(other)));
-}
-
-HomogeneousMagnitude flector_flector_cosine_angle(Flector self, Flector other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(flector_flector_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(flector_weight_norm(self), flector_weight_norm(other)));
-}
-
-HomogeneousMagnitude flector_multi_vector_cosine_angle(Flector self, MultiVector other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(flector_multi_vector_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(flector_weight_norm(self), multi_vector_weight_norm(other)));
-}
-
-HomogeneousMagnitude multi_vector_homogeneous_magnitude_cosine_angle(MultiVector self, HomogeneousMagnitude other) {
-    return scalar_anti_scalar_add(scalar_bulk_norm(multi_vector_homogeneous_magnitude_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(multi_vector_weight_norm(self), homogeneous_magnitude_weight_norm(other)));
-}
-
-HomogeneousMagnitude multi_vector_point_cosine_angle(MultiVector self, Point other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_point_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(multi_vector_weight_norm(self), point_weight_norm(other)));
-}
-
-HomogeneousMagnitude multi_vector_line_cosine_angle(MultiVector self, Line other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_line_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(multi_vector_weight_norm(self), line_weight_norm(other)));
-}
-
-HomogeneousMagnitude multi_vector_plane_cosine_angle(MultiVector self, Plane other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_plane_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(multi_vector_weight_norm(self), plane_weight_norm(other)));
-}
-
-HomogeneousMagnitude multi_vector_translator_cosine_angle(MultiVector self, Translator other) {
-    return scalar_anti_scalar_add(scalar_bulk_norm(multi_vector_translator_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(multi_vector_weight_norm(self), translator_weight_norm(other)));
-}
-
-HomogeneousMagnitude multi_vector_flector_cosine_angle(MultiVector self, Flector other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_flector_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(multi_vector_weight_norm(self), flector_weight_norm(other)));
-}
-
-HomogeneousMagnitude multi_vector_multi_vector_cosine_angle(MultiVector self, MultiVector other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_multi_vector_weight_contraction(self, other)), anti_scalar_anti_scalar_mul(multi_vector_weight_norm(self), multi_vector_weight_norm(other)));
+Scalar plane_plane_cosine_angle(Plane self, Plane other) {
+    return scalar_bulk_norm(plane_plane_weight_contraction(plane_unitize(self), plane_unitize(other)));
 }
 
