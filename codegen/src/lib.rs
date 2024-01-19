@@ -634,14 +634,18 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
         let bulk = MultiVectorClass::derive_bulk_or_weight(
             "Bulk", &param_a, &projective_basis, false, &algebra, &registry
         );
-        emitter.emit(&bulk).unwrap();
-        trait_impls.add_single_impl("Bulk", param_a.clone(), bulk);
+        if bulk != AstNode::None {
+            emitter.emit(&bulk).unwrap();
+            trait_impls.add_single_impl("Bulk", param_a.clone(), bulk);
+        }
 
         let weight = MultiVectorClass::derive_bulk_or_weight(
             "Weight", &param_a, &projective_basis, true, &algebra, &registry
         );
-        emitter.emit(&weight).unwrap();
-        trait_impls.add_single_impl("Weight", param_a, weight);
+        if weight != AstNode::None {
+            emitter.emit(&weight).unwrap();
+            trait_impls.add_single_impl("Weight", param_a, weight);
+        }
     }
 
 

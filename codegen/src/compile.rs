@@ -1621,20 +1621,6 @@ impl MultiVectorClass {
         algebra: &GeometricAlgebra,
         registry: &'a MultiVectorClassRegistry,
     ) -> AstNode<'a> {
-        // TODO CONSIDER THE FOLLOWING
-        //  current implementation is pretty cool
-        //      Motor.bulk -> Translator
-        //      Motor.weight -> Rotor
-        //  very cool
-        //  However....
-        //      Rotor.bulk -> Rotor (multiply by 1)
-        //      Rotor.weight -> Rotor (multiply by 0)
-        //      Translator.bulk -> Translator (multiply by 1)
-        //      Translator.weight -> AntiScalar (of 1)
-        //  It seems/feels like it should be more symmetrical, and/or simplified.
-        //  If I can get rid of the redundant "multiply whole thing by 1 or 0" then that would be nice.
-
-
 
         let mut result_signature = Vec::new();
         let a_flat_basis = parameter_a.multi_vector_class().flat_basis();
@@ -1649,7 +1635,14 @@ impl MultiVectorClass {
             }
         }
         result_signature.sort_unstable();
-
+        if result_signature.is_empty() {
+            return AstNode::None
+        }
+        let mut param_a_signature = parameter_a.multi_vector_class().signature();
+        param_a_signature.sort_unstable();
+        if param_a_signature == result_signature {
+            return single_expression_single_trait_impl(name, &parameter_a, variable(&parameter_a))
+        }
 
         // Most objects have bulk and weight.
         // We'll try to find an exact match for the result class.
@@ -1662,7 +1655,7 @@ impl MultiVectorClass {
                 let sig = it.signature();
                 result_signature.iter().all(|it| sig.contains(it)) &&
                     // Bulk of Line could be represented as Translator with zero anti-scalar, but that is weird
-                    sig.iter().all(|it| parameter_a.multi_vector_class().signature().contains(it))
+                    sig.iter().all(|it| param_a_signature.contains(it))
             }).collect();
             viable_classes.sort_by_key(|it| it.signature().len());
             result_class = viable_classes.first().map(|it| *it);
