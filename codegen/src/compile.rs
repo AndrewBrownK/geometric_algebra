@@ -1777,3 +1777,17 @@ pub fn single_expression_single_trait_impl<'a>(
         ]
     }
 }
+
+pub fn single_expression_class_trait_impl<'a>(
+    name: &'static str,
+    mvc: &'a MultiVectorClass,
+    expression: Expression<'a>
+) -> AstNode<'a> {
+    AstNode::TraitImplementation {
+        result: Parameter { name, data_type: DataType::MultiVector(mvc) },
+        parameters: vec![],
+        body: vec![
+            AstNode::ReturnStatement { expression: Box::new(expression) }
+        ]
+    }
+}

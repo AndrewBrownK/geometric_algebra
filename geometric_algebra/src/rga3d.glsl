@@ -555,6 +555,14 @@ MultiVector multi_vector_double_complement(MultiVector self) {
     return MultiVector(self.g0, self.g1 * vec4(-1.0), self.g2, self.g3, self.g4 * vec4(-1.0));
 }
 
+Scalar scalar_sqrt(Scalar self) {
+    return Scalar(sqrt(self.g0));
+}
+
+AntiScalar anti_scalar_sqrt(AntiScalar self) {
+    return AntiScalar(sqrt(self.g0));
+}
+
 Scalar scalar_scalar_add(Scalar self, Scalar other) {
     return Scalar(self.g0 + other.g0);
 }
@@ -12532,5 +12540,29 @@ Scalar plane_line_cosine_angle(Plane self, Line other) {
 
 Scalar plane_plane_cosine_angle(Plane self, Plane other) {
     return scalar_bulk_norm(plane_plane_weight_contraction(plane_unitize(self), plane_unitize(other)));
+}
+
+Scalar point_point_sine_angle(Point self, Point other) {
+    return scalar_sqrt(scalar_scalar_sub(scalar_one(), scalar_powi(point_point_cosine_angle(self, other), 2)));
+}
+
+Scalar line_point_sine_angle(Line self, Point other) {
+    return scalar_sqrt(scalar_scalar_sub(scalar_one(), scalar_powi(line_point_cosine_angle(self, other), 2)));
+}
+
+Scalar line_line_sine_angle(Line self, Line other) {
+    return scalar_sqrt(scalar_scalar_sub(scalar_one(), scalar_powi(line_line_cosine_angle(self, other), 2)));
+}
+
+Scalar plane_point_sine_angle(Plane self, Point other) {
+    return scalar_sqrt(scalar_scalar_sub(scalar_one(), scalar_powi(plane_point_cosine_angle(self, other), 2)));
+}
+
+Scalar plane_line_sine_angle(Plane self, Line other) {
+    return scalar_sqrt(scalar_scalar_sub(scalar_one(), scalar_powi(plane_line_cosine_angle(self, other), 2)));
+}
+
+Scalar plane_plane_sine_angle(Plane self, Plane other) {
+    return scalar_sqrt(scalar_scalar_sub(scalar_one(), scalar_powi(plane_plane_cosine_angle(self, other), 2)));
 }
 

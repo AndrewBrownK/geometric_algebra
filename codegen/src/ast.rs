@@ -7,6 +7,17 @@ pub enum DataType<'a> {
     MultiVector(&'a MultiVectorClass),
 }
 
+impl<'a> DataType<'a> {
+    pub fn data_class_name(&self) -> String {
+        match &self {
+            DataType::Integer => "Integer".to_string(),
+            DataType::SimdVector(x) => format!("SimdVector{x}"),
+            DataType::MultiVector(c) => c.class_name.clone()
+        }
+    }
+}
+
+
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub enum ExpressionContent<'a> {
     None,

@@ -1798,6 +1798,22 @@ impl DoubleComplement for MultiVector {
     }
 }
 
+impl Sqrt for Scalar {
+    type Output = Scalar;
+
+    fn sqrt(self) -> Scalar {
+        Scalar { groups: ScalarGroups { g0: self.group0().sqrt() } }
+    }
+}
+
+impl Sqrt for AntiScalar {
+    type Output = AntiScalar;
+
+    fn sqrt(self) -> AntiScalar {
+        AntiScalar { groups: AntiScalarGroups { g0: self.group0().sqrt() } }
+    }
+}
+
 impl Add<Scalar> for Scalar {
     type Output = Scalar;
 
@@ -26178,6 +26194,54 @@ impl CosineAngle<Plane> for Plane {
 
     fn cosine_angle(self, other: Plane) -> Scalar {
         self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl SineAngle<Point> for Point {
+    type Output = Scalar;
+
+    fn sine_angle(self, other: Point) -> Scalar {
+        Scalar::one().sub(self.cosine_angle(other).powi(2)).sqrt()
+    }
+}
+
+impl SineAngle<Point> for Line {
+    type Output = Scalar;
+
+    fn sine_angle(self, other: Point) -> Scalar {
+        Scalar::one().sub(self.cosine_angle(other).powi(2)).sqrt()
+    }
+}
+
+impl SineAngle<Line> for Line {
+    type Output = Scalar;
+
+    fn sine_angle(self, other: Line) -> Scalar {
+        Scalar::one().sub(self.cosine_angle(other).powi(2)).sqrt()
+    }
+}
+
+impl SineAngle<Point> for Plane {
+    type Output = Scalar;
+
+    fn sine_angle(self, other: Point) -> Scalar {
+        Scalar::one().sub(self.cosine_angle(other).powi(2)).sqrt()
+    }
+}
+
+impl SineAngle<Line> for Plane {
+    type Output = Scalar;
+
+    fn sine_angle(self, other: Line) -> Scalar {
+        Scalar::one().sub(self.cosine_angle(other).powi(2)).sqrt()
+    }
+}
+
+impl SineAngle<Plane> for Plane {
+    type Output = Scalar;
+
+    fn sine_angle(self, other: Plane) -> Scalar {
+        Scalar::one().sub(self.cosine_angle(other).powi(2)).sqrt()
     }
 }
 

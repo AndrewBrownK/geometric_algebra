@@ -475,6 +475,12 @@ pub trait Powf {
     fn powf(self, exponent: f32) -> Self::Output;
 }
 
+/// Square root
+pub trait Sqrt {
+    type Output;
+    fn sqrt(self) -> Self::Output;
+}
+
 /// Grade
 /// http://rigidgeometricalgebra.org/wiki/index.php?title=Grade_and_antigrade
 pub trait Grade {
@@ -679,6 +685,13 @@ pub trait AntiProjectThroughOriginOnto<T> {
 pub trait CosineAngle<T> {
     type Output;
     fn cosine_angle(self, other: T) -> Self::Output;
+}
+
+/// The sine of the angle between two objects.
+/// https://projectivegeometricalgebra.org/projgeomalg.pdf
+pub trait SineAngle<T> {
+    type Output;
+    fn sine_angle(self, other: T) -> Self::Output;
 }
 
 

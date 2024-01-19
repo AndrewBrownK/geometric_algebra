@@ -108,67 +108,86 @@ pub fn read_config_from_str(config: &str) -> AlgebraDescriptor {
 }
 
 struct TraitImpls<'a> {
-    singles: BTreeMap<(String, String), AstNode<'a>>,
-    pairs: BTreeMap<(String, String, String), AstNode<'a>>
+    class_level: BTreeMap<(String, String), AstNode<'a>>,
+    single_args: BTreeMap<(String, String), AstNode<'a>>,
+    pair_args: BTreeMap<(String, String, String), AstNode<'a>>
 }
 
 impl<'a> TraitImpls<'a> {
     fn new() -> Self {
         TraitImpls {
-            singles: BTreeMap::new(),
-            pairs: BTreeMap::new(),
+            class_level: BTreeMap::new(),
+            single_args: BTreeMap::new(),
+            pair_args: BTreeMap::new(),
         }
     }
 
     fn add_pair_impl(&mut self, name: &str, parameter_a: Parameter<'a>, parameter_b: Parameter<'a>, the_impl: AstNode<'a>) {
-        let a_name = parameter_a.multi_vector_class().class_name.clone();
-        let b_name = parameter_b.multi_vector_class().class_name.clone();
-        self.pairs.insert((name.to_string(), a_name.to_string(), b_name.to_string()), the_impl);
+        let a_name = parameter_a.data_type.data_class_name();
+        let b_name = parameter_b.data_type.data_class_name();
+        self.pair_args.insert((name.to_string(), a_name.to_string(), b_name.to_string()), the_impl);
     }
 
     fn add_single_impl(&mut self, name: &str, parameter_a: Parameter<'a>, the_impl: AstNode<'a>) {
-        let a_name = parameter_a.multi_vector_class().class_name.clone();
-        self.singles.insert((name.to_string(), a_name.to_string()), the_impl);
+        let a_name = parameter_a.data_type.data_class_name();
+        self.single_args.insert((name.to_string(), a_name.to_string()), the_impl);
+    }
+
+    fn add_class_impl(&mut self, name: &str, class_a: &'a MultiVectorClass, the_impl: AstNode<'a>) {
+        let a_name = class_a.class_name.clone();
+        self.class_level.insert((name.to_string(), a_name.to_string()), the_impl);
     }
 
     fn get_pair_impl(&self, name: &str, parameter_a: &Parameter<'a>, parameter_b: &Parameter<'a>) -> Option<&AstNode<'a>> {
-        let a_name = parameter_a.multi_vector_class().class_name.clone();
-        let b_name = parameter_b.multi_vector_class().class_name.clone();
-        return self.pairs.get(&(name.to_string(), a_name, b_name));
+        let a_name = parameter_a.data_type.data_class_name();
+        let b_name = parameter_b.data_type.data_class_name();
+        return self.pair_args.get(&(name.to_string(), a_name, b_name));
     }
 
     fn get_single_impl(&self, name: &str, parameter_a: &Parameter<'a>) -> Option<&AstNode<'a>> {
-        let a_name = parameter_a.multi_vector_class().class_name.clone();
-        return self.singles.get(&(name.to_string(), a_name));
+        let a_name = parameter_a.data_type.data_class_name();
+        return self.single_args.get(&(name.to_string(), a_name));
+    }
+
+    fn get_class_impl(&self, name: &str, class_a: &'a MultiVectorClass) -> Option<&AstNode<'a>> {
+        let a_name = class_a.class_name.clone();
+        return self.class_level.get(&(name.to_string(), a_name.to_string()));
     }
 
     fn get_pair_impl_and_result(&self, name: &str, parameter_a: &Parameter<'a>, parameter_b: &Parameter<'a>) -> Option<(&AstNode<'a>, &Parameter<'a>)> {
-        let a_name = parameter_a.multi_vector_class().class_name.clone();
-        let b_name = parameter_b.multi_vector_class().class_name.clone();
-        let the_impl = self.pairs.get(&(name.to_string(), a_name, b_name))?;
+        let a_name = parameter_a.data_type.data_class_name();
+        let b_name = parameter_b.data_type.data_class_name();
+        let the_impl = self.pair_args.get(&(name.to_string(), a_name, b_name))?;
         let result = result_of_trait!(the_impl);
         return Some((the_impl, result));
     }
 
     fn get_single_impl_and_result(&self, name: &str, parameter_a: &Parameter<'a>) -> Option<(&AstNode<'a>, &Parameter<'a>)> {
-        let a_name = parameter_a.multi_vector_class().class_name.clone();
-        let the_impl = self.singles.get(&(name.to_string(), a_name))?;
+        let a_name = parameter_a.data_type.data_class_name();
+        let the_impl = self.single_args.get(&(name.to_string(), a_name))?;
+        let result = result_of_trait!(the_impl);
+        return Some((the_impl, result));
+    }
+
+    fn get_class_impl_and_result(&self, name: &str, class_a: &'a MultiVectorClass) -> Option<(&AstNode<'a>, &Parameter<'a>)> {
+        let a_name = class_a.class_name.clone();
+        let the_impl = self.class_level.get(&(name.to_string(), a_name))?;
         let result = result_of_trait!(the_impl);
         return Some((the_impl, result));
     }
 
     fn get_pair_invocation(&self, name: &str, a: Expression<'a>, b: Expression<'a>) -> Option<Expression<'a>> {
-        let class_a = match a.data_type_hint {
-            Some(DataType::MultiVector(c)) => c,
+        let datatype_a = match &a.data_type_hint {
+            Some(dt) => dt.clone(),
             _ => panic!("TraitImpls.get_pair_invocation for {name} requires MultiVectorClass data_type_hints on \"a\" {a:?}"),
         };
-        let class_b = match b.data_type_hint {
-            Some(DataType::MultiVector(c)) => c,
+        let datatype_b = match &b.data_type_hint {
+            Some(dt) => dt.clone(),
             _ => panic!("TraitImpls.get_pair_invocation for {name} requires MultiVectorClass data_type_hints on \"b\" {b:?}"),
         };
-        let a_name = class_a.class_name.clone();
-        let b_name = class_b.class_name.clone();
-        let the_impl = self.pairs.get(&(name.to_string(), a_name, b_name))?;
+        let a_name = datatype_a.data_class_name();
+        let b_name = datatype_b.data_class_name();
+        let the_impl = self.pair_args.get(&(name.to_string(), a_name, b_name))?;
         let result = result_of_trait!(the_impl);
 
         // InvokeInstanceMethod:
@@ -181,23 +200,23 @@ impl<'a> TraitImpls<'a> {
             size: 1,
             data_type_hint: Some(result.data_type.clone()),
             content: ExpressionContent::InvokeInstanceMethod(
-                DataType::MultiVector(class_a),
+                datatype_a,
                 Box::new(a),
                 result.name,
                 vec![
-                    (DataType::MultiVector(class_b), b)
+                    (datatype_b, b)
                 ]
             ),
         })
     }
 
     fn get_single_invocation(&self, name: &str, a: Expression<'a>) -> Option<Expression<'a>> {
-        let class_a = match a.data_type_hint {
-            Some(DataType::MultiVector(c)) => c,
+        let datatype_a = match &a.data_type_hint {
+            Some(dt) => dt.clone(),
             _ => panic!("TraitImpls.get_single_invocation for {name} requires MultiVectorClass data_type_hints on \"a\" {a:?}"),
         };
-        let a_name = class_a.class_name.clone();
-        let the_impl = self.singles.get(&(name.to_string(), a_name))?;
+        let a_name = datatype_a.data_class_name();
+        let the_impl = self.single_args.get(&(name.to_string(), a_name))?;
         let result = result_of_trait!(the_impl);
 
         // InvokeInstanceMethod:
@@ -210,11 +229,26 @@ impl<'a> TraitImpls<'a> {
             size: 1,
             data_type_hint: Some(result.data_type.clone()),
             content: ExpressionContent::InvokeInstanceMethod(
-                DataType::MultiVector(class_a),
+                datatype_a,
                 Box::new(a),
                 result.name,
                 vec![]
             ),
+        })
+    }
+
+    fn get_class_invocation(&self, name: &'static str, class_a: &'a MultiVectorClass) -> Option<Expression<'a>> {
+        let a_name = class_a.class_name.clone();
+        let the_impl = self.class_level.get(&(name.to_string(), a_name))?;
+        let result = result_of_trait!(the_impl);
+        Some(Expression {
+            size: 1,
+            data_type_hint: Some(result.data_type.clone()),
+            content: ExpressionContent::InvokeClassMethod(
+                class_a,
+                name,
+                vec![]
+            )
         })
     }
 }
@@ -254,7 +288,7 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
             let ast_node = class_a.constant(name);
             emitter.emit(&ast_node).unwrap();
             if ast_node != AstNode::None {
-                trait_impls.add_single_impl(name, param_a.clone(), ast_node);
+                trait_impls.add_class_impl(name, param_a.multi_vector_class(), ast_node);
             }
         }
 
@@ -263,11 +297,11 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
                 let anti_grade = algebra.generator_squares.len() - grade;
                 let grade_impl = MultiVectorClass::derive_grade("Grade", &param_a, grade);
                 emitter.emit(&grade_impl).unwrap();
-                trait_impls.add_single_impl("Grade", param_a.clone(), grade_impl);
+                trait_impls.add_class_impl("Grade", param_a.multi_vector_class(), grade_impl);
 
                 let anti_grade_impl = MultiVectorClass::derive_grade("AntiGrade", &param_a, anti_grade);
                 emitter.emit(&anti_grade_impl).unwrap();
-                trait_impls.add_single_impl("AntiGrade", param_a.clone(), anti_grade_impl);
+                trait_impls.add_class_impl("AntiGrade", param_a.multi_vector_class(), anti_grade_impl);
             }
         }
 
@@ -282,6 +316,41 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
                 trait_impls.add_single_impl(name, param_a.clone(), ast_node);
             }
         }
+    }
+
+    for param_a in registry.single_parameters() {
+        if param_a.data_type.data_class_name() != "Scalar" && param_a.data_type.data_class_name() != "AntiScalar" {
+            continue
+        }
+        let access = Expression {
+            size: 1,
+            data_type_hint: None,
+            content: ExpressionContent::Access(
+                Box::new(variable(&param_a)),
+                0
+            )
+        };
+        let sqrt = Expression {
+            size: 1,
+            data_type_hint: None,
+            content: ExpressionContent::SquareRoot(Box::new(access))
+        };
+        let construct = Expression {
+            size: 1,
+            data_type_hint: Some(param_a.data_type.clone()),
+            content: ExpressionContent::InvokeClassMethod(
+                param_a.multi_vector_class(),
+                "Constructor",
+                vec![(
+                    DataType::SimdVector(1),
+                    sqrt
+                )]
+            )
+        };
+        let name = "Sqrt";
+        let sqrt = single_expression_single_trait_impl(name, &param_a, construct);
+        emitter.emit(&sqrt).unwrap();
+        trait_impls.add_single_impl(name, param_a, sqrt);
     }
 
 
@@ -443,16 +512,13 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
         };
     }
 
-    for (param_a, param_b) in registry.pair_parameters() {
-        if param_a.multi_vector_class() != param_b.multi_vector_class() {
-            continue
-        }
+    for param_a in registry.single_parameters() {
         let _: Option<()> = try {
-            let (gp, gp_r) = trait_impls.get_pair_impl_and_result("GeometricProduct", &param_a, &param_b)?;
+            let (gp, gp_r) = trait_impls.get_pair_impl_and_result("GeometricProduct", &param_a, &param_a)?;
             if gp_r.multi_vector_class() != param_a.multi_vector_class() {
                 continue
             }
-            let constant_one = trait_impls.get_single_impl("One", &param_a)?;
+            let constant_one = trait_impls.get_class_impl("One", param_a.multi_vector_class())?;
             let inverse = trait_impls.get_single_impl("Inverse", &param_a)?;
             let exponent = Parameter {
                 name: "exponent",
@@ -462,6 +528,7 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
                 "Powi", gp, constant_one, inverse, &param_a, &exponent,
             );
             emitter.emit(&power_of_integer).unwrap();
+            trait_impls.add_pair_impl("Powi", param_a, exponent, power_of_integer);
         };
     }
 
@@ -780,8 +847,8 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
         let name = "CosineAngle";
         let _: Option<()> = try {
             // Only allow angle between uniform Grade MultiVectorClasses.
-            let _ = trait_impls.get_single_impl("Grade", &param_a)?;
-            let _ = trait_impls.get_single_impl("Grade", &param_b)?;
+            let _ = trait_impls.get_class_impl("Grade", param_a.multi_vector_class())?;
+            let _ = trait_impls.get_class_impl("Grade", param_b.multi_vector_class())?;
 
             // We can return a Scalar and ignore the HomogeneousMagnitude fluff if we Unitize up front
             let a_unitize = trait_impls.get_single_invocation("Unitize", variable(&param_a))?;
@@ -793,6 +860,29 @@ pub fn generate_code(desc: AlgebraDescriptor, path: &str) {
             let cosine = single_expression_pair_trait_impl(name, &param_a, &param_b, bn);
             emitter.emit(&cosine).unwrap();
             trait_impls.add_pair_impl(name, param_a, param_b, cosine);
+        };
+    }
+
+    for (param_a, param_b) in registry.pair_parameters() {
+        let name = "SineAngle";
+        let _: Option<()> = try {
+            let cos = trait_impls.get_pair_invocation("CosineAngle", variable(&param_a), variable(&param_b))?;
+            let scalar = match cos.data_type_hint {
+                Some(DataType::MultiVector(scalar)) => scalar,
+                _ => continue
+            };
+            let one = trait_impls.get_class_invocation("One", scalar)?;
+            let const2 = Expression {
+                size: 1,
+                content: ExpressionContent::Constant(DataType::Integer, vec![2]),
+                data_type_hint: Some(DataType::Integer)
+            };
+            let pow2 = trait_impls.get_pair_invocation("Powi", cos, const2)?;
+            let sub = trait_impls.get_pair_invocation("Sub", one, pow2)?;
+            let sqrt = trait_impls.get_single_invocation("Sqrt", sub)?;
+            let sine = single_expression_pair_trait_impl(name, &param_a, &param_b, sqrt);
+            emitter.emit(&sine).unwrap();
+            trait_impls.add_pair_impl(name, param_a, param_b, sine);
         };
     }
 
