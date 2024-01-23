@@ -1,8 +1,9 @@
 use crate::{
-    algebra::{BasisElement, BasisElementIndex, Involution, MultiVectorClass, MultiVectorClassRegistry, Product},
+    algebra::{Involution, MultiVectorClass, MultiVectorClassRegistry, Product},
     ast::{AstNode, DataType, Expression, ExpressionContent, Parameter},
 };
-use crate::algebra::GeometricAlgebra;
+use crate::algebra::basis_element::{BasisElement, BasisElementIndex};
+use crate::algebra::GeometricAlgebraTrait;
 
 #[macro_export]
 macro_rules! result_of_trait {
@@ -664,131 +665,6 @@ impl MultiVectorClass {
         }
     }
 
-    pub fn derive_squared_magnitude<'a>(
-        name: &'static str,
-        scalar_product: &AstNode<'a>,
-        involution: &AstNode<'a>,
-        parameter_a: &Parameter<'a>,
-    ) -> AstNode<'a> {
-        let scalar_product_result = result_of_trait!(scalar_product);
-        let involution_result = result_of_trait!(involution);
-        AstNode::TraitImplementation {
-            result: Parameter {
-                name,
-                data_type: scalar_product_result.data_type.clone(),
-            },
-            parameters: vec![parameter_a.clone()],
-            body: vec![AstNode::ReturnStatement {
-                expression: Box::new(Expression {
-                    size: 1,
-                    content: ExpressionContent::InvokeInstanceMethod(
-                        parameter_a.data_type.clone(),
-                        Box::new(Expression {
-                            size: 1,
-                            content: ExpressionContent::Variable(parameter_a.name),
-                            data_type_hint: Some(parameter_a.data_type.clone())
-                        }),
-                        scalar_product_result.name,
-                        vec![(
-                            DataType::MultiVector(involution_result.multi_vector_class()),
-                            Expression {
-                                size: 1,
-                                content: ExpressionContent::InvokeInstanceMethod(
-                                    parameter_a.data_type.clone(),
-                                    Box::new(Expression {
-                                        size: 1,
-                                        content: ExpressionContent::Variable(parameter_a.name),
-                                        data_type_hint: Some(parameter_a.data_type.clone())
-                                    }),
-                                    involution_result.name,
-                                    vec![],
-                                ),
-                                data_type_hint: Some(involution_result.data_type.clone())
-                            },
-                        )],
-                    ),
-                    data_type_hint: Some(scalar_product_result.data_type.clone())
-                }),
-            }],
-        }
-    }
-
-
-    pub fn derive_geometric_norm<'a>(
-        name: &'static str,
-        bulk_norm: &AstNode<'a>,
-        weight_norm: &AstNode<'a>,
-        registry: &'a MultiVectorClassRegistry,
-        parameter_a: &Parameter<'a>,
-        add: &AstNode<'a>,
-    ) -> AstNode<'a> {
-        let bulk_norm_result = result_of_trait!(bulk_norm);
-        let weight_norm_result = result_of_trait!(weight_norm);
-        let add_result = result_of_trait!(add);
-        let mut result_bases = bulk_norm_result.multi_vector_class().signature();
-        result_bases.append(&mut weight_norm_result.multi_vector_class().signature());
-
-        // eprintln!("Expected result bases {result_bases:?}");
-        // let r: HashMap<String, _> = registry.classes.iter().map(|it| (it.class_name.to_string(), it.signature())).collect();
-        // eprintln!("Available result bases {r:?}");
-
-        let result = match registry.get(&result_bases) {
-            Some(r) => r,
-            None => return AstNode::None
-        };
-
-        let do_bulk_norm = Expression {
-            size: 1,
-            content: ExpressionContent::InvokeInstanceMethod(
-                parameter_a.data_type.clone(),
-                Box::new(Expression {
-                    size: 1,
-                    content: ExpressionContent::Variable(parameter_a.name),
-                    data_type_hint: Some(parameter_a.data_type.clone())
-                }),
-                bulk_norm_result.name,
-                vec![]
-            ),
-            data_type_hint: Some(bulk_norm_result.data_type.clone())
-        };
-        let do_weight_norm = Expression {
-            size: 1,
-            content: ExpressionContent::InvokeInstanceMethod(
-                parameter_a.data_type.clone(),
-                Box::new(Expression {
-                    size: 1,
-                    content: ExpressionContent::Variable(parameter_a.name),
-                    data_type_hint: Some(parameter_a.data_type.clone())
-                }),
-                weight_norm_result.name,
-                vec![]
-            ),
-            data_type_hint: Some(weight_norm_result.data_type.clone())
-        };
-
-        let do_add = Expression {
-            size: 1,
-            content: ExpressionContent::InvokeInstanceMethod(
-                bulk_norm_result.data_type.clone(),
-                Box::new(do_bulk_norm),
-                add_result.name,
-                vec![(
-                    weight_norm_result.data_type.clone(),
-                    do_weight_norm
-                )]
-            ),
-            data_type_hint: Some(add_result.data_type.clone())
-        };
-
-        AstNode::TraitImplementation {
-            result: Parameter { name, data_type: DataType::MultiVector(&result) },
-            parameters: vec![parameter_a.clone()],
-            body: vec![AstNode::ReturnStatement {
-                expression: Box::new(do_add),
-            }]
-        }
-    }
-
     pub fn derive_unitize<'a>(
         name: &'static str,
         geometric_product: &AstNode<'a>,
@@ -917,55 +793,6 @@ impl MultiVectorClass {
                         )],
                     ),
                     data_type_hint: Some(geometric_product_result.data_type.clone())
-                }),
-            }],
-        }
-    }
-
-    pub fn derive_magnitude<'a>(name: &'static str, squared_magnitude: &AstNode<'a>, parameter_a: &Parameter<'a>) -> AstNode<'a> {
-        let squared_magnitude_result = result_of_trait!(squared_magnitude);
-        AstNode::TraitImplementation {
-            result: Parameter {
-                name,
-                data_type: squared_magnitude_result.data_type.clone(),
-            },
-            parameters: vec![parameter_a.clone()],
-            body: vec![AstNode::ReturnStatement {
-                expression: Box::new(Expression {
-                    size: 1,
-                    content: ExpressionContent::InvokeClassMethod(
-                        squared_magnitude_result.multi_vector_class(),
-                        "Constructor",
-                        vec![(
-                            DataType::SimdVector(1),
-                            Expression {
-                                size: 1,
-                                content: ExpressionContent::SquareRoot(Box::new(Expression {
-                                    size: 1,
-                                    content: ExpressionContent::Access(
-                                        Box::new(Expression {
-                                            size: 1,
-                                            content: ExpressionContent::InvokeInstanceMethod(
-                                                parameter_a.data_type.clone(),
-                                                Box::new(Expression {
-                                                    size: 1,
-                                                    content: ExpressionContent::Variable(parameter_a.name),
-                                                    data_type_hint: Some(parameter_a.data_type.clone())
-                                                }),
-                                                squared_magnitude_result.name,
-                                                vec![],
-                                            ),
-                                            data_type_hint: Some(squared_magnitude_result.data_type.clone())
-                                        }),
-                                        0,
-                                    ),
-                                    data_type_hint: None
-                                })),
-                                data_type_hint: None
-                            },
-                        )],
-                    ),
-                    data_type_hint: Some(squared_magnitude_result.data_type.clone())
                 }),
             }],
         }
@@ -1449,6 +1276,7 @@ impl MultiVectorClass {
         }
     }
 
+    // TODO I can probably make this more succinct, even with the conditional Into stuff
     pub fn derive_sandwich_product<'a>(
         name: &'static str,
         geometric_product: &AstNode<'a>,
@@ -1554,78 +1382,19 @@ impl MultiVectorClass {
         }
     }
 
-    pub fn derive_attitude<'a>(
-        name: &'static str,
-        anti_wedge: &AstNode<'a>,
-        parameter_a: &Parameter<'a>,
-        parameter_b: &Parameter<'a>,
-        non_projective_blade: &BasisElement,
-    ) -> AstNode<'a> {
-        let b_flat_basis = parameter_b.multi_vector_class().flat_basis();
-        let mut body = Vec::new();
-        let mut base_index = 0;
-        for b_group in parameter_b.multi_vector_class().grouped_basis.iter() {
-            let size = b_group.len();
-            let factors: Vec<_> = (0..size).map(|index_in_group| {
-                let b_element = &b_flat_basis[base_index + index_in_group];
-                if b_element == non_projective_blade { 1 } else { 0 }
-            }).collect();
-            let expression = Expression {
-                size,
-                data_type_hint: Some(DataType::SimdVector(size)),
-                content: ExpressionContent::Constant(DataType::SimdVector(size), factors),
-            };
-            body.push((DataType::SimdVector(size), *simplify_and_legalize(Box::new(expression))));
-            base_index += size;
-        }
-
-        let anti_wedge_result = result_of_trait!(anti_wedge);
-        AstNode::TraitImplementation {
-            result: Parameter { name, data_type: anti_wedge_result.data_type.clone() },
-            parameters: vec![parameter_a.clone()],
-            body: vec![AstNode::ReturnStatement {
-                expression: Box::new(Expression {
-                    size: 1,
-                    data_type_hint: Some(anti_wedge_result.data_type.clone()),
-                    content: ExpressionContent::InvokeInstanceMethod(
-                        parameter_a.data_type.clone(),
-                        Box::new(Expression {
-                            size: 1,
-                            data_type_hint: Some(parameter_a.data_type.clone()),
-                            content: ExpressionContent::Variable(parameter_a.name),
-                        }),
-                        anti_wedge_result.name,
-                        vec![(
-                            DataType::MultiVector(parameter_b.multi_vector_class()),
-                            Expression {
-                                size: 1,
-                                data_type_hint: Some(parameter_b.data_type.clone()),
-                                content: ExpressionContent::InvokeClassMethod(
-                                    parameter_b.multi_vector_class(),
-                                    "Constructor",
-                                    body
-                                ),
-                            }
-                        )]
-                    )
-                }),
-            }],
-        }
-    }
-
-    pub fn derive_bulk_or_weight<'a>(
+    pub fn derive_bulk_or_weight<'a, GA: GeometricAlgebraTrait>(
         name: &'static str,
         parameter_a: &Parameter<'a>,
         projective_basis: &BasisElement,
         is_projective: bool,
-        algebra: &GeometricAlgebra,
+        algebra: &GA,
         registry: &'a MultiVectorClassRegistry,
     ) -> AstNode<'a> {
 
         let mut result_signature = Vec::new();
         let a_flat_basis = parameter_a.multi_vector_class().flat_basis();
         for a_element in a_flat_basis.iter() {
-            let product_scalar = BasisElement::product(projective_basis, a_element, algebra).scalar;
+            let product_scalar = algebra.product(projective_basis, a_element).scalar;
             if is_projective && product_scalar == 0isize {
                 result_signature.push(a_element.index)
             } else if !is_projective && product_scalar != 0isize {
@@ -1672,7 +1441,7 @@ impl MultiVectorClass {
                 .map(|index_in_group| {
                     let result_element = &result_flat_basis[base_index + index_in_group];
                     let index_in_a = a_flat_basis.iter().position(|a_element| a_element == result_element).unwrap();
-                    let result_element_is_projective = BasisElement::product(projective_basis, result_element, algebra).scalar == 0isize;
+                    let result_element_is_projective = algebra.product(projective_basis, result_element).scalar == 0isize;
                     let scalar = if is_projective == result_element_is_projective {
                             1isize
                         } else {

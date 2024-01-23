@@ -1,152 +1,25 @@
+use basis_element::{BasisElement, BasisElementIndex};
+use crate::algebra::dialect::Dialect;
 use crate::ast::{DataType, Parameter};
 
-pub struct GeometricAlgebra<'a> {
-    pub generator_squares: &'a [isize],
-}
+pub mod basis_element;
+pub mod rigid;
+pub mod conformal;
+pub mod dialect;
 
-impl<'a> GeometricAlgebra<'a> {
-    pub fn basis_size(&self) -> usize {
-        1 << self.generator_squares.len()
-    }
+pub trait GeometricAlgebraTrait {
+    fn algebra_name(&self) -> &'static str;
+    fn dialect(&self) -> &Dialect;
+    fn parse(&self, name: &str) -> BasisElement;
 
-    pub fn basis(&self) -> impl Iterator<Item = BasisElement> + '_ {
-        (0..self.basis_size() as BasisElementIndex).map(move |index| {
-            let mut element = BasisElement::from_index(index);
-            let dual = element.dual(self);
-            if dual.cmp(&element) == std::cmp::Ordering::Less {
-                element.scalar = element.dual(self).scalar;
-            }
-            element
-        })
-    }
+    fn basis_size(&self) -> usize;
+    fn basis(&self) -> Vec<BasisElement>;
 
-    pub fn sorted_basis(&self) -> Vec<BasisElement> {
-        let mut basis_elements = self.basis().collect::<Vec<BasisElement>>();
-        basis_elements.sort();
-        basis_elements
-    }
-}
-
-pub type BasisElementIndex = u16;
-
-#[derive(Clone, PartialEq, Eq, Hash, Debug)]
-pub struct BasisElement {
-    pub scalar: isize,
-    pub index: BasisElementIndex,
-}
-
-impl BasisElement {
-    pub fn from_index(index: BasisElementIndex) -> Self {
-        Self { scalar: 1, index }
-    }
-
-    pub fn parse(mut name: &str, algebra: &GeometricAlgebra) -> Self {
-        let mut result = Self::from_index(0);
-        if name.starts_with('-') {
-            name = &name[1..];
-            result.scalar = -1;
-        }
-        if name == "1" {
-            return result;
-        }
-        let mut generator_indices = name.chars();
-        assert_eq!(generator_indices.next().unwrap(), 'e');
-        for generator_index in generator_indices {
-            let generator_index = generator_index.to_digit(16).unwrap();
-            assert!((generator_index as usize) < algebra.generator_squares.len());
-            result = BasisElement::product(&result, &Self::from_index(1 << generator_index), algebra);
-        }
-        result
-    }
-
-    pub fn grade(&self) -> usize {
-        self.index.count_ones() as usize
-    }
-
-    pub fn component_bits(&self) -> impl Iterator<Item = usize> + '_ {
-        (0..std::mem::size_of::<BasisElementIndex>() * 8).filter(move |index| (self.index >> index) & 1 != 0)
-    }
-
-    pub fn dual(&self, algebra: &GeometricAlgebra) -> Self {
-        let mut result = Self {
-            scalar: self.scalar,
-            index: algebra.basis_size() as BasisElementIndex - 1 - self.index,
-        };
-        result.scalar *= BasisElement::product(self, &result, algebra).scalar;
-        result
-    }
-
-    pub fn other_dual(&self, algebra: &GeometricAlgebra) -> Self {
-        let mut result = Self {
-            scalar: self.scalar,
-            index: algebra.basis_size() as BasisElementIndex - 1 - self.index,
-        };
-        result.scalar *= BasisElement::product(&result, self, algebra).scalar;
-        result
-    }
-
-    pub fn product(a: &Self, b: &Self, algebra: &GeometricAlgebra) -> Self {
-        let commutations = a.component_bits().fold((0, a.index, b.index), |(commutations, a, b), index| {
-            let hurdles_a = a & (BasisElementIndex::MAX << (index + 1));
-            let hurdles_b = b & ((1 << index) - 1);
-            (
-                commutations + Self::from_index(hurdles_a | hurdles_b).grade(),
-                a & !(1 << index),
-                b ^ (1 << index),
-            )
-        });
-        Self {
-            scalar: Self::from_index(a.index & b.index)
-                .component_bits()
-                .map(|i| algebra.generator_squares[i])
-                .fold(a.scalar * b.scalar * if commutations.0 % 2 == 0 { 1 } else { -1 }, |a, b| a * b),
-            index: a.index ^ b.index,
-        }
-    }
-
-    // TODO this will probably be useful for CGA
-    pub fn sum(a: &Self, b: &Self, algebra: &GeometricAlgebra) -> Self {
-        todo!()
-    }
-}
-
-impl std::fmt::Display for BasisElement {
-    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        let name = format!("e{}", self.component_bits().map(|index| format!("{:X}", index)).collect::<String>());
-        formatter.pad_integral(
-            self.scalar >= 0,
-            "",
-            if self.scalar == 0 {
-                "0"
-            } else if self.index == 0 {
-                "1"
-            } else {
-                name.as_str()
-            },
-        )
-    }
-}
-
-impl std::cmp::Ord for BasisElement {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        let grades_order = self.grade().cmp(&other.grade());
-        if grades_order != std::cmp::Ordering::Equal {
-            return grades_order;
-        }
-        let a_without_b = self.index & (!other.index);
-        let b_without_a = other.index & (!self.index);
-        if a_without_b.trailing_zeros() < b_without_a.trailing_zeros() {
-            std::cmp::Ordering::Less
-        } else {
-            std::cmp::Ordering::Greater
-        }
-    }
-}
-
-impl std::cmp::PartialOrd for BasisElement {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        Some(self.cmp(other))
-    }
+    fn scalar_element(&self) -> BasisElement;
+    fn anti_scalar_element(&self) -> BasisElement;
+    fn right_complement(&self, a: &BasisElement) -> BasisElement;
+    fn left_complement(&self, a: &BasisElement) -> BasisElement;
+    fn product(&self, a: &BasisElement, b: &BasisElement) -> BasisElement;
 }
 
 #[derive(Clone)]
@@ -155,9 +28,9 @@ pub struct Involution {
 }
 
 impl Involution {
-    pub fn identity(algebra: &GeometricAlgebra) -> Self {
+    pub fn  identity<GA: GeometricAlgebraTrait>(algebra: &GA) -> Self {
         Self {
-            terms: algebra.basis().map(|element| (element.clone(), element)).collect(),
+            terms: algebra.basis().into_iter().map(|element| (element.clone(), element)).collect(),
         }
     }
 
@@ -177,32 +50,34 @@ impl Involution {
                 .iter()
                 .map(|(key, value)| {
                     let mut element = value.clone();
-                    element.scalar *= if grade_negation(value.grade()) { -1 } else { 1 };
+                    element.set_coefficient(if grade_negation(value.grade()) { -1 } else { 1 });
                     (key.clone(), element)
                 })
                 .collect(),
         }
     }
 
-    pub fn right_complement(&self, algebra: &GeometricAlgebra) -> Self {
+    pub fn right_complement<GA: GeometricAlgebraTrait>(&self, algebra: &GA) -> Self {
         Self {
-            terms: self.terms.iter().map(|(key, value)| (key.clone(), value.dual(algebra))).collect(),
+            terms: self.terms.iter().map(|(key, value)| (key.clone(), algebra.right_complement(value))).collect(),
         }
     }
 
-    pub fn left_complement(&self, algebra: &GeometricAlgebra) -> Self {
+    pub fn left_complement<GA: GeometricAlgebraTrait>(&self, algebra: &GA) -> Self {
         Self {
-            terms: self.terms.iter().map(|(key, value)| (key.clone(), value.other_dual(algebra))).collect(),
+            terms: self.terms.iter().map(|(key, value)| (key.clone(), algebra.left_complement(value))).collect(),
         }
     }
 
-    pub fn double_complement(&self, algebra: &GeometricAlgebra) -> Self {
+    pub fn double_complement<GA: GeometricAlgebraTrait>(&self, algebra: &GA) -> Self {
         Self {
-            terms: self.terms.iter().map(|(key, value)| (key.clone(), value.dual(algebra).dual(algebra))).collect(),
+            terms: self.terms.iter().map(|(key, value)| {
+                (key.clone(), algebra.right_complement(&algebra.right_complement(value)))
+            }).collect(),
         }
     }
 
-    pub fn involutions(algebra: &GeometricAlgebra) -> Vec<(&'static str, Self)> {
+    pub fn involutions<GA: GeometricAlgebraTrait>(algebra: &GA) -> Vec<(&'static str, Self)> {
         let involution = Self::identity(algebra);
         let dimensions = algebra.basis_size();
         vec![
@@ -236,18 +111,18 @@ pub struct Product {
 }
 
 impl Product {
-    pub fn new(a: &[BasisElement], b: &[BasisElement], algebra: &GeometricAlgebra) -> Self {
+    pub fn new<GA: GeometricAlgebraTrait>(a: &[BasisElement], b: &[BasisElement], algebra: &GA) -> Self {
         Self {
             terms: a
                 .iter()
                 .flat_map(|a| {
                     b.iter().map(move |b| ProductTerm {
-                        product: BasisElement::product(a, b, algebra),
+                        product: algebra.product(a, b),
                         factor_a: a.clone(),
                         factor_b: b.clone(),
                     })
                 })
-                .filter(|term| term.product.scalar != 0)
+                .filter(|term| term.product.get_coefficient() != 0)
                 .collect(),
         }
     }
@@ -266,52 +141,92 @@ impl Product {
         }
     }
 
-    pub fn dual(&self, algebra: &GeometricAlgebra) -> Self {
+    pub fn dual<GA: GeometricAlgebraTrait>(&self, algebra: &GA) -> Self {
         Self {
             terms: self
                 .terms
                 .iter()
-                .map(|term| ProductTerm {
-                    product: term.product.dual(algebra),
-                    factor_a: term.factor_a.dual(algebra),
-                    factor_b: term.factor_b.dual(algebra),
+                .map(|term| {
+                    ProductTerm {
+                        product: algebra.right_complement(&term.product),
+                        factor_a: algebra.right_complement(&term.factor_a),
+                        factor_b: algebra.right_complement(&term.factor_b),
+                    }
                 })
                 .collect(),
         }
     }
 
-    pub fn products(algebra: &GeometricAlgebra) -> Vec<(&'static str, Self)> {
-        let basis = algebra.basis().collect::<Vec<_>>();
+    pub fn products<GA: GeometricAlgebraTrait>(algebra: &GA) -> Vec<(&'static str, Self)> {
+        let basis = algebra.basis();
         let product = Self::new(&basis, &basis, algebra);
-        vec![
-            ("GeometricProduct", product.clone()),
-            ("GeometricAntiProduct", product.clone().dual(algebra)),
 
-            // These 3 things are synonyms
-            ("RegressiveProduct", product.projected(|r, s, t| t == r + s).dual(algebra)),
-            ("AntiWedge", product.projected(|r, s, t| t == r + s).dual(algebra)),
-            ("Meet", product.projected(|r, s, t| t == r + s).dual(algebra)),
+        let wedge_like: fn(usize, usize, usize) -> bool = |factor_a_grade, factor_b_grade, product_grade| {
+            product_grade == factor_a_grade + factor_b_grade
+        };
+        let scalar_result_only: fn(usize, usize, usize) -> bool = |_, _, product_grade| {
+            product_grade == 0
+        };
+        let product_and_a_is_b: fn(usize, usize, usize) -> bool = |factor_a_grade, factor_b_grade, product_grade| {
+            product_grade + factor_a_grade == factor_b_grade
+        };
+        let product_and_b_is_a: fn(usize, usize, usize) -> bool = |factor_a_grade, factor_b_grade, product_grade| {
+            product_grade + factor_b_grade == factor_a_grade
+        };
+
+        let dialect = algebra.dialect();
+        let mut products = vec![];
 
 
+        // https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_products
 
-            ("OuterProduct", product.projected(|r, s, t| t == r + s)),
-            ("Wedge", product.projected(|r, s, t| t == r + s)),
-            ("Join", product.projected(|r, s, t| t == r + s)),
+        for name in &dialect.geometric_product {
+            products.push((*name, product.clone()))
+        }
+        for name in &dialect.geometric_anti_product {
+            products.push((*name, product.clone().dual(algebra)))
+        }
 
-            ("InnerProduct", product.projected(|r, s, t| t == (r as isize - s as isize).unsigned_abs())),
-            ("InnerAntiProduct", product.projected(|r, s, t| t == (r as isize - s as isize).unsigned_abs()).dual(algebra)),
 
-            ("LeftContraction", product.projected(|r, s, t| t as isize == s as isize - r as isize)),
-            ("RightContraction", product.projected(|r, s, t| t as isize == r as isize - s as isize)),
-            ("LeftAntiContraction", product.projected(|r, s, t| t as isize == s as isize - r as isize).dual(algebra)),
-            ("RightAntiContraction", product.projected(|r, s, t| t as isize == r as isize - s as isize).dual(algebra)),
+        // https://rigidgeometricalgebra.org/wiki/index.php?title=Exterior_products
 
-            ("ScalarProduct", product.projected(|_r, _s, t| t == 0)),
-            ("Dot", product.projected(|_r, _s, t| t == 0)),
+        for name in &dialect.exterior_product {
+            products.push((*name, product.projected(wedge_like)))
+        }
+        for name in &dialect.exterior_anti_product {
+            products.push((*name, product.projected(wedge_like).dual(algebra)))
+        }
 
-            ("AntiScalarProduct", product.projected(|_r, _s, t| t == 0).dual(algebra)),
-            ("AntiDot", product.projected(|_r, _s, t| t == 0).dual(algebra)),
-        ]
+
+        // https://rigidgeometricalgebra.org/wiki/index.php?title=Interior_products
+
+        // TODO check that the correct predicates are used for the anti_products here, since left and right
+        //  kind of switch places on the anti_product. See Cayley tables.
+
+        for name in &dialect.left_interior_product {
+            products.push((*name, product.projected(product_and_a_is_b)))
+        }
+        for name in &dialect.left_interior_anti_product {
+            products.push((*name, product.projected(product_and_a_is_b).dual(algebra)))
+        }
+        for name in &dialect.right_interior_product {
+            products.push((*name, product.projected(product_and_b_is_a)))
+        }
+        for name in &dialect.right_interior_anti_product {
+            products.push((*name, product.projected(product_and_b_is_a).dual(algebra)))
+        }
+
+
+        // https://rigidgeometricalgebra.org/wiki/index.php?title=Dot_products
+
+        for name in &dialect.dot_product {
+            products.push((*name, product.projected(scalar_result_only)))
+        }
+        for name in &dialect.anti_dot_product {
+            products.push((*name, product.projected(scalar_result_only).dual(algebra)))
+        }
+
+        products
     }
 }
 
@@ -322,7 +237,7 @@ pub struct MultiVectorClassRegistry {
 }
 
 impl MultiVectorClassRegistry {
-    pub fn single_parameters(&self) -> impl Iterator<Item=Parameter> {
+    pub fn single_parameters<'r>(&'r self) -> impl Iterator<Item=Parameter<'r>> {
         self.classes.iter().map(|class_a| {
             Parameter {
                 name: "self",
