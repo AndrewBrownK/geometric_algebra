@@ -927,21 +927,18 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     /// https://rigidgeometricalgebra.org/wiki/index.php?title=Attitude
     /// https://conformalgeometricalgebra.org/wiki/index.php?title=Attitude
     /// Note that e4 (article) = e3 (codegen) = Origin (MultivectorClass, One)
-    pub fn attitude_and_dependencies<'s, 'e>(&'s mut self, origin_class_name: &str, registry: &'r MultiVectorClassRegistry, emitter: &'e mut Emitter<std::fs::File>) {
+    pub fn attitude_and_dependencies<'s, 'e>(&'s mut self, horizon_class_name: &str, registry: &'r MultiVectorClassRegistry, emitter: &'e mut Emitter<std::fs::File>) {
 
         // Attitude
         for param_a in registry.single_parameters() {
             let name = "Attitude";
             let _: Option<()> = try {
-                let origin = registry.classes.iter().find(|it| it.class_name == origin_class_name)?;
-                let one = self.trait_impls.get_class_invocation("One", origin)?;
-                let rc = self.trait_impls.get_single_invocation("RightComplement", one)?;
+                let horizon = registry.classes.iter().find(|it| it.class_name == horizon_class_name)?;
+                let one = self.trait_impls.get_class_invocation("One", horizon)?;
                 let anti_wedge = self.algebra.dialect().exterior_anti_product.first()?;
-                let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_a), rc)?;
+                let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_a), one)?;
                 let attitude = single_expression_single_trait_impl(name, &param_a, anti_wedge);
 
-                // TODO do I need to do any special output type derivation? or does it figure itself out
-                //  on its own?
                 emitter.emit(&attitude).unwrap();
                 self.trait_impls.add_single_impl(name, param_a.clone(), attitude);
             };

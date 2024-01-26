@@ -38018,7 +38018,7 @@ impl Attitude for AntiScalar {
     type Output = Horizon;
 
     fn attitude(self) -> Horizon {
-        self.anti_wedge(Origin::one().right_complement())
+        self.anti_wedge(Horizon::one())
     }
 }
 
@@ -38026,7 +38026,7 @@ impl Attitude for Magnitude {
     type Output = Horizon;
 
     fn attitude(self) -> Horizon {
-        self.anti_wedge(Origin::one().right_complement())
+        self.anti_wedge(Horizon::one())
     }
 }
 
@@ -38034,7 +38034,7 @@ impl Attitude for Point {
     type Output = Scalar;
 
     fn attitude(self) -> Scalar {
-        self.anti_wedge(Origin::one().right_complement())
+        self.anti_wedge(Horizon::one())
     }
 }
 
@@ -38042,7 +38042,7 @@ impl Attitude for Origin {
     type Output = Scalar;
 
     fn attitude(self) -> Scalar {
-        self.anti_wedge(Origin::one().right_complement())
+        self.anti_wedge(Horizon::one())
     }
 }
 
@@ -38050,7 +38050,7 @@ impl Attitude for Line {
     type Output = PointAtInfinity;
 
     fn attitude(self) -> PointAtInfinity {
-        self.anti_wedge(Origin::one().right_complement())
+        self.anti_wedge(Horizon::one())
     }
 }
 
@@ -38058,7 +38058,7 @@ impl Attitude for LineAtOrigin {
     type Output = PointAtInfinity;
 
     fn attitude(self) -> PointAtInfinity {
-        self.anti_wedge(Origin::one().right_complement())
+        self.anti_wedge(Horizon::one())
     }
 }
 
@@ -38066,7 +38066,7 @@ impl Attitude for Plane {
     type Output = LineAtInfinity;
 
     fn attitude(self) -> LineAtInfinity {
-        self.anti_wedge(Origin::one().right_complement())
+        self.anti_wedge(Horizon::one())
     }
 }
 
@@ -38074,7 +38074,7 @@ impl Attitude for PlaneAtOrigin {
     type Output = LineAtInfinity;
 
     fn attitude(self) -> LineAtInfinity {
-        self.anti_wedge(Origin::one().right_complement())
+        self.anti_wedge(Horizon::one())
     }
 }
 
@@ -38082,7 +38082,7 @@ impl Attitude for Motor {
     type Output = Flector;
 
     fn attitude(self) -> Flector {
-        self.anti_wedge(Origin::one().right_complement())
+        self.anti_wedge(Horizon::one())
     }
 }
 
@@ -38090,7 +38090,7 @@ impl Attitude for Rotor {
     type Output = Flector;
 
     fn attitude(self) -> Flector {
-        self.anti_wedge(Origin::one().right_complement())
+        self.anti_wedge(Horizon::one())
     }
 }
 
@@ -38098,7 +38098,7 @@ impl Attitude for Translator {
     type Output = Horizon;
 
     fn attitude(self) -> Horizon {
-        self.anti_wedge(Origin::one().right_complement())
+        self.anti_wedge(Horizon::one())
     }
 }
 
@@ -38106,7 +38106,7 @@ impl Attitude for Flector {
     type Output = MultiVector;
 
     fn attitude(self) -> MultiVector {
-        self.anti_wedge(Origin::one().right_complement())
+        self.anti_wedge(Horizon::one())
     }
 }
 
@@ -38114,7 +38114,7 @@ impl Attitude for MultiVector {
     type Output = MultiVector;
 
     fn attitude(self) -> MultiVector {
-        self.anti_wedge(Origin::one().right_complement())
+        self.anti_wedge(Horizon::one())
     }
 }
 

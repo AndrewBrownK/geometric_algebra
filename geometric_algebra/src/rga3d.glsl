@@ -18094,55 +18094,55 @@ Scalar plane_at_origin_plane_at_origin_cosine_angle(PlaneAtOrigin self, PlaneAtO
 }
 
 Horizon anti_scalar_attitude(AntiScalar self) {
-    return anti_scalar_horizon_anti_wedge(self, origin_right_complement(origin_one()));
+    return anti_scalar_horizon_anti_wedge(self, horizon_one());
 }
 
 Horizon magnitude_attitude(Magnitude self) {
-    return magnitude_horizon_anti_wedge(self, origin_right_complement(origin_one()));
+    return magnitude_horizon_anti_wedge(self, horizon_one());
 }
 
 Scalar point_attitude(Point self) {
-    return point_horizon_anti_wedge(self, origin_right_complement(origin_one()));
+    return point_horizon_anti_wedge(self, horizon_one());
 }
 
 Scalar origin_attitude(Origin self) {
-    return origin_horizon_anti_wedge(self, origin_right_complement(origin_one()));
+    return origin_horizon_anti_wedge(self, horizon_one());
 }
 
 PointAtInfinity line_attitude(Line self) {
-    return line_horizon_anti_wedge(self, origin_right_complement(origin_one()));
+    return line_horizon_anti_wedge(self, horizon_one());
 }
 
 PointAtInfinity line_at_origin_attitude(LineAtOrigin self) {
-    return line_at_origin_horizon_anti_wedge(self, origin_right_complement(origin_one()));
+    return line_at_origin_horizon_anti_wedge(self, horizon_one());
 }
 
 LineAtInfinity plane_attitude(Plane self) {
-    return plane_horizon_anti_wedge(self, origin_right_complement(origin_one()));
+    return plane_horizon_anti_wedge(self, horizon_one());
 }
 
 LineAtInfinity plane_at_origin_attitude(PlaneAtOrigin self) {
-    return plane_at_origin_horizon_anti_wedge(self, origin_right_complement(origin_one()));
+    return plane_at_origin_horizon_anti_wedge(self, horizon_one());
 }
 
 Flector motor_attitude(Motor self) {
-    return motor_horizon_anti_wedge(self, origin_right_complement(origin_one()));
+    return motor_horizon_anti_wedge(self, horizon_one());
 }
 
 Flector rotor_attitude(Rotor self) {
-    return rotor_horizon_anti_wedge(self, origin_right_complement(origin_one()));
+    return rotor_horizon_anti_wedge(self, horizon_one());
 }
 
 Horizon translator_attitude(Translator self) {
-    return translator_horizon_anti_wedge(self, origin_right_complement(origin_one()));
+    return translator_horizon_anti_wedge(self, horizon_one());
 }
 
 MultiVector flector_attitude(Flector self) {
-    return flector_horizon_anti_wedge(self, origin_right_complement(origin_one()));
+    return flector_horizon_anti_wedge(self, horizon_one());
 }
 
 MultiVector multi_vector_attitude(MultiVector self) {
-    return multi_vector_horizon_anti_wedge(self, origin_right_complement(origin_one()));
+    return multi_vector_horizon_anti_wedge(self, horizon_one());
 }
 
 Magnitude scalar_motor_distance(Scalar self, Motor other) {

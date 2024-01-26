@@ -64,5 +64,5 @@ fn main() {
     // TODO fancy norms
     // code_gen.fancy_norms()
     code_gen.post_norm_universal_stuff(&registry, &mut emitter);
-    code_gen.attitude_and_dependencies("Origin", &registry, &mut emitter);
+    code_gen.attitude_and_dependencies("Horizon", &registry, &mut emitter);
 }
