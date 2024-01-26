@@ -439,30 +439,28 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
     /// Step 2: Create some basic norms
     pub fn basic_norms<'s, 'e>(&'s mut self, registry: &'r MultiVectorClassRegistry, emitter: &'e mut Emitter<std::fs::File>) {
-        // for param_a in registry.single_parameters() {
-        //     let name = "SquaredMagnitude";
-        //     let _: Option<()> = try {
-        //         let reversal = self.trait_impls.get_single_invocation("Reversal", variable(&param_a))?;
-        //         let dot = self.algebra.dialect().dot_product.first()?;
-        //         let dot = self.trait_impls.get_pair_invocation(dot, variable(&param_a), reversal)?;
-        //         let squared_magnitude = single_expression_single_trait_impl(name, &param_a, dot);
-        //         emitter.emit(&squared_magnitude).unwrap();
-        //         self.trait_impls.add_single_impl(name, param_a.clone(), squared_magnitude);
-        //     };
-        // }
-        //
-        // for param_a in registry.single_parameters() {
-        //     let name = "Magnitude";
-        //     let _: Option<()> = try {
-        //         let sm = self.trait_impls.get_single_invocation("SquaredMagnitude", variable(&param_a))?;
-        //         let m = self.trait_impls.get_single_invocation("Sqrt", sm)?;
-        //         let magnitude = single_expression_single_trait_impl(name, &param_a, m);
-        //         emitter.emit(&magnitude).unwrap();
-        //         self.trait_impls.add_single_impl(name, param_a.clone(), magnitude);
-        //     };
-        // }
 
-        // TODO BulkNormSquared, WeightNormSquared
+        for param_a in registry.single_parameters() {
+            let name = "BulkNormSquared";
+            let _: Option<()> = try {
+                let dot = self.algebra.dialect().dot_product.first()?;
+                let dot = self.trait_impls.get_pair_invocation(dot, variable(&param_a), variable(&param_a))?;
+                let bulk_norm = single_expression_single_trait_impl(name, &param_a, dot);
+                emitter.emit(&bulk_norm).unwrap();
+                self.trait_impls.add_single_impl(name, param_a.clone(), bulk_norm);
+            };
+        }
+
+        for param_a in registry.single_parameters() {
+            let name = "WeightNormSquared";
+            let _: Option<()> = try {
+                let dot = self.algebra.dialect().anti_dot_product.first()?;
+                let dot = self.trait_impls.get_pair_invocation(dot, variable(&param_a), variable(&param_a))?;
+                let bulk_norm = single_expression_single_trait_impl(name, &param_a, dot);
+                emitter.emit(&bulk_norm).unwrap();
+                self.trait_impls.add_single_impl(name, param_a.clone(), bulk_norm);
+            };
+        }
 
         for param_a in registry.single_parameters() {
             let name = "BulkNorm";
