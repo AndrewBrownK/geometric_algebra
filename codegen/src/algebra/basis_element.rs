@@ -43,7 +43,7 @@ impl BasisElement {
 
 impl std::fmt::Display for BasisElement {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        let name = format!("e{}", self.component_bases().map(|index| format!("{:X}", index)).collect::<String>());
+        let name = format!("e{}", self.component_bases().map(|index| format!("{:X}", index + 1)).collect::<String>());
         formatter.pad_integral(
             self.scalar >= 0,
             "",

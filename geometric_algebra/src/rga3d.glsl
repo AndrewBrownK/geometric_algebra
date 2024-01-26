@@ -4,96 +4,96 @@ struct Scalar {
 };
 
 struct AntiScalar {
-    // e0123
+    // e1234
     float g0;
 };
 
 struct Magnitude {
-    // 1, e0123
+    // 1, e1234
     vec2 g0;
 };
 
 struct Point {
-    // e0, e1, e2, e3
+    // e1, e2, e3, e4
     vec4 g0;
 };
 
 struct Origin {
-    // e3
+    // e4
     float g0;
 };
 
 struct PointAtInfinity {
-    // e0, e1, e2
+    // e1, e2, e3
     vec3 g0;
 };
 
 struct Line {
-    // -e03, -e13, -e23
+    // -e14, -e24, -e34
     vec3 g0;
-    // e12, -e02, e01
+    // e23, -e13, e12
     vec3 g1;
 };
 
 struct LineAtOrigin {
-    // -e03, -e13, -e23
+    // -e14, -e24, -e34
     vec3 g0;
 };
 
 struct LineAtInfinity {
-    // e12, -e02, e01
+    // e23, -e13, e12
     vec3 g0;
 };
 
 struct Plane {
-    // e123, -e023, e013, -e012
+    // e234, -e134, e124, -e123
     vec4 g0;
 };
 
 struct PlaneAtOrigin {
-    // e123, -e023, e013
+    // e234, -e134, e124
     vec3 g0;
 };
 
 struct PlaneAtInfinity {
-    // -e012
+    // -e123
     float g0;
 };
 
 struct Motor {
-    // -e03, -e13, -e23, e0123
+    // -e14, -e24, -e34, e1234
     vec4 g0;
-    // e12, -e02, e01
+    // e23, -e13, e12
     vec3 g1;
 };
 
 struct Rotor {
-    // -e03, -e13, -e23, e0123
+    // -e14, -e24, -e34, e1234
     vec4 g0;
 };
 
 struct Translator {
-    // e12, -e02, e01, e0123
+    // e23, -e13, e12, e1234
     vec4 g0;
 };
 
 struct Flector {
-    // e0, e1, e2, e3
+    // e1, e2, e3, e4
     vec4 g0;
-    // e123, -e023, e013, -e012
+    // e234, -e134, e124, -e123
     vec4 g1;
 };
 
 struct MultiVector {
-    // 1, e0123
+    // 1, e1234
     vec2 g0;
-    // e0, e1, e2, e3
+    // e1, e2, e3, e4
     vec4 g1;
-    // -e03, -e13, -e23
+    // -e14, -e24, -e34
     vec3 g2;
-    // e12, -e02, e01
+    // e23, -e13, e12
     vec3 g3;
-    // e123, -e023, e013, -e012
+    // e234, -e134, e124, -e123
     vec4 g4;
 };
 

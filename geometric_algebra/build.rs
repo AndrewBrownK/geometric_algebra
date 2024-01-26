@@ -10,32 +10,32 @@ fn main() {
     let mv_iter =
         "\
         Scalar:1;\
-        AntiScalar:e0123;\
-        Magnitude:1,e0123;\
+        AntiScalar:e1234;\
+        Magnitude:1,e1234;\
         \
-        Point:e0,e1,e2,e3;\
-        Origin:e3;\
-        PointAtInfinity:e0,e1,e2;\
+        Point:e1,e2,e3,e4;\
+        Origin:e4;\
+        PointAtInfinity:e1,e2,e3;\
         \
-        Line:e30,e31,e32|e12,e20,e01;\
-        LineAtOrigin:e30,e31,e32;\
-        LineAtInfinity:e12,e20,e01;\
+        Line:e41,e42,e43|e23,e31,e12;\
+        LineAtOrigin:e41,e42,e43;\
+        LineAtInfinity:e23,e31,e12;\
         \
-        Plane:e312,e320,e301,e210;\
-        PlaneAtOrigin:e312,e320,e301;\
-        PlaneAtInfinity:e210;\
+        Plane:e423,e431,e412,e321;\
+        PlaneAtOrigin:e423,e431,e412;\
+        PlaneAtInfinity:e321;\
         \
-        Motor:e30,e31,e32,e0123|e12,e20,e01;\
-        Rotor:e30,e31,e32,e0123;\
-        Translator:e12,e20,e01,e0123;\
+        Motor:e41,e42,e43,e1234|e23,e31,e12;\
+        Rotor:e41,e42,e43,e1234;\
+        Translator:e23,e31,e12,e1234;\
         \
-        Flector:e0,e1,e2,e3|e312,e320,e301,e210;\
+        Flector:e1,e2,e3,e4|e423,e431,e412,e321;\
         \
         MultiVector:\
-            1,e0123|\
-            e0,e1,e2,e3|\
-            e30,e31,e32|e12,e20,e01|\
-            e312,e320,e301,e210\
+            1,e1234|\
+            e1,e2,e3,e4|\
+            e41,e42,e43|e23,e31,e12|\
+            e423,e431,e412,e321\
         ".split(';');
 
 

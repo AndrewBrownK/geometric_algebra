@@ -55,6 +55,10 @@ impl<'a> GeometricAlgebraTrait for RigidGeometricAlgebra<'a> {
         assert_eq!(generator_indices.next().unwrap(), 'e');
         for generator_index in generator_indices {
             let generator_index = generator_index.to_digit(16).unwrap();
+            if generator_index == 0 {
+                panic!("Please do not use e0, and instead start from e1")
+            }
+            let generator_index = generator_index - 1;
             assert!((generator_index as usize) < self.generator_squares.len());
             result = self.product(&result, &BasisElement::from_index(1 << generator_index));
         }

@@ -72,14 +72,14 @@ impl std::fmt::Debug for Scalar {
 
 #[derive(Clone, Copy)]
 struct AntiScalarGroups {
-    /// e0123
+    /// e1234
     g0: f32,
 }
 
 #[derive(Clone, Copy)]
 pub union AntiScalar {
     groups: AntiScalarGroups,
-    /// e0123
+    /// e1234
     elements: [f32; 1],
 }
 
@@ -133,21 +133,21 @@ impl std::fmt::Debug for AntiScalar {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
         formatter
             .debug_struct("AntiScalar")
-            .field("e0123", &self[0])
+            .field("e1234", &self[0])
             .finish()
     }
 }
 
 #[derive(Clone, Copy)]
 struct MagnitudeGroups {
-    /// 1, e0123
+    /// 1, e1234
     g0: Simd32x2,
 }
 
 #[derive(Clone, Copy)]
 pub union Magnitude {
     groups: MagnitudeGroups,
-    /// 1, e0123, 0, 0
+    /// 1, e1234, 0, 0
     elements: [f32; 4],
 }
 
@@ -202,21 +202,21 @@ impl std::fmt::Debug for Magnitude {
         formatter
             .debug_struct("Magnitude")
             .field("1", &self[0])
-            .field("e0123", &self[1])
+            .field("e1234", &self[1])
             .finish()
     }
 }
 
 #[derive(Clone, Copy)]
 struct PointGroups {
-    /// e0, e1, e2, e3
+    /// e1, e2, e3, e4
     g0: Simd32x4,
 }
 
 #[derive(Clone, Copy)]
 pub union Point {
     groups: PointGroups,
-    /// e0, e1, e2, e3
+    /// e1, e2, e3, e4
     elements: [f32; 4],
 }
 
@@ -270,24 +270,24 @@ impl std::fmt::Debug for Point {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
         formatter
             .debug_struct("Point")
-            .field("e0", &self[0])
-            .field("e1", &self[1])
-            .field("e2", &self[2])
-            .field("e3", &self[3])
+            .field("e1", &self[0])
+            .field("e2", &self[1])
+            .field("e3", &self[2])
+            .field("e4", &self[3])
             .finish()
     }
 }
 
 #[derive(Clone, Copy)]
 struct OriginGroups {
-    /// e3
+    /// e4
     g0: f32,
 }
 
 #[derive(Clone, Copy)]
 pub union Origin {
     groups: OriginGroups,
-    /// e3
+    /// e4
     elements: [f32; 1],
 }
 
@@ -341,21 +341,21 @@ impl std::fmt::Debug for Origin {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
         formatter
             .debug_struct("Origin")
-            .field("e3", &self[0])
+            .field("e4", &self[0])
             .finish()
     }
 }
 
 #[derive(Clone, Copy)]
 struct PointAtInfinityGroups {
-    /// e0, e1, e2
+    /// e1, e2, e3
     g0: Simd32x3,
 }
 
 #[derive(Clone, Copy)]
 pub union PointAtInfinity {
     groups: PointAtInfinityGroups,
-    /// e0, e1, e2, 0
+    /// e1, e2, e3, 0
     elements: [f32; 4],
 }
 
@@ -409,25 +409,25 @@ impl std::fmt::Debug for PointAtInfinity {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
         formatter
             .debug_struct("PointAtInfinity")
-            .field("e0", &self[0])
-            .field("e1", &self[1])
-            .field("e2", &self[2])
+            .field("e1", &self[0])
+            .field("e2", &self[1])
+            .field("e3", &self[2])
             .finish()
     }
 }
 
 #[derive(Clone, Copy)]
 struct LineGroups {
-    /// -e03, -e13, -e23
+    /// -e14, -e24, -e34
     g0: Simd32x3,
-    /// e12, -e02, e01
+    /// e23, -e13, e12
     g1: Simd32x3,
 }
 
 #[derive(Clone, Copy)]
 pub union Line {
     groups: LineGroups,
-    /// -e03, -e13, -e23, 0, e12, -e02, e01, 0
+    /// -e14, -e24, -e34, 0, e23, -e13, e12, 0
     elements: [f32; 8],
 }
 
@@ -489,26 +489,26 @@ impl std::fmt::Debug for Line {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
         formatter
             .debug_struct("Line")
-            .field("-e03", &self[0])
-            .field("-e13", &self[1])
-            .field("-e23", &self[2])
-            .field("e12", &self[3])
-            .field("-e02", &self[4])
-            .field("e01", &self[5])
+            .field("-e14", &self[0])
+            .field("-e24", &self[1])
+            .field("-e34", &self[2])
+            .field("e23", &self[3])
+            .field("-e13", &self[4])
+            .field("e12", &self[5])
             .finish()
     }
 }
 
 #[derive(Clone, Copy)]
 struct LineAtOriginGroups {
-    /// -e03, -e13, -e23
+    /// -e14, -e24, -e34
     g0: Simd32x3,
 }
 
 #[derive(Clone, Copy)]
 pub union LineAtOrigin {
     groups: LineAtOriginGroups,
-    /// -e03, -e13, -e23, 0
+    /// -e14, -e24, -e34, 0
     elements: [f32; 4],
 }
 
@@ -562,23 +562,23 @@ impl std::fmt::Debug for LineAtOrigin {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
         formatter
             .debug_struct("LineAtOrigin")
-            .field("-e03", &self[0])
-            .field("-e13", &self[1])
-            .field("-e23", &self[2])
+            .field("-e14", &self[0])
+            .field("-e24", &self[1])
+            .field("-e34", &self[2])
             .finish()
     }
 }
 
 #[derive(Clone, Copy)]
 struct LineAtInfinityGroups {
-    /// e12, -e02, e01
+    /// e23, -e13, e12
     g0: Simd32x3,
 }
 
 #[derive(Clone, Copy)]
 pub union LineAtInfinity {
     groups: LineAtInfinityGroups,
-    /// e12, -e02, e01, 0
+    /// e23, -e13, e12, 0
     elements: [f32; 4],
 }
 
@@ -632,23 +632,23 @@ impl std::fmt::Debug for LineAtInfinity {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
         formatter
             .debug_struct("LineAtInfinity")
-            .field("e12", &self[0])
-            .field("-e02", &self[1])
-            .field("e01", &self[2])
+            .field("e23", &self[0])
+            .field("-e13", &self[1])
+            .field("e12", &self[2])
             .finish()
     }
 }
 
 #[derive(Clone, Copy)]
 struct PlaneGroups {
-    /// e123, -e023, e013, -e012
+    /// e234, -e134, e124, -e123
     g0: Simd32x4,
 }
 
 #[derive(Clone, Copy)]
 pub union Plane {
     groups: PlaneGroups,
-    /// e123, -e023, e013, -e012
+    /// e234, -e134, e124, -e123
     elements: [f32; 4],
 }
 
@@ -702,24 +702,24 @@ impl std::fmt::Debug for Plane {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
         formatter
             .debug_struct("Plane")
-            .field("e123", &self[0])
-            .field("-e023", &self[1])
-            .field("e013", &self[2])
-            .field("-e012", &self[3])
+            .field("e234", &self[0])
+            .field("-e134", &self[1])
+            .field("e124", &self[2])
+            .field("-e123", &self[3])
             .finish()
     }
 }
 
 #[derive(Clone, Copy)]
 struct PlaneAtOriginGroups {
-    /// e123, -e023, e013
+    /// e234, -e134, e124
     g0: Simd32x3,
 }
 
 #[derive(Clone, Copy)]
 pub union PlaneAtOrigin {
     groups: PlaneAtOriginGroups,
-    /// e123, -e023, e013, 0
+    /// e234, -e134, e124, 0
     elements: [f32; 4],
 }
 
@@ -773,23 +773,23 @@ impl std::fmt::Debug for PlaneAtOrigin {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
         formatter
             .debug_struct("PlaneAtOrigin")
-            .field("e123", &self[0])
-            .field("-e023", &self[1])
-            .field("e013", &self[2])
+            .field("e234", &self[0])
+            .field("-e134", &self[1])
+            .field("e124", &self[2])
             .finish()
     }
 }
 
 #[derive(Clone, Copy)]
 struct PlaneAtInfinityGroups {
-    /// -e012
+    /// -e123
     g0: f32,
 }
 
 #[derive(Clone, Copy)]
 pub union PlaneAtInfinity {
     groups: PlaneAtInfinityGroups,
-    /// -e012
+    /// -e123
     elements: [f32; 1],
 }
 
@@ -843,23 +843,23 @@ impl std::fmt::Debug for PlaneAtInfinity {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
         formatter
             .debug_struct("PlaneAtInfinity")
-            .field("-e012", &self[0])
+            .field("-e123", &self[0])
             .finish()
     }
 }
 
 #[derive(Clone, Copy)]
 struct MotorGroups {
-    /// -e03, -e13, -e23, e0123
+    /// -e14, -e24, -e34, e1234
     g0: Simd32x4,
-    /// e12, -e02, e01
+    /// e23, -e13, e12
     g1: Simd32x3,
 }
 
 #[derive(Clone, Copy)]
 pub union Motor {
     groups: MotorGroups,
-    /// -e03, -e13, -e23, e0123, e12, -e02, e01, 0
+    /// -e14, -e24, -e34, e1234, e23, -e13, e12, 0
     elements: [f32; 8],
 }
 
@@ -921,27 +921,27 @@ impl std::fmt::Debug for Motor {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
         formatter
             .debug_struct("Motor")
-            .field("-e03", &self[0])
-            .field("-e13", &self[1])
-            .field("-e23", &self[2])
-            .field("e0123", &self[3])
-            .field("e12", &self[4])
-            .field("-e02", &self[5])
-            .field("e01", &self[6])
+            .field("-e14", &self[0])
+            .field("-e24", &self[1])
+            .field("-e34", &self[2])
+            .field("e1234", &self[3])
+            .field("e23", &self[4])
+            .field("-e13", &self[5])
+            .field("e12", &self[6])
             .finish()
     }
 }
 
 #[derive(Clone, Copy)]
 struct RotorGroups {
-    /// -e03, -e13, -e23, e0123
+    /// -e14, -e24, -e34, e1234
     g0: Simd32x4,
 }
 
 #[derive(Clone, Copy)]
 pub union Rotor {
     groups: RotorGroups,
-    /// -e03, -e13, -e23, e0123
+    /// -e14, -e24, -e34, e1234
     elements: [f32; 4],
 }
 
@@ -995,24 +995,24 @@ impl std::fmt::Debug for Rotor {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
         formatter
             .debug_struct("Rotor")
-            .field("-e03", &self[0])
-            .field("-e13", &self[1])
-            .field("-e23", &self[2])
-            .field("e0123", &self[3])
+            .field("-e14", &self[0])
+            .field("-e24", &self[1])
+            .field("-e34", &self[2])
+            .field("e1234", &self[3])
             .finish()
     }
 }
 
 #[derive(Clone, Copy)]
 struct TranslatorGroups {
-    /// e12, -e02, e01, e0123
+    /// e23, -e13, e12, e1234
     g0: Simd32x4,
 }
 
 #[derive(Clone, Copy)]
 pub union Translator {
     groups: TranslatorGroups,
-    /// e12, -e02, e01, e0123
+    /// e23, -e13, e12, e1234
     elements: [f32; 4],
 }
 
@@ -1066,26 +1066,26 @@ impl std::fmt::Debug for Translator {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
         formatter
             .debug_struct("Translator")
-            .field("e12", &self[0])
-            .field("-e02", &self[1])
-            .field("e01", &self[2])
-            .field("e0123", &self[3])
+            .field("e23", &self[0])
+            .field("-e13", &self[1])
+            .field("e12", &self[2])
+            .field("e1234", &self[3])
             .finish()
     }
 }
 
 #[derive(Clone, Copy)]
 struct FlectorGroups {
-    /// e0, e1, e2, e3
+    /// e1, e2, e3, e4
     g0: Simd32x4,
-    /// e123, -e023, e013, -e012
+    /// e234, -e134, e124, -e123
     g1: Simd32x4,
 }
 
 #[derive(Clone, Copy)]
 pub union Flector {
     groups: FlectorGroups,
-    /// e0, e1, e2, e3, e123, -e023, e013, -e012
+    /// e1, e2, e3, e4, e234, -e134, e124, -e123
     elements: [f32; 8],
 }
 
@@ -1147,36 +1147,36 @@ impl std::fmt::Debug for Flector {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
         formatter
             .debug_struct("Flector")
-            .field("e0", &self[0])
-            .field("e1", &self[1])
-            .field("e2", &self[2])
-            .field("e3", &self[3])
-            .field("e123", &self[4])
-            .field("-e023", &self[5])
-            .field("e013", &self[6])
-            .field("-e012", &self[7])
+            .field("e1", &self[0])
+            .field("e2", &self[1])
+            .field("e3", &self[2])
+            .field("e4", &self[3])
+            .field("e234", &self[4])
+            .field("-e134", &self[5])
+            .field("e124", &self[6])
+            .field("-e123", &self[7])
             .finish()
     }
 }
 
 #[derive(Clone, Copy)]
 struct MultiVectorGroups {
-    /// 1, e0123
+    /// 1, e1234
     g0: Simd32x2,
-    /// e0, e1, e2, e3
+    /// e1, e2, e3, e4
     g1: Simd32x4,
-    /// -e03, -e13, -e23
+    /// -e14, -e24, -e34
     g2: Simd32x3,
-    /// e12, -e02, e01
+    /// e23, -e13, e12
     g3: Simd32x3,
-    /// e123, -e023, e013, -e012
+    /// e234, -e134, e124, -e123
     g4: Simd32x4,
 }
 
 #[derive(Clone, Copy)]
 pub union MultiVector {
     groups: MultiVectorGroups,
-    /// 1, e0123, 0, 0, e0, e1, e2, e3, -e03, -e13, -e23, 0, e12, -e02, e01, 0, e123, -e023, e013, -e012
+    /// 1, e1234, 0, 0, e1, e2, e3, e4, -e14, -e24, -e34, 0, e23, -e13, e12, 0, e234, -e134, e124, -e123
     elements: [f32; 20],
 }
 
@@ -1263,21 +1263,21 @@ impl std::fmt::Debug for MultiVector {
         formatter
             .debug_struct("MultiVector")
             .field("1", &self[0])
-            .field("e0123", &self[1])
-            .field("e0", &self[2])
-            .field("e1", &self[3])
-            .field("e2", &self[4])
-            .field("e3", &self[5])
-            .field("-e03", &self[6])
-            .field("-e13", &self[7])
-            .field("-e23", &self[8])
-            .field("e12", &self[9])
-            .field("-e02", &self[10])
-            .field("e01", &self[11])
-            .field("e123", &self[12])
-            .field("-e023", &self[13])
-            .field("e013", &self[14])
-            .field("-e012", &self[15])
+            .field("e1234", &self[1])
+            .field("e1", &self[2])
+            .field("e2", &self[3])
+            .field("e3", &self[4])
+            .field("e4", &self[5])
+            .field("-e14", &self[6])
+            .field("-e24", &self[7])
+            .field("-e34", &self[8])
+            .field("e23", &self[9])
+            .field("-e13", &self[10])
+            .field("e12", &self[11])
+            .field("e234", &self[12])
+            .field("-e134", &self[13])
+            .field("e124", &self[14])
+            .field("-e123", &self[15])
             .finish()
     }
 }

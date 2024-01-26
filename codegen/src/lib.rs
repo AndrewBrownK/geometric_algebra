@@ -694,8 +694,8 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
         for param_a in registry.single_parameters() {
             let projective_basis = if self.algebra.algebra_name() == "rga3d" {
-                // TODO rename to e4 when the time is right
-                self.algebra.parse("e3")
+                // TODO change to use Origin instead of raw basis element
+                self.algebra.parse("e4")
             } else {
                 break
             };
