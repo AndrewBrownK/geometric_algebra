@@ -31806,238 +31806,6 @@ impl LeftWeightDual for MultiVector {
     }
 }
 
-impl BulkContraction<Scalar> for Scalar {
-    type Output = Scalar;
-
-    fn bulk_contraction(self, other: Scalar) -> Scalar {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Magnitude> for Scalar {
-    type Output = Scalar;
-
-    fn bulk_contraction(self, other: Magnitude) -> Scalar {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<MultiVector> for Scalar {
-    type Output = Scalar;
-
-    fn bulk_contraction(self, other: MultiVector) -> Scalar {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Scalar> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn bulk_contraction(self, other: Scalar) -> AntiScalar {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Magnitude> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn bulk_contraction(self, other: Magnitude) -> AntiScalar {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Point> for AntiScalar {
-    type Output = PlaneAtOrigin;
-
-    fn bulk_contraction(self, other: Point) -> PlaneAtOrigin {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<PointAtInfinity> for AntiScalar {
-    type Output = PlaneAtOrigin;
-
-    fn bulk_contraction(self, other: PointAtInfinity) -> PlaneAtOrigin {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Line> for AntiScalar {
-    type Output = LineAtOrigin;
-
-    fn bulk_contraction(self, other: Line) -> LineAtOrigin {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<LineAtInfinity> for AntiScalar {
-    type Output = LineAtOrigin;
-
-    fn bulk_contraction(self, other: LineAtInfinity) -> LineAtOrigin {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Plane> for AntiScalar {
-    type Output = Origin;
-
-    fn bulk_contraction(self, other: Plane) -> Origin {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<PlaneAtInfinity> for AntiScalar {
-    type Output = Origin;
-
-    fn bulk_contraction(self, other: PlaneAtInfinity) -> Origin {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Motor> for AntiScalar {
-    type Output = LineAtOrigin;
-
-    fn bulk_contraction(self, other: Motor) -> LineAtOrigin {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Translator> for AntiScalar {
-    type Output = LineAtOrigin;
-
-    fn bulk_contraction(self, other: Translator) -> LineAtOrigin {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Flector> for AntiScalar {
-    type Output = Flector;
-
-    fn bulk_contraction(self, other: Flector) -> Flector {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<MultiVector> for AntiScalar {
-    type Output = MultiVector;
-
-    fn bulk_contraction(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Scalar> for Magnitude {
-    type Output = Magnitude;
-
-    fn bulk_contraction(self, other: Scalar) -> Magnitude {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Magnitude> for Magnitude {
-    type Output = Magnitude;
-
-    fn bulk_contraction(self, other: Magnitude) -> Magnitude {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Point> for Magnitude {
-    type Output = PlaneAtOrigin;
-
-    fn bulk_contraction(self, other: Point) -> PlaneAtOrigin {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<PointAtInfinity> for Magnitude {
-    type Output = PlaneAtOrigin;
-
-    fn bulk_contraction(self, other: PointAtInfinity) -> PlaneAtOrigin {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Line> for Magnitude {
-    type Output = LineAtOrigin;
-
-    fn bulk_contraction(self, other: Line) -> LineAtOrigin {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<LineAtInfinity> for Magnitude {
-    type Output = LineAtOrigin;
-
-    fn bulk_contraction(self, other: LineAtInfinity) -> LineAtOrigin {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Plane> for Magnitude {
-    type Output = Origin;
-
-    fn bulk_contraction(self, other: Plane) -> Origin {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<PlaneAtInfinity> for Magnitude {
-    type Output = Origin;
-
-    fn bulk_contraction(self, other: PlaneAtInfinity) -> Origin {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Motor> for Magnitude {
-    type Output = LineAtOrigin;
-
-    fn bulk_contraction(self, other: Motor) -> LineAtOrigin {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Translator> for Magnitude {
-    type Output = LineAtOrigin;
-
-    fn bulk_contraction(self, other: Translator) -> LineAtOrigin {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Flector> for Magnitude {
-    type Output = Flector;
-
-    fn bulk_contraction(self, other: Flector) -> Flector {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<MultiVector> for Magnitude {
-    type Output = MultiVector;
-
-    fn bulk_contraction(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Scalar> for Point {
-    type Output = Point;
-
-    fn bulk_contraction(self, other: Scalar) -> Point {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Magnitude> for Point {
-    type Output = Point;
-
-    fn bulk_contraction(self, other: Magnitude) -> Point {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
 impl BulkContraction<Point> for Point {
     type Output = Scalar;
 
@@ -32070,22 +31838,6 @@ impl BulkContraction<MultiVector> for Point {
     }
 }
 
-impl BulkContraction<Scalar> for Origin {
-    type Output = Origin;
-
-    fn bulk_contraction(self, other: Scalar) -> Origin {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Magnitude> for Origin {
-    type Output = Origin;
-
-    fn bulk_contraction(self, other: Magnitude) -> Origin {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
 impl BulkContraction<Flector> for Origin {
     type Output = Scalar;
 
@@ -32098,22 +31850,6 @@ impl BulkContraction<MultiVector> for Origin {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Scalar> for PointAtInfinity {
-    type Output = PointAtInfinity;
-
-    fn bulk_contraction(self, other: Scalar) -> PointAtInfinity {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Magnitude> for PointAtInfinity {
-    type Output = PointAtInfinity;
-
-    fn bulk_contraction(self, other: Magnitude) -> PointAtInfinity {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -32146,22 +31882,6 @@ impl BulkContraction<MultiVector> for PointAtInfinity {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Scalar> for Line {
-    type Output = Line;
-
-    fn bulk_contraction(self, other: Scalar) -> Line {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Magnitude> for Line {
-    type Output = Line;
-
-    fn bulk_contraction(self, other: Magnitude) -> Line {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -32230,22 +31950,6 @@ impl BulkContraction<MultiVector> for Line {
     }
 }
 
-impl BulkContraction<Scalar> for LineAtOrigin {
-    type Output = LineAtOrigin;
-
-    fn bulk_contraction(self, other: Scalar) -> LineAtOrigin {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Magnitude> for LineAtOrigin {
-    type Output = LineAtOrigin;
-
-    fn bulk_contraction(self, other: Magnitude) -> LineAtOrigin {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
 impl BulkContraction<Point> for LineAtOrigin {
     type Output = Origin;
 
@@ -32274,22 +31978,6 @@ impl BulkContraction<MultiVector> for LineAtOrigin {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Scalar> for LineAtInfinity {
-    type Output = LineAtInfinity;
-
-    fn bulk_contraction(self, other: Scalar) -> LineAtInfinity {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Magnitude> for LineAtInfinity {
-    type Output = LineAtInfinity;
-
-    fn bulk_contraction(self, other: Magnitude) -> LineAtInfinity {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -32354,22 +32042,6 @@ impl BulkContraction<MultiVector> for LineAtInfinity {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Scalar> for Plane {
-    type Output = Plane;
-
-    fn bulk_contraction(self, other: Scalar) -> Plane {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Magnitude> for Plane {
-    type Output = Plane;
-
-    fn bulk_contraction(self, other: Magnitude) -> Plane {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -32454,22 +32126,6 @@ impl BulkContraction<MultiVector> for Plane {
     }
 }
 
-impl BulkContraction<Scalar> for PlaneAtOrigin {
-    type Output = PlaneAtOrigin;
-
-    fn bulk_contraction(self, other: Scalar) -> PlaneAtOrigin {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Magnitude> for PlaneAtOrigin {
-    type Output = PlaneAtOrigin;
-
-    fn bulk_contraction(self, other: Magnitude) -> PlaneAtOrigin {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
 impl BulkContraction<Point> for PlaneAtOrigin {
     type Output = LineAtOrigin;
 
@@ -32530,22 +32186,6 @@ impl BulkContraction<MultiVector> for PlaneAtOrigin {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Scalar> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
-
-    fn bulk_contraction(self, other: Scalar) -> PlaneAtInfinity {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Magnitude> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
-
-    fn bulk_contraction(self, other: Magnitude) -> PlaneAtInfinity {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -32630,22 +32270,6 @@ impl BulkContraction<MultiVector> for PlaneAtInfinity {
     }
 }
 
-impl BulkContraction<Scalar> for Motor {
-    type Output = Motor;
-
-    fn bulk_contraction(self, other: Scalar) -> Motor {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Magnitude> for Motor {
-    type Output = Motor;
-
-    fn bulk_contraction(self, other: Magnitude) -> Motor {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
 impl BulkContraction<Point> for Motor {
     type Output = Flector;
 
@@ -32722,22 +32346,6 @@ impl BulkContraction<MultiVector> for Motor {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Scalar> for Rotor {
-    type Output = Rotor;
-
-    fn bulk_contraction(self, other: Scalar) -> Rotor {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Magnitude> for Rotor {
-    type Output = Rotor;
-
-    fn bulk_contraction(self, other: Magnitude) -> Rotor {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -32822,22 +32430,6 @@ impl BulkContraction<MultiVector> for Rotor {
     }
 }
 
-impl BulkContraction<Scalar> for Translator {
-    type Output = Translator;
-
-    fn bulk_contraction(self, other: Scalar) -> Translator {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Magnitude> for Translator {
-    type Output = Translator;
-
-    fn bulk_contraction(self, other: Magnitude) -> Translator {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
 impl BulkContraction<Point> for Translator {
     type Output = Flector;
 
@@ -32914,22 +32506,6 @@ impl BulkContraction<MultiVector> for Translator {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Scalar> for Flector {
-    type Output = Flector;
-
-    fn bulk_contraction(self, other: Scalar) -> Flector {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Magnitude> for Flector {
-    type Output = Flector;
-
-    fn bulk_contraction(self, other: Magnitude) -> Flector {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -33014,22 +32590,6 @@ impl BulkContraction<MultiVector> for Flector {
     }
 }
 
-impl BulkContraction<Scalar> for MultiVector {
-    type Output = MultiVector;
-
-    fn bulk_contraction(self, other: Scalar) -> MultiVector {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Magnitude> for MultiVector {
-    type Output = MultiVector;
-
-    fn bulk_contraction(self, other: Magnitude) -> MultiVector {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
 impl BulkContraction<Point> for MultiVector {
     type Output = MultiVector;
 
@@ -33107,190 +32667,6 @@ impl BulkContraction<MultiVector> for MultiVector {
 
     fn bulk_contraction(self, other: MultiVector) -> MultiVector {
         self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl WeightContraction<MultiVector> for Scalar {
-    type Output = Scalar;
-
-    fn weight_contraction(self, other: MultiVector) -> Scalar {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightContraction<AntiScalar> for AntiScalar {
-    type Output = Scalar;
-
-    fn weight_contraction(self, other: AntiScalar) -> Scalar {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightContraction<Magnitude> for AntiScalar {
-    type Output = Scalar;
-
-    fn weight_contraction(self, other: Magnitude) -> Scalar {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightContraction<Point> for AntiScalar {
-    type Output = PlaneAtInfinity;
-
-    fn weight_contraction(self, other: Point) -> PlaneAtInfinity {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightContraction<Origin> for AntiScalar {
-    type Output = PlaneAtInfinity;
-
-    fn weight_contraction(self, other: Origin) -> PlaneAtInfinity {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightContraction<Line> for AntiScalar {
-    type Output = LineAtInfinity;
-
-    fn weight_contraction(self, other: Line) -> LineAtInfinity {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightContraction<LineAtOrigin> for AntiScalar {
-    type Output = LineAtInfinity;
-
-    fn weight_contraction(self, other: LineAtOrigin) -> LineAtInfinity {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightContraction<Plane> for AntiScalar {
-    type Output = PointAtInfinity;
-
-    fn weight_contraction(self, other: Plane) -> PointAtInfinity {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightContraction<PlaneAtOrigin> for AntiScalar {
-    type Output = PointAtInfinity;
-
-    fn weight_contraction(self, other: PlaneAtOrigin) -> PointAtInfinity {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightContraction<Translator> for AntiScalar {
-    type Output = Scalar;
-
-    fn weight_contraction(self, other: Translator) -> Scalar {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightContraction<Flector> for AntiScalar {
-    type Output = Flector;
-
-    fn weight_contraction(self, other: Flector) -> Flector {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightContraction<MultiVector> for AntiScalar {
-    type Output = MultiVector;
-
-    fn weight_contraction(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightContraction<AntiScalar> for Magnitude {
-    type Output = Scalar;
-
-    fn weight_contraction(self, other: AntiScalar) -> Scalar {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightContraction<Magnitude> for Magnitude {
-    type Output = Scalar;
-
-    fn weight_contraction(self, other: Magnitude) -> Scalar {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightContraction<Point> for Magnitude {
-    type Output = PlaneAtInfinity;
-
-    fn weight_contraction(self, other: Point) -> PlaneAtInfinity {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightContraction<Origin> for Magnitude {
-    type Output = PlaneAtInfinity;
-
-    fn weight_contraction(self, other: Origin) -> PlaneAtInfinity {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightContraction<Line> for Magnitude {
-    type Output = LineAtInfinity;
-
-    fn weight_contraction(self, other: Line) -> LineAtInfinity {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightContraction<LineAtOrigin> for Magnitude {
-    type Output = LineAtInfinity;
-
-    fn weight_contraction(self, other: LineAtOrigin) -> LineAtInfinity {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightContraction<Plane> for Magnitude {
-    type Output = PointAtInfinity;
-
-    fn weight_contraction(self, other: Plane) -> PointAtInfinity {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightContraction<PlaneAtOrigin> for Magnitude {
-    type Output = PointAtInfinity;
-
-    fn weight_contraction(self, other: PlaneAtOrigin) -> PointAtInfinity {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightContraction<Translator> for Magnitude {
-    type Output = Scalar;
-
-    fn weight_contraction(self, other: Translator) -> Scalar {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightContraction<Flector> for Magnitude {
-    type Output = Flector;
-
-    fn weight_contraction(self, other: Flector) -> Flector {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightContraction<MultiVector> for Magnitude {
-    type Output = MultiVector;
-
-    fn weight_contraction(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge(other.right_weight_dual())
     }
 }
 
@@ -33630,22 +33006,6 @@ impl WeightContraction<MultiVector> for PlaneAtInfinity {
     }
 }
 
-impl WeightContraction<AntiScalar> for Motor {
-    type Output = Scalar;
-
-    fn weight_contraction(self, other: AntiScalar) -> Scalar {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightContraction<Magnitude> for Motor {
-    type Output = Scalar;
-
-    fn weight_contraction(self, other: Magnitude) -> Scalar {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
 impl WeightContraction<Point> for Motor {
     type Output = Flector;
 
@@ -33718,22 +33078,6 @@ impl WeightContraction<MultiVector> for Motor {
     }
 }
 
-impl WeightContraction<AntiScalar> for Rotor {
-    type Output = Scalar;
-
-    fn weight_contraction(self, other: AntiScalar) -> Scalar {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightContraction<Magnitude> for Rotor {
-    type Output = Scalar;
-
-    fn weight_contraction(self, other: Magnitude) -> Scalar {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
 impl WeightContraction<Point> for Rotor {
     type Output = Flector;
 
@@ -33802,22 +33146,6 @@ impl WeightContraction<MultiVector> for Rotor {
     type Output = MultiVector;
 
     fn weight_contraction(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightContraction<AntiScalar> for Translator {
-    type Output = Scalar;
-
-    fn weight_contraction(self, other: AntiScalar) -> Scalar {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightContraction<Magnitude> for Translator {
-    type Output = Scalar;
-
-    fn weight_contraction(self, other: Magnitude) -> Scalar {
         self.anti_wedge(other.right_weight_dual())
     }
 }
@@ -33958,22 +33286,6 @@ impl WeightContraction<MultiVector> for Flector {
     }
 }
 
-impl WeightContraction<AntiScalar> for MultiVector {
-    type Output = Scalar;
-
-    fn weight_contraction(self, other: AntiScalar) -> Scalar {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightContraction<Magnitude> for MultiVector {
-    type Output = Scalar;
-
-    fn weight_contraction(self, other: Magnitude) -> Scalar {
-        self.anti_wedge(other.right_weight_dual())
-    }
-}
-
 impl WeightContraction<Point> for MultiVector {
     type Output = MultiVector;
 
@@ -34043,206 +33355,6 @@ impl WeightContraction<MultiVector> for MultiVector {
 
     fn weight_contraction(self, other: MultiVector) -> MultiVector {
         self.anti_wedge(other.right_weight_dual())
-    }
-}
-
-impl BulkExpansion<Scalar> for Scalar {
-    type Output = AntiScalar;
-
-    fn bulk_expansion(self, other: Scalar) -> AntiScalar {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Magnitude> for Scalar {
-    type Output = AntiScalar;
-
-    fn bulk_expansion(self, other: Magnitude) -> AntiScalar {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Point> for Scalar {
-    type Output = PlaneAtOrigin;
-
-    fn bulk_expansion(self, other: Point) -> PlaneAtOrigin {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<PointAtInfinity> for Scalar {
-    type Output = PlaneAtOrigin;
-
-    fn bulk_expansion(self, other: PointAtInfinity) -> PlaneAtOrigin {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Line> for Scalar {
-    type Output = LineAtOrigin;
-
-    fn bulk_expansion(self, other: Line) -> LineAtOrigin {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<LineAtInfinity> for Scalar {
-    type Output = LineAtOrigin;
-
-    fn bulk_expansion(self, other: LineAtInfinity) -> LineAtOrigin {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Plane> for Scalar {
-    type Output = Origin;
-
-    fn bulk_expansion(self, other: Plane) -> Origin {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<PlaneAtInfinity> for Scalar {
-    type Output = Origin;
-
-    fn bulk_expansion(self, other: PlaneAtInfinity) -> Origin {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Motor> for Scalar {
-    type Output = LineAtOrigin;
-
-    fn bulk_expansion(self, other: Motor) -> LineAtOrigin {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Translator> for Scalar {
-    type Output = LineAtOrigin;
-
-    fn bulk_expansion(self, other: Translator) -> LineAtOrigin {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Flector> for Scalar {
-    type Output = Flector;
-
-    fn bulk_expansion(self, other: Flector) -> Flector {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<MultiVector> for Scalar {
-    type Output = MultiVector;
-
-    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<MultiVector> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn bulk_expansion(self, other: MultiVector) -> AntiScalar {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Scalar> for Magnitude {
-    type Output = AntiScalar;
-
-    fn bulk_expansion(self, other: Scalar) -> AntiScalar {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Magnitude> for Magnitude {
-    type Output = AntiScalar;
-
-    fn bulk_expansion(self, other: Magnitude) -> AntiScalar {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Point> for Magnitude {
-    type Output = PlaneAtOrigin;
-
-    fn bulk_expansion(self, other: Point) -> PlaneAtOrigin {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<PointAtInfinity> for Magnitude {
-    type Output = PlaneAtOrigin;
-
-    fn bulk_expansion(self, other: PointAtInfinity) -> PlaneAtOrigin {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Line> for Magnitude {
-    type Output = LineAtOrigin;
-
-    fn bulk_expansion(self, other: Line) -> LineAtOrigin {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<LineAtInfinity> for Magnitude {
-    type Output = LineAtOrigin;
-
-    fn bulk_expansion(self, other: LineAtInfinity) -> LineAtOrigin {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Plane> for Magnitude {
-    type Output = Origin;
-
-    fn bulk_expansion(self, other: Plane) -> Origin {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<PlaneAtInfinity> for Magnitude {
-    type Output = Origin;
-
-    fn bulk_expansion(self, other: PlaneAtInfinity) -> Origin {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Motor> for Magnitude {
-    type Output = LineAtOrigin;
-
-    fn bulk_expansion(self, other: Motor) -> LineAtOrigin {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Translator> for Magnitude {
-    type Output = LineAtOrigin;
-
-    fn bulk_expansion(self, other: Translator) -> LineAtOrigin {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Flector> for Magnitude {
-    type Output = Flector;
-
-    fn bulk_expansion(self, other: Flector) -> Flector {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<MultiVector> for Magnitude {
-    type Output = MultiVector;
-
-    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
-        self.wedge(other.right_bulk_dual())
     }
 }
 
@@ -34870,22 +33982,6 @@ impl BulkExpansion<MultiVector> for Flector {
     }
 }
 
-impl BulkExpansion<Scalar> for MultiVector {
-    type Output = AntiScalar;
-
-    fn bulk_expansion(self, other: Scalar) -> AntiScalar {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Magnitude> for MultiVector {
-    type Output = AntiScalar;
-
-    fn bulk_expansion(self, other: Magnitude) -> AntiScalar {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
 impl BulkExpansion<Point> for MultiVector {
     type Output = MultiVector;
 
@@ -34966,230 +34062,6 @@ impl BulkExpansion<MultiVector> for MultiVector {
     }
 }
 
-impl WeightExpansion<AntiScalar> for Scalar {
-    type Output = Scalar;
-
-    fn weight_expansion(self, other: AntiScalar) -> Scalar {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Magnitude> for Scalar {
-    type Output = Scalar;
-
-    fn weight_expansion(self, other: Magnitude) -> Scalar {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Point> for Scalar {
-    type Output = PlaneAtInfinity;
-
-    fn weight_expansion(self, other: Point) -> PlaneAtInfinity {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Origin> for Scalar {
-    type Output = PlaneAtInfinity;
-
-    fn weight_expansion(self, other: Origin) -> PlaneAtInfinity {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Line> for Scalar {
-    type Output = LineAtInfinity;
-
-    fn weight_expansion(self, other: Line) -> LineAtInfinity {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<LineAtOrigin> for Scalar {
-    type Output = LineAtInfinity;
-
-    fn weight_expansion(self, other: LineAtOrigin) -> LineAtInfinity {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Plane> for Scalar {
-    type Output = PointAtInfinity;
-
-    fn weight_expansion(self, other: Plane) -> PointAtInfinity {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<PlaneAtOrigin> for Scalar {
-    type Output = PointAtInfinity;
-
-    fn weight_expansion(self, other: PlaneAtOrigin) -> PointAtInfinity {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Translator> for Scalar {
-    type Output = Scalar;
-
-    fn weight_expansion(self, other: Translator) -> Scalar {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Flector> for Scalar {
-    type Output = Flector;
-
-    fn weight_expansion(self, other: Flector) -> Flector {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<MultiVector> for Scalar {
-    type Output = MultiVector;
-
-    fn weight_expansion(self, other: MultiVector) -> MultiVector {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<AntiScalar> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn weight_expansion(self, other: AntiScalar) -> AntiScalar {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Magnitude> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn weight_expansion(self, other: Magnitude) -> AntiScalar {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Translator> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn weight_expansion(self, other: Translator) -> AntiScalar {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<MultiVector> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn weight_expansion(self, other: MultiVector) -> AntiScalar {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<AntiScalar> for Magnitude {
-    type Output = Magnitude;
-
-    fn weight_expansion(self, other: AntiScalar) -> Magnitude {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Magnitude> for Magnitude {
-    type Output = Magnitude;
-
-    fn weight_expansion(self, other: Magnitude) -> Magnitude {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Point> for Magnitude {
-    type Output = PlaneAtInfinity;
-
-    fn weight_expansion(self, other: Point) -> PlaneAtInfinity {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Origin> for Magnitude {
-    type Output = PlaneAtInfinity;
-
-    fn weight_expansion(self, other: Origin) -> PlaneAtInfinity {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Line> for Magnitude {
-    type Output = LineAtInfinity;
-
-    fn weight_expansion(self, other: Line) -> LineAtInfinity {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<LineAtOrigin> for Magnitude {
-    type Output = LineAtInfinity;
-
-    fn weight_expansion(self, other: LineAtOrigin) -> LineAtInfinity {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Plane> for Magnitude {
-    type Output = PointAtInfinity;
-
-    fn weight_expansion(self, other: Plane) -> PointAtInfinity {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<PlaneAtOrigin> for Magnitude {
-    type Output = PointAtInfinity;
-
-    fn weight_expansion(self, other: PlaneAtOrigin) -> PointAtInfinity {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Translator> for Magnitude {
-    type Output = Magnitude;
-
-    fn weight_expansion(self, other: Translator) -> Magnitude {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Flector> for Magnitude {
-    type Output = Flector;
-
-    fn weight_expansion(self, other: Flector) -> Flector {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<MultiVector> for Magnitude {
-    type Output = MultiVector;
-
-    fn weight_expansion(self, other: MultiVector) -> MultiVector {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<AntiScalar> for Point {
-    type Output = Point;
-
-    fn weight_expansion(self, other: AntiScalar) -> Point {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Magnitude> for Point {
-    type Output = Point;
-
-    fn weight_expansion(self, other: Magnitude) -> Point {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
 impl WeightExpansion<Point> for Point {
     type Output = AntiScalar;
 
@@ -35258,22 +34130,6 @@ impl WeightExpansion<MultiVector> for Point {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: MultiVector) -> MultiVector {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<AntiScalar> for Origin {
-    type Output = Origin;
-
-    fn weight_expansion(self, other: AntiScalar) -> Origin {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Magnitude> for Origin {
-    type Output = Origin;
-
-    fn weight_expansion(self, other: Magnitude) -> Origin {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -35350,22 +34206,6 @@ impl WeightExpansion<MultiVector> for Origin {
     }
 }
 
-impl WeightExpansion<AntiScalar> for PointAtInfinity {
-    type Output = PointAtInfinity;
-
-    fn weight_expansion(self, other: AntiScalar) -> PointAtInfinity {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Magnitude> for PointAtInfinity {
-    type Output = PointAtInfinity;
-
-    fn weight_expansion(self, other: Magnitude) -> PointAtInfinity {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
 impl WeightExpansion<Line> for PointAtInfinity {
     type Output = PlaneAtInfinity;
 
@@ -35418,22 +34258,6 @@ impl WeightExpansion<MultiVector> for PointAtInfinity {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: MultiVector) -> MultiVector {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<AntiScalar> for Line {
-    type Output = Line;
-
-    fn weight_expansion(self, other: AntiScalar) -> Line {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Magnitude> for Line {
-    type Output = Line;
-
-    fn weight_expansion(self, other: Magnitude) -> Line {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -35494,22 +34318,6 @@ impl WeightExpansion<MultiVector> for Line {
     }
 }
 
-impl WeightExpansion<AntiScalar> for LineAtOrigin {
-    type Output = LineAtOrigin;
-
-    fn weight_expansion(self, other: AntiScalar) -> LineAtOrigin {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Magnitude> for LineAtOrigin {
-    type Output = LineAtOrigin;
-
-    fn weight_expansion(self, other: Magnitude) -> LineAtOrigin {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
 impl WeightExpansion<Line> for LineAtOrigin {
     type Output = AntiScalar;
 
@@ -35566,22 +34374,6 @@ impl WeightExpansion<MultiVector> for LineAtOrigin {
     }
 }
 
-impl WeightExpansion<AntiScalar> for LineAtInfinity {
-    type Output = LineAtInfinity;
-
-    fn weight_expansion(self, other: AntiScalar) -> LineAtInfinity {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Magnitude> for LineAtInfinity {
-    type Output = LineAtInfinity;
-
-    fn weight_expansion(self, other: Magnitude) -> LineAtInfinity {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
 impl WeightExpansion<Plane> for LineAtInfinity {
     type Output = PlaneAtInfinity;
 
@@ -35618,22 +34410,6 @@ impl WeightExpansion<MultiVector> for LineAtInfinity {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: MultiVector) -> MultiVector {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<AntiScalar> for Plane {
-    type Output = Plane;
-
-    fn weight_expansion(self, other: AntiScalar) -> Plane {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Magnitude> for Plane {
-    type Output = Plane;
-
-    fn weight_expansion(self, other: Magnitude) -> Plane {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -35678,22 +34454,6 @@ impl WeightExpansion<MultiVector> for Plane {
     }
 }
 
-impl WeightExpansion<AntiScalar> for PlaneAtOrigin {
-    type Output = PlaneAtOrigin;
-
-    fn weight_expansion(self, other: AntiScalar) -> PlaneAtOrigin {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Magnitude> for PlaneAtOrigin {
-    type Output = PlaneAtOrigin;
-
-    fn weight_expansion(self, other: Magnitude) -> PlaneAtOrigin {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
 impl WeightExpansion<Plane> for PlaneAtOrigin {
     type Output = AntiScalar;
 
@@ -35734,22 +34494,6 @@ impl WeightExpansion<MultiVector> for PlaneAtOrigin {
     }
 }
 
-impl WeightExpansion<AntiScalar> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
-
-    fn weight_expansion(self, other: AntiScalar) -> PlaneAtInfinity {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Magnitude> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
-
-    fn weight_expansion(self, other: Magnitude) -> PlaneAtInfinity {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
 impl WeightExpansion<Translator> for PlaneAtInfinity {
     type Output = PlaneAtInfinity;
 
@@ -35770,22 +34514,6 @@ impl WeightExpansion<MultiVector> for PlaneAtInfinity {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: MultiVector) -> MultiVector {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<AntiScalar> for Motor {
-    type Output = Motor;
-
-    fn weight_expansion(self, other: AntiScalar) -> Motor {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Magnitude> for Motor {
-    type Output = Motor;
-
-    fn weight_expansion(self, other: Magnitude) -> Motor {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -35846,22 +34574,6 @@ impl WeightExpansion<MultiVector> for Motor {
     }
 }
 
-impl WeightExpansion<AntiScalar> for Rotor {
-    type Output = Rotor;
-
-    fn weight_expansion(self, other: AntiScalar) -> Rotor {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Magnitude> for Rotor {
-    type Output = Rotor;
-
-    fn weight_expansion(self, other: Magnitude) -> Rotor {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
 impl WeightExpansion<Line> for Rotor {
     type Output = AntiScalar;
 
@@ -35918,22 +34630,6 @@ impl WeightExpansion<MultiVector> for Rotor {
     }
 }
 
-impl WeightExpansion<AntiScalar> for Translator {
-    type Output = Translator;
-
-    fn weight_expansion(self, other: AntiScalar) -> Translator {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Magnitude> for Translator {
-    type Output = Translator;
-
-    fn weight_expansion(self, other: Magnitude) -> Translator {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
 impl WeightExpansion<Plane> for Translator {
     type Output = PlaneAtInfinity;
 
@@ -35970,22 +34666,6 @@ impl WeightExpansion<MultiVector> for Translator {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: MultiVector) -> MultiVector {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<AntiScalar> for Flector {
-    type Output = Flector;
-
-    fn weight_expansion(self, other: AntiScalar) -> Flector {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Magnitude> for Flector {
-    type Output = Flector;
-
-    fn weight_expansion(self, other: Magnitude) -> Flector {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -36062,22 +34742,6 @@ impl WeightExpansion<MultiVector> for Flector {
     }
 }
 
-impl WeightExpansion<AntiScalar> for MultiVector {
-    type Output = MultiVector;
-
-    fn weight_expansion(self, other: AntiScalar) -> MultiVector {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Magnitude> for MultiVector {
-    type Output = MultiVector;
-
-    fn weight_expansion(self, other: Magnitude) -> MultiVector {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
 impl WeightExpansion<Point> for MultiVector {
     type Output = MultiVector;
 
@@ -36150,230 +34814,6 @@ impl WeightExpansion<MultiVector> for MultiVector {
     }
 }
 
-impl ProjectOrthogonallyOnto<AntiScalar> for Scalar {
-    type Output = Scalar;
-
-    fn project_orthogonally_onto(self, other: AntiScalar) -> Scalar {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Magnitude> for Scalar {
-    type Output = Scalar;
-
-    fn project_orthogonally_onto(self, other: Magnitude) -> Scalar {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Point> for Scalar {
-    type Output = Scalar;
-
-    fn project_orthogonally_onto(self, other: Point) -> Scalar {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Origin> for Scalar {
-    type Output = Scalar;
-
-    fn project_orthogonally_onto(self, other: Origin) -> Scalar {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Line> for Scalar {
-    type Output = Scalar;
-
-    fn project_orthogonally_onto(self, other: Line) -> Scalar {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<LineAtOrigin> for Scalar {
-    type Output = Scalar;
-
-    fn project_orthogonally_onto(self, other: LineAtOrigin) -> Scalar {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Plane> for Scalar {
-    type Output = Scalar;
-
-    fn project_orthogonally_onto(self, other: Plane) -> Scalar {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<PlaneAtOrigin> for Scalar {
-    type Output = Scalar;
-
-    fn project_orthogonally_onto(self, other: PlaneAtOrigin) -> Scalar {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for Scalar {
-    type Output = Scalar;
-
-    fn project_orthogonally_onto(self, other: Translator) -> Scalar {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Flector> for Scalar {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<MultiVector> for Scalar {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<AntiScalar> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn project_orthogonally_onto(self, other: AntiScalar) -> AntiScalar {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Magnitude> for AntiScalar {
-    type Output = Magnitude;
-
-    fn project_orthogonally_onto(self, other: Magnitude) -> Magnitude {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for AntiScalar {
-    type Output = Translator;
-
-    fn project_orthogonally_onto(self, other: Translator) -> Translator {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<MultiVector> for AntiScalar {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<AntiScalar> for Magnitude {
-    type Output = Magnitude;
-
-    fn project_orthogonally_onto(self, other: AntiScalar) -> Magnitude {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Magnitude> for Magnitude {
-    type Output = Magnitude;
-
-    fn project_orthogonally_onto(self, other: Magnitude) -> Magnitude {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Point> for Magnitude {
-    type Output = Scalar;
-
-    fn project_orthogonally_onto(self, other: Point) -> Scalar {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Origin> for Magnitude {
-    type Output = Scalar;
-
-    fn project_orthogonally_onto(self, other: Origin) -> Scalar {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Line> for Magnitude {
-    type Output = Scalar;
-
-    fn project_orthogonally_onto(self, other: Line) -> Scalar {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<LineAtOrigin> for Magnitude {
-    type Output = Scalar;
-
-    fn project_orthogonally_onto(self, other: LineAtOrigin) -> Scalar {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Plane> for Magnitude {
-    type Output = Scalar;
-
-    fn project_orthogonally_onto(self, other: Plane) -> Scalar {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<PlaneAtOrigin> for Magnitude {
-    type Output = Scalar;
-
-    fn project_orthogonally_onto(self, other: PlaneAtOrigin) -> Scalar {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for Magnitude {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Flector> for Magnitude {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<MultiVector> for Magnitude {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<AntiScalar> for Point {
-    type Output = Point;
-
-    fn project_orthogonally_onto(self, other: AntiScalar) -> Point {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Magnitude> for Point {
-    type Output = Point;
-
-    fn project_orthogonally_onto(self, other: Magnitude) -> Point {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
 impl ProjectOrthogonallyOnto<Point> for Point {
     type Output = Point;
 
@@ -36442,22 +34882,6 @@ impl ProjectOrthogonallyOnto<MultiVector> for Point {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<AntiScalar> for Origin {
-    type Output = Origin;
-
-    fn project_orthogonally_onto(self, other: AntiScalar) -> Origin {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Magnitude> for Origin {
-    type Output = Origin;
-
-    fn project_orthogonally_onto(self, other: Magnitude) -> Origin {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -36534,22 +34958,6 @@ impl ProjectOrthogonallyOnto<MultiVector> for Origin {
     }
 }
 
-impl ProjectOrthogonallyOnto<AntiScalar> for PointAtInfinity {
-    type Output = PointAtInfinity;
-
-    fn project_orthogonally_onto(self, other: AntiScalar) -> PointAtInfinity {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Magnitude> for PointAtInfinity {
-    type Output = PointAtInfinity;
-
-    fn project_orthogonally_onto(self, other: Magnitude) -> PointAtInfinity {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
 impl ProjectOrthogonallyOnto<Line> for PointAtInfinity {
     type Output = PointAtInfinity;
 
@@ -36602,22 +35010,6 @@ impl ProjectOrthogonallyOnto<MultiVector> for PointAtInfinity {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<AntiScalar> for Line {
-    type Output = Line;
-
-    fn project_orthogonally_onto(self, other: AntiScalar) -> Line {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Magnitude> for Line {
-    type Output = Line;
-
-    fn project_orthogonally_onto(self, other: Magnitude) -> Line {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -36678,22 +35070,6 @@ impl ProjectOrthogonallyOnto<MultiVector> for Line {
     }
 }
 
-impl ProjectOrthogonallyOnto<AntiScalar> for LineAtOrigin {
-    type Output = LineAtOrigin;
-
-    fn project_orthogonally_onto(self, other: AntiScalar) -> LineAtOrigin {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Magnitude> for LineAtOrigin {
-    type Output = LineAtOrigin;
-
-    fn project_orthogonally_onto(self, other: Magnitude) -> LineAtOrigin {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
 impl ProjectOrthogonallyOnto<Line> for LineAtOrigin {
     type Output = Line;
 
@@ -36750,22 +35126,6 @@ impl ProjectOrthogonallyOnto<MultiVector> for LineAtOrigin {
     }
 }
 
-impl ProjectOrthogonallyOnto<AntiScalar> for LineAtInfinity {
-    type Output = LineAtInfinity;
-
-    fn project_orthogonally_onto(self, other: AntiScalar) -> LineAtInfinity {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Magnitude> for LineAtInfinity {
-    type Output = LineAtInfinity;
-
-    fn project_orthogonally_onto(self, other: Magnitude) -> LineAtInfinity {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
 impl ProjectOrthogonallyOnto<Plane> for LineAtInfinity {
     type Output = LineAtInfinity;
 
@@ -36802,22 +35162,6 @@ impl ProjectOrthogonallyOnto<MultiVector> for LineAtInfinity {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<AntiScalar> for Plane {
-    type Output = Plane;
-
-    fn project_orthogonally_onto(self, other: AntiScalar) -> Plane {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Magnitude> for Plane {
-    type Output = Plane;
-
-    fn project_orthogonally_onto(self, other: Magnitude) -> Plane {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -36862,22 +35206,6 @@ impl ProjectOrthogonallyOnto<MultiVector> for Plane {
     }
 }
 
-impl ProjectOrthogonallyOnto<AntiScalar> for PlaneAtOrigin {
-    type Output = PlaneAtOrigin;
-
-    fn project_orthogonally_onto(self, other: AntiScalar) -> PlaneAtOrigin {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Magnitude> for PlaneAtOrigin {
-    type Output = PlaneAtOrigin;
-
-    fn project_orthogonally_onto(self, other: Magnitude) -> PlaneAtOrigin {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
 impl ProjectOrthogonallyOnto<Plane> for PlaneAtOrigin {
     type Output = Plane;
 
@@ -36918,22 +35246,6 @@ impl ProjectOrthogonallyOnto<MultiVector> for PlaneAtOrigin {
     }
 }
 
-impl ProjectOrthogonallyOnto<AntiScalar> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
-
-    fn project_orthogonally_onto(self, other: AntiScalar) -> PlaneAtInfinity {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Magnitude> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
-
-    fn project_orthogonally_onto(self, other: Magnitude) -> PlaneAtInfinity {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
 impl ProjectOrthogonallyOnto<Translator> for PlaneAtInfinity {
     type Output = PlaneAtInfinity;
 
@@ -36954,22 +35266,6 @@ impl ProjectOrthogonallyOnto<MultiVector> for PlaneAtInfinity {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<AntiScalar> for Motor {
-    type Output = Motor;
-
-    fn project_orthogonally_onto(self, other: AntiScalar) -> Motor {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Magnitude> for Motor {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Magnitude) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -37030,22 +35326,6 @@ impl ProjectOrthogonallyOnto<MultiVector> for Motor {
     }
 }
 
-impl ProjectOrthogonallyOnto<AntiScalar> for Rotor {
-    type Output = Rotor;
-
-    fn project_orthogonally_onto(self, other: AntiScalar) -> Rotor {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Magnitude> for Rotor {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Magnitude) -> MultiVector {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
 impl ProjectOrthogonallyOnto<Line> for Rotor {
     type Output = Line;
 
@@ -37102,22 +35382,6 @@ impl ProjectOrthogonallyOnto<MultiVector> for Rotor {
     }
 }
 
-impl ProjectOrthogonallyOnto<AntiScalar> for Translator {
-    type Output = Translator;
-
-    fn project_orthogonally_onto(self, other: AntiScalar) -> Translator {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Magnitude> for Translator {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Magnitude) -> MultiVector {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
 impl ProjectOrthogonallyOnto<Plane> for Translator {
     type Output = LineAtInfinity;
 
@@ -37154,22 +35418,6 @@ impl ProjectOrthogonallyOnto<MultiVector> for Translator {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<AntiScalar> for Flector {
-    type Output = Flector;
-
-    fn project_orthogonally_onto(self, other: AntiScalar) -> Flector {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Magnitude> for Flector {
-    type Output = Flector;
-
-    fn project_orthogonally_onto(self, other: Magnitude) -> Flector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -37246,22 +35494,6 @@ impl ProjectOrthogonallyOnto<MultiVector> for Flector {
     }
 }
 
-impl ProjectOrthogonallyOnto<AntiScalar> for MultiVector {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: AntiScalar) -> MultiVector {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Magnitude> for MultiVector {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Magnitude) -> MultiVector {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
 impl ProjectOrthogonallyOnto<Point> for MultiVector {
     type Output = MultiVector;
 
@@ -37331,190 +35563,6 @@ impl ProjectOrthogonallyOnto<MultiVector> for MultiVector {
 
     fn project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<MultiVector> for Scalar {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<AntiScalar> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn anti_project_orthogonally_onto(self, other: AntiScalar) -> AntiScalar {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Magnitude> for AntiScalar {
-    type Output = Magnitude;
-
-    fn anti_project_orthogonally_onto(self, other: Magnitude) -> Magnitude {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Point> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn anti_project_orthogonally_onto(self, other: Point) -> AntiScalar {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Origin> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn anti_project_orthogonally_onto(self, other: Origin) -> AntiScalar {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Line> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn anti_project_orthogonally_onto(self, other: Line) -> AntiScalar {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<LineAtOrigin> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn anti_project_orthogonally_onto(self, other: LineAtOrigin) -> AntiScalar {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Plane> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn anti_project_orthogonally_onto(self, other: Plane) -> AntiScalar {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<PlaneAtOrigin> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn anti_project_orthogonally_onto(self, other: PlaneAtOrigin) -> AntiScalar {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Translator> for AntiScalar {
-    type Output = Translator;
-
-    fn anti_project_orthogonally_onto(self, other: Translator) -> Translator {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Flector> for AntiScalar {
-    type Output = Motor;
-
-    fn anti_project_orthogonally_onto(self, other: Flector) -> Motor {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<MultiVector> for AntiScalar {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<AntiScalar> for Magnitude {
-    type Output = AntiScalar;
-
-    fn anti_project_orthogonally_onto(self, other: AntiScalar) -> AntiScalar {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Magnitude> for Magnitude {
-    type Output = Magnitude;
-
-    fn anti_project_orthogonally_onto(self, other: Magnitude) -> Magnitude {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Point> for Magnitude {
-    type Output = AntiScalar;
-
-    fn anti_project_orthogonally_onto(self, other: Point) -> AntiScalar {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Origin> for Magnitude {
-    type Output = AntiScalar;
-
-    fn anti_project_orthogonally_onto(self, other: Origin) -> AntiScalar {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Line> for Magnitude {
-    type Output = AntiScalar;
-
-    fn anti_project_orthogonally_onto(self, other: Line) -> AntiScalar {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<LineAtOrigin> for Magnitude {
-    type Output = AntiScalar;
-
-    fn anti_project_orthogonally_onto(self, other: LineAtOrigin) -> AntiScalar {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Plane> for Magnitude {
-    type Output = AntiScalar;
-
-    fn anti_project_orthogonally_onto(self, other: Plane) -> AntiScalar {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<PlaneAtOrigin> for Magnitude {
-    type Output = AntiScalar;
-
-    fn anti_project_orthogonally_onto(self, other: PlaneAtOrigin) -> AntiScalar {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Translator> for Magnitude {
-    type Output = Translator;
-
-    fn anti_project_orthogonally_onto(self, other: Translator) -> Translator {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Flector> for Magnitude {
-    type Output = Motor;
-
-    fn anti_project_orthogonally_onto(self, other: Flector) -> Motor {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<MultiVector> for Magnitude {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
-        other.wedge(self.weight_contraction(other))
     }
 }
 
@@ -37854,22 +35902,6 @@ impl AntiProjectOrthogonallyOnto<MultiVector> for PlaneAtInfinity {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<AntiScalar> for Motor {
-    type Output = AntiScalar;
-
-    fn anti_project_orthogonally_onto(self, other: AntiScalar) -> AntiScalar {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Magnitude> for Motor {
-    type Output = Magnitude;
-
-    fn anti_project_orthogonally_onto(self, other: Magnitude) -> Magnitude {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
 impl AntiProjectOrthogonallyOnto<Point> for Motor {
     type Output = Motor;
 
@@ -37942,22 +35974,6 @@ impl AntiProjectOrthogonallyOnto<MultiVector> for Motor {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<AntiScalar> for Rotor {
-    type Output = AntiScalar;
-
-    fn anti_project_orthogonally_onto(self, other: AntiScalar) -> AntiScalar {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Magnitude> for Rotor {
-    type Output = Magnitude;
-
-    fn anti_project_orthogonally_onto(self, other: Magnitude) -> Magnitude {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
 impl AntiProjectOrthogonallyOnto<Point> for Rotor {
     type Output = Motor;
 
@@ -38026,22 +36042,6 @@ impl AntiProjectOrthogonallyOnto<MultiVector> for Rotor {
     type Output = MultiVector;
 
     fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<AntiScalar> for Translator {
-    type Output = AntiScalar;
-
-    fn anti_project_orthogonally_onto(self, other: AntiScalar) -> AntiScalar {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Magnitude> for Translator {
-    type Output = Magnitude;
-
-    fn anti_project_orthogonally_onto(self, other: Magnitude) -> Magnitude {
         other.wedge(self.weight_contraction(other))
     }
 }
@@ -38182,22 +36182,6 @@ impl AntiProjectOrthogonallyOnto<MultiVector> for Flector {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<AntiScalar> for MultiVector {
-    type Output = AntiScalar;
-
-    fn anti_project_orthogonally_onto(self, other: AntiScalar) -> AntiScalar {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Magnitude> for MultiVector {
-    type Output = Magnitude;
-
-    fn anti_project_orthogonally_onto(self, other: Magnitude) -> Magnitude {
-        other.wedge(self.weight_contraction(other))
-    }
-}
-
 impl AntiProjectOrthogonallyOnto<Point> for MultiVector {
     type Output = MultiVector;
 
@@ -38267,206 +36251,6 @@ impl AntiProjectOrthogonallyOnto<MultiVector> for MultiVector {
 
     fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
         other.wedge(self.weight_contraction(other))
-    }
-}
-
-impl ProjectThroughOriginOnto<Scalar> for Scalar {
-    type Output = Scalar;
-
-    fn project_through_origin_onto(self, other: Scalar) -> Scalar {
-        other.anti_wedge(self.bulk_expansion(other))
-    }
-}
-
-impl ProjectThroughOriginOnto<Magnitude> for Scalar {
-    type Output = Magnitude;
-
-    fn project_through_origin_onto(self, other: Magnitude) -> Magnitude {
-        other.anti_wedge(self.bulk_expansion(other))
-    }
-}
-
-impl ProjectThroughOriginOnto<Point> for Scalar {
-    type Output = Scalar;
-
-    fn project_through_origin_onto(self, other: Point) -> Scalar {
-        other.anti_wedge(self.bulk_expansion(other))
-    }
-}
-
-impl ProjectThroughOriginOnto<PointAtInfinity> for Scalar {
-    type Output = Scalar;
-
-    fn project_through_origin_onto(self, other: PointAtInfinity) -> Scalar {
-        other.anti_wedge(self.bulk_expansion(other))
-    }
-}
-
-impl ProjectThroughOriginOnto<Line> for Scalar {
-    type Output = Scalar;
-
-    fn project_through_origin_onto(self, other: Line) -> Scalar {
-        other.anti_wedge(self.bulk_expansion(other))
-    }
-}
-
-impl ProjectThroughOriginOnto<LineAtInfinity> for Scalar {
-    type Output = Scalar;
-
-    fn project_through_origin_onto(self, other: LineAtInfinity) -> Scalar {
-        other.anti_wedge(self.bulk_expansion(other))
-    }
-}
-
-impl ProjectThroughOriginOnto<Plane> for Scalar {
-    type Output = Scalar;
-
-    fn project_through_origin_onto(self, other: Plane) -> Scalar {
-        other.anti_wedge(self.bulk_expansion(other))
-    }
-}
-
-impl ProjectThroughOriginOnto<PlaneAtInfinity> for Scalar {
-    type Output = Scalar;
-
-    fn project_through_origin_onto(self, other: PlaneAtInfinity) -> Scalar {
-        other.anti_wedge(self.bulk_expansion(other))
-    }
-}
-
-impl ProjectThroughOriginOnto<Motor> for Scalar {
-    type Output = MultiVector;
-
-    fn project_through_origin_onto(self, other: Motor) -> MultiVector {
-        other.anti_wedge(self.bulk_expansion(other))
-    }
-}
-
-impl ProjectThroughOriginOnto<Translator> for Scalar {
-    type Output = MultiVector;
-
-    fn project_through_origin_onto(self, other: Translator) -> MultiVector {
-        other.anti_wedge(self.bulk_expansion(other))
-    }
-}
-
-impl ProjectThroughOriginOnto<Flector> for Scalar {
-    type Output = MultiVector;
-
-    fn project_through_origin_onto(self, other: Flector) -> MultiVector {
-        other.anti_wedge(self.bulk_expansion(other))
-    }
-}
-
-impl ProjectThroughOriginOnto<MultiVector> for Scalar {
-    type Output = MultiVector;
-
-    fn project_through_origin_onto(self, other: MultiVector) -> MultiVector {
-        other.anti_wedge(self.bulk_expansion(other))
-    }
-}
-
-impl ProjectThroughOriginOnto<MultiVector> for AntiScalar {
-    type Output = MultiVector;
-
-    fn project_through_origin_onto(self, other: MultiVector) -> MultiVector {
-        other.anti_wedge(self.bulk_expansion(other))
-    }
-}
-
-impl ProjectThroughOriginOnto<Scalar> for Magnitude {
-    type Output = Scalar;
-
-    fn project_through_origin_onto(self, other: Scalar) -> Scalar {
-        other.anti_wedge(self.bulk_expansion(other))
-    }
-}
-
-impl ProjectThroughOriginOnto<Magnitude> for Magnitude {
-    type Output = Magnitude;
-
-    fn project_through_origin_onto(self, other: Magnitude) -> Magnitude {
-        other.anti_wedge(self.bulk_expansion(other))
-    }
-}
-
-impl ProjectThroughOriginOnto<Point> for Magnitude {
-    type Output = Scalar;
-
-    fn project_through_origin_onto(self, other: Point) -> Scalar {
-        other.anti_wedge(self.bulk_expansion(other))
-    }
-}
-
-impl ProjectThroughOriginOnto<PointAtInfinity> for Magnitude {
-    type Output = Scalar;
-
-    fn project_through_origin_onto(self, other: PointAtInfinity) -> Scalar {
-        other.anti_wedge(self.bulk_expansion(other))
-    }
-}
-
-impl ProjectThroughOriginOnto<Line> for Magnitude {
-    type Output = Scalar;
-
-    fn project_through_origin_onto(self, other: Line) -> Scalar {
-        other.anti_wedge(self.bulk_expansion(other))
-    }
-}
-
-impl ProjectThroughOriginOnto<LineAtInfinity> for Magnitude {
-    type Output = Scalar;
-
-    fn project_through_origin_onto(self, other: LineAtInfinity) -> Scalar {
-        other.anti_wedge(self.bulk_expansion(other))
-    }
-}
-
-impl ProjectThroughOriginOnto<Plane> for Magnitude {
-    type Output = Scalar;
-
-    fn project_through_origin_onto(self, other: Plane) -> Scalar {
-        other.anti_wedge(self.bulk_expansion(other))
-    }
-}
-
-impl ProjectThroughOriginOnto<PlaneAtInfinity> for Magnitude {
-    type Output = Scalar;
-
-    fn project_through_origin_onto(self, other: PlaneAtInfinity) -> Scalar {
-        other.anti_wedge(self.bulk_expansion(other))
-    }
-}
-
-impl ProjectThroughOriginOnto<Motor> for Magnitude {
-    type Output = MultiVector;
-
-    fn project_through_origin_onto(self, other: Motor) -> MultiVector {
-        other.anti_wedge(self.bulk_expansion(other))
-    }
-}
-
-impl ProjectThroughOriginOnto<Translator> for Magnitude {
-    type Output = MultiVector;
-
-    fn project_through_origin_onto(self, other: Translator) -> MultiVector {
-        other.anti_wedge(self.bulk_expansion(other))
-    }
-}
-
-impl ProjectThroughOriginOnto<Flector> for Magnitude {
-    type Output = MultiVector;
-
-    fn project_through_origin_onto(self, other: Flector) -> MultiVector {
-        other.anti_wedge(self.bulk_expansion(other))
-    }
-}
-
-impl ProjectThroughOriginOnto<MultiVector> for Magnitude {
-    type Output = MultiVector;
-
-    fn project_through_origin_onto(self, other: MultiVector) -> MultiVector {
-        other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
@@ -39094,22 +36878,6 @@ impl ProjectThroughOriginOnto<MultiVector> for Flector {
     }
 }
 
-impl ProjectThroughOriginOnto<Scalar> for MultiVector {
-    type Output = Scalar;
-
-    fn project_through_origin_onto(self, other: Scalar) -> Scalar {
-        other.anti_wedge(self.bulk_expansion(other))
-    }
-}
-
-impl ProjectThroughOriginOnto<Magnitude> for MultiVector {
-    type Output = Magnitude;
-
-    fn project_through_origin_onto(self, other: Magnitude) -> Magnitude {
-        other.anti_wedge(self.bulk_expansion(other))
-    }
-}
-
 impl ProjectThroughOriginOnto<Point> for MultiVector {
     type Output = MultiVector;
 
@@ -39190,238 +36958,6 @@ impl ProjectThroughOriginOnto<MultiVector> for MultiVector {
     }
 }
 
-impl AntiProjectThroughOriginOnto<Scalar> for Scalar {
-    type Output = Scalar;
-
-    fn anti_project_through_origin_onto(self, other: Scalar) -> Scalar {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Magnitude> for Scalar {
-    type Output = Magnitude;
-
-    fn anti_project_through_origin_onto(self, other: Magnitude) -> Magnitude {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<MultiVector> for Scalar {
-    type Output = MultiVector;
-
-    fn anti_project_through_origin_onto(self, other: MultiVector) -> MultiVector {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Scalar> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn anti_project_through_origin_onto(self, other: Scalar) -> AntiScalar {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Magnitude> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn anti_project_through_origin_onto(self, other: Magnitude) -> AntiScalar {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Point> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn anti_project_through_origin_onto(self, other: Point) -> AntiScalar {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<PointAtInfinity> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn anti_project_through_origin_onto(self, other: PointAtInfinity) -> AntiScalar {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Line> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn anti_project_through_origin_onto(self, other: Line) -> AntiScalar {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<LineAtInfinity> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn anti_project_through_origin_onto(self, other: LineAtInfinity) -> AntiScalar {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Plane> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn anti_project_through_origin_onto(self, other: Plane) -> AntiScalar {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<PlaneAtInfinity> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn anti_project_through_origin_onto(self, other: PlaneAtInfinity) -> AntiScalar {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Motor> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn anti_project_through_origin_onto(self, other: Motor) -> AntiScalar {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Translator> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn anti_project_through_origin_onto(self, other: Translator) -> AntiScalar {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Flector> for AntiScalar {
-    type Output = Motor;
-
-    fn anti_project_through_origin_onto(self, other: Flector) -> Motor {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<MultiVector> for AntiScalar {
-    type Output = MultiVector;
-
-    fn anti_project_through_origin_onto(self, other: MultiVector) -> MultiVector {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Scalar> for Magnitude {
-    type Output = Magnitude;
-
-    fn anti_project_through_origin_onto(self, other: Scalar) -> Magnitude {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Magnitude> for Magnitude {
-    type Output = Magnitude;
-
-    fn anti_project_through_origin_onto(self, other: Magnitude) -> Magnitude {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Point> for Magnitude {
-    type Output = AntiScalar;
-
-    fn anti_project_through_origin_onto(self, other: Point) -> AntiScalar {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<PointAtInfinity> for Magnitude {
-    type Output = AntiScalar;
-
-    fn anti_project_through_origin_onto(self, other: PointAtInfinity) -> AntiScalar {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Line> for Magnitude {
-    type Output = AntiScalar;
-
-    fn anti_project_through_origin_onto(self, other: Line) -> AntiScalar {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<LineAtInfinity> for Magnitude {
-    type Output = AntiScalar;
-
-    fn anti_project_through_origin_onto(self, other: LineAtInfinity) -> AntiScalar {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Plane> for Magnitude {
-    type Output = AntiScalar;
-
-    fn anti_project_through_origin_onto(self, other: Plane) -> AntiScalar {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<PlaneAtInfinity> for Magnitude {
-    type Output = AntiScalar;
-
-    fn anti_project_through_origin_onto(self, other: PlaneAtInfinity) -> AntiScalar {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Motor> for Magnitude {
-    type Output = AntiScalar;
-
-    fn anti_project_through_origin_onto(self, other: Motor) -> AntiScalar {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Translator> for Magnitude {
-    type Output = AntiScalar;
-
-    fn anti_project_through_origin_onto(self, other: Translator) -> AntiScalar {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Flector> for Magnitude {
-    type Output = Motor;
-
-    fn anti_project_through_origin_onto(self, other: Flector) -> Motor {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<MultiVector> for Magnitude {
-    type Output = MultiVector;
-
-    fn anti_project_through_origin_onto(self, other: MultiVector) -> MultiVector {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Scalar> for Point {
-    type Output = Point;
-
-    fn anti_project_through_origin_onto(self, other: Scalar) -> Point {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Magnitude> for Point {
-    type Output = Point;
-
-    fn anti_project_through_origin_onto(self, other: Magnitude) -> Point {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
 impl AntiProjectThroughOriginOnto<Point> for Point {
     type Output = Point;
 
@@ -39454,22 +36990,6 @@ impl AntiProjectThroughOriginOnto<MultiVector> for Point {
     }
 }
 
-impl AntiProjectThroughOriginOnto<Scalar> for Origin {
-    type Output = Origin;
-
-    fn anti_project_through_origin_onto(self, other: Scalar) -> Origin {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Magnitude> for Origin {
-    type Output = Origin;
-
-    fn anti_project_through_origin_onto(self, other: Magnitude) -> Origin {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
 impl AntiProjectThroughOriginOnto<Flector> for Origin {
     type Output = Flector;
 
@@ -39482,22 +37002,6 @@ impl AntiProjectThroughOriginOnto<MultiVector> for Origin {
     type Output = MultiVector;
 
     fn anti_project_through_origin_onto(self, other: MultiVector) -> MultiVector {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Scalar> for PointAtInfinity {
-    type Output = PointAtInfinity;
-
-    fn anti_project_through_origin_onto(self, other: Scalar) -> PointAtInfinity {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Magnitude> for PointAtInfinity {
-    type Output = PointAtInfinity;
-
-    fn anti_project_through_origin_onto(self, other: Magnitude) -> PointAtInfinity {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -39530,22 +37034,6 @@ impl AntiProjectThroughOriginOnto<MultiVector> for PointAtInfinity {
     type Output = MultiVector;
 
     fn anti_project_through_origin_onto(self, other: MultiVector) -> MultiVector {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Scalar> for Line {
-    type Output = Line;
-
-    fn anti_project_through_origin_onto(self, other: Scalar) -> Line {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Magnitude> for Line {
-    type Output = Line;
-
-    fn anti_project_through_origin_onto(self, other: Magnitude) -> Line {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -39614,22 +37102,6 @@ impl AntiProjectThroughOriginOnto<MultiVector> for Line {
     }
 }
 
-impl AntiProjectThroughOriginOnto<Scalar> for LineAtOrigin {
-    type Output = LineAtOrigin;
-
-    fn anti_project_through_origin_onto(self, other: Scalar) -> LineAtOrigin {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Magnitude> for LineAtOrigin {
-    type Output = LineAtOrigin;
-
-    fn anti_project_through_origin_onto(self, other: Magnitude) -> LineAtOrigin {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
 impl AntiProjectThroughOriginOnto<Point> for LineAtOrigin {
     type Output = LineAtOrigin;
 
@@ -39658,22 +37130,6 @@ impl AntiProjectThroughOriginOnto<MultiVector> for LineAtOrigin {
     type Output = MultiVector;
 
     fn anti_project_through_origin_onto(self, other: MultiVector) -> MultiVector {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Scalar> for LineAtInfinity {
-    type Output = LineAtInfinity;
-
-    fn anti_project_through_origin_onto(self, other: Scalar) -> LineAtInfinity {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Magnitude> for LineAtInfinity {
-    type Output = LineAtInfinity;
-
-    fn anti_project_through_origin_onto(self, other: Magnitude) -> LineAtInfinity {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -39738,22 +37194,6 @@ impl AntiProjectThroughOriginOnto<MultiVector> for LineAtInfinity {
     type Output = MultiVector;
 
     fn anti_project_through_origin_onto(self, other: MultiVector) -> MultiVector {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Scalar> for Plane {
-    type Output = Plane;
-
-    fn anti_project_through_origin_onto(self, other: Scalar) -> Plane {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Magnitude> for Plane {
-    type Output = Plane;
-
-    fn anti_project_through_origin_onto(self, other: Magnitude) -> Plane {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -39838,22 +37278,6 @@ impl AntiProjectThroughOriginOnto<MultiVector> for Plane {
     }
 }
 
-impl AntiProjectThroughOriginOnto<Scalar> for PlaneAtOrigin {
-    type Output = PlaneAtOrigin;
-
-    fn anti_project_through_origin_onto(self, other: Scalar) -> PlaneAtOrigin {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Magnitude> for PlaneAtOrigin {
-    type Output = PlaneAtOrigin;
-
-    fn anti_project_through_origin_onto(self, other: Magnitude) -> PlaneAtOrigin {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
 impl AntiProjectThroughOriginOnto<Point> for PlaneAtOrigin {
     type Output = PlaneAtOrigin;
 
@@ -39914,22 +37338,6 @@ impl AntiProjectThroughOriginOnto<MultiVector> for PlaneAtOrigin {
     type Output = MultiVector;
 
     fn anti_project_through_origin_onto(self, other: MultiVector) -> MultiVector {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Scalar> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
-
-    fn anti_project_through_origin_onto(self, other: Scalar) -> PlaneAtInfinity {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Magnitude> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
-
-    fn anti_project_through_origin_onto(self, other: Magnitude) -> PlaneAtInfinity {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -40014,22 +37422,6 @@ impl AntiProjectThroughOriginOnto<MultiVector> for PlaneAtInfinity {
     }
 }
 
-impl AntiProjectThroughOriginOnto<Scalar> for Motor {
-    type Output = Motor;
-
-    fn anti_project_through_origin_onto(self, other: Scalar) -> Motor {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Magnitude> for Motor {
-    type Output = Motor;
-
-    fn anti_project_through_origin_onto(self, other: Magnitude) -> Motor {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
 impl AntiProjectThroughOriginOnto<Point> for Motor {
     type Output = Motor;
 
@@ -40106,22 +37498,6 @@ impl AntiProjectThroughOriginOnto<MultiVector> for Motor {
     type Output = MultiVector;
 
     fn anti_project_through_origin_onto(self, other: MultiVector) -> MultiVector {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Scalar> for Rotor {
-    type Output = Rotor;
-
-    fn anti_project_through_origin_onto(self, other: Scalar) -> Rotor {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Magnitude> for Rotor {
-    type Output = Rotor;
-
-    fn anti_project_through_origin_onto(self, other: Magnitude) -> Rotor {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -40206,22 +37582,6 @@ impl AntiProjectThroughOriginOnto<MultiVector> for Rotor {
     }
 }
 
-impl AntiProjectThroughOriginOnto<Scalar> for Translator {
-    type Output = Translator;
-
-    fn anti_project_through_origin_onto(self, other: Scalar) -> Translator {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Magnitude> for Translator {
-    type Output = Translator;
-
-    fn anti_project_through_origin_onto(self, other: Magnitude) -> Translator {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
 impl AntiProjectThroughOriginOnto<Point> for Translator {
     type Output = Motor;
 
@@ -40298,22 +37658,6 @@ impl AntiProjectThroughOriginOnto<MultiVector> for Translator {
     type Output = MultiVector;
 
     fn anti_project_through_origin_onto(self, other: MultiVector) -> MultiVector {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Scalar> for Flector {
-    type Output = Flector;
-
-    fn anti_project_through_origin_onto(self, other: Scalar) -> Flector {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Magnitude> for Flector {
-    type Output = Flector;
-
-    fn anti_project_through_origin_onto(self, other: Magnitude) -> Flector {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -40398,22 +37742,6 @@ impl AntiProjectThroughOriginOnto<MultiVector> for Flector {
     }
 }
 
-impl AntiProjectThroughOriginOnto<Scalar> for MultiVector {
-    type Output = MultiVector;
-
-    fn anti_project_through_origin_onto(self, other: Scalar) -> MultiVector {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl AntiProjectThroughOriginOnto<Magnitude> for MultiVector {
-    type Output = MultiVector;
-
-    fn anti_project_through_origin_onto(self, other: Magnitude) -> MultiVector {
-        other.wedge(self.bulk_contraction(other))
-    }
-}
-
 impl AntiProjectThroughOriginOnto<Point> for MultiVector {
     type Output = MultiVector;
 
@@ -40491,62 +37819,6 @@ impl AntiProjectThroughOriginOnto<MultiVector> for MultiVector {
 
     fn anti_project_through_origin_onto(self, other: MultiVector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
-    }
-}
-
-impl CosineAngle<AntiScalar> for AntiScalar {
-    type Output = Scalar;
-
-    fn cosine_angle(self, other: AntiScalar) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
-    }
-}
-
-impl CosineAngle<Point> for AntiScalar {
-    type Output = Scalar;
-
-    fn cosine_angle(self, other: Point) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
-    }
-}
-
-impl CosineAngle<Origin> for AntiScalar {
-    type Output = Scalar;
-
-    fn cosine_angle(self, other: Origin) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
-    }
-}
-
-impl CosineAngle<Line> for AntiScalar {
-    type Output = Scalar;
-
-    fn cosine_angle(self, other: Line) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
-    }
-}
-
-impl CosineAngle<LineAtOrigin> for AntiScalar {
-    type Output = Scalar;
-
-    fn cosine_angle(self, other: LineAtOrigin) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
-    }
-}
-
-impl CosineAngle<Plane> for AntiScalar {
-    type Output = Scalar;
-
-    fn cosine_angle(self, other: Plane) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
-    }
-}
-
-impl CosineAngle<PlaneAtOrigin> for AntiScalar {
-    type Output = Scalar;
-
-    fn cosine_angle(self, other: PlaneAtOrigin) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
     }
 }
 

@@ -23,10 +23,11 @@ impl BasisElement {
 }
 
 
-// TODO NEW PLAN
+// NEW PLAN (compared to original geometric_algebra repository)
 //  Since all the weird complements and stuff is characteristic to the strange GeometricAlgebra that is CGA...
 //  Leave BasisElement as a totally plain data type,
 //  And make all the fancy "complement" and "product" and "involution" behavioral stuff associated with the GA instead.
+//  (see GeometricAlgebraTrait)
 impl BasisElement {
     pub fn get_coefficient(&self) -> isize {
         self.scalar

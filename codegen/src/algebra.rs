@@ -202,6 +202,40 @@ impl Product {
 
         // TODO check that the correct predicates are used for the anti_products here, since left and right
         //  kind of switch places on the anti_product. See Cayley tables.
+        // checking.... (smoke check on contraction result MultiVectorGroups.g1)
+        //  left_contraction is fine
+        //  right_contraction is fine
+        //  left_anti_contraction is... wrong
+        //  right_anti_contraction is... wrong
+        //
+        // Despite these impls being correct (probably), the simd math leaves a lot to be desired....
+        // For example, impl RightAntiContraction<MultiVector> for MultiVector has the following expression:
+        /*
+        g1:   Simd32x4::from(self.group1()[0]) * Simd32x4::from(other.group0()[1]) * Simd32x4::from([1.0, 0.0, 0.0, 0.0])
+            + Simd32x4::from(self.group1()[1]) * Simd32x4::from(other.group0()[1]) * Simd32x4::from([0.0, 1.0, 0.0, 0.0])
+            + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group0()[1]) * Simd32x4::from([0.0, 0.0, 1.0, 0.0])
+            + Simd32x4::from(self.group1()[3]) * Simd32x4::from(other.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0])
+            + Simd32x4::from(self.group0()[0]) * swizzle!(other.group4(), 0, 1, 2, 0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0])
+         */
+        // This breaks down the Simd vectors so much that it doesn't look like it is taking advantage of Simd at all.
+        // If I'm not wrong, the following would make a correct substitute for the above:
+        /*
+        g1:   self.group1() * Simd32x4::from(other.group0()[1])
+            + Simd32x4::from(self.group0()[0]) * swizzle!(other.group4(), 0, 1, 2, 0) * Simd32x4::from([1.0, 1.0, 1.0, 0.0])
+         */
+        // And I'm not even sure if the coefficients beside that swizzle (1,1,1,0) are correct to begin with.
+        // As far as I can see from the Cayley Table, we shouldn't just ignore/disappear the e4 component.
+        // Hmmm..... check this out from impl LeftContraction<MultiVector> for MultiVector
+        /*
+        g4: Simd32x4::from(self.group0()[0]) * other.group4()
+            + swizzle!(self.group1(), 0, 1, 2, 0) * Simd32x4::from([other.group0()[1], other.group0()[1], other.group0()[1], other.group0()[0]]) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]) } }
+         */
+        // Although from the same spot in the Cayley table, it uses the much simpler expression. It also has the problem of ignoring e4 though.
+        // TODO yeah these definitely need another look. Or two or three.
+        //  - self vs other term matching seems okay
+        //  - but expressions do not always simplify optimally
+        //  - and some negative signs might be on or off incorrectly (left_anti_contraction MultiVectorGroups g1)
+        //  - the strange ignoring of e4
 
         for name in &dialect.left_interior_product {
             products.push((*name, product.projected(product_and_a_is_b)))

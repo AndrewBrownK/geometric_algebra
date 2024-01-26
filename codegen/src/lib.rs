@@ -37,68 +37,6 @@ pub struct AlgebraDescriptor {
 
 
 
-pub fn read_config_from_env() -> AlgebraDescriptor {
-
-    let mut args = std::env::args();
-    let _executable = args.next().unwrap();
-
-    // Example:
-    // epga3d:1,1,1,1;Scalar:1;MultiVector:1,e23,-e13,e12|e0,-e023,e013,-e012|e123,e1,e2,e3|e0123,e01,e02,e03;Rotor:1,e23,-e13,e12;Point:e123,-e023,e013,-e012;IdealPoint:e01,e02,e03;Plane:e0,e1,e2,e3;Line:e01,e02,e03|e23,-e13,e12;Translator:1,e01,e02,e03;Motor:1,e23,-e13,e12|e0123,e01,e02,e03;PointAndPlane:e123,-e023,e013,-e012|e0,e1,e2,e3
-    let config = args.next().unwrap();
-    read_config_from_str(config.as_str())
-}
-pub fn read_config_from_str(config: &str) -> AlgebraDescriptor {
-
-
-    // Example:
-    // epga3d:1,1,1,1;Scalar:1;MultiVector:1,e23,-e13,e12|e0,-e023,e013,-e012|e123,e1,e2,e3|e0123,e01,e02,e03;Rotor:1,e23,-e13,e12;Point:e123,-e023,e013,-e012;IdealPoint:e01,e02,e03;Plane:e0,e1,e2,e3;Line:e01,e02,e03|e23,-e13,e12;Translator:1,e01,e02,e03;Motor:1,e23,-e13,e12|e0123,e01,e02,e03;PointAndPlane:e123,-e023,e013,-e012|e0,e1,e2,e3
-    let config = config.to_string();
-
-    // epga3d:1,1,1,1
-    // Scalar:1
-    // MultiVector:1,e23,-e13,e12|e0,-e023,e013,-e012|e123,e1,e2,e3|e0123,e01,e02,e03
-    // Rotor:1,e23,-e13,e12
-    // Point:e123,-e023,e013,-e012
-    // IdealPoint:e01,e02,e03
-    // Plane:e0,e1,e2,e3
-    // Line:e01,e02,e03|e23,-e13,e12
-    // Translator:1,e01,e02,e03
-    // Motor:1,e23,-e13,e12|e0123,e01,e02,e03
-    // PointAndPlane:e123,-e023,e013,-e012|e0,e1,e2,e3
-    let mut config_iter = config.split(';');
-
-    // epga3d:1,1,1,1
-    let algebra_descriptor = config_iter.next().unwrap();
-    let mut algebra_descriptor_iter = algebra_descriptor.split(':');
-    // epga3d
-    let algebra_name = algebra_descriptor_iter.next().unwrap();
-
-    // vec![1,1,1,1]
-    let generator_squares = algebra_descriptor_iter
-        // 1,1,1,1
-        .next()
-        .unwrap()
-        .split(',')
-        .map(|x| x.parse::<isize>().unwrap())
-        .collect::<Vec<_>>();
-
-    todo!()
-
-    // let algebra = RigidGeometricAlgebra {
-    //     generator_squares: generator_squares.as_slice(),
-    // };
-    //
-    // let mut multi_vectors = vec![];
-    // for multi_vector_descriptor in config_iter {
-    //     multi_vectors.push(read_multi_vector_from_str(multi_vector_descriptor, &algebra));
-    // }
-    //
-    // AlgebraDescriptor {
-    //     algebra_name: algebra_name.to_string(),
-    //     generator_squares,
-    //     multi_vectors,
-    // }
-}
 
 pub fn read_multi_vector_from_str(multi_vector_descriptor: &str, algebra: &RigidGeometricAlgebra) -> MultiVectorClass {
     let mut multi_vector_descriptor_iter = multi_vector_descriptor.split(':');
@@ -692,7 +630,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
         for param_a in registry.single_parameters() {
             let projective_basis = if self.algebra.algebra_name() == "rga3d" {
-                // TODO change to use Origin instead of raw basis element
                 self.algebra.parse("e4")
             } else {
                 break
@@ -761,61 +698,32 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
         }
 
+        // We can end up with some very strange expansions, contractions, and projections
+        // if we don't manually exclude these at some point.
+        let non_objects = ["Scalar", "AntiScalar", "Magnitude"];
 
-        for (param_a, param_b) in registry.pair_parameters() {
-            let name = "BulkContraction";
-            let _: Option<()> = try {
-                // Bulk contraction is the antiwedge on a right bulk dual
-                let rbd = self.trait_impls.get_single_invocation("RightBulkDual", variable(&param_b))?;
-                let aw = self.trait_impls.get_pair_invocation("AntiWedge", variable(&param_a), rbd)?;
-                let bc = single_expression_pair_trait_impl(name, &param_a, &param_b, aw);
-                emitter.emit(&bc).unwrap();
-                self.trait_impls.add_pair_impl(name, param_a, param_b, bc);
-            };
+        let contraction_expansion_stuff = [
+            ("BulkContraction", "RightBulkDual", "AntiWedge"),
+            ("WeightContraction", "RightWeightDual", "AntiWedge"),
+            ("BulkExpansion", "RightBulkDual", "Wedge"),
+            ("WeightExpansion", "RightWeightDual", "Wedge"),
+        ];
+        for (name, dual, product) in contraction_expansion_stuff {
+            for (param_a, param_b) in registry.pair_parameters() {
+                let a_name = param_a.multi_vector_class().class_name.as_str();
+                let b_name = param_b.multi_vector_class().class_name.as_str();
+                if non_objects.contains(&a_name) || non_objects.contains(&b_name) {
+                    continue
+                }
+                let _: Option<()> = try {
+                    let rbd = self.trait_impls.get_single_invocation(dual, variable(&param_b))?;
+                    let aw = self.trait_impls.get_pair_invocation(product, variable(&param_a), rbd)?;
+                    let bc = single_expression_pair_trait_impl(name, &param_a, &param_b, aw);
+                    emitter.emit(&bc).unwrap();
+                    self.trait_impls.add_pair_impl(name, param_a, param_b, bc);
+                };
+            }
         }
-        for (param_a, param_b) in registry.pair_parameters() {
-            let name = "WeightContraction";
-            let _: Option<()> = try {
-                // Weight contraction is the antiwedge on a right weight dual
-                let rwd = self.trait_impls.get_single_invocation("RightWeightDual", variable(&param_b))?;
-                let aw = self.trait_impls.get_pair_invocation("AntiWedge", variable(&param_a), rwd)?;
-                let wc = single_expression_pair_trait_impl(name, &param_a, &param_b, aw);
-                emitter.emit(&wc).unwrap();
-                self.trait_impls.add_pair_impl(name, param_a, param_b, wc);
-            };
-        }
-        for (param_a, param_b) in registry.pair_parameters() {
-            let name = "BulkExpansion";
-            let _: Option<()> = try {
-                // Bulk expansion is the wedge on a right bulk dual
-                let rbd = self.trait_impls.get_single_invocation("RightBulkDual", variable(&param_b))?;
-                let w = self.trait_impls.get_pair_invocation("Wedge", variable(&param_a), rbd)?;
-                let be = single_expression_pair_trait_impl(name, &param_a, &param_b, w);
-                emitter.emit(&be).unwrap();
-                self.trait_impls.add_pair_impl(name, param_a, param_b, be);
-            };
-        }
-        for (param_a, param_b) in registry.pair_parameters() {
-            let name = "WeightExpansion";
-            let _: Option<()> = try {
-                // Weight expansion is the wedge on a right weight dual
-                let rwd = self.trait_impls.get_single_invocation("RightWeightDual", variable(&param_b))?;
-                let w = self.trait_impls.get_pair_invocation("Wedge", variable(&param_a), rwd)?;
-                let we = single_expression_pair_trait_impl(name, &param_a, &param_b, w);
-                emitter.emit(&we).unwrap();
-                self.trait_impls.add_pair_impl(name, param_a, param_b, we);
-            };
-        }
-
-
-        // TODO I feel like (but am not sure) there might be excess implementations of ProjectOnto and AntiProjectOnto.
-        //  https://rigidgeometricalgebra.org/wiki/index.php?title=Projections
-        //  The article shows a clear pattern of projecting lower dimensions onto higher dimensions, and vice versa
-        //  for anti-projection. Currently I am getting impls for all kinds of combinations that violate that pattern.
-        //  Such as for example projecting a scalar onto a line. I don't even know what that means.
-        //  It might be the case that these implementations really do stuff, and we just don't know what it means yet.
-        //  Or it is possible that these implementations are degenerate cases and we'd rather omit them.
-        //  I'll have to play around and test to find out.
 
         for (param_a, param_b) in registry.pair_parameters() {
             let name = "ProjectOrthogonallyOnto";
