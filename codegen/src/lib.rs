@@ -267,59 +267,30 @@ impl<'a> TraitImpls<'a> {
 
 pub struct CodeGenerator<'r, GA> {
     algebra: GA,
-    registry: &'r mut MultiVectorClassRegistry,
     trait_impls: TraitImpls<'r>
 }
 
 
 impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
-    pub fn new(algebra: GA, registry: &'r mut MultiVectorClassRegistry) -> Self {
+    pub fn new(algebra: GA) -> Self {
         CodeGenerator {
             algebra,
-            registry,
             trait_impls: TraitImpls::new()
         }
     }
 
-
-
-
-
-    // TODO it seems to be the <'s: 'r> part that breaks the outer lifetimes
-    pub fn lifetime_debug<'s: 'r, 'e>(&'s mut self, emitter: &'e mut Emitter<std::fs::File>) {
-        // let x = self.registry.single_parameters();
-        // for param_a in x {
-        //     let name = "Foo";
-        //     self.trait_impls.add_single_impl(name, param_a.clone(), AstNode::None);
-        // }
-    }
-
-    // TODO it seems to be the <'s: 'r> part that breaks the outer lifetimes
-    pub fn lifetime_debug2<'s: 'r, 'e>(&'s mut self, emitter: &'e mut Emitter<std::fs::File>) {
-        // let x = self.registry.single_parameters();
-        // for param_a in x {
-        //     let name = "Foo";
-        //     self.trait_impls.add_single_impl(name, param_a.clone(), AstNode::None);
-        // }
-    }
-
-
-
-
-
-
     /// Step 1: These items are somewhat universal across geometric algebras
-    pub fn preamble_and_universal_traits<'s: 'r, 'e>(&'s mut self, emitter: &'e mut Emitter<std::fs::File>) -> std::io::Result<()> {
+    pub fn preamble_and_universal_traits<'s, 'e>(&'s mut self, registry: &'r MultiVectorClassRegistry, emitter: &'e mut Emitter<std::fs::File>) -> std::io::Result<()> {
         // Preamble
         emitter.emit(&AstNode::Preamble)?;
 
         // Class Definitions
-        for class in self.registry.classes.iter() {
+        for class in registry.classes.iter() {
             emitter.emit(&AstNode::ClassDefinition { class })?;
         }
 
         // Constants
-        for param_a in self.registry.single_parameters() {
+        for param_a in registry.single_parameters() {
             let class_a = param_a.multi_vector_class();
             for name in &["Zero", "One"] {
                 let ast_node = class_a.constant(name);
@@ -331,7 +302,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         }
 
         // Uniform Grades
-        for param_a in self.registry.single_parameters() {
+        for param_a in registry.single_parameters() {
             let class_a = param_a.multi_vector_class();
 
             let grade_unanimity = class_a.flat_basis().iter()
@@ -339,7 +310,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 .reduce(|(a_grade, unanimous), (b_grade, _)| (a_grade, a_grade == b_grade && unanimous));
 
             if let Some((grade, true)) = grade_unanimity {
-                let anti_grade = self.algebra.anti_scalar_element().grade() - grade;
+                let anti_grade = (self.algebra.anti_scalar_element().grade() as isize - grade as isize).unsigned_abs();
                 let grade_impl = MultiVectorClass::derive_grade("Grade", &param_a, grade);
                 emitter.emit(&grade_impl).unwrap();
                 self.trait_impls.add_class_impl("Grade", param_a.multi_vector_class(), grade_impl);
@@ -352,12 +323,12 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
         // Involutions
         let involutions = Involution::involutions(&self.algebra);
-        for param_a in self.registry.single_parameters() {
+        for param_a in registry.single_parameters() {
             // TODO for some reason not all involutions are being output for CGA,
             //  for example search "impl Dual" in cga3d.rs vs ppga3d.rs.
             //  This is strange because some involutions are written, like Reversal.
             for (name, involution) in involutions.iter() {
-                let ast_node = MultiVectorClass::involution(name, involution, &param_a, &self.registry, false);
+                let ast_node = MultiVectorClass::involution(name, involution, &param_a, registry, false);
                 emitter.emit(&ast_node).unwrap();
                 if ast_node != AstNode::None {
                     self.trait_impls.add_single_impl(name, param_a.clone(), ast_node);
@@ -366,9 +337,19 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         }
 
         // Square Root
-        // TODO see if this generated correctly/reasonably for Magnitude
-        let scalar_like = vec!["Scalar", "AntiScalar", "Magnitude"];
-        for param_a in self.registry.single_parameters() {
+        // Why not impl Sqrt for Magnitude? Well...
+        //  - the choices of AstNode don't make it immediately easy. I mean it's possible, just annoying.
+        //  - The question of "how" to implement Sqrt begs for other issues... Initial idea was to sqrt the scalar
+        //    component and leave the antiscalar component. However this defies the symmetry of scalars and antiscalars.
+        //    Additionally, you can look at the impl of Add for Magnitude and realize, that is not accurate (or biased,
+        //    rather) to Scalars either. Magnitude + Magnitude is not the same result as Scalar + Scalar. This might
+        //    seem strange or incorrect at first glance, but again.... symmetry with antiscalars implies it shouldn't
+        //    be biased for scalars... and if we can component-wise "Add" Vectors and other MultiVectorClasses, then
+        //    why not AntiScalars and Magnitudes? So the "impl Add for Magnitude" could very well be correct in its
+        //    own special way, but in any case, this doesn't reeeeeaaallly make me comfortable enough to do a
+        //    component-wise Square Root, because we don't see component-wise Square Roots in other multi component things.
+        let scalar_like = vec!["Scalar", "AntiScalar"];
+        for param_a in registry.single_parameters() {
             let class_name = param_a.data_type.data_class_name();
             if !scalar_like.contains(&class_name.as_str()) {
                 continue
@@ -386,25 +367,13 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 data_type_hint: None,
                 content: ExpressionContent::SquareRoot(Box::new(access))
             };
-            let mut constructor_args = vec![(DataType::SimdVector(1), sqrt)];
-            if class_name == "Magnitude" {
-                let access = Expression {
-                    size: 1,
-                    data_type_hint: None,
-                    content: ExpressionContent::Access(
-                        Box::new(variable(&param_a)),
-                        1
-                    )
-                };
-                constructor_args.push((DataType::SimdVector(1), access));
-            }
             let construct = Expression {
                 size: 1,
                 data_type_hint: Some(param_a.data_type.clone()),
                 content: ExpressionContent::InvokeClassMethod(
                     param_a.multi_vector_class(),
                     "Constructor",
-                    constructor_args
+                    vec![(DataType::SimdVector(1), sqrt)]
                 )
             };
             let name = "Sqrt";
@@ -415,11 +384,11 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
 
         // Into
-        for (param_a, param_b) in self.registry.pair_parameters() {
+        for (param_a, param_b) in registry.pair_parameters() {
             let class_a = param_a.multi_vector_class();
             let class_b = param_b.multi_vector_class();
             if class_a != class_b {
-                let ast_node = MultiVectorClass::involution("Into", &Involution::projection(param_b.multi_vector_class()), &param_a, &self.registry, true);
+                let ast_node = MultiVectorClass::involution("Into", &Involution::projection(param_b.multi_vector_class()), &param_a, registry, true);
                 emitter.emit(&ast_node).unwrap();
                 if ast_node != AstNode::None {
                     self.trait_impls.add_pair_impl("Into", param_a.clone(), param_b.clone(), ast_node);
@@ -428,9 +397,9 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         }
 
         // Add, Subtract
-        for (param_a, param_b) in self.registry.pair_parameters() {
+        for (param_a, param_b) in registry.pair_parameters() {
             for name in &["Add", "Sub"] {
-                let ast_node = MultiVectorClass::element_wise(*name, &param_a, &param_b, &self.registry);
+                let ast_node = MultiVectorClass::element_wise(*name, &param_a, &param_b, registry);
                 emitter.emit(&ast_node).unwrap();
                 if ast_node != AstNode::None {
                     self.trait_impls.add_pair_impl(name, param_a.clone(), param_b.clone(), ast_node);
@@ -439,12 +408,12 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         }
 
         // Multiply, Divide
-        for (param_a, param_b) in self.registry.pair_parameters() {
+        for (param_a, param_b) in registry.pair_parameters() {
             if param_a.multi_vector_class() != param_b.multi_vector_class() {
                 continue
             }
             for name in &["Mul", "Div"] {
-                let ast_node = MultiVectorClass::element_wise(*name, &param_a, &param_b, &self.registry);
+                let ast_node = MultiVectorClass::element_wise(*name, &param_a, &param_b, registry);
                 emitter.emit(&ast_node).unwrap();
                 if ast_node != AstNode::None {
                     self.trait_impls.add_pair_impl(name, param_a.clone(), param_b.clone(), ast_node);
@@ -454,9 +423,9 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
         // Products from Geometric Algebra
         let products = Product::products(&self.algebra);
-        for (param_a, param_b) in self.registry.pair_parameters() {
+        for (param_a, param_b) in registry.pair_parameters() {
             for (name, product) in products.iter() {
-                let ast_node = MultiVectorClass::product(name, product, &param_a, &param_b, &self.registry);
+                let ast_node = MultiVectorClass::product(name, product, &param_a, &param_b, registry);
                 emitter.emit(&ast_node).unwrap();
                 if ast_node != AstNode::None {
                     self.trait_impls.add_pair_impl(name, param_a.clone(), param_b.clone(), ast_node);
@@ -469,31 +438,33 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     }
 
     /// Step 2: Create some basic norms
-    pub fn basic_norms<'s: 'r, 'e>(&'s mut self, emitter: &'e mut Emitter<std::fs::File>) {
-        for param_a in self.registry.single_parameters() {
-            let name = "SquaredMagnitude";
-            let _: Option<()> = try {
-                let reversal = self.trait_impls.get_single_invocation("Reversal", variable(&param_a))?;
-                let dot = self.algebra.dialect().dot_product.first()?;
-                let dot = self.trait_impls.get_pair_invocation(dot, variable(&param_a), reversal)?;
-                let squared_magnitude = single_expression_single_trait_impl(name, &param_a, dot);
-                emitter.emit(&squared_magnitude).unwrap();
-                self.trait_impls.add_single_impl(name, param_a.clone(), squared_magnitude);
-            };
-        }
+    pub fn basic_norms<'s, 'e>(&'s mut self, registry: &'r MultiVectorClassRegistry, emitter: &'e mut Emitter<std::fs::File>) {
+        // for param_a in registry.single_parameters() {
+        //     let name = "SquaredMagnitude";
+        //     let _: Option<()> = try {
+        //         let reversal = self.trait_impls.get_single_invocation("Reversal", variable(&param_a))?;
+        //         let dot = self.algebra.dialect().dot_product.first()?;
+        //         let dot = self.trait_impls.get_pair_invocation(dot, variable(&param_a), reversal)?;
+        //         let squared_magnitude = single_expression_single_trait_impl(name, &param_a, dot);
+        //         emitter.emit(&squared_magnitude).unwrap();
+        //         self.trait_impls.add_single_impl(name, param_a.clone(), squared_magnitude);
+        //     };
+        // }
+        //
+        // for param_a in registry.single_parameters() {
+        //     let name = "Magnitude";
+        //     let _: Option<()> = try {
+        //         let sm = self.trait_impls.get_single_invocation("SquaredMagnitude", variable(&param_a))?;
+        //         let m = self.trait_impls.get_single_invocation("Sqrt", sm)?;
+        //         let magnitude = single_expression_single_trait_impl(name, &param_a, m);
+        //         emitter.emit(&magnitude).unwrap();
+        //         self.trait_impls.add_single_impl(name, param_a.clone(), magnitude);
+        //     };
+        // }
 
-        for param_a in self.registry.single_parameters() {
-            let name = "Magnitude";
-            let _: Option<()> = try {
-                let sm = self.trait_impls.get_single_invocation("SquaredMagnitude", variable(&param_a))?;
-                let m = self.trait_impls.get_single_invocation("Sqrt", sm)?;
-                let magnitude = single_expression_single_trait_impl(name, &param_a, m);
-                emitter.emit(&magnitude).unwrap();
-                self.trait_impls.add_single_impl(name, param_a.clone(), magnitude);
-            };
-        }
+        // TODO BulkNormSquared, WeightNormSquared
 
-        for param_a in self.registry.single_parameters() {
+        for param_a in registry.single_parameters() {
             let name = "BulkNorm";
             let _: Option<()> = try {
                 let dot = self.algebra.dialect().dot_product.first()?;
@@ -505,7 +476,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
         }
 
-        for param_a in self.registry.single_parameters() {
+        for param_a in registry.single_parameters() {
             let name = "WeightNorm";
             let _: Option<()> = try {
                 let dot = self.algebra.dialect().anti_dot_product.first()?;
@@ -517,7 +488,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
         }
 
-        for param_a in self.registry.single_parameters() {
+        for param_a in registry.single_parameters() {
             let name = "GeometricNorm";
             let _: Option<()> = try {
                 let bn = self.trait_impls.get_single_invocation("BulkNorm", variable(&param_a))?;
@@ -534,7 +505,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     /// These items require some special insight per Geometric Algebra, for example if there are
     /// multiple/special projective dimensions with different meanings.
     pub fn fancy_norms(
-        &mut self, prefix: &'static str, projective_basis: BasisElement, emitter: &mut Emitter<std::fs::File>
+        &mut self, prefix: &'static str, projective_basis: BasisElement, registry: &'r MultiVectorClassRegistry, emitter: &mut Emitter<std::fs::File>
     ) {
         // TODO this is all kinds of fucked currently. Not sure how to generate norms generically
         //  for both RGA and CGA. I could get all of RGA and the flat objects of CGA by doing
@@ -547,10 +518,10 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     }
 
     /// Step 4: Create some more stuff that depends on norms
-    pub fn post_norm_universal_stuff<'s: 'r>(&'s mut self, emitter: &mut Emitter<std::fs::File>) {
+    pub fn post_norm_universal_stuff<'s, 'e>(&'s mut self, registry: &'r MultiVectorClassRegistry, emitter: &'e mut Emitter<std::fs::File>) {
 
         // Scale
-        for (param_a, param_b) in self.registry.pair_parameters() {
+        for (param_a, param_b) in registry.pair_parameters() {
             let name = "Scale";
             if param_b.multi_vector_class().grouped_basis != vec![vec![self.algebra.scalar_element()]] {
                 continue
@@ -572,7 +543,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         }
 
         // Signum
-        for (param_a, param_b) in self.registry.pair_parameters() {
+        for (param_a, param_b) in registry.pair_parameters() {
             let name = "Signum";
             if param_b.multi_vector_class().grouped_basis != vec![vec![self.algebra.scalar_element()]] {
                 continue
@@ -589,7 +560,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         }
 
         // Inverse
-        for (param_a, param_b) in self.registry.pair_parameters() {
+        for (param_a, param_b) in registry.pair_parameters() {
             if param_b.multi_vector_class().grouped_basis != vec![vec![self.algebra.scalar_element()]] {
                 continue;
             }
@@ -605,7 +576,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         }
 
         // Unitize
-        for (param_a, param_b) in self.registry.pair_parameters() {
+        for (param_a, param_b) in registry.pair_parameters() {
             if param_b.multi_vector_class().grouped_basis != vec![vec![self.algebra.scalar_element()]] {
                 continue;
             }
@@ -621,7 +592,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         }
 
         // Powi
-        for param_a in self.registry.single_parameters() {
+        for param_a in registry.single_parameters() {
             let name = "Powi";
             let _: Option<()> = try {
                 let gp = self.algebra.dialect().geometric_product.first()?;
@@ -643,7 +614,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
         }
 
-        for (param_a, param_b) in self.registry.pair_parameters() {
+        for (param_a, param_b) in registry.pair_parameters() {
             let name = "GeometricQuotient";
             let _: Option<()> = try {
                 let gp = self.algebra.dialect().geometric_product.first()?;
@@ -655,7 +626,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
         }
 
-        // for (param_a, param_b) in self.registry.pair_parameters() {
+        // for (param_a, param_b) in registry.pair_parameters() {
         //     let _: Option<()> = try {
         //         let gp_name = self.algebra.dialect().geometric_product.first()?;
         //         let (gp, gp_r) = self.trait_impls.get_pair_impl_and_result(gp_name, &param_a, &param_b)?;
@@ -670,7 +641,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         //     };
         // }
 
-        for (param_a, param_b) in self.registry.pair_parameters() {
+        for (param_a, param_b) in registry.pair_parameters() {
             let _: Option<()> = try {
                 let gap = self.algebra.dialect().geometric_anti_product.first()?;
                 let (gp, gp_r) = self.trait_impls.get_pair_impl_and_result(gap, &param_a, &param_b)?;
@@ -685,7 +656,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
         }
 
-        for (param_a, param_b) in self.registry.pair_parameters() {
+        for (param_a, param_b) in registry.pair_parameters() {
             // Invert (Inversion)
             // https://rigidgeometricalgebra.org/wiki/index.php?title=Inversion
             // The choice of what class should constitute a "Point" is somewhat contrived.
@@ -703,7 +674,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
         }
 
-        for (param_a, param_b) in self.registry.pair_parameters() {
+        for (param_a, param_b) in registry.pair_parameters() {
             // Reflect (Reflection)
             // https://rigidgeometricalgebra.org/wiki/index.php?title=Reflection
             // The choice of what class should constitute a "Plane" is somewhat contrived.
@@ -721,7 +692,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
         }
 
-        for param_a in self.registry.single_parameters() {
+        for param_a in registry.single_parameters() {
             let projective_basis = if self.algebra.algebra_name() == "rga3d" {
                 // TODO rename to e4 when the time is right
                 self.algebra.parse("e3")
@@ -730,7 +701,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
 
             let bulk = MultiVectorClass::derive_bulk_or_weight(
-                "Bulk", &param_a, &projective_basis, false, &self.algebra, &self.registry
+                "Bulk", &param_a, &projective_basis, false, &self.algebra, registry
             );
             if bulk != AstNode::None {
                 emitter.emit(&bulk).unwrap();
@@ -738,7 +709,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             }
 
             let weight = MultiVectorClass::derive_bulk_or_weight(
-                "Weight", &param_a, &projective_basis, true, &self.algebra, &self.registry
+                "Weight", &param_a, &projective_basis, true, &self.algebra, registry
             );
             if weight != AstNode::None {
                 emitter.emit(&weight).unwrap();
@@ -747,7 +718,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         }
 
 
-        for param_a in self.registry.single_parameters() {
+        for param_a in registry.single_parameters() {
             let name = "RightBulkDual";
             let _: Option<()> = try {
                 // Right bulk dual is right complement of bulk
@@ -758,7 +729,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 self.trait_impls.add_single_impl(name, param_a, rbd);
             };
         }
-        for param_a in self.registry.single_parameters() {
+        for param_a in registry.single_parameters() {
             let name = "RightWeightDual";
             let _: Option<()> = try {
                 // Right weight dual is right complement of weight
@@ -769,7 +740,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 self.trait_impls.add_single_impl(name, param_a, rwd);
             };
         }
-        for param_a in self.registry.single_parameters() {
+        for param_a in registry.single_parameters() {
             let name = "LeftBulkDual";
             let _: Option<()> = try {
                 // Left bulk dual is left complement of bulk
@@ -780,7 +751,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 self.trait_impls.add_single_impl(name, param_a, lbd);
             };
         }
-        for param_a in self.registry.single_parameters() {
+        for param_a in registry.single_parameters() {
             let name = "LeftWeightDual";
             let _: Option<()> = try {
                 // Left weight dual is left complement of weight
@@ -793,7 +764,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         }
 
 
-        for (param_a, param_b) in self.registry.pair_parameters() {
+        for (param_a, param_b) in registry.pair_parameters() {
             let name = "BulkContraction";
             let _: Option<()> = try {
                 // Bulk contraction is the antiwedge on a right bulk dual
@@ -804,7 +775,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 self.trait_impls.add_pair_impl(name, param_a, param_b, bc);
             };
         }
-        for (param_a, param_b) in self.registry.pair_parameters() {
+        for (param_a, param_b) in registry.pair_parameters() {
             let name = "WeightContraction";
             let _: Option<()> = try {
                 // Weight contraction is the antiwedge on a right weight dual
@@ -815,7 +786,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 self.trait_impls.add_pair_impl(name, param_a, param_b, wc);
             };
         }
-        for (param_a, param_b) in self.registry.pair_parameters() {
+        for (param_a, param_b) in registry.pair_parameters() {
             let name = "BulkExpansion";
             let _: Option<()> = try {
                 // Bulk expansion is the wedge on a right bulk dual
@@ -826,7 +797,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 self.trait_impls.add_pair_impl(name, param_a, param_b, be);
             };
         }
-        for (param_a, param_b) in self.registry.pair_parameters() {
+        for (param_a, param_b) in registry.pair_parameters() {
             let name = "WeightExpansion";
             let _: Option<()> = try {
                 // Weight expansion is the wedge on a right weight dual
@@ -848,7 +819,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         //  Or it is possible that these implementations are degenerate cases and we'd rather omit them.
         //  I'll have to play around and test to find out.
 
-        for (param_a, param_b) in self.registry.pair_parameters() {
+        for (param_a, param_b) in registry.pair_parameters() {
             let name = "ProjectOrthogonallyOnto";
             let _: Option<()> = try {
                 let we = self.trait_impls.get_pair_invocation("WeightExpansion", variable(&param_a), variable(&param_b))?;
@@ -859,7 +830,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 self.trait_impls.add_pair_impl(name, param_a, param_b, po);
             };
         }
-        for (param_a, param_b) in self.registry.pair_parameters() {
+        for (param_a, param_b) in registry.pair_parameters() {
             let name = "AntiProjectOrthogonallyOnto";
             let _: Option<()> = try {
                 let wc = self.trait_impls.get_pair_invocation("WeightContraction", variable(&param_a), variable(&param_b))?;
@@ -870,7 +841,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 self.trait_impls.add_pair_impl(name, param_a, param_b, apo);
             };
         }
-        for (param_a, param_b) in self.registry.pair_parameters() {
+        for (param_a, param_b) in registry.pair_parameters() {
             let name = "ProjectThroughOriginOnto";
             let _: Option<()> = try {
                 let be = self.trait_impls.get_pair_invocation("BulkExpansion", variable(&param_a), variable(&param_b))?;
@@ -881,7 +852,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 self.trait_impls.add_pair_impl(name, param_a, param_b, po);
             };
         }
-        for (param_a, param_b) in self.registry.pair_parameters() {
+        for (param_a, param_b) in registry.pair_parameters() {
             let name = "AntiProjectThroughOriginOnto";
             let _: Option<()> = try {
                 let bc = self.trait_impls.get_pair_invocation("BulkContraction", variable(&param_a), variable(&param_b))?;
@@ -940,7 +911,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
          in the big chart.
          */
 
-        for (param_a, param_b) in self.registry.pair_parameters() {
+        for (param_a, param_b) in registry.pair_parameters() {
             let name = "CosineAngle";
             let _: Option<()> = try {
                 // Only allow angle between uniform Grade MultiVectorClasses.
@@ -960,7 +931,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
         }
 
-        for (param_a, param_b) in self.registry.pair_parameters() {
+        for (param_a, param_b) in registry.pair_parameters() {
             let name = "SineAngle";
             let _: Option<()> = try {
                 let cos = self.trait_impls.get_pair_invocation("CosineAngle", variable(&param_a), variable(&param_b))?;
@@ -1021,13 +992,13 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     /// https://rigidgeometricalgebra.org/wiki/index.php?title=Attitude
     /// https://conformalgeometricalgebra.org/wiki/index.php?title=Attitude
     /// Note that e4 (article) = e3 (codegen) = Origin (MultivectorClass, One)
-    pub fn attitude_and_dependencies<'s: 'r>(&'s mut self, origin_class_name: &str, emitter: &mut Emitter<std::fs::File>) {
+    pub fn attitude_and_dependencies<'s, 'e>(&'s mut self, origin_class_name: &str, registry: &'r MultiVectorClassRegistry, emitter: &'e mut Emitter<std::fs::File>) {
 
         // Attitude
-        for param_a in self.registry.single_parameters() {
+        for param_a in registry.single_parameters() {
             let name = "Attitude";
             let _: Option<()> = try {
-                let origin = self.registry.classes.iter().find(|it| it.class_name == origin_class_name)?;
+                let origin = registry.classes.iter().find(|it| it.class_name == origin_class_name)?;
                 let one = self.trait_impls.get_class_invocation("One", origin)?;
                 let rc = self.trait_impls.get_single_invocation("RightComplement", one)?;
                 let anti_wedge = self.algebra.dialect().exterior_anti_product.first()?;
@@ -1041,7 +1012,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
         }
 
-        for (param_a, param_b) in self.registry.pair_parameters() {
+        for (param_a, param_b) in registry.pair_parameters() {
             // https://rigidgeometricalgebra.org/wiki/index.php?title=Euclidean_distance
             let name = "Distance";
             let _: Option<()> = try {

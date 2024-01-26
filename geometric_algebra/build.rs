@@ -55,14 +55,14 @@ fn main() {
         registry.register(mv);
     }
     let file_path = std::path::Path::new("./src/").join(std::path::Path::new(rga3d.name));
-    let mut code_gen = CodeGenerator::new(rga3d, &mut registry);
+    let mut code_gen = CodeGenerator::new(rga3d);
     let mut emitter = Emitter::new(&file_path);
-    code_gen.lifetime_debug(&mut emitter);
-    code_gen.lifetime_debug2(&mut emitter);
-    // code_gen.preamble_and_universal_traits(&mut emitter).unwrap();
-    // code_gen.basic_norms(&mut emitter);
-    // // TODO fancy norms
-    // // code_gen.fancy_norms()
-    // code_gen.post_norm_universal_stuff(&mut emitter);
-    // code_gen.attitude_and_dependencies("Origin", &mut emitter);
+    // code_gen.lifetime_debug(&registry, &mut emitter);
+    // code_gen.lifetime_debug2(&registry, &mut emitter);
+    code_gen.preamble_and_universal_traits(&registry, &mut emitter).unwrap();
+    code_gen.basic_norms(&registry, &mut emitter);
+    // TODO fancy norms
+    // code_gen.fancy_norms()
+    code_gen.post_norm_universal_stuff(&registry, &mut emitter);
+    code_gen.attitude_and_dependencies("Origin", &registry, &mut emitter);
 }

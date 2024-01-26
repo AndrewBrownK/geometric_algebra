@@ -246,71 +246,71 @@ impl MultiVectorClass {
             }
         }
         result_signature.sort_unstable();
-        if let Some(result_class) = registry.get(&result_signature) {
-            let result_flat_basis = result_class.flat_basis();
-            let mut body = Vec::new();
-            let mut base_index = 0;
-            for result_group in result_class.grouped_basis.iter() {
-                let size = result_group.len();
-                let (factors, a_indices): (Vec<_>, Vec<_>) = (0..size)
-                    .map(|index_in_group| {
-                        let result_element = &result_flat_basis[base_index + index_in_group];
-                        let involution_element = involution
-                            .terms
-                            .iter()
-                            .position(|(_in_element, out_element)| out_element.index == result_element.index)
-                            .unwrap();
-                        let (in_element, out_element) = &involution.terms[involution_element];
-                        let index_in_a = a_flat_basis.iter().position(|a_element| a_element.index == in_element.index).unwrap();
-                        (
-                            out_element.scalar * result_element.scalar * in_element.scalar * a_flat_basis[index_in_a].scalar,
-                            parameter_a.multi_vector_class().index_in_group(index_in_a),
-                        )
-                    })
-                    .unzip();
-                let a_group_index = a_indices[0].0;
-                let expression = Expression {
-                    size,
-                    content: ExpressionContent::Multiply(
-                        Box::new(Expression {
-                            size,
-                            content: ExpressionContent::Gather(
-                                Box::new(Expression {
-                                    size: parameter_a.multi_vector_class().grouped_basis[a_group_index].len(),
-                                    content: ExpressionContent::Variable(parameter_a.name),
-                                    data_type_hint: None
-                                }),
-                                a_indices,
-                            ),
-                            data_type_hint: None,
-                        }),
-                        Box::new(Expression {
-                            size,
-                            content: ExpressionContent::Constant(DataType::SimdVector(size), factors),
-                            data_type_hint: Some(DataType::SimdVector(size))
-                        }),
-                    ),
-                    data_type_hint: Some(DataType::SimdVector(size))
-                };
-                body.push((DataType::SimdVector(size), *simplify_and_legalize(Box::new(expression))));
-                base_index += size;
-            }
-            AstNode::TraitImplementation {
-                result: Parameter {
-                    name,
-                    data_type: DataType::MultiVector(result_class),
-                },
-                parameters: vec![parameter_a.clone()],
-                body: vec![AstNode::ReturnStatement {
-                    expression: Box::new(Expression {
-                        size: 1,
-                        content: ExpressionContent::InvokeClassMethod(result_class, "Constructor", body),
-                        data_type_hint: Some(DataType::MultiVector(result_class))
+        let result_class = match registry.get(&result_signature) {
+            None => return AstNode::None,
+            Some(rc) => rc,
+        };
+        let result_flat_basis = result_class.flat_basis();
+        let mut body = Vec::new();
+        let mut base_index = 0;
+        for result_group in result_class.grouped_basis.iter() {
+            let size = result_group.len();
+            let (factors, a_indices): (Vec<_>, Vec<_>) = (0..size)
+                .map(|index_in_group| {
+                    let result_element = &result_flat_basis[base_index + index_in_group];
+                    let involution_element = involution
+                        .terms
+                        .iter()
+                        .position(|(_in_element, out_element)| out_element.index == result_element.index)
+                        .unwrap();
+                    let (in_element, out_element) = &involution.terms[involution_element];
+                    let index_in_a = a_flat_basis.iter().position(|a_element| a_element.index == in_element.index).unwrap();
+                    (
+                        out_element.scalar * result_element.scalar * in_element.scalar * a_flat_basis[index_in_a].scalar,
+                        parameter_a.multi_vector_class().index_in_group(index_in_a),
+                    )
+                })
+                .unzip();
+            let a_group_index = a_indices[0].0;
+            let expression = Expression {
+                size,
+                content: ExpressionContent::Multiply(
+                    Box::new(Expression {
+                        size,
+                        content: ExpressionContent::Gather(
+                            Box::new(Expression {
+                                size: parameter_a.multi_vector_class().grouped_basis[a_group_index].len(),
+                                content: ExpressionContent::Variable(parameter_a.name),
+                                data_type_hint: None
+                            }),
+                            a_indices,
+                        ),
+                        data_type_hint: None,
                     }),
-                }],
-            }
-        } else {
-            AstNode::None
+                    Box::new(Expression {
+                        size,
+                        content: ExpressionContent::Constant(DataType::SimdVector(size), factors),
+                        data_type_hint: Some(DataType::SimdVector(size))
+                    }),
+                ),
+                data_type_hint: Some(DataType::SimdVector(size))
+            };
+            body.push((DataType::SimdVector(size), *simplify_and_legalize(Box::new(expression))));
+            base_index += size;
+        }
+        AstNode::TraitImplementation {
+            result: Parameter {
+                name,
+                data_type: DataType::MultiVector(result_class),
+            },
+            parameters: vec![parameter_a.clone()],
+            body: vec![AstNode::ReturnStatement {
+                expression: Box::new(Expression {
+                    size: 1,
+                    content: ExpressionContent::InvokeClassMethod(result_class, "Constructor", body),
+                    data_type_hint: Some(DataType::MultiVector(result_class))
+                }),
+            }],
         }
     }
 
