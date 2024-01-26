@@ -1,4 +1,4 @@
-use crate::{GeometricProduct, GeometricAntiProduct, Wedge, AntiWedge, AntiReversal};
+use crate::{GeometricProduct, GeometricAntiProduct, Wedge, AntiWedge, };
 
 
 // #[test]

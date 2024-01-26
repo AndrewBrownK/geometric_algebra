@@ -1,3 +1,4 @@
+use std::io::Write;
 use crate::{
     ast::{AstNode, DataType, Expression, ExpressionContent, Parameter},
     emit::{camel_to_snake_case, emit_indentation},
@@ -203,6 +204,37 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
             collector.write_all(b"#![allow(clippy::assign_op_pattern)]\n")?;
             collector
                 .write_all(b"use crate::{simd::*, *};\nuse std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};\n\n")?;
+        }
+        AstNode::TraitDefinition { name, params, docs } => {
+            if !docs.is_empty() {
+                let mut docs_as_comment = docs.replace("\n", "\n/// ");
+                if !docs_as_comment.starts_with("\n/// ") {
+                    docs_as_comment = format!("/// {}", docs_as_comment);
+                }
+                collector.write_all(docs_as_comment.as_bytes())?;
+            }
+            collector.write_fmt(format_args!("\npub trait {}", name))?;
+            if *params > 2 {
+                unreachable!("Trait definitions with more than two parameters are not supported at this time.");
+            }
+            if *params == 2 {
+                collector.write_all(b"<T>")?;
+            }
+            collector.write_all(b" {\n")?;
+            emit_indentation(collector, indentation + 1)?;
+            collector.write_all(b"type Output;\n")?;
+            emit_indentation(collector, indentation + 1)?;
+            collector.write_all(b"fn ")?;
+            camel_to_snake_case(collector, name)?;
+            collector.write_all(b"(")?;
+            if *params >= 1 {
+                collector.write_all(b"self")?;
+            }
+            if *params == 2 {
+                collector.write_all(b", other: T")?;
+            }
+            collector.write_all(b") -> Self::Output;\n")?;
+            collector.write_all(b"}\n\n")?;
         }
         AstNode::ClassDefinition { class } => {
             let element_count = class.grouped_basis.iter().fold(0, |a, b| a + b.len());

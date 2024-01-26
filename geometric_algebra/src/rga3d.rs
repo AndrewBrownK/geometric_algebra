@@ -1486,6 +1486,22 @@ impl One for MultiVector {
     }
 }
 
+
+/// Grade
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Grade_and_antigrade
+pub trait Grade {
+    type Output;
+    fn grade(self) -> Self::Output;
+}
+
+
+/// Anti-Grade
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Grade_and_antigrade
+pub trait AntiGrade {
+    type Output;
+    fn anti_grade(self) -> Self::Output;
+}
+
 impl Grade for Scalar {
     type Output = isize;
 
@@ -1660,6 +1676,72 @@ impl AntiGrade for Horizon {
     fn anti_grade(self) -> isize {
         3
     }
+}
+
+
+/// Negates elements with `grade % 2 == 1`
+/// 
+/// Also called main involution
+pub trait Automorphism {
+    type Output;
+    fn automorphism(self) -> Self::Output;
+}
+
+
+/// Negates elements with `grade % 4 >= 2`
+/// 
+/// Also called transpose
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Reverses
+pub trait Reversal {
+    type Output;
+    fn reversal(self) -> Self::Output;
+}
+
+
+/// Negates elements with `(grade + 3) % 4 < 2`
+pub trait Conjugation {
+    type Output;
+    fn conjugation(self) -> Self::Output;
+}
+
+
+/// Element order reversed
+pub trait Dual {
+    type Output;
+    fn dual(self) -> Self::Output;
+}
+
+
+/// Negates elements with `grade % 4 >= 2`
+/// 
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Reverses
+pub trait AntiReversal {
+    type Output;
+    fn anti_reversal(self) -> Self::Output;
+}
+
+
+/// Right Complement
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Complements
+pub trait RightComplement {
+    type Output;
+    fn right_complement(self) -> Self::Output;
+}
+
+
+/// Left Complement
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Complements
+pub trait LeftComplement {
+    type Output;
+    fn left_complement(self) -> Self::Output;
+}
+
+
+/// Double Complement
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Complements
+pub trait DoubleComplement {
+    type Output;
+    fn double_complement(self) -> Self::Output;
 }
 
 impl Neg for Scalar {

@@ -77,23 +77,22 @@ impl Involution {
         }
     }
 
-    pub fn involutions<GA: GeometricAlgebraTrait>(algebra: &GA) -> Vec<(&'static str, Self)> {
+    pub fn involutions<GA: GeometricAlgebraTrait>(algebra: &GA) -> Vec<(&'static str, Self, &'static str)> {
         let involution = Self::identity(algebra);
         let dimensions = algebra.basis_size();
         vec![
-            ("Neg", involution.negated(|_grade| true)),
-            ("Automorphism", involution.negated(|grade| grade % 2 == 1)),
-            ("Reversal", involution.negated(|grade| grade % 4 >= 2)),
-            ("Conjugation", involution.negated(|grade| (grade + 3) % 4 < 2)),
-            ("Dual", involution.right_complement(algebra)),
-            // Confirmed accurate: epga3d MultiVector
+            ("Neg", involution.negated(|_grade| true), ""),
+            ("Automorphism", involution.negated(|grade| grade % 2 == 1), "\nNegates elements with `grade % 2 == 1`\n\nAlso called main involution"),
+            ("Reversal", involution.negated(|grade| grade % 4 >= 2), "\nNegates elements with `grade % 4 >= 2`\n\nAlso called transpose\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Reverses"),
+            ("Conjugation", involution.negated(|grade| (grade + 3) % 4 < 2), "\nNegates elements with `(grade + 3) % 4 < 2`"),
+            ("Dual", involution.right_complement(algebra), "\nElement order reversed"),
             ("AntiReversal", involution.negated(|grade| {
                 let anti_grade = dimensions - grade;
                 anti_grade % 4 >= 2
-            })),
-            ("RightComplement", involution.right_complement(algebra)),
-            ("LeftComplement", involution.left_complement(algebra)),
-            ("DoubleComplement", involution.double_complement(algebra)),
+            }), "\nNegates elements with `grade % 4 >= 2`\n\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Reverses"),
+            ("RightComplement", involution.right_complement(algebra), "\nRight Complement\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Complements"),
+            ("LeftComplement", involution.left_complement(algebra), "\nLeft Complement\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Complements"),
+            ("DoubleComplement", involution.double_complement(algebra), "\nDouble Complement\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Complements"),
         ]
     }
 }

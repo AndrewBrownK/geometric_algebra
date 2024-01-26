@@ -171,6 +171,7 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
     match ast_node {
         AstNode::None => {}
         AstNode::Preamble => {}
+        AstNode::TraitDefinition { .. } => {}
         AstNode::ClassDefinition { class } => {
             collector.write_fmt(format_args!("struct {} {{\n", class.class_name))?;
             for (i, group) in class.grouped_basis.iter().enumerate() {

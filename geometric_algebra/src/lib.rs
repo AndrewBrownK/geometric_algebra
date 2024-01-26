@@ -89,45 +89,6 @@ pub trait One {
     fn one() -> Self;
 }
 
-/// Element order reversed
-pub trait Dual {
-    type Output;
-    fn dual(self) -> Self::Output;
-}
-
-/// Negates elements with `grade % 2 == 1`
-///
-/// Also called main involution
-pub trait Automorphism {
-    type Output;
-    fn automorphism(self) -> Self::Output;
-}
-
-/// Negates elements with `grade % 4 >= 2`
-///
-/// Also called transpose
-/// http://rigidgeometricalgebra.org/wiki/index.php?title=Reverses
-pub trait Reversal {
-    type Output;
-    fn reversal(self) -> Self::Output;
-}
-
-// (Implementation done!)
-/// Negates elements with `grade % 4 >= 2`
-///
-/// Also called transpose
-/// http://rigidgeometricalgebra.org/wiki/index.php?title=Reverses
-pub trait AntiReversal {
-    type Output;
-    fn anti_reversal(self) -> Self::Output;
-}
-
-/// Negates elements with `(grade + 3) % 4 < 2`
-pub trait Conjugation {
-    type Output;
-    fn conjugation(self) -> Self::Output;
-}
-
 /// General multi vector multiplication
 pub trait GeometricProduct<T> {
     type Output;
@@ -283,13 +244,6 @@ pub trait SquaredAntiMagnitude {
     fn squared_anti_magnitude(self) -> Self::Output;
 }
 
-// /// Length as scalar
-// ///
-// /// Also called amplitude, absolute value or norm
-// pub trait Magnitude {
-//     type Output;
-//     fn magnitude(self) -> Self::Output;
-// }
 
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
 pub trait BulkNormSquared {
@@ -363,41 +317,6 @@ pub trait Powf {
 pub trait Sqrt {
     type Output;
     fn sqrt(self) -> Self::Output;
-}
-
-/// Grade
-/// http://rigidgeometricalgebra.org/wiki/index.php?title=Grade_and_antigrade
-pub trait Grade {
-    type Output;
-    fn grade(self) -> Self::Output;
-}
-
-/// Anti-Grade
-/// http://rigidgeometricalgebra.org/wiki/index.php?title=Grade_and_antigrade
-pub trait AntiGrade {
-    type Output;
-    fn anti_grade(self) -> Self::Output;
-}
-
-/// Right Complement
-/// http://rigidgeometricalgebra.org/wiki/index.php?title=Complements
-pub trait RightComplement {
-    type Output;
-    fn right_complement(self) -> Self::Output;
-}
-
-/// Left Complement
-/// http://rigidgeometricalgebra.org/wiki/index.php?title=Complements
-pub trait LeftComplement {
-    type Output;
-    fn left_complement(self) -> Self::Output;
-}
-
-/// Double Complement
-/// http://rigidgeometricalgebra.org/wiki/index.php?title=Complements
-pub trait DoubleComplement {
-    type Output;
-    fn double_complement(self) -> Self::Output;
 }
 
 

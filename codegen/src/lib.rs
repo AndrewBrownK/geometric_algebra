@@ -240,6 +240,20 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         }
 
         // Uniform Grades
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "Grade",
+            params: 1,
+            docs: "\
+                \nGrade\
+                \nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Grade_and_antigrade",
+        }).unwrap();
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "AntiGrade",
+            params: 1,
+            docs: "\
+                \nAnti-Grade\
+                \nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Grade_and_antigrade",
+        }).unwrap();
         for param_a in registry.single_parameters() {
             let class_a = param_a.multi_vector_class();
 
@@ -261,11 +275,18 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
         // Involutions
         let involutions = Involution::involutions(&self.algebra);
+        for (name, _, docs) in involutions.iter() {
+            if *name == "Neg" {
+                continue
+            }
+            emitter.emit(&AstNode::TraitDefinition {
+                name,
+                params: 1,
+                docs,
+            }).unwrap()
+        }
         for param_a in registry.single_parameters() {
-            // TODO for some reason not all involutions are being output for CGA,
-            //  for example search "impl Dual" in cga3d.rs vs ppga3d.rs.
-            //  This is strange because some involutions are written, like Reversal.
-            for (name, involution) in involutions.iter() {
+            for (name, involution, _) in involutions.iter() {
                 let ast_node = MultiVectorClass::involution(name, involution, &param_a, registry, false);
                 emitter.emit(&ast_node).unwrap();
                 if ast_node != AstNode::None {
@@ -537,6 +558,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                     continue
                 }
                 let constant_one = self.trait_impls.get_class_impl("One", param_a.multi_vector_class())?;
+                // TODo requiring inverse is causing us to get no Powi for Scalar
                 let inverse = self.trait_impls.get_single_impl("Inverse", &param_a)?;
                 let exponent = Parameter {
                     name: "exponent",
@@ -846,6 +868,10 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
          in the big chart.
          */
 
+        // TODO make CosineAngle and SineAngle return plain floats instead of Scalars.
+        //  I mean... unless you figure out some special reason for them to be Scalars, like
+        //  if it is somehow possible to feed back into GA operations in a useful manner.
+
         for (param_a, param_b) in registry.pair_parameters() {
             let name = "CosineAngle";
             let _: Option<()> = try {
@@ -880,6 +906,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                     content: ExpressionContent::Constant(DataType::Integer, vec![2]),
                     data_type_hint: Some(DataType::Integer)
                 };
+                // TODO this is failing because no Powi implementation
                 let pow2 = self.trait_impls.get_pair_invocation("Powi", cos, const2)?;
                 let sub = self.trait_impls.get_pair_invocation("Sub", one, pow2)?;
                 let sqrt = self.trait_impls.get_single_invocation("Sqrt", sub)?;
