@@ -23,7 +23,7 @@ fn main() {
         \
         Plane:e423,e431,e412,e321;\
         PlaneAtOrigin:e423,e431,e412;\
-        PlaneAtInfinity:e321;\
+        Horizon:e321;\
         \
         Motor:e41,e42,e43,e1234|e23,e31,e12;\
         Rotor:e41,e42,e43,e1234;\

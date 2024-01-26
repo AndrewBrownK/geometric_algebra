@@ -702,6 +702,25 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         // if we don't manually exclude these at some point.
         let non_objects = ["Scalar", "AntiScalar", "Magnitude"];
 
+        // In the future it might also not be a bad idea to restrict to objects of uniform grade.
+        // However I'm not overly worried about that yet. Projecting to and from Flectors and Motors
+        // may be weird at first glance, but maybe projecting to and from MultiVector isn't, and
+        // so who knows.
+
+        // I mean, look at these examples:
+        // rotor.anti_project_orthogonally_onto(point) = motor
+        // rotor.anti_project_orthogonally_onto(origin) = rotor
+        // And rotors are not uniform grade. So that looks worth keeping to me.
+
+        // Uniform grades aside, it can be weird to see stuff like "line.project_onto(line) = line"
+        // or "origin.project_onto(plane_at_origin) = origin". I think it's kind of cute that these
+        // implementations are generated, but they are somewhat superfluous. If you wanted to do
+        // those kind of projections, I'm almost certain you'd rather just take one of the arguments
+        // as the answer instead of waste CPU cycles on all the jumbling and juggling and products
+        // and wasted floating point Simd math or whatever. I don't want to jump to conclusions
+        // though, because maybe there is special effects on the weight when these happen, and
+        // I shouldn't just assume that is useless/insignificant.
+
         let contraction_expansion_stuff = [
             ("BulkContraction", "RightBulkDual", "AntiWedge"),
             ("WeightContraction", "RightWeightDual", "AntiWedge"),
@@ -748,7 +767,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
         }
         for (param_a, param_b) in registry.pair_parameters() {
-            let name = "ProjectThroughOriginOnto";
+            let name = "ProjectViaOriginOnto";
             let _: Option<()> = try {
                 let be = self.trait_impls.get_pair_invocation("BulkExpansion", variable(&param_a), variable(&param_b))?;
                 let anti_wedge = self.algebra.dialect().exterior_anti_product.first()?;
@@ -758,8 +777,18 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 self.trait_impls.add_pair_impl(name, param_a, param_b, po);
             };
         }
+        // anti_project_via_horizon can be a little confusing... are these okay?
+        //  line_at_origin.anti_project_via_horizon_onto(point_at_infinity) = line_at_origin
+        //  plane.anti_project_via_horizon_onto(point_at_infinity) = plane
+        //  ...
+        //  I'm 90% sure it's okay though. I suspect what is happening is objects at the origin
+        //  more or less rotate at the origin. (Might not be the exact same thing as a Rotor
+        //  transformation if there are effects on the weight of the result.) Objects not at the
+        //  origin presumably rotate in a similar fashion, although I'm not certain around
+        //  which point. Heck... probably the origin again.
+        // TODO play with this at runtime to get a better feel, and reach 100% certainty it's okay.
         for (param_a, param_b) in registry.pair_parameters() {
-            let name = "AntiProjectThroughOriginOnto";
+            let name = "AntiProjectViaHorizonOnto";
             let _: Option<()> = try {
                 let bc = self.trait_impls.get_pair_invocation("BulkContraction", variable(&param_a), variable(&param_b))?;
                 let wedge = self.algebra.dialect().exterior_product.first()?;

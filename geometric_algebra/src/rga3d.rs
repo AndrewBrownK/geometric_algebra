@@ -781,25 +781,25 @@ impl std::fmt::Debug for PlaneAtOrigin {
 }
 
 #[derive(Clone, Copy)]
-struct PlaneAtInfinityGroups {
+struct HorizonGroups {
     /// -e123
     g0: f32,
 }
 
 #[derive(Clone, Copy)]
-pub union PlaneAtInfinity {
-    groups: PlaneAtInfinityGroups,
+pub union Horizon {
+    groups: HorizonGroups,
     /// -e123
     elements: [f32; 1],
 }
 
-impl PlaneAtInfinity {
+impl Horizon {
     #[allow(clippy::too_many_arguments)]
     pub const fn new(element0: f32) -> Self {
         Self { elements: [element0] }
     }
     pub const fn from_groups(g0: f32) -> Self {
-        Self { groups: PlaneAtInfinityGroups { g0 } }
+        Self { groups: HorizonGroups { g0 } }
     }
     #[inline(always)]
     pub fn group0(&self) -> f32 {
@@ -811,38 +811,38 @@ impl PlaneAtInfinity {
     }
 }
 
-const PLANEATINFINITY_INDEX_REMAP: [usize; 1] = [0];
+const HORIZON_INDEX_REMAP: [usize; 1] = [0];
 
-impl std::ops::Index<usize> for PlaneAtInfinity {
+impl std::ops::Index<usize> for Horizon {
     type Output = f32;
 
     fn index(&self, index: usize) -> &Self::Output {
-        unsafe { &self.elements[PLANEATINFINITY_INDEX_REMAP[index]] }
+        unsafe { &self.elements[HORIZON_INDEX_REMAP[index]] }
     }
 }
 
-impl std::ops::IndexMut<usize> for PlaneAtInfinity {
+impl std::ops::IndexMut<usize> for Horizon {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        unsafe { &mut self.elements[PLANEATINFINITY_INDEX_REMAP[index]] }
+        unsafe { &mut self.elements[HORIZON_INDEX_REMAP[index]] }
     }
 }
 
-impl std::convert::From<PlaneAtInfinity> for [f32; 1] {
-    fn from(vector: PlaneAtInfinity) -> Self {
+impl std::convert::From<Horizon> for [f32; 1] {
+    fn from(vector: Horizon) -> Self {
         unsafe { [vector.elements[0]] }
     }
 }
 
-impl std::convert::From<[f32; 1]> for PlaneAtInfinity {
+impl std::convert::From<[f32; 1]> for Horizon {
     fn from(array: [f32; 1]) -> Self {
         Self { elements: [array[0]] }
     }
 }
 
-impl std::fmt::Debug for PlaneAtInfinity {
+impl std::fmt::Debug for Horizon {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
         formatter
-            .debug_struct("PlaneAtInfinity")
+            .debug_struct("Horizon")
             .field("-e123", &self[0])
             .finish()
     }
@@ -1414,15 +1414,15 @@ impl One for PlaneAtOrigin {
     }
 }
 
-impl Zero for PlaneAtInfinity {
+impl Zero for Horizon {
     fn zero() -> Self {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: 0.0 } }
+        Horizon { groups: HorizonGroups { g0: 0.0 } }
     }
 }
 
-impl One for PlaneAtInfinity {
+impl One for Horizon {
     fn one() -> Self {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: 0.0 } }
+        Horizon { groups: HorizonGroups { g0: 0.0 } }
     }
 }
 
@@ -1646,7 +1646,7 @@ impl AntiGrade for PlaneAtOrigin {
     }
 }
 
-impl Grade for PlaneAtInfinity {
+impl Grade for Horizon {
     type Output = isize;
 
     fn grade(self) -> isize {
@@ -1654,7 +1654,7 @@ impl Grade for PlaneAtInfinity {
     }
 }
 
-impl AntiGrade for PlaneAtInfinity {
+impl AntiGrade for Horizon {
     type Output = isize;
 
     fn anti_grade(self) -> isize {
@@ -1983,10 +1983,10 @@ impl Conjugation for Origin {
 }
 
 impl Dual for Origin {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn dual(self) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() } }
+    fn dual(self) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() } }
     }
 }
 
@@ -1999,18 +1999,18 @@ impl AntiReversal for Origin {
 }
 
 impl RightComplement for Origin {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn right_complement(self) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() } }
+    fn right_complement(self) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() } }
     }
 }
 
 impl LeftComplement for Origin {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn left_complement(self) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * -1.0 } }
+    fn left_complement(self) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * -1.0 } }
     }
 }
 
@@ -2454,39 +2454,39 @@ impl DoubleComplement for PlaneAtOrigin {
     }
 }
 
-impl Neg for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl Neg for Horizon {
+    type Output = Horizon;
 
-    fn neg(self) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * -1.0 } }
+    fn neg(self) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * -1.0 } }
     }
 }
 
-impl Automorphism for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl Automorphism for Horizon {
+    type Output = Horizon;
 
-    fn automorphism(self) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * -1.0 } }
+    fn automorphism(self) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * -1.0 } }
     }
 }
 
-impl Reversal for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl Reversal for Horizon {
+    type Output = Horizon;
 
-    fn reversal(self) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * -1.0 } }
+    fn reversal(self) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * -1.0 } }
     }
 }
 
-impl Conjugation for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl Conjugation for Horizon {
+    type Output = Horizon;
 
-    fn conjugation(self) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() } }
+    fn conjugation(self) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() } }
     }
 }
 
-impl Dual for PlaneAtInfinity {
+impl Dual for Horizon {
     type Output = Origin;
 
     fn dual(self) -> Origin {
@@ -2494,15 +2494,15 @@ impl Dual for PlaneAtInfinity {
     }
 }
 
-impl AntiReversal for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl AntiReversal for Horizon {
+    type Output = Horizon;
 
-    fn anti_reversal(self) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() } }
+    fn anti_reversal(self) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() } }
     }
 }
 
-impl RightComplement for PlaneAtInfinity {
+impl RightComplement for Horizon {
     type Output = Origin;
 
     fn right_complement(self) -> Origin {
@@ -2510,7 +2510,7 @@ impl RightComplement for PlaneAtInfinity {
     }
 }
 
-impl LeftComplement for PlaneAtInfinity {
+impl LeftComplement for Horizon {
     type Output = Origin;
 
     fn left_complement(self) -> Origin {
@@ -2518,11 +2518,11 @@ impl LeftComplement for PlaneAtInfinity {
     }
 }
 
-impl DoubleComplement for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl DoubleComplement for Horizon {
+    type Output = Horizon;
 
-    fn double_complement(self) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * -1.0 } }
+    fn double_complement(self) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * -1.0 } }
     }
 }
 
@@ -2872,9 +2872,9 @@ impl Into<PlaneAtOrigin> for Plane {
     }
 }
 
-impl Into<PlaneAtInfinity> for Plane {
-    fn into(self) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0()[3] } }
+impl Into<Horizon> for Plane {
+    fn into(self) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0()[3] } }
     }
 }
 
@@ -2968,9 +2968,9 @@ impl Into<PlaneAtOrigin> for Flector {
     }
 }
 
-impl Into<PlaneAtInfinity> for Flector {
-    fn into(self) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group1()[3] } }
+impl Into<Horizon> for Flector {
+    fn into(self) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group1()[3] } }
     }
 }
 
@@ -3040,9 +3040,9 @@ impl Into<PlaneAtOrigin> for MultiVector {
     }
 }
 
-impl Into<PlaneAtInfinity> for MultiVector {
-    fn into(self) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group4()[3] } }
+impl Into<Horizon> for MultiVector {
+    fn into(self) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group4()[3] } }
     }
 }
 
@@ -4250,30 +4250,30 @@ impl SubAssign<PlaneAtOrigin> for Plane {
     }
 }
 
-impl Add<PlaneAtInfinity> for Plane {
+impl Add<Horizon> for Plane {
     type Output = Plane;
 
-    fn add(self, other: PlaneAtInfinity) -> Plane {
+    fn add(self, other: Horizon) -> Plane {
         Plane { groups: PlaneGroups { g0: self.group0() + Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
     }
 }
 
-impl AddAssign<PlaneAtInfinity> for Plane {
-    fn add_assign(&mut self, other: PlaneAtInfinity) {
+impl AddAssign<Horizon> for Plane {
+    fn add_assign(&mut self, other: Horizon) {
         *self = (*self).add(other);
     }
 }
 
-impl Sub<PlaneAtInfinity> for Plane {
+impl Sub<Horizon> for Plane {
     type Output = Plane;
 
-    fn sub(self, other: PlaneAtInfinity) -> Plane {
+    fn sub(self, other: Horizon) -> Plane {
         Plane { groups: PlaneGroups { g0: self.group0() - Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
     }
 }
 
-impl SubAssign<PlaneAtInfinity> for Plane {
-    fn sub_assign(&mut self, other: PlaneAtInfinity) {
+impl SubAssign<Horizon> for Plane {
+    fn sub_assign(&mut self, other: Horizon) {
         *self = (*self).sub(other);
     }
 }
@@ -4354,18 +4354,18 @@ impl SubAssign<PlaneAtOrigin> for PlaneAtOrigin {
     }
 }
 
-impl Add<PlaneAtInfinity> for PlaneAtOrigin {
+impl Add<Horizon> for PlaneAtOrigin {
     type Output = Plane;
 
-    fn add(self, other: PlaneAtInfinity) -> Plane {
+    fn add(self, other: Horizon) -> Plane {
         Plane { groups: PlaneGroups { g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]]) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]) + Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
     }
 }
 
-impl Sub<PlaneAtInfinity> for PlaneAtOrigin {
+impl Sub<Horizon> for PlaneAtOrigin {
     type Output = Plane;
 
-    fn sub(self, other: PlaneAtInfinity) -> Plane {
+    fn sub(self, other: Horizon) -> Plane {
         Plane { groups: PlaneGroups { g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]]) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]) - Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
     }
 }
@@ -4402,7 +4402,7 @@ impl Sub<MultiVector> for PlaneAtOrigin {
     }
 }
 
-impl Add<Plane> for PlaneAtInfinity {
+impl Add<Plane> for Horizon {
     type Output = Plane;
 
     fn add(self, other: Plane) -> Plane {
@@ -4410,7 +4410,7 @@ impl Add<Plane> for PlaneAtInfinity {
     }
 }
 
-impl Sub<Plane> for PlaneAtInfinity {
+impl Sub<Plane> for Horizon {
     type Output = Plane;
 
     fn sub(self, other: Plane) -> Plane {
@@ -4418,7 +4418,7 @@ impl Sub<Plane> for PlaneAtInfinity {
     }
 }
 
-impl Add<PlaneAtOrigin> for PlaneAtInfinity {
+impl Add<PlaneAtOrigin> for Horizon {
     type Output = Plane;
 
     fn add(self, other: PlaneAtOrigin) -> Plane {
@@ -4426,7 +4426,7 @@ impl Add<PlaneAtOrigin> for PlaneAtInfinity {
     }
 }
 
-impl Sub<PlaneAtOrigin> for PlaneAtInfinity {
+impl Sub<PlaneAtOrigin> for Horizon {
     type Output = Plane;
 
     fn sub(self, other: PlaneAtOrigin) -> Plane {
@@ -4434,35 +4434,35 @@ impl Sub<PlaneAtOrigin> for PlaneAtInfinity {
     }
 }
 
-impl Add<PlaneAtInfinity> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl Add<Horizon> for Horizon {
+    type Output = Horizon;
 
-    fn add(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() + other.group0() } }
+    fn add(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() + other.group0() } }
     }
 }
 
-impl AddAssign<PlaneAtInfinity> for PlaneAtInfinity {
-    fn add_assign(&mut self, other: PlaneAtInfinity) {
+impl AddAssign<Horizon> for Horizon {
+    fn add_assign(&mut self, other: Horizon) {
         *self = (*self).add(other);
     }
 }
 
-impl Sub<PlaneAtInfinity> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl Sub<Horizon> for Horizon {
+    type Output = Horizon;
 
-    fn sub(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() - other.group0() } }
+    fn sub(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() - other.group0() } }
     }
 }
 
-impl SubAssign<PlaneAtInfinity> for PlaneAtInfinity {
-    fn sub_assign(&mut self, other: PlaneAtInfinity) {
+impl SubAssign<Horizon> for Horizon {
+    fn sub_assign(&mut self, other: Horizon) {
         *self = (*self).sub(other);
     }
 }
 
-impl Add<Flector> for PlaneAtInfinity {
+impl Add<Flector> for Horizon {
     type Output = Flector;
 
     fn add(self, other: Flector) -> Flector {
@@ -4470,7 +4470,7 @@ impl Add<Flector> for PlaneAtInfinity {
     }
 }
 
-impl Sub<Flector> for PlaneAtInfinity {
+impl Sub<Flector> for Horizon {
     type Output = Flector;
 
     fn sub(self, other: Flector) -> Flector {
@@ -4478,7 +4478,7 @@ impl Sub<Flector> for PlaneAtInfinity {
     }
 }
 
-impl Add<MultiVector> for PlaneAtInfinity {
+impl Add<MultiVector> for Horizon {
     type Output = MultiVector;
 
     fn add(self, other: MultiVector) -> MultiVector {
@@ -4486,7 +4486,7 @@ impl Add<MultiVector> for PlaneAtInfinity {
     }
 }
 
-impl Sub<MultiVector> for PlaneAtInfinity {
+impl Sub<MultiVector> for Horizon {
     type Output = MultiVector;
 
     fn sub(self, other: MultiVector) -> MultiVector {
@@ -5174,30 +5174,30 @@ impl SubAssign<PlaneAtOrigin> for Flector {
     }
 }
 
-impl Add<PlaneAtInfinity> for Flector {
+impl Add<Horizon> for Flector {
     type Output = Flector;
 
-    fn add(self, other: PlaneAtInfinity) -> Flector {
+    fn add(self, other: Horizon) -> Flector {
         Flector { groups: FlectorGroups { g0: self.group0(), g1: self.group1() + Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
     }
 }
 
-impl AddAssign<PlaneAtInfinity> for Flector {
-    fn add_assign(&mut self, other: PlaneAtInfinity) {
+impl AddAssign<Horizon> for Flector {
+    fn add_assign(&mut self, other: Horizon) {
         *self = (*self).add(other);
     }
 }
 
-impl Sub<PlaneAtInfinity> for Flector {
+impl Sub<Horizon> for Flector {
     type Output = Flector;
 
-    fn sub(self, other: PlaneAtInfinity) -> Flector {
+    fn sub(self, other: Horizon) -> Flector {
         Flector { groups: FlectorGroups { g0: self.group0(), g1: self.group1() - Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
     }
 }
 
-impl SubAssign<PlaneAtInfinity> for Flector {
-    fn sub_assign(&mut self, other: PlaneAtInfinity) {
+impl SubAssign<Horizon> for Flector {
+    fn sub_assign(&mut self, other: Horizon) {
         *self = (*self).sub(other);
     }
 }
@@ -5554,30 +5554,30 @@ impl SubAssign<PlaneAtOrigin> for MultiVector {
     }
 }
 
-impl Add<PlaneAtInfinity> for MultiVector {
+impl Add<Horizon> for MultiVector {
     type Output = MultiVector;
 
-    fn add(self, other: PlaneAtInfinity) -> MultiVector {
+    fn add(self, other: Horizon) -> MultiVector {
         MultiVector { groups: MultiVectorGroups { g0: self.group0(), g1: self.group1(), g2: self.group2(), g3: self.group3(), g4: self.group4() + Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
     }
 }
 
-impl AddAssign<PlaneAtInfinity> for MultiVector {
-    fn add_assign(&mut self, other: PlaneAtInfinity) {
+impl AddAssign<Horizon> for MultiVector {
+    fn add_assign(&mut self, other: Horizon) {
         *self = (*self).add(other);
     }
 }
 
-impl Sub<PlaneAtInfinity> for MultiVector {
+impl Sub<Horizon> for MultiVector {
     type Output = MultiVector;
 
-    fn sub(self, other: PlaneAtInfinity) -> MultiVector {
+    fn sub(self, other: Horizon) -> MultiVector {
         MultiVector { groups: MultiVectorGroups { g0: self.group0(), g1: self.group1(), g2: self.group2(), g3: self.group3(), g4: self.group4() - Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
     }
 }
 
-impl SubAssign<PlaneAtInfinity> for MultiVector {
-    fn sub_assign(&mut self, other: PlaneAtInfinity) {
+impl SubAssign<Horizon> for MultiVector {
+    fn sub_assign(&mut self, other: Horizon) {
         *self = (*self).sub(other);
     }
 }
@@ -6030,30 +6030,30 @@ impl DivAssign<PlaneAtOrigin> for PlaneAtOrigin {
     }
 }
 
-impl Mul<PlaneAtInfinity> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl Mul<Horizon> for Horizon {
+    type Output = Horizon;
 
-    fn mul(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0() } }
+    fn mul(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0() } }
     }
 }
 
-impl MulAssign<PlaneAtInfinity> for PlaneAtInfinity {
-    fn mul_assign(&mut self, other: PlaneAtInfinity) {
+impl MulAssign<Horizon> for Horizon {
+    fn mul_assign(&mut self, other: Horizon) {
         *self = (*self).mul(other);
     }
 }
 
-impl Div<PlaneAtInfinity> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl Div<Horizon> for Horizon {
+    type Output = Horizon;
 
-    fn div(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * 1.0 / other.group0() * 1.0 } }
+    fn div(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * 1.0 / other.group0() * 1.0 } }
     }
 }
 
-impl DivAssign<PlaneAtInfinity> for PlaneAtInfinity {
-    fn div_assign(&mut self, other: PlaneAtInfinity) {
+impl DivAssign<Horizon> for Horizon {
+    fn div_assign(&mut self, other: Horizon) {
         *self = (*self).div(other);
     }
 }
@@ -6447,18 +6447,18 @@ impl WedgeDot<Point> for Scalar {
 }
 
 impl GeometricAntiProduct<Point> for Scalar {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn geometric_anti_product(self, other: Point) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0()[3] } }
+    fn geometric_anti_product(self, other: Point) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0()[3] } }
     }
 }
 
 impl AntiWedgeDot<Point> for Scalar {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn anti_wedge_dot(self, other: Point) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0()[3] } }
+    fn anti_wedge_dot(self, other: Point) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0()[3] } }
     }
 }
 
@@ -6487,10 +6487,10 @@ impl LeftContraction<Point> for Scalar {
 }
 
 impl RightAntiContraction<Point> for Scalar {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn right_anti_contraction(self, other: Point) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0()[3] } }
+    fn right_anti_contraction(self, other: Point) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0()[3] } }
     }
 }
 
@@ -6511,18 +6511,18 @@ impl WedgeDot<Origin> for Scalar {
 }
 
 impl GeometricAntiProduct<Origin> for Scalar {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn geometric_anti_product(self, other: Origin) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0() } }
+    fn geometric_anti_product(self, other: Origin) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0() } }
     }
 }
 
 impl AntiWedgeDot<Origin> for Scalar {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn anti_wedge_dot(self, other: Origin) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0() } }
+    fn anti_wedge_dot(self, other: Origin) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0() } }
     }
 }
 
@@ -6551,10 +6551,10 @@ impl LeftContraction<Origin> for Scalar {
 }
 
 impl RightAntiContraction<Origin> for Scalar {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn right_anti_contraction(self, other: Origin) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0() } }
+    fn right_anti_contraction(self, other: Origin) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0() } }
     }
 }
 
@@ -6894,43 +6894,43 @@ impl RightAntiContraction<PlaneAtOrigin> for Scalar {
     }
 }
 
-impl GeometricProduct<PlaneAtInfinity> for Scalar {
-    type Output = PlaneAtInfinity;
+impl GeometricProduct<Horizon> for Scalar {
+    type Output = Horizon;
 
-    fn geometric_product(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0() } }
+    fn geometric_product(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0() } }
     }
 }
 
-impl WedgeDot<PlaneAtInfinity> for Scalar {
-    type Output = PlaneAtInfinity;
+impl WedgeDot<Horizon> for Scalar {
+    type Output = Horizon;
 
-    fn wedge_dot(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0() } }
+    fn wedge_dot(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0() } }
     }
 }
 
-impl Wedge<PlaneAtInfinity> for Scalar {
-    type Output = PlaneAtInfinity;
+impl Wedge<Horizon> for Scalar {
+    type Output = Horizon;
 
-    fn wedge(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0() } }
+    fn wedge(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0() } }
     }
 }
 
-impl Join<PlaneAtInfinity> for Scalar {
-    type Output = PlaneAtInfinity;
+impl Join<Horizon> for Scalar {
+    type Output = Horizon;
 
-    fn join(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0() } }
+    fn join(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0() } }
     }
 }
 
-impl LeftContraction<PlaneAtInfinity> for Scalar {
-    type Output = PlaneAtInfinity;
+impl LeftContraction<Horizon> for Scalar {
+    type Output = Horizon;
 
-    fn left_contraction(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0() } }
+    fn left_contraction(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0() } }
     }
 }
 
@@ -8006,66 +8006,66 @@ impl LeftAntiContraction<PlaneAtOrigin> for AntiScalar {
     }
 }
 
-impl GeometricProduct<PlaneAtInfinity> for AntiScalar {
+impl GeometricProduct<Horizon> for AntiScalar {
     type Output = Origin;
 
-    fn geometric_product(self, other: PlaneAtInfinity) -> Origin {
+    fn geometric_product(self, other: Horizon) -> Origin {
         Origin { groups: OriginGroups { g0: 0.0 - self.group0() * other.group0() } }
     }
 }
 
-impl WedgeDot<PlaneAtInfinity> for AntiScalar {
+impl WedgeDot<Horizon> for AntiScalar {
     type Output = Origin;
 
-    fn wedge_dot(self, other: PlaneAtInfinity) -> Origin {
+    fn wedge_dot(self, other: Horizon) -> Origin {
         Origin { groups: OriginGroups { g0: 0.0 - self.group0() * other.group0() } }
     }
 }
 
-impl GeometricAntiProduct<PlaneAtInfinity> for AntiScalar {
-    type Output = PlaneAtInfinity;
+impl GeometricAntiProduct<Horizon> for AntiScalar {
+    type Output = Horizon;
 
-    fn geometric_anti_product(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0() } }
+    fn geometric_anti_product(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0() } }
     }
 }
 
-impl AntiWedgeDot<PlaneAtInfinity> for AntiScalar {
-    type Output = PlaneAtInfinity;
+impl AntiWedgeDot<Horizon> for AntiScalar {
+    type Output = Horizon;
 
-    fn anti_wedge_dot(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0() } }
+    fn anti_wedge_dot(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0() } }
     }
 }
 
-impl AntiWedge<PlaneAtInfinity> for AntiScalar {
-    type Output = PlaneAtInfinity;
+impl AntiWedge<Horizon> for AntiScalar {
+    type Output = Horizon;
 
-    fn anti_wedge(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0() } }
+    fn anti_wedge(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0() } }
     }
 }
 
-impl Meet<PlaneAtInfinity> for AntiScalar {
-    type Output = PlaneAtInfinity;
+impl Meet<Horizon> for AntiScalar {
+    type Output = Horizon;
 
-    fn meet(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0() } }
+    fn meet(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0() } }
     }
 }
 
-impl LeftAntiContraction<PlaneAtInfinity> for AntiScalar {
-    type Output = PlaneAtInfinity;
+impl LeftAntiContraction<Horizon> for AntiScalar {
+    type Output = Horizon;
 
-    fn left_anti_contraction(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0() } }
+    fn left_anti_contraction(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0() } }
     }
 }
 
-impl RightContraction<PlaneAtInfinity> for AntiScalar {
+impl RightContraction<Horizon> for AntiScalar {
     type Output = Origin;
 
-    fn right_contraction(self, other: PlaneAtInfinity) -> Origin {
+    fn right_contraction(self, other: Horizon) -> Origin {
         Origin { groups: OriginGroups { g0: 0.0 - self.group0() * other.group0() } }
     }
 }
@@ -8839,10 +8839,10 @@ impl RightContraction<Point> for Magnitude {
 }
 
 impl RightAntiContraction<Point> for Magnitude {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn right_anti_contraction(self, other: Point) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0()[0] * other.group0()[3] } }
+    fn right_anti_contraction(self, other: Point) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0()[0] * other.group0()[3] } }
     }
 }
 
@@ -8927,10 +8927,10 @@ impl LeftAntiContraction<Origin> for Magnitude {
 }
 
 impl RightAntiContraction<Origin> for Magnitude {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn right_anti_contraction(self, other: Origin) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0()[0] * other.group0() } }
+    fn right_anti_contraction(self, other: Origin) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0()[0] * other.group0() } }
     }
 }
 
@@ -9478,90 +9478,90 @@ impl RightAntiContraction<PlaneAtOrigin> for Magnitude {
     }
 }
 
-impl GeometricProduct<PlaneAtInfinity> for Magnitude {
+impl GeometricProduct<Horizon> for Magnitude {
     type Output = Flector;
 
-    fn geometric_product(self, other: PlaneAtInfinity) -> Flector {
+    fn geometric_product(self, other: Horizon) -> Flector {
         Flector { groups: FlectorGroups { g0: Simd32x4::from([self.group0()[0], self.group0()[0], self.group0()[0], self.group0()[1]]) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]), g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
     }
 }
 
-impl WedgeDot<PlaneAtInfinity> for Magnitude {
+impl WedgeDot<Horizon> for Magnitude {
     type Output = Flector;
 
-    fn wedge_dot(self, other: PlaneAtInfinity) -> Flector {
+    fn wedge_dot(self, other: Horizon) -> Flector {
         Flector { groups: FlectorGroups { g0: Simd32x4::from([self.group0()[0], self.group0()[0], self.group0()[0], self.group0()[1]]) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]), g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
     }
 }
 
-impl GeometricAntiProduct<PlaneAtInfinity> for Magnitude {
-    type Output = PlaneAtInfinity;
+impl GeometricAntiProduct<Horizon> for Magnitude {
+    type Output = Horizon;
 
-    fn geometric_anti_product(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0()[1] * other.group0() } }
+    fn geometric_anti_product(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0()[1] * other.group0() } }
     }
 }
 
-impl AntiWedgeDot<PlaneAtInfinity> for Magnitude {
-    type Output = PlaneAtInfinity;
+impl AntiWedgeDot<Horizon> for Magnitude {
+    type Output = Horizon;
 
-    fn anti_wedge_dot(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0()[1] * other.group0() } }
+    fn anti_wedge_dot(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0()[1] * other.group0() } }
     }
 }
 
-impl Wedge<PlaneAtInfinity> for Magnitude {
-    type Output = PlaneAtInfinity;
+impl Wedge<Horizon> for Magnitude {
+    type Output = Horizon;
 
-    fn wedge(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0()[0] * other.group0() } }
+    fn wedge(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0()[0] * other.group0() } }
     }
 }
 
-impl Join<PlaneAtInfinity> for Magnitude {
-    type Output = PlaneAtInfinity;
+impl Join<Horizon> for Magnitude {
+    type Output = Horizon;
 
-    fn join(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0()[0] * other.group0() } }
+    fn join(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0()[0] * other.group0() } }
     }
 }
 
-impl AntiWedge<PlaneAtInfinity> for Magnitude {
-    type Output = PlaneAtInfinity;
+impl AntiWedge<Horizon> for Magnitude {
+    type Output = Horizon;
 
-    fn anti_wedge(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0()[1] * other.group0() } }
+    fn anti_wedge(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0()[1] * other.group0() } }
     }
 }
 
-impl Meet<PlaneAtInfinity> for Magnitude {
-    type Output = PlaneAtInfinity;
+impl Meet<Horizon> for Magnitude {
+    type Output = Horizon;
 
-    fn meet(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0()[1] * other.group0() } }
+    fn meet(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0()[1] * other.group0() } }
     }
 }
 
-impl LeftContraction<PlaneAtInfinity> for Magnitude {
-    type Output = PlaneAtInfinity;
+impl LeftContraction<Horizon> for Magnitude {
+    type Output = Horizon;
 
-    fn left_contraction(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0()[0] * other.group0() } }
+    fn left_contraction(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0()[0] * other.group0() } }
     }
 }
 
-impl LeftAntiContraction<PlaneAtInfinity> for Magnitude {
-    type Output = PlaneAtInfinity;
+impl LeftAntiContraction<Horizon> for Magnitude {
+    type Output = Horizon;
 
-    fn left_anti_contraction(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0()[1] * other.group0() } }
+    fn left_anti_contraction(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0()[1] * other.group0() } }
     }
 }
 
-impl RightContraction<PlaneAtInfinity> for Magnitude {
+impl RightContraction<Horizon> for Magnitude {
     type Output = Origin;
 
-    fn right_contraction(self, other: PlaneAtInfinity) -> Origin {
+    fn right_contraction(self, other: Horizon) -> Origin {
         Origin { groups: OriginGroups { g0: 0.0 - self.group0()[1] * other.group0() } }
     }
 }
@@ -10095,18 +10095,18 @@ impl WedgeDot<Scalar> for Point {
 }
 
 impl GeometricAntiProduct<Scalar> for Point {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn geometric_anti_product(self, other: Scalar) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: 0.0 - self.group0()[3] * other.group0() } }
+    fn geometric_anti_product(self, other: Scalar) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: 0.0 - self.group0()[3] * other.group0() } }
     }
 }
 
 impl AntiWedgeDot<Scalar> for Point {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn anti_wedge_dot(self, other: Scalar) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: 0.0 - self.group0()[3] * other.group0() } }
+    fn anti_wedge_dot(self, other: Scalar) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: 0.0 - self.group0()[3] * other.group0() } }
     }
 }
 
@@ -10127,10 +10127,10 @@ impl Join<Scalar> for Point {
 }
 
 impl LeftAntiContraction<Scalar> for Point {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn left_anti_contraction(self, other: Scalar) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: 0.0 - self.group0()[3] * other.group0() } }
+    fn left_anti_contraction(self, other: Scalar) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: 0.0 - self.group0()[3] * other.group0() } }
     }
 }
 
@@ -10279,10 +10279,10 @@ impl LeftContraction<Magnitude> for Point {
 }
 
 impl LeftAntiContraction<Magnitude> for Point {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn left_anti_contraction(self, other: Magnitude) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: 0.0 - self.group0()[3] * other.group0()[0] } }
+    fn left_anti_contraction(self, other: Magnitude) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: 0.0 - self.group0()[3] * other.group0()[0] } }
     }
 }
 
@@ -10886,74 +10886,74 @@ impl RightAntiContraction<PlaneAtOrigin> for Point {
     }
 }
 
-impl GeometricProduct<PlaneAtInfinity> for Point {
+impl GeometricProduct<Horizon> for Point {
     type Output = Translator;
 
-    fn geometric_product(self, other: PlaneAtInfinity) -> Translator {
+    fn geometric_product(self, other: Horizon) -> Translator {
         Translator { groups: TranslatorGroups { g0: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) } }
     }
 }
 
-impl WedgeDot<PlaneAtInfinity> for Point {
+impl WedgeDot<Horizon> for Point {
     type Output = Translator;
 
-    fn wedge_dot(self, other: PlaneAtInfinity) -> Translator {
+    fn wedge_dot(self, other: Horizon) -> Translator {
         Translator { groups: TranslatorGroups { g0: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]) } }
     }
 }
 
-impl GeometricAntiProduct<PlaneAtInfinity> for Point {
+impl GeometricAntiProduct<Horizon> for Point {
     type Output = Scalar;
 
-    fn geometric_anti_product(self, other: PlaneAtInfinity) -> Scalar {
+    fn geometric_anti_product(self, other: Horizon) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[3] * other.group0() } }
     }
 }
 
-impl AntiWedgeDot<PlaneAtInfinity> for Point {
+impl AntiWedgeDot<Horizon> for Point {
     type Output = Scalar;
 
-    fn anti_wedge_dot(self, other: PlaneAtInfinity) -> Scalar {
+    fn anti_wedge_dot(self, other: Horizon) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[3] * other.group0() } }
     }
 }
 
-impl Wedge<PlaneAtInfinity> for Point {
+impl Wedge<Horizon> for Point {
     type Output = AntiScalar;
 
-    fn wedge(self, other: PlaneAtInfinity) -> AntiScalar {
+    fn wedge(self, other: Horizon) -> AntiScalar {
         AntiScalar { groups: AntiScalarGroups { g0: self.group0()[3] * other.group0() } }
     }
 }
 
-impl Join<PlaneAtInfinity> for Point {
+impl Join<Horizon> for Point {
     type Output = AntiScalar;
 
-    fn join(self, other: PlaneAtInfinity) -> AntiScalar {
+    fn join(self, other: Horizon) -> AntiScalar {
         AntiScalar { groups: AntiScalarGroups { g0: self.group0()[3] * other.group0() } }
     }
 }
 
-impl AntiWedge<PlaneAtInfinity> for Point {
+impl AntiWedge<Horizon> for Point {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: PlaneAtInfinity) -> Scalar {
+    fn anti_wedge(self, other: Horizon) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[3] * other.group0() } }
     }
 }
 
-impl Meet<PlaneAtInfinity> for Point {
+impl Meet<Horizon> for Point {
     type Output = Scalar;
 
-    fn meet(self, other: PlaneAtInfinity) -> Scalar {
+    fn meet(self, other: Horizon) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0()[3] * other.group0() } }
     }
 }
 
-impl LeftContraction<PlaneAtInfinity> for Point {
+impl LeftContraction<Horizon> for Point {
     type Output = LineAtInfinity;
 
-    fn left_contraction(self, other: PlaneAtInfinity) -> LineAtInfinity {
+    fn left_contraction(self, other: Horizon) -> LineAtInfinity {
         LineAtInfinity { groups: LineAtInfinityGroups { g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()) * Simd32x3::from(-1.0) } }
     }
 }
@@ -11439,18 +11439,18 @@ impl WedgeDot<Scalar> for Origin {
 }
 
 impl GeometricAntiProduct<Scalar> for Origin {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn geometric_anti_product(self, other: Scalar) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: 0.0 - self.group0() * other.group0() } }
+    fn geometric_anti_product(self, other: Scalar) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: 0.0 - self.group0() * other.group0() } }
     }
 }
 
 impl AntiWedgeDot<Scalar> for Origin {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn anti_wedge_dot(self, other: Scalar) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: 0.0 - self.group0() * other.group0() } }
+    fn anti_wedge_dot(self, other: Scalar) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: 0.0 - self.group0() * other.group0() } }
     }
 }
 
@@ -11471,10 +11471,10 @@ impl Join<Scalar> for Origin {
 }
 
 impl LeftAntiContraction<Scalar> for Origin {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn left_anti_contraction(self, other: Scalar) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: 0.0 - self.group0() * other.group0() } }
+    fn left_anti_contraction(self, other: Scalar) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: 0.0 - self.group0() * other.group0() } }
     }
 }
 
@@ -11591,10 +11591,10 @@ impl Meet<Magnitude> for Origin {
 }
 
 impl LeftAntiContraction<Magnitude> for Origin {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn left_anti_contraction(self, other: Magnitude) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: 0.0 - self.group0() * other.group0()[0] } }
+    fn left_anti_contraction(self, other: Magnitude) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: 0.0 - self.group0() * other.group0()[0] } }
     }
 }
 
@@ -11998,66 +11998,66 @@ impl RightAntiContraction<PlaneAtOrigin> for Origin {
     }
 }
 
-impl GeometricProduct<PlaneAtInfinity> for Origin {
+impl GeometricProduct<Horizon> for Origin {
     type Output = AntiScalar;
 
-    fn geometric_product(self, other: PlaneAtInfinity) -> AntiScalar {
+    fn geometric_product(self, other: Horizon) -> AntiScalar {
         AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0() } }
     }
 }
 
-impl WedgeDot<PlaneAtInfinity> for Origin {
+impl WedgeDot<Horizon> for Origin {
     type Output = AntiScalar;
 
-    fn wedge_dot(self, other: PlaneAtInfinity) -> AntiScalar {
+    fn wedge_dot(self, other: Horizon) -> AntiScalar {
         AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0() } }
     }
 }
 
-impl GeometricAntiProduct<PlaneAtInfinity> for Origin {
+impl GeometricAntiProduct<Horizon> for Origin {
     type Output = Scalar;
 
-    fn geometric_anti_product(self, other: PlaneAtInfinity) -> Scalar {
+    fn geometric_anti_product(self, other: Horizon) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0() * other.group0() } }
     }
 }
 
-impl AntiWedgeDot<PlaneAtInfinity> for Origin {
+impl AntiWedgeDot<Horizon> for Origin {
     type Output = Scalar;
 
-    fn anti_wedge_dot(self, other: PlaneAtInfinity) -> Scalar {
+    fn anti_wedge_dot(self, other: Horizon) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0() * other.group0() } }
     }
 }
 
-impl Wedge<PlaneAtInfinity> for Origin {
+impl Wedge<Horizon> for Origin {
     type Output = AntiScalar;
 
-    fn wedge(self, other: PlaneAtInfinity) -> AntiScalar {
+    fn wedge(self, other: Horizon) -> AntiScalar {
         AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0() } }
     }
 }
 
-impl Join<PlaneAtInfinity> for Origin {
+impl Join<Horizon> for Origin {
     type Output = AntiScalar;
 
-    fn join(self, other: PlaneAtInfinity) -> AntiScalar {
+    fn join(self, other: Horizon) -> AntiScalar {
         AntiScalar { groups: AntiScalarGroups { g0: self.group0() * other.group0() } }
     }
 }
 
-impl AntiWedge<PlaneAtInfinity> for Origin {
+impl AntiWedge<Horizon> for Origin {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: PlaneAtInfinity) -> Scalar {
+    fn anti_wedge(self, other: Horizon) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0() * other.group0() } }
     }
 }
 
-impl Meet<PlaneAtInfinity> for Origin {
+impl Meet<Horizon> for Origin {
     type Output = Scalar;
 
-    fn meet(self, other: PlaneAtInfinity) -> Scalar {
+    fn meet(self, other: Horizon) -> Scalar {
         Scalar { groups: ScalarGroups { g0: self.group0() * other.group0() } }
     }
 }
@@ -12855,10 +12855,10 @@ impl LeftContraction<Line> for PointAtInfinity {
 }
 
 impl RightAntiContraction<Line> for PointAtInfinity {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn right_anti_contraction(self, other: Line) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
+    fn right_anti_contraction(self, other: Line) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
     }
 }
 
@@ -12919,10 +12919,10 @@ impl LeftContraction<LineAtOrigin> for PointAtInfinity {
 }
 
 impl RightAntiContraction<LineAtOrigin> for PointAtInfinity {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn right_anti_contraction(self, other: LineAtOrigin) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
+    fn right_anti_contraction(self, other: LineAtOrigin) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
     }
 }
 
@@ -12943,18 +12943,18 @@ impl WedgeDot<LineAtInfinity> for PointAtInfinity {
 }
 
 impl Wedge<LineAtInfinity> for PointAtInfinity {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn wedge(self, other: LineAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
+    fn wedge(self, other: LineAtInfinity) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
     }
 }
 
 impl Join<LineAtInfinity> for PointAtInfinity {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn join(self, other: LineAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
+    fn join(self, other: LineAtInfinity) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
     }
 }
 
@@ -13126,26 +13126,26 @@ impl RightAntiContraction<PlaneAtOrigin> for PointAtInfinity {
     }
 }
 
-impl GeometricProduct<PlaneAtInfinity> for PointAtInfinity {
+impl GeometricProduct<Horizon> for PointAtInfinity {
     type Output = LineAtInfinity;
 
-    fn geometric_product(self, other: PlaneAtInfinity) -> LineAtInfinity {
+    fn geometric_product(self, other: Horizon) -> LineAtInfinity {
         LineAtInfinity { groups: LineAtInfinityGroups { g0: self.group0() * Simd32x3::from(other.group0()) * Simd32x3::from(-1.0) } }
     }
 }
 
-impl WedgeDot<PlaneAtInfinity> for PointAtInfinity {
+impl WedgeDot<Horizon> for PointAtInfinity {
     type Output = LineAtInfinity;
 
-    fn wedge_dot(self, other: PlaneAtInfinity) -> LineAtInfinity {
+    fn wedge_dot(self, other: Horizon) -> LineAtInfinity {
         LineAtInfinity { groups: LineAtInfinityGroups { g0: self.group0() * Simd32x3::from(other.group0()) * Simd32x3::from(-1.0) } }
     }
 }
 
-impl LeftContraction<PlaneAtInfinity> for PointAtInfinity {
+impl LeftContraction<Horizon> for PointAtInfinity {
     type Output = LineAtInfinity;
 
-    fn left_contraction(self, other: PlaneAtInfinity) -> LineAtInfinity {
+    fn left_contraction(self, other: Horizon) -> LineAtInfinity {
         LineAtInfinity { groups: LineAtInfinityGroups { g0: self.group0() * Simd32x3::from(other.group0()) * Simd32x3::from(-1.0) } }
     }
 }
@@ -13343,18 +13343,18 @@ impl AntiWedgeDot<Translator> for PointAtInfinity {
 }
 
 impl Wedge<Translator> for PointAtInfinity {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn wedge(self, other: Translator) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
+    fn wedge(self, other: Translator) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
     }
 }
 
 impl Join<Translator> for PointAtInfinity {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn join(self, other: Translator) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
+    fn join(self, other: Translator) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
     }
 }
 
@@ -13975,10 +13975,10 @@ impl Join<PointAtInfinity> for Line {
 }
 
 impl LeftAntiContraction<PointAtInfinity> for Line {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn left_anti_contraction(self, other: PointAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
+    fn left_anti_contraction(self, other: PointAtInfinity) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
     }
 }
 
@@ -14406,58 +14406,58 @@ impl RightAntiContraction<PlaneAtOrigin> for Line {
     }
 }
 
-impl GeometricProduct<PlaneAtInfinity> for Line {
+impl GeometricProduct<Horizon> for Line {
     type Output = Flector;
 
-    fn geometric_product(self, other: PlaneAtInfinity) -> Flector {
+    fn geometric_product(self, other: Horizon) -> Flector {
         Flector { groups: FlectorGroups { g0: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]]) * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]), g1: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]]) * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]) } }
     }
 }
 
-impl WedgeDot<PlaneAtInfinity> for Line {
+impl WedgeDot<Horizon> for Line {
     type Output = Flector;
 
-    fn wedge_dot(self, other: PlaneAtInfinity) -> Flector {
+    fn wedge_dot(self, other: Horizon) -> Flector {
         Flector { groups: FlectorGroups { g0: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]]) * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]), g1: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]]) * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]) } }
     }
 }
 
-impl GeometricAntiProduct<PlaneAtInfinity> for Line {
+impl GeometricAntiProduct<Horizon> for Line {
     type Output = PointAtInfinity;
 
-    fn geometric_anti_product(self, other: PlaneAtInfinity) -> PointAtInfinity {
+    fn geometric_anti_product(self, other: Horizon) -> PointAtInfinity {
         PointAtInfinity { groups: PointAtInfinityGroups { g0: self.group0() * Simd32x3::from(other.group0()) } }
     }
 }
 
-impl AntiWedgeDot<PlaneAtInfinity> for Line {
+impl AntiWedgeDot<Horizon> for Line {
     type Output = PointAtInfinity;
 
-    fn anti_wedge_dot(self, other: PlaneAtInfinity) -> PointAtInfinity {
+    fn anti_wedge_dot(self, other: Horizon) -> PointAtInfinity {
         PointAtInfinity { groups: PointAtInfinityGroups { g0: self.group0() * Simd32x3::from(other.group0()) } }
     }
 }
 
-impl AntiWedge<PlaneAtInfinity> for Line {
+impl AntiWedge<Horizon> for Line {
     type Output = PointAtInfinity;
 
-    fn anti_wedge(self, other: PlaneAtInfinity) -> PointAtInfinity {
+    fn anti_wedge(self, other: Horizon) -> PointAtInfinity {
         PointAtInfinity { groups: PointAtInfinityGroups { g0: self.group0() * Simd32x3::from(other.group0()) } }
     }
 }
 
-impl Meet<PlaneAtInfinity> for Line {
+impl Meet<Horizon> for Line {
     type Output = PointAtInfinity;
 
-    fn meet(self, other: PlaneAtInfinity) -> PointAtInfinity {
+    fn meet(self, other: Horizon) -> PointAtInfinity {
         PointAtInfinity { groups: PointAtInfinityGroups { g0: self.group0() * Simd32x3::from(other.group0()) } }
     }
 }
 
-impl LeftContraction<PlaneAtInfinity> for Line {
+impl LeftContraction<Horizon> for Line {
     type Output = PointAtInfinity;
 
-    fn left_contraction(self, other: PlaneAtInfinity) -> PointAtInfinity {
+    fn left_contraction(self, other: Horizon) -> PointAtInfinity {
         PointAtInfinity { groups: PointAtInfinityGroups { g0: self.group1() * Simd32x3::from(other.group0()) } }
     }
 }
@@ -15303,10 +15303,10 @@ impl Join<PointAtInfinity> for LineAtOrigin {
 }
 
 impl LeftAntiContraction<PointAtInfinity> for LineAtOrigin {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn left_anti_contraction(self, other: PointAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
+    fn left_anti_contraction(self, other: PointAtInfinity) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
     }
 }
 
@@ -15606,50 +15606,50 @@ impl RightAntiContraction<PlaneAtOrigin> for LineAtOrigin {
     }
 }
 
-impl GeometricProduct<PlaneAtInfinity> for LineAtOrigin {
+impl GeometricProduct<Horizon> for LineAtOrigin {
     type Output = PlaneAtOrigin;
 
-    fn geometric_product(self, other: PlaneAtInfinity) -> PlaneAtOrigin {
+    fn geometric_product(self, other: Horizon) -> PlaneAtOrigin {
         PlaneAtOrigin { groups: PlaneAtOriginGroups { g0: self.group0() * Simd32x3::from(other.group0()) * Simd32x3::from(-1.0) } }
     }
 }
 
-impl WedgeDot<PlaneAtInfinity> for LineAtOrigin {
+impl WedgeDot<Horizon> for LineAtOrigin {
     type Output = PlaneAtOrigin;
 
-    fn wedge_dot(self, other: PlaneAtInfinity) -> PlaneAtOrigin {
+    fn wedge_dot(self, other: Horizon) -> PlaneAtOrigin {
         PlaneAtOrigin { groups: PlaneAtOriginGroups { g0: self.group0() * Simd32x3::from(other.group0()) * Simd32x3::from(-1.0) } }
     }
 }
 
-impl GeometricAntiProduct<PlaneAtInfinity> for LineAtOrigin {
+impl GeometricAntiProduct<Horizon> for LineAtOrigin {
     type Output = PointAtInfinity;
 
-    fn geometric_anti_product(self, other: PlaneAtInfinity) -> PointAtInfinity {
+    fn geometric_anti_product(self, other: Horizon) -> PointAtInfinity {
         PointAtInfinity { groups: PointAtInfinityGroups { g0: self.group0() * Simd32x3::from(other.group0()) } }
     }
 }
 
-impl AntiWedgeDot<PlaneAtInfinity> for LineAtOrigin {
+impl AntiWedgeDot<Horizon> for LineAtOrigin {
     type Output = PointAtInfinity;
 
-    fn anti_wedge_dot(self, other: PlaneAtInfinity) -> PointAtInfinity {
+    fn anti_wedge_dot(self, other: Horizon) -> PointAtInfinity {
         PointAtInfinity { groups: PointAtInfinityGroups { g0: self.group0() * Simd32x3::from(other.group0()) } }
     }
 }
 
-impl AntiWedge<PlaneAtInfinity> for LineAtOrigin {
+impl AntiWedge<Horizon> for LineAtOrigin {
     type Output = PointAtInfinity;
 
-    fn anti_wedge(self, other: PlaneAtInfinity) -> PointAtInfinity {
+    fn anti_wedge(self, other: Horizon) -> PointAtInfinity {
         PointAtInfinity { groups: PointAtInfinityGroups { g0: self.group0() * Simd32x3::from(other.group0()) } }
     }
 }
 
-impl Meet<PlaneAtInfinity> for LineAtOrigin {
+impl Meet<Horizon> for LineAtOrigin {
     type Output = PointAtInfinity;
 
-    fn meet(self, other: PlaneAtInfinity) -> PointAtInfinity {
+    fn meet(self, other: Horizon) -> PointAtInfinity {
         PointAtInfinity { groups: PointAtInfinityGroups { g0: self.group0() * Simd32x3::from(other.group0()) } }
     }
 }
@@ -16367,18 +16367,18 @@ impl WedgeDot<PointAtInfinity> for LineAtInfinity {
 }
 
 impl Wedge<PointAtInfinity> for LineAtInfinity {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn wedge(self, other: PointAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
+    fn wedge(self, other: PointAtInfinity) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
     }
 }
 
 impl Join<PointAtInfinity> for LineAtInfinity {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn join(self, other: PointAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
+    fn join(self, other: PointAtInfinity) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
     }
 }
 
@@ -16639,10 +16639,10 @@ impl LeftContraction<Plane> for LineAtInfinity {
 }
 
 impl RightAntiContraction<Plane> for LineAtInfinity {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn right_anti_contraction(self, other: Plane) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
+    fn right_anti_contraction(self, other: Plane) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
     }
 }
 
@@ -16703,33 +16703,33 @@ impl LeftContraction<PlaneAtOrigin> for LineAtInfinity {
 }
 
 impl RightAntiContraction<PlaneAtOrigin> for LineAtInfinity {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn right_anti_contraction(self, other: PlaneAtOrigin) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
+    fn right_anti_contraction(self, other: PlaneAtOrigin) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
     }
 }
 
-impl GeometricProduct<PlaneAtInfinity> for LineAtInfinity {
+impl GeometricProduct<Horizon> for LineAtInfinity {
     type Output = PointAtInfinity;
 
-    fn geometric_product(self, other: PlaneAtInfinity) -> PointAtInfinity {
+    fn geometric_product(self, other: Horizon) -> PointAtInfinity {
         PointAtInfinity { groups: PointAtInfinityGroups { g0: self.group0() * Simd32x3::from(other.group0()) } }
     }
 }
 
-impl WedgeDot<PlaneAtInfinity> for LineAtInfinity {
+impl WedgeDot<Horizon> for LineAtInfinity {
     type Output = PointAtInfinity;
 
-    fn wedge_dot(self, other: PlaneAtInfinity) -> PointAtInfinity {
+    fn wedge_dot(self, other: Horizon) -> PointAtInfinity {
         PointAtInfinity { groups: PointAtInfinityGroups { g0: self.group0() * Simd32x3::from(other.group0()) } }
     }
 }
 
-impl LeftContraction<PlaneAtInfinity> for LineAtInfinity {
+impl LeftContraction<Horizon> for LineAtInfinity {
     type Output = PointAtInfinity;
 
-    fn left_contraction(self, other: PlaneAtInfinity) -> PointAtInfinity {
+    fn left_contraction(self, other: Horizon) -> PointAtInfinity {
         PointAtInfinity { groups: PointAtInfinityGroups { g0: self.group0() * Simd32x3::from(other.group0()) } }
     }
 }
@@ -17071,10 +17071,10 @@ impl RightContraction<Flector> for LineAtInfinity {
 }
 
 impl RightAntiContraction<Flector> for LineAtInfinity {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn right_anti_contraction(self, other: Flector) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2] } }
+    fn right_anti_contraction(self, other: Flector) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2] } }
     }
 }
 
@@ -17799,10 +17799,10 @@ impl Meet<LineAtInfinity> for Plane {
 }
 
 impl LeftAntiContraction<LineAtInfinity> for Plane {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn left_anti_contraction(self, other: LineAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] } }
+    fn left_anti_contraction(self, other: LineAtInfinity) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] } }
     }
 }
 
@@ -17982,74 +17982,74 @@ impl AntiDot<PlaneAtOrigin> for Plane {
     }
 }
 
-impl GeometricProduct<PlaneAtInfinity> for Plane {
+impl GeometricProduct<Horizon> for Plane {
     type Output = MultiVector;
 
-    fn geometric_product(self, other: PlaneAtInfinity) -> MultiVector {
+    fn geometric_product(self, other: Horizon) -> MultiVector {
         MultiVector { groups: MultiVectorGroups { g0: Simd32x2::from([self.group0()[3], self.group0()[0]]) * Simd32x2::from(other.group0()) * Simd32x2::from([-1.0, 0.0]), g1: Simd32x4::from(0.0), g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()), g3: Simd32x3::from(0.0), g4: Simd32x4::from(0.0) } }
     }
 }
 
-impl WedgeDot<PlaneAtInfinity> for Plane {
+impl WedgeDot<Horizon> for Plane {
     type Output = MultiVector;
 
-    fn wedge_dot(self, other: PlaneAtInfinity) -> MultiVector {
+    fn wedge_dot(self, other: Horizon) -> MultiVector {
         MultiVector { groups: MultiVectorGroups { g0: Simd32x2::from([self.group0()[3], self.group0()[0]]) * Simd32x2::from(other.group0()) * Simd32x2::from([-1.0, 0.0]), g1: Simd32x4::from(0.0), g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()), g3: Simd32x3::from(0.0), g4: Simd32x4::from(0.0) } }
     }
 }
 
-impl GeometricAntiProduct<PlaneAtInfinity> for Plane {
+impl GeometricAntiProduct<Horizon> for Plane {
     type Output = LineAtInfinity;
 
-    fn geometric_anti_product(self, other: PlaneAtInfinity) -> LineAtInfinity {
+    fn geometric_anti_product(self, other: Horizon) -> LineAtInfinity {
         LineAtInfinity { groups: LineAtInfinityGroups { g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()) } }
     }
 }
 
-impl AntiWedgeDot<PlaneAtInfinity> for Plane {
+impl AntiWedgeDot<Horizon> for Plane {
     type Output = LineAtInfinity;
 
-    fn anti_wedge_dot(self, other: PlaneAtInfinity) -> LineAtInfinity {
+    fn anti_wedge_dot(self, other: Horizon) -> LineAtInfinity {
         LineAtInfinity { groups: LineAtInfinityGroups { g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()) } }
     }
 }
 
-impl AntiWedge<PlaneAtInfinity> for Plane {
+impl AntiWedge<Horizon> for Plane {
     type Output = LineAtInfinity;
 
-    fn anti_wedge(self, other: PlaneAtInfinity) -> LineAtInfinity {
+    fn anti_wedge(self, other: Horizon) -> LineAtInfinity {
         LineAtInfinity { groups: LineAtInfinityGroups { g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()) } }
     }
 }
 
-impl Meet<PlaneAtInfinity> for Plane {
+impl Meet<Horizon> for Plane {
     type Output = LineAtInfinity;
 
-    fn meet(self, other: PlaneAtInfinity) -> LineAtInfinity {
+    fn meet(self, other: Horizon) -> LineAtInfinity {
         LineAtInfinity { groups: LineAtInfinityGroups { g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()) } }
     }
 }
 
-impl LeftContraction<PlaneAtInfinity> for Plane {
+impl LeftContraction<Horizon> for Plane {
     type Output = Scalar;
 
-    fn left_contraction(self, other: PlaneAtInfinity) -> Scalar {
+    fn left_contraction(self, other: Horizon) -> Scalar {
         Scalar { groups: ScalarGroups { g0: 0.0 - self.group0()[3] * other.group0() } }
     }
 }
 
-impl RightContraction<PlaneAtInfinity> for Plane {
+impl RightContraction<Horizon> for Plane {
     type Output = Scalar;
 
-    fn right_contraction(self, other: PlaneAtInfinity) -> Scalar {
+    fn right_contraction(self, other: Horizon) -> Scalar {
         Scalar { groups: ScalarGroups { g0: 0.0 - self.group0()[3] * other.group0() } }
     }
 }
 
-impl Dot<PlaneAtInfinity> for Plane {
+impl Dot<Horizon> for Plane {
     type Output = Scalar;
 
-    fn dot(self, other: PlaneAtInfinity) -> Scalar {
+    fn dot(self, other: Horizon) -> Scalar {
         Scalar { groups: ScalarGroups { g0: 0.0 - self.group0()[3] * other.group0() } }
     }
 }
@@ -18263,10 +18263,10 @@ impl LeftContraction<Translator> for Plane {
 }
 
 impl LeftAntiContraction<Translator> for Plane {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn left_anti_contraction(self, other: Translator) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] } }
+    fn left_anti_contraction(self, other: Translator) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] } }
     }
 }
 
@@ -19039,10 +19039,10 @@ impl Meet<LineAtInfinity> for PlaneAtOrigin {
 }
 
 impl LeftAntiContraction<LineAtInfinity> for PlaneAtOrigin {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn left_anti_contraction(self, other: LineAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] } }
+    fn left_anti_contraction(self, other: LineAtInfinity) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] } }
     }
 }
 
@@ -19182,50 +19182,50 @@ impl AntiDot<PlaneAtOrigin> for PlaneAtOrigin {
     }
 }
 
-impl GeometricProduct<PlaneAtInfinity> for PlaneAtOrigin {
+impl GeometricProduct<Horizon> for PlaneAtOrigin {
     type Output = LineAtOrigin;
 
-    fn geometric_product(self, other: PlaneAtInfinity) -> LineAtOrigin {
+    fn geometric_product(self, other: Horizon) -> LineAtOrigin {
         LineAtOrigin { groups: LineAtOriginGroups { g0: self.group0() * Simd32x3::from(other.group0()) } }
     }
 }
 
-impl WedgeDot<PlaneAtInfinity> for PlaneAtOrigin {
+impl WedgeDot<Horizon> for PlaneAtOrigin {
     type Output = LineAtOrigin;
 
-    fn wedge_dot(self, other: PlaneAtInfinity) -> LineAtOrigin {
+    fn wedge_dot(self, other: Horizon) -> LineAtOrigin {
         LineAtOrigin { groups: LineAtOriginGroups { g0: self.group0() * Simd32x3::from(other.group0()) } }
     }
 }
 
-impl GeometricAntiProduct<PlaneAtInfinity> for PlaneAtOrigin {
+impl GeometricAntiProduct<Horizon> for PlaneAtOrigin {
     type Output = LineAtInfinity;
 
-    fn geometric_anti_product(self, other: PlaneAtInfinity) -> LineAtInfinity {
+    fn geometric_anti_product(self, other: Horizon) -> LineAtInfinity {
         LineAtInfinity { groups: LineAtInfinityGroups { g0: self.group0() * Simd32x3::from(other.group0()) } }
     }
 }
 
-impl AntiWedgeDot<PlaneAtInfinity> for PlaneAtOrigin {
+impl AntiWedgeDot<Horizon> for PlaneAtOrigin {
     type Output = LineAtInfinity;
 
-    fn anti_wedge_dot(self, other: PlaneAtInfinity) -> LineAtInfinity {
+    fn anti_wedge_dot(self, other: Horizon) -> LineAtInfinity {
         LineAtInfinity { groups: LineAtInfinityGroups { g0: self.group0() * Simd32x3::from(other.group0()) } }
     }
 }
 
-impl AntiWedge<PlaneAtInfinity> for PlaneAtOrigin {
+impl AntiWedge<Horizon> for PlaneAtOrigin {
     type Output = LineAtInfinity;
 
-    fn anti_wedge(self, other: PlaneAtInfinity) -> LineAtInfinity {
+    fn anti_wedge(self, other: Horizon) -> LineAtInfinity {
         LineAtInfinity { groups: LineAtInfinityGroups { g0: self.group0() * Simd32x3::from(other.group0()) } }
     }
 }
 
-impl Meet<PlaneAtInfinity> for PlaneAtOrigin {
+impl Meet<Horizon> for PlaneAtOrigin {
     type Output = LineAtInfinity;
 
-    fn meet(self, other: PlaneAtInfinity) -> LineAtInfinity {
+    fn meet(self, other: Horizon) -> LineAtInfinity {
         LineAtInfinity { groups: LineAtInfinityGroups { g0: self.group0() * Simd32x3::from(other.group0()) } }
     }
 }
@@ -19399,10 +19399,10 @@ impl Meet<Translator> for PlaneAtOrigin {
 }
 
 impl LeftAntiContraction<Translator> for PlaneAtOrigin {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn left_anti_contraction(self, other: Translator) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] } }
+    fn left_anti_contraction(self, other: Translator) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] } }
     }
 }
 
@@ -19614,47 +19614,47 @@ impl AntiDot<MultiVector> for PlaneAtOrigin {
     }
 }
 
-impl GeometricProduct<Scalar> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl GeometricProduct<Scalar> for Horizon {
+    type Output = Horizon;
 
-    fn geometric_product(self, other: Scalar) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0() } }
+    fn geometric_product(self, other: Scalar) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0() } }
     }
 }
 
-impl WedgeDot<Scalar> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl WedgeDot<Scalar> for Horizon {
+    type Output = Horizon;
 
-    fn wedge_dot(self, other: Scalar) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0() } }
+    fn wedge_dot(self, other: Scalar) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0() } }
     }
 }
 
-impl Wedge<Scalar> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl Wedge<Scalar> for Horizon {
+    type Output = Horizon;
 
-    fn wedge(self, other: Scalar) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0() } }
+    fn wedge(self, other: Scalar) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0() } }
     }
 }
 
-impl Join<Scalar> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl Join<Scalar> for Horizon {
+    type Output = Horizon;
 
-    fn join(self, other: Scalar) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0() } }
+    fn join(self, other: Scalar) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0() } }
     }
 }
 
-impl RightContraction<Scalar> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl RightContraction<Scalar> for Horizon {
+    type Output = Horizon;
 
-    fn right_contraction(self, other: Scalar) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0() } }
+    fn right_contraction(self, other: Scalar) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0() } }
     }
 }
 
-impl GeometricProduct<AntiScalar> for PlaneAtInfinity {
+impl GeometricProduct<AntiScalar> for Horizon {
     type Output = Origin;
 
     fn geometric_product(self, other: AntiScalar) -> Origin {
@@ -19662,7 +19662,7 @@ impl GeometricProduct<AntiScalar> for PlaneAtInfinity {
     }
 }
 
-impl WedgeDot<AntiScalar> for PlaneAtInfinity {
+impl WedgeDot<AntiScalar> for Horizon {
     type Output = Origin;
 
     fn wedge_dot(self, other: AntiScalar) -> Origin {
@@ -19670,39 +19670,39 @@ impl WedgeDot<AntiScalar> for PlaneAtInfinity {
     }
 }
 
-impl GeometricAntiProduct<AntiScalar> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl GeometricAntiProduct<AntiScalar> for Horizon {
+    type Output = Horizon;
 
-    fn geometric_anti_product(self, other: AntiScalar) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0() } }
+    fn geometric_anti_product(self, other: AntiScalar) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0() } }
     }
 }
 
-impl AntiWedgeDot<AntiScalar> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl AntiWedgeDot<AntiScalar> for Horizon {
+    type Output = Horizon;
 
-    fn anti_wedge_dot(self, other: AntiScalar) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0() } }
+    fn anti_wedge_dot(self, other: AntiScalar) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0() } }
     }
 }
 
-impl AntiWedge<AntiScalar> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl AntiWedge<AntiScalar> for Horizon {
+    type Output = Horizon;
 
-    fn anti_wedge(self, other: AntiScalar) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0() } }
+    fn anti_wedge(self, other: AntiScalar) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0() } }
     }
 }
 
-impl Meet<AntiScalar> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl Meet<AntiScalar> for Horizon {
+    type Output = Horizon;
 
-    fn meet(self, other: AntiScalar) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0() } }
+    fn meet(self, other: AntiScalar) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0() } }
     }
 }
 
-impl LeftContraction<AntiScalar> for PlaneAtInfinity {
+impl LeftContraction<AntiScalar> for Horizon {
     type Output = Origin;
 
     fn left_contraction(self, other: AntiScalar) -> Origin {
@@ -19710,15 +19710,15 @@ impl LeftContraction<AntiScalar> for PlaneAtInfinity {
     }
 }
 
-impl RightAntiContraction<AntiScalar> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl RightAntiContraction<AntiScalar> for Horizon {
+    type Output = Horizon;
 
-    fn right_anti_contraction(self, other: AntiScalar) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0() } }
+    fn right_anti_contraction(self, other: AntiScalar) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0() } }
     }
 }
 
-impl GeometricProduct<Magnitude> for PlaneAtInfinity {
+impl GeometricProduct<Magnitude> for Horizon {
     type Output = Flector;
 
     fn geometric_product(self, other: Magnitude) -> Flector {
@@ -19726,7 +19726,7 @@ impl GeometricProduct<Magnitude> for PlaneAtInfinity {
     }
 }
 
-impl WedgeDot<Magnitude> for PlaneAtInfinity {
+impl WedgeDot<Magnitude> for Horizon {
     type Output = Flector;
 
     fn wedge_dot(self, other: Magnitude) -> Flector {
@@ -19734,55 +19734,55 @@ impl WedgeDot<Magnitude> for PlaneAtInfinity {
     }
 }
 
-impl GeometricAntiProduct<Magnitude> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl GeometricAntiProduct<Magnitude> for Horizon {
+    type Output = Horizon;
 
-    fn geometric_anti_product(self, other: Magnitude) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0()[1] } }
+    fn geometric_anti_product(self, other: Magnitude) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0()[1] } }
     }
 }
 
-impl AntiWedgeDot<Magnitude> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl AntiWedgeDot<Magnitude> for Horizon {
+    type Output = Horizon;
 
-    fn anti_wedge_dot(self, other: Magnitude) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0()[1] } }
+    fn anti_wedge_dot(self, other: Magnitude) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0()[1] } }
     }
 }
 
-impl Wedge<Magnitude> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl Wedge<Magnitude> for Horizon {
+    type Output = Horizon;
 
-    fn wedge(self, other: Magnitude) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0()[0] } }
+    fn wedge(self, other: Magnitude) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0()[0] } }
     }
 }
 
-impl Join<Magnitude> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl Join<Magnitude> for Horizon {
+    type Output = Horizon;
 
-    fn join(self, other: Magnitude) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0()[0] } }
+    fn join(self, other: Magnitude) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0()[0] } }
     }
 }
 
-impl AntiWedge<Magnitude> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl AntiWedge<Magnitude> for Horizon {
+    type Output = Horizon;
 
-    fn anti_wedge(self, other: Magnitude) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0()[1] } }
+    fn anti_wedge(self, other: Magnitude) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0()[1] } }
     }
 }
 
-impl Meet<Magnitude> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl Meet<Magnitude> for Horizon {
+    type Output = Horizon;
 
-    fn meet(self, other: Magnitude) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0()[1] } }
+    fn meet(self, other: Magnitude) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0()[1] } }
     }
 }
 
-impl LeftContraction<Magnitude> for PlaneAtInfinity {
+impl LeftContraction<Magnitude> for Horizon {
     type Output = Origin;
 
     fn left_contraction(self, other: Magnitude) -> Origin {
@@ -19790,23 +19790,23 @@ impl LeftContraction<Magnitude> for PlaneAtInfinity {
     }
 }
 
-impl RightContraction<Magnitude> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl RightContraction<Magnitude> for Horizon {
+    type Output = Horizon;
 
-    fn right_contraction(self, other: Magnitude) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0()[0] } }
+    fn right_contraction(self, other: Magnitude) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0()[0] } }
     }
 }
 
-impl RightAntiContraction<Magnitude> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl RightAntiContraction<Magnitude> for Horizon {
+    type Output = Horizon;
 
-    fn right_anti_contraction(self, other: Magnitude) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0()[1] } }
+    fn right_anti_contraction(self, other: Magnitude) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0()[1] } }
     }
 }
 
-impl GeometricProduct<Point> for PlaneAtInfinity {
+impl GeometricProduct<Point> for Horizon {
     type Output = Translator;
 
     fn geometric_product(self, other: Point) -> Translator {
@@ -19814,7 +19814,7 @@ impl GeometricProduct<Point> for PlaneAtInfinity {
     }
 }
 
-impl WedgeDot<Point> for PlaneAtInfinity {
+impl WedgeDot<Point> for Horizon {
     type Output = Translator;
 
     fn wedge_dot(self, other: Point) -> Translator {
@@ -19822,7 +19822,7 @@ impl WedgeDot<Point> for PlaneAtInfinity {
     }
 }
 
-impl GeometricAntiProduct<Point> for PlaneAtInfinity {
+impl GeometricAntiProduct<Point> for Horizon {
     type Output = Scalar;
 
     fn geometric_anti_product(self, other: Point) -> Scalar {
@@ -19830,7 +19830,7 @@ impl GeometricAntiProduct<Point> for PlaneAtInfinity {
     }
 }
 
-impl AntiWedgeDot<Point> for PlaneAtInfinity {
+impl AntiWedgeDot<Point> for Horizon {
     type Output = Scalar;
 
     fn anti_wedge_dot(self, other: Point) -> Scalar {
@@ -19838,7 +19838,7 @@ impl AntiWedgeDot<Point> for PlaneAtInfinity {
     }
 }
 
-impl Wedge<Point> for PlaneAtInfinity {
+impl Wedge<Point> for Horizon {
     type Output = AntiScalar;
 
     fn wedge(self, other: Point) -> AntiScalar {
@@ -19846,7 +19846,7 @@ impl Wedge<Point> for PlaneAtInfinity {
     }
 }
 
-impl Join<Point> for PlaneAtInfinity {
+impl Join<Point> for Horizon {
     type Output = AntiScalar;
 
     fn join(self, other: Point) -> AntiScalar {
@@ -19854,7 +19854,7 @@ impl Join<Point> for PlaneAtInfinity {
     }
 }
 
-impl AntiWedge<Point> for PlaneAtInfinity {
+impl AntiWedge<Point> for Horizon {
     type Output = Scalar;
 
     fn anti_wedge(self, other: Point) -> Scalar {
@@ -19862,7 +19862,7 @@ impl AntiWedge<Point> for PlaneAtInfinity {
     }
 }
 
-impl Meet<Point> for PlaneAtInfinity {
+impl Meet<Point> for Horizon {
     type Output = Scalar;
 
     fn meet(self, other: Point) -> Scalar {
@@ -19870,7 +19870,7 @@ impl Meet<Point> for PlaneAtInfinity {
     }
 }
 
-impl RightContraction<Point> for PlaneAtInfinity {
+impl RightContraction<Point> for Horizon {
     type Output = LineAtInfinity;
 
     fn right_contraction(self, other: Point) -> LineAtInfinity {
@@ -19878,7 +19878,7 @@ impl RightContraction<Point> for PlaneAtInfinity {
     }
 }
 
-impl GeometricProduct<Origin> for PlaneAtInfinity {
+impl GeometricProduct<Origin> for Horizon {
     type Output = AntiScalar;
 
     fn geometric_product(self, other: Origin) -> AntiScalar {
@@ -19886,7 +19886,7 @@ impl GeometricProduct<Origin> for PlaneAtInfinity {
     }
 }
 
-impl WedgeDot<Origin> for PlaneAtInfinity {
+impl WedgeDot<Origin> for Horizon {
     type Output = AntiScalar;
 
     fn wedge_dot(self, other: Origin) -> AntiScalar {
@@ -19894,7 +19894,7 @@ impl WedgeDot<Origin> for PlaneAtInfinity {
     }
 }
 
-impl GeometricAntiProduct<Origin> for PlaneAtInfinity {
+impl GeometricAntiProduct<Origin> for Horizon {
     type Output = Scalar;
 
     fn geometric_anti_product(self, other: Origin) -> Scalar {
@@ -19902,7 +19902,7 @@ impl GeometricAntiProduct<Origin> for PlaneAtInfinity {
     }
 }
 
-impl AntiWedgeDot<Origin> for PlaneAtInfinity {
+impl AntiWedgeDot<Origin> for Horizon {
     type Output = Scalar;
 
     fn anti_wedge_dot(self, other: Origin) -> Scalar {
@@ -19910,7 +19910,7 @@ impl AntiWedgeDot<Origin> for PlaneAtInfinity {
     }
 }
 
-impl Wedge<Origin> for PlaneAtInfinity {
+impl Wedge<Origin> for Horizon {
     type Output = AntiScalar;
 
     fn wedge(self, other: Origin) -> AntiScalar {
@@ -19918,7 +19918,7 @@ impl Wedge<Origin> for PlaneAtInfinity {
     }
 }
 
-impl Join<Origin> for PlaneAtInfinity {
+impl Join<Origin> for Horizon {
     type Output = AntiScalar;
 
     fn join(self, other: Origin) -> AntiScalar {
@@ -19926,7 +19926,7 @@ impl Join<Origin> for PlaneAtInfinity {
     }
 }
 
-impl AntiWedge<Origin> for PlaneAtInfinity {
+impl AntiWedge<Origin> for Horizon {
     type Output = Scalar;
 
     fn anti_wedge(self, other: Origin) -> Scalar {
@@ -19934,7 +19934,7 @@ impl AntiWedge<Origin> for PlaneAtInfinity {
     }
 }
 
-impl Meet<Origin> for PlaneAtInfinity {
+impl Meet<Origin> for Horizon {
     type Output = Scalar;
 
     fn meet(self, other: Origin) -> Scalar {
@@ -19942,7 +19942,7 @@ impl Meet<Origin> for PlaneAtInfinity {
     }
 }
 
-impl GeometricProduct<PointAtInfinity> for PlaneAtInfinity {
+impl GeometricProduct<PointAtInfinity> for Horizon {
     type Output = LineAtInfinity;
 
     fn geometric_product(self, other: PointAtInfinity) -> LineAtInfinity {
@@ -19950,7 +19950,7 @@ impl GeometricProduct<PointAtInfinity> for PlaneAtInfinity {
     }
 }
 
-impl WedgeDot<PointAtInfinity> for PlaneAtInfinity {
+impl WedgeDot<PointAtInfinity> for Horizon {
     type Output = LineAtInfinity;
 
     fn wedge_dot(self, other: PointAtInfinity) -> LineAtInfinity {
@@ -19958,7 +19958,7 @@ impl WedgeDot<PointAtInfinity> for PlaneAtInfinity {
     }
 }
 
-impl RightContraction<PointAtInfinity> for PlaneAtInfinity {
+impl RightContraction<PointAtInfinity> for Horizon {
     type Output = LineAtInfinity;
 
     fn right_contraction(self, other: PointAtInfinity) -> LineAtInfinity {
@@ -19966,7 +19966,7 @@ impl RightContraction<PointAtInfinity> for PlaneAtInfinity {
     }
 }
 
-impl GeometricProduct<Line> for PlaneAtInfinity {
+impl GeometricProduct<Line> for Horizon {
     type Output = Flector;
 
     fn geometric_product(self, other: Line) -> Flector {
@@ -19974,7 +19974,7 @@ impl GeometricProduct<Line> for PlaneAtInfinity {
     }
 }
 
-impl WedgeDot<Line> for PlaneAtInfinity {
+impl WedgeDot<Line> for Horizon {
     type Output = Flector;
 
     fn wedge_dot(self, other: Line) -> Flector {
@@ -19982,7 +19982,7 @@ impl WedgeDot<Line> for PlaneAtInfinity {
     }
 }
 
-impl GeometricAntiProduct<Line> for PlaneAtInfinity {
+impl GeometricAntiProduct<Line> for Horizon {
     type Output = PointAtInfinity;
 
     fn geometric_anti_product(self, other: Line) -> PointAtInfinity {
@@ -19990,7 +19990,7 @@ impl GeometricAntiProduct<Line> for PlaneAtInfinity {
     }
 }
 
-impl AntiWedgeDot<Line> for PlaneAtInfinity {
+impl AntiWedgeDot<Line> for Horizon {
     type Output = PointAtInfinity;
 
     fn anti_wedge_dot(self, other: Line) -> PointAtInfinity {
@@ -19998,7 +19998,7 @@ impl AntiWedgeDot<Line> for PlaneAtInfinity {
     }
 }
 
-impl AntiWedge<Line> for PlaneAtInfinity {
+impl AntiWedge<Line> for Horizon {
     type Output = PointAtInfinity;
 
     fn anti_wedge(self, other: Line) -> PointAtInfinity {
@@ -20006,7 +20006,7 @@ impl AntiWedge<Line> for PlaneAtInfinity {
     }
 }
 
-impl Meet<Line> for PlaneAtInfinity {
+impl Meet<Line> for Horizon {
     type Output = PointAtInfinity;
 
     fn meet(self, other: Line) -> PointAtInfinity {
@@ -20014,7 +20014,7 @@ impl Meet<Line> for PlaneAtInfinity {
     }
 }
 
-impl RightContraction<Line> for PlaneAtInfinity {
+impl RightContraction<Line> for Horizon {
     type Output = PointAtInfinity;
 
     fn right_contraction(self, other: Line) -> PointAtInfinity {
@@ -20022,7 +20022,7 @@ impl RightContraction<Line> for PlaneAtInfinity {
     }
 }
 
-impl GeometricProduct<LineAtOrigin> for PlaneAtInfinity {
+impl GeometricProduct<LineAtOrigin> for Horizon {
     type Output = PlaneAtOrigin;
 
     fn geometric_product(self, other: LineAtOrigin) -> PlaneAtOrigin {
@@ -20030,7 +20030,7 @@ impl GeometricProduct<LineAtOrigin> for PlaneAtInfinity {
     }
 }
 
-impl WedgeDot<LineAtOrigin> for PlaneAtInfinity {
+impl WedgeDot<LineAtOrigin> for Horizon {
     type Output = PlaneAtOrigin;
 
     fn wedge_dot(self, other: LineAtOrigin) -> PlaneAtOrigin {
@@ -20038,7 +20038,7 @@ impl WedgeDot<LineAtOrigin> for PlaneAtInfinity {
     }
 }
 
-impl GeometricAntiProduct<LineAtOrigin> for PlaneAtInfinity {
+impl GeometricAntiProduct<LineAtOrigin> for Horizon {
     type Output = PointAtInfinity;
 
     fn geometric_anti_product(self, other: LineAtOrigin) -> PointAtInfinity {
@@ -20046,7 +20046,7 @@ impl GeometricAntiProduct<LineAtOrigin> for PlaneAtInfinity {
     }
 }
 
-impl AntiWedgeDot<LineAtOrigin> for PlaneAtInfinity {
+impl AntiWedgeDot<LineAtOrigin> for Horizon {
     type Output = PointAtInfinity;
 
     fn anti_wedge_dot(self, other: LineAtOrigin) -> PointAtInfinity {
@@ -20054,7 +20054,7 @@ impl AntiWedgeDot<LineAtOrigin> for PlaneAtInfinity {
     }
 }
 
-impl AntiWedge<LineAtOrigin> for PlaneAtInfinity {
+impl AntiWedge<LineAtOrigin> for Horizon {
     type Output = PointAtInfinity;
 
     fn anti_wedge(self, other: LineAtOrigin) -> PointAtInfinity {
@@ -20062,7 +20062,7 @@ impl AntiWedge<LineAtOrigin> for PlaneAtInfinity {
     }
 }
 
-impl Meet<LineAtOrigin> for PlaneAtInfinity {
+impl Meet<LineAtOrigin> for Horizon {
     type Output = PointAtInfinity;
 
     fn meet(self, other: LineAtOrigin) -> PointAtInfinity {
@@ -20070,7 +20070,7 @@ impl Meet<LineAtOrigin> for PlaneAtInfinity {
     }
 }
 
-impl GeometricProduct<LineAtInfinity> for PlaneAtInfinity {
+impl GeometricProduct<LineAtInfinity> for Horizon {
     type Output = PointAtInfinity;
 
     fn geometric_product(self, other: LineAtInfinity) -> PointAtInfinity {
@@ -20078,7 +20078,7 @@ impl GeometricProduct<LineAtInfinity> for PlaneAtInfinity {
     }
 }
 
-impl WedgeDot<LineAtInfinity> for PlaneAtInfinity {
+impl WedgeDot<LineAtInfinity> for Horizon {
     type Output = PointAtInfinity;
 
     fn wedge_dot(self, other: LineAtInfinity) -> PointAtInfinity {
@@ -20086,7 +20086,7 @@ impl WedgeDot<LineAtInfinity> for PlaneAtInfinity {
     }
 }
 
-impl RightContraction<LineAtInfinity> for PlaneAtInfinity {
+impl RightContraction<LineAtInfinity> for Horizon {
     type Output = PointAtInfinity;
 
     fn right_contraction(self, other: LineAtInfinity) -> PointAtInfinity {
@@ -20094,7 +20094,7 @@ impl RightContraction<LineAtInfinity> for PlaneAtInfinity {
     }
 }
 
-impl GeometricProduct<Plane> for PlaneAtInfinity {
+impl GeometricProduct<Plane> for Horizon {
     type Output = MultiVector;
 
     fn geometric_product(self, other: Plane) -> MultiVector {
@@ -20102,7 +20102,7 @@ impl GeometricProduct<Plane> for PlaneAtInfinity {
     }
 }
 
-impl WedgeDot<Plane> for PlaneAtInfinity {
+impl WedgeDot<Plane> for Horizon {
     type Output = MultiVector;
 
     fn wedge_dot(self, other: Plane) -> MultiVector {
@@ -20110,7 +20110,7 @@ impl WedgeDot<Plane> for PlaneAtInfinity {
     }
 }
 
-impl GeometricAntiProduct<Plane> for PlaneAtInfinity {
+impl GeometricAntiProduct<Plane> for Horizon {
     type Output = LineAtInfinity;
 
     fn geometric_anti_product(self, other: Plane) -> LineAtInfinity {
@@ -20118,7 +20118,7 @@ impl GeometricAntiProduct<Plane> for PlaneAtInfinity {
     }
 }
 
-impl AntiWedgeDot<Plane> for PlaneAtInfinity {
+impl AntiWedgeDot<Plane> for Horizon {
     type Output = LineAtInfinity;
 
     fn anti_wedge_dot(self, other: Plane) -> LineAtInfinity {
@@ -20126,7 +20126,7 @@ impl AntiWedgeDot<Plane> for PlaneAtInfinity {
     }
 }
 
-impl AntiWedge<Plane> for PlaneAtInfinity {
+impl AntiWedge<Plane> for Horizon {
     type Output = LineAtInfinity;
 
     fn anti_wedge(self, other: Plane) -> LineAtInfinity {
@@ -20134,7 +20134,7 @@ impl AntiWedge<Plane> for PlaneAtInfinity {
     }
 }
 
-impl Meet<Plane> for PlaneAtInfinity {
+impl Meet<Plane> for Horizon {
     type Output = LineAtInfinity;
 
     fn meet(self, other: Plane) -> LineAtInfinity {
@@ -20142,7 +20142,7 @@ impl Meet<Plane> for PlaneAtInfinity {
     }
 }
 
-impl LeftContraction<Plane> for PlaneAtInfinity {
+impl LeftContraction<Plane> for Horizon {
     type Output = Scalar;
 
     fn left_contraction(self, other: Plane) -> Scalar {
@@ -20150,7 +20150,7 @@ impl LeftContraction<Plane> for PlaneAtInfinity {
     }
 }
 
-impl RightContraction<Plane> for PlaneAtInfinity {
+impl RightContraction<Plane> for Horizon {
     type Output = Scalar;
 
     fn right_contraction(self, other: Plane) -> Scalar {
@@ -20158,7 +20158,7 @@ impl RightContraction<Plane> for PlaneAtInfinity {
     }
 }
 
-impl Dot<Plane> for PlaneAtInfinity {
+impl Dot<Plane> for Horizon {
     type Output = Scalar;
 
     fn dot(self, other: Plane) -> Scalar {
@@ -20166,7 +20166,7 @@ impl Dot<Plane> for PlaneAtInfinity {
     }
 }
 
-impl GeometricProduct<PlaneAtOrigin> for PlaneAtInfinity {
+impl GeometricProduct<PlaneAtOrigin> for Horizon {
     type Output = LineAtOrigin;
 
     fn geometric_product(self, other: PlaneAtOrigin) -> LineAtOrigin {
@@ -20174,7 +20174,7 @@ impl GeometricProduct<PlaneAtOrigin> for PlaneAtInfinity {
     }
 }
 
-impl WedgeDot<PlaneAtOrigin> for PlaneAtInfinity {
+impl WedgeDot<PlaneAtOrigin> for Horizon {
     type Output = LineAtOrigin;
 
     fn wedge_dot(self, other: PlaneAtOrigin) -> LineAtOrigin {
@@ -20182,7 +20182,7 @@ impl WedgeDot<PlaneAtOrigin> for PlaneAtInfinity {
     }
 }
 
-impl GeometricAntiProduct<PlaneAtOrigin> for PlaneAtInfinity {
+impl GeometricAntiProduct<PlaneAtOrigin> for Horizon {
     type Output = LineAtInfinity;
 
     fn geometric_anti_product(self, other: PlaneAtOrigin) -> LineAtInfinity {
@@ -20190,7 +20190,7 @@ impl GeometricAntiProduct<PlaneAtOrigin> for PlaneAtInfinity {
     }
 }
 
-impl AntiWedgeDot<PlaneAtOrigin> for PlaneAtInfinity {
+impl AntiWedgeDot<PlaneAtOrigin> for Horizon {
     type Output = LineAtInfinity;
 
     fn anti_wedge_dot(self, other: PlaneAtOrigin) -> LineAtInfinity {
@@ -20198,7 +20198,7 @@ impl AntiWedgeDot<PlaneAtOrigin> for PlaneAtInfinity {
     }
 }
 
-impl AntiWedge<PlaneAtOrigin> for PlaneAtInfinity {
+impl AntiWedge<PlaneAtOrigin> for Horizon {
     type Output = LineAtInfinity;
 
     fn anti_wedge(self, other: PlaneAtOrigin) -> LineAtInfinity {
@@ -20206,7 +20206,7 @@ impl AntiWedge<PlaneAtOrigin> for PlaneAtInfinity {
     }
 }
 
-impl Meet<PlaneAtOrigin> for PlaneAtInfinity {
+impl Meet<PlaneAtOrigin> for Horizon {
     type Output = LineAtInfinity;
 
     fn meet(self, other: PlaneAtOrigin) -> LineAtInfinity {
@@ -20214,47 +20214,47 @@ impl Meet<PlaneAtOrigin> for PlaneAtInfinity {
     }
 }
 
-impl GeometricProduct<PlaneAtInfinity> for PlaneAtInfinity {
+impl GeometricProduct<Horizon> for Horizon {
     type Output = Scalar;
 
-    fn geometric_product(self, other: PlaneAtInfinity) -> Scalar {
+    fn geometric_product(self, other: Horizon) -> Scalar {
         Scalar { groups: ScalarGroups { g0: 0.0 - self.group0() * other.group0() } }
     }
 }
 
-impl WedgeDot<PlaneAtInfinity> for PlaneAtInfinity {
+impl WedgeDot<Horizon> for Horizon {
     type Output = Scalar;
 
-    fn wedge_dot(self, other: PlaneAtInfinity) -> Scalar {
+    fn wedge_dot(self, other: Horizon) -> Scalar {
         Scalar { groups: ScalarGroups { g0: 0.0 - self.group0() * other.group0() } }
     }
 }
 
-impl LeftContraction<PlaneAtInfinity> for PlaneAtInfinity {
+impl LeftContraction<Horizon> for Horizon {
     type Output = Scalar;
 
-    fn left_contraction(self, other: PlaneAtInfinity) -> Scalar {
+    fn left_contraction(self, other: Horizon) -> Scalar {
         Scalar { groups: ScalarGroups { g0: 0.0 - self.group0() * other.group0() } }
     }
 }
 
-impl RightContraction<PlaneAtInfinity> for PlaneAtInfinity {
+impl RightContraction<Horizon> for Horizon {
     type Output = Scalar;
 
-    fn right_contraction(self, other: PlaneAtInfinity) -> Scalar {
+    fn right_contraction(self, other: Horizon) -> Scalar {
         Scalar { groups: ScalarGroups { g0: 0.0 - self.group0() * other.group0() } }
     }
 }
 
-impl Dot<PlaneAtInfinity> for PlaneAtInfinity {
+impl Dot<Horizon> for Horizon {
     type Output = Scalar;
 
-    fn dot(self, other: PlaneAtInfinity) -> Scalar {
+    fn dot(self, other: Horizon) -> Scalar {
         Scalar { groups: ScalarGroups { g0: 0.0 - self.group0() * other.group0() } }
     }
 }
 
-impl GeometricProduct<Motor> for PlaneAtInfinity {
+impl GeometricProduct<Motor> for Horizon {
     type Output = Flector;
 
     fn geometric_product(self, other: Motor) -> Flector {
@@ -20262,7 +20262,7 @@ impl GeometricProduct<Motor> for PlaneAtInfinity {
     }
 }
 
-impl WedgeDot<Motor> for PlaneAtInfinity {
+impl WedgeDot<Motor> for Horizon {
     type Output = Flector;
 
     fn wedge_dot(self, other: Motor) -> Flector {
@@ -20270,7 +20270,7 @@ impl WedgeDot<Motor> for PlaneAtInfinity {
     }
 }
 
-impl GeometricAntiProduct<Motor> for PlaneAtInfinity {
+impl GeometricAntiProduct<Motor> for Horizon {
     type Output = Flector;
 
     fn geometric_anti_product(self, other: Motor) -> Flector {
@@ -20278,7 +20278,7 @@ impl GeometricAntiProduct<Motor> for PlaneAtInfinity {
     }
 }
 
-impl AntiWedgeDot<Motor> for PlaneAtInfinity {
+impl AntiWedgeDot<Motor> for Horizon {
     type Output = Flector;
 
     fn anti_wedge_dot(self, other: Motor) -> Flector {
@@ -20286,7 +20286,7 @@ impl AntiWedgeDot<Motor> for PlaneAtInfinity {
     }
 }
 
-impl AntiWedge<Motor> for PlaneAtInfinity {
+impl AntiWedge<Motor> for Horizon {
     type Output = Flector;
 
     fn anti_wedge(self, other: Motor) -> Flector {
@@ -20294,7 +20294,7 @@ impl AntiWedge<Motor> for PlaneAtInfinity {
     }
 }
 
-impl Meet<Motor> for PlaneAtInfinity {
+impl Meet<Motor> for Horizon {
     type Output = Flector;
 
     fn meet(self, other: Motor) -> Flector {
@@ -20302,7 +20302,7 @@ impl Meet<Motor> for PlaneAtInfinity {
     }
 }
 
-impl LeftContraction<Motor> for PlaneAtInfinity {
+impl LeftContraction<Motor> for Horizon {
     type Output = Origin;
 
     fn left_contraction(self, other: Motor) -> Origin {
@@ -20310,7 +20310,7 @@ impl LeftContraction<Motor> for PlaneAtInfinity {
     }
 }
 
-impl RightContraction<Motor> for PlaneAtInfinity {
+impl RightContraction<Motor> for Horizon {
     type Output = PointAtInfinity;
 
     fn right_contraction(self, other: Motor) -> PointAtInfinity {
@@ -20318,15 +20318,15 @@ impl RightContraction<Motor> for PlaneAtInfinity {
     }
 }
 
-impl RightAntiContraction<Motor> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl RightAntiContraction<Motor> for Horizon {
+    type Output = Horizon;
 
-    fn right_anti_contraction(self, other: Motor) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0()[3] } }
+    fn right_anti_contraction(self, other: Motor) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0()[3] } }
     }
 }
 
-impl GeometricProduct<Rotor> for PlaneAtInfinity {
+impl GeometricProduct<Rotor> for Horizon {
     type Output = Flector;
 
     fn geometric_product(self, other: Rotor) -> Flector {
@@ -20334,7 +20334,7 @@ impl GeometricProduct<Rotor> for PlaneAtInfinity {
     }
 }
 
-impl WedgeDot<Rotor> for PlaneAtInfinity {
+impl WedgeDot<Rotor> for Horizon {
     type Output = Flector;
 
     fn wedge_dot(self, other: Rotor) -> Flector {
@@ -20342,7 +20342,7 @@ impl WedgeDot<Rotor> for PlaneAtInfinity {
     }
 }
 
-impl GeometricAntiProduct<Rotor> for PlaneAtInfinity {
+impl GeometricAntiProduct<Rotor> for Horizon {
     type Output = Flector;
 
     fn geometric_anti_product(self, other: Rotor) -> Flector {
@@ -20350,7 +20350,7 @@ impl GeometricAntiProduct<Rotor> for PlaneAtInfinity {
     }
 }
 
-impl AntiWedgeDot<Rotor> for PlaneAtInfinity {
+impl AntiWedgeDot<Rotor> for Horizon {
     type Output = Flector;
 
     fn anti_wedge_dot(self, other: Rotor) -> Flector {
@@ -20358,7 +20358,7 @@ impl AntiWedgeDot<Rotor> for PlaneAtInfinity {
     }
 }
 
-impl AntiWedge<Rotor> for PlaneAtInfinity {
+impl AntiWedge<Rotor> for Horizon {
     type Output = Flector;
 
     fn anti_wedge(self, other: Rotor) -> Flector {
@@ -20366,7 +20366,7 @@ impl AntiWedge<Rotor> for PlaneAtInfinity {
     }
 }
 
-impl Meet<Rotor> for PlaneAtInfinity {
+impl Meet<Rotor> for Horizon {
     type Output = Flector;
 
     fn meet(self, other: Rotor) -> Flector {
@@ -20374,7 +20374,7 @@ impl Meet<Rotor> for PlaneAtInfinity {
     }
 }
 
-impl LeftContraction<Rotor> for PlaneAtInfinity {
+impl LeftContraction<Rotor> for Horizon {
     type Output = Origin;
 
     fn left_contraction(self, other: Rotor) -> Origin {
@@ -20382,15 +20382,15 @@ impl LeftContraction<Rotor> for PlaneAtInfinity {
     }
 }
 
-impl RightAntiContraction<Rotor> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl RightAntiContraction<Rotor> for Horizon {
+    type Output = Horizon;
 
-    fn right_anti_contraction(self, other: Rotor) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0()[3] } }
+    fn right_anti_contraction(self, other: Rotor) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0()[3] } }
     }
 }
 
-impl GeometricProduct<Translator> for PlaneAtInfinity {
+impl GeometricProduct<Translator> for Horizon {
     type Output = Point;
 
     fn geometric_product(self, other: Translator) -> Point {
@@ -20398,7 +20398,7 @@ impl GeometricProduct<Translator> for PlaneAtInfinity {
     }
 }
 
-impl WedgeDot<Translator> for PlaneAtInfinity {
+impl WedgeDot<Translator> for Horizon {
     type Output = Point;
 
     fn wedge_dot(self, other: Translator) -> Point {
@@ -20406,39 +20406,39 @@ impl WedgeDot<Translator> for PlaneAtInfinity {
     }
 }
 
-impl GeometricAntiProduct<Translator> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl GeometricAntiProduct<Translator> for Horizon {
+    type Output = Horizon;
 
-    fn geometric_anti_product(self, other: Translator) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0()[3] } }
+    fn geometric_anti_product(self, other: Translator) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0()[3] } }
     }
 }
 
-impl AntiWedgeDot<Translator> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl AntiWedgeDot<Translator> for Horizon {
+    type Output = Horizon;
 
-    fn anti_wedge_dot(self, other: Translator) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0()[3] } }
+    fn anti_wedge_dot(self, other: Translator) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0()[3] } }
     }
 }
 
-impl AntiWedge<Translator> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl AntiWedge<Translator> for Horizon {
+    type Output = Horizon;
 
-    fn anti_wedge(self, other: Translator) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0()[3] } }
+    fn anti_wedge(self, other: Translator) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0()[3] } }
     }
 }
 
-impl Meet<Translator> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl Meet<Translator> for Horizon {
+    type Output = Horizon;
 
-    fn meet(self, other: Translator) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0()[3] } }
+    fn meet(self, other: Translator) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0()[3] } }
     }
 }
 
-impl LeftContraction<Translator> for PlaneAtInfinity {
+impl LeftContraction<Translator> for Horizon {
     type Output = Origin;
 
     fn left_contraction(self, other: Translator) -> Origin {
@@ -20446,7 +20446,7 @@ impl LeftContraction<Translator> for PlaneAtInfinity {
     }
 }
 
-impl RightContraction<Translator> for PlaneAtInfinity {
+impl RightContraction<Translator> for Horizon {
     type Output = PointAtInfinity;
 
     fn right_contraction(self, other: Translator) -> PointAtInfinity {
@@ -20454,15 +20454,15 @@ impl RightContraction<Translator> for PlaneAtInfinity {
     }
 }
 
-impl RightAntiContraction<Translator> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl RightAntiContraction<Translator> for Horizon {
+    type Output = Horizon;
 
-    fn right_anti_contraction(self, other: Translator) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0()[3] } }
+    fn right_anti_contraction(self, other: Translator) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0()[3] } }
     }
 }
 
-impl GeometricProduct<Flector> for PlaneAtInfinity {
+impl GeometricProduct<Flector> for Horizon {
     type Output = MultiVector;
 
     fn geometric_product(self, other: Flector) -> MultiVector {
@@ -20470,7 +20470,7 @@ impl GeometricProduct<Flector> for PlaneAtInfinity {
     }
 }
 
-impl WedgeDot<Flector> for PlaneAtInfinity {
+impl WedgeDot<Flector> for Horizon {
     type Output = MultiVector;
 
     fn wedge_dot(self, other: Flector) -> MultiVector {
@@ -20478,7 +20478,7 @@ impl WedgeDot<Flector> for PlaneAtInfinity {
     }
 }
 
-impl GeometricAntiProduct<Flector> for PlaneAtInfinity {
+impl GeometricAntiProduct<Flector> for Horizon {
     type Output = MultiVector;
 
     fn geometric_anti_product(self, other: Flector) -> MultiVector {
@@ -20486,7 +20486,7 @@ impl GeometricAntiProduct<Flector> for PlaneAtInfinity {
     }
 }
 
-impl AntiWedgeDot<Flector> for PlaneAtInfinity {
+impl AntiWedgeDot<Flector> for Horizon {
     type Output = MultiVector;
 
     fn anti_wedge_dot(self, other: Flector) -> MultiVector {
@@ -20494,7 +20494,7 @@ impl AntiWedgeDot<Flector> for PlaneAtInfinity {
     }
 }
 
-impl Wedge<Flector> for PlaneAtInfinity {
+impl Wedge<Flector> for Horizon {
     type Output = AntiScalar;
 
     fn wedge(self, other: Flector) -> AntiScalar {
@@ -20502,7 +20502,7 @@ impl Wedge<Flector> for PlaneAtInfinity {
     }
 }
 
-impl Join<Flector> for PlaneAtInfinity {
+impl Join<Flector> for Horizon {
     type Output = AntiScalar;
 
     fn join(self, other: Flector) -> AntiScalar {
@@ -20510,7 +20510,7 @@ impl Join<Flector> for PlaneAtInfinity {
     }
 }
 
-impl AntiWedge<Flector> for PlaneAtInfinity {
+impl AntiWedge<Flector> for Horizon {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: Flector) -> MultiVector {
@@ -20518,7 +20518,7 @@ impl AntiWedge<Flector> for PlaneAtInfinity {
     }
 }
 
-impl Meet<Flector> for PlaneAtInfinity {
+impl Meet<Flector> for Horizon {
     type Output = MultiVector;
 
     fn meet(self, other: Flector) -> MultiVector {
@@ -20526,7 +20526,7 @@ impl Meet<Flector> for PlaneAtInfinity {
     }
 }
 
-impl LeftContraction<Flector> for PlaneAtInfinity {
+impl LeftContraction<Flector> for Horizon {
     type Output = Scalar;
 
     fn left_contraction(self, other: Flector) -> Scalar {
@@ -20534,7 +20534,7 @@ impl LeftContraction<Flector> for PlaneAtInfinity {
     }
 }
 
-impl RightContraction<Flector> for PlaneAtInfinity {
+impl RightContraction<Flector> for Horizon {
     type Output = MultiVector;
 
     fn right_contraction(self, other: Flector) -> MultiVector {
@@ -20542,7 +20542,7 @@ impl RightContraction<Flector> for PlaneAtInfinity {
     }
 }
 
-impl Dot<Flector> for PlaneAtInfinity {
+impl Dot<Flector> for Horizon {
     type Output = Scalar;
 
     fn dot(self, other: Flector) -> Scalar {
@@ -20550,7 +20550,7 @@ impl Dot<Flector> for PlaneAtInfinity {
     }
 }
 
-impl GeometricProduct<MultiVector> for PlaneAtInfinity {
+impl GeometricProduct<MultiVector> for Horizon {
     type Output = MultiVector;
 
     fn geometric_product(self, other: MultiVector) -> MultiVector {
@@ -20558,7 +20558,7 @@ impl GeometricProduct<MultiVector> for PlaneAtInfinity {
     }
 }
 
-impl WedgeDot<MultiVector> for PlaneAtInfinity {
+impl WedgeDot<MultiVector> for Horizon {
     type Output = MultiVector;
 
     fn wedge_dot(self, other: MultiVector) -> MultiVector {
@@ -20566,7 +20566,7 @@ impl WedgeDot<MultiVector> for PlaneAtInfinity {
     }
 }
 
-impl GeometricAntiProduct<MultiVector> for PlaneAtInfinity {
+impl GeometricAntiProduct<MultiVector> for Horizon {
     type Output = MultiVector;
 
     fn geometric_anti_product(self, other: MultiVector) -> MultiVector {
@@ -20574,7 +20574,7 @@ impl GeometricAntiProduct<MultiVector> for PlaneAtInfinity {
     }
 }
 
-impl AntiWedgeDot<MultiVector> for PlaneAtInfinity {
+impl AntiWedgeDot<MultiVector> for Horizon {
     type Output = MultiVector;
 
     fn anti_wedge_dot(self, other: MultiVector) -> MultiVector {
@@ -20582,7 +20582,7 @@ impl AntiWedgeDot<MultiVector> for PlaneAtInfinity {
     }
 }
 
-impl Wedge<MultiVector> for PlaneAtInfinity {
+impl Wedge<MultiVector> for Horizon {
     type Output = MultiVector;
 
     fn wedge(self, other: MultiVector) -> MultiVector {
@@ -20590,7 +20590,7 @@ impl Wedge<MultiVector> for PlaneAtInfinity {
     }
 }
 
-impl Join<MultiVector> for PlaneAtInfinity {
+impl Join<MultiVector> for Horizon {
     type Output = MultiVector;
 
     fn join(self, other: MultiVector) -> MultiVector {
@@ -20598,7 +20598,7 @@ impl Join<MultiVector> for PlaneAtInfinity {
     }
 }
 
-impl AntiWedge<MultiVector> for PlaneAtInfinity {
+impl AntiWedge<MultiVector> for Horizon {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: MultiVector) -> MultiVector {
@@ -20606,7 +20606,7 @@ impl AntiWedge<MultiVector> for PlaneAtInfinity {
     }
 }
 
-impl Meet<MultiVector> for PlaneAtInfinity {
+impl Meet<MultiVector> for Horizon {
     type Output = MultiVector;
 
     fn meet(self, other: MultiVector) -> MultiVector {
@@ -20614,7 +20614,7 @@ impl Meet<MultiVector> for PlaneAtInfinity {
     }
 }
 
-impl LeftContraction<MultiVector> for PlaneAtInfinity {
+impl LeftContraction<MultiVector> for Horizon {
     type Output = MultiVector;
 
     fn left_contraction(self, other: MultiVector) -> MultiVector {
@@ -20622,7 +20622,7 @@ impl LeftContraction<MultiVector> for PlaneAtInfinity {
     }
 }
 
-impl RightContraction<MultiVector> for PlaneAtInfinity {
+impl RightContraction<MultiVector> for Horizon {
     type Output = MultiVector;
 
     fn right_contraction(self, other: MultiVector) -> MultiVector {
@@ -20630,15 +20630,15 @@ impl RightContraction<MultiVector> for PlaneAtInfinity {
     }
 }
 
-impl RightAntiContraction<MultiVector> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl RightAntiContraction<MultiVector> for Horizon {
+    type Output = Horizon;
 
-    fn right_anti_contraction(self, other: MultiVector) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0() * other.group0()[1] } }
+    fn right_anti_contraction(self, other: MultiVector) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0() * other.group0()[1] } }
     }
 }
 
-impl Dot<MultiVector> for PlaneAtInfinity {
+impl Dot<MultiVector> for Horizon {
     type Output = Scalar;
 
     fn dot(self, other: MultiVector) -> Scalar {
@@ -21590,74 +21590,74 @@ impl RightAntiContraction<PlaneAtOrigin> for Motor {
     }
 }
 
-impl GeometricProduct<PlaneAtInfinity> for Motor {
+impl GeometricProduct<Horizon> for Motor {
     type Output = Flector;
 
-    fn geometric_product(self, other: PlaneAtInfinity) -> Flector {
+    fn geometric_product(self, other: Horizon) -> Flector {
         Flector { groups: FlectorGroups { g0: Simd32x4::from(self.group1()[0]) * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 1.0, 0.0]) + swizzle!(self.group0(), 0, 0, 0, 3) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]), g1: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]) } }
     }
 }
 
-impl WedgeDot<PlaneAtInfinity> for Motor {
+impl WedgeDot<Horizon> for Motor {
     type Output = Flector;
 
-    fn wedge_dot(self, other: PlaneAtInfinity) -> Flector {
+    fn wedge_dot(self, other: Horizon) -> Flector {
         Flector { groups: FlectorGroups { g0: Simd32x4::from(self.group1()[0]) * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[1]) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group1()[2]) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 1.0, 0.0]) + swizzle!(self.group0(), 0, 0, 0, 3) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]), g1: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]) } }
     }
 }
 
-impl GeometricAntiProduct<PlaneAtInfinity> for Motor {
+impl GeometricAntiProduct<Horizon> for Motor {
     type Output = Flector;
 
-    fn geometric_anti_product(self, other: PlaneAtInfinity) -> Flector {
+    fn geometric_anti_product(self, other: Horizon) -> Flector {
         Flector { groups: FlectorGroups { g0: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]), g1: swizzle!(self.group0(), 0, 0, 0, 3) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
     }
 }
 
-impl AntiWedgeDot<PlaneAtInfinity> for Motor {
+impl AntiWedgeDot<Horizon> for Motor {
     type Output = Flector;
 
-    fn anti_wedge_dot(self, other: PlaneAtInfinity) -> Flector {
+    fn anti_wedge_dot(self, other: Horizon) -> Flector {
         Flector { groups: FlectorGroups { g0: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]), g1: swizzle!(self.group0(), 0, 0, 0, 3) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
     }
 }
 
-impl AntiWedge<PlaneAtInfinity> for Motor {
+impl AntiWedge<Horizon> for Motor {
     type Output = Flector;
 
-    fn anti_wedge(self, other: PlaneAtInfinity) -> Flector {
+    fn anti_wedge(self, other: Horizon) -> Flector {
         Flector { groups: FlectorGroups { g0: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]), g1: swizzle!(self.group0(), 0, 0, 0, 3) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
     }
 }
 
-impl Meet<PlaneAtInfinity> for Motor {
+impl Meet<Horizon> for Motor {
     type Output = Flector;
 
-    fn meet(self, other: PlaneAtInfinity) -> Flector {
+    fn meet(self, other: Horizon) -> Flector {
         Flector { groups: FlectorGroups { g0: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]), g1: swizzle!(self.group0(), 0, 0, 0, 3) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
     }
 }
 
-impl LeftContraction<PlaneAtInfinity> for Motor {
+impl LeftContraction<Horizon> for Motor {
     type Output = PointAtInfinity;
 
-    fn left_contraction(self, other: PlaneAtInfinity) -> PointAtInfinity {
+    fn left_contraction(self, other: Horizon) -> PointAtInfinity {
         PointAtInfinity { groups: PointAtInfinityGroups { g0: self.group1() * Simd32x3::from(other.group0()) } }
     }
 }
 
-impl LeftAntiContraction<PlaneAtInfinity> for Motor {
-    type Output = PlaneAtInfinity;
+impl LeftAntiContraction<Horizon> for Motor {
+    type Output = Horizon;
 
-    fn left_anti_contraction(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0()[3] * other.group0() } }
+    fn left_anti_contraction(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0()[3] * other.group0() } }
     }
 }
 
-impl RightContraction<PlaneAtInfinity> for Motor {
+impl RightContraction<Horizon> for Motor {
     type Output = Origin;
 
-    fn right_contraction(self, other: PlaneAtInfinity) -> Origin {
+    fn right_contraction(self, other: Horizon) -> Origin {
         Origin { groups: OriginGroups { g0: 0.0 - self.group0()[3] * other.group0() } }
     }
 }
@@ -22974,66 +22974,66 @@ impl RightAntiContraction<PlaneAtOrigin> for Rotor {
     }
 }
 
-impl GeometricProduct<PlaneAtInfinity> for Rotor {
+impl GeometricProduct<Horizon> for Rotor {
     type Output = Flector;
 
-    fn geometric_product(self, other: PlaneAtInfinity) -> Flector {
+    fn geometric_product(self, other: Horizon) -> Flector {
         Flector { groups: FlectorGroups { g0: swizzle!(self.group0(), 0, 0, 0, 3) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]), g1: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]) } }
     }
 }
 
-impl WedgeDot<PlaneAtInfinity> for Rotor {
+impl WedgeDot<Horizon> for Rotor {
     type Output = Flector;
 
-    fn wedge_dot(self, other: PlaneAtInfinity) -> Flector {
+    fn wedge_dot(self, other: Horizon) -> Flector {
         Flector { groups: FlectorGroups { g0: swizzle!(self.group0(), 0, 0, 0, 3) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]), g1: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0]) } }
     }
 }
 
-impl GeometricAntiProduct<PlaneAtInfinity> for Rotor {
+impl GeometricAntiProduct<Horizon> for Rotor {
     type Output = Flector;
 
-    fn geometric_anti_product(self, other: PlaneAtInfinity) -> Flector {
+    fn geometric_anti_product(self, other: Horizon) -> Flector {
         Flector { groups: FlectorGroups { g0: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]), g1: swizzle!(self.group0(), 0, 0, 0, 3) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
     }
 }
 
-impl AntiWedgeDot<PlaneAtInfinity> for Rotor {
+impl AntiWedgeDot<Horizon> for Rotor {
     type Output = Flector;
 
-    fn anti_wedge_dot(self, other: PlaneAtInfinity) -> Flector {
+    fn anti_wedge_dot(self, other: Horizon) -> Flector {
         Flector { groups: FlectorGroups { g0: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]), g1: swizzle!(self.group0(), 0, 0, 0, 3) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
     }
 }
 
-impl AntiWedge<PlaneAtInfinity> for Rotor {
+impl AntiWedge<Horizon> for Rotor {
     type Output = Flector;
 
-    fn anti_wedge(self, other: PlaneAtInfinity) -> Flector {
+    fn anti_wedge(self, other: Horizon) -> Flector {
         Flector { groups: FlectorGroups { g0: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]), g1: swizzle!(self.group0(), 0, 0, 0, 3) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
     }
 }
 
-impl Meet<PlaneAtInfinity> for Rotor {
+impl Meet<Horizon> for Rotor {
     type Output = Flector;
 
-    fn meet(self, other: PlaneAtInfinity) -> Flector {
+    fn meet(self, other: Horizon) -> Flector {
         Flector { groups: FlectorGroups { g0: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]), g1: swizzle!(self.group0(), 0, 0, 0, 3) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
     }
 }
 
-impl LeftAntiContraction<PlaneAtInfinity> for Rotor {
-    type Output = PlaneAtInfinity;
+impl LeftAntiContraction<Horizon> for Rotor {
+    type Output = Horizon;
 
-    fn left_anti_contraction(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0()[3] * other.group0() } }
+    fn left_anti_contraction(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0()[3] * other.group0() } }
     }
 }
 
-impl RightContraction<PlaneAtInfinity> for Rotor {
+impl RightContraction<Horizon> for Rotor {
     type Output = Origin;
 
-    fn right_contraction(self, other: PlaneAtInfinity) -> Origin {
+    fn right_contraction(self, other: Horizon) -> Origin {
         Origin { groups: OriginGroups { g0: 0.0 - self.group0()[3] * other.group0() } }
     }
 }
@@ -23919,18 +23919,18 @@ impl AntiWedgeDot<PointAtInfinity> for Translator {
 }
 
 impl Wedge<PointAtInfinity> for Translator {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn wedge(self, other: PointAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
+    fn wedge(self, other: PointAtInfinity) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
     }
 }
 
 impl Join<PointAtInfinity> for Translator {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn join(self, other: PointAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
+    fn join(self, other: PointAtInfinity) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
     }
 }
 
@@ -24287,10 +24287,10 @@ impl RightContraction<Plane> for Translator {
 }
 
 impl RightAntiContraction<Plane> for Translator {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn right_anti_contraction(self, other: Plane) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
+    fn right_anti_contraction(self, other: Plane) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
     }
 }
 
@@ -24359,81 +24359,81 @@ impl LeftAntiContraction<PlaneAtOrigin> for Translator {
 }
 
 impl RightAntiContraction<PlaneAtOrigin> for Translator {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn right_anti_contraction(self, other: PlaneAtOrigin) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
+    fn right_anti_contraction(self, other: PlaneAtOrigin) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] } }
     }
 }
 
-impl GeometricProduct<PlaneAtInfinity> for Translator {
+impl GeometricProduct<Horizon> for Translator {
     type Output = Point;
 
-    fn geometric_product(self, other: PlaneAtInfinity) -> Point {
+    fn geometric_product(self, other: Horizon) -> Point {
         Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) } }
     }
 }
 
-impl WedgeDot<PlaneAtInfinity> for Translator {
+impl WedgeDot<Horizon> for Translator {
     type Output = Point;
 
-    fn wedge_dot(self, other: PlaneAtInfinity) -> Point {
+    fn wedge_dot(self, other: Horizon) -> Point {
         Point { groups: PointGroups { g0: self.group0() * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]) } }
     }
 }
 
-impl GeometricAntiProduct<PlaneAtInfinity> for Translator {
-    type Output = PlaneAtInfinity;
+impl GeometricAntiProduct<Horizon> for Translator {
+    type Output = Horizon;
 
-    fn geometric_anti_product(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0()[3] * other.group0() } }
+    fn geometric_anti_product(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0()[3] * other.group0() } }
     }
 }
 
-impl AntiWedgeDot<PlaneAtInfinity> for Translator {
-    type Output = PlaneAtInfinity;
+impl AntiWedgeDot<Horizon> for Translator {
+    type Output = Horizon;
 
-    fn anti_wedge_dot(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0()[3] * other.group0() } }
+    fn anti_wedge_dot(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0()[3] * other.group0() } }
     }
 }
 
-impl AntiWedge<PlaneAtInfinity> for Translator {
-    type Output = PlaneAtInfinity;
+impl AntiWedge<Horizon> for Translator {
+    type Output = Horizon;
 
-    fn anti_wedge(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0()[3] * other.group0() } }
+    fn anti_wedge(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0()[3] * other.group0() } }
     }
 }
 
-impl Meet<PlaneAtInfinity> for Translator {
-    type Output = PlaneAtInfinity;
+impl Meet<Horizon> for Translator {
+    type Output = Horizon;
 
-    fn meet(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0()[3] * other.group0() } }
+    fn meet(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0()[3] * other.group0() } }
     }
 }
 
-impl LeftContraction<PlaneAtInfinity> for Translator {
+impl LeftContraction<Horizon> for Translator {
     type Output = PointAtInfinity;
 
-    fn left_contraction(self, other: PlaneAtInfinity) -> PointAtInfinity {
+    fn left_contraction(self, other: Horizon) -> PointAtInfinity {
         PointAtInfinity { groups: PointAtInfinityGroups { g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()) } }
     }
 }
 
-impl LeftAntiContraction<PlaneAtInfinity> for Translator {
-    type Output = PlaneAtInfinity;
+impl LeftAntiContraction<Horizon> for Translator {
+    type Output = Horizon;
 
-    fn left_anti_contraction(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0()[3] * other.group0() } }
+    fn left_anti_contraction(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0()[3] * other.group0() } }
     }
 }
 
-impl RightContraction<PlaneAtInfinity> for Translator {
+impl RightContraction<Horizon> for Translator {
     type Output = Origin;
 
-    fn right_contraction(self, other: PlaneAtInfinity) -> Origin {
+    fn right_contraction(self, other: Horizon) -> Origin {
         Origin { groups: OriginGroups { g0: 0.0 - self.group0()[3] * other.group0() } }
     }
 }
@@ -24831,10 +24831,10 @@ impl RightContraction<Flector> for Translator {
 }
 
 impl RightAntiContraction<Flector> for Translator {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn right_anti_contraction(self, other: Flector) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2] } }
+    fn right_anti_contraction(self, other: Flector) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2] } }
     }
 }
 
@@ -25727,10 +25727,10 @@ impl LeftContraction<LineAtInfinity> for Flector {
 }
 
 impl LeftAntiContraction<LineAtInfinity> for Flector {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn left_anti_contraction(self, other: LineAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2] } }
+    fn left_anti_contraction(self, other: LineAtInfinity) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2] } }
     }
 }
 
@@ -25950,90 +25950,90 @@ impl AntiDot<PlaneAtOrigin> for Flector {
     }
 }
 
-impl GeometricProduct<PlaneAtInfinity> for Flector {
+impl GeometricProduct<Horizon> for Flector {
     type Output = MultiVector;
 
-    fn geometric_product(self, other: PlaneAtInfinity) -> MultiVector {
+    fn geometric_product(self, other: Horizon) -> MultiVector {
         MultiVector { groups: MultiVectorGroups { g0: Simd32x2::from([self.group1()[3], self.group0()[3]]) * Simd32x2::from(other.group0()) * Simd32x2::from([-1.0, 1.0]), g1: Simd32x4::from(0.0), g2: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()), g3: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()) * Simd32x3::from(-1.0), g4: Simd32x4::from(0.0) } }
     }
 }
 
-impl WedgeDot<PlaneAtInfinity> for Flector {
+impl WedgeDot<Horizon> for Flector {
     type Output = MultiVector;
 
-    fn wedge_dot(self, other: PlaneAtInfinity) -> MultiVector {
+    fn wedge_dot(self, other: Horizon) -> MultiVector {
         MultiVector { groups: MultiVectorGroups { g0: Simd32x2::from([self.group1()[3], self.group0()[3]]) * Simd32x2::from(other.group0()) * Simd32x2::from([-1.0, 1.0]), g1: Simd32x4::from(0.0), g2: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()), g3: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()) * Simd32x3::from(-1.0), g4: Simd32x4::from(0.0) } }
     }
 }
 
-impl GeometricAntiProduct<PlaneAtInfinity> for Flector {
+impl GeometricAntiProduct<Horizon> for Flector {
     type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: PlaneAtInfinity) -> MultiVector {
+    fn geometric_anti_product(self, other: Horizon) -> MultiVector {
         MultiVector { groups: MultiVectorGroups { g0: Simd32x2::from([self.group0()[3], self.group0()[0]]) * Simd32x2::from(other.group0()) * Simd32x2::from([1.0, 0.0]), g1: Simd32x4::from(0.0), g2: Simd32x3::from(0.0), g3: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()), g4: Simd32x4::from(0.0) } }
     }
 }
 
-impl AntiWedgeDot<PlaneAtInfinity> for Flector {
+impl AntiWedgeDot<Horizon> for Flector {
     type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: PlaneAtInfinity) -> MultiVector {
+    fn anti_wedge_dot(self, other: Horizon) -> MultiVector {
         MultiVector { groups: MultiVectorGroups { g0: Simd32x2::from([self.group0()[3], self.group0()[0]]) * Simd32x2::from(other.group0()) * Simd32x2::from([1.0, 0.0]), g1: Simd32x4::from(0.0), g2: Simd32x3::from(0.0), g3: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()), g4: Simd32x4::from(0.0) } }
     }
 }
 
-impl Wedge<PlaneAtInfinity> for Flector {
+impl Wedge<Horizon> for Flector {
     type Output = AntiScalar;
 
-    fn wedge(self, other: PlaneAtInfinity) -> AntiScalar {
+    fn wedge(self, other: Horizon) -> AntiScalar {
         AntiScalar { groups: AntiScalarGroups { g0: self.group0()[3] * other.group0() } }
     }
 }
 
-impl Join<PlaneAtInfinity> for Flector {
+impl Join<Horizon> for Flector {
     type Output = AntiScalar;
 
-    fn join(self, other: PlaneAtInfinity) -> AntiScalar {
+    fn join(self, other: Horizon) -> AntiScalar {
         AntiScalar { groups: AntiScalarGroups { g0: self.group0()[3] * other.group0() } }
     }
 }
 
-impl AntiWedge<PlaneAtInfinity> for Flector {
+impl AntiWedge<Horizon> for Flector {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: PlaneAtInfinity) -> MultiVector {
+    fn anti_wedge(self, other: Horizon) -> MultiVector {
         MultiVector { groups: MultiVectorGroups { g0: Simd32x2::from([self.group0()[3], self.group0()[0]]) * Simd32x2::from(other.group0()) * Simd32x2::from([1.0, 0.0]), g1: Simd32x4::from(0.0), g2: Simd32x3::from(0.0), g3: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()), g4: Simd32x4::from(0.0) } }
     }
 }
 
-impl Meet<PlaneAtInfinity> for Flector {
+impl Meet<Horizon> for Flector {
     type Output = MultiVector;
 
-    fn meet(self, other: PlaneAtInfinity) -> MultiVector {
+    fn meet(self, other: Horizon) -> MultiVector {
         MultiVector { groups: MultiVectorGroups { g0: Simd32x2::from([self.group0()[3], self.group0()[0]]) * Simd32x2::from(other.group0()) * Simd32x2::from([1.0, 0.0]), g1: Simd32x4::from(0.0), g2: Simd32x3::from(0.0), g3: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()), g4: Simd32x4::from(0.0) } }
     }
 }
 
-impl LeftContraction<PlaneAtInfinity> for Flector {
+impl LeftContraction<Horizon> for Flector {
     type Output = MultiVector;
 
-    fn left_contraction(self, other: PlaneAtInfinity) -> MultiVector {
+    fn left_contraction(self, other: Horizon) -> MultiVector {
         MultiVector { groups: MultiVectorGroups { g0: Simd32x2::from([self.group1()[3], self.group1()[0]]) * Simd32x2::from(other.group0()) * Simd32x2::from([-1.0, 0.0]), g1: Simd32x4::from(0.0), g2: Simd32x3::from(0.0), g3: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()) * Simd32x3::from(-1.0), g4: Simd32x4::from(0.0) } }
     }
 }
 
-impl RightContraction<PlaneAtInfinity> for Flector {
+impl RightContraction<Horizon> for Flector {
     type Output = Scalar;
 
-    fn right_contraction(self, other: PlaneAtInfinity) -> Scalar {
+    fn right_contraction(self, other: Horizon) -> Scalar {
         Scalar { groups: ScalarGroups { g0: 0.0 - self.group1()[3] * other.group0() } }
     }
 }
 
-impl Dot<PlaneAtInfinity> for Flector {
+impl Dot<Horizon> for Flector {
     type Output = Scalar;
 
-    fn dot(self, other: PlaneAtInfinity) -> Scalar {
+    fn dot(self, other: Horizon) -> Scalar {
         Scalar { groups: ScalarGroups { g0: 0.0 - self.group1()[3] * other.group0() } }
     }
 }
@@ -26295,10 +26295,10 @@ impl LeftContraction<Translator> for Flector {
 }
 
 impl LeftAntiContraction<Translator> for Flector {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn left_anti_contraction(self, other: Translator) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2] } }
+    fn left_anti_contraction(self, other: Translator) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2] } }
     }
 }
 
@@ -27662,98 +27662,98 @@ impl AntiDot<PlaneAtOrigin> for MultiVector {
     }
 }
 
-impl GeometricProduct<PlaneAtInfinity> for MultiVector {
+impl GeometricProduct<Horizon> for MultiVector {
     type Output = MultiVector;
 
-    fn geometric_product(self, other: PlaneAtInfinity) -> MultiVector {
+    fn geometric_product(self, other: Horizon) -> MultiVector {
         MultiVector { groups: MultiVectorGroups { g0: Simd32x2::from([self.group4()[3], self.group1()[3]]) * Simd32x2::from(other.group0()) * Simd32x2::from([-1.0, 1.0]), g1: Simd32x4::from(self.group3()[0]) * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[1]) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[2]) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 1.0, 0.0]) + Simd32x4::from([self.group0()[0], self.group0()[0], self.group0()[0], self.group0()[1]]) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]), g2: Simd32x3::from([self.group4()[0], self.group4()[1], self.group4()[2]]) * Simd32x3::from(other.group0()), g3: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()) * Simd32x3::from(-1.0), g4: Simd32x4::from(self.group2()[0]) * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group2()[1]) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, -1.0, 0.0, 0.0]) + Simd32x4::from(self.group2()[2]) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
     }
 }
 
-impl WedgeDot<PlaneAtInfinity> for MultiVector {
+impl WedgeDot<Horizon> for MultiVector {
     type Output = MultiVector;
 
-    fn wedge_dot(self, other: PlaneAtInfinity) -> MultiVector {
+    fn wedge_dot(self, other: Horizon) -> MultiVector {
         MultiVector { groups: MultiVectorGroups { g0: Simd32x2::from([self.group4()[3], self.group1()[3]]) * Simd32x2::from(other.group0()) * Simd32x2::from([-1.0, 1.0]), g1: Simd32x4::from(self.group3()[0]) * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[1]) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 1.0, 0.0, 0.0]) + Simd32x4::from(self.group3()[2]) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 1.0, 0.0]) + Simd32x4::from([self.group0()[0], self.group0()[0], self.group0()[0], self.group0()[1]]) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]), g2: Simd32x3::from([self.group4()[0], self.group4()[1], self.group4()[2]]) * Simd32x3::from(other.group0()), g3: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()) * Simd32x3::from(-1.0), g4: Simd32x4::from(self.group2()[0]) * Simd32x4::from(other.group0()) * Simd32x4::from([-1.0, 0.0, 0.0, 0.0]) + Simd32x4::from(self.group2()[1]) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, -1.0, 0.0, 0.0]) + Simd32x4::from(self.group2()[2]) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, -1.0, 0.0]) + Simd32x4::from(self.group0()[0]) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
     }
 }
 
-impl GeometricAntiProduct<PlaneAtInfinity> for MultiVector {
+impl GeometricAntiProduct<Horizon> for MultiVector {
     type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: PlaneAtInfinity) -> MultiVector {
+    fn geometric_anti_product(self, other: Horizon) -> MultiVector {
         MultiVector { groups: MultiVectorGroups { g0: Simd32x2::from([self.group1()[3], self.group1()[0]]) * Simd32x2::from(other.group0()) * Simd32x2::from([1.0, 0.0]), g1: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group2()[0]]) * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]), g2: Simd32x3::from(0.0), g3: Simd32x3::from([self.group4()[0], self.group4()[1], self.group4()[2]]) * Simd32x3::from(other.group0()), g4: Simd32x4::from([self.group0()[0], self.group0()[0], self.group0()[0], self.group0()[1]]) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
     }
 }
 
-impl AntiWedgeDot<PlaneAtInfinity> for MultiVector {
+impl AntiWedgeDot<Horizon> for MultiVector {
     type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: PlaneAtInfinity) -> MultiVector {
+    fn anti_wedge_dot(self, other: Horizon) -> MultiVector {
         MultiVector { groups: MultiVectorGroups { g0: Simd32x2::from([self.group1()[3], self.group1()[0]]) * Simd32x2::from(other.group0()) * Simd32x2::from([1.0, 0.0]), g1: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group2()[0]]) * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]), g2: Simd32x3::from(0.0), g3: Simd32x3::from([self.group4()[0], self.group4()[1], self.group4()[2]]) * Simd32x3::from(other.group0()), g4: Simd32x4::from([self.group0()[0], self.group0()[0], self.group0()[0], self.group0()[1]]) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
     }
 }
 
-impl Wedge<PlaneAtInfinity> for MultiVector {
+impl Wedge<Horizon> for MultiVector {
     type Output = MultiVector;
 
-    fn wedge(self, other: PlaneAtInfinity) -> MultiVector {
+    fn wedge(self, other: Horizon) -> MultiVector {
         MultiVector { groups: MultiVectorGroups { g0: Simd32x2::from([self.group1()[0], self.group1()[3]]) * Simd32x2::from(other.group0()) * Simd32x2::from([0.0, 1.0]), g1: Simd32x4::from(0.0), g2: Simd32x3::from(0.0), g3: Simd32x3::from(0.0), g4: Simd32x4::from(self.group0()[0]) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
     }
 }
 
-impl Join<PlaneAtInfinity> for MultiVector {
+impl Join<Horizon> for MultiVector {
     type Output = MultiVector;
 
-    fn join(self, other: PlaneAtInfinity) -> MultiVector {
+    fn join(self, other: Horizon) -> MultiVector {
         MultiVector { groups: MultiVectorGroups { g0: Simd32x2::from([self.group1()[0], self.group1()[3]]) * Simd32x2::from(other.group0()) * Simd32x2::from([0.0, 1.0]), g1: Simd32x4::from(0.0), g2: Simd32x3::from(0.0), g3: Simd32x3::from(0.0), g4: Simd32x4::from(self.group0()[0]) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
     }
 }
 
-impl AntiWedge<PlaneAtInfinity> for MultiVector {
+impl AntiWedge<Horizon> for MultiVector {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: PlaneAtInfinity) -> MultiVector {
+    fn anti_wedge(self, other: Horizon) -> MultiVector {
         MultiVector { groups: MultiVectorGroups { g0: Simd32x2::from([self.group1()[3], self.group1()[0]]) * Simd32x2::from(other.group0()) * Simd32x2::from([1.0, 0.0]), g1: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group2()[0]]) * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]), g2: Simd32x3::from(0.0), g3: Simd32x3::from([self.group4()[0], self.group4()[1], self.group4()[2]]) * Simd32x3::from(other.group0()), g4: Simd32x4::from([self.group0()[0], self.group0()[0], self.group0()[0], self.group0()[1]]) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
     }
 }
 
-impl Meet<PlaneAtInfinity> for MultiVector {
+impl Meet<Horizon> for MultiVector {
     type Output = MultiVector;
 
-    fn meet(self, other: PlaneAtInfinity) -> MultiVector {
+    fn meet(self, other: Horizon) -> MultiVector {
         MultiVector { groups: MultiVectorGroups { g0: Simd32x2::from([self.group1()[3], self.group1()[0]]) * Simd32x2::from(other.group0()) * Simd32x2::from([1.0, 0.0]), g1: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group2()[0]]) * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]), g2: Simd32x3::from(0.0), g3: Simd32x3::from([self.group4()[0], self.group4()[1], self.group4()[2]]) * Simd32x3::from(other.group0()), g4: Simd32x4::from([self.group0()[0], self.group0()[0], self.group0()[0], self.group0()[1]]) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
     }
 }
 
-impl LeftContraction<PlaneAtInfinity> for MultiVector {
+impl LeftContraction<Horizon> for MultiVector {
     type Output = MultiVector;
 
-    fn left_contraction(self, other: PlaneAtInfinity) -> MultiVector {
+    fn left_contraction(self, other: Horizon) -> MultiVector {
         MultiVector { groups: MultiVectorGroups { g0: Simd32x2::from([self.group4()[3], self.group4()[0]]) * Simd32x2::from(other.group0()) * Simd32x2::from([-1.0, 0.0]), g1: Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group3()[0]]) * Simd32x4::from(other.group0()) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]), g2: Simd32x3::from(0.0), g3: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()) * Simd32x3::from(-1.0), g4: Simd32x4::from(self.group0()[0]) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]) } }
     }
 }
 
-impl LeftAntiContraction<PlaneAtInfinity> for MultiVector {
-    type Output = PlaneAtInfinity;
+impl LeftAntiContraction<Horizon> for MultiVector {
+    type Output = Horizon;
 
-    fn left_anti_contraction(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0()[1] * other.group0() } }
+    fn left_anti_contraction(self, other: Horizon) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0()[1] * other.group0() } }
     }
 }
 
-impl RightContraction<PlaneAtInfinity> for MultiVector {
+impl RightContraction<Horizon> for MultiVector {
     type Output = MultiVector;
 
-    fn right_contraction(self, other: PlaneAtInfinity) -> MultiVector {
+    fn right_contraction(self, other: Horizon) -> MultiVector {
         MultiVector { groups: MultiVectorGroups { g0: Simd32x2::from([self.group4()[3], self.group4()[0]]) * Simd32x2::from(other.group0()) * Simd32x2::from([-1.0, 0.0]), g1: Simd32x4::from([self.group0()[0], self.group0()[0], self.group0()[0], self.group0()[1]]) * Simd32x4::from(other.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]), g2: Simd32x3::from(0.0), g3: Simd32x3::from(0.0), g4: Simd32x4::from(0.0) } }
     }
 }
 
-impl Dot<PlaneAtInfinity> for MultiVector {
+impl Dot<Horizon> for MultiVector {
     type Output = Scalar;
 
-    fn dot(self, other: PlaneAtInfinity) -> Scalar {
+    fn dot(self, other: Horizon) -> Scalar {
         Scalar { groups: ScalarGroups { g0: 0.0 - self.group4()[3] * other.group0() } }
     }
 }
@@ -28358,7 +28358,7 @@ impl BulkNormSquared for Plane {
     }
 }
 
-impl BulkNormSquared for PlaneAtInfinity {
+impl BulkNormSquared for Horizon {
     type Output = Scalar;
 
     fn bulk_norm_squared(self) -> Scalar {
@@ -28558,7 +28558,7 @@ impl BulkNorm for Plane {
     }
 }
 
-impl BulkNorm for PlaneAtInfinity {
+impl BulkNorm for Horizon {
     type Output = Scalar;
 
     fn bulk_norm(self) -> Scalar {
@@ -28854,10 +28854,10 @@ impl Scale for PlaneAtOrigin {
     }
 }
 
-impl Scale for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl Scale for Horizon {
+    type Output = Horizon;
 
-    fn scale(self, other: f32) -> PlaneAtInfinity {
+    fn scale(self, other: f32) -> Horizon {
         self.geometric_product(Scalar { groups: ScalarGroups { g0: other } })
     }
 }
@@ -29126,10 +29126,10 @@ impl Sandwich<PlaneAtOrigin> for AntiScalar {
     }
 }
 
-impl Sandwich<PlaneAtInfinity> for AntiScalar {
-    type Output = PlaneAtInfinity;
+impl Sandwich<Horizon> for AntiScalar {
+    type Output = Horizon;
 
-    fn sandwich(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
+    fn sandwich(self, other: Horizon) -> Horizon {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
@@ -29262,10 +29262,10 @@ impl Sandwich<PlaneAtOrigin> for Magnitude {
     }
 }
 
-impl Sandwich<PlaneAtInfinity> for Magnitude {
-    type Output = PlaneAtInfinity;
+impl Sandwich<Horizon> for Magnitude {
+    type Output = Horizon;
 
-    fn sandwich(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
+    fn sandwich(self, other: Horizon) -> Horizon {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
@@ -29398,10 +29398,10 @@ impl Sandwich<PlaneAtOrigin> for Point {
     }
 }
 
-impl Sandwich<PlaneAtInfinity> for Point {
-    type Output = PlaneAtInfinity;
+impl Sandwich<Horizon> for Point {
+    type Output = Horizon;
 
-    fn sandwich(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
+    fn sandwich(self, other: Horizon) -> Horizon {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
@@ -29534,10 +29534,10 @@ impl Sandwich<PlaneAtOrigin> for Origin {
     }
 }
 
-impl Sandwich<PlaneAtInfinity> for Origin {
-    type Output = PlaneAtInfinity;
+impl Sandwich<Horizon> for Origin {
+    type Output = Horizon;
 
-    fn sandwich(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
+    fn sandwich(self, other: Horizon) -> Horizon {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
@@ -29734,10 +29734,10 @@ impl Sandwich<PlaneAtOrigin> for Line {
     }
 }
 
-impl Sandwich<PlaneAtInfinity> for Line {
-    type Output = PlaneAtInfinity;
+impl Sandwich<Horizon> for Line {
+    type Output = Horizon;
 
-    fn sandwich(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
+    fn sandwich(self, other: Horizon) -> Horizon {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -29870,10 +29870,10 @@ impl Sandwich<PlaneAtOrigin> for LineAtOrigin {
     }
 }
 
-impl Sandwich<PlaneAtInfinity> for LineAtOrigin {
-    type Output = PlaneAtInfinity;
+impl Sandwich<Horizon> for LineAtOrigin {
+    type Output = Horizon;
 
-    fn sandwich(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
+    fn sandwich(self, other: Horizon) -> Horizon {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -30070,10 +30070,10 @@ impl Sandwich<PlaneAtOrigin> for Plane {
     }
 }
 
-impl Sandwich<PlaneAtInfinity> for Plane {
-    type Output = PlaneAtInfinity;
+impl Sandwich<Horizon> for Plane {
+    type Output = Horizon;
 
-    fn sandwich(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
+    fn sandwich(self, other: Horizon) -> Horizon {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -30206,10 +30206,10 @@ impl Sandwich<PlaneAtOrigin> for PlaneAtOrigin {
     }
 }
 
-impl Sandwich<PlaneAtInfinity> for PlaneAtOrigin {
-    type Output = PlaneAtInfinity;
+impl Sandwich<Horizon> for PlaneAtOrigin {
+    type Output = Horizon;
 
-    fn sandwich(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
+    fn sandwich(self, other: Horizon) -> Horizon {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -30254,7 +30254,7 @@ impl Sandwich<MultiVector> for PlaneAtOrigin {
     }
 }
 
-impl Sandwich<Motor> for PlaneAtInfinity {
+impl Sandwich<Motor> for Horizon {
     type Output = Motor;
 
     fn sandwich(self, other: Motor) -> Motor {
@@ -30262,7 +30262,7 @@ impl Sandwich<Motor> for PlaneAtInfinity {
     }
 }
 
-impl Sandwich<Rotor> for PlaneAtInfinity {
+impl Sandwich<Rotor> for Horizon {
     type Output = Rotor;
 
     fn sandwich(self, other: Rotor) -> Rotor {
@@ -30270,7 +30270,7 @@ impl Sandwich<Rotor> for PlaneAtInfinity {
     }
 }
 
-impl Sandwich<Flector> for PlaneAtInfinity {
+impl Sandwich<Flector> for Horizon {
     type Output = Flector;
 
     fn sandwich(self, other: Flector) -> Flector {
@@ -30278,7 +30278,7 @@ impl Sandwich<Flector> for PlaneAtInfinity {
     }
 }
 
-impl Sandwich<MultiVector> for PlaneAtInfinity {
+impl Sandwich<MultiVector> for Horizon {
     type Output = MultiVector;
 
     fn sandwich(self, other: MultiVector) -> MultiVector {
@@ -30374,10 +30374,10 @@ impl Sandwich<PlaneAtOrigin> for Motor {
     }
 }
 
-impl Sandwich<PlaneAtInfinity> for Motor {
-    type Output = PlaneAtInfinity;
+impl Sandwich<Horizon> for Motor {
+    type Output = Horizon;
 
-    fn sandwich(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
+    fn sandwich(self, other: Horizon) -> Horizon {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -30510,10 +30510,10 @@ impl Sandwich<PlaneAtOrigin> for Rotor {
     }
 }
 
-impl Sandwich<PlaneAtInfinity> for Rotor {
-    type Output = PlaneAtInfinity;
+impl Sandwich<Horizon> for Rotor {
+    type Output = Horizon;
 
-    fn sandwich(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
+    fn sandwich(self, other: Horizon) -> Horizon {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -30646,10 +30646,10 @@ impl Sandwich<PlaneAtOrigin> for Translator {
     }
 }
 
-impl Sandwich<PlaneAtInfinity> for Translator {
-    type Output = PlaneAtInfinity;
+impl Sandwich<Horizon> for Translator {
+    type Output = Horizon;
 
-    fn sandwich(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
+    fn sandwich(self, other: Horizon) -> Horizon {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
@@ -30782,10 +30782,10 @@ impl Sandwich<PlaneAtOrigin> for Flector {
     }
 }
 
-impl Sandwich<PlaneAtInfinity> for Flector {
-    type Output = PlaneAtInfinity;
+impl Sandwich<Horizon> for Flector {
+    type Output = Horizon;
 
-    fn sandwich(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
+    fn sandwich(self, other: Horizon) -> Horizon {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -30918,10 +30918,10 @@ impl Sandwich<PlaneAtOrigin> for MultiVector {
     }
 }
 
-impl Sandwich<PlaneAtInfinity> for MultiVector {
-    type Output = PlaneAtInfinity;
+impl Sandwich<Horizon> for MultiVector {
+    type Output = Horizon;
 
-    fn sandwich(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
+    fn sandwich(self, other: Horizon) -> Horizon {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -31054,10 +31054,10 @@ impl Invert<PlaneAtOrigin> for Point {
     }
 }
 
-impl Invert<PlaneAtInfinity> for Point {
-    type Output = PlaneAtInfinity;
+impl Invert<Horizon> for Point {
+    type Output = Horizon;
 
-    fn invert(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
+    fn invert(self, other: Horizon) -> Horizon {
         self.unitize().sandwich(other)
     }
 }
@@ -31190,10 +31190,10 @@ impl Reflect<PlaneAtOrigin> for Plane {
     }
 }
 
-impl Reflect<PlaneAtInfinity> for Plane {
-    type Output = PlaneAtInfinity;
+impl Reflect<Horizon> for Plane {
+    type Output = Horizon;
 
-    fn reflect(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
+    fn reflect(self, other: Horizon) -> Horizon {
         self.unitize().sandwich(other)
     }
 }
@@ -31335,10 +31335,10 @@ impl Bulk for LineAtInfinity {
 }
 
 impl Bulk for Plane {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn bulk(self) -> PlaneAtInfinity {
-        PlaneAtInfinity { groups: PlaneAtInfinityGroups { g0: self.group0()[3] * 1.0 } }
+    fn bulk(self) -> Horizon {
+        Horizon { groups: HorizonGroups { g0: self.group0()[3] * 1.0 } }
     }
 }
 
@@ -31358,10 +31358,10 @@ impl Weight for PlaneAtOrigin {
     }
 }
 
-impl Bulk for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl Bulk for Horizon {
+    type Output = Horizon;
 
-    fn bulk(self) -> PlaneAtInfinity {
+    fn bulk(self) -> Horizon {
         self
     }
 }
@@ -31494,7 +31494,7 @@ impl RightBulkDual for Plane {
     }
 }
 
-impl RightBulkDual for PlaneAtInfinity {
+impl RightBulkDual for Horizon {
     type Output = Origin;
 
     fn right_bulk_dual(self) -> Origin {
@@ -31551,17 +31551,17 @@ impl RightWeightDual for Magnitude {
 }
 
 impl RightWeightDual for Point {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn right_weight_dual(self) -> PlaneAtInfinity {
+    fn right_weight_dual(self) -> Horizon {
         self.weight().right_complement()
     }
 }
 
 impl RightWeightDual for Origin {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn right_weight_dual(self) -> PlaneAtInfinity {
+    fn right_weight_dual(self) -> Horizon {
         self.weight().right_complement()
     }
 }
@@ -31678,7 +31678,7 @@ impl LeftBulkDual for Plane {
     }
 }
 
-impl LeftBulkDual for PlaneAtInfinity {
+impl LeftBulkDual for Horizon {
     type Output = Origin;
 
     fn left_bulk_dual(self) -> Origin {
@@ -31735,17 +31735,17 @@ impl LeftWeightDual for Magnitude {
 }
 
 impl LeftWeightDual for Point {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn left_weight_dual(self) -> PlaneAtInfinity {
+    fn left_weight_dual(self) -> Horizon {
         self.weight().left_complement()
     }
 }
 
 impl LeftWeightDual for Origin {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn left_weight_dual(self) -> PlaneAtInfinity {
+    fn left_weight_dual(self) -> Horizon {
         self.weight().left_complement()
     }
 }
@@ -32086,10 +32086,10 @@ impl BulkContraction<Plane> for Plane {
     }
 }
 
-impl BulkContraction<PlaneAtInfinity> for Plane {
+impl BulkContraction<Horizon> for Plane {
     type Output = Scalar;
 
-    fn bulk_contraction(self, other: PlaneAtInfinity) -> Scalar {
+    fn bulk_contraction(self, other: Horizon) -> Scalar {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -32190,7 +32190,7 @@ impl BulkContraction<MultiVector> for PlaneAtOrigin {
     }
 }
 
-impl BulkContraction<Point> for PlaneAtInfinity {
+impl BulkContraction<Point> for Horizon {
     type Output = LineAtInfinity;
 
     fn bulk_contraction(self, other: Point) -> LineAtInfinity {
@@ -32198,7 +32198,7 @@ impl BulkContraction<Point> for PlaneAtInfinity {
     }
 }
 
-impl BulkContraction<PointAtInfinity> for PlaneAtInfinity {
+impl BulkContraction<PointAtInfinity> for Horizon {
     type Output = LineAtInfinity;
 
     fn bulk_contraction(self, other: PointAtInfinity) -> LineAtInfinity {
@@ -32206,7 +32206,7 @@ impl BulkContraction<PointAtInfinity> for PlaneAtInfinity {
     }
 }
 
-impl BulkContraction<Line> for PlaneAtInfinity {
+impl BulkContraction<Line> for Horizon {
     type Output = PointAtInfinity;
 
     fn bulk_contraction(self, other: Line) -> PointAtInfinity {
@@ -32214,7 +32214,7 @@ impl BulkContraction<Line> for PlaneAtInfinity {
     }
 }
 
-impl BulkContraction<LineAtInfinity> for PlaneAtInfinity {
+impl BulkContraction<LineAtInfinity> for Horizon {
     type Output = PointAtInfinity;
 
     fn bulk_contraction(self, other: LineAtInfinity) -> PointAtInfinity {
@@ -32222,7 +32222,7 @@ impl BulkContraction<LineAtInfinity> for PlaneAtInfinity {
     }
 }
 
-impl BulkContraction<Plane> for PlaneAtInfinity {
+impl BulkContraction<Plane> for Horizon {
     type Output = Scalar;
 
     fn bulk_contraction(self, other: Plane) -> Scalar {
@@ -32230,15 +32230,15 @@ impl BulkContraction<Plane> for PlaneAtInfinity {
     }
 }
 
-impl BulkContraction<PlaneAtInfinity> for PlaneAtInfinity {
+impl BulkContraction<Horizon> for Horizon {
     type Output = Scalar;
 
-    fn bulk_contraction(self, other: PlaneAtInfinity) -> Scalar {
+    fn bulk_contraction(self, other: Horizon) -> Scalar {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
 
-impl BulkContraction<Motor> for PlaneAtInfinity {
+impl BulkContraction<Motor> for Horizon {
     type Output = PointAtInfinity;
 
     fn bulk_contraction(self, other: Motor) -> PointAtInfinity {
@@ -32246,7 +32246,7 @@ impl BulkContraction<Motor> for PlaneAtInfinity {
     }
 }
 
-impl BulkContraction<Translator> for PlaneAtInfinity {
+impl BulkContraction<Translator> for Horizon {
     type Output = PointAtInfinity;
 
     fn bulk_contraction(self, other: Translator) -> PointAtInfinity {
@@ -32254,7 +32254,7 @@ impl BulkContraction<Translator> for PlaneAtInfinity {
     }
 }
 
-impl BulkContraction<Flector> for PlaneAtInfinity {
+impl BulkContraction<Flector> for Horizon {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: Flector) -> MultiVector {
@@ -32262,7 +32262,7 @@ impl BulkContraction<Flector> for PlaneAtInfinity {
     }
 }
 
-impl BulkContraction<MultiVector> for PlaneAtInfinity {
+impl BulkContraction<MultiVector> for Horizon {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: MultiVector) -> MultiVector {
@@ -32310,10 +32310,10 @@ impl BulkContraction<Plane> for Motor {
     }
 }
 
-impl BulkContraction<PlaneAtInfinity> for Motor {
+impl BulkContraction<Horizon> for Motor {
     type Output = Origin;
 
-    fn bulk_contraction(self, other: PlaneAtInfinity) -> Origin {
+    fn bulk_contraction(self, other: Horizon) -> Origin {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -32390,10 +32390,10 @@ impl BulkContraction<Plane> for Rotor {
     }
 }
 
-impl BulkContraction<PlaneAtInfinity> for Rotor {
+impl BulkContraction<Horizon> for Rotor {
     type Output = Origin;
 
-    fn bulk_contraction(self, other: PlaneAtInfinity) -> Origin {
+    fn bulk_contraction(self, other: Horizon) -> Origin {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -32470,10 +32470,10 @@ impl BulkContraction<Plane> for Translator {
     }
 }
 
-impl BulkContraction<PlaneAtInfinity> for Translator {
+impl BulkContraction<Horizon> for Translator {
     type Output = Origin;
 
-    fn bulk_contraction(self, other: PlaneAtInfinity) -> Origin {
+    fn bulk_contraction(self, other: Horizon) -> Origin {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -32550,10 +32550,10 @@ impl BulkContraction<Plane> for Flector {
     }
 }
 
-impl BulkContraction<PlaneAtInfinity> for Flector {
+impl BulkContraction<Horizon> for Flector {
     type Output = Scalar;
 
-    fn bulk_contraction(self, other: PlaneAtInfinity) -> Scalar {
+    fn bulk_contraction(self, other: Horizon) -> Scalar {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -32630,10 +32630,10 @@ impl BulkContraction<Plane> for MultiVector {
     }
 }
 
-impl BulkContraction<PlaneAtInfinity> for MultiVector {
+impl BulkContraction<Horizon> for MultiVector {
     type Output = MultiVector;
 
-    fn bulk_contraction(self, other: PlaneAtInfinity) -> MultiVector {
+    fn bulk_contraction(self, other: Horizon) -> MultiVector {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -32990,7 +32990,7 @@ impl WeightContraction<MultiVector> for PlaneAtOrigin {
     }
 }
 
-impl WeightContraction<Flector> for PlaneAtInfinity {
+impl WeightContraction<Flector> for Horizon {
     type Output = MultiVector;
 
     fn weight_contraction(self, other: Flector) -> MultiVector {
@@ -32998,7 +32998,7 @@ impl WeightContraction<Flector> for PlaneAtInfinity {
     }
 }
 
-impl WeightContraction<MultiVector> for PlaneAtInfinity {
+impl WeightContraction<MultiVector> for Horizon {
     type Output = MultiVector;
 
     fn weight_contraction(self, other: MultiVector) -> MultiVector {
@@ -33151,17 +33151,17 @@ impl WeightContraction<MultiVector> for Rotor {
 }
 
 impl WeightContraction<Point> for Translator {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn weight_contraction(self, other: Point) -> PlaneAtInfinity {
+    fn weight_contraction(self, other: Point) -> Horizon {
         self.anti_wedge(other.right_weight_dual())
     }
 }
 
 impl WeightContraction<Origin> for Translator {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn weight_contraction(self, other: Origin) -> PlaneAtInfinity {
+    fn weight_contraction(self, other: Origin) -> Horizon {
         self.anti_wedge(other.right_weight_dual())
     }
 }
@@ -33398,10 +33398,10 @@ impl BulkExpansion<Plane> for Point {
     }
 }
 
-impl BulkExpansion<PlaneAtInfinity> for Point {
+impl BulkExpansion<Horizon> for Point {
     type Output = LineAtOrigin;
 
-    fn bulk_expansion(self, other: PlaneAtInfinity) -> LineAtOrigin {
+    fn bulk_expansion(self, other: Horizon) -> LineAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -33494,10 +33494,10 @@ impl BulkExpansion<Plane> for PointAtInfinity {
     }
 }
 
-impl BulkExpansion<PlaneAtInfinity> for PointAtInfinity {
+impl BulkExpansion<Horizon> for PointAtInfinity {
     type Output = LineAtOrigin;
 
-    fn bulk_expansion(self, other: PlaneAtInfinity) -> LineAtOrigin {
+    fn bulk_expansion(self, other: Horizon) -> LineAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -33558,10 +33558,10 @@ impl BulkExpansion<Plane> for Line {
     }
 }
 
-impl BulkExpansion<PlaneAtInfinity> for Line {
+impl BulkExpansion<Horizon> for Line {
     type Output = PlaneAtOrigin;
 
-    fn bulk_expansion(self, other: PlaneAtInfinity) -> PlaneAtOrigin {
+    fn bulk_expansion(self, other: Horizon) -> PlaneAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -33638,10 +33638,10 @@ impl BulkExpansion<Plane> for LineAtInfinity {
     }
 }
 
-impl BulkExpansion<PlaneAtInfinity> for LineAtInfinity {
+impl BulkExpansion<Horizon> for LineAtInfinity {
     type Output = PlaneAtOrigin;
 
-    fn bulk_expansion(self, other: PlaneAtInfinity) -> PlaneAtOrigin {
+    fn bulk_expansion(self, other: Horizon) -> PlaneAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -33686,10 +33686,10 @@ impl BulkExpansion<Plane> for Plane {
     }
 }
 
-impl BulkExpansion<PlaneAtInfinity> for Plane {
+impl BulkExpansion<Horizon> for Plane {
     type Output = AntiScalar;
 
-    fn bulk_expansion(self, other: PlaneAtInfinity) -> AntiScalar {
+    fn bulk_expansion(self, other: Horizon) -> AntiScalar {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -33726,7 +33726,7 @@ impl BulkExpansion<MultiVector> for PlaneAtOrigin {
     }
 }
 
-impl BulkExpansion<Plane> for PlaneAtInfinity {
+impl BulkExpansion<Plane> for Horizon {
     type Output = AntiScalar;
 
     fn bulk_expansion(self, other: Plane) -> AntiScalar {
@@ -33734,15 +33734,15 @@ impl BulkExpansion<Plane> for PlaneAtInfinity {
     }
 }
 
-impl BulkExpansion<PlaneAtInfinity> for PlaneAtInfinity {
+impl BulkExpansion<Horizon> for Horizon {
     type Output = AntiScalar;
 
-    fn bulk_expansion(self, other: PlaneAtInfinity) -> AntiScalar {
+    fn bulk_expansion(self, other: Horizon) -> AntiScalar {
         self.wedge(other.right_bulk_dual())
     }
 }
 
-impl BulkExpansion<Flector> for PlaneAtInfinity {
+impl BulkExpansion<Flector> for Horizon {
     type Output = AntiScalar;
 
     fn bulk_expansion(self, other: Flector) -> AntiScalar {
@@ -33750,7 +33750,7 @@ impl BulkExpansion<Flector> for PlaneAtInfinity {
     }
 }
 
-impl BulkExpansion<MultiVector> for PlaneAtInfinity {
+impl BulkExpansion<MultiVector> for Horizon {
     type Output = MultiVector;
 
     fn bulk_expansion(self, other: MultiVector) -> MultiVector {
@@ -33782,10 +33782,10 @@ impl BulkExpansion<Plane> for Motor {
     }
 }
 
-impl BulkExpansion<PlaneAtInfinity> for Motor {
+impl BulkExpansion<Horizon> for Motor {
     type Output = PlaneAtOrigin;
 
-    fn bulk_expansion(self, other: PlaneAtInfinity) -> PlaneAtOrigin {
+    fn bulk_expansion(self, other: Horizon) -> PlaneAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -33862,10 +33862,10 @@ impl BulkExpansion<Plane> for Translator {
     }
 }
 
-impl BulkExpansion<PlaneAtInfinity> for Translator {
+impl BulkExpansion<Horizon> for Translator {
     type Output = PlaneAtOrigin;
 
-    fn bulk_expansion(self, other: PlaneAtInfinity) -> PlaneAtOrigin {
+    fn bulk_expansion(self, other: Horizon) -> PlaneAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -33942,10 +33942,10 @@ impl BulkExpansion<Plane> for Flector {
     }
 }
 
-impl BulkExpansion<PlaneAtInfinity> for Flector {
+impl BulkExpansion<Horizon> for Flector {
     type Output = Rotor;
 
-    fn bulk_expansion(self, other: PlaneAtInfinity) -> Rotor {
+    fn bulk_expansion(self, other: Horizon) -> Rotor {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -34022,10 +34022,10 @@ impl BulkExpansion<Plane> for MultiVector {
     }
 }
 
-impl BulkExpansion<PlaneAtInfinity> for MultiVector {
+impl BulkExpansion<Horizon> for MultiVector {
     type Output = MultiVector;
 
-    fn bulk_expansion(self, other: PlaneAtInfinity) -> MultiVector {
+    fn bulk_expansion(self, other: Horizon) -> MultiVector {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -34207,17 +34207,17 @@ impl WeightExpansion<MultiVector> for Origin {
 }
 
 impl WeightExpansion<Line> for PointAtInfinity {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn weight_expansion(self, other: Line) -> PlaneAtInfinity {
+    fn weight_expansion(self, other: Line) -> Horizon {
         self.wedge(other.right_weight_dual())
     }
 }
 
 impl WeightExpansion<LineAtOrigin> for PointAtInfinity {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn weight_expansion(self, other: LineAtOrigin) -> PlaneAtInfinity {
+    fn weight_expansion(self, other: LineAtOrigin) -> Horizon {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -34375,17 +34375,17 @@ impl WeightExpansion<MultiVector> for LineAtOrigin {
 }
 
 impl WeightExpansion<Plane> for LineAtInfinity {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn weight_expansion(self, other: Plane) -> PlaneAtInfinity {
+    fn weight_expansion(self, other: Plane) -> Horizon {
         self.wedge(other.right_weight_dual())
     }
 }
 
 impl WeightExpansion<PlaneAtOrigin> for LineAtInfinity {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn weight_expansion(self, other: PlaneAtOrigin) -> PlaneAtInfinity {
+    fn weight_expansion(self, other: PlaneAtOrigin) -> Horizon {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -34494,15 +34494,15 @@ impl WeightExpansion<MultiVector> for PlaneAtOrigin {
     }
 }
 
-impl WeightExpansion<Translator> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl WeightExpansion<Translator> for Horizon {
+    type Output = Horizon;
 
-    fn weight_expansion(self, other: Translator) -> PlaneAtInfinity {
+    fn weight_expansion(self, other: Translator) -> Horizon {
         self.wedge(other.right_weight_dual())
     }
 }
 
-impl WeightExpansion<Flector> for PlaneAtInfinity {
+impl WeightExpansion<Flector> for Horizon {
     type Output = AntiScalar;
 
     fn weight_expansion(self, other: Flector) -> AntiScalar {
@@ -34510,7 +34510,7 @@ impl WeightExpansion<Flector> for PlaneAtInfinity {
     }
 }
 
-impl WeightExpansion<MultiVector> for PlaneAtInfinity {
+impl WeightExpansion<MultiVector> for Horizon {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: MultiVector) -> MultiVector {
@@ -34631,17 +34631,17 @@ impl WeightExpansion<MultiVector> for Rotor {
 }
 
 impl WeightExpansion<Plane> for Translator {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn weight_expansion(self, other: Plane) -> PlaneAtInfinity {
+    fn weight_expansion(self, other: Plane) -> Horizon {
         self.wedge(other.right_weight_dual())
     }
 }
 
 impl WeightExpansion<PlaneAtOrigin> for Translator {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn weight_expansion(self, other: PlaneAtOrigin) -> PlaneAtInfinity {
+    fn weight_expansion(self, other: PlaneAtOrigin) -> Horizon {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -35246,15 +35246,15 @@ impl ProjectOrthogonallyOnto<MultiVector> for PlaneAtOrigin {
     }
 }
 
-impl ProjectOrthogonallyOnto<Translator> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl ProjectOrthogonallyOnto<Translator> for Horizon {
+    type Output = Horizon;
 
-    fn project_orthogonally_onto(self, other: Translator) -> PlaneAtInfinity {
+    fn project_orthogonally_onto(self, other: Translator) -> Horizon {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
 
-impl ProjectOrthogonallyOnto<Flector> for PlaneAtInfinity {
+impl ProjectOrthogonallyOnto<Flector> for Horizon {
     type Output = Flector;
 
     fn project_orthogonally_onto(self, other: Flector) -> Flector {
@@ -35262,7 +35262,7 @@ impl ProjectOrthogonallyOnto<Flector> for PlaneAtInfinity {
     }
 }
 
-impl ProjectOrthogonallyOnto<MultiVector> for PlaneAtInfinity {
+impl ProjectOrthogonallyOnto<MultiVector> for Horizon {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
@@ -35886,7 +35886,7 @@ impl AntiProjectOrthogonallyOnto<MultiVector> for PlaneAtOrigin {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<Flector> for PlaneAtInfinity {
+impl AntiProjectOrthogonallyOnto<Flector> for Horizon {
     type Output = MultiVector;
 
     fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
@@ -35894,7 +35894,7 @@ impl AntiProjectOrthogonallyOnto<Flector> for PlaneAtInfinity {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<MultiVector> for PlaneAtInfinity {
+impl AntiProjectOrthogonallyOnto<MultiVector> for Horizon {
     type Output = MultiVector;
 
     fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
@@ -36254,1570 +36254,1570 @@ impl AntiProjectOrthogonallyOnto<MultiVector> for MultiVector {
     }
 }
 
-impl ProjectThroughOriginOnto<Point> for Point {
+impl ProjectViaOriginOnto<Point> for Point {
     type Output = Point;
 
-    fn project_through_origin_onto(self, other: Point) -> Point {
+    fn project_via_origin_onto(self, other: Point) -> Point {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<PointAtInfinity> for Point {
+impl ProjectViaOriginOnto<PointAtInfinity> for Point {
     type Output = PointAtInfinity;
 
-    fn project_through_origin_onto(self, other: PointAtInfinity) -> PointAtInfinity {
+    fn project_via_origin_onto(self, other: PointAtInfinity) -> PointAtInfinity {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Line> for Point {
+impl ProjectViaOriginOnto<Line> for Point {
     type Output = Point;
 
-    fn project_through_origin_onto(self, other: Line) -> Point {
+    fn project_via_origin_onto(self, other: Line) -> Point {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<LineAtInfinity> for Point {
+impl ProjectViaOriginOnto<LineAtInfinity> for Point {
     type Output = PointAtInfinity;
 
-    fn project_through_origin_onto(self, other: LineAtInfinity) -> PointAtInfinity {
+    fn project_via_origin_onto(self, other: LineAtInfinity) -> PointAtInfinity {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Plane> for Point {
+impl ProjectViaOriginOnto<Plane> for Point {
     type Output = Point;
 
-    fn project_through_origin_onto(self, other: Plane) -> Point {
+    fn project_via_origin_onto(self, other: Plane) -> Point {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<PlaneAtInfinity> for Point {
+impl ProjectViaOriginOnto<Horizon> for Point {
     type Output = PointAtInfinity;
 
-    fn project_through_origin_onto(self, other: PlaneAtInfinity) -> PointAtInfinity {
+    fn project_via_origin_onto(self, other: Horizon) -> PointAtInfinity {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Motor> for Point {
+impl ProjectViaOriginOnto<Motor> for Point {
     type Output = Flector;
 
-    fn project_through_origin_onto(self, other: Motor) -> Flector {
+    fn project_via_origin_onto(self, other: Motor) -> Flector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Translator> for Point {
+impl ProjectViaOriginOnto<Translator> for Point {
     type Output = Flector;
 
-    fn project_through_origin_onto(self, other: Translator) -> Flector {
+    fn project_via_origin_onto(self, other: Translator) -> Flector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Flector> for Point {
+impl ProjectViaOriginOnto<Flector> for Point {
     type Output = Flector;
 
-    fn project_through_origin_onto(self, other: Flector) -> Flector {
+    fn project_via_origin_onto(self, other: Flector) -> Flector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<MultiVector> for Point {
+impl ProjectViaOriginOnto<MultiVector> for Point {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: MultiVector) -> MultiVector {
+    fn project_via_origin_onto(self, other: MultiVector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Flector> for Origin {
+impl ProjectViaOriginOnto<Flector> for Origin {
     type Output = Flector;
 
-    fn project_through_origin_onto(self, other: Flector) -> Flector {
+    fn project_via_origin_onto(self, other: Flector) -> Flector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<MultiVector> for Origin {
+impl ProjectViaOriginOnto<MultiVector> for Origin {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: MultiVector) -> MultiVector {
+    fn project_via_origin_onto(self, other: MultiVector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Point> for PointAtInfinity {
+impl ProjectViaOriginOnto<Point> for PointAtInfinity {
     type Output = Point;
 
-    fn project_through_origin_onto(self, other: Point) -> Point {
+    fn project_via_origin_onto(self, other: Point) -> Point {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<PointAtInfinity> for PointAtInfinity {
+impl ProjectViaOriginOnto<PointAtInfinity> for PointAtInfinity {
     type Output = PointAtInfinity;
 
-    fn project_through_origin_onto(self, other: PointAtInfinity) -> PointAtInfinity {
+    fn project_via_origin_onto(self, other: PointAtInfinity) -> PointAtInfinity {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Line> for PointAtInfinity {
+impl ProjectViaOriginOnto<Line> for PointAtInfinity {
     type Output = Point;
 
-    fn project_through_origin_onto(self, other: Line) -> Point {
+    fn project_via_origin_onto(self, other: Line) -> Point {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<LineAtInfinity> for PointAtInfinity {
+impl ProjectViaOriginOnto<LineAtInfinity> for PointAtInfinity {
     type Output = PointAtInfinity;
 
-    fn project_through_origin_onto(self, other: LineAtInfinity) -> PointAtInfinity {
+    fn project_via_origin_onto(self, other: LineAtInfinity) -> PointAtInfinity {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Plane> for PointAtInfinity {
+impl ProjectViaOriginOnto<Plane> for PointAtInfinity {
     type Output = Point;
 
-    fn project_through_origin_onto(self, other: Plane) -> Point {
+    fn project_via_origin_onto(self, other: Plane) -> Point {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<PlaneAtInfinity> for PointAtInfinity {
+impl ProjectViaOriginOnto<Horizon> for PointAtInfinity {
     type Output = PointAtInfinity;
 
-    fn project_through_origin_onto(self, other: PlaneAtInfinity) -> PointAtInfinity {
+    fn project_via_origin_onto(self, other: Horizon) -> PointAtInfinity {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Motor> for PointAtInfinity {
+impl ProjectViaOriginOnto<Motor> for PointAtInfinity {
     type Output = Flector;
 
-    fn project_through_origin_onto(self, other: Motor) -> Flector {
+    fn project_via_origin_onto(self, other: Motor) -> Flector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Translator> for PointAtInfinity {
+impl ProjectViaOriginOnto<Translator> for PointAtInfinity {
     type Output = Flector;
 
-    fn project_through_origin_onto(self, other: Translator) -> Flector {
+    fn project_via_origin_onto(self, other: Translator) -> Flector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Flector> for PointAtInfinity {
+impl ProjectViaOriginOnto<Flector> for PointAtInfinity {
     type Output = Flector;
 
-    fn project_through_origin_onto(self, other: Flector) -> Flector {
+    fn project_via_origin_onto(self, other: Flector) -> Flector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<MultiVector> for PointAtInfinity {
+impl ProjectViaOriginOnto<MultiVector> for PointAtInfinity {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: MultiVector) -> MultiVector {
+    fn project_via_origin_onto(self, other: MultiVector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Line> for Line {
+impl ProjectViaOriginOnto<Line> for Line {
     type Output = Line;
 
-    fn project_through_origin_onto(self, other: Line) -> Line {
+    fn project_via_origin_onto(self, other: Line) -> Line {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<LineAtInfinity> for Line {
+impl ProjectViaOriginOnto<LineAtInfinity> for Line {
     type Output = LineAtInfinity;
 
-    fn project_through_origin_onto(self, other: LineAtInfinity) -> LineAtInfinity {
+    fn project_via_origin_onto(self, other: LineAtInfinity) -> LineAtInfinity {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Plane> for Line {
+impl ProjectViaOriginOnto<Plane> for Line {
     type Output = Line;
 
-    fn project_through_origin_onto(self, other: Plane) -> Line {
+    fn project_via_origin_onto(self, other: Plane) -> Line {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<PlaneAtInfinity> for Line {
+impl ProjectViaOriginOnto<Horizon> for Line {
     type Output = LineAtInfinity;
 
-    fn project_through_origin_onto(self, other: PlaneAtInfinity) -> LineAtInfinity {
+    fn project_via_origin_onto(self, other: Horizon) -> LineAtInfinity {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Motor> for Line {
+impl ProjectViaOriginOnto<Motor> for Line {
     type Output = Motor;
 
-    fn project_through_origin_onto(self, other: Motor) -> Motor {
+    fn project_via_origin_onto(self, other: Motor) -> Motor {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Translator> for Line {
+impl ProjectViaOriginOnto<Translator> for Line {
     type Output = Translator;
 
-    fn project_through_origin_onto(self, other: Translator) -> Translator {
+    fn project_via_origin_onto(self, other: Translator) -> Translator {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Flector> for Line {
+impl ProjectViaOriginOnto<Flector> for Line {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: Flector) -> MultiVector {
+    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<MultiVector> for Line {
+impl ProjectViaOriginOnto<MultiVector> for Line {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: MultiVector) -> MultiVector {
+    fn project_via_origin_onto(self, other: MultiVector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Flector> for LineAtOrigin {
+impl ProjectViaOriginOnto<Flector> for LineAtOrigin {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: Flector) -> MultiVector {
+    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<MultiVector> for LineAtOrigin {
+impl ProjectViaOriginOnto<MultiVector> for LineAtOrigin {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: MultiVector) -> MultiVector {
+    fn project_via_origin_onto(self, other: MultiVector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Line> for LineAtInfinity {
+impl ProjectViaOriginOnto<Line> for LineAtInfinity {
     type Output = Line;
 
-    fn project_through_origin_onto(self, other: Line) -> Line {
+    fn project_via_origin_onto(self, other: Line) -> Line {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<LineAtInfinity> for LineAtInfinity {
+impl ProjectViaOriginOnto<LineAtInfinity> for LineAtInfinity {
     type Output = LineAtInfinity;
 
-    fn project_through_origin_onto(self, other: LineAtInfinity) -> LineAtInfinity {
+    fn project_via_origin_onto(self, other: LineAtInfinity) -> LineAtInfinity {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Plane> for LineAtInfinity {
+impl ProjectViaOriginOnto<Plane> for LineAtInfinity {
     type Output = Line;
 
-    fn project_through_origin_onto(self, other: Plane) -> Line {
+    fn project_via_origin_onto(self, other: Plane) -> Line {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<PlaneAtInfinity> for LineAtInfinity {
+impl ProjectViaOriginOnto<Horizon> for LineAtInfinity {
     type Output = LineAtInfinity;
 
-    fn project_through_origin_onto(self, other: PlaneAtInfinity) -> LineAtInfinity {
+    fn project_via_origin_onto(self, other: Horizon) -> LineAtInfinity {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Motor> for LineAtInfinity {
+impl ProjectViaOriginOnto<Motor> for LineAtInfinity {
     type Output = Motor;
 
-    fn project_through_origin_onto(self, other: Motor) -> Motor {
+    fn project_via_origin_onto(self, other: Motor) -> Motor {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Translator> for LineAtInfinity {
+impl ProjectViaOriginOnto<Translator> for LineAtInfinity {
     type Output = Translator;
 
-    fn project_through_origin_onto(self, other: Translator) -> Translator {
+    fn project_via_origin_onto(self, other: Translator) -> Translator {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Flector> for LineAtInfinity {
+impl ProjectViaOriginOnto<Flector> for LineAtInfinity {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: Flector) -> MultiVector {
+    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<MultiVector> for LineAtInfinity {
+impl ProjectViaOriginOnto<MultiVector> for LineAtInfinity {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: MultiVector) -> MultiVector {
+    fn project_via_origin_onto(self, other: MultiVector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Plane> for Plane {
+impl ProjectViaOriginOnto<Plane> for Plane {
     type Output = Plane;
 
-    fn project_through_origin_onto(self, other: Plane) -> Plane {
+    fn project_via_origin_onto(self, other: Plane) -> Plane {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<PlaneAtInfinity> for Plane {
-    type Output = PlaneAtInfinity;
+impl ProjectViaOriginOnto<Horizon> for Plane {
+    type Output = Horizon;
 
-    fn project_through_origin_onto(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
+    fn project_via_origin_onto(self, other: Horizon) -> Horizon {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Flector> for Plane {
+impl ProjectViaOriginOnto<Flector> for Plane {
     type Output = Flector;
 
-    fn project_through_origin_onto(self, other: Flector) -> Flector {
+    fn project_via_origin_onto(self, other: Flector) -> Flector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<MultiVector> for Plane {
+impl ProjectViaOriginOnto<MultiVector> for Plane {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: MultiVector) -> MultiVector {
+    fn project_via_origin_onto(self, other: MultiVector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Flector> for PlaneAtOrigin {
+impl ProjectViaOriginOnto<Flector> for PlaneAtOrigin {
     type Output = Flector;
 
-    fn project_through_origin_onto(self, other: Flector) -> Flector {
+    fn project_via_origin_onto(self, other: Flector) -> Flector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<MultiVector> for PlaneAtOrigin {
+impl ProjectViaOriginOnto<MultiVector> for PlaneAtOrigin {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: MultiVector) -> MultiVector {
+    fn project_via_origin_onto(self, other: MultiVector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Plane> for PlaneAtInfinity {
+impl ProjectViaOriginOnto<Plane> for Horizon {
     type Output = Plane;
 
-    fn project_through_origin_onto(self, other: Plane) -> Plane {
+    fn project_via_origin_onto(self, other: Plane) -> Plane {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<PlaneAtInfinity> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl ProjectViaOriginOnto<Horizon> for Horizon {
+    type Output = Horizon;
 
-    fn project_through_origin_onto(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
+    fn project_via_origin_onto(self, other: Horizon) -> Horizon {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Flector> for PlaneAtInfinity {
+impl ProjectViaOriginOnto<Flector> for Horizon {
     type Output = Flector;
 
-    fn project_through_origin_onto(self, other: Flector) -> Flector {
+    fn project_via_origin_onto(self, other: Flector) -> Flector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<MultiVector> for PlaneAtInfinity {
+impl ProjectViaOriginOnto<MultiVector> for Horizon {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: MultiVector) -> MultiVector {
+    fn project_via_origin_onto(self, other: MultiVector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Line> for Motor {
+impl ProjectViaOriginOnto<Line> for Motor {
     type Output = Line;
 
-    fn project_through_origin_onto(self, other: Line) -> Line {
+    fn project_via_origin_onto(self, other: Line) -> Line {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<LineAtInfinity> for Motor {
+impl ProjectViaOriginOnto<LineAtInfinity> for Motor {
     type Output = LineAtInfinity;
 
-    fn project_through_origin_onto(self, other: LineAtInfinity) -> LineAtInfinity {
+    fn project_via_origin_onto(self, other: LineAtInfinity) -> LineAtInfinity {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Plane> for Motor {
+impl ProjectViaOriginOnto<Plane> for Motor {
     type Output = Line;
 
-    fn project_through_origin_onto(self, other: Plane) -> Line {
+    fn project_via_origin_onto(self, other: Plane) -> Line {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<PlaneAtInfinity> for Motor {
+impl ProjectViaOriginOnto<Horizon> for Motor {
     type Output = LineAtInfinity;
 
-    fn project_through_origin_onto(self, other: PlaneAtInfinity) -> LineAtInfinity {
+    fn project_via_origin_onto(self, other: Horizon) -> LineAtInfinity {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Motor> for Motor {
+impl ProjectViaOriginOnto<Motor> for Motor {
     type Output = Motor;
 
-    fn project_through_origin_onto(self, other: Motor) -> Motor {
+    fn project_via_origin_onto(self, other: Motor) -> Motor {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Translator> for Motor {
+impl ProjectViaOriginOnto<Translator> for Motor {
     type Output = Translator;
 
-    fn project_through_origin_onto(self, other: Translator) -> Translator {
+    fn project_via_origin_onto(self, other: Translator) -> Translator {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Flector> for Motor {
+impl ProjectViaOriginOnto<Flector> for Motor {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: Flector) -> MultiVector {
+    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<MultiVector> for Motor {
+impl ProjectViaOriginOnto<MultiVector> for Motor {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: MultiVector) -> MultiVector {
+    fn project_via_origin_onto(self, other: MultiVector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Flector> for Rotor {
+impl ProjectViaOriginOnto<Flector> for Rotor {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: Flector) -> MultiVector {
+    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<MultiVector> for Rotor {
+impl ProjectViaOriginOnto<MultiVector> for Rotor {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: MultiVector) -> MultiVector {
+    fn project_via_origin_onto(self, other: MultiVector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Line> for Translator {
+impl ProjectViaOriginOnto<Line> for Translator {
     type Output = Line;
 
-    fn project_through_origin_onto(self, other: Line) -> Line {
+    fn project_via_origin_onto(self, other: Line) -> Line {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<LineAtInfinity> for Translator {
+impl ProjectViaOriginOnto<LineAtInfinity> for Translator {
     type Output = LineAtInfinity;
 
-    fn project_through_origin_onto(self, other: LineAtInfinity) -> LineAtInfinity {
+    fn project_via_origin_onto(self, other: LineAtInfinity) -> LineAtInfinity {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Plane> for Translator {
+impl ProjectViaOriginOnto<Plane> for Translator {
     type Output = Line;
 
-    fn project_through_origin_onto(self, other: Plane) -> Line {
+    fn project_via_origin_onto(self, other: Plane) -> Line {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<PlaneAtInfinity> for Translator {
+impl ProjectViaOriginOnto<Horizon> for Translator {
     type Output = LineAtInfinity;
 
-    fn project_through_origin_onto(self, other: PlaneAtInfinity) -> LineAtInfinity {
+    fn project_via_origin_onto(self, other: Horizon) -> LineAtInfinity {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Motor> for Translator {
+impl ProjectViaOriginOnto<Motor> for Translator {
     type Output = Motor;
 
-    fn project_through_origin_onto(self, other: Motor) -> Motor {
+    fn project_via_origin_onto(self, other: Motor) -> Motor {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Translator> for Translator {
+impl ProjectViaOriginOnto<Translator> for Translator {
     type Output = Translator;
 
-    fn project_through_origin_onto(self, other: Translator) -> Translator {
+    fn project_via_origin_onto(self, other: Translator) -> Translator {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Flector> for Translator {
+impl ProjectViaOriginOnto<Flector> for Translator {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: Flector) -> MultiVector {
+    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<MultiVector> for Translator {
+impl ProjectViaOriginOnto<MultiVector> for Translator {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: MultiVector) -> MultiVector {
+    fn project_via_origin_onto(self, other: MultiVector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Point> for Flector {
+impl ProjectViaOriginOnto<Point> for Flector {
     type Output = Point;
 
-    fn project_through_origin_onto(self, other: Point) -> Point {
+    fn project_via_origin_onto(self, other: Point) -> Point {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<PointAtInfinity> for Flector {
+impl ProjectViaOriginOnto<PointAtInfinity> for Flector {
     type Output = PointAtInfinity;
 
-    fn project_through_origin_onto(self, other: PointAtInfinity) -> PointAtInfinity {
+    fn project_via_origin_onto(self, other: PointAtInfinity) -> PointAtInfinity {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Line> for Flector {
+impl ProjectViaOriginOnto<Line> for Flector {
     type Output = Point;
 
-    fn project_through_origin_onto(self, other: Line) -> Point {
+    fn project_via_origin_onto(self, other: Line) -> Point {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<LineAtInfinity> for Flector {
+impl ProjectViaOriginOnto<LineAtInfinity> for Flector {
     type Output = PointAtInfinity;
 
-    fn project_through_origin_onto(self, other: LineAtInfinity) -> PointAtInfinity {
+    fn project_via_origin_onto(self, other: LineAtInfinity) -> PointAtInfinity {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Plane> for Flector {
+impl ProjectViaOriginOnto<Plane> for Flector {
     type Output = Flector;
 
-    fn project_through_origin_onto(self, other: Plane) -> Flector {
+    fn project_via_origin_onto(self, other: Plane) -> Flector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<PlaneAtInfinity> for Flector {
+impl ProjectViaOriginOnto<Horizon> for Flector {
     type Output = Flector;
 
-    fn project_through_origin_onto(self, other: PlaneAtInfinity) -> Flector {
+    fn project_via_origin_onto(self, other: Horizon) -> Flector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Motor> for Flector {
+impl ProjectViaOriginOnto<Motor> for Flector {
     type Output = Flector;
 
-    fn project_through_origin_onto(self, other: Motor) -> Flector {
+    fn project_via_origin_onto(self, other: Motor) -> Flector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Translator> for Flector {
+impl ProjectViaOriginOnto<Translator> for Flector {
     type Output = Flector;
 
-    fn project_through_origin_onto(self, other: Translator) -> Flector {
+    fn project_via_origin_onto(self, other: Translator) -> Flector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Flector> for Flector {
+impl ProjectViaOriginOnto<Flector> for Flector {
     type Output = Flector;
 
-    fn project_through_origin_onto(self, other: Flector) -> Flector {
+    fn project_via_origin_onto(self, other: Flector) -> Flector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<MultiVector> for Flector {
+impl ProjectViaOriginOnto<MultiVector> for Flector {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: MultiVector) -> MultiVector {
+    fn project_via_origin_onto(self, other: MultiVector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Point> for MultiVector {
+impl ProjectViaOriginOnto<Point> for MultiVector {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: Point) -> MultiVector {
+    fn project_via_origin_onto(self, other: Point) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<PointAtInfinity> for MultiVector {
+impl ProjectViaOriginOnto<PointAtInfinity> for MultiVector {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: PointAtInfinity) -> MultiVector {
+    fn project_via_origin_onto(self, other: PointAtInfinity) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Line> for MultiVector {
+impl ProjectViaOriginOnto<Line> for MultiVector {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: Line) -> MultiVector {
+    fn project_via_origin_onto(self, other: Line) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<LineAtInfinity> for MultiVector {
+impl ProjectViaOriginOnto<LineAtInfinity> for MultiVector {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: LineAtInfinity) -> MultiVector {
+    fn project_via_origin_onto(self, other: LineAtInfinity) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Plane> for MultiVector {
+impl ProjectViaOriginOnto<Plane> for MultiVector {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: Plane) -> MultiVector {
+    fn project_via_origin_onto(self, other: Plane) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<PlaneAtInfinity> for MultiVector {
+impl ProjectViaOriginOnto<Horizon> for MultiVector {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: PlaneAtInfinity) -> MultiVector {
+    fn project_via_origin_onto(self, other: Horizon) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Motor> for MultiVector {
+impl ProjectViaOriginOnto<Motor> for MultiVector {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: Motor) -> MultiVector {
+    fn project_via_origin_onto(self, other: Motor) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Translator> for MultiVector {
+impl ProjectViaOriginOnto<Translator> for MultiVector {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: Translator) -> MultiVector {
+    fn project_via_origin_onto(self, other: Translator) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<Flector> for MultiVector {
+impl ProjectViaOriginOnto<Flector> for MultiVector {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: Flector) -> MultiVector {
+    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectThroughOriginOnto<MultiVector> for MultiVector {
+impl ProjectViaOriginOnto<MultiVector> for MultiVector {
     type Output = MultiVector;
 
-    fn project_through_origin_onto(self, other: MultiVector) -> MultiVector {
+    fn project_via_origin_onto(self, other: MultiVector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Point> for Point {
+impl AntiProjectViaHorizonOnto<Point> for Point {
     type Output = Point;
 
-    fn anti_project_through_origin_onto(self, other: Point) -> Point {
+    fn anti_project_via_horizon_onto(self, other: Point) -> Point {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<PointAtInfinity> for Point {
+impl AntiProjectViaHorizonOnto<PointAtInfinity> for Point {
     type Output = PointAtInfinity;
 
-    fn anti_project_through_origin_onto(self, other: PointAtInfinity) -> PointAtInfinity {
+    fn anti_project_via_horizon_onto(self, other: PointAtInfinity) -> PointAtInfinity {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Flector> for Point {
+impl AntiProjectViaHorizonOnto<Flector> for Point {
     type Output = Flector;
 
-    fn anti_project_through_origin_onto(self, other: Flector) -> Flector {
+    fn anti_project_via_horizon_onto(self, other: Flector) -> Flector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<MultiVector> for Point {
+impl AntiProjectViaHorizonOnto<MultiVector> for Point {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: MultiVector) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: MultiVector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Flector> for Origin {
+impl AntiProjectViaHorizonOnto<Flector> for Origin {
     type Output = Flector;
 
-    fn anti_project_through_origin_onto(self, other: Flector) -> Flector {
+    fn anti_project_via_horizon_onto(self, other: Flector) -> Flector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<MultiVector> for Origin {
+impl AntiProjectViaHorizonOnto<MultiVector> for Origin {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: MultiVector) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: MultiVector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Point> for PointAtInfinity {
+impl AntiProjectViaHorizonOnto<Point> for PointAtInfinity {
     type Output = Point;
 
-    fn anti_project_through_origin_onto(self, other: Point) -> Point {
+    fn anti_project_via_horizon_onto(self, other: Point) -> Point {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<PointAtInfinity> for PointAtInfinity {
+impl AntiProjectViaHorizonOnto<PointAtInfinity> for PointAtInfinity {
     type Output = PointAtInfinity;
 
-    fn anti_project_through_origin_onto(self, other: PointAtInfinity) -> PointAtInfinity {
+    fn anti_project_via_horizon_onto(self, other: PointAtInfinity) -> PointAtInfinity {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Flector> for PointAtInfinity {
+impl AntiProjectViaHorizonOnto<Flector> for PointAtInfinity {
     type Output = Flector;
 
-    fn anti_project_through_origin_onto(self, other: Flector) -> Flector {
+    fn anti_project_via_horizon_onto(self, other: Flector) -> Flector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<MultiVector> for PointAtInfinity {
+impl AntiProjectViaHorizonOnto<MultiVector> for PointAtInfinity {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: MultiVector) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: MultiVector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Point> for Line {
+impl AntiProjectViaHorizonOnto<Point> for Line {
     type Output = Line;
 
-    fn anti_project_through_origin_onto(self, other: Point) -> Line {
+    fn anti_project_via_horizon_onto(self, other: Point) -> Line {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<PointAtInfinity> for Line {
+impl AntiProjectViaHorizonOnto<PointAtInfinity> for Line {
     type Output = Line;
 
-    fn anti_project_through_origin_onto(self, other: PointAtInfinity) -> Line {
+    fn anti_project_via_horizon_onto(self, other: PointAtInfinity) -> Line {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Line> for Line {
+impl AntiProjectViaHorizonOnto<Line> for Line {
     type Output = Line;
 
-    fn anti_project_through_origin_onto(self, other: Line) -> Line {
+    fn anti_project_via_horizon_onto(self, other: Line) -> Line {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<LineAtInfinity> for Line {
+impl AntiProjectViaHorizonOnto<LineAtInfinity> for Line {
     type Output = LineAtInfinity;
 
-    fn anti_project_through_origin_onto(self, other: LineAtInfinity) -> LineAtInfinity {
+    fn anti_project_via_horizon_onto(self, other: LineAtInfinity) -> LineAtInfinity {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Motor> for Line {
+impl AntiProjectViaHorizonOnto<Motor> for Line {
     type Output = Motor;
 
-    fn anti_project_through_origin_onto(self, other: Motor) -> Motor {
+    fn anti_project_via_horizon_onto(self, other: Motor) -> Motor {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Translator> for Line {
+impl AntiProjectViaHorizonOnto<Translator> for Line {
     type Output = Translator;
 
-    fn anti_project_through_origin_onto(self, other: Translator) -> Translator {
+    fn anti_project_via_horizon_onto(self, other: Translator) -> Translator {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Flector> for Line {
+impl AntiProjectViaHorizonOnto<Flector> for Line {
     type Output = Motor;
 
-    fn anti_project_through_origin_onto(self, other: Flector) -> Motor {
+    fn anti_project_via_horizon_onto(self, other: Flector) -> Motor {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<MultiVector> for Line {
+impl AntiProjectViaHorizonOnto<MultiVector> for Line {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: MultiVector) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: MultiVector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Point> for LineAtOrigin {
+impl AntiProjectViaHorizonOnto<Point> for LineAtOrigin {
     type Output = LineAtOrigin;
 
-    fn anti_project_through_origin_onto(self, other: Point) -> LineAtOrigin {
+    fn anti_project_via_horizon_onto(self, other: Point) -> LineAtOrigin {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<PointAtInfinity> for LineAtOrigin {
+impl AntiProjectViaHorizonOnto<PointAtInfinity> for LineAtOrigin {
     type Output = LineAtOrigin;
 
-    fn anti_project_through_origin_onto(self, other: PointAtInfinity) -> LineAtOrigin {
+    fn anti_project_via_horizon_onto(self, other: PointAtInfinity) -> LineAtOrigin {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Flector> for LineAtOrigin {
+impl AntiProjectViaHorizonOnto<Flector> for LineAtOrigin {
     type Output = Motor;
 
-    fn anti_project_through_origin_onto(self, other: Flector) -> Motor {
+    fn anti_project_via_horizon_onto(self, other: Flector) -> Motor {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<MultiVector> for LineAtOrigin {
+impl AntiProjectViaHorizonOnto<MultiVector> for LineAtOrigin {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: MultiVector) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: MultiVector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Point> for LineAtInfinity {
+impl AntiProjectViaHorizonOnto<Point> for LineAtInfinity {
     type Output = Line;
 
-    fn anti_project_through_origin_onto(self, other: Point) -> Line {
+    fn anti_project_via_horizon_onto(self, other: Point) -> Line {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<PointAtInfinity> for LineAtInfinity {
+impl AntiProjectViaHorizonOnto<PointAtInfinity> for LineAtInfinity {
     type Output = LineAtInfinity;
 
-    fn anti_project_through_origin_onto(self, other: PointAtInfinity) -> LineAtInfinity {
+    fn anti_project_via_horizon_onto(self, other: PointAtInfinity) -> LineAtInfinity {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Line> for LineAtInfinity {
+impl AntiProjectViaHorizonOnto<Line> for LineAtInfinity {
     type Output = Line;
 
-    fn anti_project_through_origin_onto(self, other: Line) -> Line {
+    fn anti_project_via_horizon_onto(self, other: Line) -> Line {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<LineAtInfinity> for LineAtInfinity {
+impl AntiProjectViaHorizonOnto<LineAtInfinity> for LineAtInfinity {
     type Output = LineAtInfinity;
 
-    fn anti_project_through_origin_onto(self, other: LineAtInfinity) -> LineAtInfinity {
+    fn anti_project_via_horizon_onto(self, other: LineAtInfinity) -> LineAtInfinity {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Motor> for LineAtInfinity {
+impl AntiProjectViaHorizonOnto<Motor> for LineAtInfinity {
     type Output = Motor;
 
-    fn anti_project_through_origin_onto(self, other: Motor) -> Motor {
+    fn anti_project_via_horizon_onto(self, other: Motor) -> Motor {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Translator> for LineAtInfinity {
+impl AntiProjectViaHorizonOnto<Translator> for LineAtInfinity {
     type Output = Translator;
 
-    fn anti_project_through_origin_onto(self, other: Translator) -> Translator {
+    fn anti_project_via_horizon_onto(self, other: Translator) -> Translator {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Flector> for LineAtInfinity {
+impl AntiProjectViaHorizonOnto<Flector> for LineAtInfinity {
     type Output = Motor;
 
-    fn anti_project_through_origin_onto(self, other: Flector) -> Motor {
+    fn anti_project_via_horizon_onto(self, other: Flector) -> Motor {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<MultiVector> for LineAtInfinity {
+impl AntiProjectViaHorizonOnto<MultiVector> for LineAtInfinity {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: MultiVector) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: MultiVector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Point> for Plane {
+impl AntiProjectViaHorizonOnto<Point> for Plane {
     type Output = Plane;
 
-    fn anti_project_through_origin_onto(self, other: Point) -> Plane {
+    fn anti_project_via_horizon_onto(self, other: Point) -> Plane {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<PointAtInfinity> for Plane {
+impl AntiProjectViaHorizonOnto<PointAtInfinity> for Plane {
     type Output = Plane;
 
-    fn anti_project_through_origin_onto(self, other: PointAtInfinity) -> Plane {
+    fn anti_project_via_horizon_onto(self, other: PointAtInfinity) -> Plane {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Line> for Plane {
+impl AntiProjectViaHorizonOnto<Line> for Plane {
     type Output = Plane;
 
-    fn anti_project_through_origin_onto(self, other: Line) -> Plane {
+    fn anti_project_via_horizon_onto(self, other: Line) -> Plane {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<LineAtInfinity> for Plane {
+impl AntiProjectViaHorizonOnto<LineAtInfinity> for Plane {
     type Output = Plane;
 
-    fn anti_project_through_origin_onto(self, other: LineAtInfinity) -> Plane {
+    fn anti_project_via_horizon_onto(self, other: LineAtInfinity) -> Plane {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Plane> for Plane {
+impl AntiProjectViaHorizonOnto<Plane> for Plane {
     type Output = Plane;
 
-    fn anti_project_through_origin_onto(self, other: Plane) -> Plane {
+    fn anti_project_via_horizon_onto(self, other: Plane) -> Plane {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<PlaneAtInfinity> for Plane {
-    type Output = PlaneAtInfinity;
+impl AntiProjectViaHorizonOnto<Horizon> for Plane {
+    type Output = Horizon;
 
-    fn anti_project_through_origin_onto(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
+    fn anti_project_via_horizon_onto(self, other: Horizon) -> Horizon {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Motor> for Plane {
+impl AntiProjectViaHorizonOnto<Motor> for Plane {
     type Output = Plane;
 
-    fn anti_project_through_origin_onto(self, other: Motor) -> Plane {
+    fn anti_project_via_horizon_onto(self, other: Motor) -> Plane {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Translator> for Plane {
+impl AntiProjectViaHorizonOnto<Translator> for Plane {
     type Output = Plane;
 
-    fn anti_project_through_origin_onto(self, other: Translator) -> Plane {
+    fn anti_project_via_horizon_onto(self, other: Translator) -> Plane {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Flector> for Plane {
+impl AntiProjectViaHorizonOnto<Flector> for Plane {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: Flector) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<MultiVector> for Plane {
+impl AntiProjectViaHorizonOnto<MultiVector> for Plane {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: MultiVector) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: MultiVector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Point> for PlaneAtOrigin {
+impl AntiProjectViaHorizonOnto<Point> for PlaneAtOrigin {
     type Output = PlaneAtOrigin;
 
-    fn anti_project_through_origin_onto(self, other: Point) -> PlaneAtOrigin {
+    fn anti_project_via_horizon_onto(self, other: Point) -> PlaneAtOrigin {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<PointAtInfinity> for PlaneAtOrigin {
+impl AntiProjectViaHorizonOnto<PointAtInfinity> for PlaneAtOrigin {
     type Output = PlaneAtOrigin;
 
-    fn anti_project_through_origin_onto(self, other: PointAtInfinity) -> PlaneAtOrigin {
+    fn anti_project_via_horizon_onto(self, other: PointAtInfinity) -> PlaneAtOrigin {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Line> for PlaneAtOrigin {
+impl AntiProjectViaHorizonOnto<Line> for PlaneAtOrigin {
     type Output = PlaneAtOrigin;
 
-    fn anti_project_through_origin_onto(self, other: Line) -> PlaneAtOrigin {
+    fn anti_project_via_horizon_onto(self, other: Line) -> PlaneAtOrigin {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<LineAtInfinity> for PlaneAtOrigin {
+impl AntiProjectViaHorizonOnto<LineAtInfinity> for PlaneAtOrigin {
     type Output = PlaneAtOrigin;
 
-    fn anti_project_through_origin_onto(self, other: LineAtInfinity) -> PlaneAtOrigin {
+    fn anti_project_via_horizon_onto(self, other: LineAtInfinity) -> PlaneAtOrigin {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Motor> for PlaneAtOrigin {
+impl AntiProjectViaHorizonOnto<Motor> for PlaneAtOrigin {
     type Output = PlaneAtOrigin;
 
-    fn anti_project_through_origin_onto(self, other: Motor) -> PlaneAtOrigin {
+    fn anti_project_via_horizon_onto(self, other: Motor) -> PlaneAtOrigin {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Translator> for PlaneAtOrigin {
+impl AntiProjectViaHorizonOnto<Translator> for PlaneAtOrigin {
     type Output = PlaneAtOrigin;
 
-    fn anti_project_through_origin_onto(self, other: Translator) -> PlaneAtOrigin {
+    fn anti_project_via_horizon_onto(self, other: Translator) -> PlaneAtOrigin {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Flector> for PlaneAtOrigin {
+impl AntiProjectViaHorizonOnto<Flector> for PlaneAtOrigin {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: Flector) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<MultiVector> for PlaneAtOrigin {
+impl AntiProjectViaHorizonOnto<MultiVector> for PlaneAtOrigin {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: MultiVector) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: MultiVector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Point> for PlaneAtInfinity {
+impl AntiProjectViaHorizonOnto<Point> for Horizon {
     type Output = Plane;
 
-    fn anti_project_through_origin_onto(self, other: Point) -> Plane {
+    fn anti_project_via_horizon_onto(self, other: Point) -> Plane {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<PointAtInfinity> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl AntiProjectViaHorizonOnto<PointAtInfinity> for Horizon {
+    type Output = Horizon;
 
-    fn anti_project_through_origin_onto(self, other: PointAtInfinity) -> PlaneAtInfinity {
+    fn anti_project_via_horizon_onto(self, other: PointAtInfinity) -> Horizon {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Line> for PlaneAtInfinity {
+impl AntiProjectViaHorizonOnto<Line> for Horizon {
     type Output = Plane;
 
-    fn anti_project_through_origin_onto(self, other: Line) -> Plane {
+    fn anti_project_via_horizon_onto(self, other: Line) -> Plane {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<LineAtInfinity> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl AntiProjectViaHorizonOnto<LineAtInfinity> for Horizon {
+    type Output = Horizon;
 
-    fn anti_project_through_origin_onto(self, other: LineAtInfinity) -> PlaneAtInfinity {
+    fn anti_project_via_horizon_onto(self, other: LineAtInfinity) -> Horizon {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Plane> for PlaneAtInfinity {
+impl AntiProjectViaHorizonOnto<Plane> for Horizon {
     type Output = Plane;
 
-    fn anti_project_through_origin_onto(self, other: Plane) -> Plane {
+    fn anti_project_via_horizon_onto(self, other: Plane) -> Plane {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<PlaneAtInfinity> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl AntiProjectViaHorizonOnto<Horizon> for Horizon {
+    type Output = Horizon;
 
-    fn anti_project_through_origin_onto(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
+    fn anti_project_via_horizon_onto(self, other: Horizon) -> Horizon {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Motor> for PlaneAtInfinity {
+impl AntiProjectViaHorizonOnto<Motor> for Horizon {
     type Output = Plane;
 
-    fn anti_project_through_origin_onto(self, other: Motor) -> Plane {
+    fn anti_project_via_horizon_onto(self, other: Motor) -> Plane {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Translator> for PlaneAtInfinity {
-    type Output = PlaneAtInfinity;
+impl AntiProjectViaHorizonOnto<Translator> for Horizon {
+    type Output = Horizon;
 
-    fn anti_project_through_origin_onto(self, other: Translator) -> PlaneAtInfinity {
+    fn anti_project_via_horizon_onto(self, other: Translator) -> Horizon {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Flector> for PlaneAtInfinity {
+impl AntiProjectViaHorizonOnto<Flector> for Horizon {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: Flector) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<MultiVector> for PlaneAtInfinity {
+impl AntiProjectViaHorizonOnto<MultiVector> for Horizon {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: MultiVector) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: MultiVector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Point> for Motor {
+impl AntiProjectViaHorizonOnto<Point> for Motor {
     type Output = Motor;
 
-    fn anti_project_through_origin_onto(self, other: Point) -> Motor {
+    fn anti_project_via_horizon_onto(self, other: Point) -> Motor {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<PointAtInfinity> for Motor {
+impl AntiProjectViaHorizonOnto<PointAtInfinity> for Motor {
     type Output = Motor;
 
-    fn anti_project_through_origin_onto(self, other: PointAtInfinity) -> Motor {
+    fn anti_project_via_horizon_onto(self, other: PointAtInfinity) -> Motor {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Line> for Motor {
+impl AntiProjectViaHorizonOnto<Line> for Motor {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: Line) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: Line) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<LineAtInfinity> for Motor {
+impl AntiProjectViaHorizonOnto<LineAtInfinity> for Motor {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: LineAtInfinity) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: LineAtInfinity) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Plane> for Motor {
+impl AntiProjectViaHorizonOnto<Plane> for Motor {
     type Output = AntiScalar;
 
-    fn anti_project_through_origin_onto(self, other: Plane) -> AntiScalar {
+    fn anti_project_via_horizon_onto(self, other: Plane) -> AntiScalar {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<PlaneAtInfinity> for Motor {
+impl AntiProjectViaHorizonOnto<Horizon> for Motor {
     type Output = AntiScalar;
 
-    fn anti_project_through_origin_onto(self, other: PlaneAtInfinity) -> AntiScalar {
+    fn anti_project_via_horizon_onto(self, other: Horizon) -> AntiScalar {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Motor> for Motor {
+impl AntiProjectViaHorizonOnto<Motor> for Motor {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: Motor) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: Motor) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Translator> for Motor {
+impl AntiProjectViaHorizonOnto<Translator> for Motor {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: Translator) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: Translator) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Flector> for Motor {
+impl AntiProjectViaHorizonOnto<Flector> for Motor {
     type Output = Motor;
 
-    fn anti_project_through_origin_onto(self, other: Flector) -> Motor {
+    fn anti_project_via_horizon_onto(self, other: Flector) -> Motor {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<MultiVector> for Motor {
+impl AntiProjectViaHorizonOnto<MultiVector> for Motor {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: MultiVector) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: MultiVector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Point> for Rotor {
+impl AntiProjectViaHorizonOnto<Point> for Rotor {
     type Output = Motor;
 
-    fn anti_project_through_origin_onto(self, other: Point) -> Motor {
+    fn anti_project_via_horizon_onto(self, other: Point) -> Motor {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<PointAtInfinity> for Rotor {
+impl AntiProjectViaHorizonOnto<PointAtInfinity> for Rotor {
     type Output = Motor;
 
-    fn anti_project_through_origin_onto(self, other: PointAtInfinity) -> Motor {
+    fn anti_project_via_horizon_onto(self, other: PointAtInfinity) -> Motor {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Line> for Rotor {
+impl AntiProjectViaHorizonOnto<Line> for Rotor {
     type Output = AntiScalar;
 
-    fn anti_project_through_origin_onto(self, other: Line) -> AntiScalar {
+    fn anti_project_via_horizon_onto(self, other: Line) -> AntiScalar {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<LineAtInfinity> for Rotor {
+impl AntiProjectViaHorizonOnto<LineAtInfinity> for Rotor {
     type Output = AntiScalar;
 
-    fn anti_project_through_origin_onto(self, other: LineAtInfinity) -> AntiScalar {
+    fn anti_project_via_horizon_onto(self, other: LineAtInfinity) -> AntiScalar {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Plane> for Rotor {
+impl AntiProjectViaHorizonOnto<Plane> for Rotor {
     type Output = AntiScalar;
 
-    fn anti_project_through_origin_onto(self, other: Plane) -> AntiScalar {
+    fn anti_project_via_horizon_onto(self, other: Plane) -> AntiScalar {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<PlaneAtInfinity> for Rotor {
+impl AntiProjectViaHorizonOnto<Horizon> for Rotor {
     type Output = AntiScalar;
 
-    fn anti_project_through_origin_onto(self, other: PlaneAtInfinity) -> AntiScalar {
+    fn anti_project_via_horizon_onto(self, other: Horizon) -> AntiScalar {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Motor> for Rotor {
+impl AntiProjectViaHorizonOnto<Motor> for Rotor {
     type Output = AntiScalar;
 
-    fn anti_project_through_origin_onto(self, other: Motor) -> AntiScalar {
+    fn anti_project_via_horizon_onto(self, other: Motor) -> AntiScalar {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Translator> for Rotor {
+impl AntiProjectViaHorizonOnto<Translator> for Rotor {
     type Output = AntiScalar;
 
-    fn anti_project_through_origin_onto(self, other: Translator) -> AntiScalar {
+    fn anti_project_via_horizon_onto(self, other: Translator) -> AntiScalar {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Flector> for Rotor {
+impl AntiProjectViaHorizonOnto<Flector> for Rotor {
     type Output = Motor;
 
-    fn anti_project_through_origin_onto(self, other: Flector) -> Motor {
+    fn anti_project_via_horizon_onto(self, other: Flector) -> Motor {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<MultiVector> for Rotor {
+impl AntiProjectViaHorizonOnto<MultiVector> for Rotor {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: MultiVector) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: MultiVector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Point> for Translator {
+impl AntiProjectViaHorizonOnto<Point> for Translator {
     type Output = Motor;
 
-    fn anti_project_through_origin_onto(self, other: Point) -> Motor {
+    fn anti_project_via_horizon_onto(self, other: Point) -> Motor {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<PointAtInfinity> for Translator {
+impl AntiProjectViaHorizonOnto<PointAtInfinity> for Translator {
     type Output = Motor;
 
-    fn anti_project_through_origin_onto(self, other: PointAtInfinity) -> Motor {
+    fn anti_project_via_horizon_onto(self, other: PointAtInfinity) -> Motor {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Line> for Translator {
+impl AntiProjectViaHorizonOnto<Line> for Translator {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: Line) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: Line) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<LineAtInfinity> for Translator {
+impl AntiProjectViaHorizonOnto<LineAtInfinity> for Translator {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: LineAtInfinity) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: LineAtInfinity) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Plane> for Translator {
+impl AntiProjectViaHorizonOnto<Plane> for Translator {
     type Output = AntiScalar;
 
-    fn anti_project_through_origin_onto(self, other: Plane) -> AntiScalar {
+    fn anti_project_via_horizon_onto(self, other: Plane) -> AntiScalar {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<PlaneAtInfinity> for Translator {
+impl AntiProjectViaHorizonOnto<Horizon> for Translator {
     type Output = AntiScalar;
 
-    fn anti_project_through_origin_onto(self, other: PlaneAtInfinity) -> AntiScalar {
+    fn anti_project_via_horizon_onto(self, other: Horizon) -> AntiScalar {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Motor> for Translator {
+impl AntiProjectViaHorizonOnto<Motor> for Translator {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: Motor) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: Motor) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Translator> for Translator {
+impl AntiProjectViaHorizonOnto<Translator> for Translator {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: Translator) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: Translator) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Flector> for Translator {
+impl AntiProjectViaHorizonOnto<Flector> for Translator {
     type Output = Motor;
 
-    fn anti_project_through_origin_onto(self, other: Flector) -> Motor {
+    fn anti_project_via_horizon_onto(self, other: Flector) -> Motor {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<MultiVector> for Translator {
+impl AntiProjectViaHorizonOnto<MultiVector> for Translator {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: MultiVector) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: MultiVector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Point> for Flector {
+impl AntiProjectViaHorizonOnto<Point> for Flector {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: Point) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: Point) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<PointAtInfinity> for Flector {
+impl AntiProjectViaHorizonOnto<PointAtInfinity> for Flector {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: PointAtInfinity) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: PointAtInfinity) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Line> for Flector {
+impl AntiProjectViaHorizonOnto<Line> for Flector {
     type Output = Plane;
 
-    fn anti_project_through_origin_onto(self, other: Line) -> Plane {
+    fn anti_project_via_horizon_onto(self, other: Line) -> Plane {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<LineAtInfinity> for Flector {
+impl AntiProjectViaHorizonOnto<LineAtInfinity> for Flector {
     type Output = Plane;
 
-    fn anti_project_through_origin_onto(self, other: LineAtInfinity) -> Plane {
+    fn anti_project_via_horizon_onto(self, other: LineAtInfinity) -> Plane {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Plane> for Flector {
+impl AntiProjectViaHorizonOnto<Plane> for Flector {
     type Output = Plane;
 
-    fn anti_project_through_origin_onto(self, other: Plane) -> Plane {
+    fn anti_project_via_horizon_onto(self, other: Plane) -> Plane {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<PlaneAtInfinity> for Flector {
-    type Output = PlaneAtInfinity;
+impl AntiProjectViaHorizonOnto<Horizon> for Flector {
+    type Output = Horizon;
 
-    fn anti_project_through_origin_onto(self, other: PlaneAtInfinity) -> PlaneAtInfinity {
+    fn anti_project_via_horizon_onto(self, other: Horizon) -> Horizon {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Motor> for Flector {
+impl AntiProjectViaHorizonOnto<Motor> for Flector {
     type Output = Plane;
 
-    fn anti_project_through_origin_onto(self, other: Motor) -> Plane {
+    fn anti_project_via_horizon_onto(self, other: Motor) -> Plane {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Translator> for Flector {
+impl AntiProjectViaHorizonOnto<Translator> for Flector {
     type Output = Plane;
 
-    fn anti_project_through_origin_onto(self, other: Translator) -> Plane {
+    fn anti_project_via_horizon_onto(self, other: Translator) -> Plane {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Flector> for Flector {
+impl AntiProjectViaHorizonOnto<Flector> for Flector {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: Flector) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<MultiVector> for Flector {
+impl AntiProjectViaHorizonOnto<MultiVector> for Flector {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: MultiVector) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: MultiVector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Point> for MultiVector {
+impl AntiProjectViaHorizonOnto<Point> for MultiVector {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: Point) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: Point) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<PointAtInfinity> for MultiVector {
+impl AntiProjectViaHorizonOnto<PointAtInfinity> for MultiVector {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: PointAtInfinity) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: PointAtInfinity) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Line> for MultiVector {
+impl AntiProjectViaHorizonOnto<Line> for MultiVector {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: Line) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: Line) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<LineAtInfinity> for MultiVector {
+impl AntiProjectViaHorizonOnto<LineAtInfinity> for MultiVector {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: LineAtInfinity) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: LineAtInfinity) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Plane> for MultiVector {
+impl AntiProjectViaHorizonOnto<Plane> for MultiVector {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: Plane) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: Plane) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<PlaneAtInfinity> for MultiVector {
+impl AntiProjectViaHorizonOnto<Horizon> for MultiVector {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: PlaneAtInfinity) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: Horizon) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Motor> for MultiVector {
+impl AntiProjectViaHorizonOnto<Motor> for MultiVector {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: Motor) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: Motor) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Translator> for MultiVector {
+impl AntiProjectViaHorizonOnto<Translator> for MultiVector {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: Translator) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: Translator) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<Flector> for MultiVector {
+impl AntiProjectViaHorizonOnto<Flector> for MultiVector {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: Flector) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectThroughOriginOnto<MultiVector> for MultiVector {
+impl AntiProjectViaHorizonOnto<MultiVector> for MultiVector {
     type Output = MultiVector;
 
-    fn anti_project_through_origin_onto(self, other: MultiVector) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: MultiVector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -38015,17 +38015,17 @@ impl CosineAngle<PlaneAtOrigin> for PlaneAtOrigin {
 }
 
 impl Attitude for AntiScalar {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn attitude(self) -> PlaneAtInfinity {
+    fn attitude(self) -> Horizon {
         self.anti_wedge(Origin::one().right_complement())
     }
 }
 
 impl Attitude for Magnitude {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn attitude(self) -> PlaneAtInfinity {
+    fn attitude(self) -> Horizon {
         self.anti_wedge(Origin::one().right_complement())
     }
 }
@@ -38095,9 +38095,9 @@ impl Attitude for Rotor {
 }
 
 impl Attitude for Translator {
-    type Output = PlaneAtInfinity;
+    type Output = Horizon;
 
-    fn attitude(self) -> PlaneAtInfinity {
+    fn attitude(self) -> Horizon {
         self.anti_wedge(Origin::one().right_complement())
     }
 }
@@ -38590,7 +38590,7 @@ impl Distance<MultiVector> for PlaneAtOrigin {
     }
 }
 
-impl Distance<Flector> for PlaneAtInfinity {
+impl Distance<Flector> for Horizon {
     type Output = Magnitude;
 
     fn distance(self, other: Flector) -> Magnitude {
@@ -38598,7 +38598,7 @@ impl Distance<Flector> for PlaneAtInfinity {
     }
 }
 
-impl Distance<MultiVector> for PlaneAtInfinity {
+impl Distance<MultiVector> for Horizon {
     type Output = Magnitude;
 
     fn distance(self, other: MultiVector) -> Magnitude {

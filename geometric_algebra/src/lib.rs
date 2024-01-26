@@ -551,17 +551,18 @@ pub trait AntiProjectOrthogonallyOnto<T> {
 }
 
 /// Central (to origin) Projection
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Projections
 /// https://projectivegeometricalgebra.org/projgeomalg.pdf
-pub trait ProjectThroughOriginOnto<T> {
+pub trait ProjectViaOriginOnto<T> {
     type Output;
-    fn project_through_origin_onto(self, other: T) -> Self::Output;
+    fn project_via_origin_onto(self, other: T) -> Self::Output;
 }
 
-/// Central (to origin) AntiProjection
-/// Not documented on the wiki yet, but it could be a thing, right?
-pub trait AntiProjectThroughOriginOnto<T> {
+/// Outward (to horizon) AntiProjection
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Projections
+pub trait AntiProjectViaHorizonOnto<T> {
     type Output;
-    fn anti_project_through_origin_onto(self, other: T) -> Self::Output;
+    fn anti_project_via_horizon_onto(self, other: T) -> Self::Output;
 }
 
 /// The cosine of the angle between two objects.
