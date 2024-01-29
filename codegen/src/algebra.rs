@@ -156,7 +156,7 @@ impl Product {
         }
     }
 
-    pub fn products<GA: GeometricAlgebraTrait>(algebra: &GA) -> Vec<(&'static str, Self)> {
+    pub fn products<GA: GeometricAlgebraTrait>(algebra: &GA) -> Vec<(&'static str, Self, String)> {
         let basis = algebra.basis();
         let product = Self::new(&basis, &basis, algebra);
 
@@ -179,21 +179,47 @@ impl Product {
 
         // https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_products
 
+        let synonyms = Product::synonyms(&dialect.geometric_product);
+        let docs = format!("
+            Geometric Product
+            {synonyms}
+            https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_products
+        ");
         for name in &dialect.geometric_product {
-            products.push((*name, product.clone()))
+            products.push((*name, product.clone(), docs.clone()))
         }
+
+        let synonyms = Product::synonyms(&dialect.geometric_anti_product);
+        let docs = format!("
+            Geometric Anti-Product
+            {synonyms}
+            https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_products
+        ");
         for name in &dialect.geometric_anti_product {
-            products.push((*name, product.clone().dual(algebra)))
+            products.push((*name, product.clone().dual(algebra), docs.clone()))
         }
 
 
         // https://rigidgeometricalgebra.org/wiki/index.php?title=Exterior_products
 
+
+        let synonyms = Product::synonyms(&dialect.exterior_product);
+        let docs = format!("
+            Exterior Product
+            {synonyms}
+            https://rigidgeometricalgebra.org/wiki/index.php?title=Exterior_products
+        ");
         for name in &dialect.exterior_product {
-            products.push((*name, product.projected(wedge_like)))
+            products.push((*name, product.projected(wedge_like), docs.clone()))
         }
+        let synonyms = Product::synonyms(&dialect.exterior_anti_product);
+        let docs = format!("
+            Geometric Anti-Product
+            {synonyms}
+            https://rigidgeometricalgebra.org/wiki/index.php?title=Exterior_products
+        ");
         for name in &dialect.exterior_anti_product {
-            products.push((*name, product.projected(wedge_like).dual(algebra)))
+            products.push((*name, product.projected(wedge_like).dual(algebra), docs.clone()))
         }
 
 
@@ -236,30 +262,73 @@ impl Product {
         //  - and some negative signs might be on or off incorrectly (left_anti_contraction MultiVectorGroups g1)
         //  - the strange ignoring of e4
 
+        // TODO interior products have totally changed, ard are now broken down as contractions/expansions. SO redo all these.
+
+        let synonyms = Product::synonyms(&dialect.left_interior_product);
+        let docs = format!("
+            Left Interior Product
+            {synonyms}
+            https://rigidgeometricalgebra.org/wiki/index.php?title=Interior_products
+        ");
         for name in &dialect.left_interior_product {
-            products.push((*name, product.projected(product_and_a_is_b)))
+            products.push((*name, product.projected(product_and_a_is_b), docs.clone()))
         }
+        let synonyms = Product::synonyms(&dialect.left_interior_anti_product);
+        let docs = format!("
+            Left Interior Anti-Product
+            {synonyms}
+            https://rigidgeometricalgebra.org/wiki/index.php?title=Interior_products
+        ");
         for name in &dialect.left_interior_anti_product {
-            products.push((*name, product.projected(product_and_a_is_b).dual(algebra)))
+            products.push((*name, product.projected(product_and_a_is_b).dual(algebra), docs.clone()))
         }
+        let synonyms = Product::synonyms(&dialect.right_interior_product);
+        let docs = format!("
+            Right Interior Product
+            {synonyms}
+            https://rigidgeometricalgebra.org/wiki/index.php?title=Interior_products
+        ");
         for name in &dialect.right_interior_product {
-            products.push((*name, product.projected(product_and_b_is_a)))
+            products.push((*name, product.projected(product_and_b_is_a), docs.clone()))
         }
+        let synonyms = Product::synonyms(&dialect.right_interior_anti_product);
+        let docs = format!("
+            Right Interior Anti-Product
+            {synonyms}
+            https://rigidgeometricalgebra.org/wiki/index.php?title=Interior_products
+        ");
         for name in &dialect.right_interior_anti_product {
-            products.push((*name, product.projected(product_and_b_is_a).dual(algebra)))
+            products.push((*name, product.projected(product_and_b_is_a).dual(algebra), docs.clone()))
         }
 
 
         // https://rigidgeometricalgebra.org/wiki/index.php?title=Dot_products
 
+        let synonyms = Product::synonyms(&dialect.dot_product);
+        let docs = format!("
+            Dot Product
+            {synonyms}
+            https://rigidgeometricalgebra.org/wiki/index.php?title=Dot_products
+        ");
         for name in &dialect.dot_product {
-            products.push((*name, product.projected(scalar_result_only)))
+            products.push((*name, product.projected(scalar_result_only), docs.clone()))
         }
+        let synonyms = Product::synonyms(&dialect.anti_dot_product);
+        let docs = format!("
+            Anti-Dot Product
+            {synonyms}
+            https://rigidgeometricalgebra.org/wiki/index.php?title=Dot_products
+        ");
         for name in &dialect.anti_dot_product {
-            products.push((*name, product.projected(scalar_result_only).dual(algebra)))
+            products.push((*name, product.projected(scalar_result_only).dual(algebra), docs.clone()))
         }
 
         products
+    }
+
+    fn synonyms(names: &Vec<&'static str>) -> String {
+        let synonyms: String = names.iter().map(|it| it.to_string()).intersperse(", ".to_string()).collect();
+        format!("Synonyms included: {synonyms}")
     }
 }
 

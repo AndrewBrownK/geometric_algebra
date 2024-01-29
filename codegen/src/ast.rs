@@ -70,7 +70,7 @@ impl<'a> Parameter<'a> {
 pub enum AstNode<'a> {
     None,
     Preamble,
-    TraitDefinition { name: &'static str, params: usize, docs: &'static str },
+    TraitDefinition { name: String, params: usize, docs: String },
     ClassDefinition {
         class: &'a MultiVectorClass,
     },

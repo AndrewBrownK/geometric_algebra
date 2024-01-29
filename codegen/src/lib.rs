@@ -1,6 +1,7 @@
 #![feature(try_blocks)]
+#![feature(iter_intersperse)]
 
-use std::collections::{BTreeMap, HashMap};
+use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::io::{Read, Write};
 use std::path::PathBuf;
 
@@ -28,6 +29,7 @@ mod compile;
 pub mod emit;
 mod glsl;
 mod rust;
+mod wgsl;
 
 pub struct AlgebraDescriptor {
     pub algebra_name: String,
@@ -218,21 +220,13 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     }
 
     /// Step 1: These items are somewhat universal across geometric algebras
-    pub fn preamble_and_universal_traits<'s, 'e>(&'s mut self, registry: &'r MultiVectorClassRegistry, emitter: &'e mut Emitter<std::fs::File>) -> std::io::Result<()> {
-        // Preamble
-        emitter.emit(&AstNode::Preamble)?;
-
-        // Class Definitions
-        for class in registry.classes.iter() {
-            emitter.emit(&AstNode::ClassDefinition { class })?;
-        }
+    pub fn preamble_and_universal_traits<'s>(&'s mut self, registry: &'r MultiVectorClassRegistry) -> std::io::Result<()> {
 
         // Constants
         for param_a in registry.single_parameters() {
             let class_a = param_a.multi_vector_class();
             for name in &["Zero", "One"] {
                 let ast_node = class_a.constant(name);
-                emitter.emit(&ast_node).unwrap();
                 if ast_node != AstNode::None {
                     self.trait_impls.add_class_impl(name, param_a.multi_vector_class(), ast_node);
                 }
@@ -240,20 +234,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         }
 
         // Uniform Grades
-        emitter.emit(&AstNode::TraitDefinition {
-            name: "Grade",
-            params: 1,
-            docs: "\
-                \nGrade\
-                \nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Grade_and_antigrade",
-        }).unwrap();
-        emitter.emit(&AstNode::TraitDefinition {
-            name: "AntiGrade",
-            params: 1,
-            docs: "\
-                \nAnti-Grade\
-                \nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Grade_and_antigrade",
-        }).unwrap();
         for param_a in registry.single_parameters() {
             let class_a = param_a.multi_vector_class();
 
@@ -264,31 +244,18 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             if let Some((grade, true)) = grade_unanimity {
                 let anti_grade = (self.algebra.anti_scalar_element().grade() as isize - grade as isize).unsigned_abs();
                 let grade_impl = MultiVectorClass::derive_grade("Grade", &param_a, grade);
-                emitter.emit(&grade_impl).unwrap();
                 self.trait_impls.add_class_impl("Grade", param_a.multi_vector_class(), grade_impl);
 
                 let anti_grade_impl = MultiVectorClass::derive_grade("AntiGrade", &param_a, anti_grade);
-                emitter.emit(&anti_grade_impl).unwrap();
                 self.trait_impls.add_class_impl("AntiGrade", param_a.multi_vector_class(), anti_grade_impl);
             }
         }
 
         // Involutions
         let involutions = Involution::involutions(&self.algebra);
-        for (name, _, docs) in involutions.iter() {
-            if *name == "Neg" {
-                continue
-            }
-            emitter.emit(&AstNode::TraitDefinition {
-                name,
-                params: 1,
-                docs,
-            }).unwrap()
-        }
         for param_a in registry.single_parameters() {
             for (name, involution, _) in involutions.iter() {
                 let ast_node = MultiVectorClass::involution(name, involution, &param_a, registry, false);
-                emitter.emit(&ast_node).unwrap();
                 if ast_node != AstNode::None {
                     self.trait_impls.add_single_impl(name, param_a.clone(), ast_node);
                 }
@@ -337,7 +304,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
             let name = "Sqrt";
             let sqrt = single_expression_single_trait_impl(name, &param_a, construct);
-            emitter.emit(&sqrt).unwrap();
             self.trait_impls.add_single_impl(name, param_a, sqrt);
         }
 
@@ -348,7 +314,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let class_b = param_b.multi_vector_class();
             if class_a != class_b {
                 let ast_node = MultiVectorClass::involution("Into", &Involution::projection(param_b.multi_vector_class()), &param_a, registry, true);
-                emitter.emit(&ast_node).unwrap();
                 if ast_node != AstNode::None {
                     self.trait_impls.add_pair_impl("Into", param_a.clone(), param_b.clone(), ast_node);
                 }
@@ -359,7 +324,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         for (param_a, param_b) in registry.pair_parameters() {
             for name in &["Add", "Sub"] {
                 let ast_node = MultiVectorClass::element_wise(*name, &param_a, &param_b, registry);
-                emitter.emit(&ast_node).unwrap();
                 if ast_node != AstNode::None {
                     self.trait_impls.add_pair_impl(name, param_a.clone(), param_b.clone(), ast_node);
                 }
@@ -373,7 +337,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             }
             for name in &["Mul", "Div"] {
                 let ast_node = MultiVectorClass::element_wise(*name, &param_a, &param_b, registry);
-                emitter.emit(&ast_node).unwrap();
                 if ast_node != AstNode::None {
                     self.trait_impls.add_pair_impl(name, param_a.clone(), param_b.clone(), ast_node);
                 }
@@ -383,9 +346,8 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         // Products from Geometric Algebra
         let products = Product::products(&self.algebra);
         for (param_a, param_b) in registry.pair_parameters() {
-            for (name, product) in products.iter() {
+            for (name, product, _) in products.iter() {
                 let ast_node = MultiVectorClass::product(name, product, &param_a, &param_b, registry);
-                emitter.emit(&ast_node).unwrap();
                 if ast_node != AstNode::None {
                     self.trait_impls.add_pair_impl(name, param_a.clone(), param_b.clone(), ast_node);
                 }
@@ -397,7 +359,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     }
 
     /// Step 2: Create some basic norms
-    pub fn basic_norms<'s, 'e>(&'s mut self, registry: &'r MultiVectorClassRegistry, emitter: &'e mut Emitter<std::fs::File>) {
+    pub fn basic_norms<'s>(&'s mut self, registry: &'r MultiVectorClassRegistry) {
 
         for param_a in registry.single_parameters() {
             let name = "BulkNormSquared";
@@ -405,7 +367,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let dot = self.algebra.dialect().dot_product.first()?;
                 let dot = self.trait_impls.get_pair_invocation(dot, variable(&param_a), variable(&param_a))?;
                 let bulk_norm = single_expression_single_trait_impl(name, &param_a, dot);
-                emitter.emit(&bulk_norm).unwrap();
                 self.trait_impls.add_single_impl(name, param_a.clone(), bulk_norm);
             };
         }
@@ -416,7 +377,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let dot = self.algebra.dialect().anti_dot_product.first()?;
                 let dot = self.trait_impls.get_pair_invocation(dot, variable(&param_a), variable(&param_a))?;
                 let bulk_norm = single_expression_single_trait_impl(name, &param_a, dot);
-                emitter.emit(&bulk_norm).unwrap();
                 self.trait_impls.add_single_impl(name, param_a.clone(), bulk_norm);
             };
         }
@@ -428,7 +388,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let dot = self.trait_impls.get_pair_invocation(dot, variable(&param_a), variable(&param_a))?;
                 let m = self.trait_impls.get_single_invocation("Sqrt", dot)?;
                 let bulk_norm = single_expression_single_trait_impl(name, &param_a, m);
-                emitter.emit(&bulk_norm).unwrap();
                 self.trait_impls.add_single_impl(name, param_a.clone(), bulk_norm);
             };
         }
@@ -440,7 +399,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let dot = self.trait_impls.get_pair_invocation(dot, variable(&param_a), variable(&param_a))?;
                 let m = self.trait_impls.get_single_invocation("Sqrt", dot)?;
                 let bulk_norm = single_expression_single_trait_impl(name, &param_a, m);
-                emitter.emit(&bulk_norm).unwrap();
                 self.trait_impls.add_single_impl(name, param_a.clone(), bulk_norm);
             };
         }
@@ -452,7 +410,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let wn = self.trait_impls.get_single_invocation("WeightNorm", variable(&param_a))?;
                 let add = self.trait_impls.get_pair_invocation("Add", bn, wn)?;
                 let gn = single_expression_single_trait_impl(name, &param_a, add);
-                emitter.emit(&gn).unwrap();
                 self.trait_impls.add_single_impl(name, param_a.clone(), gn);
             };
         }
@@ -462,7 +419,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     /// These items require some special insight per Geometric Algebra, for example if there are
     /// multiple/special projective dimensions with different meanings.
     pub fn fancy_norms(
-        &mut self, prefix: &'static str, projective_basis: BasisElement, registry: &'r MultiVectorClassRegistry, emitter: &mut Emitter<std::fs::File>
+        &mut self, prefix: &'static str, projective_basis: BasisElement, registry: &'r MultiVectorClassRegistry
     ) {
         // TODO this is all kinds of fucked currently. Not sure how to generate norms generically
         //  for both RGA and CGA. I could get all of RGA and the flat objects of CGA by doing
@@ -475,62 +432,65 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     }
 
     /// Step 4: Create some more stuff that depends on norms
-    pub fn post_norm_universal_stuff<'s, 'e>(&'s mut self, registry: &'r MultiVectorClassRegistry, emitter: &'e mut Emitter<std::fs::File>) {
+    pub fn post_norm_universal_stuff<'s>(&'s mut self, registry: &'r MultiVectorClassRegistry) {
 
+        // TODO tentatively not excluding Scale. Need to decide to keep after all, or fully delete
         // Scale
-        for (param_a, param_b) in registry.pair_parameters() {
-            let name = "Scale";
-            if param_b.multi_vector_class().grouped_basis != vec![vec![self.algebra.scalar_element()]] {
-                continue
-            }
-            let _: Option<()> = try {
-                let gp = self.algebra.dialect().geometric_product.first()?;
+        // for (param_a, param_b) in registry.pair_parameters() {
+        //     let name = "Scale";
+        //     if param_b.multi_vector_class().grouped_basis != vec![vec![self.algebra.scalar_element()]] {
+        //         continue
+        //     }
+        //     let _: Option<()> = try {
+        //         let gp = self.algebra.dialect().geometric_product.first()?;
+        //
+        //         // These commented lines will implement "Scale" using Scalar
+        //         // let gp = self.trait_impls.get_pair_invocation(gp, variable(&param_a), variable(&param_b))?;
+        //         // let scale = single_expression_pair_trait_impl(name, &param_a, &param_b, gp);
+        //
+        //         // The following implementation will implement "Scale" using SimdVector(1) instead of a Scalar
+        //         let gp = self.trait_impls.get_pair_impl(gp, &param_a, &param_b)?;
+        //         let scale = MultiVectorClass::derive_scale(name, gp, &param_a, &param_b);
+        //
+        //         emitter.emit(&scale).unwrap();
+        //         self.trait_impls.add_pair_impl(name, param_a, param_b, scale);
+        //     };
+        // }
 
-                // These commented lines will implement "Scale" using Scalar
-                // let gp = self.trait_impls.get_pair_invocation(gp, variable(&param_a), variable(&param_b))?;
-                // let scale = single_expression_pair_trait_impl(name, &param_a, &param_b, gp);
-
-                // The following implementation will implement "Scale" using SimdVector(1) instead of a Scalar
-                let gp = self.trait_impls.get_pair_impl(gp, &param_a, &param_b)?;
-                let scale = MultiVectorClass::derive_scale(name, gp, &param_a, &param_b);
-
-                emitter.emit(&scale).unwrap();
-                self.trait_impls.add_pair_impl(name, param_a, param_b, scale);
-            };
-        }
-
+        // TODO not sure the use of Signum yet. Either keep, or fully delete
         // Signum
-        for (param_a, param_b) in registry.pair_parameters() {
-            let name = "Signum";
-            if param_b.multi_vector_class().grouped_basis != vec![vec![self.algebra.scalar_element()]] {
-                continue
-            }
-            let _: Option<()> = try {
-                let gp = self.algebra.dialect().geometric_product.first()?;
-                let gp = self.trait_impls.get_pair_impl(gp, &param_a, &param_b)?;
-                let magnitude = self.trait_impls.get_single_impl("Magnitude", &param_a)?;
-                let signum = MultiVectorClass::derive_signum("Signum", gp, magnitude, &param_a);
+        // for (param_a, param_b) in registry.pair_parameters() {
+        //     let name = "Signum";
+        //     if param_b.multi_vector_class().grouped_basis != vec![vec![self.algebra.scalar_element()]] {
+        //         continue
+        //     }
+        //     let _: Option<()> = try {
+        //         let gp = self.algebra.dialect().geometric_product.first()?;
+        //         let gp = self.trait_impls.get_pair_impl(gp, &param_a, &param_b)?;
+        //         let magnitude = self.trait_impls.get_single_impl("Magnitude", &param_a)?;
+        //         let signum = MultiVectorClass::derive_signum("Signum", gp, magnitude, &param_a);
+        //
+        //         emitter.emit(&signum).unwrap();
+        //         self.trait_impls.add_pair_impl(name, param_a, param_b, signum);
+        //     };
+        // }
 
-                emitter.emit(&signum).unwrap();
-                self.trait_impls.add_pair_impl(name, param_a, param_b, signum);
-            };
-        }
-
+        // TODO not sure the use of Inverse yet. Either keep, or fully delete
         // Inverse
-        for (param_a, param_b) in registry.pair_parameters() {
-            if param_b.multi_vector_class().grouped_basis != vec![vec![self.algebra.scalar_element()]] {
-                continue;
-            }
-            let _: Option<()> = try {
-                let gp = self.algebra.dialect().geometric_product.first()?;
-                let gp = self.trait_impls.get_pair_impl(gp, &param_a, &param_b)?;
-                let squared_magnitude = self.trait_impls.get_single_impl("SquaredMagnitude", &param_a)?;
-                let reversal = self.trait_impls.get_single_impl("Reversal", &param_a)?;
-                let inverse = MultiVectorClass::derive_inverse("Inverse", gp, squared_magnitude, reversal, &param_a);
-                emitter.emit(&inverse).unwrap();
-                self.trait_impls.add_single_impl("Inverse", param_a.clone(), inverse);
-            };
-        }
+        // for (param_a, param_b) in registry.pair_parameters() {
+        //     if param_b.multi_vector_class().grouped_basis != vec![vec![self.algebra.scalar_element()]] {
+        //         continue;
+        //     }
+        //     let _: Option<()> = try {
+        //         let gp = self.algebra.dialect().geometric_product.first()?;
+        //         let gp = self.trait_impls.get_pair_impl(gp, &param_a, &param_b)?;
+        //         let squared_magnitude = self.trait_impls.get_single_impl("SquaredMagnitude", &param_a)?;
+        //         let reversal = self.trait_impls.get_single_impl("Reversal", &param_a)?;
+        //         let inverse = MultiVectorClass::derive_inverse("Inverse", gp, squared_magnitude, reversal, &param_a);
+        //         emitter.emit(&inverse).unwrap();
+        //         self.trait_impls.add_single_impl("Inverse", param_a.clone(), inverse);
+        //     };
+        // }
 
         // Unitize
         for (param_a, param_b) in registry.pair_parameters() {
@@ -543,46 +503,48 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let gp = self.trait_impls.get_pair_impl(gp, &param_a, &param_b)?;
                 let weight_norm = self.trait_impls.get_single_impl("WeightNorm", &param_a)?;
                 let unitize = MultiVectorClass::derive_unitize(name, gp, weight_norm, &param_a, &param_b);
-                emitter.emit(&unitize).unwrap();
                 self.trait_impls.add_single_impl(name, param_a.clone(), unitize);
             };
         }
 
+        // TODO Powi is a whole situation, figure it out
         // Powi
-        for param_a in registry.single_parameters() {
-            let name = "Powi";
-            let _: Option<()> = try {
-                let gp = self.algebra.dialect().geometric_product.first()?;
-                let (gp, gp_r) = self.trait_impls.get_pair_impl_and_result(gp, &param_a, &param_a)?;
-                if gp_r.multi_vector_class() != param_a.multi_vector_class() {
-                    continue
-                }
-                let constant_one = self.trait_impls.get_class_impl("One", param_a.multi_vector_class())?;
-                // TODo requiring inverse is causing us to get no Powi for Scalar
-                let inverse = self.trait_impls.get_single_impl("Inverse", &param_a)?;
-                let exponent = Parameter {
-                    name: "exponent",
-                    data_type: DataType::Integer,
-                };
-                let power_of_integer = MultiVectorClass::derive_power_of_integer(
-                    name, gp, constant_one, inverse, &param_a, &exponent,
-                );
-                emitter.emit(&power_of_integer).unwrap();
-                self.trait_impls.add_pair_impl(name, param_a, exponent, power_of_integer);
-            };
-        }
+        // for param_a in registry.single_parameters() {
+        //     let name = "Powi";
+        //     let _: Option<()> = try {
+        //         let gp = self.algebra.dialect().geometric_product.first()?;
+        //         let (gp, gp_r) = self.trait_impls.get_pair_impl_and_result(gp, &param_a, &param_a)?;
+        //         if gp_r.multi_vector_class() != param_a.multi_vector_class() {
+        //             continue
+        //         }
+        //         let constant_one = self.trait_impls.get_class_impl("One", param_a.multi_vector_class())?;
+        //         // TODo requiring inverse is causing us to get no Powi for Scalar
+        //         let inverse = self.trait_impls.get_single_impl("Inverse", &param_a)?;
+        //         let exponent = Parameter {
+        //             name: "exponent",
+        //             data_type: DataType::Integer,
+        //         };
+        //         let power_of_integer = MultiVectorClass::derive_power_of_integer(
+        //             name, gp, constant_one, inverse, &param_a, &exponent,
+        //         );
+        //         emitter.emit(&power_of_integer).unwrap();
+        //         self.trait_impls.add_pair_impl(name, param_a, exponent, power_of_integer);
+        //     };
+        // }
 
-        for (param_a, param_b) in registry.pair_parameters() {
-            let name = "GeometricQuotient";
-            let _: Option<()> = try {
-                let gp = self.algebra.dialect().geometric_product.first()?;
-                let gp = self.trait_impls.get_pair_impl(gp, &param_a, &param_b)?;
-                let inverse = self.trait_impls.get_single_impl("Inverse", &param_b)?;
-                let division = MultiVectorClass::derive_division(name, gp, inverse, &param_a, &param_b);
-                emitter.emit(&division).unwrap();
-                self.trait_impls.add_pair_impl(name, param_a, param_b, division);
-            };
-        }
+
+        // TODO figure out the situation with GeometricQuotient
+        // for (param_a, param_b) in registry.pair_parameters() {
+        //     let name = "GeometricQuotient";
+        //     let _: Option<()> = try {
+        //         let gp = self.algebra.dialect().geometric_product.first()?;
+        //         let gp = self.trait_impls.get_pair_impl(gp, &param_a, &param_b)?;
+        //         let inverse = self.trait_impls.get_single_impl("Inverse", &param_b)?;
+        //         let division = MultiVectorClass::derive_division(name, gp, inverse, &param_a, &param_b);
+        //         emitter.emit(&division).unwrap();
+        //         self.trait_impls.add_pair_impl(name, param_a, param_b, division);
+        //     };
+        // }
 
         // for (param_a, param_b) in registry.pair_parameters() {
         //     let _: Option<()> = try {
@@ -609,7 +571,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let sandwich = MultiVectorClass::derive_sandwich_product(
                     "Sandwich", gp, gp2, reversal, into, &param_a, &param_b
                 );
-                emitter.emit(&sandwich).unwrap();
                 self.trait_impls.add_pair_impl("Sandwich", param_a, param_b, sandwich);
             };
         }
@@ -627,7 +588,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let unitize = self.trait_impls.get_single_invocation("Unitize", variable(&param_a))?;
                 let sandwich = self.trait_impls.get_pair_invocation("Sandwich", unitize, variable(&param_b))?;
                 let i = single_expression_pair_trait_impl(name, &param_a, &param_b, sandwich);
-                emitter.emit(&i).unwrap();
                 self.trait_impls.add_pair_impl(name, param_a, param_b, i);
             };
         }
@@ -645,7 +605,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let unitize = self.trait_impls.get_single_invocation("Unitize", variable(&param_a))?;
                 let sandwich = self.trait_impls.get_pair_invocation("Sandwich", unitize, variable(&param_b))?;
                 let i = single_expression_pair_trait_impl(name, &param_a, &param_b, sandwich);
-                emitter.emit(&i).unwrap();
                 self.trait_impls.add_pair_impl(name, param_a, param_b, i);
             };
         }
@@ -661,7 +620,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 "Bulk", &param_a, &projective_basis, false, &self.algebra, registry
             );
             if bulk != AstNode::None {
-                emitter.emit(&bulk).unwrap();
                 self.trait_impls.add_single_impl("Bulk", param_a.clone(), bulk);
             }
 
@@ -669,7 +627,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 "Weight", &param_a, &projective_basis, true, &self.algebra, registry
             );
             if weight != AstNode::None {
-                emitter.emit(&weight).unwrap();
                 self.trait_impls.add_single_impl("Weight", param_a, weight);
             }
         }
@@ -682,7 +639,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let bulk = self.trait_impls.get_single_invocation("Bulk", variable(&param_a))?;
                 let right_comp = self.trait_impls.get_single_invocation("RightComplement", bulk)?;
                 let rbd = single_expression_single_trait_impl(name, &param_a, right_comp);
-                emitter.emit(&rbd).unwrap();
                 self.trait_impls.add_single_impl(name, param_a, rbd);
             };
         }
@@ -693,7 +649,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let weight = self.trait_impls.get_single_invocation("Weight", variable(&param_a))?;
                 let right_comp = self.trait_impls.get_single_invocation("RightComplement", weight)?;
                 let rwd = single_expression_single_trait_impl(name, &param_a, right_comp);
-                emitter.emit(&rwd).unwrap();
                 self.trait_impls.add_single_impl(name, param_a, rwd);
             };
         }
@@ -704,7 +659,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let bulk = self.trait_impls.get_single_invocation("Bulk", variable(&param_a))?;
                 let left_comp = self.trait_impls.get_single_invocation("LeftComplement", bulk)?;
                 let lbd = single_expression_single_trait_impl(name, &param_a, left_comp);
-                emitter.emit(&lbd).unwrap();
                 self.trait_impls.add_single_impl(name, param_a, lbd);
             };
         }
@@ -715,7 +669,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let weight = self.trait_impls.get_single_invocation("Weight", variable(&param_a))?;
                 let left_comp = self.trait_impls.get_single_invocation("LeftComplement", weight)?;
                 let lwd = single_expression_single_trait_impl(name, &param_a, left_comp);
-                emitter.emit(&lwd).unwrap();
                 self.trait_impls.add_single_impl(name, param_a, lwd);
             };
         }
@@ -760,7 +713,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                     let rbd = self.trait_impls.get_single_invocation(dual, variable(&param_b))?;
                     let aw = self.trait_impls.get_pair_invocation(product, variable(&param_a), rbd)?;
                     let bc = single_expression_pair_trait_impl(name, &param_a, &param_b, aw);
-                    emitter.emit(&bc).unwrap();
                     self.trait_impls.add_pair_impl(name, param_a, param_b, bc);
                 };
             }
@@ -773,7 +725,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let anti_wedge = self.algebra.dialect().exterior_anti_product.first()?;
                 let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_b), we)?;
                 let po = single_expression_pair_trait_impl(name, &param_a, &param_b, anti_wedge);
-                emitter.emit(&po).unwrap();
                 self.trait_impls.add_pair_impl(name, param_a, param_b, po);
             };
         }
@@ -784,7 +735,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let wedge = self.algebra.dialect().exterior_product.first()?;
                 let wedge = self.trait_impls.get_pair_invocation(wedge, variable(&param_b), wc)?;
                 let apo = single_expression_pair_trait_impl(name, &param_a, &param_b, wedge);
-                emitter.emit(&apo).unwrap();
                 self.trait_impls.add_pair_impl(name, param_a, param_b, apo);
             };
         }
@@ -795,7 +745,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let anti_wedge = self.algebra.dialect().exterior_anti_product.first()?;
                 let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_b), be)?;
                 let po = single_expression_pair_trait_impl(name, &param_a, &param_b, anti_wedge);
-                emitter.emit(&po).unwrap();
                 self.trait_impls.add_pair_impl(name, param_a, param_b, po);
             };
         }
@@ -816,7 +765,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let wedge = self.algebra.dialect().exterior_product.first()?;
                 let wedge = self.trait_impls.get_pair_invocation(wedge, variable(&param_b), bc)?;
                 let apo = single_expression_pair_trait_impl(name, &param_a, &param_b, wedge);
-                emitter.emit(&apo).unwrap();
                 self.trait_impls.add_pair_impl(name, param_a, param_b, apo);
             };
         }
@@ -887,7 +835,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let wc = self.trait_impls.get_pair_invocation("WeightContraction", a_unitize, b_unitize)?;
                 let bn = self.trait_impls.get_single_invocation("BulkNorm", wc)?;
                 let cosine = single_expression_pair_trait_impl(name, &param_a, &param_b, bn);
-                emitter.emit(&cosine).unwrap();
                 self.trait_impls.add_pair_impl(name, param_a, param_b, cosine);
             };
         }
@@ -911,7 +858,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let sub = self.trait_impls.get_pair_invocation("Sub", one, pow2)?;
                 let sqrt = self.trait_impls.get_single_invocation("Sqrt", sub)?;
                 let sine = single_expression_pair_trait_impl(name, &param_a, &param_b, sqrt);
-                emitter.emit(&sine).unwrap();
                 self.trait_impls.add_pair_impl(name, param_a, param_b, sine);
             };
         }
@@ -954,7 +900,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     /// https://rigidgeometricalgebra.org/wiki/index.php?title=Attitude
     /// https://conformalgeometricalgebra.org/wiki/index.php?title=Attitude
     /// Note that e4 (article) = e3 (codegen) = Origin (MultivectorClass, One)
-    pub fn attitude_and_dependencies<'s, 'e>(&'s mut self, horizon_class_name: &str, registry: &'r MultiVectorClassRegistry, emitter: &'e mut Emitter<std::fs::File>) {
+    pub fn attitude_and_dependencies<'s>(&'s mut self, horizon_class_name: &str, registry: &'r MultiVectorClassRegistry) {
 
         // Attitude
         for param_a in registry.single_parameters() {
@@ -966,7 +912,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_a), one)?;
                 let attitude = single_expression_single_trait_impl(name, &param_a, anti_wedge);
 
-                emitter.emit(&attitude).unwrap();
                 self.trait_impls.add_single_impl(name, param_a.clone(), attitude);
             };
         }
@@ -984,10 +929,285 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let weight_norm = self.trait_impls.get_single_invocation("WeightNorm", weight_wedge)?;
                 let add = self.trait_impls.get_pair_invocation("Add", bulk_norm, weight_norm)?;
                 let ed = single_expression_pair_trait_impl(name, &param_a, &param_b, add);
-                emitter.emit(&ed).unwrap();
                 self.trait_impls.add_pair_impl(name, param_a, param_b, ed);
             };
         }
+    }
+
+
+
+
+    /// Datatype definitions, and implementations of external traits
+    pub fn emit_datatypes_and_external_traits(&mut self, registry: &'r MultiVectorClassRegistry, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
+        // Preamble
+        // emitter.emit(&AstNode::Preamble)?;
+
+        // Class Definitions
+        for class in registry.classes.iter() {
+            emitter.emit(&AstNode::ClassDefinition { class })?;
+        }
+
+        // External Traits
+        let trait_names = ["Zero", "One", "Neg", "Into", "Add", "Sub", "Mul", "Div"];
+        self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
+        Ok(())
+    }
+
+    pub fn emit_component_wise_aspects(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
+        // Bulk, Weight, RoundBulk, RoundWeight, Unitize
+
+        emitter.emit(&AstNode::TraitDefinition { name: "Unitize".to_string(), params: 1, docs: "
+            Unitization
+            https://rigidgeometricalgebra.org/wiki/index.php?title=Unitization
+        ".to_string(), })?;
+
+        emitter.emit(&AstNode::TraitDefinition { name: "Bulk".to_string(), params: 1, docs: "
+            The Bulk of an object usually describes the object's relationship with the origin.
+            An object with a Bulk of zero contains the origin.
+            http://rigidgeometricalgebra.org/wiki/index.php?title=Bulk_and_weight
+        ".to_string(), })?;
+
+        emitter.emit(&AstNode::TraitDefinition { name: "Weight".to_string(), params: 1, docs: "
+            The Weight of an object usually describes the object's attitude and orientation.
+            An object with zero weight is contained by the horizon.
+            Also known as the attitude operator.
+            http://rigidgeometricalgebra.org/wiki/index.php?title=Bulk_and_weight
+        ".to_string(), })?;
+
+        if self.algebra.algebra_name().contains("cga") {
+            emitter.emit(&AstNode::TraitDefinition { name: "RoundBulk".to_string(), params: 1, docs: "
+                Round Bulk is a special type of bulk in CGA
+                https://conformalgeometricalgebra.com/wiki/index.php?title=Main_Page
+            ".to_string(), })?;
+
+            emitter.emit(&AstNode::TraitDefinition { name: "RoundWeight".to_string(), params: 1, docs: "
+                Round Weight is a special type of weight in CGA
+                https://conformalgeometricalgebra.com/wiki/index.php?title=Main_Page
+            ".to_string(), })?;
+        }
+
+        let trait_names = ["Unitize", "Bulk", "Weight", "RoundBulk", "RoundWeight"];
+        self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
+        Ok(())
+    }
+
+    pub fn emit_products_and_isometries(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
+        // items in Dialect mostly
+        let products = Product::products(&self.algebra);
+        let mut trait_names = BTreeSet::new();
+        for (name, _, docs) in &products {
+            trait_names.insert(name.to_string());
+            emitter.emit(&AstNode::TraitDefinition { name: name.to_string(), params: 2, docs: docs.to_string(), })?;
+        }
+
+        emitter.emit(&AstNode::TraitDefinition { name: "Sandwich".to_string(), params: 2, docs: "
+            self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+
+            Also called sandwich product
+            See article \"Projective Geometric Algebra Done Right\"
+            https://rigidgeometricalgebra.org/wiki/index.php?title=Projective_Geometric_Algebra_Done_Right
+        ".to_string(), })?;
+
+        emitter.emit(&AstNode::TraitDefinition { name: "Invert".to_string(), params: 2, docs: "
+            Invert (Inversion)
+            An improper isometry that performs an inversion through a point.
+            Be careful not to confuse with `Inverse`, which raises a number to the power of `-1.0`.
+            https://rigidgeometricalgebra.org/wiki/index.php?title=Inversion
+        ".to_string(), })?;
+
+        emitter.emit(&AstNode::TraitDefinition { name: "Reflect".to_string(), params: 2, docs: "
+            Reflection
+            https://rigidgeometricalgebra.org/wiki/index.php?title=Reflection
+        ".to_string(), })?;
+
+
+        let trait_names2: Vec<_> = trait_names.iter().map(|it| it.as_str()).collect();
+        self.emit_exact_name_match_trait_impls(trait_names2.as_slice(), emitter)?;
+        self.emit_exact_name_match_trait_impls(&["Sandwich", "Invert", "Reflect"], emitter)?;
+        Ok(())
+    }
+
+    pub fn emit_involutions_and_duals(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
+        let external_trait_names = vec!["Neg"];
+        let mut trait_names = BTreeSet::new();
+        let involutions = Involution::involutions(&self.algebra);
+        for (name, _, docs) in involutions.iter() {
+            if !external_trait_names.contains(name) {
+                let name = name.to_string();
+                trait_names.insert(name.clone());
+                emitter.emit(&AstNode::TraitDefinition { name, params: 1, docs: docs.to_string(), })?;
+            }
+        }
+
+        trait_names.insert("RightBulkDual".to_string());
+        trait_names.insert("RightWeightDual".to_string());
+        trait_names.insert("LeftBulkDual".to_string());
+        trait_names.insert("LeftWeightDual".to_string());
+
+        emitter.emit(&AstNode::TraitDefinition { name: "RightBulkDual".to_string(), params: 1, docs: "
+            Right Bulk Dual
+            https://projectivegeometricalgebra.org/projgeomalg.pdf
+        ".to_string(), })?;
+        emitter.emit(&AstNode::TraitDefinition { name: "RightWeightDual".to_string(), params: 1, docs: "
+            Right Weight Dual
+            https://projectivegeometricalgebra.org/projgeomalg.pdf
+        ".to_string(), })?;
+        emitter.emit(&AstNode::TraitDefinition { name: "LeftBulkDual".to_string(), params: 1, docs: "
+            Left Bulk Dual
+            https://projectivegeometricalgebra.org/projgeomalg.pdf
+        ".to_string(), })?;
+        emitter.emit(&AstNode::TraitDefinition { name: "LeftWeightDual".to_string(), params: 1, docs: "
+            Left Weight Dual
+            https://projectivegeometricalgebra.org/projgeomalg.pdf
+        ".to_string(), })?;
+
+
+        let trait_names: Vec<_> = trait_names.iter().map(|it| it.as_str()).collect();
+        self.emit_exact_name_match_trait_impls(trait_names.as_slice(), emitter)?;
+        Ok(())
+    }
+
+    pub fn emit_norms(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
+        // bulk norm, weight norm, position norm, center norm, radius norm, squared variants
+        let mut trait_names = BTreeSet::new();
+        for ((name, _), _, ) in &self.trait_impls.single_args {
+            if name.contains("Norm") {
+                trait_names.insert(name.to_string());
+            }
+        }
+        for name in &trait_names {
+            // Even though CGA has its own unique norms, there is not a page dedicated to them on the CGA wiki yet.
+            let docs = format!("
+                {name}
+                https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+            ");
+            emitter.emit(&AstNode::TraitDefinition { name: name.clone(), params: 1, docs, })?;
+        }
+        for ((name, _), ast, ) in &self.trait_impls.single_args {
+            if trait_names.contains(name) {
+                emitter.emit(ast)?;
+            }
+        }
+        Ok(())
+    }
+
+    pub fn emit_characteristic_features(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
+        // Sqrt, Grade, AntiGrade, Attitude, Carrier, CoCarrier, Container, Center
+
+        emitter.emit(&AstNode::TraitDefinition { name: "Sqrt".to_string(), params: 1, docs: "
+            Square Root".to_string(),
+        })?;
+
+        // TODO make grade and anti_grade class-level traits
+        emitter.emit(&AstNode::TraitDefinition { name: "Grade".to_string(), params: 1, docs: "
+            Grade
+            https://rigidgeometricalgebra.org/wiki/index.php?title=Grade_and_antigrade".to_string(),
+        })?;
+        emitter.emit(&AstNode::TraitDefinition { name: "AntiGrade".to_string(), params: 1, docs: "
+            Anti-Grade
+            https://rigidgeometricalgebra.org/wiki/index.php?title=Grade_and_antigrade".to_string(),
+        })?;
+
+
+        emitter.emit(&AstNode::TraitDefinition { name: "Attitude".to_string(), params: 1, docs: "
+            Attitude
+            https://rigidgeometricalgebra.org/wiki/index.php?title=Attitude
+        ".to_string(), })?;
+
+        // TODO remaining trait declarations and docs
+
+
+        let trait_names = ["Sqrt", "Grade", "AntiGrade", "Attitude", "Carrier", "CoCarrier", "Container", "Center"];
+        self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
+        Ok(())
+    }
+
+    pub fn emit_projections_and_stuff(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
+
+
+        emitter.emit(&AstNode::TraitDefinition { name: "BulkContraction".to_string(), params: 2, docs: "
+            Bulk Contraction
+            https://projectivegeometricalgebra.org/projgeomalg.pdf
+        ".to_string(), })?;
+        emitter.emit(&AstNode::TraitDefinition { name: "WeightContraction".to_string(), params: 2, docs: "
+            Weight Contraction
+            https://projectivegeometricalgebra.org/projgeomalg.pdf
+        ".to_string(), })?;
+        emitter.emit(&AstNode::TraitDefinition { name: "BulkExpansion".to_string(), params: 2, docs: "
+            Bulk Expansion
+            https://projectivegeometricalgebra.org/projgeomalg.pdf
+        ".to_string(), })?;
+        emitter.emit(&AstNode::TraitDefinition { name: "WeightExpansion".to_string(), params: 2, docs: "
+            Weight Expansion
+            https://projectivegeometricalgebra.org/projgeomalg.pdf
+        ".to_string(), })?;
+        emitter.emit(&AstNode::TraitDefinition { name: "ProjectOrthogonallyOnto".to_string(), params: 2, docs: "
+            Orthogonal Projection
+            Typically involves bringing a lower dimensional object to a higher dimensional object
+            https://rigidgeometricalgebra.org/wiki/index.php?title=Projections
+            https://projectivegeometricalgebra.org/projgeomalg.pdf
+        ".to_string().to_string(), })?;
+        emitter.emit(&AstNode::TraitDefinition { name: "AntiProjectOrthogonallyOnto".to_string(), params: 2, docs: "
+            Orthogonal AntiProjection
+            Typically involves bringing a higher dimensional object to a lower dimensional object.
+            https://rigidgeometricalgebra.org/wiki/index.php?title=Projections
+            https://projectivegeometricalgebra.org/projgeomalg.pdf
+        ".to_string(), })?;
+        emitter.emit(&AstNode::TraitDefinition { name: "ProjectViaOriginOnto".to_string(), params: 2, docs: "
+            Central (to origin) Projection
+            https://rigidgeometricalgebra.org/wiki/index.php?title=Projections
+            https://projectivegeometricalgebra.org/projgeomalg.pdf
+        ".to_string(), })?;
+        emitter.emit(&AstNode::TraitDefinition { name: "AntiProjectViaHorizonOnto".to_string(), params: 2, docs: "
+            Outward (to horizon) AntiProjection
+            https://rigidgeometricalgebra.org/wiki/index.php?title=Projections
+        ".to_string(), })?;
+
+
+        let trait_names = ["BulkContraction", "WeightContraction", "BulkExpansion", "WeightExpansion", "ProjectOrthogonallyOnto", "ProjectOrthogonallyOnto", "ProjectViaOriginOnto", "AntiProjectViaHorizonOnto"];
+        self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
+        Ok(())
+    }
+
+    pub fn emit_metric_operations(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
+
+        emitter.emit(&AstNode::TraitDefinition { name: "Distance".to_string(), params: 2, docs: "
+            Euclidean distance between objects
+            https://rigidgeometricalgebra.org/wiki/index.php?title=Euclidean_distance
+            distance(a,b) = bulk_norm(attitude(a wedge b)) + weight_norm(a wedge attitude(b))
+            where attitude(c) = c anti_wedge complement(e4) where e4 is the projective dimension
+        ".to_string(), })?;
+        emitter.emit(&AstNode::TraitDefinition { name: "CosineAngle".to_string(), params: 2, docs: "
+            The cosine of the angle between two objects.
+            https://projectivegeometricalgebra.org/projgeomalg.pdf
+        ".to_string(), })?;
+        emitter.emit(&AstNode::TraitDefinition { name: "SineAngle".to_string(), params: 2, docs: "
+            The sine of the angle between two objects.
+            https://projectivegeometricalgebra.org/projgeomalg.pdf
+        ".to_string(), })?;
+
+        let trait_names = ["Distance", "CosineAngle", "SineAngle"];
+        self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
+        Ok(())
+    }
+
+    fn emit_exact_name_match_trait_impls(&mut self, trait_names: &[&str], emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
+        for ((name, _), ast_node) in &self.trait_impls.class_level {
+            if trait_names.contains(&name.as_str()) {
+                emitter.emit(ast_node)?;
+            }
+        }
+        for ((name, _), ast_node) in &self.trait_impls.single_args {
+            if trait_names.contains(&name.as_str()) {
+                emitter.emit(ast_node)?;
+            }
+        }
+        for ((name, _, _), ast_node) in &self.trait_impls.pair_args {
+            if trait_names.contains(&name.as_str()) {
+                emitter.emit(ast_node)?;
+            }
+        }
+        Ok(())
     }
 }
 

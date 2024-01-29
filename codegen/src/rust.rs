@@ -202,18 +202,20 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
         AstNode::None => {}
         AstNode::Preamble => {
             collector.write_all(b"#![allow(clippy::assign_op_pattern)]\n")?;
-            collector
-                .write_all(b"use crate::{simd::*, *};\nuse std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};\n\n")?;
+            collector.write_all(b"use crate::{simd::*, *};\nuse std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};\n\n")?;
         }
         AstNode::TraitDefinition { name, params, docs } => {
-            if !docs.is_empty() {
-                let mut docs_as_comment = docs.replace("\n", "\n/// ");
-                if !docs_as_comment.starts_with("\n/// ") {
-                    docs_as_comment = format!("/// {}", docs_as_comment);
+            if !docs.trim().is_empty() {
+                collector.write_all(b"\n")?;
+                for line in docs.split("\n") {
+                    let line = line.trim();
+                    if line.is_empty() {
+                        continue
+                    }
+                    collector.write_fmt(format_args!("/// {}\n", line))?;
                 }
-                collector.write_all(docs_as_comment.as_bytes())?;
             }
-            collector.write_fmt(format_args!("\npub trait {}", name))?;
+            collector.write_fmt(format_args!("pub trait {}", name))?;
             if *params > 2 {
                 unreachable!("Trait definitions with more than two parameters are not supported at this time.");
             }
