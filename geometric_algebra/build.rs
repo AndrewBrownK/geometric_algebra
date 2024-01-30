@@ -3,7 +3,7 @@
 use std::io::Write;
 use ::codegen;
 use codegen::algebra::rigid::RigidGeometricAlgebra;
-use codegen::{CodeGenerator, read_multi_vector_from_str};
+use codegen::{CodeGenerator, read_multi_vector_from_str, validate_glsl_and_wgsl};
 use codegen::algebra::dialect::Dialect;
 use codegen::algebra::MultiVectorClassRegistry;
 use codegen::emit::Emitter;
@@ -105,6 +105,8 @@ pub mod products {
 /// Involutions and Duals
 pub mod involutions;
 
+pub mod unitize;
+
 /// Norms
 pub mod norms;
 
@@ -120,9 +122,6 @@ pub mod metrics;
          code_gen.emit_datatypes_and_external_traits(&registry, &mut rust_emitter)?;
          code_gen.emit_datatypes_and_external_traits(&registry, &mut glsl_emitter)?;
          code_gen.emit_datatypes_and_external_traits(&registry, &mut wgsl_emitter)?;
-
-
-
 
 
          let module_path = file_path.join(std::path::Path::new("products/geometric"));
@@ -166,6 +165,137 @@ use crate::rga3d::*;
 
 
 
+         let module_path = file_path.join(std::path::Path::new("aspects"));
+         let mut rust_emitter = Emitter::new_rust_only(&module_path);
+         rust_emitter.rust_collector.as_mut().unwrap().write_all(b"
+#![allow(clippy::assign_op_pattern)]
+use crate::rga3d::*;
+use crate::rga3d::products::geometric::GeometricProduct;
+
+")?;
+
+         code_gen.emit_component_wise_aspects(&mut rust_emitter)?;
+         code_gen.emit_component_wise_aspects(&mut glsl_emitter)?;
+         code_gen.emit_component_wise_aspects(&mut wgsl_emitter)?;
+
+
+
+
+         let module_path = file_path.join(std::path::Path::new("involutions"));
+         let mut rust_emitter = Emitter::new_rust_only(&module_path);
+         rust_emitter.rust_collector.as_mut().unwrap().write_all(b"
+#![allow(clippy::assign_op_pattern)]
+use crate::{simd::*, *, rga3d::*};
+use std::ops::{Add, Div, Mul, Neg, Sub};
+
+")?;
+
+         code_gen.emit_involutions_and_duals(&mut rust_emitter)?;
+         code_gen.emit_involutions_and_duals(&mut glsl_emitter)?;
+         code_gen.emit_involutions_and_duals(&mut wgsl_emitter)?;
+
+
+
+
+
+
+
+
+
+
+
+         let module_path = file_path.join(std::path::Path::new("aspect_duals"));
+         let mut rust_emitter = Emitter::new_rust_only(&module_path);
+         rust_emitter.rust_collector.as_mut().unwrap().write_all(b"
+#![allow(clippy::assign_op_pattern)]
+use crate::{simd::*, *, rga3d::*};
+use std::ops::{Add, Div, Mul, Neg, Sub};
+use crate::rga3d::aspects::{Bulk, Weight};
+use crate::rga3d::involutions::*;
+
+")?;
+
+         code_gen.emit_aspect_duals(&mut rust_emitter)?;
+         code_gen.emit_aspect_duals(&mut glsl_emitter)?;
+         code_gen.emit_aspect_duals(&mut wgsl_emitter)?;
+
+
+
+
+
+
+         let module_path = file_path.join(std::path::Path::new("characteristics"));
+         let mut rust_emitter = Emitter::new_rust_only(&module_path);
+         rust_emitter.rust_collector.as_mut().unwrap().write_all(b"
+#![allow(clippy::assign_op_pattern)]
+use crate::rga3d::*;
+use crate::rga3d::products::exterior::AntiWedge;
+
+")?;
+
+         code_gen.emit_characteristic_features(&mut rust_emitter)?;
+         code_gen.emit_characteristic_features(&mut glsl_emitter)?;
+         code_gen.emit_characteristic_features(&mut wgsl_emitter)?;
+
+
+
+
+
+
+
+
+         let module_path = file_path.join(std::path::Path::new("norms"));
+         let mut rust_emitter = Emitter::new_rust_only(&module_path);
+         rust_emitter.rust_collector.as_mut().unwrap().write_all(b"
+#![allow(clippy::assign_op_pattern)]
+use crate::rga3d::*;
+use crate::rga3d::characteristics::Sqrt;
+use crate::rga3d::products::dot::{AntiDot, Dot};
+
+")?;
+
+         code_gen.emit_norms(&mut rust_emitter)?;
+         code_gen.emit_norms(&mut glsl_emitter)?;
+         code_gen.emit_norms(&mut wgsl_emitter)?;
+
+
+
+         let module_path = file_path.join(std::path::Path::new("unitize"));
+         let mut rust_emitter = Emitter::new_rust_only(&module_path);
+         rust_emitter.rust_collector.as_mut().unwrap().write_all(b"
+#![allow(clippy::assign_op_pattern)]
+use crate::rga3d::*;
+use crate::rga3d::norms::WeightNorm;
+use crate::rga3d::products::geometric::GeometricProduct;
+
+")?;
+
+         code_gen.emit_unitize(&mut rust_emitter)?;
+         code_gen.emit_unitize(&mut glsl_emitter)?;
+         code_gen.emit_unitize(&mut wgsl_emitter)?;
+
+
+
+
+         let module_path = file_path.join(std::path::Path::new("products/isometries"));
+         let mut rust_emitter = Emitter::new_rust_only(&module_path);
+         rust_emitter.rust_collector.as_mut().unwrap().write_all(b"
+#![allow(clippy::assign_op_pattern)]
+use crate::rga3d::*;
+use crate::rga3d::unitize::Unitize;
+use crate::rga3d::involutions::AntiReversal;
+use crate::rga3d::products::geometric::GeometricAntiProduct;
+
+")?;
+
+         code_gen.emit_isometries(&mut rust_emitter)?;
+         code_gen.emit_isometries(&mut glsl_emitter)?;
+         code_gen.emit_isometries(&mut wgsl_emitter)?;
+
+
+
+
+
 
          let module_path = file_path.join(std::path::Path::new("products/contractions"));
          let mut rust_emitter = Emitter::new_rust_only(&module_path);
@@ -202,100 +332,9 @@ use crate::rga3d::products::exterior::Wedge;
 
 
 
-         let module_path = file_path.join(std::path::Path::new("products/isometries"));
-         let mut rust_emitter = Emitter::new_rust_only(&module_path);
-         rust_emitter.rust_collector.as_mut().unwrap().write_all(b"
-#![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;
-use crate::rga3d::aspects::Unitize;
-use crate::rga3d::involutions::AntiReversal;
-use crate::rga3d::products::geometric::GeometricAntiProduct;
-
-")?;
-
-         code_gen.emit_isometries(&mut rust_emitter)?;
-         code_gen.emit_isometries(&mut glsl_emitter)?;
-         code_gen.emit_isometries(&mut wgsl_emitter)?;
-
-         let module_path = file_path.join(std::path::Path::new("aspects"));
-         let mut rust_emitter = Emitter::new_rust_only(&module_path);
-         rust_emitter.rust_collector.as_mut().unwrap().write_all(b"
-#![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;
-use crate::rga3d::norms::WeightNorm;
-use crate::rga3d::products::geometric::GeometricProduct;
-
-")?;
-
-         code_gen.emit_component_wise_aspects(&mut rust_emitter)?;
-         code_gen.emit_component_wise_aspects(&mut glsl_emitter)?;
-         code_gen.emit_component_wise_aspects(&mut wgsl_emitter)?;
 
 
 
-
-
-         let module_path = file_path.join(std::path::Path::new("involutions"));
-         let mut rust_emitter = Emitter::new_rust_only(&module_path);
-         rust_emitter.rust_collector.as_mut().unwrap().write_all(b"
-#![allow(clippy::assign_op_pattern)]
-use crate::{simd::*, *, rga3d::*};
-use std::ops::{Add, Div, Mul, Neg, Sub};
-
-")?;
-
-         code_gen.emit_involutions_and_duals(&mut rust_emitter)?;
-         code_gen.emit_involutions_and_duals(&mut glsl_emitter)?;
-         code_gen.emit_involutions_and_duals(&mut wgsl_emitter)?;
-
-
-
-
-         let module_path = file_path.join(std::path::Path::new("aspect_duals"));
-         let mut rust_emitter = Emitter::new_rust_only(&module_path);
-         rust_emitter.rust_collector.as_mut().unwrap().write_all(b"
-#![allow(clippy::assign_op_pattern)]
-use crate::{simd::*, *, rga3d::*};
-use std::ops::{Add, Div, Mul, Neg, Sub};
-use crate::rga3d::aspects::{Bulk, Weight};
-use crate::rga3d::involutions::*;
-
-")?;
-
-         code_gen.emit_aspect_duals(&mut rust_emitter)?;
-         code_gen.emit_aspect_duals(&mut glsl_emitter)?;
-         code_gen.emit_aspect_duals(&mut wgsl_emitter)?;
-
-
-
-
-
-         let module_path = file_path.join(std::path::Path::new("norms"));
-         let mut rust_emitter = Emitter::new_rust_only(&module_path);
-         rust_emitter.rust_collector.as_mut().unwrap().write_all(b"
-#![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;
-use crate::rga3d::characteristics::Sqrt;
-use crate::rga3d::products::dot::{AntiDot, Dot};
-
-")?;
-
-         code_gen.emit_norms(&mut rust_emitter)?;
-         code_gen.emit_norms(&mut glsl_emitter)?;
-         code_gen.emit_norms(&mut wgsl_emitter)?;
-
-         let module_path = file_path.join(std::path::Path::new("characteristics"));
-         let mut rust_emitter = Emitter::new_rust_only(&module_path);
-         rust_emitter.rust_collector.as_mut().unwrap().write_all(b"
-#![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;
-use crate::rga3d::products::exterior::AntiWedge;
-
-")?;
-
-         code_gen.emit_characteristic_features(&mut rust_emitter)?;
-         code_gen.emit_characteristic_features(&mut glsl_emitter)?;
-         code_gen.emit_characteristic_features(&mut wgsl_emitter)?;
 
          let module_path = file_path.join(std::path::Path::new("products/projections"));
          let mut rust_emitter = Emitter::new_rust_only(&module_path);
@@ -323,11 +362,12 @@ use crate::rga3d::aspect_duals::*;
          rust_emitter.rust_collector.as_mut().unwrap().write_all(b"
 #![allow(clippy::assign_op_pattern)]
 use crate::rga3d::*;
-use crate::rga3d::aspects::Unitize;
+use crate::rga3d::unitize::Unitize;
 use crate::rga3d::products::exterior::Wedge;
 use crate::rga3d::characteristics::Attitude;
 use crate::rga3d::products::projections::*;
 use crate::rga3d::norms::*;
+use crate::rga3d::products::contractions::WeightContraction;
 
 ")?;
 
@@ -335,6 +375,8 @@ use crate::rga3d::norms::*;
          code_gen.emit_metric_operations(&mut glsl_emitter)?;
          code_gen.emit_metric_operations(&mut wgsl_emitter)?;
 
+         validate_glsl_and_wgsl("rga3d", file_path);
     };
     result.unwrap();
+
 }

@@ -980,12 +980,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     }
 
     pub fn emit_component_wise_aspects(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
-        // Bulk, Weight, RoundBulk, RoundWeight, Unitize
-
-        emitter.emit(&AstNode::TraitDefinition { name: "Unitize".to_string(), params: 1, docs: "
-            Unitization
-            https://rigidgeometricalgebra.org/wiki/index.php?title=Unitization
-        ".to_string(), })?;
+        // Bulk, Weight, RoundBulk, RoundWeight
 
         emitter.emit(&AstNode::TraitDefinition { name: "Bulk".to_string(), params: 1, docs: "
             The Bulk of an object usually describes the object's relationship with the origin.
@@ -1012,7 +1007,20 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             ".to_string(), })?;
         }
 
-        let trait_names = ["Unitize", "Bulk", "Weight", "RoundBulk", "RoundWeight"];
+        let trait_names = ["Bulk", "Weight", "RoundBulk", "RoundWeight"];
+        self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
+        Ok(())
+    }
+
+    pub fn emit_unitize(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
+        // Unitize
+
+        emitter.emit(&AstNode::TraitDefinition { name: "Unitize".to_string(), params: 1, docs: "
+            Unitization
+            https://rigidgeometricalgebra.org/wiki/index.php?title=Unitization
+        ".to_string(), })?;
+
+        let trait_names = ["Unitize"];
         self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
         Ok(())
     }
@@ -1099,7 +1107,8 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             https://rigidgeometricalgebra.org/wiki/index.php?title=Reflection
         ".to_string(), })?;
 
-        self.emit_exact_name_match_trait_impls(&["Sandwich", "Invert", "Reflect"], emitter)?;
+        self.emit_exact_name_match_trait_impls(&["Sandwich"], emitter)?;
+        self.emit_exact_name_match_trait_impls(&["Invert", "Reflect"], emitter)?;
         Ok(())
     }
 
@@ -1194,10 +1203,11 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             emitter.emit(&AstNode::TraitDefinition { name: name.clone(), params: 1, docs, })?;
         }
         for ((name, _), ast, ) in &self.trait_impls.single_args {
-            if trait_names.contains(name) {
+            if trait_names.contains(name) && name.as_str() != "GeometricNorm"{
                 emitter.emit(ast)?;
             }
         }
+        self.emit_exact_name_match_trait_impls(&["GeometricNorm"], emitter)?;
         Ok(())
     }
 
@@ -1233,24 +1243,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     }
 
     pub fn emit_projections_and_stuff(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
-
-
-        emitter.emit(&AstNode::TraitDefinition { name: "BulkContraction".to_string(), params: 2, docs: "
-            Bulk Contraction
-            https://projectivegeometricalgebra.org/projgeomalg.pdf
-        ".to_string(), })?;
-        emitter.emit(&AstNode::TraitDefinition { name: "WeightContraction".to_string(), params: 2, docs: "
-            Weight Contraction
-            https://projectivegeometricalgebra.org/projgeomalg.pdf
-        ".to_string(), })?;
-        emitter.emit(&AstNode::TraitDefinition { name: "BulkExpansion".to_string(), params: 2, docs: "
-            Bulk Expansion
-            https://projectivegeometricalgebra.org/projgeomalg.pdf
-        ".to_string(), })?;
-        emitter.emit(&AstNode::TraitDefinition { name: "WeightExpansion".to_string(), params: 2, docs: "
-            Weight Expansion
-            https://projectivegeometricalgebra.org/projgeomalg.pdf
-        ".to_string(), })?;
         emitter.emit(&AstNode::TraitDefinition { name: "ProjectOrthogonallyOnto".to_string(), params: 2, docs: "
             Orthogonal Projection
             Typically involves bringing a lower dimensional object to a higher dimensional object
@@ -1274,7 +1266,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         ".to_string(), })?;
 
 
-        let trait_names = ["BulkContraction", "WeightContraction", "BulkExpansion", "WeightExpansion", "ProjectOrthogonallyOnto", "ProjectOrthogonallyOnto", "ProjectViaOriginOnto", "AntiProjectViaHorizonOnto"];
+        let trait_names = ["ProjectOrthogonallyOnto", "ProjectOrthogonallyOnto", "ProjectViaOriginOnto", "AntiProjectViaHorizonOnto"];
         self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
         Ok(())
     }
@@ -1322,19 +1314,18 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 }
 
 // TODO replace with direct codegen instead of naga output, but still validate with naga.
-fn do_wgsl(algebra_name: &str, file_path: PathBuf) {
-    // Let naga do wgsl:
-    // - Good because low maintenance here.
-    // - Bad because it erases useful comments.
+pub fn validate_glsl_and_wgsl(algebra_name: &str, file_path: PathBuf) {
 
     // Prepare some of naga's clutter
     let mut glsl_frontend = naga::front::glsl::Frontend::default();
-    let mut wgsl_backend = naga::back::wgsl::Writer::new(String::new(), WriterFlags::EXPLICIT_TYPES);
+    let mut wgsl_frontend = naga::front::wgsl::Frontend::new();
     let mut validator = naga::valid::Validator::new(ValidationFlags::default(), Capabilities::default());
     let options = naga::front::glsl::Options {
         stage: ShaderStage::Compute,
         defines: Default::default(),
     };
+
+
 
     // Read the glsl
     let mut glsl_file = std::fs::File::open(file_path.with_extension("glsl")).unwrap();
@@ -1351,19 +1342,37 @@ fn do_wgsl(algebra_name: &str, file_path: PathBuf) {
             if let Some(Error { meta, .. }) = err.first() {
                 line = meta.location(glsl_contents.as_str()).line_number.to_string();
             }
-            panic!("Error generating {algebra_name} on line {line}: {err:?}")
+            panic!("Error generating {algebra_name} glsl on line {line}: {err:?}")
         }
     };
-    let mut pruner = naga_oil::prune::Pruner::new(&module);
-    for (hf, _) in module.functions.iter() {
-        pruner.add_function(hf, HashMap::new(), Some(PartReq::All));
-    }
-    let module = pruner.rewrite();
-    let module_info = validator.validate(&module).unwrap();
+    if let Err(err) = validator.validate(&module) {
+        panic!("Error generating {algebra_name}: {err:?}")
+    };
+    // glsl success, woo hoo!
 
-    // Write the wgsl
-    wgsl_backend.write(&module, &module_info).unwrap();
-    let wgsl_contents = wgsl_backend.finish();
-    let mut wgsl_file = std::fs::File::create(file_path.with_extension("wgsl")).unwrap();
-    wgsl_file.write(wgsl_contents.as_bytes()).unwrap();
+
+    // Read the wgsl
+    let mut wgsl_file = std::fs::File::open(file_path.with_extension("wgsl")).unwrap();
+    let mut wgsl_contents = String::new();
+    wgsl_file.read_to_string(&mut wgsl_contents).unwrap();
+
+    // Parse, prune, and validate the naga module
+    let module = match wgsl_frontend.parse(wgsl_contents.as_str()) {
+        Ok(m) => m,
+        Err(err) => {
+            let mut line = "??".to_string();
+            if let Some(loc) = err.location(wgsl_contents.as_str()) {
+                line = loc.line_number.to_string();
+            }
+            panic!("Error generating {algebra_name} wgsl on line {line}: {err:?}")
+        }
+    };
+    if let Err(err) = validator.validate(&module) {
+        panic!("Error generating {algebra_name}: {err:?}")
+    };
+    // wgsl success, woo hoo!
+
+
+
+    // TODO remove pruner dependency
 }

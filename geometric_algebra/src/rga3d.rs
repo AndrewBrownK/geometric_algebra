@@ -21,6 +21,8 @@ pub mod products {
 /// Involutions and Duals
 pub mod involutions;
 
+pub mod unitize;
+
 /// Norms
 pub mod norms;
 

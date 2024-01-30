@@ -8,7 +8,7 @@ const COMPONENT: &[&str] = &["x", "y", "z", "w"];
 
 fn emit_data_type<W: std::io::Write>(collector: &mut W, data_type: &DataType) -> std::io::Result<()> {
     match data_type {
-        DataType::Integer => collector.write_all(b"int"),
+        DataType::Integer => collector.write_all(b"i32"),
         DataType::SimdVector(size) if *size == 1 => collector.write_all(b"f32"),
         DataType::SimdVector(size) => collector.write_fmt(format_args!("vec{}<f32>", *size)),
         DataType::MultiVector(class) => collector.write_fmt(format_args!("{}", class.class_name)),
@@ -255,7 +255,7 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
                 emit_data_type(collector, &parameter.data_type)?;
             }
             collector.write_all(b") -> ")?;
-            collector.write_fmt(format_args!("{} ", result.data_type.data_class_name()))?;
+            emit_data_type(collector, &result.data_type)?;
             collector.write_all(b" {\n")?;
             for statement in body.iter() {
                 emit_indentation(collector, indentation + 1)?;

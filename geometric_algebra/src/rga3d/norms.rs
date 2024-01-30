@@ -236,70 +236,6 @@ impl BulkNormSquared for Translator {
     }
 }
 
-impl GeometricNorm for Flector {
-    type Output = Magnitude;
-
-    fn geometric_norm(self) -> Magnitude {
-        self.bulk_norm().add(self.weight_norm())
-    }
-}
-
-impl GeometricNorm for Line {
-    type Output = Magnitude;
-
-    fn geometric_norm(self) -> Magnitude {
-        self.bulk_norm().add(self.weight_norm())
-    }
-}
-
-impl GeometricNorm for Magnitude {
-    type Output = Magnitude;
-
-    fn geometric_norm(self) -> Magnitude {
-        self.bulk_norm().add(self.weight_norm())
-    }
-}
-
-impl GeometricNorm for Motor {
-    type Output = Magnitude;
-
-    fn geometric_norm(self) -> Magnitude {
-        self.bulk_norm().add(self.weight_norm())
-    }
-}
-
-impl GeometricNorm for MultiVector {
-    type Output = Magnitude;
-
-    fn geometric_norm(self) -> Magnitude {
-        self.bulk_norm().add(self.weight_norm())
-    }
-}
-
-impl GeometricNorm for Plane {
-    type Output = Magnitude;
-
-    fn geometric_norm(self) -> Magnitude {
-        self.bulk_norm().add(self.weight_norm())
-    }
-}
-
-impl GeometricNorm for Point {
-    type Output = Magnitude;
-
-    fn geometric_norm(self) -> Magnitude {
-        self.bulk_norm().add(self.weight_norm())
-    }
-}
-
-impl GeometricNorm for Translator {
-    type Output = Magnitude;
-
-    fn geometric_norm(self) -> Magnitude {
-        self.bulk_norm().add(self.weight_norm())
-    }
-}
-
 impl WeightNorm for AntiScalar {
     type Output = AntiScalar;
 
@@ -505,6 +441,70 @@ impl WeightNormSquared for Translator {
 
     fn weight_norm_squared(self) -> AntiScalar {
         self.anti_dot(self)
+    }
+}
+
+impl GeometricNorm for Flector {
+    type Output = Magnitude;
+
+    fn geometric_norm(self) -> Magnitude {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for Line {
+    type Output = Magnitude;
+
+    fn geometric_norm(self) -> Magnitude {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for Magnitude {
+    type Output = Magnitude;
+
+    fn geometric_norm(self) -> Magnitude {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for Motor {
+    type Output = Magnitude;
+
+    fn geometric_norm(self) -> Magnitude {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for MultiVector {
+    type Output = Magnitude;
+
+    fn geometric_norm(self) -> Magnitude {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for Plane {
+    type Output = Magnitude;
+
+    fn geometric_norm(self) -> Magnitude {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for Point {
+    type Output = Magnitude;
+
+    fn geometric_norm(self) -> Magnitude {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for Translator {
+    type Output = Magnitude;
+
+    fn geometric_norm(self) -> Magnitude {
+        self.bulk_norm().add(self.weight_norm())
     }
 }
 

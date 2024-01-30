@@ -1,11 +1,12 @@
 
 #![allow(clippy::assign_op_pattern)]
 use crate::rga3d::*;
-use crate::rga3d::aspects::Unitize;
+use crate::rga3d::unitize::Unitize;
 use crate::rga3d::products::exterior::Wedge;
 use crate::rga3d::characteristics::Attitude;
 use crate::rga3d::products::projections::*;
 use crate::rga3d::norms::*;
+use crate::rga3d::products::contractions::WeightContraction;
 
 
 /// Euclidean distance between objects
