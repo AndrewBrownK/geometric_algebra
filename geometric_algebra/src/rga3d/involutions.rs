@@ -12,6 +12,13 @@ pub trait Automorphism {
 }
 
 
+/// Negates elements with `(grade + 3) % 4 < 2`
+pub trait Conjugation {
+    type Output;
+    fn conjugation(self) -> Self::Output;
+}
+
+
 /// Negates elements with `grade % 4 >= 2`
 /// Also called transpose
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Reverses
@@ -21,25 +28,20 @@ pub trait Reversal {
 }
 
 
-/// Negates elements with `(grade + 3) % 4 < 2`
-pub trait Conjugation {
-    type Output;
-    fn conjugation(self) -> Self::Output;
-}
-
-
-/// Element order reversed
-pub trait Dual {
-    type Output;
-    fn dual(self) -> Self::Output;
-}
-
-
 /// Negates elements with `grade % 4 >= 2`
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Reverses
 pub trait AntiReversal {
     type Output;
     fn anti_reversal(self) -> Self::Output;
+}
+
+
+/// Element order reversed
+/// Also known as Right Complement
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Complements
+pub trait Dual {
+    type Output;
+    fn dual(self) -> Self::Output;
 }
 
 

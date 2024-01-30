@@ -83,13 +83,13 @@ impl Involution {
         vec![
             ("Neg", involution.negated(|_grade| true), ""),
             ("Automorphism", involution.negated(|grade| grade % 2 == 1), "\nNegates elements with `grade % 2 == 1`\n\nAlso called main involution"),
-            ("Reversal", involution.negated(|grade| grade % 4 >= 2), "\nNegates elements with `grade % 4 >= 2`\n\nAlso called transpose\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Reverses"),
             ("Conjugation", involution.negated(|grade| (grade + 3) % 4 < 2), "\nNegates elements with `(grade + 3) % 4 < 2`"),
-            ("Dual", involution.right_complement(algebra), "\nElement order reversed"),
+            ("Reversal", involution.negated(|grade| grade % 4 >= 2), "\nNegates elements with `grade % 4 >= 2`\n\nAlso called transpose\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Reverses"),
             ("AntiReversal", involution.negated(|grade| {
                 let anti_grade = dimensions - grade;
                 anti_grade % 4 >= 2
             }), "\nNegates elements with `grade % 4 >= 2`\n\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Reverses"),
+            ("Dual", involution.right_complement(algebra), "\nElement order reversed\nAlso known as Right Complement\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Complements"),
             ("RightComplement", involution.right_complement(algebra), "\nRight Complement\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Complements"),
             ("LeftComplement", involution.left_complement(algebra), "\nLeft Complement\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Complements"),
             ("DoubleComplement", involution.double_complement(algebra), "\nDouble Complement\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Complements"),
