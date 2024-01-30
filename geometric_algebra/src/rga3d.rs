@@ -3,34 +3,22 @@
 use crate::{simd::*, *};
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
-/// Component-wise aspects to objects, and Unitization
 pub mod aspects;
 pub mod aspect_duals;
-
-/// Products
-pub mod products {
-    pub mod geometric;
-    pub mod exterior;
-    pub mod contractions;
-    pub mod expansions;
-    pub mod projections;
-    pub mod dot;
-    pub mod isometries;
-}
-
-/// Involutions and Duals
 pub mod involutions;
-
 pub mod unitize;
-
-/// Norms
 pub mod norms;
-
-/// Characteristic Features
 pub mod characteristics;
-
-/// Metric operations
 pub mod metrics;
+pub mod products {
+pub mod geometric;
+pub mod exterior;
+pub mod contractions;
+pub mod expansions;
+pub mod projections;
+pub mod dot;
+pub mod isometries;
+}
 
 #[derive(Clone, Copy)]
 struct ScalarGroups {

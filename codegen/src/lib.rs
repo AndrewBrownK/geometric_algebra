@@ -30,6 +30,9 @@ pub mod emit;
 mod glsl;
 mod rust;
 mod wgsl;
+pub mod build_scripts {
+    pub mod rga3d;
+}
 
 pub struct AlgebraDescriptor {
     pub algebra_name: String,
