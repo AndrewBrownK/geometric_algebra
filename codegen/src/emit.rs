@@ -21,61 +21,38 @@ pub fn emit_indentation<W: std::io::Write>(collector: &mut W, indentation: usize
     Ok(())
 }
 
+use std::io::Write;
 use crate::{ast::AstNode, glsl, rust, wgsl};
 
-// TODO change this to an enum
+
 pub struct Emitter<W: std::io::Write> {
-    pub rust_collector: Option<W>,
-    pub glsl_collector: Option<W>,
-    pub wgsl_collector: Option<W>,
+    pub rust_collector: W,
+    pub glsl_collector: W,
+    pub wgsl_collector: W,
 }
 
 impl Emitter<std::fs::File> {
     pub fn new(path: &std::path::Path) -> Self {
         Self {
-            rust_collector: Some(std::fs::File::create(path.with_extension("rs")).unwrap()),
-            glsl_collector: Some(std::fs::File::create(path.with_extension("glsl")).unwrap()),
-            wgsl_collector: Some(std::fs::File::create(path.with_extension("wgsl")).unwrap()),
+            rust_collector: std::fs::File::create(path.with_extension("rs")).unwrap(),
+            glsl_collector: std::fs::File::create(path.with_extension("glsl")).unwrap(),
+            wgsl_collector: std::fs::File::create(path.with_extension("wgsl")).unwrap(),
         }
     }
 
-    pub fn new_rust_only(path: &std::path::Path) -> Self {
-        Self {
-            rust_collector: Some(std::fs::File::create(path.with_extension("rs")).unwrap()),
-            glsl_collector: None,
-            wgsl_collector: None,
-        }
-    }
-
-    pub fn new_glsl_only(path: &std::path::Path) -> Self {
-        Self {
-            rust_collector: None,
-            glsl_collector: Some(std::fs::File::create(path.with_extension("glsl")).unwrap()),
-            wgsl_collector: None,
-        }
-    }
-
-    pub fn new_wgsl_only(path: &std::path::Path) -> Self {
-        Self {
-            rust_collector: None,
-            glsl_collector: None,
-            wgsl_collector: Some(std::fs::File::create(path.with_extension("wgsl")).unwrap()),
-        }
+    pub fn with_new_rust_collector(&mut self, path: &std::path::Path, preamble: &'static str) -> std::io::Result<()>{
+        self.rust_collector = std::fs::File::create(path.with_extension("rs")).unwrap();
+        self.rust_collector.write_all(&preamble.as_bytes())?;
+        self.rust_collector.write_all(b"\n\n")
     }
 }
 
 
 impl<W: std::io::Write> Emitter<W> {
     pub fn emit(&mut self, ast_node: &AstNode) -> std::io::Result<()> {
-        if let Some(rc) = &mut self.rust_collector {
-            rust::emit_code(rc, ast_node, 0)?;
-        }
-        if let Some(gc) = &mut self.glsl_collector {
-            glsl::emit_code(gc, ast_node, 0)?;
-        }
-        if let Some(wc) = &mut self.wgsl_collector {
-            wgsl::emit_code(wc, ast_node, 0)?;
-        }
+        rust::emit_code(&mut self.rust_collector, ast_node, 0)?;
+        glsl::emit_code(&mut self.glsl_collector, ast_node, 0)?;
+        wgsl::emit_code(&mut self.wgsl_collector, ast_node, 0)?;
         Ok(())
     }
 }
