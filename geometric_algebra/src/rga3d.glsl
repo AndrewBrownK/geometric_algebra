@@ -9889,2748 +9889,1508 @@ Scalar translator_translator_dot(Translator self, Translator other) {
     return Scalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
-AntiScalar anti_scalar_anti_scalar_left_anti_contraction(AntiScalar self, AntiScalar other) {
-    return AntiScalar(self.g0 * other.g0);
+MultiVector flector_flector_bulk_contraction(Flector self, Flector other) {
+    return flector_flector_anti_wedge(self, flector_right_bulk_dual(other));
 }
 
-Flector anti_scalar_flector_left_anti_contraction(AntiScalar self, Flector other) {
-    return Flector(vec4(self.g0) * other.g0, vec4(self.g0) * other.g1);
+Scalar flector_horizon_bulk_contraction(Flector self, Horizon other) {
+    return flector_origin_anti_wedge(self, horizon_right_bulk_dual(other));
 }
 
-Horizon anti_scalar_horizon_left_anti_contraction(AntiScalar self, Horizon other) {
-    return Horizon(self.g0 * other.g0);
+Point flector_line_bulk_contraction(Flector self, Line other) {
+    return flector_line_at_origin_anti_wedge(self, line_right_bulk_dual(other));
 }
 
-Line anti_scalar_line_left_anti_contraction(AntiScalar self, Line other) {
-    return Line(vec3(self.g0) * other.g0, vec3(self.g0) * other.g1);
+Point flector_line_at_infinity_bulk_contraction(Flector self, LineAtInfinity other) {
+    return flector_line_at_origin_anti_wedge(self, line_at_infinity_right_bulk_dual(other));
 }
 
-LineAtInfinity anti_scalar_line_at_infinity_left_anti_contraction(AntiScalar self, LineAtInfinity other) {
-    return LineAtInfinity(vec3(self.g0) * other.g0);
+Point flector_motor_bulk_contraction(Flector self, Motor other) {
+    return flector_line_at_origin_anti_wedge(self, motor_right_bulk_dual(other));
 }
 
-LineAtOrigin anti_scalar_line_at_origin_left_anti_contraction(AntiScalar self, LineAtOrigin other) {
-    return LineAtOrigin(vec3(self.g0) * other.g0);
+MultiVector flector_multi_vector_bulk_contraction(Flector self, MultiVector other) {
+    return flector_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-Magnitude anti_scalar_magnitude_left_anti_contraction(AntiScalar self, Magnitude other) {
-    return Magnitude(vec2(self.g0) * other.g0);
+Scalar flector_plane_bulk_contraction(Flector self, Plane other) {
+    return flector_origin_anti_wedge(self, plane_right_bulk_dual(other));
 }
 
-Motor anti_scalar_motor_left_anti_contraction(AntiScalar self, Motor other) {
-    return Motor(vec4(self.g0) * other.g0, vec3(self.g0) * other.g1);
+MultiVector flector_point_bulk_contraction(Flector self, Point other) {
+    return flector_plane_at_origin_anti_wedge(self, point_right_bulk_dual(other));
 }
 
-MultiVector anti_scalar_multi_vector_left_anti_contraction(AntiScalar self, MultiVector other) {
-    return MultiVector(vec2(self.g0) * other.g0, vec4(self.g0) * other.g1, vec3(self.g0) * other.g2, vec3(self.g0) * other.g3, vec4(self.g0) * other.g4);
+MultiVector flector_point_at_infinity_bulk_contraction(Flector self, PointAtInfinity other) {
+    return flector_plane_at_origin_anti_wedge(self, point_at_infinity_right_bulk_dual(other));
 }
 
-Origin anti_scalar_origin_left_anti_contraction(AntiScalar self, Origin other) {
-    return Origin(self.g0 * other.g0);
+Point flector_translator_bulk_contraction(Flector self, Translator other) {
+    return flector_line_at_origin_anti_wedge(self, translator_right_bulk_dual(other));
 }
 
-Plane anti_scalar_plane_left_anti_contraction(AntiScalar self, Plane other) {
-    return Plane(vec4(self.g0) * other.g0);
+MultiVector horizon_flector_bulk_contraction(Horizon self, Flector other) {
+    return horizon_flector_anti_wedge(self, flector_right_bulk_dual(other));
 }
 
-PlaneAtOrigin anti_scalar_plane_at_origin_left_anti_contraction(AntiScalar self, PlaneAtOrigin other) {
-    return PlaneAtOrigin(vec3(self.g0) * other.g0);
+Scalar horizon_horizon_bulk_contraction(Horizon self, Horizon other) {
+    return horizon_origin_anti_wedge(self, horizon_right_bulk_dual(other));
 }
 
-Point anti_scalar_point_left_anti_contraction(AntiScalar self, Point other) {
-    return Point(vec4(self.g0) * other.g0);
+PointAtInfinity horizon_line_bulk_contraction(Horizon self, Line other) {
+    return horizon_line_at_origin_anti_wedge(self, line_right_bulk_dual(other));
 }
 
-PointAtInfinity anti_scalar_point_at_infinity_left_anti_contraction(AntiScalar self, PointAtInfinity other) {
-    return PointAtInfinity(vec3(self.g0) * other.g0);
+PointAtInfinity horizon_line_at_infinity_bulk_contraction(Horizon self, LineAtInfinity other) {
+    return horizon_line_at_origin_anti_wedge(self, line_at_infinity_right_bulk_dual(other));
 }
 
-Rotor anti_scalar_rotor_left_anti_contraction(AntiScalar self, Rotor other) {
-    return Rotor(vec4(self.g0) * other.g0);
+PointAtInfinity horizon_motor_bulk_contraction(Horizon self, Motor other) {
+    return horizon_line_at_origin_anti_wedge(self, motor_right_bulk_dual(other));
 }
 
-Scalar anti_scalar_scalar_left_anti_contraction(AntiScalar self, Scalar other) {
-    return Scalar(self.g0 * other.g0);
+MultiVector horizon_multi_vector_bulk_contraction(Horizon self, MultiVector other) {
+    return horizon_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-Translator anti_scalar_translator_left_anti_contraction(AntiScalar self, Translator other) {
-    return Translator(vec4(self.g0) * other.g0);
+Scalar horizon_plane_bulk_contraction(Horizon self, Plane other) {
+    return horizon_origin_anti_wedge(self, plane_right_bulk_dual(other));
 }
 
-Motor flector_flector_left_anti_contraction(Flector self, Flector other) {
-    return Motor(vec4(self.g1.x) * vec4(other.g0.w, other.g0.w, other.g0.w, other.g1.x) * vec4(-1.0, 0.0, 0.0, 1.0) + vec4(self.g1.y) * vec4(other.g0.w, other.g0.w, other.g0.w, other.g1.y) * vec4(0.0, -1.0, 0.0, 1.0) + vec4(self.g1.z) * vec4(other.g0.w, other.g0.w, other.g0.w, other.g1.z) * vec4(0.0, 0.0, -1.0, 1.0) + self.g0.xxxw * other.g0.xxxw * vec4(0.0, 0.0, 0.0, -1.0), vec3(self.g1.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g1.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g1.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0));
+LineAtInfinity horizon_point_bulk_contraction(Horizon self, Point other) {
+    return horizon_plane_at_origin_anti_wedge(self, point_right_bulk_dual(other));
 }
 
-Plane flector_line_left_anti_contraction(Flector self, Line other) {
-    return Plane(vec4(self.g1.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g1.y) * vec4(1.0, 0.0, -1.0, 1.0) + vec4(self.g1.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g1.z) * vec4(-1.0, 1.0, 0.0, 1.0) + vec4(self.g1.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g1.x) * vec4(0.0, -1.0, 1.0, 1.0));
+LineAtInfinity horizon_point_at_infinity_bulk_contraction(Horizon self, PointAtInfinity other) {
+    return horizon_plane_at_origin_anti_wedge(self, point_at_infinity_right_bulk_dual(other));
 }
 
-Horizon flector_line_at_infinity_left_anti_contraction(Flector self, LineAtInfinity other) {
-    return Horizon(self.g1.x * other.g0.x + self.g1.y * other.g0.y + self.g1.z * other.g0.z);
+PointAtInfinity horizon_translator_bulk_contraction(Horizon self, Translator other) {
+    return horizon_line_at_origin_anti_wedge(self, translator_right_bulk_dual(other));
 }
 
-PlaneAtOrigin flector_line_at_origin_left_anti_contraction(Flector self, LineAtOrigin other) {
-    return PlaneAtOrigin(vec3(self.g1.y) * other.g0.zzx * vec3(1.0, 0.0, -1.0) + vec3(self.g1.z) * other.g0.yxy * vec3(-1.0, 1.0, 0.0) + vec3(self.g1.x) * other.g0.xzy * vec3(0.0, -1.0, 1.0));
+Point line_flector_bulk_contraction(Line self, Flector other) {
+    return line_flector_anti_wedge(self, flector_right_bulk_dual(other));
 }
 
-Flector flector_magnitude_left_anti_contraction(Flector self, Magnitude other) {
-    return Flector(self.g1.xyzx * vec4(other.g0.x) * vec4(-1.0, -1.0, -1.0, 0.0), self.g0.xxxw * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0));
+Scalar line_line_bulk_contraction(Line self, Line other) {
+    return line_line_at_origin_anti_wedge(self, line_right_bulk_dual(other));
 }
 
-Plane flector_motor_left_anti_contraction(Flector self, Motor other) {
-    return Plane(vec4(self.g1.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g1.y) * vec4(1.0, 0.0, -1.0, 1.0) + vec4(self.g1.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g1.z) * vec4(-1.0, 1.0, 0.0, 1.0) + vec4(self.g1.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g1.x) * vec4(0.0, -1.0, 1.0, 1.0));
+Scalar line_line_at_infinity_bulk_contraction(Line self, LineAtInfinity other) {
+    return line_line_at_origin_anti_wedge(self, line_at_infinity_right_bulk_dual(other));
 }
 
-MultiVector flector_multi_vector_left_anti_contraction(Flector self, MultiVector other) {
-    return MultiVector(vec2(self.g1.x) * vec2(other.g4.x) * vec2(0.0, 1.0) + vec2(self.g1.y) * vec2(other.g4.y) * vec2(0.0, 1.0) + vec2(self.g1.z) * vec2(other.g4.z) * vec2(0.0, 1.0) + vec2(self.g0.x, self.g0.w) * vec2(other.g1.x, other.g1.w) * vec2(0.0, -1.0), self.g1.xyzx * vec4(other.g0.x) * vec4(-1.0, -1.0, -1.0, 0.0), vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g1.w) * vec3(-1.0), vec3(self.g1.y) * vec3(other.g1.z, other.g1.z, other.g1.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g1.z) * vec3(other.g1.y, other.g1.x, other.g1.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g1.x) * vec3(other.g1.x, other.g1.z, other.g1.y) * vec3(0.0, -1.0, 1.0), vec4(self.g1.x) * vec4(other.g2.z, other.g2.z, other.g2.y, other.g3.x) * vec4(0.0, -1.0, 1.0, 1.0) + vec4(self.g1.y) * vec4(other.g2.z, other.g2.z, other.g2.x, other.g3.y) * vec4(1.0, 0.0, -1.0, 1.0) + vec4(self.g1.z) * vec4(other.g2.y, other.g2.x, other.g2.y, other.g3.z) * vec4(-1.0, 1.0, 0.0, 1.0) + self.g0.xxxw * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0));
+Scalar line_motor_bulk_contraction(Line self, Motor other) {
+    return line_line_at_origin_anti_wedge(self, motor_right_bulk_dual(other));
 }
 
-Rotor flector_origin_left_anti_contraction(Flector self, Origin other) {
-    return Rotor(vec4(self.g1.x, self.g1.y, self.g1.z, self.g0.w) * vec4(other.g0) * vec4(-1.0));
+MultiVector line_multi_vector_bulk_contraction(Line self, MultiVector other) {
+    return line_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-AntiScalar flector_plane_left_anti_contraction(Flector self, Plane other) {
-    return AntiScalar(self.g1.x * other.g0.x + self.g1.y * other.g0.y + self.g1.z * other.g0.z);
+Point line_point_bulk_contraction(Line self, Point other) {
+    return line_plane_at_origin_anti_wedge(self, point_right_bulk_dual(other));
 }
 
-AntiScalar flector_plane_at_origin_left_anti_contraction(Flector self, PlaneAtOrigin other) {
-    return AntiScalar(self.g1.x * other.g0.x + self.g1.y * other.g0.y + self.g1.z * other.g0.z);
+Point line_point_at_infinity_bulk_contraction(Line self, PointAtInfinity other) {
+    return line_plane_at_origin_anti_wedge(self, point_at_infinity_right_bulk_dual(other));
 }
 
-Motor flector_point_left_anti_contraction(Flector self, Point other) {
-    return Motor(vec4(self.g1.x, self.g1.y, self.g1.z, self.g0.w) * vec4(other.g0.w) * vec4(-1.0), vec3(self.g1.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g1.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g1.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0));
+Scalar line_translator_bulk_contraction(Line self, Translator other) {
+    return line_line_at_origin_anti_wedge(self, translator_right_bulk_dual(other));
 }
 
-LineAtInfinity flector_point_at_infinity_left_anti_contraction(Flector self, PointAtInfinity other) {
-    return LineAtInfinity(vec3(self.g1.y) * other.g0.zzx * vec3(1.0, 0.0, -1.0) + vec3(self.g1.z) * other.g0.yxy * vec3(-1.0, 1.0, 0.0) + vec3(self.g1.x) * other.g0.xzy * vec3(0.0, -1.0, 1.0));
+PointAtInfinity line_at_infinity_flector_bulk_contraction(LineAtInfinity self, Flector other) {
+    return line_at_infinity_flector_anti_wedge(self, flector_right_bulk_dual(other));
 }
 
-PlaneAtOrigin flector_rotor_left_anti_contraction(Flector self, Rotor other) {
-    return PlaneAtOrigin(vec3(self.g1.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g1.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g1.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0));
+Scalar line_at_infinity_line_bulk_contraction(LineAtInfinity self, Line other) {
+    return line_at_infinity_line_at_origin_anti_wedge(self, line_right_bulk_dual(other));
 }
 
-Flector flector_scalar_left_anti_contraction(Flector self, Scalar other) {
-    return Flector(self.g1.xyzx * vec4(other.g0) * vec4(-1.0, -1.0, -1.0, 0.0), self.g0.xxxw * vec4(other.g0) * vec4(0.0, 0.0, 0.0, -1.0));
+Scalar line_at_infinity_line_at_infinity_bulk_contraction(LineAtInfinity self, LineAtInfinity other) {
+    return line_at_infinity_line_at_origin_anti_wedge(self, line_at_infinity_right_bulk_dual(other));
 }
 
-Horizon flector_translator_left_anti_contraction(Flector self, Translator other) {
-    return Horizon(self.g1.x * other.g0.x + self.g1.y * other.g0.y + self.g1.z * other.g0.z);
+Scalar line_at_infinity_motor_bulk_contraction(LineAtInfinity self, Motor other) {
+    return line_at_infinity_line_at_origin_anti_wedge(self, motor_right_bulk_dual(other));
 }
 
-Plane line_flector_left_anti_contraction(Line self, Flector other) {
-    return Plane(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+MultiVector line_at_infinity_multi_vector_bulk_contraction(LineAtInfinity self, MultiVector other) {
+    return line_at_infinity_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-AntiScalar line_line_left_anti_contraction(Line self, Line other) {
-    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+PointAtInfinity line_at_infinity_point_bulk_contraction(LineAtInfinity self, Point other) {
+    return line_at_infinity_plane_at_origin_anti_wedge(self, point_right_bulk_dual(other));
 }
 
-AntiScalar line_line_at_origin_left_anti_contraction(Line self, LineAtOrigin other) {
-    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+PointAtInfinity line_at_infinity_point_at_infinity_bulk_contraction(LineAtInfinity self, PointAtInfinity other) {
+    return line_at_infinity_plane_at_origin_anti_wedge(self, point_at_infinity_right_bulk_dual(other));
 }
 
-LineAtInfinity line_magnitude_left_anti_contraction(Line self, Magnitude other) {
-    return LineAtInfinity(self.g0 * vec3(other.g0.x));
+Scalar line_at_infinity_translator_bulk_contraction(LineAtInfinity self, Translator other) {
+    return line_at_infinity_line_at_origin_anti_wedge(self, translator_right_bulk_dual(other));
 }
 
-AntiScalar line_motor_left_anti_contraction(Line self, Motor other) {
-    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+Point line_at_origin_flector_bulk_contraction(LineAtOrigin self, Flector other) {
+    return line_at_origin_flector_anti_wedge(self, flector_right_bulk_dual(other));
 }
 
-MultiVector line_multi_vector_left_anti_contraction(Line self, MultiVector other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g2.y) * vec2(0.0, -1.0) + vec2(self.g0.z) * vec2(other.g2.z) * vec2(0.0, -1.0) + vec2(self.g0.x) * vec2(other.g2.x) * vec2(0.0, -1.0), vec4(0.0), vec3(0.0), self.g0 * vec3(other.g0.x), vec4(self.g0.y) * other.g1.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g1.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g1.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+MultiVector line_at_origin_multi_vector_bulk_contraction(LineAtOrigin self, MultiVector other) {
+    return line_at_origin_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-PlaneAtOrigin line_origin_left_anti_contraction(Line self, Origin other) {
-    return PlaneAtOrigin(self.g0 * vec3(other.g0));
+Origin line_at_origin_point_bulk_contraction(LineAtOrigin self, Point other) {
+    return line_at_origin_plane_at_origin_anti_wedge(self, point_right_bulk_dual(other));
 }
 
-Plane line_point_left_anti_contraction(Line self, Point other) {
-    return Plane(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+Origin line_at_origin_point_at_infinity_bulk_contraction(LineAtOrigin self, PointAtInfinity other) {
+    return line_at_origin_plane_at_origin_anti_wedge(self, point_at_infinity_right_bulk_dual(other));
 }
 
-Horizon line_point_at_infinity_left_anti_contraction(Line self, PointAtInfinity other) {
-    return Horizon(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+Flector motor_flector_bulk_contraction(Motor self, Flector other) {
+    return motor_flector_anti_wedge(self, flector_right_bulk_dual(other));
 }
 
-AntiScalar line_rotor_left_anti_contraction(Line self, Rotor other) {
-    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+Origin motor_horizon_bulk_contraction(Motor self, Horizon other) {
+    return motor_origin_anti_wedge(self, horizon_right_bulk_dual(other));
 }
 
-LineAtInfinity line_scalar_left_anti_contraction(Line self, Scalar other) {
-    return LineAtInfinity(self.g0 * vec3(other.g0));
+MultiVector motor_line_bulk_contraction(Motor self, Line other) {
+    return motor_line_at_origin_anti_wedge(self, line_right_bulk_dual(other));
 }
 
-Plane line_at_origin_flector_left_anti_contraction(LineAtOrigin self, Flector other) {
-    return Plane(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+MultiVector motor_line_at_infinity_bulk_contraction(Motor self, LineAtInfinity other) {
+    return motor_line_at_origin_anti_wedge(self, line_at_infinity_right_bulk_dual(other));
 }
 
-AntiScalar line_at_origin_line_left_anti_contraction(LineAtOrigin self, Line other) {
-    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+MultiVector motor_motor_bulk_contraction(Motor self, Motor other) {
+    return motor_line_at_origin_anti_wedge(self, motor_right_bulk_dual(other));
 }
 
-AntiScalar line_at_origin_line_at_origin_left_anti_contraction(LineAtOrigin self, LineAtOrigin other) {
-    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+MultiVector motor_multi_vector_bulk_contraction(Motor self, MultiVector other) {
+    return motor_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-LineAtInfinity line_at_origin_magnitude_left_anti_contraction(LineAtOrigin self, Magnitude other) {
-    return LineAtInfinity(self.g0 * vec3(other.g0.x));
+Origin motor_plane_bulk_contraction(Motor self, Plane other) {
+    return motor_origin_anti_wedge(self, plane_right_bulk_dual(other));
 }
 
-AntiScalar line_at_origin_motor_left_anti_contraction(LineAtOrigin self, Motor other) {
-    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+Flector motor_point_bulk_contraction(Motor self, Point other) {
+    return motor_plane_at_origin_anti_wedge(self, point_right_bulk_dual(other));
 }
 
-MultiVector line_at_origin_multi_vector_left_anti_contraction(LineAtOrigin self, MultiVector other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g2.y) * vec2(0.0, -1.0) + vec2(self.g0.z) * vec2(other.g2.z) * vec2(0.0, -1.0) + vec2(self.g0.x) * vec2(other.g2.x) * vec2(0.0, -1.0), vec4(0.0), vec3(0.0), self.g0 * vec3(other.g0.x), vec4(self.g0.y) * other.g1.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g1.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g1.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+Flector motor_point_at_infinity_bulk_contraction(Motor self, PointAtInfinity other) {
+    return motor_plane_at_origin_anti_wedge(self, point_at_infinity_right_bulk_dual(other));
 }
 
-PlaneAtOrigin line_at_origin_origin_left_anti_contraction(LineAtOrigin self, Origin other) {
-    return PlaneAtOrigin(self.g0 * vec3(other.g0));
+MultiVector motor_translator_bulk_contraction(Motor self, Translator other) {
+    return motor_line_at_origin_anti_wedge(self, translator_right_bulk_dual(other));
 }
 
-Plane line_at_origin_point_left_anti_contraction(LineAtOrigin self, Point other) {
-    return Plane(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+MultiVector multi_vector_flector_bulk_contraction(MultiVector self, Flector other) {
+    return multi_vector_flector_anti_wedge(self, flector_right_bulk_dual(other));
 }
 
-Horizon line_at_origin_point_at_infinity_left_anti_contraction(LineAtOrigin self, PointAtInfinity other) {
-    return Horizon(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+MultiVector multi_vector_horizon_bulk_contraction(MultiVector self, Horizon other) {
+    return multi_vector_origin_anti_wedge(self, horizon_right_bulk_dual(other));
 }
 
-AntiScalar line_at_origin_rotor_left_anti_contraction(LineAtOrigin self, Rotor other) {
-    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+MultiVector multi_vector_line_bulk_contraction(MultiVector self, Line other) {
+    return multi_vector_line_at_origin_anti_wedge(self, line_right_bulk_dual(other));
 }
 
-LineAtInfinity line_at_origin_scalar_left_anti_contraction(LineAtOrigin self, Scalar other) {
-    return LineAtInfinity(self.g0 * vec3(other.g0));
+MultiVector multi_vector_line_at_infinity_bulk_contraction(MultiVector self, LineAtInfinity other) {
+    return multi_vector_line_at_origin_anti_wedge(self, line_at_infinity_right_bulk_dual(other));
 }
 
-AntiScalar magnitude_anti_scalar_left_anti_contraction(Magnitude self, AntiScalar other) {
-    return AntiScalar(self.g0.y * other.g0);
+MultiVector multi_vector_motor_bulk_contraction(MultiVector self, Motor other) {
+    return multi_vector_line_at_origin_anti_wedge(self, motor_right_bulk_dual(other));
 }
 
-Flector magnitude_flector_left_anti_contraction(Magnitude self, Flector other) {
-    return Flector(vec4(self.g0.y) * other.g0, vec4(self.g0.y) * other.g1);
+MultiVector multi_vector_multi_vector_bulk_contraction(MultiVector self, MultiVector other) {
+    return multi_vector_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-Horizon magnitude_horizon_left_anti_contraction(Magnitude self, Horizon other) {
-    return Horizon(self.g0.y * other.g0);
+MultiVector multi_vector_plane_bulk_contraction(MultiVector self, Plane other) {
+    return multi_vector_origin_anti_wedge(self, plane_right_bulk_dual(other));
 }
 
-Line magnitude_line_left_anti_contraction(Magnitude self, Line other) {
-    return Line(vec3(self.g0.y) * other.g0, vec3(self.g0.y) * other.g1);
+MultiVector multi_vector_point_bulk_contraction(MultiVector self, Point other) {
+    return multi_vector_plane_at_origin_anti_wedge(self, point_right_bulk_dual(other));
 }
 
-LineAtInfinity magnitude_line_at_infinity_left_anti_contraction(Magnitude self, LineAtInfinity other) {
-    return LineAtInfinity(vec3(self.g0.y) * other.g0);
+MultiVector multi_vector_point_at_infinity_bulk_contraction(MultiVector self, PointAtInfinity other) {
+    return multi_vector_plane_at_origin_anti_wedge(self, point_at_infinity_right_bulk_dual(other));
 }
 
-LineAtOrigin magnitude_line_at_origin_left_anti_contraction(Magnitude self, LineAtOrigin other) {
-    return LineAtOrigin(vec3(self.g0.y) * other.g0);
+MultiVector multi_vector_translator_bulk_contraction(MultiVector self, Translator other) {
+    return multi_vector_line_at_origin_anti_wedge(self, translator_right_bulk_dual(other));
 }
 
-Magnitude magnitude_magnitude_left_anti_contraction(Magnitude self, Magnitude other) {
-    return Magnitude(vec2(self.g0.y) * other.g0);
+Scalar origin_flector_bulk_contraction(Origin self, Flector other) {
+    return origin_flector_anti_wedge(self, flector_right_bulk_dual(other));
 }
 
-Motor magnitude_motor_left_anti_contraction(Magnitude self, Motor other) {
-    return Motor(vec4(self.g0.y) * other.g0, vec3(self.g0.y) * other.g1);
+MultiVector origin_multi_vector_bulk_contraction(Origin self, MultiVector other) {
+    return origin_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-MultiVector magnitude_multi_vector_left_anti_contraction(Magnitude self, MultiVector other) {
-    return MultiVector(vec2(self.g0.y) * other.g0, vec4(self.g0.y) * other.g1, vec3(self.g0.y) * other.g2, vec3(self.g0.y) * other.g3, vec4(self.g0.y) * other.g4);
+MultiVector plane_flector_bulk_contraction(Plane self, Flector other) {
+    return plane_flector_anti_wedge(self, flector_right_bulk_dual(other));
 }
 
-Origin magnitude_origin_left_anti_contraction(Magnitude self, Origin other) {
-    return Origin(self.g0.y * other.g0);
+Scalar plane_horizon_bulk_contraction(Plane self, Horizon other) {
+    return plane_origin_anti_wedge(self, horizon_right_bulk_dual(other));
 }
 
-Plane magnitude_plane_left_anti_contraction(Magnitude self, Plane other) {
-    return Plane(vec4(self.g0.y) * other.g0);
+Point plane_line_bulk_contraction(Plane self, Line other) {
+    return plane_line_at_origin_anti_wedge(self, line_right_bulk_dual(other));
 }
 
-PlaneAtOrigin magnitude_plane_at_origin_left_anti_contraction(Magnitude self, PlaneAtOrigin other) {
-    return PlaneAtOrigin(vec3(self.g0.y) * other.g0);
+Point plane_line_at_infinity_bulk_contraction(Plane self, LineAtInfinity other) {
+    return plane_line_at_origin_anti_wedge(self, line_at_infinity_right_bulk_dual(other));
 }
 
-Point magnitude_point_left_anti_contraction(Magnitude self, Point other) {
-    return Point(vec4(self.g0.y) * other.g0);
+Point plane_motor_bulk_contraction(Plane self, Motor other) {
+    return plane_line_at_origin_anti_wedge(self, motor_right_bulk_dual(other));
 }
 
-PointAtInfinity magnitude_point_at_infinity_left_anti_contraction(Magnitude self, PointAtInfinity other) {
-    return PointAtInfinity(vec3(self.g0.y) * other.g0);
+MultiVector plane_multi_vector_bulk_contraction(Plane self, MultiVector other) {
+    return plane_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-Rotor magnitude_rotor_left_anti_contraction(Magnitude self, Rotor other) {
-    return Rotor(vec4(self.g0.y) * other.g0);
+Scalar plane_plane_bulk_contraction(Plane self, Plane other) {
+    return plane_origin_anti_wedge(self, plane_right_bulk_dual(other));
 }
 
-Scalar magnitude_scalar_left_anti_contraction(Magnitude self, Scalar other) {
-    return Scalar(self.g0.y * other.g0);
+Line plane_point_bulk_contraction(Plane self, Point other) {
+    return plane_plane_at_origin_anti_wedge(self, point_right_bulk_dual(other));
 }
 
-Translator magnitude_translator_left_anti_contraction(Magnitude self, Translator other) {
-    return Translator(vec4(self.g0.y) * other.g0);
+Line plane_point_at_infinity_bulk_contraction(Plane self, PointAtInfinity other) {
+    return plane_plane_at_origin_anti_wedge(self, point_at_infinity_right_bulk_dual(other));
 }
 
-AntiScalar motor_anti_scalar_left_anti_contraction(Motor self, AntiScalar other) {
-    return AntiScalar(self.g0.w * other.g0);
+Point plane_translator_bulk_contraction(Plane self, Translator other) {
+    return plane_line_at_origin_anti_wedge(self, translator_right_bulk_dual(other));
 }
 
-Flector motor_flector_left_anti_contraction(Motor self, Flector other) {
-    return Flector(vec4(self.g0.w) * other.g0, vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.w) * other.g1 + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+MultiVector plane_at_origin_flector_bulk_contraction(PlaneAtOrigin self, Flector other) {
+    return plane_at_origin_flector_anti_wedge(self, flector_right_bulk_dual(other));
 }
 
-Horizon motor_horizon_left_anti_contraction(Motor self, Horizon other) {
-    return Horizon(self.g0.w * other.g0);
+Origin plane_at_origin_line_bulk_contraction(PlaneAtOrigin self, Line other) {
+    return plane_at_origin_line_at_origin_anti_wedge(self, line_right_bulk_dual(other));
 }
 
-Motor motor_line_left_anti_contraction(Motor self, Line other) {
-    return Motor(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, -1.0), vec3(self.g0.w) * other.g1);
+Origin plane_at_origin_line_at_infinity_bulk_contraction(PlaneAtOrigin self, LineAtInfinity other) {
+    return plane_at_origin_line_at_origin_anti_wedge(self, line_at_infinity_right_bulk_dual(other));
 }
 
-LineAtInfinity motor_line_at_infinity_left_anti_contraction(Motor self, LineAtInfinity other) {
-    return LineAtInfinity(vec3(self.g0.w) * other.g0);
+Origin plane_at_origin_motor_bulk_contraction(PlaneAtOrigin self, Motor other) {
+    return plane_at_origin_line_at_origin_anti_wedge(self, motor_right_bulk_dual(other));
 }
 
-Rotor motor_line_at_origin_left_anti_contraction(Motor self, LineAtOrigin other) {
-    return Rotor(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, -1.0));
+MultiVector plane_at_origin_multi_vector_bulk_contraction(PlaneAtOrigin self, MultiVector other) {
+    return plane_at_origin_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-MultiVector motor_magnitude_left_anti_contraction(Motor self, Magnitude other) {
-    return MultiVector(vec2(self.g0.w) * other.g0, vec4(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.x), vec4(0.0));
+LineAtOrigin plane_at_origin_point_bulk_contraction(PlaneAtOrigin self, Point other) {
+    return plane_at_origin_plane_at_origin_anti_wedge(self, point_right_bulk_dual(other));
 }
 
-Motor motor_motor_left_anti_contraction(Motor self, Motor other) {
-    return Motor(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.w) * other.g0 + vec4(self.g0.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0), vec3(self.g0.w) * other.g1);
+LineAtOrigin plane_at_origin_point_at_infinity_bulk_contraction(PlaneAtOrigin self, PointAtInfinity other) {
+    return plane_at_origin_plane_at_origin_anti_wedge(self, point_at_infinity_right_bulk_dual(other));
 }
 
-MultiVector motor_multi_vector_left_anti_contraction(Motor self, MultiVector other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g2.y) * vec2(0.0, -1.0) + vec2(self.g0.z) * vec2(other.g2.z) * vec2(0.0, -1.0) + vec2(self.g0.w) * other.g0 + vec2(self.g0.x) * vec2(other.g2.x) * vec2(0.0, -1.0), vec4(self.g0.w) * other.g1, vec3(self.g0.w) * other.g2, vec3(self.g0.w) * other.g3 + vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.x), vec4(self.g0.y) * other.g1.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g1.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.w) * other.g4 + vec4(self.g0.x) * other.g1.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+Origin plane_at_origin_translator_bulk_contraction(PlaneAtOrigin self, Translator other) {
+    return plane_at_origin_line_at_origin_anti_wedge(self, translator_right_bulk_dual(other));
 }
 
-Flector motor_origin_left_anti_contraction(Motor self, Origin other) {
-    return Flector(self.g0.xxxw * vec4(other.g0) * vec4(0.0, 0.0, 0.0, 1.0), self.g0.xyzx * vec4(other.g0) * vec4(1.0, 1.0, 1.0, 0.0));
+Scalar point_flector_bulk_contraction(Point self, Flector other) {
+    return point_flector_anti_wedge(self, flector_right_bulk_dual(other));
 }
 
-Plane motor_plane_left_anti_contraction(Motor self, Plane other) {
-    return Plane(vec4(self.g0.w) * other.g0);
+MultiVector point_multi_vector_bulk_contraction(Point self, MultiVector other) {
+    return point_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-PlaneAtOrigin motor_plane_at_origin_left_anti_contraction(Motor self, PlaneAtOrigin other) {
-    return PlaneAtOrigin(vec3(self.g0.w) * other.g0);
+Scalar point_point_bulk_contraction(Point self, Point other) {
+    return point_plane_at_origin_anti_wedge(self, point_right_bulk_dual(other));
 }
 
-Flector motor_point_left_anti_contraction(Motor self, Point other) {
-    return Flector(vec4(self.g0.w) * other.g0, vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+Scalar point_point_at_infinity_bulk_contraction(Point self, PointAtInfinity other) {
+    return point_plane_at_origin_anti_wedge(self, point_at_infinity_right_bulk_dual(other));
 }
 
-Flector motor_point_at_infinity_left_anti_contraction(Motor self, PointAtInfinity other) {
-    return Flector(self.g0.wwwx * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0), vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0));
+Scalar point_at_infinity_flector_bulk_contraction(PointAtInfinity self, Flector other) {
+    return point_at_infinity_flector_anti_wedge(self, flector_right_bulk_dual(other));
 }
 
-Rotor motor_rotor_left_anti_contraction(Motor self, Rotor other) {
-    return Rotor(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.w) * other.g0 + vec4(self.g0.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0));
+MultiVector point_at_infinity_multi_vector_bulk_contraction(PointAtInfinity self, MultiVector other) {
+    return point_at_infinity_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-MultiVector motor_scalar_left_anti_contraction(Motor self, Scalar other) {
-    return MultiVector(vec2(self.g0.w, self.g0.x) * vec2(other.g0) * vec2(1.0, 0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), vec4(0.0));
+Scalar point_at_infinity_point_bulk_contraction(PointAtInfinity self, Point other) {
+    return point_at_infinity_plane_at_origin_anti_wedge(self, point_right_bulk_dual(other));
 }
 
-Translator motor_translator_left_anti_contraction(Motor self, Translator other) {
-    return Translator(vec4(self.g0.w) * other.g0);
+Scalar point_at_infinity_point_at_infinity_bulk_contraction(PointAtInfinity self, PointAtInfinity other) {
+    return point_at_infinity_plane_at_origin_anti_wedge(self, point_at_infinity_right_bulk_dual(other));
 }
 
-AntiScalar multi_vector_anti_scalar_left_anti_contraction(MultiVector self, AntiScalar other) {
-    return AntiScalar(self.g0.y * other.g0);
+Flector rotor_flector_bulk_contraction(Rotor self, Flector other) {
+    return rotor_flector_anti_wedge(self, flector_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_flector_left_anti_contraction(MultiVector self, Flector other) {
-    return MultiVector(vec2(self.g4.x) * vec2(other.g1.x) * vec2(0.0, 1.0) + vec2(self.g4.y) * vec2(other.g1.y) * vec2(0.0, 1.0) + vec2(self.g4.z) * vec2(other.g1.z) * vec2(0.0, 1.0) + vec2(self.g1.x, self.g1.w) * vec2(other.g0.x, other.g0.w) * vec2(0.0, -1.0), vec4(self.g0.y) * other.g0, vec3(self.g4.x, self.g4.y, self.g4.z) * vec3(other.g0.w) * vec3(-1.0), vec3(self.g4.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g4.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g4.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0), vec4(self.g0.y) * other.g1 + vec4(self.g2.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g2.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g2.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+Origin rotor_horizon_bulk_contraction(Rotor self, Horizon other) {
+    return rotor_origin_anti_wedge(self, horizon_right_bulk_dual(other));
 }
 
-Horizon multi_vector_horizon_left_anti_contraction(MultiVector self, Horizon other) {
-    return Horizon(self.g0.y * other.g0);
+LineAtOrigin rotor_line_bulk_contraction(Rotor self, Line other) {
+    return rotor_line_at_origin_anti_wedge(self, line_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_line_left_anti_contraction(MultiVector self, Line other) {
-    return MultiVector(vec2(self.g2.y) * vec2(other.g0.y) * vec2(0.0, -1.0) + vec2(self.g2.z) * vec2(other.g0.z) * vec2(0.0, -1.0) + vec2(self.g2.x) * vec2(other.g0.x) * vec2(0.0, -1.0), vec4(0.0), vec3(self.g0.y) * other.g0, vec3(self.g0.y) * other.g1, vec4(self.g4.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g1.y) * vec4(1.0, 0.0, -1.0, 1.0) + vec4(self.g4.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g1.z) * vec4(-1.0, 1.0, 0.0, 1.0) + vec4(self.g4.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g1.x) * vec4(0.0, -1.0, 1.0, 1.0));
+LineAtOrigin rotor_line_at_infinity_bulk_contraction(Rotor self, LineAtInfinity other) {
+    return rotor_line_at_origin_anti_wedge(self, line_at_infinity_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_line_at_infinity_left_anti_contraction(MultiVector self, LineAtInfinity other) {
-    return MultiVector(vec2(0.0), vec4(0.0), vec3(0.0), vec3(self.g0.y) * other.g0, vec4(self.g4.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g4.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g4.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, 1.0));
+LineAtOrigin rotor_motor_bulk_contraction(Rotor self, Motor other) {
+    return rotor_line_at_origin_anti_wedge(self, motor_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_line_at_origin_left_anti_contraction(MultiVector self, LineAtOrigin other) {
-    return MultiVector(vec2(self.g2.y) * vec2(other.g0.y) * vec2(0.0, -1.0) + vec2(self.g2.z) * vec2(other.g0.z) * vec2(0.0, -1.0) + vec2(self.g2.x) * vec2(other.g0.x) * vec2(0.0, -1.0), vec4(0.0), vec3(self.g0.y) * other.g0, vec3(0.0), vec4(self.g4.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g0.z) * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g4.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g0.y) * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g4.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g0.x) * vec4(0.0, -1.0, 1.0, 0.0));
+MultiVector rotor_multi_vector_bulk_contraction(Rotor self, MultiVector other) {
+    return rotor_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_magnitude_left_anti_contraction(MultiVector self, Magnitude other) {
-    return MultiVector(vec2(self.g0.y) * other.g0, self.g4.xyzx * vec4(other.g0.x) * vec4(-1.0, -1.0, -1.0, 0.0), vec3(0.0), self.g2 * vec3(other.g0.x), self.g1.xxxw * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0));
+Origin rotor_plane_bulk_contraction(Rotor self, Plane other) {
+    return rotor_origin_anti_wedge(self, plane_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_motor_left_anti_contraction(MultiVector self, Motor other) {
-    return MultiVector(vec2(self.g2.x) * vec2(other.g0.x) * vec2(0.0, -1.0) + vec2(self.g2.y) * vec2(other.g0.y) * vec2(0.0, -1.0) + vec2(self.g2.z) * vec2(other.g0.z) * vec2(0.0, -1.0) + self.g0 * vec2(other.g0.x, other.g0.w) * vec2(0.0, 1.0), vec4(0.0), vec3(self.g0.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.y) * other.g1, vec4(self.g4.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g1.y) * vec4(1.0, 0.0, -1.0, 1.0) + vec4(self.g4.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g1.z) * vec4(-1.0, 1.0, 0.0, 1.0) + vec4(self.g4.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g1.x) * vec4(0.0, -1.0, 1.0, 1.0));
+Flector rotor_point_bulk_contraction(Rotor self, Point other) {
+    return rotor_plane_at_origin_anti_wedge(self, point_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_multi_vector_left_anti_contraction(MultiVector self, MultiVector other) {
-    return MultiVector(vec2(self.g0.y) * other.g0 + vec2(self.g2.x) * vec2(other.g2.x) * vec2(0.0, -1.0) + vec2(self.g2.y) * vec2(other.g2.y) * vec2(0.0, -1.0) + vec2(self.g2.z) * vec2(other.g2.z) * vec2(0.0, -1.0) + vec2(self.g4.x) * vec2(other.g4.x) * vec2(0.0, 1.0) + vec2(self.g4.y) * vec2(other.g4.y) * vec2(0.0, 1.0) + vec2(self.g4.z) * vec2(other.g4.z) * vec2(0.0, 1.0) + vec2(self.g1.x, self.g1.w) * vec2(other.g1.x, other.g1.w) * vec2(0.0, -1.0), vec4(self.g0.y) * other.g1 + self.g4.xyzx * vec4(other.g0.x) * vec4(-1.0, -1.0, -1.0, 0.0), vec3(self.g0.y) * other.g2 + vec3(self.g4.x, self.g4.y, self.g4.z) * vec3(other.g1.w) * vec3(-1.0), vec3(self.g0.y) * other.g3 + vec3(self.g4.x) * vec3(other.g1.z, other.g1.z, other.g1.y) * vec3(0.0, -1.0, 1.0) + vec3(self.g4.y) * vec3(other.g1.z, other.g1.z, other.g1.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g4.z) * vec3(other.g1.y, other.g1.x, other.g1.y) * vec3(-1.0, 1.0, 0.0) + self.g2 * vec3(other.g0.x), vec4(self.g0.y) * other.g4 + vec4(self.g2.x) * other.g1.wwwx * vec4(1.0, 0.0, 0.0, -1.0) + vec4(self.g2.y) * other.g1.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g2.z) * other.g1.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g4.x) * vec4(other.g2.z, other.g2.z, other.g2.y, other.g3.x) * vec4(0.0, -1.0, 1.0, 1.0) + vec4(self.g4.y) * vec4(other.g2.z, other.g2.z, other.g2.x, other.g3.y) * vec4(1.0, 0.0, -1.0, 1.0) + vec4(self.g4.z) * vec4(other.g2.y, other.g2.x, other.g2.y, other.g3.z) * vec4(-1.0, 1.0, 0.0, 1.0) + self.g1.xxxw * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0));
+Flector rotor_point_at_infinity_bulk_contraction(Rotor self, PointAtInfinity other) {
+    return rotor_plane_at_origin_anti_wedge(self, point_at_infinity_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_origin_left_anti_contraction(MultiVector self, Origin other) {
-    return MultiVector(vec2(self.g1.x, self.g1.w) * vec2(other.g0) * vec2(0.0, -1.0), vec4(self.g0.x, self.g0.x, self.g0.x, self.g0.y) * vec4(other.g0) * vec4(0.0, 0.0, 0.0, 1.0), vec3(self.g4.x, self.g4.y, self.g4.z) * vec3(other.g0) * vec3(-1.0), vec3(0.0), vec4(self.g2.x, self.g2.y, self.g2.z, self.g2.x) * vec4(other.g0) * vec4(1.0, 1.0, 1.0, 0.0));
+LineAtOrigin rotor_translator_bulk_contraction(Rotor self, Translator other) {
+    return rotor_line_at_origin_anti_wedge(self, translator_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_plane_left_anti_contraction(MultiVector self, Plane other) {
-    return MultiVector(vec2(self.g4.y) * vec2(other.g0.y) * vec2(0.0, 1.0) + vec2(self.g4.z) * vec2(other.g0.z) * vec2(0.0, 1.0) + vec2(self.g4.x) * vec2(other.g0.x) * vec2(0.0, 1.0), vec4(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.y) * other.g0);
+Flector translator_flector_bulk_contraction(Translator self, Flector other) {
+    return translator_flector_anti_wedge(self, flector_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_plane_at_origin_left_anti_contraction(MultiVector self, PlaneAtOrigin other) {
-    return MultiVector(vec2(self.g4.y) * vec2(other.g0.y) * vec2(0.0, 1.0) + vec2(self.g4.z) * vec2(other.g0.z) * vec2(0.0, 1.0) + vec2(self.g4.x) * vec2(other.g0.x) * vec2(0.0, 1.0), vec4(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.y, self.g0.y, self.g0.y, self.g0.x) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0));
+Origin translator_horizon_bulk_contraction(Translator self, Horizon other) {
+    return translator_origin_anti_wedge(self, horizon_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_point_left_anti_contraction(MultiVector self, Point other) {
-    return MultiVector(vec2(self.g1.x, self.g1.w) * vec2(other.g0.x, other.g0.w) * vec2(0.0, -1.0), vec4(self.g0.y) * other.g0, vec3(self.g4.x, self.g4.y, self.g4.z) * vec3(other.g0.w) * vec3(-1.0), vec3(self.g4.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g4.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g4.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0), vec4(self.g2.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g2.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g2.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+MultiVector translator_line_bulk_contraction(Translator self, Line other) {
+    return translator_line_at_origin_anti_wedge(self, line_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_point_at_infinity_left_anti_contraction(MultiVector self, PointAtInfinity other) {
-    return MultiVector(vec2(0.0), vec4(self.g0.y, self.g0.y, self.g0.y, self.g0.x) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0), vec3(0.0), vec3(self.g4.y) * other.g0.zzx * vec3(1.0, 0.0, -1.0) + vec3(self.g4.z) * other.g0.yxy * vec3(-1.0, 1.0, 0.0) + vec3(self.g4.x) * other.g0.xzy * vec3(0.0, -1.0, 1.0), vec4(self.g2.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g2.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g2.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0));
+MultiVector translator_line_at_infinity_bulk_contraction(Translator self, LineAtInfinity other) {
+    return translator_line_at_origin_anti_wedge(self, line_at_infinity_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_rotor_left_anti_contraction(MultiVector self, Rotor other) {
-    return MultiVector(vec2(self.g2.x) * vec2(other.g0.x) * vec2(0.0, -1.0) + vec2(self.g2.y) * vec2(other.g0.y) * vec2(0.0, -1.0) + vec2(self.g2.z) * vec2(other.g0.z) * vec2(0.0, -1.0) + self.g0 * vec2(other.g0.x, other.g0.w) * vec2(0.0, 1.0), vec4(0.0), vec3(self.g0.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec4(self.g4.y) * other.g0.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g4.z) * other.g0.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g4.x) * other.g0.xzyx * vec4(0.0, -1.0, 1.0, 0.0));
+MultiVector translator_motor_bulk_contraction(Translator self, Motor other) {
+    return translator_line_at_origin_anti_wedge(self, motor_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_scalar_left_anti_contraction(MultiVector self, Scalar other) {
-    return MultiVector(self.g0.yx * vec2(other.g0) * vec2(1.0, 0.0), self.g4.xyzx * vec4(other.g0) * vec4(-1.0, -1.0, -1.0, 0.0), vec3(0.0), self.g2 * vec3(other.g0), self.g1.xxxw * vec4(other.g0) * vec4(0.0, 0.0, 0.0, -1.0));
+MultiVector translator_multi_vector_bulk_contraction(Translator self, MultiVector other) {
+    return translator_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_translator_left_anti_contraction(MultiVector self, Translator other) {
-    return MultiVector(self.g0 * vec2(other.g0.x, other.g0.w) * vec2(0.0, 1.0), vec4(0.0), vec3(0.0), vec3(self.g0.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g4.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g4.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g4.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, 1.0));
+Origin translator_plane_bulk_contraction(Translator self, Plane other) {
+    return translator_origin_anti_wedge(self, plane_right_bulk_dual(other));
 }
 
-AntiScalar origin_flector_left_anti_contraction(Origin self, Flector other) {
-    return AntiScalar(0.0 - self.g0 * other.g0.w);
+Flector translator_point_bulk_contraction(Translator self, Point other) {
+    return translator_plane_at_origin_anti_wedge(self, point_right_bulk_dual(other));
 }
 
-Horizon origin_magnitude_left_anti_contraction(Origin self, Magnitude other) {
-    return Horizon(0.0 - self.g0 * other.g0.x);
+Flector translator_point_at_infinity_bulk_contraction(Translator self, PointAtInfinity other) {
+    return translator_plane_at_origin_anti_wedge(self, point_at_infinity_right_bulk_dual(other));
 }
 
-MultiVector origin_multi_vector_left_anti_contraction(Origin self, MultiVector other) {
-    return MultiVector(vec2(self.g0) * vec2(other.g1.x, other.g1.w) * vec2(0.0, -1.0), vec4(0.0), vec3(0.0), vec3(0.0), vec4(self.g0) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0));
+MultiVector translator_translator_bulk_contraction(Translator self, Translator other) {
+    return translator_line_at_origin_anti_wedge(self, translator_right_bulk_dual(other));
 }
 
-AntiScalar origin_origin_left_anti_contraction(Origin self, Origin other) {
-    return AntiScalar(0.0 - self.g0 * other.g0);
+MultiVector flector_flector_weight_contraction(Flector self, Flector other) {
+    return flector_flector_anti_wedge(self, flector_right_weight_dual(other));
 }
 
-AntiScalar origin_point_left_anti_contraction(Origin self, Point other) {
-    return AntiScalar(0.0 - self.g0 * other.g0.w);
+PointAtInfinity flector_line_weight_contraction(Flector self, Line other) {
+    return flector_line_at_infinity_anti_wedge(self, line_right_weight_dual(other));
 }
 
-Horizon origin_scalar_left_anti_contraction(Origin self, Scalar other) {
-    return Horizon(0.0 - self.g0 * other.g0);
+PointAtInfinity flector_line_at_origin_weight_contraction(Flector self, LineAtOrigin other) {
+    return flector_line_at_infinity_anti_wedge(self, line_at_origin_right_weight_dual(other));
 }
 
-Motor plane_flector_left_anti_contraction(Plane self, Flector other) {
-    return Motor(vec4(self.g0.y) * vec4(other.g0.w, other.g0.w, other.g0.w, other.g1.y) * vec4(0.0, -1.0, 0.0, 1.0) + vec4(self.g0.z) * vec4(other.g0.w, other.g0.w, other.g0.w, other.g1.z) * vec4(0.0, 0.0, -1.0, 1.0) + vec4(self.g0.x) * vec4(other.g0.w, other.g0.x, other.g0.x, other.g1.x) * vec4(-1.0, 0.0, 0.0, 1.0), vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0));
+MultiVector flector_multi_vector_weight_contraction(Flector self, MultiVector other) {
+    return flector_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-Plane plane_line_left_anti_contraction(Plane self, Line other) {
-    return Plane(vec4(self.g0.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g1.y) * vec4(1.0, 0.0, -1.0, 1.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g1.z) * vec4(-1.0, 1.0, 0.0, 1.0) + vec4(self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g1.x) * vec4(0.0, -1.0, 1.0, 1.0));
+MultiVector flector_origin_weight_contraction(Flector self, Origin other) {
+    return flector_horizon_anti_wedge(self, origin_right_weight_dual(other));
 }
 
-Horizon plane_line_at_infinity_left_anti_contraction(Plane self, LineAtInfinity other) {
-    return Horizon(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
+Scalar flector_plane_weight_contraction(Flector self, Plane other) {
+    return flector_point_at_infinity_anti_wedge(self, plane_right_weight_dual(other));
 }
 
-PlaneAtOrigin plane_line_at_origin_left_anti_contraction(Plane self, LineAtOrigin other) {
-    return PlaneAtOrigin(vec3(self.g0.y) * other.g0.zzx * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * other.g0.yxy * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * other.g0.xzy * vec3(0.0, -1.0, 1.0));
+Scalar flector_plane_at_origin_weight_contraction(Flector self, PlaneAtOrigin other) {
+    return flector_point_at_infinity_anti_wedge(self, plane_at_origin_right_weight_dual(other));
 }
 
-PointAtInfinity plane_magnitude_left_anti_contraction(Plane self, Magnitude other) {
-    return PointAtInfinity(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.x) * vec3(-1.0));
+MultiVector flector_point_weight_contraction(Flector self, Point other) {
+    return flector_horizon_anti_wedge(self, point_right_weight_dual(other));
 }
 
-Plane plane_motor_left_anti_contraction(Plane self, Motor other) {
-    return Plane(vec4(self.g0.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g1.y) * vec4(1.0, 0.0, -1.0, 1.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g1.z) * vec4(-1.0, 1.0, 0.0, 1.0) + vec4(self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g1.x) * vec4(0.0, -1.0, 1.0, 1.0));
+MultiVector horizon_flector_weight_contraction(Horizon self, Flector other) {
+    return horizon_flector_anti_wedge(self, flector_right_weight_dual(other));
 }
 
-MultiVector plane_multi_vector_left_anti_contraction(Plane self, MultiVector other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g4.y) * vec2(0.0, 1.0) + vec2(self.g0.z) * vec2(other.g4.z) * vec2(0.0, 1.0) + vec2(self.g0.x) * vec2(other.g4.x) * vec2(0.0, 1.0), self.g0.xyzx * vec4(other.g0.x) * vec4(-1.0, -1.0, -1.0, 0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.w) * vec3(-1.0), vec3(self.g0.y) * vec3(other.g1.z, other.g1.z, other.g1.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g1.y, other.g1.x, other.g1.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g1.x, other.g1.z, other.g1.y) * vec3(0.0, -1.0, 1.0), vec4(self.g0.y) * vec4(other.g2.z, other.g2.z, other.g2.x, other.g3.y) * vec4(1.0, 0.0, -1.0, 1.0) + vec4(self.g0.z) * vec4(other.g2.y, other.g2.x, other.g2.y, other.g3.z) * vec4(-1.0, 1.0, 0.0, 1.0) + vec4(self.g0.x) * vec4(other.g2.x, other.g2.z, other.g2.y, other.g3.x) * vec4(0.0, -1.0, 1.0, 1.0));
+MultiVector horizon_multi_vector_weight_contraction(Horizon self, MultiVector other) {
+    return horizon_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-LineAtOrigin plane_origin_left_anti_contraction(Plane self, Origin other) {
-    return LineAtOrigin(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0) * vec3(-1.0));
+Point line_flector_weight_contraction(Line self, Flector other) {
+    return line_flector_anti_wedge(self, flector_right_weight_dual(other));
 }
 
-AntiScalar plane_plane_left_anti_contraction(Plane self, Plane other) {
-    return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
+Scalar line_line_weight_contraction(Line self, Line other) {
+    return line_line_at_infinity_anti_wedge(self, line_right_weight_dual(other));
 }
 
-AntiScalar plane_plane_at_origin_left_anti_contraction(Plane self, PlaneAtOrigin other) {
-    return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
+Scalar line_line_at_origin_weight_contraction(Line self, LineAtOrigin other) {
+    return line_line_at_infinity_anti_wedge(self, line_at_origin_right_weight_dual(other));
 }
 
-Line plane_point_left_anti_contraction(Plane self, Point other) {
-    return Line(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w) * vec3(-1.0), vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0));
+MultiVector line_multi_vector_weight_contraction(Line self, MultiVector other) {
+    return line_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-LineAtInfinity plane_point_at_infinity_left_anti_contraction(Plane self, PointAtInfinity other) {
-    return LineAtInfinity(vec3(self.g0.y) * other.g0.zzx * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * other.g0.yxy * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * other.g0.xzy * vec3(0.0, -1.0, 1.0));
+PointAtInfinity line_origin_weight_contraction(Line self, Origin other) {
+    return line_horizon_anti_wedge(self, origin_right_weight_dual(other));
 }
 
-PlaneAtOrigin plane_rotor_left_anti_contraction(Plane self, Rotor other) {
-    return PlaneAtOrigin(vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0));
+PointAtInfinity line_point_weight_contraction(Line self, Point other) {
+    return line_horizon_anti_wedge(self, point_right_weight_dual(other));
 }
 
-PointAtInfinity plane_scalar_left_anti_contraction(Plane self, Scalar other) {
-    return PointAtInfinity(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0) * vec3(-1.0));
+PointAtInfinity line_at_infinity_flector_weight_contraction(LineAtInfinity self, Flector other) {
+    return line_at_infinity_flector_anti_wedge(self, flector_right_weight_dual(other));
 }
 
-Horizon plane_translator_left_anti_contraction(Plane self, Translator other) {
-    return Horizon(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
+MultiVector line_at_infinity_multi_vector_weight_contraction(LineAtInfinity self, MultiVector other) {
+    return line_at_infinity_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-Motor plane_at_origin_flector_left_anti_contraction(PlaneAtOrigin self, Flector other) {
-    return Motor(vec4(self.g0.y) * vec4(other.g0.w, other.g0.w, other.g0.w, other.g1.y) * vec4(0.0, -1.0, 0.0, 1.0) + vec4(self.g0.z) * vec4(other.g0.w, other.g0.w, other.g0.w, other.g1.z) * vec4(0.0, 0.0, -1.0, 1.0) + vec4(self.g0.x) * vec4(other.g0.w, other.g0.x, other.g0.x, other.g1.x) * vec4(-1.0, 0.0, 0.0, 1.0), vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0));
+Point line_at_origin_flector_weight_contraction(LineAtOrigin self, Flector other) {
+    return line_at_origin_flector_anti_wedge(self, flector_right_weight_dual(other));
 }
 
-Plane plane_at_origin_line_left_anti_contraction(PlaneAtOrigin self, Line other) {
-    return Plane(vec4(self.g0.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g1.y) * vec4(1.0, 0.0, -1.0, 1.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g1.z) * vec4(-1.0, 1.0, 0.0, 1.0) + vec4(self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g1.x) * vec4(0.0, -1.0, 1.0, 1.0));
+Scalar line_at_origin_line_weight_contraction(LineAtOrigin self, Line other) {
+    return line_at_origin_line_at_infinity_anti_wedge(self, line_right_weight_dual(other));
 }
 
-Horizon plane_at_origin_line_at_infinity_left_anti_contraction(PlaneAtOrigin self, LineAtInfinity other) {
-    return Horizon(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
+Scalar line_at_origin_line_at_origin_weight_contraction(LineAtOrigin self, LineAtOrigin other) {
+    return line_at_origin_line_at_infinity_anti_wedge(self, line_at_origin_right_weight_dual(other));
 }
 
-PlaneAtOrigin plane_at_origin_line_at_origin_left_anti_contraction(PlaneAtOrigin self, LineAtOrigin other) {
-    return PlaneAtOrigin(vec3(self.g0.y) * other.g0.zzx * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * other.g0.yxy * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * other.g0.xzy * vec3(0.0, -1.0, 1.0));
+MultiVector line_at_origin_multi_vector_weight_contraction(LineAtOrigin self, MultiVector other) {
+    return line_at_origin_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-PointAtInfinity plane_at_origin_magnitude_left_anti_contraction(PlaneAtOrigin self, Magnitude other) {
-    return PointAtInfinity(self.g0 * vec3(other.g0.x) * vec3(-1.0));
+PointAtInfinity line_at_origin_origin_weight_contraction(LineAtOrigin self, Origin other) {
+    return line_at_origin_horizon_anti_wedge(self, origin_right_weight_dual(other));
 }
 
-Plane plane_at_origin_motor_left_anti_contraction(PlaneAtOrigin self, Motor other) {
-    return Plane(vec4(self.g0.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g1.y) * vec4(1.0, 0.0, -1.0, 1.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g1.z) * vec4(-1.0, 1.0, 0.0, 1.0) + vec4(self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g1.x) * vec4(0.0, -1.0, 1.0, 1.0));
+PointAtInfinity line_at_origin_point_weight_contraction(LineAtOrigin self, Point other) {
+    return line_at_origin_horizon_anti_wedge(self, point_right_weight_dual(other));
 }
 
-MultiVector plane_at_origin_multi_vector_left_anti_contraction(PlaneAtOrigin self, MultiVector other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g4.y) * vec2(0.0, 1.0) + vec2(self.g0.z) * vec2(other.g4.z) * vec2(0.0, 1.0) + vec2(self.g0.x) * vec2(other.g4.x) * vec2(0.0, 1.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g0.x) * vec4(-1.0, -1.0, -1.0, 0.0), self.g0 * vec3(other.g1.w) * vec3(-1.0), vec3(self.g0.y) * vec3(other.g1.z, other.g1.z, other.g1.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g1.y, other.g1.x, other.g1.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g1.x, other.g1.z, other.g1.y) * vec3(0.0, -1.0, 1.0), vec4(self.g0.y) * vec4(other.g2.z, other.g2.z, other.g2.x, other.g3.y) * vec4(1.0, 0.0, -1.0, 1.0) + vec4(self.g0.z) * vec4(other.g2.y, other.g2.x, other.g2.y, other.g3.z) * vec4(-1.0, 1.0, 0.0, 1.0) + vec4(self.g0.x) * vec4(other.g2.x, other.g2.z, other.g2.y, other.g3.x) * vec4(0.0, -1.0, 1.0, 1.0));
+Flector motor_flector_weight_contraction(Motor self, Flector other) {
+    return motor_flector_anti_wedge(self, flector_right_weight_dual(other));
 }
 
-LineAtOrigin plane_at_origin_origin_left_anti_contraction(PlaneAtOrigin self, Origin other) {
-    return LineAtOrigin(self.g0 * vec3(other.g0) * vec3(-1.0));
+MultiVector motor_line_weight_contraction(Motor self, Line other) {
+    return motor_line_at_infinity_anti_wedge(self, line_right_weight_dual(other));
 }
 
-AntiScalar plane_at_origin_plane_left_anti_contraction(PlaneAtOrigin self, Plane other) {
-    return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
+MultiVector motor_line_at_origin_weight_contraction(Motor self, LineAtOrigin other) {
+    return motor_line_at_infinity_anti_wedge(self, line_at_origin_right_weight_dual(other));
 }
 
-AntiScalar plane_at_origin_plane_at_origin_left_anti_contraction(PlaneAtOrigin self, PlaneAtOrigin other) {
-    return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
+MultiVector motor_multi_vector_weight_contraction(Motor self, MultiVector other) {
+    return motor_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-Line plane_at_origin_point_left_anti_contraction(PlaneAtOrigin self, Point other) {
-    return Line(self.g0 * vec3(other.g0.w) * vec3(-1.0), vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0));
+Flector motor_origin_weight_contraction(Motor self, Origin other) {
+    return motor_horizon_anti_wedge(self, origin_right_weight_dual(other));
 }
 
-LineAtInfinity plane_at_origin_point_at_infinity_left_anti_contraction(PlaneAtOrigin self, PointAtInfinity other) {
-    return LineAtInfinity(vec3(self.g0.y) * other.g0.zzx * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * other.g0.yxy * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * other.g0.xzy * vec3(0.0, -1.0, 1.0));
+PointAtInfinity motor_plane_weight_contraction(Motor self, Plane other) {
+    return motor_point_at_infinity_anti_wedge(self, plane_right_weight_dual(other));
 }
 
-PlaneAtOrigin plane_at_origin_rotor_left_anti_contraction(PlaneAtOrigin self, Rotor other) {
-    return PlaneAtOrigin(vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0));
+PointAtInfinity motor_plane_at_origin_weight_contraction(Motor self, PlaneAtOrigin other) {
+    return motor_point_at_infinity_anti_wedge(self, plane_at_origin_right_weight_dual(other));
 }
 
-PointAtInfinity plane_at_origin_scalar_left_anti_contraction(PlaneAtOrigin self, Scalar other) {
-    return PointAtInfinity(self.g0 * vec3(other.g0) * vec3(-1.0));
+Flector motor_point_weight_contraction(Motor self, Point other) {
+    return motor_horizon_anti_wedge(self, point_right_weight_dual(other));
 }
 
-Horizon plane_at_origin_translator_left_anti_contraction(PlaneAtOrigin self, Translator other) {
-    return Horizon(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
+Scalar motor_translator_weight_contraction(Motor self, Translator other) {
+    return motor_scalar_anti_wedge(self, translator_right_weight_dual(other));
 }
 
-AntiScalar point_flector_left_anti_contraction(Point self, Flector other) {
-    return AntiScalar(0.0 - self.g0.w * other.g0.w);
+MultiVector multi_vector_flector_weight_contraction(MultiVector self, Flector other) {
+    return multi_vector_flector_anti_wedge(self, flector_right_weight_dual(other));
 }
 
-Horizon point_magnitude_left_anti_contraction(Point self, Magnitude other) {
-    return Horizon(0.0 - self.g0.w * other.g0.x);
+MultiVector multi_vector_line_weight_contraction(MultiVector self, Line other) {
+    return multi_vector_line_at_infinity_anti_wedge(self, line_right_weight_dual(other));
 }
 
-MultiVector point_multi_vector_left_anti_contraction(Point self, MultiVector other) {
-    return MultiVector(vec2(self.g0.x, self.g0.w) * vec2(other.g1.x, other.g1.w) * vec2(0.0, -1.0), vec4(0.0), vec3(0.0), vec3(0.0), self.g0.xxxw * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0));
+MultiVector multi_vector_line_at_origin_weight_contraction(MultiVector self, LineAtOrigin other) {
+    return multi_vector_line_at_infinity_anti_wedge(self, line_at_origin_right_weight_dual(other));
 }
 
-AntiScalar point_origin_left_anti_contraction(Point self, Origin other) {
-    return AntiScalar(0.0 - self.g0.w * other.g0);
+MultiVector multi_vector_multi_vector_weight_contraction(MultiVector self, MultiVector other) {
+    return multi_vector_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-AntiScalar point_point_left_anti_contraction(Point self, Point other) {
-    return AntiScalar(0.0 - self.g0.w * other.g0.w);
+MultiVector multi_vector_origin_weight_contraction(MultiVector self, Origin other) {
+    return multi_vector_horizon_anti_wedge(self, origin_right_weight_dual(other));
 }
 
-Horizon point_scalar_left_anti_contraction(Point self, Scalar other) {
-    return Horizon(0.0 - self.g0.w * other.g0);
+MultiVector multi_vector_plane_weight_contraction(MultiVector self, Plane other) {
+    return multi_vector_point_at_infinity_anti_wedge(self, plane_right_weight_dual(other));
 }
 
-AntiScalar rotor_anti_scalar_left_anti_contraction(Rotor self, AntiScalar other) {
-    return AntiScalar(self.g0.w * other.g0);
+MultiVector multi_vector_plane_at_origin_weight_contraction(MultiVector self, PlaneAtOrigin other) {
+    return multi_vector_point_at_infinity_anti_wedge(self, plane_at_origin_right_weight_dual(other));
 }
 
-Flector rotor_flector_left_anti_contraction(Rotor self, Flector other) {
-    return Flector(vec4(self.g0.w) * other.g0, vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.w) * other.g1 + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+MultiVector multi_vector_point_weight_contraction(MultiVector self, Point other) {
+    return multi_vector_horizon_anti_wedge(self, point_right_weight_dual(other));
 }
 
-Horizon rotor_horizon_left_anti_contraction(Rotor self, Horizon other) {
-    return Horizon(self.g0.w * other.g0);
+Scalar multi_vector_translator_weight_contraction(MultiVector self, Translator other) {
+    return multi_vector_scalar_anti_wedge(self, translator_right_weight_dual(other));
 }
 
-Motor rotor_line_left_anti_contraction(Rotor self, Line other) {
-    return Motor(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, -1.0), vec3(self.g0.w) * other.g1);
+Scalar origin_flector_weight_contraction(Origin self, Flector other) {
+    return origin_flector_anti_wedge(self, flector_right_weight_dual(other));
 }
 
-LineAtInfinity rotor_line_at_infinity_left_anti_contraction(Rotor self, LineAtInfinity other) {
-    return LineAtInfinity(vec3(self.g0.w) * other.g0);
+MultiVector origin_multi_vector_weight_contraction(Origin self, MultiVector other) {
+    return origin_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-Rotor rotor_line_at_origin_left_anti_contraction(Rotor self, LineAtOrigin other) {
-    return Rotor(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, -1.0));
+Scalar origin_origin_weight_contraction(Origin self, Origin other) {
+    return origin_horizon_anti_wedge(self, origin_right_weight_dual(other));
 }
 
-MultiVector rotor_magnitude_left_anti_contraction(Rotor self, Magnitude other) {
-    return MultiVector(vec2(self.g0.w) * other.g0, vec4(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.x), vec4(0.0));
+Scalar origin_point_weight_contraction(Origin self, Point other) {
+    return origin_horizon_anti_wedge(self, point_right_weight_dual(other));
 }
 
-Motor rotor_motor_left_anti_contraction(Rotor self, Motor other) {
-    return Motor(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.w) * other.g0 + vec4(self.g0.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0), vec3(self.g0.w) * other.g1);
+MultiVector plane_flector_weight_contraction(Plane self, Flector other) {
+    return plane_flector_anti_wedge(self, flector_right_weight_dual(other));
 }
 
-MultiVector rotor_multi_vector_left_anti_contraction(Rotor self, MultiVector other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g2.y) * vec2(0.0, -1.0) + vec2(self.g0.z) * vec2(other.g2.z) * vec2(0.0, -1.0) + vec2(self.g0.w) * other.g0 + vec2(self.g0.x) * vec2(other.g2.x) * vec2(0.0, -1.0), vec4(self.g0.w) * other.g1, vec3(self.g0.w) * other.g2, vec3(self.g0.w) * other.g3 + vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.x), vec4(self.g0.y) * other.g1.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g1.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.w) * other.g4 + vec4(self.g0.x) * other.g1.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+PointAtInfinity plane_line_weight_contraction(Plane self, Line other) {
+    return plane_line_at_infinity_anti_wedge(self, line_right_weight_dual(other));
 }
 
-Flector rotor_origin_left_anti_contraction(Rotor self, Origin other) {
-    return Flector(self.g0.xxxw * vec4(other.g0) * vec4(0.0, 0.0, 0.0, 1.0), self.g0.xyzx * vec4(other.g0) * vec4(1.0, 1.0, 1.0, 0.0));
+PointAtInfinity plane_line_at_origin_weight_contraction(Plane self, LineAtOrigin other) {
+    return plane_line_at_infinity_anti_wedge(self, line_at_origin_right_weight_dual(other));
 }
 
-Plane rotor_plane_left_anti_contraction(Rotor self, Plane other) {
-    return Plane(vec4(self.g0.w) * other.g0);
+MultiVector plane_multi_vector_weight_contraction(Plane self, MultiVector other) {
+    return plane_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-PlaneAtOrigin rotor_plane_at_origin_left_anti_contraction(Rotor self, PlaneAtOrigin other) {
-    return PlaneAtOrigin(vec3(self.g0.w) * other.g0);
+LineAtInfinity plane_origin_weight_contraction(Plane self, Origin other) {
+    return plane_horizon_anti_wedge(self, origin_right_weight_dual(other));
 }
 
-Flector rotor_point_left_anti_contraction(Rotor self, Point other) {
-    return Flector(vec4(self.g0.w) * other.g0, vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+Scalar plane_plane_weight_contraction(Plane self, Plane other) {
+    return plane_point_at_infinity_anti_wedge(self, plane_right_weight_dual(other));
 }
 
-Flector rotor_point_at_infinity_left_anti_contraction(Rotor self, PointAtInfinity other) {
-    return Flector(self.g0.wwwx * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0), vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0));
+Scalar plane_plane_at_origin_weight_contraction(Plane self, PlaneAtOrigin other) {
+    return plane_point_at_infinity_anti_wedge(self, plane_at_origin_right_weight_dual(other));
 }
 
-Rotor rotor_rotor_left_anti_contraction(Rotor self, Rotor other) {
-    return Rotor(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.w) * other.g0 + vec4(self.g0.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0));
+LineAtInfinity plane_point_weight_contraction(Plane self, Point other) {
+    return plane_horizon_anti_wedge(self, point_right_weight_dual(other));
 }
 
-MultiVector rotor_scalar_left_anti_contraction(Rotor self, Scalar other) {
-    return MultiVector(vec2(self.g0.w, self.g0.x) * vec2(other.g0) * vec2(1.0, 0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), vec4(0.0));
+MultiVector plane_at_origin_flector_weight_contraction(PlaneAtOrigin self, Flector other) {
+    return plane_at_origin_flector_anti_wedge(self, flector_right_weight_dual(other));
 }
 
-Translator rotor_translator_left_anti_contraction(Rotor self, Translator other) {
-    return Translator(vec4(self.g0.w) * other.g0);
+PointAtInfinity plane_at_origin_line_weight_contraction(PlaneAtOrigin self, Line other) {
+    return plane_at_origin_line_at_infinity_anti_wedge(self, line_right_weight_dual(other));
 }
 
-AntiScalar translator_anti_scalar_left_anti_contraction(Translator self, AntiScalar other) {
-    return AntiScalar(self.g0.w * other.g0);
+PointAtInfinity plane_at_origin_line_at_origin_weight_contraction(PlaneAtOrigin self, LineAtOrigin other) {
+    return plane_at_origin_line_at_infinity_anti_wedge(self, line_at_origin_right_weight_dual(other));
 }
 
-Flector translator_flector_left_anti_contraction(Translator self, Flector other) {
-    return Flector(vec4(self.g0.w) * other.g0, vec4(self.g0.w) * other.g1);
+MultiVector plane_at_origin_multi_vector_weight_contraction(PlaneAtOrigin self, MultiVector other) {
+    return plane_at_origin_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-Horizon translator_horizon_left_anti_contraction(Translator self, Horizon other) {
-    return Horizon(self.g0.w * other.g0);
+LineAtInfinity plane_at_origin_origin_weight_contraction(PlaneAtOrigin self, Origin other) {
+    return plane_at_origin_horizon_anti_wedge(self, origin_right_weight_dual(other));
 }
 
-Line translator_line_left_anti_contraction(Translator self, Line other) {
-    return Line(vec3(self.g0.w) * other.g0, vec3(self.g0.w) * other.g1);
+Scalar plane_at_origin_plane_weight_contraction(PlaneAtOrigin self, Plane other) {
+    return plane_at_origin_point_at_infinity_anti_wedge(self, plane_right_weight_dual(other));
 }
 
-LineAtInfinity translator_line_at_infinity_left_anti_contraction(Translator self, LineAtInfinity other) {
-    return LineAtInfinity(vec3(self.g0.w) * other.g0);
+Scalar plane_at_origin_plane_at_origin_weight_contraction(PlaneAtOrigin self, PlaneAtOrigin other) {
+    return plane_at_origin_point_at_infinity_anti_wedge(self, plane_at_origin_right_weight_dual(other));
 }
 
-LineAtOrigin translator_line_at_origin_left_anti_contraction(Translator self, LineAtOrigin other) {
-    return LineAtOrigin(vec3(self.g0.w) * other.g0);
+LineAtInfinity plane_at_origin_point_weight_contraction(PlaneAtOrigin self, Point other) {
+    return plane_at_origin_horizon_anti_wedge(self, point_right_weight_dual(other));
 }
 
-Magnitude translator_magnitude_left_anti_contraction(Translator self, Magnitude other) {
-    return Magnitude(vec2(self.g0.w) * other.g0);
+Scalar point_flector_weight_contraction(Point self, Flector other) {
+    return point_flector_anti_wedge(self, flector_right_weight_dual(other));
 }
 
-Motor translator_motor_left_anti_contraction(Translator self, Motor other) {
-    return Motor(vec4(self.g0.w) * other.g0, vec3(self.g0.w) * other.g1);
+MultiVector point_multi_vector_weight_contraction(Point self, MultiVector other) {
+    return point_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-MultiVector translator_multi_vector_left_anti_contraction(Translator self, MultiVector other) {
-    return MultiVector(vec2(self.g0.w) * other.g0, vec4(self.g0.w) * other.g1, vec3(self.g0.w) * other.g2, vec3(self.g0.w) * other.g3, vec4(self.g0.w) * other.g4);
+Scalar point_origin_weight_contraction(Point self, Origin other) {
+    return point_horizon_anti_wedge(self, origin_right_weight_dual(other));
 }
 
-Origin translator_origin_left_anti_contraction(Translator self, Origin other) {
-    return Origin(self.g0.w * other.g0);
+Scalar point_point_weight_contraction(Point self, Point other) {
+    return point_horizon_anti_wedge(self, point_right_weight_dual(other));
 }
 
-Plane translator_plane_left_anti_contraction(Translator self, Plane other) {
-    return Plane(vec4(self.g0.w) * other.g0);
+Scalar point_at_infinity_flector_weight_contraction(PointAtInfinity self, Flector other) {
+    return point_at_infinity_flector_anti_wedge(self, flector_right_weight_dual(other));
 }
 
-PlaneAtOrigin translator_plane_at_origin_left_anti_contraction(Translator self, PlaneAtOrigin other) {
-    return PlaneAtOrigin(vec3(self.g0.w) * other.g0);
+MultiVector point_at_infinity_multi_vector_weight_contraction(PointAtInfinity self, MultiVector other) {
+    return point_at_infinity_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-Point translator_point_left_anti_contraction(Translator self, Point other) {
-    return Point(vec4(self.g0.w) * other.g0);
+Flector rotor_flector_weight_contraction(Rotor self, Flector other) {
+    return rotor_flector_anti_wedge(self, flector_right_weight_dual(other));
 }
 
-PointAtInfinity translator_point_at_infinity_left_anti_contraction(Translator self, PointAtInfinity other) {
-    return PointAtInfinity(vec3(self.g0.w) * other.g0);
+MultiVector rotor_line_weight_contraction(Rotor self, Line other) {
+    return rotor_line_at_infinity_anti_wedge(self, line_right_weight_dual(other));
 }
 
-Rotor translator_rotor_left_anti_contraction(Translator self, Rotor other) {
-    return Rotor(vec4(self.g0.w) * other.g0);
+MultiVector rotor_line_at_origin_weight_contraction(Rotor self, LineAtOrigin other) {
+    return rotor_line_at_infinity_anti_wedge(self, line_at_origin_right_weight_dual(other));
 }
 
-Scalar translator_scalar_left_anti_contraction(Translator self, Scalar other) {
-    return Scalar(self.g0.w * other.g0);
+MultiVector rotor_multi_vector_weight_contraction(Rotor self, MultiVector other) {
+    return rotor_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-Translator translator_translator_left_anti_contraction(Translator self, Translator other) {
-    return Translator(vec4(self.g0.w) * other.g0);
+Flector rotor_origin_weight_contraction(Rotor self, Origin other) {
+    return rotor_horizon_anti_wedge(self, origin_right_weight_dual(other));
 }
 
-Flector flector_anti_scalar_left_contraction(Flector self, AntiScalar other) {
-    return Flector(self.g1.xxxw * vec4(other.g0) * vec4(0.0, 0.0, 0.0, 1.0), self.g0.xyzx * vec4(other.g0) * vec4(1.0, 1.0, 1.0, 0.0));
+PointAtInfinity rotor_plane_weight_contraction(Rotor self, Plane other) {
+    return rotor_point_at_infinity_anti_wedge(self, plane_right_weight_dual(other));
 }
 
-MultiVector flector_flector_left_contraction(Flector self, Flector other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g0.y) * vec2(1.0, 0.0) + vec2(self.g0.z) * vec2(other.g0.z) * vec2(1.0, 0.0) + vec2(self.g1.w) * vec2(other.g1.w) * vec2(-1.0, 0.0) + vec2(self.g0.x) * vec2(other.g0.x) * vec2(1.0, 0.0), vec4(0.0), vec3(self.g0.y) * vec3(other.g1.z, other.g1.z, other.g1.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g1.y, other.g1.x, other.g1.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g1.x, other.g1.z, other.g1.y) * vec3(0.0, -1.0, 1.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.w) * vec3(-1.0), vec4(0.0));
+PointAtInfinity rotor_plane_at_origin_weight_contraction(Rotor self, PlaneAtOrigin other) {
+    return rotor_point_at_infinity_anti_wedge(self, plane_at_origin_right_weight_dual(other));
 }
 
-MultiVector flector_horizon_left_contraction(Flector self, Horizon other) {
-    return MultiVector(vec2(self.g1.w, self.g1.x) * vec2(other.g0) * vec2(-1.0, 0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0) * vec3(-1.0), vec4(0.0));
+Flector rotor_point_weight_contraction(Rotor self, Point other) {
+    return rotor_horizon_anti_wedge(self, point_right_weight_dual(other));
 }
 
-Point flector_line_left_contraction(Flector self, Line other) {
-    return Point(vec4(self.g0.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.x) * vec4(other.g1.x, other.g1.z, other.g1.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0));
+Scalar rotor_translator_weight_contraction(Rotor self, Translator other) {
+    return rotor_scalar_anti_wedge(self, translator_right_weight_dual(other));
 }
 
-PointAtInfinity flector_line_at_infinity_left_contraction(Flector self, LineAtInfinity other) {
-    return PointAtInfinity(vec3(self.g0.y) * other.g0.zzx * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * other.g0.yxy * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * other.g0.xzy * vec3(0.0, 1.0, -1.0));
+Flector translator_flector_weight_contraction(Translator self, Flector other) {
+    return translator_flector_anti_wedge(self, flector_right_weight_dual(other));
 }
 
-Origin flector_line_at_origin_left_contraction(Flector self, LineAtOrigin other) {
-    return Origin(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+LineAtInfinity translator_line_weight_contraction(Translator self, Line other) {
+    return translator_line_at_infinity_anti_wedge(self, line_right_weight_dual(other));
 }
 
-Flector flector_magnitude_left_contraction(Flector self, Magnitude other) {
-    return Flector(self.g1.xxxw * vec4(other.g0.x, other.g0.x, other.g0.x, other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0), self.g0.xyzx * vec4(other.g0.y, other.g0.y, other.g0.y, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0));
+LineAtInfinity translator_line_at_origin_weight_contraction(Translator self, LineAtOrigin other) {
+    return translator_line_at_infinity_anti_wedge(self, line_at_origin_right_weight_dual(other));
 }
 
-Flector flector_motor_left_contraction(Flector self, Motor other) {
-    return Flector(vec4(self.g0.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g1.w) * vec4(other.g0.w) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.x) * vec4(other.g1.x, other.g1.z, other.g1.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0), self.g0.xyzx * other.g0.wwwx * vec4(1.0, 1.0, 1.0, 0.0));
+MultiVector translator_multi_vector_weight_contraction(Translator self, MultiVector other) {
+    return translator_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-MultiVector flector_multi_vector_left_contraction(Flector self, MultiVector other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g1.y) * vec2(1.0, 0.0) + vec2(self.g0.z) * vec2(other.g1.z) * vec2(1.0, 0.0) + vec2(self.g1.w) * vec2(other.g4.w) * vec2(-1.0, 0.0) + vec2(self.g0.x) * vec2(other.g1.x) * vec2(1.0, 0.0), vec4(self.g0.y) * vec4(other.g3.z, other.g3.z, other.g3.x, other.g2.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g3.y, other.g3.x, other.g3.y, other.g2.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g1.w) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.x) * vec4(other.g3.x, other.g3.z, other.g3.y, other.g2.x) * vec4(0.0, 1.0, -1.0, -1.0), vec3(self.g0.y) * vec3(other.g4.z, other.g4.z, other.g4.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g4.y, other.g4.x, other.g4.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g4.x, other.g4.z, other.g4.y) * vec3(0.0, -1.0, 1.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g4.w) * vec3(-1.0), self.g0.xyzx * vec4(other.g0.y, other.g0.y, other.g0.y, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0));
+Horizon translator_origin_weight_contraction(Translator self, Origin other) {
+    return translator_horizon_anti_wedge(self, origin_right_weight_dual(other));
 }
 
-MultiVector flector_plane_left_contraction(Flector self, Plane other) {
-    return MultiVector(vec2(self.g1.w, self.g1.x) * vec2(other.g0.w, other.g0.x) * vec2(-1.0, 0.0), vec4(0.0), vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w) * vec3(-1.0), vec4(0.0));
+PointAtInfinity translator_plane_weight_contraction(Translator self, Plane other) {
+    return translator_point_at_infinity_anti_wedge(self, plane_right_weight_dual(other));
 }
 
-LineAtOrigin flector_plane_at_origin_left_contraction(Flector self, PlaneAtOrigin other) {
-    return LineAtOrigin(vec3(self.g0.y) * other.g0.zzx * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * other.g0.yxy * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * other.g0.xzy * vec3(0.0, -1.0, 1.0));
+PointAtInfinity translator_plane_at_origin_weight_contraction(Translator self, PlaneAtOrigin other) {
+    return translator_point_at_infinity_anti_wedge(self, plane_at_origin_right_weight_dual(other));
 }
 
-Scalar flector_point_left_contraction(Flector self, Point other) {
-    return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
+Horizon translator_point_weight_contraction(Translator self, Point other) {
+    return translator_horizon_anti_wedge(self, point_right_weight_dual(other));
 }
 
-Scalar flector_point_at_infinity_left_contraction(Flector self, PointAtInfinity other) {
-    return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
+Scalar translator_translator_weight_contraction(Translator self, Translator other) {
+    return translator_scalar_anti_wedge(self, translator_right_weight_dual(other));
 }
 
-Flector flector_rotor_left_contraction(Flector self, Rotor other) {
-    return Flector(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.w) * vec4(other.g0.w) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0), self.g0.xyzx * other.g0.wwwx * vec4(1.0, 1.0, 1.0, 0.0));
+Motor flector_flector_bulk_expansion(Flector self, Flector other) {
+    return flector_flector_wedge(self, flector_right_bulk_dual(other));
 }
 
-Flector flector_translator_left_contraction(Flector self, Translator other) {
-    return Flector(vec4(self.g0.y) * other.g0.zzxz * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g0.z) * other.g0.yxyy * vec4(1.0, -1.0, 0.0, 0.0) + vec4(self.g0.x, self.g0.x, self.g0.x, self.g1.w) * other.g0.xzyw * vec4(0.0, 1.0, -1.0, 1.0), self.g0.xyzx * other.g0.wwwx * vec4(1.0, 1.0, 1.0, 0.0));
+Rotor flector_horizon_bulk_expansion(Flector self, Horizon other) {
+    return flector_origin_wedge(self, horizon_right_bulk_dual(other));
 }
 
-Origin horizon_anti_scalar_left_contraction(Horizon self, AntiScalar other) {
-    return Origin(self.g0 * other.g0);
+PlaneAtOrigin flector_line_bulk_expansion(Flector self, Line other) {
+    return flector_line_at_origin_wedge(self, line_right_bulk_dual(other));
 }
 
-Scalar horizon_flector_left_contraction(Horizon self, Flector other) {
-    return Scalar(0.0 - self.g0 * other.g1.w);
+PlaneAtOrigin flector_line_at_infinity_bulk_expansion(Flector self, LineAtInfinity other) {
+    return flector_line_at_origin_wedge(self, line_at_infinity_right_bulk_dual(other));
 }
 
-Scalar horizon_horizon_left_contraction(Horizon self, Horizon other) {
-    return Scalar(0.0 - self.g0 * other.g0);
+PlaneAtOrigin flector_motor_bulk_expansion(Flector self, Motor other) {
+    return flector_line_at_origin_wedge(self, motor_right_bulk_dual(other));
 }
 
-Origin horizon_magnitude_left_contraction(Horizon self, Magnitude other) {
-    return Origin(self.g0 * other.g0.y);
+MultiVector flector_multi_vector_bulk_expansion(Flector self, MultiVector other) {
+    return flector_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-Origin horizon_motor_left_contraction(Horizon self, Motor other) {
-    return Origin(self.g0 * other.g0.w);
+Rotor flector_plane_bulk_expansion(Flector self, Plane other) {
+    return flector_origin_wedge(self, plane_right_bulk_dual(other));
 }
 
-MultiVector horizon_multi_vector_left_contraction(Horizon self, MultiVector other) {
-    return MultiVector(vec2(self.g0) * vec2(other.g4.w, other.g4.x) * vec2(-1.0, 0.0), vec4(self.g0) * vec4(other.g0.x, other.g0.x, other.g0.x, other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0), vec3(0.0), vec3(0.0), vec4(0.0));
+AntiScalar flector_point_bulk_expansion(Flector self, Point other) {
+    return flector_plane_at_origin_wedge(self, point_right_bulk_dual(other));
 }
 
-Scalar horizon_plane_left_contraction(Horizon self, Plane other) {
-    return Scalar(0.0 - self.g0 * other.g0.w);
+AntiScalar flector_point_at_infinity_bulk_expansion(Flector self, PointAtInfinity other) {
+    return flector_plane_at_origin_wedge(self, point_at_infinity_right_bulk_dual(other));
 }
 
-Origin horizon_rotor_left_contraction(Horizon self, Rotor other) {
-    return Origin(self.g0 * other.g0.w);
+PlaneAtOrigin flector_translator_bulk_expansion(Flector self, Translator other) {
+    return flector_line_at_origin_wedge(self, translator_right_bulk_dual(other));
 }
 
-Origin horizon_translator_left_contraction(Horizon self, Translator other) {
-    return Origin(self.g0 * other.g0.w);
+AntiScalar horizon_flector_bulk_expansion(Horizon self, Flector other) {
+    return horizon_flector_wedge(self, flector_right_bulk_dual(other));
 }
 
-LineAtOrigin line_anti_scalar_left_contraction(Line self, AntiScalar other) {
-    return LineAtOrigin(self.g1 * vec3(other.g0));
+AntiScalar horizon_horizon_bulk_expansion(Horizon self, Horizon other) {
+    return horizon_origin_wedge(self, horizon_right_bulk_dual(other));
 }
 
-Point line_flector_left_contraction(Line self, Flector other) {
-    return Point(vec4(self.g1.y) * other.g1.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g1.z) * other.g1.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.x) * other.g1.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+MultiVector horizon_multi_vector_bulk_expansion(Horizon self, MultiVector other) {
+    return horizon_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-PointAtInfinity line_horizon_left_contraction(Line self, Horizon other) {
-    return PointAtInfinity(self.g1 * vec3(other.g0));
+AntiScalar horizon_plane_bulk_expansion(Horizon self, Plane other) {
+    return horizon_origin_wedge(self, plane_right_bulk_dual(other));
 }
 
-Scalar line_line_left_contraction(Line self, Line other) {
-    return Scalar(0.0 - self.g1.x * other.g1.x - self.g1.y * other.g1.y - self.g1.z * other.g1.z);
+Plane line_flector_bulk_expansion(Line self, Flector other) {
+    return line_flector_wedge(self, flector_right_bulk_dual(other));
 }
 
-Scalar line_line_at_infinity_left_contraction(Line self, LineAtInfinity other) {
-    return Scalar(0.0 - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
+PlaneAtOrigin line_horizon_bulk_expansion(Line self, Horizon other) {
+    return line_origin_wedge(self, horizon_right_bulk_dual(other));
 }
 
-LineAtOrigin line_magnitude_left_contraction(Line self, Magnitude other) {
-    return LineAtOrigin(self.g1 * vec3(other.g0.y));
+AntiScalar line_line_bulk_expansion(Line self, Line other) {
+    return line_line_at_origin_wedge(self, line_right_bulk_dual(other));
 }
 
-MultiVector line_motor_left_contraction(Line self, Motor other) {
-    return MultiVector(vec2(self.g1.y) * vec2(other.g1.y) * vec2(-1.0, 0.0) + vec2(self.g1.z) * vec2(other.g1.z) * vec2(-1.0, 0.0) + vec2(self.g1.x) * vec2(other.g1.x) * vec2(-1.0, 0.0), vec4(0.0), self.g1 * vec3(other.g0.w), vec3(0.0), vec4(0.0));
+AntiScalar line_line_at_infinity_bulk_expansion(Line self, LineAtInfinity other) {
+    return line_line_at_origin_wedge(self, line_at_infinity_right_bulk_dual(other));
 }
 
-MultiVector line_multi_vector_left_contraction(Line self, MultiVector other) {
-    return MultiVector(vec2(self.g1.y) * vec2(other.g3.y) * vec2(-1.0, 0.0) + vec2(self.g1.z) * vec2(other.g3.z) * vec2(-1.0, 0.0) + vec2(self.g1.x) * vec2(other.g3.x) * vec2(-1.0, 0.0), vec4(self.g1.y) * other.g4.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g1.z) * other.g4.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.x) * other.g4.wxxx * vec4(1.0, 0.0, 0.0, -1.0), self.g1 * vec3(other.g0.y), vec3(0.0), vec4(0.0));
+AntiScalar line_motor_bulk_expansion(Line self, Motor other) {
+    return line_line_at_origin_wedge(self, motor_right_bulk_dual(other));
 }
 
-Point line_plane_left_contraction(Line self, Plane other) {
-    return Point(vec4(self.g1.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g1.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+MultiVector line_multi_vector_bulk_expansion(Line self, MultiVector other) {
+    return line_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-Origin line_plane_at_origin_left_contraction(Line self, PlaneAtOrigin other) {
-    return Origin(0.0 - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
+PlaneAtOrigin line_plane_bulk_expansion(Line self, Plane other) {
+    return line_origin_wedge(self, plane_right_bulk_dual(other));
 }
 
-LineAtOrigin line_rotor_left_contraction(Line self, Rotor other) {
-    return LineAtOrigin(self.g1 * vec3(other.g0.w));
+AntiScalar line_translator_bulk_expansion(Line self, Translator other) {
+    return line_line_at_origin_wedge(self, translator_right_bulk_dual(other));
 }
 
-MultiVector line_translator_left_contraction(Line self, Translator other) {
-    return MultiVector(vec2(self.g1.y) * vec2(other.g0.y) * vec2(-1.0, 0.0) + vec2(self.g1.z) * vec2(other.g0.z) * vec2(-1.0, 0.0) + vec2(self.g1.x) * vec2(other.g0.x) * vec2(-1.0, 0.0), vec4(0.0), self.g1 * vec3(other.g0.w), vec3(0.0), vec4(0.0));
+Plane line_at_infinity_flector_bulk_expansion(LineAtInfinity self, Flector other) {
+    return line_at_infinity_flector_wedge(self, flector_right_bulk_dual(other));
 }
 
-LineAtOrigin line_at_infinity_anti_scalar_left_contraction(LineAtInfinity self, AntiScalar other) {
-    return LineAtOrigin(self.g0 * vec3(other.g0));
+PlaneAtOrigin line_at_infinity_horizon_bulk_expansion(LineAtInfinity self, Horizon other) {
+    return line_at_infinity_origin_wedge(self, horizon_right_bulk_dual(other));
 }
 
-Point line_at_infinity_flector_left_contraction(LineAtInfinity self, Flector other) {
-    return Point(vec4(self.g0.y) * other.g1.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g1.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g1.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+AntiScalar line_at_infinity_line_bulk_expansion(LineAtInfinity self, Line other) {
+    return line_at_infinity_line_at_origin_wedge(self, line_right_bulk_dual(other));
 }
 
-PointAtInfinity line_at_infinity_horizon_left_contraction(LineAtInfinity self, Horizon other) {
-    return PointAtInfinity(self.g0 * vec3(other.g0));
+AntiScalar line_at_infinity_line_at_infinity_bulk_expansion(LineAtInfinity self, LineAtInfinity other) {
+    return line_at_infinity_line_at_origin_wedge(self, line_at_infinity_right_bulk_dual(other));
 }
 
-Scalar line_at_infinity_line_left_contraction(LineAtInfinity self, Line other) {
-    return Scalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z);
+AntiScalar line_at_infinity_motor_bulk_expansion(LineAtInfinity self, Motor other) {
+    return line_at_infinity_line_at_origin_wedge(self, motor_right_bulk_dual(other));
 }
 
-Scalar line_at_infinity_line_at_infinity_left_contraction(LineAtInfinity self, LineAtInfinity other) {
-    return Scalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+MultiVector line_at_infinity_multi_vector_bulk_expansion(LineAtInfinity self, MultiVector other) {
+    return line_at_infinity_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-LineAtOrigin line_at_infinity_magnitude_left_contraction(LineAtInfinity self, Magnitude other) {
-    return LineAtOrigin(self.g0 * vec3(other.g0.y));
+PlaneAtOrigin line_at_infinity_plane_bulk_expansion(LineAtInfinity self, Plane other) {
+    return line_at_infinity_origin_wedge(self, plane_right_bulk_dual(other));
 }
 
-MultiVector line_at_infinity_motor_left_contraction(LineAtInfinity self, Motor other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g1.y) * vec2(-1.0, 0.0) + vec2(self.g0.z) * vec2(other.g1.z) * vec2(-1.0, 0.0) + vec2(self.g0.x) * vec2(other.g1.x) * vec2(-1.0, 0.0), vec4(0.0), self.g0 * vec3(other.g0.w), vec3(0.0), vec4(0.0));
+AntiScalar line_at_infinity_translator_bulk_expansion(LineAtInfinity self, Translator other) {
+    return line_at_infinity_line_at_origin_wedge(self, translator_right_bulk_dual(other));
 }
 
-MultiVector line_at_infinity_multi_vector_left_contraction(LineAtInfinity self, MultiVector other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g3.y) * vec2(-1.0, 0.0) + vec2(self.g0.z) * vec2(other.g3.z) * vec2(-1.0, 0.0) + vec2(self.g0.x) * vec2(other.g3.x) * vec2(-1.0, 0.0), vec4(self.g0.y) * other.g4.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g4.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g4.wxxx * vec4(1.0, 0.0, 0.0, -1.0), self.g0 * vec3(other.g0.y), vec3(0.0), vec4(0.0));
+PlaneAtOrigin line_at_origin_flector_bulk_expansion(LineAtOrigin self, Flector other) {
+    return line_at_origin_flector_wedge(self, flector_right_bulk_dual(other));
 }
 
-Point line_at_infinity_plane_left_contraction(LineAtInfinity self, Plane other) {
-    return Point(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+MultiVector line_at_origin_multi_vector_bulk_expansion(LineAtOrigin self, MultiVector other) {
+    return line_at_origin_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-Origin line_at_infinity_plane_at_origin_left_contraction(LineAtInfinity self, PlaneAtOrigin other) {
-    return Origin(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+Plane motor_flector_bulk_expansion(Motor self, Flector other) {
+    return motor_flector_wedge(self, flector_right_bulk_dual(other));
 }
 
-LineAtOrigin line_at_infinity_rotor_left_contraction(LineAtInfinity self, Rotor other) {
-    return LineAtOrigin(self.g0 * vec3(other.g0.w));
+PlaneAtOrigin motor_horizon_bulk_expansion(Motor self, Horizon other) {
+    return motor_origin_wedge(self, horizon_right_bulk_dual(other));
 }
 
-MultiVector line_at_infinity_translator_left_contraction(LineAtInfinity self, Translator other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g0.y) * vec2(-1.0, 0.0) + vec2(self.g0.z) * vec2(other.g0.z) * vec2(-1.0, 0.0) + vec2(self.g0.x) * vec2(other.g0.x) * vec2(-1.0, 0.0), vec4(0.0), self.g0 * vec3(other.g0.w), vec3(0.0), vec4(0.0));
+AntiScalar motor_line_bulk_expansion(Motor self, Line other) {
+    return motor_line_at_origin_wedge(self, line_right_bulk_dual(other));
 }
 
-AntiScalar magnitude_anti_scalar_left_contraction(Magnitude self, AntiScalar other) {
-    return AntiScalar(self.g0.x * other.g0);
+AntiScalar motor_line_at_infinity_bulk_expansion(Motor self, LineAtInfinity other) {
+    return motor_line_at_origin_wedge(self, line_at_infinity_right_bulk_dual(other));
 }
 
-Flector magnitude_flector_left_contraction(Magnitude self, Flector other) {
-    return Flector(vec4(self.g0.x) * other.g0, vec4(self.g0.x) * other.g1);
+AntiScalar motor_motor_bulk_expansion(Motor self, Motor other) {
+    return motor_line_at_origin_wedge(self, motor_right_bulk_dual(other));
 }
 
-Horizon magnitude_horizon_left_contraction(Magnitude self, Horizon other) {
-    return Horizon(self.g0.x * other.g0);
+MultiVector motor_multi_vector_bulk_expansion(Motor self, MultiVector other) {
+    return motor_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-Line magnitude_line_left_contraction(Magnitude self, Line other) {
-    return Line(vec3(self.g0.x) * other.g0, vec3(self.g0.x) * other.g1);
+PlaneAtOrigin motor_plane_bulk_expansion(Motor self, Plane other) {
+    return motor_origin_wedge(self, plane_right_bulk_dual(other));
 }
 
-LineAtInfinity magnitude_line_at_infinity_left_contraction(Magnitude self, LineAtInfinity other) {
-    return LineAtInfinity(vec3(self.g0.x) * other.g0);
+AntiScalar motor_translator_bulk_expansion(Motor self, Translator other) {
+    return motor_line_at_origin_wedge(self, translator_right_bulk_dual(other));
 }
 
-LineAtOrigin magnitude_line_at_origin_left_contraction(Magnitude self, LineAtOrigin other) {
-    return LineAtOrigin(vec3(self.g0.x) * other.g0);
+MultiVector multi_vector_flector_bulk_expansion(MultiVector self, Flector other) {
+    return multi_vector_flector_wedge(self, flector_right_bulk_dual(other));
 }
 
-Magnitude magnitude_magnitude_left_contraction(Magnitude self, Magnitude other) {
-    return Magnitude(vec2(self.g0.x) * other.g0);
+MultiVector multi_vector_horizon_bulk_expansion(MultiVector self, Horizon other) {
+    return multi_vector_origin_wedge(self, horizon_right_bulk_dual(other));
 }
 
-Motor magnitude_motor_left_contraction(Magnitude self, Motor other) {
-    return Motor(vec4(self.g0.x) * other.g0, vec3(self.g0.x) * other.g1);
+MultiVector multi_vector_line_bulk_expansion(MultiVector self, Line other) {
+    return multi_vector_line_at_origin_wedge(self, line_right_bulk_dual(other));
 }
 
-MultiVector magnitude_multi_vector_left_contraction(Magnitude self, MultiVector other) {
-    return MultiVector(vec2(self.g0.x) * other.g0, vec4(self.g0.x) * other.g1, vec3(self.g0.x) * other.g2, vec3(self.g0.x) * other.g3, vec4(self.g0.x) * other.g4);
+MultiVector multi_vector_line_at_infinity_bulk_expansion(MultiVector self, LineAtInfinity other) {
+    return multi_vector_line_at_origin_wedge(self, line_at_infinity_right_bulk_dual(other));
 }
 
-Origin magnitude_origin_left_contraction(Magnitude self, Origin other) {
-    return Origin(self.g0.x * other.g0);
+MultiVector multi_vector_motor_bulk_expansion(MultiVector self, Motor other) {
+    return multi_vector_line_at_origin_wedge(self, motor_right_bulk_dual(other));
 }
 
-Plane magnitude_plane_left_contraction(Magnitude self, Plane other) {
-    return Plane(vec4(self.g0.x) * other.g0);
+MultiVector multi_vector_multi_vector_bulk_expansion(MultiVector self, MultiVector other) {
+    return multi_vector_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-PlaneAtOrigin magnitude_plane_at_origin_left_contraction(Magnitude self, PlaneAtOrigin other) {
-    return PlaneAtOrigin(vec3(self.g0.x) * other.g0);
+MultiVector multi_vector_plane_bulk_expansion(MultiVector self, Plane other) {
+    return multi_vector_origin_wedge(self, plane_right_bulk_dual(other));
 }
 
-Point magnitude_point_left_contraction(Magnitude self, Point other) {
-    return Point(vec4(self.g0.x) * other.g0);
+MultiVector multi_vector_point_bulk_expansion(MultiVector self, Point other) {
+    return multi_vector_plane_at_origin_wedge(self, point_right_bulk_dual(other));
 }
 
-PointAtInfinity magnitude_point_at_infinity_left_contraction(Magnitude self, PointAtInfinity other) {
-    return PointAtInfinity(vec3(self.g0.x) * other.g0);
+MultiVector multi_vector_point_at_infinity_bulk_expansion(MultiVector self, PointAtInfinity other) {
+    return multi_vector_plane_at_origin_wedge(self, point_at_infinity_right_bulk_dual(other));
 }
 
-Rotor magnitude_rotor_left_contraction(Magnitude self, Rotor other) {
-    return Rotor(vec4(self.g0.x) * other.g0);
+MultiVector multi_vector_translator_bulk_expansion(MultiVector self, Translator other) {
+    return multi_vector_line_at_origin_wedge(self, translator_right_bulk_dual(other));
 }
 
-Scalar magnitude_scalar_left_contraction(Magnitude self, Scalar other) {
-    return Scalar(self.g0.x * other.g0);
+Rotor origin_flector_bulk_expansion(Origin self, Flector other) {
+    return origin_flector_wedge(self, flector_right_bulk_dual(other));
 }
 
-Translator magnitude_translator_left_contraction(Magnitude self, Translator other) {
-    return Translator(vec4(self.g0.x) * other.g0);
+MultiVector origin_multi_vector_bulk_expansion(Origin self, MultiVector other) {
+    return origin_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-LineAtOrigin motor_anti_scalar_left_contraction(Motor self, AntiScalar other) {
-    return LineAtOrigin(self.g1 * vec3(other.g0));
+AntiScalar plane_flector_bulk_expansion(Plane self, Flector other) {
+    return plane_flector_wedge(self, flector_right_bulk_dual(other));
 }
 
-Point motor_flector_left_contraction(Motor self, Flector other) {
-    return Point(vec4(self.g1.y) * other.g1.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g1.z) * other.g1.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.x) * other.g1.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+AntiScalar plane_horizon_bulk_expansion(Plane self, Horizon other) {
+    return plane_origin_wedge(self, horizon_right_bulk_dual(other));
 }
 
-PointAtInfinity motor_horizon_left_contraction(Motor self, Horizon other) {
-    return PointAtInfinity(self.g1 * vec3(other.g0));
+MultiVector plane_multi_vector_bulk_expansion(Plane self, MultiVector other) {
+    return plane_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-Scalar motor_line_left_contraction(Motor self, Line other) {
-    return Scalar(0.0 - self.g1.x * other.g1.x - self.g1.y * other.g1.y - self.g1.z * other.g1.z);
+AntiScalar plane_plane_bulk_expansion(Plane self, Plane other) {
+    return plane_origin_wedge(self, plane_right_bulk_dual(other));
 }
 
-Scalar motor_line_at_infinity_left_contraction(Motor self, LineAtInfinity other) {
-    return Scalar(0.0 - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
+AntiScalar plane_at_origin_flector_bulk_expansion(PlaneAtOrigin self, Flector other) {
+    return plane_at_origin_flector_wedge(self, flector_right_bulk_dual(other));
 }
 
-LineAtOrigin motor_magnitude_left_contraction(Motor self, Magnitude other) {
-    return LineAtOrigin(self.g1 * vec3(other.g0.y));
+MultiVector plane_at_origin_multi_vector_bulk_expansion(PlaneAtOrigin self, MultiVector other) {
+    return plane_at_origin_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-MultiVector motor_motor_left_contraction(Motor self, Motor other) {
-    return MultiVector(vec2(self.g1.y) * vec2(other.g1.y) * vec2(-1.0, 0.0) + vec2(self.g1.z) * vec2(other.g1.z) * vec2(-1.0, 0.0) + vec2(self.g1.x) * vec2(other.g1.x) * vec2(-1.0, 0.0), vec4(0.0), self.g1 * vec3(other.g0.w), vec3(0.0), vec4(0.0));
+Motor point_flector_bulk_expansion(Point self, Flector other) {
+    return point_flector_wedge(self, flector_right_bulk_dual(other));
 }
 
-MultiVector motor_multi_vector_left_contraction(Motor self, MultiVector other) {
-    return MultiVector(vec2(self.g1.y) * vec2(other.g3.y) * vec2(-1.0, 0.0) + vec2(self.g1.z) * vec2(other.g3.z) * vec2(-1.0, 0.0) + vec2(self.g1.x) * vec2(other.g3.x) * vec2(-1.0, 0.0), vec4(self.g1.y) * other.g4.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g1.z) * other.g4.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.x) * other.g4.wxxx * vec4(1.0, 0.0, 0.0, -1.0), self.g1 * vec3(other.g0.y), vec3(0.0), vec4(0.0));
+LineAtOrigin point_horizon_bulk_expansion(Point self, Horizon other) {
+    return point_origin_wedge(self, horizon_right_bulk_dual(other));
 }
 
-Point motor_plane_left_contraction(Motor self, Plane other) {
-    return Point(vec4(self.g1.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g1.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g1.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+PlaneAtOrigin point_line_bulk_expansion(Point self, Line other) {
+    return point_line_at_origin_wedge(self, line_right_bulk_dual(other));
 }
 
-Origin motor_plane_at_origin_left_contraction(Motor self, PlaneAtOrigin other) {
-    return Origin(0.0 - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
+PlaneAtOrigin point_line_at_infinity_bulk_expansion(Point self, LineAtInfinity other) {
+    return point_line_at_origin_wedge(self, line_at_infinity_right_bulk_dual(other));
 }
 
-LineAtOrigin motor_rotor_left_contraction(Motor self, Rotor other) {
-    return LineAtOrigin(self.g1 * vec3(other.g0.w));
+PlaneAtOrigin point_motor_bulk_expansion(Point self, Motor other) {
+    return point_line_at_origin_wedge(self, motor_right_bulk_dual(other));
 }
 
-MultiVector motor_translator_left_contraction(Motor self, Translator other) {
-    return MultiVector(vec2(self.g1.y) * vec2(other.g0.y) * vec2(-1.0, 0.0) + vec2(self.g1.z) * vec2(other.g0.z) * vec2(-1.0, 0.0) + vec2(self.g1.x) * vec2(other.g0.x) * vec2(-1.0, 0.0), vec4(0.0), self.g1 * vec3(other.g0.w), vec3(0.0), vec4(0.0));
+MultiVector point_multi_vector_bulk_expansion(Point self, MultiVector other) {
+    return point_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_anti_scalar_left_contraction(MultiVector self, AntiScalar other) {
-    return MultiVector(vec2(self.g0.x) * vec2(other.g0) * vec2(0.0, 1.0), self.g4.xxxw * vec4(other.g0) * vec4(0.0, 0.0, 0.0, 1.0), self.g3 * vec3(other.g0), vec3(0.0), self.g1.xyzx * vec4(other.g0) * vec4(1.0, 1.0, 1.0, 0.0));
+LineAtOrigin point_plane_bulk_expansion(Point self, Plane other) {
+    return point_origin_wedge(self, plane_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_flector_left_contraction(MultiVector self, Flector other) {
-    return MultiVector(vec2(self.g1.y) * vec2(other.g0.y) * vec2(1.0, 0.0) + vec2(self.g1.z) * vec2(other.g0.z) * vec2(1.0, 0.0) + vec2(self.g4.w) * vec2(other.g1.w) * vec2(-1.0, 0.0) + vec2(self.g1.x) * vec2(other.g0.x) * vec2(1.0, 0.0), vec4(self.g0.x) * other.g0 + vec4(self.g3.y) * other.g1.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g3.z) * other.g1.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g3.x) * other.g1.wxxx * vec4(1.0, 0.0, 0.0, -1.0), vec3(self.g1.y) * vec3(other.g1.z, other.g1.z, other.g1.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g1.z) * vec3(other.g1.y, other.g1.x, other.g1.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g1.x) * vec3(other.g1.x, other.g1.z, other.g1.y) * vec3(0.0, -1.0, 1.0), vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g1.w) * vec3(-1.0), vec4(self.g0.x) * other.g1);
+AntiScalar point_point_bulk_expansion(Point self, Point other) {
+    return point_plane_at_origin_wedge(self, point_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_horizon_left_contraction(MultiVector self, Horizon other) {
-    return MultiVector(vec2(self.g4.w, self.g4.x) * vec2(other.g0) * vec2(-1.0, 0.0), vec4(self.g3.x, self.g3.y, self.g3.z, self.g3.x) * vec4(other.g0) * vec4(1.0, 1.0, 1.0, 0.0), vec3(0.0), vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g0) * vec3(-1.0), vec4(self.g0.x) * vec4(other.g0) * vec4(0.0, 0.0, 0.0, 1.0));
+AntiScalar point_point_at_infinity_bulk_expansion(Point self, PointAtInfinity other) {
+    return point_plane_at_origin_wedge(self, point_at_infinity_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_line_left_contraction(MultiVector self, Line other) {
-    return MultiVector(vec2(self.g3.y) * vec2(other.g1.y) * vec2(-1.0, 0.0) + vec2(self.g3.z) * vec2(other.g1.z) * vec2(-1.0, 0.0) + vec2(self.g3.x) * vec2(other.g1.x) * vec2(-1.0, 0.0), vec4(self.g1.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g1.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g1.x) * vec4(other.g1.x, other.g1.z, other.g1.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0), vec3(self.g0.x) * other.g0, vec3(self.g0.x) * other.g1, vec4(0.0));
+PlaneAtOrigin point_translator_bulk_expansion(Point self, Translator other) {
+    return point_line_at_origin_wedge(self, translator_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_line_at_infinity_left_contraction(MultiVector self, LineAtInfinity other) {
-    return MultiVector(vec2(self.g3.y) * vec2(other.g0.y) * vec2(-1.0, 0.0) + vec2(self.g3.z) * vec2(other.g0.z) * vec2(-1.0, 0.0) + vec2(self.g3.x) * vec2(other.g0.x) * vec2(-1.0, 0.0), vec4(self.g1.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g0.z) * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g1.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g0.y) * vec4(1.0, -1.0, 0.0, 0.0) + vec4(self.g1.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g0.x) * vec4(0.0, 1.0, -1.0, 0.0), vec3(0.0), vec3(self.g0.x) * other.g0, vec4(0.0));
+Motor point_at_infinity_flector_bulk_expansion(PointAtInfinity self, Flector other) {
+    return point_at_infinity_flector_wedge(self, flector_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_line_at_origin_left_contraction(MultiVector self, LineAtOrigin other) {
-    return MultiVector(vec2(0.0), vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0), vec3(self.g0.x) * other.g0, vec3(0.0), vec4(0.0));
+LineAtOrigin point_at_infinity_horizon_bulk_expansion(PointAtInfinity self, Horizon other) {
+    return point_at_infinity_origin_wedge(self, horizon_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_magnitude_left_contraction(MultiVector self, Magnitude other) {
-    return MultiVector(vec2(self.g0.x) * other.g0, self.g4.xxxw * vec4(other.g0.x, other.g0.x, other.g0.x, other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0), self.g3 * vec3(other.g0.y), vec3(0.0), self.g1.xyzx * vec4(other.g0.y, other.g0.y, other.g0.y, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0));
+PlaneAtOrigin point_at_infinity_line_bulk_expansion(PointAtInfinity self, Line other) {
+    return point_at_infinity_line_at_origin_wedge(self, line_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_motor_left_contraction(MultiVector self, Motor other) {
-    return MultiVector(vec2(self.g3.x) * vec2(other.g1.x) * vec2(-1.0, 0.0) + vec2(self.g3.y) * vec2(other.g1.y) * vec2(-1.0, 0.0) + vec2(self.g3.z) * vec2(other.g1.z) * vec2(-1.0, 0.0) + vec2(self.g0.x) * vec2(other.g0.x, other.g0.w) * vec2(0.0, 1.0), vec4(self.g1.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g1.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g4.w) * vec4(other.g0.w) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g1.x) * vec4(other.g1.x, other.g1.z, other.g1.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0), vec3(self.g0.x) * vec3(other.g0.x, other.g0.y, other.g0.z) + self.g3 * vec3(other.g0.w), vec3(self.g0.x) * other.g1, self.g1.xyzx * other.g0.wwwx * vec4(1.0, 1.0, 1.0, 0.0));
+PlaneAtOrigin point_at_infinity_line_at_infinity_bulk_expansion(PointAtInfinity self, LineAtInfinity other) {
+    return point_at_infinity_line_at_origin_wedge(self, line_at_infinity_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_multi_vector_left_contraction(MultiVector self, MultiVector other) {
-    return MultiVector(vec2(self.g0.x) * other.g0 + vec2(self.g1.y) * vec2(other.g1.y) * vec2(1.0, 0.0) + vec2(self.g1.z) * vec2(other.g1.z) * vec2(1.0, 0.0) + vec2(self.g3.x) * vec2(other.g3.x) * vec2(-1.0, 0.0) + vec2(self.g3.y) * vec2(other.g3.y) * vec2(-1.0, 0.0) + vec2(self.g3.z) * vec2(other.g3.z) * vec2(-1.0, 0.0) + vec2(self.g4.w) * vec2(other.g4.w) * vec2(-1.0, 0.0) + vec2(self.g1.x) * vec2(other.g1.x) * vec2(1.0, 0.0), vec4(self.g0.x) * other.g1 + vec4(self.g1.y) * vec4(other.g3.z, other.g3.z, other.g3.x, other.g2.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g1.z) * vec4(other.g3.y, other.g3.x, other.g3.y, other.g2.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g3.x) * other.g4.wwwx * vec4(1.0, 0.0, 0.0, -1.0) + vec4(self.g3.y) * other.g4.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g3.z) * other.g4.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g4.w) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g1.x) * vec4(other.g3.x, other.g3.z, other.g3.y, other.g2.x) * vec4(0.0, 1.0, -1.0, -1.0), vec3(self.g0.x) * other.g2 + vec3(self.g1.y) * vec3(other.g4.z, other.g4.z, other.g4.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g1.z) * vec3(other.g4.y, other.g4.x, other.g4.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g3.x) * vec3(other.g0.y) * vec3(1.0, 0.0, 0.0) + vec3(self.g3.y) * vec3(other.g0.y) * vec3(0.0, 1.0, 0.0) + vec3(self.g3.z) * vec3(other.g0.y) * vec3(0.0, 0.0, 1.0) + vec3(self.g1.x) * vec3(other.g4.x, other.g4.z, other.g4.y) * vec3(0.0, -1.0, 1.0), vec3(self.g0.x) * other.g3 + vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g4.w) * vec3(-1.0), vec4(self.g0.x) * other.g4 + self.g1.xyzx * vec4(other.g0.y, other.g0.y, other.g0.y, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0));
+PlaneAtOrigin point_at_infinity_motor_bulk_expansion(PointAtInfinity self, Motor other) {
+    return point_at_infinity_line_at_origin_wedge(self, motor_right_bulk_dual(other));
 }
 
-Origin multi_vector_origin_left_contraction(MultiVector self, Origin other) {
-    return Origin(self.g0.x * other.g0);
+MultiVector point_at_infinity_multi_vector_bulk_expansion(PointAtInfinity self, MultiVector other) {
+    return point_at_infinity_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_plane_left_contraction(MultiVector self, Plane other) {
-    return MultiVector(vec2(self.g4.w, self.g4.x) * vec2(other.g0.w, other.g0.x) * vec2(-1.0, 0.0), vec4(self.g3.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g3.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g3.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0), vec3(self.g1.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g1.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g1.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0), vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g0.w) * vec3(-1.0), vec4(self.g0.x) * other.g0);
+LineAtOrigin point_at_infinity_plane_bulk_expansion(PointAtInfinity self, Plane other) {
+    return point_at_infinity_origin_wedge(self, plane_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_plane_at_origin_left_contraction(MultiVector self, PlaneAtOrigin other) {
-    return MultiVector(vec2(0.0), vec4(self.g3.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g3.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g3.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0), vec3(self.g1.y) * other.g0.zzx * vec3(1.0, 0.0, -1.0) + vec3(self.g1.z) * other.g0.yxy * vec3(-1.0, 1.0, 0.0) + vec3(self.g1.x) * other.g0.xzy * vec3(0.0, -1.0, 1.0), vec3(0.0), vec4(self.g0.x) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0));
+AntiScalar point_at_infinity_point_bulk_expansion(PointAtInfinity self, Point other) {
+    return point_at_infinity_plane_at_origin_wedge(self, point_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_point_left_contraction(MultiVector self, Point other) {
-    return MultiVector(vec2(self.g1.y) * vec2(other.g0.y) * vec2(1.0, 0.0) + vec2(self.g1.z) * vec2(other.g0.z) * vec2(1.0, 0.0) + vec2(self.g1.x) * vec2(other.g0.x) * vec2(1.0, 0.0), vec4(self.g0.x) * other.g0, vec3(0.0), vec3(0.0), vec4(0.0));
+AntiScalar point_at_infinity_point_at_infinity_bulk_expansion(PointAtInfinity self, PointAtInfinity other) {
+    return point_at_infinity_plane_at_origin_wedge(self, point_at_infinity_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_point_at_infinity_left_contraction(MultiVector self, PointAtInfinity other) {
-    return MultiVector(vec2(self.g1.y) * vec2(other.g0.y) * vec2(1.0, 0.0) + vec2(self.g1.z) * vec2(other.g0.z) * vec2(1.0, 0.0) + vec2(self.g1.x) * vec2(other.g0.x) * vec2(1.0, 0.0), vec4(self.g0.x) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0), vec3(0.0), vec3(0.0), vec4(0.0));
+PlaneAtOrigin point_at_infinity_translator_bulk_expansion(PointAtInfinity self, Translator other) {
+    return point_at_infinity_line_at_origin_wedge(self, translator_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_rotor_left_contraction(MultiVector self, Rotor other) {
-    return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, other.g0.w) * vec2(0.0, 1.0), vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g4.w) * vec4(other.g0.w) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g1.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0), vec3(self.g0.x) * vec3(other.g0.x, other.g0.y, other.g0.z) + self.g3 * vec3(other.g0.w), vec3(0.0), self.g1.xyzx * other.g0.wwwx * vec4(1.0, 1.0, 1.0, 0.0));
+PlaneAtOrigin rotor_flector_bulk_expansion(Rotor self, Flector other) {
+    return rotor_flector_wedge(self, flector_right_bulk_dual(other));
 }
 
-Scalar multi_vector_scalar_left_contraction(MultiVector self, Scalar other) {
-    return Scalar(self.g0.x * other.g0);
+MultiVector rotor_multi_vector_bulk_expansion(Rotor self, MultiVector other) {
+    return rotor_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-MultiVector multi_vector_translator_left_contraction(MultiVector self, Translator other) {
-    return MultiVector(vec2(self.g3.x) * vec2(other.g0.x) * vec2(-1.0, 0.0) + vec2(self.g3.y) * vec2(other.g0.y) * vec2(-1.0, 0.0) + vec2(self.g3.z) * vec2(other.g0.z) * vec2(-1.0, 0.0) + vec2(self.g0.x) * vec2(other.g0.x, other.g0.w) * vec2(0.0, 1.0), vec4(self.g1.y) * other.g0.zzxz * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g1.z) * other.g0.yxyy * vec4(1.0, -1.0, 0.0, 0.0) + vec4(self.g1.x, self.g1.x, self.g1.x, self.g4.w) * other.g0.xzyw * vec4(0.0, 1.0, -1.0, 1.0), self.g3 * vec3(other.g0.w), vec3(self.g0.x) * vec3(other.g0.x, other.g0.y, other.g0.z), self.g1.xyzx * other.g0.wwwx * vec4(1.0, 1.0, 1.0, 0.0));
+Plane translator_flector_bulk_expansion(Translator self, Flector other) {
+    return translator_flector_wedge(self, flector_right_bulk_dual(other));
 }
 
-Origin plane_anti_scalar_left_contraction(Plane self, AntiScalar other) {
-    return Origin(self.g0.w * other.g0);
+PlaneAtOrigin translator_horizon_bulk_expansion(Translator self, Horizon other) {
+    return translator_origin_wedge(self, horizon_right_bulk_dual(other));
 }
 
-Scalar plane_flector_left_contraction(Plane self, Flector other) {
-    return Scalar(0.0 - self.g0.w * other.g1.w);
+AntiScalar translator_line_bulk_expansion(Translator self, Line other) {
+    return translator_line_at_origin_wedge(self, line_right_bulk_dual(other));
 }
 
-Scalar plane_horizon_left_contraction(Plane self, Horizon other) {
-    return Scalar(0.0 - self.g0.w * other.g0);
+AntiScalar translator_line_at_infinity_bulk_expansion(Translator self, LineAtInfinity other) {
+    return translator_line_at_origin_wedge(self, line_at_infinity_right_bulk_dual(other));
 }
 
-Origin plane_magnitude_left_contraction(Plane self, Magnitude other) {
-    return Origin(self.g0.w * other.g0.y);
+AntiScalar translator_motor_bulk_expansion(Translator self, Motor other) {
+    return translator_line_at_origin_wedge(self, motor_right_bulk_dual(other));
 }
 
-Origin plane_motor_left_contraction(Plane self, Motor other) {
-    return Origin(self.g0.w * other.g0.w);
+MultiVector translator_multi_vector_bulk_expansion(Translator self, MultiVector other) {
+    return translator_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-MultiVector plane_multi_vector_left_contraction(Plane self, MultiVector other) {
-    return MultiVector(vec2(self.g0.w, self.g0.x) * vec2(other.g4.w, other.g4.x) * vec2(-1.0, 0.0), self.g0.xxxw * vec4(other.g0.x, other.g0.x, other.g0.x, other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0), vec3(0.0), vec3(0.0), vec4(0.0));
+PlaneAtOrigin translator_plane_bulk_expansion(Translator self, Plane other) {
+    return translator_origin_wedge(self, plane_right_bulk_dual(other));
 }
 
-Scalar plane_plane_left_contraction(Plane self, Plane other) {
-    return Scalar(0.0 - self.g0.w * other.g0.w);
+AntiScalar translator_translator_bulk_expansion(Translator self, Translator other) {
+    return translator_line_at_origin_wedge(self, translator_right_bulk_dual(other));
 }
 
-Origin plane_rotor_left_contraction(Plane self, Rotor other) {
-    return Origin(self.g0.w * other.g0.w);
+Motor flector_flector_weight_expansion(Flector self, Flector other) {
+    return flector_flector_wedge(self, flector_right_weight_dual(other));
 }
 
-Origin plane_translator_left_contraction(Plane self, Translator other) {
-    return Origin(self.g0.w * other.g0.w);
+Plane flector_line_weight_expansion(Flector self, Line other) {
+    return flector_line_at_infinity_wedge(self, line_right_weight_dual(other));
 }
 
-PlaneAtOrigin point_anti_scalar_left_contraction(Point self, AntiScalar other) {
-    return PlaneAtOrigin(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0));
+Plane flector_line_at_origin_weight_expansion(Flector self, LineAtOrigin other) {
+    return flector_line_at_infinity_wedge(self, line_at_origin_right_weight_dual(other));
 }
 
-MultiVector point_flector_left_contraction(Point self, Flector other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g0.y) * vec2(1.0, 0.0) + vec2(self.g0.z) * vec2(other.g0.z) * vec2(1.0, 0.0) + vec2(self.g0.x) * vec2(other.g0.x) * vec2(1.0, 0.0), vec4(0.0), vec3(self.g0.y) * vec3(other.g1.z, other.g1.z, other.g1.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g1.y, other.g1.x, other.g1.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g1.x, other.g1.z, other.g1.y) * vec3(0.0, -1.0, 1.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.w) * vec3(-1.0), vec4(0.0));
+MultiVector flector_multi_vector_weight_expansion(Flector self, MultiVector other) {
+    return flector_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-LineAtInfinity point_horizon_left_contraction(Point self, Horizon other) {
-    return LineAtInfinity(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0) * vec3(-1.0));
+AntiScalar flector_origin_weight_expansion(Flector self, Origin other) {
+    return flector_horizon_wedge(self, origin_right_weight_dual(other));
 }
 
-Point point_line_left_contraction(Point self, Line other) {
-    return Point(vec4(self.g0.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.x) * vec4(other.g1.x, other.g1.z, other.g1.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0));
+Motor flector_plane_weight_expansion(Flector self, Plane other) {
+    return flector_point_at_infinity_wedge(self, plane_right_weight_dual(other));
 }
 
-PointAtInfinity point_line_at_infinity_left_contraction(Point self, LineAtInfinity other) {
-    return PointAtInfinity(vec3(self.g0.y) * other.g0.zzx * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * other.g0.yxy * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * other.g0.xzy * vec3(0.0, 1.0, -1.0));
+Motor flector_plane_at_origin_weight_expansion(Flector self, PlaneAtOrigin other) {
+    return flector_point_at_infinity_wedge(self, plane_at_origin_right_weight_dual(other));
 }
 
-Origin point_line_at_origin_left_contraction(Point self, LineAtOrigin other) {
-    return Origin(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+AntiScalar flector_point_weight_expansion(Flector self, Point other) {
+    return flector_horizon_wedge(self, point_right_weight_dual(other));
 }
 
-PlaneAtOrigin point_magnitude_left_contraction(Point self, Magnitude other) {
-    return PlaneAtOrigin(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.y));
+Flector flector_translator_weight_expansion(Flector self, Translator other) {
+    return flector_scalar_wedge(self, translator_right_weight_dual(other));
 }
 
-Flector point_motor_left_contraction(Point self, Motor other) {
-    return Flector(vec4(self.g0.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.x) * vec4(other.g1.x, other.g1.z, other.g1.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0), self.g0.xyzx * other.g0.wwwx * vec4(1.0, 1.0, 1.0, 0.0));
+AntiScalar horizon_flector_weight_expansion(Horizon self, Flector other) {
+    return horizon_flector_wedge(self, flector_right_weight_dual(other));
 }
 
-MultiVector point_multi_vector_left_contraction(Point self, MultiVector other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g1.y) * vec2(1.0, 0.0) + vec2(self.g0.z) * vec2(other.g1.z) * vec2(1.0, 0.0) + vec2(self.g0.x) * vec2(other.g1.x) * vec2(1.0, 0.0), vec4(self.g0.y) * vec4(other.g3.z, other.g3.z, other.g3.x, other.g2.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g3.y, other.g3.x, other.g3.y, other.g2.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.x) * vec4(other.g3.x, other.g3.z, other.g3.y, other.g2.x) * vec4(0.0, 1.0, -1.0, -1.0), vec3(self.g0.y) * vec3(other.g4.z, other.g4.z, other.g4.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g4.y, other.g4.x, other.g4.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g4.x, other.g4.z, other.g4.y) * vec3(0.0, -1.0, 1.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g4.w) * vec3(-1.0), self.g0.xyzx * vec4(other.g0.y, other.g0.y, other.g0.y, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0));
+MultiVector horizon_multi_vector_weight_expansion(Horizon self, MultiVector other) {
+    return horizon_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-Line point_plane_left_contraction(Point self, Plane other) {
-    return Line(vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w) * vec3(-1.0));
+Horizon horizon_translator_weight_expansion(Horizon self, Translator other) {
+    return horizon_scalar_wedge(self, translator_right_weight_dual(other));
 }
 
-LineAtOrigin point_plane_at_origin_left_contraction(Point self, PlaneAtOrigin other) {
-    return LineAtOrigin(vec3(self.g0.y) * other.g0.zzx * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * other.g0.yxy * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * other.g0.xzy * vec3(0.0, -1.0, 1.0));
+Plane line_flector_weight_expansion(Line self, Flector other) {
+    return line_flector_wedge(self, flector_right_weight_dual(other));
 }
 
-Scalar point_point_left_contraction(Point self, Point other) {
-    return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
+AntiScalar line_line_weight_expansion(Line self, Line other) {
+    return line_line_at_infinity_wedge(self, line_right_weight_dual(other));
 }
 
-Scalar point_point_at_infinity_left_contraction(Point self, PointAtInfinity other) {
-    return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
+AntiScalar line_line_at_origin_weight_expansion(Line self, LineAtOrigin other) {
+    return line_line_at_infinity_wedge(self, line_at_origin_right_weight_dual(other));
 }
 
-Flector point_rotor_left_contraction(Point self, Rotor other) {
-    return Flector(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0), self.g0.xyzx * other.g0.wwwx * vec4(1.0, 1.0, 1.0, 0.0));
+MultiVector line_multi_vector_weight_expansion(Line self, MultiVector other) {
+    return line_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-Flector point_translator_left_contraction(Point self, Translator other) {
-    return Flector(vec4(self.g0.y) * other.g0.zzxz * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g0.z) * other.g0.yxyy * vec4(1.0, -1.0, 0.0, 0.0) + vec4(self.g0.x) * other.g0.xzyx * vec4(0.0, 1.0, -1.0, 0.0), self.g0.xyzx * other.g0.wwwx * vec4(1.0, 1.0, 1.0, 0.0));
+Plane line_plane_weight_expansion(Line self, Plane other) {
+    return line_point_at_infinity_wedge(self, plane_right_weight_dual(other));
 }
 
-PlaneAtOrigin point_at_infinity_anti_scalar_left_contraction(PointAtInfinity self, AntiScalar other) {
-    return PlaneAtOrigin(self.g0 * vec3(other.g0));
+Plane line_plane_at_origin_weight_expansion(Line self, PlaneAtOrigin other) {
+    return line_point_at_infinity_wedge(self, plane_at_origin_right_weight_dual(other));
 }
 
-MultiVector point_at_infinity_flector_left_contraction(PointAtInfinity self, Flector other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g0.y) * vec2(1.0, 0.0) + vec2(self.g0.z) * vec2(other.g0.z) * vec2(1.0, 0.0) + vec2(self.g0.x) * vec2(other.g0.x) * vec2(1.0, 0.0), vec4(0.0), vec3(self.g0.y) * vec3(other.g1.z, other.g1.z, other.g1.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g1.y, other.g1.x, other.g1.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g1.x, other.g1.z, other.g1.y) * vec3(0.0, -1.0, 1.0), self.g0 * vec3(other.g1.w) * vec3(-1.0), vec4(0.0));
+Line line_translator_weight_expansion(Line self, Translator other) {
+    return line_scalar_wedge(self, translator_right_weight_dual(other));
 }
 
-LineAtInfinity point_at_infinity_horizon_left_contraction(PointAtInfinity self, Horizon other) {
-    return LineAtInfinity(self.g0 * vec3(other.g0) * vec3(-1.0));
+Plane line_at_infinity_flector_weight_expansion(LineAtInfinity self, Flector other) {
+    return line_at_infinity_flector_wedge(self, flector_right_weight_dual(other));
 }
 
-Point point_at_infinity_line_left_contraction(PointAtInfinity self, Line other) {
-    return Point(vec4(self.g0.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.x) * vec4(other.g1.x, other.g1.z, other.g1.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0));
+MultiVector line_at_infinity_multi_vector_weight_expansion(LineAtInfinity self, MultiVector other) {
+    return line_at_infinity_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-PointAtInfinity point_at_infinity_line_at_infinity_left_contraction(PointAtInfinity self, LineAtInfinity other) {
-    return PointAtInfinity(vec3(self.g0.y) * other.g0.zzx * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * other.g0.yxy * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * other.g0.xzy * vec3(0.0, 1.0, -1.0));
+Horizon line_at_infinity_plane_weight_expansion(LineAtInfinity self, Plane other) {
+    return line_at_infinity_point_at_infinity_wedge(self, plane_right_weight_dual(other));
 }
 
-Origin point_at_infinity_line_at_origin_left_contraction(PointAtInfinity self, LineAtOrigin other) {
-    return Origin(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+Horizon line_at_infinity_plane_at_origin_weight_expansion(LineAtInfinity self, PlaneAtOrigin other) {
+    return line_at_infinity_point_at_infinity_wedge(self, plane_at_origin_right_weight_dual(other));
 }
 
-PlaneAtOrigin point_at_infinity_magnitude_left_contraction(PointAtInfinity self, Magnitude other) {
-    return PlaneAtOrigin(self.g0 * vec3(other.g0.y));
+LineAtInfinity line_at_infinity_translator_weight_expansion(LineAtInfinity self, Translator other) {
+    return line_at_infinity_scalar_wedge(self, translator_right_weight_dual(other));
 }
 
-Flector point_at_infinity_motor_left_contraction(PointAtInfinity self, Motor other) {
-    return Flector(vec4(self.g0.y) * vec4(other.g1.z, other.g1.z, other.g1.x, other.g0.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g1.y, other.g1.x, other.g1.y, other.g0.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.x) * vec4(other.g1.x, other.g1.z, other.g1.y, other.g0.x) * vec4(0.0, 1.0, -1.0, -1.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * other.g0.wwwx * vec4(1.0, 1.0, 1.0, 0.0));
+PlaneAtOrigin line_at_origin_flector_weight_expansion(LineAtOrigin self, Flector other) {
+    return line_at_origin_flector_wedge(self, flector_right_weight_dual(other));
 }
 
-MultiVector point_at_infinity_multi_vector_left_contraction(PointAtInfinity self, MultiVector other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g1.y) * vec2(1.0, 0.0) + vec2(self.g0.z) * vec2(other.g1.z) * vec2(1.0, 0.0) + vec2(self.g0.x) * vec2(other.g1.x) * vec2(1.0, 0.0), vec4(self.g0.y) * vec4(other.g3.z, other.g3.z, other.g3.x, other.g2.y) * vec4(-1.0, 0.0, 1.0, -1.0) + vec4(self.g0.z) * vec4(other.g3.y, other.g3.x, other.g3.y, other.g2.z) * vec4(1.0, -1.0, 0.0, -1.0) + vec4(self.g0.x) * vec4(other.g3.x, other.g3.z, other.g3.y, other.g2.x) * vec4(0.0, 1.0, -1.0, -1.0), vec3(self.g0.y) * vec3(other.g4.z, other.g4.z, other.g4.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g4.y, other.g4.x, other.g4.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g4.x, other.g4.z, other.g4.y) * vec3(0.0, -1.0, 1.0), self.g0 * vec3(other.g4.w) * vec3(-1.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g0.y, other.g0.y, other.g0.y, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0));
+AntiScalar line_at_origin_line_weight_expansion(LineAtOrigin self, Line other) {
+    return line_at_origin_line_at_infinity_wedge(self, line_right_weight_dual(other));
 }
 
-Line point_at_infinity_plane_left_contraction(PointAtInfinity self, Plane other) {
-    return Line(vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0), self.g0 * vec3(other.g0.w) * vec3(-1.0));
+AntiScalar line_at_origin_line_at_origin_weight_expansion(LineAtOrigin self, LineAtOrigin other) {
+    return line_at_origin_line_at_infinity_wedge(self, line_at_origin_right_weight_dual(other));
 }
 
-LineAtOrigin point_at_infinity_plane_at_origin_left_contraction(PointAtInfinity self, PlaneAtOrigin other) {
-    return LineAtOrigin(vec3(self.g0.y) * other.g0.zzx * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * other.g0.yxy * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * other.g0.xzy * vec3(0.0, -1.0, 1.0));
+MultiVector line_at_origin_multi_vector_weight_expansion(LineAtOrigin self, MultiVector other) {
+    return line_at_origin_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-Scalar point_at_infinity_point_left_contraction(PointAtInfinity self, Point other) {
-    return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
+PlaneAtOrigin line_at_origin_plane_weight_expansion(LineAtOrigin self, Plane other) {
+    return line_at_origin_point_at_infinity_wedge(self, plane_right_weight_dual(other));
 }
 
-Scalar point_at_infinity_point_at_infinity_left_contraction(PointAtInfinity self, PointAtInfinity other) {
-    return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
+PlaneAtOrigin line_at_origin_plane_at_origin_weight_expansion(LineAtOrigin self, PlaneAtOrigin other) {
+    return line_at_origin_point_at_infinity_wedge(self, plane_at_origin_right_weight_dual(other));
 }
 
-Flector point_at_infinity_rotor_left_contraction(PointAtInfinity self, Rotor other) {
-    return Flector(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * other.g0.wwwx * vec4(1.0, 1.0, 1.0, 0.0));
+LineAtOrigin line_at_origin_translator_weight_expansion(LineAtOrigin self, Translator other) {
+    return line_at_origin_scalar_wedge(self, translator_right_weight_dual(other));
 }
 
-Flector point_at_infinity_translator_left_contraction(PointAtInfinity self, Translator other) {
-    return Flector(vec4(self.g0.y) * other.g0.zzxz * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g0.z) * other.g0.yxyy * vec4(1.0, -1.0, 0.0, 0.0) + vec4(self.g0.x) * other.g0.xzyx * vec4(0.0, 1.0, -1.0, 0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * other.g0.wwwx * vec4(1.0, 1.0, 1.0, 0.0));
+Plane motor_flector_weight_expansion(Motor self, Flector other) {
+    return motor_flector_wedge(self, flector_right_weight_dual(other));
 }
 
-AntiScalar scalar_anti_scalar_left_contraction(Scalar self, AntiScalar other) {
-    return AntiScalar(self.g0 * other.g0);
+AntiScalar motor_line_weight_expansion(Motor self, Line other) {
+    return motor_line_at_infinity_wedge(self, line_right_weight_dual(other));
 }
 
-Flector scalar_flector_left_contraction(Scalar self, Flector other) {
-    return Flector(vec4(self.g0) * other.g0, vec4(self.g0) * other.g1);
+AntiScalar motor_line_at_origin_weight_expansion(Motor self, LineAtOrigin other) {
+    return motor_line_at_infinity_wedge(self, line_at_origin_right_weight_dual(other));
 }
 
-Horizon scalar_horizon_left_contraction(Scalar self, Horizon other) {
-    return Horizon(self.g0 * other.g0);
+MultiVector motor_multi_vector_weight_expansion(Motor self, MultiVector other) {
+    return motor_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-Line scalar_line_left_contraction(Scalar self, Line other) {
-    return Line(vec3(self.g0) * other.g0, vec3(self.g0) * other.g1);
+Plane motor_plane_weight_expansion(Motor self, Plane other) {
+    return motor_point_at_infinity_wedge(self, plane_right_weight_dual(other));
 }
 
-LineAtInfinity scalar_line_at_infinity_left_contraction(Scalar self, LineAtInfinity other) {
-    return LineAtInfinity(vec3(self.g0) * other.g0);
+Plane motor_plane_at_origin_weight_expansion(Motor self, PlaneAtOrigin other) {
+    return motor_point_at_infinity_wedge(self, plane_at_origin_right_weight_dual(other));
 }
 
-LineAtOrigin scalar_line_at_origin_left_contraction(Scalar self, LineAtOrigin other) {
-    return LineAtOrigin(vec3(self.g0) * other.g0);
+Motor motor_translator_weight_expansion(Motor self, Translator other) {
+    return motor_scalar_wedge(self, translator_right_weight_dual(other));
 }
 
-Magnitude scalar_magnitude_left_contraction(Scalar self, Magnitude other) {
-    return Magnitude(vec2(self.g0) * other.g0);
+MultiVector multi_vector_flector_weight_expansion(MultiVector self, Flector other) {
+    return multi_vector_flector_wedge(self, flector_right_weight_dual(other));
 }
 
-Motor scalar_motor_left_contraction(Scalar self, Motor other) {
-    return Motor(vec4(self.g0) * other.g0, vec3(self.g0) * other.g1);
+MultiVector multi_vector_line_weight_expansion(MultiVector self, Line other) {
+    return multi_vector_line_at_infinity_wedge(self, line_right_weight_dual(other));
 }
 
-MultiVector scalar_multi_vector_left_contraction(Scalar self, MultiVector other) {
-    return MultiVector(vec2(self.g0) * other.g0, vec4(self.g0) * other.g1, vec3(self.g0) * other.g2, vec3(self.g0) * other.g3, vec4(self.g0) * other.g4);
+MultiVector multi_vector_line_at_origin_weight_expansion(MultiVector self, LineAtOrigin other) {
+    return multi_vector_line_at_infinity_wedge(self, line_at_origin_right_weight_dual(other));
 }
 
-Origin scalar_origin_left_contraction(Scalar self, Origin other) {
-    return Origin(self.g0 * other.g0);
+MultiVector multi_vector_multi_vector_weight_expansion(MultiVector self, MultiVector other) {
+    return multi_vector_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-Plane scalar_plane_left_contraction(Scalar self, Plane other) {
-    return Plane(vec4(self.g0) * other.g0);
+MultiVector multi_vector_origin_weight_expansion(MultiVector self, Origin other) {
+    return multi_vector_horizon_wedge(self, origin_right_weight_dual(other));
 }
 
-PlaneAtOrigin scalar_plane_at_origin_left_contraction(Scalar self, PlaneAtOrigin other) {
-    return PlaneAtOrigin(vec3(self.g0) * other.g0);
+MultiVector multi_vector_plane_weight_expansion(MultiVector self, Plane other) {
+    return multi_vector_point_at_infinity_wedge(self, plane_right_weight_dual(other));
 }
 
-Point scalar_point_left_contraction(Scalar self, Point other) {
-    return Point(vec4(self.g0) * other.g0);
+MultiVector multi_vector_plane_at_origin_weight_expansion(MultiVector self, PlaneAtOrigin other) {
+    return multi_vector_point_at_infinity_wedge(self, plane_at_origin_right_weight_dual(other));
 }
 
-PointAtInfinity scalar_point_at_infinity_left_contraction(Scalar self, PointAtInfinity other) {
-    return PointAtInfinity(vec3(self.g0) * other.g0);
+MultiVector multi_vector_point_weight_expansion(MultiVector self, Point other) {
+    return multi_vector_horizon_wedge(self, point_right_weight_dual(other));
 }
 
-Rotor scalar_rotor_left_contraction(Scalar self, Rotor other) {
-    return Rotor(vec4(self.g0) * other.g0);
+MultiVector multi_vector_translator_weight_expansion(MultiVector self, Translator other) {
+    return multi_vector_scalar_wedge(self, translator_right_weight_dual(other));
 }
 
-Scalar scalar_scalar_left_contraction(Scalar self, Scalar other) {
-    return Scalar(self.g0 * other.g0);
+Rotor origin_flector_weight_expansion(Origin self, Flector other) {
+    return origin_flector_wedge(self, flector_right_weight_dual(other));
 }
 
-Translator scalar_translator_left_contraction(Scalar self, Translator other) {
-    return Translator(vec4(self.g0) * other.g0);
+PlaneAtOrigin origin_line_weight_expansion(Origin self, Line other) {
+    return origin_line_at_infinity_wedge(self, line_right_weight_dual(other));
 }
 
-LineAtOrigin translator_anti_scalar_left_contraction(Translator self, AntiScalar other) {
-    return LineAtOrigin(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0));
+PlaneAtOrigin origin_line_at_origin_weight_expansion(Origin self, LineAtOrigin other) {
+    return origin_line_at_infinity_wedge(self, line_at_origin_right_weight_dual(other));
 }
 
-Point translator_flector_left_contraction(Translator self, Flector other) {
-    return Point(vec4(self.g0.y) * other.g1.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g1.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g1.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+MultiVector origin_multi_vector_weight_expansion(Origin self, MultiVector other) {
+    return origin_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-PointAtInfinity translator_horizon_left_contraction(Translator self, Horizon other) {
-    return PointAtInfinity(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0));
+AntiScalar origin_origin_weight_expansion(Origin self, Origin other) {
+    return origin_horizon_wedge(self, origin_right_weight_dual(other));
 }
 
-Scalar translator_line_left_contraction(Translator self, Line other) {
-    return Scalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z);
+LineAtOrigin origin_plane_weight_expansion(Origin self, Plane other) {
+    return origin_point_at_infinity_wedge(self, plane_right_weight_dual(other));
 }
 
-Scalar translator_line_at_infinity_left_contraction(Translator self, LineAtInfinity other) {
-    return Scalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+LineAtOrigin origin_plane_at_origin_weight_expansion(Origin self, PlaneAtOrigin other) {
+    return origin_point_at_infinity_wedge(self, plane_at_origin_right_weight_dual(other));
 }
 
-LineAtOrigin translator_magnitude_left_contraction(Translator self, Magnitude other) {
-    return LineAtOrigin(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.y));
+AntiScalar origin_point_weight_expansion(Origin self, Point other) {
+    return origin_horizon_wedge(self, point_right_weight_dual(other));
 }
 
-MultiVector translator_motor_left_contraction(Translator self, Motor other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g1.y) * vec2(-1.0, 0.0) + vec2(self.g0.z) * vec2(other.g1.z) * vec2(-1.0, 0.0) + vec2(self.g0.x) * vec2(other.g1.x) * vec2(-1.0, 0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w), vec3(0.0), vec4(0.0));
+Origin origin_translator_weight_expansion(Origin self, Translator other) {
+    return origin_scalar_wedge(self, translator_right_weight_dual(other));
 }
 
-MultiVector translator_multi_vector_left_contraction(Translator self, MultiVector other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g3.y) * vec2(-1.0, 0.0) + vec2(self.g0.z) * vec2(other.g3.z) * vec2(-1.0, 0.0) + vec2(self.g0.x) * vec2(other.g3.x) * vec2(-1.0, 0.0), vec4(self.g0.y) * other.g4.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g4.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g4.wxxx * vec4(1.0, 0.0, 0.0, -1.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.y), vec3(0.0), vec4(0.0));
+AntiScalar plane_flector_weight_expansion(Plane self, Flector other) {
+    return plane_flector_wedge(self, flector_right_weight_dual(other));
 }
 
-Point translator_plane_left_contraction(Translator self, Plane other) {
-    return Point(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
+MultiVector plane_multi_vector_weight_expansion(Plane self, MultiVector other) {
+    return plane_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-Origin translator_plane_at_origin_left_contraction(Translator self, PlaneAtOrigin other) {
-    return Origin(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+AntiScalar plane_plane_weight_expansion(Plane self, Plane other) {
+    return plane_point_at_infinity_wedge(self, plane_right_weight_dual(other));
 }
 
-LineAtOrigin translator_rotor_left_contraction(Translator self, Rotor other) {
-    return LineAtOrigin(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w));
+AntiScalar plane_plane_at_origin_weight_expansion(Plane self, PlaneAtOrigin other) {
+    return plane_point_at_infinity_wedge(self, plane_at_origin_right_weight_dual(other));
 }
 
-MultiVector translator_translator_left_contraction(Translator self, Translator other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g0.y) * vec2(-1.0, 0.0) + vec2(self.g0.z) * vec2(other.g0.z) * vec2(-1.0, 0.0) + vec2(self.g0.x) * vec2(other.g0.x) * vec2(-1.0, 0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w), vec3(0.0), vec4(0.0));
+Plane plane_translator_weight_expansion(Plane self, Translator other) {
+    return plane_scalar_wedge(self, translator_right_weight_dual(other));
 }
 
-AntiScalar anti_scalar_anti_scalar_right_anti_contraction(AntiScalar self, AntiScalar other) {
-    return AntiScalar(self.g0 * other.g0);
+AntiScalar plane_at_origin_flector_weight_expansion(PlaneAtOrigin self, Flector other) {
+    return plane_at_origin_flector_wedge(self, flector_right_weight_dual(other));
 }
 
-AntiScalar anti_scalar_magnitude_right_anti_contraction(AntiScalar self, Magnitude other) {
-    return AntiScalar(self.g0 * other.g0.y);
+MultiVector plane_at_origin_multi_vector_weight_expansion(PlaneAtOrigin self, MultiVector other) {
+    return plane_at_origin_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-AntiScalar anti_scalar_motor_right_anti_contraction(AntiScalar self, Motor other) {
-    return AntiScalar(self.g0 * other.g0.w);
+AntiScalar plane_at_origin_plane_weight_expansion(PlaneAtOrigin self, Plane other) {
+    return plane_at_origin_point_at_infinity_wedge(self, plane_right_weight_dual(other));
 }
 
-AntiScalar anti_scalar_multi_vector_right_anti_contraction(AntiScalar self, MultiVector other) {
-    return AntiScalar(self.g0 * other.g0.y);
+AntiScalar plane_at_origin_plane_at_origin_weight_expansion(PlaneAtOrigin self, PlaneAtOrigin other) {
+    return plane_at_origin_point_at_infinity_wedge(self, plane_at_origin_right_weight_dual(other));
 }
 
-AntiScalar anti_scalar_rotor_right_anti_contraction(AntiScalar self, Rotor other) {
-    return AntiScalar(self.g0 * other.g0.w);
+PlaneAtOrigin plane_at_origin_translator_weight_expansion(PlaneAtOrigin self, Translator other) {
+    return plane_at_origin_scalar_wedge(self, translator_right_weight_dual(other));
 }
 
-AntiScalar anti_scalar_translator_right_anti_contraction(AntiScalar self, Translator other) {
-    return AntiScalar(self.g0 * other.g0.w);
+Motor point_flector_weight_expansion(Point self, Flector other) {
+    return point_flector_wedge(self, flector_right_weight_dual(other));
 }
 
-Flector flector_anti_scalar_right_anti_contraction(Flector self, AntiScalar other) {
-    return Flector(self.g0 * vec4(other.g0), self.g1 * vec4(other.g0));
+Plane point_line_weight_expansion(Point self, Line other) {
+    return point_line_at_infinity_wedge(self, line_right_weight_dual(other));
 }
 
-Motor flector_flector_right_anti_contraction(Flector self, Flector other) {
-    return Motor(vec4(0.0) - vec4(self.g0.w) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g0.w) + vec4(self.g1.y) * vec4(other.g1.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g1.z) * vec4(other.g1.z) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g1.x) * vec4(other.g1.x) * vec4(0.0, 0.0, 0.0, 1.0), vec3(self.g0.y) * vec3(other.g1.z, other.g1.z, other.g1.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * vec3(other.g1.y, other.g1.x, other.g1.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * vec3(other.g1.x, other.g1.z, other.g1.y) * vec3(0.0, 1.0, -1.0));
+Plane point_line_at_origin_weight_expansion(Point self, LineAtOrigin other) {
+    return point_line_at_infinity_wedge(self, line_at_origin_right_weight_dual(other));
 }
 
-Plane flector_line_right_anti_contraction(Flector self, Line other) {
-    return Plane(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, -1.0));
+MultiVector point_multi_vector_weight_expansion(Point self, MultiVector other) {
+    return point_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-Plane flector_line_at_origin_right_anti_contraction(Flector self, LineAtOrigin other) {
-    return Plane(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, -1.0));
+AntiScalar point_origin_weight_expansion(Point self, Origin other) {
+    return point_horizon_wedge(self, origin_right_weight_dual(other));
 }
 
-Flector flector_magnitude_right_anti_contraction(Flector self, Magnitude other) {
-    return Flector(self.g0 * vec4(other.g0.y), self.g1 * vec4(other.g0.y));
+Line point_plane_weight_expansion(Point self, Plane other) {
+    return point_point_at_infinity_wedge(self, plane_right_weight_dual(other));
 }
 
-Flector flector_motor_right_anti_contraction(Flector self, Motor other) {
-    return Flector(self.g0 * vec4(other.g0.w), vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.x) * vec4(other.g0.w) * vec4(1.0, 0.0, 0.0, 0.0) + vec4(self.g1.y) * vec4(other.g0.w) * vec4(0.0, 1.0, 0.0, 0.0) + vec4(self.g1.z) * vec4(other.g0.w) * vec4(0.0, 0.0, 1.0, 0.0) + vec4(self.g1.w) * vec4(other.g0.w) * vec4(0.0, 0.0, 0.0, 1.0) + self.g0.wwwx * other.g0.xyzx * vec4(1.0, 1.0, 1.0, -1.0));
+Line point_plane_at_origin_weight_expansion(Point self, PlaneAtOrigin other) {
+    return point_point_at_infinity_wedge(self, plane_at_origin_right_weight_dual(other));
 }
 
-MultiVector flector_multi_vector_right_anti_contraction(Flector self, MultiVector other) {
-    return MultiVector(vec2(self.g1.x) * vec2(other.g4.x) * vec2(0.0, 1.0) + vec2(self.g1.y) * vec2(other.g4.y) * vec2(0.0, 1.0) + vec2(self.g1.z) * vec2(other.g4.z) * vec2(0.0, 1.0) + vec2(self.g0.x, self.g0.w) * vec2(other.g1.x, other.g1.w) * vec2(0.0, -1.0), self.g0 * vec4(other.g0.y), vec3(0.0) - vec3(self.g0.w) * vec3(other.g4.x, other.g4.y, other.g4.z), vec3(self.g0.y) * vec3(other.g4.z, other.g4.z, other.g4.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * vec3(other.g4.y, other.g4.x, other.g4.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * vec3(other.g4.x, other.g4.z, other.g4.y) * vec3(0.0, 1.0, -1.0), vec4(self.g0.y) * vec4(other.g2.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g2.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.x) * vec4(other.g0.y) * vec4(1.0, 0.0, 0.0, 0.0) + vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 1.0, 0.0, 0.0) + vec4(self.g1.z) * vec4(other.g0.y) * vec4(0.0, 0.0, 1.0, 0.0) + vec4(self.g1.w) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + self.g0.wwwx * vec4(other.g2.x, other.g2.y, other.g2.z, other.g2.x) * vec4(1.0, 1.0, 1.0, -1.0));
+AntiScalar point_point_weight_expansion(Point self, Point other) {
+    return point_horizon_wedge(self, point_right_weight_dual(other));
 }
 
-AntiScalar flector_origin_right_anti_contraction(Flector self, Origin other) {
-    return AntiScalar(0.0 - self.g0.w * other.g0);
+Point point_translator_weight_expansion(Point self, Translator other) {
+    return point_scalar_wedge(self, translator_right_weight_dual(other));
 }
 
-Motor flector_plane_right_anti_contraction(Flector self, Plane other) {
-    return Motor(vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g1.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.w, self.g0.w, self.g0.w, self.g1.x) * other.g0.xyzx * vec4(-1.0, -1.0, -1.0, 1.0), vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, 1.0, -1.0));
+Motor point_at_infinity_flector_weight_expansion(PointAtInfinity self, Flector other) {
+    return point_at_infinity_flector_wedge(self, flector_right_weight_dual(other));
 }
 
-Motor flector_plane_at_origin_right_anti_contraction(Flector self, PlaneAtOrigin other) {
-    return Motor(vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g1.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.w, self.g0.w, self.g0.w, self.g1.x) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(-1.0, -1.0, -1.0, 1.0), vec3(self.g0.y) * other.g0.zzx * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * other.g0.yxy * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * other.g0.xzy * vec3(0.0, 1.0, -1.0));
+Horizon point_at_infinity_line_weight_expansion(PointAtInfinity self, Line other) {
+    return point_at_infinity_line_at_infinity_wedge(self, line_right_weight_dual(other));
 }
 
-AntiScalar flector_point_right_anti_contraction(Flector self, Point other) {
-    return AntiScalar(0.0 - self.g0.w * other.g0.w);
+Horizon point_at_infinity_line_at_origin_weight_expansion(PointAtInfinity self, LineAtOrigin other) {
+    return point_at_infinity_line_at_infinity_wedge(self, line_at_origin_right_weight_dual(other));
 }
 
-Flector flector_rotor_right_anti_contraction(Flector self, Rotor other) {
-    return Flector(self.g0 * vec4(other.g0.w), vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.x) * vec4(other.g0.w) * vec4(1.0, 0.0, 0.0, 0.0) + vec4(self.g1.y) * vec4(other.g0.w) * vec4(0.0, 1.0, 0.0, 0.0) + vec4(self.g1.z) * vec4(other.g0.w) * vec4(0.0, 0.0, 1.0, 0.0) + vec4(self.g1.w) * vec4(other.g0.w) * vec4(0.0, 0.0, 0.0, 1.0) + self.g0.wwwx * other.g0.xyzx * vec4(1.0, 1.0, 1.0, -1.0));
+MultiVector point_at_infinity_multi_vector_weight_expansion(PointAtInfinity self, MultiVector other) {
+    return point_at_infinity_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-Flector flector_translator_right_anti_contraction(Flector self, Translator other) {
-    return Flector(self.g0 * vec4(other.g0.w), self.g1 * vec4(other.g0.w));
+LineAtInfinity point_at_infinity_plane_weight_expansion(PointAtInfinity self, Plane other) {
+    return point_at_infinity_point_at_infinity_wedge(self, plane_right_weight_dual(other));
 }
 
-Horizon horizon_anti_scalar_right_anti_contraction(Horizon self, AntiScalar other) {
-    return Horizon(self.g0 * other.g0);
+LineAtInfinity point_at_infinity_plane_at_origin_weight_expansion(PointAtInfinity self, PlaneAtOrigin other) {
+    return point_at_infinity_point_at_infinity_wedge(self, plane_at_origin_right_weight_dual(other));
 }
 
-Horizon horizon_magnitude_right_anti_contraction(Horizon self, Magnitude other) {
-    return Horizon(self.g0 * other.g0.y);
+PointAtInfinity point_at_infinity_translator_weight_expansion(PointAtInfinity self, Translator other) {
+    return point_at_infinity_scalar_wedge(self, translator_right_weight_dual(other));
 }
 
-Horizon horizon_motor_right_anti_contraction(Horizon self, Motor other) {
-    return Horizon(self.g0 * other.g0.w);
+PlaneAtOrigin rotor_flector_weight_expansion(Rotor self, Flector other) {
+    return rotor_flector_wedge(self, flector_right_weight_dual(other));
 }
 
-Horizon horizon_multi_vector_right_anti_contraction(Horizon self, MultiVector other) {
-    return Horizon(self.g0 * other.g0.y);
+AntiScalar rotor_line_weight_expansion(Rotor self, Line other) {
+    return rotor_line_at_infinity_wedge(self, line_right_weight_dual(other));
 }
 
-Horizon horizon_rotor_right_anti_contraction(Horizon self, Rotor other) {
-    return Horizon(self.g0 * other.g0.w);
+AntiScalar rotor_line_at_origin_weight_expansion(Rotor self, LineAtOrigin other) {
+    return rotor_line_at_infinity_wedge(self, line_at_origin_right_weight_dual(other));
 }
 
-Horizon horizon_translator_right_anti_contraction(Horizon self, Translator other) {
-    return Horizon(self.g0 * other.g0.w);
+MultiVector rotor_multi_vector_weight_expansion(Rotor self, MultiVector other) {
+    return rotor_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-Line line_anti_scalar_right_anti_contraction(Line self, AntiScalar other) {
-    return Line(self.g0 * vec3(other.g0), self.g1 * vec3(other.g0));
+PlaneAtOrigin rotor_plane_weight_expansion(Rotor self, Plane other) {
+    return rotor_point_at_infinity_wedge(self, plane_right_weight_dual(other));
 }
 
-Plane line_flector_right_anti_contraction(Line self, Flector other) {
-    return Plane(vec4(self.g0.y) * other.g1.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * other.g1.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g1.y) * vec4(other.g1.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g1.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.x, self.g0.x, self.g0.x, self.g1.x) * other.g1.xzyx * vec4(0.0, -1.0, 1.0, -1.0));
+PlaneAtOrigin rotor_plane_at_origin_weight_expansion(Rotor self, PlaneAtOrigin other) {
+    return rotor_point_at_infinity_wedge(self, plane_at_origin_right_weight_dual(other));
 }
 
-AntiScalar line_line_right_anti_contraction(Line self, Line other) {
-    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+Rotor rotor_translator_weight_expansion(Rotor self, Translator other) {
+    return rotor_scalar_wedge(self, translator_right_weight_dual(other));
 }
 
-AntiScalar line_line_at_origin_right_anti_contraction(Line self, LineAtOrigin other) {
-    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
+Plane translator_flector_weight_expansion(Translator self, Flector other) {
+    return translator_flector_wedge(self, flector_right_weight_dual(other));
 }
 
-Line line_magnitude_right_anti_contraction(Line self, Magnitude other) {
-    return Line(self.g0 * vec3(other.g0.y), self.g1 * vec3(other.g0.y));
+MultiVector translator_multi_vector_weight_expansion(Translator self, MultiVector other) {
+    return translator_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-Motor line_motor_right_anti_contraction(Line self, Motor other) {
-    return Motor(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0), self.g1 * vec3(other.g0.w));
+Horizon translator_plane_weight_expansion(Translator self, Plane other) {
+    return translator_point_at_infinity_wedge(self, plane_right_weight_dual(other));
 }
 
-MultiVector line_multi_vector_right_anti_contraction(Line self, MultiVector other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g2.y) * vec2(0.0, -1.0) + vec2(self.g0.z) * vec2(other.g2.z) * vec2(0.0, -1.0) + vec2(self.g0.x) * vec2(other.g2.x) * vec2(0.0, -1.0), vec4(0.0), self.g0 * vec3(other.g0.y), self.g1 * vec3(other.g0.y), vec4(self.g0.y) * other.g4.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * other.g4.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g1.y) * vec4(other.g4.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g4.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.x, self.g0.x, self.g0.x, self.g1.x) * other.g4.xzyx * vec4(0.0, -1.0, 1.0, -1.0));
+Horizon translator_plane_at_origin_weight_expansion(Translator self, PlaneAtOrigin other) {
+    return translator_point_at_infinity_wedge(self, plane_at_origin_right_weight_dual(other));
 }
 
-Plane line_plane_right_anti_contraction(Line self, Plane other) {
-    return Plane(vec4(self.g0.y) * other.g0.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * other.g0.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.x, self.g0.x, self.g0.x, self.g1.x) * other.g0.xzyx * vec4(0.0, -1.0, 1.0, -1.0));
-}
-
-Plane line_plane_at_origin_right_anti_contraction(Line self, PlaneAtOrigin other) {
-    return Plane(vec4(self.g0.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g0.z) * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g0.y) * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.x, self.g0.x, self.g0.x, self.g1.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g0.x) * vec4(0.0, -1.0, 1.0, -1.0));
-}
-
-Motor line_rotor_right_anti_contraction(Line self, Rotor other) {
-    return Motor(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0), self.g1 * vec3(other.g0.w));
-}
-
-Line line_translator_right_anti_contraction(Line self, Translator other) {
-    return Line(self.g0 * vec3(other.g0.w), self.g1 * vec3(other.g0.w));
-}
-
-LineAtInfinity line_at_infinity_anti_scalar_right_anti_contraction(LineAtInfinity self, AntiScalar other) {
-    return LineAtInfinity(self.g0 * vec3(other.g0));
-}
-
-Horizon line_at_infinity_flector_right_anti_contraction(LineAtInfinity self, Flector other) {
-    return Horizon(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z);
-}
-
-LineAtInfinity line_at_infinity_magnitude_right_anti_contraction(LineAtInfinity self, Magnitude other) {
-    return LineAtInfinity(self.g0 * vec3(other.g0.y));
-}
-
-LineAtInfinity line_at_infinity_motor_right_anti_contraction(LineAtInfinity self, Motor other) {
-    return LineAtInfinity(self.g0 * vec3(other.g0.w));
-}
-
-MultiVector line_at_infinity_multi_vector_right_anti_contraction(LineAtInfinity self, MultiVector other) {
-    return MultiVector(vec2(0.0), vec4(0.0), vec3(0.0), self.g0 * vec3(other.g0.y), vec4(self.g0.y) * vec4(other.g4.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g4.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.x) * vec4(other.g4.x) * vec4(0.0, 0.0, 0.0, -1.0));
-}
-
-Horizon line_at_infinity_plane_right_anti_contraction(LineAtInfinity self, Plane other) {
-    return Horizon(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
-}
-
-Horizon line_at_infinity_plane_at_origin_right_anti_contraction(LineAtInfinity self, PlaneAtOrigin other) {
-    return Horizon(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
-}
-
-LineAtInfinity line_at_infinity_rotor_right_anti_contraction(LineAtInfinity self, Rotor other) {
-    return LineAtInfinity(self.g0 * vec3(other.g0.w));
-}
-
-LineAtInfinity line_at_infinity_translator_right_anti_contraction(LineAtInfinity self, Translator other) {
-    return LineAtInfinity(self.g0 * vec3(other.g0.w));
-}
-
-LineAtOrigin line_at_origin_anti_scalar_right_anti_contraction(LineAtOrigin self, AntiScalar other) {
-    return LineAtOrigin(self.g0 * vec3(other.g0));
-}
-
-PlaneAtOrigin line_at_origin_flector_right_anti_contraction(LineAtOrigin self, Flector other) {
-    return PlaneAtOrigin(vec3(self.g0.y) * vec3(other.g1.z, other.g1.z, other.g1.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g1.y, other.g1.x, other.g1.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g1.x, other.g1.z, other.g1.y) * vec3(0.0, -1.0, 1.0));
-}
-
-AntiScalar line_at_origin_line_right_anti_contraction(LineAtOrigin self, Line other) {
-    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
-}
-
-AntiScalar line_at_origin_line_at_origin_right_anti_contraction(LineAtOrigin self, LineAtOrigin other) {
-    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
-}
-
-LineAtOrigin line_at_origin_magnitude_right_anti_contraction(LineAtOrigin self, Magnitude other) {
-    return LineAtOrigin(self.g0 * vec3(other.g0.y));
-}
-
-Rotor line_at_origin_motor_right_anti_contraction(LineAtOrigin self, Motor other) {
-    return Rotor(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
-}
-
-MultiVector line_at_origin_multi_vector_right_anti_contraction(LineAtOrigin self, MultiVector other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g2.y) * vec2(0.0, -1.0) + vec2(self.g0.z) * vec2(other.g2.z) * vec2(0.0, -1.0) + vec2(self.g0.x) * vec2(other.g2.x) * vec2(0.0, -1.0), vec4(0.0), self.g0 * vec3(other.g0.y), vec3(0.0), vec4(self.g0.y) * other.g4.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * other.g4.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g0.x) * other.g4.xzyx * vec4(0.0, -1.0, 1.0, 0.0));
-}
-
-PlaneAtOrigin line_at_origin_plane_right_anti_contraction(LineAtOrigin self, Plane other) {
-    return PlaneAtOrigin(vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0));
-}
-
-PlaneAtOrigin line_at_origin_plane_at_origin_right_anti_contraction(LineAtOrigin self, PlaneAtOrigin other) {
-    return PlaneAtOrigin(vec3(self.g0.y) * other.g0.zzx * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * other.g0.yxy * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * other.g0.xzy * vec3(0.0, -1.0, 1.0));
-}
-
-Rotor line_at_origin_rotor_right_anti_contraction(LineAtOrigin self, Rotor other) {
-    return Rotor(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
-}
-
-LineAtOrigin line_at_origin_translator_right_anti_contraction(LineAtOrigin self, Translator other) {
-    return LineAtOrigin(self.g0 * vec3(other.g0.w));
-}
-
-Magnitude magnitude_anti_scalar_right_anti_contraction(Magnitude self, AntiScalar other) {
-    return Magnitude(self.g0 * vec2(other.g0));
-}
-
-Flector magnitude_flector_right_anti_contraction(Magnitude self, Flector other) {
-    return Flector(vec4(self.g0.x) * other.g1.xyzx * vec4(1.0, 1.0, 1.0, 0.0), vec4(self.g0.x) * other.g0.xxxw * vec4(0.0, 0.0, 0.0, 1.0));
-}
-
-LineAtInfinity magnitude_line_right_anti_contraction(Magnitude self, Line other) {
-    return LineAtInfinity(vec3(self.g0.x) * other.g0);
-}
-
-LineAtInfinity magnitude_line_at_origin_right_anti_contraction(Magnitude self, LineAtOrigin other) {
-    return LineAtInfinity(vec3(self.g0.x) * other.g0);
-}
-
-Magnitude magnitude_magnitude_right_anti_contraction(Magnitude self, Magnitude other) {
-    return Magnitude(self.g0 * vec2(other.g0.y));
-}
-
-MultiVector magnitude_motor_right_anti_contraction(Magnitude self, Motor other) {
-    return MultiVector(self.g0 * vec2(other.g0.w), vec4(0.0), vec3(0.0), vec3(self.g0.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(0.0));
-}
-
-MultiVector magnitude_multi_vector_right_anti_contraction(Magnitude self, MultiVector other) {
-    return MultiVector(self.g0 * vec2(other.g0.y), vec4(self.g0.x) * other.g4.xyzx * vec4(1.0, 1.0, 1.0, 0.0), vec3(0.0), vec3(self.g0.x) * other.g2, vec4(self.g0.x) * other.g1.xxxw * vec4(0.0, 0.0, 0.0, 1.0));
-}
-
-Horizon magnitude_origin_right_anti_contraction(Magnitude self, Origin other) {
-    return Horizon(self.g0.x * other.g0);
-}
-
-PointAtInfinity magnitude_plane_right_anti_contraction(Magnitude self, Plane other) {
-    return PointAtInfinity(vec3(self.g0.x) * vec3(other.g0.x, other.g0.y, other.g0.z));
-}
-
-PointAtInfinity magnitude_plane_at_origin_right_anti_contraction(Magnitude self, PlaneAtOrigin other) {
-    return PointAtInfinity(vec3(self.g0.x) * other.g0);
-}
-
-Horizon magnitude_point_right_anti_contraction(Magnitude self, Point other) {
-    return Horizon(self.g0.x * other.g0.w);
-}
-
-MultiVector magnitude_rotor_right_anti_contraction(Magnitude self, Rotor other) {
-    return MultiVector(self.g0 * vec2(other.g0.w), vec4(0.0), vec3(0.0), vec3(self.g0.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(0.0));
-}
-
-Magnitude magnitude_translator_right_anti_contraction(Magnitude self, Translator other) {
-    return Magnitude(self.g0 * vec2(other.g0.w));
-}
-
-Motor motor_anti_scalar_right_anti_contraction(Motor self, AntiScalar other) {
-    return Motor(self.g0 * vec4(other.g0), self.g1 * vec3(other.g0));
-}
-
-Plane motor_flector_right_anti_contraction(Motor self, Flector other) {
-    return Plane(vec4(self.g0.y) * other.g1.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * other.g1.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g1.x) * vec4(other.g1.x) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.y) * vec4(other.g1.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g1.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.x) * other.g1.xzyx * vec4(0.0, -1.0, 1.0, 0.0));
-}
-
-AntiScalar motor_line_right_anti_contraction(Motor self, Line other) {
-    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
-}
-
-AntiScalar motor_line_at_origin_right_anti_contraction(Motor self, LineAtOrigin other) {
-    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
-}
-
-Motor motor_magnitude_right_anti_contraction(Motor self, Magnitude other) {
-    return Motor(self.g0 * vec4(other.g0.y), self.g1 * vec3(other.g0.y));
-}
-
-Motor motor_motor_right_anti_contraction(Motor self, Motor other) {
-    return Motor(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.w) * vec4(other.g0.w) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0), self.g1 * vec3(other.g0.w));
-}
-
-MultiVector motor_multi_vector_right_anti_contraction(Motor self, MultiVector other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g2.y) * vec2(0.0, -1.0) + vec2(self.g0.z) * vec2(other.g2.z) * vec2(0.0, -1.0) + vec2(self.g0.w) * vec2(other.g0.y) * vec2(0.0, 1.0) + vec2(self.g0.x) * vec2(other.g2.x) * vec2(0.0, -1.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.y), self.g1 * vec3(other.g0.y), vec4(self.g0.y) * other.g4.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * other.g4.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g1.x) * vec4(other.g4.x) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.y) * vec4(other.g4.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g4.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.x) * other.g4.xzyx * vec4(0.0, -1.0, 1.0, 0.0));
-}
-
-Plane motor_plane_right_anti_contraction(Motor self, Plane other) {
-    return Plane(vec4(self.g0.y) * other.g0.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * other.g0.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g1.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.x) * other.g0.xzyx * vec4(0.0, -1.0, 1.0, 0.0));
-}
-
-Plane motor_plane_at_origin_right_anti_contraction(Motor self, PlaneAtOrigin other) {
-    return Plane(vec4(self.g0.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g0.z) * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g0.y) * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g1.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g0.x) * vec4(0.0, -1.0, 1.0, 0.0));
-}
-
-Motor motor_rotor_right_anti_contraction(Motor self, Rotor other) {
-    return Motor(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.w) * vec4(other.g0.w) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0), self.g1 * vec3(other.g0.w));
-}
-
-Motor motor_translator_right_anti_contraction(Motor self, Translator other) {
-    return Motor(self.g0 * vec4(other.g0.w), self.g1 * vec3(other.g0.w));
-}
-
-MultiVector multi_vector_anti_scalar_right_anti_contraction(MultiVector self, AntiScalar other) {
-    return MultiVector(self.g0 * vec2(other.g0), self.g1 * vec4(other.g0), self.g2 * vec3(other.g0), self.g3 * vec3(other.g0), self.g4 * vec4(other.g0));
-}
-
-MultiVector multi_vector_flector_right_anti_contraction(MultiVector self, Flector other) {
-    return MultiVector(vec2(self.g4.x) * vec2(other.g1.x) * vec2(0.0, 1.0) + vec2(self.g4.y) * vec2(other.g1.y) * vec2(0.0, 1.0) + vec2(self.g4.z) * vec2(other.g1.z) * vec2(0.0, 1.0) + vec2(self.g1.x, self.g1.w) * vec2(other.g0.x, other.g0.w) * vec2(0.0, -1.0), vec4(self.g0.x) * other.g1.xyzx * vec4(1.0, 1.0, 1.0, 0.0), vec3(0.0) - vec3(self.g1.w) * vec3(other.g1.x, other.g1.y, other.g1.z), vec3(self.g1.y) * vec3(other.g1.z, other.g1.z, other.g1.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g1.z) * vec3(other.g1.y, other.g1.x, other.g1.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g1.x) * vec3(other.g1.x, other.g1.z, other.g1.y) * vec3(0.0, 1.0, -1.0), vec4(self.g2.x) * other.g1.zzyz * vec4(0.0, -1.0, 1.0, 0.0) + vec4(self.g2.y) * other.g1.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g2.z) * other.g1.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g3.x) * vec4(other.g1.x) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g3.y) * vec4(other.g1.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g3.z) * vec4(other.g1.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.x) * other.g0.xxxw * vec4(0.0, 0.0, 0.0, 1.0));
-}
-
-MultiVector multi_vector_line_right_anti_contraction(MultiVector self, Line other) {
-    return MultiVector(vec2(self.g2.y) * vec2(other.g0.y) * vec2(0.0, -1.0) + vec2(self.g2.z) * vec2(other.g0.z) * vec2(0.0, -1.0) + vec2(self.g2.x) * vec2(other.g0.x) * vec2(0.0, -1.0), vec4(0.0), vec3(0.0), vec3(self.g0.x) * other.g0, vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g1.wwwx * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, -1.0));
-}
-
-MultiVector multi_vector_line_at_origin_right_anti_contraction(MultiVector self, LineAtOrigin other) {
-    return MultiVector(vec2(self.g2.y) * vec2(other.g0.y) * vec2(0.0, -1.0) + vec2(self.g2.z) * vec2(other.g0.z) * vec2(0.0, -1.0) + vec2(self.g2.x) * vec2(other.g0.x) * vec2(0.0, -1.0), vec4(0.0), vec3(0.0), vec3(self.g0.x) * other.g0, vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g1.wwwx * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, -1.0));
-}
-
-MultiVector multi_vector_magnitude_right_anti_contraction(MultiVector self, Magnitude other) {
-    return MultiVector(self.g0 * vec2(other.g0.y), self.g1 * vec4(other.g0.y), self.g2 * vec3(other.g0.y), self.g3 * vec3(other.g0.y), self.g4 * vec4(other.g0.y));
-}
-
-MultiVector multi_vector_motor_right_anti_contraction(MultiVector self, Motor other) {
-    return MultiVector(vec2(self.g2.x) * vec2(other.g0.x) * vec2(0.0, -1.0) + vec2(self.g2.y) * vec2(other.g0.y) * vec2(0.0, -1.0) + vec2(self.g2.z) * vec2(other.g0.z) * vec2(0.0, -1.0) + self.g0 * vec2(other.g0.w), self.g1 * vec4(other.g0.w), self.g2 * vec3(other.g0.w), vec3(self.g0.x) * vec3(other.g0.x, other.g0.y, other.g0.z) + self.g3 * vec3(other.g0.w), vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g4.x) * vec4(other.g0.w) * vec4(1.0, 0.0, 0.0, 0.0) + vec4(self.g4.y) * vec4(other.g0.w) * vec4(0.0, 1.0, 0.0, 0.0) + vec4(self.g4.z) * vec4(other.g0.w) * vec4(0.0, 0.0, 1.0, 0.0) + vec4(self.g4.w) * vec4(other.g0.w) * vec4(0.0, 0.0, 0.0, 1.0) + self.g1.wwwx * other.g0.xyzx * vec4(1.0, 1.0, 1.0, -1.0));
-}
-
-MultiVector multi_vector_multi_vector_right_anti_contraction(MultiVector self, MultiVector other) {
-    return MultiVector(vec2(self.g1.w) * vec2(other.g1.w) * vec2(0.0, -1.0) + vec2(self.g2.x) * vec2(other.g2.x) * vec2(0.0, -1.0) + vec2(self.g2.y) * vec2(other.g2.y) * vec2(0.0, -1.0) + vec2(self.g2.z) * vec2(other.g2.z) * vec2(0.0, -1.0) + vec2(self.g4.x) * vec2(other.g4.x) * vec2(0.0, 1.0) + vec2(self.g4.y) * vec2(other.g4.y) * vec2(0.0, 1.0) + vec2(self.g4.z) * vec2(other.g4.z) * vec2(0.0, 1.0) + self.g0 * vec2(other.g0.y), vec4(self.g1.x) * vec4(other.g0.y) * vec4(1.0, 0.0, 0.0, 0.0) + vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 1.0, 0.0, 0.0) + vec4(self.g1.z) * vec4(other.g0.y) * vec4(0.0, 0.0, 1.0, 0.0) + vec4(self.g1.w) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.x) * other.g4.xyzx * vec4(1.0, 1.0, 1.0, 0.0), vec3(0.0) - vec3(self.g1.w) * vec3(other.g4.x, other.g4.y, other.g4.z) + self.g2 * vec3(other.g0.y), vec3(self.g0.x) * other.g2 + vec3(self.g1.y) * vec3(other.g4.z, other.g4.z, other.g4.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g1.z) * vec3(other.g4.y, other.g4.x, other.g4.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g3.x) * vec3(other.g0.y) * vec3(1.0, 0.0, 0.0) + vec3(self.g3.y) * vec3(other.g0.y) * vec3(0.0, 1.0, 0.0) + vec3(self.g3.z) * vec3(other.g0.y) * vec3(0.0, 0.0, 1.0) + vec3(self.g1.x) * vec3(other.g4.x, other.g4.z, other.g4.y) * vec3(0.0, 1.0, -1.0), vec4(self.g1.x) * vec4(other.g2.x) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.y) * vec4(other.g2.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g2.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.w) * vec4(other.g2.x, other.g2.y, other.g2.z, other.g2.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g2.x) * other.g4.zzyz * vec4(0.0, -1.0, 1.0, 0.0) + vec4(self.g2.y) * other.g4.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g2.z) * other.g4.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g3.x) * vec4(other.g4.x) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g3.y) * vec4(other.g4.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g3.z) * vec4(other.g4.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g4.x) * vec4(other.g0.y) * vec4(1.0, 0.0, 0.0, 0.0) + vec4(self.g4.y) * vec4(other.g0.y) * vec4(0.0, 1.0, 0.0, 0.0) + vec4(self.g4.z) * vec4(other.g0.y) * vec4(0.0, 0.0, 1.0, 0.0) + vec4(self.g4.w) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.x) * other.g1.xxxw * vec4(0.0, 0.0, 0.0, 1.0));
-}
-
-MultiVector multi_vector_origin_right_anti_contraction(MultiVector self, Origin other) {
-    return MultiVector(vec2(self.g1.x, self.g1.w) * vec2(other.g0) * vec2(0.0, -1.0), vec4(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x) * vec4(other.g0) * vec4(0.0, 0.0, 0.0, 1.0));
-}
-
-MultiVector multi_vector_plane_right_anti_contraction(MultiVector self, Plane other) {
-    return MultiVector(vec2(self.g4.y) * vec2(other.g0.y) * vec2(0.0, 1.0) + vec2(self.g4.z) * vec2(other.g0.z) * vec2(0.0, 1.0) + vec2(self.g4.x) * vec2(other.g0.x) * vec2(0.0, 1.0), vec4(self.g0.x) * other.g0.xyzx * vec4(1.0, 1.0, 1.0, 0.0), vec3(0.0) - vec3(self.g1.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g1.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g1.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g1.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, 1.0, -1.0), vec4(self.g2.y) * other.g0.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g2.z) * other.g0.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g3.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g3.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g2.x, self.g2.x, self.g2.x, self.g3.x) * other.g0.xzyx * vec4(0.0, -1.0, 1.0, -1.0));
-}
-
-MultiVector multi_vector_plane_at_origin_right_anti_contraction(MultiVector self, PlaneAtOrigin other) {
-    return MultiVector(vec2(self.g4.y) * vec2(other.g0.y) * vec2(0.0, 1.0) + vec2(self.g4.z) * vec2(other.g0.z) * vec2(0.0, 1.0) + vec2(self.g4.x) * vec2(other.g0.x) * vec2(0.0, 1.0), vec4(self.g0.x) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0), vec3(0.0) - vec3(self.g1.w) * other.g0, vec3(self.g1.y) * other.g0.zzx * vec3(-1.0, 0.0, 1.0) + vec3(self.g1.z) * other.g0.yxy * vec3(1.0, -1.0, 0.0) + vec3(self.g1.x) * other.g0.xzy * vec3(0.0, 1.0, -1.0), vec4(self.g2.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g0.z) * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g2.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g0.y) * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g3.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g3.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g2.x, self.g2.x, self.g2.x, self.g3.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g0.x) * vec4(0.0, -1.0, 1.0, -1.0));
-}
-
-MultiVector multi_vector_point_right_anti_contraction(MultiVector self, Point other) {
-    return MultiVector(vec2(self.g1.x, self.g1.w) * vec2(other.g0.x, other.g0.w) * vec2(0.0, -1.0), vec4(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x) * other.g0.xxxw * vec4(0.0, 0.0, 0.0, 1.0));
-}
-
-MultiVector multi_vector_rotor_right_anti_contraction(MultiVector self, Rotor other) {
-    return MultiVector(vec2(self.g2.x) * vec2(other.g0.x) * vec2(0.0, -1.0) + vec2(self.g2.y) * vec2(other.g0.y) * vec2(0.0, -1.0) + vec2(self.g2.z) * vec2(other.g0.z) * vec2(0.0, -1.0) + self.g0 * vec2(other.g0.w), self.g1 * vec4(other.g0.w), self.g2 * vec3(other.g0.w), vec3(self.g0.x) * vec3(other.g0.x, other.g0.y, other.g0.z) + self.g3 * vec3(other.g0.w), vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g4.x) * vec4(other.g0.w) * vec4(1.0, 0.0, 0.0, 0.0) + vec4(self.g4.y) * vec4(other.g0.w) * vec4(0.0, 1.0, 0.0, 0.0) + vec4(self.g4.z) * vec4(other.g0.w) * vec4(0.0, 0.0, 1.0, 0.0) + vec4(self.g4.w) * vec4(other.g0.w) * vec4(0.0, 0.0, 0.0, 1.0) + self.g1.wwwx * other.g0.xyzx * vec4(1.0, 1.0, 1.0, -1.0));
-}
-
-MultiVector multi_vector_translator_right_anti_contraction(MultiVector self, Translator other) {
-    return MultiVector(self.g0 * vec2(other.g0.w), self.g1 * vec4(other.g0.w), self.g2 * vec3(other.g0.w), self.g3 * vec3(other.g0.w), self.g4 * vec4(other.g0.w));
-}
-
-Origin origin_anti_scalar_right_anti_contraction(Origin self, AntiScalar other) {
-    return Origin(self.g0 * other.g0);
-}
-
-Rotor origin_flector_right_anti_contraction(Origin self, Flector other) {
-    return Rotor(vec4(0.0) - vec4(self.g0) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g0.w));
-}
-
-PlaneAtOrigin origin_line_right_anti_contraction(Origin self, Line other) {
-    return PlaneAtOrigin(vec3(self.g0) * other.g0);
-}
-
-PlaneAtOrigin origin_line_at_origin_right_anti_contraction(Origin self, LineAtOrigin other) {
-    return PlaneAtOrigin(vec3(self.g0) * other.g0);
-}
-
-Origin origin_magnitude_right_anti_contraction(Origin self, Magnitude other) {
-    return Origin(self.g0 * other.g0.y);
-}
-
-Flector origin_motor_right_anti_contraction(Origin self, Motor other) {
-    return Flector(vec4(self.g0) * other.g0.xxxw * vec4(0.0, 0.0, 0.0, 1.0), vec4(self.g0) * other.g0.xyzx * vec4(1.0, 1.0, 1.0, 0.0));
-}
-
-MultiVector origin_multi_vector_right_anti_contraction(Origin self, MultiVector other) {
-    return MultiVector(vec2(self.g0) * vec2(other.g1.x, other.g1.w) * vec2(0.0, -1.0), vec4(self.g0) * vec4(other.g0.x, other.g0.x, other.g0.x, other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0), vec3(0.0) - vec3(self.g0) * vec3(other.g4.x, other.g4.y, other.g4.z), vec3(0.0), vec4(self.g0) * vec4(other.g2.x, other.g2.y, other.g2.z, other.g2.x) * vec4(1.0, 1.0, 1.0, 0.0));
-}
-
-AntiScalar origin_origin_right_anti_contraction(Origin self, Origin other) {
-    return AntiScalar(0.0 - self.g0 * other.g0);
-}
-
-LineAtOrigin origin_plane_right_anti_contraction(Origin self, Plane other) {
-    return LineAtOrigin(vec3(0.0) - vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z));
-}
-
-LineAtOrigin origin_plane_at_origin_right_anti_contraction(Origin self, PlaneAtOrigin other) {
-    return LineAtOrigin(vec3(0.0) - vec3(self.g0) * other.g0);
-}
-
-AntiScalar origin_point_right_anti_contraction(Origin self, Point other) {
-    return AntiScalar(0.0 - self.g0 * other.g0.w);
-}
-
-Flector origin_rotor_right_anti_contraction(Origin self, Rotor other) {
-    return Flector(vec4(self.g0) * other.g0.xxxw * vec4(0.0, 0.0, 0.0, 1.0), vec4(self.g0) * other.g0.xyzx * vec4(1.0, 1.0, 1.0, 0.0));
-}
-
-Origin origin_translator_right_anti_contraction(Origin self, Translator other) {
-    return Origin(self.g0 * other.g0.w);
-}
-
-Plane plane_anti_scalar_right_anti_contraction(Plane self, AntiScalar other) {
-    return Plane(self.g0 * vec4(other.g0));
-}
-
-AntiScalar plane_flector_right_anti_contraction(Plane self, Flector other) {
-    return AntiScalar(self.g0.x * other.g1.x + self.g0.y * other.g1.y + self.g0.z * other.g1.z);
-}
-
-Plane plane_magnitude_right_anti_contraction(Plane self, Magnitude other) {
-    return Plane(self.g0 * vec4(other.g0.y));
-}
-
-Plane plane_motor_right_anti_contraction(Plane self, Motor other) {
-    return Plane(self.g0 * vec4(other.g0.w));
-}
-
-MultiVector plane_multi_vector_right_anti_contraction(Plane self, MultiVector other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g4.y) * vec2(0.0, 1.0) + vec2(self.g0.z) * vec2(other.g4.z) * vec2(0.0, 1.0) + vec2(self.g0.x) * vec2(other.g4.x) * vec2(0.0, 1.0), vec4(0.0), vec3(0.0), vec3(0.0), self.g0 * vec4(other.g0.y));
-}
-
-AntiScalar plane_plane_right_anti_contraction(Plane self, Plane other) {
-    return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
-}
-
-AntiScalar plane_plane_at_origin_right_anti_contraction(Plane self, PlaneAtOrigin other) {
-    return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
-}
-
-Plane plane_rotor_right_anti_contraction(Plane self, Rotor other) {
-    return Plane(self.g0 * vec4(other.g0.w));
-}
-
-Plane plane_translator_right_anti_contraction(Plane self, Translator other) {
-    return Plane(self.g0 * vec4(other.g0.w));
-}
-
-PlaneAtOrigin plane_at_origin_anti_scalar_right_anti_contraction(PlaneAtOrigin self, AntiScalar other) {
-    return PlaneAtOrigin(self.g0 * vec3(other.g0));
-}
-
-AntiScalar plane_at_origin_flector_right_anti_contraction(PlaneAtOrigin self, Flector other) {
-    return AntiScalar(self.g0.x * other.g1.x + self.g0.y * other.g1.y + self.g0.z * other.g1.z);
-}
-
-PlaneAtOrigin plane_at_origin_magnitude_right_anti_contraction(PlaneAtOrigin self, Magnitude other) {
-    return PlaneAtOrigin(self.g0 * vec3(other.g0.y));
-}
-
-PlaneAtOrigin plane_at_origin_motor_right_anti_contraction(PlaneAtOrigin self, Motor other) {
-    return PlaneAtOrigin(self.g0 * vec3(other.g0.w));
-}
-
-MultiVector plane_at_origin_multi_vector_right_anti_contraction(PlaneAtOrigin self, MultiVector other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g4.y) * vec2(0.0, 1.0) + vec2(self.g0.z) * vec2(other.g4.z) * vec2(0.0, 1.0) + vec2(self.g0.x) * vec2(other.g4.x) * vec2(0.0, 1.0), vec4(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g0.y, other.g0.y, other.g0.y, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0));
-}
-
-AntiScalar plane_at_origin_plane_right_anti_contraction(PlaneAtOrigin self, Plane other) {
-    return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
-}
-
-AntiScalar plane_at_origin_plane_at_origin_right_anti_contraction(PlaneAtOrigin self, PlaneAtOrigin other) {
-    return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
-}
-
-PlaneAtOrigin plane_at_origin_rotor_right_anti_contraction(PlaneAtOrigin self, Rotor other) {
-    return PlaneAtOrigin(self.g0 * vec3(other.g0.w));
-}
-
-PlaneAtOrigin plane_at_origin_translator_right_anti_contraction(PlaneAtOrigin self, Translator other) {
-    return PlaneAtOrigin(self.g0 * vec3(other.g0.w));
-}
-
-Point point_anti_scalar_right_anti_contraction(Point self, AntiScalar other) {
-    return Point(self.g0 * vec4(other.g0));
-}
-
-Motor point_flector_right_anti_contraction(Point self, Flector other) {
-    return Motor(vec4(0.0) - vec4(self.g0.w) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g0.w), vec3(self.g0.y) * vec3(other.g1.z, other.g1.z, other.g1.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * vec3(other.g1.y, other.g1.x, other.g1.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * vec3(other.g1.x, other.g1.z, other.g1.y) * vec3(0.0, 1.0, -1.0));
-}
-
-Plane point_line_right_anti_contraction(Point self, Line other) {
-    return Plane(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, -1.0));
-}
-
-Plane point_line_at_origin_right_anti_contraction(Point self, LineAtOrigin other) {
-    return Plane(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, -1.0));
-}
-
-Point point_magnitude_right_anti_contraction(Point self, Magnitude other) {
-    return Point(self.g0 * vec4(other.g0.y));
-}
-
-Flector point_motor_right_anti_contraction(Point self, Motor other) {
-    return Flector(self.g0 * vec4(other.g0.w), vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * other.g0.xyzx * vec4(1.0, 1.0, 1.0, -1.0));
-}
-
-MultiVector point_multi_vector_right_anti_contraction(Point self, MultiVector other) {
-    return MultiVector(vec2(self.g0.x, self.g0.w) * vec2(other.g1.x, other.g1.w) * vec2(0.0, -1.0), self.g0 * vec4(other.g0.y), vec3(0.0) - vec3(self.g0.w) * vec3(other.g4.x, other.g4.y, other.g4.z), vec3(self.g0.y) * vec3(other.g4.z, other.g4.z, other.g4.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * vec3(other.g4.y, other.g4.x, other.g4.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * vec3(other.g4.x, other.g4.z, other.g4.y) * vec3(0.0, 1.0, -1.0), vec4(self.g0.y) * vec4(other.g2.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g2.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * vec4(other.g2.x, other.g2.y, other.g2.z, other.g2.x) * vec4(1.0, 1.0, 1.0, -1.0));
-}
-
-AntiScalar point_origin_right_anti_contraction(Point self, Origin other) {
-    return AntiScalar(0.0 - self.g0.w * other.g0);
-}
-
-Line point_plane_right_anti_contraction(Point self, Plane other) {
-    return Line(vec3(0.0) - vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, 1.0, -1.0));
-}
-
-Line point_plane_at_origin_right_anti_contraction(Point self, PlaneAtOrigin other) {
-    return Line(vec3(0.0) - vec3(self.g0.w) * other.g0, vec3(self.g0.y) * other.g0.zzx * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * other.g0.yxy * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * other.g0.xzy * vec3(0.0, 1.0, -1.0));
-}
-
-AntiScalar point_point_right_anti_contraction(Point self, Point other) {
-    return AntiScalar(0.0 - self.g0.w * other.g0.w);
-}
-
-Flector point_rotor_right_anti_contraction(Point self, Rotor other) {
-    return Flector(self.g0 * vec4(other.g0.w), vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * other.g0.xyzx * vec4(1.0, 1.0, 1.0, -1.0));
-}
-
-Point point_translator_right_anti_contraction(Point self, Translator other) {
-    return Point(self.g0 * vec4(other.g0.w));
-}
-
-PointAtInfinity point_at_infinity_anti_scalar_right_anti_contraction(PointAtInfinity self, AntiScalar other) {
-    return PointAtInfinity(self.g0 * vec3(other.g0));
-}
-
-LineAtInfinity point_at_infinity_flector_right_anti_contraction(PointAtInfinity self, Flector other) {
-    return LineAtInfinity(vec3(self.g0.y) * vec3(other.g1.z, other.g1.z, other.g1.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * vec3(other.g1.y, other.g1.x, other.g1.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * vec3(other.g1.x, other.g1.z, other.g1.y) * vec3(0.0, 1.0, -1.0));
-}
-
-Horizon point_at_infinity_line_right_anti_contraction(PointAtInfinity self, Line other) {
-    return Horizon(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
-}
-
-Horizon point_at_infinity_line_at_origin_right_anti_contraction(PointAtInfinity self, LineAtOrigin other) {
-    return Horizon(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
-}
-
-PointAtInfinity point_at_infinity_magnitude_right_anti_contraction(PointAtInfinity self, Magnitude other) {
-    return PointAtInfinity(self.g0 * vec3(other.g0.y));
-}
-
-Flector point_at_infinity_motor_right_anti_contraction(PointAtInfinity self, Motor other) {
-    return Flector(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * other.g0.wwwx * vec4(1.0, 1.0, 1.0, 0.0), vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0));
-}
-
-MultiVector point_at_infinity_multi_vector_right_anti_contraction(PointAtInfinity self, MultiVector other) {
-    return MultiVector(vec2(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g0.y, other.g0.y, other.g0.y, other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0), vec3(0.0), vec3(self.g0.y) * vec3(other.g4.z, other.g4.z, other.g4.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * vec3(other.g4.y, other.g4.x, other.g4.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * vec3(other.g4.x, other.g4.z, other.g4.y) * vec3(0.0, 1.0, -1.0), vec4(self.g0.y) * vec4(other.g2.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g2.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.x) * vec4(other.g2.x) * vec4(0.0, 0.0, 0.0, -1.0));
-}
-
-LineAtInfinity point_at_infinity_plane_right_anti_contraction(PointAtInfinity self, Plane other) {
-    return LineAtInfinity(vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, 1.0, -1.0));
-}
-
-LineAtInfinity point_at_infinity_plane_at_origin_right_anti_contraction(PointAtInfinity self, PlaneAtOrigin other) {
-    return LineAtInfinity(vec3(self.g0.y) * other.g0.zzx * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * other.g0.yxy * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * other.g0.xzy * vec3(0.0, 1.0, -1.0));
-}
-
-Flector point_at_infinity_rotor_right_anti_contraction(PointAtInfinity self, Rotor other) {
-    return Flector(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * other.g0.wwwx * vec4(1.0, 1.0, 1.0, 0.0), vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, -1.0));
-}
-
-PointAtInfinity point_at_infinity_translator_right_anti_contraction(PointAtInfinity self, Translator other) {
-    return PointAtInfinity(self.g0 * vec3(other.g0.w));
-}
-
-Rotor rotor_anti_scalar_right_anti_contraction(Rotor self, AntiScalar other) {
-    return Rotor(self.g0 * vec4(other.g0));
-}
-
-PlaneAtOrigin rotor_flector_right_anti_contraction(Rotor self, Flector other) {
-    return PlaneAtOrigin(vec3(self.g0.y) * vec3(other.g1.z, other.g1.z, other.g1.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g1.y, other.g1.x, other.g1.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g1.x, other.g1.z, other.g1.y) * vec3(0.0, -1.0, 1.0));
-}
-
-AntiScalar rotor_line_right_anti_contraction(Rotor self, Line other) {
-    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
-}
-
-AntiScalar rotor_line_at_origin_right_anti_contraction(Rotor self, LineAtOrigin other) {
-    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
-}
-
-Rotor rotor_magnitude_right_anti_contraction(Rotor self, Magnitude other) {
-    return Rotor(self.g0 * vec4(other.g0.y));
-}
-
-Rotor rotor_motor_right_anti_contraction(Rotor self, Motor other) {
-    return Rotor(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.w) * vec4(other.g0.w) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
-}
-
-MultiVector rotor_multi_vector_right_anti_contraction(Rotor self, MultiVector other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g2.y) * vec2(0.0, -1.0) + vec2(self.g0.z) * vec2(other.g2.z) * vec2(0.0, -1.0) + vec2(self.g0.w) * vec2(other.g0.y) * vec2(0.0, 1.0) + vec2(self.g0.x) * vec2(other.g2.x) * vec2(0.0, -1.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.y), vec3(0.0), vec4(self.g0.y) * other.g4.zzxz * vec4(1.0, 0.0, -1.0, 0.0) + vec4(self.g0.z) * other.g4.yxyy * vec4(-1.0, 1.0, 0.0, 0.0) + vec4(self.g0.x) * other.g4.xzyx * vec4(0.0, -1.0, 1.0, 0.0));
-}
-
-PlaneAtOrigin rotor_plane_right_anti_contraction(Rotor self, Plane other) {
-    return PlaneAtOrigin(vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, -1.0, 1.0));
-}
-
-PlaneAtOrigin rotor_plane_at_origin_right_anti_contraction(Rotor self, PlaneAtOrigin other) {
-    return PlaneAtOrigin(vec3(self.g0.y) * other.g0.zzx * vec3(1.0, 0.0, -1.0) + vec3(self.g0.z) * other.g0.yxy * vec3(-1.0, 1.0, 0.0) + vec3(self.g0.x) * other.g0.xzy * vec3(0.0, -1.0, 1.0));
-}
-
-Rotor rotor_rotor_right_anti_contraction(Rotor self, Rotor other) {
-    return Rotor(vec4(self.g0.y) * other.g0.wwwy * vec4(0.0, 1.0, 0.0, -1.0) + vec4(self.g0.z) * other.g0.wwwz * vec4(0.0, 0.0, 1.0, -1.0) + vec4(self.g0.w) * vec4(other.g0.w) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.x) * other.g0.wxxx * vec4(1.0, 0.0, 0.0, -1.0));
-}
-
-Rotor rotor_translator_right_anti_contraction(Rotor self, Translator other) {
-    return Rotor(self.g0 * vec4(other.g0.w));
-}
-
-Scalar scalar_anti_scalar_right_anti_contraction(Scalar self, AntiScalar other) {
-    return Scalar(self.g0 * other.g0);
-}
-
-Flector scalar_flector_right_anti_contraction(Scalar self, Flector other) {
-    return Flector(vec4(self.g0) * other.g1.xyzx * vec4(1.0, 1.0, 1.0, 0.0), vec4(self.g0) * other.g0.xxxw * vec4(0.0, 0.0, 0.0, 1.0));
-}
-
-LineAtInfinity scalar_line_right_anti_contraction(Scalar self, Line other) {
-    return LineAtInfinity(vec3(self.g0) * other.g0);
-}
-
-LineAtInfinity scalar_line_at_origin_right_anti_contraction(Scalar self, LineAtOrigin other) {
-    return LineAtInfinity(vec3(self.g0) * other.g0);
-}
-
-Scalar scalar_magnitude_right_anti_contraction(Scalar self, Magnitude other) {
-    return Scalar(self.g0 * other.g0.y);
-}
-
-MultiVector scalar_motor_right_anti_contraction(Scalar self, Motor other) {
-    return MultiVector(vec2(self.g0) * vec2(other.g0.w, other.g0.x) * vec2(1.0, 0.0), vec4(0.0), vec3(0.0), vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(0.0));
-}
-
-MultiVector scalar_multi_vector_right_anti_contraction(Scalar self, MultiVector other) {
-    return MultiVector(vec2(self.g0) * other.g0.yx * vec2(1.0, 0.0), vec4(self.g0) * other.g4.xyzx * vec4(1.0, 1.0, 1.0, 0.0), vec3(0.0), vec3(self.g0) * other.g2, vec4(self.g0) * other.g1.xxxw * vec4(0.0, 0.0, 0.0, 1.0));
-}
-
-Horizon scalar_origin_right_anti_contraction(Scalar self, Origin other) {
-    return Horizon(self.g0 * other.g0);
-}
-
-PointAtInfinity scalar_plane_right_anti_contraction(Scalar self, Plane other) {
-    return PointAtInfinity(vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z));
-}
-
-PointAtInfinity scalar_plane_at_origin_right_anti_contraction(Scalar self, PlaneAtOrigin other) {
-    return PointAtInfinity(vec3(self.g0) * other.g0);
-}
-
-Horizon scalar_point_right_anti_contraction(Scalar self, Point other) {
-    return Horizon(self.g0 * other.g0.w);
-}
-
-MultiVector scalar_rotor_right_anti_contraction(Scalar self, Rotor other) {
-    return MultiVector(vec2(self.g0) * vec2(other.g0.w, other.g0.x) * vec2(1.0, 0.0), vec4(0.0), vec3(0.0), vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(0.0));
-}
-
-Scalar scalar_translator_right_anti_contraction(Scalar self, Translator other) {
-    return Scalar(self.g0 * other.g0.w);
-}
-
-Translator translator_anti_scalar_right_anti_contraction(Translator self, AntiScalar other) {
-    return Translator(self.g0 * vec4(other.g0));
-}
-
-Horizon translator_flector_right_anti_contraction(Translator self, Flector other) {
-    return Horizon(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z);
-}
-
-Translator translator_magnitude_right_anti_contraction(Translator self, Magnitude other) {
-    return Translator(self.g0 * vec4(other.g0.y));
-}
-
-Translator translator_motor_right_anti_contraction(Translator self, Motor other) {
-    return Translator(self.g0 * vec4(other.g0.w));
-}
-
-MultiVector translator_multi_vector_right_anti_contraction(Translator self, MultiVector other) {
-    return MultiVector(vec2(self.g0.x, self.g0.w) * other.g0 * vec2(0.0, 1.0), vec4(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.y), vec4(self.g0.y) * vec4(other.g4.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g4.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.x) * vec4(other.g4.x) * vec4(0.0, 0.0, 0.0, -1.0));
-}
-
-Horizon translator_plane_right_anti_contraction(Translator self, Plane other) {
-    return Horizon(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
-}
-
-Horizon translator_plane_at_origin_right_anti_contraction(Translator self, PlaneAtOrigin other) {
-    return Horizon(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
-}
-
-Translator translator_rotor_right_anti_contraction(Translator self, Rotor other) {
-    return Translator(self.g0 * vec4(other.g0.w));
-}
-
-Translator translator_translator_right_anti_contraction(Translator self, Translator other) {
-    return Translator(self.g0 * vec4(other.g0.w));
-}
-
-Flector anti_scalar_flector_right_contraction(AntiScalar self, Flector other) {
-    return Flector(vec4(self.g0) * other.g1.xxxw * vec4(0.0, 0.0, 0.0, -1.0), vec4(self.g0) * other.g0.xyzx * vec4(-1.0, -1.0, -1.0, 0.0));
-}
-
-Origin anti_scalar_horizon_right_contraction(AntiScalar self, Horizon other) {
-    return Origin(0.0 - self.g0 * other.g0);
-}
-
-LineAtOrigin anti_scalar_line_right_contraction(AntiScalar self, Line other) {
-    return LineAtOrigin(vec3(self.g0) * other.g1);
-}
-
-LineAtOrigin anti_scalar_line_at_infinity_right_contraction(AntiScalar self, LineAtInfinity other) {
-    return LineAtOrigin(vec3(self.g0) * other.g0);
-}
-
-AntiScalar anti_scalar_magnitude_right_contraction(AntiScalar self, Magnitude other) {
-    return AntiScalar(self.g0 * other.g0.x);
-}
-
-LineAtOrigin anti_scalar_motor_right_contraction(AntiScalar self, Motor other) {
-    return LineAtOrigin(vec3(self.g0) * other.g1);
-}
-
-MultiVector anti_scalar_multi_vector_right_contraction(AntiScalar self, MultiVector other) {
-    return MultiVector(vec2(self.g0) * vec2(other.g0.x) * vec2(0.0, 1.0), vec4(self.g0) * other.g4.xxxw * vec4(0.0, 0.0, 0.0, -1.0), vec3(self.g0) * other.g3, vec3(0.0), vec4(self.g0) * other.g1.xyzx * vec4(-1.0, -1.0, -1.0, 0.0));
-}
-
-Origin anti_scalar_plane_right_contraction(AntiScalar self, Plane other) {
-    return Origin(0.0 - self.g0 * other.g0.w);
-}
-
-PlaneAtOrigin anti_scalar_point_right_contraction(AntiScalar self, Point other) {
-    return PlaneAtOrigin(vec3(0.0) - vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z));
-}
-
-PlaneAtOrigin anti_scalar_point_at_infinity_right_contraction(AntiScalar self, PointAtInfinity other) {
-    return PlaneAtOrigin(vec3(0.0) - vec3(self.g0) * other.g0);
-}
-
-AntiScalar anti_scalar_scalar_right_contraction(AntiScalar self, Scalar other) {
-    return AntiScalar(self.g0 * other.g0);
-}
-
-LineAtOrigin anti_scalar_translator_right_contraction(AntiScalar self, Translator other) {
-    return LineAtOrigin(vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z));
-}
-
-MultiVector flector_flector_right_contraction(Flector self, Flector other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g0.y) * vec2(1.0, 0.0) + vec2(self.g0.z) * vec2(other.g0.z) * vec2(1.0, 0.0) + vec2(self.g1.w) * vec2(other.g1.w) * vec2(-1.0, 0.0) + vec2(self.g0.x) * vec2(other.g0.x) * vec2(1.0, 0.0), vec4(0.0), vec3(self.g1.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g1.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g1.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, 1.0, -1.0), vec3(0.0) - vec3(self.g1.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(0.0));
-}
-
-Scalar flector_horizon_right_contraction(Flector self, Horizon other) {
-    return Scalar(0.0 - self.g1.w * other.g0);
-}
-
-Point flector_line_right_contraction(Flector self, Line other) {
-    return Point(vec4(self.g1.y) * vec4(other.g1.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g1.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g1.wwwx * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, -1.0));
-}
-
-Point flector_line_at_infinity_right_contraction(Flector self, LineAtInfinity other) {
-    return Point(vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g1.wwwx * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, -1.0));
-}
-
-Flector flector_magnitude_right_contraction(Flector self, Magnitude other) {
-    return Flector(self.g0 * vec4(other.g0.x), self.g1 * vec4(other.g0.x));
-}
-
-Point flector_motor_right_contraction(Flector self, Motor other) {
-    return Point(vec4(self.g1.y) * vec4(other.g1.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g1.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g1.wwwx * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, -1.0));
-}
-
-MultiVector flector_multi_vector_right_contraction(Flector self, MultiVector other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g1.y) * vec2(1.0, 0.0) + vec2(self.g0.z) * vec2(other.g1.z) * vec2(1.0, 0.0) + vec2(self.g1.w) * vec2(other.g4.w) * vec2(-1.0, 0.0) + vec2(self.g0.x) * vec2(other.g1.x) * vec2(1.0, 0.0), vec4(self.g1.x) * vec4(other.g3.x) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.y) * vec4(other.g3.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g3.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.w) * vec4(other.g3.x, other.g3.y, other.g3.z, other.g3.x) * vec4(1.0, 1.0, 1.0, 0.0) + self.g0 * vec4(other.g0.x), vec3(self.g1.y) * vec3(other.g1.z, other.g1.z, other.g1.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g1.z) * vec3(other.g1.y, other.g1.x, other.g1.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g1.x) * vec3(other.g1.x, other.g1.z, other.g1.y) * vec3(0.0, 1.0, -1.0), vec3(0.0) - vec3(self.g1.w) * vec3(other.g1.x, other.g1.y, other.g1.z), self.g1 * vec4(other.g0.x));
-}
-
-Scalar flector_plane_right_contraction(Flector self, Plane other) {
-    return Scalar(0.0 - self.g1.w * other.g0.w);
-}
-
-MultiVector flector_point_right_contraction(Flector self, Point other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g0.y) * vec2(1.0, 0.0) + vec2(self.g0.z) * vec2(other.g0.z) * vec2(1.0, 0.0) + vec2(self.g0.x) * vec2(other.g0.x) * vec2(1.0, 0.0), vec4(0.0), vec3(self.g1.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g1.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g1.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, 1.0, -1.0), vec3(0.0) - vec3(self.g1.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(0.0));
-}
-
-MultiVector flector_point_at_infinity_right_contraction(Flector self, PointAtInfinity other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g0.y) * vec2(1.0, 0.0) + vec2(self.g0.z) * vec2(other.g0.z) * vec2(1.0, 0.0) + vec2(self.g0.x) * vec2(other.g0.x) * vec2(1.0, 0.0), vec4(0.0), vec3(self.g1.y) * other.g0.zzx * vec3(-1.0, 0.0, 1.0) + vec3(self.g1.z) * other.g0.yxy * vec3(1.0, -1.0, 0.0) + vec3(self.g1.x) * other.g0.xzy * vec3(0.0, 1.0, -1.0), vec3(0.0) - vec3(self.g1.w) * other.g0, vec4(0.0));
-}
-
-Flector flector_scalar_right_contraction(Flector self, Scalar other) {
-    return Flector(self.g0 * vec4(other.g0), self.g1 * vec4(other.g0));
-}
-
-Point flector_translator_right_contraction(Flector self, Translator other) {
-    return Point(vec4(self.g1.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g1.wwwx * other.g0.xyzx * vec4(1.0, 1.0, 1.0, -1.0));
-}
-
-MultiVector horizon_flector_right_contraction(Horizon self, Flector other) {
-    return MultiVector(vec2(self.g0) * vec2(other.g1.w, other.g1.x) * vec2(-1.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(0.0));
-}
-
-Scalar horizon_horizon_right_contraction(Horizon self, Horizon other) {
-    return Scalar(0.0 - self.g0 * other.g0);
-}
-
-PointAtInfinity horizon_line_right_contraction(Horizon self, Line other) {
-    return PointAtInfinity(vec3(self.g0) * other.g1);
-}
-
-PointAtInfinity horizon_line_at_infinity_right_contraction(Horizon self, LineAtInfinity other) {
-    return PointAtInfinity(vec3(self.g0) * other.g0);
-}
-
-Horizon horizon_magnitude_right_contraction(Horizon self, Magnitude other) {
-    return Horizon(self.g0 * other.g0.x);
-}
-
-PointAtInfinity horizon_motor_right_contraction(Horizon self, Motor other) {
-    return PointAtInfinity(vec3(self.g0) * other.g1);
-}
-
-MultiVector horizon_multi_vector_right_contraction(Horizon self, MultiVector other) {
-    return MultiVector(vec2(self.g0) * vec2(other.g4.w, other.g4.x) * vec2(-1.0, 0.0), vec4(self.g0) * vec4(other.g3.x, other.g3.y, other.g3.z, other.g3.x) * vec4(1.0, 1.0, 1.0, 0.0), vec3(0.0), vec3(0.0) - vec3(self.g0) * vec3(other.g1.x, other.g1.y, other.g1.z), vec4(self.g0) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, 1.0));
-}
-
-Scalar horizon_plane_right_contraction(Horizon self, Plane other) {
-    return Scalar(0.0 - self.g0 * other.g0.w);
-}
-
-LineAtInfinity horizon_point_right_contraction(Horizon self, Point other) {
-    return LineAtInfinity(vec3(0.0) - vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z));
-}
-
-LineAtInfinity horizon_point_at_infinity_right_contraction(Horizon self, PointAtInfinity other) {
-    return LineAtInfinity(vec3(0.0) - vec3(self.g0) * other.g0);
-}
-
-Horizon horizon_scalar_right_contraction(Horizon self, Scalar other) {
-    return Horizon(self.g0 * other.g0);
-}
-
-PointAtInfinity horizon_translator_right_contraction(Horizon self, Translator other) {
-    return PointAtInfinity(vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z));
-}
-
-Point line_flector_right_contraction(Line self, Flector other) {
-    return Point(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g1.y) * other.g0.zzxz * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g1.z) * other.g0.yxyy * vec4(1.0, -1.0, 0.0, 0.0) + vec4(self.g0.x, self.g1.x, self.g1.x, self.g0.x) * other.g0.xzyx * vec4(0.0, 1.0, -1.0, 1.0));
-}
-
-Scalar line_line_right_contraction(Line self, Line other) {
-    return Scalar(0.0 - self.g1.x * other.g1.x - self.g1.y * other.g1.y - self.g1.z * other.g1.z);
-}
-
-Scalar line_line_at_infinity_right_contraction(Line self, LineAtInfinity other) {
-    return Scalar(0.0 - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
-}
-
-Line line_magnitude_right_contraction(Line self, Magnitude other) {
-    return Line(self.g0 * vec3(other.g0.x), self.g1 * vec3(other.g0.x));
-}
-
-Scalar line_motor_right_contraction(Line self, Motor other) {
-    return Scalar(0.0 - self.g1.x * other.g1.x - self.g1.y * other.g1.y - self.g1.z * other.g1.z);
-}
-
-MultiVector line_multi_vector_right_contraction(Line self, MultiVector other) {
-    return MultiVector(vec2(self.g1.y) * vec2(other.g3.y) * vec2(-1.0, 0.0) + vec2(self.g1.z) * vec2(other.g3.z) * vec2(-1.0, 0.0) + vec2(self.g1.x) * vec2(other.g3.x) * vec2(-1.0, 0.0), vec4(self.g0.y) * vec4(other.g1.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.z) * vec4(other.g1.z) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g1.y) * other.g1.zzxz * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g1.z) * other.g1.yxyy * vec4(1.0, -1.0, 0.0, 0.0) + vec4(self.g0.x, self.g1.x, self.g1.x, self.g0.x) * other.g1.xzyx * vec4(0.0, 1.0, -1.0, 1.0), self.g0 * vec3(other.g0.x), self.g1 * vec3(other.g0.x), vec4(0.0));
-}
-
-Point line_point_right_contraction(Line self, Point other) {
-    return Point(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g1.y) * other.g0.zzxz * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g1.z) * other.g0.yxyy * vec4(1.0, -1.0, 0.0, 0.0) + vec4(self.g0.x, self.g1.x, self.g1.x, self.g0.x) * other.g0.xzyx * vec4(0.0, 1.0, -1.0, 1.0));
-}
-
-Point line_point_at_infinity_right_contraction(Line self, PointAtInfinity other) {
-    return Point(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g1.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g0.z) * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g1.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g0.y) * vec4(1.0, -1.0, 0.0, 0.0) + vec4(self.g0.x, self.g1.x, self.g1.x, self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g0.x) * vec4(0.0, 1.0, -1.0, 1.0));
-}
-
-Line line_scalar_right_contraction(Line self, Scalar other) {
-    return Line(self.g0 * vec3(other.g0), self.g1 * vec3(other.g0));
-}
-
-Scalar line_translator_right_contraction(Line self, Translator other) {
-    return Scalar(0.0 - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
-}
-
-PointAtInfinity line_at_infinity_flector_right_contraction(LineAtInfinity self, Flector other) {
-    return PointAtInfinity(vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, 1.0, -1.0));
-}
-
-Scalar line_at_infinity_line_right_contraction(LineAtInfinity self, Line other) {
-    return Scalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z);
-}
-
-Scalar line_at_infinity_line_at_infinity_right_contraction(LineAtInfinity self, LineAtInfinity other) {
-    return Scalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
-}
-
-LineAtInfinity line_at_infinity_magnitude_right_contraction(LineAtInfinity self, Magnitude other) {
-    return LineAtInfinity(self.g0 * vec3(other.g0.x));
-}
-
-Scalar line_at_infinity_motor_right_contraction(LineAtInfinity self, Motor other) {
-    return Scalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z);
-}
-
-MultiVector line_at_infinity_multi_vector_right_contraction(LineAtInfinity self, MultiVector other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g3.y) * vec2(-1.0, 0.0) + vec2(self.g0.z) * vec2(other.g3.z) * vec2(-1.0, 0.0) + vec2(self.g0.x) * vec2(other.g3.x) * vec2(-1.0, 0.0), vec4(self.g0.y) * other.g1.zzxz * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g0.z) * other.g1.yxyy * vec4(1.0, -1.0, 0.0, 0.0) + vec4(self.g0.x) * other.g1.xzyx * vec4(0.0, 1.0, -1.0, 0.0), vec3(0.0), self.g0 * vec3(other.g0.x), vec4(0.0));
-}
-
-PointAtInfinity line_at_infinity_point_right_contraction(LineAtInfinity self, Point other) {
-    return PointAtInfinity(vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, 1.0, -1.0));
-}
-
-PointAtInfinity line_at_infinity_point_at_infinity_right_contraction(LineAtInfinity self, PointAtInfinity other) {
-    return PointAtInfinity(vec3(self.g0.y) * other.g0.zzx * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * other.g0.yxy * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * other.g0.xzy * vec3(0.0, 1.0, -1.0));
-}
-
-LineAtInfinity line_at_infinity_scalar_right_contraction(LineAtInfinity self, Scalar other) {
-    return LineAtInfinity(self.g0 * vec3(other.g0));
-}
-
-Scalar line_at_infinity_translator_right_contraction(LineAtInfinity self, Translator other) {
-    return Scalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
-}
-
-Origin line_at_origin_flector_right_contraction(LineAtOrigin self, Flector other) {
-    return Origin(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
-}
-
-LineAtOrigin line_at_origin_magnitude_right_contraction(LineAtOrigin self, Magnitude other) {
-    return LineAtOrigin(self.g0 * vec3(other.g0.x));
-}
-
-MultiVector line_at_origin_multi_vector_right_contraction(LineAtOrigin self, MultiVector other) {
-    return MultiVector(vec2(0.0), vec4(self.g0.y) * vec4(other.g1.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.z) * vec4(other.g1.z) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.x) * vec4(other.g1.x) * vec4(0.0, 0.0, 0.0, 1.0), self.g0 * vec3(other.g0.x), vec3(0.0), vec4(0.0));
-}
-
-Origin line_at_origin_point_right_contraction(LineAtOrigin self, Point other) {
-    return Origin(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
-}
-
-Origin line_at_origin_point_at_infinity_right_contraction(LineAtOrigin self, PointAtInfinity other) {
-    return Origin(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
-}
-
-LineAtOrigin line_at_origin_scalar_right_contraction(LineAtOrigin self, Scalar other) {
-    return LineAtOrigin(self.g0 * vec3(other.g0));
-}
-
-Flector magnitude_flector_right_contraction(Magnitude self, Flector other) {
-    return Flector(vec4(self.g0.x, self.g0.x, self.g0.x, self.g0.y) * other.g1.xxxw * vec4(0.0, 0.0, 0.0, -1.0), vec4(self.g0.y, self.g0.y, self.g0.y, self.g0.x) * other.g0.xyzx * vec4(-1.0, -1.0, -1.0, 0.0));
-}
-
-Origin magnitude_horizon_right_contraction(Magnitude self, Horizon other) {
-    return Origin(0.0 - self.g0.y * other.g0);
-}
-
-LineAtOrigin magnitude_line_right_contraction(Magnitude self, Line other) {
-    return LineAtOrigin(vec3(self.g0.y) * other.g1);
-}
-
-LineAtOrigin magnitude_line_at_infinity_right_contraction(Magnitude self, LineAtInfinity other) {
-    return LineAtOrigin(vec3(self.g0.y) * other.g0);
-}
-
-Magnitude magnitude_magnitude_right_contraction(Magnitude self, Magnitude other) {
-    return Magnitude(self.g0 * vec2(other.g0.x));
-}
-
-LineAtOrigin magnitude_motor_right_contraction(Magnitude self, Motor other) {
-    return LineAtOrigin(vec3(self.g0.y) * other.g1);
-}
-
-MultiVector magnitude_multi_vector_right_contraction(Magnitude self, MultiVector other) {
-    return MultiVector(self.g0 * vec2(other.g0.x), vec4(self.g0.x, self.g0.x, self.g0.x, self.g0.y) * other.g4.xxxw * vec4(0.0, 0.0, 0.0, -1.0), vec3(self.g0.y) * other.g3, vec3(0.0), vec4(self.g0.y, self.g0.y, self.g0.y, self.g0.x) * other.g1.xyzx * vec4(-1.0, -1.0, -1.0, 0.0));
-}
-
-Origin magnitude_plane_right_contraction(Magnitude self, Plane other) {
-    return Origin(0.0 - self.g0.y * other.g0.w);
-}
-
-PlaneAtOrigin magnitude_point_right_contraction(Magnitude self, Point other) {
-    return PlaneAtOrigin(vec3(0.0) - vec3(self.g0.y) * vec3(other.g0.x, other.g0.y, other.g0.z));
-}
-
-PlaneAtOrigin magnitude_point_at_infinity_right_contraction(Magnitude self, PointAtInfinity other) {
-    return PlaneAtOrigin(vec3(0.0) - vec3(self.g0.y) * other.g0);
-}
-
-Magnitude magnitude_scalar_right_contraction(Magnitude self, Scalar other) {
-    return Magnitude(self.g0 * vec2(other.g0));
-}
-
-LineAtOrigin magnitude_translator_right_contraction(Magnitude self, Translator other) {
-    return LineAtOrigin(vec3(self.g0.y) * vec3(other.g0.x, other.g0.y, other.g0.z));
-}
-
-Flector motor_flector_right_contraction(Motor self, Flector other) {
-    return Flector(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.w) * vec4(other.g1.w) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.x) * other.g0.zzyz * vec4(0.0, 1.0, -1.0, 0.0) + vec4(self.g1.y) * other.g0.zzxz * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g1.z) * other.g0.yxyy * vec4(1.0, -1.0, 0.0, 0.0) + vec4(self.g0.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, 1.0), self.g0.wwwx * other.g0.xyzx * vec4(-1.0, -1.0, -1.0, 0.0));
-}
-
-Origin motor_horizon_right_contraction(Motor self, Horizon other) {
-    return Origin(0.0 - self.g0.w * other.g0);
-}
-
-MultiVector motor_line_right_contraction(Motor self, Line other) {
-    return MultiVector(vec2(self.g1.y) * vec2(other.g1.y) * vec2(-1.0, 0.0) + vec2(self.g1.z) * vec2(other.g1.z) * vec2(-1.0, 0.0) + vec2(self.g1.x) * vec2(other.g1.x) * vec2(-1.0, 0.0), vec4(0.0), vec3(self.g0.w) * other.g1, vec3(0.0), vec4(0.0));
-}
-
-MultiVector motor_line_at_infinity_right_contraction(Motor self, LineAtInfinity other) {
-    return MultiVector(vec2(self.g1.y) * vec2(other.g0.y) * vec2(-1.0, 0.0) + vec2(self.g1.z) * vec2(other.g0.z) * vec2(-1.0, 0.0) + vec2(self.g1.x) * vec2(other.g0.x) * vec2(-1.0, 0.0), vec4(0.0), vec3(self.g0.w) * other.g0, vec3(0.0), vec4(0.0));
-}
-
-Motor motor_magnitude_right_contraction(Motor self, Magnitude other) {
-    return Motor(self.g0 * vec4(other.g0.x), self.g1 * vec3(other.g0.x));
-}
-
-MultiVector motor_motor_right_contraction(Motor self, Motor other) {
-    return MultiVector(vec2(self.g1.y) * vec2(other.g1.y) * vec2(-1.0, 0.0) + vec2(self.g1.z) * vec2(other.g1.z) * vec2(-1.0, 0.0) + vec2(self.g1.x) * vec2(other.g1.x) * vec2(-1.0, 0.0), vec4(0.0), vec3(self.g0.w) * other.g1, vec3(0.0), vec4(0.0));
-}
-
-MultiVector motor_multi_vector_right_contraction(Motor self, MultiVector other) {
-    return MultiVector(vec2(self.g1.x) * vec2(other.g3.x) * vec2(-1.0, 0.0) + vec2(self.g1.y) * vec2(other.g3.y) * vec2(-1.0, 0.0) + vec2(self.g1.z) * vec2(other.g3.z) * vec2(-1.0, 0.0) + vec2(self.g0.x, self.g0.w) * vec2(other.g0.x) * vec2(0.0, 1.0), vec4(self.g0.y) * vec4(other.g1.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.z) * vec4(other.g1.z) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.w) * vec4(other.g4.w) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g1.x) * other.g1.zzyz * vec4(0.0, 1.0, -1.0, 0.0) + vec4(self.g1.y) * other.g1.zzxz * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g1.z) * other.g1.yxyy * vec4(1.0, -1.0, 0.0, 0.0) + vec4(self.g0.x) * vec4(other.g1.x) * vec4(0.0, 0.0, 0.0, 1.0), vec3(self.g0.w) * other.g3 + vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.x), self.g1 * vec3(other.g0.x), self.g0.wwwx * other.g1.xyzx * vec4(-1.0, -1.0, -1.0, 0.0));
-}
-
-Origin motor_plane_right_contraction(Motor self, Plane other) {
-    return Origin(0.0 - self.g0.w * other.g0.w);
-}
-
-Flector motor_point_right_contraction(Motor self, Point other) {
-    return Flector(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g1.x) * other.g0.zzyz * vec4(0.0, 1.0, -1.0, 0.0) + vec4(self.g1.y) * other.g0.zzxz * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g1.z) * other.g0.yxyy * vec4(1.0, -1.0, 0.0, 0.0) + vec4(self.g0.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, 1.0), self.g0.wwwx * other.g0.xyzx * vec4(-1.0, -1.0, -1.0, 0.0));
-}
-
-Flector motor_point_at_infinity_right_contraction(Motor self, PointAtInfinity other) {
-    return Flector(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g1.x) * vec4(other.g0.z, other.g0.z, other.g0.y, other.g0.z) * vec4(0.0, 1.0, -1.0, 0.0) + vec4(self.g1.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g0.z) * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g1.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g0.y) * vec4(1.0, -1.0, 0.0, 0.0) + vec4(self.g0.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, 1.0), self.g0.wwwx * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(-1.0, -1.0, -1.0, 0.0));
-}
-
-Motor motor_scalar_right_contraction(Motor self, Scalar other) {
-    return Motor(self.g0 * vec4(other.g0), self.g1 * vec3(other.g0));
-}
-
-MultiVector motor_translator_right_contraction(Motor self, Translator other) {
-    return MultiVector(vec2(self.g1.y) * vec2(other.g0.y) * vec2(-1.0, 0.0) + vec2(self.g1.z) * vec2(other.g0.z) * vec2(-1.0, 0.0) + vec2(self.g1.x) * vec2(other.g0.x) * vec2(-1.0, 0.0), vec4(0.0), vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec4(0.0));
-}
-
-MultiVector multi_vector_flector_right_contraction(MultiVector self, Flector other) {
-    return MultiVector(vec2(self.g1.y) * vec2(other.g0.y) * vec2(1.0, 0.0) + vec2(self.g1.z) * vec2(other.g0.z) * vec2(1.0, 0.0) + vec2(self.g4.w) * vec2(other.g1.w) * vec2(-1.0, 0.0) + vec2(self.g1.x) * vec2(other.g0.x) * vec2(1.0, 0.0), vec4(self.g2.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g2.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g2.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g3.x) * other.g0.zzyz * vec4(0.0, 1.0, -1.0, 0.0) + vec4(self.g3.y) * other.g0.zzxz * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g3.z) * other.g0.yxyy * vec4(1.0, -1.0, 0.0, 0.0) + vec4(self.g0.x, self.g0.x, self.g0.x, self.g0.y) * other.g1.xxxw * vec4(0.0, 0.0, 0.0, -1.0), vec3(self.g4.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g4.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g4.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, 1.0, -1.0), vec3(0.0) - vec3(self.g4.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g0.y, self.g0.y, self.g0.y, self.g0.x) * other.g0.xyzx * vec4(-1.0, -1.0, -1.0, 0.0));
-}
-
-MultiVector multi_vector_horizon_right_contraction(MultiVector self, Horizon other) {
-    return MultiVector(vec2(self.g4.w, self.g4.x) * vec2(other.g0) * vec2(-1.0, 0.0), vec4(self.g0.x, self.g0.x, self.g0.x, self.g0.y) * vec4(other.g0) * vec4(0.0, 0.0, 0.0, -1.0), vec3(0.0), vec3(0.0), vec4(0.0));
-}
-
-MultiVector multi_vector_line_right_contraction(MultiVector self, Line other) {
-    return MultiVector(vec2(self.g3.y) * vec2(other.g1.y) * vec2(-1.0, 0.0) + vec2(self.g3.z) * vec2(other.g1.z) * vec2(-1.0, 0.0) + vec2(self.g3.x) * vec2(other.g1.x) * vec2(-1.0, 0.0), vec4(self.g4.y) * vec4(other.g1.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g4.z) * vec4(other.g1.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g4.wwwx * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, -1.0), vec3(self.g0.y) * other.g1, vec3(0.0), vec4(0.0));
-}
-
-MultiVector multi_vector_line_at_infinity_right_contraction(MultiVector self, LineAtInfinity other) {
-    return MultiVector(vec2(self.g3.y) * vec2(other.g0.y) * vec2(-1.0, 0.0) + vec2(self.g3.z) * vec2(other.g0.z) * vec2(-1.0, 0.0) + vec2(self.g3.x) * vec2(other.g0.x) * vec2(-1.0, 0.0), vec4(self.g4.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g4.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g4.wwwx * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, -1.0), vec3(self.g0.y) * other.g0, vec3(0.0), vec4(0.0));
-}
-
-MultiVector multi_vector_magnitude_right_contraction(MultiVector self, Magnitude other) {
-    return MultiVector(self.g0 * vec2(other.g0.x), self.g1 * vec4(other.g0.x), self.g2 * vec3(other.g0.x), self.g3 * vec3(other.g0.x), self.g4 * vec4(other.g0.x));
-}
-
-MultiVector multi_vector_motor_right_contraction(MultiVector self, Motor other) {
-    return MultiVector(vec2(self.g3.y) * vec2(other.g1.y) * vec2(-1.0, 0.0) + vec2(self.g3.z) * vec2(other.g1.z) * vec2(-1.0, 0.0) + vec2(self.g3.x) * vec2(other.g1.x) * vec2(-1.0, 0.0), vec4(self.g4.y) * vec4(other.g1.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g4.z) * vec4(other.g1.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g4.wwwx * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, -1.0), vec3(self.g0.y) * other.g1, vec3(0.0), vec4(0.0));
-}
-
-MultiVector multi_vector_multi_vector_right_contraction(MultiVector self, MultiVector other) {
-    return MultiVector(vec2(self.g1.x) * vec2(other.g1.x) * vec2(1.0, 0.0) + vec2(self.g1.y) * vec2(other.g1.y) * vec2(1.0, 0.0) + vec2(self.g1.z) * vec2(other.g1.z) * vec2(1.0, 0.0) + vec2(self.g3.x) * vec2(other.g3.x) * vec2(-1.0, 0.0) + vec2(self.g3.y) * vec2(other.g3.y) * vec2(-1.0, 0.0) + vec2(self.g3.z) * vec2(other.g3.z) * vec2(-1.0, 0.0) + vec2(self.g4.w) * vec2(other.g4.w) * vec2(-1.0, 0.0) + self.g0 * vec2(other.g0.x), vec4(self.g1.x) * vec4(other.g0.x) * vec4(1.0, 0.0, 0.0, 0.0) + vec4(self.g1.y) * vec4(other.g0.x) * vec4(0.0, 1.0, 0.0, 0.0) + vec4(self.g1.z) * vec4(other.g0.x) * vec4(0.0, 0.0, 1.0, 0.0) + vec4(self.g1.w) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g2.x) * vec4(other.g1.x) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g2.y) * vec4(other.g1.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g2.z) * vec4(other.g1.z) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g3.x) * other.g1.zzyz * vec4(0.0, 1.0, -1.0, 0.0) + vec4(self.g3.y) * other.g1.zzxz * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g3.z) * other.g1.yxyy * vec4(1.0, -1.0, 0.0, 0.0) + vec4(self.g4.x) * vec4(other.g3.x) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g4.y) * vec4(other.g3.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g4.z) * vec4(other.g3.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g4.w) * vec4(other.g3.x, other.g3.y, other.g3.z, other.g3.x) * vec4(1.0, 1.0, 1.0, 0.0) + vec4(self.g0.x, self.g0.x, self.g0.x, self.g0.y) * other.g4.xxxw * vec4(0.0, 0.0, 0.0, -1.0), vec3(self.g0.y) * other.g3 + vec3(self.g4.x) * vec3(other.g1.z, other.g1.z, other.g1.y) * vec3(0.0, 1.0, -1.0) + vec3(self.g4.y) * vec3(other.g1.z, other.g1.z, other.g1.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g4.z) * vec3(other.g1.y, other.g1.x, other.g1.y) * vec3(1.0, -1.0, 0.0) + self.g2 * vec3(other.g0.x), vec3(0.0) - vec3(self.g4.w) * vec3(other.g1.x, other.g1.y, other.g1.z) + self.g3 * vec3(other.g0.x), vec4(self.g4.x) * vec4(other.g0.x) * vec4(1.0, 0.0, 0.0, 0.0) + vec4(self.g4.y) * vec4(other.g0.x) * vec4(0.0, 1.0, 0.0, 0.0) + vec4(self.g4.z) * vec4(other.g0.x) * vec4(0.0, 0.0, 1.0, 0.0) + vec4(self.g4.w) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.y, self.g0.y, self.g0.y, self.g0.x) * other.g1.xyzx * vec4(-1.0, -1.0, -1.0, 0.0));
-}
-
-MultiVector multi_vector_plane_right_contraction(MultiVector self, Plane other) {
-    return MultiVector(vec2(self.g4.w, self.g4.x) * vec2(other.g0.w, other.g0.x) * vec2(-1.0, 0.0), vec4(self.g0.x, self.g0.x, self.g0.x, self.g0.y) * other.g0.xxxw * vec4(0.0, 0.0, 0.0, -1.0), vec3(0.0), vec3(0.0), vec4(0.0));
-}
-
-MultiVector multi_vector_point_right_contraction(MultiVector self, Point other) {
-    return MultiVector(vec2(self.g1.y) * vec2(other.g0.y) * vec2(1.0, 0.0) + vec2(self.g1.z) * vec2(other.g0.z) * vec2(1.0, 0.0) + vec2(self.g1.x) * vec2(other.g0.x) * vec2(1.0, 0.0), vec4(self.g2.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g2.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g3.y) * other.g0.zzxz * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g3.z) * other.g0.yxyy * vec4(1.0, -1.0, 0.0, 0.0) + vec4(self.g2.x, self.g3.x, self.g3.x, self.g2.x) * other.g0.xzyx * vec4(0.0, 1.0, -1.0, 1.0), vec3(self.g4.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g4.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g4.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, 1.0, -1.0), vec3(0.0) - vec3(self.g4.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g0.y, self.g0.y, self.g0.y, self.g0.x) * other.g0.xyzx * vec4(-1.0, -1.0, -1.0, 0.0));
-}
-
-MultiVector multi_vector_point_at_infinity_right_contraction(MultiVector self, PointAtInfinity other) {
-    return MultiVector(vec2(self.g1.y) * vec2(other.g0.y) * vec2(1.0, 0.0) + vec2(self.g1.z) * vec2(other.g0.z) * vec2(1.0, 0.0) + vec2(self.g1.x) * vec2(other.g0.x) * vec2(1.0, 0.0), vec4(self.g2.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g2.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g3.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g0.z) * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g3.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g0.y) * vec4(1.0, -1.0, 0.0, 0.0) + vec4(self.g2.x, self.g3.x, self.g3.x, self.g2.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g0.x) * vec4(0.0, 1.0, -1.0, 1.0), vec3(self.g4.y) * other.g0.zzx * vec3(-1.0, 0.0, 1.0) + vec3(self.g4.z) * other.g0.yxy * vec3(1.0, -1.0, 0.0) + vec3(self.g4.x) * other.g0.xzy * vec3(0.0, 1.0, -1.0), vec3(0.0) - vec3(self.g4.w) * other.g0, vec4(self.g0.y, self.g0.y, self.g0.y, self.g0.x) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(-1.0, -1.0, -1.0, 0.0));
-}
-
-MultiVector multi_vector_scalar_right_contraction(MultiVector self, Scalar other) {
-    return MultiVector(self.g0 * vec2(other.g0), self.g1 * vec4(other.g0), self.g2 * vec3(other.g0), self.g3 * vec3(other.g0), self.g4 * vec4(other.g0));
-}
-
-MultiVector multi_vector_translator_right_contraction(MultiVector self, Translator other) {
-    return MultiVector(vec2(self.g3.y) * vec2(other.g0.y) * vec2(-1.0, 0.0) + vec2(self.g3.z) * vec2(other.g0.z) * vec2(-1.0, 0.0) + vec2(self.g3.x) * vec2(other.g0.x) * vec2(-1.0, 0.0), vec4(self.g4.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g4.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g4.wwwx * other.g0.xyzx * vec4(1.0, 1.0, 1.0, -1.0), vec3(self.g0.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec4(0.0));
-}
-
-Origin origin_magnitude_right_contraction(Origin self, Magnitude other) {
-    return Origin(self.g0 * other.g0.x);
-}
-
-Origin origin_multi_vector_right_contraction(Origin self, MultiVector other) {
-    return Origin(self.g0 * other.g0.x);
-}
-
-Origin origin_scalar_right_contraction(Origin self, Scalar other) {
-    return Origin(self.g0 * other.g0);
-}
-
-MultiVector plane_flector_right_contraction(Plane self, Flector other) {
-    return MultiVector(vec2(self.g0.w, self.g0.x) * vec2(other.g1.w, other.g1.x) * vec2(-1.0, 0.0), vec4(0.0), vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, 1.0, -1.0), vec3(0.0) - vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(0.0));
-}
-
-Scalar plane_horizon_right_contraction(Plane self, Horizon other) {
-    return Scalar(0.0 - self.g0.w * other.g0);
-}
-
-Point plane_line_right_contraction(Plane self, Line other) {
-    return Point(vec4(self.g0.y) * vec4(other.g1.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g1.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, -1.0));
-}
-
-Point plane_line_at_infinity_right_contraction(Plane self, LineAtInfinity other) {
-    return Point(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(1.0, 1.0, 1.0, -1.0));
-}
-
-Plane plane_magnitude_right_contraction(Plane self, Magnitude other) {
-    return Plane(self.g0 * vec4(other.g0.x));
-}
-
-Point plane_motor_right_contraction(Plane self, Motor other) {
-    return Point(vec4(self.g0.y) * vec4(other.g1.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g1.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.x) * vec4(1.0, 1.0, 1.0, -1.0));
-}
-
-MultiVector plane_multi_vector_right_contraction(Plane self, MultiVector other) {
-    return MultiVector(vec2(self.g0.w, self.g0.x) * vec2(other.g4.w, other.g4.x) * vec2(-1.0, 0.0), vec4(self.g0.y) * vec4(other.g3.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g3.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * vec4(other.g3.x, other.g3.y, other.g3.z, other.g3.x) * vec4(1.0, 1.0, 1.0, -1.0), vec3(self.g0.y) * vec3(other.g1.z, other.g1.z, other.g1.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * vec3(other.g1.y, other.g1.x, other.g1.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * vec3(other.g1.x, other.g1.z, other.g1.y) * vec3(0.0, 1.0, -1.0), vec3(0.0) - vec3(self.g0.w) * vec3(other.g1.x, other.g1.y, other.g1.z), self.g0 * vec4(other.g0.x));
-}
-
-Scalar plane_plane_right_contraction(Plane self, Plane other) {
-    return Scalar(0.0 - self.g0.w * other.g0.w);
-}
-
-Line plane_point_right_contraction(Plane self, Point other) {
-    return Line(vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, 1.0, -1.0), vec3(0.0) - vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z));
-}
-
-Line plane_point_at_infinity_right_contraction(Plane self, PointAtInfinity other) {
-    return Line(vec3(self.g0.y) * other.g0.zzx * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * other.g0.yxy * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * other.g0.xzy * vec3(0.0, 1.0, -1.0), vec3(0.0) - vec3(self.g0.w) * other.g0);
-}
-
-Plane plane_scalar_right_contraction(Plane self, Scalar other) {
-    return Plane(self.g0 * vec4(other.g0));
-}
-
-Point plane_translator_right_contraction(Plane self, Translator other) {
-    return Point(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, -1.0) + self.g0.wwwx * other.g0.xyzx * vec4(1.0, 1.0, 1.0, -1.0));
-}
-
-LineAtOrigin plane_at_origin_flector_right_contraction(PlaneAtOrigin self, Flector other) {
-    return LineAtOrigin(vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, 1.0, -1.0));
-}
-
-Origin plane_at_origin_line_right_contraction(PlaneAtOrigin self, Line other) {
-    return Origin(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z);
-}
-
-Origin plane_at_origin_line_at_infinity_right_contraction(PlaneAtOrigin self, LineAtInfinity other) {
-    return Origin(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
-}
-
-PlaneAtOrigin plane_at_origin_magnitude_right_contraction(PlaneAtOrigin self, Magnitude other) {
-    return PlaneAtOrigin(self.g0 * vec3(other.g0.x));
-}
-
-Origin plane_at_origin_motor_right_contraction(PlaneAtOrigin self, Motor other) {
-    return Origin(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z);
-}
-
-MultiVector plane_at_origin_multi_vector_right_contraction(PlaneAtOrigin self, MultiVector other) {
-    return MultiVector(vec2(0.0), vec4(self.g0.y) * vec4(other.g3.y) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.z) * vec4(other.g3.z) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.x) * vec4(other.g3.x) * vec4(0.0, 0.0, 0.0, -1.0), vec3(self.g0.y) * vec3(other.g1.z, other.g1.z, other.g1.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * vec3(other.g1.y, other.g1.x, other.g1.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * vec3(other.g1.x, other.g1.z, other.g1.y) * vec3(0.0, 1.0, -1.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0));
-}
-
-LineAtOrigin plane_at_origin_point_right_contraction(PlaneAtOrigin self, Point other) {
-    return LineAtOrigin(vec3(self.g0.y) * vec3(other.g0.z, other.g0.z, other.g0.x) * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * vec3(other.g0.y, other.g0.x, other.g0.y) * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * vec3(other.g0.x, other.g0.z, other.g0.y) * vec3(0.0, 1.0, -1.0));
-}
-
-LineAtOrigin plane_at_origin_point_at_infinity_right_contraction(PlaneAtOrigin self, PointAtInfinity other) {
-    return LineAtOrigin(vec3(self.g0.y) * other.g0.zzx * vec3(-1.0, 0.0, 1.0) + vec3(self.g0.z) * other.g0.yxy * vec3(1.0, -1.0, 0.0) + vec3(self.g0.x) * other.g0.xzy * vec3(0.0, 1.0, -1.0));
-}
-
-PlaneAtOrigin plane_at_origin_scalar_right_contraction(PlaneAtOrigin self, Scalar other) {
-    return PlaneAtOrigin(self.g0 * vec3(other.g0));
-}
-
-Origin plane_at_origin_translator_right_contraction(PlaneAtOrigin self, Translator other) {
-    return Origin(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
-}
-
-Scalar point_flector_right_contraction(Point self, Flector other) {
-    return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
-}
-
-Point point_magnitude_right_contraction(Point self, Magnitude other) {
-    return Point(self.g0 * vec4(other.g0.x));
-}
-
-MultiVector point_multi_vector_right_contraction(Point self, MultiVector other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g1.y) * vec2(1.0, 0.0) + vec2(self.g0.z) * vec2(other.g1.z) * vec2(1.0, 0.0) + vec2(self.g0.x) * vec2(other.g1.x) * vec2(1.0, 0.0), self.g0 * vec4(other.g0.x), vec3(0.0), vec3(0.0), vec4(0.0));
-}
-
-Scalar point_point_right_contraction(Point self, Point other) {
-    return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
-}
-
-Scalar point_point_at_infinity_right_contraction(Point self, PointAtInfinity other) {
-    return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
-}
-
-Point point_scalar_right_contraction(Point self, Scalar other) {
-    return Point(self.g0 * vec4(other.g0));
-}
-
-Scalar point_at_infinity_flector_right_contraction(PointAtInfinity self, Flector other) {
-    return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
-}
-
-PointAtInfinity point_at_infinity_magnitude_right_contraction(PointAtInfinity self, Magnitude other) {
-    return PointAtInfinity(self.g0 * vec3(other.g0.x));
-}
-
-MultiVector point_at_infinity_multi_vector_right_contraction(PointAtInfinity self, MultiVector other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g1.y) * vec2(1.0, 0.0) + vec2(self.g0.z) * vec2(other.g1.z) * vec2(1.0, 0.0) + vec2(self.g0.x) * vec2(other.g1.x) * vec2(1.0, 0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g0.x) * vec4(1.0, 1.0, 1.0, 0.0), vec3(0.0), vec3(0.0), vec4(0.0));
-}
-
-Scalar point_at_infinity_point_right_contraction(PointAtInfinity self, Point other) {
-    return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
-}
-
-Scalar point_at_infinity_point_at_infinity_right_contraction(PointAtInfinity self, PointAtInfinity other) {
-    return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
-}
-
-PointAtInfinity point_at_infinity_scalar_right_contraction(PointAtInfinity self, Scalar other) {
-    return PointAtInfinity(self.g0 * vec3(other.g0));
-}
-
-Flector rotor_flector_right_contraction(Rotor self, Flector other) {
-    return Flector(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.w) * vec4(other.g1.w) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, 1.0), self.g0.wwwx * other.g0.xyzx * vec4(-1.0, -1.0, -1.0, 0.0));
-}
-
-Origin rotor_horizon_right_contraction(Rotor self, Horizon other) {
-    return Origin(0.0 - self.g0.w * other.g0);
-}
-
-LineAtOrigin rotor_line_right_contraction(Rotor self, Line other) {
-    return LineAtOrigin(vec3(self.g0.w) * other.g1);
-}
-
-LineAtOrigin rotor_line_at_infinity_right_contraction(Rotor self, LineAtInfinity other) {
-    return LineAtOrigin(vec3(self.g0.w) * other.g0);
-}
-
-Rotor rotor_magnitude_right_contraction(Rotor self, Magnitude other) {
-    return Rotor(self.g0 * vec4(other.g0.x));
-}
-
-LineAtOrigin rotor_motor_right_contraction(Rotor self, Motor other) {
-    return LineAtOrigin(vec3(self.g0.w) * other.g1);
-}
-
-MultiVector rotor_multi_vector_right_contraction(Rotor self, MultiVector other) {
-    return MultiVector(vec2(self.g0.x, self.g0.w) * vec2(other.g0.x) * vec2(0.0, 1.0), vec4(self.g0.y) * vec4(other.g1.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.z) * vec4(other.g1.z) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.w) * vec4(other.g4.w) * vec4(0.0, 0.0, 0.0, -1.0) + vec4(self.g0.x) * vec4(other.g1.x) * vec4(0.0, 0.0, 0.0, 1.0), vec3(self.g0.w) * other.g3 + vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.x), vec3(0.0), self.g0.wwwx * other.g1.xyzx * vec4(-1.0, -1.0, -1.0, 0.0));
-}
-
-Origin rotor_plane_right_contraction(Rotor self, Plane other) {
-    return Origin(0.0 - self.g0.w * other.g0.w);
-}
-
-Flector rotor_point_right_contraction(Rotor self, Point other) {
-    return Flector(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, 1.0), self.g0.wwwx * other.g0.xyzx * vec4(-1.0, -1.0, -1.0, 0.0));
-}
-
-Flector rotor_point_at_infinity_right_contraction(Rotor self, PointAtInfinity other) {
-    return Flector(vec4(self.g0.y) * vec4(other.g0.y) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.z) * vec4(other.g0.z) * vec4(0.0, 0.0, 0.0, 1.0) + vec4(self.g0.x) * vec4(other.g0.x) * vec4(0.0, 0.0, 0.0, 1.0), self.g0.wwwx * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(-1.0, -1.0, -1.0, 0.0));
-}
-
-Rotor rotor_scalar_right_contraction(Rotor self, Scalar other) {
-    return Rotor(self.g0 * vec4(other.g0));
-}
-
-LineAtOrigin rotor_translator_right_contraction(Rotor self, Translator other) {
-    return LineAtOrigin(vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z));
-}
-
-Scalar scalar_magnitude_right_contraction(Scalar self, Magnitude other) {
-    return Scalar(self.g0 * other.g0.x);
-}
-
-Scalar scalar_multi_vector_right_contraction(Scalar self, MultiVector other) {
-    return Scalar(self.g0 * other.g0.x);
-}
-
-Scalar scalar_scalar_right_contraction(Scalar self, Scalar other) {
-    return Scalar(self.g0 * other.g0);
-}
-
-Flector translator_flector_right_contraction(Translator self, Flector other) {
-    return Flector(vec4(self.g0.y) * other.g0.zzxz * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g0.z) * other.g0.yxyy * vec4(1.0, -1.0, 0.0, 0.0) + self.g0.xxxw * vec4(other.g0.x, other.g0.z, other.g0.y, other.g1.w) * vec4(0.0, 1.0, -1.0, -1.0), self.g0.wwwx * other.g0.xyzx * vec4(-1.0, -1.0, -1.0, 0.0));
-}
-
-Origin translator_horizon_right_contraction(Translator self, Horizon other) {
-    return Origin(0.0 - self.g0.w * other.g0);
-}
-
-MultiVector translator_line_right_contraction(Translator self, Line other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g1.y) * vec2(-1.0, 0.0) + vec2(self.g0.z) * vec2(other.g1.z) * vec2(-1.0, 0.0) + vec2(self.g0.x) * vec2(other.g1.x) * vec2(-1.0, 0.0), vec4(0.0), vec3(self.g0.w) * other.g1, vec3(0.0), vec4(0.0));
-}
-
-MultiVector translator_line_at_infinity_right_contraction(Translator self, LineAtInfinity other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g0.y) * vec2(-1.0, 0.0) + vec2(self.g0.z) * vec2(other.g0.z) * vec2(-1.0, 0.0) + vec2(self.g0.x) * vec2(other.g0.x) * vec2(-1.0, 0.0), vec4(0.0), vec3(self.g0.w) * other.g0, vec3(0.0), vec4(0.0));
-}
-
-Translator translator_magnitude_right_contraction(Translator self, Magnitude other) {
-    return Translator(self.g0 * vec4(other.g0.x));
-}
-
-MultiVector translator_motor_right_contraction(Translator self, Motor other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g1.y) * vec2(-1.0, 0.0) + vec2(self.g0.z) * vec2(other.g1.z) * vec2(-1.0, 0.0) + vec2(self.g0.x) * vec2(other.g1.x) * vec2(-1.0, 0.0), vec4(0.0), vec3(self.g0.w) * other.g1, vec3(0.0), vec4(0.0));
-}
-
-MultiVector translator_multi_vector_right_contraction(Translator self, MultiVector other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g3.y) * vec2(-1.0, 0.0) + vec2(self.g0.z) * vec2(other.g3.z) * vec2(-1.0, 0.0) + vec2(self.g0.w) * vec2(other.g0.x) * vec2(0.0, 1.0) + vec2(self.g0.x) * vec2(other.g3.x) * vec2(-1.0, 0.0), vec4(self.g0.y) * other.g1.zzxz * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g0.z) * other.g1.yxyy * vec4(1.0, -1.0, 0.0, 0.0) + self.g0.xxxw * vec4(other.g1.x, other.g1.z, other.g1.y, other.g4.w) * vec4(0.0, 1.0, -1.0, -1.0), vec3(self.g0.w) * other.g3, vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.x), self.g0.wwwx * other.g1.xyzx * vec4(-1.0, -1.0, -1.0, 0.0));
-}
-
-Origin translator_plane_right_contraction(Translator self, Plane other) {
-    return Origin(0.0 - self.g0.w * other.g0.w);
-}
-
-Flector translator_point_right_contraction(Translator self, Point other) {
-    return Flector(vec4(self.g0.y) * other.g0.zzxz * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g0.z) * other.g0.yxyy * vec4(1.0, -1.0, 0.0, 0.0) + vec4(self.g0.x) * other.g0.xzyx * vec4(0.0, 1.0, -1.0, 0.0), self.g0.wwwx * other.g0.xyzx * vec4(-1.0, -1.0, -1.0, 0.0));
-}
-
-Flector translator_point_at_infinity_right_contraction(Translator self, PointAtInfinity other) {
-    return Flector(vec4(self.g0.y) * vec4(other.g0.z, other.g0.z, other.g0.x, other.g0.z) * vec4(-1.0, 0.0, 1.0, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, other.g0.x, other.g0.y, other.g0.y) * vec4(1.0, -1.0, 0.0, 0.0) + vec4(self.g0.x) * vec4(other.g0.x, other.g0.z, other.g0.y, other.g0.x) * vec4(0.0, 1.0, -1.0, 0.0), self.g0.wwwx * vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.x) * vec4(-1.0, -1.0, -1.0, 0.0));
-}
-
-Translator translator_scalar_right_contraction(Translator self, Scalar other) {
-    return Translator(self.g0 * vec4(other.g0));
-}
-
-MultiVector translator_translator_right_contraction(Translator self, Translator other) {
-    return MultiVector(vec2(self.g0.y) * vec2(other.g0.y) * vec2(-1.0, 0.0) + vec2(self.g0.z) * vec2(other.g0.z) * vec2(-1.0, 0.0) + vec2(self.g0.x) * vec2(other.g0.x) * vec2(-1.0, 0.0), vec4(0.0), vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec4(0.0));
+Translator translator_translator_weight_expansion(Translator self, Translator other) {
+    return translator_scalar_wedge(self, translator_right_weight_dual(other));
 }
 
 Flector point_flector_invert(Point self, Flector other) {
@@ -14049,54 +12809,6 @@ AntiScalar scalar_dual(Scalar self) {
     return AntiScalar(self.g0);
 }
 
-Flector flector_left_bulk_dual(Flector self) {
-    return flector_left_complement(flector_bulk(self));
-}
-
-Origin horizon_left_bulk_dual(Horizon self) {
-    return horizon_left_complement(horizon_bulk(self));
-}
-
-LineAtOrigin line_left_bulk_dual(Line self) {
-    return line_at_infinity_left_complement(line_bulk(self));
-}
-
-LineAtOrigin line_at_infinity_left_bulk_dual(LineAtInfinity self) {
-    return line_at_infinity_left_complement(line_at_infinity_bulk(self));
-}
-
-AntiScalar magnitude_left_bulk_dual(Magnitude self) {
-    return scalar_left_complement(magnitude_bulk(self));
-}
-
-LineAtOrigin motor_left_bulk_dual(Motor self) {
-    return line_at_infinity_left_complement(motor_bulk(self));
-}
-
-MultiVector multi_vector_left_bulk_dual(MultiVector self) {
-    return multi_vector_left_complement(multi_vector_bulk(self));
-}
-
-Origin plane_left_bulk_dual(Plane self) {
-    return horizon_left_complement(plane_bulk(self));
-}
-
-PlaneAtOrigin point_left_bulk_dual(Point self) {
-    return point_at_infinity_left_complement(point_bulk(self));
-}
-
-PlaneAtOrigin point_at_infinity_left_bulk_dual(PointAtInfinity self) {
-    return point_at_infinity_left_complement(point_at_infinity_bulk(self));
-}
-
-AntiScalar scalar_left_bulk_dual(Scalar self) {
-    return scalar_left_complement(scalar_bulk(self));
-}
-
-LineAtOrigin translator_left_bulk_dual(Translator self) {
-    return line_at_infinity_left_complement(translator_bulk(self));
-}
-
 Scalar anti_scalar_left_complement(AntiScalar self) {
     return Scalar(self.g0);
 }
@@ -14151,50 +12863,6 @@ PlaneAtOrigin point_at_infinity_left_complement(PointAtInfinity self) {
 
 AntiScalar scalar_left_complement(Scalar self) {
     return AntiScalar(self.g0);
-}
-
-Scalar anti_scalar_left_weight_dual(AntiScalar self) {
-    return anti_scalar_left_complement(anti_scalar_weight(self));
-}
-
-Flector flector_left_weight_dual(Flector self) {
-    return flector_left_complement(flector_weight(self));
-}
-
-LineAtInfinity line_left_weight_dual(Line self) {
-    return line_at_origin_left_complement(line_weight(self));
-}
-
-LineAtInfinity line_at_origin_left_weight_dual(LineAtOrigin self) {
-    return line_at_origin_left_complement(line_at_origin_weight(self));
-}
-
-Scalar magnitude_left_weight_dual(Magnitude self) {
-    return anti_scalar_left_complement(magnitude_weight(self));
-}
-
-MultiVector multi_vector_left_weight_dual(MultiVector self) {
-    return multi_vector_left_complement(multi_vector_weight(self));
-}
-
-Horizon origin_left_weight_dual(Origin self) {
-    return origin_left_complement(origin_weight(self));
-}
-
-PointAtInfinity plane_left_weight_dual(Plane self) {
-    return plane_at_origin_left_complement(plane_weight(self));
-}
-
-PointAtInfinity plane_at_origin_left_weight_dual(PlaneAtOrigin self) {
-    return plane_at_origin_left_complement(plane_at_origin_weight(self));
-}
-
-Horizon point_left_weight_dual(Point self) {
-    return origin_left_complement(point_weight(self));
-}
-
-Scalar translator_left_weight_dual(Translator self) {
-    return anti_scalar_left_complement(translator_weight(self));
 }
 
 AntiScalar anti_scalar_reversal(AntiScalar self) {
@@ -14265,54 +12933,6 @@ Translator translator_reversal(Translator self) {
     return Translator(self.g0 * vec4(-1.0, -1.0, -1.0, 1.0));
 }
 
-Flector flector_right_bulk_dual(Flector self) {
-    return flector_right_complement(flector_bulk(self));
-}
-
-Origin horizon_right_bulk_dual(Horizon self) {
-    return horizon_right_complement(horizon_bulk(self));
-}
-
-LineAtOrigin line_right_bulk_dual(Line self) {
-    return line_at_infinity_right_complement(line_bulk(self));
-}
-
-LineAtOrigin line_at_infinity_right_bulk_dual(LineAtInfinity self) {
-    return line_at_infinity_right_complement(line_at_infinity_bulk(self));
-}
-
-AntiScalar magnitude_right_bulk_dual(Magnitude self) {
-    return scalar_right_complement(magnitude_bulk(self));
-}
-
-LineAtOrigin motor_right_bulk_dual(Motor self) {
-    return line_at_infinity_right_complement(motor_bulk(self));
-}
-
-MultiVector multi_vector_right_bulk_dual(MultiVector self) {
-    return multi_vector_right_complement(multi_vector_bulk(self));
-}
-
-Origin plane_right_bulk_dual(Plane self) {
-    return horizon_right_complement(plane_bulk(self));
-}
-
-PlaneAtOrigin point_right_bulk_dual(Point self) {
-    return point_at_infinity_right_complement(point_bulk(self));
-}
-
-PlaneAtOrigin point_at_infinity_right_bulk_dual(PointAtInfinity self) {
-    return point_at_infinity_right_complement(point_at_infinity_bulk(self));
-}
-
-AntiScalar scalar_right_bulk_dual(Scalar self) {
-    return scalar_right_complement(scalar_bulk(self));
-}
-
-LineAtOrigin translator_right_bulk_dual(Translator self) {
-    return line_at_infinity_right_complement(translator_bulk(self));
-}
-
 Scalar anti_scalar_right_complement(AntiScalar self) {
     return Scalar(self.g0);
 }
@@ -14367,6 +12987,146 @@ PlaneAtOrigin point_at_infinity_right_complement(PointAtInfinity self) {
 
 AntiScalar scalar_right_complement(Scalar self) {
     return AntiScalar(self.g0);
+}
+
+Flector flector_left_bulk_dual(Flector self) {
+    return flector_left_complement(flector_bulk(self));
+}
+
+Origin horizon_left_bulk_dual(Horizon self) {
+    return horizon_left_complement(horizon_bulk(self));
+}
+
+LineAtOrigin line_left_bulk_dual(Line self) {
+    return line_at_infinity_left_complement(line_bulk(self));
+}
+
+LineAtOrigin line_at_infinity_left_bulk_dual(LineAtInfinity self) {
+    return line_at_infinity_left_complement(line_at_infinity_bulk(self));
+}
+
+AntiScalar magnitude_left_bulk_dual(Magnitude self) {
+    return scalar_left_complement(magnitude_bulk(self));
+}
+
+LineAtOrigin motor_left_bulk_dual(Motor self) {
+    return line_at_infinity_left_complement(motor_bulk(self));
+}
+
+MultiVector multi_vector_left_bulk_dual(MultiVector self) {
+    return multi_vector_left_complement(multi_vector_bulk(self));
+}
+
+Origin plane_left_bulk_dual(Plane self) {
+    return horizon_left_complement(plane_bulk(self));
+}
+
+PlaneAtOrigin point_left_bulk_dual(Point self) {
+    return point_at_infinity_left_complement(point_bulk(self));
+}
+
+PlaneAtOrigin point_at_infinity_left_bulk_dual(PointAtInfinity self) {
+    return point_at_infinity_left_complement(point_at_infinity_bulk(self));
+}
+
+AntiScalar scalar_left_bulk_dual(Scalar self) {
+    return scalar_left_complement(scalar_bulk(self));
+}
+
+LineAtOrigin translator_left_bulk_dual(Translator self) {
+    return line_at_infinity_left_complement(translator_bulk(self));
+}
+
+Scalar anti_scalar_left_weight_dual(AntiScalar self) {
+    return anti_scalar_left_complement(anti_scalar_weight(self));
+}
+
+Flector flector_left_weight_dual(Flector self) {
+    return flector_left_complement(flector_weight(self));
+}
+
+LineAtInfinity line_left_weight_dual(Line self) {
+    return line_at_origin_left_complement(line_weight(self));
+}
+
+LineAtInfinity line_at_origin_left_weight_dual(LineAtOrigin self) {
+    return line_at_origin_left_complement(line_at_origin_weight(self));
+}
+
+Scalar magnitude_left_weight_dual(Magnitude self) {
+    return anti_scalar_left_complement(magnitude_weight(self));
+}
+
+MultiVector multi_vector_left_weight_dual(MultiVector self) {
+    return multi_vector_left_complement(multi_vector_weight(self));
+}
+
+Horizon origin_left_weight_dual(Origin self) {
+    return origin_left_complement(origin_weight(self));
+}
+
+PointAtInfinity plane_left_weight_dual(Plane self) {
+    return plane_at_origin_left_complement(plane_weight(self));
+}
+
+PointAtInfinity plane_at_origin_left_weight_dual(PlaneAtOrigin self) {
+    return plane_at_origin_left_complement(plane_at_origin_weight(self));
+}
+
+Horizon point_left_weight_dual(Point self) {
+    return origin_left_complement(point_weight(self));
+}
+
+Scalar translator_left_weight_dual(Translator self) {
+    return anti_scalar_left_complement(translator_weight(self));
+}
+
+Flector flector_right_bulk_dual(Flector self) {
+    return flector_right_complement(flector_bulk(self));
+}
+
+Origin horizon_right_bulk_dual(Horizon self) {
+    return horizon_right_complement(horizon_bulk(self));
+}
+
+LineAtOrigin line_right_bulk_dual(Line self) {
+    return line_at_infinity_right_complement(line_bulk(self));
+}
+
+LineAtOrigin line_at_infinity_right_bulk_dual(LineAtInfinity self) {
+    return line_at_infinity_right_complement(line_at_infinity_bulk(self));
+}
+
+AntiScalar magnitude_right_bulk_dual(Magnitude self) {
+    return scalar_right_complement(magnitude_bulk(self));
+}
+
+LineAtOrigin motor_right_bulk_dual(Motor self) {
+    return line_at_infinity_right_complement(motor_bulk(self));
+}
+
+MultiVector multi_vector_right_bulk_dual(MultiVector self) {
+    return multi_vector_right_complement(multi_vector_bulk(self));
+}
+
+Origin plane_right_bulk_dual(Plane self) {
+    return horizon_right_complement(plane_bulk(self));
+}
+
+PlaneAtOrigin point_right_bulk_dual(Point self) {
+    return point_at_infinity_right_complement(point_bulk(self));
+}
+
+PlaneAtOrigin point_at_infinity_right_bulk_dual(PointAtInfinity self) {
+    return point_at_infinity_right_complement(point_at_infinity_bulk(self));
+}
+
+AntiScalar scalar_right_bulk_dual(Scalar self) {
+    return scalar_right_complement(scalar_bulk(self));
+}
+
+LineAtOrigin translator_right_bulk_dual(Translator self) {
+    return line_at_infinity_right_complement(translator_bulk(self));
 }
 
 Scalar anti_scalar_right_weight_dual(AntiScalar self) {

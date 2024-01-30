@@ -64,7 +64,7 @@ impl Emitter<std::fs::File> {
     }
 }
 
-// TODO do things differently so that I can have multiple rust files, but still keep one shader file
+
 impl<W: std::io::Write> Emitter<W> {
     pub fn emit(&mut self, ast_node: &AstNode) -> std::io::Result<()> {
         if let Some(rc) = &mut self.rust_collector {

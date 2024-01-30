@@ -3,7 +3,9 @@
 use crate::rga3d::*;
 use crate::rga3d::products::exterior::Wedge;
 use crate::rga3d::products::exterior::AntiWedge;
-use crate::rga3d::involutions::*;
+use crate::rga3d::products::contractions::*;
+use crate::rga3d::products::expansions::*;
+use crate::rga3d::aspect_duals::*;
 
 
 /// Bulk Contraction

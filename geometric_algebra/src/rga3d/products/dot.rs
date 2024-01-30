@@ -4,7 +4,6 @@ use crate::rga3d::*;
 
 
 /// Dot Product
-/// Synonyms included: Dot
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Dot_products
 pub trait Dot<T> {
     type Output;
@@ -13,7 +12,6 @@ pub trait Dot<T> {
 
 
 /// Anti-Dot Product
-/// Synonyms included: AntiDot
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Dot_products
 pub trait AntiDot<T> {
     type Output;

@@ -5,15 +5,16 @@ use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssi
 
 /// Component-wise aspects to objects, and Unitization
 pub mod aspects;
+pub mod aspect_duals;
 
 /// Products
 pub mod products {
     pub mod geometric;
     pub mod exterior;
-    pub mod remaining;
+    pub mod contractions;
+    pub mod expansions;
+    pub mod projections;
     pub mod dot;
-
-    /// Isometries
     pub mod isometries;
 }
 
@@ -25,9 +26,6 @@ pub mod norms;
 
 /// Characteristic Features
 pub mod characteristics;
-
-/// Projections
-pub mod projections;
 
 /// Metric operations
 pub mod metrics;
