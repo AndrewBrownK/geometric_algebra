@@ -158,7 +158,7 @@ impl Product {
 
     pub fn products<GA: GeometricAlgebraTrait>(algebra: &GA) -> Vec<(&'static str, Self, String)> {
 
-        // TODO I severely need to cut down on these, or divide them up
+
 
         let basis = algebra.basis();
         let product = Self::new(&basis, &basis, algebra);
@@ -373,17 +373,22 @@ impl MultiVectorClassRegistry {
         self.classes.push((class, None));
     }
 
-    // TODO register superclasses
     pub fn register_with_superclass(&mut self, class: MultiVectorClass, superclass: String) {
         self.index_by_signature.insert(class.signature(), self.classes.len());
         self.classes.push((class, Some(superclass)));
     }
 
+
+    // TODO currently this superclass concept is working decently well, it is intended for Sandwich product
+    //  isometries where an object might start at the origin or horizon, but not end there. However maybe you
+    //  Rotor sandwich LineAtOrigin and that should still be LineAtOrigin, or Translator sandwich Horizon and
+    //  that should still be Horizon. So I think this could still use some refinement, and/or a totally different
+    //  approach.
     pub fn get_preferring_superclass(&self, signature: &[BasisElementIndex]) -> Option<&MultiVectorClass> {
         let index = self.index_by_signature.get(signature)?;
         let matched = &self.classes[*index];
         if let Some(superclass) = &matched.1 {
-            return self.classes.iter().find(|it| it.1 == Some(superclass.to_string())).map(|it| &it.0);
+            return self.classes.iter().find(|it| it.0.class_name == *superclass).map(|it| &it.0);
         }
         return Some(&matched.0);
 

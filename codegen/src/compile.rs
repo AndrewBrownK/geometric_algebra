@@ -1335,7 +1335,6 @@ impl MultiVectorClass {
                 )],
             ),
         });
-        // TODO problem..... Sandwich<PlaneAtOrigin> for Motor outputs a PlaneAtOrigin........
         let conversion_result = if let Some(conversion) = conversion {
             result_of_trait!(conversion)
         } else {

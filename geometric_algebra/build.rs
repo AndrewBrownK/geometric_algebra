@@ -17,20 +17,20 @@ fn main() {
         Magnitude:1,e1234;\
         \
         Point:e1,e2,e3,e4;\
-        Origin:e4;\
-        PointAtInfinity:e1,e2,e3;\
+        Point/Origin:e4;\
+        Point/PointAtInfinity:e1,e2,e3;\
         \
         Line:e41,e42,e43|e23,e31,e12;\
-        LineAtOrigin:e41,e42,e43;\
-        LineAtInfinity:e23,e31,e12;\
+        Line/LineAtOrigin:e41,e42,e43;\
+        Line/LineAtInfinity:e23,e31,e12;\
         \
         Plane:e423,e431,e412,e321;\
-        PlaneAtOrigin:e423,e431,e412;\
-        Horizon:e321;\
+        Plane/PlaneAtOrigin:e423,e431,e412;\
+        Plane/Horizon:e321;\
         \
         Motor:e41,e42,e43,e1234|e23,e31,e12;\
-        Rotor:e41,e42,e43,e1234;\
-        Translator:e23,e31,e12,e1234;\
+        Motor/Rotor:e41,e42,e43,e1234;\
+        Motor/Translator:e23,e31,e12,e1234;\
         \
         Flector:e1,e2,e3,e4|e423,e431,e412,e321;\
         \
@@ -54,8 +54,12 @@ fn main() {
 
     let mut registry = MultiVectorClassRegistry::default();
     for multi_vector_descriptor in mv_iter {
-        let mv = read_multi_vector_from_str(multi_vector_descriptor, &rga3d);
-        registry.register(mv);
+        let (mv, sc) = read_multi_vector_from_str(multi_vector_descriptor, &rga3d);
+        if let Some(sc) = sc {
+            registry.register_with_superclass(mv, sc);
+        } else {
+            registry.register(mv);
+        }
     }
 
     let rga3d_name = rga3d.name.to_string();

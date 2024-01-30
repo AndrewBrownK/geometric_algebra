@@ -40,10 +40,17 @@ pub struct AlgebraDescriptor {
 
 
 
-pub fn read_multi_vector_from_str(multi_vector_descriptor: &str, algebra: &RigidGeometricAlgebra) -> MultiVectorClass {
+pub fn read_multi_vector_from_str(multi_vector_descriptor: &str, algebra: &RigidGeometricAlgebra) -> (MultiVectorClass, Option<String>) {
     let mut multi_vector_descriptor_iter = multi_vector_descriptor.split(':');
-    MultiVectorClass {
-        class_name: multi_vector_descriptor_iter.next().unwrap().to_owned(),
+    let mut class_name = multi_vector_descriptor_iter.next().unwrap().to_owned();
+    let mut superclass_name = None;
+    if class_name.contains('/') {
+        let mut split = class_name.split('/').map(|it| it.to_string());
+        superclass_name = split.next();
+        class_name = split.next().unwrap();
+    }
+    let mvc = MultiVectorClass {
+        class_name,
         grouped_basis: multi_vector_descriptor_iter
             .next()
             .unwrap()
@@ -55,7 +62,8 @@ pub fn read_multi_vector_from_str(multi_vector_descriptor: &str, algebra: &Rigid
                     .collect::<Vec<_>>()
             })
             .collect::<Vec<_>>(),
-    }
+    };
+    (mvc, superclass_name)
 }
 
 struct TraitImpls<'a> {
@@ -567,7 +575,11 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let (gp, gp_r) = self.trait_impls.get_pair_impl_and_result(gap, &param_a, &param_b)?;
                 let (reversal, reversal_r) = self.trait_impls.get_single_impl_and_result("AntiReversal", &param_a)?;
                 let (gp2, gp2_r) = self.trait_impls.get_pair_impl_and_result(gap, &gp_r, &reversal_r)?;
-                let into = self.trait_impls.get_pair_impl("Into", &gp2_r, &param_b);
+
+                let result_class = registry.get_preferring_superclass(param_b.multi_vector_class().signature().as_slice()).unwrap();
+                let result_param = Parameter { name: "other", data_type: DataType::MultiVector(result_class), };
+                let into = self.trait_impls.get_pair_impl("Into", &gp2_r, &result_param);
+
                 let sandwich = MultiVectorClass::derive_sandwich_product(
                     "Sandwich", gp, gp2, reversal, into, &param_a, &param_b
                 );
