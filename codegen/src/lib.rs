@@ -569,7 +569,15 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         //     };
         // }
 
+        // let allowed_to_sandwich = ["Motor", "Translator", "Rotor", "Flector", "Point", "Plane"];
+        let disallowed_to_be_sandwiched = ["Scalar", "AntiScalar", "Magnitude"];
         for (param_a, param_b) in registry.pair_parameters() {
+            // if !allowed_to_sandwich.contains(&param_a.multi_vector_class().class_name.as_str()) {
+            //     continue
+            // }
+            if disallowed_to_be_sandwiched.contains(&param_b.multi_vector_class().class_name.as_str()) {
+                continue
+            }
             let _: Option<()> = try {
                 let gap = self.algebra.dialect().geometric_anti_product.first()?;
                 let (gp, gp_r) = self.trait_impls.get_pair_impl_and_result(gap, &param_a, &param_b)?;

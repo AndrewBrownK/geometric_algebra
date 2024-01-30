@@ -12633,10 +12633,6 @@ MultiVector translator_translator_right_contraction(Translator self, Translator 
     return MultiVector(vec2(self.g0.y) * vec2(other.g0.y) * vec2(-1.0, 0.0) + vec2(self.g0.z) * vec2(other.g0.z) * vec2(-1.0, 0.0) + vec2(self.g0.x) * vec2(other.g0.x) * vec2(-1.0, 0.0), vec4(0.0), vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec4(0.0));
 }
 
-AntiScalar point_anti_scalar_invert(Point self, AntiScalar other) {
-    return point_anti_scalar_sandwich(point_unitize(self), other);
-}
-
 Flector point_flector_invert(Point self, Flector other) {
     return point_flector_sandwich(point_unitize(self), other);
 }
@@ -12655,10 +12651,6 @@ LineAtInfinity point_line_at_infinity_invert(Point self, LineAtInfinity other) {
 
 Line point_line_at_origin_invert(Point self, LineAtOrigin other) {
     return point_line_at_origin_sandwich(point_unitize(self), other);
-}
-
-Magnitude point_magnitude_invert(Point self, Magnitude other) {
-    return point_magnitude_sandwich(point_unitize(self), other);
 }
 
 Motor point_motor_invert(Point self, Motor other) {
@@ -12693,16 +12685,8 @@ Motor point_rotor_invert(Point self, Rotor other) {
     return point_rotor_sandwich(point_unitize(self), other);
 }
 
-Scalar point_scalar_invert(Point self, Scalar other) {
-    return point_scalar_sandwich(point_unitize(self), other);
-}
-
 Translator point_translator_invert(Point self, Translator other) {
     return point_translator_sandwich(point_unitize(self), other);
-}
-
-AntiScalar plane_anti_scalar_reflect(Plane self, AntiScalar other) {
-    return plane_anti_scalar_sandwich(plane_unitize(self), other);
 }
 
 Flector plane_flector_reflect(Plane self, Flector other) {
@@ -12723,10 +12707,6 @@ Line plane_line_at_infinity_reflect(Plane self, LineAtInfinity other) {
 
 Line plane_line_at_origin_reflect(Plane self, LineAtOrigin other) {
     return plane_line_at_origin_sandwich(plane_unitize(self), other);
-}
-
-Magnitude plane_magnitude_reflect(Plane self, Magnitude other) {
-    return plane_magnitude_sandwich(plane_unitize(self), other);
 }
 
 Motor plane_motor_reflect(Plane self, Motor other) {
@@ -12761,16 +12741,8 @@ Motor plane_rotor_reflect(Plane self, Rotor other) {
     return plane_rotor_sandwich(plane_unitize(self), other);
 }
 
-Scalar plane_scalar_reflect(Plane self, Scalar other) {
-    return plane_scalar_sandwich(plane_unitize(self), other);
-}
-
 Motor plane_translator_reflect(Plane self, Translator other) {
     return plane_translator_sandwich(plane_unitize(self), other);
-}
-
-AntiScalar anti_scalar_anti_scalar_sandwich(AntiScalar self, AntiScalar other) {
-    return anti_scalar_anti_scalar_geometric_anti_product(anti_scalar_anti_scalar_geometric_anti_product(self, other), anti_scalar_anti_reversal(self));
 }
 
 Flector anti_scalar_flector_sandwich(AntiScalar self, Flector other) {
@@ -12791,10 +12763,6 @@ LineAtInfinity anti_scalar_line_at_infinity_sandwich(AntiScalar self, LineAtInfi
 
 LineAtOrigin anti_scalar_line_at_origin_sandwich(AntiScalar self, LineAtOrigin other) {
     return line_at_origin_anti_scalar_geometric_anti_product(anti_scalar_line_at_origin_geometric_anti_product(self, other), anti_scalar_anti_reversal(self));
-}
-
-Magnitude anti_scalar_magnitude_sandwich(AntiScalar self, Magnitude other) {
-    return magnitude_anti_scalar_geometric_anti_product(anti_scalar_magnitude_geometric_anti_product(self, other), anti_scalar_anti_reversal(self));
 }
 
 Motor anti_scalar_motor_sandwich(AntiScalar self, Motor other) {
@@ -12829,16 +12797,8 @@ Rotor anti_scalar_rotor_sandwich(AntiScalar self, Rotor other) {
     return rotor_anti_scalar_geometric_anti_product(anti_scalar_rotor_geometric_anti_product(self, other), anti_scalar_anti_reversal(self));
 }
 
-Scalar anti_scalar_scalar_sandwich(AntiScalar self, Scalar other) {
-    return scalar_anti_scalar_geometric_anti_product(anti_scalar_scalar_geometric_anti_product(self, other), anti_scalar_anti_reversal(self));
-}
-
 Translator anti_scalar_translator_sandwich(AntiScalar self, Translator other) {
     return translator_anti_scalar_geometric_anti_product(anti_scalar_translator_geometric_anti_product(self, other), anti_scalar_anti_reversal(self));
-}
-
-AntiScalar flector_anti_scalar_sandwich(Flector self, AntiScalar other) {
-    return multi_vector_anti_scalar_into(flector_flector_geometric_anti_product(flector_anti_scalar_geometric_anti_product(self, other), flector_anti_reversal(self)));
 }
 
 Flector flector_flector_sandwich(Flector self, Flector other) {
@@ -12859,10 +12819,6 @@ Line flector_line_at_infinity_sandwich(Flector self, LineAtInfinity other) {
 
 Line flector_line_at_origin_sandwich(Flector self, LineAtOrigin other) {
     return multi_vector_line_into(flector_flector_geometric_anti_product(flector_line_at_origin_geometric_anti_product(self, other), flector_anti_reversal(self)));
-}
-
-Magnitude flector_magnitude_sandwich(Flector self, Magnitude other) {
-    return multi_vector_magnitude_into(flector_flector_geometric_anti_product(flector_magnitude_geometric_anti_product(self, other), flector_anti_reversal(self)));
 }
 
 Motor flector_motor_sandwich(Flector self, Motor other) {
@@ -12897,10 +12853,6 @@ Motor flector_rotor_sandwich(Flector self, Rotor other) {
     return multi_vector_motor_into(flector_flector_geometric_anti_product(flector_rotor_geometric_anti_product(self, other), flector_anti_reversal(self)));
 }
 
-Scalar flector_scalar_sandwich(Flector self, Scalar other) {
-    return multi_vector_scalar_into(flector_flector_geometric_anti_product(flector_scalar_geometric_anti_product(self, other), flector_anti_reversal(self)));
-}
-
 Motor flector_translator_sandwich(Flector self, Translator other) {
     return multi_vector_motor_into(flector_flector_geometric_anti_product(flector_translator_geometric_anti_product(self, other), flector_anti_reversal(self)));
 }
@@ -12921,10 +12873,6 @@ Motor horizon_rotor_sandwich(Horizon self, Rotor other) {
     return multi_vector_motor_into(flector_horizon_geometric_anti_product(horizon_rotor_geometric_anti_product(self, other), horizon_anti_reversal(self)));
 }
 
-AntiScalar line_anti_scalar_sandwich(Line self, AntiScalar other) {
-    return multi_vector_anti_scalar_into(line_line_geometric_anti_product(line_anti_scalar_geometric_anti_product(self, other), line_anti_reversal(self)));
-}
-
 Flector line_flector_sandwich(Line self, Flector other) {
     return flector_line_geometric_anti_product(line_flector_geometric_anti_product(self, other), line_anti_reversal(self));
 }
@@ -12943,10 +12891,6 @@ Line line_line_at_infinity_sandwich(Line self, LineAtInfinity other) {
 
 Line line_line_at_origin_sandwich(Line self, LineAtOrigin other) {
     return multi_vector_line_into(multi_vector_line_geometric_anti_product(line_line_at_origin_geometric_anti_product(self, other), line_anti_reversal(self)));
-}
-
-Magnitude line_magnitude_sandwich(Line self, Magnitude other) {
-    return multi_vector_magnitude_into(line_line_geometric_anti_product(line_magnitude_geometric_anti_product(self, other), line_anti_reversal(self)));
 }
 
 Motor line_motor_sandwich(Line self, Motor other) {
@@ -12979,10 +12923,6 @@ Point line_point_at_infinity_sandwich(Line self, PointAtInfinity other) {
 
 Motor line_rotor_sandwich(Line self, Rotor other) {
     return multi_vector_motor_into(multi_vector_line_geometric_anti_product(line_rotor_geometric_anti_product(self, other), line_anti_reversal(self)));
-}
-
-Scalar line_scalar_sandwich(Line self, Scalar other) {
-    return multi_vector_scalar_into(line_at_infinity_line_geometric_anti_product(line_scalar_geometric_anti_product(self, other), line_anti_reversal(self)));
 }
 
 Motor line_translator_sandwich(Line self, Translator other) {
@@ -13021,10 +12961,6 @@ Motor line_at_infinity_rotor_sandwich(LineAtInfinity self, Rotor other) {
     return multi_vector_motor_into(multi_vector_line_at_infinity_geometric_anti_product(line_at_infinity_rotor_geometric_anti_product(self, other), line_at_infinity_anti_reversal(self)));
 }
 
-AntiScalar line_at_origin_anti_scalar_sandwich(LineAtOrigin self, AntiScalar other) {
-    return rotor_anti_scalar_into(line_at_origin_line_at_origin_geometric_anti_product(line_at_origin_anti_scalar_geometric_anti_product(self, other), line_at_origin_anti_reversal(self)));
-}
-
 Flector line_at_origin_flector_sandwich(LineAtOrigin self, Flector other) {
     return flector_line_at_origin_geometric_anti_product(line_at_origin_flector_geometric_anti_product(self, other), line_at_origin_anti_reversal(self));
 }
@@ -13043,10 +12979,6 @@ Line line_at_origin_line_at_infinity_sandwich(LineAtOrigin self, LineAtInfinity 
 
 Rotor line_at_origin_line_at_origin_sandwich(LineAtOrigin self, LineAtOrigin other) {
     return rotor_line_at_origin_geometric_anti_product(line_at_origin_line_at_origin_geometric_anti_product(self, other), line_at_origin_anti_reversal(self));
-}
-
-Magnitude line_at_origin_magnitude_sandwich(LineAtOrigin self, Magnitude other) {
-    return multi_vector_magnitude_into(line_line_at_origin_geometric_anti_product(line_at_origin_magnitude_geometric_anti_product(self, other), line_at_origin_anti_reversal(self)));
 }
 
 Motor line_at_origin_motor_sandwich(LineAtOrigin self, Motor other) {
@@ -13081,16 +13013,8 @@ Rotor line_at_origin_rotor_sandwich(LineAtOrigin self, Rotor other) {
     return rotor_line_at_origin_geometric_anti_product(line_at_origin_rotor_geometric_anti_product(self, other), line_at_origin_anti_reversal(self));
 }
 
-Scalar line_at_origin_scalar_sandwich(LineAtOrigin self, Scalar other) {
-    return multi_vector_scalar_into(line_at_infinity_line_at_origin_geometric_anti_product(line_at_origin_scalar_geometric_anti_product(self, other), line_at_origin_anti_reversal(self)));
-}
-
 Motor line_at_origin_translator_sandwich(LineAtOrigin self, Translator other) {
     return multi_vector_motor_into(multi_vector_line_at_origin_geometric_anti_product(line_at_origin_translator_geometric_anti_product(self, other), line_at_origin_anti_reversal(self)));
-}
-
-AntiScalar magnitude_anti_scalar_sandwich(Magnitude self, AntiScalar other) {
-    return magnitude_anti_scalar_into(magnitude_magnitude_geometric_anti_product(magnitude_anti_scalar_geometric_anti_product(self, other), magnitude_anti_reversal(self)));
 }
 
 Flector magnitude_flector_sandwich(Magnitude self, Flector other) {
@@ -13111,10 +13035,6 @@ LineAtInfinity magnitude_line_at_infinity_sandwich(Magnitude self, LineAtInfinit
 
 Line magnitude_line_at_origin_sandwich(Magnitude self, LineAtOrigin other) {
     return line_magnitude_geometric_anti_product(magnitude_line_at_origin_geometric_anti_product(self, other), magnitude_anti_reversal(self));
-}
-
-Magnitude magnitude_magnitude_sandwich(Magnitude self, Magnitude other) {
-    return magnitude_magnitude_geometric_anti_product(magnitude_magnitude_geometric_anti_product(self, other), magnitude_anti_reversal(self));
 }
 
 Motor magnitude_motor_sandwich(Magnitude self, Motor other) {
@@ -13149,16 +13069,8 @@ Motor magnitude_rotor_sandwich(Magnitude self, Rotor other) {
     return multi_vector_motor_into(multi_vector_magnitude_geometric_anti_product(magnitude_rotor_geometric_anti_product(self, other), magnitude_anti_reversal(self)));
 }
 
-Scalar magnitude_scalar_sandwich(Magnitude self, Scalar other) {
-    return scalar_magnitude_geometric_anti_product(magnitude_scalar_geometric_anti_product(self, other), magnitude_anti_reversal(self));
-}
-
 Motor magnitude_translator_sandwich(Magnitude self, Translator other) {
     return multi_vector_motor_into(multi_vector_magnitude_geometric_anti_product(magnitude_translator_geometric_anti_product(self, other), magnitude_anti_reversal(self)));
-}
-
-AntiScalar motor_anti_scalar_sandwich(Motor self, AntiScalar other) {
-    return multi_vector_anti_scalar_into(motor_motor_geometric_anti_product(motor_anti_scalar_geometric_anti_product(self, other), motor_anti_reversal(self)));
 }
 
 Flector motor_flector_sandwich(Motor self, Flector other) {
@@ -13179,10 +13091,6 @@ Line motor_line_at_infinity_sandwich(Motor self, LineAtInfinity other) {
 
 Line motor_line_at_origin_sandwich(Motor self, LineAtOrigin other) {
     return multi_vector_line_into(multi_vector_motor_geometric_anti_product(motor_line_at_origin_geometric_anti_product(self, other), motor_anti_reversal(self)));
-}
-
-Magnitude motor_magnitude_sandwich(Motor self, Magnitude other) {
-    return multi_vector_magnitude_into(multi_vector_motor_geometric_anti_product(motor_magnitude_geometric_anti_product(self, other), motor_anti_reversal(self)));
 }
 
 Motor motor_motor_sandwich(Motor self, Motor other) {
@@ -13217,16 +13125,8 @@ Motor motor_rotor_sandwich(Motor self, Rotor other) {
     return multi_vector_motor_into(multi_vector_motor_geometric_anti_product(motor_rotor_geometric_anti_product(self, other), motor_anti_reversal(self)));
 }
 
-Scalar motor_scalar_sandwich(Motor self, Scalar other) {
-    return multi_vector_scalar_into(multi_vector_motor_geometric_anti_product(motor_scalar_geometric_anti_product(self, other), motor_anti_reversal(self)));
-}
-
 Motor motor_translator_sandwich(Motor self, Translator other) {
     return multi_vector_motor_into(multi_vector_motor_geometric_anti_product(motor_translator_geometric_anti_product(self, other), motor_anti_reversal(self)));
-}
-
-AntiScalar multi_vector_anti_scalar_sandwich(MultiVector self, AntiScalar other) {
-    return multi_vector_anti_scalar_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_anti_scalar_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
 }
 
 Flector multi_vector_flector_sandwich(MultiVector self, Flector other) {
@@ -13247,10 +13147,6 @@ Line multi_vector_line_at_infinity_sandwich(MultiVector self, LineAtInfinity oth
 
 Line multi_vector_line_at_origin_sandwich(MultiVector self, LineAtOrigin other) {
     return multi_vector_line_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_line_at_origin_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
-}
-
-Magnitude multi_vector_magnitude_sandwich(MultiVector self, Magnitude other) {
-    return multi_vector_magnitude_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_magnitude_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
 }
 
 Motor multi_vector_motor_sandwich(MultiVector self, Motor other) {
@@ -13285,16 +13181,8 @@ Motor multi_vector_rotor_sandwich(MultiVector self, Rotor other) {
     return multi_vector_motor_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_rotor_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
 }
 
-Scalar multi_vector_scalar_sandwich(MultiVector self, Scalar other) {
-    return multi_vector_scalar_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_scalar_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
-}
-
 Motor multi_vector_translator_sandwich(MultiVector self, Translator other) {
     return multi_vector_motor_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_translator_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
-}
-
-AntiScalar origin_anti_scalar_sandwich(Origin self, AntiScalar other) {
-    return origin_origin_geometric_anti_product(origin_anti_scalar_geometric_anti_product(self, other), origin_anti_reversal(self));
 }
 
 Flector origin_flector_sandwich(Origin self, Flector other) {
@@ -13315,10 +13203,6 @@ LineAtInfinity origin_line_at_infinity_sandwich(Origin self, LineAtInfinity othe
 
 LineAtOrigin origin_line_at_origin_sandwich(Origin self, LineAtOrigin other) {
     return plane_at_origin_origin_geometric_anti_product(origin_line_at_origin_geometric_anti_product(self, other), origin_anti_reversal(self));
-}
-
-Magnitude origin_magnitude_sandwich(Origin self, Magnitude other) {
-    return multi_vector_magnitude_into(flector_origin_geometric_anti_product(origin_magnitude_geometric_anti_product(self, other), origin_anti_reversal(self)));
 }
 
 Motor origin_motor_sandwich(Origin self, Motor other) {
@@ -13353,16 +13237,8 @@ Motor origin_rotor_sandwich(Origin self, Rotor other) {
     return multi_vector_motor_into(flector_origin_geometric_anti_product(origin_rotor_geometric_anti_product(self, other), origin_anti_reversal(self)));
 }
 
-Scalar origin_scalar_sandwich(Origin self, Scalar other) {
-    return horizon_origin_geometric_anti_product(origin_scalar_geometric_anti_product(self, other), origin_anti_reversal(self));
-}
-
 Translator origin_translator_sandwich(Origin self, Translator other) {
     return point_origin_geometric_anti_product(origin_translator_geometric_anti_product(self, other), origin_anti_reversal(self));
-}
-
-AntiScalar plane_anti_scalar_sandwich(Plane self, AntiScalar other) {
-    return motor_anti_scalar_into(plane_plane_geometric_anti_product(plane_anti_scalar_geometric_anti_product(self, other), plane_anti_reversal(self)));
 }
 
 Flector plane_flector_sandwich(Plane self, Flector other) {
@@ -13383,10 +13259,6 @@ Line plane_line_at_infinity_sandwich(Plane self, LineAtInfinity other) {
 
 Line plane_line_at_origin_sandwich(Plane self, LineAtOrigin other) {
     return multi_vector_line_into(flector_plane_geometric_anti_product(plane_line_at_origin_geometric_anti_product(self, other), plane_anti_reversal(self)));
-}
-
-Magnitude plane_magnitude_sandwich(Plane self, Magnitude other) {
-    return multi_vector_magnitude_into(flector_plane_geometric_anti_product(plane_magnitude_geometric_anti_product(self, other), plane_anti_reversal(self)));
 }
 
 Motor plane_motor_sandwich(Plane self, Motor other) {
@@ -13421,16 +13293,8 @@ Motor plane_rotor_sandwich(Plane self, Rotor other) {
     return multi_vector_motor_into(flector_plane_geometric_anti_product(plane_rotor_geometric_anti_product(self, other), plane_anti_reversal(self)));
 }
 
-Scalar plane_scalar_sandwich(Plane self, Scalar other) {
-    return multi_vector_scalar_into(point_at_infinity_plane_geometric_anti_product(plane_scalar_geometric_anti_product(self, other), plane_anti_reversal(self)));
-}
-
 Motor plane_translator_sandwich(Plane self, Translator other) {
     return multi_vector_motor_into(flector_plane_geometric_anti_product(plane_translator_geometric_anti_product(self, other), plane_anti_reversal(self)));
-}
-
-AntiScalar plane_at_origin_anti_scalar_sandwich(PlaneAtOrigin self, AntiScalar other) {
-    return rotor_anti_scalar_into(plane_at_origin_plane_at_origin_geometric_anti_product(plane_at_origin_anti_scalar_geometric_anti_product(self, other), plane_at_origin_anti_reversal(self)));
 }
 
 Flector plane_at_origin_flector_sandwich(PlaneAtOrigin self, Flector other) {
@@ -13451,10 +13315,6 @@ Line plane_at_origin_line_at_infinity_sandwich(PlaneAtOrigin self, LineAtInfinit
 
 Line plane_at_origin_line_at_origin_sandwich(PlaneAtOrigin self, LineAtOrigin other) {
     return multi_vector_line_into(flector_plane_at_origin_geometric_anti_product(plane_at_origin_line_at_origin_geometric_anti_product(self, other), plane_at_origin_anti_reversal(self)));
-}
-
-Magnitude plane_at_origin_magnitude_sandwich(PlaneAtOrigin self, Magnitude other) {
-    return multi_vector_magnitude_into(flector_plane_at_origin_geometric_anti_product(plane_at_origin_magnitude_geometric_anti_product(self, other), plane_at_origin_anti_reversal(self)));
 }
 
 Motor plane_at_origin_motor_sandwich(PlaneAtOrigin self, Motor other) {
@@ -13489,16 +13349,8 @@ Motor plane_at_origin_rotor_sandwich(PlaneAtOrigin self, Rotor other) {
     return multi_vector_motor_into(flector_plane_at_origin_geometric_anti_product(plane_at_origin_rotor_geometric_anti_product(self, other), plane_at_origin_anti_reversal(self)));
 }
 
-Scalar plane_at_origin_scalar_sandwich(PlaneAtOrigin self, Scalar other) {
-    return multi_vector_scalar_into(point_at_infinity_plane_at_origin_geometric_anti_product(plane_at_origin_scalar_geometric_anti_product(self, other), plane_at_origin_anti_reversal(self)));
-}
-
 Motor plane_at_origin_translator_sandwich(PlaneAtOrigin self, Translator other) {
     return multi_vector_motor_into(flector_plane_at_origin_geometric_anti_product(plane_at_origin_translator_geometric_anti_product(self, other), plane_at_origin_anti_reversal(self)));
-}
-
-AntiScalar point_anti_scalar_sandwich(Point self, AntiScalar other) {
-    return translator_anti_scalar_into(point_point_geometric_anti_product(point_anti_scalar_geometric_anti_product(self, other), point_anti_reversal(self)));
 }
 
 Flector point_flector_sandwich(Point self, Flector other) {
@@ -13519,10 +13371,6 @@ LineAtInfinity point_line_at_infinity_sandwich(Point self, LineAtInfinity other)
 
 Line point_line_at_origin_sandwich(Point self, LineAtOrigin other) {
     return multi_vector_line_into(flector_point_geometric_anti_product(point_line_at_origin_geometric_anti_product(self, other), point_anti_reversal(self)));
-}
-
-Magnitude point_magnitude_sandwich(Point self, Magnitude other) {
-    return multi_vector_magnitude_into(flector_point_geometric_anti_product(point_magnitude_geometric_anti_product(self, other), point_anti_reversal(self)));
 }
 
 Motor point_motor_sandwich(Point self, Motor other) {
@@ -13555,10 +13403,6 @@ PointAtInfinity point_point_at_infinity_sandwich(Point self, PointAtInfinity oth
 
 Motor point_rotor_sandwich(Point self, Rotor other) {
     return multi_vector_motor_into(flector_point_geometric_anti_product(point_rotor_geometric_anti_product(self, other), point_anti_reversal(self)));
-}
-
-Scalar point_scalar_sandwich(Point self, Scalar other) {
-    return horizon_point_geometric_anti_product(point_scalar_geometric_anti_product(self, other), point_anti_reversal(self));
 }
 
 Translator point_translator_sandwich(Point self, Translator other) {
@@ -13597,10 +13441,6 @@ Motor point_at_infinity_rotor_sandwich(PointAtInfinity self, Rotor other) {
     return multi_vector_motor_into(flector_point_at_infinity_geometric_anti_product(point_at_infinity_rotor_geometric_anti_product(self, other), point_at_infinity_anti_reversal(self)));
 }
 
-AntiScalar rotor_anti_scalar_sandwich(Rotor self, AntiScalar other) {
-    return rotor_anti_scalar_into(rotor_rotor_geometric_anti_product(rotor_anti_scalar_geometric_anti_product(self, other), rotor_anti_reversal(self)));
-}
-
 Flector rotor_flector_sandwich(Rotor self, Flector other) {
     return flector_rotor_geometric_anti_product(rotor_flector_geometric_anti_product(self, other), rotor_anti_reversal(self));
 }
@@ -13619,10 +13459,6 @@ Line rotor_line_at_infinity_sandwich(Rotor self, LineAtInfinity other) {
 
 Rotor rotor_line_at_origin_sandwich(Rotor self, LineAtOrigin other) {
     return rotor_rotor_geometric_anti_product(rotor_line_at_origin_geometric_anti_product(self, other), rotor_anti_reversal(self));
-}
-
-Magnitude rotor_magnitude_sandwich(Rotor self, Magnitude other) {
-    return multi_vector_magnitude_into(multi_vector_rotor_geometric_anti_product(rotor_magnitude_geometric_anti_product(self, other), rotor_anti_reversal(self)));
 }
 
 Motor rotor_motor_sandwich(Rotor self, Motor other) {
@@ -13657,10 +13493,6 @@ Rotor rotor_rotor_sandwich(Rotor self, Rotor other) {
     return rotor_rotor_geometric_anti_product(rotor_rotor_geometric_anti_product(self, other), rotor_anti_reversal(self));
 }
 
-Scalar rotor_scalar_sandwich(Rotor self, Scalar other) {
-    return multi_vector_scalar_into(multi_vector_rotor_geometric_anti_product(rotor_scalar_geometric_anti_product(self, other), rotor_anti_reversal(self)));
-}
-
 Motor rotor_translator_sandwich(Rotor self, Translator other) {
     return multi_vector_motor_into(multi_vector_rotor_geometric_anti_product(rotor_translator_geometric_anti_product(self, other), rotor_anti_reversal(self)));
 }
@@ -13681,10 +13513,6 @@ Motor scalar_rotor_sandwich(Scalar self, Rotor other) {
     return multi_vector_motor_into(multi_vector_scalar_geometric_anti_product(scalar_rotor_geometric_anti_product(self, other), scalar_anti_reversal(self)));
 }
 
-AntiScalar translator_anti_scalar_sandwich(Translator self, AntiScalar other) {
-    return translator_anti_scalar_into(translator_translator_geometric_anti_product(translator_anti_scalar_geometric_anti_product(self, other), translator_anti_reversal(self)));
-}
-
 Flector translator_flector_sandwich(Translator self, Flector other) {
     return flector_translator_geometric_anti_product(translator_flector_geometric_anti_product(self, other), translator_anti_reversal(self));
 }
@@ -13703,10 +13531,6 @@ LineAtInfinity translator_line_at_infinity_sandwich(Translator self, LineAtInfin
 
 Line translator_line_at_origin_sandwich(Translator self, LineAtOrigin other) {
     return multi_vector_line_into(multi_vector_translator_geometric_anti_product(translator_line_at_origin_geometric_anti_product(self, other), translator_anti_reversal(self)));
-}
-
-Magnitude translator_magnitude_sandwich(Translator self, Magnitude other) {
-    return multi_vector_magnitude_into(multi_vector_translator_geometric_anti_product(translator_magnitude_geometric_anti_product(self, other), translator_anti_reversal(self)));
 }
 
 Motor translator_motor_sandwich(Translator self, Motor other) {
@@ -13739,10 +13563,6 @@ PointAtInfinity translator_point_at_infinity_sandwich(Translator self, PointAtIn
 
 Motor translator_rotor_sandwich(Translator self, Rotor other) {
     return multi_vector_motor_into(multi_vector_translator_geometric_anti_product(translator_rotor_geometric_anti_product(self, other), translator_anti_reversal(self)));
-}
-
-Scalar translator_scalar_sandwich(Translator self, Scalar other) {
-    return scalar_translator_geometric_anti_product(translator_scalar_geometric_anti_product(self, other), translator_anti_reversal(self));
 }
 
 Translator translator_translator_sandwich(Translator self, Translator other) {
