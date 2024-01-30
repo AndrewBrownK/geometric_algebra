@@ -6,8 +6,16 @@ use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssi
 /// Component-wise aspects to objects, and Unitization
 pub mod aspects;
 
-/// Products and Isometries
-pub mod products;
+/// Products
+pub mod products {
+    pub mod geometric;
+    pub mod exterior;
+    pub mod remaining;
+    pub mod dot;
+
+    /// Isometries
+    pub mod isometries;
+}
 
 /// Involutions and Duals
 pub mod involutions;
@@ -23,7 +31,8 @@ pub mod projections;
 
 /// Metric operations
 pub mod metrics;
-        #[derive(Clone, Copy)]
+
+#[derive(Clone, Copy)]
 struct ScalarGroups {
     /// 1
     g0: f32,

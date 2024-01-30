@@ -1,8 +1,9 @@
 
 #![allow(clippy::assign_op_pattern)]
 use crate::rga3d::*;
-use crate::rga3d::products::AntiWedge;
-         
+use crate::rga3d::products::exterior::AntiWedge;
+
+
 /// Square Root
 pub trait Sqrt {
     type Output;

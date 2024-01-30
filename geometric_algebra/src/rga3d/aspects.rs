@@ -2,8 +2,9 @@
 #![allow(clippy::assign_op_pattern)]
 use crate::rga3d::*;
 use crate::rga3d::norms::WeightNorm;
-use crate::rga3d::products::GeometricProduct;
-         
+use crate::rga3d::products::geometric::GeometricProduct;
+
+
 /// Unitization
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Unitization
 pub trait Unitize {

@@ -157,6 +157,9 @@ impl Product {
     }
 
     pub fn products<GA: GeometricAlgebraTrait>(algebra: &GA) -> Vec<(&'static str, Self, String)> {
+
+        // TODO I severely need to cut down on these, or divide them up
+
         let basis = algebra.basis();
         let product = Self::new(&basis, &basis, algebra);
 
@@ -334,13 +337,13 @@ impl Product {
 
 #[derive(Default)]
 pub struct MultiVectorClassRegistry {
-    pub classes: Vec<MultiVectorClass>,
+    pub classes: Vec<(MultiVectorClass, Option<String>)>,
     index_by_signature: std::collections::HashMap<Vec<BasisElementIndex>, usize>,
 }
 
 impl MultiVectorClassRegistry {
     pub fn single_parameters<'r>(&'r self) -> impl Iterator<Item=Parameter<'r>> {
-        self.classes.iter().map(|class_a| {
+        self.classes.iter().map(|(class_a, _)| {
             Parameter {
                 name: "self",
                 data_type: DataType::MultiVector(class_a),
@@ -348,12 +351,12 @@ impl MultiVectorClassRegistry {
         })
     }
     pub fn pair_parameters(&self) -> impl Iterator<Item=(Parameter, Parameter)> {
-        self.classes.iter().map(|class_a| {
+        self.classes.iter().map(|(class_a, _)| {
             let param_a = Parameter {
                 name: "self",
                 data_type: DataType::MultiVector(class_a),
             };
-            self.classes.iter().map(move |class_b| {
+            self.classes.iter().map(move |(class_b, _)| {
                 let param_b = Parameter {
                     name: "other",
                     data_type: DataType::MultiVector(class_b),
@@ -367,11 +370,27 @@ impl MultiVectorClassRegistry {
 impl MultiVectorClassRegistry {
     pub fn register(&mut self, class: MultiVectorClass) {
         self.index_by_signature.insert(class.signature(), self.classes.len());
-        self.classes.push(class);
+        self.classes.push((class, None));
+    }
+
+    // TODO register superclasses
+    pub fn register_with_superclass(&mut self, class: MultiVectorClass, superclass: String) {
+        self.index_by_signature.insert(class.signature(), self.classes.len());
+        self.classes.push((class, Some(superclass)));
+    }
+
+    pub fn get_preferring_superclass(&self, signature: &[BasisElementIndex]) -> Option<&MultiVectorClass> {
+        let index = self.index_by_signature.get(signature)?;
+        let matched = &self.classes[*index];
+        if let Some(superclass) = &matched.1 {
+            return self.classes.iter().find(|it| it.1 == Some(superclass.to_string())).map(|it| &it.0);
+        }
+        return Some(&matched.0);
+
     }
 
     pub fn get(&self, signature: &[BasisElementIndex]) -> Option<&MultiVectorClass> {
-        self.index_by_signature.get(signature).map(|index| &self.classes[*index])
+        self.index_by_signature.get(signature).map(|index| &self.classes[*index].0)
     }
 }
 

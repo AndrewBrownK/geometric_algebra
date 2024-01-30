@@ -441,11 +441,11 @@ impl MultiVectorClass {
 
         if result_class.is_none() && !result_signature.is_empty() {
             let mut viable_classes: Vec<_> = registry.classes.iter().filter(|it| {
-                let sig = it.signature();
+                let sig = it.0.signature();
                 result_signature.iter().all(|it| sig.contains(it))
             }).collect();
-            viable_classes.sort_by_key(|it| it.signature().len());
-            result_class = viable_classes.first().map(|it| *it);
+            viable_classes.sort_by_key(|it| it.0.signature().len());
+            result_class = viable_classes.first().map(|it| &it.0);
         }
 
         let result_class = match result_class {
@@ -1335,6 +1335,7 @@ impl MultiVectorClass {
                 )],
             ),
         });
+        // TODO problem..... Sandwich<PlaneAtOrigin> for Motor outputs a PlaneAtOrigin........
         let conversion_result = if let Some(conversion) = conversion {
             result_of_trait!(conversion)
         } else {
@@ -1421,13 +1422,13 @@ impl MultiVectorClass {
         let mut result_class = registry.get(&result_signature);
         if result_class.is_none() && !result_signature.is_empty() {
             let mut viable_classes: Vec<_> = registry.classes.iter().filter(|it| {
-                let sig = it.signature();
+                let sig = it.0.signature();
                 result_signature.iter().all(|it| sig.contains(it)) &&
                     // Bulk of Line could be represented as Translator with zero anti-scalar, but that is weird
                     sig.iter().all(|it| param_a_signature.contains(it))
             }).collect();
-            viable_classes.sort_by_key(|it| it.signature().len());
-            result_class = viable_classes.first().map(|it| *it);
+            viable_classes.sort_by_key(|it| it.0.signature().len());
+            result_class = viable_classes.first().map(|it| &it.0);
         }
         let result_class = result_class.unwrap_or_else(|| parameter_a.multi_vector_class());
 

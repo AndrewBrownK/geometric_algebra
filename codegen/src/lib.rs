@@ -906,7 +906,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         for param_a in registry.single_parameters() {
             let name = "Attitude";
             let _: Option<()> = try {
-                let horizon = registry.classes.iter().find(|it| it.class_name == horizon_class_name)?;
+                let horizon = &registry.classes.iter().find(|it| it.0.class_name == horizon_class_name)?.0;
                 let one = self.trait_impls.get_class_invocation("One", horizon)?;
                 let anti_wedge = self.algebra.dialect().exterior_anti_product.first()?;
                 let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_a), one)?;
@@ -943,7 +943,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         // emitter.emit(&AstNode::Preamble)?;
 
         // Class Definitions
-        for class in registry.classes.iter() {
+        for (class, _) in registry.classes.iter() {
             emitter.emit(&AstNode::ClassDefinition { class })?;
         }
 
@@ -991,15 +991,105 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         Ok(())
     }
 
-    pub fn emit_products_and_isometries(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
+    pub fn emit_geometric_products(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
+        let products = Product::products(&self.algebra);
+
+        let mut trait_names = BTreeSet::new();
+        for n in &self.algebra.dialect().geometric_product {
+            trait_names.insert(n.to_string());
+        }
+        for n in &self.algebra.dialect().geometric_anti_product {
+            trait_names.insert(n.to_string());
+        }
+        for (name, _, docs) in &products {
+            if trait_names.contains(*name) {
+                emitter.emit(&AstNode::TraitDefinition { name: name.to_string(), params: 2, docs: docs.to_string(), })?;
+            }
+        }
+
+        let trait_names2: Vec<_> = trait_names.iter().map(|it| it.as_str()).collect();
+        self.emit_exact_name_match_trait_impls(trait_names2.as_slice(), emitter)?;
+        Ok(())
+    }
+    pub fn emit_exterior_products(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
+        let products = Product::products(&self.algebra);
+
+        let mut trait_names = BTreeSet::new();
+        for n in &self.algebra.dialect().exterior_product {
+            trait_names.insert(n.to_string());
+        }
+        for n in &self.algebra.dialect().exterior_anti_product {
+            trait_names.insert(n.to_string());
+        }
+        for (name, _, docs) in &products {
+            if trait_names.contains(*name) {
+                emitter.emit(&AstNode::TraitDefinition { name: name.to_string(), params: 2, docs: docs.to_string(), })?;
+            }
+        }
+
+        let trait_names2: Vec<_> = trait_names.iter().map(|it| it.as_str()).collect();
+        self.emit_exact_name_match_trait_impls(trait_names2.as_slice(), emitter)?;
+        Ok(())
+    }
+    pub fn emit_dot_products(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
+        let products = Product::products(&self.algebra);
+
+        let mut trait_names = BTreeSet::new();
+        for n in &self.algebra.dialect().dot_product {
+            trait_names.insert(n.to_string());
+        }
+        for n in &self.algebra.dialect().anti_dot_product {
+            trait_names.insert(n.to_string());
+        }
+        for (name, _, docs) in &products {
+            if trait_names.contains(*name) {
+                emitter.emit(&AstNode::TraitDefinition { name: name.to_string(), params: 2, docs: docs.to_string(), })?;
+            }
+        }
+
+        let trait_names2: Vec<_> = trait_names.iter().map(|it| it.as_str()).collect();
+        self.emit_exact_name_match_trait_impls(trait_names2.as_slice(), emitter)?;
+        Ok(())
+    }
+
+    pub fn emit_remaining_products(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
         // items in Dialect mostly
         let products = Product::products(&self.algebra);
         let mut trait_names = BTreeSet::new();
+        let mut excluded_traits = BTreeSet::new();
+        for n in &self.algebra.dialect().geometric_product {
+            excluded_traits.insert(n.to_string());
+        }
+        for n in &self.algebra.dialect().geometric_anti_product {
+            excluded_traits.insert(n.to_string());
+        }
+        for n in &self.algebra.dialect().exterior_product {
+            excluded_traits.insert(n.to_string());
+        }
+        for n in &self.algebra.dialect().exterior_anti_product {
+            excluded_traits.insert(n.to_string());
+        }
+        for n in &self.algebra.dialect().dot_product {
+            excluded_traits.insert(n.to_string());
+        }
+        for n in &self.algebra.dialect().anti_dot_product {
+            excluded_traits.insert(n.to_string());
+        }
+
         for (name, _, docs) in &products {
+            if excluded_traits.contains(&name.to_string()) {
+                continue
+            }
             trait_names.insert(name.to_string());
             emitter.emit(&AstNode::TraitDefinition { name: name.to_string(), params: 2, docs: docs.to_string(), })?;
         }
 
+        let trait_names2: Vec<_> = trait_names.iter().map(|it| it.as_str()).collect();
+        self.emit_exact_name_match_trait_impls(trait_names2.as_slice(), emitter)?;
+        Ok(())
+    }
+
+    pub fn emit_isometries(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
         emitter.emit(&AstNode::TraitDefinition { name: "Sandwich".to_string(), params: 2, docs: "
             self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
 
@@ -1020,9 +1110,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             https://rigidgeometricalgebra.org/wiki/index.php?title=Reflection
         ".to_string(), })?;
 
-
-        let trait_names2: Vec<_> = trait_names.iter().map(|it| it.as_str()).collect();
-        self.emit_exact_name_match_trait_impls(trait_names2.as_slice(), emitter)?;
         self.emit_exact_name_match_trait_impls(&["Sandwich", "Invert", "Reflect"], emitter)?;
         Ok(())
     }

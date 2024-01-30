@@ -3,7 +3,8 @@
 use crate::{simd::*, *, rga3d::*};
 use std::ops::{Add, Div, Mul, Neg, Sub};
 use crate::rga3d::aspects::{Bulk, Weight};
-         
+
+
 /// Negates elements with `grade % 2 == 1`
 /// Also called main involution
 pub trait Automorphism {

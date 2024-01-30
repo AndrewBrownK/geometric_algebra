@@ -2,8 +2,9 @@
 #![allow(clippy::assign_op_pattern)]
 use crate::rga3d::*;
 use crate::rga3d::characteristics::Sqrt;
-use crate::rga3d::products::{AntiDot, Dot};
-         
+use crate::rga3d::products::dot::{AntiDot, Dot};
+
+
 /// BulkNorm
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
 pub trait BulkNorm {

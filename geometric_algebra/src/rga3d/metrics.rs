@@ -2,11 +2,12 @@
 #![allow(clippy::assign_op_pattern)]
 use crate::rga3d::*;
 use crate::rga3d::aspects::Unitize;
-use crate::rga3d::products::Wedge;
+use crate::rga3d::products::exterior::Wedge;
 use crate::rga3d::characteristics::Attitude;
 use crate::rga3d::projections::*;
 use crate::rga3d::norms::*;
-         
+
+
 /// Euclidean distance between objects
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Euclidean_distance
 /// distance(a,b) = bulk_norm(attitude(a wedge b)) + weight_norm(a wedge attitude(b))

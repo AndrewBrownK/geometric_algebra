@@ -1,10 +1,11 @@
 
 #![allow(clippy::assign_op_pattern)]
 use crate::rga3d::*;
-use crate::rga3d::products::Wedge;
-use crate::rga3d::products::AntiWedge;
+use crate::rga3d::products::exterior::Wedge;
+use crate::rga3d::products::exterior::AntiWedge;
 use crate::rga3d::involutions::*;
-         
+
+
 /// Bulk Contraction
 /// https://projectivegeometricalgebra.org/projgeomalg.pdf
 pub trait BulkContraction<T> {
