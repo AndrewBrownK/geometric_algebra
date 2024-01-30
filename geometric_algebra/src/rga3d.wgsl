@@ -29,58 +29,58 @@ struct PointAtInfinity {
 }
 
 struct Line {
-    // -e14, -e24, -e34
+    // e41, e42, e43
      g0: vec3<f32>,
-    // e23, -e13, e12
+    // e23, e31, e12
      g1: vec3<f32>,
 }
 
 struct LineAtOrigin {
-    // -e14, -e24, -e34
+    // e41, e42, e43
      g0: vec3<f32>,
 }
 
 struct LineAtInfinity {
-    // e23, -e13, e12
+    // e23, e31, e12
      g0: vec3<f32>,
 }
 
 struct Plane {
-    // e234, -e134, e124, -e123
+    // e423, e431, e412, e321
      g0: vec4<f32>,
 }
 
 struct PlaneAtOrigin {
-    // e234, -e134, e124
+    // e423, e431, e412
      g0: vec3<f32>,
 }
 
 struct Horizon {
-    // -e123
+    // e321
      g0: f32,
 }
 
 struct Motor {
-    // -e14, -e24, -e34, e1234
+    // e41, e42, e43, e1234
      g0: vec4<f32>,
-    // e23, -e13, e12
+    // e23, e31, e12
      g1: vec3<f32>,
 }
 
 struct Rotor {
-    // -e14, -e24, -e34, e1234
+    // e41, e42, e43, e1234
      g0: vec4<f32>,
 }
 
 struct Translator {
-    // e23, -e13, e12, e1234
+    // e23, e31, e12, e1234
      g0: vec4<f32>,
 }
 
 struct Flector {
     // e1, e2, e3, e4
      g0: vec4<f32>,
-    // e234, -e134, e124, -e123
+    // e423, e431, e412, e321
      g1: vec4<f32>,
 }
 
@@ -89,11 +89,11 @@ struct MultiVector {
      g0: vec2<f32>,
     // e1, e2, e3, e4
      g1: vec4<f32>,
-    // -e14, -e24, -e34
+    // e41, e42, e43
      g2: vec3<f32>,
-    // e23, -e13, e12
+    // e23, e31, e12
      g3: vec3<f32>,
-    // e234, -e134, e124, -e123
+    // e423, e431, e412, e321
      g4: vec4<f32>,
 }
 

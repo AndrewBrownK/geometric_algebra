@@ -1,5 +1,4 @@
-
-
+use std::fmt::Write;
 
 /// The BasisElementIndex is a set of bits representing the orthogonal vector BasisElements
 /// in (what might be) a product of BasisElements. e0 is binary 1, e1 is binary 10, and e01 is binary 11.
@@ -8,13 +7,13 @@ pub type BasisElementIndex = u16;
 
 #[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub struct BasisElement {
-    pub scalar: isize,
+    pub coefficient: isize,
     pub index: BasisElementIndex,
 }
 
 impl BasisElement {
     pub fn from_index(index: BasisElementIndex) -> Self {
-        Self { scalar: 1, index }
+        Self { coefficient: 1, index }
     }
 
     pub fn component_bases(&self) -> impl Iterator<Item = usize> + '_ {
@@ -30,11 +29,11 @@ impl BasisElement {
 //  (see GeometricAlgebraTrait)
 impl BasisElement {
     pub fn get_coefficient(&self) -> isize {
-        self.scalar
+        self.coefficient
     }
 
     pub fn set_coefficient(&mut self, c: isize) {
-        self.scalar = c;
+        self.coefficient = c;
     }
 
     pub fn grade(&self) -> usize {
@@ -44,18 +43,64 @@ impl BasisElement {
 
 impl std::fmt::Display for BasisElement {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        let name = format!("e{}", self.component_bases().map(|index| format!("{:X}", index + 1)).collect::<String>());
-        formatter.pad_integral(
-            self.scalar >= 0,
-            "",
-            if self.scalar == 0 {
-                "0"
-            } else if self.index == 0 {
-                "1"
-            } else {
-                name.as_str()
-            },
-        )
+        let mut name = format!("e{}", self.component_bases().map(|index| format!("{:X}", index + 1)).collect::<String>());
+        // TODO it would be nice if you could have something more generalized than these hard coded conditions
+        if name.as_str() == "e13" {
+            name = "e31".to_string()
+        }
+        if name.as_str() == "e14" {
+            name = "e41".to_string()
+        }
+        if name.as_str() == "e24" {
+            name = "e42".to_string()
+        }
+        if name.as_str() == "e34" {
+            name = "e43".to_string()
+        }
+        if name.as_str() == "e134" {
+            name = "e431".to_string()
+        }
+        if name.as_str() == "e123" {
+            name = "e321".to_string()
+        }
+        if name.as_str() == "e234" {
+            name = "e423".to_string()
+        }
+        if name.as_str() == "e124" {
+            name = "e412".to_string()
+        }
+        if name.as_str() == "e135" {
+            name = "e315".to_string()
+        }
+        if name.as_str() == "e345" {
+            name = "e435".to_string()
+        }
+        if name.as_str() == "e245" {
+            name = "e425".to_string()
+        }
+        if name.as_str() == "e145" {
+            name = "e415".to_string()
+        }
+        if name.as_str() == "e1235" {
+            name = "e3215".to_string()
+        }
+        if name.as_str() == "e1245" {
+            name = "e4125".to_string()
+        }
+        if name.as_str() == "e1345" {
+            name = "e4315".to_string()
+        }
+        if name.as_str() == "e2345" {
+            name = "e4235".to_string()
+        }
+        if self.coefficient == 0 {
+            formatter.write_str("0")?;
+        } else if self.index == 0 {
+            formatter.write_str("1")?;
+        } else {
+            formatter.write_str(name.as_str())?;
+        }
+        Ok(())
     }
 }
 

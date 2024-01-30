@@ -27,7 +27,7 @@ impl<'a> GeometricAlgebraTrait for RigidGeometricAlgebra<'a> {
             let mut element = BasisElement::from_index(index);
             let dual = self.right_complement(&element);
             if dual.cmp(&element) == std::cmp::Ordering::Less {
-                element.scalar = self.right_complement(&element).scalar;
+                element.coefficient = self.right_complement(&element).coefficient;
             }
             v.push(element);
         }
@@ -46,7 +46,7 @@ impl<'a> GeometricAlgebraTrait for RigidGeometricAlgebra<'a> {
         let mut result = BasisElement::from_index(0);
         if name.starts_with('-') {
             name = &name[1..];
-            result.scalar = -1;
+            result.coefficient = -1;
         }
         if name == "1" {
             return result;
@@ -80,19 +80,19 @@ impl<'a> GeometricAlgebraTrait for RigidGeometricAlgebra<'a> {
 
     fn right_complement(&self, a: &BasisElement) -> BasisElement {
         let mut result = BasisElement {
-            scalar: a.scalar,
+            coefficient: a.coefficient,
             index: self.basis_size() as BasisElementIndex - 1 - a.index,
         };
-        result.scalar *= self.product(a, &result).scalar;
+        result.coefficient *= self.product(a, &result).coefficient;
         result
     }
 
     fn left_complement(&self, a: &BasisElement) -> BasisElement {
         let mut result = BasisElement {
-            scalar: a.scalar,
+            coefficient: a.coefficient,
             index: self.basis_size() as BasisElementIndex - 1 - a.index,
         };
-        result.scalar *= self.product(&result, a).scalar;
+        result.coefficient *= self.product(&result, a).coefficient;
         result
     }
 
@@ -107,10 +107,10 @@ impl<'a> GeometricAlgebraTrait for RigidGeometricAlgebra<'a> {
             )
         });
         BasisElement {
-            scalar: BasisElement::from_index(a.index & b.index)
+            coefficient: BasisElement::from_index(a.index & b.index)
                 .component_bases()
                 .map(|i| self.generator_squares[i])
-                .fold(a.scalar * b.scalar * if commutations.0 % 2 == 0 { 1 } else { -1 }, |a, b| a * b),
+                .fold(a.coefficient * b.coefficient * if commutations.0 % 2 == 0 { 1 } else { -1 }, |a, b| a * b),
             index: a.index ^ b.index,
         }
     }

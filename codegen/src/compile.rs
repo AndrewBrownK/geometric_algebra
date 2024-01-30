@@ -266,7 +266,7 @@ impl MultiVectorClass {
                     let (in_element, out_element) = &involution.terms[involution_element];
                     let index_in_a = a_flat_basis.iter().position(|a_element| a_element.index == in_element.index).unwrap();
                     (
-                        out_element.scalar * result_element.scalar * in_element.scalar * a_flat_basis[index_in_a].scalar,
+                        out_element.coefficient * result_element.coefficient * in_element.coefficient * a_flat_basis[index_in_a].coefficient,
                         parameter_a.multi_vector_class().index_in_group(index_in_a),
                     )
                 })
@@ -342,7 +342,7 @@ impl MultiVectorClass {
                             if let Some(index_in_flat_basis) = flat_basis.iter().position(|element| element.index == result_element.index) {
                                 let index_pair = parameter.multi_vector_class().index_in_group(index_in_flat_basis);
                                 parameter_group_index = Some(index_pair.0);
-                                (result_element.scalar * flat_basis[index_in_flat_basis].scalar, index_pair)
+                                (result_element.coefficient * flat_basis[index_in_flat_basis].coefficient, index_pair)
                             } else {
                                 (0, (0, 0))
                             }
@@ -460,12 +460,12 @@ impl MultiVectorClass {
                 if let Some(x) = a_flat_basis.iter().position(|e| e.index == product_term.factor_a.index) {
                     if let Some(gather_index) = b_flat_basis.iter().position(|e| e.index == product_term.factor_b.index) {
                         sorted_terms[y][x] = (
-                            result_flat_basis[y].scalar
-                                * product_term.product.scalar
-                                * a_flat_basis[x].scalar
-                                * product_term.factor_a.scalar
-                                * b_flat_basis[gather_index].scalar
-                                * product_term.factor_b.scalar,
+                            result_flat_basis[y].coefficient
+                                * product_term.product.coefficient
+                                * a_flat_basis[x].coefficient
+                                * product_term.factor_a.coefficient
+                                * b_flat_basis[gather_index].coefficient
+                                * product_term.factor_b.coefficient,
                             gather_index,
                         );
                     }
@@ -1394,7 +1394,7 @@ impl MultiVectorClass {
         let mut result_signature = Vec::new();
         let a_flat_basis = parameter_a.multi_vector_class().flat_basis();
         for a_element in a_flat_basis.iter() {
-            let product_scalar = algebra.product(projective_basis, a_element).scalar;
+            let product_scalar = algebra.product(projective_basis, a_element).coefficient;
             if is_projective && product_scalar == 0isize {
                 result_signature.push(a_element.index)
             } else if !is_projective && product_scalar != 0isize {
@@ -1441,7 +1441,7 @@ impl MultiVectorClass {
                 .map(|index_in_group| {
                     let result_element = &result_flat_basis[base_index + index_in_group];
                     let index_in_a = a_flat_basis.iter().position(|a_element| a_element == result_element).unwrap();
-                    let result_element_is_projective = algebra.product(projective_basis, result_element).scalar == 0isize;
+                    let result_element_is_projective = algebra.product(projective_basis, result_element).coefficient == 0isize;
                     let scalar = if is_projective == result_element_is_projective {
                             1isize
                         } else {

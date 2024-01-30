@@ -292,6 +292,7 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
                 if i > 0 {
                     collector.write_all(b", ")?;
                 }
+                // TODO better parameter names
                 collector.write_fmt(format_args!("element{}: f32", i))?;
             }
             collector.write_all(b") -> Self {\n")?;
