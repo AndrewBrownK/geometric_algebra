@@ -238,6 +238,9 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
             collector.write_all(b") -> Self::Output;\n")?;
             collector.write_all(b"}\n\n")?;
         }
+        AstNode::TypeAlias(a, b) => {
+            collector.write_fmt(format_args!("type {a} = {b};\n\n"))?;
+        }
         AstNode::ClassDefinition { class } => {
             let element_count = class.grouped_basis.iter().fold(0, |a, b| a + b.len());
             let mut simd_widths = Vec::new();

@@ -71,6 +71,7 @@ pub enum AstNode<'a> {
     None,
     Preamble,
     TraitDefinition { name: String, params: usize, docs: String },
+    TypeAlias(String, String),
     ClassDefinition {
         class: &'a MultiVectorClass,
     },

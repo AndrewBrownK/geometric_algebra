@@ -964,6 +964,12 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
         // Class Definitions
         for (class, _) in registry.classes.iter() {
+            if class.class_name == "Origin" {
+                emitter.emit(&AstNode::TypeAlias("PointAtOrigin".to_string(), "Origin".to_string()))?;
+            }
+            if class.class_name == "Horizon" {
+                emitter.emit(&AstNode::TypeAlias("PlaneAtInfinity".to_string(), "Horizon".to_string()))?;
+            }
             emitter.emit(&AstNode::ClassDefinition { class })?;
         }
 

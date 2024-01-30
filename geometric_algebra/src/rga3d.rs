@@ -306,6 +306,8 @@ impl std::fmt::Debug for Point {
     }
 }
 
+type PointAtOrigin = Origin;
+
 #[derive(Clone, Copy)]
 struct OriginGroups {
     /// e4
@@ -807,6 +809,8 @@ impl std::fmt::Debug for PlaneAtOrigin {
             .finish()
     }
 }
+
+type PlaneAtInfinity = Horizon;
 
 #[derive(Clone, Copy)]
 struct HorizonGroups {
