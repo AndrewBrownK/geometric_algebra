@@ -21,19 +21,6 @@ impl<'a> GeometricAlgebraTrait for RigidGeometricAlgebra<'a> {
         1 << self.generator_squares.len()
     }
 
-    fn basis(&self) -> Vec<BasisElement> {
-        let mut v = vec![];
-        for index in 0..self.basis_size() as BasisElementIndex {
-            let mut element = BasisElement::from_index(index);
-            let dual = self.right_complement(&element);
-            if dual.cmp(&element) == std::cmp::Ordering::Less {
-                element.coefficient = self.right_complement(&element).coefficient;
-            }
-            v.push(element);
-        }
-        v
-    }
-
     fn algebra_name(&self) -> &'static str {
         self.name
     }
@@ -42,6 +29,7 @@ impl<'a> GeometricAlgebraTrait for RigidGeometricAlgebra<'a> {
         &self.dialect
     }
 
+    //noinspection DuplicatedCode
     fn parse(&self, mut name: &str) -> BasisElement {
         let mut result = BasisElement::from_index(0);
         if name.starts_with('-') {
@@ -60,22 +48,9 @@ impl<'a> GeometricAlgebraTrait for RigidGeometricAlgebra<'a> {
             }
             let generator_index = generator_index - 1;
             assert!((generator_index as usize) < self.generator_squares.len());
-            result = self.product(&result, &BasisElement::from_index(1 << generator_index));
+            result = result.primitive_product(&BasisElement::from_index(1 << generator_index), &self.generator_squares);
         }
         result
-    }
-
-    fn scalar_element(&self) -> BasisElement {
-        BasisElement::from_index(0)
-    }
-
-    fn anti_scalar_element(&self) -> BasisElement {
-        let mut index: BasisElementIndex = 0;
-        for _ in 0..self.generator_squares.len() {
-            index = index << 1;
-            index = index & 1;
-        }
-        BasisElement::from_index(index)
     }
 
     fn right_complement(&self, a: &BasisElement) -> BasisElement {
@@ -83,7 +58,7 @@ impl<'a> GeometricAlgebraTrait for RigidGeometricAlgebra<'a> {
             coefficient: a.coefficient,
             index: self.basis_size() as BasisElementIndex - 1 - a.index,
         };
-        result.coefficient *= self.product(a, &result).coefficient;
+        result.coefficient *= self.product(a, &result).first().unwrap().coefficient;
         result
     }
 
@@ -92,26 +67,15 @@ impl<'a> GeometricAlgebraTrait for RigidGeometricAlgebra<'a> {
             coefficient: a.coefficient,
             index: self.basis_size() as BasisElementIndex - 1 - a.index,
         };
-        result.coefficient *= self.product(&result, a).coefficient;
+        result.coefficient *= self.product(&result, a).first().unwrap().coefficient;
         result
     }
 
-    fn product(&self, a: &BasisElement, b: &BasisElement) -> BasisElement {
-        let commutations = a.component_bases().fold((0, a.index, b.index), |(commutations, a, b), index| {
-            let hurdles_a = a & (BasisElementIndex::MAX << (index + 1));
-            let hurdles_b = b & ((1 << index) - 1);
-            (
-                commutations + BasisElement::from_index(hurdles_a | hurdles_b).grade(),
-                a & !(1 << index),
-                b ^ (1 << index),
-            )
-        });
-        BasisElement {
-            coefficient: BasisElement::from_index(a.index & b.index)
-                .component_bases()
-                .map(|i| self.generator_squares[i])
-                .fold(a.coefficient * b.coefficient * if commutations.0 % 2 == 0 { 1 } else { -1 }, |a, b| a * b),
-            index: a.index ^ b.index,
+    fn product(&self, a: &BasisElement, b: &BasisElement) -> Vec<BasisElement> {
+        let result = a.primitive_product(b, &self.generator_squares);
+        if result.coefficient == 0 {
+            return vec![];
         }
+        vec![result]
     }
 }

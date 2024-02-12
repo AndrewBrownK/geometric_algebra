@@ -1,4 +1,4 @@
-pub fn camel_to_snake_case<W: std::io::Write>(collector: &mut W, name: &str) -> std::io::Result<()> {
+pub fn camel_to_snake_case<W: Write>(collector: &mut W, name: &str) -> std::io::Result<()> {
     let mut underscores = name.chars().enumerate().filter(|(_i, c)| c.is_uppercase()).map(|(i, _c)| i).peekable();
     for (i, c) in name.to_lowercase().bytes().enumerate() {
         if let Some(next_underscores) = underscores.peek() {
@@ -14,7 +14,7 @@ pub fn camel_to_snake_case<W: std::io::Write>(collector: &mut W, name: &str) -> 
     Ok(())
 }
 
-pub fn emit_indentation<W: std::io::Write>(collector: &mut W, indentation: usize) -> std::io::Result<()> {
+pub fn emit_indentation<W: Write>(collector: &mut W, indentation: usize) -> std::io::Result<()> {
     for _ in 0..indentation {
         collector.write_all(b"    ")?;
     }
@@ -25,7 +25,7 @@ use std::io::Write;
 use crate::{ast::AstNode, glsl, rust, wgsl};
 
 
-pub struct Emitter<W: std::io::Write> {
+pub struct Emitter<W: Write> {
     pub rust_collector: W,
     pub glsl_collector: W,
     pub wgsl_collector: W,
@@ -48,7 +48,7 @@ impl Emitter<std::fs::File> {
 }
 
 
-impl<W: std::io::Write> Emitter<W> {
+impl<W: Write> Emitter<W> {
     pub fn emit(&mut self, ast_node: &AstNode) -> std::io::Result<()> {
         rust::emit_code(&mut self.rust_collector, ast_node, 0)?;
         glsl::emit_code(&mut self.glsl_collector, ast_node, 0)?;

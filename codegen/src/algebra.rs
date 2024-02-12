@@ -13,13 +13,36 @@ pub trait GeometricAlgebraTrait {
     fn parse(&self, name: &str) -> BasisElement;
 
     fn basis_size(&self) -> usize;
-    fn basis(&self) -> Vec<BasisElement>;
 
-    fn scalar_element(&self) -> BasisElement;
-    fn anti_scalar_element(&self) -> BasisElement;
+    fn basis(&self) -> Vec<BasisElement> {
+        let mut v = vec![];
+        for index in 0..self.basis_size() as BasisElementIndex {
+            let mut element = BasisElement::from_index(index);
+            let dual = self.right_complement(&element);
+            if dual.cmp(&element) == std::cmp::Ordering::Less {
+                element.coefficient = self.right_complement(&element).coefficient;
+            }
+            v.push(element);
+        }
+        v
+    }
+
+    fn scalar_element(&self) -> BasisElement {
+        BasisElement::from_index(0 as BasisElementIndex)
+    }
+    fn anti_scalar_element(&self) -> BasisElement {
+        BasisElement::from_index(self.basis_size() as BasisElementIndex - 1)
+    }
+
+    // Good news...
+    // Can confirm between these two pages that the complement of a BasisElement is always just one BasisElement
+    // Bad news...
+    // Not sure how to determine the sign yet.
+    // https://rigidgeometricalgebra.org/wiki/index.php?title=Complements
+    // https://conformalgeometricalgebra.org/wiki/index.php?title=Exterior_products
     fn right_complement(&self, a: &BasisElement) -> BasisElement;
     fn left_complement(&self, a: &BasisElement) -> BasisElement;
-    fn product(&self, a: &BasisElement, b: &BasisElement) -> BasisElement;
+    fn product(&self, a: &BasisElement, b: &BasisElement) -> Vec<BasisElement>;
 }
 
 #[derive(Clone)]
@@ -79,7 +102,7 @@ impl Involution {
 
     pub fn involutions<GA: GeometricAlgebraTrait>(algebra: &GA) -> Vec<(&'static str, Self, &'static str)> {
         let involution = Self::identity(algebra);
-        let dimensions = algebra.basis_size();
+        let dimensions = algebra.anti_scalar_element().grade();
         vec![
             ("Neg", involution.negated(|_grade| true), ""),
             ("Automorphism", involution.negated(|grade| grade % 2 == 1), "\nNegates elements with `grade % 2 == 1`\n\nAlso called main involution"),
@@ -99,7 +122,7 @@ impl Involution {
 
 #[derive(Clone, PartialEq, Eq)]
 pub struct ProductTerm {
-    pub product: BasisElement,
+    pub product: Vec<BasisElement>,
     pub factor_a: BasisElement,
     pub factor_b: BasisElement,
 }

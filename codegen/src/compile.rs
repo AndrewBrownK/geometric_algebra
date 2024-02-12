@@ -1394,10 +1394,10 @@ impl MultiVectorClass {
         let mut result_signature = Vec::new();
         let a_flat_basis = parameter_a.multi_vector_class().flat_basis();
         for a_element in a_flat_basis.iter() {
-            let product_scalar = algebra.product(projective_basis, a_element).coefficient;
-            if is_projective && product_scalar == 0isize {
+            let products = algebra.product(projective_basis, a_element);
+            if is_projective && products.is_empty() {
                 result_signature.push(a_element.index)
-            } else if !is_projective && product_scalar != 0isize {
+            } else if !is_projective && !products.is_empty() {
                 result_signature.push(a_element.index)
             } else {
                 continue
@@ -1441,7 +1441,7 @@ impl MultiVectorClass {
                 .map(|index_in_group| {
                     let result_element = &result_flat_basis[base_index + index_in_group];
                     let index_in_a = a_flat_basis.iter().position(|a_element| a_element == result_element).unwrap();
-                    let result_element_is_projective = algebra.product(projective_basis, result_element).coefficient == 0isize;
+                    let result_element_is_projective = algebra.product(projective_basis, result_element).is_empty();
                     let scalar = if is_projective == result_element_is_projective {
                             1isize
                         } else {

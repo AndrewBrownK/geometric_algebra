@@ -1215,7 +1215,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     }
 
     pub fn emit_characteristic_features(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
-        // Sqrt, Grade, AntiGrade, Attitude, Carrier, CoCarrier, Container, Center
+        // Sqrt, Grade, AntiGrade, Attitude, Carrier, CoCarrier, Container, Center, Partner
 
         emitter.emit(&AstNode::TraitDefinition { name: "Sqrt".to_string(), params: 1, docs: "
             Square Root".to_string(),
