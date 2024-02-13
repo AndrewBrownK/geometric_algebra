@@ -144,7 +144,7 @@ impl Product {
                         factor_b: b.clone(),
                     })
                 })
-                .filter(|term| term.product.get_coefficient() != 0)
+                .filter(|term| !term.product.is_empty())
                 .collect(),
         }
     }
@@ -157,8 +157,22 @@ impl Product {
             terms: self
                 .terms
                 .iter()
-                .filter(|term| grade_projection(term.factor_a.grade(), term.factor_b.grade(), term.product.grade()))
-                .cloned()
+                .filter(|term| !term.product.is_empty())
+                .flat_map(|term| {
+                    if term.product.len() == 1 {
+                        return vec![term.clone()];
+                    }
+                    let mut terms = vec![];
+                    for p in term.product {
+                        terms.push(ProductTerm {
+                            product: vec![p],
+                            factor_a: term.factor_a.clone(),
+                            factor_b: term.factor_b.clone(),
+                        })
+                    }
+                    terms
+                })
+                .filter(|term| grade_projection(term.factor_a.grade(), term.factor_b.grade(), term.product[0].grade()))
                 .collect(),
         }
     }
@@ -170,7 +184,7 @@ impl Product {
                 .iter()
                 .map(|term| {
                     ProductTerm {
-                        product: algebra.right_complement(&term.product),
+                        product: term.product.iter().map(|p| algebra.right_complement(p)).collect(),
                         factor_a: algebra.right_complement(&term.factor_a),
                         factor_b: algebra.right_complement(&term.factor_b),
                     }

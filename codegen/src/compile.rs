@@ -1,3 +1,4 @@
+use std::collections::BTreeMap;
 use crate::{
     algebra::{Involution, MultiVectorClass, MultiVectorClassRegistry, Product},
     ast::{AstNode, DataType, Expression, ExpressionContent, Parameter},
@@ -427,7 +428,9 @@ impl MultiVectorClass {
             if a_flat_basis.iter().any(|e| e.index == product_term.factor_a.index)
                 && b_flat_basis.iter().any(|e| e.index == product_term.factor_b.index)
             {
-                result_signature.insert(product_term.product.index);
+                for pt in product_term.product {
+                    result_signature.insert(pt.index);
+                }
             }
         }
         let mut result_signature = result_signature.into_iter().collect::<Vec<_>>();
@@ -454,24 +457,33 @@ impl MultiVectorClass {
         };
 
         let result_flat_basis = result_class.flat_basis();
-        let mut sorted_terms = vec![vec![(0, 0); a_flat_basis.len()]; result_flat_basis.len()];
-        for product_term in product.terms.iter() {
-            if let Some(y) = result_flat_basis.iter().position(|e| e.index == product_term.product.index) {
-                if let Some(x) = a_flat_basis.iter().position(|e| e.index == product_term.factor_a.index) {
-                    if let Some(gather_index) = b_flat_basis.iter().position(|e| e.index == product_term.factor_b.index) {
-                        sorted_terms[y][x] = (
-                            result_flat_basis[y].coefficient
-                                * product_term.product.coefficient
-                                * a_flat_basis[x].coefficient
-                                * product_term.factor_a.coefficient
-                                * b_flat_basis[gather_index].coefficient
-                                * product_term.factor_b.coefficient,
-                            gather_index,
-                        );
-                    }
-                }
-            }
+        let mut new_sorted_terms: BTreeMap<usize, Vec<(isize, usize, usize)>> = BTreeMap::new();
+        let mut stuff = product.terms.iter().flat_map(|it| {
+            it.product.iter().map(|p| {
+                (it.factor_a.clone(), it.factor_b.clone(), p.clone())
+            })
+        });
+        for (factor_a, factor_b, product) in stuff {
+            let a_position = a_flat_basis.iter().position(|e| e.index == factor_a.index);
+            let b_position = b_flat_basis.iter().position(|e| e.index == factor_b.index);
+            let result_position = result_flat_basis.iter().position(|e| e.index == product.index);
+            let (a_position, b_position, result_position) = match (a_position, b_position, result_position) {
+                (Some(a), Some(b), Some(r)) => (a, b, r),
+                _ => continue
+            };
+            let coefficient
+                = result_flat_basis[result_position].coefficient
+                * product.coefficient
+                * a_flat_basis[a_position].coefficient
+                * factor_a.coefficient
+                * b_flat_basis[b_position].coefficient
+                * factor_b.coefficient;
+            new_sorted_terms.entry(result_position)
+                .and_modify(|v| v.push((coefficient, a_position, b_position)))
+                .or_insert(vec![(coefficient, a_position, b_position)]);
         }
+
+
         let mut body = Vec::new();
         let mut base_index = 0;
         for result_group in result_class.grouped_basis.iter() {
@@ -482,9 +494,17 @@ impl MultiVectorClass {
                 data_type_hint: None
             };
             let result_terms = (0..size)
-                .map(|index_in_group| &sorted_terms[base_index + index_in_group])
+                .map(|index_in_group| new_sorted_terms.remove(&(base_index + index_in_group)).unwrap_or_default())
                 .collect::<Vec<_>>();
-            let transposed_terms = (0..result_terms[0].len()).map(|i| result_terms.iter().map(|inner| inner[i]).collect::<Vec<_>>());
+
+
+
+            // TODO this is divider line of refactor progress
+            //  result_terms[0].len() is really trying to figure out how many factor_a terms contribute to this result term
+            //  Don't forget that, whatever is going on, I'll need to add an "Add" expression. So expect that.
+
+
+
             let mut contraction = (
                 Expression {
                     size,
@@ -500,6 +520,7 @@ impl MultiVectorClass {
                 vec![(0, 0); expression.size],
                 vec![0; expression.size],
             );
+            let transposed_terms = (0..result_terms[0].len()).map(|i| result_terms.iter().map(|inner| inner[i]).collect::<Vec<_>>());
             for (index_in_a, a_terms) in transposed_terms.enumerate() {
                 if a_terms.iter().all(|(factor, _)| *factor == 0) {
                     continue;

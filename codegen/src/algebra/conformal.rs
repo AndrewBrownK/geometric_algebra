@@ -179,9 +179,9 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
             a.index = a.index & non_projective;
             b.index = b.index & non_projective;
             let mut result = a.primitive_product(&b, &self.surface_generator_squares);
-            assert_eq!(result.index && projective, 0);
+            assert_eq!(result.index & projective, 0);
             // TODO not sure if this coefficient is accurate in higher dimensions. Or heck... this dimension...
-            result.coefficient = a.coefficient * b.coefficient * (-1isize) ^ result.grade();
+            result.coefficient = a.coefficient * b.coefficient * result.coefficient;
             return vec![result]
         }
 
