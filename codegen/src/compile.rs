@@ -499,29 +499,51 @@ impl MultiVectorClass {
 
 
 
-            // TODO this is divider line of refactor progress
-            //  result_terms[0].len() is really trying to figure out how many factor_a terms contribute to this result term
+            // TODO this is divider line of refactor progress (refactor is incomplete below, and complete above)
             //  Don't forget that, whatever is going on, I'll need to add an "Add" expression. So expect that.
 
 
+            let mut contraction_expr_a = Expression {
+                size,
+                content: ExpressionContent::None,
+                data_type_hint: None
+            };
+            let mut contraction_expr_b = Expression {
+                size,
+                content: ExpressionContent::None,
+                data_type_hint: None
+            };
+            let mut contraction_expr_a_gather_indices = vec![(0, 0); expression.size];
+            let mut contraction_expr_b_gather_indices = vec![(0, 0); expression.size];
+            let mut coefficients = vec![0; expression.size];
 
-            let mut contraction = (
-                Expression {
-                    size,
-                    content: ExpressionContent::None,
-                    data_type_hint: None
-                },
-                Expression {
-                    size,
-                    content: ExpressionContent::None,
-                    data_type_hint: None
-                },
-                vec![(0, 0); expression.size],
-                vec![(0, 0); expression.size],
-                vec![0; expression.size],
-            );
-            let transposed_terms = (0..result_terms[0].len()).map(|i| result_terms.iter().map(|inner| inner[i]).collect::<Vec<_>>());
-            for (index_in_a, a_terms) in transposed_terms.enumerate() {
+
+            // TODO result_terms[0].len() is trying to figure out how many factor_a terms contribute to this result term
+            //  because just beware that result_terms is not the same data type before and after this refactor pass, but
+            //  len() exists for both.
+            //  So... what transposed_terms was PREVIOUSLY trying to express, was....
+            //  well, result_terms was to the effect of Map<a_factor_position, (coefficient, b_factor_position)>
+            //  except instead of a Map, it's a Vec accessed by index. Anyway result_terms is a Vec<> of these
+            //  "effective Maps", that correspond to this result_group in the result_class.
+            //  So what is transposed_terms?
+            //  transposed_terms would have been... for each position_in_a...
+            //  Okay, jesus fucking christ this is annoying. All the trouble of using Vecs instead of properly keyed
+            //  maps, to then turn the Vecs into iters, and recover the index with an enumerate. Christ.
+            //  Okay so you can't truly comprehend transposed_terms without also the foresight that enumerate is called
+            //  on it. Come on man you could have just made the tuple in the map() invocation instead of making
+            //  this so convoluted and obscure. So there's an implicit factor_a_position (aka index_in_a), then we...
+            //  Collect the (coefficient, factor_b_position) for all result_terms at each factor_a_position..
+            //  it's goddamn confusing, because "inner[i]" is per result_term, but also per i (the outer loop)
+            //  goddamn it this is frustrating
+            let transposed_terms = (0..result_terms[0].len()).map(|i| {
+                result_terms.iter().map(|inner| {
+                    inner[i]
+                }).collect::<Vec<_>>()
+            }).collect::<Vec<_>>();
+
+            // For each position_in_a used in this result_group
+            for (index_in_a, a_terms) in transposed_terms.iter().enumerate() {
+                // If all coefficients are zero, then move on. We'll put in a const simd4 of 0s after this for loop.
                 if a_terms.iter().all(|(factor, _)| *factor == 0) {
                     continue;
                 }
@@ -538,32 +560,32 @@ impl MultiVectorClass {
                     .enumerate()
                     .map(|(index, (factor, _index_pair))| b_indices[if *factor == 0 { non_zero_index } else { index }])
                     .collect::<Vec<_>>();
-                let is_contractable = a_terms.iter().enumerate().all(|(i, (factor, _))| *factor == 0 || contraction.4[i] == 0)
-                    && (contraction.0.content == ExpressionContent::None
-                        || contraction.0.size == parameter_a.multi_vector_class().grouped_basis[a_group_index].len())
-                    && (contraction.1.content == ExpressionContent::None
-                        || contraction.1.size == parameter_b.multi_vector_class().grouped_basis[b_group_index].len());
-                if is_contractable && a_terms.iter().any(|(factor, _)| *factor == 0) {
-                    if contraction.0.content == ExpressionContent::None {
-                        assert!(contraction.1.content == ExpressionContent::None);
-                        contraction.0 = Expression {
+                let is_contractible = a_terms.iter().enumerate().all(|(i, (factor, _))| *factor == 0 || coefficients[i] == 0)
+                    && (contraction_expr_a.content == ExpressionContent::None
+                        || contraction_expr_a.size == parameter_a.multi_vector_class().grouped_basis[a_group_index].len())
+                    && (contraction_expr_b.content == ExpressionContent::None
+                        || contraction_expr_b.size == parameter_b.multi_vector_class().grouped_basis[b_group_index].len());
+                if is_contractible && a_terms.iter().any(|(factor, _)| *factor == 0) {
+                    if contraction_expr_a.content == ExpressionContent::None {
+                        assert!(contraction_expr_b.content == ExpressionContent::None);
+                        contraction_expr_a = Expression {
                             size: parameter_a.multi_vector_class().grouped_basis[a_group_index].len(),
                             content: ExpressionContent::Variable(parameter_a.name),
                             data_type_hint: Some(parameter_a.data_type.clone())
                         };
-                        contraction.1 = Expression {
+                        contraction_expr_b = Expression {
                             size: parameter_b.multi_vector_class().grouped_basis[b_group_index].len(),
                             content: ExpressionContent::Variable(parameter_b.name),
                             data_type_hint: Some(parameter_b.data_type.clone())
                         };
-                        contraction.2 = a_indices.iter().map(|(a_group_index, _)| (*a_group_index, 0)).collect();
-                        contraction.3 = b_indices.iter().map(|(b_group_index, _)| (*b_group_index, 0)).collect();
+                        contraction_expr_a_gather_indices = a_indices.iter().map(|(a_group_index, _)| (*a_group_index, 0)).collect();
+                        contraction_expr_b_gather_indices = b_indices.iter().map(|(b_group_index, _)| (*b_group_index, 0)).collect();
                     }
                     for (i, (factor, _index_in_b)) in a_terms.iter().enumerate() {
                         if *factor != 0 {
-                            contraction.2[i] = a_indices[i];
-                            contraction.3[i] = b_indices[i];
-                            contraction.4[i] = *factor;
+                            contraction_expr_a_gather_indices[i] = a_indices[i];
+                            contraction_expr_b_gather_indices[i] = b_indices[i];
+                            coefficients[i] = *factor;
                         }
                     }
                 } else {
@@ -620,7 +642,7 @@ impl MultiVectorClass {
                     };
                 }
             }
-            if contraction.4.iter().any(|scalar| *scalar != 0) {
+            if coefficients.iter().any(|scalar| *scalar != 0) {
                 expression = Expression {
                     size,
                     content: ExpressionContent::Add(
@@ -633,12 +655,12 @@ impl MultiVectorClass {
                                     content: ExpressionContent::Multiply(
                                         Box::new(Expression {
                                             size,
-                                            content: ExpressionContent::Gather(Box::new(contraction.0), contraction.2),
+                                            content: ExpressionContent::Gather(Box::new(contraction_expr_a), contraction_expr_a_gather_indices),
                                             data_type_hint: None
                                         }),
                                         Box::new(Expression {
                                             size,
-                                            content: ExpressionContent::Gather(Box::new(contraction.1), contraction.3),
+                                            content: ExpressionContent::Gather(Box::new(contraction_expr_b), contraction_expr_b_gather_indices),
                                             data_type_hint: None
                                         }),
                                     ),
@@ -646,7 +668,7 @@ impl MultiVectorClass {
                                 }),
                                 Box::new(Expression {
                                     size,
-                                    content: ExpressionContent::Constant(DataType::SimdVector(size), contraction.4),
+                                    content: ExpressionContent::Constant(DataType::SimdVector(size), coefficients),
                                     data_type_hint: Some(DataType::SimdVector(size))
                                 }),
                             ),
@@ -656,6 +678,15 @@ impl MultiVectorClass {
                     data_type_hint: None
                 };
             }
+
+
+
+            // TODO refactoring above this line
+            // TODO don't forget to simplify_and_legalize all components of the sum (if applicable)
+
+
+
+
             if expression.content == ExpressionContent::None {
                 expression = Expression {
                     size,
@@ -667,22 +698,21 @@ impl MultiVectorClass {
             base_index += size;
         }
         if body.is_empty() {
-            AstNode::None
-        } else {
-            AstNode::TraitImplementation {
-                result: Parameter {
-                    name,
-                    data_type: DataType::MultiVector(result_class),
-                },
-                parameters: vec![parameter_a.clone(), parameter_b.clone()],
-                body: vec![AstNode::ReturnStatement {
-                    expression: Box::new(Expression {
-                        size: 1,
-                        content: ExpressionContent::InvokeClassMethod(result_class, "Constructor", body),
-                        data_type_hint: Some(DataType::MultiVector(result_class))
-                    }),
-                }],
-            }
+            return AstNode::None
+        }
+        AstNode::TraitImplementation {
+            result: Parameter {
+                name,
+                data_type: DataType::MultiVector(result_class),
+            },
+            parameters: vec![parameter_a.clone(), parameter_b.clone()],
+            body: vec![AstNode::ReturnStatement {
+                expression: Box::new(Expression {
+                    size: 1,
+                    content: ExpressionContent::InvokeClassMethod(result_class, "Constructor", body),
+                    data_type_hint: Some(DataType::MultiVector(result_class))
+                }),
+            }],
         }
     }
 
