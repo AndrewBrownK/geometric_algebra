@@ -30,6 +30,8 @@ pub mod emit;
 mod glsl;
 mod rust;
 mod wgsl;
+mod old_product;
+
 pub mod build_scripts {
     pub mod rga3d;
 }

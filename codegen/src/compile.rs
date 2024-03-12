@@ -467,56 +467,49 @@ impl MultiVectorClass {
             let a_position = a_flat_basis.iter().position(|e| e.index == factor_a.index);
             let b_position = b_flat_basis.iter().position(|e| e.index == factor_b.index);
             let result_position = result_flat_basis.iter().position(|e| e.index == product.index);
-            let (a_position, b_position, result_position) = match (a_position, b_position, result_position) {
+            let (a_flat_index, b_flat_index, result_flat_index) = match (a_position, b_position, result_position) {
                 (Some(a), Some(b), Some(r)) => (a, b, r),
                 _ => continue
             };
             let coefficient
-                = result_flat_basis[result_position].coefficient
+                = result_flat_basis[result_flat_index].coefficient
                 * product.coefficient
-                * a_flat_basis[a_position].coefficient
+                * a_flat_basis[a_flat_index].coefficient
                 * factor_a.coefficient
-                * b_flat_basis[b_position].coefficient
+                * b_flat_basis[b_flat_index].coefficient
                 * factor_b.coefficient;
-            new_sorted_terms.entry(result_position)
-                .and_modify(|v| v.push((coefficient, a_position, b_position)))
-                .or_insert(vec![(coefficient, a_position, b_position)]);
+            new_sorted_terms.entry(result_flat_index)
+                .and_modify(|v| v.push((coefficient, a_flat_index, b_flat_index)))
+                .or_insert(vec![(coefficient, a_flat_index, b_flat_index)]);
         }
 
 
         let mut body = Vec::new();
         let mut base_index = 0;
         for result_group in result_class.grouped_basis.iter() {
-            let size = result_group.len();
+            let result_group_size = result_group.len();
             let mut expression = Expression {
-                size,
+                size: result_group_size,
                 content: ExpressionContent::None,
                 data_type_hint: None
             };
-            let result_terms = (0..size)
-                .map(|index_in_group| new_sorted_terms.remove(&(base_index + index_in_group)).unwrap_or_default())
-                .collect::<Vec<_>>();
-
-
-
-            // TODO this is divider line of refactor progress (refactor is incomplete below, and complete above)
-            //  Don't forget that, whatever is going on, I'll need to add an "Add" expression. So expect that.
-
 
             let mut contraction_expr_a = Expression {
-                size,
+                size: result_group_size,
                 content: ExpressionContent::None,
                 data_type_hint: None
             };
             let mut contraction_expr_b = Expression {
-                size,
+                size: result_group_size,
                 content: ExpressionContent::None,
                 data_type_hint: None
             };
             let mut contraction_expr_a_gather_indices = vec![(0, 0); expression.size];
             let mut contraction_expr_b_gather_indices = vec![(0, 0); expression.size];
-            let mut coefficients = vec![0; expression.size];
+            let mut last_term_coefficients = vec![0; expression.size];
 
+            // TODO this is divider line of refactor progress (refactor is incomplete below, and complete above)
+            //  Don't forget that, whatever is going on, I'll need to add an "Add" expression. So expect that.
 
             // TODO result_terms[0].len() is trying to figure out how many factor_a terms contribute to this result term
             //  because just beware that result_terms is not the same data type before and after this refactor pass, but
@@ -535,39 +528,119 @@ impl MultiVectorClass {
             //  Collect the (coefficient, factor_b_position) for all result_terms at each factor_a_position..
             //  it's goddamn confusing, because "inner[i]" is per result_term, but also per i (the outer loop)
             //  goddamn it this is frustrating
-            let transposed_terms = (0..result_terms[0].len()).map(|i| {
-                result_terms.iter().map(|inner| {
-                    inner[i]
-                }).collect::<Vec<_>>()
-            }).collect::<Vec<_>>();
+
+
+            // Prior to refactor...
+            // sorted_terms:
+            //      Vec<Vec<(isize, usize)>> as in map(result_basis_index, map(a_basis_index, (coefficient, b_basis_index)))
+            // result_terms:
+            //      (per result_group, with size of result_group.len()), in other words vec length/index is index_in_group
+            //      Vec<Vec<(isize, usize)>> as in map(index_in_group, map(a_basis_index, (coefficient, b_basis_index)))
+            //      so compared to sorted_terms, result_terms has an index within the result_group, instead of an index within the entire flat_basis
+            // transposed_terms:
+            //      Seems to assume all components of this result_group depend on the same quantity of a components
+            //      So i is a_basis_index, from 0 to max_a_basis_index
+            //      If we assume the outer map can be collected into a Vec too, it looks like this expresses roughly Vec<Vec<(isize, usize)>>
+            //      Actually.... yeah.... it's not just assuming every component of this result_group depends on the same quantity of a components... it is enforcing that...
+            //      it does an iter().map() on result_terms, but just accesses inside the thing... is it like....
+            //      is it changing map(index_in_group, map(a_basis_index, (coefficient, b_basis_index))) into map(a_basis_index, map(index_in_group, (coefficient, b_basis_index)))?
+            //      no not quite.... it is more like... creating the following...
+            //      map(a_basis_index, vec(coefficient, b_basis_index))
+            //      the index of the inner vec doesnt mean anything. I think so, anyway.
+            //      well no.... so look ahead. We have the hypothesis on what a_terms means. And enumerate isn't
+            //      usually used on it, but is sometimes. Okay. It seems to represent "just some index within the result_group"
+            //      ...particularly when it comes to the last term?
+
+            // After refactor...
+            // new_sorted_terms:
+            //      BTreeMap<usize, Vec<(isize, usize, usize)>> as in map(result_basis_index, (coefficient, a_basis_index, b_basis_index))
+            //
+
+
+
+
+
+
+
+            // TODO refactor line
+
+
+
+
+
+            // index_in_group -> sum of terms: coefficient, a_flat_index, b_flat_index
+            // (this makes no assumptions about how many times each factor_flat_index can show up in each index_in_group)
+
+            let result_terms_per_index_in_group = (0..result_group_size)
+                .map(|index_in_group| new_sorted_terms.remove(&(base_index + index_in_group)).unwrap_or_default())
+                .collect::<Vec<_>>();
+
+            //
+
+            let transposed_terms: Vec<Vec<(isize, usize)>> = vec![];
+
+
+
+
+
+
 
             // For each position_in_a used in this result_group
-            for (index_in_a, a_terms) in transposed_terms.iter().enumerate() {
+            for (a_flat_index, coefficient_and_b_index_per_result_group_index) in transposed_terms.iter().enumerate() {
+
                 // If all coefficients are zero, then move on. We'll put in a const simd4 of 0s after this for loop.
-                if a_terms.iter().all(|(factor, _)| *factor == 0) {
+                if coefficient_and_b_index_per_result_group_index.iter().all(|(factor, _)| *factor == 0) {
                     continue;
                 }
-                let (a_group_index, a_index_in_group) = parameter_a.multi_vector_class().index_in_group(index_in_a);
-                let a_indices = a_terms.iter().map(|_| (a_group_index, a_index_in_group)).collect::<Vec<_>>();
-                let b_indices = a_terms
+
+                // a_indices and b_indices are the "index_in_group" for a and b
+                // TODO this is the only use of index_in_a.... am I sure I'm not mixing up index_in_a and index_in_result_group?
+                let (a_group_index, a_index_in_group) = parameter_a.multi_vector_class().index_in_group(a_flat_index);
+                let a_indices = coefficient_and_b_index_per_result_group_index.iter().map(|_| (a_group_index, a_index_in_group)).collect::<Vec<_>>();
+                let b_indices = coefficient_and_b_index_per_result_group_index
                     .iter()
-                    .map(|(_, index_in_b)| parameter_b.multi_vector_class().index_in_group(*index_in_b))
+                    .map(|(_, b_flat_index)| parameter_b.multi_vector_class().index_in_group(*b_flat_index))
                     .collect::<Vec<_>>();
-                let non_zero_index = a_terms.iter().position(|(factor, _index_pair)| *factor != 0).unwrap();
+
+                // Get the first entry with a non-zero coefficient
+                let non_zero_index = coefficient_and_b_index_per_result_group_index.iter().position(|(factor, _)| *factor != 0).unwrap();
+
+                // then get the group index of b having that non-zero coefficent
                 let b_group_index = b_indices[non_zero_index].0;
-                let b_indices = a_terms
+                // Then overwrite (shadow) b_indices..... by.... replacing any zero terms with the non-zero term found?
+                let b_indices = coefficient_and_b_index_per_result_group_index
                     .iter()
                     .enumerate()
-                    .map(|(index, (factor, _index_pair))| b_indices[if *factor == 0 { non_zero_index } else { index }])
+                    .map(|(index, (factor, _))| b_indices[if *factor == 0 { non_zero_index } else { index }])
                     .collect::<Vec<_>>();
-                let is_contractible = a_terms.iter().enumerate().all(|(i, (factor, _))| *factor == 0 || coefficients[i] == 0)
+
+                // What conditions to be contractible?
+                // - all factors per result group are zero
+                // - we have not yet initialized contraction_expr_a, or its size is the same as the parameter_a group
+                // - we have not yet initialized contraction_expr_b, or its size is the same as the parameter_b group
+                let is_contractible = coefficient_and_b_index_per_result_group_index.iter().enumerate().all(
+                    |(result_group_index, (factor, _))| *factor == 0 || last_term_coefficients[result_group_index] == 0
+                )
                     && (contraction_expr_a.content == ExpressionContent::None
                         || contraction_expr_a.size == parameter_a.multi_vector_class().grouped_basis[a_group_index].len())
                     && (contraction_expr_b.content == ExpressionContent::None
                         || contraction_expr_b.size == parameter_b.multi_vector_class().grouped_basis[b_group_index].len());
-                if is_contractible && a_terms.iter().any(|(factor, _)| *factor == 0) {
+
+
+
+
+                if is_contractible && coefficient_and_b_index_per_result_group_index.iter().any(|(factor, _)| *factor == 0) {
                     if contraction_expr_a.content == ExpressionContent::None {
                         assert!(contraction_expr_b.content == ExpressionContent::None);
+
+                        // TODO so this is the real business when it comes to contraction
+                        //  as you can see, it just takes Variable(parameter_a) and Variable(parameter_b) raw?
+                        //  Well.. it's just the start, this branch will only be entered once per result_group.
+                        //  Okay so, it is used in a "Gather" expression.
+                        //  contraction_expr_a is gathered at contraction_expr_a_gather_indices
+                        //  contraction_expr_b is gathered at contraction_expr_b_gather_indices
+                        //  You can also see where these are finally used, it is only in the so called "last_term"
+                        //  where it is multiplied by "last_term_coefficients"
                         contraction_expr_a = Expression {
                             size: parameter_a.multi_vector_class().grouped_basis[a_group_index].len(),
                             content: ExpressionContent::Variable(parameter_a.name),
@@ -581,23 +654,28 @@ impl MultiVectorClass {
                         contraction_expr_a_gather_indices = a_indices.iter().map(|(a_group_index, _)| (*a_group_index, 0)).collect();
                         contraction_expr_b_gather_indices = b_indices.iter().map(|(b_group_index, _)| (*b_group_index, 0)).collect();
                     }
-                    for (i, (factor, _index_in_b)) in a_terms.iter().enumerate() {
+                    for (result_group_index, (factor, _index_in_b)) in coefficient_and_b_index_per_result_group_index.iter().enumerate() {
                         if *factor != 0 {
-                            contraction_expr_a_gather_indices[i] = a_indices[i];
-                            contraction_expr_b_gather_indices[i] = b_indices[i];
-                            coefficients[i] = *factor;
+                            contraction_expr_a_gather_indices[result_group_index] = a_indices[result_group_index];
+                            contraction_expr_b_gather_indices[result_group_index] = b_indices[result_group_index];
+                            last_term_coefficients[result_group_index] = *factor;
                         }
                     }
                 } else {
+
+                    // expression = expression + (gather(parameter_a, a_indices) * gather(parameter_b, b_indices) * coefficients)
                     expression = Expression {
-                        size,
+                        size: result_group_size,
+                        data_type_hint: None,
                         content: ExpressionContent::Add(
                             Box::new(expression),
                             Box::new(Expression {
-                                size,
+                                size: result_group_size,
+                                data_type_hint: None,
                                 content: ExpressionContent::Multiply(
                                     Box::new(Expression {
-                                        size,
+                                        size: result_group_size,
+                                        data_type_hint: None,
                                         content: ExpressionContent::Gather(
                                             Box::new(Expression {
                                                 size: parameter_a.multi_vector_class().grouped_basis[a_group_index].len(),
@@ -606,60 +684,68 @@ impl MultiVectorClass {
                                             }),
                                             a_indices,
                                         ),
-                                        data_type_hint: None
                                     }),
                                     Box::new(Expression {
-                                        size,
+                                        size: result_group_size,
+                                        data_type_hint: Some(DataType::SimdVector(result_group_size)),
                                         content: ExpressionContent::Multiply(
                                             Box::new(Expression {
-                                                size,
+                                                size: result_group_size,
+                                                data_type_hint: None,
                                                 content: ExpressionContent::Gather(
                                                     Box::new(Expression {
                                                         size: parameter_b.multi_vector_class().grouped_basis[b_group_index].len(),
-                                                        content: ExpressionContent::Variable(parameter_b.name),
                                                         data_type_hint: None,
+                                                        content: ExpressionContent::Variable(parameter_b.name),
                                                     }),
                                                     b_indices,
                                                 ),
-                                                data_type_hint: None
                                             }),
                                             Box::new(Expression {
-                                                size,
+                                                size: result_group_size,
+                                                data_type_hint: Some(DataType::SimdVector(result_group_size)),
                                                 content: ExpressionContent::Constant(
-                                                    DataType::SimdVector(size),
-                                                    a_terms.iter().map(|(factor, _)| *factor).collect::<Vec<_>>(),
+                                                    DataType::SimdVector(result_group_size),
+                                                    coefficient_and_b_index_per_result_group_index.iter().map(|(factor, _)| *factor).collect::<Vec<_>>(),
                                                 ),
-                                                data_type_hint: Some(DataType::SimdVector(size))
                                             }),
                                         ),
-                                        data_type_hint: Some(DataType::SimdVector(size))
                                     }),
                                 ),
-                                data_type_hint: None
                             }),
                         ),
-                        data_type_hint: None
                     };
                 }
             }
-            if coefficients.iter().any(|scalar| *scalar != 0) {
+
+
+            // TODO refactoring above this line
+            // TODO don't forget to simplify_and_legalize all components of the sum (if applicable)
+
+
+            // If there are any (non-zero) coefficients for the last term in this result_group...
+            if last_term_coefficients.iter().any(|scalar| *scalar != 0) {
                 expression = Expression {
-                    size,
+                    size: result_group_size,
                     content: ExpressionContent::Add(
+
+                        // then add the expression so far...
                         Box::new(expression),
+
+                        // ...and the last_term_coefficients times the contraction factors
                         Box::new(Expression {
-                            size,
+                            size: result_group_size,
                             content: ExpressionContent::Multiply(
                                 Box::new(Expression {
-                                    size,
+                                    size: result_group_size,
                                     content: ExpressionContent::Multiply(
                                         Box::new(Expression {
-                                            size,
+                                            size: result_group_size,
                                             content: ExpressionContent::Gather(Box::new(contraction_expr_a), contraction_expr_a_gather_indices),
                                             data_type_hint: None
                                         }),
                                         Box::new(Expression {
-                                            size,
+                                            size: result_group_size,
                                             content: ExpressionContent::Gather(Box::new(contraction_expr_b), contraction_expr_b_gather_indices),
                                             data_type_hint: None
                                         }),
@@ -667,9 +753,9 @@ impl MultiVectorClass {
                                     data_type_hint: None
                                 }),
                                 Box::new(Expression {
-                                    size,
-                                    content: ExpressionContent::Constant(DataType::SimdVector(size), coefficients),
-                                    data_type_hint: Some(DataType::SimdVector(size))
+                                    size: result_group_size,
+                                    content: ExpressionContent::Constant(DataType::SimdVector(result_group_size), last_term_coefficients),
+                                    data_type_hint: Some(DataType::SimdVector(result_group_size))
                                 }),
                             ),
                             data_type_hint: None
@@ -679,23 +765,22 @@ impl MultiVectorClass {
                 };
             }
 
-
-
-            // TODO refactoring above this line
-            // TODO don't forget to simplify_and_legalize all components of the sum (if applicable)
-
-
-
-
+            // If this entire result_group has not been expressed yet...
             if expression.content == ExpressionContent::None {
+
+                // ...then it is zero
                 expression = Expression {
-                    size,
-                    content: ExpressionContent::Constant(DataType::SimdVector(size), (0..size).map(|_| 0).collect()),
-                    data_type_hint: Some(DataType::SimdVector(size))
+                    size: result_group_size,
+                    content: ExpressionContent::Constant(DataType::SimdVector(result_group_size), (0..result_group_size).map(|_| 0).collect()),
+                    data_type_hint: Some(DataType::SimdVector(result_group_size))
                 };
             }
-            body.push((DataType::SimdVector(size), *simplify_and_legalize(Box::new(expression))));
-            base_index += size;
+
+            // Push the expression for this result group
+            body.push((DataType::SimdVector(result_group_size), *simplify_and_legalize(Box::new(expression))));
+
+            // and move on to the next result_group
+            base_index += result_group_size;
         }
         if body.is_empty() {
             return AstNode::None
@@ -714,6 +799,97 @@ impl MultiVectorClass {
                 }),
             }],
         }
+
+
+        /* Example from rga3d
+
+impl WedgeDot<MultiVector> for MultiVector {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+
+                g0: Simd32x2::from(self.group0()[0]) * other.group0()
+                    + Simd32x2::from(self.group1()[0]) * Simd32x2::from([other.group1()[0], other.group4()[0]])
+                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([other.group1()[1], other.group4()[1]])
+                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([other.group1()[2], other.group4()[2]])
+                    + Simd32x2::from(self.group1()[3]) * Simd32x2::from(                     other.group4()[3]) * Simd32x2::from([0.0, 1.0])
+                    + Simd32x2::from(self.group2()[0]) * Simd32x2::from(                     other.group3()[0]) * Simd32x2::from([0.0, -1.0])
+                    + Simd32x2::from(self.group2()[1]) * Simd32x2::from(                     other.group3()[1]) * Simd32x2::from([0.0, -1.0])
+                    + Simd32x2::from(self.group2()[2]) * Simd32x2::from(                     other.group3()[2]) * Simd32x2::from([0.0, -1.0])
+                    - Simd32x2::from(self.group3()[0]) * Simd32x2::from([other.group3()[0], other.group2()[0]])
+                    - Simd32x2::from(self.group3()[1]) * Simd32x2::from([other.group3()[1], other.group2()[1]])
+                    - Simd32x2::from(self.group3()[2]) * Simd32x2::from([other.group3()[2], other.group2()[2]])
+                    + Simd32x2::from(self.group4()[0]) * Simd32x2::from(                     other.group1()[0]) * Simd32x2::from([0.0, -1.0])
+                    + Simd32x2::from(self.group4()[1]) * Simd32x2::from(                     other.group1()[1]) * Simd32x2::from([0.0, -1.0])
+                    + Simd32x2::from(self.group4()[2]) * Simd32x2::from(                     other.group1()[2]) * Simd32x2::from([0.0, -1.0])
+                    - Simd32x2::from(self.group4()[3]) * Simd32x2::from([other.group4()[3], other.group1()[3]])
+                    +                    self.group0() * Simd32x2::from(                     other.group0()[0]) * Simd32x2::from([0.0, 1.0]),
+
+                g1: Simd32x4::from(self.group0()[0]) * other.group1()
+                    + Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[0], other.group3()[2], other.group3()[1], other.group2()[0]]) * Simd32x4::from([1.0, 1.0, -1.0, -1.0])
+                    + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group3()[2], other.group0()[0], other.group3()[0], other.group2()[1]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0])
+                    + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group3()[1], other.group3()[0], other.group0()[0], other.group2()[2]]) * Simd32x4::from([1.0, -1.0, 1.0, -1.0])
+                    + Simd32x4::from(self.group1()[3]) * Simd32x4::from(                                                           other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0])
+                    + Simd32x4::from(self.group2()[0]) * Simd32x4::from(                                                           other.group1()[0]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0])
+                    + Simd32x4::from(self.group2()[1]) * Simd32x4::from(                                                           other.group1()[1]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0])
+                    + Simd32x4::from(self.group2()[2]) * Simd32x4::from(                                                           other.group1()[2]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0])
+                    + Simd32x4::from(self.group3()[0]) * Simd32x4::from([other.group4()[3], other.group1()[2], other.group1()[1], other.group4()[0]]) * Simd32x4::from([1.0, 1.0, -1.0, -1.0])
+                    + Simd32x4::from(self.group3()[1]) * Simd32x4::from([other.group1()[2], other.group4()[3], other.group1()[0], other.group4()[1]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0])
+                    + Simd32x4::from(self.group3()[2]) * Simd32x4::from([other.group1()[1], other.group1()[0], other.group4()[3], other.group4()[2]]) * Simd32x4::from([1.0, -1.0, 1.0, -1.0])
+                    + Simd32x4::from(self.group4()[0]) * Simd32x4::from(                                                           other.group3()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0])
+                    + Simd32x4::from(self.group4()[1]) * Simd32x4::from(                                                           other.group3()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0])
+                    + Simd32x4::from(self.group4()[2]) * Simd32x4::from(                                                           other.group3()[2]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0])
+                    + Simd32x4::from(self.group4()[3]) * Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group0()[1]])
+                    + Simd32x4::from([self.group0()[0], self.group0()[0], self.group0()[0], self.group0()[1]]) * swizzle!(other.group4(), 0, 0, 0, 3) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+
+                g2: Simd32x3::from(self.group0()[0]) * other.group2() + Simd32x3::from(self.group0()[1]) * other.group3()
+                    + Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group1()[3], other.group4()[2], other.group4()[1]]) * Simd32x3::from([-1.0, -1.0, 1.0])
+                    + Simd32x3::from(self.group1()[1]) * Simd32x3::from([other.group4()[2], other.group1()[3], other.group4()[0]]) * Simd32x3::from([1.0, -1.0, -1.0])
+                    + Simd32x3::from(self.group1()[2]) * Simd32x3::from([other.group4()[1], other.group4()[0], other.group1()[3]]) * Simd32x3::from([-1.0, 1.0, -1.0])
+                    + Simd32x3::from(self.group1()[3]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])
+                    + Simd32x3::from(self.group2()[0]) * Simd32x3::from([other.group0()[0], other.group3()[2], other.group3()[1]]) * Simd32x3::from([1.0, 1.0, -1.0])
+                    + Simd32x3::from(self.group2()[1]) * Simd32x3::from([other.group3()[2], other.group0()[0], other.group3()[0]]) * Simd32x3::from([-1.0, 1.0, 1.0])
+                    + Simd32x3::from(self.group2()[2]) * Simd32x3::from([other.group3()[1], other.group3()[0], other.group0()[0]]) * Simd32x3::from([1.0, -1.0, 1.0])
+                    + Simd32x3::from(self.group3()[0]) * Simd32x3::from([other.group0()[1], other.group2()[2], other.group2()[1]]) * Simd32x3::from([1.0, 1.0, -1.0])
+                    + Simd32x3::from(self.group3()[1]) * Simd32x3::from([other.group2()[2], other.group0()[1], other.group2()[0]]) * Simd32x3::from([-1.0, 1.0, 1.0])
+                    + Simd32x3::from(self.group3()[2]) * Simd32x3::from([other.group2()[1], other.group2()[0], other.group0()[1]]) * Simd32x3::from([1.0, -1.0, 1.0])
+                    + Simd32x3::from(self.group4()[0]) * Simd32x3::from([other.group4()[3], other.group1()[2], other.group1()[1]]) * Simd32x3::from([1.0, 1.0, -1.0])
+                    + Simd32x3::from(self.group4()[1]) * Simd32x3::from([other.group1()[2], other.group4()[3], other.group1()[0]]) * Simd32x3::from([-1.0, 1.0, 1.0])
+                    + Simd32x3::from(self.group4()[2]) * Simd32x3::from([other.group1()[1], other.group1()[0], other.group4()[3]]) * Simd32x3::from([1.0, -1.0, 1.0])
+                    - Simd32x3::from(self.group4()[3]) * Simd32x3::from([other.group4()[0], other.group4()[1], other.group4()[2]]),
+
+                g3: Simd32x3::from(self.group0()[0]) * other.group3()
+                    + Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group4()[3], other.group1()[2], other.group1()[1]]) * Simd32x3::from([-1.0, -1.0, 1.0])
+                    + Simd32x3::from(self.group1()[1]) * Simd32x3::from([other.group1()[2], other.group4()[3], other.group1()[0]]) * Simd32x3::from([1.0, -1.0, -1.0])
+                    + Simd32x3::from(self.group1()[2]) * Simd32x3::from([other.group1()[1], other.group1()[0], other.group4()[3]]) * Simd32x3::from([-1.0, 1.0, -1.0])
+                    + Simd32x3::from(self.group3()[0]) * Simd32x3::from([other.group0()[0], other.group3()[2], other.group3()[1]]) * Simd32x3::from([1.0, 1.0, -1.0])
+                    + Simd32x3::from(self.group3()[1]) * Simd32x3::from([other.group3()[2], other.group0()[0], other.group3()[0]]) * Simd32x3::from([-1.0, 1.0, 1.0])
+                    + Simd32x3::from(self.group3()[2]) * Simd32x3::from([other.group3()[1], other.group3()[0], other.group0()[0]]) * Simd32x3::from([1.0, -1.0, 1.0])
+                    - Simd32x3::from(self.group4()[3]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+
+                g4: Simd32x4::from(self.group0()[0]) * other.group4()
+                    + Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[1], other.group2()[2], other.group2()[1], other.group3()[0]]) * Simd32x4::from([1.0, 1.0, -1.0, -1.0])
+                    + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group2()[2], other.group0()[1], other.group2()[0], other.group3()[1]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0])
+                    + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group2()[1], other.group2()[0], other.group0()[1], other.group3()[2]]) * Simd32x4::from([1.0, -1.0, 1.0, -1.0])
+                    + Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group3()[0]]) * Simd32x4::from([1.0, 1.0, 1.0, 0.0])
+                    + Simd32x4::from(self.group2()[0]) * Simd32x4::from([other.group4()[3], other.group1()[2], other.group1()[1], other.group4()[3]]) * Simd32x4::from([-1.0, -1.0, 1.0, 0.0])
+                    + Simd32x4::from(self.group2()[1]) * Simd32x4::from([other.group1()[2], other.group4()[3], other.group1()[0], other.group1()[2]]) * Simd32x4::from([1.0, -1.0, -1.0, 0.0])
+                    + Simd32x4::from(self.group2()[2]) * Simd32x4::from([other.group1()[1], other.group1()[0], other.group4()[3], other.group1()[1]]) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0])
+                    + Simd32x4::from(self.group3()[0]) * Simd32x4::from([other.group1()[3], other.group4()[2], other.group4()[1], other.group1()[0]]) * Simd32x4::from([1.0, 1.0, -1.0, -1.0])
+                    + Simd32x4::from(self.group3()[1]) * Simd32x4::from([other.group4()[2], other.group1()[3], other.group4()[0], other.group1()[1]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0])
+                    + Simd32x4::from(self.group3()[2]) * Simd32x4::from([other.group4()[1], other.group4()[0], other.group1()[3], other.group1()[2]]) * Simd32x4::from([1.0, -1.0, 1.0, -1.0])
+                    + Simd32x4::from(self.group4()[0]) * Simd32x4::from([other.group0()[0], other.group3()[2], other.group3()[1], other.group0()[0]]) * Simd32x4::from([1.0, 1.0, -1.0, 0.0])
+                    + Simd32x4::from(self.group4()[1]) * Simd32x4::from([other.group3()[2], other.group0()[0], other.group3()[0], other.group3()[2]]) * Simd32x4::from([-1.0, 1.0, 1.0, 0.0])
+                    + Simd32x4::from(self.group4()[2]) * Simd32x4::from([other.group3()[1], other.group3()[0], other.group0()[0], other.group3()[1]]) * Simd32x4::from([1.0, -1.0, 1.0, 0.0])
+                    + Simd32x4::from(self.group4()[3]) * Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group0()[0]])
+                    + Simd32x4::from([self.group0()[1], self.group0()[1], self.group0()[1], self.group0()[0]]) * swizzle!(other.group1(), 0, 1, 2, 0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0])
+            }
+        }
+    }
+}
+         */
     }
 
     pub fn derive_unitize<'a>(

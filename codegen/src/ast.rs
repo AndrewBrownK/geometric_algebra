@@ -44,8 +44,8 @@ pub enum ExpressionContent<'a> {
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct Expression<'a> {
     pub size: usize,
-    pub content: ExpressionContent<'a>,
     pub data_type_hint: Option<DataType<'a>>,
+    pub content: ExpressionContent<'a>,
 }
 
 #[derive(PartialEq, Eq, Clone, Debug)]
@@ -64,6 +64,12 @@ impl<'a> Parameter<'a> {
             unreachable!("No multi_vector_class for {n:?} with datatype {d:?}")
         }
     }
+
+    // pub fn variable(&self) -> Expression {
+    //     Expression {
+    //         size:
+    //     }
+    // }
 }
 
 #[derive(PartialEq, Eq, Clone, Debug)]
