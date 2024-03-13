@@ -1,16 +1,15 @@
 #![feature(try_blocks)]
 #![feature(iter_intersperse)]
 
-use std::collections::{BTreeMap, BTreeSet, HashMap};
-use std::io::{Read, Write};
+use std::collections::{BTreeMap, BTreeSet};
+use std::io::{Read};
 use std::path::PathBuf;
 
 use naga;
-use naga::back::wgsl::WriterFlags;
 use naga::front::glsl::Error;
 use naga::ShaderStage;
 use naga::valid::{Capabilities, ValidationFlags};
-use naga_oil::prune::PartReq;
+
 use algebra::basis_element::BasisElement;
 use algebra::rigid::RigidGeometricAlgebra;
 

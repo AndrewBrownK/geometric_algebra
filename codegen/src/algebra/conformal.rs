@@ -1,15 +1,14 @@
+use crate::algebra::basis_element::{BasisElement, BasisElementIndex};
+use crate::algebra::dialect::Dialect;
+use crate::algebra::GeometricAlgebraTrait;
 
 #[cfg(test)]
 mod tests;
 
-use crate::algebra::basis_element::{BasisElement, BasisElementIndex};
-use crate::algebra::dialect::Dialect;
-use crate::algebra::GeometricAlgebraTrait;
-use crate::algebra::rigid::RigidGeometricAlgebra;
-
 pub struct ConformalGeometricAlgebra {
-    // origin_retaining_generator_squares: Vec<isize>,
-    // infinity_retaining_generator_squares: Vec<isize>,
+    origin_retaining_generator_squares: Vec<isize>,
+    infinity_retaining_generator_squares: Vec<isize>,
+    all_retaining_generator_squares: Vec<isize>,
     surface_generator_squares: Vec<isize>,
     origin: usize,
     infinity: usize,
@@ -29,6 +28,8 @@ impl ConformalGeometricAlgebra {
         infinity_retaining_generator_squares.push(0);
         infinity_retaining_generator_squares.push(1);
 
+        let mut all_retaining_generator_squares = vec![1; dimensions + 2];
+
         let mut surface_generator_squares = vec![1; dimensions];
         surface_generator_squares.push(0);
         surface_generator_squares.push(0);
@@ -36,7 +37,9 @@ impl ConformalGeometricAlgebra {
         let origin = surface_generator_squares.len() - 2;
         let infinity = surface_generator_squares.len() - 1;
         ConformalGeometricAlgebra {
-            // origin_retaining_generator_squares, infinity_retaining_generator_squares,
+            origin_retaining_generator_squares,
+            infinity_retaining_generator_squares,
+            all_retaining_generator_squares,
             surface_generator_squares,
             origin, infinity, name, dialect,
         }
@@ -162,9 +165,6 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
         let anti_scalar = self.anti_scalar_element().index;
         let non_projective = anti_scalar - projective;
 
-        // TODO remove if unused
-        let origin_basis = BasisElement::from_index(origin);
-        let infinity_basis = BasisElement::from_index(infinity);
         let projective_basis = BasisElement::from_index(projective);
 
 
@@ -180,7 +180,6 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
             b.index = b.index & non_projective;
             let mut result = a.primitive_product(&b, &self.surface_generator_squares);
             assert_eq!(result.index & projective, 0);
-            // TODO not sure if this coefficient is accurate in higher dimensions. Or heck... this dimension...
             result.coefficient = a.coefficient * b.coefficient * result.coefficient;
             return vec![result]
         }
@@ -197,8 +196,10 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
             // There will be two components to the result
             // So we should already have one of the results
             assert_eq!(result.len(), 1);
-            let second_product_component = result[0].primitive_product(&projective_basis, &self.surface_generator_squares);
-            // TODO coefficient?
+            let mut second_product_component = result[0].primitive_product(&projective_basis, &self.all_retaining_generator_squares);
+            if a_is_along_infinity && b_is_along_origin {
+                second_product_component.coefficient = second_product_component.coefficient * -1;
+            }
             result.push(second_product_component);
             return result
         }
@@ -216,11 +217,12 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
                 b.index = b.index & non_projective;
             }
             let mut result = a.primitive_product(&b, &self.surface_generator_squares);
-            // todo coefficient?
+            if a_is_along_infinity && b_is_projective || a_is_projective && b_is_along_origin {
+                result.coefficient = result.coefficient * -1;
+            }
             return vec![result]
         }
 
-        // TODO otherwise we can do the trivial product (I think)
         return result
     }
 }

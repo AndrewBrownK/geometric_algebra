@@ -163,9 +163,9 @@ impl Product {
                         return vec![term.clone()];
                     }
                     let mut terms = vec![];
-                    for p in term.product {
+                    for p in term.product.iter() {
                         terms.push(ProductTerm {
-                            product: vec![p],
+                            product: vec![p.clone()],
                             factor_a: term.factor_a.clone(),
                             factor_b: term.factor_b.clone(),
                         })

@@ -123,56 +123,10 @@ impl BasisElement {
 
 impl std::fmt::Display for BasisElement {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        let mut name = format!("e{}", self.component_bases().map(|index| format!("{:X}", index + 1)).collect::<String>());
-        // TODO it would be nice if you could have something more generalized than these hard coded conditions
-        // if name.as_str() == "e13" {
-        //     name = "e31".to_string()
-        // }
-        // if name.as_str() == "e14" {
-        //     name = "e41".to_string()
-        // }
-        // if name.as_str() == "e24" {
-        //     name = "e42".to_string()
-        // }
-        // if name.as_str() == "e34" {
-        //     name = "e43".to_string()
-        // }
-        // if name.as_str() == "e134" {
-        //     name = "e431".to_string()
-        // }
-        // if name.as_str() == "e123" {
-        //     name = "e321".to_string()
-        // }
-        // if name.as_str() == "e234" {
-        //     name = "e423".to_string()
-        // }
-        // if name.as_str() == "e124" {
-        //     name = "e412".to_string()
-        // }
-        // if name.as_str() == "e135" {
-        //     name = "e315".to_string()
-        // }
-        // if name.as_str() == "e345" {
-        //     name = "e435".to_string()
-        // }
-        // if name.as_str() == "e245" {
-        //     name = "e425".to_string()
-        // }
-        // if name.as_str() == "e145" {
-        //     name = "e415".to_string()
-        // }
-        // if name.as_str() == "e1235" {
-        //     name = "e3215".to_string()
-        // }
-        // if name.as_str() == "e1245" {
-        //     name = "e4125".to_string()
-        // }
-        // if name.as_str() == "e1345" {
-        //     name = "e4315".to_string()
-        // }
-        // if name.as_str() == "e2345" {
-        //     name = "e4235".to_string()
-        // }
+        let name = format!("e{}", self.component_bases().map(|index| format!("{:X}", index + 1)).collect::<String>());
+        if self.coefficient == -1 {
+            formatter.write_str("-")?;
+        }
         if self.coefficient == 0 {
             formatter.write_str("0")?;
         } else if self.index == 0 {
