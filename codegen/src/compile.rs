@@ -514,34 +514,48 @@ impl MultiVectorClass {
             }
 
             for ((a_group, b_group), [mut terms_0, mut terms_1, mut terms_2, mut terms_3]) in transposed {
-                while !terms_0.is_empty() || !terms_1.is_empty() || !terms_2.is_empty() || !terms_3.is_empty() {
+                'inner: while !terms_0.is_empty() || !terms_1.is_empty() || !terms_2.is_empty() || !terms_3.is_empty() {
                     let mut a_indices = vec![];
                     let mut b_indices = vec![];
                     let mut coefficients = vec![];
 
-                    if result_group_size > 0 {
-                        let (c, a, b) = terms_0.pop().unwrap_or_else(|| (0, 0, 0));
-                        coefficients.push(c);
-                        a_indices.push((a_group, a));
-                        b_indices.push((b_group, b));
+                    let (c, a, b) = terms_0.pop().unwrap_or_else(|| (0, 0, 0));
+                    coefficients.push(c);
+                    a_indices.push((a_group, a));
+                    b_indices.push((b_group, b));
+
+                    if !terms_1.is_empty() {
+                        assert!(result_group_size > 1);
                     }
+                    if !terms_2.is_empty() {
+                        assert!(result_group_size > 2);
+                    }
+                    if !terms_3.is_empty() {
+                        assert!(result_group_size > 3);
+                    }
+
+                    let (c, a, b) = terms_1.pop().unwrap_or_else(|| (0, 0, 0));
                     if result_group_size > 1 {
-                        let (c, a, b) = terms_1.pop().unwrap_or_else(|| (0, 0, 0));
                         coefficients.push(c);
                         a_indices.push((a_group, a));
                         b_indices.push((b_group, b));
                     }
+
+                    let (c, a, b) = terms_2.pop().unwrap_or_else(|| (0, 0, 0));
                     if result_group_size > 2 {
-                        let (c, a, b) = terms_1.pop().unwrap_or_else(|| (0, 0, 0));
                         coefficients.push(c);
                         a_indices.push((a_group, a));
                         b_indices.push((b_group, b));
                     }
+
+                    let (c, a, b) = terms_3.pop().unwrap_or_else(|| (0, 0, 0));
                     if result_group_size > 3 {
-                        let (c, a, b) = terms_1.pop().unwrap_or_else(|| (0, 0, 0));
                         coefficients.push(c);
                         a_indices.push((a_group, a));
                         b_indices.push((b_group, b));
+                    }
+                    if coefficients.iter().all(|it| *it == 0) {
+                        continue 'inner
                     }
 
                     let gather_a = Expression {
@@ -588,6 +602,7 @@ impl MultiVectorClass {
                         )
                     };
 
+                    // TODO if all coefficients are 1, then skip this
                     let mul_a_b_c = Expression {
                         size: result_group_size,
                         data_type_hint: None,
@@ -620,7 +635,8 @@ impl MultiVectorClass {
             }
 
             // Push the expression for this result group
-            body.push((DataType::SimdVector(result_group_size), *simplify_and_legalize(Box::new(expression))));
+            let simplified = simplify_and_legalize(Box::new(expression));
+            body.push((DataType::SimdVector(result_group_size), *simplified));
 
             // and move on to the next result_group
             base_index += result_group_size;

@@ -6,8 +6,6 @@ use crate::algebra::GeometricAlgebraTrait;
 mod tests;
 
 pub struct ConformalGeometricAlgebra {
-    origin_retaining_generator_squares: Vec<isize>,
-    infinity_retaining_generator_squares: Vec<isize>,
     all_retaining_generator_squares: Vec<isize>,
     surface_generator_squares: Vec<isize>,
     origin: usize,
@@ -18,18 +16,7 @@ pub struct ConformalGeometricAlgebra {
 
 impl ConformalGeometricAlgebra {
     pub fn new(name: &'static str, dimensions: usize, dialect: Dialect) -> Self {
-        // TODO maybe one of these retaining squares should be -1 instead of 1
-
-        let mut origin_retaining_generator_squares = vec![1; dimensions];
-        origin_retaining_generator_squares.push(1);
-        origin_retaining_generator_squares.push(0);
-
-        let mut infinity_retaining_generator_squares = vec![1; dimensions];
-        infinity_retaining_generator_squares.push(0);
-        infinity_retaining_generator_squares.push(1);
-
         let mut all_retaining_generator_squares = vec![1; dimensions + 2];
-
         let mut surface_generator_squares = vec![1; dimensions];
         surface_generator_squares.push(0);
         surface_generator_squares.push(0);
@@ -37,8 +24,6 @@ impl ConformalGeometricAlgebra {
         let origin = surface_generator_squares.len() - 2;
         let infinity = surface_generator_squares.len() - 1;
         ConformalGeometricAlgebra {
-            origin_retaining_generator_squares,
-            infinity_retaining_generator_squares,
             all_retaining_generator_squares,
             surface_generator_squares,
             origin, infinity, name, dialect,
@@ -196,7 +181,9 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
             // There will be two components to the result
             // So we should already have one of the results
             assert_eq!(result.len(), 1);
+            // Note the use of different generator squares here
             let mut second_product_component = result[0].primitive_product(&projective_basis, &self.all_retaining_generator_squares);
+            // TODO not yet sure if this coefficient logic correctly generalizes to higher dimensions
             if a_is_along_infinity && b_is_along_origin {
                 second_product_component.coefficient = second_product_component.coefficient * -1;
             }
@@ -217,6 +204,7 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
                 b.index = b.index & non_projective;
             }
             let mut result = a.primitive_product(&b, &self.surface_generator_squares);
+            // TODO not yet sure if this coefficient logic correctly generalizes to higher dimensions
             if a_is_along_infinity && b_is_projective || a_is_projective && b_is_along_origin {
                 result.coefficient = result.coefficient * -1;
             }

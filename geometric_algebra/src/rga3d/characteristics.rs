@@ -38,7 +38,7 @@ impl AntiGrade for AntiScalar {
     type Output = isize;
 
     fn anti_grade(self) -> isize {
-        4
+        0
     }
 }
 
@@ -46,7 +46,7 @@ impl AntiGrade for Horizon {
     type Output = isize;
 
     fn anti_grade(self) -> isize {
-        3
+        1
     }
 }
 
@@ -78,7 +78,7 @@ impl AntiGrade for Origin {
     type Output = isize;
 
     fn anti_grade(self) -> isize {
-        1
+        3
     }
 }
 
@@ -86,7 +86,7 @@ impl AntiGrade for Plane {
     type Output = isize;
 
     fn anti_grade(self) -> isize {
-        3
+        1
     }
 }
 
@@ -94,7 +94,7 @@ impl AntiGrade for PlaneAtOrigin {
     type Output = isize;
 
     fn anti_grade(self) -> isize {
-        3
+        1
     }
 }
 
@@ -102,7 +102,7 @@ impl AntiGrade for Point {
     type Output = isize;
 
     fn anti_grade(self) -> isize {
-        1
+        3
     }
 }
 
@@ -110,7 +110,7 @@ impl AntiGrade for PointAtInfinity {
     type Output = isize;
 
     fn anti_grade(self) -> isize {
-        1
+        3
     }
 }
 
@@ -118,7 +118,7 @@ impl AntiGrade for Scalar {
     type Output = isize;
 
     fn anti_grade(self) -> isize {
-        0
+        4
     }
 }
 

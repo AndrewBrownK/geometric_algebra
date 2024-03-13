@@ -6,30 +6,40 @@ use crate::algebra::dialect::Dialect;
 use crate::algebra::MultiVectorClassRegistry;
 use crate::emit::Emitter;
 
+#[cfg(test)]
+mod test {
+    use crate::build_scripts::rga3d::script;
+
+    #[test]
+    fn test_script() {
+        script().unwrap()
+    }
+}
+
 pub fn script() -> std::io::Result<()> {
 
     let mv_iter = [
-        "Scalar:1;",
-        "AntiScalar:e1234;",
-        "Magnitude:1,e1234;",
+        "Scalar:1",
+        "AntiScalar:e1234",
+        "Magnitude:1,e1234",
 
-        "Point:e1,e2,e3,e4;",
-        "Point/Origin:e4;",
-        "Point/PointAtInfinity:e1,e2,e3;",
+        "Point:e1,e2,e3,e4",
+        "Point/Origin:e4",
+        "Point/PointAtInfinity:e1,e2,e3",
 
-        "Line:e41,e42,e43|e23,e31,e12;",
-        "Line/LineAtOrigin:e41,e42,e43;",
-        "Line/LineAtInfinity:e23,e31,e12;",
+        "Line:e41,e42,e43|e23,e31,e12",
+        "Line/LineAtOrigin:e41,e42,e43",
+        "Line/LineAtInfinity:e23,e31,e12",
 
-        "Plane:e423,e431,e412,e321;",
-        "Plane/PlaneAtOrigin:e423,e431,e412;",
-        "Plane/Horizon:e321;",
+        "Plane:e423,e431,e412,e321",
+        "Plane/PlaneAtOrigin:e423,e431,e412",
+        "Plane/Horizon:e321",
 
-        "Motor:e41,e42,e43,e1234|e23,e31,e12;",
-        "Motor/Rotor:e41,e42,e43,e1234;",
-        "Motor/Translator:e23,e31,e12,e1234;",
+        "Motor:e41,e42,e43,e1234|e23,e31,e12",
+        "Motor/Rotor:e41,e42,e43,e1234",
+        "Motor/Translator:e23,e31,e12,e1234",
 
-        "Flector:e1,e2,e3,e4|e423,e431,e412,e321;",
+        "Flector:e1,e2,e3,e4|e423,e431,e412,e321",
 
         "MultiVector:\
             1,e1234|\
