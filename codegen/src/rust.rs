@@ -107,14 +107,20 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
             if indices.len() > 1 {
                 collector.write_all(b"[")?;
             }
-            for (i, GatherData { group, element, group_size }) in indices.iter().enumerate() {
+            for (i, gather_data) in indices.iter().enumerate() {
                 if i > 0 {
                     collector.write_all(b", ")?;
                 }
-                emit_expression(collector, inner_expression)?;
-                collector.write_fmt(format_args!(".group{}()", group))?;
-                if *group_size > 1 {
-                    collector.write_fmt(format_args!("[{}]", *element))?;
+                match gather_data {
+                    GatherData::Usual(gd) => {
+                        emit_expression(collector, inner_expression)?;
+                        collector.write_fmt(format_args!(".group{}()", gd.group))?;
+                        if gd.group_size > 1 {
+                            collector.write_fmt(format_args!("[{}]", gd.element))?;
+                        }
+                    }
+                    GatherData::RawZero => collector.write_all(b"0.0")?,
+                    GatherData::RawOne => collector.write_all(b"1.0")?,
                 }
             }
             if indices.len() > 1 {

@@ -2,7 +2,7 @@ use crate::{
     ast::{AstNode, DataType, Expression, ExpressionContent},
     emit::{camel_to_snake_case, emit_indentation},
 };
-use crate::ast::GatherData;
+use crate::ast::{GatherData, UsualGatherData};
 
 const COMPONENT: &[&str] = &["x", "y", "z", "w"];
 
@@ -102,14 +102,20 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
                 emit_data_type(collector, &DataType::SimdVector(expression.size))?;
                 collector.write_all(b"(")?;
             }
-            for (i, GatherData { group, element, group_size }) in indices.iter().enumerate() {
+            for (i, gather_data) in indices.iter().enumerate() {
                 if i > 0 {
                     collector.write_all(b", ")?;
                 }
-                emit_expression(collector, inner_expression)?;
-                collector.write_fmt(format_args!(".g{}", group))?;
-                if *group_size > 1 {
-                    collector.write_fmt(format_args!(".{}", COMPONENT[*element]))?;
+                match gather_data {
+                    GatherData::Usual(gd)=> {
+                        emit_expression(collector, inner_expression)?;
+                        collector.write_fmt(format_args!(".g{}", gd.group))?;
+                        if gd.group_size > 1 {
+                            collector.write_fmt(format_args!(".{}", COMPONENT[gd.element]))?;
+                        }
+                    }
+                    GatherData::RawZero => collector.write_all(b"0.0")?,
+                    GatherData::RawOne => collector.write_all(b"1.0")?,
                 }
             }
             if expression.size > 1 {
