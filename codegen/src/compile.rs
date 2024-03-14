@@ -5,6 +5,7 @@ use crate::{
 };
 use crate::algebra::basis_element::{BasisElement, BasisElementIndex};
 use crate::algebra::GeometricAlgebraTrait;
+use crate::ast::GatherData;
 
 #[macro_export]
 macro_rules! result_of_trait {
@@ -19,39 +20,48 @@ macro_rules! result_of_trait {
 pub fn simplify_and_legalize(expression: Box<Expression>) -> Box<Expression> {
     match expression.content {
         ExpressionContent::Gather(mut inner_expression, indices) => {
-            if let Some(first_index_pair) = indices.first() {
+            if let Some(first_group_data) = indices.first() {
                 inner_expression = simplify_and_legalize(inner_expression);
-                if indices.iter().all(|index_pair| index_pair == first_index_pair) {
-                    Box::new(Expression {
+
+                let all_gathered_items_are_same = indices.iter().all(|index_pair| index_pair == first_group_data);
+                let gathering_in_same_group = indices.iter().all(|it| it.group == first_group_data.group);
+                let some_components_out_of_order = indices.iter().enumerate().any(|(i, it)| i != it.element);
+
+                if all_gathered_items_are_same {
+                    return Box::new(Expression {
                         size: expression.size,
-                        content: ExpressionContent::Gather(inner_expression, vec![*first_index_pair]),
-                        data_type_hint: None
-                    })
-                } else if inner_expression.size == expression.size && indices.iter().all(|(array_index, _)| *array_index == first_index_pair.0) {
-                    inner_expression = Box::new(Expression {
-                        size: expression.size,
-                        content: ExpressionContent::Access(inner_expression, first_index_pair.0),
-                        data_type_hint: None
-                    });
-                    if indices.iter().enumerate().any(|(i, (_, component_index))| i != *component_index) {
-                        Box::new(Expression {
-                            size: expression.size,
-                            content: ExpressionContent::Swizzle(
-                                inner_expression,
-                                indices.iter().map(|(_, component_index)| *component_index).collect(),
-                            ),
-                            data_type_hint: None
-                        })
-                    } else {
-                        inner_expression
-                    }
-                } else {
-                    Box::new(Expression {
-                        size: expression.size,
-                        content: ExpressionContent::Gather(inner_expression, indices),
+                        content: ExpressionContent::Gather(inner_expression, vec![first_group_data.clone()]),
                         data_type_hint: None
                     })
                 }
+
+                if expression.size == indices.len() && gathering_in_same_group {
+                    // We are gathering_in_same_group
+                    let agreed_size = first_group_data.group_size;
+                    if agreed_size == indices.len() {
+                        inner_expression = Box::new(Expression {
+                            size: expression.size,
+                            content: ExpressionContent::Access(inner_expression, first_group_data.group),
+                            data_type_hint: None
+                        });
+                        if some_components_out_of_order && agreed_size > 1 {
+                            return Box::new(Expression {
+                                size: expression.size,
+                                content: ExpressionContent::Swizzle(
+                                    inner_expression,
+                                    indices.iter().map(|it| it.element).collect(),
+                                ),
+                                data_type_hint: None
+                            })
+                        }
+                        return inner_expression
+                    }
+                }
+                return Box::new(Expression {
+                    size: expression.size,
+                    content: ExpressionContent::Gather(inner_expression, indices),
+                    data_type_hint: None
+                });
             } else {
                 Box::new(Expression {
                     size: expression.size,
@@ -266,13 +276,16 @@ impl MultiVectorClass {
                         .unwrap();
                     let (in_element, out_element) = &involution.terms[involution_element];
                     let index_in_a = a_flat_basis.iter().position(|a_element| a_element.index == in_element.index).unwrap();
+                    let coefficients = out_element.coefficient * result_element.coefficient * in_element.coefficient * a_flat_basis[index_in_a].coefficient;
+                    let (group, element) = parameter_a.multi_vector_class().index_in_group(index_in_a);
+                    let group_size = parameter_a.multi_vector_class().grouped_basis[group].len();
                     (
-                        out_element.coefficient * result_element.coefficient * in_element.coefficient * a_flat_basis[index_in_a].coefficient,
-                        parameter_a.multi_vector_class().index_in_group(index_in_a),
+                        coefficients,
+                        GatherData { group, element, group_size },
                     )
                 })
                 .unzip();
-            let a_group_index = a_indices[0].0;
+            let a_group_index = a_indices[0].group;
             let expression = Expression {
                 size,
                 content: ExpressionContent::Multiply(
@@ -340,12 +353,18 @@ impl MultiVectorClass {
                     let terms: Vec<_> = result_group
                         .iter()
                         .map(|result_element| {
+                            // min_group_size helps avoid a degenerate problem when coefficient is 0
+                            let min_group_size = parameter.multi_vector_class().grouped_basis.iter()
+                                .map(|it| it.len()).min().expect("MultiVectorClass must have at least one group");
+
                             if let Some(index_in_flat_basis) = flat_basis.iter().position(|element| element.index == result_element.index) {
                                 let index_pair = parameter.multi_vector_class().index_in_group(index_in_flat_basis);
                                 parameter_group_index = Some(index_pair.0);
-                                (result_element.coefficient * flat_basis[index_in_flat_basis].coefficient, index_pair)
+                                let group_size = parameter.multi_vector_class().grouped_basis[index_pair.0].len();
+                                let gd = GatherData { group: index_pair.0, element: index_pair.1, group_size };
+                                (result_element.coefficient * flat_basis[index_in_flat_basis].coefficient, gd)
                             } else {
-                                (0, (0, 0))
+                                (0, GatherData { group: 0, element: 0, group_size: min_group_size })
                             }
                         })
                         .collect();
@@ -364,7 +383,7 @@ impl MultiVectorClass {
                                         content: ExpressionContent::Variable(parameter.name),
                                         data_type_hint: None
                                     }),
-                                    terms.iter().map(|(_factor, index_pair)| index_pair).cloned().collect(),
+                                    terms.iter().map(|(factor, index_pair)| index_pair).cloned().collect(),
                                 ),
                                 data_type_hint: None
                             }),
@@ -494,35 +513,47 @@ impl MultiVectorClass {
                 data_type_hint: None
             };
 
-            // TODO it might be possible for gather to handle disparate groups, in which case it might
-            //  be possible to make the generated code more compact.
-            let mut transposed: BTreeMap<(usize, usize), [Vec<(isize, usize, usize)>; 4]> = BTreeMap::new();
-
+            let mut terms_by_a: BTreeMap<(usize, usize), [Vec<(isize, usize, usize)>; 4]> = BTreeMap::new();
             for index_in_group in 0..result_group_size {
                 let terms = terms_in_result.remove(&(base_index + index_in_group)).unwrap_or_default();
                 for (coefficient, a_flat_index, b_flat_index) in terms {
                     let (a_group, a_element) = parameter_a.multi_vector_class().index_in_group(a_flat_index);
                     let (b_group, b_element) = parameter_b.multi_vector_class().index_in_group(b_flat_index);
-                    transposed.entry((a_group, b_group))
-                        .and_modify(|it| it[index_in_group].push((coefficient, a_element, b_element)))
+                    terms_by_a.entry((a_group, a_element))
+                        .and_modify(|it| it[index_in_group].push((coefficient, b_group, b_element)))
                         .or_insert_with(|| {
                             let mut v = [vec![], vec![], vec![], vec![]];
-                            v[index_in_group].push((coefficient, a_element, b_element));
+                            v[index_in_group].push((coefficient, b_group, b_element));
                             v
                         });
                 }
             }
 
-            for ((a_group, b_group), [mut terms_0, mut terms_1, mut terms_2, mut terms_3]) in transposed {
+            for ((a_group, a), [mut terms_0, mut terms_1, mut terms_2, mut terms_3]) in terms_by_a {
+                let a_size = parameter_a.multi_vector_class().grouped_basis[a_group].len();
+                let a_gather_data = GatherData { group: a_group, element: a, group_size: a_size };
                 'inner: while !terms_0.is_empty() || !terms_1.is_empty() || !terms_2.is_empty() || !terms_3.is_empty() {
                     let mut a_indices = vec![];
                     let mut b_indices = vec![];
                     let mut coefficients = vec![];
 
-                    let (c, a, b) = terms_0.pop().unwrap_or_else(|| (0, 0, 0));
+                    // Sort by group_b
+                    terms_0.sort_by_key(|it| it.1);
+                    terms_1.sort_by_key(|it| it.1);
+                    terms_2.sort_by_key(|it| it.1);
+                    terms_3.sort_by_key(|it| it.1);
+
+                    let mut non_zero_b = None;
+
+                    let (c, b_group, b) = terms_0.pop().unwrap_or_else(|| (0, 0, 0));
+                    let b_size = parameter_b.multi_vector_class().grouped_basis[b_group].len();
                     coefficients.push(c);
-                    a_indices.push((a_group, a));
-                    b_indices.push((b_group, b));
+                    a_indices.push(a_gather_data.clone());
+                    let b_gather_data = GatherData { group: b_group, element: b, group_size: b_size };
+                    if non_zero_b.is_none() && c != 0 {
+                        non_zero_b = Some(b_gather_data.clone());
+                    }
+                    b_indices.push(b_gather_data);
 
                     if !terms_1.is_empty() {
                         assert!(result_group_size > 1);
@@ -534,28 +565,52 @@ impl MultiVectorClass {
                         assert!(result_group_size > 3);
                     }
 
-                    let (c, a, b) = terms_1.pop().unwrap_or_else(|| (0, 0, 0));
+                    let (c, b_group, b) = terms_1.pop().unwrap_or_else(|| (0, 0, 0));
                     if result_group_size > 1 {
+                        let b_size = parameter_b.multi_vector_class().grouped_basis[b_group].len();
                         coefficients.push(c);
-                        a_indices.push((a_group, a));
-                        b_indices.push((b_group, b));
+                        a_indices.push(a_gather_data.clone());
+                        let b_gather_data = GatherData { group: b_group, element: b, group_size: b_size };
+                        if non_zero_b.is_none() && c != 0 {
+                            non_zero_b = Some(b_gather_data.clone());
+                        }
+                        b_indices.push(b_gather_data);
                     }
 
-                    let (c, a, b) = terms_2.pop().unwrap_or_else(|| (0, 0, 0));
+                    let (c, b_group, b) = terms_2.pop().unwrap_or_else(|| (0, 0, 0));
                     if result_group_size > 2 {
+                        let b_size = parameter_b.multi_vector_class().grouped_basis[b_group].len();
                         coefficients.push(c);
-                        a_indices.push((a_group, a));
-                        b_indices.push((b_group, b));
+                        a_indices.push(a_gather_data.clone());
+                        let b_gather_data = GatherData { group: b_group, element: b, group_size: b_size };
+                        if non_zero_b.is_none() && c != 0 {
+                            non_zero_b = Some(b_gather_data.clone());
+                        }
+                        b_indices.push(b_gather_data);
                     }
 
-                    let (c, a, b) = terms_3.pop().unwrap_or_else(|| (0, 0, 0));
+                    let (c, b_group, b) = terms_3.pop().unwrap_or_else(|| (0, 0, 0));
                     if result_group_size > 3 {
+                        let b_size = parameter_b.multi_vector_class().grouped_basis[b_group].len();
                         coefficients.push(c);
-                        a_indices.push((a_group, a));
-                        b_indices.push((b_group, b));
+                        a_indices.push(a_gather_data.clone());
+                        let b_gather_data = GatherData { group: b_group, element: b, group_size: b_size };
+                        if non_zero_b.is_none() && c != 0 {
+                            non_zero_b = Some(b_gather_data.clone());
+                        }
+                        b_indices.push(b_gather_data);
                     }
+
                     if coefficients.iter().all(|it| *it == 0) {
                         continue 'inner
+                    }
+
+                    for (i, c) in coefficients.iter().enumerate() {
+                        if let Some(non_zero_b) = non_zero_b.clone() {
+                            if *c == 0 && i < b_indices.len() {
+                                b_indices[i] = non_zero_b;
+                            }
+                        }
                     }
 
                     let gather_a = Expression {
@@ -576,7 +631,7 @@ impl MultiVectorClass {
                         data_type_hint: None,
                         content: ExpressionContent::Gather(
                             Box::new(Expression {
-                                size: parameter_b.multi_vector_class().grouped_basis[b_group].len(),
+                                size: result_group_size,
                                 data_type_hint: None,
                                 content: ExpressionContent::Variable(parameter_b.name),
                             }),
@@ -584,16 +639,7 @@ impl MultiVectorClass {
                         )
                     };
 
-                    let const_coefficients = Expression {
-                        size: result_group_size,
-                        data_type_hint: None,
-                        content: ExpressionContent::Constant(
-                            DataType::SimdVector(result_group_size),
-                            coefficients
-                        )
-                    };
-
-                    let mul_a_b = Expression {
+                    let mut mul = Expression {
                         size: result_group_size,
                         data_type_hint: None,
                         content: ExpressionContent::Multiply(
@@ -602,24 +648,35 @@ impl MultiVectorClass {
                         )
                     };
 
-                    // TODO if all coefficients are 1, then skip this
-                    let mul_a_b_c = Expression {
-                        size: result_group_size,
-                        data_type_hint: None,
-                        content: ExpressionContent::Multiply(
-                            Box::new(mul_a_b),
-                            Box::new(const_coefficients),
-                        )
-                    };
+                    if !coefficients.iter().all(|it| *it == 1) {
+                        let const_coefficients = Expression {
+                            size: result_group_size,
+                            data_type_hint: None,
+                            content: ExpressionContent::Constant(
+                                DataType::SimdVector(result_group_size),
+                                coefficients
+                            )
+                        };
+                        mul = Expression {
+                            size: result_group_size,
+                            data_type_hint: None,
+                            content: ExpressionContent::Multiply(
+                                Box::new(mul),
+                                Box::new(const_coefficients),
+                            )
+                        };
+                    }
 
-                    expression = Expression {
+                    let sum = Expression {
                         size: result_group_size,
                         data_type_hint: None,
                         content: ExpressionContent::Add(
                             Box::new(expression),
-                            Box::new(mul_a_b_c),
+                            Box::new(mul),
                         )
                     };
+
+                    expression = sum;
                 }
             }
 
@@ -1534,13 +1591,14 @@ impl WedgeDot<MultiVector> for MultiVector {
                         } else {
                             0isize
                         };
-                    let a_index = parameter_a.multi_vector_class().index_in_group(index_in_a);
-                    (scalar, a_index)
+                    let (group, element) = parameter_a.multi_vector_class().index_in_group(index_in_a);
+                    let group_size = parameter_a.multi_vector_class().grouped_basis[group].len();
+                    (scalar, GatherData { group, element, group_size })
                 })
                 .unzip();
 
 
-            let a_group_index = a_indices[0].0;
+            let a_group_index = a_indices[0].group;
             let expression = Expression {
                 size,
                 data_type_hint: None,

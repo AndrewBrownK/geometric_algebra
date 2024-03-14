@@ -1332,7 +1332,8 @@ pub fn validate_glsl_and_wgsl(algebra_name: &str, file_path: PathBuf) {
 
 
     // Read the glsl
-    let mut glsl_file = std::fs::File::open(file_path.with_extension("glsl")).unwrap();
+    let glsl_file_name = file_path.with_extension("glsl");
+    let mut glsl_file = std::fs::File::open(glsl_file_name).unwrap();
     let mut glsl_contents = String::new();
     glsl_file.read_to_string(&mut glsl_contents).unwrap();
     // Append a dummy entry point
@@ -1343,10 +1344,13 @@ pub fn validate_glsl_and_wgsl(algebra_name: &str, file_path: PathBuf) {
         Ok(m) => m,
         Err(err) => {
             let mut line = "??".to_string();
+            let mut line_position = "??".to_string();
             if let Some(Error { meta, .. }) = err.first() {
-                line = meta.location(glsl_contents.as_str()).line_number.to_string();
+                let location = meta.location(glsl_contents.as_str());
+                line = location.line_number.to_string();
+                line_position = location.line_position.to_string();
             }
-            panic!("Error generating {algebra_name} glsl on line {line}: {err:?}")
+            panic!("Error generating {algebra_name} glsl on line {line} at line position {line_position}: {err:?}")
         }
     };
     if let Err(err) = validator.validate(&module) {
@@ -1356,7 +1360,8 @@ pub fn validate_glsl_and_wgsl(algebra_name: &str, file_path: PathBuf) {
 
 
     // Read the wgsl
-    let mut wgsl_file = std::fs::File::open(file_path.with_extension("wgsl")).unwrap();
+    let wgsl_file_name = file_path.with_extension("wgsl");
+    let mut wgsl_file = std::fs::File::open(wgsl_file_name).unwrap();
     let mut wgsl_contents = String::new();
     wgsl_file.read_to_string(&mut wgsl_contents).unwrap();
 
@@ -1365,10 +1370,12 @@ pub fn validate_glsl_and_wgsl(algebra_name: &str, file_path: PathBuf) {
         Ok(m) => m,
         Err(err) => {
             let mut line = "??".to_string();
+            let mut line_position = "??".to_string();
             if let Some(loc) = err.location(wgsl_contents.as_str()) {
                 line = loc.line_number.to_string();
+                line_position = loc.line_position.to_string();
             }
-            panic!("Error generating {algebra_name} wgsl on line {line}: {err:?}")
+            panic!("Error generating {algebra_name} wgsl on line {line} at line position {line_position}: {err:?}")
         }
     };
     if let Err(err) = validator.validate(&module) {

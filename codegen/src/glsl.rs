@@ -2,6 +2,7 @@ use crate::{
     ast::{AstNode, DataType, Expression, ExpressionContent},
     emit::{camel_to_snake_case, emit_indentation},
 };
+use crate::ast::GatherData;
 
 const COMPONENT: &[&str] = &["x", "y", "z", "w"];
 
@@ -101,14 +102,14 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
                 emit_data_type(collector, &DataType::SimdVector(expression.size))?;
                 collector.write_all(b"(")?;
             }
-            for (i, (array_index, component_index)) in indices.iter().enumerate() {
+            for (i, GatherData { group, element, group_size }) in indices.iter().enumerate() {
                 if i > 0 {
                     collector.write_all(b", ")?;
                 }
                 emit_expression(collector, inner_expression)?;
-                collector.write_fmt(format_args!(".g{}", array_index))?;
-                if inner_expression.size > 1 {
-                    collector.write_fmt(format_args!(".{}", COMPONENT[*component_index]))?;
+                collector.write_fmt(format_args!(".g{}", group))?;
+                if *group_size > 1 {
+                    collector.write_fmt(format_args!(".{}", COMPONENT[*element]))?;
                 }
             }
             if expression.size > 1 {

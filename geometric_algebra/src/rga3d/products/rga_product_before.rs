@@ -4,7 +4,7 @@ impl AntiWedgeDot<MultiVector> for MultiVector {
     fn anti_wedge_dot(self, other: MultiVector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0:   Simd32x2::from(self.group0()[1]) * other.group0() // confirmed
+                g0:   Simd32x2::from(self.group0()[1]) * other.group0()
                     + Simd32x2::from(self.group1()[0]) * Simd32x2::from(other.group4()[0]) * Simd32x2::from([1.0, 0.0])
                     + Simd32x2::from(self.group1()[1]) * Simd32x2::from(other.group4()[1]) * Simd32x2::from([1.0, 0.0])
                     + Simd32x2::from(self.group1()[2]) * Simd32x2::from(other.group4()[2]) * Simd32x2::from([1.0, 0.0])
@@ -84,3 +84,14 @@ impl AntiWedgeDot<MultiVector> for MultiVector {
         }
     }
 }
+
+/*
+
+
+Flector flector_anti_scalar_anti_wedge_dot(Flector self, AntiScalar other) {
+    return Flector(
+        self.g0 * vec4(other.g0),
+        self.g1 * vec4(other.g0)
+    );
+}
+ */

@@ -3,6 +3,7 @@ use crate::{
     ast::{AstNode, DataType, Expression, ExpressionContent, Parameter},
     emit::{camel_to_snake_case, emit_indentation},
 };
+use crate::ast::GatherData;
 
 fn emit_data_type<W: std::io::Write>(collector: &mut W, data_type: &DataType) -> std::io::Result<()> {
     match data_type {
@@ -106,14 +107,14 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
             if indices.len() > 1 {
                 collector.write_all(b"[")?;
             }
-            for (i, (array_index, component_index)) in indices.iter().enumerate() {
+            for (i, GatherData { group, element, group_size }) in indices.iter().enumerate() {
                 if i > 0 {
                     collector.write_all(b", ")?;
                 }
                 emit_expression(collector, inner_expression)?;
-                collector.write_fmt(format_args!(".group{}()", array_index))?;
-                if inner_expression.size > 1 {
-                    collector.write_fmt(format_args!("[{}]", *component_index))?;
+                collector.write_fmt(format_args!(".group{}()", group))?;
+                if *group_size > 1 {
+                    collector.write_fmt(format_args!("[{}]", *element))?;
                 }
             }
             if indices.len() > 1 {

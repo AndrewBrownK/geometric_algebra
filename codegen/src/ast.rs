@@ -19,6 +19,13 @@ impl<'a> DataType<'a> {
 
 
 #[derive(PartialEq, Eq, Clone, Debug)]
+pub struct GatherData {
+    pub group: usize,
+    pub element: usize,
+    pub group_size: usize,
+}
+
+#[derive(PartialEq, Eq, Clone, Debug)]
 pub enum ExpressionContent<'a> {
     None,
     Variable(&'static str),
@@ -28,7 +35,7 @@ pub enum ExpressionContent<'a> {
     Select(Box<Expression<'a>>, Box<Expression<'a>>, Box<Expression<'a>>),
     Access(Box<Expression<'a>>, usize),
     Swizzle(Box<Expression<'a>>, Vec<usize>),
-    Gather(Box<Expression<'a>>, Vec<(usize, usize)>),
+    Gather(Box<Expression<'a>>, Vec<GatherData>),
     Constant(DataType<'a>, Vec<isize>),
     SquareRoot(Box<Expression<'a>>),
     Add(Box<Expression<'a>>, Box<Expression<'a>>),
