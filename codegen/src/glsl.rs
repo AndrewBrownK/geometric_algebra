@@ -2,7 +2,7 @@ use crate::{
     ast::{AstNode, DataType, Expression, ExpressionContent},
     emit::{camel_to_snake_case, emit_indentation},
 };
-use crate::ast::{GatherData, UsualGatherData};
+use crate::ast::{GatherData};
 
 const COMPONENT: &[&str] = &["x", "y", "z", "w"];
 

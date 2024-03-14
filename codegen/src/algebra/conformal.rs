@@ -16,7 +16,7 @@ pub struct ConformalGeometricAlgebra {
 
 impl ConformalGeometricAlgebra {
     pub fn new(name: &'static str, dimensions: usize, dialect: Dialect) -> Self {
-        let mut all_retaining_generator_squares = vec![1; dimensions + 2];
+        let all_retaining_generator_squares = vec![1; dimensions + 2];
         let mut surface_generator_squares = vec![1; dimensions];
         surface_generator_squares.push(0);
         surface_generator_squares.push(0);
@@ -121,7 +121,7 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
 
         // Neither e4 nor e5 -> regular dual (acquires e4 and e5)
         assert_eq!(index & projective, 0);
-        let mut new_index = anti_scalar - index;
+        let new_index = anti_scalar - index;
         return BasisElement {
             // TODO coefficient
             coefficient: 1,
@@ -129,7 +129,7 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
         }
     }
 
-    fn left_complement(&self, a: &BasisElement) -> BasisElement {
+    fn left_complement(&self, _a: &BasisElement) -> BasisElement {
         todo!()
     }
 

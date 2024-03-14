@@ -431,7 +431,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     /// These items require some special insight per Geometric Algebra, for example if there are
     /// multiple/special projective dimensions with different meanings.
     pub fn fancy_norms(
-        &mut self, prefix: &'static str, projective_basis: BasisElement, registry: &'r MultiVectorClassRegistry
+        &mut self, _prefix: &'static str, _projective_basis: BasisElement, _registry: &'r MultiVectorClassRegistry
     ) {
         // TODO this is all kinds of fucked currently. Not sure how to generate norms generically
         //  for both RGA and CGA. I could get all of RGA and the flat objects of CGA by doing
@@ -1317,7 +1317,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     }
 }
 
-// TODO replace with direct codegen instead of naga output, but still validate with naga.
 pub fn validate_glsl_and_wgsl(algebra_name: &str, file_path: PathBuf) {
 
     // Prepare some of naga's clutter
@@ -1328,8 +1327,6 @@ pub fn validate_glsl_and_wgsl(algebra_name: &str, file_path: PathBuf) {
         stage: ShaderStage::Compute,
         defines: Default::default(),
     };
-
-
 
     // Read the glsl
     let glsl_file_name = file_path.with_extension("glsl");
@@ -1382,8 +1379,4 @@ pub fn validate_glsl_and_wgsl(algebra_name: &str, file_path: PathBuf) {
         panic!("Error generating {algebra_name}: {err:?}")
     };
     // wgsl success, woo hoo!
-
-
-
-    // TODO remove pruner dependency
 }

@@ -206,12 +206,6 @@ impl Product {
         let scalar_result_only: fn(usize, usize, usize) -> bool = |_, _, product_grade| {
             product_grade == 0
         };
-        let product_and_a_is_b: fn(usize, usize, usize) -> bool = |factor_a_grade, factor_b_grade, product_grade| {
-            product_grade + factor_a_grade == factor_b_grade
-        };
-        let product_and_b_is_a: fn(usize, usize, usize) -> bool = |factor_a_grade, factor_b_grade, product_grade| {
-            product_grade + factor_b_grade == factor_a_grade
-        };
 
         let dialect = algebra.dialect();
         let mut products = vec![];

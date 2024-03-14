@@ -1,4 +1,3 @@
-use std::io::Write;
 use crate::{
     ast::{AstNode, DataType, Expression, ExpressionContent},
     emit::{camel_to_snake_case, emit_indentation},

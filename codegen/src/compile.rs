@@ -438,7 +438,7 @@ impl MultiVectorClass {
                                         content: ExpressionContent::Variable(parameter.name),
                                         data_type_hint: None
                                     }),
-                                    terms.iter().map(|(factor, index_pair)| index_pair).cloned().collect(),
+                                    terms.iter().map(|(_, index_pair)| index_pair).cloned().collect(),
                                 ),
                                 data_type_hint: None
                             }),
@@ -532,7 +532,7 @@ impl MultiVectorClass {
 
         let result_flat_basis = result_class.flat_basis();
         let mut terms_in_result: BTreeMap<usize, Vec<(isize, usize, usize)>> = BTreeMap::new();
-        let mut stuff = product.terms.iter().flat_map(|it| {
+        let stuff = product.terms.iter().flat_map(|it| {
             it.product.iter().map(|p| {
                 (it.factor_a.clone(), it.factor_b.clone(), p.clone())
             })
@@ -742,7 +742,7 @@ impl MultiVectorClass {
                         };
                     }
 
-                    let mut mul = Expression {
+                    let mul = Expression {
                         size: result_group_size,
                         data_type_hint: None,
                         content: ExpressionContent::Multiply(
