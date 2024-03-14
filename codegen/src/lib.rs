@@ -33,6 +33,7 @@ mod old_product;
 
 pub mod build_scripts {
     pub mod rga3d;
+    pub mod cga3d;
 }
 
 pub struct AlgebraDescriptor {
@@ -44,7 +45,7 @@ pub struct AlgebraDescriptor {
 
 
 
-pub fn read_multi_vector_from_str(multi_vector_descriptor: &str, algebra: &RigidGeometricAlgebra) -> (MultiVectorClass, Option<String>) {
+pub fn read_multi_vector_from_str<GA: GeometricAlgebraTrait>(multi_vector_descriptor: &str, algebra: &GA) -> (MultiVectorClass, Option<String>) {
     let mut multi_vector_descriptor_iter = multi_vector_descriptor.split(':');
     let mut class_name = multi_vector_descriptor_iter.next().unwrap().to_owned();
     let mut superclass_name = None;

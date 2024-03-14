@@ -1,6 +1,6 @@
 
 use std::io::Write;
-use crate::algebra::rigid::RigidGeometricAlgebra;
+use crate::algebra::conformal::ConformalGeometricAlgebra;
 use crate::{CodeGenerator, read_multi_vector_from_str, validate_glsl_and_wgsl};
 use crate::algebra::dialect::Dialect;
 use crate::algebra::MultiVectorClassRegistry;
@@ -10,66 +10,77 @@ use crate::emit::Emitter;
 mod test {
     #[test]
     fn test_script() {
-        // crate::build_scripts::rga3d::script().unwrap()
+        // crate::build_scripts::cga3d::script().unwrap()
     }
 }
+
 
 //noinspection DuplicatedCode
 pub fn script() -> std::io::Result<()> {
 
     let mv_iter = [
         "Scalar:1",
-        "AntiScalar:e1234",
-        "Magnitude:1,e1234",
+        "AntiScalar:e12345",
+        "Magnitude:1,e12345",
 
-        "Point:e1,e2,e3,e4",
-        "Point/Origin:e4",
-        "Point/PointAtInfinity:e1,e2,e3",
 
-        "Line:e41,e42,e43|e23,e31,e12",
-        "Line/LineAtOrigin:e41,e42,e43",
-        "Line/LineAtInfinity:e23,e31,e12",
 
-        "Plane:e423,e431,e412,e321",
-        "Plane/PlaneAtOrigin:e423,e431,e412",
-        "Plane/Horizon:e321",
+        "Point:e15,e25,e35,e45",
+        "Point/Origin:e45",
+        "Point/PointAtInfinity:e15,e25,e35",
 
-        "Motor:e41,e42,e43,e1234|e23,e31,e12",
-        "Motor/Rotor:e41,e42,e43,e1234",
-        "Motor/Translator:e23,e31,e12,e1234",
+        "Line:e415,e425,e435|e235,e315,e125",
+        "Line/LineAtOrigin:e415,e425,e435",
+        "Line/LineAtInfinity:e235,e315,e125",
 
-        "Flector:e1,e2,e3,e4|e423,e431,e412,e321",
+        "Plane:e4235,e4315,e4125,e3215",
+        "Plane/PlaneAtOrigin:e4235,e4315,e4125",
+        "Plane/Horizon:e3215",
+
+
+
+        // TODO not yet sure on what kinds of "superclassing" I want with round objects
+        //  it partly depends on how the sandwich operators (are supposed to) turn out
+        //  Maybe the flat objects should be subclassed to these round objects,
+        //  or maybe there are yet other round variants of objects subclassed here
+        "Radial:e1,e2,e3|e4,e5",
+        "Dipole:e41,e42,e43|e23,e31,e12|e15,e25,e35,e45",
+        "Circle:e423,e431,e412,e321|e415,e425,e435|e235,e315,e125",
+        "Sphere:e4235,e4315,e4125|e1234,e3215",
+
+
+        // TODO figure out these objects
+        // "Motor:e41,e42,e43,e1234|e23,e31,e12",
+        // "Motor/Rotor:e41,e42,e43,e1234",
+        // "Motor/Translator:e23,e31,e12,e1234",
+        //
+        // "Flector:e1,e2,e3,e4|e423,e431,e412,e321",
 
         "MultiVector:\
-            1,e1234|\
-            e1,e2,e3,e4|\
-            e41,e42,e43|e23,e31,e12|\
-            e423,e431,e412,e321"
+            1,e12345|\
+            e1,e2,e3|e4,e5|\
+            e41,e42,e43|e23,e31,e12|e15,e25,e35,e45|\
+            e423,e431,e412,e321|e415,e425,e435|e235,e315,e125|\
+            e4235,e4315,e4125|e1234,e3215"
     ];
 
 
     // Arbitrary personal preference for dialect
     let dialect = Dialect::default().also_wedge_dot().wedge().dot().also_meet_and_join();
 
-
-    let rga3d = RigidGeometricAlgebra {
-        generator_squares: &[1, 1, 1, 0],
-        name: "rga3d",
-        dialect,
-    };
+    let cga3d = ConformalGeometricAlgebra::new("cga3d", 3, dialect);
 
     let mut registry = MultiVectorClassRegistry::default();
     for multi_vector_descriptor in mv_iter {
-        let (mv, sc) = read_multi_vector_from_str(multi_vector_descriptor, &rga3d);
+        let (mv, sc) = read_multi_vector_from_str(multi_vector_descriptor, &cga3d);
         if let Some(sc) = sc {
             registry.register_with_superclass(mv, sc);
         } else {
             registry.register(mv);
         }
     }
-
-    let rga3d_name = rga3d.name.to_string();
-    let mut code_gen = CodeGenerator::new(rga3d);
+    let cga3d_name = cga3d.name.to_string();
+    let mut code_gen = CodeGenerator::new(cga3d);
     code_gen.preamble_and_universal_traits(&registry).unwrap();
     code_gen.basic_norms(&registry);
     // TODO fancy norms
@@ -79,7 +90,10 @@ pub fn script() -> std::io::Result<()> {
 
 
 
-    let file_path = std::path::Path::new("./src/").join(std::path::Path::new(rga3d_name.as_str()));
+
+
+
+    let file_path = std::path::Path::new("./src/").join(std::path::Path::new(cga3d_name.as_str()));
     let mut emitter = Emitter::new(&file_path);
 
     emitter.rust_collector.write_all(b"
@@ -110,119 +124,158 @@ pub mod products {
 
     emitter.with_new_rust_collector(&file_path.join(std::path::Path::new("products/geometric")), "
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;")?;
+use crate::cga3d::*;")?;
     code_gen.emit_geometric_products(&mut emitter)?;
 
 
     emitter.with_new_rust_collector(&file_path.join(std::path::Path::new("products/exterior")), "
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;")?;
+use crate::cga3d::*;")?;
     code_gen.emit_exterior_products(&mut emitter)?;
 
 
     emitter.with_new_rust_collector(&file_path.join(std::path::Path::new("products/dot")), "
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;")?;
+use crate::cga3d::*;")?;
     code_gen.emit_dot_products(&mut emitter)?;
 
 
     emitter.with_new_rust_collector(&file_path.join(std::path::Path::new("aspects")), "
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;
-use crate::rga3d::products::geometric::GeometricProduct;")?;
+use crate::cga3d::*;
+use crate::cga3d::products::geometric::GeometricProduct;")?;
     code_gen.emit_component_wise_aspects(&mut emitter)?;
 
 
     emitter.with_new_rust_collector(&file_path.join(std::path::Path::new("involutions")), "
 #![allow(clippy::assign_op_pattern)]
-use crate::{simd::*, *, rga3d::*};
+use crate::{simd::*, *, cga3d::*};
 use std::ops::{Add, Div, Mul, Neg, Sub};")?;
     code_gen.emit_involutions_and_duals(&mut emitter)?;
 
 
     emitter.with_new_rust_collector(&file_path.join(std::path::Path::new("aspect_duals")), "
 #![allow(clippy::assign_op_pattern)]
-use crate::{simd::*, *, rga3d::*};
+use crate::{simd::*, *, cga3d::*};
 use std::ops::{Add, Div, Mul, Neg, Sub};
-use crate::rga3d::aspects::{Bulk, Weight};
-use crate::rga3d::involutions::*;")?;
+use crate::cga3d::aspects::{Bulk, Weight};
+use crate::cga3d::involutions::*;")?;
     code_gen.emit_aspect_duals(&mut emitter)?;
 
 
     emitter.with_new_rust_collector(&file_path.join(std::path::Path::new("characteristics")), "
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;
-use crate::rga3d::products::exterior::AntiWedge;")?;
+use crate::cga3d::*;
+use crate::cga3d::products::exterior::AntiWedge;")?;
     code_gen.emit_characteristic_features(&mut emitter)?;
 
 
     emitter.with_new_rust_collector(&file_path.join(std::path::Path::new("norms")), "
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;
-use crate::rga3d::characteristics::Sqrt;
-use crate::rga3d::products::dot::{AntiDot, Dot};")?;
+use crate::cga3d::*;
+use crate::cga3d::characteristics::Sqrt;
+use crate::cga3d::products::dot::{AntiDot, Dot};")?;
     code_gen.emit_norms(&mut emitter)?;
 
 
     emitter.with_new_rust_collector(&file_path.join(std::path::Path::new("unitize")), "
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;
-use crate::rga3d::norms::WeightNorm;
-use crate::rga3d::products::geometric::GeometricProduct;")?;
+use crate::cga3d::*;
+use crate::cga3d::norms::WeightNorm;
+use crate::cga3d::products::geometric::GeometricProduct;")?;
     code_gen.emit_unitize(&mut emitter)?;
 
 
     emitter.with_new_rust_collector(&file_path.join(std::path::Path::new("products/isometries")), "
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;
-use crate::rga3d::unitize::Unitize;
-use crate::rga3d::involutions::AntiReversal;
-use crate::rga3d::products::geometric::GeometricAntiProduct;")?;
+use crate::cga3d::*;
+use crate::cga3d::unitize::Unitize;
+use crate::cga3d::involutions::AntiReversal;
+use crate::cga3d::products::geometric::GeometricAntiProduct;")?;
     code_gen.emit_isometries(&mut emitter)?;
 
 
     emitter.with_new_rust_collector(&file_path.join(std::path::Path::new("products/contractions")), "
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;
-use crate::rga3d::aspect_duals::*;
-use crate::rga3d::products::exterior::AntiWedge;")?;
+use crate::cga3d::*;
+use crate::cga3d::aspect_duals::*;
+use crate::cga3d::products::exterior::AntiWedge;")?;
     code_gen.emit_contractions(&mut emitter)?;
 
 
     emitter.with_new_rust_collector(&file_path.join(std::path::Path::new("products/expansions")), "
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;
-use crate::rga3d::aspect_duals::*;
-use crate::rga3d::products::exterior::Wedge;")?;
+use crate::cga3d::*;
+use crate::cga3d::aspect_duals::*;
+use crate::cga3d::products::exterior::Wedge;")?;
     code_gen.emit_expansions(&mut emitter)?;
 
 
     emitter.with_new_rust_collector(&file_path.join(std::path::Path::new("products/projections")), "
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;
-use crate::rga3d::products::exterior::Wedge;
-use crate::rga3d::products::exterior::AntiWedge;
-use crate::rga3d::products::contractions::*;
-use crate::rga3d::products::expansions::*;
-use crate::rga3d::aspect_duals::*;")?;
+use crate::cga3d::*;
+use crate::cga3d::products::exterior::Wedge;
+use crate::cga3d::products::exterior::AntiWedge;
+use crate::cga3d::products::contractions::*;
+use crate::cga3d::products::expansions::*;
+use crate::cga3d::aspect_duals::*;")?;
     code_gen.emit_projections_and_stuff(&mut emitter)?;
 
 
     emitter.with_new_rust_collector(&file_path.join(std::path::Path::new("metrics")), "
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;
-use crate::rga3d::unitize::Unitize;
-use crate::rga3d::products::exterior::Wedge;
-use crate::rga3d::characteristics::Attitude;
-use crate::rga3d::products::projections::*;
-use crate::rga3d::norms::*;
-use crate::rga3d::products::contractions::WeightContraction;")?;
+use crate::cga3d::*;
+use crate::cga3d::unitize::Unitize;
+use crate::cga3d::products::exterior::Wedge;
+use crate::cga3d::characteristics::Attitude;
+use crate::cga3d::products::projections::*;
+use crate::cga3d::norms::*;
+use crate::cga3d::products::contractions::WeightContraction;")?;
     code_gen.emit_metric_operations(&mut emitter)?;
 
 
+    // TODO the shader validation stack overflows compilation
+    return Ok(());
+
+
+    validate_glsl_and_wgsl("cga3d", file_path);
 
 
 
-    validate_glsl_and_wgsl("rga3d", file_path);
+
+
+
     Ok(())
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//

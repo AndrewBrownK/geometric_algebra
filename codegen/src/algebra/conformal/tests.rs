@@ -5,6 +5,84 @@ use crate::algebra::dialect::Dialect;
 use crate::algebra::GeometricAlgebraTrait;
 
 #[test]
+fn conformal_3d_right_complements() {
+    let dialect = Dialect::default();
+    let cga3d = ConformalGeometricAlgebra::new("cga3d", 3, dialect);
+
+    // Right complements are gathered from the "duals" on round objects in this pdf:
+    // https://projectivegeometricalgebra.org/confgeomalg.pdf
+    // See also...
+    // https://rigidgeometricalgebra.org/wiki/index.php?title=Complements
+
+
+    // NOTE THAT RIGHT COMPLEMENTS AND DUALS ARE NOT THE SAME IN CGA
+    //  See thread: https://twitter.com/Foo55443320/status/1768401735410958594
+    //  So instead of using the CGA object duals, just consider the exterior product
+    //  and definition of right complements to begin with.
+    // https://conformalgeometricalgebra.org/wiki/index.php?title=Exterior_products
+    // https://rigidgeometricalgebra.org/wiki/index.php?title=Complements
+    let correct_right_complements = [
+        ("1", "e12345"),
+        ("e12345", "1"),
+
+        ("e1", "e4235"),
+        ("e2", "e4315"),
+        ("e3", "e4125"),
+        ("e4", "-e1235"),
+        ("e5", "-e3214"),
+
+        ("e41", "e523"),
+        ("e42", "e531"),
+        ("e43", "e512"),
+        ("e23", "-e415"),
+        ("e31", "e425"),
+        ("e12", "-e435"),
+        ("e15", "-e234"),
+        ("e25", "-e314"),
+        ("e35", "-e124"),
+        ("e45", "-e321"),
+
+        ("e423", "e51"),
+        ("e431", "-e52"),
+        ("e412", "e53"),
+        ("e321", "e45"),
+        ("e415", "-e23"),
+        ("e425", "e31"),
+        ("e435", "-e12"),
+        ("e235", "e14"),
+        ("e315", "-e24"),
+        ("e125", "e34"),
+
+        ("e4235", "e1"),
+        ("e4315", "-e2"),
+        ("e4125", "e3"),
+        ("e1234", "e5"),
+        ("e3215", "-e4"),
+    ];
+    let mut failures = 0;
+    let mut correct_complements = BTreeMap::new();
+    for (a, complement) in correct_right_complements {
+        let a = cga3d.parse(a);
+        let b = cga3d.parse(complement);
+        correct_complements.insert(a.index, (a.coefficient, b));
+    }
+
+    for mut a in cga3d.sorted_basis() {
+        let (sign, mut correct_complement) = correct_complements.remove(&a.index)
+            .unwrap_or_else(|| panic!("Right Complement list must be complete, missing {a}"));
+        a.coefficient = a.coefficient * sign;
+        let calculated_complement = cga3d.right_complement(&a);
+
+        if calculated_complement != correct_complement {
+            eprintln!("right_complement({a}) was calculated as {calculated_complement}, but we expected {correct_complement}");
+            failures = failures + 1;
+        }
+    }
+    assert_eq!(failures, 0, "Conformal Geometric Right Complement has {failures} errors.")
+}
+
+
+#[test]
 fn conformal_3d_geometric_products() {
     let dialect = Dialect::default();
     let cga3d = ConformalGeometricAlgebra::new("cga3d", 3, dialect);

@@ -8,6 +8,8 @@ pub mod simd;
 mod tests;
 
 
+// TODO delete most or all of the stuff in this file
+
 //
 //
 // impl Exp for ppga3d::IdealPoint {
