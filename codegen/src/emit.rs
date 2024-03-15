@@ -29,14 +29,16 @@ mod rust;
 mod wgsl;
 
 pub struct Emitter<W: Write> {
+    pub actually_emit: bool,
     pub rust_collector: W,
     pub glsl_collector: W,
     pub wgsl_collector: W,
 }
 
 impl Emitter<std::fs::File> {
-    pub fn new(path: &std::path::Path) -> Self {
+    pub fn new(actually_emit: bool, path: &std::path::Path) -> Self {
         Self {
+            actually_emit,
             rust_collector: std::fs::File::create(path.with_extension("rs")).unwrap(),
             glsl_collector: std::fs::File::create(path.with_extension("glsl")).unwrap(),
             wgsl_collector: std::fs::File::create(path.with_extension("wgsl")).unwrap(),
@@ -52,9 +54,11 @@ impl Emitter<std::fs::File> {
 
 impl<W: Write> Emitter<W> {
     pub fn emit(&mut self, ast_node: &AstNode) -> std::io::Result<()> {
-        rust::emit_code(&mut self.rust_collector, ast_node, 0)?;
-        glsl::emit_code(&mut self.glsl_collector, ast_node, 0)?;
-        wgsl::emit_code(&mut self.wgsl_collector, ast_node, 0)?;
+        if self.actually_emit {
+            rust::emit_code(&mut self.rust_collector, ast_node, 0)?;
+            glsl::emit_code(&mut self.glsl_collector, ast_node, 0)?;
+            wgsl::emit_code(&mut self.wgsl_collector, ast_node, 0)?;
+        }
         Ok(())
     }
 }

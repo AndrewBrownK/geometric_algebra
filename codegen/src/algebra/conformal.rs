@@ -77,7 +77,7 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
         1 << self.surface_generator_squares.len()
     }
 
-    // TODO NOTE THAT RIGHT COMPLEMENTS AND DUALS ARE NOT THE SAME IN CGA
+    // NOTE THAT RIGHT COMPLEMENTS AND DUALS ARE NOT THE SAME IN CGA
     //  See thread: https://twitter.com/Foo55443320/status/1768401735410958594
     fn right_complement(&self, a: &BasisElement) -> BasisElement {
         let coefficient = a.coefficient;

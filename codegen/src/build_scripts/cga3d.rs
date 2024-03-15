@@ -2,20 +2,17 @@ use crate::algebra::conformal::ConformalGeometricAlgebra;
 use crate::algebra::dialect::Dialect;
 use crate::algebra::MultiVectorClassRegistry;
 use crate::emit::Emitter;
-use crate::{read_multi_vector_from_str, validate_glsl, validate_wgsl, CodeGenerator};
+use crate::{read_multi_vector_from_str, validate_wgsl, CodeGenerator};
 use std::io::Write;
 
-#[cfg(test)]
-mod test {
+const CGA3D: &str = "cga3d";
 
-    #[test]
-    fn test_script() {
-        // crate::build_scripts::cga3d::script().unwrap()
-    }
+pub fn script() -> std::io::Result<()> {
+    script_custom(true, "")
 }
 
 //noinspection DuplicatedCode
-pub fn script() -> std::io::Result<()> {
+fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> {
     // TODO more precise rerun conditions
     //  https://doc.rust-lang.org/cargo/reference/build-scripts.html#outputs-of-the-build-script
 
@@ -57,7 +54,7 @@ pub fn script() -> std::io::Result<()> {
     // Arbitrary personal preference for dialect
     let dialect = Dialect::default().also_wedge_dot().wedge().dot().also_meet_and_join();
 
-    let cga3d = ConformalGeometricAlgebra::new("cga3d", 3, dialect);
+    let cga3d = ConformalGeometricAlgebra::new(CGA3D, 3, dialect);
 
     let mut registry = MultiVectorClassRegistry::default();
     for multi_vector_descriptor in mv_iter {
@@ -77,8 +74,13 @@ pub fn script() -> std::io::Result<()> {
     code_gen.post_norm_universal_stuff(&registry);
     code_gen.attitude_and_dependencies("Horizon", &registry);
 
-    let file_path = std::path::Path::new("./src/").join(std::path::Path::new(cga3d_name.as_str()));
-    let mut emitter = Emitter::new(&file_path);
+    let mut file_path = std::path::Path::new("src/").join(std::path::Path::new(CGA3D));
+    if !path_prefix.is_empty() {
+        file_path = std::path::Path::new(path_prefix).join(file_path);
+    }
+    let file_path = file_path;
+
+    let mut emitter = Emitter::new(actually_emit, &file_path);
 
     emitter.rust_collector.write_all(
         b"
@@ -247,18 +249,42 @@ use crate::cga3d::products::contractions::WeightContraction;",
     )?;
     code_gen.emit_metric_operations(&mut emitter)?;
 
-    /*
-     * Currently this shader validation stack-overflows compilation.
-     * This requires a fix in Naga.
-     * For now, we will ignore it, and assume it is valid.
-     * If both RGA glsl and CGA wgsl are valid, then CGA glsl is probably valid too.
-     */
-    // validate_glsl("cga3d", file_path.clone());
-
-    // Still validate wgsl because it does not stack overflow
-    validate_wgsl("cga3d", file_path);
+    // GLSL validation can stack overflow when ran in a build script (requires fix in Naga).
+    // However, it is fine in a test (must be larger stack size).
+    // So we will not validate here, and just use tests instead.
+    // validate_glsl(CGA3D, file_path.clone());
+    // validate_wgsl(CGA3D, file_path);
 
     Ok(())
 }
 
-//
+#[cfg(test)]
+mod test {
+    use crate::build_scripts::cga3d::{script_custom, CGA3D};
+    use crate::{validate_glsl, validate_wgsl};
+    use std::path::Path;
+
+    const OTHER_CRATE: &str = "../geometric_algebra/";
+
+    // #[test]
+    // fn build_with_disk_writes() {
+    //     script_custom(true, OTHER_CRATE).unwrap()
+    // }
+
+    #[test]
+    fn build_without_disk_writes() {
+        script_custom(false, OTHER_CRATE).unwrap()
+    }
+
+    #[test]
+    fn glsl_validation() {
+        let file_path = Path::new(OTHER_CRATE).join(Path::new("src/").join(CGA3D));
+        validate_glsl(CGA3D, file_path);
+    }
+
+    #[test]
+    fn wgsl_validation() {
+        let file_path = Path::new(OTHER_CRATE).join(Path::new("src/").join(CGA3D));
+        validate_wgsl(CGA3D, file_path);
+    }
+}

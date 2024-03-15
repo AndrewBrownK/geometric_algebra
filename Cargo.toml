@@ -1,3 +1,5 @@
 [workspace]
 resolver = "2"
+
+# TODO I'm tempted to make a separate member for each algebra
 members = ["codegen", "geometric_algebra"]

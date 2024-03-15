@@ -58,11 +58,10 @@ pub fn simplify_and_legalize(expression: Box<Expression>) -> Box<Expression> {
                     }
                 });
                 let no_raw_consts = indices.iter().all(|it| if let GatherData::Usual(_) = it { true } else { false });
-                let some_components_out_of_order =
-                    indices
-                        .iter()
-                        .enumerate()
-                        .any(|(i, it)| if let GatherData::Usual(u) = it { i != u.element } else { true });
+                let some_components_out_of_order = indices
+                    .iter()
+                    .enumerate()
+                    .any(|(i, it)| if let GatherData::Usual(u) = it { i != u.element } else { true });
 
                 if all_gathered_items_are_same {
                     return Box::new(Expression {
