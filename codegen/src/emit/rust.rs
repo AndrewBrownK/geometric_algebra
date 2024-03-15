@@ -210,8 +210,7 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
         AstNode::None => {}
         AstNode::Preamble => {
             collector.write_all(b"#![allow(clippy::assign_op_pattern)]\n")?;
-            collector
-                .write_all(b"use crate::{simd::*, *};\nuse std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};\n\n")?;
+            collector.write_all(b"use crate::{simd::*, *};\nuse std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};\n\n")?;
         }
         AstNode::TraitDefinition { name, params, docs } => {
             if !docs.trim().is_empty() {
@@ -372,11 +371,7 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
             emit_indentation(collector, indentation)?;
             collector.write_all(b"}\n\n")?;
             emit_indentation(collector, indentation)?;
-            collector.write_fmt(format_args!(
-                "const {}_INDEX_REMAP: [usize; {}] = [",
-                class.class_name.to_uppercase(),
-                element_count
-            ))?;
+            collector.write_fmt(format_args!("const {}_INDEX_REMAP: [usize; {}] = [", class.class_name.to_uppercase(), element_count))?;
             let mut element_index = 0;
             let mut index_remap = Vec::new();
             for (j, group) in class.grouped_basis.iter().enumerate() {
@@ -398,10 +393,7 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
             emit_indentation(collector, indentation + 1)?;
             collector.write_all(b"fn index(&self, index: usize) -> &Self::Output {\n")?;
             emit_indentation(collector, indentation + 2)?;
-            collector.write_fmt(format_args!(
-                "unsafe {{ &self.elements[{}_INDEX_REMAP[index]] }}\n",
-                class.class_name.to_uppercase()
-            ))?;
+            collector.write_fmt(format_args!("unsafe {{ &self.elements[{}_INDEX_REMAP[index]] }}\n", class.class_name.to_uppercase()))?;
             emit_indentation(collector, indentation + 1)?;
             collector.write_all(b"}\n")?;
             emit_indentation(collector, indentation)?;
@@ -411,19 +403,13 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
             emit_indentation(collector, indentation + 1)?;
             collector.write_all(b"fn index_mut(&mut self, index: usize) -> &mut Self::Output {\n")?;
             emit_indentation(collector, indentation + 2)?;
-            collector.write_fmt(format_args!(
-                "unsafe {{ &mut self.elements[{}_INDEX_REMAP[index]] }}\n",
-                class.class_name.to_uppercase()
-            ))?;
+            collector.write_fmt(format_args!("unsafe {{ &mut self.elements[{}_INDEX_REMAP[index]] }}\n", class.class_name.to_uppercase()))?;
             emit_indentation(collector, indentation + 1)?;
             collector.write_all(b"}\n")?;
             emit_indentation(collector, indentation)?;
             collector.write_all(b"}\n\n")?;
             emit_indentation(collector, indentation)?;
-            collector.write_fmt(format_args!(
-                "impl std::convert::From<{}> for [f32; {}] {{\n",
-                class.class_name, element_count
-            ))?;
+            collector.write_fmt(format_args!("impl std::convert::From<{}> for [f32; {}] {{\n", class.class_name, element_count))?;
             emit_indentation(collector, indentation + 1)?;
             collector.write_fmt(format_args!("fn from(vector: {}) -> Self {{\n", class.class_name))?;
             emit_indentation(collector, indentation + 2)?;
@@ -440,10 +426,7 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
             emit_indentation(collector, indentation)?;
             collector.write_all(b"}\n\n")?;
             emit_indentation(collector, indentation)?;
-            collector.write_fmt(format_args!(
-                "impl std::convert::From<[f32; {}]> for {} {{\n",
-                element_count, class.class_name
-            ))?;
+            collector.write_fmt(format_args!("impl std::convert::From<[f32; {}]> for {} {{\n", element_count, class.class_name))?;
             emit_indentation(collector, indentation + 1)?;
             collector.write_fmt(format_args!("fn from(array: [f32; {}]) -> Self {{\n", element_count))?;
             emit_indentation(collector, indentation + 2)?;
@@ -525,12 +508,9 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
             let result_type_name = get_data_type(&result.data_type);
             match parameters.len() {
                 0 => collector.write_fmt(format_args!("impl {} for {}", result.name, result_type_name))?,
-                1 if result.name == "Into" => collector.write_fmt(format_args!(
-                    "impl {}<{}> for {}",
-                    result.name,
-                    result_type_name,
-                    parameters[0].multi_vector_class().class_name,
-                ))?,
+                1 if result.name == "Into" => {
+                    collector.write_fmt(format_args!("impl {}<{}> for {}", result.name, result_type_name, parameters[0].multi_vector_class().class_name,))?
+                }
                 1 => collector.write_fmt(format_args!("impl {} for {}", result.name, parameters[0].multi_vector_class().class_name))?,
                 2 if !matches!(parameters[1].data_type, DataType::MultiVector(_)) => {
                     collector.write_fmt(format_args!("impl {} for {}", result.name, parameters[0].multi_vector_class().class_name))?

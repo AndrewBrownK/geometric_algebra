@@ -6,9 +6,9 @@
 //
 
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::aspect_duals::*;
-use crate::rga3d::products::exterior::AntiWedge;
-use crate::rga3d::*;
+use crate::aspect_duals::*;
+use crate::products::exterior::AntiWedge;
+use crate::*;
 
 /// Bulk Contraction (Interior Product)
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Interior_products

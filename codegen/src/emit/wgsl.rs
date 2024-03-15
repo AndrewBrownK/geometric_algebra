@@ -124,10 +124,7 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
                     collector.write_fmt(format_args!("{:.1}", values[0] as f32))?
                 } else {
                     emit_data_type(collector, &DataType::SimdVector(expression.size))?;
-                    collector.write_fmt(format_args!(
-                        "({})",
-                        values.iter().map(|value| format!("{:.1}", *value as f32)).collect::<Vec<_>>().join(", ")
-                    ))?
+                    collector.write_fmt(format_args!("({})", values.iter().map(|value| format!("{:.1}", *value as f32)).collect::<Vec<_>>().join(", ")))?
                 }
             }
             _ => unreachable!(),
@@ -238,9 +235,7 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
                     camel_to_snake_case(collector, &result.data_type.data_class_name())?;
                 }
                 1 => camel_to_snake_case(collector, &parameters[0].data_type.data_class_name())?,
-                2 if !matches!(parameters[1].data_type, DataType::MultiVector(_)) => {
-                    camel_to_snake_case(collector, &parameters[0].data_type.data_class_name())?
-                }
+                2 if !matches!(parameters[1].data_type, DataType::MultiVector(_)) => camel_to_snake_case(collector, &parameters[0].data_type.data_class_name())?,
                 2 => {
                     camel_to_snake_case(collector, &parameters[0].data_type.data_class_name())?;
                     collector.write_all(b"_")?;

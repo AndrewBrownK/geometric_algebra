@@ -6,8 +6,8 @@
 //
 
 #![allow(clippy::assign_op_pattern)]
-use crate::cga3d::products::geometric::GeometricProduct;
-use crate::cga3d::*;
+use crate::products::geometric::GeometricProduct;
+use crate::*;
 
 /// The Bulk of an object usually describes the object's relationship with the origin.
 /// An object with a Bulk of zero contains the origin.

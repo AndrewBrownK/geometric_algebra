@@ -6,8 +6,8 @@
 //
 
 #![allow(clippy::assign_op_pattern)]
-use crate::cga3d::products::exterior::AntiWedge;
-use crate::cga3d::*;
+use crate::products::exterior::AntiWedge;
+use crate::*;
 
 /// Square Root
 pub trait Sqrt {
@@ -385,9 +385,7 @@ impl Sqrt for AntiScalar {
 
     fn sqrt(self) -> AntiScalar {
         AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group0().sqrt(),
-            },
+            groups: AntiScalarGroups { g0: self.group0().sqrt() },
         }
     }
 }
@@ -397,9 +395,7 @@ impl Sqrt for Scalar {
 
     fn sqrt(self) -> Scalar {
         Scalar {
-            groups: ScalarGroups {
-                g0: self.group0().sqrt(),
-            },
+            groups: ScalarGroups { g0: self.group0().sqrt() },
         }
     }
 }

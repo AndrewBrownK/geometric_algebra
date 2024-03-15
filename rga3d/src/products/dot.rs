@@ -6,7 +6,7 @@
 //
 
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;
+use crate::*;
 
 /// Dot Product
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Dot_products
@@ -100,10 +100,7 @@ impl AntiDot<Flector> for Flector {
     fn anti_dot(self, other: Flector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0 - self.group0()[3] * other.group0()[3]
-                    + self.group1()[0] * other.group1()[0]
-                    + self.group1()[1] * other.group1()[1]
-                    + self.group1()[2] * other.group1()[2],
+                g0: 0.0 - self.group0()[3] * other.group0()[3] + self.group1()[0] * other.group1()[0] + self.group1()[1] * other.group1()[1] + self.group1()[2] * other.group1()[2],
             },
         }
     }
@@ -115,10 +112,7 @@ impl AntiDot<MultiVector> for Flector {
     fn anti_dot(self, other: MultiVector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0 - self.group0()[3] * other.group1()[3]
-                    + self.group1()[0] * other.group4()[0]
-                    + self.group1()[1] * other.group4()[1]
-                    + self.group1()[2] * other.group4()[2],
+                g0: 0.0 - self.group0()[3] * other.group1()[3] + self.group1()[0] * other.group4()[0] + self.group1()[1] * other.group4()[1] + self.group1()[2] * other.group4()[2],
             },
         }
     }
@@ -142,9 +136,7 @@ impl AntiDot<Plane> for Flector {
     fn anti_dot(self, other: Plane) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group1()[0] * other.group0()[0]
-                    + self.group1()[1] * other.group0()[1]
-                    + self.group1()[2] * other.group0()[2],
+                g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2],
             },
         }
     }
@@ -156,9 +148,7 @@ impl AntiDot<PlaneAtOrigin> for Flector {
     fn anti_dot(self, other: PlaneAtOrigin) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group1()[0] * other.group0()[0]
-                    + self.group1()[1] * other.group0()[1]
-                    + self.group1()[2] * other.group0()[2],
+                g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2],
             },
         }
     }
@@ -182,10 +172,7 @@ impl AntiDot<Line> for Line {
     fn anti_dot(self, other: Line) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group0()[0]
-                    - self.group0()[1] * other.group0()[1]
-                    - self.group0()[2] * other.group0()[2],
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -197,10 +184,7 @@ impl AntiDot<LineAtOrigin> for Line {
     fn anti_dot(self, other: LineAtOrigin) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group0()[0]
-                    - self.group0()[1] * other.group0()[1]
-                    - self.group0()[2] * other.group0()[2],
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -212,10 +196,7 @@ impl AntiDot<Motor> for Line {
     fn anti_dot(self, other: Motor) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group0()[0]
-                    - self.group0()[1] * other.group0()[1]
-                    - self.group0()[2] * other.group0()[2],
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -227,10 +208,7 @@ impl AntiDot<MultiVector> for Line {
     fn anti_dot(self, other: MultiVector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group2()[0]
-                    - self.group0()[1] * other.group2()[1]
-                    - self.group0()[2] * other.group2()[2],
+                g0: 0.0 - self.group0()[0] * other.group2()[0] - self.group0()[1] * other.group2()[1] - self.group0()[2] * other.group2()[2],
             },
         }
     }
@@ -242,10 +220,7 @@ impl AntiDot<Rotor> for Line {
     fn anti_dot(self, other: Rotor) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group0()[0]
-                    - self.group0()[1] * other.group0()[1]
-                    - self.group0()[2] * other.group0()[2],
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -257,10 +232,7 @@ impl AntiDot<Line> for LineAtOrigin {
     fn anti_dot(self, other: Line) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group0()[0]
-                    - self.group0()[1] * other.group0()[1]
-                    - self.group0()[2] * other.group0()[2],
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -272,10 +244,7 @@ impl AntiDot<LineAtOrigin> for LineAtOrigin {
     fn anti_dot(self, other: LineAtOrigin) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group0()[0]
-                    - self.group0()[1] * other.group0()[1]
-                    - self.group0()[2] * other.group0()[2],
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -287,10 +256,7 @@ impl AntiDot<Motor> for LineAtOrigin {
     fn anti_dot(self, other: Motor) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group0()[0]
-                    - self.group0()[1] * other.group0()[1]
-                    - self.group0()[2] * other.group0()[2],
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -302,10 +268,7 @@ impl AntiDot<MultiVector> for LineAtOrigin {
     fn anti_dot(self, other: MultiVector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group2()[0]
-                    - self.group0()[1] * other.group2()[1]
-                    - self.group0()[2] * other.group2()[2],
+                g0: 0.0 - self.group0()[0] * other.group2()[0] - self.group0()[1] * other.group2()[1] - self.group0()[2] * other.group2()[2],
             },
         }
     }
@@ -317,10 +280,7 @@ impl AntiDot<Rotor> for LineAtOrigin {
     fn anti_dot(self, other: Rotor) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group0()[0]
-                    - self.group0()[1] * other.group0()[1]
-                    - self.group0()[2] * other.group0()[2],
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -416,10 +376,7 @@ impl AntiDot<Line> for Motor {
     fn anti_dot(self, other: Line) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group0()[0]
-                    - self.group0()[1] * other.group0()[1]
-                    - self.group0()[2] * other.group0()[2],
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -431,10 +388,7 @@ impl AntiDot<LineAtOrigin> for Motor {
     fn anti_dot(self, other: LineAtOrigin) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group0()[0]
-                    - self.group0()[1] * other.group0()[1]
-                    - self.group0()[2] * other.group0()[2],
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -458,11 +412,7 @@ impl AntiDot<Motor> for Motor {
     fn anti_dot(self, other: Motor) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group0()[0]
-                    - self.group0()[1] * other.group0()[1]
-                    - self.group0()[2] * other.group0()[2]
-                    + self.group0()[3] * other.group0()[3],
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3],
             },
         }
     }
@@ -474,11 +424,7 @@ impl AntiDot<MultiVector> for Motor {
     fn anti_dot(self, other: MultiVector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group2()[0]
-                    - self.group0()[1] * other.group2()[1]
-                    - self.group0()[2] * other.group2()[2]
-                    + self.group0()[3] * other.group0()[1],
+                g0: 0.0 - self.group0()[0] * other.group2()[0] - self.group0()[1] * other.group2()[1] - self.group0()[2] * other.group2()[2] + self.group0()[3] * other.group0()[1],
             },
         }
     }
@@ -490,11 +436,7 @@ impl AntiDot<Rotor> for Motor {
     fn anti_dot(self, other: Rotor) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group0()[0]
-                    - self.group0()[1] * other.group0()[1]
-                    - self.group0()[2] * other.group0()[2]
-                    + self.group0()[3] * other.group0()[3],
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3],
             },
         }
     }
@@ -530,10 +472,7 @@ impl AntiDot<Flector> for MultiVector {
     fn anti_dot(self, other: Flector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0 - self.group1()[3] * other.group0()[3]
-                    + self.group4()[0] * other.group1()[0]
-                    + self.group4()[1] * other.group1()[1]
-                    + self.group4()[2] * other.group1()[2],
+                g0: 0.0 - self.group1()[3] * other.group0()[3] + self.group4()[0] * other.group1()[0] + self.group4()[1] * other.group1()[1] + self.group4()[2] * other.group1()[2],
             },
         }
     }
@@ -545,10 +484,7 @@ impl AntiDot<Line> for MultiVector {
     fn anti_dot(self, other: Line) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0
-                    - self.group2()[0] * other.group0()[0]
-                    - self.group2()[1] * other.group0()[1]
-                    - self.group2()[2] * other.group0()[2],
+                g0: 0.0 - self.group2()[0] * other.group0()[0] - self.group2()[1] * other.group0()[1] - self.group2()[2] * other.group0()[2],
             },
         }
     }
@@ -560,10 +496,7 @@ impl AntiDot<LineAtOrigin> for MultiVector {
     fn anti_dot(self, other: LineAtOrigin) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0
-                    - self.group2()[0] * other.group0()[0]
-                    - self.group2()[1] * other.group0()[1]
-                    - self.group2()[2] * other.group0()[2],
+                g0: 0.0 - self.group2()[0] * other.group0()[0] - self.group2()[1] * other.group0()[1] - self.group2()[2] * other.group0()[2],
             },
         }
     }
@@ -587,10 +520,7 @@ impl AntiDot<Motor> for MultiVector {
     fn anti_dot(self, other: Motor) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[1] * other.group0()[3]
-                    - self.group2()[0] * other.group0()[0]
-                    - self.group2()[1] * other.group0()[1]
-                    - self.group2()[2] * other.group0()[2],
+                g0: self.group0()[1] * other.group0()[3] - self.group2()[0] * other.group0()[0] - self.group2()[1] * other.group0()[1] - self.group2()[2] * other.group0()[2],
             },
         }
     }
@@ -633,9 +563,7 @@ impl AntiDot<Plane> for MultiVector {
     fn anti_dot(self, other: Plane) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group4()[0] * other.group0()[0]
-                    + self.group4()[1] * other.group0()[1]
-                    + self.group4()[2] * other.group0()[2],
+                g0: self.group4()[0] * other.group0()[0] + self.group4()[1] * other.group0()[1] + self.group4()[2] * other.group0()[2],
             },
         }
     }
@@ -647,9 +575,7 @@ impl AntiDot<PlaneAtOrigin> for MultiVector {
     fn anti_dot(self, other: PlaneAtOrigin) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group4()[0] * other.group0()[0]
-                    + self.group4()[1] * other.group0()[1]
-                    + self.group4()[2] * other.group0()[2],
+                g0: self.group4()[0] * other.group0()[0] + self.group4()[1] * other.group0()[1] + self.group4()[2] * other.group0()[2],
             },
         }
     }
@@ -673,10 +599,7 @@ impl AntiDot<Rotor> for MultiVector {
     fn anti_dot(self, other: Rotor) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[1] * other.group0()[3]
-                    - self.group2()[0] * other.group0()[0]
-                    - self.group2()[1] * other.group0()[1]
-                    - self.group2()[2] * other.group0()[2],
+                g0: self.group0()[1] * other.group0()[3] - self.group2()[0] * other.group0()[0] - self.group2()[1] * other.group0()[1] - self.group2()[2] * other.group0()[2],
             },
         }
     }
@@ -748,9 +671,7 @@ impl AntiDot<Flector> for Plane {
     fn anti_dot(self, other: Flector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group1()[0]
-                    + self.group0()[1] * other.group1()[1]
-                    + self.group0()[2] * other.group1()[2],
+                g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2],
             },
         }
     }
@@ -762,9 +683,7 @@ impl AntiDot<MultiVector> for Plane {
     fn anti_dot(self, other: MultiVector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group4()[0]
-                    + self.group0()[1] * other.group4()[1]
-                    + self.group0()[2] * other.group4()[2],
+                g0: self.group0()[0] * other.group4()[0] + self.group0()[1] * other.group4()[1] + self.group0()[2] * other.group4()[2],
             },
         }
     }
@@ -776,9 +695,7 @@ impl AntiDot<Plane> for Plane {
     fn anti_dot(self, other: Plane) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group0()[0]
-                    + self.group0()[1] * other.group0()[1]
-                    + self.group0()[2] * other.group0()[2],
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -790,9 +707,7 @@ impl AntiDot<PlaneAtOrigin> for Plane {
     fn anti_dot(self, other: PlaneAtOrigin) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group0()[0]
-                    + self.group0()[1] * other.group0()[1]
-                    + self.group0()[2] * other.group0()[2],
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -804,9 +719,7 @@ impl AntiDot<Flector> for PlaneAtOrigin {
     fn anti_dot(self, other: Flector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group1()[0]
-                    + self.group0()[1] * other.group1()[1]
-                    + self.group0()[2] * other.group1()[2],
+                g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2],
             },
         }
     }
@@ -818,9 +731,7 @@ impl AntiDot<MultiVector> for PlaneAtOrigin {
     fn anti_dot(self, other: MultiVector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group4()[0]
-                    + self.group0()[1] * other.group4()[1]
-                    + self.group0()[2] * other.group4()[2],
+                g0: self.group0()[0] * other.group4()[0] + self.group0()[1] * other.group4()[1] + self.group0()[2] * other.group4()[2],
             },
         }
     }
@@ -832,9 +743,7 @@ impl AntiDot<Plane> for PlaneAtOrigin {
     fn anti_dot(self, other: Plane) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group0()[0]
-                    + self.group0()[1] * other.group0()[1]
-                    + self.group0()[2] * other.group0()[2],
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -846,9 +755,7 @@ impl AntiDot<PlaneAtOrigin> for PlaneAtOrigin {
     fn anti_dot(self, other: PlaneAtOrigin) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group0()[0]
-                    + self.group0()[1] * other.group0()[1]
-                    + self.group0()[2] * other.group0()[2],
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -920,10 +827,7 @@ impl AntiDot<Line> for Rotor {
     fn anti_dot(self, other: Line) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group0()[0]
-                    - self.group0()[1] * other.group0()[1]
-                    - self.group0()[2] * other.group0()[2],
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -935,10 +839,7 @@ impl AntiDot<LineAtOrigin> for Rotor {
     fn anti_dot(self, other: LineAtOrigin) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group0()[0]
-                    - self.group0()[1] * other.group0()[1]
-                    - self.group0()[2] * other.group0()[2],
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -962,11 +863,7 @@ impl AntiDot<Motor> for Rotor {
     fn anti_dot(self, other: Motor) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group0()[0]
-                    - self.group0()[1] * other.group0()[1]
-                    - self.group0()[2] * other.group0()[2]
-                    + self.group0()[3] * other.group0()[3],
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3],
             },
         }
     }
@@ -978,11 +875,7 @@ impl AntiDot<MultiVector> for Rotor {
     fn anti_dot(self, other: MultiVector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group2()[0]
-                    - self.group0()[1] * other.group2()[1]
-                    - self.group0()[2] * other.group2()[2]
-                    + self.group0()[3] * other.group0()[1],
+                g0: 0.0 - self.group0()[0] * other.group2()[0] - self.group0()[1] * other.group2()[1] - self.group0()[2] * other.group2()[2] + self.group0()[3] * other.group0()[1],
             },
         }
     }
@@ -994,11 +887,7 @@ impl AntiDot<Rotor> for Rotor {
     fn anti_dot(self, other: Rotor) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group0()[0]
-                    - self.group0()[1] * other.group0()[1]
-                    - self.group0()[2] * other.group0()[2]
-                    + self.group0()[3] * other.group0()[3],
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3],
             },
         }
     }
@@ -1094,10 +983,7 @@ impl Dot<Flector> for Flector {
     fn dot(self, other: Flector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: self.group0()[0] * other.group0()[0]
-                    + self.group0()[1] * other.group0()[1]
-                    + self.group0()[2] * other.group0()[2]
-                    - self.group1()[3] * other.group1()[3],
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] - self.group1()[3] * other.group1()[3],
             },
         }
     }
@@ -1121,10 +1007,7 @@ impl Dot<MultiVector> for Flector {
     fn dot(self, other: MultiVector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: self.group0()[0] * other.group1()[0]
-                    + self.group0()[1] * other.group1()[1]
-                    + self.group0()[2] * other.group1()[2]
-                    - self.group1()[3] * other.group4()[3],
+                g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2] - self.group1()[3] * other.group4()[3],
             },
         }
     }
@@ -1148,9 +1031,7 @@ impl Dot<Point> for Flector {
     fn dot(self, other: Point) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: self.group0()[0] * other.group0()[0]
-                    + self.group0()[1] * other.group0()[1]
-                    + self.group0()[2] * other.group0()[2],
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -1162,9 +1043,7 @@ impl Dot<PointAtInfinity> for Flector {
     fn dot(self, other: PointAtInfinity) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: self.group0()[0] * other.group0()[0]
-                    + self.group0()[1] * other.group0()[1]
-                    + self.group0()[2] * other.group0()[2],
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -1224,10 +1103,7 @@ impl Dot<Line> for Line {
     fn dot(self, other: Line) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: 0.0
-                    - self.group1()[0] * other.group1()[0]
-                    - self.group1()[1] * other.group1()[1]
-                    - self.group1()[2] * other.group1()[2],
+                g0: 0.0 - self.group1()[0] * other.group1()[0] - self.group1()[1] * other.group1()[1] - self.group1()[2] * other.group1()[2],
             },
         }
     }
@@ -1239,10 +1115,7 @@ impl Dot<LineAtInfinity> for Line {
     fn dot(self, other: LineAtInfinity) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: 0.0
-                    - self.group1()[0] * other.group0()[0]
-                    - self.group1()[1] * other.group0()[1]
-                    - self.group1()[2] * other.group0()[2],
+                g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2],
             },
         }
     }
@@ -1254,10 +1127,7 @@ impl Dot<Motor> for Line {
     fn dot(self, other: Motor) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: 0.0
-                    - self.group1()[0] * other.group1()[0]
-                    - self.group1()[1] * other.group1()[1]
-                    - self.group1()[2] * other.group1()[2],
+                g0: 0.0 - self.group1()[0] * other.group1()[0] - self.group1()[1] * other.group1()[1] - self.group1()[2] * other.group1()[2],
             },
         }
     }
@@ -1269,10 +1139,7 @@ impl Dot<MultiVector> for Line {
     fn dot(self, other: MultiVector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: 0.0
-                    - self.group1()[0] * other.group3()[0]
-                    - self.group1()[1] * other.group3()[1]
-                    - self.group1()[2] * other.group3()[2],
+                g0: 0.0 - self.group1()[0] * other.group3()[0] - self.group1()[1] * other.group3()[1] - self.group1()[2] * other.group3()[2],
             },
         }
     }
@@ -1284,10 +1151,7 @@ impl Dot<Translator> for Line {
     fn dot(self, other: Translator) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: 0.0
-                    - self.group1()[0] * other.group0()[0]
-                    - self.group1()[1] * other.group0()[1]
-                    - self.group1()[2] * other.group0()[2],
+                g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2],
             },
         }
     }
@@ -1299,10 +1163,7 @@ impl Dot<Line> for LineAtInfinity {
     fn dot(self, other: Line) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group1()[0]
-                    - self.group0()[1] * other.group1()[1]
-                    - self.group0()[2] * other.group1()[2],
+                g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2],
             },
         }
     }
@@ -1314,10 +1175,7 @@ impl Dot<LineAtInfinity> for LineAtInfinity {
     fn dot(self, other: LineAtInfinity) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group0()[0]
-                    - self.group0()[1] * other.group0()[1]
-                    - self.group0()[2] * other.group0()[2],
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -1329,10 +1187,7 @@ impl Dot<Motor> for LineAtInfinity {
     fn dot(self, other: Motor) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group1()[0]
-                    - self.group0()[1] * other.group1()[1]
-                    - self.group0()[2] * other.group1()[2],
+                g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2],
             },
         }
     }
@@ -1344,10 +1199,7 @@ impl Dot<MultiVector> for LineAtInfinity {
     fn dot(self, other: MultiVector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group3()[0]
-                    - self.group0()[1] * other.group3()[1]
-                    - self.group0()[2] * other.group3()[2],
+                g0: 0.0 - self.group0()[0] * other.group3()[0] - self.group0()[1] * other.group3()[1] - self.group0()[2] * other.group3()[2],
             },
         }
     }
@@ -1359,10 +1211,7 @@ impl Dot<Translator> for LineAtInfinity {
     fn dot(self, other: Translator) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group0()[0]
-                    - self.group0()[1] * other.group0()[1]
-                    - self.group0()[2] * other.group0()[2],
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -1410,10 +1259,7 @@ impl Dot<Line> for Motor {
     fn dot(self, other: Line) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: 0.0
-                    - self.group1()[0] * other.group1()[0]
-                    - self.group1()[1] * other.group1()[1]
-                    - self.group1()[2] * other.group1()[2],
+                g0: 0.0 - self.group1()[0] * other.group1()[0] - self.group1()[1] * other.group1()[1] - self.group1()[2] * other.group1()[2],
             },
         }
     }
@@ -1425,10 +1271,7 @@ impl Dot<LineAtInfinity> for Motor {
     fn dot(self, other: LineAtInfinity) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: 0.0
-                    - self.group1()[0] * other.group0()[0]
-                    - self.group1()[1] * other.group0()[1]
-                    - self.group1()[2] * other.group0()[2],
+                g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2],
             },
         }
     }
@@ -1440,10 +1283,7 @@ impl Dot<Motor> for Motor {
     fn dot(self, other: Motor) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: 0.0
-                    - self.group1()[0] * other.group1()[0]
-                    - self.group1()[1] * other.group1()[1]
-                    - self.group1()[2] * other.group1()[2],
+                g0: 0.0 - self.group1()[0] * other.group1()[0] - self.group1()[1] * other.group1()[1] - self.group1()[2] * other.group1()[2],
             },
         }
     }
@@ -1455,10 +1295,7 @@ impl Dot<MultiVector> for Motor {
     fn dot(self, other: MultiVector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: 0.0
-                    - self.group1()[0] * other.group3()[0]
-                    - self.group1()[1] * other.group3()[1]
-                    - self.group1()[2] * other.group3()[2],
+                g0: 0.0 - self.group1()[0] * other.group3()[0] - self.group1()[1] * other.group3()[1] - self.group1()[2] * other.group3()[2],
             },
         }
     }
@@ -1470,10 +1307,7 @@ impl Dot<Translator> for Motor {
     fn dot(self, other: Translator) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: 0.0
-                    - self.group1()[0] * other.group0()[0]
-                    - self.group1()[1] * other.group0()[1]
-                    - self.group1()[2] * other.group0()[2],
+                g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2],
             },
         }
     }
@@ -1485,10 +1319,7 @@ impl Dot<Flector> for MultiVector {
     fn dot(self, other: Flector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: self.group1()[0] * other.group0()[0]
-                    + self.group1()[1] * other.group0()[1]
-                    + self.group1()[2] * other.group0()[2]
-                    - self.group4()[3] * other.group1()[3],
+                g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2] - self.group4()[3] * other.group1()[3],
             },
         }
     }
@@ -1512,10 +1343,7 @@ impl Dot<Line> for MultiVector {
     fn dot(self, other: Line) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: 0.0
-                    - self.group3()[0] * other.group1()[0]
-                    - self.group3()[1] * other.group1()[1]
-                    - self.group3()[2] * other.group1()[2],
+                g0: 0.0 - self.group3()[0] * other.group1()[0] - self.group3()[1] * other.group1()[1] - self.group3()[2] * other.group1()[2],
             },
         }
     }
@@ -1527,10 +1355,7 @@ impl Dot<LineAtInfinity> for MultiVector {
     fn dot(self, other: LineAtInfinity) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: 0.0
-                    - self.group3()[0] * other.group0()[0]
-                    - self.group3()[1] * other.group0()[1]
-                    - self.group3()[2] * other.group0()[2],
+                g0: 0.0 - self.group3()[0] * other.group0()[0] - self.group3()[1] * other.group0()[1] - self.group3()[2] * other.group0()[2],
             },
         }
     }
@@ -1554,10 +1379,7 @@ impl Dot<Motor> for MultiVector {
     fn dot(self, other: Motor) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: 0.0
-                    - self.group3()[0] * other.group1()[0]
-                    - self.group3()[1] * other.group1()[1]
-                    - self.group3()[2] * other.group1()[2],
+                g0: 0.0 - self.group3()[0] * other.group1()[0] - self.group3()[1] * other.group1()[1] - self.group3()[2] * other.group1()[2],
             },
         }
     }
@@ -1569,10 +1391,7 @@ impl Dot<MultiVector> for MultiVector {
     fn dot(self, other: MultiVector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: self.group0()[0] * other.group0()[0]
-                    + self.group1()[0] * other.group1()[0]
-                    + self.group1()[1] * other.group1()[1]
-                    + self.group1()[2] * other.group1()[2]
+                g0: self.group0()[0] * other.group0()[0] + self.group1()[0] * other.group1()[0] + self.group1()[1] * other.group1()[1] + self.group1()[2] * other.group1()[2]
                     - self.group3()[0] * other.group3()[0]
                     - self.group3()[1] * other.group3()[1]
                     - self.group3()[2] * other.group3()[2]
@@ -1600,9 +1419,7 @@ impl Dot<Point> for MultiVector {
     fn dot(self, other: Point) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: self.group1()[0] * other.group0()[0]
-                    + self.group1()[1] * other.group0()[1]
-                    + self.group1()[2] * other.group0()[2],
+                g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2],
             },
         }
     }
@@ -1614,9 +1431,7 @@ impl Dot<PointAtInfinity> for MultiVector {
     fn dot(self, other: PointAtInfinity) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: self.group1()[0] * other.group0()[0]
-                    + self.group1()[1] * other.group0()[1]
-                    + self.group1()[2] * other.group0()[2],
+                g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2],
             },
         }
     }
@@ -1640,10 +1455,7 @@ impl Dot<Translator> for MultiVector {
     fn dot(self, other: Translator) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: 0.0
-                    - self.group3()[0] * other.group0()[0]
-                    - self.group3()[1] * other.group0()[1]
-                    - self.group3()[2] * other.group0()[2],
+                g0: 0.0 - self.group3()[0] * other.group0()[0] - self.group3()[1] * other.group0()[1] - self.group3()[2] * other.group0()[2],
             },
         }
     }
@@ -1703,9 +1515,7 @@ impl Dot<Flector> for Point {
     fn dot(self, other: Flector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: self.group0()[0] * other.group0()[0]
-                    + self.group0()[1] * other.group0()[1]
-                    + self.group0()[2] * other.group0()[2],
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -1717,9 +1527,7 @@ impl Dot<MultiVector> for Point {
     fn dot(self, other: MultiVector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: self.group0()[0] * other.group1()[0]
-                    + self.group0()[1] * other.group1()[1]
-                    + self.group0()[2] * other.group1()[2],
+                g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2],
             },
         }
     }
@@ -1731,9 +1539,7 @@ impl Dot<Point> for Point {
     fn dot(self, other: Point) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: self.group0()[0] * other.group0()[0]
-                    + self.group0()[1] * other.group0()[1]
-                    + self.group0()[2] * other.group0()[2],
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -1745,9 +1551,7 @@ impl Dot<PointAtInfinity> for Point {
     fn dot(self, other: PointAtInfinity) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: self.group0()[0] * other.group0()[0]
-                    + self.group0()[1] * other.group0()[1]
-                    + self.group0()[2] * other.group0()[2],
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -1759,9 +1563,7 @@ impl Dot<Flector> for PointAtInfinity {
     fn dot(self, other: Flector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: self.group0()[0] * other.group0()[0]
-                    + self.group0()[1] * other.group0()[1]
-                    + self.group0()[2] * other.group0()[2],
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -1773,9 +1575,7 @@ impl Dot<MultiVector> for PointAtInfinity {
     fn dot(self, other: MultiVector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: self.group0()[0] * other.group1()[0]
-                    + self.group0()[1] * other.group1()[1]
-                    + self.group0()[2] * other.group1()[2],
+                g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2],
             },
         }
     }
@@ -1787,9 +1587,7 @@ impl Dot<Point> for PointAtInfinity {
     fn dot(self, other: Point) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: self.group0()[0] * other.group0()[0]
-                    + self.group0()[1] * other.group0()[1]
-                    + self.group0()[2] * other.group0()[2],
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -1801,9 +1599,7 @@ impl Dot<PointAtInfinity> for PointAtInfinity {
     fn dot(self, other: PointAtInfinity) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: self.group0()[0] * other.group0()[0]
-                    + self.group0()[1] * other.group0()[1]
-                    + self.group0()[2] * other.group0()[2],
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -1851,10 +1647,7 @@ impl Dot<Line> for Translator {
     fn dot(self, other: Line) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group1()[0]
-                    - self.group0()[1] * other.group1()[1]
-                    - self.group0()[2] * other.group1()[2],
+                g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2],
             },
         }
     }
@@ -1866,10 +1659,7 @@ impl Dot<LineAtInfinity> for Translator {
     fn dot(self, other: LineAtInfinity) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group0()[0]
-                    - self.group0()[1] * other.group0()[1]
-                    - self.group0()[2] * other.group0()[2],
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -1881,10 +1671,7 @@ impl Dot<Motor> for Translator {
     fn dot(self, other: Motor) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group1()[0]
-                    - self.group0()[1] * other.group1()[1]
-                    - self.group0()[2] * other.group1()[2],
+                g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2],
             },
         }
     }
@@ -1896,10 +1683,7 @@ impl Dot<MultiVector> for Translator {
     fn dot(self, other: MultiVector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group3()[0]
-                    - self.group0()[1] * other.group3()[1]
-                    - self.group0()[2] * other.group3()[2],
+                g0: 0.0 - self.group0()[0] * other.group3()[0] - self.group0()[1] * other.group3()[1] - self.group0()[2] * other.group3()[2],
             },
         }
     }
@@ -1911,10 +1695,7 @@ impl Dot<Translator> for Translator {
     fn dot(self, other: Translator) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group0()[0]
-                    - self.group0()[1] * other.group0()[1]
-                    - self.group0()[2] * other.group0()[2],
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }

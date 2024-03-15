@@ -6,12 +6,12 @@
 //
 
 #![allow(clippy::assign_op_pattern)]
-use crate::cga3d::aspect_duals::*;
-use crate::cga3d::products::contractions::*;
-use crate::cga3d::products::expansions::*;
-use crate::cga3d::products::exterior::AntiWedge;
-use crate::cga3d::products::exterior::Wedge;
-use crate::cga3d::*;
+use crate::aspect_duals::*;
+use crate::products::contractions::*;
+use crate::products::expansions::*;
+use crate::products::exterior::AntiWedge;
+use crate::products::exterior::Wedge;
+use crate::*;
 
 /// Orthogonal Projection
 /// Typically involves bringing a lower dimensional object to a higher dimensional object

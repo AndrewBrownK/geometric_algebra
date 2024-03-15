@@ -63,9 +63,7 @@ fn conformal_3d_right_complements() {
     }
 
     for mut a in cga3d.sorted_basis() {
-        let (sign, correct_complement) = correct_complements
-            .remove(&a.index)
-            .unwrap_or_else(|| panic!("Right Complement list must be complete, missing {a}"));
+        let (sign, correct_complement) = correct_complements.remove(&a.index).unwrap_or_else(|| panic!("Right Complement list must be complete, missing {a}"));
         a.coefficient = a.coefficient * sign;
         let calculated_complement = cga3d.right_complement(&a);
 

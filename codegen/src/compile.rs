@@ -47,21 +47,10 @@ pub fn simplify_and_legalize(expression: Box<Expression>) -> Box<Expression> {
             if let Some(first_group_data) = first_group_data {
                 inner_expression = simplify_and_legalize(inner_expression);
 
-                let all_gathered_items_are_same = indices
-                    .iter()
-                    .all(|it| if let GatherData::Usual(u) = it { u == first_group_data } else { false });
-                let gathering_in_same_group = indices.iter().all(|it| {
-                    if let GatherData::Usual(u) = it {
-                        u.group == first_group_data.group
-                    } else {
-                        false
-                    }
-                });
+                let all_gathered_items_are_same = indices.iter().all(|it| if let GatherData::Usual(u) = it { u == first_group_data } else { false });
+                let gathering_in_same_group = indices.iter().all(|it| if let GatherData::Usual(u) = it { u.group == first_group_data.group } else { false });
                 let no_raw_consts = indices.iter().all(|it| if let GatherData::Usual(_) = it { true } else { false });
-                let some_components_out_of_order = indices
-                    .iter()
-                    .enumerate()
-                    .any(|(i, it)| if let GatherData::Usual(u) = it { i != u.element } else { true });
+                let some_components_out_of_order = indices.iter().enumerate().any(|(i, it)| if let GatherData::Usual(u) = it { i != u.element } else { true });
 
                 if all_gathered_items_are_same {
                     return Box::new(Expression {
@@ -150,11 +139,7 @@ pub fn simplify_and_legalize(expression: Box<Expression>) -> Box<Expression> {
             } else if b.content == ExpressionContent::None {
                 a
             } else {
-                let data_type_hint = if a.data_type_hint == b.data_type_hint {
-                    a.data_type_hint.clone()
-                } else {
-                    None
-                };
+                let data_type_hint = if a.data_type_hint == b.data_type_hint { a.data_type_hint.clone() } else { None };
                 Box::new(Expression {
                     size: expression.size,
                     content: ExpressionContent::Add(a, b),
@@ -209,9 +194,7 @@ pub fn simplify_and_legalize(expression: Box<Expression>) -> Box<Expression> {
             }
 
             match (&mut a.content, &mut b.content) {
-                (ExpressionContent::Gather(_, gather_data), ExpressionContent::Constant(_, c))
-                    if c.iter().all(|c| *c == 1 || *c == 0 || *c == -1) =>
-                {
+                (ExpressionContent::Gather(_, gather_data), ExpressionContent::Constant(_, c)) if c.iter().all(|c| *c == 1 || *c == 0 || *c == -1) => {
                     for (gather_data, c) in gather_data.iter_mut().zip(c) {
                         match *c {
                             0 => *gather_data = GatherData::RawZero,
@@ -229,11 +212,7 @@ pub fn simplify_and_legalize(expression: Box<Expression>) -> Box<Expression> {
                 _ => {}
             }
 
-            let data_type_hint = if a.data_type_hint == b.data_type_hint {
-                a.data_type_hint.clone()
-            } else {
-                None
-            };
+            let data_type_hint = if a.data_type_hint == b.data_type_hint { a.data_type_hint.clone() } else { None };
             return Box::new(Expression {
                 size: expression.size,
                 content: ExpressionContent::Multiply(a, b),
@@ -279,10 +258,7 @@ impl MultiVectorClass {
                 size,
                 content: ExpressionContent::Constant(
                     DataType::SimdVector(size),
-                    result_group
-                        .iter()
-                        .map(|element| if element.index == 0 { scalar_value } else { other_values })
-                        .collect(),
+                    result_group.iter().map(|element| if element.index == 0 { scalar_value } else { other_values }).collect(),
                 ),
                 data_type_hint: Some(DataType::SimdVector(size)),
             };
@@ -304,13 +280,7 @@ impl MultiVectorClass {
         }
     }
 
-    pub fn involution<'a>(
-        name: &'static str,
-        involution: &Involution,
-        parameter_a: &Parameter<'a>,
-        registry: &'a MultiVectorClassRegistry,
-        project: bool,
-    ) -> AstNode<'a> {
+    pub fn involution<'a>(name: &'static str, involution: &Involution, parameter_a: &Parameter<'a>, registry: &'a MultiVectorClassRegistry, project: bool) -> AstNode<'a> {
         let a_flat_basis = parameter_a.multi_vector_class().flat_basis();
         let mut result_signature = Vec::new();
         for a_element in a_flat_basis.iter() {
@@ -342,15 +312,10 @@ impl MultiVectorClass {
             let (factors, a_indices): (Vec<_>, Vec<_>) = (0..size)
                 .map(|index_in_group| {
                     let result_element = &result_flat_basis[base_index + index_in_group];
-                    let involution_element = involution
-                        .terms
-                        .iter()
-                        .position(|(_in_element, out_element)| out_element.index == result_element.index)
-                        .unwrap();
+                    let involution_element = involution.terms.iter().position(|(_in_element, out_element)| out_element.index == result_element.index).unwrap();
                     let (in_element, out_element) = &involution.terms[involution_element];
                     let index_in_a = a_flat_basis.iter().position(|a_element| a_element.index == in_element.index).unwrap();
-                    let coefficients =
-                        out_element.coefficient * result_element.coefficient * in_element.coefficient * a_flat_basis[index_in_a].coefficient;
+                    let coefficients = out_element.coefficient * result_element.coefficient * in_element.coefficient * a_flat_basis[index_in_a].coefficient;
                     let (group, element) = parameter_a.multi_vector_class().index_in_group(index_in_a);
                     let group_size = parameter_a.multi_vector_class().grouped_basis[group].len();
                     if a_group_index.is_none() {
@@ -411,19 +376,10 @@ impl MultiVectorClass {
         }
     }
 
-    pub fn element_wise<'a>(
-        name: &'static str,
-        parameter_a: &Parameter<'a>,
-        parameter_b: &Parameter<'a>,
-        registry: &'a MultiVectorClassRegistry,
-    ) -> AstNode<'a> {
+    pub fn element_wise<'a>(name: &'static str, parameter_a: &Parameter<'a>, parameter_b: &Parameter<'a>, registry: &'a MultiVectorClassRegistry) -> AstNode<'a> {
         let a_flat_basis = parameter_a.multi_vector_class().flat_basis();
         let b_flat_basis = parameter_b.multi_vector_class().flat_basis();
-        let result_signature = a_flat_basis
-            .iter()
-            .chain(b_flat_basis.iter())
-            .cloned()
-            .collect::<std::collections::HashSet<_>>();
+        let result_signature = a_flat_basis.iter().chain(b_flat_basis.iter()).cloned().collect::<std::collections::HashSet<_>>();
         let mut result_signature = result_signature.into_iter().map(|element| element.index).collect::<Vec<_>>();
         result_signature.sort_unstable();
         if let Some(result_class) = registry.get(&result_signature) {
@@ -474,10 +430,7 @@ impl MultiVectorClass {
                             }),
                             Box::new(Expression {
                                 size,
-                                content: ExpressionContent::Constant(
-                                    DataType::SimdVector(size),
-                                    terms.iter().map(|(factor, _index_pair)| *factor).collect::<Vec<_>>(),
-                                ),
+                                content: ExpressionContent::Constant(DataType::SimdVector(size), terms.iter().map(|(factor, _index_pair)| *factor).collect::<Vec<_>>()),
                                 data_type_hint: Some(DataType::SimdVector(size)),
                             }),
                         ),
@@ -518,20 +471,12 @@ impl MultiVectorClass {
         }
     }
 
-    pub fn product<'a>(
-        name: &'static str,
-        product: &Product,
-        parameter_a: &Parameter<'a>,
-        parameter_b: &Parameter<'a>,
-        registry: &'a MultiVectorClassRegistry,
-    ) -> AstNode<'a> {
+    pub fn product<'a>(name: &'static str, product: &Product, parameter_a: &Parameter<'a>, parameter_b: &Parameter<'a>, registry: &'a MultiVectorClassRegistry) -> AstNode<'a> {
         let a_flat_basis = parameter_a.multi_vector_class().flat_basis();
         let b_flat_basis = parameter_b.multi_vector_class().flat_basis();
         let mut result_signature = std::collections::HashSet::new();
         for product_term in product.terms.iter() {
-            if a_flat_basis.iter().any(|e| e.index == product_term.factor_a.index)
-                && b_flat_basis.iter().any(|e| e.index == product_term.factor_b.index)
-            {
+            if a_flat_basis.iter().any(|e| e.index == product_term.factor_a.index) && b_flat_basis.iter().any(|e| e.index == product_term.factor_b.index) {
                 for pt in product_term.product.iter() {
                     result_signature.insert(pt.index);
                 }
@@ -566,10 +511,7 @@ impl MultiVectorClass {
 
         let result_flat_basis = result_class.flat_basis();
         let mut terms_in_result: BTreeMap<usize, Vec<(isize, usize, usize)>> = BTreeMap::new();
-        let stuff = product
-            .terms
-            .iter()
-            .flat_map(|it| it.product.iter().map(|p| (it.factor_a.clone(), it.factor_b.clone(), p.clone())));
+        let stuff = product.terms.iter().flat_map(|it| it.product.iter().map(|p| (it.factor_a.clone(), it.factor_b.clone(), p.clone())));
         for (factor_a, factor_b, product) in stuff {
             let a_position = a_flat_basis.iter().position(|e| e.index == factor_a.index);
             let b_position = b_flat_basis.iter().position(|e| e.index == factor_b.index);
@@ -625,8 +567,7 @@ impl MultiVectorClass {
                     latest_entry = Some(((a_group, vec![a; result_group_size]), [terms_0, terms_1, terms_2, terms_3]));
                     continue;
                 }
-                let ((contract_a_group, mut contract_a), [mut contract_terms_0, mut contract_terms_1, mut contract_terms_2, mut contract_terms_3]) =
-                    latest_entry.take().unwrap();
+                let ((contract_a_group, mut contract_a), [mut contract_terms_0, mut contract_terms_1, mut contract_terms_2, mut contract_terms_3]) = latest_entry.take().unwrap();
 
                 let a_group_match = a_group == contract_a_group;
                 let can_contract_on_0 = terms_0.iter().all(|it| it.0 == 0) || contract_terms_0.iter().all(|it| it.0 == 0);
@@ -652,15 +593,9 @@ impl MultiVectorClass {
                     contract_terms_1.append(&mut terms_1);
                     contract_terms_2.append(&mut terms_2);
                     contract_terms_3.append(&mut terms_3);
-                    latest_entry = Some((
-                        (contract_a_group, contract_a),
-                        [contract_terms_0, contract_terms_1, contract_terms_2, contract_terms_3],
-                    ));
+                    latest_entry = Some(((contract_a_group, contract_a), [contract_terms_0, contract_terms_1, contract_terms_2, contract_terms_3]));
                 } else {
-                    new_terms_by_a.insert(
-                        (contract_a_group, contract_a),
-                        [contract_terms_0, contract_terms_1, contract_terms_2, contract_terms_3],
-                    );
+                    new_terms_by_a.insert((contract_a_group, contract_a), [contract_terms_0, contract_terms_1, contract_terms_2, contract_terms_3]);
                     latest_entry = Some(((a_group, vec![a; result_group_size]), [terms_0, terms_1, terms_2, terms_3]));
                 }
             }
@@ -1039,12 +974,7 @@ impl MultiVectorClass {
         }
     }
 
-    pub fn derive_scale<'a>(
-        name: &'static str,
-        geometric_product: &AstNode<'a>,
-        parameter_a: &Parameter<'a>,
-        parameter_b: &Parameter<'a>,
-    ) -> AstNode<'a> {
+    pub fn derive_scale<'a>(name: &'static str, geometric_product: &AstNode<'a>, parameter_a: &Parameter<'a>, parameter_b: &Parameter<'a>) -> AstNode<'a> {
         let geometric_product_result = result_of_trait!(geometric_product);
         AstNode::TraitImplementation {
             result: Parameter {
@@ -1095,12 +1025,7 @@ impl MultiVectorClass {
         }
     }
 
-    pub fn derive_signum<'a>(
-        name: &'static str,
-        geometric_product: &AstNode<'a>,
-        magnitude: &AstNode<'a>,
-        parameter_a: &Parameter<'a>,
-    ) -> AstNode<'a> {
+    pub fn derive_signum<'a>(name: &'static str, geometric_product: &AstNode<'a>, magnitude: &AstNode<'a>, parameter_a: &Parameter<'a>) -> AstNode<'a> {
         let geometric_product_result = result_of_trait!(geometric_product);
         let magnitude_result = result_of_trait!(magnitude);
         AstNode::TraitImplementation {
@@ -1648,11 +1573,7 @@ impl MultiVectorClass {
                     Box::new(Expression {
                         size: 1,
                         data_type_hint: Some(conversion_result.data_type.clone()),
-                        content: ExpressionContent::Conversion(
-                            geometric_product_2_result.multi_vector_class(),
-                            conversion_result.multi_vector_class(),
-                            product,
-                        ),
+                        content: ExpressionContent::Conversion(geometric_product_2_result.multi_vector_class(), conversion_result.multi_vector_class(), product),
                     })
                 } else {
                     product
@@ -1814,13 +1735,7 @@ pub fn variable<'a>(param: &Parameter<'a>) -> Expression<'a> {
     }
 }
 
-pub fn single_expression_pair_trait_impl<'a>(
-    name: &'static str,
-
-    parameter_a: &Parameter<'a>,
-    parameter_b: &Parameter<'a>,
-    expression: Expression<'a>,
-) -> AstNode<'a> {
+pub fn single_expression_pair_trait_impl<'a>(name: &'static str, parameter_a: &Parameter<'a>, parameter_b: &Parameter<'a>, expression: Expression<'a>) -> AstNode<'a> {
     let data_type = match &expression.data_type_hint {
         Some(dt) => dt.clone(),
         _ => panic!("single_expression_pair_trait_impl for {name} requires data_type_hint on \"expression\" {expression:?}"),
@@ -1828,9 +1743,7 @@ pub fn single_expression_pair_trait_impl<'a>(
     AstNode::TraitImplementation {
         result: Parameter { name, data_type },
         parameters: vec![parameter_a.clone(), parameter_b.clone()],
-        body: vec![AstNode::ReturnStatement {
-            expression: Box::new(expression),
-        }],
+        body: vec![AstNode::ReturnStatement { expression: Box::new(expression) }],
     }
 }
 
@@ -1842,9 +1755,7 @@ pub fn single_expression_single_trait_impl<'a>(name: &'static str, parameter_a: 
     AstNode::TraitImplementation {
         result: Parameter { name, data_type },
         parameters: vec![parameter_a.clone()],
-        body: vec![AstNode::ReturnStatement {
-            expression: Box::new(expression),
-        }],
+        body: vec![AstNode::ReturnStatement { expression: Box::new(expression) }],
     }
 }
 
@@ -1855,8 +1766,6 @@ pub fn single_expression_class_trait_impl<'a>(name: &'static str, mvc: &'a Multi
             data_type: DataType::MultiVector(mvc),
         },
         parameters: vec![],
-        body: vec![AstNode::ReturnStatement {
-            expression: Box::new(expression),
-        }],
+        body: vec![AstNode::ReturnStatement { expression: Box::new(expression) }],
     }
 }

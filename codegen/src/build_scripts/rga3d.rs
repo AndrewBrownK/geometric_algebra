@@ -107,7 +107,7 @@ pub mod products {
     emitter.emit_rust_preamble(
         "
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;",
+use crate::*;",
     )?;
     code_gen.emit_geometric_products(&mut emitter)?;
 
@@ -115,7 +115,7 @@ use crate::rga3d::*;",
     emitter.emit_rust_preamble(
         "
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;",
+use crate::*;",
     )?;
     code_gen.emit_exterior_products(&mut emitter)?;
 
@@ -123,7 +123,7 @@ use crate::rga3d::*;",
     emitter.emit_rust_preamble(
         "
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;",
+use crate::*;",
     )?;
     code_gen.emit_dot_products(&mut emitter)?;
 
@@ -131,8 +131,8 @@ use crate::rga3d::*;",
     emitter.emit_rust_preamble(
         "
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;
-use crate::rga3d::products::geometric::GeometricProduct;",
+use crate::*;
+use crate::products::geometric::GeometricProduct;",
     )?;
     code_gen.emit_component_wise_aspects(&mut emitter)?;
 
@@ -151,8 +151,8 @@ use std::ops::{Add, Div, Mul, Neg, Sub};",
 #![allow(clippy::assign_op_pattern)]
 use geometric_algebra::{simd::*, *, rga3d::*};
 use std::ops::{Add, Div, Mul, Neg, Sub};
-use crate::rga3d::aspects::{Bulk, Weight};
-use crate::rga3d::involutions::*;",
+use crate::aspects::{Bulk, Weight};
+use crate::involutions::*;",
     )?;
     code_gen.emit_aspect_duals(&mut emitter)?;
 
@@ -160,8 +160,8 @@ use crate::rga3d::involutions::*;",
     emitter.emit_rust_preamble(
         "
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;
-use crate::rga3d::products::exterior::AntiWedge;",
+use crate::*;
+use crate::products::exterior::AntiWedge;",
     )?;
     code_gen.emit_characteristic_features(&mut emitter)?;
 
@@ -169,9 +169,9 @@ use crate::rga3d::products::exterior::AntiWedge;",
     emitter.emit_rust_preamble(
         "
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;
-use crate::rga3d::characteristics::Sqrt;
-use crate::rga3d::products::dot::{AntiDot, Dot};",
+use crate::*;
+use crate::characteristics::Sqrt;
+use crate::products::dot::{AntiDot, Dot};",
     )?;
     code_gen.emit_norms(&mut emitter)?;
 
@@ -179,9 +179,9 @@ use crate::rga3d::products::dot::{AntiDot, Dot};",
     emitter.emit_rust_preamble(
         "
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;
-use crate::rga3d::norms::WeightNorm;
-use crate::rga3d::products::geometric::GeometricProduct;",
+use crate::*;
+use crate::norms::WeightNorm;
+use crate::products::geometric::GeometricProduct;",
     )?;
     code_gen.emit_unitize(&mut emitter)?;
 
@@ -189,10 +189,10 @@ use crate::rga3d::products::geometric::GeometricProduct;",
     emitter.emit_rust_preamble(
         "
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;
-use crate::rga3d::unitize::Unitize;
-use crate::rga3d::involutions::AntiReversal;
-use crate::rga3d::products::geometric::GeometricAntiProduct;",
+use crate::*;
+use crate::unitize::Unitize;
+use crate::involutions::AntiReversal;
+use crate::products::geometric::GeometricAntiProduct;",
     )?;
     code_gen.emit_isometries(&mut emitter)?;
 
@@ -200,9 +200,9 @@ use crate::rga3d::products::geometric::GeometricAntiProduct;",
     emitter.emit_rust_preamble(
         "
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;
-use crate::rga3d::aspect_duals::*;
-use crate::rga3d::products::exterior::AntiWedge;",
+use crate::*;
+use crate::aspect_duals::*;
+use crate::products::exterior::AntiWedge;",
     )?;
     code_gen.emit_contractions(&mut emitter)?;
 
@@ -210,9 +210,9 @@ use crate::rga3d::products::exterior::AntiWedge;",
     emitter.emit_rust_preamble(
         "
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;
-use crate::rga3d::aspect_duals::*;
-use crate::rga3d::products::exterior::Wedge;",
+use crate::*;
+use crate::aspect_duals::*;
+use crate::products::exterior::Wedge;",
     )?;
     code_gen.emit_expansions(&mut emitter)?;
 
@@ -220,12 +220,12 @@ use crate::rga3d::products::exterior::Wedge;",
     emitter.emit_rust_preamble(
         "
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;
-use crate::rga3d::products::exterior::Wedge;
-use crate::rga3d::products::exterior::AntiWedge;
-use crate::rga3d::products::contractions::*;
-use crate::rga3d::products::expansions::*;
-use crate::rga3d::aspect_duals::*;",
+use crate::*;
+use crate::products::exterior::Wedge;
+use crate::products::exterior::AntiWedge;
+use crate::products::contractions::*;
+use crate::products::expansions::*;
+use crate::aspect_duals::*;",
     )?;
     code_gen.emit_projections_and_stuff(&mut emitter)?;
 
@@ -233,13 +233,13 @@ use crate::rga3d::aspect_duals::*;",
     emitter.emit_rust_preamble(
         "
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;
-use crate::rga3d::unitize::Unitize;
-use crate::rga3d::products::exterior::Wedge;
-use crate::rga3d::characteristics::Attitude;
-use crate::rga3d::products::projections::*;
-use crate::rga3d::norms::*;
-use crate::rga3d::products::contractions::WeightContraction;",
+use crate::*;
+use crate::unitize::Unitize;
+use crate::products::exterior::Wedge;
+use crate::characteristics::Attitude;
+use crate::products::projections::*;
+use crate::norms::*;
+use crate::products::contractions::WeightContraction;",
     )?;
     code_gen.emit_metric_operations(&mut emitter)?;
 

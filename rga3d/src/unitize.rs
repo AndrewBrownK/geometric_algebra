@@ -6,9 +6,9 @@
 //
 
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::norms::WeightNorm;
-use crate::rga3d::products::geometric::GeometricProduct;
-use crate::rga3d::*;
+use crate::norms::WeightNorm;
+use crate::products::geometric::GeometricProduct;
+use crate::*;
 
 /// Unitization
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Unitization

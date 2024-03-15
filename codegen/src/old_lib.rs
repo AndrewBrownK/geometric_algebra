@@ -20,7 +20,7 @@ use crate::{
 };
 
 // TODO this file is renamed "lib.rs" since we switched to "main.rs"
-//  So organize all the stuff in here, give them proper homes, then delete "old_lib.rs"
+//  So organize all the stuff in here, give them proper homes, then delete or rename "old_lib.rs"
 
 pub fn read_multi_vector_from_str<GA: GeometricAlgebraTrait>(multi_vector_descriptor: &str, algebra: &GA) -> (MultiVectorClass, Option<String>) {
     let mut multi_vector_descriptor_iter = multi_vector_descriptor.split(':');
@@ -37,12 +37,7 @@ pub fn read_multi_vector_from_str<GA: GeometricAlgebraTrait>(multi_vector_descri
             .next()
             .unwrap()
             .split('|')
-            .map(|group_descriptor| {
-                group_descriptor
-                    .split(',')
-                    .map(|element_name| algebra.parse(element_name))
-                    .collect::<Vec<_>>()
-            })
+            .map(|group_descriptor| group_descriptor.split(',').map(|element_name| algebra.parse(element_name)).collect::<Vec<_>>())
             .collect::<Vec<_>>(),
     };
     (mvc, superclass_name)
@@ -66,8 +61,7 @@ impl<'a> TraitImpls<'a> {
     fn add_pair_impl(&mut self, name: &str, parameter_a: Parameter<'a>, parameter_b: Parameter<'a>, the_impl: AstNode<'a>) {
         let a_name = parameter_a.data_type.data_class_name();
         let b_name = parameter_b.data_type.data_class_name();
-        self.pair_args
-            .insert((name.to_string(), a_name.to_string(), b_name.to_string()), the_impl);
+        self.pair_args.insert((name.to_string(), a_name.to_string(), b_name.to_string()), the_impl);
     }
 
     fn add_single_impl(&mut self, name: &str, parameter_a: Parameter<'a>, the_impl: AstNode<'a>) {
@@ -96,12 +90,7 @@ impl<'a> TraitImpls<'a> {
         return self.class_level.get(&(name.to_string(), a_name.to_string()));
     }
 
-    fn get_pair_impl_and_result(
-        &self,
-        name: &str,
-        parameter_a: &Parameter<'a>,
-        parameter_b: &Parameter<'a>,
-    ) -> Option<(&AstNode<'a>, &Parameter<'a>)> {
+    fn get_pair_impl_and_result(&self, name: &str, parameter_a: &Parameter<'a>, parameter_b: &Parameter<'a>) -> Option<(&AstNode<'a>, &Parameter<'a>)> {
         let a_name = parameter_a.data_type.data_class_name();
         let b_name = parameter_b.data_type.data_class_name();
         let the_impl = self.pair_args.get(&(name.to_string(), a_name, b_name))?;
@@ -226,8 +215,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 self.trait_impls.add_class_impl("Grade", param_a.multi_vector_class(), grade_impl);
 
                 let anti_grade_impl = MultiVectorClass::derive_grade("AntiGrade", &param_a, anti_grade);
-                self.trait_impls
-                    .add_class_impl("AntiGrade", param_a.multi_vector_class(), anti_grade_impl);
+                self.trait_impls.add_class_impl("AntiGrade", param_a.multi_vector_class(), anti_grade_impl);
             }
         }
 
@@ -542,9 +530,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let (reversal, reversal_r) = self.trait_impls.get_single_impl_and_result("AntiReversal", &param_a)?;
                 let (gp2, gp2_r) = self.trait_impls.get_pair_impl_and_result(gap, &gp_r, &reversal_r)?;
 
-                let result_class = registry
-                    .get_preferring_superclass(param_b.multi_vector_class().signature().as_slice())
-                    .unwrap();
+                let result_class = registry.get_preferring_superclass(param_b.multi_vector_class().signature().as_slice()).unwrap();
                 let result_param = Parameter {
                     name: "other",
                     data_type: DataType::MultiVector(result_class),
@@ -697,9 +683,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         for (param_a, param_b) in registry.pair_parameters() {
             let name = "ProjectOrthogonallyOnto";
             let _: Option<()> = try {
-                let we = self
-                    .trait_impls
-                    .get_pair_invocation("WeightExpansion", variable(&param_a), variable(&param_b))?;
+                let we = self.trait_impls.get_pair_invocation("WeightExpansion", variable(&param_a), variable(&param_b))?;
                 let anti_wedge = self.algebra.dialect().exterior_anti_product.first()?;
                 let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_b), we)?;
                 let po = single_expression_pair_trait_impl(name, &param_a, &param_b, anti_wedge);
@@ -709,9 +693,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         for (param_a, param_b) in registry.pair_parameters() {
             let name = "AntiProjectOrthogonallyOnto";
             let _: Option<()> = try {
-                let wc = self
-                    .trait_impls
-                    .get_pair_invocation("WeightContraction", variable(&param_a), variable(&param_b))?;
+                let wc = self.trait_impls.get_pair_invocation("WeightContraction", variable(&param_a), variable(&param_b))?;
                 let wedge = self.algebra.dialect().exterior_product.first()?;
                 let wedge = self.trait_impls.get_pair_invocation(wedge, variable(&param_b), wc)?;
                 let apo = single_expression_pair_trait_impl(name, &param_a, &param_b, wedge);
@@ -721,9 +703,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         for (param_a, param_b) in registry.pair_parameters() {
             let name = "ProjectViaOriginOnto";
             let _: Option<()> = try {
-                let be = self
-                    .trait_impls
-                    .get_pair_invocation("BulkExpansion", variable(&param_a), variable(&param_b))?;
+                let be = self.trait_impls.get_pair_invocation("BulkExpansion", variable(&param_a), variable(&param_b))?;
                 let anti_wedge = self.algebra.dialect().exterior_anti_product.first()?;
                 let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_b), be)?;
                 let po = single_expression_pair_trait_impl(name, &param_a, &param_b, anti_wedge);
@@ -743,9 +723,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         for (param_a, param_b) in registry.pair_parameters() {
             let name = "AntiProjectViaHorizonOnto";
             let _: Option<()> = try {
-                let bc = self
-                    .trait_impls
-                    .get_pair_invocation("BulkContraction", variable(&param_a), variable(&param_b))?;
+                let bc = self.trait_impls.get_pair_invocation("BulkContraction", variable(&param_a), variable(&param_b))?;
                 let wedge = self.algebra.dialect().exterior_product.first()?;
                 let wedge = self.trait_impls.get_pair_invocation(wedge, variable(&param_b), bc)?;
                 let apo = single_expression_pair_trait_impl(name, &param_a, &param_b, wedge);
@@ -826,9 +804,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         for (param_a, param_b) in registry.pair_parameters() {
             let name = "SineAngle";
             let _: Option<()> = try {
-                let cos = self
-                    .trait_impls
-                    .get_pair_invocation("CosineAngle", variable(&param_a), variable(&param_b))?;
+                let cos = self.trait_impls.get_pair_invocation("CosineAngle", variable(&param_a), variable(&param_b))?;
                 let scalar = match cos.data_type_hint {
                     Some(DataType::MultiVector(scalar)) => scalar,
                     _ => continue,
@@ -919,11 +895,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     }
 
     /// Datatype definitions, and implementations of external traits
-    pub fn emit_datatypes_and_external_traits(
-        &mut self,
-        registry: &'r MultiVectorClassRegistry,
-        emitter: &mut Emitter<std::fs::File>,
-    ) -> std::io::Result<()> {
+    pub fn emit_datatypes_and_external_traits(&mut self, registry: &'r MultiVectorClassRegistry, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
         // Preamble
         // emitter.emit(&AstNode::Preamble)?;
 
@@ -1368,12 +1340,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             .to_string(),
         })?;
 
-        let trait_names = [
-            "ProjectOrthogonallyOnto",
-            "ProjectOrthogonallyOnto",
-            "ProjectViaOriginOnto",
-            "AntiProjectViaHorizonOnto",
-        ];
+        let trait_names = ["ProjectOrthogonallyOnto", "ProjectOrthogonallyOnto", "ProjectViaOriginOnto", "AntiProjectViaHorizonOnto"];
         self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
         Ok(())
     }

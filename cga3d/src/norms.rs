@@ -6,9 +6,9 @@
 //
 
 #![allow(clippy::assign_op_pattern)]
-use crate::cga3d::characteristics::Sqrt;
-use crate::cga3d::products::dot::{AntiDot, Dot};
-use crate::cga3d::*;
+use crate::characteristics::Sqrt;
+use crate::products::dot::{AntiDot, Dot};
+use crate::*;
 
 /// BulkNorm
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm

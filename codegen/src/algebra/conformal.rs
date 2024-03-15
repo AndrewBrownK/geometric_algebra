@@ -92,10 +92,7 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
         if is_projective {
             // Start with the BasisElement index, yet uncertain of coefficient
             let new_index = anti_scalar - index;
-            let mut candidate_complement = BasisElement {
-                coefficient: 1,
-                index: new_index,
-            };
+            let mut candidate_complement = BasisElement { coefficient: 1, index: new_index };
 
             // Fix the coefficient
             let anti_scalar_product = self
@@ -116,10 +113,7 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
             let new_index = anti_scalar - index;
             // new_index = new_index - origin;
             // new_index = new_index + infinity;
-            let mut candidate_complement = BasisElement {
-                coefficient,
-                index: new_index,
-            };
+            let mut candidate_complement = BasisElement { coefficient, index: new_index };
 
             // Fix the coefficient
             let anti_scalar_product = self
@@ -140,10 +134,7 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
             let new_index = anti_scalar - index;
             // new_index = new_index - infinity;
             // new_index = new_index + origin;
-            let mut candidate_complement = BasisElement {
-                coefficient,
-                index: new_index,
-            };
+            let mut candidate_complement = BasisElement { coefficient, index: new_index };
 
             // Fix the coefficient
             let anti_scalar_product = self
@@ -162,10 +153,7 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
 
         // Start with the BasisElement index, yet uncertain of coefficient
         let new_index = anti_scalar - index;
-        let mut candidate_complement = BasisElement {
-            coefficient,
-            index: new_index,
-        };
+        let mut candidate_complement = BasisElement { coefficient, index: new_index };
 
         // Fix the coefficient
         let anti_scalar_product = self

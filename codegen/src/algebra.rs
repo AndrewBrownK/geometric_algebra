@@ -82,21 +82,13 @@ impl Involution {
 
     pub fn right_complement<GA: GeometricAlgebraTrait>(&self, algebra: &GA) -> Self {
         Self {
-            terms: self
-                .terms
-                .iter()
-                .map(|(key, value)| (key.clone(), algebra.right_complement(value)))
-                .collect(),
+            terms: self.terms.iter().map(|(key, value)| (key.clone(), algebra.right_complement(value))).collect(),
         }
     }
 
     pub fn left_complement<GA: GeometricAlgebraTrait>(&self, algebra: &GA) -> Self {
         Self {
-            terms: self
-                .terms
-                .iter()
-                .map(|(key, value)| (key.clone(), algebra.left_complement(value)))
-                .collect(),
+            terms: self.terms.iter().map(|(key, value)| (key.clone(), algebra.left_complement(value))).collect(),
         }
     }
 
@@ -120,11 +112,7 @@ impl Involution {
                 involution.negated(|grade| grade % 2 == 1),
                 "\nNegates elements with `grade % 2 == 1`\n\nAlso called main involution",
             ),
-            (
-                "Conjugation",
-                involution.negated(|grade| (grade + 3) % 4 < 2),
-                "\nNegates elements with `(grade + 3) % 4 < 2`",
-            ),
+            ("Conjugation", involution.negated(|grade| (grade + 3) % 4 < 2), "\nNegates elements with `(grade + 3) % 4 < 2`"),
             (
                 "Reversal",
                 involution.negated(|grade| grade % 4 >= 2),
@@ -237,8 +225,7 @@ impl Product {
         let basis = algebra.basis();
         let product = Self::new(&basis, &basis, algebra);
 
-        let wedge_like: fn(usize, usize, usize) -> bool =
-            |factor_a_grade, factor_b_grade, product_grade| product_grade == factor_a_grade + factor_b_grade;
+        let wedge_like: fn(usize, usize, usize) -> bool = |factor_a_grade, factor_b_grade, product_grade| product_grade == factor_a_grade + factor_b_grade;
         let scalar_result_only: fn(usize, usize, usize) -> bool = |_, _, product_grade| product_grade == 0;
 
         let dialect = algebra.dialect();

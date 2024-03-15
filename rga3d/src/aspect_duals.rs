@@ -6,8 +6,8 @@
 //
 
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::aspects::{Bulk, Weight};
-use crate::rga3d::involutions::*;
+use crate::aspects::{Bulk, Weight};
+use crate::involutions::*;
 use geometric_algebra::{rga3d::*, simd::*, *};
 use std::ops::{Add, Div, Mul, Neg, Sub};
 

@@ -1,0 +1,5 @@
+max_width = 180
+fn_call_width = 120
+array_width = 120
+chain_width = 120
+short_array_element_width_threshold = 20
