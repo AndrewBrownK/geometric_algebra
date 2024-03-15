@@ -2,7 +2,7 @@ use crate::algebra::conformal::ConformalGeometricAlgebra;
 use crate::algebra::dialect::Dialect;
 use crate::algebra::MultiVectorClassRegistry;
 use crate::emit::Emitter;
-use crate::{read_multi_vector_from_str, validate_wgsl, CodeGenerator};
+use crate::{read_multi_vector_from_str, CodeGenerator};
 use std::io::Write;
 
 const CGA3D: &str = "cga3d";
@@ -65,7 +65,6 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
             registry.register(mv);
         }
     }
-    let cga3d_name = cga3d.name.to_string();
     let mut code_gen = CodeGenerator::new(cga3d);
     code_gen.preamble_and_universal_traits(&registry).unwrap();
     code_gen.basic_norms(&registry);

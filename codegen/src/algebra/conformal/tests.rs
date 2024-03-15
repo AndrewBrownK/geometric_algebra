@@ -63,7 +63,7 @@ fn conformal_3d_right_complements() {
     }
 
     for mut a in cga3d.sorted_basis() {
-        let (sign, mut correct_complement) = correct_complements
+        let (sign, correct_complement) = correct_complements
             .remove(&a.index)
             .unwrap_or_else(|| panic!("Right Complement list must be complete, missing {a}"));
         a.coefficient = a.coefficient * sign;
@@ -1131,7 +1131,7 @@ fn conformal_3d_geometric_products() {
             let (sign, correct_product) = correct_products
                 .remove(&(a.index, b.index))
                 .unwrap_or_else(|| panic!("Cayley table must be complete, missing {a} * {b}"));
-            let mut correct_product: Vec<_> = correct_product
+            let correct_product: Vec<_> = correct_product
                 .into_iter()
                 .map(|mut it| {
                     it.coefficient = it.coefficient * sign;

@@ -1468,13 +1468,8 @@ pub fn validate_glsl(algebra_name: &str, file_path: PathBuf) {
 
     // Parse, prune, and validate the naga module
 
-    // todo stack overflow is here at parse
+    // todo stack overflow is here at parse (if used in build script, not necessarily tests)
     //   Note this only affects glsl, and not wgsl
-    // Frontend.parse
-    // ParsingContext.parse
-    // ParsingContext.parse_external_declaration
-    // ParsingContext.parse_declaration
-    // ParsingContext.parse_type_qualifiers
     //
     // Based on similar historical problems...
     // https://github.com/serde-rs/serde/issues/494#issuecomment-240381241
@@ -1483,7 +1478,9 @@ pub fn validate_glsl(algebra_name: &str, file_path: PathBuf) {
     // So likely a whole bunch of stacked ParsingContext.parse_binary (TokenValue::Plus)
     // Yes..... parse_binary is recursive.
     // Compare this to wgsl parse_binary_op that uses some kind of accumulator and not recursion.
-    // TODO update naga to see if this is even still an issue.
+    //
+    // So a fix is needed in naga
+    // See example of generated glsl below:
 
     /*
     MultiVector multi_vector_multi_vector_geometric_product(MultiVector self, MultiVector other) {
@@ -1919,10 +1916,6 @@ pub fn validate_wgsl(algebra_name: &str, file_path: PathBuf) {
     // Prepare some of naga's clutter
     let mut wgsl_frontend = naga::front::wgsl::Frontend::new();
     let mut validator = naga::valid::Validator::new(ValidationFlags::default(), Capabilities::default());
-    let options = naga::front::glsl::Options {
-        stage: ShaderStage::Compute,
-        defines: Default::default(),
-    };
 
     // Read the wgsl
     let wgsl_file_name = file_path.with_extension("wgsl");

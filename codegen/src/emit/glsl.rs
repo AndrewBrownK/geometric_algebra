@@ -3,7 +3,6 @@ use crate::{
     ast::{AstNode, DataType, Expression, ExpressionContent},
     emit::{camel_to_snake_case, emit_indentation},
 };
-use std::io::Write;
 
 const COMPONENT: &[&str] = &["x", "y", "z", "w"];
 
