@@ -1,5 +1,5 @@
 use std::collections::{BTreeMap, BTreeSet};
-use crate::algebra::basis_element::BasisElement;
+
 use crate::algebra::conformal::ConformalGeometricAlgebra;
 use crate::algebra::dialect::Dialect;
 use crate::algebra::GeometricAlgebraTrait;

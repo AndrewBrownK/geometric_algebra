@@ -17,6 +17,9 @@ mod test {
 //noinspection DuplicatedCode
 pub fn script() -> std::io::Result<()> {
 
+    // TODO more precise rerun conditions
+    //  https://doc.rust-lang.org/cargo/reference/build-scripts.html#outputs-of-the-build-script
+
     let mv_iter = [
         "Scalar:1",
         "AntiScalar:e1234",

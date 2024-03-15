@@ -2,6 +2,7 @@
 
 // pub mod cga3d;
 pub mod rga3d;
+pub mod cga3d;
 pub mod simd;
 
 #[cfg(test)]

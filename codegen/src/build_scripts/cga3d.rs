@@ -8,15 +8,34 @@ use crate::emit::Emitter;
 
 #[cfg(test)]
 mod test {
+    use crate::validate_glsl_and_wgsl;
+
     #[test]
     fn test_script() {
         // crate::build_scripts::cga3d::script().unwrap()
+    }
+
+    // TODO interesting....
+    //  It does not stack overflow when ran as a test,
+    //  but does stack overflow when run in build.rs
+    //  I can only guess that the build.rs has a more restrictive stack.
+    //  Can I find it in the cargo source code?
+    //  https://github.com/rust-lang/cargo/blob/master/src/cargo/core/compiler/custom_build.rs#L477
+    #[test]
+    fn test_shader_validation() {
+        let file_path = std::path::Path::new("C:/Users/andrewbrown/IdeaProjects/geometric_algebra/geometric_algebra/src/").join(std::path::Path::new("cga3d"));
+        validate_glsl_and_wgsl("cga3d", file_path);
     }
 }
 
 
 //noinspection DuplicatedCode
 pub fn script() -> std::io::Result<()> {
+
+    // TODO more precise rerun conditions
+    //  https://doc.rust-lang.org/cargo/reference/build-scripts.html#outputs-of-the-build-script
+
+
 
     let mv_iter = [
         "Scalar:1",
