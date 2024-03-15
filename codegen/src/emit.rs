@@ -30,9 +30,9 @@ mod wgsl;
 
 pub struct Emitter<W: Write> {
     pub actually_emit: bool,
-    pub rust_collector: W,
-    pub glsl_collector: W,
-    pub wgsl_collector: W,
+    rust_collector: W,
+    glsl_collector: W,
+    wgsl_collector: W,
 }
 
 impl Emitter<std::fs::File> {
@@ -45,10 +45,8 @@ impl Emitter<std::fs::File> {
         }
     }
 
-    pub fn with_new_rust_collector(&mut self, path: &std::path::Path, preamble: &'static str) -> std::io::Result<()> {
+    pub fn new_rust_collector(&mut self, path: &std::path::Path) {
         self.rust_collector = std::fs::File::create(path.with_extension("rs")).unwrap();
-        self.rust_collector.write_all(&preamble.as_bytes())?;
-        self.rust_collector.write_all(b"\n\n")
     }
 }
 
@@ -60,5 +58,10 @@ impl<W: Write> Emitter<W> {
             wgsl::emit_code(&mut self.wgsl_collector, ast_node, 0)?;
         }
         Ok(())
+    }
+
+    pub fn emit_rust_preamble(&mut self, preamble: &'static str) -> std::io::Result<()> {
+        self.rust_collector.write_all(&preamble.as_bytes())?;
+        self.rust_collector.write_all(b"\n\n")
     }
 }

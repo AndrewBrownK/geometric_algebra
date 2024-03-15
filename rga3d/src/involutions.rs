@@ -1,5 +1,5 @@
 #![allow(clippy::assign_op_pattern)]
-use crate::{rga3d::*, simd::*, *};
+use geometric_algebra::{rga3d::*, simd::*, *};
 use std::ops::{Add, Div, Mul, Neg, Sub};
 
 /// Negates elements with `grade % 2 == 1`

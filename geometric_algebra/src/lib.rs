@@ -6,10 +6,9 @@
     feature(stdsimd)
 )]
 
-// pub mod cga3d;
-pub mod cga3d;
-pub mod rga3d;
 pub mod simd;
+
+// TODO possibly make copies of these traits and put them in the dedicated crates instead of here
 
 /// All elements set to `0.0`
 pub trait Zero {
@@ -19,12 +18,4 @@ pub trait Zero {
 /// All elements set to `0.0`, except for the scalar, which is set to `1.0`
 pub trait One {
     fn one() -> Self;
-}
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn dummy_test() {
-        //
-    }
 }

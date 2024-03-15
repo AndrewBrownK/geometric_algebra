@@ -2,13 +2,15 @@ use crate::algebra::conformal::ConformalGeometricAlgebra;
 use crate::algebra::dialect::Dialect;
 use crate::algebra::MultiVectorClassRegistry;
 use crate::emit::Emitter;
-use crate::{read_multi_vector_from_str, CodeGenerator};
+use crate::old_lib::{read_multi_vector_from_str, CodeGenerator};
 use std::io::Write;
+use std::path::Path;
 
 const CGA3D: &str = "cga3d";
+const CGA3D_CRATE_PREFIX: &str = "cga3d/";
 
 pub fn script() -> std::io::Result<()> {
-    script_custom(true, "")
+    script_custom(true, CGA3D_CRATE_PREFIX)
 }
 
 //noinspection DuplicatedCode
@@ -73,18 +75,19 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
     code_gen.post_norm_universal_stuff(&registry);
     code_gen.attitude_and_dependencies("Horizon", &registry);
 
-    let mut file_path = std::path::Path::new("src/").join(std::path::Path::new(CGA3D));
+    let mut file_path = Path::new("src/").to_path_buf();
     if !path_prefix.is_empty() {
-        file_path = std::path::Path::new(path_prefix).join(file_path);
+        file_path = Path::new(path_prefix).join(file_path);
     }
     let file_path = file_path;
 
-    let mut emitter = Emitter::new(actually_emit, &file_path);
+    let mut emitter = Emitter::new(actually_emit, &file_path.join(Path::new(CGA3D)));
+    emitter.new_rust_collector(&file_path.join(Path::new("lib")));
 
-    emitter.rust_collector.write_all(
-        b"
+    emitter.emit_rust_preamble(
+        "
 #![allow(clippy::assign_op_pattern)]
-use crate::{simd::*, *};
+use geometric_algebra::{simd::*, *};
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
 pub mod aspects;
@@ -102,38 +105,36 @@ pub mod products {
     pub mod projections;
     pub mod dot;
     pub mod isometries;
-}
-
-",
+}",
     )?;
     code_gen.emit_datatypes_and_external_traits(&registry, &mut emitter)?;
 
-    emitter.with_new_rust_collector(
-        &file_path.join(std::path::Path::new("products/geometric")),
+    emitter.new_rust_collector(&file_path.join(Path::new("products/geometric")));
+    emitter.emit_rust_preamble(
         "
 #![allow(clippy::assign_op_pattern)]
 use crate::cga3d::*;",
     )?;
     code_gen.emit_geometric_products(&mut emitter)?;
 
-    emitter.with_new_rust_collector(
-        &file_path.join(std::path::Path::new("products/exterior")),
+    emitter.new_rust_collector(&file_path.join(Path::new("products/exterior")));
+    emitter.emit_rust_preamble(
         "
 #![allow(clippy::assign_op_pattern)]
 use crate::cga3d::*;",
     )?;
     code_gen.emit_exterior_products(&mut emitter)?;
 
-    emitter.with_new_rust_collector(
-        &file_path.join(std::path::Path::new("products/dot")),
+    emitter.new_rust_collector(&file_path.join(Path::new("products/dot")));
+    emitter.emit_rust_preamble(
         "
 #![allow(clippy::assign_op_pattern)]
 use crate::cga3d::*;",
     )?;
     code_gen.emit_dot_products(&mut emitter)?;
 
-    emitter.with_new_rust_collector(
-        &file_path.join(std::path::Path::new("aspects")),
+    emitter.new_rust_collector(&file_path.join(Path::new("aspects")));
+    emitter.emit_rust_preamble(
         "
 #![allow(clippy::assign_op_pattern)]
 use crate::cga3d::*;
@@ -141,28 +142,28 @@ use crate::cga3d::products::geometric::GeometricProduct;",
     )?;
     code_gen.emit_component_wise_aspects(&mut emitter)?;
 
-    emitter.with_new_rust_collector(
-        &file_path.join(std::path::Path::new("involutions")),
+    emitter.new_rust_collector(&file_path.join(Path::new("involutions")));
+    emitter.emit_rust_preamble(
         "
 #![allow(clippy::assign_op_pattern)]
-use crate::{simd::*, *, cga3d::*};
+use geometric_algebra::{simd::*, *, cga3d::*};
 use std::ops::{Add, Div, Mul, Neg, Sub};",
     )?;
     code_gen.emit_involutions_and_duals(&mut emitter)?;
 
-    emitter.with_new_rust_collector(
-        &file_path.join(std::path::Path::new("aspect_duals")),
+    emitter.new_rust_collector(&file_path.join(Path::new("aspect_duals")));
+    emitter.emit_rust_preamble(
         "
 #![allow(clippy::assign_op_pattern)]
-use crate::{simd::*, *, cga3d::*};
+use geometric_algebra::{simd::*, *, cga3d::*};
 use std::ops::{Add, Div, Mul, Neg, Sub};
 use crate::cga3d::aspects::{Bulk, Weight};
 use crate::cga3d::involutions::*;",
     )?;
     code_gen.emit_aspect_duals(&mut emitter)?;
 
-    emitter.with_new_rust_collector(
-        &file_path.join(std::path::Path::new("characteristics")),
+    emitter.new_rust_collector(&file_path.join(Path::new("characteristics")));
+    emitter.emit_rust_preamble(
         "
 #![allow(clippy::assign_op_pattern)]
 use crate::cga3d::*;
@@ -170,8 +171,8 @@ use crate::cga3d::products::exterior::AntiWedge;",
     )?;
     code_gen.emit_characteristic_features(&mut emitter)?;
 
-    emitter.with_new_rust_collector(
-        &file_path.join(std::path::Path::new("norms")),
+    emitter.new_rust_collector(&file_path.join(Path::new("norms")));
+    emitter.emit_rust_preamble(
         "
 #![allow(clippy::assign_op_pattern)]
 use crate::cga3d::*;
@@ -180,8 +181,8 @@ use crate::cga3d::products::dot::{AntiDot, Dot};",
     )?;
     code_gen.emit_norms(&mut emitter)?;
 
-    emitter.with_new_rust_collector(
-        &file_path.join(std::path::Path::new("unitize")),
+    emitter.new_rust_collector(&file_path.join(Path::new("unitize")));
+    emitter.emit_rust_preamble(
         "
 #![allow(clippy::assign_op_pattern)]
 use crate::cga3d::*;
@@ -190,8 +191,8 @@ use crate::cga3d::products::geometric::GeometricProduct;",
     )?;
     code_gen.emit_unitize(&mut emitter)?;
 
-    emitter.with_new_rust_collector(
-        &file_path.join(std::path::Path::new("products/isometries")),
+    emitter.new_rust_collector(&file_path.join(Path::new("products/isometries")));
+    emitter.emit_rust_preamble(
         "
 #![allow(clippy::assign_op_pattern)]
 use crate::cga3d::*;
@@ -201,8 +202,8 @@ use crate::cga3d::products::geometric::GeometricAntiProduct;",
     )?;
     code_gen.emit_isometries(&mut emitter)?;
 
-    emitter.with_new_rust_collector(
-        &file_path.join(std::path::Path::new("products/contractions")),
+    emitter.new_rust_collector(&file_path.join(Path::new("products/contractions")));
+    emitter.emit_rust_preamble(
         "
 #![allow(clippy::assign_op_pattern)]
 use crate::cga3d::*;
@@ -211,8 +212,8 @@ use crate::cga3d::products::exterior::AntiWedge;",
     )?;
     code_gen.emit_contractions(&mut emitter)?;
 
-    emitter.with_new_rust_collector(
-        &file_path.join(std::path::Path::new("products/expansions")),
+    emitter.new_rust_collector(&file_path.join(Path::new("products/expansions")));
+    emitter.emit_rust_preamble(
         "
 #![allow(clippy::assign_op_pattern)]
 use crate::cga3d::*;
@@ -221,8 +222,8 @@ use crate::cga3d::products::exterior::Wedge;",
     )?;
     code_gen.emit_expansions(&mut emitter)?;
 
-    emitter.with_new_rust_collector(
-        &file_path.join(std::path::Path::new("products/projections")),
+    emitter.new_rust_collector(&file_path.join(Path::new("products/projections")));
+    emitter.emit_rust_preamble(
         "
 #![allow(clippy::assign_op_pattern)]
 use crate::cga3d::*;
@@ -234,8 +235,8 @@ use crate::cga3d::aspect_duals::*;",
     )?;
     code_gen.emit_projections_and_stuff(&mut emitter)?;
 
-    emitter.with_new_rust_collector(
-        &file_path.join(std::path::Path::new("metrics")),
+    emitter.new_rust_collector(&file_path.join(Path::new("metrics")));
+    emitter.emit_rust_preamble(
         "
 #![allow(clippy::assign_op_pattern)]
 use crate::cga3d::*;
@@ -259,31 +260,24 @@ use crate::cga3d::products::contractions::WeightContraction;",
 
 #[cfg(test)]
 mod test {
-    use crate::build_scripts::cga3d::{script_custom, CGA3D};
-    use crate::{validate_glsl, validate_wgsl};
+    use crate::build_scripts::cga3d::{script_custom, CGA3D, CGA3D_CRATE_PREFIX};
+    use crate::old_lib::{validate_glsl, validate_wgsl};
     use std::path::Path;
-
-    const OTHER_CRATE: &str = "../geometric_algebra/";
-
-    // #[test]
-    // fn build_with_disk_writes() {
-    //     script_custom(true, OTHER_CRATE).unwrap()
-    // }
 
     #[test]
     fn build_without_disk_writes() {
-        script_custom(false, OTHER_CRATE).unwrap()
+        script_custom(false, CGA3D_CRATE_PREFIX).unwrap()
     }
 
     #[test]
     fn glsl_validation() {
-        let file_path = Path::new(OTHER_CRATE).join(Path::new("src/").join(CGA3D));
+        let file_path = Path::new(CGA3D_CRATE_PREFIX).join(Path::new("src/").join(CGA3D));
         validate_glsl(CGA3D, file_path);
     }
 
     #[test]
     fn wgsl_validation() {
-        let file_path = Path::new(OTHER_CRATE).join(Path::new("src/").join(CGA3D));
+        let file_path = Path::new(CGA3D_CRATE_PREFIX).join(Path::new("src/").join(CGA3D));
         validate_wgsl(CGA3D, file_path);
     }
 }

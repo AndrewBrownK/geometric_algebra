@@ -10,7 +10,7 @@ use naga::front::glsl::Error;
 use naga::valid::{Capabilities, ValidationFlags};
 use naga::ShaderStage;
 
-use algebra::basis_element::BasisElement;
+use crate::algebra::basis_element::BasisElement;
 
 use crate::algebra::GeometricAlgebraTrait;
 use crate::ast::{Expression, ExpressionContent};
@@ -19,17 +19,21 @@ use crate::{
     algebra::{Involution, MultiVectorClass, MultiVectorClassRegistry, Product},
     ast::{AstNode, DataType, Parameter},
     emit::Emitter,
+    result_of_trait,
 };
 
-pub mod algebra;
-mod ast;
-mod compile;
-pub mod emit;
+// TODO this file is renamed "lib.rs" since we switched to "main.rs"
+//  So organize all the stuff in here, give them proper homes, then delete "old_lib.rs"
 
-pub mod build_scripts {
-    pub mod cga3d;
-    pub mod rga3d;
-}
+// pub mod algebra;
+// mod ast;
+// mod compile;
+// pub mod emit;
+//
+// pub mod build_scripts {
+//     pub mod cga3d;
+//     pub mod rga3d;
+// }
 
 pub struct AlgebraDescriptor {
     pub algebra_name: String,

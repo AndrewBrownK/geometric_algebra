@@ -1,7 +1,7 @@
 #![allow(clippy::assign_op_pattern)]
 use crate::rga3d::aspects::{Bulk, Weight};
 use crate::rga3d::involutions::*;
-use crate::{rga3d::*, simd::*, *};
+use geometric_algebra::{rga3d::*, simd::*, *};
 use std::ops::{Add, Div, Mul, Neg, Sub};
 
 /// Right Bulk Dual

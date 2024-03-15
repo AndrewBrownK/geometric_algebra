@@ -1,5 +1,5 @@
 #![allow(clippy::assign_op_pattern)]
-use crate::{simd::*, *};
+use geometric_algebra::{simd::*, *};
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
 pub mod aspect_duals;
