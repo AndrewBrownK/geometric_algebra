@@ -1,3 +1,10 @@
+use std::fs::File;
+use std::io::Write;
+use std::path::Path;
+use std::process::Command;
+
+use crate::ast::AstNode;
+
 pub fn camel_to_snake_case<W: Write>(collector: &mut W, name: &str) -> std::io::Result<()> {
     let mut underscores = name.chars().enumerate().filter(|(_i, c)| c.is_uppercase()).map(|(i, _c)| i).peekable();
     for (i, c) in name.to_lowercase().bytes().enumerate() {
@@ -21,10 +28,6 @@ pub fn emit_indentation<W: Write>(collector: &mut W, indentation: usize) -> std:
     Ok(())
 }
 
-use crate::ast::AstNode;
-use std::io::Write;
-use std::path::Path;
-
 mod glsl;
 mod rust;
 mod wgsl;
@@ -44,20 +47,27 @@ pub struct Emitter<W: Write> {
     rust_collector: W,
     glsl_collector: W,
     wgsl_collector: W,
+    rust_files_so_far: Vec<String>,
 }
 
-impl Emitter<std::fs::File> {
+impl Emitter<File> {
     pub fn new(actually_emit: bool, path: &Path, rust_name: &str, shader_name: &str) -> Self {
+        let rust_path_buff = path.join(Path::new(rust_name)).with_extension("rs");
+        let rust_path_str = rust_path_buff.as_path().to_string_lossy().to_string();
         Self {
             actually_emit,
-            rust_collector: std::fs::File::create(path.join(Path::new(rust_name)).with_extension("rs")).unwrap(),
-            glsl_collector: std::fs::File::create(path.join(Path::new("shaders")).join(Path::new(shader_name)).with_extension("glsl")).unwrap(),
-            wgsl_collector: std::fs::File::create(path.join(Path::new("shaders")).join(Path::new(shader_name)).with_extension("wgsl")).unwrap(),
+            rust_collector: File::create(rust_path_buff).unwrap(),
+            glsl_collector: File::create(path.join(Path::new("shaders")).join(Path::new(shader_name)).with_extension("glsl")).unwrap(),
+            wgsl_collector: File::create(path.join(Path::new("shaders")).join(Path::new(shader_name)).with_extension("wgsl")).unwrap(),
+            rust_files_so_far: vec![rust_path_str],
         }
     }
 
-    pub fn new_rust_collector(&mut self, path: &std::path::Path) {
-        self.rust_collector = std::fs::File::create(path.with_extension("rs")).unwrap();
+    pub fn new_rust_collector(&mut self, path: &Path) {
+        let rust_path_buff = path.with_extension("rs");
+        let rust_path_str = rust_path_buff.as_path().to_string_lossy().to_string();
+        self.rust_collector = File::create(rust_path_buff).unwrap();
+        self.rust_files_so_far.push(rust_path_str);
     }
 }
 
@@ -86,5 +96,23 @@ impl<W: Write> Emitter<W> {
             self.wgsl_collector.write_all(CODEGEN_DISCLAIMER.as_bytes())?;
         }
         Ok(())
+    }
+
+    pub fn end_with_rust_fmt(self) {
+        let result: anyhow::Result<()> = try {
+            let mut cmd = Command::new("rustfmt");
+            for rust_file in self.rust_files_so_far {
+                cmd.arg(rust_file);
+            }
+            let mut child = cmd.spawn()?;
+            let exit_status = child.wait()?;
+            exit_status.exit_ok()?;
+        };
+        match result {
+            Ok(()) => {}
+            Err(err) => {
+                eprintln!("Could not format generated rust files: {err}");
+            }
+        }
     }
 }

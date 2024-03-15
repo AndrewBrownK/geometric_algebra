@@ -249,6 +249,8 @@ use crate::products::contractions::WeightContraction;",
     )?;
     code_gen.emit_metric_operations(&mut emitter)?;
 
+    emitter.end_with_rust_fmt();
+
     // GLSL validation can stack overflow when ran in a build script (requires fix in Naga).
     // However, it is fine in a test (must be larger stack size).
     // So we will not validate here, and just use tests instead.

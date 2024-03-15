@@ -7,3 +7,4 @@ publish = false
 
 [dependencies]
 naga = { version = "0.19.2", features = ["default", "glsl-in", "wgsl-in"] }
+anyhow = "1.0.81"

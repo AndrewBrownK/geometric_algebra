@@ -1,5 +1,7 @@
 #![feature(try_blocks)]
 #![feature(iter_intersperse)]
+#![feature(exit_status_error)]
+
 mod algebra;
 mod ast;
 mod compile;
