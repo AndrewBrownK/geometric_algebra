@@ -1,9 +1,7 @@
-
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;
 use crate::rga3d::aspect_duals::*;
 use crate::rga3d::products::exterior::AntiWedge;
-
+use crate::rga3d::*;
 
 /// Bulk Contraction (Interior Product)
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Interior_products
@@ -11,7 +9,6 @@ pub trait BulkContraction<T> {
     type Output;
     fn bulk_contraction(self, other: T) -> Self::Output;
 }
-
 
 /// Weight Contraction (Interior Product)
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Interior_products
@@ -1571,4 +1568,3 @@ impl WeightContraction<Translator> for Translator {
         self.anti_wedge(other.right_weight_dual())
     }
 }
-

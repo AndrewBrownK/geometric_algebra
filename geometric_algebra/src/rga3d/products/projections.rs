@@ -1,12 +1,10 @@
-
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;
-use crate::rga3d::products::exterior::Wedge;
-use crate::rga3d::products::exterior::AntiWedge;
+use crate::rga3d::aspect_duals::*;
 use crate::rga3d::products::contractions::*;
 use crate::rga3d::products::expansions::*;
-use crate::rga3d::aspect_duals::*;
-
+use crate::rga3d::products::exterior::AntiWedge;
+use crate::rga3d::products::exterior::Wedge;
+use crate::rga3d::*;
 
 /// Orthogonal Projection
 /// Typically involves bringing a lower dimensional object to a higher dimensional object
@@ -17,7 +15,6 @@ pub trait ProjectOrthogonallyOnto<T> {
     fn project_orthogonally_onto(self, other: T) -> Self::Output;
 }
 
-
 /// Orthogonal AntiProjection
 /// Typically involves bringing a higher dimensional object to a lower dimensional object.
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Projections
@@ -27,7 +24,6 @@ pub trait AntiProjectOrthogonallyOnto<T> {
     fn anti_project_orthogonally_onto(self, other: T) -> Self::Output;
 }
 
-
 /// Central (to origin) Projection
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Projections
 /// https://projectivegeometricalgebra.org/projgeomalg.pdf
@@ -35,7 +31,6 @@ pub trait ProjectViaOriginOnto<T> {
     type Output;
     fn project_via_origin_onto(self, other: T) -> Self::Output;
 }
-
 
 /// Outward (to horizon) AntiProjection
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Projections
@@ -2363,4 +2358,3 @@ impl ProjectViaOriginOnto<Translator> for Translator {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
-

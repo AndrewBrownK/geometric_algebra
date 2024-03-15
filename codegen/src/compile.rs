@@ -1,11 +1,11 @@
-use std::collections::BTreeMap;
+use crate::algebra::basis_element::{BasisElement, BasisElementIndex};
+use crate::algebra::GeometricAlgebraTrait;
+use crate::ast::{GatherData, UsualGatherData};
 use crate::{
     algebra::{Involution, MultiVectorClass, MultiVectorClassRegistry, Product},
     ast::{AstNode, DataType, Expression, ExpressionContent, Parameter},
 };
-use crate::algebra::basis_element::{BasisElement, BasisElementIndex};
-use crate::algebra::GeometricAlgebraTrait;
-use crate::ast::{GatherData, UsualGatherData};
+use std::collections::BTreeMap;
 
 #[macro_export]
 macro_rules! result_of_trait {
@@ -20,56 +20,56 @@ macro_rules! result_of_trait {
 pub fn simplify_and_legalize(expression: Box<Expression>) -> Box<Expression> {
     match expression.content {
         ExpressionContent::Gather(mut inner_expression, indices) => {
-            let is_all_consts = indices.iter().all(|it| {
-                match it {
-                    GatherData::Usual(_) => false,
-                    GatherData::RawZero => true,
-                }
+            let is_all_consts = indices.iter().all(|it| match it {
+                GatherData::Usual(_) => false,
+                GatherData::RawZero => true,
             });
             if is_all_consts {
-                let the_consts: Vec<_> = indices.iter().map(|it| {
-                    match it {
+                let the_consts: Vec<_> = indices
+                    .iter()
+                    .map(|it| match it {
                         GatherData::RawZero => 0isize,
                         GatherData::Usual(_) => unreachable!(),
-                    }
-                }).collect();
+                    })
+                    .collect();
                 let size = the_consts.len();
                 return Box::new(Expression {
                     size,
                     data_type_hint: None,
                     content: ExpressionContent::Constant(DataType::SimdVector(size), the_consts),
-                })
+                });
             }
 
-            let first_group_data = indices.iter().find_map(|it| {
-                match it {
-                    GatherData::Usual(u) => Some(u),
-                    _ => None,
-                }
+            let first_group_data = indices.iter().find_map(|it| match it {
+                GatherData::Usual(u) => Some(u),
+                _ => None,
             });
             if let Some(first_group_data) = first_group_data {
                 inner_expression = simplify_and_legalize(inner_expression);
 
-                let all_gathered_items_are_same = indices.iter().all(|it| {
-                    if let GatherData::Usual(u) = it { u == first_group_data } else { false }
-
-                });
+                let all_gathered_items_are_same = indices
+                    .iter()
+                    .all(|it| if let GatherData::Usual(u) = it { u == first_group_data } else { false });
                 let gathering_in_same_group = indices.iter().all(|it| {
-                    if let GatherData::Usual(u) = it { u.group == first_group_data.group } else { false }
+                    if let GatherData::Usual(u) = it {
+                        u.group == first_group_data.group
+                    } else {
+                        false
+                    }
                 });
-                let no_raw_consts = indices.iter().all(|it| {
-                    if let GatherData::Usual(_) = it { true } else { false }
-                });
-                let some_components_out_of_order = indices.iter().enumerate().any(|(i, it)| {
-                    if let GatherData::Usual(u) = it { i != u.element } else { true }
-                });
+                let no_raw_consts = indices.iter().all(|it| if let GatherData::Usual(_) = it { true } else { false });
+                let some_components_out_of_order =
+                    indices
+                        .iter()
+                        .enumerate()
+                        .any(|(i, it)| if let GatherData::Usual(u) = it { i != u.element } else { true });
 
                 if all_gathered_items_are_same {
                     return Box::new(Expression {
                         size: expression.size,
                         content: ExpressionContent::Gather(inner_expression, vec![GatherData::Usual(first_group_data.clone())]),
-                        data_type_hint: None
-                    })
+                        data_type_hint: None,
+                    });
                 }
 
                 if expression.size == indices.len() && gathering_in_same_group {
@@ -79,34 +79,37 @@ pub fn simplify_and_legalize(expression: Box<Expression>) -> Box<Expression> {
                         inner_expression = Box::new(Expression {
                             size: expression.size,
                             content: ExpressionContent::Access(inner_expression, first_group_data.group),
-                            data_type_hint: None
+                            data_type_hint: None,
                         });
                         if no_raw_consts && some_components_out_of_order && agreed_size > 1 {
                             return Box::new(Expression {
                                 size: expression.size,
                                 content: ExpressionContent::Swizzle(
                                     inner_expression,
-                                    indices.iter().map(|it| match it {
-                                        GatherData::Usual(u) => u.element,
-                                        _ => unreachable!(),
-                                    }).collect(),
+                                    indices
+                                        .iter()
+                                        .map(|it| match it {
+                                            GatherData::Usual(u) => u.element,
+                                            _ => unreachable!(),
+                                        })
+                                        .collect(),
                                 ),
-                                data_type_hint: None
-                            })
+                                data_type_hint: None,
+                            });
                         }
-                        return inner_expression
+                        return inner_expression;
                     }
                 }
                 return Box::new(Expression {
                     size: expression.size,
                     content: ExpressionContent::Gather(inner_expression, indices),
-                    data_type_hint: None
+                    data_type_hint: None,
                 });
             } else {
                 Box::new(Expression {
                     size: expression.size,
                     content: ExpressionContent::None,
-                    data_type_hint: None
+                    data_type_hint: None,
                 })
             }
         }
@@ -116,7 +119,7 @@ pub fn simplify_and_legalize(expression: Box<Expression>) -> Box<Expression> {
                 Box::new(Expression {
                     size: expression.size,
                     content: ExpressionContent::Constant(data_type.clone(), vec![*first_value]),
-                    data_type_hint: Some(data_type.clone())
+                    data_type_hint: Some(data_type.clone()),
                 })
             } else {
                 expression
@@ -130,12 +133,12 @@ pub fn simplify_and_legalize(expression: Box<Expression>) -> Box<Expression> {
                             b = Box::new(Expression {
                                 size: expression.size,
                                 content: ExpressionContent::Multiply(c.clone(), e.clone()),
-                                data_type_hint: None
+                                data_type_hint: None,
                             });
                             return simplify_and_legalize(Box::new(Expression {
                                 size: expression.size,
                                 content: ExpressionContent::Subtract(a, b),
-                                data_type_hint: None
+                                data_type_hint: None,
                             }));
                         }
                     }
@@ -148,11 +151,15 @@ pub fn simplify_and_legalize(expression: Box<Expression>) -> Box<Expression> {
             } else if b.content == ExpressionContent::None {
                 a
             } else {
-                let data_type_hint = if a.data_type_hint == b.data_type_hint { a.data_type_hint.clone() } else { None };
+                let data_type_hint = if a.data_type_hint == b.data_type_hint {
+                    a.data_type_hint.clone()
+                } else {
+                    None
+                };
                 Box::new(Expression {
                     size: expression.size,
                     content: ExpressionContent::Add(a, b),
-                    data_type_hint
+                    data_type_hint,
                 })
             }
         }
@@ -187,44 +194,52 @@ pub fn simplify_and_legalize(expression: Box<Expression>) -> Box<Expression> {
                 std::mem::swap(&mut a, &mut b)
             }
             if a.content == ExpressionContent::None {
-                return b
+                return b;
             }
             match b.content {
                 ExpressionContent::None => return a,
                 ExpressionContent::Constant(_, c) if c.iter().all(|c| *c == 1) => return a,
-                ExpressionContent::Constant(_, c) if c.iter().all(|c| *c == 0) => return Box::new(Expression {
-                    size: expression.size,
-                    content: ExpressionContent::None,
-                    data_type_hint: None
-                }),
+                ExpressionContent::Constant(_, c) if c.iter().all(|c| *c == 0) => {
+                    return Box::new(Expression {
+                        size: expression.size,
+                        content: ExpressionContent::None,
+                        data_type_hint: None,
+                    })
+                }
                 _ => {}
             }
 
             match (&mut a.content, &mut b.content) {
-                (ExpressionContent::Gather(_, gather_data), ExpressionContent::Constant(_, c)) if c.iter().all(|c| *c == 1 || *c == 0 || *c == -1) => {
+                (ExpressionContent::Gather(_, gather_data), ExpressionContent::Constant(_, c))
+                    if c.iter().all(|c| *c == 1 || *c == 0 || *c == -1) =>
+                {
                     for (gather_data, c) in gather_data.iter_mut().zip(c) {
                         match *c {
-                            0 => { *gather_data = GatherData::RawZero }
+                            0 => *gather_data = GatherData::RawZero,
                             1 => {}
                             -1 => {
                                 if let GatherData::Usual(u) = gather_data {
                                     u.negate = !u.negate;
                                 }
                             }
-                            _ => unreachable!()
+                            _ => unreachable!(),
                         }
                     }
                     return a;
-                },
+                }
                 _ => {}
             }
 
-            let data_type_hint = if a.data_type_hint == b.data_type_hint { a.data_type_hint.clone() } else { None };
+            let data_type_hint = if a.data_type_hint == b.data_type_hint {
+                a.data_type_hint.clone()
+            } else {
+                None
+            };
             return Box::new(Expression {
                 size: expression.size,
                 content: ExpressionContent::Multiply(a, b),
-                data_type_hint
-            })
+                data_type_hint,
+            });
         }
         _ => expression,
     }
@@ -270,7 +285,7 @@ impl MultiVectorClass {
                         .map(|element| if element.index == 0 { scalar_value } else { other_values })
                         .collect(),
                 ),
-                data_type_hint: Some(DataType::SimdVector(size))
+                data_type_hint: Some(DataType::SimdVector(size)),
             };
             body.push((DataType::SimdVector(size), *simplify_and_legalize(Box::new(expression))));
         }
@@ -284,7 +299,7 @@ impl MultiVectorClass {
                 expression: Box::new(Expression {
                     size: 1,
                     content: ExpressionContent::InvokeClassMethod(self, "Constructor", body),
-                    data_type_hint: Some(DataType::MultiVector(self))
+                    data_type_hint: Some(DataType::MultiVector(self)),
                 }),
             }],
         }
@@ -335,7 +350,8 @@ impl MultiVectorClass {
                         .unwrap();
                     let (in_element, out_element) = &involution.terms[involution_element];
                     let index_in_a = a_flat_basis.iter().position(|a_element| a_element.index == in_element.index).unwrap();
-                    let coefficients = out_element.coefficient * result_element.coefficient * in_element.coefficient * a_flat_basis[index_in_a].coefficient;
+                    let coefficients =
+                        out_element.coefficient * result_element.coefficient * in_element.coefficient * a_flat_basis[index_in_a].coefficient;
                     let (group, element) = parameter_a.multi_vector_class().index_in_group(index_in_a);
                     let group_size = parameter_a.multi_vector_class().grouped_basis[group].len();
                     if a_group_index.is_none() {
@@ -344,7 +360,12 @@ impl MultiVectorClass {
                     let negate = false;
                     (
                         coefficients,
-                        GatherData::Usual(UsualGatherData { negate, group, element, group_size }),
+                        GatherData::Usual(UsualGatherData {
+                            negate,
+                            group,
+                            element,
+                            group_size,
+                        }),
                     )
                 })
                 .unzip();
@@ -358,7 +379,7 @@ impl MultiVectorClass {
                             Box::new(Expression {
                                 size: parameter_a.multi_vector_class().grouped_basis[a_group_index].len(),
                                 content: ExpressionContent::Variable(parameter_a.name),
-                                data_type_hint: None
+                                data_type_hint: None,
                             }),
                             a_indices,
                         ),
@@ -367,10 +388,10 @@ impl MultiVectorClass {
                     Box::new(Expression {
                         size,
                         content: ExpressionContent::Constant(DataType::SimdVector(size), factors),
-                        data_type_hint: Some(DataType::SimdVector(size))
+                        data_type_hint: Some(DataType::SimdVector(size)),
                     }),
                 ),
-                data_type_hint: Some(DataType::SimdVector(size))
+                data_type_hint: Some(DataType::SimdVector(size)),
             };
             body.push((DataType::SimdVector(size), *simplify_and_legalize(Box::new(expression))));
             base_index += size;
@@ -385,7 +406,7 @@ impl MultiVectorClass {
                 expression: Box::new(Expression {
                     size: 1,
                     content: ExpressionContent::InvokeClassMethod(result_class, "Constructor", body),
-                    data_type_hint: Some(DataType::MultiVector(result_class))
+                    data_type_hint: Some(DataType::MultiVector(result_class)),
                 }),
             }],
         }
@@ -421,7 +442,12 @@ impl MultiVectorClass {
                                 parameter_group_index = Some(index_pair.0);
                                 let group_size = parameter.multi_vector_class().grouped_basis[index_pair.0].len();
                                 let negate = false;
-                                let gd = GatherData::Usual(UsualGatherData { negate, group: index_pair.0, element: index_pair.1, group_size });
+                                let gd = GatherData::Usual(UsualGatherData {
+                                    negate,
+                                    group: index_pair.0,
+                                    element: index_pair.1,
+                                    group_size,
+                                });
                                 (result_element.coefficient * flat_basis[index_in_flat_basis].coefficient, gd)
                             } else {
                                 (0, GatherData::RawZero)
@@ -441,11 +467,11 @@ impl MultiVectorClass {
                                             size
                                         },
                                         content: ExpressionContent::Variable(parameter.name),
-                                        data_type_hint: None
+                                        data_type_hint: None,
                                     }),
                                     terms.iter().map(|(_, index_pair)| index_pair).cloned().collect(),
                                 ),
-                                data_type_hint: None
+                                data_type_hint: None,
                             }),
                             Box::new(Expression {
                                 size,
@@ -453,10 +479,10 @@ impl MultiVectorClass {
                                     DataType::SimdVector(size),
                                     terms.iter().map(|(factor, _index_pair)| *factor).collect::<Vec<_>>(),
                                 ),
-                                data_type_hint: Some(DataType::SimdVector(size))
+                                data_type_hint: Some(DataType::SimdVector(size)),
                             }),
                         ),
-                        data_type_hint: Some(DataType::SimdVector(size))
+                        data_type_hint: Some(DataType::SimdVector(size)),
                     }
                 });
                 body.push((
@@ -470,7 +496,7 @@ impl MultiVectorClass {
                             "Div" => ExpressionContent::Divide(Box::new(expressions.next().unwrap()), Box::new(expressions.next().unwrap())),
                             _ => unreachable!(),
                         },
-                        data_type_hint: Some(DataType::SimdVector(size))
+                        data_type_hint: Some(DataType::SimdVector(size)),
                     })),
                 ));
             }
@@ -484,7 +510,7 @@ impl MultiVectorClass {
                     expression: Box::new(Expression {
                         size: 1,
                         content: ExpressionContent::InvokeClassMethod(result_class, "Constructor", body),
-                        data_type_hint: Some(DataType::MultiVector(result_class))
+                        data_type_hint: Some(DataType::MultiVector(result_class)),
                     }),
                 }],
             }
@@ -522,46 +548,48 @@ impl MultiVectorClass {
         let mut result_class = registry.get(&result_signature);
 
         if result_class.is_none() && !result_signature.is_empty() {
-            let mut viable_classes: Vec<_> = registry.classes.iter().filter(|it| {
-                let sig = it.0.signature();
-                result_signature.iter().all(|it| sig.contains(it))
-            }).collect();
+            let mut viable_classes: Vec<_> = registry
+                .classes
+                .iter()
+                .filter(|it| {
+                    let sig = it.0.signature();
+                    result_signature.iter().all(|it| sig.contains(it))
+                })
+                .collect();
             viable_classes.sort_by_key(|it| it.0.signature().len());
             result_class = viable_classes.first().map(|it| &it.0);
         }
 
         let result_class = match result_class {
             None => return AstNode::None,
-            Some(rc) => rc
+            Some(rc) => rc,
         };
 
         let result_flat_basis = result_class.flat_basis();
         let mut terms_in_result: BTreeMap<usize, Vec<(isize, usize, usize)>> = BTreeMap::new();
-        let stuff = product.terms.iter().flat_map(|it| {
-            it.product.iter().map(|p| {
-                (it.factor_a.clone(), it.factor_b.clone(), p.clone())
-            })
-        });
+        let stuff = product
+            .terms
+            .iter()
+            .flat_map(|it| it.product.iter().map(|p| (it.factor_a.clone(), it.factor_b.clone(), p.clone())));
         for (factor_a, factor_b, product) in stuff {
             let a_position = a_flat_basis.iter().position(|e| e.index == factor_a.index);
             let b_position = b_flat_basis.iter().position(|e| e.index == factor_b.index);
             let result_position = result_flat_basis.iter().position(|e| e.index == product.index);
             let (a_flat_index, b_flat_index, result_flat_index) = match (a_position, b_position, result_position) {
                 (Some(a), Some(b), Some(r)) => (a, b, r),
-                _ => continue
+                _ => continue,
             };
-            let coefficient
-                = result_flat_basis[result_flat_index].coefficient
+            let coefficient = result_flat_basis[result_flat_index].coefficient
                 * product.coefficient
                 * a_flat_basis[a_flat_index].coefficient
                 * factor_a.coefficient
                 * b_flat_basis[b_flat_index].coefficient
                 * factor_b.coefficient;
-            terms_in_result.entry(result_flat_index)
+            terms_in_result
+                .entry(result_flat_index)
                 .and_modify(|v| v.push((coefficient, a_flat_index, b_flat_index)))
                 .or_insert(vec![(coefficient, a_flat_index, b_flat_index)]);
         }
-
 
         let mut body = Vec::new();
         let mut base_index = 0;
@@ -570,7 +598,7 @@ impl MultiVectorClass {
             let mut expression = Expression {
                 size: result_group_size,
                 content: ExpressionContent::None,
-                data_type_hint: None
+                data_type_hint: None,
             };
 
             let mut terms_by_a: BTreeMap<(usize, usize), [Vec<(isize, usize, usize)>; 4]> = BTreeMap::new();
@@ -579,7 +607,8 @@ impl MultiVectorClass {
                 for (coefficient, a_flat_index, b_flat_index) in terms {
                     let (a_group, a_element) = parameter_a.multi_vector_class().index_in_group(a_flat_index);
                     let (b_group, b_element) = parameter_b.multi_vector_class().index_in_group(b_flat_index);
-                    terms_by_a.entry((a_group, a_element))
+                    terms_by_a
+                        .entry((a_group, a_element))
                         .and_modify(|it| it[index_in_group].push((coefficient, b_group, b_element)))
                         .or_insert_with(|| {
                             let mut v = [vec![], vec![], vec![], vec![]];
@@ -595,9 +624,10 @@ impl MultiVectorClass {
             for ((a_group, a), [mut terms_0, mut terms_1, mut terms_2, mut terms_3]) in terms_by_a {
                 if latest_entry.is_none() {
                     latest_entry = Some(((a_group, vec![a; result_group_size]), [terms_0, terms_1, terms_2, terms_3]));
-                    continue
+                    continue;
                 }
-                let ((contract_a_group, mut contract_a), [mut contract_terms_0, mut contract_terms_1, mut contract_terms_2, mut contract_terms_3]) = latest_entry.take().unwrap();
+                let ((contract_a_group, mut contract_a), [mut contract_terms_0, mut contract_terms_1, mut contract_terms_2, mut contract_terms_3]) =
+                    latest_entry.take().unwrap();
 
                 let a_group_match = a_group == contract_a_group;
                 let can_contract_on_0 = terms_0.iter().all(|it| it.0 == 0) || contract_terms_0.iter().all(|it| it.0 == 0);
@@ -623,9 +653,15 @@ impl MultiVectorClass {
                     contract_terms_1.append(&mut terms_1);
                     contract_terms_2.append(&mut terms_2);
                     contract_terms_3.append(&mut terms_3);
-                    latest_entry = Some(((contract_a_group, contract_a), [contract_terms_0, contract_terms_1, contract_terms_2, contract_terms_3]));
+                    latest_entry = Some((
+                        (contract_a_group, contract_a),
+                        [contract_terms_0, contract_terms_1, contract_terms_2, contract_terms_3],
+                    ));
                 } else {
-                    new_terms_by_a.insert((contract_a_group, contract_a), [contract_terms_0, contract_terms_1, contract_terms_2, contract_terms_3]);
+                    new_terms_by_a.insert(
+                        (contract_a_group, contract_a),
+                        [contract_terms_0, contract_terms_1, contract_terms_2, contract_terms_3],
+                    );
                     latest_entry = Some(((a_group, vec![a; result_group_size]), [terms_0, terms_1, terms_2, terms_3]));
                 }
             }
@@ -635,10 +671,18 @@ impl MultiVectorClass {
 
             for ((a_group, a), [mut terms_0, mut terms_1, mut terms_2, mut terms_3]) in new_terms_by_a {
                 let a_size = parameter_a.multi_vector_class().grouped_basis[a_group].len();
-                let a_indices: Vec<_> = a.iter().map(|a| {
-                    let negate = false;
-                    GatherData::Usual(UsualGatherData { negate, group: a_group, element: *a, group_size: a_size })
-                }).collect();
+                let a_indices: Vec<_> = a
+                    .iter()
+                    .map(|a| {
+                        let negate = false;
+                        GatherData::Usual(UsualGatherData {
+                            negate,
+                            group: a_group,
+                            element: *a,
+                            group_size: a_size,
+                        })
+                    })
+                    .collect();
                 'inner: while !terms_0.is_empty() || !terms_1.is_empty() || !terms_2.is_empty() || !terms_3.is_empty() {
                     let mut b_indices = vec![];
                     let mut coefficients = vec![];
@@ -653,8 +697,15 @@ impl MultiVectorClass {
                     let b_size = parameter_b.multi_vector_class().grouped_basis[b_group].len();
                     coefficients.push(c);
                     let negate = false;
-                    let mut b_gather_data = GatherData::Usual(UsualGatherData { negate, group: b_group, element: b, group_size: b_size });
-                    if c == 0 { b_gather_data = GatherData::RawZero; }
+                    let mut b_gather_data = GatherData::Usual(UsualGatherData {
+                        negate,
+                        group: b_group,
+                        element: b,
+                        group_size: b_size,
+                    });
+                    if c == 0 {
+                        b_gather_data = GatherData::RawZero;
+                    }
                     b_indices.push(b_gather_data);
 
                     if !terms_1.is_empty() {
@@ -672,8 +723,15 @@ impl MultiVectorClass {
                         let b_size = parameter_b.multi_vector_class().grouped_basis[b_group].len();
                         coefficients.push(c);
                         let negate = false;
-                        let mut b_gather_data = GatherData::Usual(UsualGatherData { negate, group: b_group, element: b, group_size: b_size });
-                        if c == 0 { b_gather_data = GatherData::RawZero; }
+                        let mut b_gather_data = GatherData::Usual(UsualGatherData {
+                            negate,
+                            group: b_group,
+                            element: b,
+                            group_size: b_size,
+                        });
+                        if c == 0 {
+                            b_gather_data = GatherData::RawZero;
+                        }
                         b_indices.push(b_gather_data);
                     }
 
@@ -682,8 +740,15 @@ impl MultiVectorClass {
                         let b_size = parameter_b.multi_vector_class().grouped_basis[b_group].len();
                         coefficients.push(c);
                         let negate = false;
-                        let mut b_gather_data = GatherData::Usual(UsualGatherData { negate, group: b_group, element: b, group_size: b_size });
-                        if c == 0 { b_gather_data = GatherData::RawZero; }
+                        let mut b_gather_data = GatherData::Usual(UsualGatherData {
+                            negate,
+                            group: b_group,
+                            element: b,
+                            group_size: b_size,
+                        });
+                        if c == 0 {
+                            b_gather_data = GatherData::RawZero;
+                        }
                         b_indices.push(b_gather_data);
                     }
 
@@ -692,13 +757,20 @@ impl MultiVectorClass {
                         let b_size = parameter_b.multi_vector_class().grouped_basis[b_group].len();
                         coefficients.push(c);
                         let negate = false;
-                        let mut b_gather_data = GatherData::Usual(UsualGatherData { negate, group: b_group, element: b, group_size: b_size });
-                        if c == 0 { b_gather_data = GatherData::RawZero; }
+                        let mut b_gather_data = GatherData::Usual(UsualGatherData {
+                            negate,
+                            group: b_group,
+                            element: b,
+                            group_size: b_size,
+                        });
+                        if c == 0 {
+                            b_gather_data = GatherData::RawZero;
+                        }
                         b_indices.push(b_gather_data);
                     }
 
                     if coefficients.iter().all(|it| *it == 0) {
-                        continue 'inner
+                        continue 'inner;
                     }
 
                     // for (i, c) in coefficients.iter().enumerate() {
@@ -717,7 +789,7 @@ impl MultiVectorClass {
                                 content: ExpressionContent::Variable(parameter_a.name),
                             }),
                             a_indices.clone(),
-                        )
+                        ),
                     };
 
                     let mut gather_b = Expression {
@@ -730,44 +802,32 @@ impl MultiVectorClass {
                                 content: ExpressionContent::Variable(parameter_b.name),
                             }),
                             b_indices,
-                        )
+                        ),
                     };
 
                     if !coefficients.iter().all(|it| *it == 1) {
                         let const_coefficients = Expression {
                             size: result_group_size,
                             data_type_hint: None,
-                            content: ExpressionContent::Constant(
-                                DataType::SimdVector(result_group_size),
-                                coefficients
-                            )
+                            content: ExpressionContent::Constant(DataType::SimdVector(result_group_size), coefficients),
                         };
                         gather_b = Expression {
                             size: result_group_size,
                             data_type_hint: None,
-                            content: ExpressionContent::Multiply(
-                                Box::new(gather_b),
-                                Box::new(const_coefficients),
-                            )
+                            content: ExpressionContent::Multiply(Box::new(gather_b), Box::new(const_coefficients)),
                         };
                     }
 
                     let mul = Expression {
                         size: result_group_size,
                         data_type_hint: None,
-                        content: ExpressionContent::Multiply(
-                            Box::new(gather_a),
-                            Box::new(gather_b),
-                        )
+                        content: ExpressionContent::Multiply(Box::new(gather_a), Box::new(gather_b)),
                     };
 
                     let sum = Expression {
                         size: result_group_size,
                         data_type_hint: None,
-                        content: ExpressionContent::Add(
-                            Box::new(expression),
-                            Box::new(mul),
-                        )
+                        content: ExpressionContent::Add(Box::new(expression), Box::new(mul)),
                     };
 
                     expression = sum;
@@ -776,12 +836,11 @@ impl MultiVectorClass {
 
             // If this entire result_group has not been expressed yet...
             if expression.content == ExpressionContent::None {
-
                 // ...then it is zero
                 expression = Expression {
                     size: result_group_size,
                     content: ExpressionContent::Constant(DataType::SimdVector(result_group_size), (0..result_group_size).map(|_| 0).collect()),
-                    data_type_hint: Some(DataType::SimdVector(result_group_size))
+                    data_type_hint: Some(DataType::SimdVector(result_group_size)),
                 };
             }
 
@@ -793,7 +852,7 @@ impl MultiVectorClass {
             base_index += result_group_size;
         }
         if body.is_empty() {
-            return AstNode::None
+            return AstNode::None;
         }
         AstNode::TraitImplementation {
             result: Parameter {
@@ -805,102 +864,101 @@ impl MultiVectorClass {
                 expression: Box::new(Expression {
                     size: 1,
                     content: ExpressionContent::InvokeClassMethod(result_class, "Constructor", body),
-                    data_type_hint: Some(DataType::MultiVector(result_class))
+                    data_type_hint: Some(DataType::MultiVector(result_class)),
                 }),
             }],
         }
 
-
         /* Example from rga3d
 
-impl WedgeDot<MultiVector> for MultiVector {
-    type Output = MultiVector;
+        impl WedgeDot<MultiVector> for MultiVector {
+            type Output = MultiVector;
 
-    fn wedge_dot(self, other: MultiVector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
+            fn wedge_dot(self, other: MultiVector) -> MultiVector {
+                MultiVector {
+                    groups: MultiVectorGroups {
 
-                g0:   Simd32x2::from(self.group0()[0]) * other.group0()
-                    + Simd32x2::from(self.group1()[0]) * Simd32x2::from([other.group1()[0], other.group4()[0]])
-                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([other.group1()[1], other.group4()[1]])
-                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([other.group1()[2], other.group4()[2]])
-                    + Simd32x2::from(self.group1()[3]) * Simd32x2::from(                     other.group4()[3]) * Simd32x2::from([0.0, 1.0])
-                    + Simd32x2::from(self.group2()[0]) * Simd32x2::from(                     other.group3()[0]) * Simd32x2::from([0.0, -1.0])
-                    + Simd32x2::from(self.group2()[1]) * Simd32x2::from(                     other.group3()[1]) * Simd32x2::from([0.0, -1.0])
-                    + Simd32x2::from(self.group2()[2]) * Simd32x2::from(                     other.group3()[2]) * Simd32x2::from([0.0, -1.0])
-                    - Simd32x2::from(self.group3()[0]) * Simd32x2::from([other.group3()[0], other.group2()[0]])
-                    - Simd32x2::from(self.group3()[1]) * Simd32x2::from([other.group3()[1], other.group2()[1]])
-                    - Simd32x2::from(self.group3()[2]) * Simd32x2::from([other.group3()[2], other.group2()[2]])
-                    + Simd32x2::from(self.group4()[0]) * Simd32x2::from(                     other.group1()[0]) * Simd32x2::from([0.0, -1.0])
-                    + Simd32x2::from(self.group4()[1]) * Simd32x2::from(                     other.group1()[1]) * Simd32x2::from([0.0, -1.0])
-                    + Simd32x2::from(self.group4()[2]) * Simd32x2::from(                     other.group1()[2]) * Simd32x2::from([0.0, -1.0])
-                    - Simd32x2::from(self.group4()[3]) * Simd32x2::from([other.group4()[3], other.group1()[3]])
-                    +                    self.group0() * Simd32x2::from(                     other.group0()[0]) * Simd32x2::from([0.0, 1.0]),
+                        g0:   Simd32x2::from(self.group0()[0]) * other.group0()
+                            + Simd32x2::from(self.group1()[0]) * Simd32x2::from([other.group1()[0], other.group4()[0]])
+                            + Simd32x2::from(self.group1()[1]) * Simd32x2::from([other.group1()[1], other.group4()[1]])
+                            + Simd32x2::from(self.group1()[2]) * Simd32x2::from([other.group1()[2], other.group4()[2]])
+                            + Simd32x2::from(self.group1()[3]) * Simd32x2::from(                     other.group4()[3]) * Simd32x2::from([0.0, 1.0])
+                            + Simd32x2::from(self.group2()[0]) * Simd32x2::from(                     other.group3()[0]) * Simd32x2::from([0.0, -1.0])
+                            + Simd32x2::from(self.group2()[1]) * Simd32x2::from(                     other.group3()[1]) * Simd32x2::from([0.0, -1.0])
+                            + Simd32x2::from(self.group2()[2]) * Simd32x2::from(                     other.group3()[2]) * Simd32x2::from([0.0, -1.0])
+                            - Simd32x2::from(self.group3()[0]) * Simd32x2::from([other.group3()[0], other.group2()[0]])
+                            - Simd32x2::from(self.group3()[1]) * Simd32x2::from([other.group3()[1], other.group2()[1]])
+                            - Simd32x2::from(self.group3()[2]) * Simd32x2::from([other.group3()[2], other.group2()[2]])
+                            + Simd32x2::from(self.group4()[0]) * Simd32x2::from(                     other.group1()[0]) * Simd32x2::from([0.0, -1.0])
+                            + Simd32x2::from(self.group4()[1]) * Simd32x2::from(                     other.group1()[1]) * Simd32x2::from([0.0, -1.0])
+                            + Simd32x2::from(self.group4()[2]) * Simd32x2::from(                     other.group1()[2]) * Simd32x2::from([0.0, -1.0])
+                            - Simd32x2::from(self.group4()[3]) * Simd32x2::from([other.group4()[3], other.group1()[3]])
+                            +                    self.group0() * Simd32x2::from(                     other.group0()[0]) * Simd32x2::from([0.0, 1.0]),
 
-                g1:   Simd32x4::from(self.group0()[0]) * other.group1()
-                    + Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[0], other.group3()[2], other.group3()[1], other.group2()[0]]) * Simd32x4::from([1.0, 1.0, -1.0, -1.0])
-                    + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group3()[2], other.group0()[0], other.group3()[0], other.group2()[1]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0])
-                    + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group3()[1], other.group3()[0], other.group0()[0], other.group2()[2]]) * Simd32x4::from([1.0, -1.0, 1.0, -1.0])
-                    + Simd32x4::from(self.group1()[3]) * Simd32x4::from(                                                           other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0])
-                    + Simd32x4::from(self.group2()[0]) * Simd32x4::from(                                                           other.group1()[0]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0])
-                    + Simd32x4::from(self.group2()[1]) * Simd32x4::from(                                                           other.group1()[1]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0])
-                    + Simd32x4::from(self.group2()[2]) * Simd32x4::from(                                                           other.group1()[2]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0])
-                    + Simd32x4::from(self.group3()[0]) * Simd32x4::from([other.group4()[3], other.group1()[2], other.group1()[1], other.group4()[0]]) * Simd32x4::from([1.0, 1.0, -1.0, -1.0])
-                    + Simd32x4::from(self.group3()[1]) * Simd32x4::from([other.group1()[2], other.group4()[3], other.group1()[0], other.group4()[1]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0])
-                    + Simd32x4::from(self.group3()[2]) * Simd32x4::from([other.group1()[1], other.group1()[0], other.group4()[3], other.group4()[2]]) * Simd32x4::from([1.0, -1.0, 1.0, -1.0])
-                    + Simd32x4::from(self.group4()[0]) * Simd32x4::from(                                                           other.group3()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0])
-                    + Simd32x4::from(self.group4()[1]) * Simd32x4::from(                                                           other.group3()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0])
-                    + Simd32x4::from(self.group4()[2]) * Simd32x4::from(                                                           other.group3()[2]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0])
-                    + Simd32x4::from(self.group4()[3]) * Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group0()[1]])
-                    + Simd32x4::from([self.group0()[0], self.group0()[0], self.group0()[0], self.group0()[1]]) * swizzle!(other.group4(), 0, 0, 0, 3) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
+                        g1:   Simd32x4::from(self.group0()[0]) * other.group1()
+                            + Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[0], other.group3()[2], other.group3()[1], other.group2()[0]]) * Simd32x4::from([1.0, 1.0, -1.0, -1.0])
+                            + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group3()[2], other.group0()[0], other.group3()[0], other.group2()[1]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0])
+                            + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group3()[1], other.group3()[0], other.group0()[0], other.group2()[2]]) * Simd32x4::from([1.0, -1.0, 1.0, -1.0])
+                            + Simd32x4::from(self.group1()[3]) * Simd32x4::from(                                                           other.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0])
+                            + Simd32x4::from(self.group2()[0]) * Simd32x4::from(                                                           other.group1()[0]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0])
+                            + Simd32x4::from(self.group2()[1]) * Simd32x4::from(                                                           other.group1()[1]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0])
+                            + Simd32x4::from(self.group2()[2]) * Simd32x4::from(                                                           other.group1()[2]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0])
+                            + Simd32x4::from(self.group3()[0]) * Simd32x4::from([other.group4()[3], other.group1()[2], other.group1()[1], other.group4()[0]]) * Simd32x4::from([1.0, 1.0, -1.0, -1.0])
+                            + Simd32x4::from(self.group3()[1]) * Simd32x4::from([other.group1()[2], other.group4()[3], other.group1()[0], other.group4()[1]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0])
+                            + Simd32x4::from(self.group3()[2]) * Simd32x4::from([other.group1()[1], other.group1()[0], other.group4()[3], other.group4()[2]]) * Simd32x4::from([1.0, -1.0, 1.0, -1.0])
+                            + Simd32x4::from(self.group4()[0]) * Simd32x4::from(                                                           other.group3()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0])
+                            + Simd32x4::from(self.group4()[1]) * Simd32x4::from(                                                           other.group3()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0])
+                            + Simd32x4::from(self.group4()[2]) * Simd32x4::from(                                                           other.group3()[2]) * Simd32x4::from([0.0, 0.0, 0.0, -1.0])
+                            + Simd32x4::from(self.group4()[3]) * Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group0()[1]])
+                            + Simd32x4::from([self.group0()[0], self.group0()[0], self.group0()[0], self.group0()[1]]) * swizzle!(other.group4(), 0, 0, 0, 3) * Simd32x4::from([0.0, 0.0, 0.0, -1.0]),
 
-                g2:   Simd32x3::from(self.group0()[0]) * other.group2()
-                    + Simd32x3::from(self.group0()[1]) * other.group3()
-                    + Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group1()[3], other.group4()[2], other.group4()[1]]) * Simd32x3::from([-1.0, -1.0, 1.0])
-                    + Simd32x3::from(self.group1()[1]) * Simd32x3::from([other.group4()[2], other.group1()[3], other.group4()[0]]) * Simd32x3::from([1.0, -1.0, -1.0])
-                    + Simd32x3::from(self.group1()[2]) * Simd32x3::from([other.group4()[1], other.group4()[0], other.group1()[3]]) * Simd32x3::from([-1.0, 1.0, -1.0])
-                    + Simd32x3::from(self.group1()[3]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])
-                    + Simd32x3::from(self.group2()[0]) * Simd32x3::from([other.group0()[0], other.group3()[2], other.group3()[1]]) * Simd32x3::from([1.0, 1.0, -1.0])
-                    + Simd32x3::from(self.group2()[1]) * Simd32x3::from([other.group3()[2], other.group0()[0], other.group3()[0]]) * Simd32x3::from([-1.0, 1.0, 1.0])
-                    + Simd32x3::from(self.group2()[2]) * Simd32x3::from([other.group3()[1], other.group3()[0], other.group0()[0]]) * Simd32x3::from([1.0, -1.0, 1.0])
-                    + Simd32x3::from(self.group3()[0]) * Simd32x3::from([other.group0()[1], other.group2()[2], other.group2()[1]]) * Simd32x3::from([1.0, 1.0, -1.0])
-                    + Simd32x3::from(self.group3()[1]) * Simd32x3::from([other.group2()[2], other.group0()[1], other.group2()[0]]) * Simd32x3::from([-1.0, 1.0, 1.0])
-                    + Simd32x3::from(self.group3()[2]) * Simd32x3::from([other.group2()[1], other.group2()[0], other.group0()[1]]) * Simd32x3::from([1.0, -1.0, 1.0])
-                    + Simd32x3::from(self.group4()[0]) * Simd32x3::from([other.group4()[3], other.group1()[2], other.group1()[1]]) * Simd32x3::from([1.0, 1.0, -1.0])
-                    + Simd32x3::from(self.group4()[1]) * Simd32x3::from([other.group1()[2], other.group4()[3], other.group1()[0]]) * Simd32x3::from([-1.0, 1.0, 1.0])
-                    + Simd32x3::from(self.group4()[2]) * Simd32x3::from([other.group1()[1], other.group1()[0], other.group4()[3]]) * Simd32x3::from([1.0, -1.0, 1.0])
-                    - Simd32x3::from(self.group4()[3]) * Simd32x3::from([other.group4()[0], other.group4()[1], other.group4()[2]]),
+                        g2:   Simd32x3::from(self.group0()[0]) * other.group2()
+                            + Simd32x3::from(self.group0()[1]) * other.group3()
+                            + Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group1()[3], other.group4()[2], other.group4()[1]]) * Simd32x3::from([-1.0, -1.0, 1.0])
+                            + Simd32x3::from(self.group1()[1]) * Simd32x3::from([other.group4()[2], other.group1()[3], other.group4()[0]]) * Simd32x3::from([1.0, -1.0, -1.0])
+                            + Simd32x3::from(self.group1()[2]) * Simd32x3::from([other.group4()[1], other.group4()[0], other.group1()[3]]) * Simd32x3::from([-1.0, 1.0, -1.0])
+                            + Simd32x3::from(self.group1()[3]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])
+                            + Simd32x3::from(self.group2()[0]) * Simd32x3::from([other.group0()[0], other.group3()[2], other.group3()[1]]) * Simd32x3::from([1.0, 1.0, -1.0])
+                            + Simd32x3::from(self.group2()[1]) * Simd32x3::from([other.group3()[2], other.group0()[0], other.group3()[0]]) * Simd32x3::from([-1.0, 1.0, 1.0])
+                            + Simd32x3::from(self.group2()[2]) * Simd32x3::from([other.group3()[1], other.group3()[0], other.group0()[0]]) * Simd32x3::from([1.0, -1.0, 1.0])
+                            + Simd32x3::from(self.group3()[0]) * Simd32x3::from([other.group0()[1], other.group2()[2], other.group2()[1]]) * Simd32x3::from([1.0, 1.0, -1.0])
+                            + Simd32x3::from(self.group3()[1]) * Simd32x3::from([other.group2()[2], other.group0()[1], other.group2()[0]]) * Simd32x3::from([-1.0, 1.0, 1.0])
+                            + Simd32x3::from(self.group3()[2]) * Simd32x3::from([other.group2()[1], other.group2()[0], other.group0()[1]]) * Simd32x3::from([1.0, -1.0, 1.0])
+                            + Simd32x3::from(self.group4()[0]) * Simd32x3::from([other.group4()[3], other.group1()[2], other.group1()[1]]) * Simd32x3::from([1.0, 1.0, -1.0])
+                            + Simd32x3::from(self.group4()[1]) * Simd32x3::from([other.group1()[2], other.group4()[3], other.group1()[0]]) * Simd32x3::from([-1.0, 1.0, 1.0])
+                            + Simd32x3::from(self.group4()[2]) * Simd32x3::from([other.group1()[1], other.group1()[0], other.group4()[3]]) * Simd32x3::from([1.0, -1.0, 1.0])
+                            - Simd32x3::from(self.group4()[3]) * Simd32x3::from([other.group4()[0], other.group4()[1], other.group4()[2]]),
 
-                g3:   Simd32x3::from(self.group0()[0]) * other.group3()
-                    + Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group4()[3], other.group1()[2], other.group1()[1]]) * Simd32x3::from([-1.0, -1.0, 1.0])
-                    + Simd32x3::from(self.group1()[1]) * Simd32x3::from([other.group1()[2], other.group4()[3], other.group1()[0]]) * Simd32x3::from([1.0, -1.0, -1.0])
-                    + Simd32x3::from(self.group1()[2]) * Simd32x3::from([other.group1()[1], other.group1()[0], other.group4()[3]]) * Simd32x3::from([-1.0, 1.0, -1.0])
-                    + Simd32x3::from(self.group3()[0]) * Simd32x3::from([other.group0()[0], other.group3()[2], other.group3()[1]]) * Simd32x3::from([1.0, 1.0, -1.0])
-                    + Simd32x3::from(self.group3()[1]) * Simd32x3::from([other.group3()[2], other.group0()[0], other.group3()[0]]) * Simd32x3::from([-1.0, 1.0, 1.0])
-                    + Simd32x3::from(self.group3()[2]) * Simd32x3::from([other.group3()[1], other.group3()[0], other.group0()[0]]) * Simd32x3::from([1.0, -1.0, 1.0])
-                    - Simd32x3::from(self.group4()[3]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                        g3:   Simd32x3::from(self.group0()[0]) * other.group3()
+                            + Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group4()[3], other.group1()[2], other.group1()[1]]) * Simd32x3::from([-1.0, -1.0, 1.0])
+                            + Simd32x3::from(self.group1()[1]) * Simd32x3::from([other.group1()[2], other.group4()[3], other.group1()[0]]) * Simd32x3::from([1.0, -1.0, -1.0])
+                            + Simd32x3::from(self.group1()[2]) * Simd32x3::from([other.group1()[1], other.group1()[0], other.group4()[3]]) * Simd32x3::from([-1.0, 1.0, -1.0])
+                            + Simd32x3::from(self.group3()[0]) * Simd32x3::from([other.group0()[0], other.group3()[2], other.group3()[1]]) * Simd32x3::from([1.0, 1.0, -1.0])
+                            + Simd32x3::from(self.group3()[1]) * Simd32x3::from([other.group3()[2], other.group0()[0], other.group3()[0]]) * Simd32x3::from([-1.0, 1.0, 1.0])
+                            + Simd32x3::from(self.group3()[2]) * Simd32x3::from([other.group3()[1], other.group3()[0], other.group0()[0]]) * Simd32x3::from([1.0, -1.0, 1.0])
+                            - Simd32x3::from(self.group4()[3]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
 
-                g4:   Simd32x4::from(self.group0()[0]) * other.group4()
-                    + Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[1], other.group2()[2], other.group2()[1], other.group3()[0]]) * Simd32x4::from([1.0, 1.0, -1.0, -1.0])
-                    + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group2()[2], other.group0()[1], other.group2()[0], other.group3()[1]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0])
-                    + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group2()[1], other.group2()[0], other.group0()[1], other.group3()[2]]) * Simd32x4::from([1.0, -1.0, 1.0, -1.0])
-                    + Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group3()[0]]) * Simd32x4::from([1.0, 1.0, 1.0, 0.0])
-                    + Simd32x4::from(self.group2()[0]) * Simd32x4::from([other.group4()[3], other.group1()[2], other.group1()[1], other.group4()[3]]) * Simd32x4::from([-1.0, -1.0, 1.0, 0.0])
-                    + Simd32x4::from(self.group2()[1]) * Simd32x4::from([other.group1()[2], other.group4()[3], other.group1()[0], other.group1()[2]]) * Simd32x4::from([1.0, -1.0, -1.0, 0.0])
-                    + Simd32x4::from(self.group2()[2]) * Simd32x4::from([other.group1()[1], other.group1()[0], other.group4()[3], other.group1()[1]]) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0])
-                    + Simd32x4::from(self.group3()[0]) * Simd32x4::from([other.group1()[3], other.group4()[2], other.group4()[1], other.group1()[0]]) * Simd32x4::from([1.0, 1.0, -1.0, -1.0])
-                    + Simd32x4::from(self.group3()[1]) * Simd32x4::from([other.group4()[2], other.group1()[3], other.group4()[0], other.group1()[1]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0])
-                    + Simd32x4::from(self.group3()[2]) * Simd32x4::from([other.group4()[1], other.group4()[0], other.group1()[3], other.group1()[2]]) * Simd32x4::from([1.0, -1.0, 1.0, -1.0])
-                    + Simd32x4::from(self.group4()[0]) * Simd32x4::from([other.group0()[0], other.group3()[2], other.group3()[1], other.group0()[0]]) * Simd32x4::from([1.0, 1.0, -1.0, 0.0])
-                    + Simd32x4::from(self.group4()[1]) * Simd32x4::from([other.group3()[2], other.group0()[0], other.group3()[0], other.group3()[2]]) * Simd32x4::from([-1.0, 1.0, 1.0, 0.0])
-                    + Simd32x4::from(self.group4()[2]) * Simd32x4::from([other.group3()[1], other.group3()[0], other.group0()[0], other.group3()[1]]) * Simd32x4::from([1.0, -1.0, 1.0, 0.0])
-                    + Simd32x4::from(self.group4()[3]) * Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group0()[0]])
-                    + Simd32x4::from([self.group0()[1], self.group0()[1], self.group0()[1], self.group0()[0]]) * swizzle!(other.group1(), 0, 1, 2, 0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0])
+                        g4:   Simd32x4::from(self.group0()[0]) * other.group4()
+                            + Simd32x4::from(self.group1()[0]) * Simd32x4::from([other.group0()[1], other.group2()[2], other.group2()[1], other.group3()[0]]) * Simd32x4::from([1.0, 1.0, -1.0, -1.0])
+                            + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group2()[2], other.group0()[1], other.group2()[0], other.group3()[1]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0])
+                            + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group2()[1], other.group2()[0], other.group0()[1], other.group3()[2]]) * Simd32x4::from([1.0, -1.0, 1.0, -1.0])
+                            + Simd32x4::from(self.group1()[3]) * Simd32x4::from([other.group3()[0], other.group3()[1], other.group3()[2], other.group3()[0]]) * Simd32x4::from([1.0, 1.0, 1.0, 0.0])
+                            + Simd32x4::from(self.group2()[0]) * Simd32x4::from([other.group4()[3], other.group1()[2], other.group1()[1], other.group4()[3]]) * Simd32x4::from([-1.0, -1.0, 1.0, 0.0])
+                            + Simd32x4::from(self.group2()[1]) * Simd32x4::from([other.group1()[2], other.group4()[3], other.group1()[0], other.group1()[2]]) * Simd32x4::from([1.0, -1.0, -1.0, 0.0])
+                            + Simd32x4::from(self.group2()[2]) * Simd32x4::from([other.group1()[1], other.group1()[0], other.group4()[3], other.group1()[1]]) * Simd32x4::from([-1.0, 1.0, -1.0, 0.0])
+                            + Simd32x4::from(self.group3()[0]) * Simd32x4::from([other.group1()[3], other.group4()[2], other.group4()[1], other.group1()[0]]) * Simd32x4::from([1.0, 1.0, -1.0, -1.0])
+                            + Simd32x4::from(self.group3()[1]) * Simd32x4::from([other.group4()[2], other.group1()[3], other.group4()[0], other.group1()[1]]) * Simd32x4::from([-1.0, 1.0, 1.0, -1.0])
+                            + Simd32x4::from(self.group3()[2]) * Simd32x4::from([other.group4()[1], other.group4()[0], other.group1()[3], other.group1()[2]]) * Simd32x4::from([1.0, -1.0, 1.0, -1.0])
+                            + Simd32x4::from(self.group4()[0]) * Simd32x4::from([other.group0()[0], other.group3()[2], other.group3()[1], other.group0()[0]]) * Simd32x4::from([1.0, 1.0, -1.0, 0.0])
+                            + Simd32x4::from(self.group4()[1]) * Simd32x4::from([other.group3()[2], other.group0()[0], other.group3()[0], other.group3()[2]]) * Simd32x4::from([-1.0, 1.0, 1.0, 0.0])
+                            + Simd32x4::from(self.group4()[2]) * Simd32x4::from([other.group3()[1], other.group3()[0], other.group0()[0], other.group3()[1]]) * Simd32x4::from([1.0, -1.0, 1.0, 0.0])
+                            + Simd32x4::from(self.group4()[3]) * Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group0()[0]])
+                            + Simd32x4::from([self.group0()[1], self.group0()[1], self.group0()[1], self.group0()[0]]) * swizzle!(other.group1(), 0, 1, 2, 0) * Simd32x4::from([-1.0, -1.0, -1.0, 0.0])
+                    }
+                }
             }
         }
-    }
-}
-         */
+                 */
     }
 
     pub fn derive_unitize<'a>(
@@ -913,7 +971,10 @@ impl WedgeDot<MultiVector> for MultiVector {
         let geometric_product_result = result_of_trait!(geometric_product);
         let weight_norm_result = result_of_trait!(weight_norm);
         AstNode::TraitImplementation {
-            result: Parameter { name, data_type: geometric_product_result.data_type.clone() },
+            result: Parameter {
+                name,
+                data_type: geometric_product_result.data_type.clone(),
+            },
             parameters: vec![parameter_a.clone()],
             body: vec![AstNode::ReturnStatement {
                 expression: Box::new(Expression {
@@ -923,7 +984,7 @@ impl WedgeDot<MultiVector> for MultiVector {
                         Box::new(Expression {
                             size: 1,
                             content: ExpressionContent::Variable(parameter_a.name),
-                            data_type_hint: Some(parameter_a.data_type.clone())
+                            data_type_hint: Some(parameter_a.data_type.clone()),
                         }),
                         geometric_product_result.name,
                         vec![(
@@ -941,7 +1002,7 @@ impl WedgeDot<MultiVector> for MultiVector {
                                                 Box::new(Expression {
                                                     size: 1,
                                                     content: ExpressionContent::Constant(DataType::SimdVector(1), vec![1]),
-                                                    data_type_hint: Some(DataType::SimdVector(1))
+                                                    data_type_hint: Some(DataType::SimdVector(1)),
                                                 }),
                                                 Box::new(Expression {
                                                     size: 1,
@@ -953,28 +1014,27 @@ impl WedgeDot<MultiVector> for MultiVector {
                                                                 Box::new(Expression {
                                                                     size: 1,
                                                                     content: ExpressionContent::Variable(parameter_a.name),
-                                                                    data_type_hint: Some(parameter_a.data_type.clone())
+                                                                    data_type_hint: Some(parameter_a.data_type.clone()),
                                                                 }),
                                                                 weight_norm_result.name,
                                                                 vec![],
                                                             ),
-                                                            data_type_hint: Some(weight_norm_result.data_type.clone())
+                                                            data_type_hint: Some(weight_norm_result.data_type.clone()),
                                                         }),
                                                         0,
                                                     ),
-                                                    data_type_hint: None
+                                                    data_type_hint: None,
                                                 }),
                                             ),
-                                            data_type_hint: None
+                                            data_type_hint: None,
                                         },
                                     )],
                                 ),
-                                data_type_hint: Some(parameter_b.data_type.clone())
+                                data_type_hint: Some(parameter_b.data_type.clone()),
                             },
-
-                        )]
+                        )],
                     ),
-                    data_type_hint: Some(geometric_product_result.data_type.clone())
+                    data_type_hint: Some(geometric_product_result.data_type.clone()),
                 }),
             }],
         }
@@ -1007,7 +1067,7 @@ impl WedgeDot<MultiVector> for MultiVector {
                         Box::new(Expression {
                             size: 1,
                             content: ExpressionContent::Variable(parameter_a.name),
-                            data_type_hint: Some(parameter_a.data_type.clone())
+                            data_type_hint: Some(parameter_a.data_type.clone()),
                         }),
                         geometric_product_result.name,
                         vec![(
@@ -1022,15 +1082,15 @@ impl WedgeDot<MultiVector> for MultiVector {
                                         Expression {
                                             size: 1,
                                             content: ExpressionContent::Variable(parameter_b.name),
-                                            data_type_hint: Some(parameter_b.data_type.clone())
+                                            data_type_hint: Some(parameter_b.data_type.clone()),
                                         },
                                     )],
                                 ),
-                                data_type_hint: Some(parameter_b.data_type.clone())
+                                data_type_hint: Some(parameter_b.data_type.clone()),
                             },
                         )],
                     ),
-                    data_type_hint: Some(geometric_product_result.data_type.clone())
+                    data_type_hint: Some(geometric_product_result.data_type.clone()),
                 }),
             }],
         }
@@ -1092,12 +1152,12 @@ impl WedgeDot<MultiVector> for MultiVector {
                                                                 Box::new(Expression {
                                                                     size: 1,
                                                                     content: ExpressionContent::Variable(parameter_a.name),
-                                                                    data_type_hint: Some(parameter_a.data_type.clone())
+                                                                    data_type_hint: Some(parameter_a.data_type.clone()),
                                                                 }),
                                                                 magnitude_result.name,
                                                                 vec![],
                                                             ),
-                                                            data_type_hint: Some(magnitude_result.data_type.clone())
+                                                            data_type_hint: Some(magnitude_result.data_type.clone()),
                                                         }),
                                                         0,
                                                     ),
@@ -1602,19 +1662,18 @@ impl WedgeDot<MultiVector> for MultiVector {
         }
     }
 
-    pub fn derive_grade<'a>(
-        name: &'static str,
-        parameter_a: &Parameter<'a>,
-        grade: usize
-    ) -> AstNode<'a> {
+    pub fn derive_grade<'a>(name: &'static str, parameter_a: &Parameter<'a>, grade: usize) -> AstNode<'a> {
         AstNode::TraitImplementation {
-            result: Parameter { name, data_type: DataType::Integer },
+            result: Parameter {
+                name,
+                data_type: DataType::Integer,
+            },
             parameters: vec![parameter_a.clone()],
             body: vec![AstNode::ReturnStatement {
                 expression: Box::new(Expression {
                     size: 0,
                     data_type_hint: Some(DataType::Integer),
-                    content: ExpressionContent::Constant(DataType::Integer, vec![grade as isize])
+                    content: ExpressionContent::Constant(DataType::Integer, vec![grade as isize]),
                 }),
             }],
         }
@@ -1628,7 +1687,6 @@ impl WedgeDot<MultiVector> for MultiVector {
         algebra: &GA,
         registry: &'a MultiVectorClassRegistry,
     ) -> AstNode<'a> {
-
         let mut result_signature = Vec::new();
         let a_flat_basis = parameter_a.multi_vector_class().flat_basis();
         for a_element in a_flat_basis.iter() {
@@ -1638,17 +1696,17 @@ impl WedgeDot<MultiVector> for MultiVector {
             } else if !is_projective && !products.is_empty() {
                 result_signature.push(a_element.index)
             } else {
-                continue
+                continue;
             }
         }
         result_signature.sort_unstable();
         if result_signature.is_empty() {
-            return AstNode::None
+            return AstNode::None;
         }
         let mut param_a_signature = parameter_a.multi_vector_class().signature();
         param_a_signature.sort_unstable();
         if param_a_signature == result_signature {
-            return single_expression_single_trait_impl(name, &parameter_a, variable(&parameter_a))
+            return single_expression_single_trait_impl(name, &parameter_a, variable(&parameter_a));
         }
 
         // Most objects have bulk and weight.
@@ -1658,12 +1716,16 @@ impl WedgeDot<MultiVector> for MultiVector {
 
         let mut result_class = registry.get(&result_signature);
         if result_class.is_none() && !result_signature.is_empty() {
-            let mut viable_classes: Vec<_> = registry.classes.iter().filter(|it| {
-                let sig = it.0.signature();
-                result_signature.iter().all(|it| sig.contains(it)) &&
+            let mut viable_classes: Vec<_> = registry
+                .classes
+                .iter()
+                .filter(|it| {
+                    let sig = it.0.signature();
+                    result_signature.iter().all(|it| sig.contains(it)) &&
                     // Bulk of Line could be represented as Translator with zero anti-scalar, but that is weird
                     sig.iter().all(|it| param_a_signature.contains(it))
-            }).collect();
+                })
+                .collect();
             viable_classes.sort_by_key(|it| it.0.signature().len());
             result_class = viable_classes.first().map(|it| &it.0);
         }
@@ -1681,19 +1743,24 @@ impl WedgeDot<MultiVector> for MultiVector {
                     let result_element = &result_flat_basis[base_index + index_in_group];
                     let index_in_a = a_flat_basis.iter().position(|a_element| a_element == result_element).unwrap();
                     let result_element_is_projective = algebra.product(projective_basis, result_element).is_empty();
-                    let scalar = if is_projective == result_element_is_projective {
-                            1isize
-                        } else {
-                            0isize
-                        };
+                    let scalar = if is_projective == result_element_is_projective { 1isize } else { 0isize };
                     let (group, element) = parameter_a.multi_vector_class().index_in_group(index_in_a);
                     let group_size = parameter_a.multi_vector_class().grouped_basis[group].len();
-                    if a_group_index.is_none() { a_group_index = Some(group); }
+                    if a_group_index.is_none() {
+                        a_group_index = Some(group);
+                    }
                     let negate = false;
-                    (scalar, GatherData::Usual(UsualGatherData { negate, group, element, group_size }))
+                    (
+                        scalar,
+                        GatherData::Usual(UsualGatherData {
+                            negate,
+                            group,
+                            element,
+                            group_size,
+                        }),
+                    )
                 })
                 .unzip();
-
 
             let a_group_index = a_group_index.unwrap();
             let expression = Expression {
@@ -1724,7 +1791,10 @@ impl WedgeDot<MultiVector> for MultiVector {
             base_index += size;
         }
         AstNode::TraitImplementation {
-            result: Parameter { name, data_type: DataType::MultiVector(result_class) },
+            result: Parameter {
+                name,
+                data_type: DataType::MultiVector(result_class),
+            },
             parameters: vec![parameter_a.clone()],
             body: vec![AstNode::ReturnStatement {
                 expression: Box::new(Expression {
@@ -1737,10 +1807,12 @@ impl WedgeDot<MultiVector> for MultiVector {
     }
 }
 
-
-
 pub fn variable<'a>(param: &Parameter<'a>) -> Expression<'a> {
-    Expression { size: 1, content: ExpressionContent::Variable(param.name), data_type_hint: Some(param.data_type.clone()) }
+    Expression {
+        size: 1,
+        content: ExpressionContent::Variable(param.name),
+        data_type_hint: Some(param.data_type.clone()),
+    }
 }
 
 pub fn single_expression_pair_trait_impl<'a>(
@@ -1748,7 +1820,7 @@ pub fn single_expression_pair_trait_impl<'a>(
 
     parameter_a: &Parameter<'a>,
     parameter_b: &Parameter<'a>,
-    expression: Expression<'a>
+    expression: Expression<'a>,
 ) -> AstNode<'a> {
     let data_type = match &expression.data_type_hint {
         Some(dt) => dt.clone(),
@@ -1757,18 +1829,13 @@ pub fn single_expression_pair_trait_impl<'a>(
     AstNode::TraitImplementation {
         result: Parameter { name, data_type },
         parameters: vec![parameter_a.clone(), parameter_b.clone()],
-        body: vec![
-            AstNode::ReturnStatement { expression: Box::new(expression) }
-        ]
+        body: vec![AstNode::ReturnStatement {
+            expression: Box::new(expression),
+        }],
     }
 }
 
-pub fn single_expression_single_trait_impl<'a>(
-    name: &'static str,
-
-    parameter_a: &Parameter<'a>,
-    expression: Expression<'a>
-) -> AstNode<'a> {
+pub fn single_expression_single_trait_impl<'a>(name: &'static str, parameter_a: &Parameter<'a>, expression: Expression<'a>) -> AstNode<'a> {
     let data_type = match &expression.data_type_hint {
         Some(dt) => dt.clone(),
         _ => panic!("single_expression_single_trait_impl for {name} requires data_type_hint on \"expression\" {expression:?}"),
@@ -1776,22 +1843,21 @@ pub fn single_expression_single_trait_impl<'a>(
     AstNode::TraitImplementation {
         result: Parameter { name, data_type },
         parameters: vec![parameter_a.clone()],
-        body: vec![
-            AstNode::ReturnStatement { expression: Box::new(expression) }
-        ]
+        body: vec![AstNode::ReturnStatement {
+            expression: Box::new(expression),
+        }],
     }
 }
 
-pub fn single_expression_class_trait_impl<'a>(
-    name: &'static str,
-    mvc: &'a MultiVectorClass,
-    expression: Expression<'a>
-) -> AstNode<'a> {
+pub fn single_expression_class_trait_impl<'a>(name: &'static str, mvc: &'a MultiVectorClass, expression: Expression<'a>) -> AstNode<'a> {
     AstNode::TraitImplementation {
-        result: Parameter { name, data_type: DataType::MultiVector(mvc) },
+        result: Parameter {
+            name,
+            data_type: DataType::MultiVector(mvc),
+        },
         parameters: vec![],
-        body: vec![
-            AstNode::ReturnStatement { expression: Box::new(expression) }
-        ]
+        body: vec![AstNode::ReturnStatement {
+            expression: Box::new(expression),
+        }],
     }
 }

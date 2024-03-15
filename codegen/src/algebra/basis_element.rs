@@ -41,7 +41,6 @@ impl BasisElement {
     }
 }
 
-
 // NEW PLAN (compared to original geometric_algebra repository)
 //  Since all the weird complements and stuff is characteristic to the strange GeometricAlgebra that is CGA...
 //  Leave BasisElement as a totally plain data type,
@@ -99,4 +98,3 @@ impl PartialOrd for BasisElement {
         Some(self.cmp(other))
     }
 }
-

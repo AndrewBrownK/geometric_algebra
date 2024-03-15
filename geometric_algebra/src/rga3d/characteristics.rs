@@ -1,15 +1,12 @@
-
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;
 use crate::rga3d::products::exterior::AntiWedge;
-
+use crate::rga3d::*;
 
 /// Square Root
 pub trait Sqrt {
     type Output;
     fn sqrt(self) -> Self::Output;
 }
-
 
 /// Grade
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Grade_and_antigrade
@@ -18,14 +15,12 @@ pub trait Grade {
     fn grade(self) -> Self::Output;
 }
 
-
 /// Anti-Grade
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Grade_and_antigrade
 pub trait AntiGrade {
     type Output;
     fn anti_grade(self) -> Self::Output;
 }
-
 
 /// Attitude
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Attitude
@@ -318,7 +313,11 @@ impl Sqrt for AntiScalar {
     type Output = AntiScalar;
 
     fn sqrt(self) -> AntiScalar {
-        AntiScalar { groups: AntiScalarGroups { g0: self.group0().sqrt() } }
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0().sqrt(),
+            },
+        }
     }
 }
 
@@ -326,7 +325,10 @@ impl Sqrt for Scalar {
     type Output = Scalar;
 
     fn sqrt(self) -> Scalar {
-        Scalar { groups: ScalarGroups { g0: self.group0().sqrt() } }
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0().sqrt(),
+            },
+        }
     }
 }
-

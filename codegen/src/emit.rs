@@ -21,13 +21,12 @@ pub fn emit_indentation<W: Write>(collector: &mut W, indentation: usize) -> std:
     Ok(())
 }
 
+use crate::ast::AstNode;
 use std::io::Write;
-use crate::{ast::AstNode};
 
 mod glsl;
 mod rust;
 mod wgsl;
-
 
 pub struct Emitter<W: Write> {
     pub rust_collector: W,
@@ -44,13 +43,12 @@ impl Emitter<std::fs::File> {
         }
     }
 
-    pub fn with_new_rust_collector(&mut self, path: &std::path::Path, preamble: &'static str) -> std::io::Result<()>{
+    pub fn with_new_rust_collector(&mut self, path: &std::path::Path, preamble: &'static str) -> std::io::Result<()> {
         self.rust_collector = std::fs::File::create(path.with_extension("rs")).unwrap();
         self.rust_collector.write_all(&preamble.as_bytes())?;
         self.rust_collector.write_all(b"\n\n")
     }
 }
-
 
 impl<W: Write> Emitter<W> {
     pub fn emit(&mut self, ast_node: &AstNode) -> std::io::Result<()> {

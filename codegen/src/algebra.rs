@@ -1,11 +1,11 @@
-use basis_element::{BasisElement, BasisElementIndex};
 use crate::algebra::dialect::Dialect;
 use crate::ast::{DataType, Parameter};
+use basis_element::{BasisElement, BasisElementIndex};
 
 pub mod basis_element;
-pub mod rigid;
 pub mod conformal;
 pub mod dialect;
+pub mod rigid;
 
 pub trait GeometricAlgebraTrait {
     fn algebra_name(&self) -> &'static str;
@@ -51,7 +51,7 @@ pub struct Involution {
 }
 
 impl Involution {
-    pub fn  identity<GA: GeometricAlgebraTrait>(algebra: &GA) -> Self {
+    pub fn identity<GA: GeometricAlgebraTrait>(algebra: &GA) -> Self {
         Self {
             terms: algebra.basis().into_iter().map(|element| (element.clone(), element)).collect(),
         }
@@ -82,21 +82,31 @@ impl Involution {
 
     pub fn right_complement<GA: GeometricAlgebraTrait>(&self, algebra: &GA) -> Self {
         Self {
-            terms: self.terms.iter().map(|(key, value)| (key.clone(), algebra.right_complement(value))).collect(),
+            terms: self
+                .terms
+                .iter()
+                .map(|(key, value)| (key.clone(), algebra.right_complement(value)))
+                .collect(),
         }
     }
 
     pub fn left_complement<GA: GeometricAlgebraTrait>(&self, algebra: &GA) -> Self {
         Self {
-            terms: self.terms.iter().map(|(key, value)| (key.clone(), algebra.left_complement(value))).collect(),
+            terms: self
+                .terms
+                .iter()
+                .map(|(key, value)| (key.clone(), algebra.left_complement(value)))
+                .collect(),
         }
     }
 
     pub fn double_complement<GA: GeometricAlgebraTrait>(&self, algebra: &GA) -> Self {
         Self {
-            terms: self.terms.iter().map(|(key, value)| {
-                (key.clone(), algebra.right_complement(&algebra.right_complement(value)))
-            }).collect(),
+            terms: self
+                .terms
+                .iter()
+                .map(|(key, value)| (key.clone(), algebra.right_complement(&algebra.right_complement(value))))
+                .collect(),
         }
     }
 
@@ -105,17 +115,49 @@ impl Involution {
         let dimensions = algebra.anti_scalar_element().grade();
         vec![
             ("Neg", involution.negated(|_grade| true), ""),
-            ("Automorphism", involution.negated(|grade| grade % 2 == 1), "\nNegates elements with `grade % 2 == 1`\n\nAlso called main involution"),
-            ("Conjugation", involution.negated(|grade| (grade + 3) % 4 < 2), "\nNegates elements with `(grade + 3) % 4 < 2`"),
-            ("Reversal", involution.negated(|grade| grade % 4 >= 2), "\nNegates elements with `grade % 4 >= 2`\n\nAlso called transpose\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Reverses"),
-            ("AntiReversal", involution.negated(|grade| {
-                let anti_grade = dimensions - grade;
-                anti_grade % 4 >= 2
-            }), "\nNegates elements with `grade % 4 >= 2`\n\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Reverses"),
-            ("Dual", involution.right_complement(algebra), "\nElement order reversed\nAlso known as Right Complement\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Complements"),
-            ("RightComplement", involution.right_complement(algebra), "\nRight Complement\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Complements"),
-            ("LeftComplement", involution.left_complement(algebra), "\nLeft Complement\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Complements"),
-            ("DoubleComplement", involution.double_complement(algebra), "\nDouble Complement\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Complements"),
+            (
+                "Automorphism",
+                involution.negated(|grade| grade % 2 == 1),
+                "\nNegates elements with `grade % 2 == 1`\n\nAlso called main involution",
+            ),
+            (
+                "Conjugation",
+                involution.negated(|grade| (grade + 3) % 4 < 2),
+                "\nNegates elements with `(grade + 3) % 4 < 2`",
+            ),
+            (
+                "Reversal",
+                involution.negated(|grade| grade % 4 >= 2),
+                "\nNegates elements with `grade % 4 >= 2`\n\nAlso called transpose\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Reverses",
+            ),
+            (
+                "AntiReversal",
+                involution.negated(|grade| {
+                    let anti_grade = dimensions - grade;
+                    anti_grade % 4 >= 2
+                }),
+                "\nNegates elements with `grade % 4 >= 2`\n\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Reverses",
+            ),
+            (
+                "Dual",
+                involution.right_complement(algebra),
+                "\nElement order reversed\nAlso known as Right Complement\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Complements",
+            ),
+            (
+                "RightComplement",
+                involution.right_complement(algebra),
+                "\nRight Complement\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Complements",
+            ),
+            (
+                "LeftComplement",
+                involution.left_complement(algebra),
+                "\nLeft Complement\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Complements",
+            ),
+            (
+                "DoubleComplement",
+                involution.double_complement(algebra),
+                "\nDouble Complement\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Complements",
+            ),
         ]
     }
 }
@@ -182,100 +224,98 @@ impl Product {
             terms: self
                 .terms
                 .iter()
-                .map(|term| {
-                    ProductTerm {
-                        product: term.product.iter().map(|p| algebra.right_complement(p)).collect(),
-                        factor_a: algebra.right_complement(&term.factor_a),
-                        factor_b: algebra.right_complement(&term.factor_b),
-                    }
+                .map(|term| ProductTerm {
+                    product: term.product.iter().map(|p| algebra.right_complement(p)).collect(),
+                    factor_a: algebra.right_complement(&term.factor_a),
+                    factor_b: algebra.right_complement(&term.factor_b),
                 })
                 .collect(),
         }
     }
 
     pub fn products<GA: GeometricAlgebraTrait>(algebra: &GA) -> Vec<(&'static str, Self, String)> {
-
-
-
         let basis = algebra.basis();
         let product = Self::new(&basis, &basis, algebra);
 
-        let wedge_like: fn(usize, usize, usize) -> bool = |factor_a_grade, factor_b_grade, product_grade| {
-            product_grade == factor_a_grade + factor_b_grade
-        };
-        let scalar_result_only: fn(usize, usize, usize) -> bool = |_, _, product_grade| {
-            product_grade == 0
-        };
+        let wedge_like: fn(usize, usize, usize) -> bool =
+            |factor_a_grade, factor_b_grade, product_grade| product_grade == factor_a_grade + factor_b_grade;
+        let scalar_result_only: fn(usize, usize, usize) -> bool = |_, _, product_grade| product_grade == 0;
 
         let dialect = algebra.dialect();
         let mut products = vec![];
 
-
         // https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_products
 
         let synonyms = Product::synonyms(&dialect.geometric_product);
-        let docs = format!("
+        let docs = format!(
+            "
             Geometric Product
             {synonyms}
             https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_products
-        ");
+        "
+        );
         for name in &dialect.geometric_product {
             products.push((*name, product.clone(), docs.clone()))
         }
 
         let synonyms = Product::synonyms(&dialect.geometric_anti_product);
-        let docs = format!("
+        let docs = format!(
+            "
             Geometric Anti-Product
             {synonyms}
             https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_products
-        ");
+        "
+        );
         for name in &dialect.geometric_anti_product {
             products.push((*name, product.clone().dual(algebra), docs.clone()))
         }
 
-
         // https://rigidgeometricalgebra.org/wiki/index.php?title=Exterior_products
 
-
         let synonyms = Product::synonyms(&dialect.exterior_product);
-        let docs = format!("
+        let docs = format!(
+            "
             Exterior Product
             {synonyms}
             https://rigidgeometricalgebra.org/wiki/index.php?title=Exterior_products
-        ");
+        "
+        );
         for name in &dialect.exterior_product {
             products.push((*name, product.projected(wedge_like), docs.clone()))
         }
         let synonyms = Product::synonyms(&dialect.exterior_anti_product);
-        let docs = format!("
+        let docs = format!(
+            "
             Geometric Anti-Product
             {synonyms}
             https://rigidgeometricalgebra.org/wiki/index.php?title=Exterior_products
-        ");
+        "
+        );
         for name in &dialect.exterior_anti_product {
             products.push((*name, product.projected(wedge_like).dual(algebra), docs.clone()))
         }
 
-
-
-
         // https://rigidgeometricalgebra.org/wiki/index.php?title=Dot_products
 
         let synonyms = Product::synonyms(&dialect.dot_product);
-        let docs = format!("
+        let docs = format!(
+            "
             Dot Product
             {synonyms}
             https://rigidgeometricalgebra.org/wiki/index.php?title=Dot_products
-        ");
+        "
+        );
         for name in &dialect.dot_product {
             products.push((*name, product.projected(scalar_result_only), docs.clone()))
         }
         let synonyms = Product::synonyms(&dialect.anti_dot_product);
-        let docs = format!("
+        let docs = format!(
+            "
             Anti-Dot Product
             {synonyms}
             https://rigidgeometricalgebra.org/wiki/index.php?title=Dot_products
-        ");
+        "
+        );
         for name in &dialect.anti_dot_product {
             products.push((*name, product.projected(scalar_result_only).dual(algebra), docs.clone()))
         }
@@ -285,7 +325,7 @@ impl Product {
 
     fn synonyms(names: &Vec<&'static str>) -> String {
         if names.len() <= 1 {
-            return "".to_string()
+            return "".to_string();
         }
         let synonyms: String = names.iter().map(|it| it.to_string()).intersperse(", ".to_string()).collect();
         format!("Synonyms included: {synonyms}")
@@ -299,28 +339,29 @@ pub struct MultiVectorClassRegistry {
 }
 
 impl MultiVectorClassRegistry {
-    pub fn single_parameters<'r>(&'r self) -> impl Iterator<Item=Parameter<'r>> {
-        self.classes.iter().map(|(class_a, _)| {
-            Parameter {
-                name: "self",
-                data_type: DataType::MultiVector(class_a),
-            }
+    pub fn single_parameters<'r>(&'r self) -> impl Iterator<Item = Parameter<'r>> {
+        self.classes.iter().map(|(class_a, _)| Parameter {
+            name: "self",
+            data_type: DataType::MultiVector(class_a),
         })
     }
-    pub fn pair_parameters(&self) -> impl Iterator<Item=(Parameter, Parameter)> {
-        self.classes.iter().map(|(class_a, _)| {
-            let param_a = Parameter {
-                name: "self",
-                data_type: DataType::MultiVector(class_a),
-            };
-            self.classes.iter().map(move |(class_b, _)| {
-                let param_b = Parameter {
-                    name: "other",
-                    data_type: DataType::MultiVector(class_b),
+    pub fn pair_parameters(&self) -> impl Iterator<Item = (Parameter, Parameter)> {
+        self.classes
+            .iter()
+            .map(|(class_a, _)| {
+                let param_a = Parameter {
+                    name: "self",
+                    data_type: DataType::MultiVector(class_a),
                 };
-                (param_a.clone(), param_b)
+                self.classes.iter().map(move |(class_b, _)| {
+                    let param_b = Parameter {
+                        name: "other",
+                        data_type: DataType::MultiVector(class_b),
+                    };
+                    (param_a.clone(), param_b)
+                })
             })
-        }).flatten()
+            .flatten()
     }
 }
 
@@ -335,7 +376,6 @@ impl MultiVectorClassRegistry {
         self.classes.push((class, Some(superclass)));
     }
 
-
     // TODO currently this superclass concept is working decently well, it is intended for Sandwich product
     //  isometries where an object might start at the origin or horizon, but not end there. However maybe you
     //  Rotor sandwich LineAtOrigin and that should still be LineAtOrigin, or Translator sandwich Horizon and
@@ -348,7 +388,6 @@ impl MultiVectorClassRegistry {
             return self.classes.iter().find(|it| it.0.class_name == *superclass).map(|it| &it.0);
         }
         return Some(&matched.0);
-
     }
 
     pub fn get(&self, signature: &[BasisElementIndex]) -> Option<&MultiVectorClass> {

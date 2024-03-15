@@ -1,8 +1,8 @@
+use crate::ast::GatherData;
 use crate::{
     ast::{AstNode, DataType, Expression, ExpressionContent, Parameter},
     emit::{camel_to_snake_case, emit_indentation},
 };
-use crate::ast::GatherData;
 
 fn emit_data_type<W: std::io::Write>(collector: &mut W, data_type: &DataType) -> std::io::Result<()> {
     match data_type {
@@ -210,7 +210,8 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
         AstNode::None => {}
         AstNode::Preamble => {
             collector.write_all(b"#![allow(clippy::assign_op_pattern)]\n")?;
-            collector.write_all(b"use crate::{simd::*, *};\nuse std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};\n\n")?;
+            collector
+                .write_all(b"use crate::{simd::*, *};\nuse std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};\n\n")?;
         }
         AstNode::TraitDefinition { name, params, docs } => {
             if !docs.trim().is_empty() {
@@ -218,7 +219,7 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
                 for line in docs.split("\n") {
                     let line = line.trim();
                     if line.is_empty() {
-                        continue
+                        continue;
                     }
                     collector.write_fmt(format_args!("/// {}\n", line))?;
                 }

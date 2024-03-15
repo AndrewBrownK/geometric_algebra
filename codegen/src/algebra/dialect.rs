@@ -1,6 +1,3 @@
-
-
-
 #[derive(Clone)]
 pub struct Dialect {
     // https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_products
@@ -26,7 +23,7 @@ impl Default for Dialect {
             exterior_anti_product: vec!["ExteriorAntiProduct"],
 
             dot_product: vec!["DotProduct"],
-            anti_dot_product: vec!["AntiDotProduct"]
+            anti_dot_product: vec!["AntiDotProduct"],
         }
     }
 }

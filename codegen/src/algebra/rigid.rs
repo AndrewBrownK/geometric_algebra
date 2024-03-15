@@ -1,6 +1,6 @@
 use crate::algebra::basis_element::{BasisElement, BasisElementIndex};
 use crate::algebra::dialect::Dialect;
-use crate::algebra::{GeometricAlgebraTrait};
+use crate::algebra::GeometricAlgebraTrait;
 
 pub struct RigidGeometricAlgebra<'a> {
     pub generator_squares: &'a [isize],

@@ -1,9 +1,7 @@
-
 #![allow(clippy::assign_op_pattern)]
-use crate::rga3d::*;
 use crate::rga3d::characteristics::Sqrt;
 use crate::rga3d::products::dot::{AntiDot, Dot};
-
+use crate::rga3d::*;
 
 /// BulkNorm
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
@@ -12,14 +10,12 @@ pub trait BulkNorm {
     fn bulk_norm(self) -> Self::Output;
 }
 
-
 /// BulkNormSquared
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
 pub trait BulkNormSquared {
     type Output;
     fn bulk_norm_squared(self) -> Self::Output;
 }
-
 
 /// GeometricNorm
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
@@ -28,14 +24,12 @@ pub trait GeometricNorm {
     fn geometric_norm(self) -> Self::Output;
 }
 
-
 /// WeightNorm
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
 pub trait WeightNorm {
     type Output;
     fn weight_norm(self) -> Self::Output;
 }
-
 
 /// WeightNormSquared
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
@@ -507,4 +501,3 @@ impl GeometricNorm for Translator {
         self.bulk_norm().add(self.weight_norm())
     }
 }
-

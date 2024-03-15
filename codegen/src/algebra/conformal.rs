@@ -26,7 +26,10 @@ impl ConformalGeometricAlgebra {
         ConformalGeometricAlgebra {
             all_retaining_generator_squares,
             surface_generator_squares,
-            origin, infinity, name, dialect,
+            origin,
+            infinity,
+            name,
+            dialect,
         }
     }
 
@@ -36,7 +39,6 @@ impl ConformalGeometricAlgebra {
         basis_elements
     }
 }
-
 
 impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
     fn algebra_name(&self) -> &'static str {
@@ -88,7 +90,6 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
         // Basis element has both e4 and e5 -> regular right complement
         let is_projective = index & projective == projective;
         if is_projective {
-
             // Start with the BasisElement index, yet uncertain of coefficient
             let new_index = anti_scalar - index;
             let mut candidate_complement = BasisElement {
@@ -97,14 +98,15 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
             };
 
             // Fix the coefficient
-            let anti_scalar_product = self.product(&a, &candidate_complement)
+            let anti_scalar_product = self
+                .product(&a, &candidate_complement)
                 .into_iter()
                 .find(|it| it.index == anti_scalar)
                 .expect("Must find anti_scalar result when wedging complements");
             candidate_complement.coefficient = anti_scalar_product.coefficient;
 
             // Return fixed result
-            return candidate_complement
+            return candidate_complement;
         }
 
         // Basis element includes e5 but not e4 -> regular right complement
@@ -120,14 +122,15 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
             };
 
             // Fix the coefficient
-            let anti_scalar_product = self.product(&a, &candidate_complement)
+            let anti_scalar_product = self
+                .product(&a, &candidate_complement)
                 .into_iter()
                 .find(|it| it.index == anti_scalar)
                 .expect("Must find anti_scalar result when wedging complements");
             candidate_complement.coefficient = anti_scalar_product.coefficient;
 
             // Return fixed result
-            return candidate_complement
+            return candidate_complement;
         }
 
         // Basis element includes e4 but not e5 -> regular right complement
@@ -143,14 +146,15 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
             };
 
             // Fix the coefficient
-            let anti_scalar_product = self.product(&a, &candidate_complement)
+            let anti_scalar_product = self
+                .product(&a, &candidate_complement)
                 .into_iter()
                 .find(|it| it.index == anti_scalar)
                 .expect("Must find anti_scalar result when wedging complements");
             candidate_complement.coefficient = anti_scalar_product.coefficient;
 
             // Return fixed result
-            return candidate_complement
+            return candidate_complement;
         }
 
         // Neither e4 nor e5 -> regular right complement (acquires e4 and e5)
@@ -164,14 +168,15 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
         };
 
         // Fix the coefficient
-        let anti_scalar_product = self.product(&a, &candidate_complement)
+        let anti_scalar_product = self
+            .product(&a, &candidate_complement)
             .into_iter()
             .find(|it| it.index == anti_scalar)
             .expect("Must find anti_scalar result when wedging complements");
         candidate_complement.coefficient = anti_scalar_product.coefficient;
 
         // Return fixed result
-        return candidate_complement
+        return candidate_complement;
     }
 
     fn left_complement(&self, a: &BasisElement) -> BasisElement {
@@ -197,7 +202,6 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
 
         let projective_basis = BasisElement::from_index(projective);
 
-
         let a_is_projective = (a.index & projective) == projective;
         let b_is_projective = (b.index & projective) == projective;
         if a_is_projective && b_is_projective {
@@ -211,15 +215,15 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
             let mut result = a.primitive_product(&b, &self.surface_generator_squares);
             assert_eq!(result.index & projective, 0);
             result.coefficient = a.coefficient * b.coefficient * result.coefficient;
-            return vec![result]
+            return vec![result];
         }
 
         let a_is_along_origin = ((a.index & origin) == origin) && !a_is_projective;
-        let a_is_along_infinity =  ((a.index & infinity) == infinity) && !a_is_projective;
+        let a_is_along_infinity = ((a.index & infinity) == infinity) && !a_is_projective;
         let a_is_half_projective = a_is_along_origin || a_is_along_infinity;
 
         let b_is_along_origin = ((b.index & origin) == origin) && !b_is_projective;
-        let b_is_along_infinity =  ((b.index & infinity) == infinity) && !b_is_projective;
+        let b_is_along_infinity = ((b.index & infinity) == infinity) && !b_is_projective;
         let b_is_half_projective = b_is_along_origin || b_is_along_infinity;
 
         if (a_is_along_origin && b_is_along_infinity) || (a_is_along_infinity && b_is_along_origin) {
@@ -233,7 +237,7 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
                 second_product_component.coefficient = second_product_component.coefficient * -1;
             }
             result.push(second_product_component);
-            return result
+            return result;
         }
 
         if (a_is_half_projective && b_is_projective) || (a_is_projective && b_is_half_projective) {
@@ -253,31 +257,11 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
             if a_is_along_infinity && b_is_projective || a_is_projective && b_is_along_origin {
                 result.coefficient = result.coefficient * -1;
             }
-            return vec![result]
+            return vec![result];
         }
 
-        return result
+        return result;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //

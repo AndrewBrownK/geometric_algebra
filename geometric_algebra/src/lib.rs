@@ -1,13 +1,18 @@
-#![cfg_attr(all(any(target_arch = "arm", target_arch = "aarch64"), target_feature = "neon"), feature(stdsimd))]
+#![cfg_attr(
+    all(
+        any(target_arch = "arm", target_arch = "aarch64"),
+        target_feature = "neon"
+    ),
+    feature(stdsimd)
+)]
 
 // pub mod cga3d;
-pub mod rga3d;
 pub mod cga3d;
+pub mod rga3d;
 pub mod simd;
 
 #[cfg(test)]
 mod tests;
-
 
 // TODO delete most or all of the stuff in this file
 
@@ -156,7 +161,6 @@ pub trait Dot<T> {
     fn dot(self, other: T) -> Self::Output;
 }
 
-
 /// Geometric product grade filtered by `t == (r - s).abs()`
 ///
 /// Also called fat anti-dot product
@@ -219,7 +223,6 @@ pub trait Transformation<T> {
     fn transformation(self, other: T) -> Self::Output;
 }
 
-
 /// Square of the magnitude
 pub trait SquaredMagnitude {
     type Output;
@@ -231,8 +234,6 @@ pub trait SquaredAntiMagnitude {
     type Output;
     fn squared_anti_magnitude(self) -> Self::Output;
 }
-
-
 
 /// Direction without magnitude (set to scalar `-1.0` or `1.0`)
 ///
@@ -272,16 +273,12 @@ pub trait Powf {
     fn powf(self, exponent: f32) -> Self::Output;
 }
 
-
-
-
 // TODO generate implementations
 // /// Dilation is a conformal transformation
 // /// https://conformalgeometricalgebra.com/wiki/index.php?title=Dilation
 // pub trait Dilate {
 //     fn dilate(factor: f32) -> Self;
 // }
-
 
 // pub trait FlatPointExt {
 //     fn from_xyz(x: f32, y: f32, z: f32) -> Self;

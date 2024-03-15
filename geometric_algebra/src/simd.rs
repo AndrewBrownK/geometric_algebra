@@ -13,17 +13,32 @@ pub use std::arch::x86_64::*;
 #[repr(C)]
 pub union Simd32x4 {
     // Intel / AMD
-    #[cfg(all(any(target_arch = "x86", target_arch = "x86_64"), target_feature = "sse2"))]
+    #[cfg(all(
+        any(target_arch = "x86", target_arch = "x86_64"),
+        target_feature = "sse2"
+    ))]
     pub f128: __m128,
-    #[cfg(all(any(target_arch = "x86", target_arch = "x86_64"), target_feature = "sse2"))]
+    #[cfg(all(
+        any(target_arch = "x86", target_arch = "x86_64"),
+        target_feature = "sse2"
+    ))]
     pub i128: __m128i,
 
     // ARM
-    #[cfg(all(any(target_arch = "arm", target_arch = "aarch64"), target_feature = "neon"))]
+    #[cfg(all(
+        any(target_arch = "arm", target_arch = "aarch64"),
+        target_feature = "neon"
+    ))]
     pub f128: float32x4_t,
-    #[cfg(all(any(target_arch = "arm", target_arch = "aarch64"), target_feature = "neon"))]
+    #[cfg(all(
+        any(target_arch = "arm", target_arch = "aarch64"),
+        target_feature = "neon"
+    ))]
     pub i128: int32x4_t,
-    #[cfg(all(any(target_arch = "arm", target_arch = "aarch64"), target_feature = "neon"))]
+    #[cfg(all(
+        any(target_arch = "arm", target_arch = "aarch64"),
+        target_feature = "neon"
+    ))]
     pub u128: uint32x4_t,
 
     // Web

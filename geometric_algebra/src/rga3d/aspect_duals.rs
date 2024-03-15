@@ -1,10 +1,8 @@
-
 #![allow(clippy::assign_op_pattern)]
-use crate::{simd::*, *, rga3d::*};
-use std::ops::{Add, Div, Mul, Neg, Sub};
 use crate::rga3d::aspects::{Bulk, Weight};
 use crate::rga3d::involutions::*;
-
+use crate::{rga3d::*, simd::*, *};
+use std::ops::{Add, Div, Mul, Neg, Sub};
 
 /// Right Bulk Dual
 /// https://projectivegeometricalgebra.org/projgeomalg.pdf
@@ -13,7 +11,6 @@ pub trait RightBulkDual {
     fn right_bulk_dual(self) -> Self::Output;
 }
 
-
 /// Right Weight Dual
 /// https://projectivegeometricalgebra.org/projgeomalg.pdf
 pub trait RightWeightDual {
@@ -21,14 +18,12 @@ pub trait RightWeightDual {
     fn right_weight_dual(self) -> Self::Output;
 }
 
-
 /// Left Bulk Dual
 /// https://projectivegeometricalgebra.org/projgeomalg.pdf
 pub trait LeftBulkDual {
     type Output;
     fn left_bulk_dual(self) -> Self::Output;
 }
-
 
 /// Left Weight Dual
 /// https://projectivegeometricalgebra.org/projgeomalg.pdf
@@ -404,4 +399,3 @@ impl RightWeightDual for Translator {
         self.weight().right_complement()
     }
 }
-

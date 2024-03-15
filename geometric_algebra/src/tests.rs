@@ -1,5 +1,4 @@
-use crate::{GeometricProduct, GeometricAntiProduct, Wedge, AntiWedge, };
-
+use crate::{AntiWedge, GeometricAntiProduct, GeometricProduct, Wedge};
 
 // #[test]
 // fn ppga3d_geometric_product_01() {
@@ -35,7 +34,6 @@ use crate::{GeometricProduct, GeometricAntiProduct, Wedge, AntiWedge, };
 //     assert_eq!(c.group0(), 35.0);
 // }
 
-
 #[test]
 fn ppga3d_use_a_motor() {
 
@@ -70,8 +68,6 @@ fn ppga3d_use_a_motor() {
     //
     // let line_ab = point_a.wedge(point_b);
 }
-
-
 
 // #[test]
 // fn cga_basics() {
@@ -120,15 +116,12 @@ fn ppga3d_use_a_motor() {
 //     // TODO dilation?
 // }
 
-
 #[test]
 fn cga_ergonomics() {
     // TODO here I will invent some new constructors and methods to conveniently work with
     //  the CGA objects. For example, a sphere by specifying a center point and radius.
     //  I might also want to make a sandwich operator thing.
 }
-
-
 
 #[test]
 fn cga_correctness() {
@@ -137,35 +130,5 @@ fn cga_correctness() {
     //  that e+ and e- are kind of hidden in the algebra, and the code was generated using
     //  e0 and e4 instead.
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //

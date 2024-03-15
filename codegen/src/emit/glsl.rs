@@ -1,9 +1,9 @@
-use std::io::Write;
+use crate::ast::GatherData;
 use crate::{
     ast::{AstNode, DataType, Expression, ExpressionContent},
     emit::{camel_to_snake_case, emit_indentation},
 };
-use crate::ast::{GatherData};
+use std::io::Write;
 
 const COMPONENT: &[&str] = &["x", "y", "z", "w"];
 
@@ -108,7 +108,7 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
                     collector.write_all(b", ")?;
                 }
                 match gather_data {
-                    GatherData::Usual(gd)=> {
+                    GatherData::Usual(gd) => {
                         if gd.negate {
                             collector.write_all(b"-")?;
                         }

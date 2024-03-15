@@ -12,11 +12,10 @@ impl<'a> DataType<'a> {
         match &self {
             DataType::Integer => "Integer".to_string(),
             DataType::SimdVector(x) => format!("SimdVector{x}"),
-            DataType::MultiVector(c) => c.class_name.clone()
+            DataType::MultiVector(c) => c.class_name.clone(),
         }
     }
 }
-
 
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct UsualGatherData {
@@ -84,7 +83,11 @@ impl<'a> Parameter<'a> {
 pub enum AstNode<'a> {
     None,
     Preamble,
-    TraitDefinition { name: String, params: usize, docs: String },
+    TraitDefinition {
+        name: String,
+        params: usize,
+        docs: String,
+    },
     TypeAlias(String, String),
     ClassDefinition {
         class: &'a MultiVectorClass,

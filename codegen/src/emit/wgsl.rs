@@ -1,8 +1,8 @@
+use crate::ast::GatherData;
 use crate::{
     ast::{AstNode, DataType, Expression, ExpressionContent},
     emit::{camel_to_snake_case, emit_indentation},
 };
-use crate::ast::GatherData;
 
 const COMPONENT: &[&str] = &["x", "y", "z", "w"];
 
@@ -255,9 +255,7 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
                 if i > 0 {
                     collector.write_all(b", ")?;
                 }
-                let parameter_name = if parameter.name == "self" { "self_" } else {
-                    parameter.name
-                };
+                let parameter_name = if parameter.name == "self" { "self_" } else { parameter.name };
                 collector.write_fmt(format_args!("{}", parameter_name))?;
                 collector.write_all(b": ")?;
                 emit_data_type(collector, &parameter.data_type)?;
