@@ -96,7 +96,7 @@ impl AntiReversal for Horizon {
     type Output = Horizon;
 
     fn anti_reversal(self) -> Horizon {
-        Horizon { groups: HorizonGroups { g0: self.group0() * -1.0 } }
+        Horizon { groups: HorizonGroups { g0: -self.group0() } }
     }
 }
 
@@ -144,7 +144,7 @@ impl AntiReversal for Origin {
     type Output = Origin;
 
     fn anti_reversal(self) -> Origin {
-        Origin { groups: OriginGroups { g0: self.group0() * -1.0 } }
+        Origin { groups: OriginGroups { g0: -self.group0() } }
     }
 }
 
@@ -208,7 +208,7 @@ impl Automorphism for AntiScalar {
     type Output = AntiScalar;
 
     fn automorphism(self) -> AntiScalar {
-        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * -1.0 } }
+        AntiScalar { groups: AntiScalarGroups { g0: -self.group0() } }
     }
 }
 
@@ -232,7 +232,7 @@ impl Automorphism for Horizon {
     type Output = Horizon;
 
     fn automorphism(self) -> Horizon {
-        Horizon { groups: HorizonGroups { g0: self.group0() * -1.0 } }
+        Horizon { groups: HorizonGroups { g0: -self.group0() } }
     }
 }
 
@@ -344,7 +344,7 @@ impl Conjugation for AntiScalar {
     type Output = AntiScalar;
 
     fn conjugation(self) -> AntiScalar {
-        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * -1.0 } }
+        AntiScalar { groups: AntiScalarGroups { g0: -self.group0() } }
     }
 }
 
@@ -368,7 +368,7 @@ impl Conjugation for Horizon {
     type Output = Horizon;
 
     fn conjugation(self) -> Horizon {
-        Horizon { groups: HorizonGroups { g0: self.group0() * -1.0 } }
+        Horizon { groups: HorizonGroups { g0: -self.group0() } }
     }
 }
 
@@ -416,7 +416,7 @@ impl Conjugation for Origin {
     type Output = Origin;
 
     fn conjugation(self) -> Origin {
-        Origin { groups: OriginGroups { g0: self.group0() * -1.0 } }
+        Origin { groups: OriginGroups { g0: -self.group0() } }
     }
 }
 
@@ -768,7 +768,7 @@ impl Reversal for Horizon {
     type Output = Horizon;
 
     fn reversal(self) -> Horizon {
-        Horizon { groups: HorizonGroups { g0: self.group0() * -1.0 } }
+        Horizon { groups: HorizonGroups { g0: -self.group0() } }
     }
 }
 
@@ -816,7 +816,7 @@ impl Reversal for Origin {
     type Output = Origin;
 
     fn reversal(self) -> Origin {
-        Origin { groups: OriginGroups { g0: self.group0() * -1.0 } }
+        Origin { groups: OriginGroups { g0: -self.group0() } }
     }
 }
 

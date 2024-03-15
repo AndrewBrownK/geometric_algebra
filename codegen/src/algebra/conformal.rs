@@ -7,7 +7,6 @@ mod tests;
 
 pub struct ConformalGeometricAlgebra {
     all_retaining_generator_squares: Vec<isize>,
-    non_projective_squares: Vec<isize>,
     surface_generator_squares: Vec<isize>,
     origin: usize,
     infinity: usize,
@@ -18,7 +17,6 @@ pub struct ConformalGeometricAlgebra {
 impl ConformalGeometricAlgebra {
     pub fn new(name: &'static str, dimensions: usize, dialect: Dialect) -> Self {
         let all_retaining_generator_squares = vec![1; dimensions + 2];
-        let non_projective_squares = vec![1; dimensions];
         let mut surface_generator_squares = vec![1; dimensions];
         surface_generator_squares.push(0);
         surface_generator_squares.push(0);
@@ -27,7 +25,6 @@ impl ConformalGeometricAlgebra {
         let infinity = surface_generator_squares.len() - 1;
         ConformalGeometricAlgebra {
             all_retaining_generator_squares,
-            non_projective_squares,
             surface_generator_squares,
             origin, infinity, name, dialect,
         }
@@ -114,7 +111,7 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
         let is_flat = index & infinity == infinity;
         if is_flat {
             // Start with the BasisElement index, yet uncertain of coefficient
-            let mut new_index = anti_scalar - index;
+            let new_index = anti_scalar - index;
             // new_index = new_index - origin;
             // new_index = new_index + infinity;
             let mut candidate_complement = BasisElement {
@@ -137,7 +134,7 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
         let is_round = index & origin == origin;
         if is_round {
             // Start with the BasisElement index, yet uncertain of coefficient
-            let mut new_index = anti_scalar - index;
+            let new_index = anti_scalar - index;
             // new_index = new_index - infinity;
             // new_index = new_index + origin;
             let mut candidate_complement = BasisElement {

@@ -112,6 +112,9 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
                 }
                 match gather_data {
                     GatherData::Usual(gd) => {
+                        if gd.negate {
+                            collector.write_all(b"-")?;
+                        }
                         emit_expression(collector, inner_expression)?;
                         collector.write_fmt(format_args!(".group{}()", gd.group))?;
                         if gd.group_size > 1 {
@@ -119,7 +122,6 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
                         }
                     }
                     GatherData::RawZero => collector.write_all(b"0.0")?,
-                    GatherData::RawOne => collector.write_all(b"1.0")?,
                 }
             }
             if indices.len() > 1 {

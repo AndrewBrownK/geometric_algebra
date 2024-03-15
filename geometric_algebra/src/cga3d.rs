@@ -1635,7 +1635,7 @@ impl Neg for AntiScalar {
     type Output = AntiScalar;
 
     fn neg(self) -> AntiScalar {
-        AntiScalar { groups: AntiScalarGroups { g0: self.group0() * -1.0 } }
+        AntiScalar { groups: AntiScalarGroups { g0: -self.group0() } }
     }
 }
 
@@ -1707,7 +1707,7 @@ impl Neg for Origin {
     type Output = Origin;
 
     fn neg(self) -> Origin {
-        Origin { groups: OriginGroups { g0: self.group0() * -1.0 } }
+        Origin { groups: OriginGroups { g0: -self.group0() } }
     }
 }
 
@@ -1755,7 +1755,7 @@ impl Neg for Scalar {
     type Output = Scalar;
 
     fn neg(self) -> Scalar {
-        Scalar { groups: ScalarGroups { g0: self.group0() * -1.0 } }
+        Scalar { groups: ScalarGroups { g0: -self.group0() } }
     }
 }
 

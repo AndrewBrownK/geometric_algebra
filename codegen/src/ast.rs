@@ -20,6 +20,7 @@ impl<'a> DataType<'a> {
 
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct UsualGatherData {
+    pub negate: bool,
     pub group: usize,
     pub element: usize,
     pub group_size: usize,
@@ -29,7 +30,6 @@ pub struct UsualGatherData {
 pub enum GatherData {
     Usual(UsualGatherData),
     RawZero,
-    RawOne,
 }
 
 #[derive(PartialEq, Eq, Clone, Debug)]

@@ -24,14 +24,12 @@ pub fn simplify_and_legalize(expression: Box<Expression>) -> Box<Expression> {
                 match it {
                     GatherData::Usual(_) => false,
                     GatherData::RawZero => true,
-                    GatherData::RawOne => true,
                 }
             });
             if is_all_consts {
                 let the_consts: Vec<_> = indices.iter().map(|it| {
                     match it {
                         GatherData::RawZero => 0isize,
-                        GatherData::RawOne => 1isize,
                         GatherData::Usual(_) => unreachable!(),
                     }
                 }).collect();
@@ -203,11 +201,16 @@ pub fn simplify_and_legalize(expression: Box<Expression>) -> Box<Expression> {
             }
 
             match (&mut a.content, &mut b.content) {
-                (ExpressionContent::Gather(_, gather_data), ExpressionContent::Constant(_, c)) if c.iter().all(|c| *c == 1 || *c == 0) => {
+                (ExpressionContent::Gather(_, gather_data), ExpressionContent::Constant(_, c)) if c.iter().all(|c| *c == 1 || *c == 0 || *c == -1) => {
                     for (gather_data, c) in gather_data.iter_mut().zip(c) {
                         match *c {
                             0 => { *gather_data = GatherData::RawZero }
                             1 => {}
+                            -1 => {
+                                if let GatherData::Usual(u) = gather_data {
+                                    u.negate = !u.negate;
+                                }
+                            }
                             _ => unreachable!()
                         }
                     }
@@ -338,9 +341,10 @@ impl MultiVectorClass {
                     if a_group_index.is_none() {
                         a_group_index = Some(group);
                     }
+                    let negate = false;
                     (
                         coefficients,
-                        GatherData::Usual(UsualGatherData { group, element, group_size }),
+                        GatherData::Usual(UsualGatherData { negate, group, element, group_size }),
                     )
                 })
                 .unzip();
@@ -416,7 +420,8 @@ impl MultiVectorClass {
                                 let index_pair = parameter.multi_vector_class().index_in_group(index_in_flat_basis);
                                 parameter_group_index = Some(index_pair.0);
                                 let group_size = parameter.multi_vector_class().grouped_basis[index_pair.0].len();
-                                let gd = GatherData::Usual(UsualGatherData { group: index_pair.0, element: index_pair.1, group_size });
+                                let negate = false;
+                                let gd = GatherData::Usual(UsualGatherData { negate, group: index_pair.0, element: index_pair.1, group_size });
                                 (result_element.coefficient * flat_basis[index_in_flat_basis].coefficient, gd)
                             } else {
                                 (0, GatherData::RawZero)
@@ -631,7 +636,8 @@ impl MultiVectorClass {
             for ((a_group, a), [mut terms_0, mut terms_1, mut terms_2, mut terms_3]) in new_terms_by_a {
                 let a_size = parameter_a.multi_vector_class().grouped_basis[a_group].len();
                 let a_indices: Vec<_> = a.iter().map(|a| {
-                    GatherData::Usual(UsualGatherData { group: a_group, element: *a, group_size: a_size })
+                    let negate = false;
+                    GatherData::Usual(UsualGatherData { negate, group: a_group, element: *a, group_size: a_size })
                 }).collect();
                 'inner: while !terms_0.is_empty() || !terms_1.is_empty() || !terms_2.is_empty() || !terms_3.is_empty() {
                     let mut b_indices = vec![];
@@ -646,7 +652,8 @@ impl MultiVectorClass {
                     let (c, b_group, b) = terms_0.pop().unwrap_or_else(|| (0, 0, 0));
                     let b_size = parameter_b.multi_vector_class().grouped_basis[b_group].len();
                     coefficients.push(c);
-                    let mut b_gather_data = GatherData::Usual(UsualGatherData { group: b_group, element: b, group_size: b_size });
+                    let negate = false;
+                    let mut b_gather_data = GatherData::Usual(UsualGatherData { negate, group: b_group, element: b, group_size: b_size });
                     if c == 0 { b_gather_data = GatherData::RawZero; }
                     b_indices.push(b_gather_data);
 
@@ -664,7 +671,8 @@ impl MultiVectorClass {
                     if result_group_size > 1 {
                         let b_size = parameter_b.multi_vector_class().grouped_basis[b_group].len();
                         coefficients.push(c);
-                        let mut b_gather_data = GatherData::Usual(UsualGatherData { group: b_group, element: b, group_size: b_size });
+                        let negate = false;
+                        let mut b_gather_data = GatherData::Usual(UsualGatherData { negate, group: b_group, element: b, group_size: b_size });
                         if c == 0 { b_gather_data = GatherData::RawZero; }
                         b_indices.push(b_gather_data);
                     }
@@ -673,7 +681,8 @@ impl MultiVectorClass {
                     if result_group_size > 2 {
                         let b_size = parameter_b.multi_vector_class().grouped_basis[b_group].len();
                         coefficients.push(c);
-                        let mut b_gather_data = GatherData::Usual(UsualGatherData { group: b_group, element: b, group_size: b_size });
+                        let negate = false;
+                        let mut b_gather_data = GatherData::Usual(UsualGatherData { negate, group: b_group, element: b, group_size: b_size });
                         if c == 0 { b_gather_data = GatherData::RawZero; }
                         b_indices.push(b_gather_data);
                     }
@@ -682,7 +691,8 @@ impl MultiVectorClass {
                     if result_group_size > 3 {
                         let b_size = parameter_b.multi_vector_class().grouped_basis[b_group].len();
                         coefficients.push(c);
-                        let mut b_gather_data = GatherData::Usual(UsualGatherData { group: b_group, element: b, group_size: b_size });
+                        let negate = false;
+                        let mut b_gather_data = GatherData::Usual(UsualGatherData { negate, group: b_group, element: b, group_size: b_size });
                         if c == 0 { b_gather_data = GatherData::RawZero; }
                         b_indices.push(b_gather_data);
                     }
@@ -1679,7 +1689,8 @@ impl WedgeDot<MultiVector> for MultiVector {
                     let (group, element) = parameter_a.multi_vector_class().index_in_group(index_in_a);
                     let group_size = parameter_a.multi_vector_class().grouped_basis[group].len();
                     if a_group_index.is_none() { a_group_index = Some(group); }
-                    (scalar, GatherData::Usual(UsualGatherData { group, element, group_size }))
+                    let negate = false;
+                    (scalar, GatherData::Usual(UsualGatherData { negate, group, element, group_size }))
                 })
                 .unzip();
 

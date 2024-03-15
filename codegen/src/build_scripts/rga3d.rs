@@ -1,9 +1,9 @@
-
 use std::io::Write;
-use crate::algebra::rigid::RigidGeometricAlgebra;
-use crate::{CodeGenerator, read_multi_vector_from_str, validate_glsl_and_wgsl};
+
+use crate::{CodeGenerator, read_multi_vector_from_str, validate_glsl, validate_wgsl};
 use crate::algebra::dialect::Dialect;
 use crate::algebra::MultiVectorClassRegistry;
+use crate::algebra::rigid::RigidGeometricAlgebra;
 use crate::emit::Emitter;
 
 #[cfg(test)]
@@ -224,8 +224,7 @@ use crate::rga3d::products::contractions::WeightContraction;")?;
 
 
 
-
-
-    validate_glsl_and_wgsl("rga3d", file_path);
+    validate_glsl("rga3d", file_path.clone());
+    validate_wgsl("rga3d", file_path);
     Ok(())
 }

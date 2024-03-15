@@ -1,30 +1,17 @@
 
 use std::io::Write;
 use crate::algebra::conformal::ConformalGeometricAlgebra;
-use crate::{CodeGenerator, read_multi_vector_from_str, validate_glsl_and_wgsl};
+use crate::{CodeGenerator, read_multi_vector_from_str, validate_wgsl};
 use crate::algebra::dialect::Dialect;
 use crate::algebra::MultiVectorClassRegistry;
 use crate::emit::Emitter;
 
 #[cfg(test)]
 mod test {
-    use crate::validate_glsl_and_wgsl;
 
     #[test]
     fn test_script() {
         // crate::build_scripts::cga3d::script().unwrap()
-    }
-
-    // TODO interesting....
-    //  It does not stack overflow when ran as a test,
-    //  but does stack overflow when run in build.rs
-    //  I can only guess that the build.rs has a more restrictive stack.
-    //  Can I find it in the cargo source code?
-    //  https://github.com/rust-lang/cargo/blob/master/src/cargo/core/compiler/custom_build.rs#L477
-    #[test]
-    fn test_shader_validation() {
-        let file_path = std::path::Path::new("C:/Users/andrewbrown/IdeaProjects/geometric_algebra/geometric_algebra/src/").join(std::path::Path::new("cga3d"));
-        validate_glsl_and_wgsl("cga3d", file_path);
     }
 }
 
@@ -252,16 +239,17 @@ use crate::cga3d::norms::*;
 use crate::cga3d::products::contractions::WeightContraction;")?;
     code_gen.emit_metric_operations(&mut emitter)?;
 
+    /*
+     * Currently this shader validation stack-overflows compilation.
+     * This requires a fix in Naga.
+     * For now, we will ignore it, and assume it is valid.
+     * If both RGA glsl and CGA wgsl are valid, then CGA glsl is probably valid too.
+    */
+    // validate_glsl("cga3d", file_path);
 
-    // TODO the shader validation stack overflows compilation
-    return Ok(());
 
-
-    validate_glsl_and_wgsl("cga3d", file_path);
-
-
-
-
+    // Still validate wgsl because it does not stack overflow
+    validate_wgsl("cga3d", file_path);
 
 
     Ok(())

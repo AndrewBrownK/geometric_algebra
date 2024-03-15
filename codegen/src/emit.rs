@@ -22,7 +22,11 @@ pub fn emit_indentation<W: Write>(collector: &mut W, indentation: usize) -> std:
 }
 
 use std::io::Write;
-use crate::{ast::AstNode, glsl, rust, wgsl};
+use crate::{ast::AstNode};
+
+mod glsl;
+mod rust;
+mod wgsl;
 
 
 pub struct Emitter<W: Write> {

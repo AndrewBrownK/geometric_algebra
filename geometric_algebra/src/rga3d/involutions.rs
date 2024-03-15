@@ -144,7 +144,7 @@ impl AntiReversal for Origin {
     type Output = Origin;
 
     fn anti_reversal(self) -> Origin {
-        Origin { groups: OriginGroups { g0: self.group0() * -1.0 } }
+        Origin { groups: OriginGroups { g0: -self.group0() } }
     }
 }
 
@@ -224,7 +224,7 @@ impl Automorphism for Horizon {
     type Output = Horizon;
 
     fn automorphism(self) -> Horizon {
-        Horizon { groups: HorizonGroups { g0: self.group0() * -1.0 } }
+        Horizon { groups: HorizonGroups { g0: -self.group0() } }
     }
 }
 
@@ -280,7 +280,7 @@ impl Automorphism for Origin {
     type Output = Origin;
 
     fn automorphism(self) -> Origin {
-        Origin { groups: OriginGroups { g0: self.group0() * -1.0 } }
+        Origin { groups: OriginGroups { g0: -self.group0() } }
     }
 }
 
@@ -416,7 +416,7 @@ impl Conjugation for Origin {
     type Output = Origin;
 
     fn conjugation(self) -> Origin {
-        Origin { groups: OriginGroups { g0: self.group0() * -1.0 } }
+        Origin { groups: OriginGroups { g0: -self.group0() } }
     }
 }
 
@@ -496,7 +496,7 @@ impl DoubleComplement for Horizon {
     type Output = Horizon;
 
     fn double_complement(self) -> Horizon {
-        Horizon { groups: HorizonGroups { g0: self.group0() * -1.0 } }
+        Horizon { groups: HorizonGroups { g0: -self.group0() } }
     }
 }
 
@@ -552,7 +552,7 @@ impl DoubleComplement for Origin {
     type Output = Origin;
 
     fn double_complement(self) -> Origin {
-        Origin { groups: OriginGroups { g0: self.group0() * -1.0 } }
+        Origin { groups: OriginGroups { g0: -self.group0() } }
     }
 }
 
@@ -632,7 +632,7 @@ impl Dual for Horizon {
     type Output = Origin;
 
     fn dual(self) -> Origin {
-        Origin { groups: OriginGroups { g0: self.group0() * -1.0 } }
+        Origin { groups: OriginGroups { g0: -self.group0() } }
     }
 }
 
@@ -792,7 +792,7 @@ impl LeftComplement for Origin {
     type Output = Horizon;
 
     fn left_complement(self) -> Horizon {
-        Horizon { groups: HorizonGroups { g0: self.group0() * -1.0 } }
+        Horizon { groups: HorizonGroups { g0: -self.group0() } }
     }
 }
 
@@ -856,7 +856,7 @@ impl Reversal for Horizon {
     type Output = Horizon;
 
     fn reversal(self) -> Horizon {
-        Horizon { groups: HorizonGroups { g0: self.group0() * -1.0 } }
+        Horizon { groups: HorizonGroups { g0: -self.group0() } }
     }
 }
 
@@ -992,7 +992,7 @@ impl RightComplement for Horizon {
     type Output = Origin;
 
     fn right_complement(self) -> Origin {
-        Origin { groups: OriginGroups { g0: self.group0() * -1.0 } }
+        Origin { groups: OriginGroups { g0: -self.group0() } }
     }
 }
 
