@@ -23,10 +23,21 @@ pub fn emit_indentation<W: Write>(collector: &mut W, indentation: usize) -> std:
 
 use crate::ast::AstNode;
 use std::io::Write;
+use std::path::Path;
 
 mod glsl;
 mod rust;
 mod wgsl;
+
+const CODEGEN_DISCLAIMER: &str = "\
+//
+// AUTO-GENERATED - DO NOT MODIFY
+//
+// To contribute to this file, see the adjacent codegen package.
+// https://github.com/AndrewBrownK/geometric_algebra/
+//
+
+";
 
 pub struct Emitter<W: Write> {
     pub actually_emit: bool,
@@ -36,12 +47,12 @@ pub struct Emitter<W: Write> {
 }
 
 impl Emitter<std::fs::File> {
-    pub fn new(actually_emit: bool, path: &std::path::Path) -> Self {
+    pub fn new(actually_emit: bool, path: &Path, rust_name: &str, shader_name: &str) -> Self {
         Self {
             actually_emit,
-            rust_collector: std::fs::File::create(path.with_extension("rs")).unwrap(),
-            glsl_collector: std::fs::File::create(path.with_extension("glsl")).unwrap(),
-            wgsl_collector: std::fs::File::create(path.with_extension("wgsl")).unwrap(),
+            rust_collector: std::fs::File::create(path.join(Path::new(rust_name)).with_extension("rs")).unwrap(),
+            glsl_collector: std::fs::File::create(path.join(Path::new("shaders")).join(Path::new(shader_name)).with_extension("glsl")).unwrap(),
+            wgsl_collector: std::fs::File::create(path.join(Path::new("shaders")).join(Path::new(shader_name)).with_extension("wgsl")).unwrap(),
         }
     }
 
@@ -61,7 +72,19 @@ impl<W: Write> Emitter<W> {
     }
 
     pub fn emit_rust_preamble(&mut self, preamble: &'static str) -> std::io::Result<()> {
-        self.rust_collector.write_all(&preamble.as_bytes())?;
-        self.rust_collector.write_all(b"\n\n")
+        if self.actually_emit {
+            self.rust_collector.write_all(CODEGEN_DISCLAIMER.as_bytes())?;
+            self.rust_collector.write_all(&preamble.as_bytes())?;
+            self.rust_collector.write_all(b"\n\n")?;
+        }
+        Ok(())
+    }
+
+    pub fn emit_shader_preamble(&mut self) -> std::io::Result<()> {
+        if self.actually_emit {
+            self.glsl_collector.write_all(CODEGEN_DISCLAIMER.as_bytes())?;
+            self.wgsl_collector.write_all(CODEGEN_DISCLAIMER.as_bytes())?;
+        }
+        Ok(())
     }
 }

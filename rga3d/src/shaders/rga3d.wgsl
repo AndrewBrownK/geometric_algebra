@@ -1,3 +1,10 @@
+//
+// AUTO-GENERATED - DO NOT MODIFY
+//
+// To contribute to this file, see the adjacent codegen package.
+// https://github.com/AndrewBrownK/geometric_algebra/
+//
+
 struct Scalar {
     // 1
      g0: f32,

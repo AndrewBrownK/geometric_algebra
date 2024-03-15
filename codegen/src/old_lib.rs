@@ -1,6 +1,3 @@
-#![feature(try_blocks)]
-#![feature(iter_intersperse)]
-
 use std::collections::{BTreeMap, BTreeSet};
 use std::io::Read;
 use std::path::PathBuf;
@@ -24,22 +21,6 @@ use crate::{
 
 // TODO this file is renamed "lib.rs" since we switched to "main.rs"
 //  So organize all the stuff in here, give them proper homes, then delete "old_lib.rs"
-
-// pub mod algebra;
-// mod ast;
-// mod compile;
-// pub mod emit;
-//
-// pub mod build_scripts {
-//     pub mod cga3d;
-//     pub mod rga3d;
-// }
-
-pub struct AlgebraDescriptor {
-    pub algebra_name: String,
-    pub generator_squares: Vec<isize>,
-    pub multi_vectors: Vec<MultiVectorClass>,
-}
 
 pub fn read_multi_vector_from_str<GA: GeometricAlgebraTrait>(multi_vector_descriptor: &str, algebra: &GA) -> (MultiVectorClass, Option<String>) {
     let mut multi_vector_descriptor_iter = multi_vector_descriptor.split(':');

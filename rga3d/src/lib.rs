@@ -1,3 +1,10 @@
+//
+// AUTO-GENERATED - DO NOT MODIFY
+//
+// To contribute to this file, see the adjacent codegen package.
+// https://github.com/AndrewBrownK/geometric_algebra/
+//
+
 #![allow(clippy::assign_op_pattern)]
 use geometric_algebra::{simd::*, *};
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};

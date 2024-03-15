@@ -81,8 +81,8 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
     }
     let file_path = file_path;
 
-    let mut emitter = Emitter::new(actually_emit, &file_path.join(Path::new(CGA3D)));
-    emitter.new_rust_collector(&file_path.join(Path::new("lib")));
+    let mut emitter = Emitter::new(actually_emit, &file_path, "lib", CGA3D);
+    emitter.emit_shader_preamble()?;
 
     emitter.emit_rust_preamble(
         "

@@ -1,3 +1,10 @@
+//
+// AUTO-GENERATED - DO NOT MODIFY
+//
+// To contribute to this file, see the adjacent codegen package.
+// https://github.com/AndrewBrownK/geometric_algebra/
+//
+
 #![allow(clippy::assign_op_pattern)]
 use crate::rga3d::aspects::{Bulk, Weight};
 use crate::rga3d::involutions::*;

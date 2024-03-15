@@ -1,3 +1,10 @@
+//
+// AUTO-GENERATED - DO NOT MODIFY
+//
+// To contribute to this file, see the adjacent codegen package.
+// https://github.com/AndrewBrownK/geometric_algebra/
+//
+
 #![allow(clippy::assign_op_pattern)]
 use crate::cga3d::characteristics::Sqrt;
 use crate::cga3d::products::dot::{AntiDot, Dot};
