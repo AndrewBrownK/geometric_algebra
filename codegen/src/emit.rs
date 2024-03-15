@@ -99,6 +99,9 @@ impl<W: Write> Emitter<W> {
     }
 
     pub fn end_with_rust_fmt(self) {
+        if !self.actually_emit {
+            return;
+        }
         let result: anyhow::Result<()> = try {
             let mut cmd = Command::new("rustfmt");
             for rust_file in self.rust_files_so_far {

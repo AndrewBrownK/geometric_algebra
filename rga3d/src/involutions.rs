@@ -5,8 +5,8 @@
 // https://github.com/AndrewBrownK/geometric_algebra/
 //
 
-#![allow(clippy::assign_op_pattern)]
-use geometric_algebra::{rga3d::*, simd::*, *};
+use crate::*;
+use geometric_algebra::{simd::*, *};
 use std::ops::{Add, Div, Mul, Neg, Sub};
 
 /// Negates elements with `grade % 2 == 1`

@@ -5,7 +5,6 @@
 // https://github.com/AndrewBrownK/geometric_algebra/
 //
 
-#![allow(clippy::assign_op_pattern)]
 use crate::involutions::AntiReversal;
 use crate::products::geometric::GeometricAntiProduct;
 use crate::unitize::Unitize;

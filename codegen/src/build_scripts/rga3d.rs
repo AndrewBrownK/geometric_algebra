@@ -80,7 +80,6 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
 
     emitter.emit_rust_preamble(
         "
-#![allow(clippy::assign_op_pattern)]
 use geometric_algebra::{simd::*, *};
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
@@ -106,7 +105,6 @@ pub mod products {
     emitter.new_rust_collector(&file_path.join(Path::new("products/geometric")));
     emitter.emit_rust_preamble(
         "
-#![allow(clippy::assign_op_pattern)]
 use crate::*;",
     )?;
     code_gen.emit_geometric_products(&mut emitter)?;
@@ -114,7 +112,6 @@ use crate::*;",
     emitter.new_rust_collector(&file_path.join(Path::new("products/exterior")));
     emitter.emit_rust_preamble(
         "
-#![allow(clippy::assign_op_pattern)]
 use crate::*;",
     )?;
     code_gen.emit_exterior_products(&mut emitter)?;
@@ -122,7 +119,6 @@ use crate::*;",
     emitter.new_rust_collector(&file_path.join(Path::new("products/dot")));
     emitter.emit_rust_preamble(
         "
-#![allow(clippy::assign_op_pattern)]
 use crate::*;",
     )?;
     code_gen.emit_dot_products(&mut emitter)?;
@@ -130,7 +126,6 @@ use crate::*;",
     emitter.new_rust_collector(&file_path.join(Path::new("aspects")));
     emitter.emit_rust_preamble(
         "
-#![allow(clippy::assign_op_pattern)]
 use crate::*;
 use crate::products::geometric::GeometricProduct;",
     )?;
@@ -139,8 +134,8 @@ use crate::products::geometric::GeometricProduct;",
     emitter.new_rust_collector(&file_path.join(Path::new("involutions")));
     emitter.emit_rust_preamble(
         "
-#![allow(clippy::assign_op_pattern)]
-use geometric_algebra::{simd::*, *, rga3d::*};
+use geometric_algebra::{simd::*, *};
+use crate::*;
 use std::ops::{Add, Div, Mul, Neg, Sub};",
     )?;
     code_gen.emit_involutions_and_duals(&mut emitter)?;
@@ -148,8 +143,9 @@ use std::ops::{Add, Div, Mul, Neg, Sub};",
     emitter.new_rust_collector(&file_path.join(Path::new("aspect_duals")));
     emitter.emit_rust_preamble(
         "
-#![allow(clippy::assign_op_pattern)]
-use geometric_algebra::{simd::*, *, rga3d::*};
+
+use geometric_algebra::{simd::*, *};
+use crate::*;
 use std::ops::{Add, Div, Mul, Neg, Sub};
 use crate::aspects::{Bulk, Weight};
 use crate::involutions::*;",
@@ -159,7 +155,6 @@ use crate::involutions::*;",
     emitter.new_rust_collector(&file_path.join(Path::new("characteristics")));
     emitter.emit_rust_preamble(
         "
-#![allow(clippy::assign_op_pattern)]
 use crate::*;
 use crate::products::exterior::AntiWedge;",
     )?;
@@ -168,7 +163,6 @@ use crate::products::exterior::AntiWedge;",
     emitter.new_rust_collector(&file_path.join(Path::new("norms")));
     emitter.emit_rust_preamble(
         "
-#![allow(clippy::assign_op_pattern)]
 use crate::*;
 use crate::characteristics::Sqrt;
 use crate::products::dot::{AntiDot, Dot};",
@@ -178,7 +172,6 @@ use crate::products::dot::{AntiDot, Dot};",
     emitter.new_rust_collector(&file_path.join(Path::new("unitize")));
     emitter.emit_rust_preamble(
         "
-#![allow(clippy::assign_op_pattern)]
 use crate::*;
 use crate::norms::WeightNorm;
 use crate::products::geometric::GeometricProduct;",
@@ -188,7 +181,6 @@ use crate::products::geometric::GeometricProduct;",
     emitter.new_rust_collector(&file_path.join(Path::new("products/isometries")));
     emitter.emit_rust_preamble(
         "
-#![allow(clippy::assign_op_pattern)]
 use crate::*;
 use crate::unitize::Unitize;
 use crate::involutions::AntiReversal;
@@ -199,7 +191,6 @@ use crate::products::geometric::GeometricAntiProduct;",
     emitter.new_rust_collector(&file_path.join(Path::new("products/contractions")));
     emitter.emit_rust_preamble(
         "
-#![allow(clippy::assign_op_pattern)]
 use crate::*;
 use crate::aspect_duals::*;
 use crate::products::exterior::AntiWedge;",
@@ -209,7 +200,6 @@ use crate::products::exterior::AntiWedge;",
     emitter.new_rust_collector(&file_path.join(Path::new("products/expansions")));
     emitter.emit_rust_preamble(
         "
-#![allow(clippy::assign_op_pattern)]
 use crate::*;
 use crate::aspect_duals::*;
 use crate::products::exterior::Wedge;",
@@ -219,7 +209,6 @@ use crate::products::exterior::Wedge;",
     emitter.new_rust_collector(&file_path.join(Path::new("products/projections")));
     emitter.emit_rust_preamble(
         "
-#![allow(clippy::assign_op_pattern)]
 use crate::*;
 use crate::products::exterior::Wedge;
 use crate::products::exterior::AntiWedge;
@@ -232,7 +221,6 @@ use crate::aspect_duals::*;",
     emitter.new_rust_collector(&file_path.join(Path::new("metrics")));
     emitter.emit_rust_preamble(
         "
-#![allow(clippy::assign_op_pattern)]
 use crate::*;
 use crate::unitize::Unitize;
 use crate::products::exterior::Wedge;

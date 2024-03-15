@@ -5,7 +5,6 @@
 // https://github.com/AndrewBrownK/geometric_algebra/
 //
 
-#![allow(clippy::assign_op_pattern)]
 use crate::characteristics::Attitude;
 use crate::norms::*;
 use crate::products::contractions::WeightContraction;

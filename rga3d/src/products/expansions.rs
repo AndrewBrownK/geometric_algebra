@@ -5,7 +5,6 @@
 // https://github.com/AndrewBrownK/geometric_algebra/
 //
 
-#![allow(clippy::assign_op_pattern)]
 use crate::aspect_duals::*;
 use crate::products::exterior::Wedge;
 use crate::*;

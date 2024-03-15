@@ -5,10 +5,10 @@
 // https://github.com/AndrewBrownK/geometric_algebra/
 //
 
-#![allow(clippy::assign_op_pattern)]
 use crate::aspects::{Bulk, Weight};
 use crate::involutions::*;
-use geometric_algebra::{cga3d::*, simd::*, *};
+use crate::*;
+use geometric_algebra::{simd::*, *};
 use std::ops::{Add, Div, Mul, Neg, Sub};
 
 /// Right Bulk Dual

@@ -5,7 +5,6 @@
 // https://github.com/AndrewBrownK/geometric_algebra/
 //
 
-#![allow(clippy::assign_op_pattern)]
 use crate::products::exterior::AntiWedge;
 use crate::*;
 
