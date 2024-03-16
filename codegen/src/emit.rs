@@ -44,9 +44,9 @@ const CODEGEN_DISCLAIMER: &str = "\
 
 pub struct Emitter<W: Write> {
     pub actually_emit: bool,
-    rust_collector: W,
-    glsl_collector: W,
-    wgsl_collector: W,
+    rust_collector: Option<W>,
+    glsl_collector: Option<W>,
+    wgsl_collector: Option<W>,
     rust_files_so_far: Vec<String>,
 }
 
@@ -54,46 +54,69 @@ impl Emitter<File> {
     pub fn new(actually_emit: bool, path: &Path, rust_name: &str, shader_name: &str) -> Self {
         let rust_path_buff = path.join(Path::new(rust_name)).with_extension("rs");
         let rust_path_str = rust_path_buff.as_path().to_string_lossy().to_string();
+        if !actually_emit {
+            return Self {
+                actually_emit,
+                rust_collector: None,
+                glsl_collector: None,
+                wgsl_collector: None,
+                rust_files_so_far: vec![]
+            }
+        }
         Self {
             actually_emit,
-            rust_collector: File::create(rust_path_buff).unwrap(),
-            glsl_collector: File::create(path.join(Path::new("shaders")).join(Path::new(shader_name)).with_extension("glsl")).unwrap(),
-            wgsl_collector: File::create(path.join(Path::new("shaders")).join(Path::new(shader_name)).with_extension("wgsl")).unwrap(),
+            rust_collector: Some(File::create(rust_path_buff).unwrap()),
+            glsl_collector: Some(File::create(path.join(Path::new("shaders")).join(Path::new(shader_name)).with_extension("glsl")).unwrap()),
+            wgsl_collector: Some(File::create(path.join(Path::new("shaders")).join(Path::new(shader_name)).with_extension("wgsl")).unwrap()),
             rust_files_so_far: vec![rust_path_str],
         }
     }
 
     pub fn new_rust_collector(&mut self, path: &Path) {
-        let rust_path_buff = path.with_extension("rs");
-        let rust_path_str = rust_path_buff.as_path().to_string_lossy().to_string();
-        self.rust_collector = File::create(rust_path_buff).unwrap();
-        self.rust_files_so_far.push(rust_path_str);
+        if self.actually_emit {
+            let rust_path_buff = path.with_extension("rs");
+            let rust_path_str = rust_path_buff.as_path().to_string_lossy().to_string();
+            self.rust_collector = Some(File::create(rust_path_buff).unwrap());
+            self.rust_files_so_far.push(rust_path_str);
+        }
     }
 }
 
 impl<W: Write> Emitter<W> {
     pub fn emit(&mut self, ast_node: &AstNode) -> std::io::Result<()> {
         if self.actually_emit {
-            rust::emit_code(&mut self.rust_collector, ast_node, 0)?;
-            glsl::emit_code(&mut self.glsl_collector, ast_node, 0)?;
-            wgsl::emit_code(&mut self.wgsl_collector, ast_node, 0)?;
+            if let Some(rc) = &mut self.rust_collector {
+                rust::emit_code(rc, ast_node, 0)?;
+            }
+            if let Some(gc) = &mut self.glsl_collector {
+                glsl::emit_code(gc, ast_node, 0)?;
+            }
+            if let Some(wc) = &mut self.wgsl_collector {
+                wgsl::emit_code(wc, ast_node, 0)?;
+            }
         }
         Ok(())
     }
 
     pub fn emit_rust_preamble(&mut self, preamble: &'static str) -> std::io::Result<()> {
         if self.actually_emit {
-            self.rust_collector.write_all(CODEGEN_DISCLAIMER.as_bytes())?;
-            self.rust_collector.write_all(&preamble.as_bytes())?;
-            self.rust_collector.write_all(b"\n\n")?;
+            if let Some(rc) = &mut self.rust_collector {
+                rc.write_all(CODEGEN_DISCLAIMER.as_bytes())?;
+                rc.write_all(&preamble.as_bytes())?;
+                rc.write_all(b"\n\n")?;
+            }
         }
         Ok(())
     }
 
     pub fn emit_shader_preamble(&mut self) -> std::io::Result<()> {
         if self.actually_emit {
-            self.glsl_collector.write_all(CODEGEN_DISCLAIMER.as_bytes())?;
-            self.wgsl_collector.write_all(CODEGEN_DISCLAIMER.as_bytes())?;
+            if let Some(gc) = &mut self.glsl_collector {
+                gc.write_all(CODEGEN_DISCLAIMER.as_bytes())?;
+            }
+            if let Some(wc) = &mut self.wgsl_collector {
+                wc.write_all(CODEGEN_DISCLAIMER.as_bytes())?;
+            }
         }
         Ok(())
     }

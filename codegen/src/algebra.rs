@@ -1,3 +1,4 @@
+use std::fmt::{Debug, Display, Formatter, Write};
 use crate::algebra::dialect::Dialect;
 use crate::ast::{DataType, Parameter};
 use basis_element::{BasisElement, BasisElementIndex};
@@ -150,14 +151,30 @@ impl Involution {
     }
 }
 
-#[derive(Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq, Debug)]
 pub struct ProductTerm {
     pub product: Vec<BasisElement>,
     pub factor_a: BasisElement,
     pub factor_b: BasisElement,
 }
 
-#[derive(Clone)]
+impl Display for ProductTerm {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        Display::fmt(&self.factor_a, f)?;
+        f.write_str(" * ")?;
+        Display::fmt(&self.factor_b, f)?;
+        f.write_str(" = ")?;
+        let mut first  = true;
+        for p in &self.product {
+            if !first { f.write_str(" + ")?; }
+            Display::fmt(p, f)?;
+            first = false;
+        }
+        Ok(())
+    }
+}
+
+#[derive(Clone, Debug)]
 pub struct Product {
     pub terms: Vec<ProductTerm>,
 }
@@ -179,10 +196,11 @@ impl Product {
         }
     }
 
-    pub fn projected<F>(&self, grade_projection: F) -> Self
+    pub fn projected<F>(&self, max_grade: usize, grade_projection: F) -> Self
     where
-        F: Fn(usize, usize, usize) -> bool,
+        F: Fn(usize, usize, usize, usize) -> bool,
     {
+
         Self {
             terms: self
                 .terms
@@ -202,11 +220,12 @@ impl Product {
                     }
                     terms
                 })
-                .filter(|term| grade_projection(term.factor_a.grade(), term.factor_b.grade(), term.product[0].grade()))
+                .filter(|term| grade_projection(max_grade, term.factor_a.grade(), term.factor_b.grade(), term.product[0].grade()))
                 .collect(),
         }
     }
 
+    // TODO duals are not always right complements
     pub fn dual<GA: GeometricAlgebraTrait>(&self, algebra: &GA) -> Self {
         Self {
             terms: self
@@ -224,9 +243,28 @@ impl Product {
     pub fn products<GA: GeometricAlgebraTrait>(algebra: &GA) -> Vec<(&'static str, Self, String)> {
         let basis = algebra.basis();
         let product = Self::new(&basis, &basis, algebra);
+        let max_grade = algebra.anti_scalar_element().grade();
 
-        let wedge_like: fn(usize, usize, usize) -> bool = |factor_a_grade, factor_b_grade, product_grade| product_grade == factor_a_grade + factor_b_grade;
-        let scalar_result_only: fn(usize, usize, usize) -> bool = |_, _, product_grade| product_grade == 0;
+        let wedge_like: fn(usize, usize, usize, usize) -> bool = |_, factor_a_grade, factor_b_grade, product_grade| {
+            product_grade == factor_a_grade + factor_b_grade
+        };
+        let anti_wedge_like: fn(usize, usize, usize, usize) -> bool = move |max_grade, factor_a_grade, factor_b_grade, product_grade| {
+            let anti_grade_a = max_grade - factor_a_grade;
+            let anti_grade_b = max_grade - factor_b_grade;
+            let anti_grade_product = max_grade - product_grade;
+            anti_grade_product == anti_grade_a + anti_grade_b
+        };
+        let scalar_result_only: fn(usize, usize, usize, usize) -> bool = |_, factor_a_grade, factor_b_grade, product_grade| {
+            product_grade == 0 && (factor_a_grade == factor_b_grade)
+        };
+        // TODO found the problem
+        //  Cannot find product where it is supposed to exist: Scalar AntiDot Scalar. Product terms: Product(e12 * e34 = e1234, e13 * -e24 = e1234, e23 * e14 = e1234, e14 * e23 = e1234, -e24 * e13 = e1234, e34 * e12 = e1234)
+        //  The problem is that this filter only works on the geometric_anti_product, but is being used on the geometric_product.
+        //  Probably should do the same fix to anti_wedge_like.
+        //  This could result it tons of mathematical changes/fixes to all anti products, even back in rga3d. Should be fun to see.
+        let anti_scalar_result_only: fn(usize, usize, usize, usize) -> bool = |max_grade, factor_a_grade, factor_b_grade, product_grade| {
+            product_grade == max_grade && (factor_a_grade == factor_b_grade)
+        };
 
         let dialect = algebra.dialect();
         let mut products = vec![];
@@ -268,7 +306,7 @@ impl Product {
         "
         );
         for name in &dialect.exterior_product {
-            products.push((*name, product.projected(wedge_like), docs.clone()))
+            products.push((*name, product.projected(max_grade, wedge_like), docs.clone()))
         }
         let synonyms = Product::synonyms(&dialect.exterior_anti_product);
         let docs = format!(
@@ -279,7 +317,7 @@ impl Product {
         "
         );
         for name in &dialect.exterior_anti_product {
-            products.push((*name, product.projected(wedge_like).dual(algebra), docs.clone()))
+            products.push((*name, product.projected(max_grade, anti_wedge_like), docs.clone()))
         }
 
         // https://rigidgeometricalgebra.org/wiki/index.php?title=Dot_products
@@ -293,7 +331,7 @@ impl Product {
         "
         );
         for name in &dialect.dot_product {
-            products.push((*name, product.projected(scalar_result_only), docs.clone()))
+            products.push((*name, product.projected(max_grade, scalar_result_only), docs.clone()))
         }
         let synonyms = Product::synonyms(&dialect.anti_dot_product);
         let docs = format!(
@@ -304,7 +342,7 @@ impl Product {
         "
         );
         for name in &dialect.anti_dot_product {
-            products.push((*name, product.projected(scalar_result_only).dual(algebra), docs.clone()))
+            products.push((*name, product.projected(max_grade, anti_scalar_result_only), docs.clone()))
         }
 
         products
@@ -316,6 +354,19 @@ impl Product {
         }
         let synonyms: String = names.iter().map(|it| it.to_string()).intersperse(", ".to_string()).collect();
         format!("Synonyms included: {synonyms}")
+    }
+}
+
+impl Display for Product {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        f.write_str("Product(")?;
+        let mut first = true;
+        for term in &self.terms {
+            if !first { f.write_str(", ")?; }
+            Display::fmt(term, f)?;
+            first = false;
+        }
+        f.write_str(")")
     }
 }
 

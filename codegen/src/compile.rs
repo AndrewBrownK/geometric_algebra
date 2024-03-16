@@ -5,7 +5,7 @@ use crate::{
     algebra::{Involution, MultiVectorClass, MultiVectorClassRegistry, Product},
     ast::{AstNode, DataType, Expression, ExpressionContent, Parameter},
 };
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 #[macro_export]
 macro_rules! result_of_trait {
@@ -472,13 +472,22 @@ impl MultiVectorClass {
     }
 
     pub fn product<'a>(name: &'static str, product: &Product, parameter_a: &Parameter<'a>, parameter_b: &Parameter<'a>, registry: &'a MultiVectorClassRegistry) -> AstNode<'a> {
+
+        let a = parameter_a.multi_vector_class().class_name.clone();
+        let b = parameter_b.multi_vector_class().class_name.clone();
+        // if name == "Dot" && (a.contains("Point") && b.contains("PointAtInfinity")) {
+        //     println!("About to attempt generating suspicious dot product")
+        // }
+
         let a_flat_basis = parameter_a.multi_vector_class().flat_basis();
         let b_flat_basis = parameter_b.multi_vector_class().flat_basis();
-        let mut result_signature = std::collections::HashSet::new();
+        let mut result_signature = BTreeSet::new();
         for product_term in product.terms.iter() {
             if a_flat_basis.iter().any(|e| e.index == product_term.factor_a.index) && b_flat_basis.iter().any(|e| e.index == product_term.factor_b.index) {
                 for pt in product_term.product.iter() {
-                    result_signature.insert(pt.index);
+                    if pt.coefficient != 0 {
+                        result_signature.insert(pt.index);
+                    }
                 }
             }
         }
@@ -505,8 +514,17 @@ impl MultiVectorClass {
         }
 
         let result_class = match result_class {
-            None => return AstNode::None,
             Some(rc) => rc,
+            None => {
+                if name == "Dot" || name == "AntiDot" {
+                    let mut a_grades = a_flat_basis.iter().map(|it| it.grade());
+                    let b_grades = b_flat_basis.iter().map(|it| it.grade()).collect::<Vec<_>>();
+                    if a_grades.any(|it| b_grades.contains(&it)) {
+                        panic!("Cannot find product where it is supposed to exist: {a} {name} {b}. Product terms: {product}")
+                    }
+                }
+                return AstNode::None
+            },
         };
 
         let result_flat_basis = result_class.flat_basis();
