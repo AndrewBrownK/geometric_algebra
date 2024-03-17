@@ -262,10 +262,38 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
             result.push(trivial_product.clone());
         }
 
+        let anti_scalar = self.anti_scalar_element().index;
+        let origin = (1 as BasisElementIndex) << self.origin;
+        let anti_origin = anti_scalar - origin;
+        let infinity = (1 as BasisElementIndex) << self.infinity;
+        let anti_infinity = anti_scalar - infinity;
+        let projective = origin | infinity;
+        let anti_projective = anti_scalar - projective;
+
+        let projective_basis = BasisElement::from_index(projective);
+        let anti_projective_basis = BasisElement::from_index(anti_projective);
+
+        // let a_is_anti_projective = (a.index & anti_projective) == anti_projective;
+        // let b_is_anti_projective = (b.index & anti_projective) == anti_projective;
+        // if a_is_anti_projective && b_is_anti_projective {
+        //     // primitive product should be zero
+        //     assert!(result.is_empty());
+        //     // Then we add the non-trivial part of this product (the only part of this product)
+        //     let mut a = a.clone();
+        //     let mut b = b.clone();
+        //     a.index = a.index & projective;
+        //     b.index = b.index & projective;
+        //     let mut result = a.primitive_product(&b, &self.surface_generator_squares);
+        //     assert_eq!(result.index & anti_projective, 0);
+        //     result.coefficient = a.coefficient * b.coefficient * result.coefficient;
+        //     return vec![result];
+        // }
 
 
 
-        todo!()
+        // TODO
+
+        return result;
     }
 }
 
