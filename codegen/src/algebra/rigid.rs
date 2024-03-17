@@ -78,4 +78,12 @@ impl<'a> GeometricAlgebraTrait for RigidGeometricAlgebra<'a> {
         }
         vec![result]
     }
+
+    fn anti_product(&self, a: &BasisElement, b: &BasisElement) -> Vec<BasisElement> {
+        let result = a.primitive_anti_product(b, &self.generator_squares);
+        if result.coefficient == 0 {
+            return vec![];
+        }
+        vec![result]
+    }
 }

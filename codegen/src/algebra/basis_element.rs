@@ -39,6 +39,18 @@ impl BasisElement {
             index: a.index ^ b.index,
         }
     }
+
+    pub fn primitive_anti_product(&self, b: &BasisElement, generator_squares: &[isize]) -> BasisElement {
+        let mut a = self.clone();
+        let mut b = b.clone();
+        let anti_scalar_grade = generator_squares.len();
+        let anti_scalar_index = (1 << anti_scalar_grade) - 1;
+        a.index = anti_scalar_index - a.index;
+        b.index = anti_scalar_index - b.index;
+        let mut result = a.primitive_product(&b, generator_squares);
+        result.index = anti_scalar_index - result.index;
+        return result;
+    }
 }
 
 // NEW PLAN (compared to original geometric_algebra repository)

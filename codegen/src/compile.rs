@@ -515,16 +515,7 @@ impl MultiVectorClass {
 
         let result_class = match result_class {
             Some(rc) => rc,
-            None => {
-                if name == "Dot" || name == "AntiDot" {
-                    let mut a_grades = a_flat_basis.iter().map(|it| it.grade());
-                    let b_grades = b_flat_basis.iter().map(|it| it.grade()).collect::<Vec<_>>();
-                    if a_grades.any(|it| b_grades.contains(&it)) {
-                        panic!("Cannot find product where it is supposed to exist: {a} {name} {b}. Product terms: {product}")
-                    }
-                }
-                return AstNode::None
-            },
+            None => return AstNode::None,
         };
 
         let result_flat_basis = result_class.flat_basis();

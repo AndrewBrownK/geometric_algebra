@@ -44,6 +44,7 @@ pub trait GeometricAlgebraTrait {
     fn right_complement(&self, a: &BasisElement) -> BasisElement;
     fn left_complement(&self, a: &BasisElement) -> BasisElement;
     fn product(&self, a: &BasisElement, b: &BasisElement) -> Vec<BasisElement>;
+    fn anti_product(&self, a: &BasisElement, b: &BasisElement) -> Vec<BasisElement>;
 }
 
 #[derive(Clone)]
@@ -196,6 +197,22 @@ impl Product {
         }
     }
 
+    pub fn anti_new<GA: GeometricAlgebraTrait>(a: &[BasisElement], b: &[BasisElement], algebra: &GA) -> Self {
+        Self {
+            terms: a
+                .iter()
+                .flat_map(|a| {
+                    b.iter().map(move |b| ProductTerm {
+                        product: algebra.anti_product(a, b),
+                        factor_a: a.clone(),
+                        factor_b: b.clone(),
+                    })
+                })
+                .filter(|term| !term.product.is_empty())
+                .collect(),
+        }
+    }
+
     pub fn projected<F>(&self, max_grade: usize, grade_projection: F) -> Self
     where
         F: Fn(usize, usize, usize, usize) -> bool,
@@ -225,24 +242,18 @@ impl Product {
         }
     }
 
-    // TODO duals are not always right complements
-    pub fn dual<GA: GeometricAlgebraTrait>(&self, algebra: &GA) -> Self {
-        Self {
-            terms: self
-                .terms
-                .iter()
-                .map(|term| ProductTerm {
-                    product: term.product.iter().map(|p| algebra.right_complement(p)).collect(),
-                    factor_a: algebra.right_complement(&term.factor_a),
-                    factor_b: algebra.right_complement(&term.factor_b),
-                })
-                .collect(),
+    fn synonyms(names: &Vec<&'static str>) -> String {
+        if names.len() <= 1 {
+            return "".to_string();
         }
+        let synonyms: String = names.iter().map(|it| it.to_string()).intersperse(", ".to_string()).collect();
+        format!("Synonyms included: {synonyms}")
     }
 
     pub fn products<GA: GeometricAlgebraTrait>(algebra: &GA) -> Vec<(&'static str, Self, String)> {
         let basis = algebra.basis();
         let product = Self::new(&basis, &basis, algebra);
+        let anti_product = Self::anti_new(&basis, &basis, algebra);
         let max_grade = algebra.anti_scalar_element().grade();
 
         let wedge_like: fn(usize, usize, usize, usize) -> bool = |_, factor_a_grade, factor_b_grade, product_grade| {
@@ -263,7 +274,7 @@ impl Product {
         //  Probably should do the same fix to anti_wedge_like.
         //  This could result it tons of mathematical changes/fixes to all anti products, even back in rga3d. Should be fun to see.
         let anti_scalar_result_only: fn(usize, usize, usize, usize) -> bool = |max_grade, factor_a_grade, factor_b_grade, product_grade| {
-            product_grade == max_grade && (factor_a_grade == factor_b_grade)
+            product_grade == max_grade
         };
 
         let dialect = algebra.dialect();
@@ -292,7 +303,7 @@ impl Product {
         "
         );
         for name in &dialect.geometric_anti_product {
-            products.push((*name, product.clone().dual(algebra), docs.clone()))
+            products.push((*name, anti_product.clone(), docs.clone()))
         }
 
         // https://rigidgeometricalgebra.org/wiki/index.php?title=Exterior_products
@@ -317,7 +328,7 @@ impl Product {
         "
         );
         for name in &dialect.exterior_anti_product {
-            products.push((*name, product.projected(max_grade, anti_wedge_like), docs.clone()))
+            products.push((*name, anti_product.projected(max_grade, anti_wedge_like), docs.clone()))
         }
 
         // https://rigidgeometricalgebra.org/wiki/index.php?title=Dot_products
@@ -342,18 +353,10 @@ impl Product {
         "
         );
         for name in &dialect.anti_dot_product {
-            products.push((*name, product.projected(max_grade, anti_scalar_result_only), docs.clone()))
+            products.push((*name, anti_product.projected(max_grade, anti_scalar_result_only), docs.clone()))
         }
 
         products
-    }
-
-    fn synonyms(names: &Vec<&'static str>) -> String {
-        if names.len() <= 1 {
-            return "".to_string();
-        }
-        let synonyms: String = names.iter().map(|it| it.to_string()).intersperse(", ".to_string()).collect();
-        format!("Synonyms included: {synonyms}")
     }
 }
 

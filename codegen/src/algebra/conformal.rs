@@ -250,6 +250,23 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
 
         return result;
     }
+
+    fn anti_product(&self, a: &BasisElement, b: &BasisElement) -> Vec<BasisElement> {
+        // We need to reproduce this Cayley table.
+        // https://conformalgeometricalgebra.org/wiki/index.php?title=Geometric_products
+
+        let mut result = vec![];
+
+        let trivial_product = a.primitive_anti_product(b, &self.surface_generator_squares);
+        if trivial_product.coefficient != 0 {
+            result.push(trivial_product.clone());
+        }
+
+
+
+
+        todo!()
+    }
 }
 
 //
