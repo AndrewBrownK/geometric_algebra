@@ -251,6 +251,7 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
         return result;
     }
 
+    // TODO see page 49 of the book, I can reuse the normal product to derive the anti_product
     fn anti_product(&self, a: &BasisElement, b: &BasisElement) -> Vec<BasisElement> {
         // We need to reproduce this Cayley table.
         // https://conformalgeometricalgebra.org/wiki/index.php?title=Geometric_products
@@ -273,21 +274,22 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
         let projective_basis = BasisElement::from_index(projective);
         let anti_projective_basis = BasisElement::from_index(anti_projective);
 
-        // let a_is_anti_projective = (a.index & anti_projective) == anti_projective;
-        // let b_is_anti_projective = (b.index & anti_projective) == anti_projective;
-        // if a_is_anti_projective && b_is_anti_projective {
-        //     // primitive product should be zero
-        //     assert!(result.is_empty());
-        //     // Then we add the non-trivial part of this product (the only part of this product)
-        //     let mut a = a.clone();
-        //     let mut b = b.clone();
-        //     a.index = a.index & projective;
-        //     b.index = b.index & projective;
-        //     let mut result = a.primitive_product(&b, &self.surface_generator_squares);
-        //     assert_eq!(result.index & anti_projective, 0);
-        //     result.coefficient = a.coefficient * b.coefficient * result.coefficient;
-        //     return vec![result];
-        // }
+        let a_is_projective = (a.index & projective) == projective;
+        let b_is_projective = (b.index & projective) == projective;
+        // TODO this branch isn't correct yet
+        if !a_is_projective && !b_is_projective {
+            // primitive product should be zero
+            assert!(result.is_empty());
+            // Then we add the non-trivial part of this product (the only part of this product)
+            let mut a = a.clone();
+            let mut b = b.clone();
+            a.index = anti_scalar - a.index;
+            b.index = anti_scalar - b.index;
+            let mut result = a.primitive_anti_product(&b, &self.surface_generator_squares);
+            // assert_eq!(result.index & projective, 0);
+            result.coefficient = -1 * a.coefficient * b.coefficient * result.coefficient;
+            return vec![result];
+        }
 
 
 
