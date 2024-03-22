@@ -609,12 +609,12 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
                 let round_bulk = MultiVectorClass::derive_bulk_or_weight("RoundBulk", &param_a, &projective_basis, false, flat_basis.clone(), false, &self.algebra, registry);
                 if round_bulk != AstNode::None {
-                    self.trait_impls.add_single_impl("Bulk", param_a.clone(), round_bulk);
+                    self.trait_impls.add_single_impl("RoundBulk", param_a.clone(), round_bulk);
                 }
 
                 let round_weight = MultiVectorClass::derive_bulk_or_weight("RoundWeight", &param_a, &projective_basis, true, flat_basis.clone(), false, &self.algebra, registry);
                 if round_weight != AstNode::None {
-                    self.trait_impls.add_single_impl("Weight", param_a, round_weight);
+                    self.trait_impls.add_single_impl("RoundWeight", param_a, round_weight);
                 }
             }
         }
