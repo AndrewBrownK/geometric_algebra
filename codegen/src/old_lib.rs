@@ -576,21 +576,46 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
         }
 
+        // TODO find a way to generalize these hard coded basis elements
+        let projective_basis = if self.algebra.algebra_name() == "rga3d" {
+            Some(self.algebra.parse("e4"))
+        } else if self.algebra.algebra_name() == "cga3d" {
+            Some(self.algebra.parse("e4"))
+        } else {
+            None
+        };
+        let flat_basis = if self.algebra.algebra_name() == "cga3d" {
+            Some(self.algebra.parse("e5"))
+        } else {
+            None
+        };
         for param_a in registry.single_parameters() {
-            let projective_basis = if self.algebra.algebra_name() == "rga3d" {
-                self.algebra.parse("e4")
-            } else {
-                break;
+            let projective_basis = match projective_basis.clone() {
+                None => continue,
+                Some(pb) => pb,
             };
 
-            let bulk = MultiVectorClass::derive_bulk_or_weight("Bulk", &param_a, &projective_basis, false, &self.algebra, registry);
+            let bulk = MultiVectorClass::derive_bulk_or_weight("Bulk", &param_a, &projective_basis, false, flat_basis.clone(), true, &self.algebra, registry);
             if bulk != AstNode::None {
                 self.trait_impls.add_single_impl("Bulk", param_a.clone(), bulk);
             }
 
-            let weight = MultiVectorClass::derive_bulk_or_weight("Weight", &param_a, &projective_basis, true, &self.algebra, registry);
+            let weight = MultiVectorClass::derive_bulk_or_weight("Weight", &param_a, &projective_basis, true, flat_basis.clone(), true, &self.algebra, registry);
             if weight != AstNode::None {
-                self.trait_impls.add_single_impl("Weight", param_a, weight);
+                self.trait_impls.add_single_impl("Weight", param_a.clone(), weight);
+            }
+
+            if self.algebra.algebra_name().contains("cga") {
+
+                let round_bulk = MultiVectorClass::derive_bulk_or_weight("RoundBulk", &param_a, &projective_basis, false, flat_basis.clone(), false, &self.algebra, registry);
+                if round_bulk != AstNode::None {
+                    self.trait_impls.add_single_impl("Bulk", param_a.clone(), round_bulk);
+                }
+
+                let round_weight = MultiVectorClass::derive_bulk_or_weight("RoundWeight", &param_a, &projective_basis, true, flat_basis.clone(), false, &self.algebra, registry);
+                if round_weight != AstNode::None {
+                    self.trait_impls.add_single_impl("Weight", param_a, round_weight);
+                }
             }
         }
 

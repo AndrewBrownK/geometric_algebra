@@ -1613,19 +1613,21 @@ impl MultiVectorClass {
         parameter_a: &Parameter<'a>,
         projective_basis: &BasisElement,
         is_projective: bool,
+        flat_basis: Option<BasisElement>,
+        is_flat: bool,
         algebra: &GA,
         registry: &'a MultiVectorClassRegistry,
     ) -> AstNode<'a> {
         let mut result_signature = Vec::new();
         let a_flat_basis = parameter_a.multi_vector_class().flat_basis();
         for a_element in a_flat_basis.iter() {
-            let products = algebra.product(projective_basis, a_element);
-            if is_projective && products.is_empty() {
-                result_signature.push(a_element.index)
-            } else if !is_projective && !products.is_empty() {
-                result_signature.push(a_element.index)
-            } else {
-                continue;
+            let basis_is_projective = projective_basis.index == (a_element.index & projective_basis.index);
+            let basis_is_flat = if let Some(flat_basis) = &flat_basis {
+                flat_basis.index == (a_element.index & flat_basis.index)
+            } else { true };
+
+            if is_projective == basis_is_projective && is_flat == basis_is_flat {
+                result_signature.push(a_element.index);
             }
         }
         result_signature.sort_unstable();
@@ -1671,8 +1673,7 @@ impl MultiVectorClass {
                 .map(|index_in_group| {
                     let result_element = &result_flat_basis[base_index + index_in_group];
                     let index_in_a = a_flat_basis.iter().position(|a_element| a_element == result_element).unwrap();
-                    let result_element_is_projective = algebra.product(projective_basis, result_element).is_empty();
-                    let scalar = if is_projective == result_element_is_projective { 1isize } else { 0isize };
+                    let scalar = if result_signature.contains(&result_element.index) { 1isize } else { 0isize };
                     let (group, element) = parameter_a.multi_vector_class().index_in_group(index_in_a);
                     let group_size = parameter_a.multi_vector_class().grouped_basis[group].len();
                     if a_group_index.is_none() {
@@ -1692,30 +1693,40 @@ impl MultiVectorClass {
                 .unzip();
 
             let a_group_index = a_group_index.unwrap();
-            let expression = Expression {
+            let mut expression = Expression {
                 size,
                 data_type_hint: None,
-                content: ExpressionContent::Multiply(
+                content: ExpressionContent::Gather(
                     Box::new(Expression {
-                        size,
-                        data_type_hint: None,
-                        content: ExpressionContent::Gather(
-                            Box::new(Expression {
-                                size: parameter_a.multi_vector_class().grouped_basis[a_group_index].len(),
-                                data_type_hint: Some(parameter_a.data_type.clone()),
-                                content: ExpressionContent::Variable(parameter_a.name),
-                            }),
-                            a_indices,
-                        ),
+                        size: parameter_a.multi_vector_class().grouped_basis[a_group_index].len(),
+                        data_type_hint: Some(parameter_a.data_type.clone()),
+                        content: ExpressionContent::Variable(parameter_a.name),
                     }),
-                    Box::new(Expression {
-                        size,
-                        data_type_hint: Some(DataType::SimdVector(size)),
-                        content: ExpressionContent::Constant(DataType::SimdVector(size), factors),
-                    }),
+                    a_indices,
                 ),
             };
-            // body.push((DataType::SimdVector(size), *simplify_and_legalize(Box::new(expression))));
+            if factors.iter().any(|it| *it != 1) {
+                expression = Expression {
+                    size,
+                    data_type_hint: None,
+                    content: ExpressionContent::Multiply(
+                        Box::new(expression),
+                        Box::new(Expression {
+                            size,
+                            data_type_hint: Some(DataType::SimdVector(size)),
+                            content: ExpressionContent::Constant(DataType::SimdVector(size), factors),
+                        }),
+                    ),
+                };
+            }
+            let mut expression = *simplify_and_legalize(Box::new(expression));
+            if expression.content == ExpressionContent::None {
+                expression = Expression {
+                    size,
+                    data_type_hint: Some(DataType::SimdVector(size)),
+                    content: ExpressionContent::Constant(DataType::SimdVector(size), vec![0; size]),
+                };
+            }
             body.push((DataType::SimdVector(size), expression));
             base_index += size;
         }

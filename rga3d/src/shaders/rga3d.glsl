@@ -9897,7 +9897,7 @@ Scalar translator_translator_dot(Translator self, Translator other) {
 }
 
 Flector flector_bulk(Flector self) {
-    return Flector(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.w) * vec4(1.0, 1.0, 1.0, 0.0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.w) * vec4(0.0, 0.0, 0.0, 1.0));
+    return Flector(self.g0 * vec4(1.0, 1.0, 1.0, 0.0), self.g1 * vec4(0.0, 0.0, 0.0, 1.0));
 }
 
 Horizon horizon_bulk(Horizon self) {
@@ -9905,7 +9905,7 @@ Horizon horizon_bulk(Horizon self) {
 }
 
 LineAtInfinity line_bulk(Line self) {
-    return LineAtInfinity(vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(1.0, 1.0, 1.0));
+    return LineAtInfinity(self.g1);
 }
 
 LineAtInfinity line_at_infinity_bulk(LineAtInfinity self) {
@@ -9913,23 +9913,23 @@ LineAtInfinity line_at_infinity_bulk(LineAtInfinity self) {
 }
 
 Scalar magnitude_bulk(Magnitude self) {
-    return Scalar(self.g0.x * 1.0);
+    return Scalar(self.g0.x);
 }
 
 LineAtInfinity motor_bulk(Motor self) {
-    return LineAtInfinity(vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(1.0, 1.0, 1.0));
+    return LineAtInfinity(self.g1);
 }
 
 MultiVector multi_vector_bulk(MultiVector self) {
-    return MultiVector(vec2(self.g0.x, self.g0.y) * vec2(1.0, 0.0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.w) * vec4(1.0, 1.0, 1.0, 0.0), vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(0.0, 0.0, 0.0), vec3(self.g3.x, self.g3.y, self.g3.z) * vec3(1.0, 1.0, 1.0), vec4(self.g4.x, self.g4.y, self.g4.z, self.g4.w) * vec4(0.0, 0.0, 0.0, 1.0));
+    return MultiVector(self.g0 * vec2(1.0, 0.0), self.g1 * vec4(1.0, 1.0, 1.0, 0.0), vec3(0.0, 0.0, 0.0), self.g3, self.g4 * vec4(0.0, 0.0, 0.0, 1.0));
 }
 
 Horizon plane_bulk(Plane self) {
-    return Horizon(self.g0.w * 1.0);
+    return Horizon(self.g0.w);
 }
 
 PointAtInfinity point_bulk(Point self) {
-    return PointAtInfinity(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(1.0, 1.0, 1.0));
+    return PointAtInfinity(vec3(self.g0.x, self.g0.y, self.g0.z));
 }
 
 PointAtInfinity point_at_infinity_bulk(PointAtInfinity self) {
@@ -9941,7 +9941,7 @@ Scalar scalar_bulk(Scalar self) {
 }
 
 LineAtInfinity translator_bulk(Translator self) {
-    return LineAtInfinity(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(1.0, 1.0, 1.0));
+    return LineAtInfinity(vec3(self.g0.x, self.g0.y, self.g0.z));
 }
 
 AntiScalar anti_scalar_weight(AntiScalar self) {
@@ -9949,11 +9949,11 @@ AntiScalar anti_scalar_weight(AntiScalar self) {
 }
 
 Flector flector_weight(Flector self) {
-    return Flector(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.w) * vec4(0.0, 0.0, 0.0, 1.0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.w) * vec4(1.0, 1.0, 1.0, 0.0));
+    return Flector(self.g0 * vec4(0.0, 0.0, 0.0, 1.0), self.g1 * vec4(1.0, 1.0, 1.0, 0.0));
 }
 
 LineAtOrigin line_weight(Line self) {
-    return LineAtOrigin(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(1.0, 1.0, 1.0));
+    return LineAtOrigin(self.g0);
 }
 
 LineAtOrigin line_at_origin_weight(LineAtOrigin self) {
@@ -9961,15 +9961,15 @@ LineAtOrigin line_at_origin_weight(LineAtOrigin self) {
 }
 
 AntiScalar magnitude_weight(Magnitude self) {
-    return AntiScalar(self.g0.y * 1.0);
+    return AntiScalar(self.g0.y);
 }
 
 Rotor motor_weight(Motor self) {
-    return Rotor(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.w) * vec4(1.0, 1.0, 1.0, 1.0));
+    return Rotor(self.g0);
 }
 
 MultiVector multi_vector_weight(MultiVector self) {
-    return MultiVector(vec2(self.g0.x, self.g0.y) * vec2(0.0, 1.0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.w) * vec4(0.0, 0.0, 0.0, 1.0), vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(1.0, 1.0, 1.0), vec3(self.g3.x, self.g3.y, self.g3.z) * vec3(0.0, 0.0, 0.0), vec4(self.g4.x, self.g4.y, self.g4.z, self.g4.w) * vec4(1.0, 1.0, 1.0, 0.0));
+    return MultiVector(self.g0 * vec2(0.0, 1.0), self.g1 * vec4(0.0, 0.0, 0.0, 1.0), self.g2, vec3(0.0, 0.0, 0.0), self.g4 * vec4(1.0, 1.0, 1.0, 0.0));
 }
 
 Origin origin_weight(Origin self) {
@@ -9977,7 +9977,7 @@ Origin origin_weight(Origin self) {
 }
 
 PlaneAtOrigin plane_weight(Plane self) {
-    return PlaneAtOrigin(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(1.0, 1.0, 1.0));
+    return PlaneAtOrigin(vec3(self.g0.x, self.g0.y, self.g0.z));
 }
 
 PlaneAtOrigin plane_at_origin_weight(PlaneAtOrigin self) {
@@ -9985,7 +9985,7 @@ PlaneAtOrigin plane_at_origin_weight(PlaneAtOrigin self) {
 }
 
 Origin point_weight(Point self) {
-    return Origin(self.g0.w * 1.0);
+    return Origin(self.g0.w);
 }
 
 Rotor rotor_weight(Rotor self) {
@@ -9993,7 +9993,7 @@ Rotor rotor_weight(Rotor self) {
 }
 
 AntiScalar translator_weight(Translator self) {
-    return AntiScalar(self.g0.w * 1.0);
+    return AntiScalar(self.g0.w);
 }
 
 AntiScalar anti_scalar_anti_reversal(AntiScalar self) {

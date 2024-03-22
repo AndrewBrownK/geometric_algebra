@@ -130,6 +130,14 @@ use crate::*;",
     code_gen.emit_dot_products(&mut emitter)?;
 
 
+
+
+
+
+
+
+
+
     // TODO we get dot products (above) but not aspects (below)
 
     emitter.new_rust_collector(&file_path.join(Path::new("aspects")));

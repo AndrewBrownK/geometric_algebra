@@ -9124,6 +9124,110 @@ fn sphere_sphere_dot(self_: Sphere, other: Sphere) -> Scalar {
     return Scalar(0.0 - self_.g0.x * other.g0.x - self_.g0.y * other.g0.y - self_.g0.z * other.g0.z + self_.g1.x * other.g1.y + self_.g1.y * other.g1.x);
 }
 
+fn circle_round_bulk(self_: Circle) -> Circle {
+    return Circle(self_.g0 * vec4<f32>(0.0, 0.0, 0.0, 1.0), vec3<f32>(0.0, 0.0, 0.0), vec3<f32>(0.0, 0.0, 0.0));
+}
+
+fn dipole_round_bulk(self_: Dipole) -> Dipole {
+    return Dipole(vec3<f32>(0.0, 0.0, 0.0), self_.g1, vec4<f32>(0.0, 0.0, 0.0, 0.0));
+}
+
+fn horizon_bulk(self_: Horizon) -> Horizon {
+    return self_;
+}
+
+fn line_bulk(self_: Line) -> LineAtInfinity {
+    return LineAtInfinity(self_.g1);
+}
+
+fn line_at_infinity_bulk(self_: LineAtInfinity) -> LineAtInfinity {
+    return self_;
+}
+
+fn magnitude_round_bulk(self_: Magnitude) -> Scalar {
+    return Scalar(self_.g0.x);
+}
+
+fn multi_vector_round_bulk(self_: MultiVector) -> MultiVector {
+    return MultiVector(self_.g0 * vec2<f32>(1.0, 0.0), self_.g1, vec2<f32>(0.0, 0.0), vec3<f32>(0.0, 0.0, 0.0), self_.g4, vec4<f32>(0.0, 0.0, 0.0, 0.0), self_.g6 * vec4<f32>(0.0, 0.0, 0.0, 1.0), vec3<f32>(0.0, 0.0, 0.0), vec3<f32>(0.0, 0.0, 0.0), vec3<f32>(0.0, 0.0, 0.0), vec2<f32>(0.0, 0.0));
+}
+
+fn plane_bulk(self_: Plane) -> Horizon {
+    return Horizon(self_.g0.w);
+}
+
+fn point_bulk(self_: Point) -> PointAtInfinity {
+    return PointAtInfinity(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z));
+}
+
+fn point_at_infinity_bulk(self_: PointAtInfinity) -> PointAtInfinity {
+    return self_;
+}
+
+fn radial_round_bulk(self_: Radial) -> Radial {
+    return Radial(self_.g0, vec2<f32>(0.0, 0.0));
+}
+
+fn scalar_round_bulk(self_: Scalar) -> Scalar {
+    return self_;
+}
+
+fn sphere_bulk(self_: Sphere) -> Horizon {
+    return Horizon(self_.g1.y);
+}
+
+fn anti_scalar_weight(self_: AntiScalar) -> AntiScalar {
+    return self_;
+}
+
+fn circle_round_weight(self_: Circle) -> Circle {
+    return Circle(self_.g0 * vec4<f32>(1.0, 1.0, 1.0, 0.0), vec3<f32>(0.0, 0.0, 0.0), vec3<f32>(0.0, 0.0, 0.0));
+}
+
+fn dipole_round_weight(self_: Dipole) -> Dipole {
+    return Dipole(self_.g0, vec3<f32>(0.0, 0.0, 0.0), vec4<f32>(0.0, 0.0, 0.0, 0.0));
+}
+
+fn line_weight(self_: Line) -> LineAtOrigin {
+    return LineAtOrigin(self_.g0);
+}
+
+fn line_at_origin_weight(self_: LineAtOrigin) -> LineAtOrigin {
+    return self_;
+}
+
+fn magnitude_weight(self_: Magnitude) -> AntiScalar {
+    return AntiScalar(self_.g0.y);
+}
+
+fn multi_vector_round_weight(self_: MultiVector) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, 0.0), vec3<f32>(0.0, 0.0, 0.0), self_.g2 * vec2<f32>(1.0, 0.0), self_.g3, vec3<f32>(0.0, 0.0, 0.0), vec4<f32>(0.0, 0.0, 0.0, 0.0), self_.g6 * vec4<f32>(1.0, 1.0, 1.0, 0.0), vec3<f32>(0.0, 0.0, 0.0), vec3<f32>(0.0, 0.0, 0.0), vec3<f32>(0.0, 0.0, 0.0), self_.g10 * vec2<f32>(1.0, 0.0));
+}
+
+fn origin_weight(self_: Origin) -> Origin {
+    return self_;
+}
+
+fn plane_weight(self_: Plane) -> PlaneAtOrigin {
+    return PlaneAtOrigin(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z));
+}
+
+fn plane_at_origin_weight(self_: PlaneAtOrigin) -> PlaneAtOrigin {
+    return self_;
+}
+
+fn point_weight(self_: Point) -> Origin {
+    return Origin(self_.g0.w);
+}
+
+fn radial_round_weight(self_: Radial) -> Radial {
+    return Radial(vec3<f32>(0.0, 0.0, 0.0), self_.g1 * vec2<f32>(1.0, 0.0));
+}
+
+fn sphere_round_weight(self_: Sphere) -> Sphere {
+    return Sphere(vec3<f32>(0.0, 0.0, 0.0), self_.g1 * vec2<f32>(1.0, 0.0));
+}
+
 fn anti_scalar_anti_reversal(self_: AntiScalar) -> AntiScalar {
     return AntiScalar(self_.g0);
 }
@@ -9558,6 +9662,110 @@ fn scalar_right_complement(self_: Scalar) -> AntiScalar {
 
 fn sphere_right_complement(self_: Sphere) -> Radial {
     return Radial(self_.g0, self_.g1.yx);
+}
+
+fn circle_left_bulk_dual(self_: Circle) -> Dipole {
+    return circle_left_complement(circle_round_bulk(self_));
+}
+
+fn dipole_left_bulk_dual(self_: Dipole) -> Circle {
+    return dipole_left_complement(dipole_round_bulk(self_));
+}
+
+fn magnitude_left_bulk_dual(self_: Magnitude) -> AntiScalar {
+    return scalar_left_complement(magnitude_round_bulk(self_));
+}
+
+fn multi_vector_left_bulk_dual(self_: MultiVector) -> MultiVector {
+    return multi_vector_left_complement(multi_vector_round_bulk(self_));
+}
+
+fn radial_left_bulk_dual(self_: Radial) -> Sphere {
+    return radial_left_complement(radial_round_bulk(self_));
+}
+
+fn scalar_left_bulk_dual(self_: Scalar) -> AntiScalar {
+    return scalar_left_complement(scalar_round_bulk(self_));
+}
+
+fn anti_scalar_left_weight_dual(self_: AntiScalar) -> Scalar {
+    return anti_scalar_left_complement(anti_scalar_weight(self_));
+}
+
+fn circle_left_weight_dual(self_: Circle) -> Dipole {
+    return circle_left_complement(circle_round_weight(self_));
+}
+
+fn dipole_left_weight_dual(self_: Dipole) -> Circle {
+    return dipole_left_complement(dipole_round_weight(self_));
+}
+
+fn magnitude_left_weight_dual(self_: Magnitude) -> Scalar {
+    return anti_scalar_left_complement(magnitude_weight(self_));
+}
+
+fn multi_vector_left_weight_dual(self_: MultiVector) -> MultiVector {
+    return multi_vector_left_complement(multi_vector_round_weight(self_));
+}
+
+fn radial_left_weight_dual(self_: Radial) -> Sphere {
+    return radial_left_complement(radial_round_weight(self_));
+}
+
+fn sphere_left_weight_dual(self_: Sphere) -> Radial {
+    return sphere_left_complement(sphere_round_weight(self_));
+}
+
+fn circle_right_bulk_dual(self_: Circle) -> Dipole {
+    return circle_right_complement(circle_round_bulk(self_));
+}
+
+fn dipole_right_bulk_dual(self_: Dipole) -> Circle {
+    return dipole_right_complement(dipole_round_bulk(self_));
+}
+
+fn magnitude_right_bulk_dual(self_: Magnitude) -> AntiScalar {
+    return scalar_right_complement(magnitude_round_bulk(self_));
+}
+
+fn multi_vector_right_bulk_dual(self_: MultiVector) -> MultiVector {
+    return multi_vector_right_complement(multi_vector_round_bulk(self_));
+}
+
+fn radial_right_bulk_dual(self_: Radial) -> Sphere {
+    return radial_right_complement(radial_round_bulk(self_));
+}
+
+fn scalar_right_bulk_dual(self_: Scalar) -> AntiScalar {
+    return scalar_right_complement(scalar_round_bulk(self_));
+}
+
+fn anti_scalar_right_weight_dual(self_: AntiScalar) -> Scalar {
+    return anti_scalar_right_complement(anti_scalar_weight(self_));
+}
+
+fn circle_right_weight_dual(self_: Circle) -> Dipole {
+    return circle_right_complement(circle_round_weight(self_));
+}
+
+fn dipole_right_weight_dual(self_: Dipole) -> Circle {
+    return dipole_right_complement(dipole_round_weight(self_));
+}
+
+fn magnitude_right_weight_dual(self_: Magnitude) -> Scalar {
+    return anti_scalar_right_complement(magnitude_weight(self_));
+}
+
+fn multi_vector_right_weight_dual(self_: MultiVector) -> MultiVector {
+    return multi_vector_right_complement(multi_vector_round_weight(self_));
+}
+
+fn radial_right_weight_dual(self_: Radial) -> Sphere {
+    return radial_right_complement(radial_round_weight(self_));
+}
+
+fn sphere_right_weight_dual(self_: Sphere) -> Radial {
+    return sphere_right_complement(sphere_round_weight(self_));
 }
 
 fn anti_scalar_anti_grade(self_: AntiScalar) -> i32 {
@@ -11070,6 +11278,1362 @@ fn plane_radial_reflect(self_: Plane, other: Radial) -> Radial {
 
 fn plane_sphere_reflect(self_: Plane, other: Sphere) -> Sphere {
     return plane_sphere_sandwich(plane_unitize(self_), other);
+}
+
+fn circle_circle_bulk_contraction(self_: Circle, other: Circle) -> Scalar {
+    return circle_dipole_anti_wedge(self_, circle_right_bulk_dual(other));
+}
+
+fn circle_dipole_bulk_contraction(self_: Circle, other: Dipole) -> Radial {
+    return circle_circle_anti_wedge(self_, dipole_right_bulk_dual(other));
+}
+
+fn circle_multi_vector_bulk_contraction(self_: Circle, other: MultiVector) -> MultiVector {
+    return circle_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
+fn circle_radial_bulk_contraction(self_: Circle, other: Radial) -> Dipole {
+    return circle_sphere_anti_wedge(self_, radial_right_bulk_dual(other));
+}
+
+fn dipole_dipole_bulk_contraction(self_: Dipole, other: Dipole) -> Scalar {
+    return dipole_circle_anti_wedge(self_, dipole_right_bulk_dual(other));
+}
+
+fn dipole_multi_vector_bulk_contraction(self_: Dipole, other: MultiVector) -> MultiVector {
+    return dipole_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
+fn dipole_radial_bulk_contraction(self_: Dipole, other: Radial) -> Radial {
+    return dipole_sphere_anti_wedge(self_, radial_right_bulk_dual(other));
+}
+
+fn horizon_circle_bulk_contraction(self_: Horizon, other: Circle) -> Radial {
+    return horizon_dipole_anti_wedge(self_, circle_right_bulk_dual(other));
+}
+
+fn horizon_dipole_bulk_contraction(self_: Horizon, other: Dipole) -> Dipole {
+    return horizon_circle_anti_wedge(self_, dipole_right_bulk_dual(other));
+}
+
+fn horizon_multi_vector_bulk_contraction(self_: Horizon, other: MultiVector) -> MultiVector {
+    return horizon_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
+fn horizon_radial_bulk_contraction(self_: Horizon, other: Radial) -> Circle {
+    return horizon_sphere_anti_wedge(self_, radial_right_bulk_dual(other));
+}
+
+fn line_circle_bulk_contraction(self_: Line, other: Circle) -> Scalar {
+    return line_dipole_anti_wedge(self_, circle_right_bulk_dual(other));
+}
+
+fn line_dipole_bulk_contraction(self_: Line, other: Dipole) -> Radial {
+    return line_circle_anti_wedge(self_, dipole_right_bulk_dual(other));
+}
+
+fn line_multi_vector_bulk_contraction(self_: Line, other: MultiVector) -> MultiVector {
+    return line_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
+fn line_radial_bulk_contraction(self_: Line, other: Radial) -> Dipole {
+    return line_sphere_anti_wedge(self_, radial_right_bulk_dual(other));
+}
+
+fn line_at_infinity_circle_bulk_contraction(self_: LineAtInfinity, other: Circle) -> Scalar {
+    return line_at_infinity_dipole_anti_wedge(self_, circle_right_bulk_dual(other));
+}
+
+fn line_at_infinity_dipole_bulk_contraction(self_: LineAtInfinity, other: Dipole) -> Radial {
+    return line_at_infinity_circle_anti_wedge(self_, dipole_right_bulk_dual(other));
+}
+
+fn line_at_infinity_multi_vector_bulk_contraction(self_: LineAtInfinity, other: MultiVector) -> MultiVector {
+    return line_at_infinity_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
+fn line_at_infinity_radial_bulk_contraction(self_: LineAtInfinity, other: Radial) -> Dipole {
+    return line_at_infinity_sphere_anti_wedge(self_, radial_right_bulk_dual(other));
+}
+
+fn line_at_origin_circle_bulk_contraction(self_: LineAtOrigin, other: Circle) -> Scalar {
+    return line_at_origin_dipole_anti_wedge(self_, circle_right_bulk_dual(other));
+}
+
+fn line_at_origin_dipole_bulk_contraction(self_: LineAtOrigin, other: Dipole) -> Radial {
+    return line_at_origin_circle_anti_wedge(self_, dipole_right_bulk_dual(other));
+}
+
+fn line_at_origin_multi_vector_bulk_contraction(self_: LineAtOrigin, other: MultiVector) -> MultiVector {
+    return line_at_origin_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
+fn line_at_origin_radial_bulk_contraction(self_: LineAtOrigin, other: Radial) -> Dipole {
+    return line_at_origin_sphere_anti_wedge(self_, radial_right_bulk_dual(other));
+}
+
+fn multi_vector_circle_bulk_contraction(self_: MultiVector, other: Circle) -> MultiVector {
+    return multi_vector_dipole_anti_wedge(self_, circle_right_bulk_dual(other));
+}
+
+fn multi_vector_dipole_bulk_contraction(self_: MultiVector, other: Dipole) -> MultiVector {
+    return multi_vector_circle_anti_wedge(self_, dipole_right_bulk_dual(other));
+}
+
+fn multi_vector_multi_vector_bulk_contraction(self_: MultiVector, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
+fn multi_vector_radial_bulk_contraction(self_: MultiVector, other: Radial) -> MultiVector {
+    return multi_vector_sphere_anti_wedge(self_, radial_right_bulk_dual(other));
+}
+
+fn origin_dipole_bulk_contraction(self_: Origin, other: Dipole) -> Scalar {
+    return origin_circle_anti_wedge(self_, dipole_right_bulk_dual(other));
+}
+
+fn origin_multi_vector_bulk_contraction(self_: Origin, other: MultiVector) -> MultiVector {
+    return origin_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
+fn origin_radial_bulk_contraction(self_: Origin, other: Radial) -> Radial {
+    return origin_sphere_anti_wedge(self_, radial_right_bulk_dual(other));
+}
+
+fn plane_circle_bulk_contraction(self_: Plane, other: Circle) -> Radial {
+    return plane_dipole_anti_wedge(self_, circle_right_bulk_dual(other));
+}
+
+fn plane_dipole_bulk_contraction(self_: Plane, other: Dipole) -> Dipole {
+    return plane_circle_anti_wedge(self_, dipole_right_bulk_dual(other));
+}
+
+fn plane_multi_vector_bulk_contraction(self_: Plane, other: MultiVector) -> MultiVector {
+    return plane_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
+fn plane_radial_bulk_contraction(self_: Plane, other: Radial) -> Circle {
+    return plane_sphere_anti_wedge(self_, radial_right_bulk_dual(other));
+}
+
+fn plane_at_origin_circle_bulk_contraction(self_: PlaneAtOrigin, other: Circle) -> Radial {
+    return plane_at_origin_dipole_anti_wedge(self_, circle_right_bulk_dual(other));
+}
+
+fn plane_at_origin_dipole_bulk_contraction(self_: PlaneAtOrigin, other: Dipole) -> Dipole {
+    return plane_at_origin_circle_anti_wedge(self_, dipole_right_bulk_dual(other));
+}
+
+fn plane_at_origin_multi_vector_bulk_contraction(self_: PlaneAtOrigin, other: MultiVector) -> MultiVector {
+    return plane_at_origin_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
+fn plane_at_origin_radial_bulk_contraction(self_: PlaneAtOrigin, other: Radial) -> Circle {
+    return plane_at_origin_sphere_anti_wedge(self_, radial_right_bulk_dual(other));
+}
+
+fn point_dipole_bulk_contraction(self_: Point, other: Dipole) -> Scalar {
+    return point_circle_anti_wedge(self_, dipole_right_bulk_dual(other));
+}
+
+fn point_multi_vector_bulk_contraction(self_: Point, other: MultiVector) -> MultiVector {
+    return point_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
+fn point_radial_bulk_contraction(self_: Point, other: Radial) -> Radial {
+    return point_sphere_anti_wedge(self_, radial_right_bulk_dual(other));
+}
+
+fn point_at_infinity_dipole_bulk_contraction(self_: PointAtInfinity, other: Dipole) -> Scalar {
+    return point_at_infinity_circle_anti_wedge(self_, dipole_right_bulk_dual(other));
+}
+
+fn point_at_infinity_multi_vector_bulk_contraction(self_: PointAtInfinity, other: MultiVector) -> MultiVector {
+    return point_at_infinity_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
+fn point_at_infinity_radial_bulk_contraction(self_: PointAtInfinity, other: Radial) -> Radial {
+    return point_at_infinity_sphere_anti_wedge(self_, radial_right_bulk_dual(other));
+}
+
+fn radial_multi_vector_bulk_contraction(self_: Radial, other: MultiVector) -> MultiVector {
+    return radial_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
+fn radial_radial_bulk_contraction(self_: Radial, other: Radial) -> Scalar {
+    return radial_sphere_anti_wedge(self_, radial_right_bulk_dual(other));
+}
+
+fn sphere_circle_bulk_contraction(self_: Sphere, other: Circle) -> Radial {
+    return sphere_dipole_anti_wedge(self_, circle_right_bulk_dual(other));
+}
+
+fn sphere_dipole_bulk_contraction(self_: Sphere, other: Dipole) -> Dipole {
+    return sphere_circle_anti_wedge(self_, dipole_right_bulk_dual(other));
+}
+
+fn sphere_multi_vector_bulk_contraction(self_: Sphere, other: MultiVector) -> MultiVector {
+    return sphere_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
+fn sphere_radial_bulk_contraction(self_: Sphere, other: Radial) -> Circle {
+    return sphere_sphere_anti_wedge(self_, radial_right_bulk_dual(other));
+}
+
+fn circle_circle_weight_contraction(self_: Circle, other: Circle) -> Scalar {
+    return circle_dipole_anti_wedge(self_, circle_right_weight_dual(other));
+}
+
+fn circle_dipole_weight_contraction(self_: Circle, other: Dipole) -> Radial {
+    return circle_circle_anti_wedge(self_, dipole_right_weight_dual(other));
+}
+
+fn circle_multi_vector_weight_contraction(self_: Circle, other: MultiVector) -> MultiVector {
+    return circle_multi_vector_anti_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn circle_radial_weight_contraction(self_: Circle, other: Radial) -> Dipole {
+    return circle_sphere_anti_wedge(self_, radial_right_weight_dual(other));
+}
+
+fn dipole_dipole_weight_contraction(self_: Dipole, other: Dipole) -> Scalar {
+    return dipole_circle_anti_wedge(self_, dipole_right_weight_dual(other));
+}
+
+fn dipole_multi_vector_weight_contraction(self_: Dipole, other: MultiVector) -> MultiVector {
+    return dipole_multi_vector_anti_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn dipole_radial_weight_contraction(self_: Dipole, other: Radial) -> Radial {
+    return dipole_sphere_anti_wedge(self_, radial_right_weight_dual(other));
+}
+
+fn horizon_circle_weight_contraction(self_: Horizon, other: Circle) -> Radial {
+    return horizon_dipole_anti_wedge(self_, circle_right_weight_dual(other));
+}
+
+fn horizon_dipole_weight_contraction(self_: Horizon, other: Dipole) -> Dipole {
+    return horizon_circle_anti_wedge(self_, dipole_right_weight_dual(other));
+}
+
+fn horizon_multi_vector_weight_contraction(self_: Horizon, other: MultiVector) -> MultiVector {
+    return horizon_multi_vector_anti_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn horizon_radial_weight_contraction(self_: Horizon, other: Radial) -> Circle {
+    return horizon_sphere_anti_wedge(self_, radial_right_weight_dual(other));
+}
+
+fn horizon_sphere_weight_contraction(self_: Horizon, other: Sphere) -> Scalar {
+    return horizon_radial_anti_wedge(self_, sphere_right_weight_dual(other));
+}
+
+fn line_circle_weight_contraction(self_: Line, other: Circle) -> Scalar {
+    return line_dipole_anti_wedge(self_, circle_right_weight_dual(other));
+}
+
+fn line_dipole_weight_contraction(self_: Line, other: Dipole) -> Radial {
+    return line_circle_anti_wedge(self_, dipole_right_weight_dual(other));
+}
+
+fn line_multi_vector_weight_contraction(self_: Line, other: MultiVector) -> MultiVector {
+    return line_multi_vector_anti_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn line_radial_weight_contraction(self_: Line, other: Radial) -> Dipole {
+    return line_sphere_anti_wedge(self_, radial_right_weight_dual(other));
+}
+
+fn line_at_infinity_circle_weight_contraction(self_: LineAtInfinity, other: Circle) -> Scalar {
+    return line_at_infinity_dipole_anti_wedge(self_, circle_right_weight_dual(other));
+}
+
+fn line_at_infinity_dipole_weight_contraction(self_: LineAtInfinity, other: Dipole) -> Radial {
+    return line_at_infinity_circle_anti_wedge(self_, dipole_right_weight_dual(other));
+}
+
+fn line_at_infinity_multi_vector_weight_contraction(self_: LineAtInfinity, other: MultiVector) -> MultiVector {
+    return line_at_infinity_multi_vector_anti_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn line_at_infinity_radial_weight_contraction(self_: LineAtInfinity, other: Radial) -> Dipole {
+    return line_at_infinity_sphere_anti_wedge(self_, radial_right_weight_dual(other));
+}
+
+fn line_at_origin_circle_weight_contraction(self_: LineAtOrigin, other: Circle) -> Scalar {
+    return line_at_origin_dipole_anti_wedge(self_, circle_right_weight_dual(other));
+}
+
+fn line_at_origin_dipole_weight_contraction(self_: LineAtOrigin, other: Dipole) -> Radial {
+    return line_at_origin_circle_anti_wedge(self_, dipole_right_weight_dual(other));
+}
+
+fn line_at_origin_multi_vector_weight_contraction(self_: LineAtOrigin, other: MultiVector) -> MultiVector {
+    return line_at_origin_multi_vector_anti_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn line_at_origin_radial_weight_contraction(self_: LineAtOrigin, other: Radial) -> Dipole {
+    return line_at_origin_sphere_anti_wedge(self_, radial_right_weight_dual(other));
+}
+
+fn multi_vector_circle_weight_contraction(self_: MultiVector, other: Circle) -> MultiVector {
+    return multi_vector_dipole_anti_wedge(self_, circle_right_weight_dual(other));
+}
+
+fn multi_vector_dipole_weight_contraction(self_: MultiVector, other: Dipole) -> MultiVector {
+    return multi_vector_circle_anti_wedge(self_, dipole_right_weight_dual(other));
+}
+
+fn multi_vector_multi_vector_weight_contraction(self_: MultiVector, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn multi_vector_radial_weight_contraction(self_: MultiVector, other: Radial) -> MultiVector {
+    return multi_vector_sphere_anti_wedge(self_, radial_right_weight_dual(other));
+}
+
+fn multi_vector_sphere_weight_contraction(self_: MultiVector, other: Sphere) -> MultiVector {
+    return multi_vector_radial_anti_wedge(self_, sphere_right_weight_dual(other));
+}
+
+fn origin_dipole_weight_contraction(self_: Origin, other: Dipole) -> Scalar {
+    return origin_circle_anti_wedge(self_, dipole_right_weight_dual(other));
+}
+
+fn origin_multi_vector_weight_contraction(self_: Origin, other: MultiVector) -> MultiVector {
+    return origin_multi_vector_anti_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn origin_radial_weight_contraction(self_: Origin, other: Radial) -> Radial {
+    return origin_sphere_anti_wedge(self_, radial_right_weight_dual(other));
+}
+
+fn plane_circle_weight_contraction(self_: Plane, other: Circle) -> Radial {
+    return plane_dipole_anti_wedge(self_, circle_right_weight_dual(other));
+}
+
+fn plane_dipole_weight_contraction(self_: Plane, other: Dipole) -> Dipole {
+    return plane_circle_anti_wedge(self_, dipole_right_weight_dual(other));
+}
+
+fn plane_multi_vector_weight_contraction(self_: Plane, other: MultiVector) -> MultiVector {
+    return plane_multi_vector_anti_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn plane_radial_weight_contraction(self_: Plane, other: Radial) -> Circle {
+    return plane_sphere_anti_wedge(self_, radial_right_weight_dual(other));
+}
+
+fn plane_sphere_weight_contraction(self_: Plane, other: Sphere) -> Scalar {
+    return plane_radial_anti_wedge(self_, sphere_right_weight_dual(other));
+}
+
+fn plane_at_origin_circle_weight_contraction(self_: PlaneAtOrigin, other: Circle) -> Radial {
+    return plane_at_origin_dipole_anti_wedge(self_, circle_right_weight_dual(other));
+}
+
+fn plane_at_origin_dipole_weight_contraction(self_: PlaneAtOrigin, other: Dipole) -> Dipole {
+    return plane_at_origin_circle_anti_wedge(self_, dipole_right_weight_dual(other));
+}
+
+fn plane_at_origin_multi_vector_weight_contraction(self_: PlaneAtOrigin, other: MultiVector) -> MultiVector {
+    return plane_at_origin_multi_vector_anti_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn plane_at_origin_radial_weight_contraction(self_: PlaneAtOrigin, other: Radial) -> Circle {
+    return plane_at_origin_sphere_anti_wedge(self_, radial_right_weight_dual(other));
+}
+
+fn plane_at_origin_sphere_weight_contraction(self_: PlaneAtOrigin, other: Sphere) -> Scalar {
+    return plane_at_origin_radial_anti_wedge(self_, sphere_right_weight_dual(other));
+}
+
+fn point_dipole_weight_contraction(self_: Point, other: Dipole) -> Scalar {
+    return point_circle_anti_wedge(self_, dipole_right_weight_dual(other));
+}
+
+fn point_multi_vector_weight_contraction(self_: Point, other: MultiVector) -> MultiVector {
+    return point_multi_vector_anti_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn point_radial_weight_contraction(self_: Point, other: Radial) -> Radial {
+    return point_sphere_anti_wedge(self_, radial_right_weight_dual(other));
+}
+
+fn point_at_infinity_dipole_weight_contraction(self_: PointAtInfinity, other: Dipole) -> Scalar {
+    return point_at_infinity_circle_anti_wedge(self_, dipole_right_weight_dual(other));
+}
+
+fn point_at_infinity_multi_vector_weight_contraction(self_: PointAtInfinity, other: MultiVector) -> MultiVector {
+    return point_at_infinity_multi_vector_anti_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn point_at_infinity_radial_weight_contraction(self_: PointAtInfinity, other: Radial) -> Radial {
+    return point_at_infinity_sphere_anti_wedge(self_, radial_right_weight_dual(other));
+}
+
+fn radial_multi_vector_weight_contraction(self_: Radial, other: MultiVector) -> MultiVector {
+    return radial_multi_vector_anti_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn radial_radial_weight_contraction(self_: Radial, other: Radial) -> Scalar {
+    return radial_sphere_anti_wedge(self_, radial_right_weight_dual(other));
+}
+
+fn sphere_circle_weight_contraction(self_: Sphere, other: Circle) -> Radial {
+    return sphere_dipole_anti_wedge(self_, circle_right_weight_dual(other));
+}
+
+fn sphere_dipole_weight_contraction(self_: Sphere, other: Dipole) -> Dipole {
+    return sphere_circle_anti_wedge(self_, dipole_right_weight_dual(other));
+}
+
+fn sphere_multi_vector_weight_contraction(self_: Sphere, other: MultiVector) -> MultiVector {
+    return sphere_multi_vector_anti_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn sphere_radial_weight_contraction(self_: Sphere, other: Radial) -> Circle {
+    return sphere_sphere_anti_wedge(self_, radial_right_weight_dual(other));
+}
+
+fn sphere_sphere_weight_contraction(self_: Sphere, other: Sphere) -> Scalar {
+    return sphere_radial_anti_wedge(self_, sphere_right_weight_dual(other));
+}
+
+fn circle_circle_bulk_expansion(self_: Circle, other: Circle) -> AntiScalar {
+    return circle_dipole_wedge(self_, circle_right_bulk_dual(other));
+}
+
+fn circle_multi_vector_bulk_expansion(self_: Circle, other: MultiVector) -> MultiVector {
+    return circle_multi_vector_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
+fn dipole_circle_bulk_expansion(self_: Dipole, other: Circle) -> Sphere {
+    return dipole_dipole_wedge(self_, circle_right_bulk_dual(other));
+}
+
+fn dipole_dipole_bulk_expansion(self_: Dipole, other: Dipole) -> AntiScalar {
+    return dipole_circle_wedge(self_, dipole_right_bulk_dual(other));
+}
+
+fn dipole_multi_vector_bulk_expansion(self_: Dipole, other: MultiVector) -> MultiVector {
+    return dipole_multi_vector_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
+fn horizon_multi_vector_bulk_expansion(self_: Horizon, other: MultiVector) -> MultiVector {
+    return horizon_multi_vector_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
+fn line_circle_bulk_expansion(self_: Line, other: Circle) -> AntiScalar {
+    return line_dipole_wedge(self_, circle_right_bulk_dual(other));
+}
+
+fn line_multi_vector_bulk_expansion(self_: Line, other: MultiVector) -> MultiVector {
+    return line_multi_vector_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
+fn line_at_infinity_circle_bulk_expansion(self_: LineAtInfinity, other: Circle) -> AntiScalar {
+    return line_at_infinity_dipole_wedge(self_, circle_right_bulk_dual(other));
+}
+
+fn line_at_infinity_multi_vector_bulk_expansion(self_: LineAtInfinity, other: MultiVector) -> MultiVector {
+    return line_at_infinity_multi_vector_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
+fn line_at_origin_circle_bulk_expansion(self_: LineAtOrigin, other: Circle) -> AntiScalar {
+    return line_at_origin_dipole_wedge(self_, circle_right_bulk_dual(other));
+}
+
+fn line_at_origin_multi_vector_bulk_expansion(self_: LineAtOrigin, other: MultiVector) -> MultiVector {
+    return line_at_origin_multi_vector_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
+fn multi_vector_circle_bulk_expansion(self_: MultiVector, other: Circle) -> MultiVector {
+    return multi_vector_dipole_wedge(self_, circle_right_bulk_dual(other));
+}
+
+fn multi_vector_dipole_bulk_expansion(self_: MultiVector, other: Dipole) -> MultiVector {
+    return multi_vector_circle_wedge(self_, dipole_right_bulk_dual(other));
+}
+
+fn multi_vector_multi_vector_bulk_expansion(self_: MultiVector, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
+fn multi_vector_radial_bulk_expansion(self_: MultiVector, other: Radial) -> MultiVector {
+    return multi_vector_sphere_wedge(self_, radial_right_bulk_dual(other));
+}
+
+fn origin_circle_bulk_expansion(self_: Origin, other: Circle) -> PlaneAtOrigin {
+    return origin_dipole_wedge(self_, circle_right_bulk_dual(other));
+}
+
+fn origin_dipole_bulk_expansion(self_: Origin, other: Dipole) -> AntiScalar {
+    return origin_circle_wedge(self_, dipole_right_bulk_dual(other));
+}
+
+fn origin_multi_vector_bulk_expansion(self_: Origin, other: MultiVector) -> MultiVector {
+    return origin_multi_vector_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
+fn plane_multi_vector_bulk_expansion(self_: Plane, other: MultiVector) -> MultiVector {
+    return plane_multi_vector_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
+fn plane_at_origin_multi_vector_bulk_expansion(self_: PlaneAtOrigin, other: MultiVector) -> MultiVector {
+    return plane_at_origin_multi_vector_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
+fn point_circle_bulk_expansion(self_: Point, other: Circle) -> Plane {
+    return point_dipole_wedge(self_, circle_right_bulk_dual(other));
+}
+
+fn point_dipole_bulk_expansion(self_: Point, other: Dipole) -> AntiScalar {
+    return point_circle_wedge(self_, dipole_right_bulk_dual(other));
+}
+
+fn point_multi_vector_bulk_expansion(self_: Point, other: MultiVector) -> MultiVector {
+    return point_multi_vector_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
+fn point_at_infinity_circle_bulk_expansion(self_: PointAtInfinity, other: Circle) -> Plane {
+    return point_at_infinity_dipole_wedge(self_, circle_right_bulk_dual(other));
+}
+
+fn point_at_infinity_dipole_bulk_expansion(self_: PointAtInfinity, other: Dipole) -> AntiScalar {
+    return point_at_infinity_circle_wedge(self_, dipole_right_bulk_dual(other));
+}
+
+fn point_at_infinity_multi_vector_bulk_expansion(self_: PointAtInfinity, other: MultiVector) -> MultiVector {
+    return point_at_infinity_multi_vector_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
+fn radial_circle_bulk_expansion(self_: Radial, other: Circle) -> Circle {
+    return radial_dipole_wedge(self_, circle_right_bulk_dual(other));
+}
+
+fn radial_dipole_bulk_expansion(self_: Radial, other: Dipole) -> Sphere {
+    return radial_circle_wedge(self_, dipole_right_bulk_dual(other));
+}
+
+fn radial_multi_vector_bulk_expansion(self_: Radial, other: MultiVector) -> MultiVector {
+    return radial_multi_vector_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
+fn radial_radial_bulk_expansion(self_: Radial, other: Radial) -> AntiScalar {
+    return radial_sphere_wedge(self_, radial_right_bulk_dual(other));
+}
+
+fn sphere_multi_vector_bulk_expansion(self_: Sphere, other: MultiVector) -> MultiVector {
+    return sphere_multi_vector_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
+fn circle_circle_weight_expansion(self_: Circle, other: Circle) -> AntiScalar {
+    return circle_dipole_wedge(self_, circle_right_weight_dual(other));
+}
+
+fn circle_multi_vector_weight_expansion(self_: Circle, other: MultiVector) -> MultiVector {
+    return circle_multi_vector_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn circle_sphere_weight_expansion(self_: Circle, other: Sphere) -> Sphere {
+    return circle_radial_wedge(self_, sphere_right_weight_dual(other));
+}
+
+fn dipole_circle_weight_expansion(self_: Dipole, other: Circle) -> Sphere {
+    return dipole_dipole_wedge(self_, circle_right_weight_dual(other));
+}
+
+fn dipole_dipole_weight_expansion(self_: Dipole, other: Dipole) -> AntiScalar {
+    return dipole_circle_wedge(self_, dipole_right_weight_dual(other));
+}
+
+fn dipole_multi_vector_weight_expansion(self_: Dipole, other: MultiVector) -> MultiVector {
+    return dipole_multi_vector_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn dipole_sphere_weight_expansion(self_: Dipole, other: Sphere) -> Circle {
+    return dipole_radial_wedge(self_, sphere_right_weight_dual(other));
+}
+
+fn horizon_multi_vector_weight_expansion(self_: Horizon, other: MultiVector) -> MultiVector {
+    return horizon_multi_vector_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn horizon_sphere_weight_expansion(self_: Horizon, other: Sphere) -> AntiScalar {
+    return horizon_radial_wedge(self_, sphere_right_weight_dual(other));
+}
+
+fn line_circle_weight_expansion(self_: Line, other: Circle) -> AntiScalar {
+    return line_dipole_wedge(self_, circle_right_weight_dual(other));
+}
+
+fn line_multi_vector_weight_expansion(self_: Line, other: MultiVector) -> MultiVector {
+    return line_multi_vector_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn line_sphere_weight_expansion(self_: Line, other: Sphere) -> Plane {
+    return line_radial_wedge(self_, sphere_right_weight_dual(other));
+}
+
+fn line_at_infinity_circle_weight_expansion(self_: LineAtInfinity, other: Circle) -> AntiScalar {
+    return line_at_infinity_dipole_wedge(self_, circle_right_weight_dual(other));
+}
+
+fn line_at_infinity_multi_vector_weight_expansion(self_: LineAtInfinity, other: MultiVector) -> MultiVector {
+    return line_at_infinity_multi_vector_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn line_at_infinity_sphere_weight_expansion(self_: LineAtInfinity, other: Sphere) -> Plane {
+    return line_at_infinity_radial_wedge(self_, sphere_right_weight_dual(other));
+}
+
+fn line_at_origin_circle_weight_expansion(self_: LineAtOrigin, other: Circle) -> AntiScalar {
+    return line_at_origin_dipole_wedge(self_, circle_right_weight_dual(other));
+}
+
+fn line_at_origin_multi_vector_weight_expansion(self_: LineAtOrigin, other: MultiVector) -> MultiVector {
+    return line_at_origin_multi_vector_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn line_at_origin_sphere_weight_expansion(self_: LineAtOrigin, other: Sphere) -> PlaneAtOrigin {
+    return line_at_origin_radial_wedge(self_, sphere_right_weight_dual(other));
+}
+
+fn multi_vector_circle_weight_expansion(self_: MultiVector, other: Circle) -> MultiVector {
+    return multi_vector_dipole_wedge(self_, circle_right_weight_dual(other));
+}
+
+fn multi_vector_dipole_weight_expansion(self_: MultiVector, other: Dipole) -> MultiVector {
+    return multi_vector_circle_wedge(self_, dipole_right_weight_dual(other));
+}
+
+fn multi_vector_multi_vector_weight_expansion(self_: MultiVector, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn multi_vector_radial_weight_expansion(self_: MultiVector, other: Radial) -> MultiVector {
+    return multi_vector_sphere_wedge(self_, radial_right_weight_dual(other));
+}
+
+fn multi_vector_sphere_weight_expansion(self_: MultiVector, other: Sphere) -> MultiVector {
+    return multi_vector_radial_wedge(self_, sphere_right_weight_dual(other));
+}
+
+fn origin_circle_weight_expansion(self_: Origin, other: Circle) -> PlaneAtOrigin {
+    return origin_dipole_wedge(self_, circle_right_weight_dual(other));
+}
+
+fn origin_dipole_weight_expansion(self_: Origin, other: Dipole) -> AntiScalar {
+    return origin_circle_wedge(self_, dipole_right_weight_dual(other));
+}
+
+fn origin_multi_vector_weight_expansion(self_: Origin, other: MultiVector) -> MultiVector {
+    return origin_multi_vector_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn origin_sphere_weight_expansion(self_: Origin, other: Sphere) -> LineAtOrigin {
+    return origin_radial_wedge(self_, sphere_right_weight_dual(other));
+}
+
+fn plane_multi_vector_weight_expansion(self_: Plane, other: MultiVector) -> MultiVector {
+    return plane_multi_vector_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn plane_sphere_weight_expansion(self_: Plane, other: Sphere) -> AntiScalar {
+    return plane_radial_wedge(self_, sphere_right_weight_dual(other));
+}
+
+fn plane_at_origin_multi_vector_weight_expansion(self_: PlaneAtOrigin, other: MultiVector) -> MultiVector {
+    return plane_at_origin_multi_vector_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn plane_at_origin_sphere_weight_expansion(self_: PlaneAtOrigin, other: Sphere) -> AntiScalar {
+    return plane_at_origin_radial_wedge(self_, sphere_right_weight_dual(other));
+}
+
+fn point_circle_weight_expansion(self_: Point, other: Circle) -> Plane {
+    return point_dipole_wedge(self_, circle_right_weight_dual(other));
+}
+
+fn point_dipole_weight_expansion(self_: Point, other: Dipole) -> AntiScalar {
+    return point_circle_wedge(self_, dipole_right_weight_dual(other));
+}
+
+fn point_multi_vector_weight_expansion(self_: Point, other: MultiVector) -> MultiVector {
+    return point_multi_vector_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn point_sphere_weight_expansion(self_: Point, other: Sphere) -> Line {
+    return point_radial_wedge(self_, sphere_right_weight_dual(other));
+}
+
+fn point_at_infinity_circle_weight_expansion(self_: PointAtInfinity, other: Circle) -> Plane {
+    return point_at_infinity_dipole_wedge(self_, circle_right_weight_dual(other));
+}
+
+fn point_at_infinity_dipole_weight_expansion(self_: PointAtInfinity, other: Dipole) -> AntiScalar {
+    return point_at_infinity_circle_wedge(self_, dipole_right_weight_dual(other));
+}
+
+fn point_at_infinity_multi_vector_weight_expansion(self_: PointAtInfinity, other: MultiVector) -> MultiVector {
+    return point_at_infinity_multi_vector_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn point_at_infinity_sphere_weight_expansion(self_: PointAtInfinity, other: Sphere) -> Line {
+    return point_at_infinity_radial_wedge(self_, sphere_right_weight_dual(other));
+}
+
+fn radial_circle_weight_expansion(self_: Radial, other: Circle) -> Circle {
+    return radial_dipole_wedge(self_, circle_right_weight_dual(other));
+}
+
+fn radial_dipole_weight_expansion(self_: Radial, other: Dipole) -> Sphere {
+    return radial_circle_wedge(self_, dipole_right_weight_dual(other));
+}
+
+fn radial_multi_vector_weight_expansion(self_: Radial, other: MultiVector) -> MultiVector {
+    return radial_multi_vector_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn radial_radial_weight_expansion(self_: Radial, other: Radial) -> AntiScalar {
+    return radial_sphere_wedge(self_, radial_right_weight_dual(other));
+}
+
+fn radial_sphere_weight_expansion(self_: Radial, other: Sphere) -> Dipole {
+    return radial_radial_wedge(self_, sphere_right_weight_dual(other));
+}
+
+fn sphere_multi_vector_weight_expansion(self_: Sphere, other: MultiVector) -> MultiVector {
+    return sphere_multi_vector_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn sphere_sphere_weight_expansion(self_: Sphere, other: Sphere) -> AntiScalar {
+    return sphere_radial_wedge(self_, sphere_right_weight_dual(other));
+}
+
+fn circle_circle_anti_project_via_horizon_onto(self_: Circle, other: Circle) -> Circle {
+    return circle_scalar_wedge(other, circle_circle_bulk_contraction(self_, other));
+}
+
+fn circle_dipole_anti_project_via_horizon_onto(self_: Circle, other: Dipole) -> Circle {
+    return dipole_radial_wedge(other, circle_dipole_bulk_contraction(self_, other));
+}
+
+fn circle_multi_vector_anti_project_via_horizon_onto(self_: Circle, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_wedge(other, circle_multi_vector_bulk_contraction(self_, other));
+}
+
+fn circle_radial_anti_project_via_horizon_onto(self_: Circle, other: Radial) -> Circle {
+    return radial_dipole_wedge(other, circle_radial_bulk_contraction(self_, other));
+}
+
+fn dipole_dipole_anti_project_via_horizon_onto(self_: Dipole, other: Dipole) -> Dipole {
+    return dipole_scalar_wedge(other, dipole_dipole_bulk_contraction(self_, other));
+}
+
+fn dipole_multi_vector_anti_project_via_horizon_onto(self_: Dipole, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_wedge(other, dipole_multi_vector_bulk_contraction(self_, other));
+}
+
+fn dipole_radial_anti_project_via_horizon_onto(self_: Dipole, other: Radial) -> Dipole {
+    return radial_radial_wedge(other, dipole_radial_bulk_contraction(self_, other));
+}
+
+fn horizon_circle_anti_project_via_horizon_onto(self_: Horizon, other: Circle) -> Sphere {
+    return circle_radial_wedge(other, horizon_circle_bulk_contraction(self_, other));
+}
+
+fn horizon_dipole_anti_project_via_horizon_onto(self_: Horizon, other: Dipole) -> Sphere {
+    return dipole_dipole_wedge(other, horizon_dipole_bulk_contraction(self_, other));
+}
+
+fn horizon_multi_vector_anti_project_via_horizon_onto(self_: Horizon, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_wedge(other, horizon_multi_vector_bulk_contraction(self_, other));
+}
+
+fn horizon_radial_anti_project_via_horizon_onto(self_: Horizon, other: Radial) -> Sphere {
+    return radial_circle_wedge(other, horizon_radial_bulk_contraction(self_, other));
+}
+
+fn line_circle_anti_project_via_horizon_onto(self_: Line, other: Circle) -> Circle {
+    return circle_scalar_wedge(other, line_circle_bulk_contraction(self_, other));
+}
+
+fn line_dipole_anti_project_via_horizon_onto(self_: Line, other: Dipole) -> Circle {
+    return dipole_radial_wedge(other, line_dipole_bulk_contraction(self_, other));
+}
+
+fn line_multi_vector_anti_project_via_horizon_onto(self_: Line, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_wedge(other, line_multi_vector_bulk_contraction(self_, other));
+}
+
+fn line_radial_anti_project_via_horizon_onto(self_: Line, other: Radial) -> Circle {
+    return radial_dipole_wedge(other, line_radial_bulk_contraction(self_, other));
+}
+
+fn line_at_infinity_circle_anti_project_via_horizon_onto(self_: LineAtInfinity, other: Circle) -> Circle {
+    return circle_scalar_wedge(other, line_at_infinity_circle_bulk_contraction(self_, other));
+}
+
+fn line_at_infinity_dipole_anti_project_via_horizon_onto(self_: LineAtInfinity, other: Dipole) -> Circle {
+    return dipole_radial_wedge(other, line_at_infinity_dipole_bulk_contraction(self_, other));
+}
+
+fn line_at_infinity_multi_vector_anti_project_via_horizon_onto(self_: LineAtInfinity, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_wedge(other, line_at_infinity_multi_vector_bulk_contraction(self_, other));
+}
+
+fn line_at_infinity_radial_anti_project_via_horizon_onto(self_: LineAtInfinity, other: Radial) -> Circle {
+    return radial_dipole_wedge(other, line_at_infinity_radial_bulk_contraction(self_, other));
+}
+
+fn line_at_origin_circle_anti_project_via_horizon_onto(self_: LineAtOrigin, other: Circle) -> Circle {
+    return circle_scalar_wedge(other, line_at_origin_circle_bulk_contraction(self_, other));
+}
+
+fn line_at_origin_dipole_anti_project_via_horizon_onto(self_: LineAtOrigin, other: Dipole) -> Circle {
+    return dipole_radial_wedge(other, line_at_origin_dipole_bulk_contraction(self_, other));
+}
+
+fn line_at_origin_multi_vector_anti_project_via_horizon_onto(self_: LineAtOrigin, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_wedge(other, line_at_origin_multi_vector_bulk_contraction(self_, other));
+}
+
+fn line_at_origin_radial_anti_project_via_horizon_onto(self_: LineAtOrigin, other: Radial) -> Circle {
+    return radial_dipole_wedge(other, line_at_origin_radial_bulk_contraction(self_, other));
+}
+
+fn multi_vector_circle_anti_project_via_horizon_onto(self_: MultiVector, other: Circle) -> MultiVector {
+    return circle_multi_vector_wedge(other, multi_vector_circle_bulk_contraction(self_, other));
+}
+
+fn multi_vector_dipole_anti_project_via_horizon_onto(self_: MultiVector, other: Dipole) -> MultiVector {
+    return dipole_multi_vector_wedge(other, multi_vector_dipole_bulk_contraction(self_, other));
+}
+
+fn multi_vector_multi_vector_anti_project_via_horizon_onto(self_: MultiVector, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_wedge(other, multi_vector_multi_vector_bulk_contraction(self_, other));
+}
+
+fn multi_vector_radial_anti_project_via_horizon_onto(self_: MultiVector, other: Radial) -> MultiVector {
+    return radial_multi_vector_wedge(other, multi_vector_radial_bulk_contraction(self_, other));
+}
+
+fn origin_dipole_anti_project_via_horizon_onto(self_: Origin, other: Dipole) -> Dipole {
+    return dipole_scalar_wedge(other, origin_dipole_bulk_contraction(self_, other));
+}
+
+fn origin_multi_vector_anti_project_via_horizon_onto(self_: Origin, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_wedge(other, origin_multi_vector_bulk_contraction(self_, other));
+}
+
+fn origin_radial_anti_project_via_horizon_onto(self_: Origin, other: Radial) -> Dipole {
+    return radial_radial_wedge(other, origin_radial_bulk_contraction(self_, other));
+}
+
+fn plane_circle_anti_project_via_horizon_onto(self_: Plane, other: Circle) -> Sphere {
+    return circle_radial_wedge(other, plane_circle_bulk_contraction(self_, other));
+}
+
+fn plane_dipole_anti_project_via_horizon_onto(self_: Plane, other: Dipole) -> Sphere {
+    return dipole_dipole_wedge(other, plane_dipole_bulk_contraction(self_, other));
+}
+
+fn plane_multi_vector_anti_project_via_horizon_onto(self_: Plane, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_wedge(other, plane_multi_vector_bulk_contraction(self_, other));
+}
+
+fn plane_radial_anti_project_via_horizon_onto(self_: Plane, other: Radial) -> Sphere {
+    return radial_circle_wedge(other, plane_radial_bulk_contraction(self_, other));
+}
+
+fn plane_at_origin_circle_anti_project_via_horizon_onto(self_: PlaneAtOrigin, other: Circle) -> Sphere {
+    return circle_radial_wedge(other, plane_at_origin_circle_bulk_contraction(self_, other));
+}
+
+fn plane_at_origin_dipole_anti_project_via_horizon_onto(self_: PlaneAtOrigin, other: Dipole) -> Sphere {
+    return dipole_dipole_wedge(other, plane_at_origin_dipole_bulk_contraction(self_, other));
+}
+
+fn plane_at_origin_multi_vector_anti_project_via_horizon_onto(self_: PlaneAtOrigin, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_wedge(other, plane_at_origin_multi_vector_bulk_contraction(self_, other));
+}
+
+fn plane_at_origin_radial_anti_project_via_horizon_onto(self_: PlaneAtOrigin, other: Radial) -> Sphere {
+    return radial_circle_wedge(other, plane_at_origin_radial_bulk_contraction(self_, other));
+}
+
+fn point_dipole_anti_project_via_horizon_onto(self_: Point, other: Dipole) -> Dipole {
+    return dipole_scalar_wedge(other, point_dipole_bulk_contraction(self_, other));
+}
+
+fn point_multi_vector_anti_project_via_horizon_onto(self_: Point, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_wedge(other, point_multi_vector_bulk_contraction(self_, other));
+}
+
+fn point_radial_anti_project_via_horizon_onto(self_: Point, other: Radial) -> Dipole {
+    return radial_radial_wedge(other, point_radial_bulk_contraction(self_, other));
+}
+
+fn point_at_infinity_dipole_anti_project_via_horizon_onto(self_: PointAtInfinity, other: Dipole) -> Dipole {
+    return dipole_scalar_wedge(other, point_at_infinity_dipole_bulk_contraction(self_, other));
+}
+
+fn point_at_infinity_multi_vector_anti_project_via_horizon_onto(self_: PointAtInfinity, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_wedge(other, point_at_infinity_multi_vector_bulk_contraction(self_, other));
+}
+
+fn point_at_infinity_radial_anti_project_via_horizon_onto(self_: PointAtInfinity, other: Radial) -> Dipole {
+    return radial_radial_wedge(other, point_at_infinity_radial_bulk_contraction(self_, other));
+}
+
+fn radial_multi_vector_anti_project_via_horizon_onto(self_: Radial, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_wedge(other, radial_multi_vector_bulk_contraction(self_, other));
+}
+
+fn radial_radial_anti_project_via_horizon_onto(self_: Radial, other: Radial) -> Radial {
+    return radial_scalar_wedge(other, radial_radial_bulk_contraction(self_, other));
+}
+
+fn sphere_circle_anti_project_via_horizon_onto(self_: Sphere, other: Circle) -> Sphere {
+    return circle_radial_wedge(other, sphere_circle_bulk_contraction(self_, other));
+}
+
+fn sphere_dipole_anti_project_via_horizon_onto(self_: Sphere, other: Dipole) -> Sphere {
+    return dipole_dipole_wedge(other, sphere_dipole_bulk_contraction(self_, other));
+}
+
+fn sphere_multi_vector_anti_project_via_horizon_onto(self_: Sphere, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_wedge(other, sphere_multi_vector_bulk_contraction(self_, other));
+}
+
+fn sphere_radial_anti_project_via_horizon_onto(self_: Sphere, other: Radial) -> Sphere {
+    return radial_circle_wedge(other, sphere_radial_bulk_contraction(self_, other));
+}
+
+fn circle_circle_project_orthogonally_onto(self_: Circle, other: Circle) -> Circle {
+    return circle_anti_scalar_anti_wedge(other, circle_circle_weight_expansion(self_, other));
+}
+
+fn circle_multi_vector_project_orthogonally_onto(self_: Circle, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, circle_multi_vector_weight_expansion(self_, other));
+}
+
+fn circle_sphere_project_orthogonally_onto(self_: Circle, other: Sphere) -> Circle {
+    return sphere_sphere_anti_wedge(other, circle_sphere_weight_expansion(self_, other));
+}
+
+fn dipole_circle_project_orthogonally_onto(self_: Dipole, other: Circle) -> Dipole {
+    return circle_sphere_anti_wedge(other, dipole_circle_weight_expansion(self_, other));
+}
+
+fn dipole_dipole_project_orthogonally_onto(self_: Dipole, other: Dipole) -> Dipole {
+    return dipole_anti_scalar_anti_wedge(other, dipole_dipole_weight_expansion(self_, other));
+}
+
+fn dipole_multi_vector_project_orthogonally_onto(self_: Dipole, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, dipole_multi_vector_weight_expansion(self_, other));
+}
+
+fn dipole_sphere_project_orthogonally_onto(self_: Dipole, other: Sphere) -> Dipole {
+    return sphere_circle_anti_wedge(other, dipole_sphere_weight_expansion(self_, other));
+}
+
+fn horizon_multi_vector_project_orthogonally_onto(self_: Horizon, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, horizon_multi_vector_weight_expansion(self_, other));
+}
+
+fn horizon_sphere_project_orthogonally_onto(self_: Horizon, other: Sphere) -> Sphere {
+    return sphere_anti_scalar_anti_wedge(other, horizon_sphere_weight_expansion(self_, other));
+}
+
+fn line_circle_project_orthogonally_onto(self_: Line, other: Circle) -> Circle {
+    return circle_anti_scalar_anti_wedge(other, line_circle_weight_expansion(self_, other));
+}
+
+fn line_multi_vector_project_orthogonally_onto(self_: Line, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, line_multi_vector_weight_expansion(self_, other));
+}
+
+fn line_sphere_project_orthogonally_onto(self_: Line, other: Sphere) -> Circle {
+    return sphere_plane_anti_wedge(other, line_sphere_weight_expansion(self_, other));
+}
+
+fn line_at_infinity_circle_project_orthogonally_onto(self_: LineAtInfinity, other: Circle) -> Circle {
+    return circle_anti_scalar_anti_wedge(other, line_at_infinity_circle_weight_expansion(self_, other));
+}
+
+fn line_at_infinity_multi_vector_project_orthogonally_onto(self_: LineAtInfinity, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, line_at_infinity_multi_vector_weight_expansion(self_, other));
+}
+
+fn line_at_infinity_sphere_project_orthogonally_onto(self_: LineAtInfinity, other: Sphere) -> Circle {
+    return sphere_plane_anti_wedge(other, line_at_infinity_sphere_weight_expansion(self_, other));
+}
+
+fn line_at_origin_circle_project_orthogonally_onto(self_: LineAtOrigin, other: Circle) -> Circle {
+    return circle_anti_scalar_anti_wedge(other, line_at_origin_circle_weight_expansion(self_, other));
+}
+
+fn line_at_origin_multi_vector_project_orthogonally_onto(self_: LineAtOrigin, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, line_at_origin_multi_vector_weight_expansion(self_, other));
+}
+
+fn line_at_origin_sphere_project_orthogonally_onto(self_: LineAtOrigin, other: Sphere) -> Circle {
+    return sphere_plane_at_origin_anti_wedge(other, line_at_origin_sphere_weight_expansion(self_, other));
+}
+
+fn multi_vector_circle_project_orthogonally_onto(self_: MultiVector, other: Circle) -> MultiVector {
+    return circle_multi_vector_anti_wedge(other, multi_vector_circle_weight_expansion(self_, other));
+}
+
+fn multi_vector_dipole_project_orthogonally_onto(self_: MultiVector, other: Dipole) -> MultiVector {
+    return dipole_multi_vector_anti_wedge(other, multi_vector_dipole_weight_expansion(self_, other));
+}
+
+fn multi_vector_multi_vector_project_orthogonally_onto(self_: MultiVector, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, multi_vector_multi_vector_weight_expansion(self_, other));
+}
+
+fn multi_vector_radial_project_orthogonally_onto(self_: MultiVector, other: Radial) -> MultiVector {
+    return radial_multi_vector_anti_wedge(other, multi_vector_radial_weight_expansion(self_, other));
+}
+
+fn multi_vector_sphere_project_orthogonally_onto(self_: MultiVector, other: Sphere) -> MultiVector {
+    return sphere_multi_vector_anti_wedge(other, multi_vector_sphere_weight_expansion(self_, other));
+}
+
+fn origin_circle_project_orthogonally_onto(self_: Origin, other: Circle) -> Dipole {
+    return circle_plane_at_origin_anti_wedge(other, origin_circle_weight_expansion(self_, other));
+}
+
+fn origin_dipole_project_orthogonally_onto(self_: Origin, other: Dipole) -> Dipole {
+    return dipole_anti_scalar_anti_wedge(other, origin_dipole_weight_expansion(self_, other));
+}
+
+fn origin_multi_vector_project_orthogonally_onto(self_: Origin, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, origin_multi_vector_weight_expansion(self_, other));
+}
+
+fn origin_sphere_project_orthogonally_onto(self_: Origin, other: Sphere) -> Dipole {
+    return sphere_line_at_origin_anti_wedge(other, origin_sphere_weight_expansion(self_, other));
+}
+
+fn plane_multi_vector_project_orthogonally_onto(self_: Plane, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, plane_multi_vector_weight_expansion(self_, other));
+}
+
+fn plane_sphere_project_orthogonally_onto(self_: Plane, other: Sphere) -> Sphere {
+    return sphere_anti_scalar_anti_wedge(other, plane_sphere_weight_expansion(self_, other));
+}
+
+fn plane_at_origin_multi_vector_project_orthogonally_onto(self_: PlaneAtOrigin, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, plane_at_origin_multi_vector_weight_expansion(self_, other));
+}
+
+fn plane_at_origin_sphere_project_orthogonally_onto(self_: PlaneAtOrigin, other: Sphere) -> Sphere {
+    return sphere_anti_scalar_anti_wedge(other, plane_at_origin_sphere_weight_expansion(self_, other));
+}
+
+fn point_circle_project_orthogonally_onto(self_: Point, other: Circle) -> Dipole {
+    return circle_plane_anti_wedge(other, point_circle_weight_expansion(self_, other));
+}
+
+fn point_dipole_project_orthogonally_onto(self_: Point, other: Dipole) -> Dipole {
+    return dipole_anti_scalar_anti_wedge(other, point_dipole_weight_expansion(self_, other));
+}
+
+fn point_multi_vector_project_orthogonally_onto(self_: Point, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, point_multi_vector_weight_expansion(self_, other));
+}
+
+fn point_sphere_project_orthogonally_onto(self_: Point, other: Sphere) -> Dipole {
+    return sphere_line_anti_wedge(other, point_sphere_weight_expansion(self_, other));
+}
+
+fn point_at_infinity_circle_project_orthogonally_onto(self_: PointAtInfinity, other: Circle) -> Dipole {
+    return circle_plane_anti_wedge(other, point_at_infinity_circle_weight_expansion(self_, other));
+}
+
+fn point_at_infinity_dipole_project_orthogonally_onto(self_: PointAtInfinity, other: Dipole) -> Dipole {
+    return dipole_anti_scalar_anti_wedge(other, point_at_infinity_dipole_weight_expansion(self_, other));
+}
+
+fn point_at_infinity_multi_vector_project_orthogonally_onto(self_: PointAtInfinity, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, point_at_infinity_multi_vector_weight_expansion(self_, other));
+}
+
+fn point_at_infinity_sphere_project_orthogonally_onto(self_: PointAtInfinity, other: Sphere) -> Dipole {
+    return sphere_line_anti_wedge(other, point_at_infinity_sphere_weight_expansion(self_, other));
+}
+
+fn radial_circle_project_orthogonally_onto(self_: Radial, other: Circle) -> Radial {
+    return circle_circle_anti_wedge(other, radial_circle_weight_expansion(self_, other));
+}
+
+fn radial_dipole_project_orthogonally_onto(self_: Radial, other: Dipole) -> Radial {
+    return dipole_sphere_anti_wedge(other, radial_dipole_weight_expansion(self_, other));
+}
+
+fn radial_multi_vector_project_orthogonally_onto(self_: Radial, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, radial_multi_vector_weight_expansion(self_, other));
+}
+
+fn radial_radial_project_orthogonally_onto(self_: Radial, other: Radial) -> Radial {
+    return radial_anti_scalar_anti_wedge(other, radial_radial_weight_expansion(self_, other));
+}
+
+fn radial_sphere_project_orthogonally_onto(self_: Radial, other: Sphere) -> Radial {
+    return sphere_dipole_anti_wedge(other, radial_sphere_weight_expansion(self_, other));
+}
+
+fn sphere_multi_vector_project_orthogonally_onto(self_: Sphere, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, sphere_multi_vector_weight_expansion(self_, other));
+}
+
+fn sphere_sphere_project_orthogonally_onto(self_: Sphere, other: Sphere) -> Sphere {
+    return sphere_anti_scalar_anti_wedge(other, sphere_sphere_weight_expansion(self_, other));
+}
+
+fn circle_circle_project_via_origin_onto(self_: Circle, other: Circle) -> Circle {
+    return circle_anti_scalar_anti_wedge(other, circle_circle_bulk_expansion(self_, other));
+}
+
+fn circle_multi_vector_project_via_origin_onto(self_: Circle, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, circle_multi_vector_bulk_expansion(self_, other));
+}
+
+fn dipole_circle_project_via_origin_onto(self_: Dipole, other: Circle) -> Dipole {
+    return circle_sphere_anti_wedge(other, dipole_circle_bulk_expansion(self_, other));
+}
+
+fn dipole_dipole_project_via_origin_onto(self_: Dipole, other: Dipole) -> Dipole {
+    return dipole_anti_scalar_anti_wedge(other, dipole_dipole_bulk_expansion(self_, other));
+}
+
+fn dipole_multi_vector_project_via_origin_onto(self_: Dipole, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, dipole_multi_vector_bulk_expansion(self_, other));
+}
+
+fn horizon_multi_vector_project_via_origin_onto(self_: Horizon, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, horizon_multi_vector_bulk_expansion(self_, other));
+}
+
+fn line_circle_project_via_origin_onto(self_: Line, other: Circle) -> Circle {
+    return circle_anti_scalar_anti_wedge(other, line_circle_bulk_expansion(self_, other));
+}
+
+fn line_multi_vector_project_via_origin_onto(self_: Line, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, line_multi_vector_bulk_expansion(self_, other));
+}
+
+fn line_at_infinity_circle_project_via_origin_onto(self_: LineAtInfinity, other: Circle) -> Circle {
+    return circle_anti_scalar_anti_wedge(other, line_at_infinity_circle_bulk_expansion(self_, other));
+}
+
+fn line_at_infinity_multi_vector_project_via_origin_onto(self_: LineAtInfinity, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, line_at_infinity_multi_vector_bulk_expansion(self_, other));
+}
+
+fn line_at_origin_circle_project_via_origin_onto(self_: LineAtOrigin, other: Circle) -> Circle {
+    return circle_anti_scalar_anti_wedge(other, line_at_origin_circle_bulk_expansion(self_, other));
+}
+
+fn line_at_origin_multi_vector_project_via_origin_onto(self_: LineAtOrigin, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, line_at_origin_multi_vector_bulk_expansion(self_, other));
+}
+
+fn multi_vector_circle_project_via_origin_onto(self_: MultiVector, other: Circle) -> MultiVector {
+    return circle_multi_vector_anti_wedge(other, multi_vector_circle_bulk_expansion(self_, other));
+}
+
+fn multi_vector_dipole_project_via_origin_onto(self_: MultiVector, other: Dipole) -> MultiVector {
+    return dipole_multi_vector_anti_wedge(other, multi_vector_dipole_bulk_expansion(self_, other));
+}
+
+fn multi_vector_multi_vector_project_via_origin_onto(self_: MultiVector, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, multi_vector_multi_vector_bulk_expansion(self_, other));
+}
+
+fn multi_vector_radial_project_via_origin_onto(self_: MultiVector, other: Radial) -> MultiVector {
+    return radial_multi_vector_anti_wedge(other, multi_vector_radial_bulk_expansion(self_, other));
+}
+
+fn origin_circle_project_via_origin_onto(self_: Origin, other: Circle) -> Dipole {
+    return circle_plane_at_origin_anti_wedge(other, origin_circle_bulk_expansion(self_, other));
+}
+
+fn origin_dipole_project_via_origin_onto(self_: Origin, other: Dipole) -> Dipole {
+    return dipole_anti_scalar_anti_wedge(other, origin_dipole_bulk_expansion(self_, other));
+}
+
+fn origin_multi_vector_project_via_origin_onto(self_: Origin, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, origin_multi_vector_bulk_expansion(self_, other));
+}
+
+fn plane_multi_vector_project_via_origin_onto(self_: Plane, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, plane_multi_vector_bulk_expansion(self_, other));
+}
+
+fn plane_at_origin_multi_vector_project_via_origin_onto(self_: PlaneAtOrigin, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, plane_at_origin_multi_vector_bulk_expansion(self_, other));
+}
+
+fn point_circle_project_via_origin_onto(self_: Point, other: Circle) -> Dipole {
+    return circle_plane_anti_wedge(other, point_circle_bulk_expansion(self_, other));
+}
+
+fn point_dipole_project_via_origin_onto(self_: Point, other: Dipole) -> Dipole {
+    return dipole_anti_scalar_anti_wedge(other, point_dipole_bulk_expansion(self_, other));
+}
+
+fn point_multi_vector_project_via_origin_onto(self_: Point, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, point_multi_vector_bulk_expansion(self_, other));
+}
+
+fn point_at_infinity_circle_project_via_origin_onto(self_: PointAtInfinity, other: Circle) -> Dipole {
+    return circle_plane_anti_wedge(other, point_at_infinity_circle_bulk_expansion(self_, other));
+}
+
+fn point_at_infinity_dipole_project_via_origin_onto(self_: PointAtInfinity, other: Dipole) -> Dipole {
+    return dipole_anti_scalar_anti_wedge(other, point_at_infinity_dipole_bulk_expansion(self_, other));
+}
+
+fn point_at_infinity_multi_vector_project_via_origin_onto(self_: PointAtInfinity, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, point_at_infinity_multi_vector_bulk_expansion(self_, other));
+}
+
+fn radial_circle_project_via_origin_onto(self_: Radial, other: Circle) -> Radial {
+    return circle_circle_anti_wedge(other, radial_circle_bulk_expansion(self_, other));
+}
+
+fn radial_dipole_project_via_origin_onto(self_: Radial, other: Dipole) -> Radial {
+    return dipole_sphere_anti_wedge(other, radial_dipole_bulk_expansion(self_, other));
+}
+
+fn radial_multi_vector_project_via_origin_onto(self_: Radial, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, radial_multi_vector_bulk_expansion(self_, other));
+}
+
+fn radial_radial_project_via_origin_onto(self_: Radial, other: Radial) -> Radial {
+    return radial_anti_scalar_anti_wedge(other, radial_radial_bulk_expansion(self_, other));
+}
+
+fn sphere_multi_vector_project_via_origin_onto(self_: Sphere, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, sphere_multi_vector_bulk_expansion(self_, other));
+}
+
+fn circle_circle_cosine_angle(self_: Circle, other: Circle) -> Scalar {
+    return scalar_bulk_norm(circle_circle_weight_contraction(circle_unitize(self_), circle_unitize(other)));
+}
+
+fn circle_dipole_cosine_angle(self_: Circle, other: Dipole) -> Scalar {
+    return radial_bulk_norm(circle_dipole_weight_contraction(circle_unitize(self_), dipole_unitize(other)));
+}
+
+fn circle_radial_cosine_angle(self_: Circle, other: Radial) -> Scalar {
+    return dipole_bulk_norm(circle_radial_weight_contraction(circle_unitize(self_), radial_unitize(other)));
+}
+
+fn dipole_dipole_cosine_angle(self_: Dipole, other: Dipole) -> Scalar {
+    return scalar_bulk_norm(dipole_dipole_weight_contraction(dipole_unitize(self_), dipole_unitize(other)));
+}
+
+fn dipole_radial_cosine_angle(self_: Dipole, other: Radial) -> Scalar {
+    return radial_bulk_norm(dipole_radial_weight_contraction(dipole_unitize(self_), radial_unitize(other)));
+}
+
+fn line_circle_cosine_angle(self_: Line, other: Circle) -> Scalar {
+    return scalar_bulk_norm(line_circle_weight_contraction(line_unitize(self_), circle_unitize(other)));
+}
+
+fn line_dipole_cosine_angle(self_: Line, other: Dipole) -> Scalar {
+    return radial_bulk_norm(line_dipole_weight_contraction(line_unitize(self_), dipole_unitize(other)));
+}
+
+fn line_radial_cosine_angle(self_: Line, other: Radial) -> Scalar {
+    return dipole_bulk_norm(line_radial_weight_contraction(line_unitize(self_), radial_unitize(other)));
+}
+
+fn line_at_origin_circle_cosine_angle(self_: LineAtOrigin, other: Circle) -> Scalar {
+    return scalar_bulk_norm(line_at_origin_circle_weight_contraction(line_at_origin_unitize(self_), circle_unitize(other)));
+}
+
+fn line_at_origin_dipole_cosine_angle(self_: LineAtOrigin, other: Dipole) -> Scalar {
+    return radial_bulk_norm(line_at_origin_dipole_weight_contraction(line_at_origin_unitize(self_), dipole_unitize(other)));
+}
+
+fn line_at_origin_radial_cosine_angle(self_: LineAtOrigin, other: Radial) -> Scalar {
+    return dipole_bulk_norm(line_at_origin_radial_weight_contraction(line_at_origin_unitize(self_), radial_unitize(other)));
+}
+
+fn origin_dipole_cosine_angle(self_: Origin, other: Dipole) -> Scalar {
+    return scalar_bulk_norm(origin_dipole_weight_contraction(origin_unitize(self_), dipole_unitize(other)));
+}
+
+fn origin_radial_cosine_angle(self_: Origin, other: Radial) -> Scalar {
+    return radial_bulk_norm(origin_radial_weight_contraction(origin_unitize(self_), radial_unitize(other)));
+}
+
+fn plane_circle_cosine_angle(self_: Plane, other: Circle) -> Scalar {
+    return radial_bulk_norm(plane_circle_weight_contraction(plane_unitize(self_), circle_unitize(other)));
+}
+
+fn plane_dipole_cosine_angle(self_: Plane, other: Dipole) -> Scalar {
+    return dipole_bulk_norm(plane_dipole_weight_contraction(plane_unitize(self_), dipole_unitize(other)));
+}
+
+fn plane_radial_cosine_angle(self_: Plane, other: Radial) -> Scalar {
+    return circle_bulk_norm(plane_radial_weight_contraction(plane_unitize(self_), radial_unitize(other)));
+}
+
+fn plane_sphere_cosine_angle(self_: Plane, other: Sphere) -> Scalar {
+    return scalar_bulk_norm(plane_sphere_weight_contraction(plane_unitize(self_), sphere_unitize(other)));
+}
+
+fn plane_at_origin_circle_cosine_angle(self_: PlaneAtOrigin, other: Circle) -> Scalar {
+    return radial_bulk_norm(plane_at_origin_circle_weight_contraction(plane_at_origin_unitize(self_), circle_unitize(other)));
+}
+
+fn plane_at_origin_dipole_cosine_angle(self_: PlaneAtOrigin, other: Dipole) -> Scalar {
+    return dipole_bulk_norm(plane_at_origin_dipole_weight_contraction(plane_at_origin_unitize(self_), dipole_unitize(other)));
+}
+
+fn plane_at_origin_radial_cosine_angle(self_: PlaneAtOrigin, other: Radial) -> Scalar {
+    return circle_bulk_norm(plane_at_origin_radial_weight_contraction(plane_at_origin_unitize(self_), radial_unitize(other)));
+}
+
+fn plane_at_origin_sphere_cosine_angle(self_: PlaneAtOrigin, other: Sphere) -> Scalar {
+    return scalar_bulk_norm(plane_at_origin_sphere_weight_contraction(plane_at_origin_unitize(self_), sphere_unitize(other)));
+}
+
+fn point_dipole_cosine_angle(self_: Point, other: Dipole) -> Scalar {
+    return scalar_bulk_norm(point_dipole_weight_contraction(point_unitize(self_), dipole_unitize(other)));
+}
+
+fn point_radial_cosine_angle(self_: Point, other: Radial) -> Scalar {
+    return radial_bulk_norm(point_radial_weight_contraction(point_unitize(self_), radial_unitize(other)));
+}
+
+fn radial_radial_cosine_angle(self_: Radial, other: Radial) -> Scalar {
+    return scalar_bulk_norm(radial_radial_weight_contraction(radial_unitize(self_), radial_unitize(other)));
+}
+
+fn sphere_circle_cosine_angle(self_: Sphere, other: Circle) -> Scalar {
+    return radial_bulk_norm(sphere_circle_weight_contraction(sphere_unitize(self_), circle_unitize(other)));
+}
+
+fn sphere_dipole_cosine_angle(self_: Sphere, other: Dipole) -> Scalar {
+    return dipole_bulk_norm(sphere_dipole_weight_contraction(sphere_unitize(self_), dipole_unitize(other)));
+}
+
+fn sphere_radial_cosine_angle(self_: Sphere, other: Radial) -> Scalar {
+    return circle_bulk_norm(sphere_radial_weight_contraction(sphere_unitize(self_), radial_unitize(other)));
+}
+
+fn sphere_sphere_cosine_angle(self_: Sphere, other: Sphere) -> Scalar {
+    return scalar_bulk_norm(sphere_sphere_weight_contraction(sphere_unitize(self_), sphere_unitize(other)));
 }
 
 fn circle_multi_vector_distance(self_: Circle, other: MultiVector) -> Magnitude {

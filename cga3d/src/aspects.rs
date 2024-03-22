@@ -38,3 +38,300 @@ pub trait RoundWeight {
     type Output;
     fn round_weight(self) -> Self::Output;
 }
+
+impl RoundBulk for Circle {
+    type Output = Circle;
+
+    fn round_bulk(self) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: self.group0() * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+                g1: Simd32x3::from([0.0, 0.0, 0.0]),
+                g2: Simd32x3::from([0.0, 0.0, 0.0]),
+            },
+        }
+    }
+}
+
+impl RoundBulk for Dipole {
+    type Output = Dipole;
+
+    fn round_bulk(self) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: Simd32x3::from([0.0, 0.0, 0.0]),
+                g1: self.group1(),
+                g2: Simd32x4::from([0.0, 0.0, 0.0, 0.0]),
+            },
+        }
+    }
+}
+
+impl Bulk for Horizon {
+    type Output = Horizon;
+
+    fn bulk(self) -> Horizon {
+        self
+    }
+}
+
+impl Bulk for Line {
+    type Output = LineAtInfinity;
+
+    fn bulk(self) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups { g0: self.group1() },
+        }
+    }
+}
+
+impl Bulk for LineAtInfinity {
+    type Output = LineAtInfinity;
+
+    fn bulk(self) -> LineAtInfinity {
+        self
+    }
+}
+
+impl RoundBulk for Magnitude {
+    type Output = Scalar;
+
+    fn round_bulk(self) -> Scalar {
+        Scalar {
+            groups: ScalarGroups { g0: self.group0()[0] },
+        }
+    }
+}
+
+impl RoundBulk for MultiVector {
+    type Output = MultiVector;
+
+    fn round_bulk(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0() * Simd32x2::from([1.0, 0.0]),
+                g1: self.group1(),
+                g2: Simd32x2::from([0.0, 0.0]),
+                g3: Simd32x3::from([0.0, 0.0, 0.0]),
+                g4: self.group4(),
+                g5: Simd32x4::from([0.0, 0.0, 0.0, 0.0]),
+                g6: self.group6() * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+                g7: Simd32x3::from([0.0, 0.0, 0.0]),
+                g8: Simd32x3::from([0.0, 0.0, 0.0]),
+                g9: Simd32x3::from([0.0, 0.0, 0.0]),
+                g10: Simd32x2::from([0.0, 0.0]),
+            },
+        }
+    }
+}
+
+impl Bulk for Plane {
+    type Output = Horizon;
+
+    fn bulk(self) -> Horizon {
+        Horizon {
+            groups: HorizonGroups { g0: self.group0()[3] },
+        }
+    }
+}
+
+impl Bulk for Point {
+    type Output = PointAtInfinity;
+
+    fn bulk(self) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl Bulk for PointAtInfinity {
+    type Output = PointAtInfinity;
+
+    fn bulk(self) -> PointAtInfinity {
+        self
+    }
+}
+
+impl RoundBulk for Radial {
+    type Output = Radial;
+
+    fn round_bulk(self) -> Radial {
+        Radial {
+            groups: RadialGroups {
+                g0: self.group0(),
+                g1: Simd32x2::from([0.0, 0.0]),
+            },
+        }
+    }
+}
+
+impl RoundBulk for Scalar {
+    type Output = Scalar;
+
+    fn round_bulk(self) -> Scalar {
+        self
+    }
+}
+
+impl Bulk for Sphere {
+    type Output = Horizon;
+
+    fn bulk(self) -> Horizon {
+        Horizon {
+            groups: HorizonGroups { g0: self.group1()[1] },
+        }
+    }
+}
+
+impl Weight for AntiScalar {
+    type Output = AntiScalar;
+
+    fn weight(self) -> AntiScalar {
+        self
+    }
+}
+
+impl RoundWeight for Circle {
+    type Output = Circle;
+
+    fn round_weight(self) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: self.group0() * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+                g1: Simd32x3::from([0.0, 0.0, 0.0]),
+                g2: Simd32x3::from([0.0, 0.0, 0.0]),
+            },
+        }
+    }
+}
+
+impl RoundWeight for Dipole {
+    type Output = Dipole;
+
+    fn round_weight(self) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: self.group0(),
+                g1: Simd32x3::from([0.0, 0.0, 0.0]),
+                g2: Simd32x4::from([0.0, 0.0, 0.0, 0.0]),
+            },
+        }
+    }
+}
+
+impl Weight for Line {
+    type Output = LineAtOrigin;
+
+    fn weight(self) -> LineAtOrigin {
+        LineAtOrigin {
+            groups: LineAtOriginGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Weight for LineAtOrigin {
+    type Output = LineAtOrigin;
+
+    fn weight(self) -> LineAtOrigin {
+        self
+    }
+}
+
+impl Weight for Magnitude {
+    type Output = AntiScalar;
+
+    fn weight(self) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups { g0: self.group0()[1] },
+        }
+    }
+}
+
+impl RoundWeight for MultiVector {
+    type Output = MultiVector;
+
+    fn round_weight(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, 0.0]),
+                g1: Simd32x3::from([0.0, 0.0, 0.0]),
+                g2: self.group2() * Simd32x2::from([1.0, 0.0]),
+                g3: self.group3(),
+                g4: Simd32x3::from([0.0, 0.0, 0.0]),
+                g5: Simd32x4::from([0.0, 0.0, 0.0, 0.0]),
+                g6: self.group6() * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+                g7: Simd32x3::from([0.0, 0.0, 0.0]),
+                g8: Simd32x3::from([0.0, 0.0, 0.0]),
+                g9: Simd32x3::from([0.0, 0.0, 0.0]),
+                g10: self.group10() * Simd32x2::from([1.0, 0.0]),
+            },
+        }
+    }
+}
+
+impl Weight for Origin {
+    type Output = Origin;
+
+    fn weight(self) -> Origin {
+        self
+    }
+}
+
+impl Weight for Plane {
+    type Output = PlaneAtOrigin;
+
+    fn weight(self) -> PlaneAtOrigin {
+        PlaneAtOrigin {
+            groups: PlaneAtOriginGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl Weight for PlaneAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn weight(self) -> PlaneAtOrigin {
+        self
+    }
+}
+
+impl Weight for Point {
+    type Output = Origin;
+
+    fn weight(self) -> Origin {
+        Origin {
+            groups: OriginGroups { g0: self.group0()[3] },
+        }
+    }
+}
+
+impl RoundWeight for Radial {
+    type Output = Radial;
+
+    fn round_weight(self) -> Radial {
+        Radial {
+            groups: RadialGroups {
+                g0: Simd32x3::from([0.0, 0.0, 0.0]),
+                g1: self.group1() * Simd32x2::from([1.0, 0.0]),
+            },
+        }
+    }
+}
+
+impl RoundWeight for Sphere {
+    type Output = Sphere;
+
+    fn round_weight(self) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: Simd32x3::from([0.0, 0.0, 0.0]),
+                g1: self.group1() * Simd32x2::from([1.0, 0.0]),
+            },
+        }
+    }
+}

@@ -31,8 +31,8 @@ impl Bulk for Flector {
     fn bulk(self) -> Flector {
         Flector {
             groups: FlectorGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
-                g1: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3]]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+                g0: self.group0() * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+                g1: self.group1() * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
             },
         }
     }
@@ -51,9 +51,7 @@ impl Bulk for Line {
 
     fn bulk(self) -> LineAtInfinity {
         LineAtInfinity {
-            groups: LineAtInfinityGroups {
-                g0: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from([1.0, 1.0, 1.0]),
-            },
+            groups: LineAtInfinityGroups { g0: self.group1() },
         }
     }
 }
@@ -71,7 +69,7 @@ impl Bulk for Magnitude {
 
     fn bulk(self) -> Scalar {
         Scalar {
-            groups: ScalarGroups { g0: self.group0()[0] * 1.0 },
+            groups: ScalarGroups { g0: self.group0()[0] },
         }
     }
 }
@@ -81,9 +79,7 @@ impl Bulk for Motor {
 
     fn bulk(self) -> LineAtInfinity {
         LineAtInfinity {
-            groups: LineAtInfinityGroups {
-                g0: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from([1.0, 1.0, 1.0]),
-            },
+            groups: LineAtInfinityGroups { g0: self.group1() },
         }
     }
 }
@@ -94,11 +90,11 @@ impl Bulk for MultiVector {
     fn bulk(self) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from([self.group0()[0], self.group0()[1]]) * Simd32x2::from([1.0, 0.0]),
-                g1: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
-                g2: Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]) * Simd32x3::from([0.0, 0.0, 0.0]),
-                g3: Simd32x3::from([self.group3()[0], self.group3()[1], self.group3()[2]]) * Simd32x3::from([1.0, 1.0, 1.0]),
-                g4: Simd32x4::from([self.group4()[0], self.group4()[1], self.group4()[2], self.group4()[3]]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+                g0: self.group0() * Simd32x2::from([1.0, 0.0]),
+                g1: self.group1() * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+                g2: Simd32x3::from([0.0, 0.0, 0.0]),
+                g3: self.group3(),
+                g4: self.group4() * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
             },
         }
     }
@@ -109,7 +105,7 @@ impl Bulk for Plane {
 
     fn bulk(self) -> Horizon {
         Horizon {
-            groups: HorizonGroups { g0: self.group0()[3] * 1.0 },
+            groups: HorizonGroups { g0: self.group0()[3] },
         }
     }
 }
@@ -120,7 +116,7 @@ impl Bulk for Point {
     fn bulk(self) -> PointAtInfinity {
         PointAtInfinity {
             groups: PointAtInfinityGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0]),
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
             },
         }
     }
@@ -148,7 +144,7 @@ impl Bulk for Translator {
     fn bulk(self) -> LineAtInfinity {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0]),
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
             },
         }
     }
@@ -168,8 +164,8 @@ impl Weight for Flector {
     fn weight(self) -> Flector {
         Flector {
             groups: FlectorGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
-                g1: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+                g0: self.group0() * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+                g1: self.group1() * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
             },
         }
     }
@@ -180,9 +176,7 @@ impl Weight for Line {
 
     fn weight(self) -> LineAtOrigin {
         LineAtOrigin {
-            groups: LineAtOriginGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0]),
-            },
+            groups: LineAtOriginGroups { g0: self.group0() },
         }
     }
 }
@@ -200,7 +194,7 @@ impl Weight for Magnitude {
 
     fn weight(self) -> AntiScalar {
         AntiScalar {
-            groups: AntiScalarGroups { g0: self.group0()[1] * 1.0 },
+            groups: AntiScalarGroups { g0: self.group0()[1] },
         }
     }
 }
@@ -210,9 +204,7 @@ impl Weight for Motor {
 
     fn weight(self) -> Rotor {
         Rotor {
-            groups: RotorGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 1.0]),
-            },
+            groups: RotorGroups { g0: self.group0() },
         }
     }
 }
@@ -223,11 +215,11 @@ impl Weight for MultiVector {
     fn weight(self) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from([self.group0()[0], self.group0()[1]]) * Simd32x2::from([0.0, 1.0]),
-                g1: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3]]) * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
-                g2: Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]) * Simd32x3::from([1.0, 1.0, 1.0]),
-                g3: Simd32x3::from([self.group3()[0], self.group3()[1], self.group3()[2]]) * Simd32x3::from([0.0, 0.0, 0.0]),
-                g4: Simd32x4::from([self.group4()[0], self.group4()[1], self.group4()[2], self.group4()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+                g0: self.group0() * Simd32x2::from([0.0, 1.0]),
+                g1: self.group1() * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+                g2: self.group2(),
+                g3: Simd32x3::from([0.0, 0.0, 0.0]),
+                g4: self.group4() * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
             },
         }
     }
@@ -247,7 +239,7 @@ impl Weight for Plane {
     fn weight(self) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0]),
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
             },
         }
     }
@@ -266,7 +258,7 @@ impl Weight for Point {
 
     fn weight(self) -> Origin {
         Origin {
-            groups: OriginGroups { g0: self.group0()[3] * 1.0 },
+            groups: OriginGroups { g0: self.group0()[3] },
         }
     }
 }
@@ -284,7 +276,7 @@ impl Weight for Translator {
 
     fn weight(self) -> AntiScalar {
         AntiScalar {
-            groups: AntiScalarGroups { g0: self.group0()[3] * 1.0 },
+            groups: AntiScalarGroups { g0: self.group0()[3] },
         }
     }
 }

@@ -9897,7 +9897,7 @@ fn translator_translator_dot(self_: Translator, other: Translator) -> Scalar {
 }
 
 fn flector_bulk(self_: Flector) -> Flector {
-    return Flector(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.w) * vec4<f32>(1.0, 1.0, 1.0, 0.0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, self_.g1.w) * vec4<f32>(0.0, 0.0, 0.0, 1.0));
+    return Flector(self_.g0 * vec4<f32>(1.0, 1.0, 1.0, 0.0), self_.g1 * vec4<f32>(0.0, 0.0, 0.0, 1.0));
 }
 
 fn horizon_bulk(self_: Horizon) -> Horizon {
@@ -9905,7 +9905,7 @@ fn horizon_bulk(self_: Horizon) -> Horizon {
 }
 
 fn line_bulk(self_: Line) -> LineAtInfinity {
-    return LineAtInfinity(vec3<f32>(self_.g1.x, self_.g1.y, self_.g1.z) * vec3<f32>(1.0, 1.0, 1.0));
+    return LineAtInfinity(self_.g1);
 }
 
 fn line_at_infinity_bulk(self_: LineAtInfinity) -> LineAtInfinity {
@@ -9913,23 +9913,23 @@ fn line_at_infinity_bulk(self_: LineAtInfinity) -> LineAtInfinity {
 }
 
 fn magnitude_bulk(self_: Magnitude) -> Scalar {
-    return Scalar(self_.g0.x * 1.0);
+    return Scalar(self_.g0.x);
 }
 
 fn motor_bulk(self_: Motor) -> LineAtInfinity {
-    return LineAtInfinity(vec3<f32>(self_.g1.x, self_.g1.y, self_.g1.z) * vec3<f32>(1.0, 1.0, 1.0));
+    return LineAtInfinity(self_.g1);
 }
 
 fn multi_vector_bulk(self_: MultiVector) -> MultiVector {
-    return MultiVector(vec2<f32>(self_.g0.x, self_.g0.y) * vec2<f32>(1.0, 0.0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, self_.g1.w) * vec4<f32>(1.0, 1.0, 1.0, 0.0), vec3<f32>(self_.g2.x, self_.g2.y, self_.g2.z) * vec3<f32>(0.0, 0.0, 0.0), vec3<f32>(self_.g3.x, self_.g3.y, self_.g3.z) * vec3<f32>(1.0, 1.0, 1.0), vec4<f32>(self_.g4.x, self_.g4.y, self_.g4.z, self_.g4.w) * vec4<f32>(0.0, 0.0, 0.0, 1.0));
+    return MultiVector(self_.g0 * vec2<f32>(1.0, 0.0), self_.g1 * vec4<f32>(1.0, 1.0, 1.0, 0.0), vec3<f32>(0.0, 0.0, 0.0), self_.g3, self_.g4 * vec4<f32>(0.0, 0.0, 0.0, 1.0));
 }
 
 fn plane_bulk(self_: Plane) -> Horizon {
-    return Horizon(self_.g0.w * 1.0);
+    return Horizon(self_.g0.w);
 }
 
 fn point_bulk(self_: Point) -> PointAtInfinity {
-    return PointAtInfinity(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(1.0, 1.0, 1.0));
+    return PointAtInfinity(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z));
 }
 
 fn point_at_infinity_bulk(self_: PointAtInfinity) -> PointAtInfinity {
@@ -9941,7 +9941,7 @@ fn scalar_bulk(self_: Scalar) -> Scalar {
 }
 
 fn translator_bulk(self_: Translator) -> LineAtInfinity {
-    return LineAtInfinity(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(1.0, 1.0, 1.0));
+    return LineAtInfinity(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z));
 }
 
 fn anti_scalar_weight(self_: AntiScalar) -> AntiScalar {
@@ -9949,11 +9949,11 @@ fn anti_scalar_weight(self_: AntiScalar) -> AntiScalar {
 }
 
 fn flector_weight(self_: Flector) -> Flector {
-    return Flector(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.w) * vec4<f32>(0.0, 0.0, 0.0, 1.0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, self_.g1.w) * vec4<f32>(1.0, 1.0, 1.0, 0.0));
+    return Flector(self_.g0 * vec4<f32>(0.0, 0.0, 0.0, 1.0), self_.g1 * vec4<f32>(1.0, 1.0, 1.0, 0.0));
 }
 
 fn line_weight(self_: Line) -> LineAtOrigin {
-    return LineAtOrigin(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(1.0, 1.0, 1.0));
+    return LineAtOrigin(self_.g0);
 }
 
 fn line_at_origin_weight(self_: LineAtOrigin) -> LineAtOrigin {
@@ -9961,15 +9961,15 @@ fn line_at_origin_weight(self_: LineAtOrigin) -> LineAtOrigin {
 }
 
 fn magnitude_weight(self_: Magnitude) -> AntiScalar {
-    return AntiScalar(self_.g0.y * 1.0);
+    return AntiScalar(self_.g0.y);
 }
 
 fn motor_weight(self_: Motor) -> Rotor {
-    return Rotor(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.w) * vec4<f32>(1.0, 1.0, 1.0, 1.0));
+    return Rotor(self_.g0);
 }
 
 fn multi_vector_weight(self_: MultiVector) -> MultiVector {
-    return MultiVector(vec2<f32>(self_.g0.x, self_.g0.y) * vec2<f32>(0.0, 1.0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, self_.g1.w) * vec4<f32>(0.0, 0.0, 0.0, 1.0), vec3<f32>(self_.g2.x, self_.g2.y, self_.g2.z) * vec3<f32>(1.0, 1.0, 1.0), vec3<f32>(self_.g3.x, self_.g3.y, self_.g3.z) * vec3<f32>(0.0, 0.0, 0.0), vec4<f32>(self_.g4.x, self_.g4.y, self_.g4.z, self_.g4.w) * vec4<f32>(1.0, 1.0, 1.0, 0.0));
+    return MultiVector(self_.g0 * vec2<f32>(0.0, 1.0), self_.g1 * vec4<f32>(0.0, 0.0, 0.0, 1.0), self_.g2, vec3<f32>(0.0, 0.0, 0.0), self_.g4 * vec4<f32>(1.0, 1.0, 1.0, 0.0));
 }
 
 fn origin_weight(self_: Origin) -> Origin {
@@ -9977,7 +9977,7 @@ fn origin_weight(self_: Origin) -> Origin {
 }
 
 fn plane_weight(self_: Plane) -> PlaneAtOrigin {
-    return PlaneAtOrigin(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(1.0, 1.0, 1.0));
+    return PlaneAtOrigin(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z));
 }
 
 fn plane_at_origin_weight(self_: PlaneAtOrigin) -> PlaneAtOrigin {
@@ -9985,7 +9985,7 @@ fn plane_at_origin_weight(self_: PlaneAtOrigin) -> PlaneAtOrigin {
 }
 
 fn point_weight(self_: Point) -> Origin {
-    return Origin(self_.g0.w * 1.0);
+    return Origin(self_.g0.w);
 }
 
 fn rotor_weight(self_: Rotor) -> Rotor {
@@ -9993,7 +9993,7 @@ fn rotor_weight(self_: Rotor) -> Rotor {
 }
 
 fn translator_weight(self_: Translator) -> AntiScalar {
-    return AntiScalar(self_.g0.w * 1.0);
+    return AntiScalar(self_.g0.w);
 }
 
 fn anti_scalar_anti_reversal(self_: AntiScalar) -> AntiScalar {
