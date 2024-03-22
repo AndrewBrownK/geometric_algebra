@@ -377,6 +377,8 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     /// These items require some special insight per Geometric Algebra, for example if there are
     /// multiple/special projective dimensions with different meanings.
     pub fn fancy_norms(&mut self, _prefix: &'static str, _projective_basis: BasisElement, _registry: &'r MultiVectorClassRegistry) {
+        // TODO SOONER
+
         // TODO this is all kinds of fucked currently. Not sure how to generate norms generically
         //  for both RGA and CGA. I could get all of RGA and the flat objects of CGA by doing
         //  bulk and weight first, then get bulkNorm and WeightNorm from those by doing the dot product
@@ -624,6 +626,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let _: Option<()> = try {
                 // Right bulk dual is right complement of bulk
                 let bulk = self.trait_impls.get_single_invocation("Bulk", variable(&param_a))?;
+                // TODO maybe this should be "Dual" instead of "RightComplement"?
                 let right_comp = self.trait_impls.get_single_invocation("RightComplement", bulk)?;
                 let rbd = single_expression_single_trait_impl(name, &param_a, right_comp);
                 self.trait_impls.add_single_impl(name, param_a, rbd);
@@ -634,6 +637,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let _: Option<()> = try {
                 // Right weight dual is right complement of weight
                 let weight = self.trait_impls.get_single_invocation("Weight", variable(&param_a))?;
+                // TODO maybe this should be "Dual" instead of "RightComplement"?
                 let right_comp = self.trait_impls.get_single_invocation("RightComplement", weight)?;
                 let rwd = single_expression_single_trait_impl(name, &param_a, right_comp);
                 self.trait_impls.add_single_impl(name, param_a, rwd);
@@ -644,6 +648,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let _: Option<()> = try {
                 // Left bulk dual is left complement of bulk
                 let bulk = self.trait_impls.get_single_invocation("Bulk", variable(&param_a))?;
+                // TODO maybe this should be some kind of "Dual" instead of "LeftComplement"?
                 let left_comp = self.trait_impls.get_single_invocation("LeftComplement", bulk)?;
                 let lbd = single_expression_single_trait_impl(name, &param_a, left_comp);
                 self.trait_impls.add_single_impl(name, param_a, lbd);
@@ -654,6 +659,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let _: Option<()> = try {
                 // Left weight dual is left complement of weight
                 let weight = self.trait_impls.get_single_invocation("Weight", variable(&param_a))?;
+                // TODO maybe this should be some kind of "Dual" instead of "LeftComplement"?
                 let left_comp = self.trait_impls.get_single_invocation("LeftComplement", weight)?;
                 let lwd = single_expression_single_trait_impl(name, &param_a, left_comp);
                 self.trait_impls.add_single_impl(name, param_a, lwd);
@@ -704,6 +710,12 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 };
             }
         }
+
+
+        // TODO generated cga projections don't look extremely compelling yet.
+        //  Probably missing a few prerequisites, or have a few minor misplacements.
+        //  (e.g. more dual/complement mixups.)
+
 
         for (param_a, param_b) in registry.pair_parameters() {
             let name = "ProjectOrthogonallyOnto";
@@ -1314,6 +1326,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             .to_string(),
         })?;
 
+        // TODO SOONER
         // TODO remaining trait declarations and docs
 
         let trait_names = ["Sqrt", "Grade", "AntiGrade", "Attitude", "Carrier", "CoCarrier", "Container", "Center"];
@@ -1442,433 +1455,6 @@ pub fn validate_glsl(algebra_name: &str, file_path: PathBuf) {
     glsl_file.read_to_string(&mut glsl_contents).unwrap();
     // Append a dummy entry point
     glsl_contents.push_str("\nvoid main() {}");
-
-    // Parse, prune, and validate the naga module
-
-    // todo stack overflow is here at parse (if used in build script, not necessarily tests)
-    //   Note this only affects glsl, and not wgsl
-    //
-    // Based on similar historical problems...
-    // https://github.com/serde-rs/serde/issues/494#issuecomment-240381241
-    //
-    // It is likely a long series of addition/subtraction causing the problem.
-    // So likely a whole bunch of stacked ParsingContext.parse_binary (TokenValue::Plus)
-    // Yes..... parse_binary is recursive.
-    // Compare this to wgsl parse_binary_op that uses some kind of accumulator and not recursion.
-    //
-    // So a fix is needed in naga
-    // See example of generated glsl below:
-
-    /*
-    MultiVector multi_vector_multi_vector_geometric_product(MultiVector self, MultiVector other) {
-        return MultiVector(
-            vec2(self.g0.x) * other.g0
-                + vec2(self.g0.y) * other.g0.yx * vec2(-1.0, 1.0)
-                + vec2(self.g1.x) * vec2(other.g1.x, other.g9.x)
-                + vec2(self.g1.y) * vec2(other.g1.y, other.g9.y)
-                + vec2(self.g1.z) * vec2(other.g1.z, other.g9.z)
-                + vec2(self.g2.x) * vec2(other.g2.y, other.g10.y) * vec2(-1.0, 1.0)
-                + vec2(self.g2.y) * vec2(other.g2.x, other.g10.x) * vec2(-1.0, 1.0)
-                - vec2(self.g3.x) * vec2(other.g5.x, other.g8.x)
-                - vec2(self.g3.y) * vec2(other.g5.y, other.g8.y)
-                - vec2(self.g3.z) * vec2(other.g5.z, other.g8.z)
-                - vec2(self.g4.x) * vec2(other.g4.x, other.g7.x)
-                - vec2(self.g4.y) * vec2(other.g4.y, other.g7.y)
-                - vec2(self.g4.z) * vec2(other.g4.z, other.g7.z)
-                - vec2(self.g5.x) * vec2(other.g3.x, other.g6.x)
-                - vec2(self.g5.y) * vec2(other.g3.y, other.g6.y)
-                - vec2(self.g5.z) * vec2(other.g3.z, other.g6.z)
-                + vec2(self.g5.w) * vec2(other.g5.w, other.g6.w) * vec2(1.0, -1.0)
-                + vec2(self.g6.x) * vec2(other.g8.x, other.g5.x) * vec2(1.0, -1.0)
-                + vec2(self.g6.y) * vec2(other.g8.y, other.g5.y) * vec2(1.0, -1.0)
-                + vec2(self.g6.z) * vec2(other.g8.z, other.g5.z) * vec2(1.0, -1.0)
-                - vec2(self.g6.w) * vec2(other.g6.w, other.g5.w)
-                + vec2(self.g7.x) * vec2(other.g7.x, other.g4.x) * vec2(1.0, -1.0)
-                + vec2(self.g7.y) * vec2(other.g7.y, other.g4.y) * vec2(1.0, -1.0)
-                + vec2(self.g7.z) * vec2(other.g7.z, other.g4.z) * vec2(1.0, -1.0)
-                + vec2(self.g8.x) * vec2(other.g6.x, other.g3.x) * vec2(1.0, -1.0)
-                + vec2(self.g8.y) * vec2(other.g6.y, other.g3.y) * vec2(1.0, -1.0)
-                + vec2(self.g8.z) * vec2(other.g6.z, other.g3.z) * vec2(1.0, -1.0)
-                + vec2(self.g9.x) * vec2(other.g9.x, other.g1.x) * vec2(-1.0, 1.0)
-                + vec2(self.g9.y) * vec2(other.g9.y, other.g1.y) * vec2(-1.0, 1.0)
-                + vec2(self.g9.z) * vec2(other.g9.z, other.g1.z) * vec2(-1.0, 1.0)
-                + vec2(self.g10.x) * vec2(other.g10.y, other.g2.y)
-                + vec2(self.g10.y) * vec2(other.g10.x, other.g2.x),
-
-            vec3(self.g0.x) * other.g1
-                + vec3(self.g0.y) * other.g9 * vec3(-1.0, 1.0, -1.0)
-                + vec3(self.g1.x) * vec3(other.g0.x, other.g4.z, other.g4.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g1.y) * vec3(other.g4.z, other.g0.x, other.g4.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g1.z) * vec3(other.g4.y, other.g4.x, other.g0.x) * vec3(1.0, -1.0, 1.0)
-                + vec3(self.g2.x) * vec3(other.g5.x, other.g5.y, other.g5.z)
-                - vec3(self.g2.y) * other.g3
-                + vec3(self.g3.x) * vec3(other.g2.y, other.g8.z, other.g8.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g3.y) * vec3(other.g8.z, other.g2.y, other.g8.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g3.z) * vec3(other.g8.y, other.g8.x, other.g2.y) * vec3(1.0, -1.0, 1.0)
-                + vec3(self.g4.x) * vec3(other.g6.w, other.g1.z, other.g1.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g4.y) * vec3(other.g1.z, other.g6.w, other.g1.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g4.z) * vec3(other.g1.y, other.g1.x, other.g6.w) * vec3(1.0, -1.0, 1.0)
-                + vec3(self.g5.x) * vec3(other.g2.x, other.g6.z, other.g6.y) * vec3(-1.0, -1.0, 1.0)
-                + vec3(self.g5.y) * vec3(other.g6.z, other.g2.x, other.g6.x) * vec3(1.0, -1.0, -1.0)
-                + vec3(self.g5.z) * vec3(other.g6.y, other.g6.x, other.g2.x) * vec3(-1.0, 1.0, -1.0)
-                + vec3(self.g5.w) * other.g7 * vec3(-1.0, 1.0, -1.0)
-                + vec3(self.g6.x) * vec3(other.g10.y, other.g5.z, other.g5.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g6.y) * vec3(other.g5.z, other.g10.y, other.g5.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g6.z) * vec3(other.g5.y, other.g5.x, other.g10.y) * vec3(1.0, -1.0, 1.0)
-                + vec3(self.g6.w) * other.g4
-                - vec3(self.g7.x) * vec3(other.g5.w, other.g9.z, other.g9.y)
-                + vec3(self.g7.y) * vec3(other.g9.z, other.g5.w, other.g9.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g7.z) * vec3(other.g9.y, other.g9.x, other.g5.w) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g8.x) * vec3(other.g10.x, other.g3.z, other.g3.y) * vec3(-1.0, -1.0, 1.0)
-                + vec3(self.g8.y) * vec3(other.g3.z, other.g10.x, other.g3.x) * vec3(1.0, -1.0, -1.0)
-                + vec3(self.g8.z) * vec3(other.g3.y, other.g3.x, other.g10.x) * vec3(-1.0, 1.0, -1.0)
-                - vec3(self.g9.x) * vec3(other.g0.y, other.g7.z, other.g7.y)
-                + vec3(self.g9.y) * vec3(other.g7.z, other.g0.y, other.g7.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g9.z) * vec3(other.g7.y, other.g7.x, other.g0.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g10.x) * other.g8
-                - vec3(self.g10.y) * vec3(other.g6.x, other.g6.y, other.g6.z),
-
-            vec2(self.g0.x) * other.g2
-                + vec2(self.g0.y) * other.g10
-                + vec2(self.g1.x) * vec2(other.g3.x, other.g5.x) * vec2(-1.0, 1.0)
-                + vec2(self.g1.y) * vec2(other.g3.y, other.g5.y) * vec2(-1.0, 1.0)
-                + vec2(self.g1.z) * vec2(other.g3.z, other.g5.z) * vec2(-1.0, 1.0)
-                + self.g2 * vec2(other.g5.w) * vec2(1.0, -1.0)
-                + self.g2 * vec2(other.g0.x)
-                + vec2(self.g3.x) * vec2(other.g7.x, 0.0) * vec2(-1.0, 0.0)
-                + vec2(self.g3.x) * vec2(other.g1.x, 0.0)
-                + vec2(self.g3.y) * vec2(other.g7.y, 0.0) * vec2(-1.0, 0.0)
-                + vec2(self.g3.y) * vec2(other.g1.y, 0.0)
-                + vec2(self.g3.z) * vec2(other.g7.z, 0.0) * vec2(-1.0, 0.0)
-                + vec2(self.g3.z) * vec2(other.g1.z, 0.0)
-                - vec2(self.g4.x) * vec2(other.g6.x, other.g8.x)
-                - vec2(self.g4.y) * vec2(other.g6.y, other.g8.y)
-                - vec2(self.g4.z) * vec2(other.g6.z, other.g8.z)
-                + vec2(self.g5.x) * vec2(0.0, other.g7.x) * vec2(0.0, -1.0)
-                + vec2(self.g5.x) * vec2(0.0, other.g1.x) * vec2(0.0, -1.0)
-                + vec2(self.g5.y) * vec2(0.0, other.g7.y) * vec2(0.0, -1.0)
-                + vec2(self.g5.y) * vec2(0.0, other.g1.y) * vec2(0.0, -1.0)
-                + vec2(self.g5.z) * vec2(0.0, other.g7.z) * vec2(0.0, -1.0)
-                + vec2(self.g5.z) * vec2(0.0, other.g1.z) * vec2(0.0, -1.0)
-                + vec2(self.g5.w) * other.g2 * vec2(-1.0, 1.0)
-                + vec2(self.g6.x) * vec2(other.g9.x, 0.0) * vec2(-1.0, 0.0)
-                + vec2(self.g6.x) * vec2(other.g4.x, 0.0) * vec2(-1.0, 0.0)
-                + vec2(self.g6.y) * vec2(other.g9.y, 0.0) * vec2(-1.0, 0.0)
-                + vec2(self.g6.y) * vec2(other.g4.y, 0.0) * vec2(-1.0, 0.0)
-                + vec2(self.g6.z) * vec2(other.g9.z, 0.0) * vec2(-1.0, 0.0)
-                + vec2(self.g6.z) * vec2(other.g4.z, 0.0) * vec2(-1.0, 0.0)
-                + vec2(self.g6.w) * other.g10 * vec2(1.0, -1.0)
-                - vec2(self.g7.x) * vec2(other.g3.x, other.g5.x)
-                - vec2(self.g7.y) * vec2(other.g3.y, other.g5.y)
-                - vec2(self.g7.z) * vec2(other.g3.z, other.g5.z)
-                + vec2(self.g8.x) * vec2(0.0, other.g9.x)
-                + vec2(self.g8.x) * vec2(0.0, other.g4.x) * vec2(0.0, -1.0)
-                + vec2(self.g8.y) * vec2(0.0, other.g9.y)
-                + vec2(self.g8.y) * vec2(0.0, other.g4.y) * vec2(0.0, -1.0)
-                + vec2(self.g8.z) * vec2(0.0, other.g9.z)
-                + vec2(self.g8.z) * vec2(0.0, other.g4.z) * vec2(0.0, -1.0)
-                + vec2(self.g9.x) * vec2(other.g6.x, other.g8.x) * vec2(1.0, -1.0)
-                + vec2(self.g9.y) * vec2(other.g6.y, other.g8.y) * vec2(1.0, -1.0)
-                + vec2(self.g9.z) * vec2(other.g6.z, other.g8.z) * vec2(1.0, -1.0)
-                + self.g10 * vec2(other.g6.w) * vec2(-1.0, 1.0)
-                + self.g10 * vec2(other.g0.y),
-
-            vec3(self.g0.x) * other.g3
-                - vec3(self.g0.y) * vec3(other.g6.x, other.g6.y, other.g6.z)
-                + vec3(self.g1.x) * vec3(other.g2.x, other.g6.z, other.g6.y) * vec3(-1.0, -1.0, 1.0)
-                + vec3(self.g1.y) * vec3(other.g6.z, other.g2.x, other.g6.x) * vec3(1.0, -1.0, -1.0)
-                + vec3(self.g1.z) * vec3(other.g6.y, other.g6.x, other.g2.x) * vec3(-1.0, 1.0, -1.0)
-                - vec3(self.g2.x) * other.g7
-                + vec3(self.g2.x) * other.g1
-                + vec3(self.g3.x) * vec3(other.g5.w, other.g9.z, other.g9.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g3.x) * vec3(other.g0.x, other.g4.z, other.g4.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g3.y) * vec3(other.g9.z, other.g5.w, other.g9.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g3.y) * vec3(other.g4.z, other.g0.x, other.g4.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g3.z) * vec3(other.g9.y, other.g9.x, other.g5.w) * vec3(1.0, -1.0, 1.0)
-                + vec3(self.g3.z) * vec3(other.g4.y, other.g4.x, other.g0.x) * vec3(1.0, -1.0, 1.0)
-                + vec3(self.g4.x) * vec3(other.g10.x, other.g3.z, other.g3.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g4.y) * vec3(other.g3.z, other.g10.x, other.g3.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g4.z) * vec3(other.g3.y, other.g3.x, other.g10.x) * vec3(1.0, -1.0, 1.0)
-                - vec3(self.g5.w) * other.g3
-                + vec3(self.g6.x) * vec3(other.g6.w, other.g7.z, other.g7.y) * vec3(1.0, -1.0, 1.0)
-                + vec3(self.g6.x) * vec3(other.g0.y, other.g1.z, other.g1.y) * vec3(-1.0, 1.0, -1.0)
-                + vec3(self.g6.y) * vec3(other.g7.z, other.g6.w, other.g7.x) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g6.y) * vec3(other.g1.z, other.g0.y, other.g1.x) * vec3(-1.0, -1.0, 1.0)
-                + vec3(self.g6.z) * vec3(other.g7.y, other.g7.x, other.g6.w) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g6.z) * vec3(other.g1.y, other.g1.x, other.g0.y) * vec3(1.0, -1.0, -1.0)
-                - vec3(self.g6.w) * vec3(other.g6.x, other.g6.y, other.g6.z)
-                + vec3(self.g7.x) * vec3(other.g2.x, other.g6.z, other.g6.y) * vec3(-1.0, -1.0, 1.0)
-                + vec3(self.g7.y) * vec3(other.g6.z, other.g2.x, other.g6.x) * vec3(1.0, -1.0, -1.0)
-                + vec3(self.g7.z) * vec3(other.g6.y, other.g6.x, other.g2.x) * vec3(-1.0, 1.0, -1.0)
-                + vec3(self.g9.x) * vec3(other.g10.x, other.g3.z, other.g3.y) * vec3(-1.0, -1.0, 1.0)
-                + vec3(self.g9.y) * vec3(other.g3.z, other.g10.x, other.g3.x) * vec3(1.0, -1.0, -1.0)
-                + vec3(self.g9.z) * vec3(other.g3.y, other.g3.x, other.g10.x) * vec3(-1.0, 1.0, -1.0)
-                + vec3(self.g10.x) * other.g9
-                + vec3(self.g10.x) * other.g4,
-
-            vec3(self.g0.x) * other.g4
-                + vec3(self.g0.y) * other.g7 * vec3(-1.0, 1.0, -1.0)
-                + vec3(self.g1.x) * vec3(other.g6.w, other.g1.z, other.g1.y) * vec3(-1.0, -1.0, 1.0)
-                + vec3(self.g1.y) * vec3(other.g1.z, other.g6.w, other.g1.x) * vec3(1.0, -1.0, -1.0)
-                + vec3(self.g1.z) * vec3(other.g1.y, other.g1.x, other.g6.w) * vec3(-1.0, 1.0, -1.0)
-                - vec3(self.g2.x) * other.g8
-                - vec3(self.g2.y) * vec3(other.g6.x, other.g6.y, other.g6.z)
-                + vec3(self.g3.x) * vec3(other.g10.y, other.g5.z, other.g5.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g3.y) * vec3(other.g5.z, other.g10.y, other.g5.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g3.z) * vec3(other.g5.y, other.g5.x, other.g10.y) * vec3(1.0, -1.0, 1.0)
-                + vec3(self.g4.x) * vec3(other.g0.x, other.g4.z, other.g4.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g4.y) * vec3(other.g4.z, other.g0.x, other.g4.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g4.z) * vec3(other.g4.y, other.g4.x, other.g0.x) * vec3(1.0, -1.0, 1.0)
-                + vec3(self.g5.x) * vec3(other.g10.x, other.g3.z, other.g3.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g5.y) * vec3(other.g3.z, other.g10.x, other.g3.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g5.z) * vec3(other.g3.y, other.g3.x, other.g10.x) * vec3(1.0, -1.0, 1.0)
-                + vec3(self.g5.w) * other.g9 * vec3(1.0, -1.0, 1.0)
-                + vec3(self.g6.x) * vec3(other.g2.y, other.g8.z, other.g8.y) * vec3(-1.0, -1.0, 1.0)
-                + vec3(self.g6.y) * vec3(other.g8.z, other.g2.y, other.g8.x) * vec3(1.0, -1.0, -1.0)
-                + vec3(self.g6.z) * vec3(other.g8.y, other.g8.x, other.g2.y) * vec3(-1.0, 1.0, -1.0)
-                - vec3(self.g6.w) * other.g1
-                - vec3(self.g7.x) * vec3(other.g0.y, other.g7.z, other.g7.y)
-                + vec3(self.g7.y) * vec3(other.g7.z, other.g0.y, other.g7.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g7.z) * vec3(other.g7.y, other.g7.x, other.g0.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g8.x) * vec3(other.g2.x, other.g6.z, other.g6.y) * vec3(-1.0, -1.0, 1.0)
-                + vec3(self.g8.y) * vec3(other.g6.z, other.g2.x, other.g6.x) * vec3(1.0, -1.0, -1.0)
-                + vec3(self.g8.z) * vec3(other.g6.y, other.g6.x, other.g2.x) * vec3(-1.0, 1.0, -1.0)
-                + vec3(self.g9.x) * vec3(other.g5.w, other.g9.z, other.g9.y)
-                + vec3(self.g9.y) * vec3(other.g9.z, other.g5.w, other.g9.x) * vec3(1.0, -1.0, -1.0)
-                + vec3(self.g9.z) * vec3(other.g9.y, other.g9.x, other.g5.w) * vec3(-1.0, -1.0, 1.0)
-                + vec3(self.g10.x) * vec3(other.g5.x, other.g5.y, other.g5.z)
-                + vec3(self.g10.y) * other.g3,
-
-            vec4(self.g0.x) * other.g5
-                + vec4(self.g0.y) * vec4(other.g8.x, other.g8.y, other.g8.z, other.g6.w) * vec4(-1.0, -1.0, -1.0, 1.0)
-                + vec4(self.g1.x) * vec4(other.g2.y, other.g8.z, other.g8.y, other.g7.x) * vec4(1.0, 1.0, -1.0, -1.0)
-                + vec4(self.g1.y) * vec4(other.g8.z, other.g2.y, other.g8.x, other.g7.y) * vec4(-1.0, 1.0, 1.0, -1.0)
-                + vec4(self.g1.z) * vec4(other.g8.y, other.g8.x, other.g2.y, other.g7.z) * vec4(1.0, -1.0, 1.0, -1.0)
-                + vec4(self.g2.x) * vec4(0.0, 0.0, 0.0, other.g2.y)
-                - vec4(self.g2.y) * vec4(other.g7.x, other.g7.y, other.g7.z, other.g2.x)
-                + vec4(self.g2.y) * vec4(other.g1.x, other.g1.y, other.g1.z, 0.0) * vec4(-1.0, -1.0, -1.0, 0.0)
-                + vec4(self.g3.x) * vec4(0.0, 0.0, 0.0, other.g5.x)
-                + vec4(self.g3.y) * vec4(0.0, 0.0, 0.0, other.g5.y)
-                + vec4(self.g3.z) * vec4(0.0, 0.0, 0.0, other.g5.z)
-                + vec4(self.g4.x) * vec4(other.g10.y, other.g5.z, other.g5.y, other.g9.x) * vec4(1.0, 1.0, -1.0, -1.0)
-                + vec4(self.g4.y) * vec4(other.g5.z, other.g10.y, other.g5.x, other.g9.y) * vec4(-1.0, 1.0, 1.0, -1.0)
-                + vec4(self.g4.z) * vec4(other.g5.y, other.g5.x, other.g10.y, other.g9.z) * vec4(1.0, -1.0, 1.0, -1.0)
-                + vec4(self.g5.x) * vec4(other.g5.w, other.g9.z, other.g9.y, other.g3.x) * vec4(-1.0, -1.0, 1.0, -1.0)
-                + vec4(self.g5.x) * vec4(other.g0.x, other.g4.z, other.g4.y, 0.0) * vec4(1.0, 1.0, -1.0, 0.0)
-                + vec4(self.g5.y) * vec4(other.g9.z, other.g5.w, other.g9.x, other.g3.y) * vec4(1.0, -1.0, -1.0, -1.0)
-                + vec4(self.g5.y) * vec4(other.g4.z, other.g0.x, other.g4.x, 0.0) * vec4(-1.0, 1.0, 1.0, 0.0)
-                + vec4(self.g5.z) * vec4(other.g9.y, other.g9.x, other.g5.w, other.g3.z) * vec4(-1.0, 1.0, -1.0, -1.0)
-                + vec4(self.g5.z) * vec4(other.g4.y, other.g4.x, other.g0.x, 0.0) * vec4(1.0, -1.0, 1.0, 0.0)
-                + vec4(self.g5.w) * vec4(other.g5.x, other.g5.y, other.g5.z, other.g0.x)
-                + vec4(self.g6.x) * vec4(0.0, 0.0, 0.0, other.g8.x) * vec4(0.0, 0.0, 0.0, -1.0)
-                + vec4(self.g6.y) * vec4(0.0, 0.0, 0.0, other.g8.y) * vec4(0.0, 0.0, 0.0, -1.0)
-                + vec4(self.g6.z) * vec4(0.0, 0.0, 0.0, other.g8.z) * vec4(0.0, 0.0, 0.0, -1.0)
-                + vec4(self.g6.w) * vec4(other.g8.x, other.g8.y, other.g8.z, other.g0.y)
-                + vec4(self.g7.x) * vec4(other.g2.y, other.g8.z, other.g8.y, other.g1.x) * vec4(-1.0, -1.0, 1.0, -1.0)
-                + vec4(self.g7.y) * vec4(other.g8.z, other.g2.y, other.g8.x, other.g1.y) * vec4(1.0, -1.0, -1.0, -1.0)
-                + vec4(self.g7.z) * vec4(other.g8.y, other.g8.x, other.g2.y, other.g1.z) * vec4(-1.0, 1.0, -1.0, -1.0)
-                + vec4(self.g8.x) * vec4(other.g6.w, other.g7.z, other.g7.y, other.g6.x) * vec4(-1.0, -1.0, 1.0, 1.0)
-                + vec4(self.g8.x) * vec4(other.g0.y, other.g1.z, other.g1.y, 0.0) * vec4(-1.0, -1.0, 1.0, 0.0)
-                + vec4(self.g8.y) * vec4(other.g7.z, other.g6.w, other.g7.x, other.g6.y) * vec4(1.0, -1.0, -1.0, 1.0)
-                + vec4(self.g8.y) * vec4(other.g1.z, other.g0.y, other.g1.x, 0.0) * vec4(1.0, -1.0, -1.0, 0.0)
-                + vec4(self.g8.z) * vec4(other.g7.y, other.g7.x, other.g6.w, other.g6.z) * vec4(-1.0, 1.0, -1.0, 1.0)
-                + vec4(self.g8.z) * vec4(other.g1.y, other.g1.x, other.g0.y, 0.0) * vec4(-1.0, 1.0, -1.0, 0.0)
-                + vec4(self.g9.x) * vec4(other.g10.y, other.g5.z, other.g5.y, other.g4.x) * vec4(1.0, 1.0, -1.0, -1.0)
-                + vec4(self.g9.y) * vec4(other.g5.z, other.g10.y, other.g5.x, other.g4.y) * vec4(-1.0, 1.0, 1.0, -1.0)
-                + vec4(self.g9.z) * vec4(other.g5.y, other.g5.x, other.g10.y, other.g4.z) * vec4(1.0, -1.0, 1.0, -1.0)
-                + vec4(self.g10.x) * vec4(0.0, 0.0, 0.0, other.g10.y) * vec4(0.0, 0.0, 0.0, -1.0)
-                + vec4(self.g10.y) * vec4(other.g9.x, other.g9.y, other.g9.z, other.g10.x) * vec4(-1.0, -1.0, -1.0, 1.0)
-                + vec4(self.g10.y) * vec4(other.g4.x, other.g4.y, other.g4.z, 0.0),
-
-            vec4(self.g0.x) * other.g6
-                + vec4(self.g0.y) * vec4(other.g3.x, other.g3.y, other.g3.z, other.g5.w) * vec4(1.0, 1.0, 1.0, -1.0)
-                + vec4(self.g1.x) * vec4(other.g10.x, other.g3.z, other.g3.y, other.g4.x) * vec4(1.0, 1.0, -1.0, -1.0)
-                + vec4(self.g1.y) * vec4(other.g3.z, other.g10.x, other.g3.x, other.g4.y) * vec4(-1.0, 1.0, 1.0, -1.0)
-                + vec4(self.g1.z) * vec4(other.g3.y, other.g3.x, other.g10.x, other.g4.z) * vec4(1.0, -1.0, 1.0, -1.0)
-                + vec4(self.g2.x) * vec4(other.g9.x, other.g9.y, other.g9.z, other.g10.y)
-                + vec4(self.g2.x) * vec4(other.g4.x, other.g4.y, other.g4.z, 0.0)
-                + vec4(self.g2.y) * vec4(0.0, 0.0, 0.0, other.g10.x) * vec4(0.0, 0.0, 0.0, -1.0)
-                + vec4(self.g3.x) * vec4(other.g6.w, other.g7.z, other.g7.y, other.g8.x) * vec4(-1.0, 1.0, -1.0, -1.0)
-                + vec4(self.g3.x) * vec4(other.g0.y, other.g1.z, other.g1.y, 0.0) * vec4(1.0, -1.0, 1.0, 0.0)
-                + vec4(self.g3.y) * vec4(other.g7.z, other.g6.w, other.g7.x, other.g8.y) * vec4(-1.0, -1.0, 1.0, -1.0)
-                + vec4(self.g3.y) * vec4(other.g1.z, other.g0.y, other.g1.x, 0.0) * vec4(1.0, 1.0, -1.0, 0.0)
-                + vec4(self.g3.z) * vec4(other.g7.y, other.g7.x, other.g6.w, other.g8.z) * vec4(1.0, -1.0, -1.0, -1.0)
-                + vec4(self.g3.z) * vec4(other.g1.y, other.g1.x, other.g0.y, 0.0) * vec4(-1.0, 1.0, 1.0, 0.0)
-                + vec4(self.g4.x) * vec4(other.g2.x, other.g6.z, other.g6.y, other.g1.x) * vec4(1.0, 1.0, -1.0, -1.0)
-                + vec4(self.g4.y) * vec4(other.g6.z, other.g2.x, other.g6.x, other.g1.y) * vec4(-1.0, 1.0, 1.0, -1.0)
-                + vec4(self.g4.z) * vec4(other.g6.y, other.g6.x, other.g2.x, other.g1.z) * vec4(1.0, -1.0, 1.0, -1.0)
-                + vec4(self.g5.x) * vec4(0.0, 0.0, 0.0, other.g6.x)
-                + vec4(self.g5.y) * vec4(0.0, 0.0, 0.0, other.g6.y)
-                + vec4(self.g5.z) * vec4(0.0, 0.0, 0.0, other.g6.z)
-                - vec4(self.g5.w) * vec4(other.g6.x, other.g6.y, other.g6.z, other.g0.y)
-                + vec4(self.g6.x) * vec4(other.g5.w, other.g9.z, other.g9.y, other.g5.x) * vec4(1.0, 1.0, -1.0, -1.0)
-                + vec4(self.g6.x) * vec4(other.g0.x, other.g4.z, other.g4.y, 0.0) * vec4(1.0, 1.0, -1.0, 0.0)
-                + vec4(self.g6.y) * vec4(other.g9.z, other.g5.w, other.g9.x, other.g5.y) * vec4(-1.0, 1.0, 1.0, -1.0)
-                + vec4(self.g6.y) * vec4(other.g4.z, other.g0.x, other.g4.x, 0.0) * vec4(-1.0, 1.0, 1.0, 0.0)
-                + vec4(self.g6.z) * vec4(other.g9.y, other.g9.x, other.g5.w, other.g5.z) * vec4(1.0, -1.0, 1.0, -1.0)
-                + vec4(self.g6.z) * vec4(other.g4.y, other.g4.x, other.g0.x, 0.0) * vec4(1.0, -1.0, 1.0, 0.0)
-                + vec4(self.g6.w) * vec4(other.g3.x, other.g3.y, other.g3.z, other.g0.x)
-                + vec4(self.g7.x) * vec4(other.g10.x, other.g3.z, other.g3.y, other.g9.x) * vec4(1.0, 1.0, -1.0, 1.0)
-                + vec4(self.g7.y) * vec4(other.g3.z, other.g10.x, other.g3.x, other.g9.y) * vec4(-1.0, 1.0, 1.0, 1.0)
-                + vec4(self.g7.z) * vec4(other.g3.y, other.g3.x, other.g10.x, other.g9.z) * vec4(1.0, -1.0, 1.0, 1.0)
-                + vec4(self.g8.x) * vec4(0.0, 0.0, 0.0, other.g3.x)
-                + vec4(self.g8.y) * vec4(0.0, 0.0, 0.0, other.g3.y)
-                + vec4(self.g8.z) * vec4(0.0, 0.0, 0.0, other.g3.z)
-                + vec4(self.g9.x) * vec4(other.g2.x, other.g6.z, other.g6.y, other.g7.x) * vec4(-1.0, -1.0, 1.0, 1.0)
-                + vec4(self.g9.y) * vec4(other.g6.z, other.g2.x, other.g6.x, other.g7.y) * vec4(1.0, -1.0, -1.0, 1.0)
-                + vec4(self.g9.z) * vec4(other.g6.y, other.g6.x, other.g2.x, other.g7.z) * vec4(-1.0, 1.0, -1.0, 1.0)
-                + vec4(self.g10.x) * vec4(other.g7.x, other.g7.y, other.g7.z, other.g2.y)
-                + vec4(self.g10.x) * vec4(other.g1.x, other.g1.y, other.g1.z, 0.0) * vec4(-1.0, -1.0, -1.0, 0.0)
-                + vec4(self.g10.y) * vec4(0.0, 0.0, 0.0, other.g2.x) * vec4(0.0, 0.0, 0.0, -1.0),
-
-            vec3(self.g0.x) * other.g7
-                + vec3(self.g0.y) * other.g4
-                + vec3(self.g1.x) * vec3(other.g5.w, other.g9.z, other.g9.y) * vec3(-1.0, -1.0, 1.0)
-                + vec3(self.g1.y) * vec3(other.g9.z, other.g5.w, other.g9.x) * vec3(1.0, -1.0, -1.0)
-                + vec3(self.g1.z) * vec3(other.g9.y, other.g9.x, other.g5.w) * vec3(-1.0, 1.0, -1.0)
-                + vec3(self.g2.x) * vec3(other.g5.x, other.g5.y, other.g5.z)
-                + vec3(self.g2.y) * other.g3
-                + vec3(self.g3.x) * vec3(other.g2.y, other.g8.z, other.g8.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g3.y) * vec3(other.g8.z, other.g2.y, other.g8.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g3.z) * vec3(other.g8.y, other.g8.x, other.g2.y) * vec3(1.0, -1.0, 1.0)
-                + vec3(self.g4.x) * vec3(other.g0.y, other.g7.z, other.g7.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g4.y) * vec3(other.g7.z, other.g0.y, other.g7.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g4.z) * vec3(other.g7.y, other.g7.x, other.g0.y) * vec3(1.0, -1.0, 1.0)
-                + vec3(self.g5.x) * vec3(other.g2.x, other.g6.z, other.g6.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g5.y) * vec3(other.g6.z, other.g2.x, other.g6.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g5.z) * vec3(other.g6.y, other.g6.x, other.g2.x) * vec3(1.0, -1.0, 1.0)
-                - vec3(self.g5.w) * other.g1
-                + vec3(self.g6.x) * vec3(other.g10.y, other.g5.z, other.g5.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g6.y) * vec3(other.g5.z, other.g10.y, other.g5.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g6.z) * vec3(other.g5.y, other.g5.x, other.g10.y) * vec3(1.0, -1.0, 1.0)
-                - vec3(self.g6.w) * other.g9
-                + vec3(self.g7.x) * vec3(other.g0.x, other.g4.z, other.g4.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g7.y) * vec3(other.g4.z, other.g0.x, other.g4.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g7.z) * vec3(other.g4.y, other.g4.x, other.g0.x) * vec3(1.0, -1.0, 1.0)
-                + vec3(self.g8.x) * vec3(other.g10.x, other.g3.z, other.g3.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g8.y) * vec3(other.g3.z, other.g10.x, other.g3.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g8.z) * vec3(other.g3.y, other.g3.x, other.g10.x) * vec3(1.0, -1.0, 1.0)
-                + vec3(self.g9.x) * vec3(other.g6.w, other.g1.z, other.g1.y) * vec3(-1.0, -1.0, 1.0)
-                + vec3(self.g9.y) * vec3(other.g1.z, other.g6.w, other.g1.x) * vec3(1.0, -1.0, -1.0)
-                + vec3(self.g9.z) * vec3(other.g1.y, other.g1.x, other.g6.w) * vec3(-1.0, 1.0, -1.0)
-                + vec3(self.g10.x) * other.g8
-                + vec3(self.g10.y) * vec3(other.g6.x, other.g6.y, other.g6.z),
-
-            vec3(self.g0.x) * other.g8
-                + vec3(self.g0.y) * vec3(other.g5.x, other.g5.y, other.g5.z)
-                + vec3(self.g1.x) * vec3(other.g10.y, other.g5.z, other.g5.y) * vec3(-1.0, -1.0, 1.0)
-                + vec3(self.g1.y) * vec3(other.g5.z, other.g10.y, other.g5.x) * vec3(1.0, -1.0, -1.0)
-                + vec3(self.g1.z) * vec3(other.g5.y, other.g5.x, other.g10.y) * vec3(-1.0, 1.0, -1.0)
-                - vec3(self.g2.y) * other.g9
-                + vec3(self.g2.y) * other.g4
-                + vec3(self.g4.x) * vec3(other.g2.y, other.g8.z, other.g8.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g4.y) * vec3(other.g8.z, other.g2.y, other.g8.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g4.z) * vec3(other.g8.y, other.g8.x, other.g2.y) * vec3(1.0, -1.0, 1.0)
-                + vec3(self.g5.x) * vec3(other.g6.w, other.g7.z, other.g7.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g5.x) * vec3(other.g0.y, other.g1.z, other.g1.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g5.y) * vec3(other.g7.z, other.g6.w, other.g7.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g5.y) * vec3(other.g1.z, other.g0.y, other.g1.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g5.z) * vec3(other.g7.y, other.g7.x, other.g6.w) * vec3(1.0, -1.0, 1.0)
-                + vec3(self.g5.z) * vec3(other.g1.y, other.g1.x, other.g0.y) * vec3(1.0, -1.0, 1.0)
-                + vec3(self.g5.w) * other.g8
-                + vec3(self.g6.w) * vec3(other.g5.x, other.g5.y, other.g5.z)
-                + vec3(self.g7.x) * vec3(other.g10.y, other.g5.z, other.g5.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g7.y) * vec3(other.g5.z, other.g10.y, other.g5.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g7.z) * vec3(other.g5.y, other.g5.x, other.g10.y) * vec3(1.0, -1.0, 1.0)
-                + vec3(self.g8.x) * vec3(other.g5.w, other.g9.z, other.g9.y) * vec3(-1.0, -1.0, 1.0)
-                + vec3(self.g8.x) * vec3(other.g0.x, other.g4.z, other.g4.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g8.y) * vec3(other.g9.z, other.g5.w, other.g9.x) * vec3(1.0, -1.0, -1.0)
-                + vec3(self.g8.y) * vec3(other.g4.z, other.g0.x, other.g4.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g8.z) * vec3(other.g9.y, other.g9.x, other.g5.w) * vec3(-1.0, 1.0, -1.0)
-                + vec3(self.g8.z) * vec3(other.g4.y, other.g4.x, other.g0.x) * vec3(1.0, -1.0, 1.0)
-                + vec3(self.g9.x) * vec3(other.g2.y, other.g8.z, other.g8.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g9.y) * vec3(other.g8.z, other.g2.y, other.g8.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g9.z) * vec3(other.g8.y, other.g8.x, other.g2.y) * vec3(1.0, -1.0, 1.0)
-                + vec3(self.g10.y) * other.g7
-                + vec3(self.g10.y) * other.g1,
-
-            vec3(self.g0.x) * other.g9
-                + vec3(self.g0.y) * other.g1
-                + vec3(self.g1.x) * vec3(other.g0.y, other.g7.z, other.g7.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g1.y) * vec3(other.g7.z, other.g0.y, other.g7.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g1.z) * vec3(other.g7.y, other.g7.x, other.g0.y) * vec3(1.0, -1.0, 1.0)
-                + vec3(self.g2.x) * other.g8
-                - vec3(self.g2.y) * vec3(other.g6.x, other.g6.y, other.g6.z)
-                + vec3(self.g3.x) * vec3(other.g10.y, other.g5.z, other.g5.y) * vec3(-1.0, -1.0, 1.0)
-                + vec3(self.g3.y) * vec3(other.g5.z, other.g10.y, other.g5.x) * vec3(1.0, -1.0, -1.0)
-                + vec3(self.g3.z) * vec3(other.g5.y, other.g5.x, other.g10.y) * vec3(-1.0, 1.0, -1.0)
-                + vec3(self.g4.x) * vec3(other.g5.w, other.g9.z, other.g9.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g4.y) * vec3(other.g9.z, other.g5.w, other.g9.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g4.z) * vec3(other.g9.y, other.g9.x, other.g5.w) * vec3(1.0, -1.0, 1.0)
-                + vec3(self.g5.x) * vec3(other.g10.x, other.g3.z, other.g3.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g5.y) * vec3(other.g3.z, other.g10.x, other.g3.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g5.z) * vec3(other.g3.y, other.g3.x, other.g10.x) * vec3(1.0, -1.0, 1.0)
-                + vec3(self.g5.w) * other.g4
-                + vec3(self.g6.x) * vec3(other.g2.y, other.g8.z, other.g8.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g6.y) * vec3(other.g8.z, other.g2.y, other.g8.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g6.z) * vec3(other.g8.y, other.g8.x, other.g2.y) * vec3(1.0, -1.0, 1.0)
-                + vec3(self.g6.w) * other.g7
-                + vec3(self.g7.x) * vec3(other.g6.w, other.g1.z, other.g1.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g7.y) * vec3(other.g1.z, other.g6.w, other.g1.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g7.z) * vec3(other.g1.y, other.g1.x, other.g6.w) * vec3(1.0, -1.0, 1.0)
-                + vec3(self.g8.x) * vec3(other.g2.x, other.g6.z, other.g6.y) * vec3(-1.0, -1.0, 1.0)
-                + vec3(self.g8.y) * vec3(other.g6.z, other.g2.x, other.g6.x) * vec3(1.0, -1.0, -1.0)
-                + vec3(self.g8.z) * vec3(other.g6.y, other.g6.x, other.g2.x) * vec3(-1.0, 1.0, -1.0)
-                + vec3(self.g9.x) * vec3(other.g0.x, other.g4.z, other.g4.y) * vec3(1.0, 1.0, -1.0)
-                + vec3(self.g9.y) * vec3(other.g4.z, other.g0.x, other.g4.x) * vec3(-1.0, 1.0, 1.0)
-                + vec3(self.g9.z) * vec3(other.g4.y, other.g4.x, other.g0.x) * vec3(1.0, -1.0, 1.0)
-                - vec3(self.g10.x) * vec3(other.g5.x, other.g5.y, other.g5.z)
-                + vec3(self.g10.y) * other.g3,
-
-            vec2(self.g0.x) * other.g10
-                - vec2(self.g0.y) * other.g2
-                + vec2(self.g1.x) * vec2(other.g6.x, other.g8.x) * vec2(1.0, -1.0)
-                + vec2(self.g1.y) * vec2(other.g6.y, other.g8.y) * vec2(1.0, -1.0)
-                + vec2(self.g1.z) * vec2(other.g6.z, other.g8.z) * vec2(1.0, -1.0)
-                + self.g2 * vec2(other.g6.w) * vec2(1.0, -1.0)
-                - self.g2 * vec2(other.g0.y)
-                + vec2(self.g3.x) * vec2(other.g9.x, 0.0) * vec2(-1.0, 0.0)
-                + vec2(self.g3.x) * vec2(other.g4.x, 0.0) * vec2(-1.0, 0.0)
-                + vec2(self.g3.y) * vec2(other.g9.y, 0.0) * vec2(-1.0, 0.0)
-                + vec2(self.g3.y) * vec2(other.g4.y, 0.0) * vec2(-1.0, 0.0)
-                + vec2(self.g3.z) * vec2(other.g9.z, 0.0) * vec2(-1.0, 0.0)
-                + vec2(self.g3.z) * vec2(other.g4.z, 0.0) * vec2(-1.0, 0.0)
-                - vec2(self.g4.x) * vec2(other.g3.x, other.g5.x)
-                - vec2(self.g4.y) * vec2(other.g3.y, other.g5.y)
-                - vec2(self.g4.z) * vec2(other.g3.z, other.g5.z)
-                + vec2(self.g5.x) * vec2(0.0, other.g9.x)
-                + vec2(self.g5.x) * vec2(0.0, other.g4.x) * vec2(0.0, -1.0)
-                + vec2(self.g5.y) * vec2(0.0, other.g9.y)
-                + vec2(self.g5.y) * vec2(0.0, other.g4.y) * vec2(0.0, -1.0)
-                + vec2(self.g5.z) * vec2(0.0, other.g9.z)
-                + vec2(self.g5.z) * vec2(0.0, other.g4.z) * vec2(0.0, -1.0)
-                + vec2(self.g5.w) * other.g10 * vec2(-1.0, 1.0)
-                + vec2(self.g6.x) * vec2(other.g7.x, 0.0)
-                + vec2(self.g6.x) * vec2(other.g1.x, 0.0) * vec2(-1.0, 0.0)
-                + vec2(self.g6.y) * vec2(other.g7.y, 0.0)
-                + vec2(self.g6.y) * vec2(other.g1.y, 0.0) * vec2(-1.0, 0.0)
-                + vec2(self.g6.z) * vec2(other.g7.z, 0.0)
-                + vec2(self.g6.z) * vec2(other.g1.z, 0.0) * vec2(-1.0, 0.0)
-                + vec2(self.g6.w) * other.g2 * vec2(-1.0, 1.0)
-                + vec2(self.g7.x) * vec2(other.g6.x, other.g8.x)
-                + vec2(self.g7.y) * vec2(other.g6.y, other.g8.y)
-                + vec2(self.g7.z) * vec2(other.g6.z, other.g8.z)
-                + vec2(self.g8.x) * vec2(0.0, other.g7.x)
-                + vec2(self.g8.x) * vec2(0.0, other.g1.x)
-                + vec2(self.g8.y) * vec2(0.0, other.g7.y)
-                + vec2(self.g8.y) * vec2(0.0, other.g1.y)
-                + vec2(self.g8.z) * vec2(0.0, other.g7.z)
-                + vec2(self.g8.z) * vec2(0.0, other.g1.z)
-                + vec2(self.g9.x) * vec2(other.g3.x, other.g5.x) * vec2(1.0, -1.0)
-                + vec2(self.g9.y) * vec2(other.g3.y, other.g5.y) * vec2(1.0, -1.0)
-                + vec2(self.g9.z) * vec2(other.g3.z, other.g5.z) * vec2(1.0, -1.0)
-                + self.g10 * vec2(other.g5.w) * vec2(1.0, -1.0)
-                + self.g10 * vec2(other.g0.x)
-        );
-    }
-
-
-    */
 
     let module = match glsl_frontend.parse(&options, glsl_contents.as_str()) {
         Ok(m) => m,

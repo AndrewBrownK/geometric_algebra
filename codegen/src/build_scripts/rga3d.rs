@@ -16,8 +16,6 @@ pub fn script() -> std::io::Result<()> {
 
 //noinspection DuplicatedCode
 fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> {
-    // TODO more precise rerun conditions
-    //  https://doc.rust-lang.org/cargo/reference/build-scripts.html#outputs-of-the-build-script
 
     let mv_iter = [
         "Scalar:1",
@@ -65,8 +63,6 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
     let mut code_gen = CodeGenerator::new(rga3d);
     code_gen.preamble_and_universal_traits(&registry).unwrap();
     code_gen.basic_norms(&registry);
-    // TODO fancy norms
-    // code_gen.fancy_norms()
     code_gen.post_norm_universal_stuff(&registry);
     code_gen.attitude_and_dependencies("Horizon", &registry);
 

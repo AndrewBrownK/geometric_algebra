@@ -19,7 +19,6 @@ pub trait GeometricAlgebraTrait {
         let mut v = vec![];
         for index in 0..self.basis_size() as BasisElementIndex {
             let mut element = BasisElement::from_index(index);
-            // TODO maybe this actually requires a dual instead of a right_complement
             let dual = self.dual(&element);
             if dual.cmp(&element) == std::cmp::Ordering::Less {
                 element.coefficient = self.dual(&element).coefficient;
@@ -276,11 +275,6 @@ impl Product {
         let scalar_result_only: fn(usize, usize, usize, usize) -> bool = |_, factor_a_grade, factor_b_grade, product_grade| {
             product_grade == 0 && (factor_a_grade == factor_b_grade)
         };
-        // TODO found the problem
-        //  Cannot find product where it is supposed to exist: Scalar AntiDot Scalar. Product terms: Product(e12 * e34 = e1234, e13 * -e24 = e1234, e23 * e14 = e1234, e14 * e23 = e1234, -e24 * e13 = e1234, e34 * e12 = e1234)
-        //  The problem is that this filter only works on the geometric_anti_product, but is being used on the geometric_product.
-        //  Probably should do the same fix to anti_wedge_like.
-        //  This could result it tons of mathematical changes/fixes to all anti products, even back in rga3d. Should be fun to see.
         let anti_scalar_result_only: fn(usize, usize, usize, usize) -> bool = |max_grade, factor_a_grade, factor_b_grade, product_grade| {
             product_grade == max_grade
         };

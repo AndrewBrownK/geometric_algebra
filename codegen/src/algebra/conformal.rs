@@ -81,7 +81,6 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
         let mut v = vec![];
         for index in 0..self.basis_size() as BasisElementIndex {
             let mut element = BasisElement::from_index(index);
-            // TODO maybe this actually requires a dual instead of a right_complement
             let dual = self.dual(&element);
             if dual.cmp(&element) == std::cmp::Ordering::Less {
                 element.coefficient = self.dual(&element).coefficient;
