@@ -80,7 +80,7 @@ fn conformal_3d_geometric_products() {
     let dialect = Dialect::default();
     let cga3d = ConformalGeometricAlgebra::new("cga3d", 3, dialect);
     // https://conformalgeometricalgebra.org/wiki/index.php?title=Geometric_products
-    let correct_cayley_table = [
+    let correct_cayley_table = {[
         ("1", "1", vec!["1"]),
         ("1", "e1", vec!["e1"]),
         ("1", "e2", vec!["e2"]),
@@ -1105,7 +1105,7 @@ fn conformal_3d_geometric_products() {
         ("e12345", "e4315", vec!["-e2"]),
         ("e12345", "e4235", vec!["-e1"]),
         ("e12345", "e12345", vec!["-1"]),
-    ];
+    ]};
     let mut failures = 0;
     let mut correct_products = BTreeMap::new();
     for (a, b, products) in correct_cayley_table {
@@ -1154,7 +1154,7 @@ fn conformal_3d_geometric_anti_products() {
     let dialect = Dialect::default();
     let cga3d = ConformalGeometricAlgebra::new("cga3d", 3, dialect);
     // https://conformalgeometricalgebra.org/wiki/index.php?title=Geometric_products
-    let correct_cayley_table = [
+    let correct_cayley_table = {[
         ("1", "1", vec!["-e12345"]),
         ("1", "e1", vec!["-e4235"]),
         ("1", "e2", vec!["-e4315"]),
@@ -2179,7 +2179,7 @@ fn conformal_3d_geometric_anti_products() {
         ("e12345", "e4315", vec!["e4315"]),
         ("e12345", "e4235", vec!["e4235"]),
         ("e12345", "e12345", vec!["e12345"]),
-    ];
+    ]};
     let mut failures = 0;
     let mut correct_products = BTreeMap::new();
     for (a, b, products) in correct_cayley_table {

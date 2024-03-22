@@ -256,46 +256,61 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
         // We need to reproduce this Cayley table.
         // https://conformalgeometricalgebra.org/wiki/index.php?title=Geometric_products
 
-        let mut result = vec![];
-
-        let trivial_product = a.primitive_anti_product(b, &self.surface_generator_squares);
-        if trivial_product.coefficient != 0 {
-            result.push(trivial_product.clone());
+        let a = self.right_complement(a);
+        let b = self.right_complement(b);
+        let mut results = self.product(&a, &b);
+        for mut r in results.iter_mut() {
+            *r = self.left_complement(&r);
+            r.coefficient = -1 * r.coefficient;
         }
-
-        let anti_scalar = self.anti_scalar_element().index;
-        let origin = (1 as BasisElementIndex) << self.origin;
-        let anti_origin = anti_scalar - origin;
-        let infinity = (1 as BasisElementIndex) << self.infinity;
-        let anti_infinity = anti_scalar - infinity;
-        let projective = origin | infinity;
-        let anti_projective = anti_scalar - projective;
-
-        let projective_basis = BasisElement::from_index(projective);
-        let anti_projective_basis = BasisElement::from_index(anti_projective);
-
-        let a_is_projective = (a.index & projective) == projective;
-        let b_is_projective = (b.index & projective) == projective;
-        // TODO this branch isn't correct yet
-        if !a_is_projective && !b_is_projective {
-            // primitive product should be zero
-            assert!(result.is_empty());
-            // Then we add the non-trivial part of this product (the only part of this product)
-            let mut a = a.clone();
-            let mut b = b.clone();
-            a.index = anti_scalar - a.index;
-            b.index = anti_scalar - b.index;
-            let mut result = a.primitive_anti_product(&b, &self.surface_generator_squares);
-            // assert_eq!(result.index & projective, 0);
-            result.coefficient = -1 * a.coefficient * b.coefficient * result.coefficient;
-            return vec![result];
-        }
+        return results;
 
 
-
-        // TODO
-
-        return result;
+        // let mut result = vec![];
+        //
+        // let trivial_product = a.primitive_anti_product(b, &self.surface_generator_squares);
+        // if trivial_product.coefficient != 0 {
+        //     result.push(trivial_product.clone());
+        // }
+        //
+        // let anti_scalar = self.anti_scalar_element().index;
+        // let origin = (1 as BasisElementIndex) << self.origin;
+        // let anti_origin = anti_scalar - origin;
+        // let infinity = (1 as BasisElementIndex) << self.infinity;
+        // let anti_infinity = anti_scalar - infinity;
+        // let projective = origin | infinity;
+        // let anti_projective = anti_scalar - projective;
+        //
+        // let projective_basis = BasisElement::from_index(projective);
+        // let anti_projective_basis = BasisElement::from_index(anti_projective);
+        //
+        // let a_is_projective = (a.index & projective) == projective;
+        // let b_is_projective = (b.index & projective) == projective;
+        // // TODO this branch isn't correct yet
+        // if !a_is_projective && !b_is_projective {
+        //     // primitive product should be zero
+        //     assert!(result.is_empty());
+        //     // Then we add the non-trivial part of this product (the only part of this product)
+        //     // let mut a = a.clone();
+        //     // let mut b = b.clone();
+        //     let a_sign = a.coefficient;
+        //     let b_sign = b.coefficient;
+        //     let mut a =  self.right_complement(&a);
+        //     let mut b =  self.right_complement(&b);
+        //     a.index = a.index & anti_projective;
+        //     b.index = b.index & anti_projective;
+        //     let mut result = a.primitive_product(&b, &self.surface_generator_squares);
+        //     // assert_eq!(result.index & projective, 0);
+        //     result = self.left_complement(&result);
+        //     result.coefficient = -1 * a_sign * b_sign * result.coefficient;
+        //     return vec![result];
+        // }
+        //
+        //
+        //
+        // // TODO
+        //
+        // return result;
     }
 }
 
