@@ -5,70 +5,7 @@ use crate::algebra::conformal::ConformalGeometricAlgebra;
 use crate::algebra::dialect::Dialect;
 use crate::algebra::GeometricAlgebraTrait;
 
-/*
-// TODO me thinks this test is probably not actually necessary
-//  but I won't be fully decided until I truly generalize the "dual"
-//  operation for conformal GAs of all dimensions.
-//
-// #[test]
-// fn conformal_3d_basis_signs() {
-//     let dialect = Dialect::default();
-//     let cga3d = ConformalGeometricAlgebra::new("cga3d", 3, dialect);
-//
-//     let correct_basis_indices = {[
-//         "1",
-//         "e1",
-//         "e2",
-//         "e3",
-//         "e4",
-//         "e5",
-//         "e41",
-//         "e42",
-//         "e43",
-//         "e23",
-//         "e31",
-//         "e12",
-//         "e15",
-//         "e25",
-//         "e35",
-//         "e45",
-//         "e423",
-//         "e431",
-//         "e412",
-//         "e321",
-//         "e415",
-//         "e425",
-//         "e435",
-//         "e235",
-//         "e315",
-//         "e125",
-//         "e4235",
-//         "e4315",
-//         "e4125",
-//         "e1234",
-//         "e12345",
-//         "e3215",
-//     ]};
-//     let mut correct_bases = BTreeMap::new();
-//     for index in correct_basis_indices {
-//         let element = cga3d.parse(index);
-//         correct_bases.insert(element.index, element);
-//     }
-//     let mut violations = vec![];
-//     for base in cga3d.sorted_basis() {
-//         match correct_bases.remove(&base.index) {
-//             None => panic!("The correct basis signs must be fully specified, missing {base}"),
-//             Some(correct_element) => if correct_element.coefficient != base.coefficient {
-//                 violations.push((base, correct_element));
-//             },
-//         }
-//     }
-//     if !violations.is_empty() {
-//         let (incorrect, correct) = violations.into_iter().map(|(a, b)| (a.to_string(), b.to_string())).unzip::<_, _, Vec<_>, Vec<_>>();
-//         panic!("The basis element {incorrect:?} is supposed to be {correct:?}");
-//     }
-// }
-*/
+
 
 #[test]
 fn conformal_3d_right_complements() {
@@ -1843,7 +1780,7 @@ fn conformal_3d_geometric_anti_products() {
         ("e15", "e412", vec!["e4315", "-e31"]),
         ("e15", "e431", vec!["e12", "-e4125"]),
         ("e15", "e423", vec!["e45", "-1"]),
-        ("e15", "e1234", vec!["e1", "-e415"]),
+        ("e15", "e1234", vec!["-e1", "-e415"]),
         ("e15", "e5", vec![]),
         ("e15", "e15", vec![]),
         ("e15", "e25", vec![]),
@@ -2310,43 +2247,41 @@ fn conformal_3d_geometric_anti_products() {
         ("e12345", "e12345", vec!["e12345"]),
     ]};
     let mut failures = 0;
-    let mut correct_products = BTreeMap::new();
-    for (a, b, products) in correct_cayley_table {
+    let mut correct_anti_products = BTreeMap::new();
+    for (a, b, anti_products) in correct_cayley_table {
         let a = cga3d.parse(a);
         let b = cga3d.parse(b);
-        let mut products_set = BTreeSet::new();
-        for product in products {
-            products_set.insert(cga3d.parse(product));
+        let mut anti_products_set = vec![];
+        for anti_product in anti_products {
+            anti_products_set.push(cga3d.parse(anti_product));
         }
-        correct_products.insert((a.index, b.index), (a.coefficient * b.coefficient, products_set));
+        correct_anti_products.insert((a.index, b.index), (a.coefficient, b.coefficient, anti_products_set));
     }
 
-    for a in cga3d.sorted_basis() {
-        for b in cga3d.sorted_basis() {
-            let mut calculated_product = vec![];
-            for p in cga3d.anti_product(&a, &b) {
-                calculated_product.push(p);
-            }
-            calculated_product.sort_unstable();
+    for mut a in cga3d.sorted_basis() {
+        for mut b in cga3d.sorted_basis() {
 
-            let (sign, correct_product) = correct_products
+            let (a_sign, b_sign, mut correct_anti_product) = correct_anti_products
                 .remove(&(a.index, b.index))
                 .unwrap_or_else(|| panic!("Cayley table must be complete, missing {a} * {b}"));
-            let correct_product: Vec<_> = correct_product
-                .into_iter()
-                .map(|mut it| {
-                    it.coefficient = it.coefficient * sign;
-                    it
-                })
-                .collect();
+            correct_anti_product.sort_unstable();
 
-            if calculated_product != correct_product {
-                let calculated: Vec<_> = calculated_product.into_iter().map(|it| it.to_string()).collect();
-                let correct: Vec<_> = correct_product.into_iter().map(|it| it.to_string()).collect();
+            a.coefficient = a_sign;
+            b.coefficient = b_sign;
+
+            let mut calculated_anti_product = vec![];
+            for p in cga3d.anti_product(&a, &b) {
+                calculated_anti_product.push(p);
+            }
+            calculated_anti_product.sort_unstable();
+
+            if calculated_anti_product != correct_anti_product {
+                let calculated: Vec<_> = calculated_anti_product.into_iter().map(|it| it.to_string()).collect();
+                let correct: Vec<_> = correct_anti_product.into_iter().map(|it| it.to_string()).collect();
                 eprintln!("{a} * {b} was calculated as {calculated:?}, but we expected {correct:?}");
                 failures = failures + 1;
             }
         }
     }
-    assert_eq!(failures, 0, "Conformal Geometric Product has {failures} errors.")
+    assert_eq!(failures, 0, "Conformal Geometric Anti-Product has {failures} errors.")
 }
