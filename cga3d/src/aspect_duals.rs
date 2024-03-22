@@ -47,14 +47,6 @@ impl LeftBulkDual for MultiVector {
     }
 }
 
-impl LeftBulkDual for Radial {
-    type Output = Sphere;
-
-    fn left_bulk_dual(self) -> Sphere {
-        self.bulk().left_complement()
-    }
-}
-
 impl LeftWeightDual for AntiScalar {
     type Output = Scalar;
 
@@ -83,14 +75,6 @@ impl RightBulkDual for MultiVector {
     type Output = MultiVector;
 
     fn right_bulk_dual(self) -> MultiVector {
-        self.bulk().right_complement()
-    }
-}
-
-impl RightBulkDual for Radial {
-    type Output = Sphere;
-
-    fn right_bulk_dual(self) -> Sphere {
         self.bulk().right_complement()
     }
 }

@@ -31,26 +31,10 @@ impl BulkContraction<MultiVector> for Circle {
     }
 }
 
-impl BulkContraction<Radial> for Circle {
-    type Output = Dipole;
-
-    fn bulk_contraction(self, other: Radial) -> Dipole {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
 impl BulkContraction<MultiVector> for Dipole {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Radial> for Dipole {
-    type Output = Radial;
-
-    fn bulk_contraction(self, other: Radial) -> Radial {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -63,10 +47,10 @@ impl BulkContraction<MultiVector> for Horizon {
     }
 }
 
-impl BulkContraction<Radial> for Horizon {
-    type Output = Circle;
+impl BulkContraction<MultiVector> for Infinity {
+    type Output = MultiVector;
 
-    fn bulk_contraction(self, other: Radial) -> Circle {
+    fn bulk_contraction(self, other: MultiVector) -> MultiVector {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -79,26 +63,10 @@ impl BulkContraction<MultiVector> for Line {
     }
 }
 
-impl BulkContraction<Radial> for Line {
-    type Output = Dipole;
-
-    fn bulk_contraction(self, other: Radial) -> Dipole {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
 impl BulkContraction<MultiVector> for LineAtInfinity {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Radial> for LineAtInfinity {
-    type Output = Dipole;
-
-    fn bulk_contraction(self, other: Radial) -> Dipole {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -111,26 +79,10 @@ impl BulkContraction<MultiVector> for LineAtOrigin {
     }
 }
 
-impl BulkContraction<Radial> for LineAtOrigin {
-    type Output = Dipole;
-
-    fn bulk_contraction(self, other: Radial) -> Dipole {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
 impl BulkContraction<MultiVector> for MultiVector {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Radial> for MultiVector {
-    type Output = MultiVector;
-
-    fn bulk_contraction(self, other: Radial) -> MultiVector {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -143,26 +95,10 @@ impl BulkContraction<MultiVector> for Origin {
     }
 }
 
-impl BulkContraction<Radial> for Origin {
-    type Output = Radial;
-
-    fn bulk_contraction(self, other: Radial) -> Radial {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
 impl BulkContraction<MultiVector> for Plane {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Radial> for Plane {
-    type Output = Circle;
-
-    fn bulk_contraction(self, other: Radial) -> Circle {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -175,26 +111,10 @@ impl BulkContraction<MultiVector> for PlaneAtOrigin {
     }
 }
 
-impl BulkContraction<Radial> for PlaneAtOrigin {
-    type Output = Circle;
-
-    fn bulk_contraction(self, other: Radial) -> Circle {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
 impl BulkContraction<MultiVector> for Point {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Radial> for Point {
-    type Output = Radial;
-
-    fn bulk_contraction(self, other: Radial) -> Radial {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -207,26 +127,10 @@ impl BulkContraction<MultiVector> for PointAtInfinity {
     }
 }
 
-impl BulkContraction<Radial> for PointAtInfinity {
-    type Output = Radial;
-
-    fn bulk_contraction(self, other: Radial) -> Radial {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<MultiVector> for Radial {
+impl BulkContraction<MultiVector> for RoundPoint {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Radial> for Radial {
-    type Output = Scalar;
-
-    fn bulk_contraction(self, other: Radial) -> Scalar {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -235,14 +139,6 @@ impl BulkContraction<MultiVector> for Sphere {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkContraction<Radial> for Sphere {
-    type Output = Circle;
-
-    fn bulk_contraction(self, other: Radial) -> Circle {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -264,6 +160,14 @@ impl WeightContraction<MultiVector> for Dipole {
 }
 
 impl WeightContraction<MultiVector> for Horizon {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<MultiVector> for Infinity {
     type Output = MultiVector;
 
     fn weight_contraction(self, other: MultiVector) -> MultiVector {
@@ -343,7 +247,7 @@ impl WeightContraction<MultiVector> for PointAtInfinity {
     }
 }
 
-impl WeightContraction<MultiVector> for Radial {
+impl WeightContraction<MultiVector> for RoundPoint {
     type Output = MultiVector;
 
     fn weight_contraction(self, other: MultiVector) -> MultiVector {

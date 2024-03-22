@@ -44,10 +44,10 @@ impl Distance<MultiVector> for Circle {
     }
 }
 
-impl Distance<Radial> for Circle {
+impl Distance<RoundPoint> for Circle {
     type Output = Magnitude;
 
-    fn distance(self, other: Radial) -> Magnitude {
+    fn distance(self, other: RoundPoint) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -68,15 +68,23 @@ impl Distance<MultiVector> for Dipole {
     }
 }
 
-impl Distance<Radial> for Dipole {
+impl Distance<RoundPoint> for Dipole {
     type Output = Magnitude;
 
-    fn distance(self, other: Radial) -> Magnitude {
+    fn distance(self, other: RoundPoint) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
 impl Distance<MultiVector> for Horizon {
+    type Output = Magnitude;
+
+    fn distance(self, other: MultiVector) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<MultiVector> for Infinity {
     type Output = Magnitude;
 
     fn distance(self, other: MultiVector) -> Magnitude {
@@ -132,26 +140,10 @@ impl Distance<MultiVector> for Magnitude {
     }
 }
 
-impl Distance<Origin> for Magnitude {
+impl Distance<RoundPoint> for Magnitude {
     type Output = Magnitude;
 
-    fn distance(self, other: Origin) -> Magnitude {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Point> for Magnitude {
-    type Output = Magnitude;
-
-    fn distance(self, other: Point) -> Magnitude {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Radial> for Magnitude {
-    type Output = Magnitude;
-
-    fn distance(self, other: Radial) -> Magnitude {
+    fn distance(self, other: RoundPoint) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -244,10 +236,10 @@ impl Distance<Point> for MultiVector {
     }
 }
 
-impl Distance<Radial> for MultiVector {
+impl Distance<RoundPoint> for MultiVector {
     type Output = Magnitude;
 
-    fn distance(self, other: Radial) -> Magnitude {
+    fn distance(self, other: RoundPoint) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -300,7 +292,7 @@ impl Distance<MultiVector> for PointAtInfinity {
     }
 }
 
-impl Distance<Circle> for Radial {
+impl Distance<Circle> for RoundPoint {
     type Output = Magnitude;
 
     fn distance(self, other: Circle) -> Magnitude {
@@ -308,7 +300,7 @@ impl Distance<Circle> for Radial {
     }
 }
 
-impl Distance<Dipole> for Radial {
+impl Distance<Dipole> for RoundPoint {
     type Output = Magnitude;
 
     fn distance(self, other: Dipole) -> Magnitude {
@@ -316,7 +308,7 @@ impl Distance<Dipole> for Radial {
     }
 }
 
-impl Distance<Magnitude> for Radial {
+impl Distance<Magnitude> for RoundPoint {
     type Output = Magnitude;
 
     fn distance(self, other: Magnitude) -> Magnitude {
@@ -324,7 +316,7 @@ impl Distance<Magnitude> for Radial {
     }
 }
 
-impl Distance<MultiVector> for Radial {
+impl Distance<MultiVector> for RoundPoint {
     type Output = Magnitude;
 
     fn distance(self, other: MultiVector) -> Magnitude {
@@ -332,10 +324,10 @@ impl Distance<MultiVector> for Radial {
     }
 }
 
-impl Distance<Radial> for Radial {
+impl Distance<RoundPoint> for RoundPoint {
     type Output = Magnitude;
 
-    fn distance(self, other: Radial) -> Magnitude {
+    fn distance(self, other: RoundPoint) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -364,26 +356,10 @@ impl Distance<MultiVector> for Scalar {
     }
 }
 
-impl Distance<Origin> for Scalar {
+impl Distance<RoundPoint> for Scalar {
     type Output = Magnitude;
 
-    fn distance(self, other: Origin) -> Magnitude {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Point> for Scalar {
-    type Output = Magnitude;
-
-    fn distance(self, other: Point) -> Magnitude {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Radial> for Scalar {
-    type Output = Magnitude;
-
-    fn distance(self, other: Radial) -> Magnitude {
+    fn distance(self, other: RoundPoint) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }

@@ -67,7 +67,7 @@ struct Horizon {
     float g0;
 };
 
-struct Radial {
+struct RoundPoint {
     // e1, e2, e3
     vec3 g0;
     // e4, e5
@@ -97,6 +97,11 @@ struct Sphere {
     vec3 g0;
     // e1234, -e1235
     vec2 g1;
+};
+
+struct Infinity {
+    // e5
+    float g0;
 };
 
 struct MultiVector {
@@ -140,6 +145,10 @@ Horizon horizon_one() {
     return Horizon(0.0);
 }
 
+Infinity infinity_one() {
+    return Infinity(0.0);
+}
+
 Line line_one() {
     return Line(vec3(0.0), vec3(0.0));
 }
@@ -180,8 +189,8 @@ PointAtInfinity point_at_infinity_one() {
     return PointAtInfinity(vec3(0.0));
 }
 
-Radial radial_one() {
-    return Radial(vec3(0.0), vec2(0.0));
+RoundPoint round_point_one() {
+    return RoundPoint(vec3(0.0), vec2(0.0));
 }
 
 Scalar scalar_one() {
@@ -206,6 +215,10 @@ Dipole dipole_zero() {
 
 Horizon horizon_zero() {
     return Horizon(0.0);
+}
+
+Infinity infinity_zero() {
+    return Infinity(0.0);
 }
 
 Line line_zero() {
@@ -248,8 +261,8 @@ PointAtInfinity point_at_infinity_zero() {
     return PointAtInfinity(vec3(0.0));
 }
 
-Radial radial_zero() {
-    return Radial(vec3(0.0), vec2(0.0));
+RoundPoint round_point_zero() {
+    return RoundPoint(vec3(0.0), vec2(0.0));
 }
 
 Scalar scalar_zero() {
@@ -274,6 +287,10 @@ Dipole dipole_neg(Dipole self) {
 
 Horizon horizon_neg(Horizon self) {
     return Horizon(self.g0);
+}
+
+Infinity infinity_neg(Infinity self) {
+    return Infinity(-self.g0);
 }
 
 Line line_neg(Line self) {
@@ -316,8 +333,8 @@ PointAtInfinity point_at_infinity_neg(PointAtInfinity self) {
     return PointAtInfinity(self.g0 * vec3(-1.0));
 }
 
-Radial radial_neg(Radial self) {
-    return Radial(self.g0 * vec3(-1.0), self.g1 * vec2(-1.0));
+RoundPoint round_point_neg(RoundPoint self) {
+    return RoundPoint(self.g0 * vec3(-1.0), self.g1 * vec2(-1.0));
 }
 
 Scalar scalar_neg(Scalar self) {
@@ -402,6 +419,18 @@ Plane horizon_plane_at_origin_add(Horizon self, PlaneAtOrigin other) {
 
 Sphere horizon_sphere_add(Horizon self, Sphere other) {
     return Sphere(other.g0, vec2(0.0, self.g0) + other.g1);
+}
+
+Infinity infinity_infinity_add(Infinity self, Infinity other) {
+    return Infinity(self.g0 + other.g0);
+}
+
+MultiVector infinity_multi_vector_add(Infinity self, MultiVector other) {
+    return MultiVector(other.g0, other.g1, vec2(0.0, self.g0) + other.g2, other.g3, other.g4, other.g5, other.g6, other.g7, other.g8, other.g9, other.g10);
+}
+
+RoundPoint infinity_round_point_add(Infinity self, RoundPoint other) {
+    return RoundPoint(other.g0, vec2(0.0, self.g0) + other.g1);
 }
 
 Circle line_circle_add(Line self, Circle other) {
@@ -496,6 +525,10 @@ MultiVector multi_vector_horizon_add(MultiVector self, Horizon other) {
     return MultiVector(self.g0, self.g1, self.g2, self.g3, self.g4, self.g5, self.g6, self.g7, self.g8, self.g9, self.g10 + vec2(0.0, other.g0));
 }
 
+MultiVector multi_vector_infinity_add(MultiVector self, Infinity other) {
+    return MultiVector(self.g0, self.g1, self.g2 + vec2(0.0, other.g0), self.g3, self.g4, self.g5, self.g6, self.g7, self.g8, self.g9, self.g10);
+}
+
 MultiVector multi_vector_line_add(MultiVector self, Line other) {
     return MultiVector(self.g0, self.g1, self.g2, self.g3, self.g4, self.g5, self.g6, self.g7 + other.g0, self.g8 + other.g1, self.g9, self.g10);
 }
@@ -536,7 +569,7 @@ MultiVector multi_vector_point_at_infinity_add(MultiVector self, PointAtInfinity
     return MultiVector(self.g0, self.g1, self.g2, self.g3, self.g4, self.g5 + vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), self.g6, self.g7, self.g8, self.g9, self.g10);
 }
 
-MultiVector multi_vector_radial_add(MultiVector self, Radial other) {
+MultiVector multi_vector_round_point_add(MultiVector self, RoundPoint other) {
     return MultiVector(self.g0, self.g1 + other.g0, self.g2 + other.g1, self.g3, self.g4, self.g5, self.g6, self.g7, self.g8, self.g9, self.g10);
 }
 
@@ -648,12 +681,16 @@ PointAtInfinity point_at_infinity_point_at_infinity_add(PointAtInfinity self, Po
     return PointAtInfinity(self.g0 + other.g0);
 }
 
-MultiVector radial_multi_vector_add(Radial self, MultiVector other) {
+RoundPoint round_point_infinity_add(RoundPoint self, Infinity other) {
+    return RoundPoint(self.g0, self.g1 + vec2(0.0, other.g0));
+}
+
+MultiVector round_point_multi_vector_add(RoundPoint self, MultiVector other) {
     return MultiVector(other.g0, self.g0 + other.g1, self.g1 + other.g2, other.g3, other.g4, other.g5, other.g6, other.g7, other.g8, other.g9, other.g10);
 }
 
-Radial radial_radial_add(Radial self, Radial other) {
-    return Radial(self.g0 + other.g0, self.g1 + other.g1);
+RoundPoint round_point_round_point_add(RoundPoint self, RoundPoint other) {
+    return RoundPoint(self.g0 + other.g0, self.g1 + other.g1);
 }
 
 Magnitude scalar_anti_scalar_add(Scalar self, AntiScalar other) {
@@ -708,6 +745,10 @@ Horizon horizon_horizon_div(Horizon self, Horizon other) {
     return Horizon(self.g0 * 1.0 / other.g0 * 1.0);
 }
 
+Infinity infinity_infinity_div(Infinity self, Infinity other) {
+    return Infinity(self.g0 * 1.0 / other.g0 * 1.0);
+}
+
 Line line_line_div(Line self, Line other) {
     return Line(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(1.0, 1.0, 1.0) / vec3(other.g0.x, other.g0.y, other.g0.z) * vec3(1.0, 1.0, 1.0), vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(1.0, 1.0, 1.0) / vec3(other.g1.x, other.g1.y, other.g1.z) * vec3(1.0, 1.0, 1.0));
 }
@@ -748,8 +789,8 @@ PointAtInfinity point_at_infinity_point_at_infinity_div(PointAtInfinity self, Po
     return PointAtInfinity(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(1.0, 1.0, 1.0) / vec3(other.g0.x, other.g0.y, other.g0.z) * vec3(1.0, 1.0, 1.0));
 }
 
-Radial radial_radial_div(Radial self, Radial other) {
-    return Radial(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(1.0, 1.0, 1.0) / vec3(other.g0.x, other.g0.y, other.g0.z) * vec3(1.0, 1.0, 1.0), vec2(self.g1.x, self.g1.y) * vec2(1.0, 1.0) / vec2(other.g1.x, other.g1.y) * vec2(1.0, 1.0));
+RoundPoint round_point_round_point_div(RoundPoint self, RoundPoint other) {
+    return RoundPoint(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(1.0, 1.0, 1.0) / vec3(other.g0.x, other.g0.y, other.g0.z) * vec3(1.0, 1.0, 1.0), vec2(self.g1.x, self.g1.y) * vec2(1.0, 1.0) / vec2(other.g1.x, other.g1.y) * vec2(1.0, 1.0));
 }
 
 Scalar scalar_scalar_div(Scalar self, Scalar other) {
@@ -816,6 +857,10 @@ Horizon multi_vector_horizon_into(MultiVector self) {
     return Horizon(self.g10.y);
 }
 
+Infinity multi_vector_infinity_into(MultiVector self) {
+    return Infinity(self.g2.y);
+}
+
 Line multi_vector_line_into(MultiVector self) {
     return Line(self.g7, self.g8);
 }
@@ -852,8 +897,8 @@ PointAtInfinity multi_vector_point_at_infinity_into(MultiVector self) {
     return PointAtInfinity(vec3(self.g5.x, self.g5.y, self.g5.z));
 }
 
-Radial multi_vector_radial_into(MultiVector self) {
-    return Radial(self.g1, self.g2);
+RoundPoint multi_vector_round_point_into(MultiVector self) {
+    return RoundPoint(self.g1, self.g2);
 }
 
 Scalar multi_vector_scalar_into(MultiVector self) {
@@ -878,6 +923,10 @@ Origin point_origin_into(Point self) {
 
 PointAtInfinity point_point_at_infinity_into(Point self) {
     return PointAtInfinity(vec3(self.g0.x, self.g0.y, self.g0.z));
+}
+
+Infinity round_point_infinity_into(RoundPoint self) {
+    return Infinity(self.g1.y);
 }
 
 Horizon sphere_horizon_into(Sphere self) {
@@ -906,6 +955,10 @@ Dipole dipole_dipole_mul(Dipole self, Dipole other) {
 
 Horizon horizon_horizon_mul(Horizon self, Horizon other) {
     return Horizon(self.g0 * other.g0);
+}
+
+Infinity infinity_infinity_mul(Infinity self, Infinity other) {
+    return Infinity(self.g0 * other.g0);
 }
 
 Line line_line_mul(Line self, Line other) {
@@ -948,8 +1001,8 @@ PointAtInfinity point_at_infinity_point_at_infinity_mul(PointAtInfinity self, Po
     return PointAtInfinity(self.g0 * other.g0);
 }
 
-Radial radial_radial_mul(Radial self, Radial other) {
-    return Radial(self.g0 * other.g0, self.g1 * other.g1);
+RoundPoint round_point_round_point_mul(RoundPoint self, RoundPoint other) {
+    return RoundPoint(self.g0 * other.g0, self.g1 * other.g1);
 }
 
 Scalar scalar_scalar_mul(Scalar self, Scalar other) {
@@ -1034,6 +1087,18 @@ Plane horizon_plane_at_origin_sub(Horizon self, PlaneAtOrigin other) {
 
 Sphere horizon_sphere_sub(Horizon self, Sphere other) {
     return Sphere(vec3(0.0) - other.g0, vec2(0.0, self.g0) - other.g1);
+}
+
+Infinity infinity_infinity_sub(Infinity self, Infinity other) {
+    return Infinity(self.g0 - other.g0);
+}
+
+MultiVector infinity_multi_vector_sub(Infinity self, MultiVector other) {
+    return MultiVector(vec2(0.0) - other.g0, vec3(0.0) - other.g1, vec2(0.0, self.g0) - other.g2, vec3(0.0) - other.g3, vec3(0.0) - other.g4, vec4(0.0) - other.g5, vec4(0.0) - other.g6, vec3(0.0) - other.g7, vec3(0.0) - other.g8, vec3(0.0) - other.g9, vec2(0.0) - other.g10);
+}
+
+RoundPoint infinity_round_point_sub(Infinity self, RoundPoint other) {
+    return RoundPoint(vec3(0.0) - other.g0, vec2(0.0, self.g0) - other.g1);
 }
 
 Circle line_circle_sub(Line self, Circle other) {
@@ -1128,6 +1193,10 @@ MultiVector multi_vector_horizon_sub(MultiVector self, Horizon other) {
     return MultiVector(self.g0, self.g1, self.g2, self.g3, self.g4, self.g5, self.g6, self.g7, self.g8, self.g9, self.g10 - vec2(0.0, other.g0));
 }
 
+MultiVector multi_vector_infinity_sub(MultiVector self, Infinity other) {
+    return MultiVector(self.g0, self.g1, self.g2 - vec2(0.0, other.g0), self.g3, self.g4, self.g5, self.g6, self.g7, self.g8, self.g9, self.g10);
+}
+
 MultiVector multi_vector_line_sub(MultiVector self, Line other) {
     return MultiVector(self.g0, self.g1, self.g2, self.g3, self.g4, self.g5, self.g6, self.g7 - other.g0, self.g8 - other.g1, self.g9, self.g10);
 }
@@ -1168,7 +1237,7 @@ MultiVector multi_vector_point_at_infinity_sub(MultiVector self, PointAtInfinity
     return MultiVector(self.g0, self.g1, self.g2, self.g3, self.g4, self.g5 - vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), self.g6, self.g7, self.g8, self.g9, self.g10);
 }
 
-MultiVector multi_vector_radial_sub(MultiVector self, Radial other) {
+MultiVector multi_vector_round_point_sub(MultiVector self, RoundPoint other) {
     return MultiVector(self.g0, self.g1 - other.g0, self.g2 - other.g1, self.g3, self.g4, self.g5, self.g6, self.g7, self.g8, self.g9, self.g10);
 }
 
@@ -1280,12 +1349,16 @@ PointAtInfinity point_at_infinity_point_at_infinity_sub(PointAtInfinity self, Po
     return PointAtInfinity(self.g0 - other.g0);
 }
 
-MultiVector radial_multi_vector_sub(Radial self, MultiVector other) {
+RoundPoint round_point_infinity_sub(RoundPoint self, Infinity other) {
+    return RoundPoint(self.g0, self.g1 - vec2(0.0, other.g0));
+}
+
+MultiVector round_point_multi_vector_sub(RoundPoint self, MultiVector other) {
     return MultiVector(vec2(0.0) - other.g0, self.g0 - other.g1, self.g1 - other.g2, vec3(0.0) - other.g3, vec3(0.0) - other.g4, vec4(0.0) - other.g5, vec4(0.0) - other.g6, vec3(0.0) - other.g7, vec3(0.0) - other.g8, vec3(0.0) - other.g9, vec2(0.0) - other.g10);
 }
 
-Radial radial_radial_sub(Radial self, Radial other) {
-    return Radial(self.g0 - other.g0, self.g1 - other.g1);
+RoundPoint round_point_round_point_sub(RoundPoint self, RoundPoint other) {
+    return RoundPoint(self.g0 - other.g0, self.g1 - other.g1);
 }
 
 Magnitude scalar_anti_scalar_sub(Scalar self, AntiScalar other) {
@@ -1340,6 +1413,10 @@ Horizon anti_scalar_horizon_anti_wedge_dot(AntiScalar self, Horizon other) {
     return Horizon(self.g0 * other.g0);
 }
 
+Infinity anti_scalar_infinity_anti_wedge_dot(AntiScalar self, Infinity other) {
+    return Infinity(self.g0 * other.g0);
+}
+
 Line anti_scalar_line_anti_wedge_dot(AntiScalar self, Line other) {
     return Line(vec3(self.g0) * other.g0, vec3(self.g0) * other.g1);
 }
@@ -1380,8 +1457,8 @@ PointAtInfinity anti_scalar_point_at_infinity_anti_wedge_dot(AntiScalar self, Po
     return PointAtInfinity(vec3(self.g0) * other.g0);
 }
 
-Radial anti_scalar_radial_anti_wedge_dot(AntiScalar self, Radial other) {
-    return Radial(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
+RoundPoint anti_scalar_round_point_anti_wedge_dot(AntiScalar self, RoundPoint other) {
+    return RoundPoint(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
 }
 
 Scalar anti_scalar_scalar_anti_wedge_dot(AntiScalar self, Scalar other) {
@@ -1406,6 +1483,10 @@ MultiVector circle_dipole_anti_wedge_dot(Circle self, Dipole other) {
 
 MultiVector circle_horizon_anti_wedge_dot(Circle self, Horizon other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(other.g0, other.g0, other.g0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), vec2(self.g0.w) * vec2(0.0, other.g0));
+}
+
+MultiVector circle_infinity_anti_wedge_dot(Circle self, Infinity other) {
+    return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), vec2(self.g0.w) * vec2(0.0, other.g0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), self.g1 * vec3(other.g0), vec3(0.0), vec2(0.0));
 }
 
 MultiVector circle_line_anti_wedge_dot(Circle self, Line other) {
@@ -1448,7 +1529,7 @@ MultiVector circle_point_at_infinity_anti_wedge_dot(Circle self, PointAtInfinity
     return MultiVector(vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + self.g0.wwwz * vec4(other.g0.x, other.g0.y, other.g0.z, -other.g0.z) + vec4(self.g1.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g1.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g1.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z));
 }
 
-MultiVector circle_radial_anti_wedge_dot(Circle self, Radial other) {
+MultiVector circle_round_point_anti_wedge_dot(Circle self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0) + self.g2 * vec3(other.g1.x), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g0.w) * other.g1 * vec2(-1.0, 1.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g1.x) * vec4(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, other.g1.x, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, other.g1.x, -other.g0.z), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y) + vec3(self.g0.w) * other.g0 + self.g2 * vec3(other.g1.x), self.g1 * vec3(other.g1.y) + vec3(self.g2.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g2.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g2.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
@@ -1474,6 +1555,10 @@ MultiVector dipole_dipole_anti_wedge_dot(Dipole self, Dipole other) {
 
 MultiVector dipole_horizon_anti_wedge_dot(Dipole self, Horizon other) {
     return MultiVector(vec2(0.0), self.g0 * vec3(other.g0), vec2(self.g2.w) * vec2(0.0, other.g0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0) - self.g0 * vec3(other.g0), vec3(0.0) - self.g1 * vec3(other.g0), vec3(0.0), vec2(0.0));
+}
+
+MultiVector dipole_infinity_anti_wedge_dot(Dipole self, Infinity other) {
+    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), self.g0 * vec3(other.g0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(other.g0, other.g0, other.g0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), self.g0 * vec3(other.g0), vec2(self.g2.w) * vec2(0.0, -other.g0));
 }
 
 MultiVector dipole_line_anti_wedge_dot(Dipole self, Line other) {
@@ -1516,7 +1601,7 @@ MultiVector dipole_point_at_infinity_anti_wedge_dot(Dipole self, PointAtInfinity
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, -other.g0.z), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g2.w) * other.g0, vec3(0.0), vec2(0.0));
 }
 
-MultiVector dipole_radial_anti_wedge_dot(Dipole self, Radial other) {
+MultiVector dipole_round_point_anti_wedge_dot(Dipole self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) + self.g1 * vec3(other.g1.x), self.g0 * vec3(other.g1.y) + vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g1.x) - vec3(self.g2.w) * other.g0, vec4(self.g1.x) * vec4(other.g1.y, 0.0, 0.0, other.g0.x) + vec4(self.g1.y) * vec4(0.0, other.g1.y, 0.0, other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, other.g1.y, other.g0.z) + vec4(self.g2.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g2.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g2.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), self.g0 * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0) - vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z) + vec2(self.g2.w) * other.g1 * vec2(1.0, -1.0));
 }
 
@@ -1556,8 +1641,8 @@ MultiVector horizon_multi_vector_anti_wedge_dot(Horizon self, MultiVector other)
     return MultiVector(vec2(self.g0) * vec2(other.g2.x, -other.g10.x), vec3(0.0) - vec3(self.g0) * other.g3, vec2(self.g0) * vec2(0.0, -other.g5.w) + vec2(self.g0) * vec2(0.0, -other.g0.x), vec3(0.0), vec3(self.g0) * vec3(other.g6.x, other.g6.y, other.g6.z), vec4(self.g0) * vec4(other.g7.x, other.g7.y, other.g7.z, -other.g2.x) + vec4(self.g0) * vec4(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4(self.g0) * vec4(0.0, 0.0, 0.0, -other.g10.x), vec3(0.0) - vec3(self.g0) * other.g3, vec3(0.0) - vec3(self.g0) * other.g9 - vec3(self.g0) * other.g4, vec3(0.0) - vec3(self.g0) * vec3(other.g6.x, other.g6.y, other.g6.z), vec2(self.g0) * vec2(0.0, -other.g6.w) + vec2(self.g0) * vec2(0.0, other.g0.y));
 }
 
-Radial horizon_origin_anti_wedge_dot(Horizon self, Origin other) {
-    return Radial(vec3(0.0), vec2(self.g0) * vec2(0.0, -other.g0));
+Infinity horizon_origin_anti_wedge_dot(Horizon self, Origin other) {
+    return Infinity(0.0 - self.g0 * other.g0);
 }
 
 LineAtInfinity horizon_plane_anti_wedge_dot(Horizon self, Plane other) {
@@ -1568,20 +1653,76 @@ LineAtInfinity horizon_plane_at_origin_anti_wedge_dot(Horizon self, PlaneAtOrigi
     return LineAtInfinity(vec3(0.0) - vec3(self.g0) * other.g0);
 }
 
-Radial horizon_point_anti_wedge_dot(Horizon self, Point other) {
-    return Radial(vec3(0.0), vec2(self.g0) * vec2(0.0, -other.g0.w));
+Infinity horizon_point_anti_wedge_dot(Horizon self, Point other) {
+    return Infinity(0.0 - self.g0 * other.g0.w);
 }
 
-MultiVector horizon_radial_anti_wedge_dot(Horizon self, Radial other) {
+MultiVector horizon_round_point_anti_wedge_dot(Horizon self, RoundPoint other) {
     return MultiVector(vec2(self.g0) * vec2(other.g1.x, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0) - vec4(self.g0) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-Radial horizon_scalar_anti_wedge_dot(Horizon self, Scalar other) {
-    return Radial(vec3(0.0), vec2(self.g0) * vec2(0.0, -other.g0));
+Infinity horizon_scalar_anti_wedge_dot(Horizon self, Scalar other) {
+    return Infinity(0.0 - self.g0 * other.g0);
 }
 
 MultiVector horizon_sphere_anti_wedge_dot(Horizon self, Sphere other) {
     return MultiVector(vec2(self.g0) * vec2(0.0, -other.g1.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0) * vec4(0.0, 0.0, 0.0, -other.g1.x), vec3(0.0), vec3(0.0) - vec3(self.g0) * other.g0, vec3(0.0), vec2(0.0));
+}
+
+Infinity infinity_anti_scalar_anti_wedge_dot(Infinity self, AntiScalar other) {
+    return Infinity(self.g0 * other.g0);
+}
+
+MultiVector infinity_circle_anti_wedge_dot(Infinity self, Circle other) {
+    return MultiVector(vec2(0.0), vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0) * vec2(0.0, -other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0) * other.g1, vec3(0.0), vec2(0.0));
+}
+
+MultiVector infinity_dipole_anti_wedge_dot(Infinity self, Dipole other) {
+    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0) * other.g0, vec4(self.g0) * vec4(other.g1.x, other.g1.y, other.g1.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0) * other.g0, vec2(self.g0) * vec2(0.0, other.g2.w));
+}
+
+LineAtInfinity infinity_line_anti_wedge_dot(Infinity self, Line other) {
+    return LineAtInfinity(vec3(self.g0) * other.g0);
+}
+
+LineAtInfinity infinity_line_at_origin_anti_wedge_dot(Infinity self, LineAtOrigin other) {
+    return LineAtInfinity(vec3(self.g0) * other.g0);
+}
+
+MultiVector infinity_magnitude_anti_wedge_dot(Infinity self, Magnitude other) {
+    return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0) * vec2(0.0, other.g0.y), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0) * vec2(0.0, other.g0.x));
+}
+
+MultiVector infinity_multi_vector_anti_wedge_dot(Infinity self, MultiVector other) {
+    return MultiVector(vec2(self.g0) * vec2(other.g10.x, other.g2.x), vec3(self.g0) * vec3(other.g6.x, other.g6.y, other.g6.z), vec2(self.g0) * vec2(0.0, -other.g6.w) + vec2(self.g0) * vec2(0.0, other.g0.y), vec3(0.0), vec3(self.g0) * other.g3, vec4(self.g0) * vec4(other.g9.x, other.g9.y, other.g9.z, -other.g10.x) + vec4(self.g0) * vec4(other.g4.x, other.g4.y, other.g4.z, 0.0), vec4(self.g0) * vec4(0.0, 0.0, 0.0, other.g2.x), vec3(self.g0) * vec3(other.g6.x, other.g6.y, other.g6.z), vec3(self.g0) * other.g7 - vec3(self.g0) * other.g1, vec3(0.0) - vec3(self.g0) * other.g3, vec2(self.g0) * vec2(0.0, other.g5.w) + vec2(self.g0) * vec2(0.0, other.g0.x));
+}
+
+Horizon infinity_origin_anti_wedge_dot(Infinity self, Origin other) {
+    return Horizon(self.g0 * other.g0);
+}
+
+PointAtInfinity infinity_plane_anti_wedge_dot(Infinity self, Plane other) {
+    return PointAtInfinity(vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z));
+}
+
+PointAtInfinity infinity_plane_at_origin_anti_wedge_dot(Infinity self, PlaneAtOrigin other) {
+    return PointAtInfinity(vec3(self.g0) * other.g0);
+}
+
+Horizon infinity_point_anti_wedge_dot(Infinity self, Point other) {
+    return Horizon(self.g0 * other.g0.w);
+}
+
+MultiVector infinity_round_point_anti_wedge_dot(Infinity self, RoundPoint other) {
+    return MultiVector(vec2(self.g0) * vec2(0.0, other.g1.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0) * vec4(0.0, 0.0, 0.0, other.g1.x), vec3(0.0), vec3(0.0) - vec3(self.g0) * other.g0, vec3(0.0), vec2(0.0));
+}
+
+Horizon infinity_scalar_anti_wedge_dot(Infinity self, Scalar other) {
+    return Horizon(self.g0 * other.g0);
+}
+
+MultiVector infinity_sphere_anti_wedge_dot(Infinity self, Sphere other) {
+    return MultiVector(vec2(self.g0) * vec2(other.g1.x, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0) * vec4(other.g0.x, other.g0.y, other.g0.z, -other.g1.x), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
 Line line_anti_scalar_anti_wedge_dot(Line self, AntiScalar other) {
@@ -1598,6 +1739,10 @@ MultiVector line_dipole_anti_wedge_dot(Line self, Dipole other) {
 
 PointAtInfinity line_horizon_anti_wedge_dot(Line self, Horizon other) {
     return PointAtInfinity(self.g0 * vec3(other.g0));
+}
+
+LineAtInfinity line_infinity_anti_wedge_dot(Line self, Infinity other) {
+    return LineAtInfinity(self.g0 * vec3(other.g0));
 }
 
 MultiVector line_line_anti_wedge_dot(Line self, Line other) {
@@ -1640,7 +1785,7 @@ MultiVector line_point_at_infinity_anti_wedge_dot(Line self, PointAtInfinity oth
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
 }
 
-MultiVector line_radial_anti_wedge_dot(Line self, Radial other) {
+MultiVector line_round_point_anti_wedge_dot(Line self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) + self.g1 * vec3(other.g1.x), vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, other.g1.x, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g1.x, -other.g0.z), self.g1 * vec3(other.g1.x), self.g0 * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
@@ -1696,7 +1841,7 @@ PointAtInfinity line_at_infinity_point_anti_wedge_dot(LineAtInfinity self, Point
     return PointAtInfinity(self.g0 * vec3(other.g0.w));
 }
 
-MultiVector line_at_infinity_radial_anti_wedge_dot(LineAtInfinity self, Radial other) {
+MultiVector line_at_infinity_round_point_anti_wedge_dot(LineAtInfinity self, RoundPoint other) {
     return MultiVector(vec2(0.0), self.g0 * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), self.g0 * vec3(other.g1.x), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
@@ -1722,6 +1867,10 @@ MultiVector line_at_origin_dipole_anti_wedge_dot(LineAtOrigin self, Dipole other
 
 PointAtInfinity line_at_origin_horizon_anti_wedge_dot(LineAtOrigin self, Horizon other) {
     return PointAtInfinity(self.g0 * vec3(other.g0));
+}
+
+LineAtInfinity line_at_origin_infinity_anti_wedge_dot(LineAtOrigin self, Infinity other) {
+    return LineAtInfinity(self.g0 * vec3(other.g0));
 }
 
 MultiVector line_at_origin_line_anti_wedge_dot(LineAtOrigin self, Line other) {
@@ -1764,7 +1913,7 @@ MultiVector line_at_origin_point_at_infinity_anti_wedge_dot(LineAtOrigin self, P
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
 }
 
-MultiVector line_at_origin_radial_anti_wedge_dot(LineAtOrigin self, Radial other) {
+MultiVector line_at_origin_round_point_anti_wedge_dot(LineAtOrigin self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, other.g1.x, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g1.x, -other.g0.z), vec3(0.0), self.g0 * vec3(other.g1.y), vec3(0.0), vec2(0.0));
 }
 
@@ -1790,6 +1939,10 @@ MultiVector magnitude_dipole_anti_wedge_dot(Magnitude self, Dipole other) {
 
 MultiVector magnitude_horizon_anti_wedge_dot(Magnitude self, Horizon other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.y) * vec2(0.0, other.g0));
+}
+
+MultiVector magnitude_infinity_anti_wedge_dot(Magnitude self, Infinity other) {
+    return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.y) * vec2(0.0, other.g0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0));
 }
 
 MultiVector magnitude_line_anti_wedge_dot(Magnitude self, Line other) {
@@ -1832,7 +1985,7 @@ MultiVector magnitude_point_at_infinity_anti_wedge_dot(Magnitude self, PointAtIn
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.y) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0.x) * other.g0, vec3(0.0), vec2(0.0));
 }
 
-MultiVector magnitude_radial_anti_wedge_dot(Magnitude self, Radial other) {
+MultiVector magnitude_round_point_anti_wedge_dot(Magnitude self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(self.g0.y) * other.g0, vec2(self.g0.y) * other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0.x) * other.g0, vec2(self.g0.x) * other.g1);
 }
 
@@ -1858,6 +2011,10 @@ MultiVector multi_vector_dipole_anti_wedge_dot(MultiVector self, Dipole other) {
 
 MultiVector multi_vector_horizon_anti_wedge_dot(MultiVector self, Horizon other) {
     return MultiVector(vec2(self.g2.x) * vec2(other.g0, 0.0) + vec2(self.g10.x) * vec2(0.0, -other.g0), self.g3 * vec3(other.g0), vec2(self.g0.x) * vec2(0.0, -other.g0) + vec2(self.g5.w) * vec2(0.0, other.g0), vec3(0.0), vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(other.g0, other.g0, other.g0, 0.0) + vec4(self.g2.x) * vec4(0.0, 0.0, 0.0, other.g0) + vec4(self.g7.x, self.g7.y, self.g7.z, self.g7.x) * vec4(other.g0, other.g0, other.g0, 0.0), vec4(self.g10.x) * vec4(0.0, 0.0, 0.0, other.g0), vec3(0.0) - self.g3 * vec3(other.g0), vec3(0.0) - self.g4 * vec3(other.g0) + self.g9 * vec3(other.g0), vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g0), vec2(self.g0.y) * vec2(0.0, other.g0) + vec2(self.g6.w) * vec2(0.0, other.g0));
+}
+
+MultiVector multi_vector_infinity_anti_wedge_dot(MultiVector self, Infinity other) {
+    return MultiVector(vec2(self.g2.x) * vec2(0.0, other.g0) + vec2(self.g10.x) * vec2(other.g0, 0.0), vec3(0.0) - vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g0), vec2(self.g0.y) * vec2(0.0, other.g0) + vec2(self.g6.w) * vec2(0.0, other.g0), vec3(0.0), self.g3 * vec3(other.g0), vec4(self.g4.x, self.g4.y, self.g4.z, self.g4.x) * vec4(other.g0, other.g0, other.g0, 0.0) + vec4(self.g9.x, self.g9.y, self.g9.z, self.g9.x) * vec4(-other.g0, -other.g0, -other.g0, 0.0) + vec4(self.g10.x) * vec4(0.0, 0.0, 0.0, other.g0), vec4(self.g2.x) * vec4(0.0, 0.0, 0.0, -other.g0), vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g0), self.g1 * vec3(other.g0) + self.g7 * vec3(other.g0), self.g3 * vec3(other.g0), vec2(self.g0.x) * vec2(0.0, other.g0) + vec2(self.g5.w) * vec2(0.0, -other.g0));
 }
 
 MultiVector multi_vector_line_anti_wedge_dot(MultiVector self, Line other) {
@@ -1900,7 +2057,7 @@ MultiVector multi_vector_point_at_infinity_anti_wedge_dot(MultiVector self, Poin
     return MultiVector(vec2(self.g3.x) * vec2(0.0, other.g0.x) + vec2(self.g3.y) * vec2(0.0, other.g0.y) + vec2(self.g3.z) * vec2(0.0, other.g0.z) + vec2(self.g6.x) * vec2(-other.g0.x, 0.0) + vec2(self.g6.y) * vec2(-other.g0.y, 0.0) + vec2(self.g6.z) * vec2(-other.g0.z, 0.0), vec3(self.g3.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g3.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g3.z) * vec3(-other.g0.y, other.g0.x, 0.0) + vec3(self.g10.x) * other.g0, vec2(self.g4.x) * vec2(0.0, other.g0.x) + vec2(self.g4.y) * vec2(0.0, other.g0.y) + vec2(self.g4.z) * vec2(0.0, other.g0.z) + vec2(self.g9.x) * vec2(0.0, -other.g0.x) + vec2(self.g9.y) * vec2(0.0, -other.g0.y) + vec2(self.g9.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(self.g2.x) * other.g0 + vec3(self.g6.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g6.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g6.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec4(self.g0.y) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0) + vec4(self.g1.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g1.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g1.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g6.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g6.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + self.g6.wwwz * vec4(other.g0.x, other.g0.y, other.g0.z, -other.g0.z) + vec4(self.g7.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g7.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g7.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(self.g3.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g3.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g3.z) * vec4(0.0, 0.0, 0.0, -other.g0.z), vec3(self.g3.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g3.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g3.z) * vec3(other.g0.y, -other.g0.x, 0.0) - vec3(self.g10.x) * other.g0, vec3(0.0) - vec3(self.g0.x) * other.g0 + vec3(self.g4.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g4.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g4.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g5.w) * other.g0 + vec3(self.g9.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g9.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g9.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(self.g2.x) * other.g0 + vec3(self.g6.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g6.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g6.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z) + vec2(self.g7.x) * vec2(0.0, -other.g0.x) + vec2(self.g7.y) * vec2(0.0, -other.g0.y) + vec2(self.g7.z) * vec2(0.0, -other.g0.z));
 }
 
-MultiVector multi_vector_radial_anti_wedge_dot(MultiVector self, Radial other) {
+MultiVector multi_vector_round_point_anti_wedge_dot(MultiVector self, RoundPoint other) {
     return MultiVector(vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z) + vec2(self.g2.x) * vec2(0.0, other.g1.y) + vec2(self.g2.y) * vec2(0.0, other.g1.x) + vec2(self.g9.x) * vec2(other.g0.x, 0.0) + vec2(self.g9.y) * vec2(other.g0.y, 0.0) + vec2(self.g9.z) * vec2(other.g0.z, 0.0) + vec2(self.g10.x) * vec2(other.g1.y, 0.0) + vec2(self.g10.y) * vec2(other.g1.x, 0.0), vec3(self.g0.y) * other.g0 - vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g1.y) + vec3(self.g7.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g7.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g7.z) * vec3(-other.g0.y, other.g0.x, 0.0) + self.g8 * vec3(other.g1.x), vec2(self.g0.y) * other.g1 + vec2(self.g6.x) * vec2(-other.g0.x, 0.0) + vec2(self.g6.y) * vec2(-other.g0.y, 0.0) + vec2(self.g6.z) * vec2(-other.g0.z, 0.0) + vec2(self.g6.w) * other.g1 * vec2(-1.0, 1.0) + vec2(self.g8.x) * vec2(0.0, other.g0.x) + vec2(self.g8.y) * vec2(0.0, other.g0.y) + vec2(self.g8.z) * vec2(0.0, other.g0.z), vec3(self.g3.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g3.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g3.z) * vec3(-other.g0.y, other.g0.x, 0.0) + self.g4 * vec3(other.g1.x) + self.g9 * vec3(other.g1.x) + vec3(self.g10.x) * other.g0, self.g3 * vec3(other.g1.y) + vec3(self.g5.x, self.g5.y, self.g5.z) * vec3(other.g1.x) - vec3(self.g5.w) * other.g0 + vec3(self.g9.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g9.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g9.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g4.x) * vec4(other.g1.y, 0.0, 0.0, other.g0.x) + vec4(self.g4.y) * vec4(0.0, other.g1.y, 0.0, other.g0.y) + vec4(self.g4.z) * vec4(0.0, 0.0, other.g1.y, other.g0.z) + vec4(self.g5.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g5.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g5.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0) + vec4(self.g9.x, self.g9.y, self.g9.z, self.g9.x) * vec4(-other.g1.y, -other.g1.y, -other.g1.y, 0.0) + vec4(self.g10.x) * vec4(0.0, 0.0, 0.0, other.g1.y) - vec4(self.g10.y) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(-other.g1.x, -other.g1.x, -other.g1.x, 0.0) + vec4(self.g2.x) * vec4(other.g0.x, other.g0.y, other.g0.z, -other.g1.y) + vec4(self.g2.y) * vec4(0.0, 0.0, 0.0, other.g1.x) + vec4(self.g6.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g6.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g6.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g7.x) * vec4(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4(self.g7.y) * vec4(0.0, other.g1.x, 0.0, -other.g0.y) + vec4(self.g7.z) * vec4(0.0, 0.0, other.g1.x, -other.g0.z), vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0) + vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g1.y) + vec3(self.g6.w) * other.g0 + self.g8 * vec3(other.g1.x), self.g1 * vec3(other.g1.y) - vec3(self.g2.y) * other.g0 + self.g7 * vec3(other.g1.y) + vec3(self.g8.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g8.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g8.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0) - vec3(self.g0.x) * other.g0 + self.g3 * vec3(other.g1.y) + vec3(self.g4.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g4.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g4.z) * vec3(other.g0.y, -other.g0.x, 0.0) - vec3(self.g5.x, self.g5.y, self.g5.z) * vec3(other.g1.x), vec2(self.g0.x) * other.g1 + vec2(self.g3.x) * vec2(-other.g0.x, 0.0) + vec2(self.g3.y) * vec2(-other.g0.y, 0.0) + vec2(self.g3.z) * vec2(-other.g0.z, 0.0) + vec2(self.g5.x) * vec2(0.0, other.g0.x) + vec2(self.g5.y) * vec2(0.0, other.g0.y) + vec2(self.g5.z) * vec2(0.0, other.g0.z) + vec2(self.g5.w) * other.g1 * vec2(1.0, -1.0));
 }
 
@@ -1924,8 +2081,12 @@ MultiVector origin_dipole_anti_wedge_dot(Origin self, Dipole other) {
     return MultiVector(vec2(self.g0) * vec2(0.0, -other.g2.w), vec3(self.g0) * other.g1, vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, 0.0), vec3(0.0), vec3(self.g0) * vec3(other.g2.x, other.g2.y, other.g2.z), vec3(0.0), vec2(0.0));
 }
 
-Radial origin_horizon_anti_wedge_dot(Origin self, Horizon other) {
-    return Radial(vec3(0.0), vec2(self.g0) * vec2(0.0, other.g0));
+Infinity origin_horizon_anti_wedge_dot(Origin self, Horizon other) {
+    return Infinity(self.g0 * other.g0);
+}
+
+Horizon origin_infinity_anti_wedge_dot(Origin self, Infinity other) {
+    return Horizon(0.0 - self.g0 * other.g0);
 }
 
 MultiVector origin_line_anti_wedge_dot(Origin self, Line other) {
@@ -1968,7 +2129,7 @@ LineAtInfinity origin_point_at_infinity_anti_wedge_dot(Origin self, PointAtInfin
     return LineAtInfinity(vec3(self.g0) * other.g0);
 }
 
-MultiVector origin_radial_anti_wedge_dot(Origin self, Radial other) {
+MultiVector origin_round_point_anti_wedge_dot(Origin self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0) * other.g0, vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0) * other.g1 * vec2(1.0, -1.0));
 }
 
@@ -1994,6 +2155,10 @@ MultiVector plane_dipole_anti_wedge_dot(Plane self, Dipole other) {
 
 LineAtInfinity plane_horizon_anti_wedge_dot(Plane self, Horizon other) {
     return LineAtInfinity(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0));
+}
+
+PointAtInfinity plane_infinity_anti_wedge_dot(Plane self, Infinity other) {
+    return PointAtInfinity(vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0));
 }
 
 MultiVector plane_line_anti_wedge_dot(Plane self, Line other) {
@@ -2036,12 +2201,12 @@ MultiVector plane_point_at_infinity_anti_wedge_dot(Plane self, PointAtInfinity o
     return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector plane_radial_anti_wedge_dot(Plane self, Radial other) {
+MultiVector plane_round_point_anti_wedge_dot(Plane self, RoundPoint other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0) + vec2(self.g0.w) * vec2(other.g1.x, 0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), self.g0.xyzx * vec4(-other.g1.y, -other.g1.y, -other.g1.y, 0.0) - vec4(self.g0.w) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-Radial plane_scalar_anti_wedge_dot(Plane self, Scalar other) {
-    return Radial(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), vec2(self.g0.w) * vec2(0.0, -other.g0));
+RoundPoint plane_scalar_anti_wedge_dot(Plane self, Scalar other) {
+    return RoundPoint(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), vec2(self.g0.w) * vec2(0.0, -other.g0));
 }
 
 MultiVector plane_sphere_anti_wedge_dot(Plane self, Sphere other) {
@@ -2062,6 +2227,10 @@ MultiVector plane_at_origin_dipole_anti_wedge_dot(PlaneAtOrigin self, Dipole oth
 
 LineAtInfinity plane_at_origin_horizon_anti_wedge_dot(PlaneAtOrigin self, Horizon other) {
     return LineAtInfinity(self.g0 * vec3(other.g0));
+}
+
+PointAtInfinity plane_at_origin_infinity_anti_wedge_dot(PlaneAtOrigin self, Infinity other) {
+    return PointAtInfinity(vec3(0.0) - self.g0 * vec3(other.g0));
 }
 
 MultiVector plane_at_origin_line_anti_wedge_dot(PlaneAtOrigin self, Line other) {
@@ -2104,12 +2273,12 @@ MultiVector plane_at_origin_point_at_infinity_anti_wedge_dot(PlaneAtOrigin self,
     return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector plane_at_origin_radial_anti_wedge_dot(PlaneAtOrigin self, Radial other) {
+MultiVector plane_at_origin_round_point_anti_wedge_dot(PlaneAtOrigin self, RoundPoint other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0), vec3(0.0), vec2(0.0), self.g0 * vec3(other.g1.x), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(-other.g1.y, -other.g1.y, -other.g1.y, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-Radial plane_at_origin_scalar_anti_wedge_dot(PlaneAtOrigin self, Scalar other) {
-    return Radial(self.g0 * vec3(other.g0), vec2(0.0));
+RoundPoint plane_at_origin_scalar_anti_wedge_dot(PlaneAtOrigin self, Scalar other) {
+    return RoundPoint(self.g0 * vec3(other.g0), vec2(0.0));
 }
 
 MultiVector plane_at_origin_sphere_anti_wedge_dot(PlaneAtOrigin self, Sphere other) {
@@ -2128,8 +2297,12 @@ MultiVector point_dipole_anti_wedge_dot(Point self, Dipole other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * vec2(0.0, -other.g2.w), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g0.w) * other.g1, vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, other.g0.y) + self.g0.wwwz * vec4(-other.g0.x, -other.g0.y, -other.g0.z, other.g0.z), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(self.g0.x) * vec3(-other.g2.w, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, -other.g2.w, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, -other.g2.w) + vec3(self.g0.w) * vec3(other.g2.x, other.g2.y, other.g2.z), vec3(0.0), vec2(0.0));
 }
 
-Radial point_horizon_anti_wedge_dot(Point self, Horizon other) {
-    return Radial(vec3(0.0), vec2(self.g0.w) * vec2(0.0, other.g0));
+Infinity point_horizon_anti_wedge_dot(Point self, Horizon other) {
+    return Infinity(self.g0.w * other.g0);
+}
+
+Horizon point_infinity_anti_wedge_dot(Point self, Infinity other) {
+    return Horizon(0.0 - self.g0.w * other.g0);
 }
 
 MultiVector point_line_anti_wedge_dot(Point self, Line other) {
@@ -2172,7 +2345,7 @@ LineAtInfinity point_point_at_infinity_anti_wedge_dot(Point self, PointAtInfinit
     return LineAtInfinity(vec3(self.g0.w) * other.g0);
 }
 
-MultiVector point_radial_anti_wedge_dot(Point self, Radial other) {
+MultiVector point_round_point_anti_wedge_dot(Point self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x) - vec3(self.g0.w) * other.g0, vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * other.g1 * vec2(1.0, -1.0));
 }
 
@@ -2228,7 +2401,7 @@ LineAtInfinity point_at_infinity_point_anti_wedge_dot(PointAtInfinity self, Poin
     return LineAtInfinity(vec3(0.0) - self.g0 * vec3(other.g0.w));
 }
 
-MultiVector point_at_infinity_radial_anti_wedge_dot(PointAtInfinity self, Radial other) {
+MultiVector point_at_infinity_round_point_anti_wedge_dot(PointAtInfinity self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), self.g0 * vec3(other.g1.x), vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - self.g0 * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z));
 }
 
@@ -2240,71 +2413,75 @@ MultiVector point_at_infinity_sphere_anti_wedge_dot(PointAtInfinity self, Sphere
     return MultiVector(vec2(0.0), vec3(0.0) - self.g0 * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0) - self.g0 * vec3(other.g1.x), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
-Radial radial_anti_scalar_anti_wedge_dot(Radial self, AntiScalar other) {
-    return Radial(self.g0 * vec3(other.g0), self.g1 * vec2(other.g0));
+RoundPoint round_point_anti_scalar_anti_wedge_dot(RoundPoint self, AntiScalar other) {
+    return RoundPoint(self.g0 * vec3(other.g0), self.g1 * vec2(other.g0));
 }
 
-MultiVector radial_circle_anti_wedge_dot(Radial self, Circle other) {
+MultiVector round_point_circle_anti_wedge_dot(RoundPoint self, Circle other) {
     return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0) - vec3(self.g1.x) * other.g2 + vec3(self.g1.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(other.g0.x, -other.g2.x) + vec2(self.g0.y) * vec2(other.g0.y, -other.g2.y) + vec2(self.g0.z) * vec2(other.g0.z, -other.g2.z) + self.g1 * vec2(other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, -other.g1.x) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, -other.g1.y) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, -other.g1.z) + vec4(self.g1.x) * vec4(other.g1.x, other.g1.y, other.g1.z, 0.0), self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * other.g2 + vec3(self.g1.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.x) * vec3(0.0, -other.g2.z, other.g2.y) + vec3(self.g0.y) * vec3(other.g2.z, 0.0, -other.g2.x) + vec3(self.g0.z) * vec3(-other.g2.y, other.g2.x, 0.0) + vec3(self.g1.y) * other.g1, vec3(0.0), vec2(0.0));
 }
 
-MultiVector radial_dipole_anti_wedge_dot(Radial self, Dipole other) {
+MultiVector round_point_dipole_anti_wedge_dot(RoundPoint self, Dipole other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g1.x) * other.g1, vec3(0.0) - self.g0 * vec3(other.g2.w) + vec3(self.g1.x) * vec3(other.g2.x, other.g2.y, other.g2.z) + vec3(self.g1.y) * other.g0, vec4(self.g0.x) * vec4(0.0, -other.g2.z, other.g2.y, other.g1.x) + vec4(self.g0.y) * vec4(other.g2.z, 0.0, -other.g2.x, other.g1.y) + vec4(self.g0.z) * vec4(-other.g2.y, other.g2.x, 0.0, other.g1.z) + vec4(self.g1.y) * vec4(other.g1.x, other.g1.y, other.g1.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0) + vec3(self.g1.x) * vec3(other.g2.x, other.g2.y, other.g2.z) - vec3(self.g1.y) * other.g0, vec2(self.g0.x) * vec2(other.g0.x, -other.g2.x) + vec2(self.g0.y) * vec2(other.g0.y, -other.g2.y) + vec2(self.g0.z) * vec2(other.g0.z, -other.g2.z) + self.g1 * vec2(-other.g2.w));
 }
 
-MultiVector radial_horizon_anti_wedge_dot(Radial self, Horizon other) {
+MultiVector round_point_horizon_anti_wedge_dot(RoundPoint self, Horizon other) {
     return MultiVector(vec2(self.g1.x) * vec2(other.g0, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g0, other.g0, other.g0, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector radial_line_anti_wedge_dot(Radial self, Line other) {
+MultiVector round_point_infinity_anti_wedge_dot(RoundPoint self, Infinity other) {
+    return MultiVector(vec2(self.g1.x) * vec2(0.0, other.g0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, -other.g0), vec3(0.0), self.g0 * vec3(other.g0), vec3(0.0), vec2(0.0));
+}
+
+MultiVector round_point_line_anti_wedge_dot(RoundPoint self, Line other) {
     return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) - vec3(self.g1.x) * other.g1, vec2(self.g0.x) * vec2(0.0, -other.g1.x) + vec2(self.g0.y) * vec2(0.0, -other.g1.y) + vec2(self.g0.z) * vec2(0.0, -other.g1.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, -other.g0.z) + vec4(self.g1.x) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3(self.g1.x) * other.g1, vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0) + vec3(self.g1.y) * other.g0, vec3(0.0), vec2(0.0));
 }
 
-MultiVector radial_line_at_infinity_anti_wedge_dot(Radial self, LineAtInfinity other) {
+MultiVector round_point_line_at_infinity_anti_wedge_dot(RoundPoint self, LineAtInfinity other) {
     return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g1.x) * other.g0, vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector radial_line_at_origin_anti_wedge_dot(Radial self, LineAtOrigin other) {
+MultiVector round_point_line_at_origin_anti_wedge_dot(RoundPoint self, LineAtOrigin other) {
     return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, -other.g0.z) + vec4(self.g1.x) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3(0.0), vec3(self.g1.y) * other.g0, vec3(0.0), vec2(0.0));
 }
 
-MultiVector radial_magnitude_anti_wedge_dot(Radial self, Magnitude other) {
+MultiVector round_point_magnitude_anti_wedge_dot(RoundPoint self, Magnitude other) {
     return MultiVector(vec2(0.0), self.g0 * vec3(other.g0.y), self.g1 * vec2(other.g0.y), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - self.g0 * vec3(other.g0.x), self.g1 * vec2(other.g0.x));
 }
 
-MultiVector radial_multi_vector_anti_wedge_dot(Radial self, MultiVector other) {
+MultiVector round_point_multi_vector_anti_wedge_dot(RoundPoint self, MultiVector other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g9.x, -other.g1.x) + vec2(self.g0.y) * vec2(other.g9.y, -other.g1.y) + vec2(self.g0.z) * vec2(other.g9.z, -other.g1.z) + vec2(self.g1.x) * vec2(other.g10.y, other.g2.y) + vec2(self.g1.y) * vec2(other.g10.x, other.g2.x), vec3(self.g0.x) * vec3(other.g0.y, -other.g7.z, other.g7.y) + vec3(self.g0.y) * vec3(other.g7.z, other.g0.y, -other.g7.x) + vec3(self.g0.z) * vec3(-other.g7.y, other.g7.x, other.g0.y) - vec3(self.g1.x) * other.g8 + vec3(self.g1.y) * vec3(other.g6.x, other.g6.y, other.g6.z), vec2(self.g0.x) * vec2(other.g6.x, -other.g8.x) + vec2(self.g0.y) * vec2(other.g6.y, -other.g8.y) + vec2(self.g0.z) * vec2(other.g6.z, -other.g8.z) + self.g1 * vec2(other.g6.w) + self.g1 * vec2(other.g0.y), vec3(self.g0.x) * vec3(-other.g10.x, other.g3.z, -other.g3.y) + vec3(self.g0.y) * vec3(-other.g3.z, -other.g10.x, other.g3.x) + vec3(self.g0.z) * vec3(other.g3.y, -other.g3.x, -other.g10.x) - vec3(self.g1.x) * other.g9 + vec3(self.g1.x) * other.g4, vec3(self.g0.x) * vec3(-other.g5.w, other.g9.z, -other.g9.y) + vec3(self.g0.y) * vec3(-other.g9.z, -other.g5.w, other.g9.x) + vec3(self.g0.z) * vec3(other.g9.y, -other.g9.x, -other.g5.w) + vec3(self.g1.x) * vec3(other.g5.x, other.g5.y, other.g5.z) + vec3(self.g1.y) * other.g3, vec4(self.g0.x) * vec4(other.g10.y, -other.g5.z, other.g5.y, other.g4.x) + vec4(self.g0.y) * vec4(other.g5.z, other.g10.y, -other.g5.x, other.g4.y) + vec4(self.g0.z) * vec4(-other.g5.y, other.g5.x, other.g10.y, other.g4.z) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g10.y) + vec4(self.g1.y) * vec4(other.g9.x, other.g9.y, other.g9.z, -other.g10.x) + vec4(self.g1.y) * vec4(other.g4.x, other.g4.y, other.g4.z, 0.0), vec4(self.g0.x) * vec4(-other.g2.x, other.g6.z, -other.g6.y, -other.g7.x) + vec4(self.g0.y) * vec4(-other.g6.z, -other.g2.x, other.g6.x, -other.g7.y) + vec4(self.g0.z) * vec4(other.g6.y, -other.g6.x, -other.g2.x, -other.g7.z) + vec4(self.g1.x) * vec4(other.g7.x, other.g7.y, other.g7.z, -other.g2.y) + vec4(self.g1.x) * vec4(other.g1.x, other.g1.y, other.g1.z, 0.0) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, other.g2.x), vec3(self.g0.x) * vec3(other.g6.w, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, other.g6.w, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, other.g6.w) + vec3(self.g1.x) * other.g8 + vec3(self.g1.y) * vec3(other.g6.x, other.g6.y, other.g6.z), vec3(self.g0.x) * vec3(other.g2.y, -other.g8.z, other.g8.y) + vec3(self.g0.y) * vec3(other.g8.z, other.g2.y, -other.g8.x) + vec3(self.g0.z) * vec3(-other.g8.y, other.g8.x, other.g2.y) + vec3(self.g1.y) * other.g7 - vec3(self.g1.y) * other.g1, vec3(self.g0.x) * vec3(-other.g0.x, other.g4.z, -other.g4.y) + vec3(self.g0.y) * vec3(-other.g4.z, -other.g0.x, other.g4.x) + vec3(self.g0.z) * vec3(other.g4.y, -other.g4.x, -other.g0.x) + vec3(self.g1.x) * vec3(other.g5.x, other.g5.y, other.g5.z) - vec3(self.g1.y) * other.g3, vec2(self.g0.x) * vec2(other.g3.x, -other.g5.x) + vec2(self.g0.y) * vec2(other.g3.y, -other.g5.y) + vec2(self.g0.z) * vec2(other.g3.z, -other.g5.z) + self.g1 * vec2(-other.g5.w) + self.g1 * vec2(other.g0.x));
 }
 
-MultiVector radial_origin_anti_wedge_dot(Radial self, Origin other) {
+MultiVector round_point_origin_anti_wedge_dot(RoundPoint self, Origin other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0) - self.g0 * vec3(other.g0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), self.g1 * vec2(-other.g0));
 }
 
-MultiVector radial_plane_anti_wedge_dot(Radial self, Plane other) {
+MultiVector round_point_plane_anti_wedge_dot(RoundPoint self, Plane other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0) + vec2(self.g1.x) * vec2(other.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0) - vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g0.w, other.g0.w, other.g0.w, 0.0) + vec4(self.g1.y, self.g1.y, self.g1.y, self.g1.x) * other.g0, vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector radial_plane_at_origin_anti_wedge_dot(Radial self, PlaneAtOrigin other) {
+MultiVector round_point_plane_at_origin_anti_wedge_dot(RoundPoint self, PlaneAtOrigin other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0), vec3(0.0), vec2(0.0), vec3(0.0) - vec3(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g1.y) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector radial_point_anti_wedge_dot(Radial self, Point other) {
+MultiVector round_point_point_anti_wedge_dot(RoundPoint self, Point other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0) - self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + self.g1 * vec2(-other.g0.w));
 }
 
-MultiVector radial_point_at_infinity_anti_wedge_dot(Radial self, PointAtInfinity other) {
+MultiVector round_point_point_at_infinity_anti_wedge_dot(RoundPoint self, PointAtInfinity other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g1.x) * other.g0, vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g1.x) * other.g0, vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
 }
 
-MultiVector radial_radial_anti_wedge_dot(Radial self, Radial other) {
+MultiVector round_point_round_point_anti_wedge_dot(RoundPoint self, RoundPoint other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + vec2(self.g1.x) * vec2(0.0, other.g1.y) + vec2(self.g1.y) * vec2(0.0, other.g1.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(-other.g1.x, -other.g1.x, -other.g1.x, 0.0) + vec4(self.g1.x) * vec4(other.g0.x, other.g0.y, other.g0.z, -other.g1.y) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, other.g1.x), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), self.g0 * vec3(other.g1.y) - vec3(self.g1.y) * other.g0, vec3(0.0), vec2(0.0));
 }
 
-Sphere radial_scalar_anti_wedge_dot(Radial self, Scalar other) {
+Sphere round_point_scalar_anti_wedge_dot(RoundPoint self, Scalar other) {
     return Sphere(vec3(0.0) - self.g0 * vec3(other.g0), self.g1 * vec2(other.g0));
 }
 
-MultiVector radial_sphere_anti_wedge_dot(Radial self, Sphere other) {
+MultiVector round_point_sphere_anti_wedge_dot(RoundPoint self, Sphere other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0) + vec2(self.g1.x) * vec2(other.g1.y, 0.0) + vec2(self.g1.y) * vec2(other.g1.x, 0.0), vec3(0.0), vec2(0.0), vec3(0.0) - self.g0 * vec3(other.g1.x) - vec3(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g1.y) + vec4(self.g1.y) * vec4(other.g0.x, other.g0.y, other.g0.z, -other.g1.x), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
@@ -2320,8 +2497,12 @@ Circle scalar_dipole_anti_wedge_dot(Scalar self, Dipole other) {
     return Circle(vec4(self.g0) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, other.g2.w), vec3(0.0) - vec3(self.g0) * other.g1, vec3(0.0) - vec3(self.g0) * vec3(other.g2.x, other.g2.y, other.g2.z));
 }
 
-Radial scalar_horizon_anti_wedge_dot(Scalar self, Horizon other) {
-    return Radial(vec3(0.0), vec2(self.g0) * vec2(0.0, -other.g0));
+Infinity scalar_horizon_anti_wedge_dot(Scalar self, Horizon other) {
+    return Infinity(0.0 - self.g0 * other.g0);
+}
+
+Horizon scalar_infinity_anti_wedge_dot(Scalar self, Infinity other) {
+    return Horizon(self.g0 * other.g0);
 }
 
 Dipole scalar_line_anti_wedge_dot(Scalar self, Line other) {
@@ -2348,12 +2529,12 @@ Circle scalar_origin_anti_wedge_dot(Scalar self, Origin other) {
     return Circle(vec4(self.g0) * vec4(0.0, 0.0, 0.0, other.g0), vec3(0.0), vec3(0.0));
 }
 
-Radial scalar_plane_anti_wedge_dot(Scalar self, Plane other) {
-    return Radial(vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0) * vec2(0.0, -other.g0.w));
+RoundPoint scalar_plane_anti_wedge_dot(Scalar self, Plane other) {
+    return RoundPoint(vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0) * vec2(0.0, -other.g0.w));
 }
 
-Radial scalar_plane_at_origin_anti_wedge_dot(Scalar self, PlaneAtOrigin other) {
-    return Radial(vec3(self.g0) * other.g0, vec2(0.0));
+RoundPoint scalar_plane_at_origin_anti_wedge_dot(Scalar self, PlaneAtOrigin other) {
+    return RoundPoint(vec3(self.g0) * other.g0, vec2(0.0));
 }
 
 Circle scalar_point_anti_wedge_dot(Scalar self, Point other) {
@@ -2364,7 +2545,7 @@ LineAtInfinity scalar_point_at_infinity_anti_wedge_dot(Scalar self, PointAtInfin
     return LineAtInfinity(vec3(0.0) - vec3(self.g0) * other.g0);
 }
 
-Sphere scalar_radial_anti_wedge_dot(Scalar self, Radial other) {
+Sphere scalar_round_point_anti_wedge_dot(Scalar self, RoundPoint other) {
     return Sphere(vec3(0.0) - vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
 }
 
@@ -2372,8 +2553,8 @@ AntiScalar scalar_scalar_anti_wedge_dot(Scalar self, Scalar other) {
     return AntiScalar(0.0 - self.g0 * other.g0);
 }
 
-Radial scalar_sphere_anti_wedge_dot(Scalar self, Sphere other) {
-    return Radial(vec3(self.g0) * other.g0, vec2(0.0) - vec2(self.g0) * other.g1);
+RoundPoint scalar_sphere_anti_wedge_dot(Scalar self, Sphere other) {
+    return RoundPoint(vec3(self.g0) * other.g0, vec2(0.0) - vec2(self.g0) * other.g1);
 }
 
 Sphere sphere_anti_scalar_anti_wedge_dot(Sphere self, AntiScalar other) {
@@ -2390,6 +2571,10 @@ MultiVector sphere_dipole_anti_wedge_dot(Sphere self, Dipole other) {
 
 MultiVector sphere_horizon_anti_wedge_dot(Sphere self, Horizon other) {
     return MultiVector(vec2(self.g1.x) * vec2(0.0, -other.g0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g0), vec3(0.0), self.g0 * vec3(other.g0), vec3(0.0), vec2(0.0));
+}
+
+MultiVector sphere_infinity_anti_wedge_dot(Sphere self, Infinity other) {
+    return MultiVector(vec2(self.g1.x) * vec2(other.g0, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(-other.g0, -other.g0, -other.g0, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
 MultiVector sphere_line_anti_wedge_dot(Sphere self, Line other) {
@@ -2432,12 +2617,12 @@ MultiVector sphere_point_at_infinity_anti_wedge_dot(Sphere self, PointAtInfinity
     return MultiVector(vec2(0.0), vec3(self.g1.x) * other.g0, vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0) - vec3(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector sphere_radial_anti_wedge_dot(Sphere self, Radial other) {
+MultiVector sphere_round_point_anti_wedge_dot(Sphere self, RoundPoint other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0) + vec2(self.g1.x) * vec2(other.g1.y, 0.0) + vec2(self.g1.y) * vec2(other.g1.x, 0.0), vec3(0.0), vec2(0.0), self.g0 * vec3(other.g1.x) + vec3(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(-other.g1.y, -other.g1.y, -other.g1.y, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g1.y) - vec4(self.g1.y) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-Radial sphere_scalar_anti_wedge_dot(Sphere self, Scalar other) {
-    return Radial(self.g0 * vec3(other.g0), vec2(0.0) - self.g1 * vec2(other.g0));
+RoundPoint sphere_scalar_anti_wedge_dot(Sphere self, Scalar other) {
+    return RoundPoint(self.g0 * vec3(other.g0), vec2(0.0) - self.g1 * vec2(other.g0));
 }
 
 MultiVector sphere_sphere_anti_wedge_dot(Sphere self, Sphere other) {
@@ -2458,6 +2643,10 @@ Dipole anti_scalar_dipole_geometric_anti_product(AntiScalar self, Dipole other) 
 
 Horizon anti_scalar_horizon_geometric_anti_product(AntiScalar self, Horizon other) {
     return Horizon(self.g0 * other.g0);
+}
+
+Infinity anti_scalar_infinity_geometric_anti_product(AntiScalar self, Infinity other) {
+    return Infinity(self.g0 * other.g0);
 }
 
 Line anti_scalar_line_geometric_anti_product(AntiScalar self, Line other) {
@@ -2500,8 +2689,8 @@ PointAtInfinity anti_scalar_point_at_infinity_geometric_anti_product(AntiScalar 
     return PointAtInfinity(vec3(self.g0) * other.g0);
 }
 
-Radial anti_scalar_radial_geometric_anti_product(AntiScalar self, Radial other) {
-    return Radial(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
+RoundPoint anti_scalar_round_point_geometric_anti_product(AntiScalar self, RoundPoint other) {
+    return RoundPoint(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
 }
 
 Scalar anti_scalar_scalar_geometric_anti_product(AntiScalar self, Scalar other) {
@@ -2526,6 +2715,10 @@ MultiVector circle_dipole_geometric_anti_product(Circle self, Dipole other) {
 
 MultiVector circle_horizon_geometric_anti_product(Circle self, Horizon other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(other.g0, other.g0, other.g0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), vec2(self.g0.w) * vec2(0.0, other.g0));
+}
+
+MultiVector circle_infinity_geometric_anti_product(Circle self, Infinity other) {
+    return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), vec2(self.g0.w) * vec2(0.0, other.g0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), self.g1 * vec3(other.g0), vec3(0.0), vec2(0.0));
 }
 
 MultiVector circle_line_geometric_anti_product(Circle self, Line other) {
@@ -2568,7 +2761,7 @@ MultiVector circle_point_at_infinity_geometric_anti_product(Circle self, PointAt
     return MultiVector(vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + self.g0.wwwz * vec4(other.g0.x, other.g0.y, other.g0.z, -other.g0.z) + vec4(self.g1.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g1.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g1.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z));
 }
 
-MultiVector circle_radial_geometric_anti_product(Circle self, Radial other) {
+MultiVector circle_round_point_geometric_anti_product(Circle self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0) + self.g2 * vec3(other.g1.x), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g0.w) * other.g1 * vec2(-1.0, 1.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g1.x) * vec4(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, other.g1.x, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, other.g1.x, -other.g0.z), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y) + vec3(self.g0.w) * other.g0 + self.g2 * vec3(other.g1.x), self.g1 * vec3(other.g1.y) + vec3(self.g2.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g2.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g2.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
@@ -2594,6 +2787,10 @@ MultiVector dipole_dipole_geometric_anti_product(Dipole self, Dipole other) {
 
 MultiVector dipole_horizon_geometric_anti_product(Dipole self, Horizon other) {
     return MultiVector(vec2(0.0), self.g0 * vec3(other.g0), vec2(self.g2.w) * vec2(0.0, other.g0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0) - self.g0 * vec3(other.g0), vec3(0.0) - self.g1 * vec3(other.g0), vec3(0.0), vec2(0.0));
+}
+
+MultiVector dipole_infinity_geometric_anti_product(Dipole self, Infinity other) {
+    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), self.g0 * vec3(other.g0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(other.g0, other.g0, other.g0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), self.g0 * vec3(other.g0), vec2(self.g2.w) * vec2(0.0, -other.g0));
 }
 
 MultiVector dipole_line_geometric_anti_product(Dipole self, Line other) {
@@ -2636,7 +2833,7 @@ MultiVector dipole_point_at_infinity_geometric_anti_product(Dipole self, PointAt
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, -other.g0.z), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g2.w) * other.g0, vec3(0.0), vec2(0.0));
 }
 
-MultiVector dipole_radial_geometric_anti_product(Dipole self, Radial other) {
+MultiVector dipole_round_point_geometric_anti_product(Dipole self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) + self.g1 * vec3(other.g1.x), self.g0 * vec3(other.g1.y) + vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g1.x) - vec3(self.g2.w) * other.g0, vec4(self.g1.x) * vec4(other.g1.y, 0.0, 0.0, other.g0.x) + vec4(self.g1.y) * vec4(0.0, other.g1.y, 0.0, other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, other.g1.y, other.g0.z) + vec4(self.g2.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g2.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g2.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), self.g0 * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0) - vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z) + vec2(self.g2.w) * other.g1 * vec2(1.0, -1.0));
 }
 
@@ -2676,8 +2873,8 @@ MultiVector horizon_multi_vector_geometric_anti_product(Horizon self, MultiVecto
     return MultiVector(vec2(self.g0) * vec2(other.g2.x, -other.g10.x), vec3(0.0) - vec3(self.g0) * other.g3, vec2(self.g0) * vec2(0.0, -other.g5.w) + vec2(self.g0) * vec2(0.0, -other.g0.x), vec3(0.0), vec3(self.g0) * vec3(other.g6.x, other.g6.y, other.g6.z), vec4(self.g0) * vec4(other.g7.x, other.g7.y, other.g7.z, -other.g2.x) + vec4(self.g0) * vec4(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4(self.g0) * vec4(0.0, 0.0, 0.0, -other.g10.x), vec3(0.0) - vec3(self.g0) * other.g3, vec3(0.0) - vec3(self.g0) * other.g9 - vec3(self.g0) * other.g4, vec3(0.0) - vec3(self.g0) * vec3(other.g6.x, other.g6.y, other.g6.z), vec2(self.g0) * vec2(0.0, -other.g6.w) + vec2(self.g0) * vec2(0.0, other.g0.y));
 }
 
-Radial horizon_origin_geometric_anti_product(Horizon self, Origin other) {
-    return Radial(vec3(0.0), vec2(self.g0) * vec2(0.0, -other.g0));
+Infinity horizon_origin_geometric_anti_product(Horizon self, Origin other) {
+    return Infinity(0.0 - self.g0 * other.g0);
 }
 
 LineAtInfinity horizon_plane_geometric_anti_product(Horizon self, Plane other) {
@@ -2688,20 +2885,76 @@ LineAtInfinity horizon_plane_at_origin_geometric_anti_product(Horizon self, Plan
     return LineAtInfinity(vec3(0.0) - vec3(self.g0) * other.g0);
 }
 
-Radial horizon_point_geometric_anti_product(Horizon self, Point other) {
-    return Radial(vec3(0.0), vec2(self.g0) * vec2(0.0, -other.g0.w));
+Infinity horizon_point_geometric_anti_product(Horizon self, Point other) {
+    return Infinity(0.0 - self.g0 * other.g0.w);
 }
 
-MultiVector horizon_radial_geometric_anti_product(Horizon self, Radial other) {
+MultiVector horizon_round_point_geometric_anti_product(Horizon self, RoundPoint other) {
     return MultiVector(vec2(self.g0) * vec2(other.g1.x, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0) - vec4(self.g0) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-Radial horizon_scalar_geometric_anti_product(Horizon self, Scalar other) {
-    return Radial(vec3(0.0), vec2(self.g0) * vec2(0.0, -other.g0));
+Infinity horizon_scalar_geometric_anti_product(Horizon self, Scalar other) {
+    return Infinity(0.0 - self.g0 * other.g0);
 }
 
 MultiVector horizon_sphere_geometric_anti_product(Horizon self, Sphere other) {
     return MultiVector(vec2(self.g0) * vec2(0.0, -other.g1.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0) * vec4(0.0, 0.0, 0.0, -other.g1.x), vec3(0.0), vec3(0.0) - vec3(self.g0) * other.g0, vec3(0.0), vec2(0.0));
+}
+
+Infinity infinity_anti_scalar_geometric_anti_product(Infinity self, AntiScalar other) {
+    return Infinity(self.g0 * other.g0);
+}
+
+MultiVector infinity_circle_geometric_anti_product(Infinity self, Circle other) {
+    return MultiVector(vec2(0.0), vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0) * vec2(0.0, -other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0) * other.g1, vec3(0.0), vec2(0.0));
+}
+
+MultiVector infinity_dipole_geometric_anti_product(Infinity self, Dipole other) {
+    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0) * other.g0, vec4(self.g0) * vec4(other.g1.x, other.g1.y, other.g1.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0) * other.g0, vec2(self.g0) * vec2(0.0, other.g2.w));
+}
+
+LineAtInfinity infinity_line_geometric_anti_product(Infinity self, Line other) {
+    return LineAtInfinity(vec3(self.g0) * other.g0);
+}
+
+LineAtInfinity infinity_line_at_origin_geometric_anti_product(Infinity self, LineAtOrigin other) {
+    return LineAtInfinity(vec3(self.g0) * other.g0);
+}
+
+MultiVector infinity_magnitude_geometric_anti_product(Infinity self, Magnitude other) {
+    return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0) * vec2(0.0, other.g0.y), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0) * vec2(0.0, other.g0.x));
+}
+
+MultiVector infinity_multi_vector_geometric_anti_product(Infinity self, MultiVector other) {
+    return MultiVector(vec2(self.g0) * vec2(other.g10.x, other.g2.x), vec3(self.g0) * vec3(other.g6.x, other.g6.y, other.g6.z), vec2(self.g0) * vec2(0.0, -other.g6.w) + vec2(self.g0) * vec2(0.0, other.g0.y), vec3(0.0), vec3(self.g0) * other.g3, vec4(self.g0) * vec4(other.g9.x, other.g9.y, other.g9.z, -other.g10.x) + vec4(self.g0) * vec4(other.g4.x, other.g4.y, other.g4.z, 0.0), vec4(self.g0) * vec4(0.0, 0.0, 0.0, other.g2.x), vec3(self.g0) * vec3(other.g6.x, other.g6.y, other.g6.z), vec3(self.g0) * other.g7 - vec3(self.g0) * other.g1, vec3(0.0) - vec3(self.g0) * other.g3, vec2(self.g0) * vec2(0.0, other.g5.w) + vec2(self.g0) * vec2(0.0, other.g0.x));
+}
+
+Horizon infinity_origin_geometric_anti_product(Infinity self, Origin other) {
+    return Horizon(self.g0 * other.g0);
+}
+
+PointAtInfinity infinity_plane_geometric_anti_product(Infinity self, Plane other) {
+    return PointAtInfinity(vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z));
+}
+
+PointAtInfinity infinity_plane_at_origin_geometric_anti_product(Infinity self, PlaneAtOrigin other) {
+    return PointAtInfinity(vec3(self.g0) * other.g0);
+}
+
+Horizon infinity_point_geometric_anti_product(Infinity self, Point other) {
+    return Horizon(self.g0 * other.g0.w);
+}
+
+MultiVector infinity_round_point_geometric_anti_product(Infinity self, RoundPoint other) {
+    return MultiVector(vec2(self.g0) * vec2(0.0, other.g1.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0) * vec4(0.0, 0.0, 0.0, other.g1.x), vec3(0.0), vec3(0.0) - vec3(self.g0) * other.g0, vec3(0.0), vec2(0.0));
+}
+
+Horizon infinity_scalar_geometric_anti_product(Infinity self, Scalar other) {
+    return Horizon(self.g0 * other.g0);
+}
+
+MultiVector infinity_sphere_geometric_anti_product(Infinity self, Sphere other) {
+    return MultiVector(vec2(self.g0) * vec2(other.g1.x, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0) * vec4(other.g0.x, other.g0.y, other.g0.z, -other.g1.x), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
 Line line_anti_scalar_geometric_anti_product(Line self, AntiScalar other) {
@@ -2718,6 +2971,10 @@ MultiVector line_dipole_geometric_anti_product(Line self, Dipole other) {
 
 PointAtInfinity line_horizon_geometric_anti_product(Line self, Horizon other) {
     return PointAtInfinity(self.g0 * vec3(other.g0));
+}
+
+LineAtInfinity line_infinity_geometric_anti_product(Line self, Infinity other) {
+    return LineAtInfinity(self.g0 * vec3(other.g0));
 }
 
 MultiVector line_line_geometric_anti_product(Line self, Line other) {
@@ -2760,7 +3017,7 @@ MultiVector line_point_at_infinity_geometric_anti_product(Line self, PointAtInfi
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
 }
 
-MultiVector line_radial_geometric_anti_product(Line self, Radial other) {
+MultiVector line_round_point_geometric_anti_product(Line self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) + self.g1 * vec3(other.g1.x), vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, other.g1.x, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g1.x, -other.g0.z), self.g1 * vec3(other.g1.x), self.g0 * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
@@ -2816,7 +3073,7 @@ PointAtInfinity line_at_infinity_point_geometric_anti_product(LineAtInfinity sel
     return PointAtInfinity(self.g0 * vec3(other.g0.w));
 }
 
-MultiVector line_at_infinity_radial_geometric_anti_product(LineAtInfinity self, Radial other) {
+MultiVector line_at_infinity_round_point_geometric_anti_product(LineAtInfinity self, RoundPoint other) {
     return MultiVector(vec2(0.0), self.g0 * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), self.g0 * vec3(other.g1.x), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
@@ -2842,6 +3099,10 @@ MultiVector line_at_origin_dipole_geometric_anti_product(LineAtOrigin self, Dipo
 
 PointAtInfinity line_at_origin_horizon_geometric_anti_product(LineAtOrigin self, Horizon other) {
     return PointAtInfinity(self.g0 * vec3(other.g0));
+}
+
+LineAtInfinity line_at_origin_infinity_geometric_anti_product(LineAtOrigin self, Infinity other) {
+    return LineAtInfinity(self.g0 * vec3(other.g0));
 }
 
 MultiVector line_at_origin_line_geometric_anti_product(LineAtOrigin self, Line other) {
@@ -2884,7 +3145,7 @@ MultiVector line_at_origin_point_at_infinity_geometric_anti_product(LineAtOrigin
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
 }
 
-MultiVector line_at_origin_radial_geometric_anti_product(LineAtOrigin self, Radial other) {
+MultiVector line_at_origin_round_point_geometric_anti_product(LineAtOrigin self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, other.g1.x, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g1.x, -other.g0.z), vec3(0.0), self.g0 * vec3(other.g1.y), vec3(0.0), vec2(0.0));
 }
 
@@ -2910,6 +3171,10 @@ MultiVector magnitude_dipole_geometric_anti_product(Magnitude self, Dipole other
 
 MultiVector magnitude_horizon_geometric_anti_product(Magnitude self, Horizon other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.y) * vec2(0.0, other.g0));
+}
+
+MultiVector magnitude_infinity_geometric_anti_product(Magnitude self, Infinity other) {
+    return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.y) * vec2(0.0, other.g0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0));
 }
 
 MultiVector magnitude_line_geometric_anti_product(Magnitude self, Line other) {
@@ -2952,7 +3217,7 @@ MultiVector magnitude_point_at_infinity_geometric_anti_product(Magnitude self, P
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.y) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0.x) * other.g0, vec3(0.0), vec2(0.0));
 }
 
-MultiVector magnitude_radial_geometric_anti_product(Magnitude self, Radial other) {
+MultiVector magnitude_round_point_geometric_anti_product(Magnitude self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(self.g0.y) * other.g0, vec2(self.g0.y) * other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0.x) * other.g0, vec2(self.g0.x) * other.g1);
 }
 
@@ -2978,6 +3243,10 @@ MultiVector multi_vector_dipole_geometric_anti_product(MultiVector self, Dipole 
 
 MultiVector multi_vector_horizon_geometric_anti_product(MultiVector self, Horizon other) {
     return MultiVector(vec2(self.g2.x) * vec2(other.g0, 0.0) + vec2(self.g10.x) * vec2(0.0, -other.g0), self.g3 * vec3(other.g0), vec2(self.g0.x) * vec2(0.0, -other.g0) + vec2(self.g5.w) * vec2(0.0, other.g0), vec3(0.0), vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(other.g0, other.g0, other.g0, 0.0) + vec4(self.g2.x) * vec4(0.0, 0.0, 0.0, other.g0) + vec4(self.g7.x, self.g7.y, self.g7.z, self.g7.x) * vec4(other.g0, other.g0, other.g0, 0.0), vec4(self.g10.x) * vec4(0.0, 0.0, 0.0, other.g0), vec3(0.0) - self.g3 * vec3(other.g0), vec3(0.0) - self.g4 * vec3(other.g0) + self.g9 * vec3(other.g0), vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g0), vec2(self.g0.y) * vec2(0.0, other.g0) + vec2(self.g6.w) * vec2(0.0, other.g0));
+}
+
+MultiVector multi_vector_infinity_geometric_anti_product(MultiVector self, Infinity other) {
+    return MultiVector(vec2(self.g2.x) * vec2(0.0, other.g0) + vec2(self.g10.x) * vec2(other.g0, 0.0), vec3(0.0) - vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g0), vec2(self.g0.y) * vec2(0.0, other.g0) + vec2(self.g6.w) * vec2(0.0, other.g0), vec3(0.0), self.g3 * vec3(other.g0), vec4(self.g4.x, self.g4.y, self.g4.z, self.g4.x) * vec4(other.g0, other.g0, other.g0, 0.0) + vec4(self.g9.x, self.g9.y, self.g9.z, self.g9.x) * vec4(-other.g0, -other.g0, -other.g0, 0.0) + vec4(self.g10.x) * vec4(0.0, 0.0, 0.0, other.g0), vec4(self.g2.x) * vec4(0.0, 0.0, 0.0, -other.g0), vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g0), self.g1 * vec3(other.g0) + self.g7 * vec3(other.g0), self.g3 * vec3(other.g0), vec2(self.g0.x) * vec2(0.0, other.g0) + vec2(self.g5.w) * vec2(0.0, -other.g0));
 }
 
 MultiVector multi_vector_line_geometric_anti_product(MultiVector self, Line other) {
@@ -3020,7 +3289,7 @@ MultiVector multi_vector_point_at_infinity_geometric_anti_product(MultiVector se
     return MultiVector(vec2(self.g3.x) * vec2(0.0, other.g0.x) + vec2(self.g3.y) * vec2(0.0, other.g0.y) + vec2(self.g3.z) * vec2(0.0, other.g0.z) + vec2(self.g6.x) * vec2(-other.g0.x, 0.0) + vec2(self.g6.y) * vec2(-other.g0.y, 0.0) + vec2(self.g6.z) * vec2(-other.g0.z, 0.0), vec3(self.g3.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g3.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g3.z) * vec3(-other.g0.y, other.g0.x, 0.0) + vec3(self.g10.x) * other.g0, vec2(self.g4.x) * vec2(0.0, other.g0.x) + vec2(self.g4.y) * vec2(0.0, other.g0.y) + vec2(self.g4.z) * vec2(0.0, other.g0.z) + vec2(self.g9.x) * vec2(0.0, -other.g0.x) + vec2(self.g9.y) * vec2(0.0, -other.g0.y) + vec2(self.g9.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(self.g2.x) * other.g0 + vec3(self.g6.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g6.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g6.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec4(self.g0.y) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0) + vec4(self.g1.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g1.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g1.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g6.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g6.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + self.g6.wwwz * vec4(other.g0.x, other.g0.y, other.g0.z, -other.g0.z) + vec4(self.g7.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g7.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g7.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(self.g3.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g3.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g3.z) * vec4(0.0, 0.0, 0.0, -other.g0.z), vec3(self.g3.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g3.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g3.z) * vec3(other.g0.y, -other.g0.x, 0.0) - vec3(self.g10.x) * other.g0, vec3(0.0) - vec3(self.g0.x) * other.g0 + vec3(self.g4.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g4.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g4.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g5.w) * other.g0 + vec3(self.g9.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g9.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g9.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(self.g2.x) * other.g0 + vec3(self.g6.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g6.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g6.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z) + vec2(self.g7.x) * vec2(0.0, -other.g0.x) + vec2(self.g7.y) * vec2(0.0, -other.g0.y) + vec2(self.g7.z) * vec2(0.0, -other.g0.z));
 }
 
-MultiVector multi_vector_radial_geometric_anti_product(MultiVector self, Radial other) {
+MultiVector multi_vector_round_point_geometric_anti_product(MultiVector self, RoundPoint other) {
     return MultiVector(vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z) + vec2(self.g2.x) * vec2(0.0, other.g1.y) + vec2(self.g2.y) * vec2(0.0, other.g1.x) + vec2(self.g9.x) * vec2(other.g0.x, 0.0) + vec2(self.g9.y) * vec2(other.g0.y, 0.0) + vec2(self.g9.z) * vec2(other.g0.z, 0.0) + vec2(self.g10.x) * vec2(other.g1.y, 0.0) + vec2(self.g10.y) * vec2(other.g1.x, 0.0), vec3(self.g0.y) * other.g0 - vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g1.y) + vec3(self.g7.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g7.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g7.z) * vec3(-other.g0.y, other.g0.x, 0.0) + self.g8 * vec3(other.g1.x), vec2(self.g0.y) * other.g1 + vec2(self.g6.x) * vec2(-other.g0.x, 0.0) + vec2(self.g6.y) * vec2(-other.g0.y, 0.0) + vec2(self.g6.z) * vec2(-other.g0.z, 0.0) + vec2(self.g6.w) * other.g1 * vec2(-1.0, 1.0) + vec2(self.g8.x) * vec2(0.0, other.g0.x) + vec2(self.g8.y) * vec2(0.0, other.g0.y) + vec2(self.g8.z) * vec2(0.0, other.g0.z), vec3(self.g3.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g3.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g3.z) * vec3(-other.g0.y, other.g0.x, 0.0) + self.g4 * vec3(other.g1.x) + self.g9 * vec3(other.g1.x) + vec3(self.g10.x) * other.g0, self.g3 * vec3(other.g1.y) + vec3(self.g5.x, self.g5.y, self.g5.z) * vec3(other.g1.x) - vec3(self.g5.w) * other.g0 + vec3(self.g9.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g9.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g9.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g4.x) * vec4(other.g1.y, 0.0, 0.0, other.g0.x) + vec4(self.g4.y) * vec4(0.0, other.g1.y, 0.0, other.g0.y) + vec4(self.g4.z) * vec4(0.0, 0.0, other.g1.y, other.g0.z) + vec4(self.g5.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g5.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g5.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0) + vec4(self.g9.x, self.g9.y, self.g9.z, self.g9.x) * vec4(-other.g1.y, -other.g1.y, -other.g1.y, 0.0) + vec4(self.g10.x) * vec4(0.0, 0.0, 0.0, other.g1.y) - vec4(self.g10.y) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(-other.g1.x, -other.g1.x, -other.g1.x, 0.0) + vec4(self.g2.x) * vec4(other.g0.x, other.g0.y, other.g0.z, -other.g1.y) + vec4(self.g2.y) * vec4(0.0, 0.0, 0.0, other.g1.x) + vec4(self.g6.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g6.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g6.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g7.x) * vec4(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4(self.g7.y) * vec4(0.0, other.g1.x, 0.0, -other.g0.y) + vec4(self.g7.z) * vec4(0.0, 0.0, other.g1.x, -other.g0.z), vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0) + vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g1.y) + vec3(self.g6.w) * other.g0 + self.g8 * vec3(other.g1.x), self.g1 * vec3(other.g1.y) - vec3(self.g2.y) * other.g0 + self.g7 * vec3(other.g1.y) + vec3(self.g8.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g8.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g8.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0) - vec3(self.g0.x) * other.g0 + self.g3 * vec3(other.g1.y) + vec3(self.g4.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g4.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g4.z) * vec3(other.g0.y, -other.g0.x, 0.0) - vec3(self.g5.x, self.g5.y, self.g5.z) * vec3(other.g1.x), vec2(self.g0.x) * other.g1 + vec2(self.g3.x) * vec2(-other.g0.x, 0.0) + vec2(self.g3.y) * vec2(-other.g0.y, 0.0) + vec2(self.g3.z) * vec2(-other.g0.z, 0.0) + vec2(self.g5.x) * vec2(0.0, other.g0.x) + vec2(self.g5.y) * vec2(0.0, other.g0.y) + vec2(self.g5.z) * vec2(0.0, other.g0.z) + vec2(self.g5.w) * other.g1 * vec2(1.0, -1.0));
 }
 
@@ -3044,8 +3313,12 @@ MultiVector origin_dipole_geometric_anti_product(Origin self, Dipole other) {
     return MultiVector(vec2(self.g0) * vec2(0.0, -other.g2.w), vec3(self.g0) * other.g1, vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, 0.0), vec3(0.0), vec3(self.g0) * vec3(other.g2.x, other.g2.y, other.g2.z), vec3(0.0), vec2(0.0));
 }
 
-Radial origin_horizon_geometric_anti_product(Origin self, Horizon other) {
-    return Radial(vec3(0.0), vec2(self.g0) * vec2(0.0, other.g0));
+Infinity origin_horizon_geometric_anti_product(Origin self, Horizon other) {
+    return Infinity(self.g0 * other.g0);
+}
+
+Horizon origin_infinity_geometric_anti_product(Origin self, Infinity other) {
+    return Horizon(0.0 - self.g0 * other.g0);
 }
 
 MultiVector origin_line_geometric_anti_product(Origin self, Line other) {
@@ -3088,7 +3361,7 @@ LineAtInfinity origin_point_at_infinity_geometric_anti_product(Origin self, Poin
     return LineAtInfinity(vec3(self.g0) * other.g0);
 }
 
-MultiVector origin_radial_geometric_anti_product(Origin self, Radial other) {
+MultiVector origin_round_point_geometric_anti_product(Origin self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0) * other.g0, vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0) * other.g1 * vec2(1.0, -1.0));
 }
 
@@ -3114,6 +3387,10 @@ MultiVector plane_dipole_geometric_anti_product(Plane self, Dipole other) {
 
 LineAtInfinity plane_horizon_geometric_anti_product(Plane self, Horizon other) {
     return LineAtInfinity(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0));
+}
+
+PointAtInfinity plane_infinity_geometric_anti_product(Plane self, Infinity other) {
+    return PointAtInfinity(vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0));
 }
 
 MultiVector plane_line_geometric_anti_product(Plane self, Line other) {
@@ -3156,12 +3433,12 @@ MultiVector plane_point_at_infinity_geometric_anti_product(Plane self, PointAtIn
     return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector plane_radial_geometric_anti_product(Plane self, Radial other) {
+MultiVector plane_round_point_geometric_anti_product(Plane self, RoundPoint other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0) + vec2(self.g0.w) * vec2(other.g1.x, 0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), self.g0.xyzx * vec4(-other.g1.y, -other.g1.y, -other.g1.y, 0.0) - vec4(self.g0.w) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-Radial plane_scalar_geometric_anti_product(Plane self, Scalar other) {
-    return Radial(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), vec2(self.g0.w) * vec2(0.0, -other.g0));
+RoundPoint plane_scalar_geometric_anti_product(Plane self, Scalar other) {
+    return RoundPoint(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), vec2(self.g0.w) * vec2(0.0, -other.g0));
 }
 
 MultiVector plane_sphere_geometric_anti_product(Plane self, Sphere other) {
@@ -3182,6 +3459,10 @@ MultiVector plane_at_origin_dipole_geometric_anti_product(PlaneAtOrigin self, Di
 
 LineAtInfinity plane_at_origin_horizon_geometric_anti_product(PlaneAtOrigin self, Horizon other) {
     return LineAtInfinity(self.g0 * vec3(other.g0));
+}
+
+PointAtInfinity plane_at_origin_infinity_geometric_anti_product(PlaneAtOrigin self, Infinity other) {
+    return PointAtInfinity(vec3(0.0) - self.g0 * vec3(other.g0));
 }
 
 MultiVector plane_at_origin_line_geometric_anti_product(PlaneAtOrigin self, Line other) {
@@ -3224,12 +3505,12 @@ MultiVector plane_at_origin_point_at_infinity_geometric_anti_product(PlaneAtOrig
     return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector plane_at_origin_radial_geometric_anti_product(PlaneAtOrigin self, Radial other) {
+MultiVector plane_at_origin_round_point_geometric_anti_product(PlaneAtOrigin self, RoundPoint other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0), vec3(0.0), vec2(0.0), self.g0 * vec3(other.g1.x), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(-other.g1.y, -other.g1.y, -other.g1.y, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-Radial plane_at_origin_scalar_geometric_anti_product(PlaneAtOrigin self, Scalar other) {
-    return Radial(self.g0 * vec3(other.g0), vec2(0.0));
+RoundPoint plane_at_origin_scalar_geometric_anti_product(PlaneAtOrigin self, Scalar other) {
+    return RoundPoint(self.g0 * vec3(other.g0), vec2(0.0));
 }
 
 MultiVector plane_at_origin_sphere_geometric_anti_product(PlaneAtOrigin self, Sphere other) {
@@ -3248,8 +3529,12 @@ MultiVector point_dipole_geometric_anti_product(Point self, Dipole other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * vec2(0.0, -other.g2.w), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g0.w) * other.g1, vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, other.g0.y) + self.g0.wwwz * vec4(-other.g0.x, -other.g0.y, -other.g0.z, other.g0.z), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(self.g0.x) * vec3(-other.g2.w, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, -other.g2.w, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, -other.g2.w) + vec3(self.g0.w) * vec3(other.g2.x, other.g2.y, other.g2.z), vec3(0.0), vec2(0.0));
 }
 
-Radial point_horizon_geometric_anti_product(Point self, Horizon other) {
-    return Radial(vec3(0.0), vec2(self.g0.w) * vec2(0.0, other.g0));
+Infinity point_horizon_geometric_anti_product(Point self, Horizon other) {
+    return Infinity(self.g0.w * other.g0);
+}
+
+Horizon point_infinity_geometric_anti_product(Point self, Infinity other) {
+    return Horizon(0.0 - self.g0.w * other.g0);
 }
 
 MultiVector point_line_geometric_anti_product(Point self, Line other) {
@@ -3292,7 +3577,7 @@ LineAtInfinity point_point_at_infinity_geometric_anti_product(Point self, PointA
     return LineAtInfinity(vec3(self.g0.w) * other.g0);
 }
 
-MultiVector point_radial_geometric_anti_product(Point self, Radial other) {
+MultiVector point_round_point_geometric_anti_product(Point self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x) - vec3(self.g0.w) * other.g0, vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * other.g1 * vec2(1.0, -1.0));
 }
 
@@ -3348,7 +3633,7 @@ LineAtInfinity point_at_infinity_point_geometric_anti_product(PointAtInfinity se
     return LineAtInfinity(vec3(0.0) - self.g0 * vec3(other.g0.w));
 }
 
-MultiVector point_at_infinity_radial_geometric_anti_product(PointAtInfinity self, Radial other) {
+MultiVector point_at_infinity_round_point_geometric_anti_product(PointAtInfinity self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), self.g0 * vec3(other.g1.x), vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - self.g0 * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z));
 }
 
@@ -3360,71 +3645,75 @@ MultiVector point_at_infinity_sphere_geometric_anti_product(PointAtInfinity self
     return MultiVector(vec2(0.0), vec3(0.0) - self.g0 * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0) - self.g0 * vec3(other.g1.x), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
-Radial radial_anti_scalar_geometric_anti_product(Radial self, AntiScalar other) {
-    return Radial(self.g0 * vec3(other.g0), self.g1 * vec2(other.g0));
+RoundPoint round_point_anti_scalar_geometric_anti_product(RoundPoint self, AntiScalar other) {
+    return RoundPoint(self.g0 * vec3(other.g0), self.g1 * vec2(other.g0));
 }
 
-MultiVector radial_circle_geometric_anti_product(Radial self, Circle other) {
+MultiVector round_point_circle_geometric_anti_product(RoundPoint self, Circle other) {
     return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0) - vec3(self.g1.x) * other.g2 + vec3(self.g1.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(other.g0.x, -other.g2.x) + vec2(self.g0.y) * vec2(other.g0.y, -other.g2.y) + vec2(self.g0.z) * vec2(other.g0.z, -other.g2.z) + self.g1 * vec2(other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, -other.g1.x) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, -other.g1.y) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, -other.g1.z) + vec4(self.g1.x) * vec4(other.g1.x, other.g1.y, other.g1.z, 0.0), self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * other.g2 + vec3(self.g1.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.x) * vec3(0.0, -other.g2.z, other.g2.y) + vec3(self.g0.y) * vec3(other.g2.z, 0.0, -other.g2.x) + vec3(self.g0.z) * vec3(-other.g2.y, other.g2.x, 0.0) + vec3(self.g1.y) * other.g1, vec3(0.0), vec2(0.0));
 }
 
-MultiVector radial_dipole_geometric_anti_product(Radial self, Dipole other) {
+MultiVector round_point_dipole_geometric_anti_product(RoundPoint self, Dipole other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g1.x) * other.g1, vec3(0.0) - self.g0 * vec3(other.g2.w) + vec3(self.g1.x) * vec3(other.g2.x, other.g2.y, other.g2.z) + vec3(self.g1.y) * other.g0, vec4(self.g0.x) * vec4(0.0, -other.g2.z, other.g2.y, other.g1.x) + vec4(self.g0.y) * vec4(other.g2.z, 0.0, -other.g2.x, other.g1.y) + vec4(self.g0.z) * vec4(-other.g2.y, other.g2.x, 0.0, other.g1.z) + vec4(self.g1.y) * vec4(other.g1.x, other.g1.y, other.g1.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0) + vec3(self.g1.x) * vec3(other.g2.x, other.g2.y, other.g2.z) - vec3(self.g1.y) * other.g0, vec2(self.g0.x) * vec2(other.g0.x, -other.g2.x) + vec2(self.g0.y) * vec2(other.g0.y, -other.g2.y) + vec2(self.g0.z) * vec2(other.g0.z, -other.g2.z) + self.g1 * vec2(-other.g2.w));
 }
 
-MultiVector radial_horizon_geometric_anti_product(Radial self, Horizon other) {
+MultiVector round_point_horizon_geometric_anti_product(RoundPoint self, Horizon other) {
     return MultiVector(vec2(self.g1.x) * vec2(other.g0, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g0, other.g0, other.g0, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector radial_line_geometric_anti_product(Radial self, Line other) {
+MultiVector round_point_infinity_geometric_anti_product(RoundPoint self, Infinity other) {
+    return MultiVector(vec2(self.g1.x) * vec2(0.0, other.g0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, -other.g0), vec3(0.0), self.g0 * vec3(other.g0), vec3(0.0), vec2(0.0));
+}
+
+MultiVector round_point_line_geometric_anti_product(RoundPoint self, Line other) {
     return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) - vec3(self.g1.x) * other.g1, vec2(self.g0.x) * vec2(0.0, -other.g1.x) + vec2(self.g0.y) * vec2(0.0, -other.g1.y) + vec2(self.g0.z) * vec2(0.0, -other.g1.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, -other.g0.z) + vec4(self.g1.x) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3(self.g1.x) * other.g1, vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0) + vec3(self.g1.y) * other.g0, vec3(0.0), vec2(0.0));
 }
 
-MultiVector radial_line_at_infinity_geometric_anti_product(Radial self, LineAtInfinity other) {
+MultiVector round_point_line_at_infinity_geometric_anti_product(RoundPoint self, LineAtInfinity other) {
     return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g1.x) * other.g0, vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector radial_line_at_origin_geometric_anti_product(Radial self, LineAtOrigin other) {
+MultiVector round_point_line_at_origin_geometric_anti_product(RoundPoint self, LineAtOrigin other) {
     return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, -other.g0.z) + vec4(self.g1.x) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3(0.0), vec3(self.g1.y) * other.g0, vec3(0.0), vec2(0.0));
 }
 
-MultiVector radial_magnitude_geometric_anti_product(Radial self, Magnitude other) {
+MultiVector round_point_magnitude_geometric_anti_product(RoundPoint self, Magnitude other) {
     return MultiVector(vec2(0.0), self.g0 * vec3(other.g0.y), self.g1 * vec2(other.g0.y), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - self.g0 * vec3(other.g0.x), self.g1 * vec2(other.g0.x));
 }
 
-MultiVector radial_multi_vector_geometric_anti_product(Radial self, MultiVector other) {
+MultiVector round_point_multi_vector_geometric_anti_product(RoundPoint self, MultiVector other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g9.x, -other.g1.x) + vec2(self.g0.y) * vec2(other.g9.y, -other.g1.y) + vec2(self.g0.z) * vec2(other.g9.z, -other.g1.z) + vec2(self.g1.x) * vec2(other.g10.y, other.g2.y) + vec2(self.g1.y) * vec2(other.g10.x, other.g2.x), vec3(self.g0.x) * vec3(other.g0.y, -other.g7.z, other.g7.y) + vec3(self.g0.y) * vec3(other.g7.z, other.g0.y, -other.g7.x) + vec3(self.g0.z) * vec3(-other.g7.y, other.g7.x, other.g0.y) - vec3(self.g1.x) * other.g8 + vec3(self.g1.y) * vec3(other.g6.x, other.g6.y, other.g6.z), vec2(self.g0.x) * vec2(other.g6.x, -other.g8.x) + vec2(self.g0.y) * vec2(other.g6.y, -other.g8.y) + vec2(self.g0.z) * vec2(other.g6.z, -other.g8.z) + self.g1 * vec2(other.g6.w) + self.g1 * vec2(other.g0.y), vec3(self.g0.x) * vec3(-other.g10.x, other.g3.z, -other.g3.y) + vec3(self.g0.y) * vec3(-other.g3.z, -other.g10.x, other.g3.x) + vec3(self.g0.z) * vec3(other.g3.y, -other.g3.x, -other.g10.x) - vec3(self.g1.x) * other.g9 + vec3(self.g1.x) * other.g4, vec3(self.g0.x) * vec3(-other.g5.w, other.g9.z, -other.g9.y) + vec3(self.g0.y) * vec3(-other.g9.z, -other.g5.w, other.g9.x) + vec3(self.g0.z) * vec3(other.g9.y, -other.g9.x, -other.g5.w) + vec3(self.g1.x) * vec3(other.g5.x, other.g5.y, other.g5.z) + vec3(self.g1.y) * other.g3, vec4(self.g0.x) * vec4(other.g10.y, -other.g5.z, other.g5.y, other.g4.x) + vec4(self.g0.y) * vec4(other.g5.z, other.g10.y, -other.g5.x, other.g4.y) + vec4(self.g0.z) * vec4(-other.g5.y, other.g5.x, other.g10.y, other.g4.z) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g10.y) + vec4(self.g1.y) * vec4(other.g9.x, other.g9.y, other.g9.z, -other.g10.x) + vec4(self.g1.y) * vec4(other.g4.x, other.g4.y, other.g4.z, 0.0), vec4(self.g0.x) * vec4(-other.g2.x, other.g6.z, -other.g6.y, -other.g7.x) + vec4(self.g0.y) * vec4(-other.g6.z, -other.g2.x, other.g6.x, -other.g7.y) + vec4(self.g0.z) * vec4(other.g6.y, -other.g6.x, -other.g2.x, -other.g7.z) + vec4(self.g1.x) * vec4(other.g7.x, other.g7.y, other.g7.z, -other.g2.y) + vec4(self.g1.x) * vec4(other.g1.x, other.g1.y, other.g1.z, 0.0) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, other.g2.x), vec3(self.g0.x) * vec3(other.g6.w, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, other.g6.w, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, other.g6.w) + vec3(self.g1.x) * other.g8 + vec3(self.g1.y) * vec3(other.g6.x, other.g6.y, other.g6.z), vec3(self.g0.x) * vec3(other.g2.y, -other.g8.z, other.g8.y) + vec3(self.g0.y) * vec3(other.g8.z, other.g2.y, -other.g8.x) + vec3(self.g0.z) * vec3(-other.g8.y, other.g8.x, other.g2.y) + vec3(self.g1.y) * other.g7 - vec3(self.g1.y) * other.g1, vec3(self.g0.x) * vec3(-other.g0.x, other.g4.z, -other.g4.y) + vec3(self.g0.y) * vec3(-other.g4.z, -other.g0.x, other.g4.x) + vec3(self.g0.z) * vec3(other.g4.y, -other.g4.x, -other.g0.x) + vec3(self.g1.x) * vec3(other.g5.x, other.g5.y, other.g5.z) - vec3(self.g1.y) * other.g3, vec2(self.g0.x) * vec2(other.g3.x, -other.g5.x) + vec2(self.g0.y) * vec2(other.g3.y, -other.g5.y) + vec2(self.g0.z) * vec2(other.g3.z, -other.g5.z) + self.g1 * vec2(-other.g5.w) + self.g1 * vec2(other.g0.x));
 }
 
-MultiVector radial_origin_geometric_anti_product(Radial self, Origin other) {
+MultiVector round_point_origin_geometric_anti_product(RoundPoint self, Origin other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0) - self.g0 * vec3(other.g0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), self.g1 * vec2(-other.g0));
 }
 
-MultiVector radial_plane_geometric_anti_product(Radial self, Plane other) {
+MultiVector round_point_plane_geometric_anti_product(RoundPoint self, Plane other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0) + vec2(self.g1.x) * vec2(other.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0) - vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g0.w, other.g0.w, other.g0.w, 0.0) + vec4(self.g1.y, self.g1.y, self.g1.y, self.g1.x) * other.g0, vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector radial_plane_at_origin_geometric_anti_product(Radial self, PlaneAtOrigin other) {
+MultiVector round_point_plane_at_origin_geometric_anti_product(RoundPoint self, PlaneAtOrigin other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0), vec3(0.0), vec2(0.0), vec3(0.0) - vec3(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g1.y) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector radial_point_geometric_anti_product(Radial self, Point other) {
+MultiVector round_point_point_geometric_anti_product(RoundPoint self, Point other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0) - self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + self.g1 * vec2(-other.g0.w));
 }
 
-MultiVector radial_point_at_infinity_geometric_anti_product(Radial self, PointAtInfinity other) {
+MultiVector round_point_point_at_infinity_geometric_anti_product(RoundPoint self, PointAtInfinity other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g1.x) * other.g0, vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g1.x) * other.g0, vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
 }
 
-MultiVector radial_radial_geometric_anti_product(Radial self, Radial other) {
+MultiVector round_point_round_point_geometric_anti_product(RoundPoint self, RoundPoint other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + vec2(self.g1.x) * vec2(0.0, other.g1.y) + vec2(self.g1.y) * vec2(0.0, other.g1.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(-other.g1.x, -other.g1.x, -other.g1.x, 0.0) + vec4(self.g1.x) * vec4(other.g0.x, other.g0.y, other.g0.z, -other.g1.y) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, other.g1.x), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), self.g0 * vec3(other.g1.y) - vec3(self.g1.y) * other.g0, vec3(0.0), vec2(0.0));
 }
 
-Sphere radial_scalar_geometric_anti_product(Radial self, Scalar other) {
+Sphere round_point_scalar_geometric_anti_product(RoundPoint self, Scalar other) {
     return Sphere(vec3(0.0) - self.g0 * vec3(other.g0), self.g1 * vec2(other.g0));
 }
 
-MultiVector radial_sphere_geometric_anti_product(Radial self, Sphere other) {
+MultiVector round_point_sphere_geometric_anti_product(RoundPoint self, Sphere other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0) + vec2(self.g1.x) * vec2(other.g1.y, 0.0) + vec2(self.g1.y) * vec2(other.g1.x, 0.0), vec3(0.0), vec2(0.0), vec3(0.0) - self.g0 * vec3(other.g1.x) - vec3(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g1.y) + vec4(self.g1.y) * vec4(other.g0.x, other.g0.y, other.g0.z, -other.g1.x), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
@@ -3440,8 +3729,12 @@ Circle scalar_dipole_geometric_anti_product(Scalar self, Dipole other) {
     return Circle(vec4(self.g0) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, other.g2.w), vec3(0.0) - vec3(self.g0) * other.g1, vec3(0.0) - vec3(self.g0) * vec3(other.g2.x, other.g2.y, other.g2.z));
 }
 
-Radial scalar_horizon_geometric_anti_product(Scalar self, Horizon other) {
-    return Radial(vec3(0.0), vec2(self.g0) * vec2(0.0, -other.g0));
+Infinity scalar_horizon_geometric_anti_product(Scalar self, Horizon other) {
+    return Infinity(0.0 - self.g0 * other.g0);
+}
+
+Horizon scalar_infinity_geometric_anti_product(Scalar self, Infinity other) {
+    return Horizon(self.g0 * other.g0);
 }
 
 Dipole scalar_line_geometric_anti_product(Scalar self, Line other) {
@@ -3468,12 +3761,12 @@ Circle scalar_origin_geometric_anti_product(Scalar self, Origin other) {
     return Circle(vec4(self.g0) * vec4(0.0, 0.0, 0.0, other.g0), vec3(0.0), vec3(0.0));
 }
 
-Radial scalar_plane_geometric_anti_product(Scalar self, Plane other) {
-    return Radial(vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0) * vec2(0.0, -other.g0.w));
+RoundPoint scalar_plane_geometric_anti_product(Scalar self, Plane other) {
+    return RoundPoint(vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0) * vec2(0.0, -other.g0.w));
 }
 
-Radial scalar_plane_at_origin_geometric_anti_product(Scalar self, PlaneAtOrigin other) {
-    return Radial(vec3(self.g0) * other.g0, vec2(0.0));
+RoundPoint scalar_plane_at_origin_geometric_anti_product(Scalar self, PlaneAtOrigin other) {
+    return RoundPoint(vec3(self.g0) * other.g0, vec2(0.0));
 }
 
 Circle scalar_point_geometric_anti_product(Scalar self, Point other) {
@@ -3484,7 +3777,7 @@ LineAtInfinity scalar_point_at_infinity_geometric_anti_product(Scalar self, Poin
     return LineAtInfinity(vec3(0.0) - vec3(self.g0) * other.g0);
 }
 
-Sphere scalar_radial_geometric_anti_product(Scalar self, Radial other) {
+Sphere scalar_round_point_geometric_anti_product(Scalar self, RoundPoint other) {
     return Sphere(vec3(0.0) - vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
 }
 
@@ -3492,8 +3785,8 @@ AntiScalar scalar_scalar_geometric_anti_product(Scalar self, Scalar other) {
     return AntiScalar(0.0 - self.g0 * other.g0);
 }
 
-Radial scalar_sphere_geometric_anti_product(Scalar self, Sphere other) {
-    return Radial(vec3(self.g0) * other.g0, vec2(0.0) - vec2(self.g0) * other.g1);
+RoundPoint scalar_sphere_geometric_anti_product(Scalar self, Sphere other) {
+    return RoundPoint(vec3(self.g0) * other.g0, vec2(0.0) - vec2(self.g0) * other.g1);
 }
 
 Sphere sphere_anti_scalar_geometric_anti_product(Sphere self, AntiScalar other) {
@@ -3510,6 +3803,10 @@ MultiVector sphere_dipole_geometric_anti_product(Sphere self, Dipole other) {
 
 MultiVector sphere_horizon_geometric_anti_product(Sphere self, Horizon other) {
     return MultiVector(vec2(self.g1.x) * vec2(0.0, -other.g0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g0), vec3(0.0), self.g0 * vec3(other.g0), vec3(0.0), vec2(0.0));
+}
+
+MultiVector sphere_infinity_geometric_anti_product(Sphere self, Infinity other) {
+    return MultiVector(vec2(self.g1.x) * vec2(other.g0, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(-other.g0, -other.g0, -other.g0, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
 MultiVector sphere_line_geometric_anti_product(Sphere self, Line other) {
@@ -3552,12 +3849,12 @@ MultiVector sphere_point_at_infinity_geometric_anti_product(Sphere self, PointAt
     return MultiVector(vec2(0.0), vec3(self.g1.x) * other.g0, vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0) - vec3(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector sphere_radial_geometric_anti_product(Sphere self, Radial other) {
+MultiVector sphere_round_point_geometric_anti_product(Sphere self, RoundPoint other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0) + vec2(self.g1.x) * vec2(other.g1.y, 0.0) + vec2(self.g1.y) * vec2(other.g1.x, 0.0), vec3(0.0), vec2(0.0), self.g0 * vec3(other.g1.x) + vec3(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(-other.g1.y, -other.g1.y, -other.g1.y, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g1.y) - vec4(self.g1.y) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-Radial sphere_scalar_geometric_anti_product(Sphere self, Scalar other) {
-    return Radial(self.g0 * vec3(other.g0), vec2(0.0) - self.g1 * vec2(other.g0));
+RoundPoint sphere_scalar_geometric_anti_product(Sphere self, Scalar other) {
+    return RoundPoint(self.g0 * vec3(other.g0), vec2(0.0) - self.g1 * vec2(other.g0));
 }
 
 MultiVector sphere_sphere_geometric_anti_product(Sphere self, Sphere other) {
@@ -3576,8 +3873,12 @@ Circle anti_scalar_dipole_geometric_product(AntiScalar self, Dipole other) {
     return Circle(vec4(self.g0) * vec4(other.g0.x, other.g0.y, other.g0.z, -other.g2.w), vec3(self.g0) * other.g1, vec3(self.g0) * vec3(other.g2.x, other.g2.y, other.g2.z));
 }
 
-Radial anti_scalar_horizon_geometric_product(AntiScalar self, Horizon other) {
-    return Radial(vec3(0.0), vec2(self.g0) * vec2(0.0, other.g0));
+Infinity anti_scalar_horizon_geometric_product(AntiScalar self, Horizon other) {
+    return Infinity(self.g0 * other.g0);
+}
+
+Horizon anti_scalar_infinity_geometric_product(AntiScalar self, Infinity other) {
+    return Horizon(0.0 - self.g0 * other.g0);
 }
 
 Dipole anti_scalar_line_geometric_product(AntiScalar self, Line other) {
@@ -3604,12 +3905,12 @@ Circle anti_scalar_origin_geometric_product(AntiScalar self, Origin other) {
     return Circle(vec4(self.g0) * vec4(0.0, 0.0, 0.0, -other.g0), vec3(0.0), vec3(0.0));
 }
 
-Radial anti_scalar_plane_geometric_product(AntiScalar self, Plane other) {
-    return Radial(vec3(0.0) - vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0) * vec2(0.0, other.g0.w));
+RoundPoint anti_scalar_plane_geometric_product(AntiScalar self, Plane other) {
+    return RoundPoint(vec3(0.0) - vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0) * vec2(0.0, other.g0.w));
 }
 
-Radial anti_scalar_plane_at_origin_geometric_product(AntiScalar self, PlaneAtOrigin other) {
-    return Radial(vec3(0.0) - vec3(self.g0) * other.g0, vec2(0.0));
+RoundPoint anti_scalar_plane_at_origin_geometric_product(AntiScalar self, PlaneAtOrigin other) {
+    return RoundPoint(vec3(0.0) - vec3(self.g0) * other.g0, vec2(0.0));
 }
 
 Circle anti_scalar_point_geometric_product(AntiScalar self, Point other) {
@@ -3620,7 +3921,7 @@ LineAtInfinity anti_scalar_point_at_infinity_geometric_product(AntiScalar self, 
     return LineAtInfinity(vec3(self.g0) * other.g0);
 }
 
-Sphere anti_scalar_radial_geometric_product(AntiScalar self, Radial other) {
+Sphere anti_scalar_round_point_geometric_product(AntiScalar self, RoundPoint other) {
     return Sphere(vec3(self.g0) * other.g0, vec2(0.0) - vec2(self.g0) * other.g1);
 }
 
@@ -3628,8 +3929,8 @@ AntiScalar anti_scalar_scalar_geometric_product(AntiScalar self, Scalar other) {
     return AntiScalar(self.g0 * other.g0);
 }
 
-Radial anti_scalar_sphere_geometric_product(AntiScalar self, Sphere other) {
-    return Radial(vec3(0.0) - vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
+RoundPoint anti_scalar_sphere_geometric_product(AntiScalar self, Sphere other) {
+    return RoundPoint(vec3(0.0) - vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
 }
 
 Dipole circle_anti_scalar_geometric_product(Circle self, AntiScalar other) {
@@ -3646,6 +3947,10 @@ MultiVector circle_dipole_geometric_product(Circle self, Dipole other) {
 
 MultiVector circle_horizon_geometric_product(Circle self, Horizon other) {
     return MultiVector(vec2(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), vec2(self.g0.w) * vec2(0.0, -other.g0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), self.g1 * vec3(other.g0), vec3(0.0), vec2(0.0));
+}
+
+MultiVector circle_infinity_geometric_product(Circle self, Infinity other) {
+    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(-other.g0, -other.g0, -other.g0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), vec2(self.g0.w) * vec2(0.0, other.g0));
 }
 
 MultiVector circle_line_geometric_product(Circle self, Line other) {
@@ -3688,7 +3993,7 @@ MultiVector circle_point_at_infinity_geometric_product(Circle self, PointAtInfin
     return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, -other.g0.z), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0) - vec3(self.g0.w) * other.g0 + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector circle_radial_geometric_product(Circle self, Radial other) {
+MultiVector circle_round_point_geometric_product(Circle self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) - self.g1 * vec3(other.g1.x), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y) - vec3(self.g0.w) * other.g0 - self.g2 * vec3(other.g1.x), vec4(self.g1.x) * vec4(-other.g1.y, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, -other.g1.y, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, -other.g1.y, -other.g0.z) + vec4(self.g2.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g2.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g2.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0) - self.g2 * vec3(other.g1.x), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g0.w) * other.g1 * vec2(-1.0, 1.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z));
 }
 
@@ -3714,6 +4019,10 @@ MultiVector dipole_dipole_geometric_product(Dipole self, Dipole other) {
 
 MultiVector dipole_horizon_geometric_product(Dipole self, Horizon other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), self.g0 * vec3(other.g0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(other.g0, other.g0, other.g0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - self.g0 * vec3(other.g0), vec2(self.g2.w) * vec2(0.0, other.g0));
+}
+
+MultiVector dipole_infinity_geometric_product(Dipole self, Infinity other) {
+    return MultiVector(vec2(0.0), self.g0 * vec3(other.g0), vec2(self.g2.w) * vec2(0.0, other.g0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), self.g0 * vec3(other.g0), self.g1 * vec3(other.g0), vec3(0.0), vec2(0.0));
 }
 
 MultiVector dipole_line_geometric_product(Dipole self, Line other) {
@@ -3756,7 +4065,7 @@ MultiVector dipole_point_at_infinity_geometric_product(Dipole self, PointAtInfin
     return MultiVector(vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, other.g0.z) + vec4(self.g1.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g1.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g1.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0) + vec4(self.g2.w) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z));
 }
 
-MultiVector dipole_radial_geometric_product(Dipole self, Radial other) {
+MultiVector dipole_round_point_geometric_product(Dipole self, RoundPoint other) {
     return MultiVector(vec2(0.0), self.g0 * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0) - vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, -other.g0.x) + vec2(self.g2.y) * vec2(0.0, -other.g0.y) + vec2(self.g2.z) * vec2(0.0, -other.g0.z) + vec2(self.g2.w) * other.g1 * vec2(-1.0, 1.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g1.x) * vec4(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, other.g1.x, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, other.g1.x, -other.g0.z), self.g0 * vec3(other.g1.y) + vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g1.x) - vec3(self.g2.w) * other.g0, self.g1 * vec3(other.g1.y) + vec3(self.g2.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g2.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g2.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
@@ -3768,8 +4077,8 @@ MultiVector dipole_sphere_geometric_product(Dipole self, Sphere other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) + self.g1 * vec3(other.g1.x), self.g0 * vec3(other.g1.y) + vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g1.x) + vec3(self.g2.w) * other.g0, vec4(self.g1.x) * vec4(other.g1.y, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, other.g1.y, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, other.g1.y, -other.g0.z) + vec4(self.g2.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g2.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g2.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - self.g0 * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z) + vec2(self.g2.w) * other.g1 * vec2(-1.0, 1.0));
 }
 
-Radial horizon_anti_scalar_geometric_product(Horizon self, AntiScalar other) {
-    return Radial(vec3(0.0), vec2(self.g0) * vec2(0.0, other.g0));
+Infinity horizon_anti_scalar_geometric_product(Horizon self, AntiScalar other) {
+    return Infinity(self.g0 * other.g0);
 }
 
 MultiVector horizon_circle_geometric_product(Horizon self, Circle other) {
@@ -3812,7 +4121,7 @@ Horizon horizon_point_geometric_product(Horizon self, Point other) {
     return Horizon(0.0 - self.g0 * other.g0.w);
 }
 
-MultiVector horizon_radial_geometric_product(Horizon self, Radial other) {
+MultiVector horizon_round_point_geometric_product(Horizon self, RoundPoint other) {
     return MultiVector(vec2(self.g0) * vec2(0.0, other.g1.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0) * vec4(0.0, 0.0, 0.0, -other.g1.x), vec3(0.0), vec3(self.g0) * other.g0, vec3(0.0), vec2(0.0));
 }
 
@@ -3822,6 +4131,62 @@ Horizon horizon_scalar_geometric_product(Horizon self, Scalar other) {
 
 MultiVector horizon_sphere_geometric_product(Horizon self, Sphere other) {
     return MultiVector(vec2(self.g0) * vec2(other.g1.x, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, other.g1.x), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
+}
+
+Horizon infinity_anti_scalar_geometric_product(Infinity self, AntiScalar other) {
+    return Horizon(0.0 - self.g0 * other.g0);
+}
+
+MultiVector infinity_circle_geometric_product(Infinity self, Circle other) {
+    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g0) * vec4(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0) * vec2(0.0, -other.g0.w));
+}
+
+MultiVector infinity_dipole_geometric_product(Infinity self, Dipole other) {
+    return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g0) * other.g0, vec2(self.g0) * vec2(0.0, -other.g2.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0) * other.g0, vec3(self.g0) * other.g1, vec3(0.0), vec2(0.0));
+}
+
+PointAtInfinity infinity_line_geometric_product(Infinity self, Line other) {
+    return PointAtInfinity(vec3(0.0) - vec3(self.g0) * other.g0);
+}
+
+PointAtInfinity infinity_line_at_origin_geometric_product(Infinity self, LineAtOrigin other) {
+    return PointAtInfinity(vec3(0.0) - vec3(self.g0) * other.g0);
+}
+
+MultiVector infinity_magnitude_geometric_product(Infinity self, Magnitude other) {
+    return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0) * vec2(0.0, other.g0.x), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0) * vec2(0.0, -other.g0.y));
+}
+
+MultiVector infinity_multi_vector_geometric_product(Infinity self, MultiVector other) {
+    return MultiVector(vec2(self.g0) * vec2(-other.g2.x, other.g10.x), vec3(0.0) - vec3(self.g0) * other.g3, vec2(self.g0) * vec2(0.0, -other.g5.w) + vec2(self.g0) * vec2(0.0, other.g0.x), vec3(0.0), vec3(0.0) - vec3(self.g0) * vec3(other.g6.x, other.g6.y, other.g6.z), vec4(0.0) - vec4(self.g0) * vec4(other.g7.x, other.g7.y, other.g7.z, other.g2.x) + vec4(self.g0) * vec4(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4(self.g0) * vec4(0.0, 0.0, 0.0, -other.g10.x), vec3(self.g0) * other.g3, vec3(0.0) - vec3(self.g0) * other.g9 + vec3(self.g0) * other.g4, vec3(0.0) - vec3(self.g0) * vec3(other.g6.x, other.g6.y, other.g6.z), vec2(self.g0) * vec2(0.0, -other.g6.w) + vec2(self.g0) * vec2(0.0, -other.g0.y));
+}
+
+Infinity infinity_origin_geometric_product(Infinity self, Origin other) {
+    return Infinity(0.0 - self.g0 * other.g0);
+}
+
+LineAtInfinity infinity_plane_geometric_product(Infinity self, Plane other) {
+    return LineAtInfinity(vec3(0.0) - vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z));
+}
+
+LineAtInfinity infinity_plane_at_origin_geometric_product(Infinity self, PlaneAtOrigin other) {
+    return LineAtInfinity(vec3(0.0) - vec3(self.g0) * other.g0);
+}
+
+Infinity infinity_point_geometric_product(Infinity self, Point other) {
+    return Infinity(0.0 - self.g0 * other.g0.w);
+}
+
+MultiVector infinity_round_point_geometric_product(Infinity self, RoundPoint other) {
+    return MultiVector(vec2(self.g0) * vec2(-other.g1.x, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0) - vec4(self.g0) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
+}
+
+Infinity infinity_scalar_geometric_product(Infinity self, Scalar other) {
+    return Infinity(self.g0 * other.g0);
+}
+
+MultiVector infinity_sphere_geometric_product(Infinity self, Sphere other) {
+    return MultiVector(vec2(self.g0) * vec2(0.0, other.g1.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0) * vec4(0.0, 0.0, 0.0, -other.g1.x), vec3(0.0), vec3(0.0) - vec3(self.g0) * other.g0, vec3(0.0), vec2(0.0));
 }
 
 Dipole line_anti_scalar_geometric_product(Line self, AntiScalar other) {
@@ -3838,6 +4203,10 @@ MultiVector line_dipole_geometric_product(Line self, Dipole other) {
 
 LineAtInfinity line_horizon_geometric_product(Line self, Horizon other) {
     return LineAtInfinity(self.g0 * vec3(other.g0));
+}
+
+PointAtInfinity line_infinity_geometric_product(Line self, Infinity other) {
+    return PointAtInfinity(vec3(0.0) - self.g0 * vec3(other.g0));
 }
 
 MultiVector line_line_geometric_product(Line self, Line other) {
@@ -3880,7 +4249,7 @@ MultiVector line_point_at_infinity_geometric_product(Line self, PointAtInfinity 
     return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector line_radial_geometric_product(Line self, Radial other) {
+MultiVector line_round_point_geometric_product(Line self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0) - self.g0 * vec3(other.g1.x), vec3(0.0) - self.g1 * vec3(other.g1.x), vec4(self.g0.x) * vec4(-other.g1.y, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, -other.g1.y, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, -other.g1.y, -other.g0.z) + vec4(self.g1.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g1.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g1.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) - self.g1 * vec3(other.g1.x), vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z));
 }
 
@@ -3936,7 +4305,7 @@ LineAtInfinity line_at_infinity_point_geometric_product(LineAtInfinity self, Poi
     return LineAtInfinity(vec3(0.0) - self.g0 * vec3(other.g0.w));
 }
 
-MultiVector line_at_infinity_radial_geometric_product(LineAtInfinity self, Radial other) {
+MultiVector line_at_infinity_round_point_geometric_product(LineAtInfinity self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0) - self.g0 * vec3(other.g1.x), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - self.g0 * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z));
 }
 
@@ -3964,6 +4333,10 @@ LineAtInfinity line_at_origin_horizon_geometric_product(LineAtOrigin self, Horiz
     return LineAtInfinity(self.g0 * vec3(other.g0));
 }
 
+PointAtInfinity line_at_origin_infinity_geometric_product(LineAtOrigin self, Infinity other) {
+    return PointAtInfinity(vec3(0.0) - self.g0 * vec3(other.g0));
+}
+
 MultiVector line_at_origin_line_geometric_product(LineAtOrigin self, Line other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec4(self.g0.x) * vec4(0.0, -other.g1.z, other.g1.y, 0.0) + vec4(self.g0.y) * vec4(other.g1.z, 0.0, -other.g1.x, 0.0) + vec4(self.g0.z) * vec4(-other.g1.y, other.g1.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z));
 }
@@ -3984,8 +4357,8 @@ MultiVector line_at_origin_multi_vector_geometric_product(LineAtOrigin self, Mul
     return MultiVector(vec2(self.g0.x) * vec2(other.g7.x, -other.g4.x) + vec2(self.g0.y) * vec2(other.g7.y, -other.g4.y) + vec2(self.g0.z) * vec2(other.g7.z, -other.g4.z), vec3(self.g0.x) * vec3(-other.g5.w, -other.g9.z, other.g9.y) + vec3(self.g0.y) * vec3(other.g9.z, -other.g5.w, -other.g9.x) + vec3(self.g0.z) * vec3(-other.g9.y, other.g9.x, -other.g5.w), vec2(0.0) - vec2(self.g0.x) * vec2(other.g3.x, other.g5.x) - vec2(self.g0.y) * vec2(other.g3.y, other.g5.y) - vec2(self.g0.z) * vec2(other.g3.z, other.g5.z), vec3(self.g0.x) * vec3(-other.g2.x, -other.g6.z, other.g6.y) + vec3(self.g0.y) * vec3(other.g6.z, -other.g2.x, -other.g6.x) + vec3(self.g0.z) * vec3(-other.g6.y, other.g6.x, -other.g2.x), vec3(self.g0.x) * vec3(-other.g0.y, -other.g7.z, other.g7.y) + vec3(self.g0.y) * vec3(other.g7.z, -other.g0.y, -other.g7.x) + vec3(self.g0.z) * vec3(-other.g7.y, other.g7.x, -other.g0.y), vec4(self.g0.x) * vec4(-other.g2.y, -other.g8.z, other.g8.y, -other.g1.x) + vec4(self.g0.y) * vec4(other.g8.z, -other.g2.y, -other.g8.x, -other.g1.y) + vec4(self.g0.z) * vec4(-other.g8.y, other.g8.x, -other.g2.y, -other.g1.z), vec4(self.g0.x) * vec4(other.g10.x, other.g3.z, -other.g3.y, other.g9.x) + vec4(self.g0.y) * vec4(-other.g3.z, other.g10.x, other.g3.x, other.g9.y) + vec4(self.g0.z) * vec4(other.g3.y, -other.g3.x, other.g10.x, other.g9.z), vec3(self.g0.x) * vec3(other.g0.x, other.g4.z, -other.g4.y) + vec3(self.g0.y) * vec3(-other.g4.z, other.g0.x, other.g4.x) + vec3(self.g0.z) * vec3(other.g4.y, -other.g4.x, other.g0.x), vec3(self.g0.x) * vec3(other.g10.y, other.g5.z, -other.g5.y) + vec3(self.g0.y) * vec3(-other.g5.z, other.g10.y, other.g5.x) + vec3(self.g0.z) * vec3(other.g5.y, -other.g5.x, other.g10.y), vec3(self.g0.x) * vec3(other.g6.w, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, other.g6.w, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, other.g6.w), vec2(self.g0.x) * vec2(other.g6.x, other.g8.x) + vec2(self.g0.y) * vec2(other.g6.y, other.g8.y) + vec2(self.g0.z) * vec2(other.g6.z, other.g8.z));
 }
 
-Radial line_at_origin_origin_geometric_product(LineAtOrigin self, Origin other) {
-    return Radial(vec3(0.0) - self.g0 * vec3(other.g0), vec2(0.0));
+RoundPoint line_at_origin_origin_geometric_product(LineAtOrigin self, Origin other) {
+    return RoundPoint(vec3(0.0) - self.g0 * vec3(other.g0), vec2(0.0));
 }
 
 MultiVector line_at_origin_plane_geometric_product(LineAtOrigin self, Plane other) {
@@ -4004,7 +4377,7 @@ MultiVector line_at_origin_point_at_infinity_geometric_product(LineAtOrigin self
     return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector line_at_origin_radial_geometric_product(LineAtOrigin self, Radial other) {
+MultiVector line_at_origin_round_point_geometric_product(LineAtOrigin self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0) - self.g0 * vec3(other.g1.x), vec3(0.0), vec4(self.g0.x) * vec4(-other.g1.y, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, -other.g1.y, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, -other.g1.y, -other.g0.z), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec2(0.0));
 }
 
@@ -4030,6 +4403,10 @@ MultiVector magnitude_dipole_geometric_product(Magnitude self, Dipole other) {
 
 MultiVector magnitude_horizon_geometric_product(Magnitude self, Horizon other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.y) * vec2(0.0, other.g0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0));
+}
+
+MultiVector magnitude_infinity_geometric_product(Magnitude self, Infinity other) {
+    return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.y) * vec2(0.0, -other.g0));
 }
 
 MultiVector magnitude_line_geometric_product(Magnitude self, Line other) {
@@ -4072,7 +4449,7 @@ MultiVector magnitude_point_at_infinity_geometric_product(Magnitude self, PointA
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(self.g0.y) * other.g0, vec3(0.0), vec2(0.0));
 }
 
-MultiVector magnitude_radial_geometric_product(Magnitude self, Radial other) {
+MultiVector magnitude_round_point_geometric_product(Magnitude self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(self.g0.x) * other.g0, vec2(self.g0.x) * other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.y) * other.g0, vec2(0.0) - vec2(self.g0.y) * other.g1);
 }
 
@@ -4098,6 +4475,10 @@ MultiVector multi_vector_dipole_geometric_product(MultiVector self, Dipole other
 
 MultiVector multi_vector_horizon_geometric_product(MultiVector self, Horizon other) {
     return MultiVector(vec2(self.g2.x) * vec2(0.0, other.g0) + vec2(self.g10.x) * vec2(other.g0, 0.0), vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g0), vec2(self.g0.y) * vec2(0.0, other.g0) + vec2(self.g6.w) * vec2(0.0, -other.g0), vec3(0.0), self.g3 * vec3(other.g0), vec4(self.g4.x, self.g4.y, self.g4.z, self.g4.x) * vec4(other.g0, other.g0, other.g0, 0.0) + vec4(self.g9.x, self.g9.y, self.g9.z, self.g9.x) * vec4(other.g0, other.g0, other.g0, 0.0) + vec4(self.g10.x) * vec4(0.0, 0.0, 0.0, -other.g0), vec4(self.g2.x) * vec4(0.0, 0.0, 0.0, other.g0), vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g0), vec3(0.0) - self.g1 * vec3(other.g0) + self.g7 * vec3(other.g0), vec3(0.0) - self.g3 * vec3(other.g0), vec2(self.g0.x) * vec2(0.0, other.g0) + vec2(self.g5.w) * vec2(0.0, other.g0));
+}
+
+MultiVector multi_vector_infinity_geometric_product(MultiVector self, Infinity other) {
+    return MultiVector(vec2(self.g2.x) * vec2(-other.g0, 0.0) + vec2(self.g10.x) * vec2(0.0, other.g0), self.g3 * vec3(other.g0), vec2(self.g0.x) * vec2(0.0, other.g0) + vec2(self.g5.w) * vec2(0.0, other.g0), vec3(0.0), vec3(0.0) - vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(other.g0, other.g0, other.g0, 0.0) + vec4(self.g2.x) * vec4(0.0, 0.0, 0.0, other.g0) + vec4(self.g7.x, self.g7.y, self.g7.z, self.g7.x) * vec4(-other.g0, -other.g0, -other.g0, 0.0), vec4(self.g10.x) * vec4(0.0, 0.0, 0.0, other.g0), self.g3 * vec3(other.g0), self.g4 * vec3(other.g0) + self.g9 * vec3(other.g0), vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g0), vec2(self.g0.y) * vec2(0.0, -other.g0) + vec2(self.g6.w) * vec2(0.0, other.g0));
 }
 
 MultiVector multi_vector_line_geometric_product(MultiVector self, Line other) {
@@ -4140,7 +4521,7 @@ MultiVector multi_vector_point_at_infinity_geometric_product(MultiVector self, P
     return MultiVector(vec2(self.g3.x) * vec2(-other.g0.x, 0.0) + vec2(self.g3.y) * vec2(-other.g0.y, 0.0) + vec2(self.g3.z) * vec2(-other.g0.z, 0.0) + vec2(self.g6.x) * vec2(0.0, -other.g0.x) + vec2(self.g6.y) * vec2(0.0, -other.g0.y) + vec2(self.g6.z) * vec2(0.0, -other.g0.z), vec3(self.g2.x) * other.g0 + vec3(self.g6.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g6.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g6.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z) + vec2(self.g7.x) * vec2(0.0, -other.g0.x) + vec2(self.g7.y) * vec2(0.0, -other.g0.y) + vec2(self.g7.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(self.g3.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g3.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g3.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g10.x) * other.g0, vec4(self.g0.x) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0) + vec4(self.g3.x) * vec4(0.0, 0.0, 0.0, other.g0.x) + vec4(self.g3.y) * vec4(0.0, 0.0, 0.0, other.g0.y) + vec4(self.g3.z) * vec4(0.0, 0.0, 0.0, other.g0.z) + vec4(self.g4.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g4.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g4.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0) + vec4(self.g5.w) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0) + vec4(self.g9.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g9.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g9.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0), vec4(self.g6.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g6.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g6.z) * vec4(0.0, 0.0, 0.0, -other.g0.z), vec3(self.g2.x) * other.g0 + vec3(self.g6.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g6.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g6.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(self.g0.y) * other.g0 + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0) - vec3(self.g6.w) * other.g0 + vec3(self.g7.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g7.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g7.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(self.g3.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g3.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g3.z) * vec3(-other.g0.y, other.g0.x, 0.0) - vec3(self.g10.x) * other.g0, vec2(self.g4.x) * vec2(0.0, -other.g0.x) + vec2(self.g4.y) * vec2(0.0, -other.g0.y) + vec2(self.g4.z) * vec2(0.0, -other.g0.z) + vec2(self.g9.x) * vec2(0.0, -other.g0.x) + vec2(self.g9.y) * vec2(0.0, -other.g0.y) + vec2(self.g9.z) * vec2(0.0, -other.g0.z));
 }
 
-MultiVector multi_vector_radial_geometric_product(MultiVector self, Radial other) {
+MultiVector multi_vector_round_point_geometric_product(MultiVector self, RoundPoint other) {
     return MultiVector(vec2(self.g1.x) * vec2(other.g0.x, 0.0) + vec2(self.g1.y) * vec2(other.g0.y, 0.0) + vec2(self.g1.z) * vec2(other.g0.z, 0.0) + vec2(self.g2.x) * vec2(-other.g1.y, 0.0) + vec2(self.g2.y) * vec2(-other.g1.x, 0.0) + vec2(self.g9.x) * vec2(0.0, other.g0.x) + vec2(self.g9.y) * vec2(0.0, other.g0.y) + vec2(self.g9.z) * vec2(0.0, other.g0.z) + vec2(self.g10.x) * vec2(0.0, other.g1.y) + vec2(self.g10.y) * vec2(0.0, other.g1.x), vec3(self.g0.x) * other.g0 + self.g3 * vec3(other.g1.y) + vec3(self.g4.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g4.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g4.z) * vec3(other.g0.y, -other.g0.x, 0.0) - vec3(self.g5.x, self.g5.y, self.g5.z) * vec3(other.g1.x), vec2(self.g0.x) * other.g1 + vec2(self.g3.x) * vec2(other.g0.x, 0.0) + vec2(self.g3.y) * vec2(other.g0.y, 0.0) + vec2(self.g3.z) * vec2(other.g0.z, 0.0) + vec2(self.g5.x) * vec2(0.0, -other.g0.x) + vec2(self.g5.y) * vec2(0.0, -other.g0.y) + vec2(self.g5.z) * vec2(0.0, -other.g0.z) + vec2(self.g5.w) * other.g1 * vec2(-1.0, 1.0), vec3(0.0) - self.g1 * vec3(other.g1.x) + vec3(self.g2.x) * other.g0 + vec3(self.g6.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g6.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g6.z) * vec3(other.g0.y, -other.g0.x, 0.0) - self.g7 * vec3(other.g1.x), vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0) - vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g1.y) - vec3(self.g6.w) * other.g0 - self.g8 * vec3(other.g1.x), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4(self.g2.x) * vec4(0.0, 0.0, 0.0, other.g1.y) - vec4(self.g2.y) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x) + vec4(self.g7.x) * vec4(-other.g1.y, 0.0, 0.0, -other.g0.x) + vec4(self.g7.y) * vec4(0.0, -other.g1.y, 0.0, -other.g0.y) + vec4(self.g7.z) * vec4(0.0, 0.0, -other.g1.y, -other.g0.z) + vec4(self.g8.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g8.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g8.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(self.g3.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g3.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g3.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g4.x) * vec4(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4(self.g4.y) * vec4(0.0, other.g1.x, 0.0, -other.g0.y) + vec4(self.g4.z) * vec4(0.0, 0.0, other.g1.x, -other.g0.z) + vec4(self.g9.x, self.g9.y, self.g9.z, self.g9.x) * vec4(-other.g1.x, -other.g1.x, -other.g1.x, 0.0) + vec4(self.g10.x) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, other.g1.y) + vec4(self.g10.y) * vec4(0.0, 0.0, 0.0, -other.g1.x), self.g3 * vec3(other.g1.y) + vec3(self.g5.x, self.g5.y, self.g5.z) * vec3(other.g1.x) - vec3(self.g5.w) * other.g0 + vec3(self.g9.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g9.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g9.z) * vec3(-other.g0.y, other.g0.x, 0.0), self.g4 * vec3(other.g1.y) + vec3(self.g5.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g5.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g5.z) * vec3(other.g0.y, -other.g0.x, 0.0) + self.g9 * vec3(other.g1.y) + vec3(self.g10.y) * other.g0, vec3(self.g0.y) * other.g0 + vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g1.y) + vec3(self.g7.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g7.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g7.z) * vec3(other.g0.y, -other.g0.x, 0.0) - self.g8 * vec3(other.g1.x), vec2(0.0) - vec2(self.g0.y) * other.g1 + vec2(self.g6.x) * vec2(-other.g0.x, 0.0) + vec2(self.g6.y) * vec2(-other.g0.y, 0.0) + vec2(self.g6.z) * vec2(-other.g0.z, 0.0) + vec2(self.g6.w) * other.g1 * vec2(-1.0, 1.0) + vec2(self.g8.x) * vec2(0.0, other.g0.x) + vec2(self.g8.y) * vec2(0.0, other.g0.y) + vec2(self.g8.z) * vec2(0.0, other.g0.z));
 }
 
@@ -4168,6 +4549,10 @@ Horizon origin_horizon_geometric_product(Origin self, Horizon other) {
     return Horizon(self.g0 * other.g0);
 }
 
+Infinity origin_infinity_geometric_product(Origin self, Infinity other) {
+    return Infinity(self.g0 * other.g0);
+}
+
 MultiVector origin_line_geometric_product(Origin self, Line other) {
     return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g0) * other.g0, vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(self.g0) * other.g1, vec3(0.0), vec2(0.0));
 }
@@ -4176,8 +4561,8 @@ LineAtInfinity origin_line_at_infinity_geometric_product(Origin self, LineAtInfi
     return LineAtInfinity(vec3(self.g0) * other.g0);
 }
 
-Radial origin_line_at_origin_geometric_product(Origin self, LineAtOrigin other) {
-    return Radial(vec3(0.0) - vec3(self.g0) * other.g0, vec2(0.0));
+RoundPoint origin_line_at_origin_geometric_product(Origin self, LineAtOrigin other) {
+    return RoundPoint(vec3(0.0) - vec3(self.g0) * other.g0, vec2(0.0));
 }
 
 MultiVector origin_magnitude_geometric_product(Origin self, Magnitude other) {
@@ -4208,7 +4593,7 @@ PointAtInfinity origin_point_at_infinity_geometric_product(Origin self, PointAtI
     return PointAtInfinity(vec3(self.g0) * other.g0);
 }
 
-MultiVector origin_radial_geometric_product(Origin self, Radial other) {
+MultiVector origin_round_point_geometric_product(Origin self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0) * other.g1 * vec2(-1.0, 1.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0) - vec3(self.g0) * other.g0, vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
@@ -4220,8 +4605,8 @@ MultiVector origin_sphere_geometric_product(Origin self, Sphere other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0) * other.g0, vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0) * other.g1 * vec2(-1.0, 1.0));
 }
 
-Radial plane_anti_scalar_geometric_product(Plane self, AntiScalar other) {
-    return Radial(vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), vec2(self.g0.w) * vec2(0.0, other.g0));
+RoundPoint plane_anti_scalar_geometric_product(Plane self, AntiScalar other) {
+    return RoundPoint(vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), vec2(self.g0.w) * vec2(0.0, other.g0));
 }
 
 MultiVector plane_circle_geometric_product(Plane self, Circle other) {
@@ -4234,6 +4619,10 @@ MultiVector plane_dipole_geometric_product(Plane self, Dipole other) {
 
 PointAtInfinity plane_horizon_geometric_product(Plane self, Horizon other) {
     return PointAtInfinity(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0));
+}
+
+LineAtInfinity plane_infinity_geometric_product(Plane self, Infinity other) {
+    return LineAtInfinity(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0));
 }
 
 MultiVector plane_line_geometric_product(Plane self, Line other) {
@@ -4276,7 +4665,7 @@ MultiVector plane_point_at_infinity_geometric_product(Plane self, PointAtInfinit
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
 }
 
-MultiVector plane_radial_geometric_product(Plane self, Radial other) {
+MultiVector plane_round_point_geometric_product(Plane self, RoundPoint other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * vec2(0.0, other.g1.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0) - self.g0 * vec4(other.g1.x), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y) + vec3(self.g0.w) * other.g0, vec3(0.0), vec2(0.0));
 }
 
@@ -4288,8 +4677,8 @@ MultiVector plane_sphere_geometric_product(Plane self, Sphere other) {
     return MultiVector(vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g0.w) * vec2(other.g1.x, 0.0), vec3(0.0), vec2(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), self.g0.xyzx * vec4(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4(self.g0.w) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, other.g1.x), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-Radial plane_at_origin_anti_scalar_geometric_product(PlaneAtOrigin self, AntiScalar other) {
-    return Radial(vec3(0.0) - self.g0 * vec3(other.g0), vec2(0.0));
+RoundPoint plane_at_origin_anti_scalar_geometric_product(PlaneAtOrigin self, AntiScalar other) {
+    return RoundPoint(vec3(0.0) - self.g0 * vec3(other.g0), vec2(0.0));
 }
 
 MultiVector plane_at_origin_circle_geometric_product(PlaneAtOrigin self, Circle other) {
@@ -4302,6 +4691,10 @@ MultiVector plane_at_origin_dipole_geometric_product(PlaneAtOrigin self, Dipole 
 
 PointAtInfinity plane_at_origin_horizon_geometric_product(PlaneAtOrigin self, Horizon other) {
     return PointAtInfinity(self.g0 * vec3(other.g0));
+}
+
+LineAtInfinity plane_at_origin_infinity_geometric_product(PlaneAtOrigin self, Infinity other) {
+    return LineAtInfinity(self.g0 * vec3(other.g0));
 }
 
 MultiVector plane_at_origin_line_geometric_product(PlaneAtOrigin self, Line other) {
@@ -4344,7 +4737,7 @@ MultiVector plane_at_origin_point_at_infinity_geometric_product(PlaneAtOrigin se
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
 }
 
-MultiVector plane_at_origin_radial_geometric_product(PlaneAtOrigin self, Radial other) {
+MultiVector plane_at_origin_round_point_geometric_product(PlaneAtOrigin self, RoundPoint other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(-other.g1.x, -other.g1.x, -other.g1.x, 0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), self.g0 * vec3(other.g1.y), vec3(0.0), vec2(0.0));
 }
 
@@ -4370,6 +4763,10 @@ MultiVector point_dipole_geometric_product(Point self, Dipole other) {
 
 Horizon point_horizon_geometric_product(Point self, Horizon other) {
     return Horizon(self.g0.w * other.g0);
+}
+
+Infinity point_infinity_geometric_product(Point self, Infinity other) {
+    return Infinity(self.g0.w * other.g0);
 }
 
 MultiVector point_line_geometric_product(Point self, Line other) {
@@ -4412,7 +4809,7 @@ PointAtInfinity point_point_at_infinity_geometric_product(Point self, PointAtInf
     return PointAtInfinity(vec3(self.g0.w) * other.g0);
 }
 
-MultiVector point_radial_geometric_product(Point self, Radial other) {
+MultiVector point_round_point_geometric_product(Point self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + vec2(self.g0.w) * other.g1 * vec2(-1.0, 1.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x) - vec3(self.g0.w) * other.g0, vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
@@ -4468,7 +4865,7 @@ PointAtInfinity point_at_infinity_point_geometric_product(PointAtInfinity self, 
     return PointAtInfinity(vec3(0.0) - self.g0 * vec3(other.g0.w));
 }
 
-MultiVector point_at_infinity_radial_geometric_product(PointAtInfinity self, Radial other) {
+MultiVector point_at_infinity_round_point_geometric_product(PointAtInfinity self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0) - self.g0 * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), self.g0 * vec3(other.g1.x), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
@@ -4480,71 +4877,75 @@ MultiVector point_at_infinity_sphere_geometric_product(PointAtInfinity self, Sph
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), self.g0 * vec3(other.g1.x), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), self.g0 * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z));
 }
 
-Sphere radial_anti_scalar_geometric_product(Radial self, AntiScalar other) {
+Sphere round_point_anti_scalar_geometric_product(RoundPoint self, AntiScalar other) {
     return Sphere(self.g0 * vec3(other.g0), vec2(0.0) - self.g1 * vec2(other.g0));
 }
 
-MultiVector radial_circle_geometric_product(Radial self, Circle other) {
+MultiVector round_point_circle_geometric_product(RoundPoint self, Circle other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) - vec3(self.g1.x) * other.g1, vec3(0.0) - self.g0 * vec3(other.g0.w) - vec3(self.g1.x) * other.g2 - vec3(self.g1.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g0.x) * vec4(0.0, other.g2.z, -other.g2.y, -other.g1.x) + vec4(self.g0.y) * vec4(-other.g2.z, 0.0, other.g2.x, -other.g1.y) + vec4(self.g0.z) * vec4(other.g2.y, -other.g2.x, 0.0, -other.g1.z) + vec4(self.g1.y) * vec4(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0) + vec3(self.g1.x) * other.g2 - vec3(self.g1.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(other.g0.x, -other.g2.x) + vec2(self.g0.y) * vec2(other.g0.y, -other.g2.y) + vec2(self.g0.z) * vec2(other.g0.z, -other.g2.z) + self.g1 * vec2(other.g0.w));
 }
 
-MultiVector radial_dipole_geometric_product(Radial self, Dipole other) {
+MultiVector round_point_dipole_geometric_product(RoundPoint self, Dipole other) {
     return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0) + vec3(self.g1.x) * vec3(other.g2.x, other.g2.y, other.g2.z) - vec3(self.g1.y) * other.g0, vec2(self.g0.x) * vec2(-other.g0.x, other.g2.x) + vec2(self.g0.y) * vec2(-other.g0.y, other.g2.y) + vec2(self.g0.z) * vec2(-other.g0.z, other.g2.z) + self.g1 * vec2(other.g2.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, -other.g1.x) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, -other.g1.y) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, -other.g1.z) + vec4(self.g1.x) * vec4(other.g1.x, other.g1.y, other.g1.z, 0.0), vec3(0.0) - self.g0 * vec3(other.g2.w) + vec3(self.g1.x) * vec3(other.g2.x, other.g2.y, other.g2.z) + vec3(self.g1.y) * other.g0, vec3(self.g0.x) * vec3(0.0, -other.g2.z, other.g2.y) + vec3(self.g0.y) * vec3(other.g2.z, 0.0, -other.g2.x) + vec3(self.g0.z) * vec3(-other.g2.y, other.g2.x, 0.0) + vec3(self.g1.y) * other.g1, vec3(0.0), vec2(0.0));
 }
 
-MultiVector radial_horizon_geometric_product(Radial self, Horizon other) {
+MultiVector round_point_horizon_geometric_product(RoundPoint self, Horizon other) {
     return MultiVector(vec2(self.g1.x) * vec2(0.0, other.g0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g0), vec3(0.0), vec3(0.0) - self.g0 * vec3(other.g0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector radial_line_geometric_product(Radial self, Line other) {
+MultiVector round_point_infinity_geometric_product(RoundPoint self, Infinity other) {
+    return MultiVector(vec2(self.g1.x) * vec2(-other.g0, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g0, other.g0, other.g0, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
+}
+
+MultiVector round_point_line_geometric_product(RoundPoint self, Line other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0) - vec3(self.g1.x) * other.g0, vec3(0.0) - vec3(self.g1.x) * other.g1, vec4(self.g0.x) * vec4(0.0, other.g1.z, -other.g1.y, -other.g0.x) + vec4(self.g0.y) * vec4(-other.g1.z, 0.0, other.g1.x, -other.g0.y) + vec4(self.g0.z) * vec4(other.g1.y, -other.g1.x, 0.0, -other.g0.z) + vec4(self.g1.y) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g1.x) * other.g1, vec2(self.g0.x) * vec2(0.0, -other.g1.x) + vec2(self.g0.y) * vec2(0.0, -other.g1.y) + vec2(self.g0.z) * vec2(0.0, -other.g1.z));
 }
 
-MultiVector radial_line_at_infinity_geometric_product(Radial self, LineAtInfinity other) {
+MultiVector round_point_line_at_infinity_geometric_product(RoundPoint self, LineAtInfinity other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0) - vec3(self.g1.x) * other.g0, vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g1.x) * other.g0, vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
 }
 
-MultiVector radial_line_at_origin_geometric_product(Radial self, LineAtOrigin other) {
+MultiVector round_point_line_at_origin_geometric_product(RoundPoint self, LineAtOrigin other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0) - vec3(self.g1.x) * other.g0, vec3(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, -other.g0.z) + vec4(self.g1.y) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec2(0.0));
 }
 
-MultiVector radial_magnitude_geometric_product(Radial self, Magnitude other) {
+MultiVector round_point_magnitude_geometric_product(RoundPoint self, Magnitude other) {
     return MultiVector(vec2(0.0), self.g0 * vec3(other.g0.x), self.g1 * vec2(other.g0.x), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), self.g0 * vec3(other.g0.y), vec2(0.0) - self.g1 * vec2(other.g0.y));
 }
 
-MultiVector radial_multi_vector_geometric_product(Radial self, MultiVector other) {
+MultiVector round_point_multi_vector_geometric_product(RoundPoint self, MultiVector other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g1.x, other.g9.x) + vec2(self.g0.y) * vec2(other.g1.y, other.g9.y) + vec2(self.g0.z) * vec2(other.g1.z, other.g9.z) + vec2(self.g1.x) * vec2(-other.g2.y, other.g10.y) + vec2(self.g1.y) * vec2(-other.g2.x, other.g10.x), vec3(self.g0.x) * vec3(other.g0.x, other.g4.z, -other.g4.y) + vec3(self.g0.y) * vec3(-other.g4.z, other.g0.x, other.g4.x) + vec3(self.g0.z) * vec3(other.g4.y, -other.g4.x, other.g0.x) + vec3(self.g1.x) * vec3(other.g5.x, other.g5.y, other.g5.z) - vec3(self.g1.y) * other.g3, vec2(self.g0.x) * vec2(-other.g3.x, other.g5.x) + vec2(self.g0.y) * vec2(-other.g3.y, other.g5.y) + vec2(self.g0.z) * vec2(-other.g3.z, other.g5.z) + self.g1 * vec2(other.g5.w) + self.g1 * vec2(other.g0.x), vec3(self.g0.x) * vec3(-other.g2.x, -other.g6.z, other.g6.y) + vec3(self.g0.y) * vec3(other.g6.z, -other.g2.x, -other.g6.x) + vec3(self.g0.z) * vec3(-other.g6.y, other.g6.x, -other.g2.x) - vec3(self.g1.x) * other.g7 + vec3(self.g1.x) * other.g1, vec3(self.g0.x) * vec3(-other.g6.w, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, -other.g6.w, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, -other.g6.w) - vec3(self.g1.x) * other.g8 - vec3(self.g1.y) * vec3(other.g6.x, other.g6.y, other.g6.z), vec4(self.g0.x) * vec4(other.g2.y, other.g8.z, -other.g8.y, -other.g7.x) + vec4(self.g0.y) * vec4(-other.g8.z, other.g2.y, other.g8.x, -other.g7.y) + vec4(self.g0.z) * vec4(other.g8.y, -other.g8.x, other.g2.y, -other.g7.z) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g2.y) - vec4(self.g1.y) * vec4(other.g7.x, other.g7.y, other.g7.z, other.g2.x) + vec4(self.g1.y) * vec4(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4(self.g0.x) * vec4(other.g10.x, other.g3.z, -other.g3.y, -other.g4.x) + vec4(self.g0.y) * vec4(-other.g3.z, other.g10.x, other.g3.x, -other.g4.y) + vec4(self.g0.z) * vec4(other.g3.y, -other.g3.x, other.g10.x, -other.g4.z) + vec4(self.g1.x) * vec4(other.g9.x, other.g9.y, other.g9.z, other.g10.y) + vec4(self.g1.x) * vec4(other.g4.x, other.g4.y, other.g4.z, 0.0) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, -other.g10.x), vec3(self.g0.x) * vec3(-other.g5.w, -other.g9.z, other.g9.y) + vec3(self.g0.y) * vec3(other.g9.z, -other.g5.w, -other.g9.x) + vec3(self.g0.z) * vec3(-other.g9.y, other.g9.x, -other.g5.w) + vec3(self.g1.x) * vec3(other.g5.x, other.g5.y, other.g5.z) + vec3(self.g1.y) * other.g3, vec3(self.g0.x) * vec3(-other.g10.y, -other.g5.z, other.g5.y) + vec3(self.g0.y) * vec3(other.g5.z, -other.g10.y, -other.g5.x) + vec3(self.g0.z) * vec3(-other.g5.y, other.g5.x, -other.g10.y) - vec3(self.g1.y) * other.g9 + vec3(self.g1.y) * other.g4, vec3(self.g0.x) * vec3(other.g0.y, other.g7.z, -other.g7.y) + vec3(self.g0.y) * vec3(-other.g7.z, other.g0.y, other.g7.x) + vec3(self.g0.z) * vec3(other.g7.y, -other.g7.x, other.g0.y) + vec3(self.g1.x) * other.g8 - vec3(self.g1.y) * vec3(other.g6.x, other.g6.y, other.g6.z), vec2(self.g0.x) * vec2(other.g6.x, -other.g8.x) + vec2(self.g0.y) * vec2(other.g6.y, -other.g8.y) + vec2(self.g0.z) * vec2(other.g6.z, -other.g8.z) + self.g1 * vec2(other.g6.w) - self.g1 * vec2(other.g0.y));
 }
 
-MultiVector radial_origin_geometric_product(Radial self, Origin other) {
+MultiVector round_point_origin_geometric_product(RoundPoint self, Origin other) {
     return MultiVector(vec2(0.0), vec3(0.0), self.g1 * vec2(other.g0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0) - self.g0 * vec3(other.g0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector radial_plane_geometric_product(Radial self, Plane other) {
+MultiVector round_point_plane_geometric_product(RoundPoint self, Plane other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g1.x) * vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0) - self.g0 * vec3(other.g0.w) - vec3(self.g1.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
 }
 
-MultiVector radial_plane_at_origin_geometric_product(Radial self, PlaneAtOrigin other) {
+MultiVector round_point_plane_at_origin_geometric_product(RoundPoint self, PlaneAtOrigin other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g1.x) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0) - vec3(self.g1.y) * other.g0, vec3(0.0), vec2(0.0));
 }
 
-MultiVector radial_point_geometric_product(Radial self, Point other) {
+MultiVector round_point_point_geometric_product(RoundPoint self, Point other) {
     return MultiVector(vec2(0.0), vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + self.g1 * vec2(other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0) - self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector radial_point_at_infinity_geometric_product(Radial self, PointAtInfinity other) {
+MultiVector round_point_point_at_infinity_geometric_product(RoundPoint self, PointAtInfinity other) {
     return MultiVector(vec2(0.0), vec3(self.g1.x) * other.g0, vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector radial_radial_geometric_product(Radial self, Radial other) {
+MultiVector round_point_round_point_geometric_product(RoundPoint self, RoundPoint other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0) + vec2(self.g1.x) * vec2(-other.g1.y, 0.0) + vec2(self.g1.y) * vec2(-other.g1.x, 0.0), vec3(0.0), vec2(0.0), vec3(0.0) - self.g0 * vec3(other.g1.x) + vec3(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g1.y) - vec4(self.g1.y) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-Radial radial_scalar_geometric_product(Radial self, Scalar other) {
-    return Radial(self.g0 * vec3(other.g0), self.g1 * vec2(other.g0));
+RoundPoint round_point_scalar_geometric_product(RoundPoint self, Scalar other) {
+    return RoundPoint(self.g0 * vec3(other.g0), self.g1 * vec2(other.g0));
 }
 
-MultiVector radial_sphere_geometric_product(Radial self, Sphere other) {
+MultiVector round_point_sphere_geometric_product(RoundPoint self, Sphere other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g1.x) * vec2(0.0, other.g1.y) + vec2(self.g1.y) * vec2(0.0, other.g1.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g1.x, other.g1.x, other.g1.x, 0.0) + vec4(self.g1.x) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.y) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, -other.g1.x), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0) - self.g0 * vec3(other.g1.y) - vec3(self.g1.y) * other.g0, vec3(0.0), vec2(0.0));
 }
 
@@ -4562,6 +4963,10 @@ Dipole scalar_dipole_geometric_product(Scalar self, Dipole other) {
 
 Horizon scalar_horizon_geometric_product(Scalar self, Horizon other) {
     return Horizon(self.g0 * other.g0);
+}
+
+Infinity scalar_infinity_geometric_product(Scalar self, Infinity other) {
+    return Infinity(self.g0 * other.g0);
 }
 
 Line scalar_line_geometric_product(Scalar self, Line other) {
@@ -4604,8 +5009,8 @@ PointAtInfinity scalar_point_at_infinity_geometric_product(Scalar self, PointAtI
     return PointAtInfinity(vec3(self.g0) * other.g0);
 }
 
-Radial scalar_radial_geometric_product(Scalar self, Radial other) {
-    return Radial(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
+RoundPoint scalar_round_point_geometric_product(Scalar self, RoundPoint other) {
+    return RoundPoint(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
 }
 
 Scalar scalar_scalar_geometric_product(Scalar self, Scalar other) {
@@ -4616,8 +5021,8 @@ Sphere scalar_sphere_geometric_product(Scalar self, Sphere other) {
     return Sphere(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
 }
 
-Radial sphere_anti_scalar_geometric_product(Sphere self, AntiScalar other) {
-    return Radial(vec3(0.0) - self.g0 * vec3(other.g0), self.g1 * vec2(other.g0));
+RoundPoint sphere_anti_scalar_geometric_product(Sphere self, AntiScalar other) {
+    return RoundPoint(vec3(0.0) - self.g0 * vec3(other.g0), self.g1 * vec2(other.g0));
 }
 
 MultiVector sphere_circle_geometric_product(Sphere self, Circle other) {
@@ -4630,6 +5035,10 @@ MultiVector sphere_dipole_geometric_product(Sphere self, Dipole other) {
 
 MultiVector sphere_horizon_geometric_product(Sphere self, Horizon other) {
     return MultiVector(vec2(self.g1.x) * vec2(other.g0, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g0, other.g0, other.g0, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, -other.g0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
+}
+
+MultiVector sphere_infinity_geometric_product(Sphere self, Infinity other) {
+    return MultiVector(vec2(self.g1.x) * vec2(0.0, other.g0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g0), vec3(0.0), self.g0 * vec3(other.g0), vec3(0.0), vec2(0.0));
 }
 
 MultiVector sphere_line_geometric_product(Sphere self, Line other) {
@@ -4672,7 +5081,7 @@ MultiVector sphere_point_at_infinity_geometric_product(Sphere self, PointAtInfin
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g1.x) * other.g0, vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - vec3(self.g1.x) * other.g0, vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
 }
 
-MultiVector sphere_radial_geometric_product(Sphere self, Radial other) {
+MultiVector sphere_round_point_geometric_product(Sphere self, RoundPoint other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g1.x) * vec2(0.0, other.g1.y) + vec2(self.g1.y) * vec2(0.0, other.g1.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(-other.g1.x, -other.g1.x, -other.g1.x, 0.0) + vec4(self.g1.x) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, other.g1.y) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, -other.g1.x), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), self.g0 * vec3(other.g1.y) + vec3(self.g1.y) * other.g0, vec3(0.0), vec2(0.0));
 }
 
@@ -4696,8 +5105,12 @@ Circle anti_scalar_dipole_wedge_dot(AntiScalar self, Dipole other) {
     return Circle(vec4(self.g0) * vec4(other.g0.x, other.g0.y, other.g0.z, -other.g2.w), vec3(self.g0) * other.g1, vec3(self.g0) * vec3(other.g2.x, other.g2.y, other.g2.z));
 }
 
-Radial anti_scalar_horizon_wedge_dot(AntiScalar self, Horizon other) {
-    return Radial(vec3(0.0), vec2(self.g0) * vec2(0.0, other.g0));
+Infinity anti_scalar_horizon_wedge_dot(AntiScalar self, Horizon other) {
+    return Infinity(self.g0 * other.g0);
+}
+
+Horizon anti_scalar_infinity_wedge_dot(AntiScalar self, Infinity other) {
+    return Horizon(0.0 - self.g0 * other.g0);
 }
 
 Dipole anti_scalar_line_wedge_dot(AntiScalar self, Line other) {
@@ -4724,12 +5137,12 @@ Circle anti_scalar_origin_wedge_dot(AntiScalar self, Origin other) {
     return Circle(vec4(self.g0) * vec4(0.0, 0.0, 0.0, -other.g0), vec3(0.0), vec3(0.0));
 }
 
-Radial anti_scalar_plane_wedge_dot(AntiScalar self, Plane other) {
-    return Radial(vec3(0.0) - vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0) * vec2(0.0, other.g0.w));
+RoundPoint anti_scalar_plane_wedge_dot(AntiScalar self, Plane other) {
+    return RoundPoint(vec3(0.0) - vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0) * vec2(0.0, other.g0.w));
 }
 
-Radial anti_scalar_plane_at_origin_wedge_dot(AntiScalar self, PlaneAtOrigin other) {
-    return Radial(vec3(0.0) - vec3(self.g0) * other.g0, vec2(0.0));
+RoundPoint anti_scalar_plane_at_origin_wedge_dot(AntiScalar self, PlaneAtOrigin other) {
+    return RoundPoint(vec3(0.0) - vec3(self.g0) * other.g0, vec2(0.0));
 }
 
 Circle anti_scalar_point_wedge_dot(AntiScalar self, Point other) {
@@ -4740,7 +5153,7 @@ LineAtInfinity anti_scalar_point_at_infinity_wedge_dot(AntiScalar self, PointAtI
     return LineAtInfinity(vec3(self.g0) * other.g0);
 }
 
-Sphere anti_scalar_radial_wedge_dot(AntiScalar self, Radial other) {
+Sphere anti_scalar_round_point_wedge_dot(AntiScalar self, RoundPoint other) {
     return Sphere(vec3(self.g0) * other.g0, vec2(0.0) - vec2(self.g0) * other.g1);
 }
 
@@ -4748,8 +5161,8 @@ AntiScalar anti_scalar_scalar_wedge_dot(AntiScalar self, Scalar other) {
     return AntiScalar(self.g0 * other.g0);
 }
 
-Radial anti_scalar_sphere_wedge_dot(AntiScalar self, Sphere other) {
-    return Radial(vec3(0.0) - vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
+RoundPoint anti_scalar_sphere_wedge_dot(AntiScalar self, Sphere other) {
+    return RoundPoint(vec3(0.0) - vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
 }
 
 Dipole circle_anti_scalar_wedge_dot(Circle self, AntiScalar other) {
@@ -4766,6 +5179,10 @@ MultiVector circle_dipole_wedge_dot(Circle self, Dipole other) {
 
 MultiVector circle_horizon_wedge_dot(Circle self, Horizon other) {
     return MultiVector(vec2(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), vec2(self.g0.w) * vec2(0.0, -other.g0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), self.g1 * vec3(other.g0), vec3(0.0), vec2(0.0));
+}
+
+MultiVector circle_infinity_wedge_dot(Circle self, Infinity other) {
+    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(-other.g0, -other.g0, -other.g0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), vec2(self.g0.w) * vec2(0.0, other.g0));
 }
 
 MultiVector circle_line_wedge_dot(Circle self, Line other) {
@@ -4808,7 +5225,7 @@ MultiVector circle_point_at_infinity_wedge_dot(Circle self, PointAtInfinity othe
     return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, -other.g0.z), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0) - vec3(self.g0.w) * other.g0 + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector circle_radial_wedge_dot(Circle self, Radial other) {
+MultiVector circle_round_point_wedge_dot(Circle self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) - self.g1 * vec3(other.g1.x), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y) - vec3(self.g0.w) * other.g0 - self.g2 * vec3(other.g1.x), vec4(self.g1.x) * vec4(-other.g1.y, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, -other.g1.y, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, -other.g1.y, -other.g0.z) + vec4(self.g2.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g2.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g2.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0) - self.g2 * vec3(other.g1.x), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g0.w) * other.g1 * vec2(-1.0, 1.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z));
 }
 
@@ -4834,6 +5251,10 @@ MultiVector dipole_dipole_wedge_dot(Dipole self, Dipole other) {
 
 MultiVector dipole_horizon_wedge_dot(Dipole self, Horizon other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), self.g0 * vec3(other.g0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(other.g0, other.g0, other.g0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - self.g0 * vec3(other.g0), vec2(self.g2.w) * vec2(0.0, other.g0));
+}
+
+MultiVector dipole_infinity_wedge_dot(Dipole self, Infinity other) {
+    return MultiVector(vec2(0.0), self.g0 * vec3(other.g0), vec2(self.g2.w) * vec2(0.0, other.g0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), self.g0 * vec3(other.g0), self.g1 * vec3(other.g0), vec3(0.0), vec2(0.0));
 }
 
 MultiVector dipole_line_wedge_dot(Dipole self, Line other) {
@@ -4876,7 +5297,7 @@ MultiVector dipole_point_at_infinity_wedge_dot(Dipole self, PointAtInfinity othe
     return MultiVector(vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, other.g0.z) + vec4(self.g1.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g1.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g1.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0) + vec4(self.g2.w) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z));
 }
 
-MultiVector dipole_radial_wedge_dot(Dipole self, Radial other) {
+MultiVector dipole_round_point_wedge_dot(Dipole self, RoundPoint other) {
     return MultiVector(vec2(0.0), self.g0 * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0) - vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, -other.g0.x) + vec2(self.g2.y) * vec2(0.0, -other.g0.y) + vec2(self.g2.z) * vec2(0.0, -other.g0.z) + vec2(self.g2.w) * other.g1 * vec2(-1.0, 1.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g1.x) * vec4(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, other.g1.x, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, other.g1.x, -other.g0.z), self.g0 * vec3(other.g1.y) + vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g1.x) - vec3(self.g2.w) * other.g0, self.g1 * vec3(other.g1.y) + vec3(self.g2.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g2.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g2.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
@@ -4888,8 +5309,8 @@ MultiVector dipole_sphere_wedge_dot(Dipole self, Sphere other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) + self.g1 * vec3(other.g1.x), self.g0 * vec3(other.g1.y) + vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g1.x) + vec3(self.g2.w) * other.g0, vec4(self.g1.x) * vec4(other.g1.y, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, other.g1.y, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, other.g1.y, -other.g0.z) + vec4(self.g2.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g2.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g2.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - self.g0 * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z) + vec2(self.g2.w) * other.g1 * vec2(-1.0, 1.0));
 }
 
-Radial horizon_anti_scalar_wedge_dot(Horizon self, AntiScalar other) {
-    return Radial(vec3(0.0), vec2(self.g0) * vec2(0.0, other.g0));
+Infinity horizon_anti_scalar_wedge_dot(Horizon self, AntiScalar other) {
+    return Infinity(self.g0 * other.g0);
 }
 
 MultiVector horizon_circle_wedge_dot(Horizon self, Circle other) {
@@ -4932,7 +5353,7 @@ Horizon horizon_point_wedge_dot(Horizon self, Point other) {
     return Horizon(0.0 - self.g0 * other.g0.w);
 }
 
-MultiVector horizon_radial_wedge_dot(Horizon self, Radial other) {
+MultiVector horizon_round_point_wedge_dot(Horizon self, RoundPoint other) {
     return MultiVector(vec2(self.g0) * vec2(0.0, other.g1.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0) * vec4(0.0, 0.0, 0.0, -other.g1.x), vec3(0.0), vec3(self.g0) * other.g0, vec3(0.0), vec2(0.0));
 }
 
@@ -4942,6 +5363,62 @@ Horizon horizon_scalar_wedge_dot(Horizon self, Scalar other) {
 
 MultiVector horizon_sphere_wedge_dot(Horizon self, Sphere other) {
     return MultiVector(vec2(self.g0) * vec2(other.g1.x, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, other.g1.x), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
+}
+
+Horizon infinity_anti_scalar_wedge_dot(Infinity self, AntiScalar other) {
+    return Horizon(0.0 - self.g0 * other.g0);
+}
+
+MultiVector infinity_circle_wedge_dot(Infinity self, Circle other) {
+    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g0) * vec4(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0) * vec2(0.0, -other.g0.w));
+}
+
+MultiVector infinity_dipole_wedge_dot(Infinity self, Dipole other) {
+    return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g0) * other.g0, vec2(self.g0) * vec2(0.0, -other.g2.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0) * other.g0, vec3(self.g0) * other.g1, vec3(0.0), vec2(0.0));
+}
+
+PointAtInfinity infinity_line_wedge_dot(Infinity self, Line other) {
+    return PointAtInfinity(vec3(0.0) - vec3(self.g0) * other.g0);
+}
+
+PointAtInfinity infinity_line_at_origin_wedge_dot(Infinity self, LineAtOrigin other) {
+    return PointAtInfinity(vec3(0.0) - vec3(self.g0) * other.g0);
+}
+
+MultiVector infinity_magnitude_wedge_dot(Infinity self, Magnitude other) {
+    return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0) * vec2(0.0, other.g0.x), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0) * vec2(0.0, -other.g0.y));
+}
+
+MultiVector infinity_multi_vector_wedge_dot(Infinity self, MultiVector other) {
+    return MultiVector(vec2(self.g0) * vec2(-other.g2.x, other.g10.x), vec3(0.0) - vec3(self.g0) * other.g3, vec2(self.g0) * vec2(0.0, -other.g5.w) + vec2(self.g0) * vec2(0.0, other.g0.x), vec3(0.0), vec3(0.0) - vec3(self.g0) * vec3(other.g6.x, other.g6.y, other.g6.z), vec4(0.0) - vec4(self.g0) * vec4(other.g7.x, other.g7.y, other.g7.z, other.g2.x) + vec4(self.g0) * vec4(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4(self.g0) * vec4(0.0, 0.0, 0.0, -other.g10.x), vec3(self.g0) * other.g3, vec3(0.0) - vec3(self.g0) * other.g9 + vec3(self.g0) * other.g4, vec3(0.0) - vec3(self.g0) * vec3(other.g6.x, other.g6.y, other.g6.z), vec2(self.g0) * vec2(0.0, -other.g6.w) + vec2(self.g0) * vec2(0.0, -other.g0.y));
+}
+
+Infinity infinity_origin_wedge_dot(Infinity self, Origin other) {
+    return Infinity(0.0 - self.g0 * other.g0);
+}
+
+LineAtInfinity infinity_plane_wedge_dot(Infinity self, Plane other) {
+    return LineAtInfinity(vec3(0.0) - vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z));
+}
+
+LineAtInfinity infinity_plane_at_origin_wedge_dot(Infinity self, PlaneAtOrigin other) {
+    return LineAtInfinity(vec3(0.0) - vec3(self.g0) * other.g0);
+}
+
+Infinity infinity_point_wedge_dot(Infinity self, Point other) {
+    return Infinity(0.0 - self.g0 * other.g0.w);
+}
+
+MultiVector infinity_round_point_wedge_dot(Infinity self, RoundPoint other) {
+    return MultiVector(vec2(self.g0) * vec2(-other.g1.x, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0) - vec4(self.g0) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
+}
+
+Infinity infinity_scalar_wedge_dot(Infinity self, Scalar other) {
+    return Infinity(self.g0 * other.g0);
+}
+
+MultiVector infinity_sphere_wedge_dot(Infinity self, Sphere other) {
+    return MultiVector(vec2(self.g0) * vec2(0.0, other.g1.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0) * vec4(0.0, 0.0, 0.0, -other.g1.x), vec3(0.0), vec3(0.0) - vec3(self.g0) * other.g0, vec3(0.0), vec2(0.0));
 }
 
 Dipole line_anti_scalar_wedge_dot(Line self, AntiScalar other) {
@@ -4958,6 +5435,10 @@ MultiVector line_dipole_wedge_dot(Line self, Dipole other) {
 
 LineAtInfinity line_horizon_wedge_dot(Line self, Horizon other) {
     return LineAtInfinity(self.g0 * vec3(other.g0));
+}
+
+PointAtInfinity line_infinity_wedge_dot(Line self, Infinity other) {
+    return PointAtInfinity(vec3(0.0) - self.g0 * vec3(other.g0));
 }
 
 MultiVector line_line_wedge_dot(Line self, Line other) {
@@ -5000,7 +5481,7 @@ MultiVector line_point_at_infinity_wedge_dot(Line self, PointAtInfinity other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector line_radial_wedge_dot(Line self, Radial other) {
+MultiVector line_round_point_wedge_dot(Line self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0) - self.g0 * vec3(other.g1.x), vec3(0.0) - self.g1 * vec3(other.g1.x), vec4(self.g0.x) * vec4(-other.g1.y, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, -other.g1.y, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, -other.g1.y, -other.g0.z) + vec4(self.g1.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g1.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g1.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) - self.g1 * vec3(other.g1.x), vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z));
 }
 
@@ -5056,7 +5537,7 @@ LineAtInfinity line_at_infinity_point_wedge_dot(LineAtInfinity self, Point other
     return LineAtInfinity(vec3(0.0) - self.g0 * vec3(other.g0.w));
 }
 
-MultiVector line_at_infinity_radial_wedge_dot(LineAtInfinity self, Radial other) {
+MultiVector line_at_infinity_round_point_wedge_dot(LineAtInfinity self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0) - self.g0 * vec3(other.g1.x), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - self.g0 * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z));
 }
 
@@ -5084,6 +5565,10 @@ LineAtInfinity line_at_origin_horizon_wedge_dot(LineAtOrigin self, Horizon other
     return LineAtInfinity(self.g0 * vec3(other.g0));
 }
 
+PointAtInfinity line_at_origin_infinity_wedge_dot(LineAtOrigin self, Infinity other) {
+    return PointAtInfinity(vec3(0.0) - self.g0 * vec3(other.g0));
+}
+
 MultiVector line_at_origin_line_wedge_dot(LineAtOrigin self, Line other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec4(self.g0.x) * vec4(0.0, -other.g1.z, other.g1.y, 0.0) + vec4(self.g0.y) * vec4(other.g1.z, 0.0, -other.g1.x, 0.0) + vec4(self.g0.z) * vec4(-other.g1.y, other.g1.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z));
 }
@@ -5104,8 +5589,8 @@ MultiVector line_at_origin_multi_vector_wedge_dot(LineAtOrigin self, MultiVector
     return MultiVector(vec2(self.g0.x) * vec2(other.g7.x, -other.g4.x) + vec2(self.g0.y) * vec2(other.g7.y, -other.g4.y) + vec2(self.g0.z) * vec2(other.g7.z, -other.g4.z), vec3(self.g0.x) * vec3(-other.g5.w, -other.g9.z, other.g9.y) + vec3(self.g0.y) * vec3(other.g9.z, -other.g5.w, -other.g9.x) + vec3(self.g0.z) * vec3(-other.g9.y, other.g9.x, -other.g5.w), vec2(0.0) - vec2(self.g0.x) * vec2(other.g3.x, other.g5.x) - vec2(self.g0.y) * vec2(other.g3.y, other.g5.y) - vec2(self.g0.z) * vec2(other.g3.z, other.g5.z), vec3(self.g0.x) * vec3(-other.g2.x, -other.g6.z, other.g6.y) + vec3(self.g0.y) * vec3(other.g6.z, -other.g2.x, -other.g6.x) + vec3(self.g0.z) * vec3(-other.g6.y, other.g6.x, -other.g2.x), vec3(self.g0.x) * vec3(-other.g0.y, -other.g7.z, other.g7.y) + vec3(self.g0.y) * vec3(other.g7.z, -other.g0.y, -other.g7.x) + vec3(self.g0.z) * vec3(-other.g7.y, other.g7.x, -other.g0.y), vec4(self.g0.x) * vec4(-other.g2.y, -other.g8.z, other.g8.y, -other.g1.x) + vec4(self.g0.y) * vec4(other.g8.z, -other.g2.y, -other.g8.x, -other.g1.y) + vec4(self.g0.z) * vec4(-other.g8.y, other.g8.x, -other.g2.y, -other.g1.z), vec4(self.g0.x) * vec4(other.g10.x, other.g3.z, -other.g3.y, other.g9.x) + vec4(self.g0.y) * vec4(-other.g3.z, other.g10.x, other.g3.x, other.g9.y) + vec4(self.g0.z) * vec4(other.g3.y, -other.g3.x, other.g10.x, other.g9.z), vec3(self.g0.x) * vec3(other.g0.x, other.g4.z, -other.g4.y) + vec3(self.g0.y) * vec3(-other.g4.z, other.g0.x, other.g4.x) + vec3(self.g0.z) * vec3(other.g4.y, -other.g4.x, other.g0.x), vec3(self.g0.x) * vec3(other.g10.y, other.g5.z, -other.g5.y) + vec3(self.g0.y) * vec3(-other.g5.z, other.g10.y, other.g5.x) + vec3(self.g0.z) * vec3(other.g5.y, -other.g5.x, other.g10.y), vec3(self.g0.x) * vec3(other.g6.w, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, other.g6.w, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, other.g6.w), vec2(self.g0.x) * vec2(other.g6.x, other.g8.x) + vec2(self.g0.y) * vec2(other.g6.y, other.g8.y) + vec2(self.g0.z) * vec2(other.g6.z, other.g8.z));
 }
 
-Radial line_at_origin_origin_wedge_dot(LineAtOrigin self, Origin other) {
-    return Radial(vec3(0.0) - self.g0 * vec3(other.g0), vec2(0.0));
+RoundPoint line_at_origin_origin_wedge_dot(LineAtOrigin self, Origin other) {
+    return RoundPoint(vec3(0.0) - self.g0 * vec3(other.g0), vec2(0.0));
 }
 
 MultiVector line_at_origin_plane_wedge_dot(LineAtOrigin self, Plane other) {
@@ -5124,7 +5609,7 @@ MultiVector line_at_origin_point_at_infinity_wedge_dot(LineAtOrigin self, PointA
     return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector line_at_origin_radial_wedge_dot(LineAtOrigin self, Radial other) {
+MultiVector line_at_origin_round_point_wedge_dot(LineAtOrigin self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0) - self.g0 * vec3(other.g1.x), vec3(0.0), vec4(self.g0.x) * vec4(-other.g1.y, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, -other.g1.y, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, -other.g1.y, -other.g0.z), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec2(0.0));
 }
 
@@ -5150,6 +5635,10 @@ MultiVector magnitude_dipole_wedge_dot(Magnitude self, Dipole other) {
 
 MultiVector magnitude_horizon_wedge_dot(Magnitude self, Horizon other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.y) * vec2(0.0, other.g0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0));
+}
+
+MultiVector magnitude_infinity_wedge_dot(Magnitude self, Infinity other) {
+    return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.y) * vec2(0.0, -other.g0));
 }
 
 MultiVector magnitude_line_wedge_dot(Magnitude self, Line other) {
@@ -5192,7 +5681,7 @@ MultiVector magnitude_point_at_infinity_wedge_dot(Magnitude self, PointAtInfinit
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(self.g0.y) * other.g0, vec3(0.0), vec2(0.0));
 }
 
-MultiVector magnitude_radial_wedge_dot(Magnitude self, Radial other) {
+MultiVector magnitude_round_point_wedge_dot(Magnitude self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(self.g0.x) * other.g0, vec2(self.g0.x) * other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.y) * other.g0, vec2(0.0) - vec2(self.g0.y) * other.g1);
 }
 
@@ -5218,6 +5707,10 @@ MultiVector multi_vector_dipole_wedge_dot(MultiVector self, Dipole other) {
 
 MultiVector multi_vector_horizon_wedge_dot(MultiVector self, Horizon other) {
     return MultiVector(vec2(self.g2.x) * vec2(0.0, other.g0) + vec2(self.g10.x) * vec2(other.g0, 0.0), vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g0), vec2(self.g0.y) * vec2(0.0, other.g0) + vec2(self.g6.w) * vec2(0.0, -other.g0), vec3(0.0), self.g3 * vec3(other.g0), vec4(self.g4.x, self.g4.y, self.g4.z, self.g4.x) * vec4(other.g0, other.g0, other.g0, 0.0) + vec4(self.g9.x, self.g9.y, self.g9.z, self.g9.x) * vec4(other.g0, other.g0, other.g0, 0.0) + vec4(self.g10.x) * vec4(0.0, 0.0, 0.0, -other.g0), vec4(self.g2.x) * vec4(0.0, 0.0, 0.0, other.g0), vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g0), vec3(0.0) - self.g1 * vec3(other.g0) + self.g7 * vec3(other.g0), vec3(0.0) - self.g3 * vec3(other.g0), vec2(self.g0.x) * vec2(0.0, other.g0) + vec2(self.g5.w) * vec2(0.0, other.g0));
+}
+
+MultiVector multi_vector_infinity_wedge_dot(MultiVector self, Infinity other) {
+    return MultiVector(vec2(self.g2.x) * vec2(-other.g0, 0.0) + vec2(self.g10.x) * vec2(0.0, other.g0), self.g3 * vec3(other.g0), vec2(self.g0.x) * vec2(0.0, other.g0) + vec2(self.g5.w) * vec2(0.0, other.g0), vec3(0.0), vec3(0.0) - vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(other.g0, other.g0, other.g0, 0.0) + vec4(self.g2.x) * vec4(0.0, 0.0, 0.0, other.g0) + vec4(self.g7.x, self.g7.y, self.g7.z, self.g7.x) * vec4(-other.g0, -other.g0, -other.g0, 0.0), vec4(self.g10.x) * vec4(0.0, 0.0, 0.0, other.g0), self.g3 * vec3(other.g0), self.g4 * vec3(other.g0) + self.g9 * vec3(other.g0), vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g0), vec2(self.g0.y) * vec2(0.0, -other.g0) + vec2(self.g6.w) * vec2(0.0, other.g0));
 }
 
 MultiVector multi_vector_line_wedge_dot(MultiVector self, Line other) {
@@ -5260,7 +5753,7 @@ MultiVector multi_vector_point_at_infinity_wedge_dot(MultiVector self, PointAtIn
     return MultiVector(vec2(self.g3.x) * vec2(-other.g0.x, 0.0) + vec2(self.g3.y) * vec2(-other.g0.y, 0.0) + vec2(self.g3.z) * vec2(-other.g0.z, 0.0) + vec2(self.g6.x) * vec2(0.0, -other.g0.x) + vec2(self.g6.y) * vec2(0.0, -other.g0.y) + vec2(self.g6.z) * vec2(0.0, -other.g0.z), vec3(self.g2.x) * other.g0 + vec3(self.g6.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g6.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g6.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z) + vec2(self.g7.x) * vec2(0.0, -other.g0.x) + vec2(self.g7.y) * vec2(0.0, -other.g0.y) + vec2(self.g7.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(self.g3.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g3.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g3.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g10.x) * other.g0, vec4(self.g0.x) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0) + vec4(self.g3.x) * vec4(0.0, 0.0, 0.0, other.g0.x) + vec4(self.g3.y) * vec4(0.0, 0.0, 0.0, other.g0.y) + vec4(self.g3.z) * vec4(0.0, 0.0, 0.0, other.g0.z) + vec4(self.g4.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g4.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g4.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0) + vec4(self.g5.w) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0) + vec4(self.g9.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g9.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g9.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0), vec4(self.g6.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g6.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g6.z) * vec4(0.0, 0.0, 0.0, -other.g0.z), vec3(self.g2.x) * other.g0 + vec3(self.g6.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g6.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g6.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(self.g0.y) * other.g0 + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0) - vec3(self.g6.w) * other.g0 + vec3(self.g7.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g7.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g7.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(self.g3.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g3.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g3.z) * vec3(-other.g0.y, other.g0.x, 0.0) - vec3(self.g10.x) * other.g0, vec2(self.g4.x) * vec2(0.0, -other.g0.x) + vec2(self.g4.y) * vec2(0.0, -other.g0.y) + vec2(self.g4.z) * vec2(0.0, -other.g0.z) + vec2(self.g9.x) * vec2(0.0, -other.g0.x) + vec2(self.g9.y) * vec2(0.0, -other.g0.y) + vec2(self.g9.z) * vec2(0.0, -other.g0.z));
 }
 
-MultiVector multi_vector_radial_wedge_dot(MultiVector self, Radial other) {
+MultiVector multi_vector_round_point_wedge_dot(MultiVector self, RoundPoint other) {
     return MultiVector(vec2(self.g1.x) * vec2(other.g0.x, 0.0) + vec2(self.g1.y) * vec2(other.g0.y, 0.0) + vec2(self.g1.z) * vec2(other.g0.z, 0.0) + vec2(self.g2.x) * vec2(-other.g1.y, 0.0) + vec2(self.g2.y) * vec2(-other.g1.x, 0.0) + vec2(self.g9.x) * vec2(0.0, other.g0.x) + vec2(self.g9.y) * vec2(0.0, other.g0.y) + vec2(self.g9.z) * vec2(0.0, other.g0.z) + vec2(self.g10.x) * vec2(0.0, other.g1.y) + vec2(self.g10.y) * vec2(0.0, other.g1.x), vec3(self.g0.x) * other.g0 + self.g3 * vec3(other.g1.y) + vec3(self.g4.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g4.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g4.z) * vec3(other.g0.y, -other.g0.x, 0.0) - vec3(self.g5.x, self.g5.y, self.g5.z) * vec3(other.g1.x), vec2(self.g0.x) * other.g1 + vec2(self.g3.x) * vec2(other.g0.x, 0.0) + vec2(self.g3.y) * vec2(other.g0.y, 0.0) + vec2(self.g3.z) * vec2(other.g0.z, 0.0) + vec2(self.g5.x) * vec2(0.0, -other.g0.x) + vec2(self.g5.y) * vec2(0.0, -other.g0.y) + vec2(self.g5.z) * vec2(0.0, -other.g0.z) + vec2(self.g5.w) * other.g1 * vec2(-1.0, 1.0), vec3(0.0) - self.g1 * vec3(other.g1.x) + vec3(self.g2.x) * other.g0 + vec3(self.g6.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g6.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g6.z) * vec3(other.g0.y, -other.g0.x, 0.0) - self.g7 * vec3(other.g1.x), vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0) - vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g1.y) - vec3(self.g6.w) * other.g0 - self.g8 * vec3(other.g1.x), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4(self.g2.x) * vec4(0.0, 0.0, 0.0, other.g1.y) - vec4(self.g2.y) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x) + vec4(self.g7.x) * vec4(-other.g1.y, 0.0, 0.0, -other.g0.x) + vec4(self.g7.y) * vec4(0.0, -other.g1.y, 0.0, -other.g0.y) + vec4(self.g7.z) * vec4(0.0, 0.0, -other.g1.y, -other.g0.z) + vec4(self.g8.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g8.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g8.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(self.g3.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g3.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g3.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g4.x) * vec4(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4(self.g4.y) * vec4(0.0, other.g1.x, 0.0, -other.g0.y) + vec4(self.g4.z) * vec4(0.0, 0.0, other.g1.x, -other.g0.z) + vec4(self.g9.x, self.g9.y, self.g9.z, self.g9.x) * vec4(-other.g1.x, -other.g1.x, -other.g1.x, 0.0) + vec4(self.g10.x) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, other.g1.y) + vec4(self.g10.y) * vec4(0.0, 0.0, 0.0, -other.g1.x), self.g3 * vec3(other.g1.y) + vec3(self.g5.x, self.g5.y, self.g5.z) * vec3(other.g1.x) - vec3(self.g5.w) * other.g0 + vec3(self.g9.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g9.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g9.z) * vec3(-other.g0.y, other.g0.x, 0.0), self.g4 * vec3(other.g1.y) + vec3(self.g5.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g5.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g5.z) * vec3(other.g0.y, -other.g0.x, 0.0) + self.g9 * vec3(other.g1.y) + vec3(self.g10.y) * other.g0, vec3(self.g0.y) * other.g0 + vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g1.y) + vec3(self.g7.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g7.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g7.z) * vec3(other.g0.y, -other.g0.x, 0.0) - self.g8 * vec3(other.g1.x), vec2(0.0) - vec2(self.g0.y) * other.g1 + vec2(self.g6.x) * vec2(-other.g0.x, 0.0) + vec2(self.g6.y) * vec2(-other.g0.y, 0.0) + vec2(self.g6.z) * vec2(-other.g0.z, 0.0) + vec2(self.g6.w) * other.g1 * vec2(-1.0, 1.0) + vec2(self.g8.x) * vec2(0.0, other.g0.x) + vec2(self.g8.y) * vec2(0.0, other.g0.y) + vec2(self.g8.z) * vec2(0.0, other.g0.z));
 }
 
@@ -5288,6 +5781,10 @@ Horizon origin_horizon_wedge_dot(Origin self, Horizon other) {
     return Horizon(self.g0 * other.g0);
 }
 
+Infinity origin_infinity_wedge_dot(Origin self, Infinity other) {
+    return Infinity(self.g0 * other.g0);
+}
+
 MultiVector origin_line_wedge_dot(Origin self, Line other) {
     return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g0) * other.g0, vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(self.g0) * other.g1, vec3(0.0), vec2(0.0));
 }
@@ -5296,8 +5793,8 @@ LineAtInfinity origin_line_at_infinity_wedge_dot(Origin self, LineAtInfinity oth
     return LineAtInfinity(vec3(self.g0) * other.g0);
 }
 
-Radial origin_line_at_origin_wedge_dot(Origin self, LineAtOrigin other) {
-    return Radial(vec3(0.0) - vec3(self.g0) * other.g0, vec2(0.0));
+RoundPoint origin_line_at_origin_wedge_dot(Origin self, LineAtOrigin other) {
+    return RoundPoint(vec3(0.0) - vec3(self.g0) * other.g0, vec2(0.0));
 }
 
 MultiVector origin_magnitude_wedge_dot(Origin self, Magnitude other) {
@@ -5328,7 +5825,7 @@ PointAtInfinity origin_point_at_infinity_wedge_dot(Origin self, PointAtInfinity 
     return PointAtInfinity(vec3(self.g0) * other.g0);
 }
 
-MultiVector origin_radial_wedge_dot(Origin self, Radial other) {
+MultiVector origin_round_point_wedge_dot(Origin self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0) * other.g1 * vec2(-1.0, 1.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0) - vec3(self.g0) * other.g0, vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
@@ -5340,8 +5837,8 @@ MultiVector origin_sphere_wedge_dot(Origin self, Sphere other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0) * other.g0, vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0) * other.g1 * vec2(-1.0, 1.0));
 }
 
-Radial plane_anti_scalar_wedge_dot(Plane self, AntiScalar other) {
-    return Radial(vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), vec2(self.g0.w) * vec2(0.0, other.g0));
+RoundPoint plane_anti_scalar_wedge_dot(Plane self, AntiScalar other) {
+    return RoundPoint(vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), vec2(self.g0.w) * vec2(0.0, other.g0));
 }
 
 MultiVector plane_circle_wedge_dot(Plane self, Circle other) {
@@ -5354,6 +5851,10 @@ MultiVector plane_dipole_wedge_dot(Plane self, Dipole other) {
 
 PointAtInfinity plane_horizon_wedge_dot(Plane self, Horizon other) {
     return PointAtInfinity(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0));
+}
+
+LineAtInfinity plane_infinity_wedge_dot(Plane self, Infinity other) {
+    return LineAtInfinity(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0));
 }
 
 MultiVector plane_line_wedge_dot(Plane self, Line other) {
@@ -5396,7 +5897,7 @@ MultiVector plane_point_at_infinity_wedge_dot(Plane self, PointAtInfinity other)
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
 }
 
-MultiVector plane_radial_wedge_dot(Plane self, Radial other) {
+MultiVector plane_round_point_wedge_dot(Plane self, RoundPoint other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * vec2(0.0, other.g1.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0) - self.g0 * vec4(other.g1.x), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y) + vec3(self.g0.w) * other.g0, vec3(0.0), vec2(0.0));
 }
 
@@ -5408,8 +5909,8 @@ MultiVector plane_sphere_wedge_dot(Plane self, Sphere other) {
     return MultiVector(vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g0.w) * vec2(other.g1.x, 0.0), vec3(0.0), vec2(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), self.g0.xyzx * vec4(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4(self.g0.w) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, other.g1.x), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-Radial plane_at_origin_anti_scalar_wedge_dot(PlaneAtOrigin self, AntiScalar other) {
-    return Radial(vec3(0.0) - self.g0 * vec3(other.g0), vec2(0.0));
+RoundPoint plane_at_origin_anti_scalar_wedge_dot(PlaneAtOrigin self, AntiScalar other) {
+    return RoundPoint(vec3(0.0) - self.g0 * vec3(other.g0), vec2(0.0));
 }
 
 MultiVector plane_at_origin_circle_wedge_dot(PlaneAtOrigin self, Circle other) {
@@ -5422,6 +5923,10 @@ MultiVector plane_at_origin_dipole_wedge_dot(PlaneAtOrigin self, Dipole other) {
 
 PointAtInfinity plane_at_origin_horizon_wedge_dot(PlaneAtOrigin self, Horizon other) {
     return PointAtInfinity(self.g0 * vec3(other.g0));
+}
+
+LineAtInfinity plane_at_origin_infinity_wedge_dot(PlaneAtOrigin self, Infinity other) {
+    return LineAtInfinity(self.g0 * vec3(other.g0));
 }
 
 MultiVector plane_at_origin_line_wedge_dot(PlaneAtOrigin self, Line other) {
@@ -5464,7 +5969,7 @@ MultiVector plane_at_origin_point_at_infinity_wedge_dot(PlaneAtOrigin self, Poin
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
 }
 
-MultiVector plane_at_origin_radial_wedge_dot(PlaneAtOrigin self, Radial other) {
+MultiVector plane_at_origin_round_point_wedge_dot(PlaneAtOrigin self, RoundPoint other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(-other.g1.x, -other.g1.x, -other.g1.x, 0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), self.g0 * vec3(other.g1.y), vec3(0.0), vec2(0.0));
 }
 
@@ -5490,6 +5995,10 @@ MultiVector point_dipole_wedge_dot(Point self, Dipole other) {
 
 Horizon point_horizon_wedge_dot(Point self, Horizon other) {
     return Horizon(self.g0.w * other.g0);
+}
+
+Infinity point_infinity_wedge_dot(Point self, Infinity other) {
+    return Infinity(self.g0.w * other.g0);
 }
 
 MultiVector point_line_wedge_dot(Point self, Line other) {
@@ -5532,7 +6041,7 @@ PointAtInfinity point_point_at_infinity_wedge_dot(Point self, PointAtInfinity ot
     return PointAtInfinity(vec3(self.g0.w) * other.g0);
 }
 
-MultiVector point_radial_wedge_dot(Point self, Radial other) {
+MultiVector point_round_point_wedge_dot(Point self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + vec2(self.g0.w) * other.g1 * vec2(-1.0, 1.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x) - vec3(self.g0.w) * other.g0, vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
@@ -5588,7 +6097,7 @@ PointAtInfinity point_at_infinity_point_wedge_dot(PointAtInfinity self, Point ot
     return PointAtInfinity(vec3(0.0) - self.g0 * vec3(other.g0.w));
 }
 
-MultiVector point_at_infinity_radial_wedge_dot(PointAtInfinity self, Radial other) {
+MultiVector point_at_infinity_round_point_wedge_dot(PointAtInfinity self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0) - self.g0 * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), self.g0 * vec3(other.g1.x), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
@@ -5600,71 +6109,75 @@ MultiVector point_at_infinity_sphere_wedge_dot(PointAtInfinity self, Sphere othe
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), self.g0 * vec3(other.g1.x), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), self.g0 * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z));
 }
 
-Sphere radial_anti_scalar_wedge_dot(Radial self, AntiScalar other) {
+Sphere round_point_anti_scalar_wedge_dot(RoundPoint self, AntiScalar other) {
     return Sphere(self.g0 * vec3(other.g0), vec2(0.0) - self.g1 * vec2(other.g0));
 }
 
-MultiVector radial_circle_wedge_dot(Radial self, Circle other) {
+MultiVector round_point_circle_wedge_dot(RoundPoint self, Circle other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) - vec3(self.g1.x) * other.g1, vec3(0.0) - self.g0 * vec3(other.g0.w) - vec3(self.g1.x) * other.g2 - vec3(self.g1.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g0.x) * vec4(0.0, other.g2.z, -other.g2.y, -other.g1.x) + vec4(self.g0.y) * vec4(-other.g2.z, 0.0, other.g2.x, -other.g1.y) + vec4(self.g0.z) * vec4(other.g2.y, -other.g2.x, 0.0, -other.g1.z) + vec4(self.g1.y) * vec4(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0) + vec3(self.g1.x) * other.g2 - vec3(self.g1.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(other.g0.x, -other.g2.x) + vec2(self.g0.y) * vec2(other.g0.y, -other.g2.y) + vec2(self.g0.z) * vec2(other.g0.z, -other.g2.z) + self.g1 * vec2(other.g0.w));
 }
 
-MultiVector radial_dipole_wedge_dot(Radial self, Dipole other) {
+MultiVector round_point_dipole_wedge_dot(RoundPoint self, Dipole other) {
     return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0) + vec3(self.g1.x) * vec3(other.g2.x, other.g2.y, other.g2.z) - vec3(self.g1.y) * other.g0, vec2(self.g0.x) * vec2(-other.g0.x, other.g2.x) + vec2(self.g0.y) * vec2(-other.g0.y, other.g2.y) + vec2(self.g0.z) * vec2(-other.g0.z, other.g2.z) + self.g1 * vec2(other.g2.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, -other.g1.x) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, -other.g1.y) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, -other.g1.z) + vec4(self.g1.x) * vec4(other.g1.x, other.g1.y, other.g1.z, 0.0), vec3(0.0) - self.g0 * vec3(other.g2.w) + vec3(self.g1.x) * vec3(other.g2.x, other.g2.y, other.g2.z) + vec3(self.g1.y) * other.g0, vec3(self.g0.x) * vec3(0.0, -other.g2.z, other.g2.y) + vec3(self.g0.y) * vec3(other.g2.z, 0.0, -other.g2.x) + vec3(self.g0.z) * vec3(-other.g2.y, other.g2.x, 0.0) + vec3(self.g1.y) * other.g1, vec3(0.0), vec2(0.0));
 }
 
-MultiVector radial_horizon_wedge_dot(Radial self, Horizon other) {
+MultiVector round_point_horizon_wedge_dot(RoundPoint self, Horizon other) {
     return MultiVector(vec2(self.g1.x) * vec2(0.0, other.g0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g0), vec3(0.0), vec3(0.0) - self.g0 * vec3(other.g0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector radial_line_wedge_dot(Radial self, Line other) {
+MultiVector round_point_infinity_wedge_dot(RoundPoint self, Infinity other) {
+    return MultiVector(vec2(self.g1.x) * vec2(-other.g0, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g0, other.g0, other.g0, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
+}
+
+MultiVector round_point_line_wedge_dot(RoundPoint self, Line other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0) - vec3(self.g1.x) * other.g0, vec3(0.0) - vec3(self.g1.x) * other.g1, vec4(self.g0.x) * vec4(0.0, other.g1.z, -other.g1.y, -other.g0.x) + vec4(self.g0.y) * vec4(-other.g1.z, 0.0, other.g1.x, -other.g0.y) + vec4(self.g0.z) * vec4(other.g1.y, -other.g1.x, 0.0, -other.g0.z) + vec4(self.g1.y) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g1.x) * other.g1, vec2(self.g0.x) * vec2(0.0, -other.g1.x) + vec2(self.g0.y) * vec2(0.0, -other.g1.y) + vec2(self.g0.z) * vec2(0.0, -other.g1.z));
 }
 
-MultiVector radial_line_at_infinity_wedge_dot(Radial self, LineAtInfinity other) {
+MultiVector round_point_line_at_infinity_wedge_dot(RoundPoint self, LineAtInfinity other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0) - vec3(self.g1.x) * other.g0, vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g1.x) * other.g0, vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
 }
 
-MultiVector radial_line_at_origin_wedge_dot(Radial self, LineAtOrigin other) {
+MultiVector round_point_line_at_origin_wedge_dot(RoundPoint self, LineAtOrigin other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0) - vec3(self.g1.x) * other.g0, vec3(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, -other.g0.z) + vec4(self.g1.y) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec2(0.0));
 }
 
-MultiVector radial_magnitude_wedge_dot(Radial self, Magnitude other) {
+MultiVector round_point_magnitude_wedge_dot(RoundPoint self, Magnitude other) {
     return MultiVector(vec2(0.0), self.g0 * vec3(other.g0.x), self.g1 * vec2(other.g0.x), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), self.g0 * vec3(other.g0.y), vec2(0.0) - self.g1 * vec2(other.g0.y));
 }
 
-MultiVector radial_multi_vector_wedge_dot(Radial self, MultiVector other) {
+MultiVector round_point_multi_vector_wedge_dot(RoundPoint self, MultiVector other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g1.x, other.g9.x) + vec2(self.g0.y) * vec2(other.g1.y, other.g9.y) + vec2(self.g0.z) * vec2(other.g1.z, other.g9.z) + vec2(self.g1.x) * vec2(-other.g2.y, other.g10.y) + vec2(self.g1.y) * vec2(-other.g2.x, other.g10.x), vec3(self.g0.x) * vec3(other.g0.x, other.g4.z, -other.g4.y) + vec3(self.g0.y) * vec3(-other.g4.z, other.g0.x, other.g4.x) + vec3(self.g0.z) * vec3(other.g4.y, -other.g4.x, other.g0.x) + vec3(self.g1.x) * vec3(other.g5.x, other.g5.y, other.g5.z) - vec3(self.g1.y) * other.g3, vec2(self.g0.x) * vec2(-other.g3.x, other.g5.x) + vec2(self.g0.y) * vec2(-other.g3.y, other.g5.y) + vec2(self.g0.z) * vec2(-other.g3.z, other.g5.z) + self.g1 * vec2(other.g5.w) + self.g1 * vec2(other.g0.x), vec3(self.g0.x) * vec3(-other.g2.x, -other.g6.z, other.g6.y) + vec3(self.g0.y) * vec3(other.g6.z, -other.g2.x, -other.g6.x) + vec3(self.g0.z) * vec3(-other.g6.y, other.g6.x, -other.g2.x) - vec3(self.g1.x) * other.g7 + vec3(self.g1.x) * other.g1, vec3(self.g0.x) * vec3(-other.g6.w, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, -other.g6.w, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, -other.g6.w) - vec3(self.g1.x) * other.g8 - vec3(self.g1.y) * vec3(other.g6.x, other.g6.y, other.g6.z), vec4(self.g0.x) * vec4(other.g2.y, other.g8.z, -other.g8.y, -other.g7.x) + vec4(self.g0.y) * vec4(-other.g8.z, other.g2.y, other.g8.x, -other.g7.y) + vec4(self.g0.z) * vec4(other.g8.y, -other.g8.x, other.g2.y, -other.g7.z) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g2.y) - vec4(self.g1.y) * vec4(other.g7.x, other.g7.y, other.g7.z, other.g2.x) + vec4(self.g1.y) * vec4(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4(self.g0.x) * vec4(other.g10.x, other.g3.z, -other.g3.y, -other.g4.x) + vec4(self.g0.y) * vec4(-other.g3.z, other.g10.x, other.g3.x, -other.g4.y) + vec4(self.g0.z) * vec4(other.g3.y, -other.g3.x, other.g10.x, -other.g4.z) + vec4(self.g1.x) * vec4(other.g9.x, other.g9.y, other.g9.z, other.g10.y) + vec4(self.g1.x) * vec4(other.g4.x, other.g4.y, other.g4.z, 0.0) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, -other.g10.x), vec3(self.g0.x) * vec3(-other.g5.w, -other.g9.z, other.g9.y) + vec3(self.g0.y) * vec3(other.g9.z, -other.g5.w, -other.g9.x) + vec3(self.g0.z) * vec3(-other.g9.y, other.g9.x, -other.g5.w) + vec3(self.g1.x) * vec3(other.g5.x, other.g5.y, other.g5.z) + vec3(self.g1.y) * other.g3, vec3(self.g0.x) * vec3(-other.g10.y, -other.g5.z, other.g5.y) + vec3(self.g0.y) * vec3(other.g5.z, -other.g10.y, -other.g5.x) + vec3(self.g0.z) * vec3(-other.g5.y, other.g5.x, -other.g10.y) - vec3(self.g1.y) * other.g9 + vec3(self.g1.y) * other.g4, vec3(self.g0.x) * vec3(other.g0.y, other.g7.z, -other.g7.y) + vec3(self.g0.y) * vec3(-other.g7.z, other.g0.y, other.g7.x) + vec3(self.g0.z) * vec3(other.g7.y, -other.g7.x, other.g0.y) + vec3(self.g1.x) * other.g8 - vec3(self.g1.y) * vec3(other.g6.x, other.g6.y, other.g6.z), vec2(self.g0.x) * vec2(other.g6.x, -other.g8.x) + vec2(self.g0.y) * vec2(other.g6.y, -other.g8.y) + vec2(self.g0.z) * vec2(other.g6.z, -other.g8.z) + self.g1 * vec2(other.g6.w) - self.g1 * vec2(other.g0.y));
 }
 
-MultiVector radial_origin_wedge_dot(Radial self, Origin other) {
+MultiVector round_point_origin_wedge_dot(RoundPoint self, Origin other) {
     return MultiVector(vec2(0.0), vec3(0.0), self.g1 * vec2(other.g0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0) - self.g0 * vec3(other.g0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector radial_plane_wedge_dot(Radial self, Plane other) {
+MultiVector round_point_plane_wedge_dot(RoundPoint self, Plane other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g1.x) * vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0) - self.g0 * vec3(other.g0.w) - vec3(self.g1.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
 }
 
-MultiVector radial_plane_at_origin_wedge_dot(Radial self, PlaneAtOrigin other) {
+MultiVector round_point_plane_at_origin_wedge_dot(RoundPoint self, PlaneAtOrigin other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g1.x) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0) - vec3(self.g1.y) * other.g0, vec3(0.0), vec2(0.0));
 }
 
-MultiVector radial_point_wedge_dot(Radial self, Point other) {
+MultiVector round_point_point_wedge_dot(RoundPoint self, Point other) {
     return MultiVector(vec2(0.0), vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + self.g1 * vec2(other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0) - self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector radial_point_at_infinity_wedge_dot(Radial self, PointAtInfinity other) {
+MultiVector round_point_point_at_infinity_wedge_dot(RoundPoint self, PointAtInfinity other) {
     return MultiVector(vec2(0.0), vec3(self.g1.x) * other.g0, vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector radial_radial_wedge_dot(Radial self, Radial other) {
+MultiVector round_point_round_point_wedge_dot(RoundPoint self, RoundPoint other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0) + vec2(self.g1.x) * vec2(-other.g1.y, 0.0) + vec2(self.g1.y) * vec2(-other.g1.x, 0.0), vec3(0.0), vec2(0.0), vec3(0.0) - self.g0 * vec3(other.g1.x) + vec3(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g1.y) - vec4(self.g1.y) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-Radial radial_scalar_wedge_dot(Radial self, Scalar other) {
-    return Radial(self.g0 * vec3(other.g0), self.g1 * vec2(other.g0));
+RoundPoint round_point_scalar_wedge_dot(RoundPoint self, Scalar other) {
+    return RoundPoint(self.g0 * vec3(other.g0), self.g1 * vec2(other.g0));
 }
 
-MultiVector radial_sphere_wedge_dot(Radial self, Sphere other) {
+MultiVector round_point_sphere_wedge_dot(RoundPoint self, Sphere other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g1.x) * vec2(0.0, other.g1.y) + vec2(self.g1.y) * vec2(0.0, other.g1.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g1.x, other.g1.x, other.g1.x, 0.0) + vec4(self.g1.x) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.y) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, -other.g1.x), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0) - self.g0 * vec3(other.g1.y) - vec3(self.g1.y) * other.g0, vec3(0.0), vec2(0.0));
 }
 
@@ -5682,6 +6195,10 @@ Dipole scalar_dipole_wedge_dot(Scalar self, Dipole other) {
 
 Horizon scalar_horizon_wedge_dot(Scalar self, Horizon other) {
     return Horizon(self.g0 * other.g0);
+}
+
+Infinity scalar_infinity_wedge_dot(Scalar self, Infinity other) {
+    return Infinity(self.g0 * other.g0);
 }
 
 Line scalar_line_wedge_dot(Scalar self, Line other) {
@@ -5724,8 +6241,8 @@ PointAtInfinity scalar_point_at_infinity_wedge_dot(Scalar self, PointAtInfinity 
     return PointAtInfinity(vec3(self.g0) * other.g0);
 }
 
-Radial scalar_radial_wedge_dot(Scalar self, Radial other) {
-    return Radial(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
+RoundPoint scalar_round_point_wedge_dot(Scalar self, RoundPoint other) {
+    return RoundPoint(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
 }
 
 Scalar scalar_scalar_wedge_dot(Scalar self, Scalar other) {
@@ -5736,8 +6253,8 @@ Sphere scalar_sphere_wedge_dot(Scalar self, Sphere other) {
     return Sphere(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
 }
 
-Radial sphere_anti_scalar_wedge_dot(Sphere self, AntiScalar other) {
-    return Radial(vec3(0.0) - self.g0 * vec3(other.g0), self.g1 * vec2(other.g0));
+RoundPoint sphere_anti_scalar_wedge_dot(Sphere self, AntiScalar other) {
+    return RoundPoint(vec3(0.0) - self.g0 * vec3(other.g0), self.g1 * vec2(other.g0));
 }
 
 MultiVector sphere_circle_wedge_dot(Sphere self, Circle other) {
@@ -5750,6 +6267,10 @@ MultiVector sphere_dipole_wedge_dot(Sphere self, Dipole other) {
 
 MultiVector sphere_horizon_wedge_dot(Sphere self, Horizon other) {
     return MultiVector(vec2(self.g1.x) * vec2(other.g0, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g0, other.g0, other.g0, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, -other.g0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
+}
+
+MultiVector sphere_infinity_wedge_dot(Sphere self, Infinity other) {
+    return MultiVector(vec2(self.g1.x) * vec2(0.0, other.g0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g0), vec3(0.0), self.g0 * vec3(other.g0), vec3(0.0), vec2(0.0));
 }
 
 MultiVector sphere_line_wedge_dot(Sphere self, Line other) {
@@ -5792,7 +6313,7 @@ MultiVector sphere_point_at_infinity_wedge_dot(Sphere self, PointAtInfinity othe
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g1.x) * other.g0, vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - vec3(self.g1.x) * other.g0, vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
 }
 
-MultiVector sphere_radial_wedge_dot(Sphere self, Radial other) {
+MultiVector sphere_round_point_wedge_dot(Sphere self, RoundPoint other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g1.x) * vec2(0.0, other.g1.y) + vec2(self.g1.y) * vec2(0.0, other.g1.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(-other.g1.x, -other.g1.x, -other.g1.x, 0.0) + vec4(self.g1.x) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, other.g1.y) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, -other.g1.x), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), self.g0 * vec3(other.g1.y) + vec3(self.g1.y) * other.g0, vec3(0.0), vec2(0.0));
 }
 
@@ -5818,6 +6339,10 @@ Dipole anti_scalar_dipole_anti_wedge(AntiScalar self, Dipole other) {
 
 Horizon anti_scalar_horizon_anti_wedge(AntiScalar self, Horizon other) {
     return Horizon(self.g0 * other.g0);
+}
+
+Infinity anti_scalar_infinity_anti_wedge(AntiScalar self, Infinity other) {
+    return Infinity(self.g0 * other.g0);
 }
 
 Line anti_scalar_line_anti_wedge(AntiScalar self, Line other) {
@@ -5860,8 +6385,8 @@ PointAtInfinity anti_scalar_point_at_infinity_anti_wedge(AntiScalar self, PointA
     return PointAtInfinity(vec3(self.g0) * other.g0);
 }
 
-Radial anti_scalar_radial_anti_wedge(AntiScalar self, Radial other) {
-    return Radial(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
+RoundPoint anti_scalar_round_point_anti_wedge(AntiScalar self, RoundPoint other) {
+    return RoundPoint(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
 }
 
 Scalar anti_scalar_scalar_anti_wedge(AntiScalar self, Scalar other) {
@@ -5876,8 +6401,8 @@ Circle circle_anti_scalar_anti_wedge(Circle self, AntiScalar other) {
     return Circle(self.g0 * vec4(other.g0), self.g1 * vec3(other.g0), self.g2 * vec3(other.g0));
 }
 
-Radial circle_circle_anti_wedge(Circle self, Circle other) {
-    return Radial(vec3(self.g0.x) * vec3(0.0, other.g2.z, -other.g2.y) + vec3(self.g0.y) * vec3(-other.g2.z, 0.0, other.g2.x) + vec3(self.g0.z) * vec3(other.g2.y, -other.g2.x, 0.0) + vec3(self.g0.w) * other.g1 + self.g1 * vec3(other.g0.w) + vec3(self.g2.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g2.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g2.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.x) * vec2(-other.g1.x, 0.0) + vec2(self.g0.y) * vec2(-other.g1.y, 0.0) + vec2(self.g0.z) * vec2(-other.g1.z, 0.0) - vec2(self.g1.x) * vec2(other.g0.x, other.g2.x) - vec2(self.g1.y) * vec2(other.g0.y, other.g2.y) - vec2(self.g1.z) * vec2(other.g0.z, other.g2.z) + vec2(self.g2.x) * vec2(0.0, -other.g1.x) + vec2(self.g2.y) * vec2(0.0, -other.g1.y) + vec2(self.g2.z) * vec2(0.0, -other.g1.z));
+RoundPoint circle_circle_anti_wedge(Circle self, Circle other) {
+    return RoundPoint(vec3(self.g0.x) * vec3(0.0, other.g2.z, -other.g2.y) + vec3(self.g0.y) * vec3(-other.g2.z, 0.0, other.g2.x) + vec3(self.g0.z) * vec3(other.g2.y, -other.g2.x, 0.0) + vec3(self.g0.w) * other.g1 + self.g1 * vec3(other.g0.w) + vec3(self.g2.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g2.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g2.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.x) * vec2(-other.g1.x, 0.0) + vec2(self.g0.y) * vec2(-other.g1.y, 0.0) + vec2(self.g0.z) * vec2(-other.g1.z, 0.0) - vec2(self.g1.x) * vec2(other.g0.x, other.g2.x) - vec2(self.g1.y) * vec2(other.g0.y, other.g2.y) - vec2(self.g1.z) * vec2(other.g0.z, other.g2.z) + vec2(self.g2.x) * vec2(0.0, -other.g1.x) + vec2(self.g2.y) * vec2(0.0, -other.g1.y) + vec2(self.g2.z) * vec2(0.0, -other.g1.z));
 }
 
 Scalar circle_dipole_anti_wedge(Circle self, Dipole other) {
@@ -5888,16 +6413,16 @@ Dipole circle_horizon_anti_wedge(Circle self, Horizon other) {
     return Dipole(vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(other.g0, other.g0, other.g0, 0.0));
 }
 
-Radial circle_line_anti_wedge(Circle self, Line other) {
-    return Radial(vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0) + vec3(self.g0.w) * other.g0, vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g1.x) * vec2(0.0, -other.g1.x) + vec2(self.g1.y) * vec2(0.0, -other.g1.y) + vec2(self.g1.z) * vec2(0.0, -other.g1.z) + vec2(self.g2.x) * vec2(0.0, -other.g0.x) + vec2(self.g2.y) * vec2(0.0, -other.g0.y) + vec2(self.g2.z) * vec2(0.0, -other.g0.z));
+RoundPoint circle_line_anti_wedge(Circle self, Line other) {
+    return RoundPoint(vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0) + vec3(self.g0.w) * other.g0, vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g1.x) * vec2(0.0, -other.g1.x) + vec2(self.g1.y) * vec2(0.0, -other.g1.y) + vec2(self.g1.z) * vec2(0.0, -other.g1.z) + vec2(self.g2.x) * vec2(0.0, -other.g0.x) + vec2(self.g2.y) * vec2(0.0, -other.g0.y) + vec2(self.g2.z) * vec2(0.0, -other.g0.z));
 }
 
-Radial circle_line_at_infinity_anti_wedge(Circle self, LineAtInfinity other) {
-    return Radial(vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z));
+RoundPoint circle_line_at_infinity_anti_wedge(Circle self, LineAtInfinity other) {
+    return RoundPoint(vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z));
 }
 
-Radial circle_line_at_origin_anti_wedge(Circle self, LineAtOrigin other) {
-    return Radial(vec3(self.g0.w) * other.g0, vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, -other.g0.x) + vec2(self.g2.y) * vec2(0.0, -other.g0.y) + vec2(self.g2.z) * vec2(0.0, -other.g0.z));
+RoundPoint circle_line_at_origin_anti_wedge(Circle self, LineAtOrigin other) {
+    return RoundPoint(vec3(self.g0.w) * other.g0, vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, -other.g0.x) + vec2(self.g2.y) * vec2(0.0, -other.g0.y) + vec2(self.g2.z) * vec2(0.0, -other.g0.z));
 }
 
 Circle circle_magnitude_anti_wedge(Circle self, Magnitude other) {
@@ -5940,8 +6465,8 @@ Scalar dipole_circle_anti_wedge(Dipole self, Circle other) {
     return Scalar(0.0 - self.g0.x * other.g2.x - self.g0.y * other.g2.y - self.g0.z * other.g2.z - self.g1.x * other.g1.x - self.g1.y * other.g1.y - self.g1.z * other.g1.z - self.g2.x * other.g0.x - self.g2.y * other.g0.y - self.g2.z * other.g0.z - self.g2.w * other.g0.w);
 }
 
-Radial dipole_horizon_anti_wedge(Dipole self, Horizon other) {
-    return Radial(self.g0 * vec3(other.g0), vec2(self.g2.w) * vec2(0.0, other.g0));
+RoundPoint dipole_horizon_anti_wedge(Dipole self, Horizon other) {
+    return RoundPoint(self.g0 * vec3(other.g0), vec2(self.g2.w) * vec2(0.0, other.g0));
 }
 
 Scalar dipole_line_anti_wedge(Dipole self, Line other) {
@@ -5964,16 +6489,16 @@ MultiVector dipole_multi_vector_anti_wedge(Dipole self, MultiVector other) {
     return MultiVector(vec2(self.g0.x) * vec2(-other.g8.x, 0.0) + vec2(self.g0.y) * vec2(-other.g8.y, 0.0) + vec2(self.g0.z) * vec2(-other.g8.z, 0.0) + vec2(self.g1.x) * vec2(-other.g7.x, 0.0) + vec2(self.g1.y) * vec2(-other.g7.y, 0.0) + vec2(self.g1.z) * vec2(-other.g7.z, 0.0) + vec2(self.g2.x) * vec2(-other.g6.x, 0.0) + vec2(self.g2.y) * vec2(-other.g6.y, 0.0) + vec2(self.g2.z) * vec2(-other.g6.z, 0.0) + vec2(self.g2.w) * vec2(-other.g6.w, 0.0), self.g0 * vec3(other.g10.y) + vec3(self.g1.x) * vec3(0.0, -other.g9.z, other.g9.y) + vec3(self.g1.y) * vec3(other.g9.z, 0.0, -other.g9.x) + vec3(self.g1.z) * vec3(-other.g9.y, other.g9.x, 0.0) - vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g10.x), vec2(self.g0.x) * vec2(-other.g9.x, 0.0) + vec2(self.g0.y) * vec2(-other.g9.y, 0.0) + vec2(self.g0.z) * vec2(-other.g9.z, 0.0) + vec2(self.g2.x) * vec2(0.0, other.g9.x) + vec2(self.g2.y) * vec2(0.0, other.g9.y) + vec2(self.g2.z) * vec2(0.0, other.g9.z) + vec2(self.g2.w) * other.g10 * vec2(-1.0, 1.0), self.g0 * vec3(other.g0.y), self.g1 * vec3(other.g0.y), self.g2 * vec4(other.g0.y), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-Radial dipole_plane_anti_wedge(Dipole self, Plane other) {
-    return Radial(self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z) + vec2(self.g2.w) * vec2(0.0, other.g0.w));
+RoundPoint dipole_plane_anti_wedge(Dipole self, Plane other) {
+    return RoundPoint(self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z) + vec2(self.g2.w) * vec2(0.0, other.g0.w));
 }
 
-Radial dipole_plane_at_origin_anti_wedge(Dipole self, PlaneAtOrigin other) {
-    return Radial(vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z));
+RoundPoint dipole_plane_at_origin_anti_wedge(Dipole self, PlaneAtOrigin other) {
+    return RoundPoint(vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z));
 }
 
-Radial dipole_sphere_anti_wedge(Dipole self, Sphere other) {
-    return Radial(self.g0 * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0) - vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z) + vec2(self.g2.w) * other.g1 * vec2(-1.0, 1.0));
+RoundPoint dipole_sphere_anti_wedge(Dipole self, Sphere other) {
+    return RoundPoint(self.g0 * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0) - vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z) + vec2(self.g2.w) * other.g1 * vec2(-1.0, 1.0));
 }
 
 Horizon horizon_anti_scalar_anti_wedge(Horizon self, AntiScalar other) {
@@ -5984,8 +6509,8 @@ Dipole horizon_circle_anti_wedge(Horizon self, Circle other) {
     return Dipole(vec3(0.0), vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g0) * vec4(other.g1.x, other.g1.y, other.g1.z, 0.0));
 }
 
-Radial horizon_dipole_anti_wedge(Horizon self, Dipole other) {
-    return Radial(vec3(0.0) - vec3(self.g0) * other.g0, vec2(self.g0) * vec2(0.0, -other.g2.w));
+RoundPoint horizon_dipole_anti_wedge(Horizon self, Dipole other) {
+    return RoundPoint(vec3(0.0) - vec3(self.g0) * other.g0, vec2(self.g0) * vec2(0.0, -other.g2.w));
 }
 
 PointAtInfinity horizon_line_anti_wedge(Horizon self, Line other) {
@@ -6004,8 +6529,8 @@ MultiVector horizon_multi_vector_anti_wedge(Horizon self, MultiVector other) {
     return MultiVector(vec2(self.g0) * vec2(other.g2.x, 0.0), vec3(0.0) - vec3(self.g0) * other.g3, vec2(self.g0) * vec2(0.0, -other.g5.w), vec3(0.0), vec3(self.g0) * vec3(other.g6.x, other.g6.y, other.g6.z), vec4(self.g0) * vec4(other.g7.x, other.g7.y, other.g7.z, 0.0), vec4(self.g0) * vec4(0.0, 0.0, 0.0, -other.g10.x), vec3(0.0), vec3(0.0) - vec3(self.g0) * other.g9, vec3(0.0), vec2(self.g0) * vec2(0.0, other.g0.y));
 }
 
-Radial horizon_origin_anti_wedge(Horizon self, Origin other) {
-    return Radial(vec3(0.0), vec2(self.g0) * vec2(0.0, -other.g0));
+Infinity horizon_origin_anti_wedge(Horizon self, Origin other) {
+    return Infinity(0.0 - self.g0 * other.g0);
 }
 
 LineAtInfinity horizon_plane_anti_wedge(Horizon self, Plane other) {
@@ -6016,11 +6541,11 @@ LineAtInfinity horizon_plane_at_origin_anti_wedge(Horizon self, PlaneAtOrigin ot
     return LineAtInfinity(vec3(0.0) - vec3(self.g0) * other.g0);
 }
 
-Radial horizon_point_anti_wedge(Horizon self, Point other) {
-    return Radial(vec3(0.0), vec2(self.g0) * vec2(0.0, -other.g0.w));
+Infinity horizon_point_anti_wedge(Horizon self, Point other) {
+    return Infinity(0.0 - self.g0 * other.g0.w);
 }
 
-Scalar horizon_radial_anti_wedge(Horizon self, Radial other) {
+Scalar horizon_round_point_anti_wedge(Horizon self, RoundPoint other) {
     return Scalar(self.g0 * other.g1.x);
 }
 
@@ -6028,12 +6553,28 @@ Circle horizon_sphere_anti_wedge(Horizon self, Sphere other) {
     return Circle(vec4(self.g0) * vec4(0.0, 0.0, 0.0, -other.g1.x), vec3(0.0), vec3(0.0) - vec3(self.g0) * other.g0);
 }
 
+Infinity infinity_anti_scalar_anti_wedge(Infinity self, AntiScalar other) {
+    return Infinity(self.g0 * other.g0);
+}
+
+Infinity infinity_magnitude_anti_wedge(Infinity self, Magnitude other) {
+    return Infinity(self.g0 * other.g0.y);
+}
+
+MultiVector infinity_multi_vector_anti_wedge(Infinity self, MultiVector other) {
+    return MultiVector(vec2(self.g0) * vec2(other.g10.x, 0.0), vec3(0.0), vec2(self.g0) * vec2(0.0, other.g0.y), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
+}
+
+Scalar infinity_sphere_anti_wedge(Infinity self, Sphere other) {
+    return Scalar(self.g0 * other.g1.x);
+}
+
 Line line_anti_scalar_anti_wedge(Line self, AntiScalar other) {
     return Line(self.g0 * vec3(other.g0), self.g1 * vec3(other.g0));
 }
 
-Radial line_circle_anti_wedge(Line self, Circle other) {
-    return Radial(self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(0.0) - vec2(self.g0.x) * vec2(other.g0.x, other.g2.x) - vec2(self.g0.y) * vec2(other.g0.y, other.g2.y) - vec2(self.g0.z) * vec2(other.g0.z, other.g2.z) + vec2(self.g1.x) * vec2(0.0, -other.g1.x) + vec2(self.g1.y) * vec2(0.0, -other.g1.y) + vec2(self.g1.z) * vec2(0.0, -other.g1.z));
+RoundPoint line_circle_anti_wedge(Line self, Circle other) {
+    return RoundPoint(self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(0.0) - vec2(self.g0.x) * vec2(other.g0.x, other.g2.x) - vec2(self.g0.y) * vec2(other.g0.y, other.g2.y) - vec2(self.g0.z) * vec2(other.g0.z, other.g2.z) + vec2(self.g1.x) * vec2(0.0, -other.g1.x) + vec2(self.g1.y) * vec2(0.0, -other.g1.y) + vec2(self.g1.z) * vec2(0.0, -other.g1.z));
 }
 
 Scalar line_dipole_anti_wedge(Line self, Dipole other) {
@@ -6044,16 +6585,16 @@ PointAtInfinity line_horizon_anti_wedge(Line self, Horizon other) {
     return PointAtInfinity(self.g0 * vec3(other.g0));
 }
 
-Radial line_line_anti_wedge(Line self, Line other) {
-    return Radial(vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g1.x) + vec2(self.g0.y) * vec2(0.0, -other.g1.y) + vec2(self.g0.z) * vec2(0.0, -other.g1.z) + vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z));
+Infinity line_line_anti_wedge(Line self, Line other) {
+    return Infinity(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
 }
 
-Radial line_line_at_infinity_anti_wedge(Line self, LineAtInfinity other) {
-    return Radial(vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
+Infinity line_line_at_infinity_anti_wedge(Line self, LineAtInfinity other) {
+    return Infinity(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
-Radial line_line_at_origin_anti_wedge(Line self, LineAtOrigin other) {
-    return Radial(vec3(0.0), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z));
+Infinity line_line_at_origin_anti_wedge(Line self, LineAtOrigin other) {
+    return Infinity(0.0 - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
 }
 
 Line line_magnitude_anti_wedge(Line self, Magnitude other) {
@@ -6080,20 +6621,20 @@ LineAtInfinity line_at_infinity_anti_scalar_anti_wedge(LineAtInfinity self, Anti
     return LineAtInfinity(self.g0 * vec3(other.g0));
 }
 
-Radial line_at_infinity_circle_anti_wedge(LineAtInfinity self, Circle other) {
-    return Radial(vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.x) * vec2(0.0, -other.g1.x) + vec2(self.g0.y) * vec2(0.0, -other.g1.y) + vec2(self.g0.z) * vec2(0.0, -other.g1.z));
+RoundPoint line_at_infinity_circle_anti_wedge(LineAtInfinity self, Circle other) {
+    return RoundPoint(vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.x) * vec2(0.0, -other.g1.x) + vec2(self.g0.y) * vec2(0.0, -other.g1.y) + vec2(self.g0.z) * vec2(0.0, -other.g1.z));
 }
 
 Scalar line_at_infinity_dipole_anti_wedge(LineAtInfinity self, Dipole other) {
     return Scalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
-Radial line_at_infinity_line_anti_wedge(LineAtInfinity self, Line other) {
-    return Radial(vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
+Infinity line_at_infinity_line_anti_wedge(LineAtInfinity self, Line other) {
+    return Infinity(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
-Radial line_at_infinity_line_at_origin_anti_wedge(LineAtInfinity self, LineAtOrigin other) {
-    return Radial(vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
+Infinity line_at_infinity_line_at_origin_anti_wedge(LineAtInfinity self, LineAtOrigin other) {
+    return Infinity(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
 LineAtInfinity line_at_infinity_magnitude_anti_wedge(LineAtInfinity self, Magnitude other) {
@@ -6120,8 +6661,8 @@ LineAtOrigin line_at_origin_anti_scalar_anti_wedge(LineAtOrigin self, AntiScalar
     return LineAtOrigin(self.g0 * vec3(other.g0));
 }
 
-Radial line_at_origin_circle_anti_wedge(LineAtOrigin self, Circle other) {
-    return Radial(self.g0 * vec3(other.g0.w), vec2(0.0) - vec2(self.g0.x) * vec2(other.g0.x, other.g2.x) - vec2(self.g0.y) * vec2(other.g0.y, other.g2.y) - vec2(self.g0.z) * vec2(other.g0.z, other.g2.z));
+RoundPoint line_at_origin_circle_anti_wedge(LineAtOrigin self, Circle other) {
+    return RoundPoint(self.g0 * vec3(other.g0.w), vec2(0.0) - vec2(self.g0.x) * vec2(other.g0.x, other.g2.x) - vec2(self.g0.y) * vec2(other.g0.y, other.g2.y) - vec2(self.g0.z) * vec2(other.g0.z, other.g2.z));
 }
 
 Scalar line_at_origin_dipole_anti_wedge(LineAtOrigin self, Dipole other) {
@@ -6132,12 +6673,12 @@ PointAtInfinity line_at_origin_horizon_anti_wedge(LineAtOrigin self, Horizon oth
     return PointAtInfinity(self.g0 * vec3(other.g0));
 }
 
-Radial line_at_origin_line_anti_wedge(LineAtOrigin self, Line other) {
-    return Radial(vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g1.x) + vec2(self.g0.y) * vec2(0.0, -other.g1.y) + vec2(self.g0.z) * vec2(0.0, -other.g1.z));
+Infinity line_at_origin_line_anti_wedge(LineAtOrigin self, Line other) {
+    return Infinity(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z);
 }
 
-Radial line_at_origin_line_at_infinity_anti_wedge(LineAtOrigin self, LineAtInfinity other) {
-    return Radial(vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
+Infinity line_at_origin_line_at_infinity_anti_wedge(LineAtOrigin self, LineAtInfinity other) {
+    return Infinity(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
 LineAtOrigin line_at_origin_magnitude_anti_wedge(LineAtOrigin self, Magnitude other) {
@@ -6174,6 +6715,10 @@ Dipole magnitude_dipole_anti_wedge(Magnitude self, Dipole other) {
 
 Horizon magnitude_horizon_anti_wedge(Magnitude self, Horizon other) {
     return Horizon(self.g0.y * other.g0);
+}
+
+Infinity magnitude_infinity_anti_wedge(Magnitude self, Infinity other) {
+    return Infinity(self.g0.y * other.g0);
 }
 
 Line magnitude_line_anti_wedge(Magnitude self, Line other) {
@@ -6216,8 +6761,8 @@ PointAtInfinity magnitude_point_at_infinity_anti_wedge(Magnitude self, PointAtIn
     return PointAtInfinity(vec3(self.g0.y) * other.g0);
 }
 
-Radial magnitude_radial_anti_wedge(Magnitude self, Radial other) {
-    return Radial(vec3(self.g0.y) * other.g0, vec2(self.g0.y) * other.g1);
+RoundPoint magnitude_round_point_anti_wedge(Magnitude self, RoundPoint other) {
+    return RoundPoint(vec3(self.g0.y) * other.g0, vec2(self.g0.y) * other.g1);
 }
 
 Scalar magnitude_scalar_anti_wedge(Magnitude self, Scalar other) {
@@ -6242,6 +6787,10 @@ MultiVector multi_vector_dipole_anti_wedge(MultiVector self, Dipole other) {
 
 MultiVector multi_vector_horizon_anti_wedge(MultiVector self, Horizon other) {
     return MultiVector(vec2(self.g2.x) * vec2(other.g0, 0.0), self.g3 * vec3(other.g0), vec2(self.g5.w) * vec2(0.0, other.g0), vec3(0.0), vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g0), vec4(self.g7.x, self.g7.y, self.g7.z, self.g7.x) * vec4(other.g0, other.g0, other.g0, 0.0), vec4(self.g10.x) * vec4(0.0, 0.0, 0.0, other.g0), vec3(0.0), self.g9 * vec3(other.g0), vec3(0.0), vec2(self.g0.y) * vec2(0.0, other.g0));
+}
+
+MultiVector multi_vector_infinity_anti_wedge(MultiVector self, Infinity other) {
+    return MultiVector(vec2(self.g10.x) * vec2(other.g0, 0.0), vec3(0.0), vec2(self.g0.y) * vec2(0.0, other.g0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
 MultiVector multi_vector_line_anti_wedge(MultiVector self, Line other) {
@@ -6284,7 +6833,7 @@ MultiVector multi_vector_point_at_infinity_anti_wedge(MultiVector self, PointAtI
     return MultiVector(vec2(self.g6.x) * vec2(-other.g0.x, 0.0) + vec2(self.g6.y) * vec2(-other.g0.y, 0.0) + vec2(self.g6.z) * vec2(-other.g0.z, 0.0), vec3(self.g10.x) * other.g0, vec2(self.g9.x) * vec2(0.0, -other.g0.x) + vec2(self.g9.y) * vec2(0.0, -other.g0.y) + vec2(self.g9.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(self.g0.y) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector multi_vector_radial_anti_wedge(MultiVector self, Radial other) {
+MultiVector multi_vector_round_point_anti_wedge(MultiVector self, RoundPoint other) {
     return MultiVector(vec2(self.g9.x) * vec2(other.g0.x, 0.0) + vec2(self.g9.y) * vec2(other.g0.y, 0.0) + vec2(self.g9.z) * vec2(other.g0.z, 0.0) + vec2(self.g10.x) * vec2(other.g1.y, 0.0) + vec2(self.g10.y) * vec2(other.g1.x, 0.0), vec3(self.g0.y) * other.g0, vec2(self.g0.y) * other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
@@ -6304,8 +6853,8 @@ Scalar origin_circle_anti_wedge(Origin self, Circle other) {
     return Scalar(0.0 - self.g0 * other.g0.w);
 }
 
-Radial origin_horizon_anti_wedge(Origin self, Horizon other) {
-    return Radial(vec3(0.0), vec2(self.g0) * vec2(0.0, other.g0));
+Infinity origin_horizon_anti_wedge(Origin self, Horizon other) {
+    return Infinity(self.g0 * other.g0);
 }
 
 Origin origin_magnitude_anti_wedge(Origin self, Magnitude other) {
@@ -6316,12 +6865,12 @@ MultiVector origin_multi_vector_anti_wedge(Origin self, MultiVector other) {
     return MultiVector(vec2(self.g0) * vec2(-other.g6.w, 0.0), vec3(0.0), vec2(self.g0) * other.g10 * vec2(-1.0, 1.0), vec3(0.0), vec3(0.0), vec4(self.g0) * vec4(0.0, 0.0, 0.0, other.g0.y), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-Radial origin_plane_anti_wedge(Origin self, Plane other) {
-    return Radial(vec3(0.0), vec2(self.g0) * vec2(0.0, other.g0.w));
+Infinity origin_plane_anti_wedge(Origin self, Plane other) {
+    return Infinity(self.g0 * other.g0.w);
 }
 
-Radial origin_sphere_anti_wedge(Origin self, Sphere other) {
-    return Radial(vec3(0.0), vec2(self.g0) * other.g1 * vec2(-1.0, 1.0));
+RoundPoint origin_sphere_anti_wedge(Origin self, Sphere other) {
+    return RoundPoint(vec3(0.0), vec2(self.g0) * other.g1 * vec2(-1.0, 1.0));
 }
 
 Plane plane_anti_scalar_anti_wedge(Plane self, AntiScalar other) {
@@ -6332,8 +6881,8 @@ Dipole plane_circle_anti_wedge(Plane self, Circle other) {
     return Dipole(vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w) + vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g0.x) * vec4(0.0, other.g2.z, -other.g2.y, -other.g1.x) + vec4(self.g0.y) * vec4(-other.g2.z, 0.0, other.g2.x, -other.g1.y) + vec4(self.g0.z) * vec4(other.g2.y, -other.g2.x, 0.0, -other.g1.z) + vec4(self.g0.w) * vec4(other.g1.x, other.g1.y, other.g1.z, 0.0));
 }
 
-Radial plane_dipole_anti_wedge(Plane self, Dipole other) {
-    return Radial(vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0) - vec3(self.g0.w) * other.g0, vec2(self.g0.x) * vec2(other.g0.x, -other.g2.x) + vec2(self.g0.y) * vec2(other.g0.y, -other.g2.y) + vec2(self.g0.z) * vec2(other.g0.z, -other.g2.z) + vec2(self.g0.w) * vec2(0.0, -other.g2.w));
+RoundPoint plane_dipole_anti_wedge(Plane self, Dipole other) {
+    return RoundPoint(vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0) - vec3(self.g0.w) * other.g0, vec2(self.g0.x) * vec2(other.g0.x, -other.g2.x) + vec2(self.g0.y) * vec2(other.g0.y, -other.g2.y) + vec2(self.g0.z) * vec2(other.g0.z, -other.g2.z) + vec2(self.g0.w) * vec2(0.0, -other.g2.w));
 }
 
 LineAtInfinity plane_horizon_anti_wedge(Plane self, Horizon other) {
@@ -6360,8 +6909,8 @@ MultiVector plane_multi_vector_anti_wedge(Plane self, MultiVector other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g1.x, 0.0) + vec2(self.g0.y) * vec2(other.g1.y, 0.0) + vec2(self.g0.z) * vec2(other.g1.z, 0.0) + vec2(self.g0.w) * vec2(other.g2.x, 0.0), vec3(self.g0.x) * vec3(0.0, -other.g4.z, other.g4.y) + vec3(self.g0.y) * vec3(other.g4.z, 0.0, -other.g4.x) + vec3(self.g0.z) * vec3(-other.g4.y, other.g4.x, 0.0) - vec3(self.g0.w) * other.g3, vec2(self.g0.x) * vec2(other.g3.x, -other.g5.x) + vec2(self.g0.y) * vec2(other.g3.y, -other.g5.y) + vec2(self.g0.z) * vec2(other.g3.z, -other.g5.z) + vec2(self.g0.w) * vec2(0.0, -other.g5.w), vec3(self.g0.x) * vec3(0.0, -other.g6.z, other.g6.y) + vec3(self.g0.y) * vec3(other.g6.z, 0.0, -other.g6.x) + vec3(self.g0.z) * vec3(-other.g6.y, other.g6.x, 0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g6.w) + vec3(self.g0.w) * vec3(other.g6.x, other.g6.y, other.g6.z), vec4(self.g0.x) * vec4(0.0, other.g8.z, -other.g8.y, -other.g7.x) + vec4(self.g0.y) * vec4(-other.g8.z, 0.0, other.g8.x, -other.g7.y) + vec4(self.g0.z) * vec4(other.g8.y, -other.g8.x, 0.0, -other.g7.z) + vec4(self.g0.w) * vec4(other.g7.x, other.g7.y, other.g7.z, 0.0), vec4(0.0) - self.g0 * vec4(other.g10.x), vec3(self.g0.x) * vec3(0.0, other.g9.z, -other.g9.y) + vec3(self.g0.y) * vec3(-other.g9.z, 0.0, other.g9.x) + vec3(self.g0.z) * vec3(other.g9.y, -other.g9.x, 0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g10.y) - vec3(self.g0.w) * other.g9, vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.y), vec2(self.g0.w) * vec2(0.0, other.g0.y));
 }
 
-Radial plane_origin_anti_wedge(Plane self, Origin other) {
-    return Radial(vec3(0.0), vec2(self.g0.w) * vec2(0.0, -other.g0));
+Infinity plane_origin_anti_wedge(Plane self, Origin other) {
+    return Infinity(0.0 - self.g0.w * other.g0);
 }
 
 Line plane_plane_anti_wedge(Plane self, Plane other) {
@@ -6372,15 +6921,15 @@ Line plane_plane_at_origin_anti_wedge(Plane self, PlaneAtOrigin other) {
     return Line(vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0) - vec3(self.g0.w) * other.g0);
 }
 
-Radial plane_point_anti_wedge(Plane self, Point other) {
-    return Radial(vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + vec2(self.g0.w) * vec2(0.0, -other.g0.w));
+Infinity plane_point_anti_wedge(Plane self, Point other) {
+    return Infinity(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z - self.g0.w * other.g0.w);
 }
 
-Radial plane_point_at_infinity_anti_wedge(Plane self, PointAtInfinity other) {
-    return Radial(vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
+Infinity plane_point_at_infinity_anti_wedge(Plane self, PointAtInfinity other) {
+    return Infinity(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
-Scalar plane_radial_anti_wedge(Plane self, Radial other) {
+Scalar plane_round_point_anti_wedge(Plane self, RoundPoint other) {
     return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g0.w * other.g1.x);
 }
 
@@ -6396,8 +6945,8 @@ Dipole plane_at_origin_circle_anti_wedge(PlaneAtOrigin self, Circle other) {
     return Dipole(vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0) - self.g0 * vec3(other.g0.w), vec4(self.g0.x) * vec4(0.0, other.g2.z, -other.g2.y, -other.g1.x) + vec4(self.g0.y) * vec4(-other.g2.z, 0.0, other.g2.x, -other.g1.y) + vec4(self.g0.z) * vec4(other.g2.y, -other.g2.x, 0.0, -other.g1.z));
 }
 
-Radial plane_at_origin_dipole_anti_wedge(PlaneAtOrigin self, Dipole other) {
-    return Radial(vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0), vec2(self.g0.x) * vec2(other.g0.x, -other.g2.x) + vec2(self.g0.y) * vec2(other.g0.y, -other.g2.y) + vec2(self.g0.z) * vec2(other.g0.z, -other.g2.z));
+RoundPoint plane_at_origin_dipole_anti_wedge(PlaneAtOrigin self, Dipole other) {
+    return RoundPoint(vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0), vec2(self.g0.x) * vec2(other.g0.x, -other.g2.x) + vec2(self.g0.y) * vec2(other.g0.y, -other.g2.y) + vec2(self.g0.z) * vec2(other.g0.z, -other.g2.z));
 }
 
 LineAtInfinity plane_at_origin_horizon_anti_wedge(PlaneAtOrigin self, Horizon other) {
@@ -6432,15 +6981,15 @@ LineAtOrigin plane_at_origin_plane_at_origin_anti_wedge(PlaneAtOrigin self, Plan
     return LineAtOrigin(vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0));
 }
 
-Radial plane_at_origin_point_anti_wedge(PlaneAtOrigin self, Point other) {
-    return Radial(vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
+Infinity plane_at_origin_point_anti_wedge(PlaneAtOrigin self, Point other) {
+    return Infinity(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
-Radial plane_at_origin_point_at_infinity_anti_wedge(PlaneAtOrigin self, PointAtInfinity other) {
-    return Radial(vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
+Infinity plane_at_origin_point_at_infinity_anti_wedge(PlaneAtOrigin self, PointAtInfinity other) {
+    return Infinity(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
-Scalar plane_at_origin_radial_anti_wedge(PlaneAtOrigin self, Radial other) {
+Scalar plane_at_origin_round_point_anti_wedge(PlaneAtOrigin self, RoundPoint other) {
     return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
 }
 
@@ -6456,8 +7005,8 @@ Scalar point_circle_anti_wedge(Point self, Circle other) {
     return Scalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z - self.g0.w * other.g0.w);
 }
 
-Radial point_horizon_anti_wedge(Point self, Horizon other) {
-    return Radial(vec3(0.0), vec2(self.g0.w) * vec2(0.0, other.g0));
+Infinity point_horizon_anti_wedge(Point self, Horizon other) {
+    return Infinity(self.g0.w * other.g0);
 }
 
 Point point_magnitude_anti_wedge(Point self, Magnitude other) {
@@ -6468,16 +7017,16 @@ MultiVector point_multi_vector_anti_wedge(Point self, MultiVector other) {
     return MultiVector(vec2(self.g0.x) * vec2(-other.g6.x, 0.0) + vec2(self.g0.y) * vec2(-other.g6.y, 0.0) + vec2(self.g0.z) * vec2(-other.g6.z, 0.0) + vec2(self.g0.w) * vec2(-other.g6.w, 0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g10.x), vec2(self.g0.x) * vec2(0.0, other.g9.x) + vec2(self.g0.y) * vec2(0.0, other.g9.y) + vec2(self.g0.z) * vec2(0.0, other.g9.z) + vec2(self.g0.w) * other.g10 * vec2(-1.0, 1.0), vec3(0.0), vec3(0.0), self.g0 * vec4(other.g0.y), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-Radial point_plane_anti_wedge(Point self, Plane other) {
-    return Radial(vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * vec2(0.0, other.g0.w));
+Infinity point_plane_anti_wedge(Point self, Plane other) {
+    return Infinity(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g0.w * other.g0.w);
 }
 
-Radial point_plane_at_origin_anti_wedge(Point self, PlaneAtOrigin other) {
-    return Radial(vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z));
+Infinity point_plane_at_origin_anti_wedge(Point self, PlaneAtOrigin other) {
+    return Infinity(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
 }
 
-Radial point_sphere_anti_wedge(Point self, Sphere other) {
-    return Radial(vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * other.g1 * vec2(-1.0, 1.0));
+RoundPoint point_sphere_anti_wedge(Point self, Sphere other) {
+    return RoundPoint(vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * other.g1 * vec2(-1.0, 1.0));
 }
 
 PointAtInfinity point_at_infinity_anti_scalar_anti_wedge(PointAtInfinity self, AntiScalar other) {
@@ -6496,43 +7045,43 @@ MultiVector point_at_infinity_multi_vector_anti_wedge(PointAtInfinity self, Mult
     return MultiVector(vec2(self.g0.x) * vec2(-other.g6.x, 0.0) + vec2(self.g0.y) * vec2(-other.g6.y, 0.0) + vec2(self.g0.z) * vec2(-other.g6.z, 0.0), vec3(0.0) - self.g0 * vec3(other.g10.x), vec2(self.g0.x) * vec2(0.0, other.g9.x) + vec2(self.g0.y) * vec2(0.0, other.g9.y) + vec2(self.g0.z) * vec2(0.0, other.g9.z), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g0.y, other.g0.y, other.g0.y, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-Radial point_at_infinity_plane_anti_wedge(PointAtInfinity self, Plane other) {
-    return Radial(vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z));
+Infinity point_at_infinity_plane_anti_wedge(PointAtInfinity self, Plane other) {
+    return Infinity(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
 }
 
-Radial point_at_infinity_plane_at_origin_anti_wedge(PointAtInfinity self, PlaneAtOrigin other) {
-    return Radial(vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z));
+Infinity point_at_infinity_plane_at_origin_anti_wedge(PointAtInfinity self, PlaneAtOrigin other) {
+    return Infinity(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
 }
 
-Radial point_at_infinity_sphere_anti_wedge(PointAtInfinity self, Sphere other) {
-    return Radial(vec3(0.0) - self.g0 * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z));
+RoundPoint point_at_infinity_sphere_anti_wedge(PointAtInfinity self, Sphere other) {
+    return RoundPoint(vec3(0.0) - self.g0 * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z));
 }
 
-Radial radial_anti_scalar_anti_wedge(Radial self, AntiScalar other) {
-    return Radial(self.g0 * vec3(other.g0), self.g1 * vec2(other.g0));
+RoundPoint round_point_anti_scalar_anti_wedge(RoundPoint self, AntiScalar other) {
+    return RoundPoint(self.g0 * vec3(other.g0), self.g1 * vec2(other.g0));
 }
 
-Scalar radial_horizon_anti_wedge(Radial self, Horizon other) {
+Scalar round_point_horizon_anti_wedge(RoundPoint self, Horizon other) {
     return Scalar(self.g1.x * other.g0);
 }
 
-Radial radial_magnitude_anti_wedge(Radial self, Magnitude other) {
-    return Radial(self.g0 * vec3(other.g0.y), self.g1 * vec2(other.g0.y));
+RoundPoint round_point_magnitude_anti_wedge(RoundPoint self, Magnitude other) {
+    return RoundPoint(self.g0 * vec3(other.g0.y), self.g1 * vec2(other.g0.y));
 }
 
-MultiVector radial_multi_vector_anti_wedge(Radial self, MultiVector other) {
+MultiVector round_point_multi_vector_anti_wedge(RoundPoint self, MultiVector other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g9.x, 0.0) + vec2(self.g0.y) * vec2(other.g9.y, 0.0) + vec2(self.g0.z) * vec2(other.g9.z, 0.0) + vec2(self.g1.x) * vec2(other.g10.y, 0.0) + vec2(self.g1.y) * vec2(other.g10.x, 0.0), self.g0 * vec3(other.g0.y), self.g1 * vec2(other.g0.y), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-Scalar radial_plane_anti_wedge(Radial self, Plane other) {
+Scalar round_point_plane_anti_wedge(RoundPoint self, Plane other) {
     return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g1.x * other.g0.w);
 }
 
-Scalar radial_plane_at_origin_anti_wedge(Radial self, PlaneAtOrigin other) {
+Scalar round_point_plane_at_origin_anti_wedge(RoundPoint self, PlaneAtOrigin other) {
     return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
 }
 
-Scalar radial_sphere_anti_wedge(Radial self, Sphere other) {
+Scalar round_point_sphere_anti_wedge(RoundPoint self, Sphere other) {
     return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g1.x * other.g1.y + self.g1.y * other.g1.x);
 }
 
@@ -6556,12 +7105,16 @@ Dipole sphere_circle_anti_wedge(Sphere self, Circle other) {
     return Dipole(vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) + vec3(self.g1.x) * other.g1, vec3(0.0) - self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * other.g2 + vec3(self.g1.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g0.x) * vec4(0.0, other.g2.z, -other.g2.y, -other.g1.x) + vec4(self.g0.y) * vec4(-other.g2.z, 0.0, other.g2.x, -other.g1.y) + vec4(self.g0.z) * vec4(other.g2.y, -other.g2.x, 0.0, -other.g1.z) + vec4(self.g1.y) * vec4(other.g1.x, other.g1.y, other.g1.z, 0.0));
 }
 
-Radial sphere_dipole_anti_wedge(Sphere self, Dipole other) {
-    return Radial(vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0) + vec3(self.g1.x) * vec3(other.g2.x, other.g2.y, other.g2.z) - vec3(self.g1.y) * other.g0, vec2(self.g0.x) * vec2(other.g0.x, -other.g2.x) + vec2(self.g0.y) * vec2(other.g0.y, -other.g2.y) + vec2(self.g0.z) * vec2(other.g0.z, -other.g2.z) + self.g1 * vec2(other.g2.w));
+RoundPoint sphere_dipole_anti_wedge(Sphere self, Dipole other) {
+    return RoundPoint(vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0) + vec3(self.g1.x) * vec3(other.g2.x, other.g2.y, other.g2.z) - vec3(self.g1.y) * other.g0, vec2(self.g0.x) * vec2(other.g0.x, -other.g2.x) + vec2(self.g0.y) * vec2(other.g0.y, -other.g2.y) + vec2(self.g0.z) * vec2(other.g0.z, -other.g2.z) + self.g1 * vec2(other.g2.w));
 }
 
 Circle sphere_horizon_anti_wedge(Sphere self, Horizon other) {
     return Circle(vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g0), vec3(0.0), self.g0 * vec3(other.g0));
+}
+
+Scalar sphere_infinity_anti_wedge(Sphere self, Infinity other) {
+    return Scalar(self.g1.x * other.g0);
 }
 
 Dipole sphere_line_anti_wedge(Sphere self, Line other) {
@@ -6584,8 +7137,8 @@ MultiVector sphere_multi_vector_anti_wedge(Sphere self, MultiVector other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g1.x, 0.0) + vec2(self.g0.y) * vec2(other.g1.y, 0.0) + vec2(self.g0.z) * vec2(other.g1.z, 0.0) + vec2(self.g1.x) * vec2(other.g2.y, 0.0) + vec2(self.g1.y) * vec2(other.g2.x, 0.0), vec3(self.g0.x) * vec3(0.0, -other.g4.z, other.g4.y) + vec3(self.g0.y) * vec3(other.g4.z, 0.0, -other.g4.x) + vec3(self.g0.z) * vec3(-other.g4.y, other.g4.x, 0.0) + vec3(self.g1.x) * vec3(other.g5.x, other.g5.y, other.g5.z) - vec3(self.g1.y) * other.g3, vec2(self.g0.x) * vec2(other.g3.x, -other.g5.x) + vec2(self.g0.y) * vec2(other.g3.y, -other.g5.y) + vec2(self.g0.z) * vec2(other.g3.z, -other.g5.z) + self.g1 * vec2(other.g5.w), vec3(self.g0.x) * vec3(0.0, -other.g6.z, other.g6.y) + vec3(self.g0.y) * vec3(other.g6.z, 0.0, -other.g6.x) + vec3(self.g0.z) * vec3(-other.g6.y, other.g6.x, 0.0) + vec3(self.g1.x) * other.g7, vec3(0.0) - self.g0 * vec3(other.g6.w) + vec3(self.g1.x) * other.g8 + vec3(self.g1.y) * vec3(other.g6.x, other.g6.y, other.g6.z), vec4(self.g0.x) * vec4(0.0, other.g8.z, -other.g8.y, -other.g7.x) + vec4(self.g0.y) * vec4(-other.g8.z, 0.0, other.g8.x, -other.g7.y) + vec4(self.g0.z) * vec4(other.g8.y, -other.g8.x, 0.0, -other.g7.z) + vec4(self.g1.y) * vec4(other.g7.x, other.g7.y, other.g7.z, 0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(-other.g10.x, -other.g10.x, -other.g10.x, 0.0) + vec4(self.g1.x) * vec4(other.g9.x, other.g9.y, other.g9.z, other.g10.y) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, -other.g10.x), vec3(self.g0.x) * vec3(0.0, other.g9.z, -other.g9.y) + vec3(self.g0.y) * vec3(-other.g9.z, 0.0, other.g9.x) + vec3(self.g0.z) * vec3(other.g9.y, -other.g9.x, 0.0), self.g0 * vec3(other.g10.y) - vec3(self.g1.y) * other.g9, self.g0 * vec3(other.g0.y), self.g1 * vec2(other.g0.y));
 }
 
-Radial sphere_origin_anti_wedge(Sphere self, Origin other) {
-    return Radial(vec3(0.0), self.g1 * vec2(other.g0));
+RoundPoint sphere_origin_anti_wedge(Sphere self, Origin other) {
+    return RoundPoint(vec3(0.0), self.g1 * vec2(other.g0));
 }
 
 Circle sphere_plane_anti_wedge(Sphere self, Plane other) {
@@ -6596,15 +7149,15 @@ Circle sphere_plane_at_origin_anti_wedge(Sphere self, PlaneAtOrigin other) {
     return Circle(vec4(self.g1.x) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0) - vec3(self.g1.y) * other.g0);
 }
 
-Radial sphere_point_anti_wedge(Sphere self, Point other) {
-    return Radial(vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + self.g1 * vec2(other.g0.w));
+RoundPoint sphere_point_anti_wedge(Sphere self, Point other) {
+    return RoundPoint(vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + self.g1 * vec2(other.g0.w));
 }
 
-Radial sphere_point_at_infinity_anti_wedge(Sphere self, PointAtInfinity other) {
-    return Radial(vec3(self.g1.x) * other.g0, vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
+RoundPoint sphere_point_at_infinity_anti_wedge(Sphere self, PointAtInfinity other) {
+    return RoundPoint(vec3(self.g1.x) * other.g0, vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
 }
 
-Scalar sphere_radial_anti_wedge(Sphere self, Radial other) {
+Scalar sphere_round_point_anti_wedge(Sphere self, RoundPoint other) {
     return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g1.x * other.g1.y + self.g1.y * other.g1.x);
 }
 
@@ -6628,6 +7181,10 @@ AntiScalar circle_dipole_join(Circle self, Dipole other) {
     return AntiScalar(0.0 - self.g0.x * other.g2.x - self.g0.y * other.g2.y - self.g0.z * other.g2.z - self.g0.w * other.g2.w - self.g1.x * other.g1.x - self.g1.y * other.g1.y - self.g1.z * other.g1.z - self.g2.x * other.g0.x - self.g2.y * other.g0.y - self.g2.z * other.g0.z);
 }
 
+Plane circle_infinity_join(Circle self, Infinity other) {
+    return Plane(self.g0 * vec4(other.g0));
+}
+
 Circle circle_magnitude_join(Circle self, Magnitude other) {
     return Circle(self.g0 * vec4(other.g0.x), self.g1 * vec3(other.g0.x), self.g2 * vec3(other.g0.x));
 }
@@ -6648,7 +7205,7 @@ AntiScalar circle_point_at_infinity_join(Circle self, PointAtInfinity other) {
     return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
-Sphere circle_radial_join(Circle self, Radial other) {
+Sphere circle_round_point_join(Circle self, RoundPoint other) {
     return Sphere(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0) - self.g2 * vec3(other.g1.x), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g0.w) * other.g1 * vec2(-1.0, 1.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z));
 }
 
@@ -6662,6 +7219,10 @@ AntiScalar dipole_circle_join(Dipole self, Circle other) {
 
 Sphere dipole_dipole_join(Dipole self, Dipole other) {
     return Sphere(vec3(self.g0.x) * vec3(0.0, -other.g2.z, other.g2.y) + vec3(self.g0.y) * vec3(other.g2.z, 0.0, -other.g2.x) + vec3(self.g0.z) * vec3(-other.g2.y, other.g2.x, 0.0) + self.g1 * vec3(other.g2.w) + vec3(self.g2.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g2.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g2.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g2.w) * other.g1, vec2(self.g0.x) * vec2(-other.g1.x, 0.0) + vec2(self.g0.y) * vec2(-other.g1.y, 0.0) + vec2(self.g0.z) * vec2(-other.g1.z, 0.0) - vec2(self.g1.x) * vec2(other.g0.x, other.g2.x) - vec2(self.g1.y) * vec2(other.g0.y, other.g2.y) - vec2(self.g1.z) * vec2(other.g0.z, other.g2.z) + vec2(self.g2.x) * vec2(0.0, -other.g1.x) + vec2(self.g2.y) * vec2(0.0, -other.g1.y) + vec2(self.g2.z) * vec2(0.0, -other.g1.z));
+}
+
+Line dipole_infinity_join(Dipole self, Infinity other) {
+    return Line(self.g0 * vec3(other.g0), self.g1 * vec3(other.g0));
 }
 
 AntiScalar dipole_line_join(Dipole self, Line other) {
@@ -6696,7 +7257,7 @@ Plane dipole_point_at_infinity_join(Dipole self, PointAtInfinity other) {
     return Plane(vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, 0.0, -other.g0.z));
 }
 
-Circle dipole_radial_join(Dipole self, Radial other) {
+Circle dipole_round_point_join(Dipole self, RoundPoint other) {
     return Circle(vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g1.x) * vec4(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, other.g1.x, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, other.g1.x, -other.g0.z), self.g0 * vec3(other.g1.y) + vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g1.x) - vec3(self.g2.w) * other.g0, self.g1 * vec3(other.g1.y) + vec3(self.g2.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g2.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g2.z) * vec3(other.g0.y, -other.g0.x, 0.0));
 }
 
@@ -6712,12 +7273,40 @@ MultiVector horizon_multi_vector_join(Horizon self, MultiVector other) {
     return MultiVector(vec2(self.g0) * vec2(0.0, other.g2.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0) * vec2(0.0, other.g0.x));
 }
 
-AntiScalar horizon_radial_join(Horizon self, Radial other) {
+AntiScalar horizon_round_point_join(Horizon self, RoundPoint other) {
     return AntiScalar(self.g0 * other.g1.x);
 }
 
 Horizon horizon_scalar_join(Horizon self, Scalar other) {
     return Horizon(self.g0 * other.g0);
+}
+
+Plane infinity_circle_join(Infinity self, Circle other) {
+    return Plane(vec4(0.0) - vec4(self.g0) * other.g0);
+}
+
+Line infinity_dipole_join(Infinity self, Dipole other) {
+    return Line(vec3(self.g0) * other.g0, vec3(self.g0) * other.g1);
+}
+
+Infinity infinity_magnitude_join(Infinity self, Magnitude other) {
+    return Infinity(self.g0 * other.g0.x);
+}
+
+MultiVector infinity_multi_vector_join(Infinity self, MultiVector other) {
+    return MultiVector(vec2(self.g0) * vec2(0.0, other.g10.x), vec3(0.0), vec2(self.g0) * vec2(0.0, other.g0.x), vec3(0.0), vec3(0.0), vec4(0.0) - vec4(self.g0) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g2.x), vec4(0.0), vec3(self.g0) * other.g3, vec3(self.g0) * other.g4, vec3(0.0) - vec3(self.g0) * vec3(other.g6.x, other.g6.y, other.g6.z), vec2(self.g0) * vec2(0.0, -other.g6.w));
+}
+
+Point infinity_round_point_join(Infinity self, RoundPoint other) {
+    return Point(vec4(0.0) - vec4(self.g0) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x));
+}
+
+Infinity infinity_scalar_join(Infinity self, Scalar other) {
+    return Infinity(self.g0 * other.g0);
+}
+
+AntiScalar infinity_sphere_join(Infinity self, Sphere other) {
+    return AntiScalar(self.g0 * other.g1.x);
 }
 
 AntiScalar line_dipole_join(Line self, Dipole other) {
@@ -6732,7 +7321,7 @@ MultiVector line_multi_vector_join(Line self, MultiVector other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g4.x) + vec2(self.g0.y) * vec2(0.0, -other.g4.y) + vec2(self.g0.z) * vec2(0.0, -other.g4.z) + vec2(self.g1.x) * vec2(0.0, -other.g3.x) + vec2(self.g1.y) * vec2(0.0, -other.g3.y) + vec2(self.g1.z) * vec2(0.0, -other.g3.z), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), self.g0 * vec3(other.g0.x), self.g1 * vec3(other.g0.x), vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0) - self.g1 * vec3(other.g2.x), vec2(self.g1.x) * vec2(0.0, other.g1.x) + vec2(self.g1.y) * vec2(0.0, other.g1.y) + vec2(self.g1.z) * vec2(0.0, other.g1.z));
 }
 
-Plane line_radial_join(Line self, Radial other) {
+Plane line_round_point_join(Line self, RoundPoint other) {
     return Plane(vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0) + vec4(self.g1.x) * vec4(-other.g1.x, 0.0, 0.0, other.g0.x) + vec4(self.g1.y) * vec4(0.0, -other.g1.x, 0.0, other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, -other.g1.x, other.g0.z));
 }
 
@@ -6752,7 +7341,7 @@ MultiVector line_at_infinity_multi_vector_join(LineAtInfinity self, MultiVector 
     return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g3.x) + vec2(self.g0.y) * vec2(0.0, -other.g3.y) + vec2(self.g0.z) * vec2(0.0, -other.g3.z), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), self.g0 * vec3(other.g0.x), vec3(0.0) - self.g0 * vec3(other.g2.x), vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z));
 }
 
-Plane line_at_infinity_radial_join(LineAtInfinity self, Radial other) {
+Plane line_at_infinity_round_point_join(LineAtInfinity self, RoundPoint other) {
     return Plane(vec4(self.g0.x) * vec4(-other.g1.x, 0.0, 0.0, other.g0.x) + vec4(self.g0.y) * vec4(0.0, -other.g1.x, 0.0, other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, -other.g1.x, other.g0.z));
 }
 
@@ -6772,7 +7361,7 @@ MultiVector line_at_origin_multi_vector_join(LineAtOrigin self, MultiVector othe
     return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g4.x) + vec2(self.g0.y) * vec2(0.0, -other.g4.y) + vec2(self.g0.z) * vec2(0.0, -other.g4.z), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), self.g0 * vec3(other.g0.x), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0), vec2(0.0));
 }
 
-PlaneAtOrigin line_at_origin_radial_join(LineAtOrigin self, Radial other) {
+PlaneAtOrigin line_at_origin_round_point_join(LineAtOrigin self, RoundPoint other) {
     return PlaneAtOrigin(vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0));
 }
 
@@ -6794,6 +7383,10 @@ Dipole magnitude_dipole_join(Magnitude self, Dipole other) {
 
 Horizon magnitude_horizon_join(Magnitude self, Horizon other) {
     return Horizon(self.g0.x * other.g0);
+}
+
+Infinity magnitude_infinity_join(Magnitude self, Infinity other) {
+    return Infinity(self.g0.x * other.g0);
 }
 
 Line magnitude_line_join(Magnitude self, Line other) {
@@ -6836,8 +7429,8 @@ PointAtInfinity magnitude_point_at_infinity_join(Magnitude self, PointAtInfinity
     return PointAtInfinity(vec3(self.g0.x) * other.g0);
 }
 
-Radial magnitude_radial_join(Magnitude self, Radial other) {
-    return Radial(vec3(self.g0.x) * other.g0, vec2(self.g0.x) * other.g1);
+RoundPoint magnitude_round_point_join(Magnitude self, RoundPoint other) {
+    return RoundPoint(vec3(self.g0.x) * other.g0, vec2(self.g0.x) * other.g1);
 }
 
 Magnitude magnitude_scalar_join(Magnitude self, Scalar other) {
@@ -6862,6 +7455,10 @@ MultiVector multi_vector_dipole_join(MultiVector self, Dipole other) {
 
 MultiVector multi_vector_horizon_join(MultiVector self, Horizon other) {
     return MultiVector(vec2(self.g2.x) * vec2(0.0, other.g0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0));
+}
+
+MultiVector multi_vector_infinity_join(MultiVector self, Infinity other) {
+    return MultiVector(vec2(self.g10.x) * vec2(0.0, other.g0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0), vec3(0.0), vec3(0.0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(other.g0, other.g0, other.g0, 0.0) + vec4(self.g2.x) * vec4(0.0, 0.0, 0.0, other.g0), vec4(0.0), self.g3 * vec3(other.g0), self.g4 * vec3(other.g0), vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g0), vec2(self.g6.w) * vec2(0.0, other.g0));
 }
 
 MultiVector multi_vector_line_join(MultiVector self, Line other) {
@@ -6904,7 +7501,7 @@ MultiVector multi_vector_point_at_infinity_join(MultiVector self, PointAtInfinit
     return MultiVector(vec2(self.g6.x) * vec2(0.0, -other.g0.x) + vec2(self.g6.y) * vec2(0.0, -other.g0.y) + vec2(self.g6.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(self.g2.x) * other.g0, vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(self.g3.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g3.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g3.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g4.x) * vec2(0.0, -other.g0.x) + vec2(self.g4.y) * vec2(0.0, -other.g0.y) + vec2(self.g4.z) * vec2(0.0, -other.g0.z));
 }
 
-MultiVector multi_vector_radial_join(MultiVector self, Radial other) {
+MultiVector multi_vector_round_point_join(MultiVector self, RoundPoint other) {
     return MultiVector(vec2(self.g9.x) * vec2(0.0, other.g0.x) + vec2(self.g9.y) * vec2(0.0, other.g0.y) + vec2(self.g9.z) * vec2(0.0, other.g0.z) + vec2(self.g10.x) * vec2(0.0, other.g1.y) + vec2(self.g10.y) * vec2(0.0, other.g1.x), vec3(self.g0.x) * other.g0, vec2(self.g0.x) * other.g1, vec3(0.0) - self.g1 * vec3(other.g1.x) + vec3(self.g2.x) * other.g0, vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4(self.g2.x) * vec4(0.0, 0.0, 0.0, other.g1.y) - vec4(self.g2.y) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4(self.g3.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g3.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g3.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g4.x) * vec4(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4(self.g4.y) * vec4(0.0, other.g1.x, 0.0, -other.g0.y) + vec4(self.g4.z) * vec4(0.0, 0.0, other.g1.x, -other.g0.z), self.g3 * vec3(other.g1.y) + vec3(self.g5.x, self.g5.y, self.g5.z) * vec3(other.g1.x) - vec3(self.g5.w) * other.g0, self.g4 * vec3(other.g1.y) + vec3(self.g5.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g5.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g5.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g1.y) + vec3(self.g7.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g7.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g7.z) * vec3(other.g0.y, -other.g0.x, 0.0) - self.g8 * vec3(other.g1.x), vec2(self.g6.x) * vec2(-other.g0.x, 0.0) + vec2(self.g6.y) * vec2(-other.g0.y, 0.0) + vec2(self.g6.z) * vec2(-other.g0.z, 0.0) + vec2(self.g6.w) * other.g1 * vec2(-1.0, 1.0) + vec2(self.g8.x) * vec2(0.0, other.g0.x) + vec2(self.g8.y) * vec2(0.0, other.g0.y) + vec2(self.g8.z) * vec2(0.0, other.g0.z));
 }
 
@@ -6932,7 +7529,7 @@ MultiVector origin_multi_vector_join(Origin self, MultiVector other) {
     return MultiVector(vec2(self.g0) * vec2(0.0, -other.g6.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0) * vec4(0.0, 0.0, 0.0, other.g0.x), vec4(0.0), vec3(0.0) - vec3(self.g0) * other.g1, vec3(0.0), vec3(self.g0) * other.g4, vec2(0.0));
 }
 
-LineAtOrigin origin_radial_join(Origin self, Radial other) {
+LineAtOrigin origin_round_point_join(Origin self, RoundPoint other) {
     return LineAtOrigin(vec3(0.0) - vec3(self.g0) * other.g0);
 }
 
@@ -6948,7 +7545,7 @@ MultiVector plane_multi_vector_join(Plane self, MultiVector other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z) + vec2(self.g0.w) * vec2(0.0, other.g2.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.x), vec2(self.g0.w) * vec2(0.0, other.g0.x));
 }
 
-AntiScalar plane_radial_join(Plane self, Radial other) {
+AntiScalar plane_round_point_join(Plane self, RoundPoint other) {
     return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g0.w * other.g1.x);
 }
 
@@ -6964,7 +7561,7 @@ MultiVector plane_at_origin_multi_vector_join(PlaneAtOrigin self, MultiVector ot
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), self.g0 * vec3(other.g0.x), vec2(0.0));
 }
 
-AntiScalar plane_at_origin_radial_join(PlaneAtOrigin self, Radial other) {
+AntiScalar plane_at_origin_round_point_join(PlaneAtOrigin self, RoundPoint other) {
     return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
 }
 
@@ -6988,7 +7585,7 @@ MultiVector point_multi_vector_join(Point self, MultiVector other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g6.x) + vec2(self.g0.y) * vec2(0.0, -other.g6.y) + vec2(self.g0.z) * vec2(0.0, -other.g6.z) + vec2(self.g0.w) * vec2(0.0, -other.g6.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), self.g0 * vec4(other.g0.x), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g2.x) - vec3(self.g0.w) * other.g1, vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0), vec3(self.g0.x) * vec3(0.0, other.g3.z, -other.g3.y) + vec3(self.g0.y) * vec3(-other.g3.z, 0.0, other.g3.x) + vec3(self.g0.z) * vec3(other.g3.y, -other.g3.x, 0.0) + vec3(self.g0.w) * other.g4, vec2(self.g0.x) * vec2(0.0, -other.g4.x) + vec2(self.g0.y) * vec2(0.0, -other.g4.y) + vec2(self.g0.z) * vec2(0.0, -other.g4.z));
 }
 
-Line point_radial_join(Point self, Radial other) {
+Line point_round_point_join(Point self, RoundPoint other) {
     return Line(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x) - vec3(self.g0.w) * other.g0, vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0));
 }
 
@@ -7012,7 +7609,7 @@ MultiVector point_at_infinity_multi_vector_join(PointAtInfinity self, MultiVecto
     return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g6.x) + vec2(self.g0.y) * vec2(0.0, -other.g6.y) + vec2(self.g0.z) * vec2(0.0, -other.g6.z), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g0.x, other.g0.x, other.g0.x, 0.0), vec4(0.0), self.g0 * vec3(other.g2.x), vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0), vec3(self.g0.x) * vec3(0.0, other.g3.z, -other.g3.y) + vec3(self.g0.y) * vec3(-other.g3.z, 0.0, other.g3.x) + vec3(self.g0.z) * vec3(other.g3.y, -other.g3.x, 0.0), vec2(self.g0.x) * vec2(0.0, -other.g4.x) + vec2(self.g0.y) * vec2(0.0, -other.g4.y) + vec2(self.g0.z) * vec2(0.0, -other.g4.z));
 }
 
-Line point_at_infinity_radial_join(PointAtInfinity self, Radial other) {
+Line point_at_infinity_round_point_join(PointAtInfinity self, RoundPoint other) {
     return Line(self.g0 * vec3(other.g1.x), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0));
 }
 
@@ -7020,67 +7617,71 @@ PointAtInfinity point_at_infinity_scalar_join(PointAtInfinity self, Scalar other
     return PointAtInfinity(self.g0 * vec3(other.g0));
 }
 
-Sphere radial_circle_join(Radial self, Circle other) {
+Sphere round_point_circle_join(RoundPoint self, Circle other) {
     return Sphere(vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0) + vec3(self.g1.x) * other.g2 - vec3(self.g1.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(other.g0.x, -other.g2.x) + vec2(self.g0.y) * vec2(other.g0.y, -other.g2.y) + vec2(self.g0.z) * vec2(other.g0.z, -other.g2.z) + self.g1 * vec2(other.g0.w));
 }
 
-Circle radial_dipole_join(Radial self, Dipole other) {
+Circle round_point_dipole_join(RoundPoint self, Dipole other) {
     return Circle(vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, -other.g1.x) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, -other.g1.y) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, -other.g1.z) + vec4(self.g1.x) * vec4(other.g1.x, other.g1.y, other.g1.z, 0.0), vec3(0.0) - self.g0 * vec3(other.g2.w) + vec3(self.g1.x) * vec3(other.g2.x, other.g2.y, other.g2.z) + vec3(self.g1.y) * other.g0, vec3(self.g0.x) * vec3(0.0, -other.g2.z, other.g2.y) + vec3(self.g0.y) * vec3(other.g2.z, 0.0, -other.g2.x) + vec3(self.g0.z) * vec3(-other.g2.y, other.g2.x, 0.0) + vec3(self.g1.y) * other.g1);
 }
 
-AntiScalar radial_horizon_join(Radial self, Horizon other) {
+AntiScalar round_point_horizon_join(RoundPoint self, Horizon other) {
     return AntiScalar(self.g1.x * other.g0);
 }
 
-Plane radial_line_join(Radial self, Line other) {
+Point round_point_infinity_join(RoundPoint self, Infinity other) {
+    return Point(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g0, other.g0, other.g0, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g0));
+}
+
+Plane round_point_line_join(RoundPoint self, Line other) {
     return Plane(vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, -other.g1.x) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, -other.g1.y) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, -other.g1.z) + vec4(self.g1.x) * vec4(other.g1.x, other.g1.y, other.g1.z, 0.0));
 }
 
-Plane radial_line_at_infinity_join(Radial self, LineAtInfinity other) {
+Plane round_point_line_at_infinity_join(RoundPoint self, LineAtInfinity other) {
     return Plane(vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, -other.g0.z) + vec4(self.g1.x) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0));
 }
 
-PlaneAtOrigin radial_line_at_origin_join(Radial self, LineAtOrigin other) {
+PlaneAtOrigin round_point_line_at_origin_join(RoundPoint self, LineAtOrigin other) {
     return PlaneAtOrigin(vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0));
 }
 
-Radial radial_magnitude_join(Radial self, Magnitude other) {
-    return Radial(self.g0 * vec3(other.g0.x), self.g1 * vec2(other.g0.x));
+RoundPoint round_point_magnitude_join(RoundPoint self, Magnitude other) {
+    return RoundPoint(self.g0 * vec3(other.g0.x), self.g1 * vec2(other.g0.x));
 }
 
-MultiVector radial_multi_vector_join(Radial self, MultiVector other) {
+MultiVector round_point_multi_vector_join(RoundPoint self, MultiVector other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g9.x) + vec2(self.g0.y) * vec2(0.0, other.g9.y) + vec2(self.g0.z) * vec2(0.0, other.g9.z) + vec2(self.g1.x) * vec2(0.0, other.g10.y) + vec2(self.g1.y) * vec2(0.0, other.g10.x), self.g0 * vec3(other.g0.x), self.g1 * vec2(other.g0.x), vec3(0.0) - self.g0 * vec3(other.g2.x) + vec3(self.g1.x) * other.g1, vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g2.y, other.g2.y, other.g2.y, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g2.y) - vec4(self.g1.y) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g2.x), vec4(self.g0.x) * vec4(0.0, other.g3.z, -other.g3.y, -other.g4.x) + vec4(self.g0.y) * vec4(-other.g3.z, 0.0, other.g3.x, -other.g4.y) + vec4(self.g0.z) * vec4(other.g3.y, -other.g3.x, 0.0, -other.g4.z) + vec4(self.g1.x) * vec4(other.g4.x, other.g4.y, other.g4.z, 0.0), vec3(0.0) - self.g0 * vec3(other.g5.w) + vec3(self.g1.x) * vec3(other.g5.x, other.g5.y, other.g5.z) + vec3(self.g1.y) * other.g3, vec3(self.g0.x) * vec3(0.0, -other.g5.z, other.g5.y) + vec3(self.g0.y) * vec3(other.g5.z, 0.0, -other.g5.x) + vec3(self.g0.z) * vec3(-other.g5.y, other.g5.x, 0.0) + vec3(self.g1.y) * other.g4, vec3(self.g0.x) * vec3(0.0, other.g7.z, -other.g7.y) + vec3(self.g0.y) * vec3(-other.g7.z, 0.0, other.g7.x) + vec3(self.g0.z) * vec3(other.g7.y, -other.g7.x, 0.0) + vec3(self.g1.x) * other.g8 - vec3(self.g1.y) * vec3(other.g6.x, other.g6.y, other.g6.z), vec2(self.g0.x) * vec2(other.g6.x, -other.g8.x) + vec2(self.g0.y) * vec2(other.g6.y, -other.g8.y) + vec2(self.g0.z) * vec2(other.g6.z, -other.g8.z) + self.g1 * vec2(other.g6.w));
 }
 
-LineAtOrigin radial_origin_join(Radial self, Origin other) {
+LineAtOrigin round_point_origin_join(RoundPoint self, Origin other) {
     return LineAtOrigin(vec3(0.0) - self.g0 * vec3(other.g0));
 }
 
-AntiScalar radial_plane_join(Radial self, Plane other) {
+AntiScalar round_point_plane_join(RoundPoint self, Plane other) {
     return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g1.x * other.g0.w);
 }
 
-AntiScalar radial_plane_at_origin_join(Radial self, PlaneAtOrigin other) {
+AntiScalar round_point_plane_at_origin_join(RoundPoint self, PlaneAtOrigin other) {
     return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
 }
 
-Line radial_point_join(Radial self, Point other) {
+Line round_point_point_join(RoundPoint self, Point other) {
     return Line(vec3(0.0) - self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0));
 }
 
-Line radial_point_at_infinity_join(Radial self, PointAtInfinity other) {
+Line round_point_point_at_infinity_join(RoundPoint self, PointAtInfinity other) {
     return Line(vec3(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0));
 }
 
-Dipole radial_radial_join(Radial self, Radial other) {
+Dipole round_point_round_point_join(RoundPoint self, RoundPoint other) {
     return Dipole(vec3(0.0) - self.g0 * vec3(other.g1.x) + vec3(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g1.y) - vec4(self.g1.y) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x));
 }
 
-Radial radial_scalar_join(Radial self, Scalar other) {
-    return Radial(self.g0 * vec3(other.g0), self.g1 * vec2(other.g0));
+RoundPoint round_point_scalar_join(RoundPoint self, Scalar other) {
+    return RoundPoint(self.g0 * vec3(other.g0), self.g1 * vec2(other.g0));
 }
 
-AntiScalar radial_sphere_join(Radial self, Sphere other) {
+AntiScalar round_point_sphere_join(RoundPoint self, Sphere other) {
     return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g1.x * other.g1.y + self.g1.y * other.g1.x);
 }
 
@@ -7098,6 +7699,10 @@ Dipole scalar_dipole_join(Scalar self, Dipole other) {
 
 Horizon scalar_horizon_join(Scalar self, Horizon other) {
     return Horizon(self.g0 * other.g0);
+}
+
+Infinity scalar_infinity_join(Scalar self, Infinity other) {
+    return Infinity(self.g0 * other.g0);
 }
 
 Line scalar_line_join(Scalar self, Line other) {
@@ -7140,8 +7745,8 @@ PointAtInfinity scalar_point_at_infinity_join(Scalar self, PointAtInfinity other
     return PointAtInfinity(vec3(self.g0) * other.g0);
 }
 
-Radial scalar_radial_join(Scalar self, Radial other) {
-    return Radial(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
+RoundPoint scalar_round_point_join(Scalar self, RoundPoint other) {
+    return RoundPoint(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
 }
 
 Scalar scalar_scalar_join(Scalar self, Scalar other) {
@@ -7152,6 +7757,10 @@ Sphere scalar_sphere_join(Scalar self, Sphere other) {
     return Sphere(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
 }
 
+AntiScalar sphere_infinity_join(Sphere self, Infinity other) {
+    return AntiScalar(self.g1.x * other.g0);
+}
+
 Sphere sphere_magnitude_join(Sphere self, Magnitude other) {
     return Sphere(self.g0 * vec3(other.g0.x), self.g1 * vec2(other.g0.x));
 }
@@ -7160,7 +7769,7 @@ MultiVector sphere_multi_vector_join(Sphere self, MultiVector other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z) + vec2(self.g1.x) * vec2(0.0, other.g2.y) + vec2(self.g1.y) * vec2(0.0, other.g2.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), self.g0 * vec3(other.g0.x), self.g1 * vec2(other.g0.x));
 }
 
-AntiScalar sphere_radial_join(Sphere self, Radial other) {
+AntiScalar sphere_round_point_join(Sphere self, RoundPoint other) {
     return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g1.x * other.g1.y + self.g1.y * other.g1.x);
 }
 
@@ -7182,6 +7791,10 @@ Dipole anti_scalar_dipole_meet(AntiScalar self, Dipole other) {
 
 Horizon anti_scalar_horizon_meet(AntiScalar self, Horizon other) {
     return Horizon(self.g0 * other.g0);
+}
+
+Infinity anti_scalar_infinity_meet(AntiScalar self, Infinity other) {
+    return Infinity(self.g0 * other.g0);
 }
 
 Line anti_scalar_line_meet(AntiScalar self, Line other) {
@@ -7224,8 +7837,8 @@ PointAtInfinity anti_scalar_point_at_infinity_meet(AntiScalar self, PointAtInfin
     return PointAtInfinity(vec3(self.g0) * other.g0);
 }
 
-Radial anti_scalar_radial_meet(AntiScalar self, Radial other) {
-    return Radial(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
+RoundPoint anti_scalar_round_point_meet(AntiScalar self, RoundPoint other) {
+    return RoundPoint(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
 }
 
 Scalar anti_scalar_scalar_meet(AntiScalar self, Scalar other) {
@@ -7240,8 +7853,8 @@ Circle circle_anti_scalar_meet(Circle self, AntiScalar other) {
     return Circle(self.g0 * vec4(other.g0), self.g1 * vec3(other.g0), self.g2 * vec3(other.g0));
 }
 
-Radial circle_circle_meet(Circle self, Circle other) {
-    return Radial(vec3(self.g0.x) * vec3(0.0, other.g2.z, -other.g2.y) + vec3(self.g0.y) * vec3(-other.g2.z, 0.0, other.g2.x) + vec3(self.g0.z) * vec3(other.g2.y, -other.g2.x, 0.0) + vec3(self.g0.w) * other.g1 + self.g1 * vec3(other.g0.w) + vec3(self.g2.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g2.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g2.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.x) * vec2(-other.g1.x, 0.0) + vec2(self.g0.y) * vec2(-other.g1.y, 0.0) + vec2(self.g0.z) * vec2(-other.g1.z, 0.0) - vec2(self.g1.x) * vec2(other.g0.x, other.g2.x) - vec2(self.g1.y) * vec2(other.g0.y, other.g2.y) - vec2(self.g1.z) * vec2(other.g0.z, other.g2.z) + vec2(self.g2.x) * vec2(0.0, -other.g1.x) + vec2(self.g2.y) * vec2(0.0, -other.g1.y) + vec2(self.g2.z) * vec2(0.0, -other.g1.z));
+RoundPoint circle_circle_meet(Circle self, Circle other) {
+    return RoundPoint(vec3(self.g0.x) * vec3(0.0, other.g2.z, -other.g2.y) + vec3(self.g0.y) * vec3(-other.g2.z, 0.0, other.g2.x) + vec3(self.g0.z) * vec3(other.g2.y, -other.g2.x, 0.0) + vec3(self.g0.w) * other.g1 + self.g1 * vec3(other.g0.w) + vec3(self.g2.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g2.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g2.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.x) * vec2(-other.g1.x, 0.0) + vec2(self.g0.y) * vec2(-other.g1.y, 0.0) + vec2(self.g0.z) * vec2(-other.g1.z, 0.0) - vec2(self.g1.x) * vec2(other.g0.x, other.g2.x) - vec2(self.g1.y) * vec2(other.g0.y, other.g2.y) - vec2(self.g1.z) * vec2(other.g0.z, other.g2.z) + vec2(self.g2.x) * vec2(0.0, -other.g1.x) + vec2(self.g2.y) * vec2(0.0, -other.g1.y) + vec2(self.g2.z) * vec2(0.0, -other.g1.z));
 }
 
 Scalar circle_dipole_meet(Circle self, Dipole other) {
@@ -7252,16 +7865,16 @@ Dipole circle_horizon_meet(Circle self, Horizon other) {
     return Dipole(vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(other.g0, other.g0, other.g0, 0.0));
 }
 
-Radial circle_line_meet(Circle self, Line other) {
-    return Radial(vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0) + vec3(self.g0.w) * other.g0, vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g1.x) * vec2(0.0, -other.g1.x) + vec2(self.g1.y) * vec2(0.0, -other.g1.y) + vec2(self.g1.z) * vec2(0.0, -other.g1.z) + vec2(self.g2.x) * vec2(0.0, -other.g0.x) + vec2(self.g2.y) * vec2(0.0, -other.g0.y) + vec2(self.g2.z) * vec2(0.0, -other.g0.z));
+RoundPoint circle_line_meet(Circle self, Line other) {
+    return RoundPoint(vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0) + vec3(self.g0.w) * other.g0, vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g1.x) * vec2(0.0, -other.g1.x) + vec2(self.g1.y) * vec2(0.0, -other.g1.y) + vec2(self.g1.z) * vec2(0.0, -other.g1.z) + vec2(self.g2.x) * vec2(0.0, -other.g0.x) + vec2(self.g2.y) * vec2(0.0, -other.g0.y) + vec2(self.g2.z) * vec2(0.0, -other.g0.z));
 }
 
-Radial circle_line_at_infinity_meet(Circle self, LineAtInfinity other) {
-    return Radial(vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z));
+RoundPoint circle_line_at_infinity_meet(Circle self, LineAtInfinity other) {
+    return RoundPoint(vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z));
 }
 
-Radial circle_line_at_origin_meet(Circle self, LineAtOrigin other) {
-    return Radial(vec3(self.g0.w) * other.g0, vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, -other.g0.x) + vec2(self.g2.y) * vec2(0.0, -other.g0.y) + vec2(self.g2.z) * vec2(0.0, -other.g0.z));
+RoundPoint circle_line_at_origin_meet(Circle self, LineAtOrigin other) {
+    return RoundPoint(vec3(self.g0.w) * other.g0, vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, -other.g0.x) + vec2(self.g2.y) * vec2(0.0, -other.g0.y) + vec2(self.g2.z) * vec2(0.0, -other.g0.z));
 }
 
 Circle circle_magnitude_meet(Circle self, Magnitude other) {
@@ -7304,8 +7917,8 @@ Scalar dipole_circle_meet(Dipole self, Circle other) {
     return Scalar(0.0 - self.g0.x * other.g2.x - self.g0.y * other.g2.y - self.g0.z * other.g2.z - self.g1.x * other.g1.x - self.g1.y * other.g1.y - self.g1.z * other.g1.z - self.g2.x * other.g0.x - self.g2.y * other.g0.y - self.g2.z * other.g0.z - self.g2.w * other.g0.w);
 }
 
-Radial dipole_horizon_meet(Dipole self, Horizon other) {
-    return Radial(self.g0 * vec3(other.g0), vec2(self.g2.w) * vec2(0.0, other.g0));
+RoundPoint dipole_horizon_meet(Dipole self, Horizon other) {
+    return RoundPoint(self.g0 * vec3(other.g0), vec2(self.g2.w) * vec2(0.0, other.g0));
 }
 
 Scalar dipole_line_meet(Dipole self, Line other) {
@@ -7328,16 +7941,16 @@ MultiVector dipole_multi_vector_meet(Dipole self, MultiVector other) {
     return MultiVector(vec2(self.g0.x) * vec2(-other.g8.x, 0.0) + vec2(self.g0.y) * vec2(-other.g8.y, 0.0) + vec2(self.g0.z) * vec2(-other.g8.z, 0.0) + vec2(self.g1.x) * vec2(-other.g7.x, 0.0) + vec2(self.g1.y) * vec2(-other.g7.y, 0.0) + vec2(self.g1.z) * vec2(-other.g7.z, 0.0) + vec2(self.g2.x) * vec2(-other.g6.x, 0.0) + vec2(self.g2.y) * vec2(-other.g6.y, 0.0) + vec2(self.g2.z) * vec2(-other.g6.z, 0.0) + vec2(self.g2.w) * vec2(-other.g6.w, 0.0), self.g0 * vec3(other.g10.y) + vec3(self.g1.x) * vec3(0.0, -other.g9.z, other.g9.y) + vec3(self.g1.y) * vec3(other.g9.z, 0.0, -other.g9.x) + vec3(self.g1.z) * vec3(-other.g9.y, other.g9.x, 0.0) - vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g10.x), vec2(self.g0.x) * vec2(-other.g9.x, 0.0) + vec2(self.g0.y) * vec2(-other.g9.y, 0.0) + vec2(self.g0.z) * vec2(-other.g9.z, 0.0) + vec2(self.g2.x) * vec2(0.0, other.g9.x) + vec2(self.g2.y) * vec2(0.0, other.g9.y) + vec2(self.g2.z) * vec2(0.0, other.g9.z) + vec2(self.g2.w) * other.g10 * vec2(-1.0, 1.0), self.g0 * vec3(other.g0.y), self.g1 * vec3(other.g0.y), self.g2 * vec4(other.g0.y), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-Radial dipole_plane_meet(Dipole self, Plane other) {
-    return Radial(self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z) + vec2(self.g2.w) * vec2(0.0, other.g0.w));
+RoundPoint dipole_plane_meet(Dipole self, Plane other) {
+    return RoundPoint(self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z) + vec2(self.g2.w) * vec2(0.0, other.g0.w));
 }
 
-Radial dipole_plane_at_origin_meet(Dipole self, PlaneAtOrigin other) {
-    return Radial(vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z));
+RoundPoint dipole_plane_at_origin_meet(Dipole self, PlaneAtOrigin other) {
+    return RoundPoint(vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z));
 }
 
-Radial dipole_sphere_meet(Dipole self, Sphere other) {
-    return Radial(self.g0 * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0) - vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z) + vec2(self.g2.w) * other.g1 * vec2(-1.0, 1.0));
+RoundPoint dipole_sphere_meet(Dipole self, Sphere other) {
+    return RoundPoint(self.g0 * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0) - vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z) + vec2(self.g2.w) * other.g1 * vec2(-1.0, 1.0));
 }
 
 Horizon horizon_anti_scalar_meet(Horizon self, AntiScalar other) {
@@ -7348,8 +7961,8 @@ Dipole horizon_circle_meet(Horizon self, Circle other) {
     return Dipole(vec3(0.0), vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g0) * vec4(other.g1.x, other.g1.y, other.g1.z, 0.0));
 }
 
-Radial horizon_dipole_meet(Horizon self, Dipole other) {
-    return Radial(vec3(0.0) - vec3(self.g0) * other.g0, vec2(self.g0) * vec2(0.0, -other.g2.w));
+RoundPoint horizon_dipole_meet(Horizon self, Dipole other) {
+    return RoundPoint(vec3(0.0) - vec3(self.g0) * other.g0, vec2(self.g0) * vec2(0.0, -other.g2.w));
 }
 
 PointAtInfinity horizon_line_meet(Horizon self, Line other) {
@@ -7368,8 +7981,8 @@ MultiVector horizon_multi_vector_meet(Horizon self, MultiVector other) {
     return MultiVector(vec2(self.g0) * vec2(other.g2.x, 0.0), vec3(0.0) - vec3(self.g0) * other.g3, vec2(self.g0) * vec2(0.0, -other.g5.w), vec3(0.0), vec3(self.g0) * vec3(other.g6.x, other.g6.y, other.g6.z), vec4(self.g0) * vec4(other.g7.x, other.g7.y, other.g7.z, 0.0), vec4(self.g0) * vec4(0.0, 0.0, 0.0, -other.g10.x), vec3(0.0), vec3(0.0) - vec3(self.g0) * other.g9, vec3(0.0), vec2(self.g0) * vec2(0.0, other.g0.y));
 }
 
-Radial horizon_origin_meet(Horizon self, Origin other) {
-    return Radial(vec3(0.0), vec2(self.g0) * vec2(0.0, -other.g0));
+Infinity horizon_origin_meet(Horizon self, Origin other) {
+    return Infinity(0.0 - self.g0 * other.g0);
 }
 
 LineAtInfinity horizon_plane_meet(Horizon self, Plane other) {
@@ -7380,11 +7993,11 @@ LineAtInfinity horizon_plane_at_origin_meet(Horizon self, PlaneAtOrigin other) {
     return LineAtInfinity(vec3(0.0) - vec3(self.g0) * other.g0);
 }
 
-Radial horizon_point_meet(Horizon self, Point other) {
-    return Radial(vec3(0.0), vec2(self.g0) * vec2(0.0, -other.g0.w));
+Infinity horizon_point_meet(Horizon self, Point other) {
+    return Infinity(0.0 - self.g0 * other.g0.w);
 }
 
-Scalar horizon_radial_meet(Horizon self, Radial other) {
+Scalar horizon_round_point_meet(Horizon self, RoundPoint other) {
     return Scalar(self.g0 * other.g1.x);
 }
 
@@ -7392,12 +8005,28 @@ Circle horizon_sphere_meet(Horizon self, Sphere other) {
     return Circle(vec4(self.g0) * vec4(0.0, 0.0, 0.0, -other.g1.x), vec3(0.0), vec3(0.0) - vec3(self.g0) * other.g0);
 }
 
+Infinity infinity_anti_scalar_meet(Infinity self, AntiScalar other) {
+    return Infinity(self.g0 * other.g0);
+}
+
+Infinity infinity_magnitude_meet(Infinity self, Magnitude other) {
+    return Infinity(self.g0 * other.g0.y);
+}
+
+MultiVector infinity_multi_vector_meet(Infinity self, MultiVector other) {
+    return MultiVector(vec2(self.g0) * vec2(other.g10.x, 0.0), vec3(0.0), vec2(self.g0) * vec2(0.0, other.g0.y), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
+}
+
+Scalar infinity_sphere_meet(Infinity self, Sphere other) {
+    return Scalar(self.g0 * other.g1.x);
+}
+
 Line line_anti_scalar_meet(Line self, AntiScalar other) {
     return Line(self.g0 * vec3(other.g0), self.g1 * vec3(other.g0));
 }
 
-Radial line_circle_meet(Line self, Circle other) {
-    return Radial(self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(0.0) - vec2(self.g0.x) * vec2(other.g0.x, other.g2.x) - vec2(self.g0.y) * vec2(other.g0.y, other.g2.y) - vec2(self.g0.z) * vec2(other.g0.z, other.g2.z) + vec2(self.g1.x) * vec2(0.0, -other.g1.x) + vec2(self.g1.y) * vec2(0.0, -other.g1.y) + vec2(self.g1.z) * vec2(0.0, -other.g1.z));
+RoundPoint line_circle_meet(Line self, Circle other) {
+    return RoundPoint(self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(0.0) - vec2(self.g0.x) * vec2(other.g0.x, other.g2.x) - vec2(self.g0.y) * vec2(other.g0.y, other.g2.y) - vec2(self.g0.z) * vec2(other.g0.z, other.g2.z) + vec2(self.g1.x) * vec2(0.0, -other.g1.x) + vec2(self.g1.y) * vec2(0.0, -other.g1.y) + vec2(self.g1.z) * vec2(0.0, -other.g1.z));
 }
 
 Scalar line_dipole_meet(Line self, Dipole other) {
@@ -7408,16 +8037,16 @@ PointAtInfinity line_horizon_meet(Line self, Horizon other) {
     return PointAtInfinity(self.g0 * vec3(other.g0));
 }
 
-Radial line_line_meet(Line self, Line other) {
-    return Radial(vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g1.x) + vec2(self.g0.y) * vec2(0.0, -other.g1.y) + vec2(self.g0.z) * vec2(0.0, -other.g1.z) + vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z));
+Infinity line_line_meet(Line self, Line other) {
+    return Infinity(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
 }
 
-Radial line_line_at_infinity_meet(Line self, LineAtInfinity other) {
-    return Radial(vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
+Infinity line_line_at_infinity_meet(Line self, LineAtInfinity other) {
+    return Infinity(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
-Radial line_line_at_origin_meet(Line self, LineAtOrigin other) {
-    return Radial(vec3(0.0), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z));
+Infinity line_line_at_origin_meet(Line self, LineAtOrigin other) {
+    return Infinity(0.0 - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
 }
 
 Line line_magnitude_meet(Line self, Magnitude other) {
@@ -7444,20 +8073,20 @@ LineAtInfinity line_at_infinity_anti_scalar_meet(LineAtInfinity self, AntiScalar
     return LineAtInfinity(self.g0 * vec3(other.g0));
 }
 
-Radial line_at_infinity_circle_meet(LineAtInfinity self, Circle other) {
-    return Radial(vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.x) * vec2(0.0, -other.g1.x) + vec2(self.g0.y) * vec2(0.0, -other.g1.y) + vec2(self.g0.z) * vec2(0.0, -other.g1.z));
+RoundPoint line_at_infinity_circle_meet(LineAtInfinity self, Circle other) {
+    return RoundPoint(vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.x) * vec2(0.0, -other.g1.x) + vec2(self.g0.y) * vec2(0.0, -other.g1.y) + vec2(self.g0.z) * vec2(0.0, -other.g1.z));
 }
 
 Scalar line_at_infinity_dipole_meet(LineAtInfinity self, Dipole other) {
     return Scalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
-Radial line_at_infinity_line_meet(LineAtInfinity self, Line other) {
-    return Radial(vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
+Infinity line_at_infinity_line_meet(LineAtInfinity self, Line other) {
+    return Infinity(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
-Radial line_at_infinity_line_at_origin_meet(LineAtInfinity self, LineAtOrigin other) {
-    return Radial(vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
+Infinity line_at_infinity_line_at_origin_meet(LineAtInfinity self, LineAtOrigin other) {
+    return Infinity(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
 LineAtInfinity line_at_infinity_magnitude_meet(LineAtInfinity self, Magnitude other) {
@@ -7484,8 +8113,8 @@ LineAtOrigin line_at_origin_anti_scalar_meet(LineAtOrigin self, AntiScalar other
     return LineAtOrigin(self.g0 * vec3(other.g0));
 }
 
-Radial line_at_origin_circle_meet(LineAtOrigin self, Circle other) {
-    return Radial(self.g0 * vec3(other.g0.w), vec2(0.0) - vec2(self.g0.x) * vec2(other.g0.x, other.g2.x) - vec2(self.g0.y) * vec2(other.g0.y, other.g2.y) - vec2(self.g0.z) * vec2(other.g0.z, other.g2.z));
+RoundPoint line_at_origin_circle_meet(LineAtOrigin self, Circle other) {
+    return RoundPoint(self.g0 * vec3(other.g0.w), vec2(0.0) - vec2(self.g0.x) * vec2(other.g0.x, other.g2.x) - vec2(self.g0.y) * vec2(other.g0.y, other.g2.y) - vec2(self.g0.z) * vec2(other.g0.z, other.g2.z));
 }
 
 Scalar line_at_origin_dipole_meet(LineAtOrigin self, Dipole other) {
@@ -7496,12 +8125,12 @@ PointAtInfinity line_at_origin_horizon_meet(LineAtOrigin self, Horizon other) {
     return PointAtInfinity(self.g0 * vec3(other.g0));
 }
 
-Radial line_at_origin_line_meet(LineAtOrigin self, Line other) {
-    return Radial(vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g1.x) + vec2(self.g0.y) * vec2(0.0, -other.g1.y) + vec2(self.g0.z) * vec2(0.0, -other.g1.z));
+Infinity line_at_origin_line_meet(LineAtOrigin self, Line other) {
+    return Infinity(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z);
 }
 
-Radial line_at_origin_line_at_infinity_meet(LineAtOrigin self, LineAtInfinity other) {
-    return Radial(vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
+Infinity line_at_origin_line_at_infinity_meet(LineAtOrigin self, LineAtInfinity other) {
+    return Infinity(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
 LineAtOrigin line_at_origin_magnitude_meet(LineAtOrigin self, Magnitude other) {
@@ -7538,6 +8167,10 @@ Dipole magnitude_dipole_meet(Magnitude self, Dipole other) {
 
 Horizon magnitude_horizon_meet(Magnitude self, Horizon other) {
     return Horizon(self.g0.y * other.g0);
+}
+
+Infinity magnitude_infinity_meet(Magnitude self, Infinity other) {
+    return Infinity(self.g0.y * other.g0);
 }
 
 Line magnitude_line_meet(Magnitude self, Line other) {
@@ -7580,8 +8213,8 @@ PointAtInfinity magnitude_point_at_infinity_meet(Magnitude self, PointAtInfinity
     return PointAtInfinity(vec3(self.g0.y) * other.g0);
 }
 
-Radial magnitude_radial_meet(Magnitude self, Radial other) {
-    return Radial(vec3(self.g0.y) * other.g0, vec2(self.g0.y) * other.g1);
+RoundPoint magnitude_round_point_meet(Magnitude self, RoundPoint other) {
+    return RoundPoint(vec3(self.g0.y) * other.g0, vec2(self.g0.y) * other.g1);
 }
 
 Scalar magnitude_scalar_meet(Magnitude self, Scalar other) {
@@ -7606,6 +8239,10 @@ MultiVector multi_vector_dipole_meet(MultiVector self, Dipole other) {
 
 MultiVector multi_vector_horizon_meet(MultiVector self, Horizon other) {
     return MultiVector(vec2(self.g2.x) * vec2(other.g0, 0.0), self.g3 * vec3(other.g0), vec2(self.g5.w) * vec2(0.0, other.g0), vec3(0.0), vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g0), vec4(self.g7.x, self.g7.y, self.g7.z, self.g7.x) * vec4(other.g0, other.g0, other.g0, 0.0), vec4(self.g10.x) * vec4(0.0, 0.0, 0.0, other.g0), vec3(0.0), self.g9 * vec3(other.g0), vec3(0.0), vec2(self.g0.y) * vec2(0.0, other.g0));
+}
+
+MultiVector multi_vector_infinity_meet(MultiVector self, Infinity other) {
+    return MultiVector(vec2(self.g10.x) * vec2(other.g0, 0.0), vec3(0.0), vec2(self.g0.y) * vec2(0.0, other.g0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
 MultiVector multi_vector_line_meet(MultiVector self, Line other) {
@@ -7648,7 +8285,7 @@ MultiVector multi_vector_point_at_infinity_meet(MultiVector self, PointAtInfinit
     return MultiVector(vec2(self.g6.x) * vec2(-other.g0.x, 0.0) + vec2(self.g6.y) * vec2(-other.g0.y, 0.0) + vec2(self.g6.z) * vec2(-other.g0.z, 0.0), vec3(self.g10.x) * other.g0, vec2(self.g9.x) * vec2(0.0, -other.g0.x) + vec2(self.g9.y) * vec2(0.0, -other.g0.y) + vec2(self.g9.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(self.g0.y) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector multi_vector_radial_meet(MultiVector self, Radial other) {
+MultiVector multi_vector_round_point_meet(MultiVector self, RoundPoint other) {
     return MultiVector(vec2(self.g9.x) * vec2(other.g0.x, 0.0) + vec2(self.g9.y) * vec2(other.g0.y, 0.0) + vec2(self.g9.z) * vec2(other.g0.z, 0.0) + vec2(self.g10.x) * vec2(other.g1.y, 0.0) + vec2(self.g10.y) * vec2(other.g1.x, 0.0), vec3(self.g0.y) * other.g0, vec2(self.g0.y) * other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
@@ -7668,8 +8305,8 @@ Scalar origin_circle_meet(Origin self, Circle other) {
     return Scalar(0.0 - self.g0 * other.g0.w);
 }
 
-Radial origin_horizon_meet(Origin self, Horizon other) {
-    return Radial(vec3(0.0), vec2(self.g0) * vec2(0.0, other.g0));
+Infinity origin_horizon_meet(Origin self, Horizon other) {
+    return Infinity(self.g0 * other.g0);
 }
 
 Origin origin_magnitude_meet(Origin self, Magnitude other) {
@@ -7680,12 +8317,12 @@ MultiVector origin_multi_vector_meet(Origin self, MultiVector other) {
     return MultiVector(vec2(self.g0) * vec2(-other.g6.w, 0.0), vec3(0.0), vec2(self.g0) * other.g10 * vec2(-1.0, 1.0), vec3(0.0), vec3(0.0), vec4(self.g0) * vec4(0.0, 0.0, 0.0, other.g0.y), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-Radial origin_plane_meet(Origin self, Plane other) {
-    return Radial(vec3(0.0), vec2(self.g0) * vec2(0.0, other.g0.w));
+Infinity origin_plane_meet(Origin self, Plane other) {
+    return Infinity(self.g0 * other.g0.w);
 }
 
-Radial origin_sphere_meet(Origin self, Sphere other) {
-    return Radial(vec3(0.0), vec2(self.g0) * other.g1 * vec2(-1.0, 1.0));
+RoundPoint origin_sphere_meet(Origin self, Sphere other) {
+    return RoundPoint(vec3(0.0), vec2(self.g0) * other.g1 * vec2(-1.0, 1.0));
 }
 
 Plane plane_anti_scalar_meet(Plane self, AntiScalar other) {
@@ -7696,8 +8333,8 @@ Dipole plane_circle_meet(Plane self, Circle other) {
     return Dipole(vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w) + vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g0.x) * vec4(0.0, other.g2.z, -other.g2.y, -other.g1.x) + vec4(self.g0.y) * vec4(-other.g2.z, 0.0, other.g2.x, -other.g1.y) + vec4(self.g0.z) * vec4(other.g2.y, -other.g2.x, 0.0, -other.g1.z) + vec4(self.g0.w) * vec4(other.g1.x, other.g1.y, other.g1.z, 0.0));
 }
 
-Radial plane_dipole_meet(Plane self, Dipole other) {
-    return Radial(vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0) - vec3(self.g0.w) * other.g0, vec2(self.g0.x) * vec2(other.g0.x, -other.g2.x) + vec2(self.g0.y) * vec2(other.g0.y, -other.g2.y) + vec2(self.g0.z) * vec2(other.g0.z, -other.g2.z) + vec2(self.g0.w) * vec2(0.0, -other.g2.w));
+RoundPoint plane_dipole_meet(Plane self, Dipole other) {
+    return RoundPoint(vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0) - vec3(self.g0.w) * other.g0, vec2(self.g0.x) * vec2(other.g0.x, -other.g2.x) + vec2(self.g0.y) * vec2(other.g0.y, -other.g2.y) + vec2(self.g0.z) * vec2(other.g0.z, -other.g2.z) + vec2(self.g0.w) * vec2(0.0, -other.g2.w));
 }
 
 LineAtInfinity plane_horizon_meet(Plane self, Horizon other) {
@@ -7724,8 +8361,8 @@ MultiVector plane_multi_vector_meet(Plane self, MultiVector other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g1.x, 0.0) + vec2(self.g0.y) * vec2(other.g1.y, 0.0) + vec2(self.g0.z) * vec2(other.g1.z, 0.0) + vec2(self.g0.w) * vec2(other.g2.x, 0.0), vec3(self.g0.x) * vec3(0.0, -other.g4.z, other.g4.y) + vec3(self.g0.y) * vec3(other.g4.z, 0.0, -other.g4.x) + vec3(self.g0.z) * vec3(-other.g4.y, other.g4.x, 0.0) - vec3(self.g0.w) * other.g3, vec2(self.g0.x) * vec2(other.g3.x, -other.g5.x) + vec2(self.g0.y) * vec2(other.g3.y, -other.g5.y) + vec2(self.g0.z) * vec2(other.g3.z, -other.g5.z) + vec2(self.g0.w) * vec2(0.0, -other.g5.w), vec3(self.g0.x) * vec3(0.0, -other.g6.z, other.g6.y) + vec3(self.g0.y) * vec3(other.g6.z, 0.0, -other.g6.x) + vec3(self.g0.z) * vec3(-other.g6.y, other.g6.x, 0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g6.w) + vec3(self.g0.w) * vec3(other.g6.x, other.g6.y, other.g6.z), vec4(self.g0.x) * vec4(0.0, other.g8.z, -other.g8.y, -other.g7.x) + vec4(self.g0.y) * vec4(-other.g8.z, 0.0, other.g8.x, -other.g7.y) + vec4(self.g0.z) * vec4(other.g8.y, -other.g8.x, 0.0, -other.g7.z) + vec4(self.g0.w) * vec4(other.g7.x, other.g7.y, other.g7.z, 0.0), vec4(0.0) - self.g0 * vec4(other.g10.x), vec3(self.g0.x) * vec3(0.0, other.g9.z, -other.g9.y) + vec3(self.g0.y) * vec3(-other.g9.z, 0.0, other.g9.x) + vec3(self.g0.z) * vec3(other.g9.y, -other.g9.x, 0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g10.y) - vec3(self.g0.w) * other.g9, vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.y), vec2(self.g0.w) * vec2(0.0, other.g0.y));
 }
 
-Radial plane_origin_meet(Plane self, Origin other) {
-    return Radial(vec3(0.0), vec2(self.g0.w) * vec2(0.0, -other.g0));
+Infinity plane_origin_meet(Plane self, Origin other) {
+    return Infinity(0.0 - self.g0.w * other.g0);
 }
 
 Line plane_plane_meet(Plane self, Plane other) {
@@ -7736,15 +8373,15 @@ Line plane_plane_at_origin_meet(Plane self, PlaneAtOrigin other) {
     return Line(vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0) - vec3(self.g0.w) * other.g0);
 }
 
-Radial plane_point_meet(Plane self, Point other) {
-    return Radial(vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + vec2(self.g0.w) * vec2(0.0, -other.g0.w));
+Infinity plane_point_meet(Plane self, Point other) {
+    return Infinity(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z - self.g0.w * other.g0.w);
 }
 
-Radial plane_point_at_infinity_meet(Plane self, PointAtInfinity other) {
-    return Radial(vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
+Infinity plane_point_at_infinity_meet(Plane self, PointAtInfinity other) {
+    return Infinity(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
-Scalar plane_radial_meet(Plane self, Radial other) {
+Scalar plane_round_point_meet(Plane self, RoundPoint other) {
     return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g0.w * other.g1.x);
 }
 
@@ -7760,8 +8397,8 @@ Dipole plane_at_origin_circle_meet(PlaneAtOrigin self, Circle other) {
     return Dipole(vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0) - self.g0 * vec3(other.g0.w), vec4(self.g0.x) * vec4(0.0, other.g2.z, -other.g2.y, -other.g1.x) + vec4(self.g0.y) * vec4(-other.g2.z, 0.0, other.g2.x, -other.g1.y) + vec4(self.g0.z) * vec4(other.g2.y, -other.g2.x, 0.0, -other.g1.z));
 }
 
-Radial plane_at_origin_dipole_meet(PlaneAtOrigin self, Dipole other) {
-    return Radial(vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0), vec2(self.g0.x) * vec2(other.g0.x, -other.g2.x) + vec2(self.g0.y) * vec2(other.g0.y, -other.g2.y) + vec2(self.g0.z) * vec2(other.g0.z, -other.g2.z));
+RoundPoint plane_at_origin_dipole_meet(PlaneAtOrigin self, Dipole other) {
+    return RoundPoint(vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0), vec2(self.g0.x) * vec2(other.g0.x, -other.g2.x) + vec2(self.g0.y) * vec2(other.g0.y, -other.g2.y) + vec2(self.g0.z) * vec2(other.g0.z, -other.g2.z));
 }
 
 LineAtInfinity plane_at_origin_horizon_meet(PlaneAtOrigin self, Horizon other) {
@@ -7796,15 +8433,15 @@ LineAtOrigin plane_at_origin_plane_at_origin_meet(PlaneAtOrigin self, PlaneAtOri
     return LineAtOrigin(vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0));
 }
 
-Radial plane_at_origin_point_meet(PlaneAtOrigin self, Point other) {
-    return Radial(vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
+Infinity plane_at_origin_point_meet(PlaneAtOrigin self, Point other) {
+    return Infinity(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
-Radial plane_at_origin_point_at_infinity_meet(PlaneAtOrigin self, PointAtInfinity other) {
-    return Radial(vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
+Infinity plane_at_origin_point_at_infinity_meet(PlaneAtOrigin self, PointAtInfinity other) {
+    return Infinity(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
-Scalar plane_at_origin_radial_meet(PlaneAtOrigin self, Radial other) {
+Scalar plane_at_origin_round_point_meet(PlaneAtOrigin self, RoundPoint other) {
     return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
 }
 
@@ -7820,8 +8457,8 @@ Scalar point_circle_meet(Point self, Circle other) {
     return Scalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z - self.g0.w * other.g0.w);
 }
 
-Radial point_horizon_meet(Point self, Horizon other) {
-    return Radial(vec3(0.0), vec2(self.g0.w) * vec2(0.0, other.g0));
+Infinity point_horizon_meet(Point self, Horizon other) {
+    return Infinity(self.g0.w * other.g0);
 }
 
 Point point_magnitude_meet(Point self, Magnitude other) {
@@ -7832,16 +8469,16 @@ MultiVector point_multi_vector_meet(Point self, MultiVector other) {
     return MultiVector(vec2(self.g0.x) * vec2(-other.g6.x, 0.0) + vec2(self.g0.y) * vec2(-other.g6.y, 0.0) + vec2(self.g0.z) * vec2(-other.g6.z, 0.0) + vec2(self.g0.w) * vec2(-other.g6.w, 0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g10.x), vec2(self.g0.x) * vec2(0.0, other.g9.x) + vec2(self.g0.y) * vec2(0.0, other.g9.y) + vec2(self.g0.z) * vec2(0.0, other.g9.z) + vec2(self.g0.w) * other.g10 * vec2(-1.0, 1.0), vec3(0.0), vec3(0.0), self.g0 * vec4(other.g0.y), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-Radial point_plane_meet(Point self, Plane other) {
-    return Radial(vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * vec2(0.0, other.g0.w));
+Infinity point_plane_meet(Point self, Plane other) {
+    return Infinity(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g0.w * other.g0.w);
 }
 
-Radial point_plane_at_origin_meet(Point self, PlaneAtOrigin other) {
-    return Radial(vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z));
+Infinity point_plane_at_origin_meet(Point self, PlaneAtOrigin other) {
+    return Infinity(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
 }
 
-Radial point_sphere_meet(Point self, Sphere other) {
-    return Radial(vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * other.g1 * vec2(-1.0, 1.0));
+RoundPoint point_sphere_meet(Point self, Sphere other) {
+    return RoundPoint(vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * other.g1 * vec2(-1.0, 1.0));
 }
 
 PointAtInfinity point_at_infinity_anti_scalar_meet(PointAtInfinity self, AntiScalar other) {
@@ -7860,43 +8497,43 @@ MultiVector point_at_infinity_multi_vector_meet(PointAtInfinity self, MultiVecto
     return MultiVector(vec2(self.g0.x) * vec2(-other.g6.x, 0.0) + vec2(self.g0.y) * vec2(-other.g6.y, 0.0) + vec2(self.g0.z) * vec2(-other.g6.z, 0.0), vec3(0.0) - self.g0 * vec3(other.g10.x), vec2(self.g0.x) * vec2(0.0, other.g9.x) + vec2(self.g0.y) * vec2(0.0, other.g9.y) + vec2(self.g0.z) * vec2(0.0, other.g9.z), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g0.y, other.g0.y, other.g0.y, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-Radial point_at_infinity_plane_meet(PointAtInfinity self, Plane other) {
-    return Radial(vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z));
+Infinity point_at_infinity_plane_meet(PointAtInfinity self, Plane other) {
+    return Infinity(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
 }
 
-Radial point_at_infinity_plane_at_origin_meet(PointAtInfinity self, PlaneAtOrigin other) {
-    return Radial(vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z));
+Infinity point_at_infinity_plane_at_origin_meet(PointAtInfinity self, PlaneAtOrigin other) {
+    return Infinity(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
 }
 
-Radial point_at_infinity_sphere_meet(PointAtInfinity self, Sphere other) {
-    return Radial(vec3(0.0) - self.g0 * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z));
+RoundPoint point_at_infinity_sphere_meet(PointAtInfinity self, Sphere other) {
+    return RoundPoint(vec3(0.0) - self.g0 * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z));
 }
 
-Radial radial_anti_scalar_meet(Radial self, AntiScalar other) {
-    return Radial(self.g0 * vec3(other.g0), self.g1 * vec2(other.g0));
+RoundPoint round_point_anti_scalar_meet(RoundPoint self, AntiScalar other) {
+    return RoundPoint(self.g0 * vec3(other.g0), self.g1 * vec2(other.g0));
 }
 
-Scalar radial_horizon_meet(Radial self, Horizon other) {
+Scalar round_point_horizon_meet(RoundPoint self, Horizon other) {
     return Scalar(self.g1.x * other.g0);
 }
 
-Radial radial_magnitude_meet(Radial self, Magnitude other) {
-    return Radial(self.g0 * vec3(other.g0.y), self.g1 * vec2(other.g0.y));
+RoundPoint round_point_magnitude_meet(RoundPoint self, Magnitude other) {
+    return RoundPoint(self.g0 * vec3(other.g0.y), self.g1 * vec2(other.g0.y));
 }
 
-MultiVector radial_multi_vector_meet(Radial self, MultiVector other) {
+MultiVector round_point_multi_vector_meet(RoundPoint self, MultiVector other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g9.x, 0.0) + vec2(self.g0.y) * vec2(other.g9.y, 0.0) + vec2(self.g0.z) * vec2(other.g9.z, 0.0) + vec2(self.g1.x) * vec2(other.g10.y, 0.0) + vec2(self.g1.y) * vec2(other.g10.x, 0.0), self.g0 * vec3(other.g0.y), self.g1 * vec2(other.g0.y), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-Scalar radial_plane_meet(Radial self, Plane other) {
+Scalar round_point_plane_meet(RoundPoint self, Plane other) {
     return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g1.x * other.g0.w);
 }
 
-Scalar radial_plane_at_origin_meet(Radial self, PlaneAtOrigin other) {
+Scalar round_point_plane_at_origin_meet(RoundPoint self, PlaneAtOrigin other) {
     return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
 }
 
-Scalar radial_sphere_meet(Radial self, Sphere other) {
+Scalar round_point_sphere_meet(RoundPoint self, Sphere other) {
     return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g1.x * other.g1.y + self.g1.y * other.g1.x);
 }
 
@@ -7920,12 +8557,16 @@ Dipole sphere_circle_meet(Sphere self, Circle other) {
     return Dipole(vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) + vec3(self.g1.x) * other.g1, vec3(0.0) - self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * other.g2 + vec3(self.g1.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g0.x) * vec4(0.0, other.g2.z, -other.g2.y, -other.g1.x) + vec4(self.g0.y) * vec4(-other.g2.z, 0.0, other.g2.x, -other.g1.y) + vec4(self.g0.z) * vec4(other.g2.y, -other.g2.x, 0.0, -other.g1.z) + vec4(self.g1.y) * vec4(other.g1.x, other.g1.y, other.g1.z, 0.0));
 }
 
-Radial sphere_dipole_meet(Sphere self, Dipole other) {
-    return Radial(vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0) + vec3(self.g1.x) * vec3(other.g2.x, other.g2.y, other.g2.z) - vec3(self.g1.y) * other.g0, vec2(self.g0.x) * vec2(other.g0.x, -other.g2.x) + vec2(self.g0.y) * vec2(other.g0.y, -other.g2.y) + vec2(self.g0.z) * vec2(other.g0.z, -other.g2.z) + self.g1 * vec2(other.g2.w));
+RoundPoint sphere_dipole_meet(Sphere self, Dipole other) {
+    return RoundPoint(vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0) + vec3(self.g1.x) * vec3(other.g2.x, other.g2.y, other.g2.z) - vec3(self.g1.y) * other.g0, vec2(self.g0.x) * vec2(other.g0.x, -other.g2.x) + vec2(self.g0.y) * vec2(other.g0.y, -other.g2.y) + vec2(self.g0.z) * vec2(other.g0.z, -other.g2.z) + self.g1 * vec2(other.g2.w));
 }
 
 Circle sphere_horizon_meet(Sphere self, Horizon other) {
     return Circle(vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g0), vec3(0.0), self.g0 * vec3(other.g0));
+}
+
+Scalar sphere_infinity_meet(Sphere self, Infinity other) {
+    return Scalar(self.g1.x * other.g0);
 }
 
 Dipole sphere_line_meet(Sphere self, Line other) {
@@ -7948,8 +8589,8 @@ MultiVector sphere_multi_vector_meet(Sphere self, MultiVector other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g1.x, 0.0) + vec2(self.g0.y) * vec2(other.g1.y, 0.0) + vec2(self.g0.z) * vec2(other.g1.z, 0.0) + vec2(self.g1.x) * vec2(other.g2.y, 0.0) + vec2(self.g1.y) * vec2(other.g2.x, 0.0), vec3(self.g0.x) * vec3(0.0, -other.g4.z, other.g4.y) + vec3(self.g0.y) * vec3(other.g4.z, 0.0, -other.g4.x) + vec3(self.g0.z) * vec3(-other.g4.y, other.g4.x, 0.0) + vec3(self.g1.x) * vec3(other.g5.x, other.g5.y, other.g5.z) - vec3(self.g1.y) * other.g3, vec2(self.g0.x) * vec2(other.g3.x, -other.g5.x) + vec2(self.g0.y) * vec2(other.g3.y, -other.g5.y) + vec2(self.g0.z) * vec2(other.g3.z, -other.g5.z) + self.g1 * vec2(other.g5.w), vec3(self.g0.x) * vec3(0.0, -other.g6.z, other.g6.y) + vec3(self.g0.y) * vec3(other.g6.z, 0.0, -other.g6.x) + vec3(self.g0.z) * vec3(-other.g6.y, other.g6.x, 0.0) + vec3(self.g1.x) * other.g7, vec3(0.0) - self.g0 * vec3(other.g6.w) + vec3(self.g1.x) * other.g8 + vec3(self.g1.y) * vec3(other.g6.x, other.g6.y, other.g6.z), vec4(self.g0.x) * vec4(0.0, other.g8.z, -other.g8.y, -other.g7.x) + vec4(self.g0.y) * vec4(-other.g8.z, 0.0, other.g8.x, -other.g7.y) + vec4(self.g0.z) * vec4(other.g8.y, -other.g8.x, 0.0, -other.g7.z) + vec4(self.g1.y) * vec4(other.g7.x, other.g7.y, other.g7.z, 0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(-other.g10.x, -other.g10.x, -other.g10.x, 0.0) + vec4(self.g1.x) * vec4(other.g9.x, other.g9.y, other.g9.z, other.g10.y) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, -other.g10.x), vec3(self.g0.x) * vec3(0.0, other.g9.z, -other.g9.y) + vec3(self.g0.y) * vec3(-other.g9.z, 0.0, other.g9.x) + vec3(self.g0.z) * vec3(other.g9.y, -other.g9.x, 0.0), self.g0 * vec3(other.g10.y) - vec3(self.g1.y) * other.g9, self.g0 * vec3(other.g0.y), self.g1 * vec2(other.g0.y));
 }
 
-Radial sphere_origin_meet(Sphere self, Origin other) {
-    return Radial(vec3(0.0), self.g1 * vec2(other.g0));
+RoundPoint sphere_origin_meet(Sphere self, Origin other) {
+    return RoundPoint(vec3(0.0), self.g1 * vec2(other.g0));
 }
 
 Circle sphere_plane_meet(Sphere self, Plane other) {
@@ -7960,15 +8601,15 @@ Circle sphere_plane_at_origin_meet(Sphere self, PlaneAtOrigin other) {
     return Circle(vec4(self.g1.x) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0) - vec3(self.g1.y) * other.g0);
 }
 
-Radial sphere_point_meet(Sphere self, Point other) {
-    return Radial(vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + self.g1 * vec2(other.g0.w));
+RoundPoint sphere_point_meet(Sphere self, Point other) {
+    return RoundPoint(vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + self.g1 * vec2(other.g0.w));
 }
 
-Radial sphere_point_at_infinity_meet(Sphere self, PointAtInfinity other) {
-    return Radial(vec3(self.g1.x) * other.g0, vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
+RoundPoint sphere_point_at_infinity_meet(Sphere self, PointAtInfinity other) {
+    return RoundPoint(vec3(self.g1.x) * other.g0, vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
 }
 
-Scalar sphere_radial_meet(Sphere self, Radial other) {
+Scalar sphere_round_point_meet(Sphere self, RoundPoint other) {
     return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g1.x * other.g1.y + self.g1.y * other.g1.x);
 }
 
@@ -7992,6 +8633,10 @@ AntiScalar circle_dipole_wedge(Circle self, Dipole other) {
     return AntiScalar(0.0 - self.g0.x * other.g2.x - self.g0.y * other.g2.y - self.g0.z * other.g2.z - self.g0.w * other.g2.w - self.g1.x * other.g1.x - self.g1.y * other.g1.y - self.g1.z * other.g1.z - self.g2.x * other.g0.x - self.g2.y * other.g0.y - self.g2.z * other.g0.z);
 }
 
+Plane circle_infinity_wedge(Circle self, Infinity other) {
+    return Plane(self.g0 * vec4(other.g0));
+}
+
 Circle circle_magnitude_wedge(Circle self, Magnitude other) {
     return Circle(self.g0 * vec4(other.g0.x), self.g1 * vec3(other.g0.x), self.g2 * vec3(other.g0.x));
 }
@@ -8012,7 +8657,7 @@ AntiScalar circle_point_at_infinity_wedge(Circle self, PointAtInfinity other) {
     return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
-Sphere circle_radial_wedge(Circle self, Radial other) {
+Sphere circle_round_point_wedge(Circle self, RoundPoint other) {
     return Sphere(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0) - self.g2 * vec3(other.g1.x), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g0.w) * other.g1 * vec2(-1.0, 1.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z));
 }
 
@@ -8026,6 +8671,10 @@ AntiScalar dipole_circle_wedge(Dipole self, Circle other) {
 
 Sphere dipole_dipole_wedge(Dipole self, Dipole other) {
     return Sphere(vec3(self.g0.x) * vec3(0.0, -other.g2.z, other.g2.y) + vec3(self.g0.y) * vec3(other.g2.z, 0.0, -other.g2.x) + vec3(self.g0.z) * vec3(-other.g2.y, other.g2.x, 0.0) + self.g1 * vec3(other.g2.w) + vec3(self.g2.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g2.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g2.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g2.w) * other.g1, vec2(self.g0.x) * vec2(-other.g1.x, 0.0) + vec2(self.g0.y) * vec2(-other.g1.y, 0.0) + vec2(self.g0.z) * vec2(-other.g1.z, 0.0) - vec2(self.g1.x) * vec2(other.g0.x, other.g2.x) - vec2(self.g1.y) * vec2(other.g0.y, other.g2.y) - vec2(self.g1.z) * vec2(other.g0.z, other.g2.z) + vec2(self.g2.x) * vec2(0.0, -other.g1.x) + vec2(self.g2.y) * vec2(0.0, -other.g1.y) + vec2(self.g2.z) * vec2(0.0, -other.g1.z));
+}
+
+Line dipole_infinity_wedge(Dipole self, Infinity other) {
+    return Line(self.g0 * vec3(other.g0), self.g1 * vec3(other.g0));
 }
 
 AntiScalar dipole_line_wedge(Dipole self, Line other) {
@@ -8060,7 +8709,7 @@ Plane dipole_point_at_infinity_wedge(Dipole self, PointAtInfinity other) {
     return Plane(vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, 0.0, -other.g0.z));
 }
 
-Circle dipole_radial_wedge(Dipole self, Radial other) {
+Circle dipole_round_point_wedge(Dipole self, RoundPoint other) {
     return Circle(vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g1.x) * vec4(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, other.g1.x, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, other.g1.x, -other.g0.z), self.g0 * vec3(other.g1.y) + vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g1.x) - vec3(self.g2.w) * other.g0, self.g1 * vec3(other.g1.y) + vec3(self.g2.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g2.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g2.z) * vec3(other.g0.y, -other.g0.x, 0.0));
 }
 
@@ -8076,12 +8725,40 @@ MultiVector horizon_multi_vector_wedge(Horizon self, MultiVector other) {
     return MultiVector(vec2(self.g0) * vec2(0.0, other.g2.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0) * vec2(0.0, other.g0.x));
 }
 
-AntiScalar horizon_radial_wedge(Horizon self, Radial other) {
+AntiScalar horizon_round_point_wedge(Horizon self, RoundPoint other) {
     return AntiScalar(self.g0 * other.g1.x);
 }
 
 Horizon horizon_scalar_wedge(Horizon self, Scalar other) {
     return Horizon(self.g0 * other.g0);
+}
+
+Plane infinity_circle_wedge(Infinity self, Circle other) {
+    return Plane(vec4(0.0) - vec4(self.g0) * other.g0);
+}
+
+Line infinity_dipole_wedge(Infinity self, Dipole other) {
+    return Line(vec3(self.g0) * other.g0, vec3(self.g0) * other.g1);
+}
+
+Infinity infinity_magnitude_wedge(Infinity self, Magnitude other) {
+    return Infinity(self.g0 * other.g0.x);
+}
+
+MultiVector infinity_multi_vector_wedge(Infinity self, MultiVector other) {
+    return MultiVector(vec2(self.g0) * vec2(0.0, other.g10.x), vec3(0.0), vec2(self.g0) * vec2(0.0, other.g0.x), vec3(0.0), vec3(0.0), vec4(0.0) - vec4(self.g0) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g2.x), vec4(0.0), vec3(self.g0) * other.g3, vec3(self.g0) * other.g4, vec3(0.0) - vec3(self.g0) * vec3(other.g6.x, other.g6.y, other.g6.z), vec2(self.g0) * vec2(0.0, -other.g6.w));
+}
+
+Point infinity_round_point_wedge(Infinity self, RoundPoint other) {
+    return Point(vec4(0.0) - vec4(self.g0) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x));
+}
+
+Infinity infinity_scalar_wedge(Infinity self, Scalar other) {
+    return Infinity(self.g0 * other.g0);
+}
+
+AntiScalar infinity_sphere_wedge(Infinity self, Sphere other) {
+    return AntiScalar(self.g0 * other.g1.x);
 }
 
 AntiScalar line_dipole_wedge(Line self, Dipole other) {
@@ -8096,7 +8773,7 @@ MultiVector line_multi_vector_wedge(Line self, MultiVector other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g4.x) + vec2(self.g0.y) * vec2(0.0, -other.g4.y) + vec2(self.g0.z) * vec2(0.0, -other.g4.z) + vec2(self.g1.x) * vec2(0.0, -other.g3.x) + vec2(self.g1.y) * vec2(0.0, -other.g3.y) + vec2(self.g1.z) * vec2(0.0, -other.g3.z), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), self.g0 * vec3(other.g0.x), self.g1 * vec3(other.g0.x), vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0) - self.g1 * vec3(other.g2.x), vec2(self.g1.x) * vec2(0.0, other.g1.x) + vec2(self.g1.y) * vec2(0.0, other.g1.y) + vec2(self.g1.z) * vec2(0.0, other.g1.z));
 }
 
-Plane line_radial_wedge(Line self, Radial other) {
+Plane line_round_point_wedge(Line self, RoundPoint other) {
     return Plane(vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0) + vec4(self.g1.x) * vec4(-other.g1.x, 0.0, 0.0, other.g0.x) + vec4(self.g1.y) * vec4(0.0, -other.g1.x, 0.0, other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, -other.g1.x, other.g0.z));
 }
 
@@ -8116,7 +8793,7 @@ MultiVector line_at_infinity_multi_vector_wedge(LineAtInfinity self, MultiVector
     return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g3.x) + vec2(self.g0.y) * vec2(0.0, -other.g3.y) + vec2(self.g0.z) * vec2(0.0, -other.g3.z), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), self.g0 * vec3(other.g0.x), vec3(0.0) - self.g0 * vec3(other.g2.x), vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z));
 }
 
-Plane line_at_infinity_radial_wedge(LineAtInfinity self, Radial other) {
+Plane line_at_infinity_round_point_wedge(LineAtInfinity self, RoundPoint other) {
     return Plane(vec4(self.g0.x) * vec4(-other.g1.x, 0.0, 0.0, other.g0.x) + vec4(self.g0.y) * vec4(0.0, -other.g1.x, 0.0, other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, -other.g1.x, other.g0.z));
 }
 
@@ -8136,7 +8813,7 @@ MultiVector line_at_origin_multi_vector_wedge(LineAtOrigin self, MultiVector oth
     return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g4.x) + vec2(self.g0.y) * vec2(0.0, -other.g4.y) + vec2(self.g0.z) * vec2(0.0, -other.g4.z), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), self.g0 * vec3(other.g0.x), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0), vec2(0.0));
 }
 
-PlaneAtOrigin line_at_origin_radial_wedge(LineAtOrigin self, Radial other) {
+PlaneAtOrigin line_at_origin_round_point_wedge(LineAtOrigin self, RoundPoint other) {
     return PlaneAtOrigin(vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0));
 }
 
@@ -8158,6 +8835,10 @@ Dipole magnitude_dipole_wedge(Magnitude self, Dipole other) {
 
 Horizon magnitude_horizon_wedge(Magnitude self, Horizon other) {
     return Horizon(self.g0.x * other.g0);
+}
+
+Infinity magnitude_infinity_wedge(Magnitude self, Infinity other) {
+    return Infinity(self.g0.x * other.g0);
 }
 
 Line magnitude_line_wedge(Magnitude self, Line other) {
@@ -8200,8 +8881,8 @@ PointAtInfinity magnitude_point_at_infinity_wedge(Magnitude self, PointAtInfinit
     return PointAtInfinity(vec3(self.g0.x) * other.g0);
 }
 
-Radial magnitude_radial_wedge(Magnitude self, Radial other) {
-    return Radial(vec3(self.g0.x) * other.g0, vec2(self.g0.x) * other.g1);
+RoundPoint magnitude_round_point_wedge(Magnitude self, RoundPoint other) {
+    return RoundPoint(vec3(self.g0.x) * other.g0, vec2(self.g0.x) * other.g1);
 }
 
 Magnitude magnitude_scalar_wedge(Magnitude self, Scalar other) {
@@ -8226,6 +8907,10 @@ MultiVector multi_vector_dipole_wedge(MultiVector self, Dipole other) {
 
 MultiVector multi_vector_horizon_wedge(MultiVector self, Horizon other) {
     return MultiVector(vec2(self.g2.x) * vec2(0.0, other.g0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0));
+}
+
+MultiVector multi_vector_infinity_wedge(MultiVector self, Infinity other) {
+    return MultiVector(vec2(self.g10.x) * vec2(0.0, other.g0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0), vec3(0.0), vec3(0.0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(other.g0, other.g0, other.g0, 0.0) + vec4(self.g2.x) * vec4(0.0, 0.0, 0.0, other.g0), vec4(0.0), self.g3 * vec3(other.g0), self.g4 * vec3(other.g0), vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g0), vec2(self.g6.w) * vec2(0.0, other.g0));
 }
 
 MultiVector multi_vector_line_wedge(MultiVector self, Line other) {
@@ -8268,7 +8953,7 @@ MultiVector multi_vector_point_at_infinity_wedge(MultiVector self, PointAtInfini
     return MultiVector(vec2(self.g6.x) * vec2(0.0, -other.g0.x) + vec2(self.g6.y) * vec2(0.0, -other.g0.y) + vec2(self.g6.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(self.g2.x) * other.g0, vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(self.g3.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g3.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g3.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g4.x) * vec2(0.0, -other.g0.x) + vec2(self.g4.y) * vec2(0.0, -other.g0.y) + vec2(self.g4.z) * vec2(0.0, -other.g0.z));
 }
 
-MultiVector multi_vector_radial_wedge(MultiVector self, Radial other) {
+MultiVector multi_vector_round_point_wedge(MultiVector self, RoundPoint other) {
     return MultiVector(vec2(self.g9.x) * vec2(0.0, other.g0.x) + vec2(self.g9.y) * vec2(0.0, other.g0.y) + vec2(self.g9.z) * vec2(0.0, other.g0.z) + vec2(self.g10.x) * vec2(0.0, other.g1.y) + vec2(self.g10.y) * vec2(0.0, other.g1.x), vec3(self.g0.x) * other.g0, vec2(self.g0.x) * other.g1, vec3(0.0) - self.g1 * vec3(other.g1.x) + vec3(self.g2.x) * other.g0, vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4(self.g2.x) * vec4(0.0, 0.0, 0.0, other.g1.y) - vec4(self.g2.y) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4(self.g3.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g3.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g3.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g4.x) * vec4(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4(self.g4.y) * vec4(0.0, other.g1.x, 0.0, -other.g0.y) + vec4(self.g4.z) * vec4(0.0, 0.0, other.g1.x, -other.g0.z), self.g3 * vec3(other.g1.y) + vec3(self.g5.x, self.g5.y, self.g5.z) * vec3(other.g1.x) - vec3(self.g5.w) * other.g0, self.g4 * vec3(other.g1.y) + vec3(self.g5.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g5.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g5.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g1.y) + vec3(self.g7.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g7.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g7.z) * vec3(other.g0.y, -other.g0.x, 0.0) - self.g8 * vec3(other.g1.x), vec2(self.g6.x) * vec2(-other.g0.x, 0.0) + vec2(self.g6.y) * vec2(-other.g0.y, 0.0) + vec2(self.g6.z) * vec2(-other.g0.z, 0.0) + vec2(self.g6.w) * other.g1 * vec2(-1.0, 1.0) + vec2(self.g8.x) * vec2(0.0, other.g0.x) + vec2(self.g8.y) * vec2(0.0, other.g0.y) + vec2(self.g8.z) * vec2(0.0, other.g0.z));
 }
 
@@ -8296,7 +8981,7 @@ MultiVector origin_multi_vector_wedge(Origin self, MultiVector other) {
     return MultiVector(vec2(self.g0) * vec2(0.0, -other.g6.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0) * vec4(0.0, 0.0, 0.0, other.g0.x), vec4(0.0), vec3(0.0) - vec3(self.g0) * other.g1, vec3(0.0), vec3(self.g0) * other.g4, vec2(0.0));
 }
 
-LineAtOrigin origin_radial_wedge(Origin self, Radial other) {
+LineAtOrigin origin_round_point_wedge(Origin self, RoundPoint other) {
     return LineAtOrigin(vec3(0.0) - vec3(self.g0) * other.g0);
 }
 
@@ -8312,7 +8997,7 @@ MultiVector plane_multi_vector_wedge(Plane self, MultiVector other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z) + vec2(self.g0.w) * vec2(0.0, other.g2.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.x), vec2(self.g0.w) * vec2(0.0, other.g0.x));
 }
 
-AntiScalar plane_radial_wedge(Plane self, Radial other) {
+AntiScalar plane_round_point_wedge(Plane self, RoundPoint other) {
     return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g0.w * other.g1.x);
 }
 
@@ -8328,7 +9013,7 @@ MultiVector plane_at_origin_multi_vector_wedge(PlaneAtOrigin self, MultiVector o
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), self.g0 * vec3(other.g0.x), vec2(0.0));
 }
 
-AntiScalar plane_at_origin_radial_wedge(PlaneAtOrigin self, Radial other) {
+AntiScalar plane_at_origin_round_point_wedge(PlaneAtOrigin self, RoundPoint other) {
     return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
 }
 
@@ -8352,7 +9037,7 @@ MultiVector point_multi_vector_wedge(Point self, MultiVector other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g6.x) + vec2(self.g0.y) * vec2(0.0, -other.g6.y) + vec2(self.g0.z) * vec2(0.0, -other.g6.z) + vec2(self.g0.w) * vec2(0.0, -other.g6.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), self.g0 * vec4(other.g0.x), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g2.x) - vec3(self.g0.w) * other.g1, vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0), vec3(self.g0.x) * vec3(0.0, other.g3.z, -other.g3.y) + vec3(self.g0.y) * vec3(-other.g3.z, 0.0, other.g3.x) + vec3(self.g0.z) * vec3(other.g3.y, -other.g3.x, 0.0) + vec3(self.g0.w) * other.g4, vec2(self.g0.x) * vec2(0.0, -other.g4.x) + vec2(self.g0.y) * vec2(0.0, -other.g4.y) + vec2(self.g0.z) * vec2(0.0, -other.g4.z));
 }
 
-Line point_radial_wedge(Point self, Radial other) {
+Line point_round_point_wedge(Point self, RoundPoint other) {
     return Line(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x) - vec3(self.g0.w) * other.g0, vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0));
 }
 
@@ -8376,7 +9061,7 @@ MultiVector point_at_infinity_multi_vector_wedge(PointAtInfinity self, MultiVect
     return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g6.x) + vec2(self.g0.y) * vec2(0.0, -other.g6.y) + vec2(self.g0.z) * vec2(0.0, -other.g6.z), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g0.x, other.g0.x, other.g0.x, 0.0), vec4(0.0), self.g0 * vec3(other.g2.x), vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0), vec3(self.g0.x) * vec3(0.0, other.g3.z, -other.g3.y) + vec3(self.g0.y) * vec3(-other.g3.z, 0.0, other.g3.x) + vec3(self.g0.z) * vec3(other.g3.y, -other.g3.x, 0.0), vec2(self.g0.x) * vec2(0.0, -other.g4.x) + vec2(self.g0.y) * vec2(0.0, -other.g4.y) + vec2(self.g0.z) * vec2(0.0, -other.g4.z));
 }
 
-Line point_at_infinity_radial_wedge(PointAtInfinity self, Radial other) {
+Line point_at_infinity_round_point_wedge(PointAtInfinity self, RoundPoint other) {
     return Line(self.g0 * vec3(other.g1.x), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0));
 }
 
@@ -8384,67 +9069,71 @@ PointAtInfinity point_at_infinity_scalar_wedge(PointAtInfinity self, Scalar othe
     return PointAtInfinity(self.g0 * vec3(other.g0));
 }
 
-Sphere radial_circle_wedge(Radial self, Circle other) {
+Sphere round_point_circle_wedge(RoundPoint self, Circle other) {
     return Sphere(vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0) + vec3(self.g1.x) * other.g2 - vec3(self.g1.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(other.g0.x, -other.g2.x) + vec2(self.g0.y) * vec2(other.g0.y, -other.g2.y) + vec2(self.g0.z) * vec2(other.g0.z, -other.g2.z) + self.g1 * vec2(other.g0.w));
 }
 
-Circle radial_dipole_wedge(Radial self, Dipole other) {
+Circle round_point_dipole_wedge(RoundPoint self, Dipole other) {
     return Circle(vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, -other.g1.x) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, -other.g1.y) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, -other.g1.z) + vec4(self.g1.x) * vec4(other.g1.x, other.g1.y, other.g1.z, 0.0), vec3(0.0) - self.g0 * vec3(other.g2.w) + vec3(self.g1.x) * vec3(other.g2.x, other.g2.y, other.g2.z) + vec3(self.g1.y) * other.g0, vec3(self.g0.x) * vec3(0.0, -other.g2.z, other.g2.y) + vec3(self.g0.y) * vec3(other.g2.z, 0.0, -other.g2.x) + vec3(self.g0.z) * vec3(-other.g2.y, other.g2.x, 0.0) + vec3(self.g1.y) * other.g1);
 }
 
-AntiScalar radial_horizon_wedge(Radial self, Horizon other) {
+AntiScalar round_point_horizon_wedge(RoundPoint self, Horizon other) {
     return AntiScalar(self.g1.x * other.g0);
 }
 
-Plane radial_line_wedge(Radial self, Line other) {
+Point round_point_infinity_wedge(RoundPoint self, Infinity other) {
+    return Point(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g0, other.g0, other.g0, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g0));
+}
+
+Plane round_point_line_wedge(RoundPoint self, Line other) {
     return Plane(vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, -other.g1.x) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, -other.g1.y) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, -other.g1.z) + vec4(self.g1.x) * vec4(other.g1.x, other.g1.y, other.g1.z, 0.0));
 }
 
-Plane radial_line_at_infinity_wedge(Radial self, LineAtInfinity other) {
+Plane round_point_line_at_infinity_wedge(RoundPoint self, LineAtInfinity other) {
     return Plane(vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, -other.g0.z) + vec4(self.g1.x) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0));
 }
 
-PlaneAtOrigin radial_line_at_origin_wedge(Radial self, LineAtOrigin other) {
+PlaneAtOrigin round_point_line_at_origin_wedge(RoundPoint self, LineAtOrigin other) {
     return PlaneAtOrigin(vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0));
 }
 
-Radial radial_magnitude_wedge(Radial self, Magnitude other) {
-    return Radial(self.g0 * vec3(other.g0.x), self.g1 * vec2(other.g0.x));
+RoundPoint round_point_magnitude_wedge(RoundPoint self, Magnitude other) {
+    return RoundPoint(self.g0 * vec3(other.g0.x), self.g1 * vec2(other.g0.x));
 }
 
-MultiVector radial_multi_vector_wedge(Radial self, MultiVector other) {
+MultiVector round_point_multi_vector_wedge(RoundPoint self, MultiVector other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g9.x) + vec2(self.g0.y) * vec2(0.0, other.g9.y) + vec2(self.g0.z) * vec2(0.0, other.g9.z) + vec2(self.g1.x) * vec2(0.0, other.g10.y) + vec2(self.g1.y) * vec2(0.0, other.g10.x), self.g0 * vec3(other.g0.x), self.g1 * vec2(other.g0.x), vec3(0.0) - self.g0 * vec3(other.g2.x) + vec3(self.g1.x) * other.g1, vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g2.y, other.g2.y, other.g2.y, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g2.y) - vec4(self.g1.y) * vec4(other.g1.x, other.g1.y, other.g1.z, other.g2.x), vec4(self.g0.x) * vec4(0.0, other.g3.z, -other.g3.y, -other.g4.x) + vec4(self.g0.y) * vec4(-other.g3.z, 0.0, other.g3.x, -other.g4.y) + vec4(self.g0.z) * vec4(other.g3.y, -other.g3.x, 0.0, -other.g4.z) + vec4(self.g1.x) * vec4(other.g4.x, other.g4.y, other.g4.z, 0.0), vec3(0.0) - self.g0 * vec3(other.g5.w) + vec3(self.g1.x) * vec3(other.g5.x, other.g5.y, other.g5.z) + vec3(self.g1.y) * other.g3, vec3(self.g0.x) * vec3(0.0, -other.g5.z, other.g5.y) + vec3(self.g0.y) * vec3(other.g5.z, 0.0, -other.g5.x) + vec3(self.g0.z) * vec3(-other.g5.y, other.g5.x, 0.0) + vec3(self.g1.y) * other.g4, vec3(self.g0.x) * vec3(0.0, other.g7.z, -other.g7.y) + vec3(self.g0.y) * vec3(-other.g7.z, 0.0, other.g7.x) + vec3(self.g0.z) * vec3(other.g7.y, -other.g7.x, 0.0) + vec3(self.g1.x) * other.g8 - vec3(self.g1.y) * vec3(other.g6.x, other.g6.y, other.g6.z), vec2(self.g0.x) * vec2(other.g6.x, -other.g8.x) + vec2(self.g0.y) * vec2(other.g6.y, -other.g8.y) + vec2(self.g0.z) * vec2(other.g6.z, -other.g8.z) + self.g1 * vec2(other.g6.w));
 }
 
-LineAtOrigin radial_origin_wedge(Radial self, Origin other) {
+LineAtOrigin round_point_origin_wedge(RoundPoint self, Origin other) {
     return LineAtOrigin(vec3(0.0) - self.g0 * vec3(other.g0));
 }
 
-AntiScalar radial_plane_wedge(Radial self, Plane other) {
+AntiScalar round_point_plane_wedge(RoundPoint self, Plane other) {
     return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g1.x * other.g0.w);
 }
 
-AntiScalar radial_plane_at_origin_wedge(Radial self, PlaneAtOrigin other) {
+AntiScalar round_point_plane_at_origin_wedge(RoundPoint self, PlaneAtOrigin other) {
     return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
 }
 
-Line radial_point_wedge(Radial self, Point other) {
+Line round_point_point_wedge(RoundPoint self, Point other) {
     return Line(vec3(0.0) - self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0));
 }
 
-Line radial_point_at_infinity_wedge(Radial self, PointAtInfinity other) {
+Line round_point_point_at_infinity_wedge(RoundPoint self, PointAtInfinity other) {
     return Line(vec3(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0));
 }
 
-Dipole radial_radial_wedge(Radial self, Radial other) {
+Dipole round_point_round_point_wedge(RoundPoint self, RoundPoint other) {
     return Dipole(vec3(0.0) - self.g0 * vec3(other.g1.x) + vec3(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g1.y) - vec4(self.g1.y) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x));
 }
 
-Radial radial_scalar_wedge(Radial self, Scalar other) {
-    return Radial(self.g0 * vec3(other.g0), self.g1 * vec2(other.g0));
+RoundPoint round_point_scalar_wedge(RoundPoint self, Scalar other) {
+    return RoundPoint(self.g0 * vec3(other.g0), self.g1 * vec2(other.g0));
 }
 
-AntiScalar radial_sphere_wedge(Radial self, Sphere other) {
+AntiScalar round_point_sphere_wedge(RoundPoint self, Sphere other) {
     return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g1.x * other.g1.y + self.g1.y * other.g1.x);
 }
 
@@ -8462,6 +9151,10 @@ Dipole scalar_dipole_wedge(Scalar self, Dipole other) {
 
 Horizon scalar_horizon_wedge(Scalar self, Horizon other) {
     return Horizon(self.g0 * other.g0);
+}
+
+Infinity scalar_infinity_wedge(Scalar self, Infinity other) {
+    return Infinity(self.g0 * other.g0);
 }
 
 Line scalar_line_wedge(Scalar self, Line other) {
@@ -8504,8 +9197,8 @@ PointAtInfinity scalar_point_at_infinity_wedge(Scalar self, PointAtInfinity othe
     return PointAtInfinity(vec3(self.g0) * other.g0);
 }
 
-Radial scalar_radial_wedge(Scalar self, Radial other) {
-    return Radial(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
+RoundPoint scalar_round_point_wedge(Scalar self, RoundPoint other) {
+    return RoundPoint(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
 }
 
 Scalar scalar_scalar_wedge(Scalar self, Scalar other) {
@@ -8516,6 +9209,10 @@ Sphere scalar_sphere_wedge(Scalar self, Sphere other) {
     return Sphere(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
 }
 
+AntiScalar sphere_infinity_wedge(Sphere self, Infinity other) {
+    return AntiScalar(self.g1.x * other.g0);
+}
+
 Sphere sphere_magnitude_wedge(Sphere self, Magnitude other) {
     return Sphere(self.g0 * vec3(other.g0.x), self.g1 * vec2(other.g0.x));
 }
@@ -8524,7 +9221,7 @@ MultiVector sphere_multi_vector_wedge(Sphere self, MultiVector other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z) + vec2(self.g1.x) * vec2(0.0, other.g2.y) + vec2(self.g1.y) * vec2(0.0, other.g2.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), self.g0 * vec3(other.g0.x), self.g1 * vec2(other.g0.x));
 }
 
-AntiScalar sphere_radial_wedge(Sphere self, Radial other) {
+AntiScalar sphere_round_point_wedge(Sphere self, RoundPoint other) {
     return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g1.x * other.g1.y + self.g1.y * other.g1.x);
 }
 
@@ -8590,6 +9287,14 @@ AntiScalar horizon_multi_vector_anti_dot(Horizon self, MultiVector other) {
 
 AntiScalar horizon_sphere_anti_dot(Horizon self, Sphere other) {
     return AntiScalar(0.0 - self.g0 * other.g1.x);
+}
+
+AntiScalar infinity_multi_vector_anti_dot(Infinity self, MultiVector other) {
+    return AntiScalar(self.g0 * other.g2.x);
+}
+
+AntiScalar infinity_round_point_anti_dot(Infinity self, RoundPoint other) {
+    return AntiScalar(self.g0 * other.g1.x);
 }
 
 AntiScalar line_circle_anti_dot(Line self, Circle other) {
@@ -8664,6 +9369,10 @@ AntiScalar multi_vector_horizon_anti_dot(MultiVector self, Horizon other) {
     return AntiScalar(0.0 - self.g10.x * other.g0);
 }
 
+AntiScalar multi_vector_infinity_anti_dot(MultiVector self, Infinity other) {
+    return AntiScalar(self.g2.x * other.g0);
+}
+
 AntiScalar multi_vector_line_anti_dot(MultiVector self, Line other) {
     return AntiScalar(0.0 - self.g6.x * other.g1.x - self.g6.y * other.g1.y - self.g6.z * other.g1.z - self.g7.x * other.g0.x - self.g7.y * other.g0.y - self.g7.z * other.g0.z);
 }
@@ -8704,7 +9413,7 @@ AntiScalar multi_vector_point_at_infinity_anti_dot(MultiVector self, PointAtInfi
     return AntiScalar(self.g3.x * other.g0.x + self.g3.y * other.g0.y + self.g3.z * other.g0.z);
 }
 
-AntiScalar multi_vector_radial_anti_dot(MultiVector self, Radial other) {
+AntiScalar multi_vector_round_point_anti_dot(MultiVector self, RoundPoint other) {
     return AntiScalar(0.0 - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z + self.g2.x * other.g1.y + self.g2.y * other.g1.x);
 }
 
@@ -8788,11 +9497,15 @@ AntiScalar point_at_infinity_multi_vector_anti_dot(PointAtInfinity self, MultiVe
     return AntiScalar(self.g0.x * other.g3.x + self.g0.y * other.g3.y + self.g0.z * other.g3.z);
 }
 
-AntiScalar radial_multi_vector_anti_dot(Radial self, MultiVector other) {
+AntiScalar round_point_infinity_anti_dot(RoundPoint self, Infinity other) {
+    return AntiScalar(self.g1.x * other.g0);
+}
+
+AntiScalar round_point_multi_vector_anti_dot(RoundPoint self, MultiVector other) {
     return AntiScalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z + self.g1.x * other.g2.y + self.g1.y * other.g2.x);
 }
 
-AntiScalar radial_radial_anti_dot(Radial self, Radial other) {
+AntiScalar round_point_round_point_anti_dot(RoundPoint self, RoundPoint other) {
     return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z + self.g1.x * other.g1.y + self.g1.y * other.g1.x);
 }
 
@@ -8888,6 +9601,14 @@ Scalar horizon_sphere_dot(Horizon self, Sphere other) {
     return Scalar(self.g0 * other.g1.x);
 }
 
+Scalar infinity_multi_vector_dot(Infinity self, MultiVector other) {
+    return Scalar(0.0 - self.g0 * other.g2.x);
+}
+
+Scalar infinity_round_point_dot(Infinity self, RoundPoint other) {
+    return Scalar(0.0 - self.g0 * other.g1.x);
+}
+
 Scalar line_circle_dot(Line self, Circle other) {
     return Scalar(self.g0.x * other.g1.x + self.g0.y * other.g1.y + self.g0.z * other.g1.z + self.g1.x * other.g0.x + self.g1.y * other.g0.y + self.g1.z * other.g0.z);
 }
@@ -8960,6 +9681,10 @@ Scalar multi_vector_horizon_dot(MultiVector self, Horizon other) {
     return Scalar(self.g10.x * other.g0);
 }
 
+Scalar multi_vector_infinity_dot(MultiVector self, Infinity other) {
+    return Scalar(0.0 - self.g2.x * other.g0);
+}
+
 Scalar multi_vector_line_dot(MultiVector self, Line other) {
     return Scalar(self.g6.x * other.g1.x + self.g6.y * other.g1.y + self.g6.z * other.g1.z + self.g7.x * other.g0.x + self.g7.y * other.g0.y + self.g7.z * other.g0.z);
 }
@@ -9000,7 +9725,7 @@ Scalar multi_vector_point_at_infinity_dot(MultiVector self, PointAtInfinity othe
     return Scalar(0.0 - self.g3.x * other.g0.x - self.g3.y * other.g0.y - self.g3.z * other.g0.z);
 }
 
-Scalar multi_vector_radial_dot(MultiVector self, Radial other) {
+Scalar multi_vector_round_point_dot(MultiVector self, RoundPoint other) {
     return Scalar(self.g1.x * other.g0.x + self.g1.y * other.g0.y + self.g1.z * other.g0.z - self.g2.x * other.g1.y - self.g2.y * other.g1.x);
 }
 
@@ -9084,11 +9809,15 @@ Scalar point_at_infinity_multi_vector_dot(PointAtInfinity self, MultiVector othe
     return Scalar(0.0 - self.g0.x * other.g3.x - self.g0.y * other.g3.y - self.g0.z * other.g3.z);
 }
 
-Scalar radial_multi_vector_dot(Radial self, MultiVector other) {
+Scalar round_point_infinity_dot(RoundPoint self, Infinity other) {
+    return Scalar(0.0 - self.g1.x * other.g0);
+}
+
+Scalar round_point_multi_vector_dot(RoundPoint self, MultiVector other) {
     return Scalar(self.g0.x * other.g1.x + self.g0.y * other.g1.y + self.g0.z * other.g1.z - self.g1.x * other.g2.y - self.g1.y * other.g2.x);
 }
 
-Scalar radial_radial_dot(Radial self, Radial other) {
+Scalar round_point_round_point_dot(RoundPoint self, RoundPoint other) {
     return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z - self.g1.x * other.g1.y - self.g1.y * other.g1.x);
 }
 
@@ -9136,6 +9865,10 @@ Horizon horizon_bulk(Horizon self) {
     return self;
 }
 
+Infinity infinity_bulk(Infinity self) {
+    return self;
+}
+
 LineAtInfinity line_bulk(Line self) {
     return LineAtInfinity(self.g1);
 }
@@ -9160,8 +9893,8 @@ PointAtInfinity point_at_infinity_bulk(PointAtInfinity self) {
     return self;
 }
 
-Radial radial_bulk(Radial self) {
-    return Radial(vec3(0.0, 0.0, 0.0), self.g1 * vec2(0.0, 1.0));
+Infinity round_point_bulk(RoundPoint self) {
+    return Infinity(self.g1.y);
 }
 
 Horizon sphere_bulk(Sphere self) {
@@ -9184,8 +9917,8 @@ MultiVector multi_vector_round_bulk(MultiVector self) {
     return MultiVector(self.g0 * vec2(1.0, 0.0), self.g1, vec2(0.0, 0.0), vec3(0.0, 0.0, 0.0), self.g4, vec4(0.0, 0.0, 0.0, 0.0), self.g6 * vec4(0.0, 0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.0, 0.0, 0.0), vec2(0.0, 0.0));
 }
 
-Radial radial_round_bulk(Radial self) {
-    return Radial(self.g0, vec2(0.0, 0.0));
+RoundPoint round_point_round_bulk(RoundPoint self) {
+    return RoundPoint(self.g0, vec2(0.0, 0.0));
 }
 
 Scalar scalar_round_bulk(Scalar self) {
@@ -9204,8 +9937,8 @@ MultiVector multi_vector_round_weight(MultiVector self) {
     return MultiVector(vec2(0.0, 0.0), vec3(0.0, 0.0, 0.0), self.g2 * vec2(1.0, 0.0), self.g3, vec3(0.0, 0.0, 0.0), vec4(0.0, 0.0, 0.0, 0.0), self.g6 * vec4(1.0, 1.0, 1.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.0, 0.0, 0.0), self.g10 * vec2(1.0, 0.0));
 }
 
-Radial radial_round_weight(Radial self) {
-    return Radial(vec3(0.0, 0.0, 0.0), self.g1 * vec2(1.0, 0.0));
+RoundPoint round_point_round_weight(RoundPoint self) {
+    return RoundPoint(vec3(0.0, 0.0, 0.0), self.g1 * vec2(1.0, 0.0));
 }
 
 Sphere sphere_round_weight(Sphere self) {
@@ -9276,6 +10009,10 @@ Horizon horizon_anti_reversal(Horizon self) {
     return Horizon(-self.g0);
 }
 
+Infinity infinity_anti_reversal(Infinity self) {
+    return Infinity(self.g0);
+}
+
 Line line_anti_reversal(Line self) {
     return Line(self.g0 * vec3(1.0, -1.0, 1.0), self.g1 * vec3(-1.0, 1.0, -1.0));
 }
@@ -9316,8 +10053,8 @@ PointAtInfinity point_at_infinity_anti_reversal(PointAtInfinity self) {
     return PointAtInfinity(self.g0 * vec3(-1.0));
 }
 
-Radial radial_anti_reversal(Radial self) {
-    return Radial(self.g0, self.g1);
+RoundPoint round_point_anti_reversal(RoundPoint self) {
+    return RoundPoint(self.g0, self.g1);
 }
 
 Scalar scalar_anti_reversal(Scalar self) {
@@ -9342,6 +10079,10 @@ Dipole dipole_automorphism(Dipole self) {
 
 Horizon horizon_automorphism(Horizon self) {
     return Horizon(-self.g0);
+}
+
+Infinity infinity_automorphism(Infinity self) {
+    return Infinity(-self.g0);
 }
 
 Line line_automorphism(Line self) {
@@ -9384,8 +10125,8 @@ PointAtInfinity point_at_infinity_automorphism(PointAtInfinity self) {
     return PointAtInfinity(self.g0);
 }
 
-Radial radial_automorphism(Radial self) {
-    return Radial(self.g0 * vec3(-1.0), self.g1 * vec2(-1.0));
+RoundPoint round_point_automorphism(RoundPoint self) {
+    return RoundPoint(self.g0 * vec3(-1.0), self.g1 * vec2(-1.0));
 }
 
 Scalar scalar_automorphism(Scalar self) {
@@ -9410,6 +10151,10 @@ Dipole dipole_conjugation(Dipole self) {
 
 Horizon horizon_conjugation(Horizon self) {
     return Horizon(-self.g0);
+}
+
+Infinity infinity_conjugation(Infinity self) {
+    return Infinity(-self.g0);
 }
 
 Line line_conjugation(Line self) {
@@ -9452,8 +10197,8 @@ PointAtInfinity point_at_infinity_conjugation(PointAtInfinity self) {
     return PointAtInfinity(self.g0 * vec3(-1.0));
 }
 
-Radial radial_conjugation(Radial self) {
-    return Radial(self.g0 * vec3(-1.0), self.g1 * vec2(-1.0));
+RoundPoint round_point_conjugation(RoundPoint self) {
+    return RoundPoint(self.g0 * vec3(-1.0), self.g1 * vec2(-1.0));
 }
 
 Scalar scalar_conjugation(Scalar self) {
@@ -9478,6 +10223,10 @@ Dipole dipole_double_complement(Dipole self) {
 
 Horizon horizon_double_complement(Horizon self) {
     return Horizon(self.g0);
+}
+
+Infinity infinity_double_complement(Infinity self) {
+    return Infinity(self.g0);
 }
 
 Line line_double_complement(Line self) {
@@ -9520,8 +10269,8 @@ PointAtInfinity point_at_infinity_double_complement(PointAtInfinity self) {
     return PointAtInfinity(self.g0);
 }
 
-Radial radial_double_complement(Radial self) {
-    return Radial(self.g0, self.g1);
+RoundPoint round_point_double_complement(RoundPoint self) {
+    return RoundPoint(self.g0, self.g1);
 }
 
 Scalar scalar_double_complement(Scalar self) {
@@ -9544,6 +10293,14 @@ Circle dipole_dual(Dipole self) {
     return Circle(vec4(-self.g0.x, -self.g0.y, -self.g0.z, self.g2.w), self.g1 * vec3(-1.0), vec3(-self.g2.x, self.g2.y, self.g2.z));
 }
 
+Infinity horizon_dual(Horizon self) {
+    return Infinity(self.g0);
+}
+
+Horizon infinity_dual(Infinity self) {
+    return Horizon(-self.g0);
+}
+
 PointAtInfinity line_at_infinity_dual(LineAtInfinity self) {
     return PointAtInfinity(self.g0);
 }
@@ -9560,7 +10317,7 @@ LineAtInfinity point_at_infinity_dual(PointAtInfinity self) {
     return LineAtInfinity(self.g0 * vec3(-1.0));
 }
 
-Sphere radial_dual(Radial self) {
+Sphere round_point_dual(RoundPoint self) {
     return Sphere(self.g0, self.g1 * vec2(-1.0));
 }
 
@@ -9568,8 +10325,8 @@ AntiScalar scalar_dual(Scalar self) {
     return AntiScalar(self.g0);
 }
 
-Radial sphere_dual(Sphere self) {
-    return Radial(self.g0 * vec3(-1.0), self.g1);
+RoundPoint sphere_dual(Sphere self) {
+    return RoundPoint(self.g0 * vec3(-1.0), self.g1);
 }
 
 Scalar anti_scalar_left_complement(AntiScalar self) {
@@ -9592,7 +10349,7 @@ MultiVector multi_vector_left_complement(MultiVector self) {
     return MultiVector(self.g0.yx, self.g9, self.g10.yx, self.g8 * vec3(-1.0), self.g7 * vec3(-1.0), self.g6 * vec4(-1.0), self.g5 * vec4(-1.0), self.g4 * vec3(-1.0), self.g3 * vec3(-1.0), self.g1, self.g2.yx);
 }
 
-Sphere radial_left_complement(Radial self) {
+Sphere round_point_left_complement(RoundPoint self) {
     return Sphere(self.g0, self.g1.yx);
 }
 
@@ -9600,8 +10357,8 @@ AntiScalar scalar_left_complement(Scalar self) {
     return AntiScalar(self.g0);
 }
 
-Radial sphere_left_complement(Sphere self) {
-    return Radial(self.g0, self.g1.yx);
+RoundPoint sphere_left_complement(Sphere self) {
+    return RoundPoint(self.g0, self.g1.yx);
 }
 
 AntiScalar anti_scalar_reversal(AntiScalar self) {
@@ -9618,6 +10375,10 @@ Dipole dipole_reversal(Dipole self) {
 
 Horizon horizon_reversal(Horizon self) {
     return Horizon(-self.g0);
+}
+
+Infinity infinity_reversal(Infinity self) {
+    return Infinity(self.g0);
 }
 
 Line line_reversal(Line self) {
@@ -9660,8 +10421,8 @@ PointAtInfinity point_at_infinity_reversal(PointAtInfinity self) {
     return PointAtInfinity(self.g0 * vec3(-1.0));
 }
 
-Radial radial_reversal(Radial self) {
-    return Radial(self.g0, self.g1);
+RoundPoint round_point_reversal(RoundPoint self) {
+    return RoundPoint(self.g0, self.g1);
 }
 
 Scalar scalar_reversal(Scalar self) {
@@ -9692,7 +10453,7 @@ MultiVector multi_vector_right_complement(MultiVector self) {
     return MultiVector(self.g0.yx, self.g9, self.g10.yx, self.g8 * vec3(-1.0), self.g7 * vec3(-1.0), self.g6 * vec4(-1.0), self.g5 * vec4(-1.0), self.g4 * vec3(-1.0), self.g3 * vec3(-1.0), self.g1, self.g2.yx);
 }
 
-Sphere radial_right_complement(Radial self) {
+Sphere round_point_right_complement(RoundPoint self) {
     return Sphere(self.g0, self.g1.yx);
 }
 
@@ -9700,16 +10461,12 @@ AntiScalar scalar_right_complement(Scalar self) {
     return AntiScalar(self.g0);
 }
 
-Radial sphere_right_complement(Sphere self) {
-    return Radial(self.g0, self.g1.yx);
+RoundPoint sphere_right_complement(Sphere self) {
+    return RoundPoint(self.g0, self.g1.yx);
 }
 
 MultiVector multi_vector_left_bulk_dual(MultiVector self) {
     return multi_vector_left_complement(multi_vector_bulk(self));
-}
-
-Sphere radial_left_bulk_dual(Radial self) {
-    return radial_left_complement(radial_bulk(self));
 }
 
 Scalar anti_scalar_left_weight_dual(AntiScalar self) {
@@ -9726,10 +10483,6 @@ MultiVector multi_vector_left_weight_dual(MultiVector self) {
 
 MultiVector multi_vector_right_bulk_dual(MultiVector self) {
     return multi_vector_right_complement(multi_vector_bulk(self));
-}
-
-Sphere radial_right_bulk_dual(Radial self) {
-    return radial_right_complement(radial_bulk(self));
 }
 
 Scalar anti_scalar_right_weight_dual(AntiScalar self) {
@@ -9758,6 +10511,10 @@ int dipole_anti_grade(Dipole self) {
 
 int horizon_anti_grade(Horizon self) {
     return 1;
+}
+
+int infinity_anti_grade(Infinity self) {
+    return 4;
 }
 
 int line_anti_grade(Line self) {
@@ -9792,7 +10549,7 @@ int point_at_infinity_anti_grade(PointAtInfinity self) {
     return 3;
 }
 
-int radial_anti_grade(Radial self) {
+int round_point_anti_grade(RoundPoint self) {
     return 4;
 }
 
@@ -9818,6 +10575,10 @@ int dipole_grade(Dipole self) {
 
 int horizon_grade(Horizon self) {
     return 4;
+}
+
+int infinity_grade(Infinity self) {
+    return 1;
 }
 
 int line_grade(Line self) {
@@ -9852,7 +10613,7 @@ int point_at_infinity_grade(PointAtInfinity self) {
     return 2;
 }
 
-int radial_grade(Radial self) {
+int round_point_grade(RoundPoint self) {
     return 1;
 }
 
@@ -9872,7 +10633,7 @@ Dipole circle_attitude(Circle self) {
     return circle_horizon_anti_wedge(self, horizon_one());
 }
 
-Radial dipole_attitude(Dipole self) {
+RoundPoint dipole_attitude(Dipole self) {
     return dipole_horizon_anti_wedge(self, horizon_one());
 }
 
@@ -9892,7 +10653,7 @@ MultiVector multi_vector_attitude(MultiVector self) {
     return multi_vector_horizon_anti_wedge(self, horizon_one());
 }
 
-Radial origin_attitude(Origin self) {
+Infinity origin_attitude(Origin self) {
     return origin_horizon_anti_wedge(self, horizon_one());
 }
 
@@ -9904,16 +10665,44 @@ LineAtInfinity plane_at_origin_attitude(PlaneAtOrigin self) {
     return plane_at_origin_horizon_anti_wedge(self, horizon_one());
 }
 
-Radial point_attitude(Point self) {
+Infinity point_attitude(Point self) {
     return point_horizon_anti_wedge(self, horizon_one());
 }
 
-Scalar radial_attitude(Radial self) {
-    return radial_horizon_anti_wedge(self, horizon_one());
+Scalar round_point_attitude(RoundPoint self) {
+    return round_point_horizon_anti_wedge(self, horizon_one());
 }
 
 Circle sphere_attitude(Sphere self) {
     return sphere_horizon_anti_wedge(self, horizon_one());
+}
+
+Plane circle_carrier(Circle self) {
+    return circle_infinity_wedge(self, Infinity(1.0));
+}
+
+Line dipole_carrier(Dipole self) {
+    return dipole_infinity_wedge(self, Infinity(1.0));
+}
+
+Infinity magnitude_carrier(Magnitude self) {
+    return magnitude_infinity_wedge(self, Infinity(1.0));
+}
+
+MultiVector multi_vector_carrier(MultiVector self) {
+    return multi_vector_infinity_wedge(self, Infinity(1.0));
+}
+
+Point round_point_carrier(RoundPoint self) {
+    return round_point_infinity_wedge(self, Infinity(1.0));
+}
+
+Infinity scalar_carrier(Scalar self) {
+    return scalar_infinity_wedge(self, Infinity(1.0));
+}
+
+AntiScalar sphere_carrier(Sphere self) {
+    return sphere_infinity_wedge(self, Infinity(1.0));
 }
 
 AntiScalar anti_scalar_sqrt(AntiScalar self) {
@@ -9968,8 +10757,8 @@ Scalar point_bulk_norm(Point self) {
     return scalar_sqrt(point_point_dot(self, self));
 }
 
-Scalar radial_bulk_norm(Radial self) {
-    return scalar_sqrt(radial_radial_dot(self, self));
+Scalar round_point_bulk_norm(RoundPoint self) {
+    return scalar_sqrt(round_point_round_point_dot(self, self));
 }
 
 Scalar scalar_bulk_norm(Scalar self) {
@@ -10024,8 +10813,8 @@ Scalar point_bulk_norm_squared(Point self) {
     return point_point_dot(self, self);
 }
 
-Scalar radial_bulk_norm_squared(Radial self) {
-    return radial_radial_dot(self, self);
+Scalar round_point_bulk_norm_squared(RoundPoint self) {
+    return round_point_round_point_dot(self, self);
 }
 
 Scalar scalar_bulk_norm_squared(Scalar self) {
@@ -10080,8 +10869,8 @@ AntiScalar point_weight_norm(Point self) {
     return anti_scalar_sqrt(point_point_anti_dot(self, self));
 }
 
-AntiScalar radial_weight_norm(Radial self) {
-    return anti_scalar_sqrt(radial_radial_anti_dot(self, self));
+AntiScalar round_point_weight_norm(RoundPoint self) {
+    return anti_scalar_sqrt(round_point_round_point_anti_dot(self, self));
 }
 
 AntiScalar scalar_weight_norm(Scalar self) {
@@ -10136,8 +10925,8 @@ AntiScalar point_weight_norm_squared(Point self) {
     return point_point_anti_dot(self, self);
 }
 
-AntiScalar radial_weight_norm_squared(Radial self) {
-    return radial_radial_anti_dot(self, self);
+AntiScalar round_point_weight_norm_squared(RoundPoint self) {
+    return round_point_round_point_anti_dot(self, self);
 }
 
 AntiScalar scalar_weight_norm_squared(Scalar self) {
@@ -10192,8 +10981,8 @@ Magnitude point_geometric_norm(Point self) {
     return scalar_anti_scalar_add(point_bulk_norm(self), point_weight_norm(self));
 }
 
-Magnitude radial_geometric_norm(Radial self) {
-    return scalar_anti_scalar_add(radial_bulk_norm(self), radial_weight_norm(self));
+Magnitude round_point_geometric_norm(RoundPoint self) {
+    return scalar_anti_scalar_add(round_point_bulk_norm(self), round_point_weight_norm(self));
 }
 
 Magnitude scalar_geometric_norm(Scalar self) {
@@ -10248,8 +11037,8 @@ Point point_unitize(Point self) {
     return point_scalar_geometric_product(self, Scalar(1.0 / point_weight_norm(self).g0));
 }
 
-Radial radial_unitize(Radial self) {
-    return radial_scalar_geometric_product(self, Scalar(1.0 / radial_weight_norm(self).g0));
+RoundPoint round_point_unitize(RoundPoint self) {
+    return round_point_scalar_geometric_product(self, Scalar(1.0 / round_point_weight_norm(self).g0));
 }
 
 Scalar scalar_unitize(Scalar self) {
@@ -10270,6 +11059,10 @@ Dipole anti_scalar_dipole_sandwich(AntiScalar self, Dipole other) {
 
 Horizon anti_scalar_horizon_sandwich(AntiScalar self, Horizon other) {
     return horizon_anti_scalar_geometric_anti_product(anti_scalar_horizon_geometric_anti_product(self, other), anti_scalar_anti_reversal(self));
+}
+
+Infinity anti_scalar_infinity_sandwich(AntiScalar self, Infinity other) {
+    return infinity_anti_scalar_geometric_anti_product(anti_scalar_infinity_geometric_anti_product(self, other), anti_scalar_anti_reversal(self));
 }
 
 Line anti_scalar_line_sandwich(AntiScalar self, Line other) {
@@ -10308,8 +11101,8 @@ PointAtInfinity anti_scalar_point_at_infinity_sandwich(AntiScalar self, PointAtI
     return point_at_infinity_anti_scalar_geometric_anti_product(anti_scalar_point_at_infinity_geometric_anti_product(self, other), anti_scalar_anti_reversal(self));
 }
 
-Radial anti_scalar_radial_sandwich(AntiScalar self, Radial other) {
-    return radial_anti_scalar_geometric_anti_product(anti_scalar_radial_geometric_anti_product(self, other), anti_scalar_anti_reversal(self));
+RoundPoint anti_scalar_round_point_sandwich(AntiScalar self, RoundPoint other) {
+    return round_point_anti_scalar_geometric_anti_product(anti_scalar_round_point_geometric_anti_product(self, other), anti_scalar_anti_reversal(self));
 }
 
 Sphere anti_scalar_sphere_sandwich(AntiScalar self, Sphere other) {
@@ -10326,6 +11119,10 @@ Dipole circle_dipole_sandwich(Circle self, Dipole other) {
 
 Plane circle_horizon_sandwich(Circle self, Horizon other) {
     return multi_vector_plane_into(multi_vector_circle_geometric_anti_product(circle_horizon_geometric_anti_product(self, other), circle_anti_reversal(self)));
+}
+
+RoundPoint circle_infinity_sandwich(Circle self, Infinity other) {
+    return multi_vector_round_point_into(multi_vector_circle_geometric_anti_product(circle_infinity_geometric_anti_product(self, other), circle_anti_reversal(self)));
 }
 
 Line circle_line_sandwich(Circle self, Line other) {
@@ -10364,8 +11161,8 @@ Point circle_point_at_infinity_sandwich(Circle self, PointAtInfinity other) {
     return multi_vector_point_into(multi_vector_circle_geometric_anti_product(circle_point_at_infinity_geometric_anti_product(self, other), circle_anti_reversal(self)));
 }
 
-Radial circle_radial_sandwich(Circle self, Radial other) {
-    return multi_vector_radial_into(multi_vector_circle_geometric_anti_product(circle_radial_geometric_anti_product(self, other), circle_anti_reversal(self)));
+RoundPoint circle_round_point_sandwich(Circle self, RoundPoint other) {
+    return multi_vector_round_point_into(multi_vector_circle_geometric_anti_product(circle_round_point_geometric_anti_product(self, other), circle_anti_reversal(self)));
 }
 
 Sphere circle_sphere_sandwich(Circle self, Sphere other) {
@@ -10382,6 +11179,10 @@ Dipole dipole_dipole_sandwich(Dipole self, Dipole other) {
 
 Plane dipole_horizon_sandwich(Dipole self, Horizon other) {
     return multi_vector_plane_into(multi_vector_dipole_geometric_anti_product(dipole_horizon_geometric_anti_product(self, other), dipole_anti_reversal(self)));
+}
+
+RoundPoint dipole_infinity_sandwich(Dipole self, Infinity other) {
+    return multi_vector_round_point_into(multi_vector_dipole_geometric_anti_product(dipole_infinity_geometric_anti_product(self, other), dipole_anti_reversal(self)));
 }
 
 Line dipole_line_sandwich(Dipole self, Line other) {
@@ -10420,8 +11221,8 @@ Point dipole_point_at_infinity_sandwich(Dipole self, PointAtInfinity other) {
     return multi_vector_point_into(multi_vector_dipole_geometric_anti_product(dipole_point_at_infinity_geometric_anti_product(self, other), dipole_anti_reversal(self)));
 }
 
-Radial dipole_radial_sandwich(Dipole self, Radial other) {
-    return multi_vector_radial_into(multi_vector_dipole_geometric_anti_product(dipole_radial_geometric_anti_product(self, other), dipole_anti_reversal(self)));
+RoundPoint dipole_round_point_sandwich(Dipole self, RoundPoint other) {
+    return multi_vector_round_point_into(multi_vector_dipole_geometric_anti_product(dipole_round_point_geometric_anti_product(self, other), dipole_anti_reversal(self)));
 }
 
 Sphere dipole_sphere_sandwich(Dipole self, Sphere other) {
@@ -10440,20 +11241,32 @@ MultiVector horizon_multi_vector_sandwich(Horizon self, MultiVector other) {
     return multi_vector_horizon_geometric_anti_product(horizon_multi_vector_geometric_anti_product(self, other), horizon_anti_reversal(self));
 }
 
-Point horizon_origin_sandwich(Horizon self, Origin other) {
-    return multi_vector_point_into(radial_horizon_geometric_anti_product(horizon_origin_geometric_anti_product(self, other), horizon_anti_reversal(self)));
-}
-
-Point horizon_point_sandwich(Horizon self, Point other) {
-    return multi_vector_point_into(radial_horizon_geometric_anti_product(horizon_point_geometric_anti_product(self, other), horizon_anti_reversal(self)));
-}
-
-Radial horizon_radial_sandwich(Horizon self, Radial other) {
-    return multi_vector_radial_into(multi_vector_horizon_geometric_anti_product(horizon_radial_geometric_anti_product(self, other), horizon_anti_reversal(self)));
+RoundPoint horizon_round_point_sandwich(Horizon self, RoundPoint other) {
+    return multi_vector_round_point_into(multi_vector_horizon_geometric_anti_product(horizon_round_point_geometric_anti_product(self, other), horizon_anti_reversal(self)));
 }
 
 Sphere horizon_sphere_sandwich(Horizon self, Sphere other) {
     return multi_vector_sphere_into(multi_vector_horizon_geometric_anti_product(horizon_sphere_geometric_anti_product(self, other), horizon_anti_reversal(self)));
+}
+
+Circle infinity_circle_sandwich(Infinity self, Circle other) {
+    return multi_vector_circle_into(multi_vector_infinity_geometric_anti_product(infinity_circle_geometric_anti_product(self, other), infinity_anti_reversal(self)));
+}
+
+Dipole infinity_dipole_sandwich(Infinity self, Dipole other) {
+    return multi_vector_dipole_into(multi_vector_infinity_geometric_anti_product(infinity_dipole_geometric_anti_product(self, other), infinity_anti_reversal(self)));
+}
+
+MultiVector infinity_multi_vector_sandwich(Infinity self, MultiVector other) {
+    return multi_vector_infinity_geometric_anti_product(infinity_multi_vector_geometric_anti_product(self, other), infinity_anti_reversal(self));
+}
+
+RoundPoint infinity_round_point_sandwich(Infinity self, RoundPoint other) {
+    return multi_vector_round_point_into(multi_vector_infinity_geometric_anti_product(infinity_round_point_geometric_anti_product(self, other), infinity_anti_reversal(self)));
+}
+
+Sphere infinity_sphere_sandwich(Infinity self, Sphere other) {
+    return multi_vector_sphere_into(multi_vector_infinity_geometric_anti_product(infinity_sphere_geometric_anti_product(self, other), infinity_anti_reversal(self)));
 }
 
 Circle line_circle_sandwich(Line self, Circle other) {
@@ -10466,6 +11279,10 @@ Dipole line_dipole_sandwich(Line self, Dipole other) {
 
 Plane line_horizon_sandwich(Line self, Horizon other) {
     return multi_vector_plane_into(point_at_infinity_line_geometric_anti_product(line_horizon_geometric_anti_product(self, other), line_anti_reversal(self)));
+}
+
+RoundPoint line_infinity_sandwich(Line self, Infinity other) {
+    return multi_vector_round_point_into(line_at_infinity_line_geometric_anti_product(line_infinity_geometric_anti_product(self, other), line_anti_reversal(self)));
 }
 
 Line line_line_sandwich(Line self, Line other) {
@@ -10504,8 +11321,8 @@ Point line_point_at_infinity_sandwich(Line self, PointAtInfinity other) {
     return multi_vector_point_into(multi_vector_line_geometric_anti_product(line_point_at_infinity_geometric_anti_product(self, other), line_anti_reversal(self)));
 }
 
-Radial line_radial_sandwich(Line self, Radial other) {
-    return multi_vector_radial_into(multi_vector_line_geometric_anti_product(line_radial_geometric_anti_product(self, other), line_anti_reversal(self)));
+RoundPoint line_round_point_sandwich(Line self, RoundPoint other) {
+    return multi_vector_round_point_into(multi_vector_line_geometric_anti_product(line_round_point_geometric_anti_product(self, other), line_anti_reversal(self)));
 }
 
 Sphere line_sphere_sandwich(Line self, Sphere other) {
@@ -10540,8 +11357,8 @@ Plane line_at_infinity_plane_at_origin_sandwich(LineAtInfinity self, PlaneAtOrig
     return multi_vector_plane_into(multi_vector_line_at_infinity_geometric_anti_product(line_at_infinity_plane_at_origin_geometric_anti_product(self, other), line_at_infinity_anti_reversal(self)));
 }
 
-Radial line_at_infinity_radial_sandwich(LineAtInfinity self, Radial other) {
-    return multi_vector_radial_into(multi_vector_line_at_infinity_geometric_anti_product(line_at_infinity_radial_geometric_anti_product(self, other), line_at_infinity_anti_reversal(self)));
+RoundPoint line_at_infinity_round_point_sandwich(LineAtInfinity self, RoundPoint other) {
+    return multi_vector_round_point_into(multi_vector_line_at_infinity_geometric_anti_product(line_at_infinity_round_point_geometric_anti_product(self, other), line_at_infinity_anti_reversal(self)));
 }
 
 Sphere line_at_infinity_sphere_sandwich(LineAtInfinity self, Sphere other) {
@@ -10558,6 +11375,10 @@ Dipole line_at_origin_dipole_sandwich(LineAtOrigin self, Dipole other) {
 
 Plane line_at_origin_horizon_sandwich(LineAtOrigin self, Horizon other) {
     return multi_vector_plane_into(point_at_infinity_line_at_origin_geometric_anti_product(line_at_origin_horizon_geometric_anti_product(self, other), line_at_origin_anti_reversal(self)));
+}
+
+RoundPoint line_at_origin_infinity_sandwich(LineAtOrigin self, Infinity other) {
+    return multi_vector_round_point_into(line_at_infinity_line_at_origin_geometric_anti_product(line_at_origin_infinity_geometric_anti_product(self, other), line_at_origin_anti_reversal(self)));
 }
 
 Line line_at_origin_line_sandwich(LineAtOrigin self, Line other) {
@@ -10596,8 +11417,8 @@ Point line_at_origin_point_at_infinity_sandwich(LineAtOrigin self, PointAtInfini
     return multi_vector_point_into(multi_vector_line_at_origin_geometric_anti_product(line_at_origin_point_at_infinity_geometric_anti_product(self, other), line_at_origin_anti_reversal(self)));
 }
 
-Radial line_at_origin_radial_sandwich(LineAtOrigin self, Radial other) {
-    return multi_vector_radial_into(multi_vector_line_at_origin_geometric_anti_product(line_at_origin_radial_geometric_anti_product(self, other), line_at_origin_anti_reversal(self)));
+RoundPoint line_at_origin_round_point_sandwich(LineAtOrigin self, RoundPoint other) {
+    return multi_vector_round_point_into(multi_vector_line_at_origin_geometric_anti_product(line_at_origin_round_point_geometric_anti_product(self, other), line_at_origin_anti_reversal(self)));
 }
 
 Sphere line_at_origin_sphere_sandwich(LineAtOrigin self, Sphere other) {
@@ -10614,6 +11435,10 @@ Dipole magnitude_dipole_sandwich(Magnitude self, Dipole other) {
 
 Plane magnitude_horizon_sandwich(Magnitude self, Horizon other) {
     return multi_vector_plane_into(multi_vector_magnitude_geometric_anti_product(magnitude_horizon_geometric_anti_product(self, other), magnitude_anti_reversal(self)));
+}
+
+RoundPoint magnitude_infinity_sandwich(Magnitude self, Infinity other) {
+    return multi_vector_round_point_into(multi_vector_magnitude_geometric_anti_product(magnitude_infinity_geometric_anti_product(self, other), magnitude_anti_reversal(self)));
 }
 
 Line magnitude_line_sandwich(Magnitude self, Line other) {
@@ -10652,8 +11477,8 @@ Point magnitude_point_at_infinity_sandwich(Magnitude self, PointAtInfinity other
     return multi_vector_point_into(multi_vector_magnitude_geometric_anti_product(magnitude_point_at_infinity_geometric_anti_product(self, other), magnitude_anti_reversal(self)));
 }
 
-Radial magnitude_radial_sandwich(Magnitude self, Radial other) {
-    return multi_vector_radial_into(multi_vector_magnitude_geometric_anti_product(magnitude_radial_geometric_anti_product(self, other), magnitude_anti_reversal(self)));
+RoundPoint magnitude_round_point_sandwich(Magnitude self, RoundPoint other) {
+    return multi_vector_round_point_into(multi_vector_magnitude_geometric_anti_product(magnitude_round_point_geometric_anti_product(self, other), magnitude_anti_reversal(self)));
 }
 
 Sphere magnitude_sphere_sandwich(Magnitude self, Sphere other) {
@@ -10670,6 +11495,10 @@ Dipole multi_vector_dipole_sandwich(MultiVector self, Dipole other) {
 
 Plane multi_vector_horizon_sandwich(MultiVector self, Horizon other) {
     return multi_vector_plane_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_horizon_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
+}
+
+RoundPoint multi_vector_infinity_sandwich(MultiVector self, Infinity other) {
+    return multi_vector_round_point_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_infinity_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
 }
 
 Line multi_vector_line_sandwich(MultiVector self, Line other) {
@@ -10708,8 +11537,8 @@ Point multi_vector_point_at_infinity_sandwich(MultiVector self, PointAtInfinity 
     return multi_vector_point_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_point_at_infinity_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
 }
 
-Radial multi_vector_radial_sandwich(MultiVector self, Radial other) {
-    return multi_vector_radial_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_radial_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
+RoundPoint multi_vector_round_point_sandwich(MultiVector self, RoundPoint other) {
+    return multi_vector_round_point_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_round_point_geometric_anti_product(self, other), multi_vector_anti_reversal(self)));
 }
 
 Sphere multi_vector_sphere_sandwich(MultiVector self, Sphere other) {
@@ -10724,8 +11553,12 @@ Dipole origin_dipole_sandwich(Origin self, Dipole other) {
     return multi_vector_dipole_into(multi_vector_origin_geometric_anti_product(origin_dipole_geometric_anti_product(self, other), origin_anti_reversal(self)));
 }
 
-Plane origin_horizon_sandwich(Origin self, Horizon other) {
-    return multi_vector_plane_into(radial_origin_geometric_anti_product(origin_horizon_geometric_anti_product(self, other), origin_anti_reversal(self)));
+Horizon origin_horizon_sandwich(Origin self, Horizon other) {
+    return infinity_origin_geometric_anti_product(origin_horizon_geometric_anti_product(self, other), origin_anti_reversal(self));
+}
+
+Infinity origin_infinity_sandwich(Origin self, Infinity other) {
+    return horizon_origin_geometric_anti_product(origin_infinity_geometric_anti_product(self, other), origin_anti_reversal(self));
 }
 
 Line origin_line_sandwich(Origin self, Line other) {
@@ -10764,8 +11597,8 @@ PointAtInfinity origin_point_at_infinity_sandwich(Origin self, PointAtInfinity o
     return line_at_infinity_origin_geometric_anti_product(origin_point_at_infinity_geometric_anti_product(self, other), origin_anti_reversal(self));
 }
 
-Radial origin_radial_sandwich(Origin self, Radial other) {
-    return multi_vector_radial_into(multi_vector_origin_geometric_anti_product(origin_radial_geometric_anti_product(self, other), origin_anti_reversal(self)));
+RoundPoint origin_round_point_sandwich(Origin self, RoundPoint other) {
+    return multi_vector_round_point_into(multi_vector_origin_geometric_anti_product(origin_round_point_geometric_anti_product(self, other), origin_anti_reversal(self)));
 }
 
 Sphere origin_sphere_sandwich(Origin self, Sphere other) {
@@ -10782,6 +11615,10 @@ Dipole plane_dipole_sandwich(Plane self, Dipole other) {
 
 Plane plane_horizon_sandwich(Plane self, Horizon other) {
     return multi_vector_plane_into(line_at_infinity_plane_geometric_anti_product(plane_horizon_geometric_anti_product(self, other), plane_anti_reversal(self)));
+}
+
+RoundPoint plane_infinity_sandwich(Plane self, Infinity other) {
+    return multi_vector_round_point_into(point_at_infinity_plane_geometric_anti_product(plane_infinity_geometric_anti_product(self, other), plane_anti_reversal(self)));
 }
 
 Line plane_line_sandwich(Plane self, Line other) {
@@ -10820,8 +11657,8 @@ Point plane_point_at_infinity_sandwich(Plane self, PointAtInfinity other) {
     return multi_vector_point_into(multi_vector_plane_geometric_anti_product(plane_point_at_infinity_geometric_anti_product(self, other), plane_anti_reversal(self)));
 }
 
-Radial plane_radial_sandwich(Plane self, Radial other) {
-    return multi_vector_radial_into(multi_vector_plane_geometric_anti_product(plane_radial_geometric_anti_product(self, other), plane_anti_reversal(self)));
+RoundPoint plane_round_point_sandwich(Plane self, RoundPoint other) {
+    return multi_vector_round_point_into(multi_vector_plane_geometric_anti_product(plane_round_point_geometric_anti_product(self, other), plane_anti_reversal(self)));
 }
 
 Sphere plane_sphere_sandwich(Plane self, Sphere other) {
@@ -10838,6 +11675,10 @@ Dipole plane_at_origin_dipole_sandwich(PlaneAtOrigin self, Dipole other) {
 
 Plane plane_at_origin_horizon_sandwich(PlaneAtOrigin self, Horizon other) {
     return multi_vector_plane_into(line_at_infinity_plane_at_origin_geometric_anti_product(plane_at_origin_horizon_geometric_anti_product(self, other), plane_at_origin_anti_reversal(self)));
+}
+
+RoundPoint plane_at_origin_infinity_sandwich(PlaneAtOrigin self, Infinity other) {
+    return multi_vector_round_point_into(point_at_infinity_plane_at_origin_geometric_anti_product(plane_at_origin_infinity_geometric_anti_product(self, other), plane_at_origin_anti_reversal(self)));
 }
 
 Line plane_at_origin_line_sandwich(PlaneAtOrigin self, Line other) {
@@ -10876,8 +11717,8 @@ Point plane_at_origin_point_at_infinity_sandwich(PlaneAtOrigin self, PointAtInfi
     return multi_vector_point_into(multi_vector_plane_at_origin_geometric_anti_product(plane_at_origin_point_at_infinity_geometric_anti_product(self, other), plane_at_origin_anti_reversal(self)));
 }
 
-Radial plane_at_origin_radial_sandwich(PlaneAtOrigin self, Radial other) {
-    return multi_vector_radial_into(multi_vector_plane_at_origin_geometric_anti_product(plane_at_origin_radial_geometric_anti_product(self, other), plane_at_origin_anti_reversal(self)));
+RoundPoint plane_at_origin_round_point_sandwich(PlaneAtOrigin self, RoundPoint other) {
+    return multi_vector_round_point_into(multi_vector_plane_at_origin_geometric_anti_product(plane_at_origin_round_point_geometric_anti_product(self, other), plane_at_origin_anti_reversal(self)));
 }
 
 Sphere plane_at_origin_sphere_sandwich(PlaneAtOrigin self, Sphere other) {
@@ -10892,8 +11733,12 @@ Dipole point_dipole_sandwich(Point self, Dipole other) {
     return multi_vector_dipole_into(multi_vector_point_geometric_anti_product(point_dipole_geometric_anti_product(self, other), point_anti_reversal(self)));
 }
 
-Plane point_horizon_sandwich(Point self, Horizon other) {
-    return multi_vector_plane_into(radial_point_geometric_anti_product(point_horizon_geometric_anti_product(self, other), point_anti_reversal(self)));
+Horizon point_horizon_sandwich(Point self, Horizon other) {
+    return infinity_point_geometric_anti_product(point_horizon_geometric_anti_product(self, other), point_anti_reversal(self));
+}
+
+Infinity point_infinity_sandwich(Point self, Infinity other) {
+    return horizon_point_geometric_anti_product(point_infinity_geometric_anti_product(self, other), point_anti_reversal(self));
 }
 
 Line point_line_sandwich(Point self, Line other) {
@@ -10932,8 +11777,8 @@ PointAtInfinity point_point_at_infinity_sandwich(Point self, PointAtInfinity oth
     return line_at_infinity_point_geometric_anti_product(point_point_at_infinity_geometric_anti_product(self, other), point_anti_reversal(self));
 }
 
-Radial point_radial_sandwich(Point self, Radial other) {
-    return multi_vector_radial_into(multi_vector_point_geometric_anti_product(point_radial_geometric_anti_product(self, other), point_anti_reversal(self)));
+RoundPoint point_round_point_sandwich(Point self, RoundPoint other) {
+    return multi_vector_round_point_into(multi_vector_point_geometric_anti_product(point_round_point_geometric_anti_product(self, other), point_anti_reversal(self)));
 }
 
 Sphere point_sphere_sandwich(Point self, Sphere other) {
@@ -10968,68 +11813,72 @@ Plane point_at_infinity_plane_at_origin_sandwich(PointAtInfinity self, PlaneAtOr
     return multi_vector_plane_into(multi_vector_point_at_infinity_geometric_anti_product(point_at_infinity_plane_at_origin_geometric_anti_product(self, other), point_at_infinity_anti_reversal(self)));
 }
 
-Radial point_at_infinity_radial_sandwich(PointAtInfinity self, Radial other) {
-    return multi_vector_radial_into(multi_vector_point_at_infinity_geometric_anti_product(point_at_infinity_radial_geometric_anti_product(self, other), point_at_infinity_anti_reversal(self)));
+RoundPoint point_at_infinity_round_point_sandwich(PointAtInfinity self, RoundPoint other) {
+    return multi_vector_round_point_into(multi_vector_point_at_infinity_geometric_anti_product(point_at_infinity_round_point_geometric_anti_product(self, other), point_at_infinity_anti_reversal(self)));
 }
 
 Sphere point_at_infinity_sphere_sandwich(PointAtInfinity self, Sphere other) {
     return multi_vector_sphere_into(multi_vector_point_at_infinity_geometric_anti_product(point_at_infinity_sphere_geometric_anti_product(self, other), point_at_infinity_anti_reversal(self)));
 }
 
-Circle radial_circle_sandwich(Radial self, Circle other) {
-    return multi_vector_circle_into(multi_vector_radial_geometric_anti_product(radial_circle_geometric_anti_product(self, other), radial_anti_reversal(self)));
+Circle round_point_circle_sandwich(RoundPoint self, Circle other) {
+    return multi_vector_circle_into(multi_vector_round_point_geometric_anti_product(round_point_circle_geometric_anti_product(self, other), round_point_anti_reversal(self)));
 }
 
-Dipole radial_dipole_sandwich(Radial self, Dipole other) {
-    return multi_vector_dipole_into(multi_vector_radial_geometric_anti_product(radial_dipole_geometric_anti_product(self, other), radial_anti_reversal(self)));
+Dipole round_point_dipole_sandwich(RoundPoint self, Dipole other) {
+    return multi_vector_dipole_into(multi_vector_round_point_geometric_anti_product(round_point_dipole_geometric_anti_product(self, other), round_point_anti_reversal(self)));
 }
 
-Plane radial_horizon_sandwich(Radial self, Horizon other) {
-    return multi_vector_plane_into(multi_vector_radial_geometric_anti_product(radial_horizon_geometric_anti_product(self, other), radial_anti_reversal(self)));
+Plane round_point_horizon_sandwich(RoundPoint self, Horizon other) {
+    return multi_vector_plane_into(multi_vector_round_point_geometric_anti_product(round_point_horizon_geometric_anti_product(self, other), round_point_anti_reversal(self)));
 }
 
-Line radial_line_sandwich(Radial self, Line other) {
-    return multi_vector_line_into(multi_vector_radial_geometric_anti_product(radial_line_geometric_anti_product(self, other), radial_anti_reversal(self)));
+RoundPoint round_point_infinity_sandwich(RoundPoint self, Infinity other) {
+    return multi_vector_round_point_into(multi_vector_round_point_geometric_anti_product(round_point_infinity_geometric_anti_product(self, other), round_point_anti_reversal(self)));
 }
 
-Line radial_line_at_infinity_sandwich(Radial self, LineAtInfinity other) {
-    return multi_vector_line_into(multi_vector_radial_geometric_anti_product(radial_line_at_infinity_geometric_anti_product(self, other), radial_anti_reversal(self)));
+Line round_point_line_sandwich(RoundPoint self, Line other) {
+    return multi_vector_line_into(multi_vector_round_point_geometric_anti_product(round_point_line_geometric_anti_product(self, other), round_point_anti_reversal(self)));
 }
 
-Line radial_line_at_origin_sandwich(Radial self, LineAtOrigin other) {
-    return multi_vector_line_into(multi_vector_radial_geometric_anti_product(radial_line_at_origin_geometric_anti_product(self, other), radial_anti_reversal(self)));
+Line round_point_line_at_infinity_sandwich(RoundPoint self, LineAtInfinity other) {
+    return multi_vector_line_into(multi_vector_round_point_geometric_anti_product(round_point_line_at_infinity_geometric_anti_product(self, other), round_point_anti_reversal(self)));
 }
 
-MultiVector radial_multi_vector_sandwich(Radial self, MultiVector other) {
-    return multi_vector_radial_geometric_anti_product(radial_multi_vector_geometric_anti_product(self, other), radial_anti_reversal(self));
+Line round_point_line_at_origin_sandwich(RoundPoint self, LineAtOrigin other) {
+    return multi_vector_line_into(multi_vector_round_point_geometric_anti_product(round_point_line_at_origin_geometric_anti_product(self, other), round_point_anti_reversal(self)));
 }
 
-Point radial_origin_sandwich(Radial self, Origin other) {
-    return multi_vector_point_into(multi_vector_radial_geometric_anti_product(radial_origin_geometric_anti_product(self, other), radial_anti_reversal(self)));
+MultiVector round_point_multi_vector_sandwich(RoundPoint self, MultiVector other) {
+    return multi_vector_round_point_geometric_anti_product(round_point_multi_vector_geometric_anti_product(self, other), round_point_anti_reversal(self));
 }
 
-Plane radial_plane_sandwich(Radial self, Plane other) {
-    return multi_vector_plane_into(multi_vector_radial_geometric_anti_product(radial_plane_geometric_anti_product(self, other), radial_anti_reversal(self)));
+Point round_point_origin_sandwich(RoundPoint self, Origin other) {
+    return multi_vector_point_into(multi_vector_round_point_geometric_anti_product(round_point_origin_geometric_anti_product(self, other), round_point_anti_reversal(self)));
 }
 
-Plane radial_plane_at_origin_sandwich(Radial self, PlaneAtOrigin other) {
-    return multi_vector_plane_into(multi_vector_radial_geometric_anti_product(radial_plane_at_origin_geometric_anti_product(self, other), radial_anti_reversal(self)));
+Plane round_point_plane_sandwich(RoundPoint self, Plane other) {
+    return multi_vector_plane_into(multi_vector_round_point_geometric_anti_product(round_point_plane_geometric_anti_product(self, other), round_point_anti_reversal(self)));
 }
 
-Point radial_point_sandwich(Radial self, Point other) {
-    return multi_vector_point_into(multi_vector_radial_geometric_anti_product(radial_point_geometric_anti_product(self, other), radial_anti_reversal(self)));
+Plane round_point_plane_at_origin_sandwich(RoundPoint self, PlaneAtOrigin other) {
+    return multi_vector_plane_into(multi_vector_round_point_geometric_anti_product(round_point_plane_at_origin_geometric_anti_product(self, other), round_point_anti_reversal(self)));
 }
 
-Point radial_point_at_infinity_sandwich(Radial self, PointAtInfinity other) {
-    return multi_vector_point_into(multi_vector_radial_geometric_anti_product(radial_point_at_infinity_geometric_anti_product(self, other), radial_anti_reversal(self)));
+Point round_point_point_sandwich(RoundPoint self, Point other) {
+    return multi_vector_point_into(multi_vector_round_point_geometric_anti_product(round_point_point_geometric_anti_product(self, other), round_point_anti_reversal(self)));
 }
 
-Radial radial_radial_sandwich(Radial self, Radial other) {
-    return multi_vector_radial_into(multi_vector_radial_geometric_anti_product(radial_radial_geometric_anti_product(self, other), radial_anti_reversal(self)));
+Point round_point_point_at_infinity_sandwich(RoundPoint self, PointAtInfinity other) {
+    return multi_vector_point_into(multi_vector_round_point_geometric_anti_product(round_point_point_at_infinity_geometric_anti_product(self, other), round_point_anti_reversal(self)));
 }
 
-Sphere radial_sphere_sandwich(Radial self, Sphere other) {
-    return multi_vector_sphere_into(multi_vector_radial_geometric_anti_product(radial_sphere_geometric_anti_product(self, other), radial_anti_reversal(self)));
+RoundPoint round_point_round_point_sandwich(RoundPoint self, RoundPoint other) {
+    return multi_vector_round_point_into(multi_vector_round_point_geometric_anti_product(round_point_round_point_geometric_anti_product(self, other), round_point_anti_reversal(self)));
+}
+
+Sphere round_point_sphere_sandwich(RoundPoint self, Sphere other) {
+    return multi_vector_sphere_into(multi_vector_round_point_geometric_anti_product(round_point_sphere_geometric_anti_product(self, other), round_point_anti_reversal(self)));
 }
 
 Circle scalar_circle_sandwich(Scalar self, Circle other) {
@@ -11040,8 +11889,12 @@ Dipole scalar_dipole_sandwich(Scalar self, Dipole other) {
     return circle_scalar_geometric_anti_product(scalar_dipole_geometric_anti_product(self, other), scalar_anti_reversal(self));
 }
 
-Plane scalar_horizon_sandwich(Scalar self, Horizon other) {
-    return sphere_plane_into(radial_scalar_geometric_anti_product(scalar_horizon_geometric_anti_product(self, other), scalar_anti_reversal(self)));
+Horizon scalar_horizon_sandwich(Scalar self, Horizon other) {
+    return infinity_scalar_geometric_anti_product(scalar_horizon_geometric_anti_product(self, other), scalar_anti_reversal(self));
+}
+
+Infinity scalar_infinity_sandwich(Scalar self, Infinity other) {
+    return horizon_scalar_geometric_anti_product(scalar_infinity_geometric_anti_product(self, other), scalar_anti_reversal(self));
 }
 
 Line scalar_line_sandwich(Scalar self, Line other) {
@@ -11065,11 +11918,11 @@ Point scalar_origin_sandwich(Scalar self, Origin other) {
 }
 
 Plane scalar_plane_sandwich(Scalar self, Plane other) {
-    return sphere_plane_into(radial_scalar_geometric_anti_product(scalar_plane_geometric_anti_product(self, other), scalar_anti_reversal(self)));
+    return sphere_plane_into(round_point_scalar_geometric_anti_product(scalar_plane_geometric_anti_product(self, other), scalar_anti_reversal(self)));
 }
 
 Plane scalar_plane_at_origin_sandwich(Scalar self, PlaneAtOrigin other) {
-    return sphere_plane_into(radial_scalar_geometric_anti_product(scalar_plane_at_origin_geometric_anti_product(self, other), scalar_anti_reversal(self)));
+    return sphere_plane_into(round_point_scalar_geometric_anti_product(scalar_plane_at_origin_geometric_anti_product(self, other), scalar_anti_reversal(self)));
 }
 
 Point scalar_point_sandwich(Scalar self, Point other) {
@@ -11080,12 +11933,12 @@ PointAtInfinity scalar_point_at_infinity_sandwich(Scalar self, PointAtInfinity o
     return line_at_infinity_scalar_geometric_anti_product(scalar_point_at_infinity_geometric_anti_product(self, other), scalar_anti_reversal(self));
 }
 
-Radial scalar_radial_sandwich(Scalar self, Radial other) {
-    return sphere_scalar_geometric_anti_product(scalar_radial_geometric_anti_product(self, other), scalar_anti_reversal(self));
+RoundPoint scalar_round_point_sandwich(Scalar self, RoundPoint other) {
+    return sphere_scalar_geometric_anti_product(scalar_round_point_geometric_anti_product(self, other), scalar_anti_reversal(self));
 }
 
 Sphere scalar_sphere_sandwich(Scalar self, Sphere other) {
-    return radial_scalar_geometric_anti_product(scalar_sphere_geometric_anti_product(self, other), scalar_anti_reversal(self));
+    return round_point_scalar_geometric_anti_product(scalar_sphere_geometric_anti_product(self, other), scalar_anti_reversal(self));
 }
 
 Circle sphere_circle_sandwich(Sphere self, Circle other) {
@@ -11098,6 +11951,10 @@ Dipole sphere_dipole_sandwich(Sphere self, Dipole other) {
 
 Plane sphere_horizon_sandwich(Sphere self, Horizon other) {
     return multi_vector_plane_into(multi_vector_sphere_geometric_anti_product(sphere_horizon_geometric_anti_product(self, other), sphere_anti_reversal(self)));
+}
+
+RoundPoint sphere_infinity_sandwich(Sphere self, Infinity other) {
+    return multi_vector_round_point_into(multi_vector_sphere_geometric_anti_product(sphere_infinity_geometric_anti_product(self, other), sphere_anti_reversal(self)));
 }
 
 Line sphere_line_sandwich(Sphere self, Line other) {
@@ -11136,8 +11993,8 @@ Point sphere_point_at_infinity_sandwich(Sphere self, PointAtInfinity other) {
     return multi_vector_point_into(multi_vector_sphere_geometric_anti_product(sphere_point_at_infinity_geometric_anti_product(self, other), sphere_anti_reversal(self)));
 }
 
-Radial sphere_radial_sandwich(Sphere self, Radial other) {
-    return multi_vector_radial_into(multi_vector_sphere_geometric_anti_product(sphere_radial_geometric_anti_product(self, other), sphere_anti_reversal(self)));
+RoundPoint sphere_round_point_sandwich(Sphere self, RoundPoint other) {
+    return multi_vector_round_point_into(multi_vector_sphere_geometric_anti_product(sphere_round_point_geometric_anti_product(self, other), sphere_anti_reversal(self)));
 }
 
 Sphere sphere_sphere_sandwich(Sphere self, Sphere other) {
@@ -11152,8 +12009,12 @@ Dipole point_dipole_invert(Point self, Dipole other) {
     return point_dipole_sandwich(point_unitize(self), other);
 }
 
-Plane point_horizon_invert(Point self, Horizon other) {
+Horizon point_horizon_invert(Point self, Horizon other) {
     return point_horizon_sandwich(point_unitize(self), other);
+}
+
+Infinity point_infinity_invert(Point self, Infinity other) {
+    return point_infinity_sandwich(point_unitize(self), other);
 }
 
 Line point_line_invert(Point self, Line other) {
@@ -11192,8 +12053,8 @@ PointAtInfinity point_point_at_infinity_invert(Point self, PointAtInfinity other
     return point_point_at_infinity_sandwich(point_unitize(self), other);
 }
 
-Radial point_radial_invert(Point self, Radial other) {
-    return point_radial_sandwich(point_unitize(self), other);
+RoundPoint point_round_point_invert(Point self, RoundPoint other) {
+    return point_round_point_sandwich(point_unitize(self), other);
 }
 
 Sphere point_sphere_invert(Point self, Sphere other) {
@@ -11210,6 +12071,10 @@ Dipole plane_dipole_reflect(Plane self, Dipole other) {
 
 Plane plane_horizon_reflect(Plane self, Horizon other) {
     return plane_horizon_sandwich(plane_unitize(self), other);
+}
+
+RoundPoint plane_infinity_reflect(Plane self, Infinity other) {
+    return plane_infinity_sandwich(plane_unitize(self), other);
 }
 
 Line plane_line_reflect(Plane self, Line other) {
@@ -11248,8 +12113,8 @@ Point plane_point_at_infinity_reflect(Plane self, PointAtInfinity other) {
     return plane_point_at_infinity_sandwich(plane_unitize(self), other);
 }
 
-Radial plane_radial_reflect(Plane self, Radial other) {
-    return plane_radial_sandwich(plane_unitize(self), other);
+RoundPoint plane_round_point_reflect(Plane self, RoundPoint other) {
+    return plane_round_point_sandwich(plane_unitize(self), other);
 }
 
 Sphere plane_sphere_reflect(Plane self, Sphere other) {
@@ -11260,112 +12125,60 @@ MultiVector circle_multi_vector_bulk_contraction(Circle self, MultiVector other)
     return circle_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-Dipole circle_radial_bulk_contraction(Circle self, Radial other) {
-    return circle_sphere_anti_wedge(self, radial_right_bulk_dual(other));
-}
-
 MultiVector dipole_multi_vector_bulk_contraction(Dipole self, MultiVector other) {
     return dipole_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
-}
-
-Radial dipole_radial_bulk_contraction(Dipole self, Radial other) {
-    return dipole_sphere_anti_wedge(self, radial_right_bulk_dual(other));
 }
 
 MultiVector horizon_multi_vector_bulk_contraction(Horizon self, MultiVector other) {
     return horizon_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-Circle horizon_radial_bulk_contraction(Horizon self, Radial other) {
-    return horizon_sphere_anti_wedge(self, radial_right_bulk_dual(other));
+MultiVector infinity_multi_vector_bulk_contraction(Infinity self, MultiVector other) {
+    return infinity_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
 MultiVector line_multi_vector_bulk_contraction(Line self, MultiVector other) {
     return line_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-Dipole line_radial_bulk_contraction(Line self, Radial other) {
-    return line_sphere_anti_wedge(self, radial_right_bulk_dual(other));
-}
-
 MultiVector line_at_infinity_multi_vector_bulk_contraction(LineAtInfinity self, MultiVector other) {
     return line_at_infinity_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
-}
-
-Dipole line_at_infinity_radial_bulk_contraction(LineAtInfinity self, Radial other) {
-    return line_at_infinity_sphere_anti_wedge(self, radial_right_bulk_dual(other));
 }
 
 MultiVector line_at_origin_multi_vector_bulk_contraction(LineAtOrigin self, MultiVector other) {
     return line_at_origin_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-Dipole line_at_origin_radial_bulk_contraction(LineAtOrigin self, Radial other) {
-    return line_at_origin_sphere_anti_wedge(self, radial_right_bulk_dual(other));
-}
-
 MultiVector multi_vector_multi_vector_bulk_contraction(MultiVector self, MultiVector other) {
     return multi_vector_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
-}
-
-MultiVector multi_vector_radial_bulk_contraction(MultiVector self, Radial other) {
-    return multi_vector_sphere_anti_wedge(self, radial_right_bulk_dual(other));
 }
 
 MultiVector origin_multi_vector_bulk_contraction(Origin self, MultiVector other) {
     return origin_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-Radial origin_radial_bulk_contraction(Origin self, Radial other) {
-    return origin_sphere_anti_wedge(self, radial_right_bulk_dual(other));
-}
-
 MultiVector plane_multi_vector_bulk_contraction(Plane self, MultiVector other) {
     return plane_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
-}
-
-Circle plane_radial_bulk_contraction(Plane self, Radial other) {
-    return plane_sphere_anti_wedge(self, radial_right_bulk_dual(other));
 }
 
 MultiVector plane_at_origin_multi_vector_bulk_contraction(PlaneAtOrigin self, MultiVector other) {
     return plane_at_origin_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-Circle plane_at_origin_radial_bulk_contraction(PlaneAtOrigin self, Radial other) {
-    return plane_at_origin_sphere_anti_wedge(self, radial_right_bulk_dual(other));
-}
-
 MultiVector point_multi_vector_bulk_contraction(Point self, MultiVector other) {
     return point_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
-}
-
-Radial point_radial_bulk_contraction(Point self, Radial other) {
-    return point_sphere_anti_wedge(self, radial_right_bulk_dual(other));
 }
 
 MultiVector point_at_infinity_multi_vector_bulk_contraction(PointAtInfinity self, MultiVector other) {
     return point_at_infinity_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-Radial point_at_infinity_radial_bulk_contraction(PointAtInfinity self, Radial other) {
-    return point_at_infinity_sphere_anti_wedge(self, radial_right_bulk_dual(other));
-}
-
-MultiVector radial_multi_vector_bulk_contraction(Radial self, MultiVector other) {
-    return radial_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
-}
-
-Scalar radial_radial_bulk_contraction(Radial self, Radial other) {
-    return radial_sphere_anti_wedge(self, radial_right_bulk_dual(other));
+MultiVector round_point_multi_vector_bulk_contraction(RoundPoint self, MultiVector other) {
+    return round_point_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
 MultiVector sphere_multi_vector_bulk_contraction(Sphere self, MultiVector other) {
     return sphere_multi_vector_anti_wedge(self, multi_vector_right_bulk_dual(other));
-}
-
-Circle sphere_radial_bulk_contraction(Sphere self, Radial other) {
-    return sphere_sphere_anti_wedge(self, radial_right_bulk_dual(other));
 }
 
 MultiVector circle_multi_vector_weight_contraction(Circle self, MultiVector other) {
@@ -11378,6 +12191,10 @@ MultiVector dipole_multi_vector_weight_contraction(Dipole self, MultiVector othe
 
 MultiVector horizon_multi_vector_weight_contraction(Horizon self, MultiVector other) {
     return horizon_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
+}
+
+MultiVector infinity_multi_vector_weight_contraction(Infinity self, MultiVector other) {
+    return infinity_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
 }
 
 MultiVector line_multi_vector_weight_contraction(Line self, MultiVector other) {
@@ -11416,8 +12233,8 @@ MultiVector point_at_infinity_multi_vector_weight_contraction(PointAtInfinity se
     return point_at_infinity_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-MultiVector radial_multi_vector_weight_contraction(Radial self, MultiVector other) {
-    return radial_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
+MultiVector round_point_multi_vector_weight_contraction(RoundPoint self, MultiVector other) {
+    return round_point_multi_vector_anti_wedge(self, multi_vector_right_weight_dual(other));
 }
 
 MultiVector sphere_multi_vector_weight_contraction(Sphere self, MultiVector other) {
@@ -11436,6 +12253,10 @@ MultiVector horizon_multi_vector_bulk_expansion(Horizon self, MultiVector other)
     return horizon_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
+MultiVector infinity_multi_vector_bulk_expansion(Infinity self, MultiVector other) {
+    return infinity_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
+}
+
 MultiVector line_multi_vector_bulk_expansion(Line self, MultiVector other) {
     return line_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
 }
@@ -11450,10 +12271,6 @@ MultiVector line_at_origin_multi_vector_bulk_expansion(LineAtOrigin self, MultiV
 
 MultiVector multi_vector_multi_vector_bulk_expansion(MultiVector self, MultiVector other) {
     return multi_vector_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
-}
-
-MultiVector multi_vector_radial_bulk_expansion(MultiVector self, Radial other) {
-    return multi_vector_sphere_wedge(self, radial_right_bulk_dual(other));
 }
 
 MultiVector origin_multi_vector_bulk_expansion(Origin self, MultiVector other) {
@@ -11476,12 +12293,8 @@ MultiVector point_at_infinity_multi_vector_bulk_expansion(PointAtInfinity self, 
     return point_at_infinity_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
-MultiVector radial_multi_vector_bulk_expansion(Radial self, MultiVector other) {
-    return radial_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
-}
-
-AntiScalar radial_radial_bulk_expansion(Radial self, Radial other) {
-    return radial_sphere_wedge(self, radial_right_bulk_dual(other));
+MultiVector round_point_multi_vector_bulk_expansion(RoundPoint self, MultiVector other) {
+    return round_point_multi_vector_wedge(self, multi_vector_right_bulk_dual(other));
 }
 
 MultiVector sphere_multi_vector_bulk_expansion(Sphere self, MultiVector other) {
@@ -11498,6 +12311,10 @@ MultiVector dipole_multi_vector_weight_expansion(Dipole self, MultiVector other)
 
 MultiVector horizon_multi_vector_weight_expansion(Horizon self, MultiVector other) {
     return horizon_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
+}
+
+MultiVector infinity_multi_vector_weight_expansion(Infinity self, MultiVector other) {
+    return infinity_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
 }
 
 MultiVector line_multi_vector_weight_expansion(Line self, MultiVector other) {
@@ -11536,8 +12353,8 @@ MultiVector point_at_infinity_multi_vector_weight_expansion(PointAtInfinity self
     return point_at_infinity_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
 }
 
-MultiVector radial_multi_vector_weight_expansion(Radial self, MultiVector other) {
-    return radial_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
+MultiVector round_point_multi_vector_weight_expansion(RoundPoint self, MultiVector other) {
+    return round_point_multi_vector_wedge(self, multi_vector_right_weight_dual(other));
 }
 
 MultiVector sphere_multi_vector_weight_expansion(Sphere self, MultiVector other) {
@@ -11548,112 +12365,60 @@ MultiVector circle_multi_vector_anti_project_via_horizon_onto(Circle self, Multi
     return multi_vector_multi_vector_wedge(other, circle_multi_vector_bulk_contraction(self, other));
 }
 
-Circle circle_radial_anti_project_via_horizon_onto(Circle self, Radial other) {
-    return radial_dipole_wedge(other, circle_radial_bulk_contraction(self, other));
-}
-
 MultiVector dipole_multi_vector_anti_project_via_horizon_onto(Dipole self, MultiVector other) {
     return multi_vector_multi_vector_wedge(other, dipole_multi_vector_bulk_contraction(self, other));
-}
-
-Dipole dipole_radial_anti_project_via_horizon_onto(Dipole self, Radial other) {
-    return radial_radial_wedge(other, dipole_radial_bulk_contraction(self, other));
 }
 
 MultiVector horizon_multi_vector_anti_project_via_horizon_onto(Horizon self, MultiVector other) {
     return multi_vector_multi_vector_wedge(other, horizon_multi_vector_bulk_contraction(self, other));
 }
 
-Sphere horizon_radial_anti_project_via_horizon_onto(Horizon self, Radial other) {
-    return radial_circle_wedge(other, horizon_radial_bulk_contraction(self, other));
+MultiVector infinity_multi_vector_anti_project_via_horizon_onto(Infinity self, MultiVector other) {
+    return multi_vector_multi_vector_wedge(other, infinity_multi_vector_bulk_contraction(self, other));
 }
 
 MultiVector line_multi_vector_anti_project_via_horizon_onto(Line self, MultiVector other) {
     return multi_vector_multi_vector_wedge(other, line_multi_vector_bulk_contraction(self, other));
 }
 
-Circle line_radial_anti_project_via_horizon_onto(Line self, Radial other) {
-    return radial_dipole_wedge(other, line_radial_bulk_contraction(self, other));
-}
-
 MultiVector line_at_infinity_multi_vector_anti_project_via_horizon_onto(LineAtInfinity self, MultiVector other) {
     return multi_vector_multi_vector_wedge(other, line_at_infinity_multi_vector_bulk_contraction(self, other));
-}
-
-Circle line_at_infinity_radial_anti_project_via_horizon_onto(LineAtInfinity self, Radial other) {
-    return radial_dipole_wedge(other, line_at_infinity_radial_bulk_contraction(self, other));
 }
 
 MultiVector line_at_origin_multi_vector_anti_project_via_horizon_onto(LineAtOrigin self, MultiVector other) {
     return multi_vector_multi_vector_wedge(other, line_at_origin_multi_vector_bulk_contraction(self, other));
 }
 
-Circle line_at_origin_radial_anti_project_via_horizon_onto(LineAtOrigin self, Radial other) {
-    return radial_dipole_wedge(other, line_at_origin_radial_bulk_contraction(self, other));
-}
-
 MultiVector multi_vector_multi_vector_anti_project_via_horizon_onto(MultiVector self, MultiVector other) {
     return multi_vector_multi_vector_wedge(other, multi_vector_multi_vector_bulk_contraction(self, other));
-}
-
-MultiVector multi_vector_radial_anti_project_via_horizon_onto(MultiVector self, Radial other) {
-    return radial_multi_vector_wedge(other, multi_vector_radial_bulk_contraction(self, other));
 }
 
 MultiVector origin_multi_vector_anti_project_via_horizon_onto(Origin self, MultiVector other) {
     return multi_vector_multi_vector_wedge(other, origin_multi_vector_bulk_contraction(self, other));
 }
 
-Dipole origin_radial_anti_project_via_horizon_onto(Origin self, Radial other) {
-    return radial_radial_wedge(other, origin_radial_bulk_contraction(self, other));
-}
-
 MultiVector plane_multi_vector_anti_project_via_horizon_onto(Plane self, MultiVector other) {
     return multi_vector_multi_vector_wedge(other, plane_multi_vector_bulk_contraction(self, other));
-}
-
-Sphere plane_radial_anti_project_via_horizon_onto(Plane self, Radial other) {
-    return radial_circle_wedge(other, plane_radial_bulk_contraction(self, other));
 }
 
 MultiVector plane_at_origin_multi_vector_anti_project_via_horizon_onto(PlaneAtOrigin self, MultiVector other) {
     return multi_vector_multi_vector_wedge(other, plane_at_origin_multi_vector_bulk_contraction(self, other));
 }
 
-Sphere plane_at_origin_radial_anti_project_via_horizon_onto(PlaneAtOrigin self, Radial other) {
-    return radial_circle_wedge(other, plane_at_origin_radial_bulk_contraction(self, other));
-}
-
 MultiVector point_multi_vector_anti_project_via_horizon_onto(Point self, MultiVector other) {
     return multi_vector_multi_vector_wedge(other, point_multi_vector_bulk_contraction(self, other));
-}
-
-Dipole point_radial_anti_project_via_horizon_onto(Point self, Radial other) {
-    return radial_radial_wedge(other, point_radial_bulk_contraction(self, other));
 }
 
 MultiVector point_at_infinity_multi_vector_anti_project_via_horizon_onto(PointAtInfinity self, MultiVector other) {
     return multi_vector_multi_vector_wedge(other, point_at_infinity_multi_vector_bulk_contraction(self, other));
 }
 
-Dipole point_at_infinity_radial_anti_project_via_horizon_onto(PointAtInfinity self, Radial other) {
-    return radial_radial_wedge(other, point_at_infinity_radial_bulk_contraction(self, other));
-}
-
-MultiVector radial_multi_vector_anti_project_via_horizon_onto(Radial self, MultiVector other) {
-    return multi_vector_multi_vector_wedge(other, radial_multi_vector_bulk_contraction(self, other));
-}
-
-Radial radial_radial_anti_project_via_horizon_onto(Radial self, Radial other) {
-    return radial_scalar_wedge(other, radial_radial_bulk_contraction(self, other));
+MultiVector round_point_multi_vector_anti_project_via_horizon_onto(RoundPoint self, MultiVector other) {
+    return multi_vector_multi_vector_wedge(other, round_point_multi_vector_bulk_contraction(self, other));
 }
 
 MultiVector sphere_multi_vector_anti_project_via_horizon_onto(Sphere self, MultiVector other) {
     return multi_vector_multi_vector_wedge(other, sphere_multi_vector_bulk_contraction(self, other));
-}
-
-Sphere sphere_radial_anti_project_via_horizon_onto(Sphere self, Radial other) {
-    return radial_circle_wedge(other, sphere_radial_bulk_contraction(self, other));
 }
 
 MultiVector circle_multi_vector_project_orthogonally_onto(Circle self, MultiVector other) {
@@ -11666,6 +12431,10 @@ MultiVector dipole_multi_vector_project_orthogonally_onto(Dipole self, MultiVect
 
 MultiVector horizon_multi_vector_project_orthogonally_onto(Horizon self, MultiVector other) {
     return multi_vector_multi_vector_anti_wedge(other, horizon_multi_vector_weight_expansion(self, other));
+}
+
+MultiVector infinity_multi_vector_project_orthogonally_onto(Infinity self, MultiVector other) {
+    return multi_vector_multi_vector_anti_wedge(other, infinity_multi_vector_weight_expansion(self, other));
 }
 
 MultiVector line_multi_vector_project_orthogonally_onto(Line self, MultiVector other) {
@@ -11704,8 +12473,8 @@ MultiVector point_at_infinity_multi_vector_project_orthogonally_onto(PointAtInfi
     return multi_vector_multi_vector_anti_wedge(other, point_at_infinity_multi_vector_weight_expansion(self, other));
 }
 
-MultiVector radial_multi_vector_project_orthogonally_onto(Radial self, MultiVector other) {
-    return multi_vector_multi_vector_anti_wedge(other, radial_multi_vector_weight_expansion(self, other));
+MultiVector round_point_multi_vector_project_orthogonally_onto(RoundPoint self, MultiVector other) {
+    return multi_vector_multi_vector_anti_wedge(other, round_point_multi_vector_weight_expansion(self, other));
 }
 
 MultiVector sphere_multi_vector_project_orthogonally_onto(Sphere self, MultiVector other) {
@@ -11724,6 +12493,10 @@ MultiVector horizon_multi_vector_project_via_origin_onto(Horizon self, MultiVect
     return multi_vector_multi_vector_anti_wedge(other, horizon_multi_vector_bulk_expansion(self, other));
 }
 
+MultiVector infinity_multi_vector_project_via_origin_onto(Infinity self, MultiVector other) {
+    return multi_vector_multi_vector_anti_wedge(other, infinity_multi_vector_bulk_expansion(self, other));
+}
+
 MultiVector line_multi_vector_project_via_origin_onto(Line self, MultiVector other) {
     return multi_vector_multi_vector_anti_wedge(other, line_multi_vector_bulk_expansion(self, other));
 }
@@ -11738,10 +12511,6 @@ MultiVector line_at_origin_multi_vector_project_via_origin_onto(LineAtOrigin sel
 
 MultiVector multi_vector_multi_vector_project_via_origin_onto(MultiVector self, MultiVector other) {
     return multi_vector_multi_vector_anti_wedge(other, multi_vector_multi_vector_bulk_expansion(self, other));
-}
-
-MultiVector multi_vector_radial_project_via_origin_onto(MultiVector self, Radial other) {
-    return radial_multi_vector_anti_wedge(other, multi_vector_radial_bulk_expansion(self, other));
 }
 
 MultiVector origin_multi_vector_project_via_origin_onto(Origin self, MultiVector other) {
@@ -11764,12 +12533,8 @@ MultiVector point_at_infinity_multi_vector_project_via_origin_onto(PointAtInfini
     return multi_vector_multi_vector_anti_wedge(other, point_at_infinity_multi_vector_bulk_expansion(self, other));
 }
 
-MultiVector radial_multi_vector_project_via_origin_onto(Radial self, MultiVector other) {
-    return multi_vector_multi_vector_anti_wedge(other, radial_multi_vector_bulk_expansion(self, other));
-}
-
-Radial radial_radial_project_via_origin_onto(Radial self, Radial other) {
-    return radial_anti_scalar_anti_wedge(other, radial_radial_bulk_expansion(self, other));
+MultiVector round_point_multi_vector_project_via_origin_onto(RoundPoint self, MultiVector other) {
+    return multi_vector_multi_vector_anti_wedge(other, round_point_multi_vector_bulk_expansion(self, other));
 }
 
 MultiVector sphere_multi_vector_project_via_origin_onto(Sphere self, MultiVector other) {
@@ -11780,24 +12545,28 @@ Magnitude circle_multi_vector_distance(Circle self, MultiVector other) {
     return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(circle_multi_vector_wedge(self, other))), multi_vector_weight_norm(circle_multi_vector_wedge(self, multi_vector_attitude(other))));
 }
 
-Magnitude circle_radial_distance(Circle self, Radial other) {
-    return scalar_anti_scalar_add(circle_bulk_norm(sphere_attitude(circle_radial_wedge(self, other))), circle_weight_norm(circle_scalar_wedge(self, radial_attitude(other))));
+Magnitude circle_round_point_distance(Circle self, RoundPoint other) {
+    return scalar_anti_scalar_add(circle_bulk_norm(sphere_attitude(circle_round_point_wedge(self, other))), circle_weight_norm(circle_scalar_wedge(self, round_point_attitude(other))));
 }
 
 Magnitude dipole_dipole_distance(Dipole self, Dipole other) {
-    return scalar_anti_scalar_add(circle_bulk_norm(sphere_attitude(dipole_dipole_wedge(self, other))), circle_weight_norm(dipole_radial_wedge(self, dipole_attitude(other))));
+    return scalar_anti_scalar_add(circle_bulk_norm(sphere_attitude(dipole_dipole_wedge(self, other))), circle_weight_norm(dipole_round_point_wedge(self, dipole_attitude(other))));
 }
 
 Magnitude dipole_multi_vector_distance(Dipole self, MultiVector other) {
     return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(dipole_multi_vector_wedge(self, other))), multi_vector_weight_norm(dipole_multi_vector_wedge(self, multi_vector_attitude(other))));
 }
 
-Magnitude dipole_radial_distance(Dipole self, Radial other) {
-    return scalar_anti_scalar_add(dipole_bulk_norm(circle_attitude(dipole_radial_wedge(self, other))), dipole_weight_norm(dipole_scalar_wedge(self, radial_attitude(other))));
+Magnitude dipole_round_point_distance(Dipole self, RoundPoint other) {
+    return scalar_anti_scalar_add(dipole_bulk_norm(circle_attitude(dipole_round_point_wedge(self, other))), dipole_weight_norm(dipole_scalar_wedge(self, round_point_attitude(other))));
 }
 
 Magnitude horizon_multi_vector_distance(Horizon self, MultiVector other) {
     return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(horizon_multi_vector_wedge(self, other))), multi_vector_weight_norm(horizon_multi_vector_wedge(self, multi_vector_attitude(other))));
+}
+
+Magnitude infinity_multi_vector_distance(Infinity self, MultiVector other) {
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(infinity_multi_vector_wedge(self, other))), multi_vector_weight_norm(infinity_multi_vector_wedge(self, multi_vector_attitude(other))));
 }
 
 Magnitude line_multi_vector_distance(Line self, MultiVector other) {
@@ -11817,23 +12586,15 @@ Magnitude magnitude_circle_distance(Magnitude self, Circle other) {
 }
 
 Magnitude magnitude_dipole_distance(Magnitude self, Dipole other) {
-    return scalar_anti_scalar_add(radial_bulk_norm(dipole_attitude(magnitude_dipole_wedge(self, other))), radial_weight_norm(magnitude_radial_wedge(self, dipole_attitude(other))));
+    return scalar_anti_scalar_add(round_point_bulk_norm(dipole_attitude(magnitude_dipole_wedge(self, other))), round_point_weight_norm(magnitude_round_point_wedge(self, dipole_attitude(other))));
 }
 
 Magnitude magnitude_multi_vector_distance(Magnitude self, MultiVector other) {
     return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(magnitude_multi_vector_wedge(self, other))), multi_vector_weight_norm(magnitude_multi_vector_wedge(self, multi_vector_attitude(other))));
 }
 
-Magnitude magnitude_origin_distance(Magnitude self, Origin other) {
-    return scalar_anti_scalar_add(radial_bulk_norm(origin_attitude(magnitude_origin_wedge(self, other))), radial_weight_norm(magnitude_radial_wedge(self, origin_attitude(other))));
-}
-
-Magnitude magnitude_point_distance(Magnitude self, Point other) {
-    return scalar_anti_scalar_add(radial_bulk_norm(point_attitude(magnitude_point_wedge(self, other))), radial_weight_norm(magnitude_radial_wedge(self, point_attitude(other))));
-}
-
-Magnitude magnitude_radial_distance(Magnitude self, Radial other) {
-    return scalar_anti_scalar_add(scalar_bulk_norm(radial_attitude(magnitude_radial_wedge(self, other))), magnitude_weight_norm(magnitude_scalar_wedge(self, radial_attitude(other))));
+Magnitude magnitude_round_point_distance(Magnitude self, RoundPoint other) {
+    return scalar_anti_scalar_add(scalar_bulk_norm(round_point_attitude(magnitude_round_point_wedge(self, other))), magnitude_weight_norm(magnitude_scalar_wedge(self, round_point_attitude(other))));
 }
 
 Magnitude magnitude_sphere_distance(Magnitude self, Sphere other) {
@@ -11845,7 +12606,7 @@ Magnitude multi_vector_circle_distance(MultiVector self, Circle other) {
 }
 
 Magnitude multi_vector_dipole_distance(MultiVector self, Dipole other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_dipole_wedge(self, other))), multi_vector_weight_norm(multi_vector_radial_wedge(self, dipole_attitude(other))));
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_dipole_wedge(self, other))), multi_vector_weight_norm(multi_vector_round_point_wedge(self, dipole_attitude(other))));
 }
 
 Magnitude multi_vector_line_distance(MultiVector self, Line other) {
@@ -11865,7 +12626,7 @@ Magnitude multi_vector_multi_vector_distance(MultiVector self, MultiVector other
 }
 
 Magnitude multi_vector_origin_distance(MultiVector self, Origin other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_origin_wedge(self, other))), multi_vector_weight_norm(multi_vector_radial_wedge(self, origin_attitude(other))));
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_origin_wedge(self, other))), multi_vector_weight_norm(multi_vector_infinity_wedge(self, origin_attitude(other))));
 }
 
 Magnitude multi_vector_plane_distance(MultiVector self, Plane other) {
@@ -11877,11 +12638,11 @@ Magnitude multi_vector_plane_at_origin_distance(MultiVector self, PlaneAtOrigin 
 }
 
 Magnitude multi_vector_point_distance(MultiVector self, Point other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_point_wedge(self, other))), multi_vector_weight_norm(multi_vector_radial_wedge(self, point_attitude(other))));
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_point_wedge(self, other))), multi_vector_weight_norm(multi_vector_infinity_wedge(self, point_attitude(other))));
 }
 
-Magnitude multi_vector_radial_distance(MultiVector self, Radial other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_radial_wedge(self, other))), multi_vector_weight_norm(multi_vector_scalar_wedge(self, radial_attitude(other))));
+Magnitude multi_vector_round_point_distance(MultiVector self, RoundPoint other) {
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_round_point_wedge(self, other))), multi_vector_weight_norm(multi_vector_scalar_wedge(self, round_point_attitude(other))));
 }
 
 Magnitude multi_vector_sphere_distance(MultiVector self, Sphere other) {
@@ -11908,24 +12669,24 @@ Magnitude point_at_infinity_multi_vector_distance(PointAtInfinity self, MultiVec
     return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(point_at_infinity_multi_vector_wedge(self, other))), multi_vector_weight_norm(point_at_infinity_multi_vector_wedge(self, multi_vector_attitude(other))));
 }
 
-Magnitude radial_circle_distance(Radial self, Circle other) {
-    return scalar_anti_scalar_add(circle_bulk_norm(sphere_attitude(radial_circle_wedge(self, other))), circle_weight_norm(radial_dipole_wedge(self, circle_attitude(other))));
+Magnitude round_point_circle_distance(RoundPoint self, Circle other) {
+    return scalar_anti_scalar_add(circle_bulk_norm(sphere_attitude(round_point_circle_wedge(self, other))), circle_weight_norm(round_point_dipole_wedge(self, circle_attitude(other))));
 }
 
-Magnitude radial_dipole_distance(Radial self, Dipole other) {
-    return scalar_anti_scalar_add(dipole_bulk_norm(circle_attitude(radial_dipole_wedge(self, other))), dipole_weight_norm(radial_radial_wedge(self, dipole_attitude(other))));
+Magnitude round_point_dipole_distance(RoundPoint self, Dipole other) {
+    return scalar_anti_scalar_add(dipole_bulk_norm(circle_attitude(round_point_dipole_wedge(self, other))), dipole_weight_norm(round_point_round_point_wedge(self, dipole_attitude(other))));
 }
 
-Magnitude radial_magnitude_distance(Radial self, Magnitude other) {
-    return scalar_anti_scalar_add(scalar_bulk_norm(radial_attitude(radial_magnitude_wedge(self, other))), anti_scalar_weight_norm(radial_horizon_wedge(self, magnitude_attitude(other))));
+Magnitude round_point_magnitude_distance(RoundPoint self, Magnitude other) {
+    return scalar_anti_scalar_add(scalar_bulk_norm(round_point_attitude(round_point_magnitude_wedge(self, other))), anti_scalar_weight_norm(round_point_horizon_wedge(self, magnitude_attitude(other))));
 }
 
-Magnitude radial_multi_vector_distance(Radial self, MultiVector other) {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(radial_multi_vector_wedge(self, other))), multi_vector_weight_norm(radial_multi_vector_wedge(self, multi_vector_attitude(other))));
+Magnitude round_point_multi_vector_distance(RoundPoint self, MultiVector other) {
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(round_point_multi_vector_wedge(self, other))), multi_vector_weight_norm(round_point_multi_vector_wedge(self, multi_vector_attitude(other))));
 }
 
-Magnitude radial_radial_distance(Radial self, Radial other) {
-    return scalar_anti_scalar_add(radial_bulk_norm(dipole_attitude(radial_radial_wedge(self, other))), radial_weight_norm(radial_scalar_wedge(self, radial_attitude(other))));
+Magnitude round_point_round_point_distance(RoundPoint self, RoundPoint other) {
+    return scalar_anti_scalar_add(round_point_bulk_norm(dipole_attitude(round_point_round_point_wedge(self, other))), round_point_weight_norm(round_point_scalar_wedge(self, round_point_attitude(other))));
 }
 
 Magnitude scalar_circle_distance(Scalar self, Circle other) {
@@ -11933,23 +12694,15 @@ Magnitude scalar_circle_distance(Scalar self, Circle other) {
 }
 
 Magnitude scalar_dipole_distance(Scalar self, Dipole other) {
-    return scalar_anti_scalar_add(radial_bulk_norm(dipole_attitude(scalar_dipole_wedge(self, other))), radial_weight_norm(scalar_radial_wedge(self, dipole_attitude(other))));
+    return scalar_anti_scalar_add(round_point_bulk_norm(dipole_attitude(scalar_dipole_wedge(self, other))), round_point_weight_norm(scalar_round_point_wedge(self, dipole_attitude(other))));
 }
 
 Magnitude scalar_multi_vector_distance(Scalar self, MultiVector other) {
     return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(scalar_multi_vector_wedge(self, other))), multi_vector_weight_norm(scalar_multi_vector_wedge(self, multi_vector_attitude(other))));
 }
 
-Magnitude scalar_origin_distance(Scalar self, Origin other) {
-    return scalar_anti_scalar_add(radial_bulk_norm(origin_attitude(scalar_origin_wedge(self, other))), radial_weight_norm(scalar_radial_wedge(self, origin_attitude(other))));
-}
-
-Magnitude scalar_point_distance(Scalar self, Point other) {
-    return scalar_anti_scalar_add(radial_bulk_norm(point_attitude(scalar_point_wedge(self, other))), radial_weight_norm(scalar_radial_wedge(self, point_attitude(other))));
-}
-
-Magnitude scalar_radial_distance(Scalar self, Radial other) {
-    return scalar_anti_scalar_add(scalar_bulk_norm(radial_attitude(scalar_radial_wedge(self, other))), scalar_weight_norm(scalar_scalar_wedge(self, radial_attitude(other))));
+Magnitude scalar_round_point_distance(Scalar self, RoundPoint other) {
+    return scalar_anti_scalar_add(scalar_bulk_norm(round_point_attitude(scalar_round_point_wedge(self, other))), scalar_weight_norm(scalar_scalar_wedge(self, round_point_attitude(other))));
 }
 
 Magnitude scalar_sphere_distance(Scalar self, Sphere other) {

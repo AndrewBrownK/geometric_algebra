@@ -1,10 +1,11 @@
 use crate::algebra::conformal::ConformalGeometricAlgebra;
 use crate::algebra::dialect::Dialect;
-use crate::algebra::MultiVectorClassRegistry;
+use crate::algebra::{GeometricAlgebraTrait, MultiVectorClassRegistry};
 use crate::emit::Emitter;
 use crate::old_lib::{read_multi_vector_from_str, CodeGenerator};
 use std::io::Write;
 use std::path::Path;
+use crate::algebra::basis_element::BasisElement;
 
 const CGA3D: &str = "cga3d";
 const CGA3D_CRATE_PREFIX: &str = "cga3d/";
@@ -33,10 +34,14 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         //  it partly depends on how the sandwich operators (are supposed to) turn out
         //  Maybe the flat objects should be subclassed to these round objects,
         //  or maybe there are yet other round variants of objects subclassed here
-        "Radial:e1,e2,e3|e4,e5",
+        "RoundPoint:e1,e2,e3|e4,e5",
         "Dipole:e41,e42,e43|e23,e31,e12|e15,e25,e35,e45",
         "Circle:e423,e431,e412,e321|e415,e425,e435|e235,e315,e125",
         "Sphere:e4235,e4315,e4125|e1234,e3215",
+
+        // "RoundPoint/RoundOrigin:e4",
+        "RoundPoint/Infinity:e5",
+
         // TODO figure out these objects
         // "Motor:e41,e42,e43,e1234|e23,e31,e12",
         // "Motor/Rotor:e41,e42,e43,e1234",
@@ -65,9 +70,11 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
             registry.register(mv);
         }
     }
+    let flat_basis = cga3d.parse("e5");
     let mut code_gen = CodeGenerator::new(cga3d);
     code_gen.preamble_and_universal_traits(&registry).unwrap();
     code_gen.basic_norms(&registry);
+    code_gen.round_features(flat_basis, &registry);
 
     // TODO fancy norms
     // code_gen.fancy_norms(&registry);
@@ -161,7 +168,8 @@ use crate::involutions::*;",
     emitter.emit_rust_preamble(
         "
 use crate::*;
-use crate::products::exterior::AntiWedge;",
+use crate::products::exterior::AntiWedge;
+use crate::products::exterior::Wedge;",
     )?;
     code_gen.emit_characteristic_features(&mut emitter)?;
 

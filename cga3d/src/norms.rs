@@ -132,7 +132,7 @@ impl BulkNorm for Point {
     }
 }
 
-impl BulkNorm for Radial {
+impl BulkNorm for RoundPoint {
     type Output = Scalar;
 
     fn bulk_norm(self) -> Scalar {
@@ -244,7 +244,7 @@ impl BulkNormSquared for Point {
     }
 }
 
-impl BulkNormSquared for Radial {
+impl BulkNormSquared for RoundPoint {
     type Output = Scalar;
 
     fn bulk_norm_squared(self) -> Scalar {
@@ -356,7 +356,7 @@ impl WeightNorm for Point {
     }
 }
 
-impl WeightNorm for Radial {
+impl WeightNorm for RoundPoint {
     type Output = AntiScalar;
 
     fn weight_norm(self) -> AntiScalar {
@@ -468,7 +468,7 @@ impl WeightNormSquared for Point {
     }
 }
 
-impl WeightNormSquared for Radial {
+impl WeightNormSquared for RoundPoint {
     type Output = AntiScalar;
 
     fn weight_norm_squared(self) -> AntiScalar {
@@ -580,7 +580,7 @@ impl GeometricNorm for Point {
     }
 }
 
-impl GeometricNorm for Radial {
+impl GeometricNorm for RoundPoint {
     type Output = Magnitude;
 
     fn geometric_norm(self) -> Magnitude {

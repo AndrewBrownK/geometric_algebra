@@ -114,6 +114,16 @@ impl AntiReversal for Horizon {
     }
 }
 
+impl AntiReversal for Infinity {
+    type Output = Infinity;
+
+    fn anti_reversal(self) -> Infinity {
+        Infinity {
+            groups: InfinityGroups { g0: self.group0() },
+        }
+    }
+}
+
 impl AntiReversal for Line {
     type Output = Line;
 
@@ -241,12 +251,12 @@ impl AntiReversal for PointAtInfinity {
     }
 }
 
-impl AntiReversal for Radial {
-    type Output = Radial;
+impl AntiReversal for RoundPoint {
+    type Output = RoundPoint;
 
-    fn anti_reversal(self) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn anti_reversal(self) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: self.group0(),
                 g1: self.group1(),
             },
@@ -321,6 +331,16 @@ impl Automorphism for Horizon {
     fn automorphism(self) -> Horizon {
         Horizon {
             groups: HorizonGroups { g0: -self.group0() },
+        }
+    }
+}
+
+impl Automorphism for Infinity {
+    type Output = Infinity;
+
+    fn automorphism(self) -> Infinity {
+        Infinity {
+            groups: InfinityGroups { g0: -self.group0() },
         }
     }
 }
@@ -450,12 +470,12 @@ impl Automorphism for PointAtInfinity {
     }
 }
 
-impl Automorphism for Radial {
-    type Output = Radial;
+impl Automorphism for RoundPoint {
+    type Output = RoundPoint;
 
-    fn automorphism(self) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn automorphism(self) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x2::from(-1.0),
             },
@@ -530,6 +550,16 @@ impl Conjugation for Horizon {
     fn conjugation(self) -> Horizon {
         Horizon {
             groups: HorizonGroups { g0: -self.group0() },
+        }
+    }
+}
+
+impl Conjugation for Infinity {
+    type Output = Infinity;
+
+    fn conjugation(self) -> Infinity {
+        Infinity {
+            groups: InfinityGroups { g0: -self.group0() },
         }
     }
 }
@@ -663,12 +693,12 @@ impl Conjugation for PointAtInfinity {
     }
 }
 
-impl Conjugation for Radial {
-    type Output = Radial;
+impl Conjugation for RoundPoint {
+    type Output = RoundPoint;
 
-    fn conjugation(self) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn conjugation(self) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x2::from(-1.0),
             },
@@ -743,6 +773,16 @@ impl DoubleComplement for Horizon {
     fn double_complement(self) -> Horizon {
         Horizon {
             groups: HorizonGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl DoubleComplement for Infinity {
+    type Output = Infinity;
+
+    fn double_complement(self) -> Infinity {
+        Infinity {
+            groups: InfinityGroups { g0: self.group0() },
         }
     }
 }
@@ -862,12 +902,12 @@ impl DoubleComplement for PointAtInfinity {
     }
 }
 
-impl DoubleComplement for Radial {
-    type Output = Radial;
+impl DoubleComplement for RoundPoint {
+    type Output = RoundPoint;
 
-    fn double_complement(self) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn double_complement(self) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: self.group0(),
                 g1: self.group1(),
             },
@@ -936,6 +976,26 @@ impl Dual for Dipole {
     }
 }
 
+impl Dual for Horizon {
+    type Output = Infinity;
+
+    fn dual(self) -> Infinity {
+        Infinity {
+            groups: InfinityGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Dual for Infinity {
+    type Output = Horizon;
+
+    fn dual(self) -> Horizon {
+        Horizon {
+            groups: HorizonGroups { g0: -self.group0() },
+        }
+    }
+}
+
 impl Dual for LineAtInfinity {
     type Output = PointAtInfinity;
 
@@ -992,7 +1052,7 @@ impl Dual for PointAtInfinity {
     }
 }
 
-impl Dual for Radial {
+impl Dual for RoundPoint {
     type Output = Sphere;
 
     fn dual(self) -> Sphere {
@@ -1016,11 +1076,11 @@ impl Dual for Scalar {
 }
 
 impl Dual for Sphere {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn dual(self) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn dual(self) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1(),
             },
@@ -1100,7 +1160,7 @@ impl LeftComplement for MultiVector {
     }
 }
 
-impl LeftComplement for Radial {
+impl LeftComplement for RoundPoint {
     type Output = Sphere;
 
     fn left_complement(self) -> Sphere {
@@ -1124,11 +1184,11 @@ impl LeftComplement for Scalar {
 }
 
 impl LeftComplement for Sphere {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn left_complement(self) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn left_complement(self) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: self.group0(),
                 g1: swizzle!(self.group1(), 1, 0),
             },
@@ -1180,6 +1240,16 @@ impl Reversal for Horizon {
     fn reversal(self) -> Horizon {
         Horizon {
             groups: HorizonGroups { g0: -self.group0() },
+        }
+    }
+}
+
+impl Reversal for Infinity {
+    type Output = Infinity;
+
+    fn reversal(self) -> Infinity {
+        Infinity {
+            groups: InfinityGroups { g0: self.group0() },
         }
     }
 }
@@ -1311,12 +1381,12 @@ impl Reversal for PointAtInfinity {
     }
 }
 
-impl Reversal for Radial {
-    type Output = Radial;
+impl Reversal for RoundPoint {
+    type Output = RoundPoint;
 
-    fn reversal(self) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn reversal(self) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: self.group0(),
                 g1: self.group1(),
             },
@@ -1419,7 +1489,7 @@ impl RightComplement for MultiVector {
     }
 }
 
-impl RightComplement for Radial {
+impl RightComplement for RoundPoint {
     type Output = Sphere;
 
     fn right_complement(self) -> Sphere {
@@ -1443,11 +1513,11 @@ impl RightComplement for Scalar {
 }
 
 impl RightComplement for Sphere {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn right_complement(self) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn right_complement(self) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: self.group0(),
                 g1: swizzle!(self.group1(), 1, 0),
             },

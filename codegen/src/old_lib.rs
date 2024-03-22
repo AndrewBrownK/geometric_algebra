@@ -931,6 +931,54 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         }
     }
 
+    pub fn round_features<'s>(&'s mut self, flat_basis: BasisElement, registry: &'r MultiVectorClassRegistry) {
+        for param_a in registry.single_parameters() {
+            let is_all_flat = param_a.multi_vector_class().flat_basis().iter().all(|it| {
+                flat_basis.index == (flat_basis.index & it.index)
+            });
+            if is_all_flat {
+                continue;
+            }
+            // The object is round
+
+            // TODO if I ever create a dedicated MultiVectorClass for e5 then use that
+            //  here instead of RoundPoint. In fact... Carrier(Circle) is giving us Sphere,
+            //  but we are expecting a Plane. So yeah RoundPoint (or "Radial") is too broad.
+            let mut e5_candidates: Vec<_> = registry.classes.iter().filter_map(|it| {
+                if it.0.flat_basis().contains(&flat_basis) { Some(&it.0) } else { None }
+            }).collect();
+            e5_candidates.sort_by(|a, b| a.flat_basis().len().cmp(&b.flat_basis().len()));
+
+
+            let name = "Carrier";
+            let _: Option<()> = try {
+                let round_point = *e5_candidates.first()?;
+                let mut body = vec![];
+                for group in &round_point.grouped_basis {
+                    let mut elements = vec![];
+                    for element in group {
+                        let v = if *element == flat_basis { 1 } else { 0 };
+                        elements.push(v);
+                    }
+                    let e = Expression {
+                        size: group.len(),
+                        data_type_hint: None,
+                        content: ExpressionContent::Constant(DataType::SimdVector(group.len()), elements),
+                    };
+                    body.push((DataType::SimdVector(group.len()), e));
+                }
+                let construct = Expression {
+                    size: 1,
+                    data_type_hint: Some(DataType::MultiVector(round_point)),
+                    content: ExpressionContent::InvokeClassMethod(round_point, "Constructor", body),
+                };
+                let wedge = self.trait_impls.get_pair_invocation("Wedge", variable(&param_a), construct)?;
+                let carrier = single_expression_single_trait_impl(name, &param_a, wedge);
+                self.trait_impls.add_single_impl(name, param_a.clone(), carrier)
+            };
+        }
+    }
+
     /// Datatype definitions, and implementations of external traits
     pub fn emit_datatypes_and_external_traits(&mut self, registry: &'r MultiVectorClassRegistry, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
         // Preamble
@@ -1326,10 +1374,61 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             .to_string(),
         })?;
 
-        // TODO SOONER
-        // TODO remaining trait declarations and docs
+        if self.algebra.algebra_name().contains("cga") {
+            emitter.emit(&AstNode::TraitDefinition {
+                name: "Carrier".to_string(),
+                params: 1,
+                docs: "
+            Carrier
+            The Carrier of a round object is the lowest dimensional flat object that contains it.
+            https://conformalgeometricalgebra.org/wiki/index.php?title=Carriers
+            ".to_string(),
+            })?;
 
-        let trait_names = ["Sqrt", "Grade", "AntiGrade", "Attitude", "Carrier", "CoCarrier", "Container", "Center"];
+            emitter.emit(&AstNode::TraitDefinition {
+                name: "CoCarrier".to_string(),
+                params: 1,
+                docs: "
+            CoCarrier
+            The CoCarrier of a round object is the Carrier of its antidual.
+            https://conformalgeometricalgebra.org/wiki/index.php?title=Carriers
+            ".to_string(),
+            })?;
+
+            emitter.emit(&AstNode::TraitDefinition {
+                name: "Container".to_string(),
+                params: 1,
+                docs: "
+            Container
+            The Container of a round object is the smallest Sphere that contains it.
+            https://conformalgeometricalgebra.org/wiki/index.php?title=Containers
+            ".to_string(),
+            })?;
+
+            emitter.emit(&AstNode::TraitDefinition {
+                name: "Center".to_string(),
+                params: 1,
+                docs: "
+            Center
+            The Center of a round object is the Radial (RoundPoint) having the same center and radius.
+            https://conformalgeometricalgebra.org/wiki/index.php?title=Centers
+            ".to_string(),
+            })?;
+
+            emitter.emit(&AstNode::TraitDefinition {
+                name: "Partner".to_string(),
+                params: 1,
+                docs: "
+                Partner
+                The Partner of a round object is the round object having the same center, same carrier,
+                and same absolute size, but having a squared radius of the opposite sign.
+                The dot product between a round object and its partner is always zero. They are orthogonal.
+                https://conformalgeometricalgebra.org/wiki/index.php?title=Partners
+                ".to_string(),
+            })?;
+        }
+
+        let trait_names = ["Sqrt", "Grade", "AntiGrade", "Attitude", "Carrier", "CoCarrier", "Container", "Center", "Partner"];
         self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
         Ok(())
     }

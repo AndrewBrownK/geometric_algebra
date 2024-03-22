@@ -6,6 +6,7 @@
 //
 
 use crate::products::exterior::AntiWedge;
+use crate::products::exterior::Wedge;
 use crate::*;
 
 /// Square Root
@@ -33,6 +34,48 @@ pub trait AntiGrade {
 pub trait Attitude {
     type Output;
     fn attitude(self) -> Self::Output;
+}
+
+/// Carrier
+/// The Carrier of a round object is the lowest dimensional flat object that contains it.
+/// https://conformalgeometricalgebra.org/wiki/index.php?title=Carriers
+pub trait Carrier {
+    type Output;
+    fn carrier(self) -> Self::Output;
+}
+
+/// CoCarrier
+/// The CoCarrier of a round object is the Carrier of its antidual.
+/// https://conformalgeometricalgebra.org/wiki/index.php?title=Carriers
+pub trait CoCarrier {
+    type Output;
+    fn co_carrier(self) -> Self::Output;
+}
+
+/// Container
+/// The Container of a round object is the smallest Sphere that contains it.
+/// https://conformalgeometricalgebra.org/wiki/index.php?title=Containers
+pub trait Container {
+    type Output;
+    fn container(self) -> Self::Output;
+}
+
+/// Center
+/// The Center of a round object is the Radial (RoundPoint) having the same center and radius.
+/// https://conformalgeometricalgebra.org/wiki/index.php?title=Centers
+pub trait Center {
+    type Output;
+    fn center(self) -> Self::Output;
+}
+
+/// Partner
+/// The Partner of a round object is the round object having the same center, same carrier,
+/// and same absolute size, but having a squared radius of the opposite sign.
+/// The dot product between a round object and its partner is always zero. They are orthogonal.
+/// https://conformalgeometricalgebra.org/wiki/index.php?title=Partners
+pub trait Partner {
+    type Output;
+    fn partner(self) -> Self::Output;
 }
 
 impl AntiGrade for AntiScalar {
@@ -64,6 +107,14 @@ impl AntiGrade for Horizon {
 
     fn anti_grade(self) -> isize {
         1
+    }
+}
+
+impl AntiGrade for Infinity {
+    type Output = isize;
+
+    fn anti_grade(self) -> isize {
+        4
     }
 }
 
@@ -131,7 +182,7 @@ impl AntiGrade for PointAtInfinity {
     }
 }
 
-impl AntiGrade for Radial {
+impl AntiGrade for RoundPoint {
     type Output = isize;
 
     fn anti_grade(self) -> isize {
@@ -184,6 +235,14 @@ impl Grade for Horizon {
 
     fn grade(self) -> isize {
         4
+    }
+}
+
+impl Grade for Infinity {
+    type Output = isize;
+
+    fn grade(self) -> isize {
+        1
     }
 }
 
@@ -251,7 +310,7 @@ impl Grade for PointAtInfinity {
     }
 }
 
-impl Grade for Radial {
+impl Grade for RoundPoint {
     type Output = isize;
 
     fn grade(self) -> isize {
@@ -292,9 +351,9 @@ impl Attitude for Circle {
 }
 
 impl Attitude for Dipole {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn attitude(self) -> Radial {
+    fn attitude(self) -> RoundPoint {
         self.anti_wedge(Horizon::one())
     }
 }
@@ -332,9 +391,9 @@ impl Attitude for MultiVector {
 }
 
 impl Attitude for Origin {
-    type Output = Radial;
+    type Output = Infinity;
 
-    fn attitude(self) -> Radial {
+    fn attitude(self) -> Infinity {
         self.anti_wedge(Horizon::one())
     }
 }
@@ -356,14 +415,14 @@ impl Attitude for PlaneAtOrigin {
 }
 
 impl Attitude for Point {
-    type Output = Radial;
+    type Output = Infinity;
 
-    fn attitude(self) -> Radial {
+    fn attitude(self) -> Infinity {
         self.anti_wedge(Horizon::one())
     }
 }
 
-impl Attitude for Radial {
+impl Attitude for RoundPoint {
     type Output = Scalar;
 
     fn attitude(self) -> Scalar {
@@ -376,6 +435,76 @@ impl Attitude for Sphere {
 
     fn attitude(self) -> Circle {
         self.anti_wedge(Horizon::one())
+    }
+}
+
+impl Carrier for Circle {
+    type Output = Plane;
+
+    fn carrier(self) -> Plane {
+        self.wedge(Infinity {
+            groups: InfinityGroups { g0: 1.0 },
+        })
+    }
+}
+
+impl Carrier for Dipole {
+    type Output = Line;
+
+    fn carrier(self) -> Line {
+        self.wedge(Infinity {
+            groups: InfinityGroups { g0: 1.0 },
+        })
+    }
+}
+
+impl Carrier for Magnitude {
+    type Output = Infinity;
+
+    fn carrier(self) -> Infinity {
+        self.wedge(Infinity {
+            groups: InfinityGroups { g0: 1.0 },
+        })
+    }
+}
+
+impl Carrier for MultiVector {
+    type Output = MultiVector;
+
+    fn carrier(self) -> MultiVector {
+        self.wedge(Infinity {
+            groups: InfinityGroups { g0: 1.0 },
+        })
+    }
+}
+
+impl Carrier for RoundPoint {
+    type Output = Point;
+
+    fn carrier(self) -> Point {
+        self.wedge(Infinity {
+            groups: InfinityGroups { g0: 1.0 },
+        })
+    }
+}
+
+impl Carrier for Scalar {
+    type Output = Infinity;
+
+    fn carrier(self) -> Infinity {
+        self.wedge(Infinity {
+            groups: InfinityGroups { g0: 1.0 },
+        })
+    }
+}
+
+impl Carrier for Sphere {
+    type Output = AntiScalar;
+
+    fn carrier(self) -> AntiScalar {
+        self.wedge(Infinity {
+            groups: InfinityGroups { g0: 1.0 },
+        })
     }
 }
 

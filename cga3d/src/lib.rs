@@ -895,7 +895,7 @@ impl std::fmt::Debug for Horizon {
 }
 
 #[derive(Clone, Copy)]
-struct RadialGroups {
+struct RoundPointGroups {
     /// e1, e2, e3
     g0: Simd32x3,
     /// e4, e5
@@ -903,13 +903,13 @@ struct RadialGroups {
 }
 
 #[derive(Clone, Copy)]
-pub union Radial {
-    groups: RadialGroups,
+pub union RoundPoint {
+    groups: RoundPointGroups,
     /// e1, e2, e3, 0, e4, e5, 0, 0
     elements: [f32; 8],
 }
 
-impl Radial {
+impl RoundPoint {
     #[allow(clippy::too_many_arguments)]
     pub const fn new(element0: f32, element1: f32, element2: f32, element3: f32, element4: f32) -> Self {
         Self {
@@ -917,7 +917,9 @@ impl Radial {
         }
     }
     pub const fn from_groups(g0: Simd32x3, g1: Simd32x2) -> Self {
-        Self { groups: RadialGroups { g0, g1 } }
+        Self {
+            groups: RoundPointGroups { g0, g1 },
+        }
     }
     #[inline(always)]
     pub fn group0(&self) -> Simd32x3 {
@@ -937,29 +939,29 @@ impl Radial {
     }
 }
 
-const RADIAL_INDEX_REMAP: [usize; 5] = [0, 1, 2, 4, 5];
+const ROUNDPOINT_INDEX_REMAP: [usize; 5] = [0, 1, 2, 4, 5];
 
-impl std::ops::Index<usize> for Radial {
+impl std::ops::Index<usize> for RoundPoint {
     type Output = f32;
 
     fn index(&self, index: usize) -> &Self::Output {
-        unsafe { &self.elements[RADIAL_INDEX_REMAP[index]] }
+        unsafe { &self.elements[ROUNDPOINT_INDEX_REMAP[index]] }
     }
 }
 
-impl std::ops::IndexMut<usize> for Radial {
+impl std::ops::IndexMut<usize> for RoundPoint {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        unsafe { &mut self.elements[RADIAL_INDEX_REMAP[index]] }
+        unsafe { &mut self.elements[ROUNDPOINT_INDEX_REMAP[index]] }
     }
 }
 
-impl std::convert::From<Radial> for [f32; 5] {
-    fn from(vector: Radial) -> Self {
+impl std::convert::From<RoundPoint> for [f32; 5] {
+    fn from(vector: RoundPoint) -> Self {
         unsafe { [vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[4], vector.elements[5]] }
     }
 }
 
-impl std::convert::From<[f32; 5]> for Radial {
+impl std::convert::From<[f32; 5]> for RoundPoint {
     fn from(array: [f32; 5]) -> Self {
         Self {
             elements: [array[0], array[1], array[2], 0.0, array[3], array[4], 0.0, 0.0],
@@ -967,10 +969,10 @@ impl std::convert::From<[f32; 5]> for Radial {
     }
 }
 
-impl std::fmt::Debug for Radial {
+impl std::fmt::Debug for RoundPoint {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
         formatter
-            .debug_struct("Radial")
+            .debug_struct("RoundPoint")
             .field("e1", &self[0])
             .field("e2", &self[1])
             .field("e3", &self[2])
@@ -1279,6 +1281,71 @@ impl std::fmt::Debug for Sphere {
             .field("e1234", &self[3])
             .field("-e1235", &self[4])
             .finish()
+    }
+}
+
+#[derive(Clone, Copy)]
+struct InfinityGroups {
+    /// e5
+    g0: f32,
+}
+
+#[derive(Clone, Copy)]
+pub union Infinity {
+    groups: InfinityGroups,
+    /// e5
+    elements: [f32; 1],
+}
+
+impl Infinity {
+    #[allow(clippy::too_many_arguments)]
+    pub const fn new(element0: f32) -> Self {
+        Self { elements: [element0] }
+    }
+    pub const fn from_groups(g0: f32) -> Self {
+        Self { groups: InfinityGroups { g0 } }
+    }
+    #[inline(always)]
+    pub fn group0(&self) -> f32 {
+        unsafe { self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group0_mut(&mut self) -> &mut f32 {
+        unsafe { &mut self.groups.g0 }
+    }
+}
+
+const INFINITY_INDEX_REMAP: [usize; 1] = [0];
+
+impl std::ops::Index<usize> for Infinity {
+    type Output = f32;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        unsafe { &self.elements[INFINITY_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::ops::IndexMut<usize> for Infinity {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        unsafe { &mut self.elements[INFINITY_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::convert::From<Infinity> for [f32; 1] {
+    fn from(vector: Infinity) -> Self {
+        unsafe { [vector.elements[0]] }
+    }
+}
+
+impl std::convert::From<[f32; 1]> for Infinity {
+    fn from(array: [f32; 1]) -> Self {
+        Self { elements: [array[0]] }
+    }
+}
+
+impl std::fmt::Debug for Infinity {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter.debug_struct("Infinity").field("e5", &self[0]).finish()
     }
 }
 
@@ -1600,6 +1667,14 @@ impl One for Horizon {
     }
 }
 
+impl One for Infinity {
+    fn one() -> Self {
+        Infinity {
+            groups: InfinityGroups { g0: 0.0 },
+        }
+    }
+}
+
 impl One for Line {
     fn one() -> Self {
         Line {
@@ -1693,10 +1768,10 @@ impl One for PointAtInfinity {
     }
 }
 
-impl One for Radial {
+impl One for RoundPoint {
     fn one() -> Self {
-        Radial {
-            groups: RadialGroups {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(0.0),
                 g1: Simd32x2::from(0.0),
             },
@@ -1757,6 +1832,14 @@ impl Zero for Horizon {
     fn zero() -> Self {
         Horizon {
             groups: HorizonGroups { g0: 0.0 },
+        }
+    }
+}
+
+impl Zero for Infinity {
+    fn zero() -> Self {
+        Infinity {
+            groups: InfinityGroups { g0: 0.0 },
         }
     }
 }
@@ -1854,10 +1937,10 @@ impl Zero for PointAtInfinity {
     }
 }
 
-impl Zero for Radial {
+impl Zero for RoundPoint {
     fn zero() -> Self {
-        Radial {
-            groups: RadialGroups {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(0.0),
                 g1: Simd32x2::from(0.0),
             },
@@ -1926,6 +2009,16 @@ impl Neg for Horizon {
     fn neg(self) -> Horizon {
         Horizon {
             groups: HorizonGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Neg for Infinity {
+    type Output = Infinity;
+
+    fn neg(self) -> Infinity {
+        Infinity {
+            groups: InfinityGroups { g0: -self.group0() },
         }
     }
 }
@@ -2059,12 +2152,12 @@ impl Neg for PointAtInfinity {
     }
 }
 
-impl Neg for Radial {
-    type Output = Radial;
+impl Neg for RoundPoint {
+    type Output = RoundPoint;
 
-    fn neg(self) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn neg(self) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x2::from(-1.0),
             },
@@ -2433,6 +2526,59 @@ impl Add<Sphere> for Horizon {
     fn add(self, other: Sphere) -> Sphere {
         Sphere {
             groups: SphereGroups {
+                g0: other.group0(),
+                g1: Simd32x2::from([0.0, self.group0()]) + other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<Infinity> for Infinity {
+    type Output = Infinity;
+
+    fn add(self, other: Infinity) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: self.group0() + other.group0(),
+            },
+        }
+    }
+}
+
+impl AddAssign<Infinity> for Infinity {
+    fn add_assign(&mut self, other: Infinity) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<MultiVector> for Infinity {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: other.group0(),
+                g1: other.group1(),
+                g2: Simd32x2::from([0.0, self.group0()]) + other.group2(),
+                g3: other.group3(),
+                g4: other.group4(),
+                g5: other.group5(),
+                g6: other.group6(),
+                g7: other.group7(),
+                g8: other.group8(),
+                g9: other.group9(),
+                g10: other.group10(),
+            },
+        }
+    }
+}
+
+impl Add<RoundPoint> for Infinity {
+    type Output = RoundPoint;
+
+    fn add(self, other: RoundPoint) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: other.group0(),
                 g1: Simd32x2::from([0.0, self.group0()]) + other.group1(),
             },
@@ -2881,6 +3027,34 @@ impl AddAssign<Horizon> for MultiVector {
     }
 }
 
+impl Add<Infinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn add(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2() + Simd32x2::from([0.0, other.group0()]),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl AddAssign<Infinity> for MultiVector {
+    fn add_assign(&mut self, other: Infinity) {
+        *self = (*self).add(other);
+    }
+}
+
 impl Add<Line> for MultiVector {
     type Output = MultiVector;
 
@@ -3161,10 +3335,10 @@ impl AddAssign<PointAtInfinity> for MultiVector {
     }
 }
 
-impl Add<Radial> for MultiVector {
+impl Add<RoundPoint> for MultiVector {
     type Output = MultiVector;
 
-    fn add(self, other: Radial) -> MultiVector {
+    fn add(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -3183,8 +3357,8 @@ impl Add<Radial> for MultiVector {
     }
 }
 
-impl AddAssign<Radial> for MultiVector {
-    fn add_assign(&mut self, other: Radial) {
+impl AddAssign<RoundPoint> for MultiVector {
+    fn add_assign(&mut self, other: RoundPoint) {
         *self = (*self).add(other);
     }
 }
@@ -3657,7 +3831,26 @@ impl AddAssign<PointAtInfinity> for PointAtInfinity {
     }
 }
 
-impl Add<MultiVector> for Radial {
+impl Add<Infinity> for RoundPoint {
+    type Output = RoundPoint;
+
+    fn add(self, other: Infinity) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: self.group0(),
+                g1: self.group1() + Simd32x2::from([0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl AddAssign<Infinity> for RoundPoint {
+    fn add_assign(&mut self, other: Infinity) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<MultiVector> for RoundPoint {
     type Output = MultiVector;
 
     fn add(self, other: MultiVector) -> MultiVector {
@@ -3679,12 +3872,12 @@ impl Add<MultiVector> for Radial {
     }
 }
 
-impl Add<Radial> for Radial {
-    type Output = Radial;
+impl Add<RoundPoint> for RoundPoint {
+    type Output = RoundPoint;
 
-    fn add(self, other: Radial) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn add(self, other: RoundPoint) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: self.group0() + other.group0(),
                 g1: self.group1() + other.group1(),
             },
@@ -3692,8 +3885,8 @@ impl Add<Radial> for Radial {
     }
 }
 
-impl AddAssign<Radial> for Radial {
-    fn add_assign(&mut self, other: Radial) {
+impl AddAssign<RoundPoint> for RoundPoint {
+    fn add_assign(&mut self, other: RoundPoint) {
         *self = (*self).add(other);
     }
 }
@@ -3948,6 +4141,24 @@ impl DivAssign<Horizon> for Horizon {
     }
 }
 
+impl Div<Infinity> for Infinity {
+    type Output = Infinity;
+
+    fn div(self, other: Infinity) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: self.group0() * 1.0 / other.group0() * 1.0,
+            },
+        }
+    }
+}
+
+impl DivAssign<Infinity> for Infinity {
+    fn div_assign(&mut self, other: Infinity) {
+        *self = (*self).div(other);
+    }
+}
+
 impl Div<Line> for Line {
     type Output = Line;
 
@@ -4175,12 +4386,12 @@ impl DivAssign<PointAtInfinity> for PointAtInfinity {
     }
 }
 
-impl Div<Radial> for Radial {
-    type Output = Radial;
+impl Div<RoundPoint> for RoundPoint {
+    type Output = RoundPoint;
 
-    fn div(self, other: Radial) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn div(self, other: RoundPoint) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
                     / Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
                     * Simd32x3::from([1.0, 1.0, 1.0]),
@@ -4191,8 +4402,8 @@ impl Div<Radial> for Radial {
     }
 }
 
-impl DivAssign<Radial> for Radial {
-    fn div_assign(&mut self, other: Radial) {
+impl DivAssign<RoundPoint> for RoundPoint {
+    fn div_assign(&mut self, other: RoundPoint) {
         *self = (*self).div(other);
     }
 }
@@ -4362,6 +4573,14 @@ impl Into<Horizon> for MultiVector {
     }
 }
 
+impl Into<Infinity> for MultiVector {
+    fn into(self) -> Infinity {
+        Infinity {
+            groups: InfinityGroups { g0: self.group2()[1] },
+        }
+    }
+}
+
 impl Into<Line> for MultiVector {
     fn into(self) -> Line {
         Line {
@@ -4441,10 +4660,10 @@ impl Into<PointAtInfinity> for MultiVector {
     }
 }
 
-impl Into<Radial> for MultiVector {
-    fn into(self) -> Radial {
-        Radial {
-            groups: RadialGroups {
+impl Into<RoundPoint> for MultiVector {
+    fn into(self) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: self.group1(),
                 g1: self.group2(),
             },
@@ -4503,6 +4722,14 @@ impl Into<PointAtInfinity> for Point {
             groups: PointAtInfinityGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
             },
+        }
+    }
+}
+
+impl Into<Infinity> for RoundPoint {
+    fn into(self) -> Infinity {
+        Infinity {
+            groups: InfinityGroups { g0: self.group1()[1] },
         }
     }
 }
@@ -4605,6 +4832,24 @@ impl Mul<Horizon> for Horizon {
 
 impl MulAssign<Horizon> for Horizon {
     fn mul_assign(&mut self, other: Horizon) {
+        *self = (*self).mul(other);
+    }
+}
+
+impl Mul<Infinity> for Infinity {
+    type Output = Infinity;
+
+    fn mul(self, other: Infinity) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl MulAssign<Infinity> for Infinity {
+    fn mul_assign(&mut self, other: Infinity) {
         *self = (*self).mul(other);
     }
 }
@@ -4800,12 +5045,12 @@ impl MulAssign<PointAtInfinity> for PointAtInfinity {
     }
 }
 
-impl Mul<Radial> for Radial {
-    type Output = Radial;
+impl Mul<RoundPoint> for RoundPoint {
+    type Output = RoundPoint;
 
-    fn mul(self, other: Radial) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn mul(self, other: RoundPoint) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: self.group0() * other.group0(),
                 g1: self.group1() * other.group1(),
             },
@@ -4813,8 +5058,8 @@ impl Mul<Radial> for Radial {
     }
 }
 
-impl MulAssign<Radial> for Radial {
-    fn mul_assign(&mut self, other: Radial) {
+impl MulAssign<RoundPoint> for RoundPoint {
+    fn mul_assign(&mut self, other: RoundPoint) {
         *self = (*self).mul(other);
     }
 }
@@ -5194,6 +5439,59 @@ impl Sub<Sphere> for Horizon {
     fn sub(self, other: Sphere) -> Sphere {
         Sphere {
             groups: SphereGroups {
+                g0: Simd32x3::from(0.0) - other.group0(),
+                g1: Simd32x2::from([0.0, self.group0()]) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<Infinity> for Infinity {
+    type Output = Infinity;
+
+    fn sub(self, other: Infinity) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: self.group0() - other.group0(),
+            },
+        }
+    }
+}
+
+impl SubAssign<Infinity> for Infinity {
+    fn sub_assign(&mut self, other: Infinity) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<MultiVector> for Infinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x2::from([0.0, self.group0()]) - other.group2(),
+                g3: Simd32x3::from(0.0) - other.group3(),
+                g4: Simd32x3::from(0.0) - other.group4(),
+                g5: Simd32x4::from(0.0) - other.group5(),
+                g6: Simd32x4::from(0.0) - other.group6(),
+                g7: Simd32x3::from(0.0) - other.group7(),
+                g8: Simd32x3::from(0.0) - other.group8(),
+                g9: Simd32x3::from(0.0) - other.group9(),
+                g10: Simd32x2::from(0.0) - other.group10(),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPoint> for Infinity {
+    type Output = RoundPoint;
+
+    fn sub(self, other: RoundPoint) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(0.0) - other.group0(),
                 g1: Simd32x2::from([0.0, self.group0()]) - other.group1(),
             },
@@ -5642,6 +5940,34 @@ impl SubAssign<Horizon> for MultiVector {
     }
 }
 
+impl Sub<Infinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn sub(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2() - Simd32x2::from([0.0, other.group0()]),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl SubAssign<Infinity> for MultiVector {
+    fn sub_assign(&mut self, other: Infinity) {
+        *self = (*self).sub(other);
+    }
+}
+
 impl Sub<Line> for MultiVector {
     type Output = MultiVector;
 
@@ -5922,10 +6248,10 @@ impl SubAssign<PointAtInfinity> for MultiVector {
     }
 }
 
-impl Sub<Radial> for MultiVector {
+impl Sub<RoundPoint> for MultiVector {
     type Output = MultiVector;
 
-    fn sub(self, other: Radial) -> MultiVector {
+    fn sub(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -5944,8 +6270,8 @@ impl Sub<Radial> for MultiVector {
     }
 }
 
-impl SubAssign<Radial> for MultiVector {
-    fn sub_assign(&mut self, other: Radial) {
+impl SubAssign<RoundPoint> for MultiVector {
+    fn sub_assign(&mut self, other: RoundPoint) {
         *self = (*self).sub(other);
     }
 }
@@ -6418,7 +6744,26 @@ impl SubAssign<PointAtInfinity> for PointAtInfinity {
     }
 }
 
-impl Sub<MultiVector> for Radial {
+impl Sub<Infinity> for RoundPoint {
+    type Output = RoundPoint;
+
+    fn sub(self, other: Infinity) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: self.group0(),
+                g1: self.group1() - Simd32x2::from([0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl SubAssign<Infinity> for RoundPoint {
+    fn sub_assign(&mut self, other: Infinity) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<MultiVector> for RoundPoint {
     type Output = MultiVector;
 
     fn sub(self, other: MultiVector) -> MultiVector {
@@ -6440,12 +6785,12 @@ impl Sub<MultiVector> for Radial {
     }
 }
 
-impl Sub<Radial> for Radial {
-    type Output = Radial;
+impl Sub<RoundPoint> for RoundPoint {
+    type Output = RoundPoint;
 
-    fn sub(self, other: Radial) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn sub(self, other: RoundPoint) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: self.group0() - other.group0(),
                 g1: self.group1() - other.group1(),
             },
@@ -6453,8 +6798,8 @@ impl Sub<Radial> for Radial {
     }
 }
 
-impl SubAssign<Radial> for Radial {
-    fn sub_assign(&mut self, other: Radial) {
+impl SubAssign<RoundPoint> for RoundPoint {
+    fn sub_assign(&mut self, other: RoundPoint) {
         *self = (*self).sub(other);
     }
 }

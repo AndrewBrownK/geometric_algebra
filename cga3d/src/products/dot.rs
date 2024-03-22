@@ -237,6 +237,30 @@ impl AntiDot<Sphere> for Horizon {
     }
 }
 
+impl AntiDot<MultiVector> for Infinity {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: MultiVector) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0() * other.group2()[0],
+            },
+        }
+    }
+}
+
+impl AntiDot<RoundPoint> for Infinity {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: RoundPoint) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0() * other.group1()[0],
+            },
+        }
+    }
+}
+
 impl AntiDot<Circle> for Line {
     type Output = AntiScalar;
 
@@ -480,6 +504,18 @@ impl AntiDot<Horizon> for MultiVector {
     }
 }
 
+impl AntiDot<Infinity> for MultiVector {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Infinity) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group2()[0] * other.group0(),
+            },
+        }
+    }
+}
+
 impl AntiDot<Line> for MultiVector {
     type Output = AntiScalar;
 
@@ -636,10 +672,10 @@ impl AntiDot<PointAtInfinity> for MultiVector {
     }
 }
 
-impl AntiDot<Radial> for MultiVector {
+impl AntiDot<RoundPoint> for MultiVector {
     type Output = AntiScalar;
 
-    fn anti_dot(self, other: Radial) -> AntiScalar {
+    fn anti_dot(self, other: RoundPoint) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2]
@@ -892,7 +928,19 @@ impl AntiDot<MultiVector> for PointAtInfinity {
     }
 }
 
-impl AntiDot<MultiVector> for Radial {
+impl AntiDot<Infinity> for RoundPoint {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Infinity) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group1()[0] * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiDot<MultiVector> for RoundPoint {
     type Output = AntiScalar;
 
     fn anti_dot(self, other: MultiVector) -> AntiScalar {
@@ -906,10 +954,10 @@ impl AntiDot<MultiVector> for Radial {
     }
 }
 
-impl AntiDot<Radial> for Radial {
+impl AntiDot<RoundPoint> for RoundPoint {
     type Output = AntiScalar;
 
-    fn anti_dot(self, other: Radial) -> AntiScalar {
+    fn anti_dot(self, other: RoundPoint) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2]
@@ -1237,6 +1285,30 @@ impl Dot<Sphere> for Horizon {
     }
 }
 
+impl Dot<MultiVector> for Infinity {
+    type Output = Scalar;
+
+    fn dot(self, other: MultiVector) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0() * other.group2()[0],
+            },
+        }
+    }
+}
+
+impl Dot<RoundPoint> for Infinity {
+    type Output = Scalar;
+
+    fn dot(self, other: RoundPoint) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0() * other.group1()[0],
+            },
+        }
+    }
+}
+
 impl Dot<Circle> for Line {
     type Output = Scalar;
 
@@ -1479,6 +1551,18 @@ impl Dot<Horizon> for MultiVector {
     }
 }
 
+impl Dot<Infinity> for MultiVector {
+    type Output = Scalar;
+
+    fn dot(self, other: Infinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group2()[0] * other.group0(),
+            },
+        }
+    }
+}
+
 impl Dot<Line> for MultiVector {
     type Output = Scalar;
 
@@ -1635,10 +1719,10 @@ impl Dot<PointAtInfinity> for MultiVector {
     }
 }
 
-impl Dot<Radial> for MultiVector {
+impl Dot<RoundPoint> for MultiVector {
     type Output = Scalar;
 
-    fn dot(self, other: Radial) -> Scalar {
+    fn dot(self, other: RoundPoint) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2]
@@ -1892,7 +1976,19 @@ impl Dot<MultiVector> for PointAtInfinity {
     }
 }
 
-impl Dot<MultiVector> for Radial {
+impl Dot<Infinity> for RoundPoint {
+    type Output = Scalar;
+
+    fn dot(self, other: Infinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group1()[0] * other.group0(),
+            },
+        }
+    }
+}
+
+impl Dot<MultiVector> for RoundPoint {
     type Output = Scalar;
 
     fn dot(self, other: MultiVector) -> Scalar {
@@ -1906,10 +2002,10 @@ impl Dot<MultiVector> for Radial {
     }
 }
 
-impl Dot<Radial> for Radial {
+impl Dot<RoundPoint> for RoundPoint {
     type Output = Scalar;
 
-    fn dot(self, other: Radial) -> Scalar {
+    fn dot(self, other: RoundPoint) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2]

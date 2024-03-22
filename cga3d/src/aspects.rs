@@ -69,6 +69,14 @@ impl Bulk for Horizon {
     }
 }
 
+impl Bulk for Infinity {
+    type Output = Infinity;
+
+    fn bulk(self) -> Infinity {
+        self
+    }
+}
+
 impl Bulk for Line {
     type Output = LineAtInfinity;
 
@@ -139,15 +147,12 @@ impl Bulk for PointAtInfinity {
     }
 }
 
-impl Bulk for Radial {
-    type Output = Radial;
+impl Bulk for RoundPoint {
+    type Output = Infinity;
 
-    fn bulk(self) -> Radial {
-        Radial {
-            groups: RadialGroups {
-                g0: Simd32x3::from([0.0, 0.0, 0.0]),
-                g1: self.group1() * Simd32x2::from([0.0, 1.0]),
-            },
+    fn bulk(self) -> Infinity {
+        Infinity {
+            groups: InfinityGroups { g0: self.group1()[1] },
         }
     }
 }
@@ -222,12 +227,12 @@ impl RoundBulk for MultiVector {
     }
 }
 
-impl RoundBulk for Radial {
-    type Output = Radial;
+impl RoundBulk for RoundPoint {
+    type Output = RoundPoint;
 
-    fn round_bulk(self) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn round_bulk(self) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: self.group0(),
                 g1: Simd32x2::from([0.0, 0.0]),
             },
@@ -293,12 +298,12 @@ impl RoundWeight for MultiVector {
     }
 }
 
-impl RoundWeight for Radial {
-    type Output = Radial;
+impl RoundWeight for RoundPoint {
+    type Output = RoundPoint;
 
-    fn round_weight(self) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn round_weight(self) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from([0.0, 0.0, 0.0]),
                 g1: self.group1() * Simd32x2::from([1.0, 0.0]),
             },

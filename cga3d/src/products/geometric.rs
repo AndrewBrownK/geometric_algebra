@@ -91,6 +91,18 @@ impl AntiWedgeDot<Horizon> for AntiScalar {
     }
 }
 
+impl AntiWedgeDot<Infinity> for AntiScalar {
+    type Output = Infinity;
+
+    fn anti_wedge_dot(self, other: Infinity) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
 impl AntiWedgeDot<Line> for AntiScalar {
     type Output = Line;
 
@@ -222,12 +234,12 @@ impl AntiWedgeDot<PointAtInfinity> for AntiScalar {
     }
 }
 
-impl AntiWedgeDot<Radial> for AntiScalar {
-    type Output = Radial;
+impl AntiWedgeDot<RoundPoint> for AntiScalar {
+    type Output = RoundPoint;
 
-    fn anti_wedge_dot(self, other: Radial) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn anti_wedge_dot(self, other: RoundPoint) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
                 g1: Simd32x2::from(self.group0()) * other.group1(),
             },
@@ -429,6 +441,28 @@ impl AntiWedgeDot<Horizon> for Circle {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
                 g10: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Infinity> for Circle {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, other.group0()]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g8: self.group1() * Simd32x3::from(other.group0()),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -890,10 +924,10 @@ impl AntiWedgeDot<PointAtInfinity> for Circle {
     }
 }
 
-impl AntiWedgeDot<Radial> for Circle {
+impl AntiWedgeDot<RoundPoint> for Circle {
     type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: Radial) -> MultiVector {
+    fn anti_wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -1157,6 +1191,29 @@ impl AntiWedgeDot<Horizon> for Dipole {
                 g8: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Infinity> for Dipole {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0() * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]])
+                    * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: self.group0() * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(self.group2()[3]) * Simd32x2::from([0.0, -other.group0()]),
             },
         }
     }
@@ -1623,10 +1680,10 @@ impl AntiWedgeDot<PointAtInfinity> for Dipole {
     }
 }
 
-impl AntiWedgeDot<Radial> for Dipole {
+impl AntiWedgeDot<RoundPoint> for Dipole {
     type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: Radial) -> MultiVector {
+    fn anti_wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -1849,13 +1906,12 @@ impl AntiWedgeDot<MultiVector> for Horizon {
 }
 
 impl AntiWedgeDot<Origin> for Horizon {
-    type Output = Radial;
+    type Output = Infinity;
 
-    fn anti_wedge_dot(self, other: Origin) -> Radial {
-        Radial {
-            groups: RadialGroups {
-                g0: Simd32x3::from(0.0),
-                g1: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group0()]),
+    fn anti_wedge_dot(self, other: Origin) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: 0.0 - self.group0() * other.group0(),
             },
         }
     }
@@ -1886,22 +1942,21 @@ impl AntiWedgeDot<PlaneAtOrigin> for Horizon {
 }
 
 impl AntiWedgeDot<Point> for Horizon {
-    type Output = Radial;
+    type Output = Infinity;
 
-    fn anti_wedge_dot(self, other: Point) -> Radial {
-        Radial {
-            groups: RadialGroups {
-                g0: Simd32x3::from(0.0),
-                g1: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group0()[3]]),
+    fn anti_wedge_dot(self, other: Point) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: 0.0 - self.group0() * other.group0()[3],
             },
         }
     }
 }
 
-impl AntiWedgeDot<Radial> for Horizon {
+impl AntiWedgeDot<RoundPoint> for Horizon {
     type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: Radial) -> MultiVector {
+    fn anti_wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group1()[0], 0.0]),
@@ -1921,13 +1976,12 @@ impl AntiWedgeDot<Radial> for Horizon {
 }
 
 impl AntiWedgeDot<Scalar> for Horizon {
-    type Output = Radial;
+    type Output = Infinity;
 
-    fn anti_wedge_dot(self, other: Scalar) -> Radial {
-        Radial {
-            groups: RadialGroups {
-                g0: Simd32x3::from(0.0),
-                g1: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group0()]),
+    fn anti_wedge_dot(self, other: Scalar) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: 0.0 - self.group0() * other.group0(),
             },
         }
     }
@@ -1948,6 +2002,235 @@ impl AntiWedgeDot<Sphere> for Horizon {
                 g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group1()[0]]),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<AntiScalar> for Infinity {
+    type Output = Infinity;
+
+    fn anti_wedge_dot(self, other: AntiScalar) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Circle> for Infinity {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: Circle) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group0()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: Simd32x3::from(self.group0()) * other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Dipole> for Infinity {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: Dipole) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(self.group0()) * other.group0(),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group2()[3]]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Line> for Infinity {
+    type Output = LineAtInfinity;
+
+    fn anti_wedge_dot(self, other: Line) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<LineAtOrigin> for Infinity {
+    type Output = LineAtInfinity;
+
+    fn anti_wedge_dot(self, other: LineAtOrigin) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Magnitude> for Infinity {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: Magnitude) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()[1]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()[0]]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<MultiVector> for Infinity {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group10()[0], other.group2()[0]]),
+                g1: Simd32x3::from(self.group0()) * Simd32x3::from([other.group6()[0], other.group6()[1], other.group6()[2]]),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group6()[3]]) + Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()[1]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(self.group0()) * other.group3(),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([other.group9()[0], other.group9()[1], other.group9()[2], -other.group10()[0]])
+                    + Simd32x4::from(self.group0()) * Simd32x4::from([other.group4()[0], other.group4()[1], other.group4()[2], 0.0]),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group2()[0]]),
+                g7: Simd32x3::from(self.group0()) * Simd32x3::from([other.group6()[0], other.group6()[1], other.group6()[2]]),
+                g8: Simd32x3::from(self.group0()) * other.group7() - Simd32x3::from(self.group0()) * other.group1(),
+                g9: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group3(),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group5()[3]]) + Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()[0]]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Origin> for Infinity {
+    type Output = Horizon;
+
+    fn anti_wedge_dot(self, other: Origin) -> Horizon {
+        Horizon {
+            groups: HorizonGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Plane> for Infinity {
+    type Output = PointAtInfinity;
+
+    fn anti_wedge_dot(self, other: Plane) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<PlaneAtOrigin> for Infinity {
+    type Output = PointAtInfinity;
+
+    fn anti_wedge_dot(self, other: PlaneAtOrigin) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Point> for Infinity {
+    type Output = Horizon;
+
+    fn anti_wedge_dot(self, other: Point) -> Horizon {
+        Horizon {
+            groups: HorizonGroups {
+                g0: self.group0() * other.group0()[3],
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<RoundPoint> for Infinity {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: RoundPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group1()[0]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group1()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Scalar> for Infinity {
+    type Output = Horizon;
+
+    fn anti_wedge_dot(self, other: Scalar) -> Horizon {
+        Horizon {
+            groups: HorizonGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Sphere> for Infinity {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: Sphere) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group1()[0], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], -other.group1()[0]]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -2073,6 +2356,18 @@ impl AntiWedgeDot<Horizon> for Line {
     fn anti_wedge_dot(self, other: Horizon) -> PointAtInfinity {
         PointAtInfinity {
             groups: PointAtInfinityGroups {
+                g0: self.group0() * Simd32x3::from(other.group0()),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Infinity> for Line {
+    type Output = LineAtInfinity;
+
+    fn anti_wedge_dot(self, other: Infinity) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
@@ -2422,10 +2717,10 @@ impl AntiWedgeDot<PointAtInfinity> for Line {
     }
 }
 
-impl AntiWedgeDot<Radial> for Line {
+impl AntiWedgeDot<RoundPoint> for Line {
     type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: Radial) -> MultiVector {
+    fn anti_wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -2785,10 +3080,10 @@ impl AntiWedgeDot<Point> for LineAtInfinity {
     }
 }
 
-impl AntiWedgeDot<Radial> for LineAtInfinity {
+impl AntiWedgeDot<RoundPoint> for LineAtInfinity {
     type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: Radial) -> MultiVector {
+    fn anti_wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -2933,6 +3228,18 @@ impl AntiWedgeDot<Horizon> for LineAtOrigin {
     fn anti_wedge_dot(self, other: Horizon) -> PointAtInfinity {
         PointAtInfinity {
             groups: PointAtInfinityGroups {
+                g0: self.group0() * Simd32x3::from(other.group0()),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Infinity> for LineAtOrigin {
+    type Output = LineAtInfinity;
+
+    fn anti_wedge_dot(self, other: Infinity) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
@@ -3206,10 +3513,10 @@ impl AntiWedgeDot<PointAtInfinity> for LineAtOrigin {
     }
 }
 
-impl AntiWedgeDot<Radial> for LineAtOrigin {
+impl AntiWedgeDot<RoundPoint> for LineAtOrigin {
     type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: Radial) -> MultiVector {
+    fn anti_wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -3345,6 +3652,28 @@ impl AntiWedgeDot<Horizon> for Magnitude {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Infinity> for Magnitude {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()]),
             },
         }
     }
@@ -3564,10 +3893,10 @@ impl AntiWedgeDot<PointAtInfinity> for Magnitude {
     }
 }
 
-impl AntiWedgeDot<Radial> for Magnitude {
+impl AntiWedgeDot<RoundPoint> for Magnitude {
     type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: Radial) -> MultiVector {
+    fn anti_wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -3986,6 +4315,32 @@ impl AntiWedgeDot<Horizon> for MultiVector {
                 g8: Simd32x3::from(0.0) - self.group4() * Simd32x3::from(other.group0()) + self.group9() * Simd32x3::from(other.group0()),
                 g9: Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]) * Simd32x3::from(other.group0()),
                 g10: Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()]) + Simd32x2::from(self.group6()[3]) * Simd32x2::from([0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Infinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group2()[0]) * Simd32x2::from([0.0, other.group0()]) + Simd32x2::from(self.group10()[0]) * Simd32x2::from([other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]) * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()]) + Simd32x2::from(self.group6()[3]) * Simd32x2::from([0.0, other.group0()]),
+                g3: Simd32x3::from(0.0),
+                g4: self.group3() * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from([self.group4()[0], self.group4()[1], self.group4()[2], self.group4()[0]])
+                    * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0])
+                    + Simd32x4::from([self.group9()[0], self.group9()[1], self.group9()[2], self.group9()[0]])
+                        * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0])
+                    + Simd32x4::from(self.group10()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g6: Simd32x4::from(self.group2()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g7: Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]) * Simd32x3::from(other.group0()),
+                g8: self.group1() * Simd32x3::from(other.group0()) + self.group7() * Simd32x3::from(other.group0()),
+                g9: self.group3() * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()]) + Simd32x2::from(self.group5()[3]) * Simd32x2::from([0.0, -other.group0()]),
             },
         }
     }
@@ -4995,10 +5350,10 @@ impl AntiWedgeDot<PointAtInfinity> for MultiVector {
     }
 }
 
-impl AntiWedgeDot<Radial> for MultiVector {
+impl AntiWedgeDot<RoundPoint> for MultiVector {
     type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: Radial) -> MultiVector {
+    fn anti_wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
@@ -5261,13 +5616,24 @@ impl AntiWedgeDot<Dipole> for Origin {
 }
 
 impl AntiWedgeDot<Horizon> for Origin {
-    type Output = Radial;
+    type Output = Infinity;
 
-    fn anti_wedge_dot(self, other: Horizon) -> Radial {
-        Radial {
-            groups: RadialGroups {
-                g0: Simd32x3::from(0.0),
-                g1: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()]),
+    fn anti_wedge_dot(self, other: Horizon) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Infinity> for Origin {
+    type Output = Horizon;
+
+    fn anti_wedge_dot(self, other: Infinity) -> Horizon {
+        Horizon {
+            groups: HorizonGroups {
+                g0: 0.0 - self.group0() * other.group0(),
             },
         }
     }
@@ -5443,10 +5809,10 @@ impl AntiWedgeDot<PointAtInfinity> for Origin {
     }
 }
 
-impl AntiWedgeDot<Radial> for Origin {
+impl AntiWedgeDot<RoundPoint> for Origin {
     type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: Radial) -> MultiVector {
+    fn anti_wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -5589,6 +5955,18 @@ impl AntiWedgeDot<Horizon> for Plane {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Infinity> for Plane {
+    type Output = PointAtInfinity;
+
+    fn anti_wedge_dot(self, other: Infinity) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
             },
         }
     }
@@ -5883,10 +6261,10 @@ impl AntiWedgeDot<PointAtInfinity> for Plane {
     }
 }
 
-impl AntiWedgeDot<Radial> for Plane {
+impl AntiWedgeDot<RoundPoint> for Plane {
     type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: Radial) -> MultiVector {
+    fn anti_wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], 0.0])
@@ -5912,11 +6290,11 @@ impl AntiWedgeDot<Radial> for Plane {
 }
 
 impl AntiWedgeDot<Scalar> for Plane {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn anti_wedge_dot(self, other: Scalar) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn anti_wedge_dot(self, other: Scalar) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
                 g1: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()]),
             },
@@ -6030,6 +6408,18 @@ impl AntiWedgeDot<Horizon> for PlaneAtOrigin {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Infinity> for PlaneAtOrigin {
+    type Output = PointAtInfinity;
+
+    fn anti_wedge_dot(self, other: Infinity) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
@@ -6297,10 +6687,10 @@ impl AntiWedgeDot<PointAtInfinity> for PlaneAtOrigin {
     }
 }
 
-impl AntiWedgeDot<Radial> for PlaneAtOrigin {
+impl AntiWedgeDot<RoundPoint> for PlaneAtOrigin {
     type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: Radial) -> MultiVector {
+    fn anti_wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], 0.0])
@@ -6325,11 +6715,11 @@ impl AntiWedgeDot<Radial> for PlaneAtOrigin {
 }
 
 impl AntiWedgeDot<Scalar> for PlaneAtOrigin {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn anti_wedge_dot(self, other: Scalar) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn anti_wedge_dot(self, other: Scalar) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
                 g1: Simd32x2::from(0.0),
             },
@@ -6449,13 +6839,24 @@ impl AntiWedgeDot<Dipole> for Point {
 }
 
 impl AntiWedgeDot<Horizon> for Point {
-    type Output = Radial;
+    type Output = Infinity;
 
-    fn anti_wedge_dot(self, other: Horizon) -> Radial {
-        Radial {
-            groups: RadialGroups {
-                g0: Simd32x3::from(0.0),
-                g1: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, other.group0()]),
+    fn anti_wedge_dot(self, other: Horizon) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: self.group0()[3] * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Infinity> for Point {
+    type Output = Horizon;
+
+    fn anti_wedge_dot(self, other: Infinity) -> Horizon {
+        Horizon {
+            groups: HorizonGroups {
+                g0: 0.0 - self.group0()[3] * other.group0(),
             },
         }
     }
@@ -6722,10 +7123,10 @@ impl AntiWedgeDot<PointAtInfinity> for Point {
     }
 }
 
-impl AntiWedgeDot<Radial> for Point {
+impl AntiWedgeDot<RoundPoint> for Point {
     type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: Radial) -> MultiVector {
+    fn anti_wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -7075,10 +7476,10 @@ impl AntiWedgeDot<Point> for PointAtInfinity {
     }
 }
 
-impl AntiWedgeDot<Radial> for PointAtInfinity {
+impl AntiWedgeDot<RoundPoint> for PointAtInfinity {
     type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: Radial) -> MultiVector {
+    fn anti_wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -7139,12 +7540,12 @@ impl AntiWedgeDot<Sphere> for PointAtInfinity {
     }
 }
 
-impl AntiWedgeDot<AntiScalar> for Radial {
-    type Output = Radial;
+impl AntiWedgeDot<AntiScalar> for RoundPoint {
+    type Output = RoundPoint;
 
-    fn anti_wedge_dot(self, other: AntiScalar) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn anti_wedge_dot(self, other: AntiScalar) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
                 g1: self.group1() * Simd32x2::from(other.group0()),
             },
@@ -7152,7 +7553,7 @@ impl AntiWedgeDot<AntiScalar> for Radial {
     }
 }
 
-impl AntiWedgeDot<Circle> for Radial {
+impl AntiWedgeDot<Circle> for RoundPoint {
     type Output = MultiVector;
 
     fn anti_wedge_dot(self, other: Circle) -> MultiVector {
@@ -7189,7 +7590,7 @@ impl AntiWedgeDot<Circle> for Radial {
     }
 }
 
-impl AntiWedgeDot<Dipole> for Radial {
+impl AntiWedgeDot<Dipole> for RoundPoint {
     type Output = MultiVector;
 
     fn anti_wedge_dot(self, other: Dipole) -> MultiVector {
@@ -7226,7 +7627,7 @@ impl AntiWedgeDot<Dipole> for Radial {
     }
 }
 
-impl AntiWedgeDot<Horizon> for Radial {
+impl AntiWedgeDot<Horizon> for RoundPoint {
     type Output = MultiVector;
 
     fn anti_wedge_dot(self, other: Horizon) -> MultiVector {
@@ -7250,7 +7651,29 @@ impl AntiWedgeDot<Horizon> for Radial {
     }
 }
 
-impl AntiWedgeDot<Line> for Radial {
+impl AntiWedgeDot<Infinity> for RoundPoint {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g7: Simd32x3::from(0.0),
+                g8: self.group0() * Simd32x3::from(other.group0()),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Line> for RoundPoint {
     type Output = MultiVector;
 
     fn anti_wedge_dot(self, other: Line) -> MultiVector {
@@ -7283,7 +7706,7 @@ impl AntiWedgeDot<Line> for Radial {
     }
 }
 
-impl AntiWedgeDot<LineAtInfinity> for Radial {
+impl AntiWedgeDot<LineAtInfinity> for RoundPoint {
     type Output = MultiVector;
 
     fn anti_wedge_dot(self, other: LineAtInfinity) -> MultiVector {
@@ -7309,7 +7732,7 @@ impl AntiWedgeDot<LineAtInfinity> for Radial {
     }
 }
 
-impl AntiWedgeDot<LineAtOrigin> for Radial {
+impl AntiWedgeDot<LineAtOrigin> for RoundPoint {
     type Output = MultiVector;
 
     fn anti_wedge_dot(self, other: LineAtOrigin) -> MultiVector {
@@ -7336,7 +7759,7 @@ impl AntiWedgeDot<LineAtOrigin> for Radial {
     }
 }
 
-impl AntiWedgeDot<Magnitude> for Radial {
+impl AntiWedgeDot<Magnitude> for RoundPoint {
     type Output = MultiVector;
 
     fn anti_wedge_dot(self, other: Magnitude) -> MultiVector {
@@ -7358,7 +7781,7 @@ impl AntiWedgeDot<Magnitude> for Radial {
     }
 }
 
-impl AntiWedgeDot<MultiVector> for Radial {
+impl AntiWedgeDot<MultiVector> for RoundPoint {
     type Output = MultiVector;
 
     fn anti_wedge_dot(self, other: MultiVector) -> MultiVector {
@@ -7426,7 +7849,7 @@ impl AntiWedgeDot<MultiVector> for Radial {
     }
 }
 
-impl AntiWedgeDot<Origin> for Radial {
+impl AntiWedgeDot<Origin> for RoundPoint {
     type Output = MultiVector;
 
     fn anti_wedge_dot(self, other: Origin) -> MultiVector {
@@ -7448,7 +7871,7 @@ impl AntiWedgeDot<Origin> for Radial {
     }
 }
 
-impl AntiWedgeDot<Plane> for Radial {
+impl AntiWedgeDot<Plane> for RoundPoint {
     type Output = MultiVector;
 
     fn anti_wedge_dot(self, other: Plane) -> MultiVector {
@@ -7477,7 +7900,7 @@ impl AntiWedgeDot<Plane> for Radial {
     }
 }
 
-impl AntiWedgeDot<PlaneAtOrigin> for Radial {
+impl AntiWedgeDot<PlaneAtOrigin> for RoundPoint {
     type Output = MultiVector;
 
     fn anti_wedge_dot(self, other: PlaneAtOrigin) -> MultiVector {
@@ -7503,7 +7926,7 @@ impl AntiWedgeDot<PlaneAtOrigin> for Radial {
     }
 }
 
-impl AntiWedgeDot<Point> for Radial {
+impl AntiWedgeDot<Point> for RoundPoint {
     type Output = MultiVector;
 
     fn anti_wedge_dot(self, other: Point) -> MultiVector {
@@ -7531,7 +7954,7 @@ impl AntiWedgeDot<Point> for Radial {
     }
 }
 
-impl AntiWedgeDot<PointAtInfinity> for Radial {
+impl AntiWedgeDot<PointAtInfinity> for RoundPoint {
     type Output = MultiVector;
 
     fn anti_wedge_dot(self, other: PointAtInfinity) -> MultiVector {
@@ -7557,10 +7980,10 @@ impl AntiWedgeDot<PointAtInfinity> for Radial {
     }
 }
 
-impl AntiWedgeDot<Radial> for Radial {
+impl AntiWedgeDot<RoundPoint> for RoundPoint {
     type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: Radial) -> MultiVector {
+    fn anti_wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
@@ -7588,7 +8011,7 @@ impl AntiWedgeDot<Radial> for Radial {
     }
 }
 
-impl AntiWedgeDot<Scalar> for Radial {
+impl AntiWedgeDot<Scalar> for RoundPoint {
     type Output = Sphere;
 
     fn anti_wedge_dot(self, other: Scalar) -> Sphere {
@@ -7601,7 +8024,7 @@ impl AntiWedgeDot<Scalar> for Radial {
     }
 }
 
-impl AntiWedgeDot<Sphere> for Radial {
+impl AntiWedgeDot<Sphere> for RoundPoint {
     type Output = MultiVector;
 
     fn anti_wedge_dot(self, other: Sphere) -> MultiVector {
@@ -7673,13 +8096,24 @@ impl AntiWedgeDot<Dipole> for Scalar {
 }
 
 impl AntiWedgeDot<Horizon> for Scalar {
-    type Output = Radial;
+    type Output = Infinity;
 
-    fn anti_wedge_dot(self, other: Horizon) -> Radial {
-        Radial {
-            groups: RadialGroups {
-                g0: Simd32x3::from(0.0),
-                g1: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group0()]),
+    fn anti_wedge_dot(self, other: Horizon) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: 0.0 - self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Infinity> for Scalar {
+    type Output = Horizon;
+
+    fn anti_wedge_dot(self, other: Infinity) -> Horizon {
+        Horizon {
+            groups: HorizonGroups {
+                g0: self.group0() * other.group0(),
             },
         }
     }
@@ -7774,11 +8208,11 @@ impl AntiWedgeDot<Origin> for Scalar {
 }
 
 impl AntiWedgeDot<Plane> for Scalar {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn anti_wedge_dot(self, other: Plane) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn anti_wedge_dot(self, other: Plane) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
                 g1: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group0()[3]]),
             },
@@ -7787,11 +8221,11 @@ impl AntiWedgeDot<Plane> for Scalar {
 }
 
 impl AntiWedgeDot<PlaneAtOrigin> for Scalar {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn anti_wedge_dot(self, other: PlaneAtOrigin) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn anti_wedge_dot(self, other: PlaneAtOrigin) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
                 g1: Simd32x2::from(0.0),
             },
@@ -7825,10 +8259,10 @@ impl AntiWedgeDot<PointAtInfinity> for Scalar {
     }
 }
 
-impl AntiWedgeDot<Radial> for Scalar {
+impl AntiWedgeDot<RoundPoint> for Scalar {
     type Output = Sphere;
 
-    fn anti_wedge_dot(self, other: Radial) -> Sphere {
+    fn anti_wedge_dot(self, other: RoundPoint) -> Sphere {
         Sphere {
             groups: SphereGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
@@ -7851,11 +8285,11 @@ impl AntiWedgeDot<Scalar> for Scalar {
 }
 
 impl AntiWedgeDot<Sphere> for Scalar {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn anti_wedge_dot(self, other: Sphere) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn anti_wedge_dot(self, other: Sphere) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
                 g1: Simd32x2::from(0.0) - Simd32x2::from(self.group0()) * other.group1(),
             },
@@ -7966,6 +8400,30 @@ impl AntiWedgeDot<Horizon> for Sphere {
                 g6: Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
                 g7: Simd32x3::from(0.0),
                 g8: self.group0() * Simd32x3::from(other.group0()),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Infinity> for Sphere {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
+                    * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0])
+                    + Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -8277,10 +8735,10 @@ impl AntiWedgeDot<PointAtInfinity> for Sphere {
     }
 }
 
-impl AntiWedgeDot<Radial> for Sphere {
+impl AntiWedgeDot<RoundPoint> for Sphere {
     type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: Radial) -> MultiVector {
+    fn anti_wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], 0.0])
@@ -8309,11 +8767,11 @@ impl AntiWedgeDot<Radial> for Sphere {
 }
 
 impl AntiWedgeDot<Scalar> for Sphere {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn anti_wedge_dot(self, other: Scalar) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn anti_wedge_dot(self, other: Scalar) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
                 g1: Simd32x2::from(0.0) - self.group1() * Simd32x2::from(other.group0()),
             },
@@ -8398,6 +8856,18 @@ impl GeometricAntiProduct<Horizon> for AntiScalar {
     fn geometric_anti_product(self, other: Horizon) -> Horizon {
         Horizon {
             groups: HorizonGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Infinity> for AntiScalar {
+    type Output = Infinity;
+
+    fn geometric_anti_product(self, other: Infinity) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
                 g0: self.group0() * other.group0(),
             },
         }
@@ -8535,12 +9005,12 @@ impl GeometricAntiProduct<PointAtInfinity> for AntiScalar {
     }
 }
 
-impl GeometricAntiProduct<Radial> for AntiScalar {
-    type Output = Radial;
+impl GeometricAntiProduct<RoundPoint> for AntiScalar {
+    type Output = RoundPoint;
 
-    fn geometric_anti_product(self, other: Radial) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn geometric_anti_product(self, other: RoundPoint) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
                 g1: Simd32x2::from(self.group0()) * other.group1(),
             },
@@ -8742,6 +9212,28 @@ impl GeometricAntiProduct<Horizon> for Circle {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
                 g10: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Infinity> for Circle {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, other.group0()]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g8: self.group1() * Simd32x3::from(other.group0()),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -9203,10 +9695,10 @@ impl GeometricAntiProduct<PointAtInfinity> for Circle {
     }
 }
 
-impl GeometricAntiProduct<Radial> for Circle {
+impl GeometricAntiProduct<RoundPoint> for Circle {
     type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: Radial) -> MultiVector {
+    fn geometric_anti_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -9470,6 +9962,29 @@ impl GeometricAntiProduct<Horizon> for Dipole {
                 g8: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Infinity> for Dipole {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0() * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]])
+                    * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: self.group0() * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(self.group2()[3]) * Simd32x2::from([0.0, -other.group0()]),
             },
         }
     }
@@ -9936,10 +10451,10 @@ impl GeometricAntiProduct<PointAtInfinity> for Dipole {
     }
 }
 
-impl GeometricAntiProduct<Radial> for Dipole {
+impl GeometricAntiProduct<RoundPoint> for Dipole {
     type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: Radial) -> MultiVector {
+    fn geometric_anti_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -10162,13 +10677,12 @@ impl GeometricAntiProduct<MultiVector> for Horizon {
 }
 
 impl GeometricAntiProduct<Origin> for Horizon {
-    type Output = Radial;
+    type Output = Infinity;
 
-    fn geometric_anti_product(self, other: Origin) -> Radial {
-        Radial {
-            groups: RadialGroups {
-                g0: Simd32x3::from(0.0),
-                g1: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group0()]),
+    fn geometric_anti_product(self, other: Origin) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: 0.0 - self.group0() * other.group0(),
             },
         }
     }
@@ -10199,22 +10713,21 @@ impl GeometricAntiProduct<PlaneAtOrigin> for Horizon {
 }
 
 impl GeometricAntiProduct<Point> for Horizon {
-    type Output = Radial;
+    type Output = Infinity;
 
-    fn geometric_anti_product(self, other: Point) -> Radial {
-        Radial {
-            groups: RadialGroups {
-                g0: Simd32x3::from(0.0),
-                g1: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group0()[3]]),
+    fn geometric_anti_product(self, other: Point) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: 0.0 - self.group0() * other.group0()[3],
             },
         }
     }
 }
 
-impl GeometricAntiProduct<Radial> for Horizon {
+impl GeometricAntiProduct<RoundPoint> for Horizon {
     type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: Radial) -> MultiVector {
+    fn geometric_anti_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group1()[0], 0.0]),
@@ -10234,13 +10747,12 @@ impl GeometricAntiProduct<Radial> for Horizon {
 }
 
 impl GeometricAntiProduct<Scalar> for Horizon {
-    type Output = Radial;
+    type Output = Infinity;
 
-    fn geometric_anti_product(self, other: Scalar) -> Radial {
-        Radial {
-            groups: RadialGroups {
-                g0: Simd32x3::from(0.0),
-                g1: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group0()]),
+    fn geometric_anti_product(self, other: Scalar) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: 0.0 - self.group0() * other.group0(),
             },
         }
     }
@@ -10261,6 +10773,235 @@ impl GeometricAntiProduct<Sphere> for Horizon {
                 g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group1()[0]]),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<AntiScalar> for Infinity {
+    type Output = Infinity;
+
+    fn geometric_anti_product(self, other: AntiScalar) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Circle> for Infinity {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Circle) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group0()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: Simd32x3::from(self.group0()) * other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Dipole> for Infinity {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Dipole) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(self.group0()) * other.group0(),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group2()[3]]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Line> for Infinity {
+    type Output = LineAtInfinity;
+
+    fn geometric_anti_product(self, other: Line) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<LineAtOrigin> for Infinity {
+    type Output = LineAtInfinity;
+
+    fn geometric_anti_product(self, other: LineAtOrigin) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Magnitude> for Infinity {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Magnitude) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()[1]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()[0]]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<MultiVector> for Infinity {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group10()[0], other.group2()[0]]),
+                g1: Simd32x3::from(self.group0()) * Simd32x3::from([other.group6()[0], other.group6()[1], other.group6()[2]]),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group6()[3]]) + Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()[1]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(self.group0()) * other.group3(),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([other.group9()[0], other.group9()[1], other.group9()[2], -other.group10()[0]])
+                    + Simd32x4::from(self.group0()) * Simd32x4::from([other.group4()[0], other.group4()[1], other.group4()[2], 0.0]),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group2()[0]]),
+                g7: Simd32x3::from(self.group0()) * Simd32x3::from([other.group6()[0], other.group6()[1], other.group6()[2]]),
+                g8: Simd32x3::from(self.group0()) * other.group7() - Simd32x3::from(self.group0()) * other.group1(),
+                g9: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group3(),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group5()[3]]) + Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()[0]]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Origin> for Infinity {
+    type Output = Horizon;
+
+    fn geometric_anti_product(self, other: Origin) -> Horizon {
+        Horizon {
+            groups: HorizonGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Plane> for Infinity {
+    type Output = PointAtInfinity;
+
+    fn geometric_anti_product(self, other: Plane) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<PlaneAtOrigin> for Infinity {
+    type Output = PointAtInfinity;
+
+    fn geometric_anti_product(self, other: PlaneAtOrigin) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Point> for Infinity {
+    type Output = Horizon;
+
+    fn geometric_anti_product(self, other: Point) -> Horizon {
+        Horizon {
+            groups: HorizonGroups {
+                g0: self.group0() * other.group0()[3],
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<RoundPoint> for Infinity {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: RoundPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group1()[0]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group1()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Scalar> for Infinity {
+    type Output = Horizon;
+
+    fn geometric_anti_product(self, other: Scalar) -> Horizon {
+        Horizon {
+            groups: HorizonGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Sphere> for Infinity {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Sphere) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group1()[0], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], -other.group1()[0]]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -10386,6 +11127,18 @@ impl GeometricAntiProduct<Horizon> for Line {
     fn geometric_anti_product(self, other: Horizon) -> PointAtInfinity {
         PointAtInfinity {
             groups: PointAtInfinityGroups {
+                g0: self.group0() * Simd32x3::from(other.group0()),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Infinity> for Line {
+    type Output = LineAtInfinity;
+
+    fn geometric_anti_product(self, other: Infinity) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
@@ -10735,10 +11488,10 @@ impl GeometricAntiProduct<PointAtInfinity> for Line {
     }
 }
 
-impl GeometricAntiProduct<Radial> for Line {
+impl GeometricAntiProduct<RoundPoint> for Line {
     type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: Radial) -> MultiVector {
+    fn geometric_anti_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -11098,10 +11851,10 @@ impl GeometricAntiProduct<Point> for LineAtInfinity {
     }
 }
 
-impl GeometricAntiProduct<Radial> for LineAtInfinity {
+impl GeometricAntiProduct<RoundPoint> for LineAtInfinity {
     type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: Radial) -> MultiVector {
+    fn geometric_anti_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -11246,6 +11999,18 @@ impl GeometricAntiProduct<Horizon> for LineAtOrigin {
     fn geometric_anti_product(self, other: Horizon) -> PointAtInfinity {
         PointAtInfinity {
             groups: PointAtInfinityGroups {
+                g0: self.group0() * Simd32x3::from(other.group0()),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Infinity> for LineAtOrigin {
+    type Output = LineAtInfinity;
+
+    fn geometric_anti_product(self, other: Infinity) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
@@ -11519,10 +12284,10 @@ impl GeometricAntiProduct<PointAtInfinity> for LineAtOrigin {
     }
 }
 
-impl GeometricAntiProduct<Radial> for LineAtOrigin {
+impl GeometricAntiProduct<RoundPoint> for LineAtOrigin {
     type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: Radial) -> MultiVector {
+    fn geometric_anti_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -11658,6 +12423,28 @@ impl GeometricAntiProduct<Horizon> for Magnitude {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Infinity> for Magnitude {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()]),
             },
         }
     }
@@ -11877,10 +12664,10 @@ impl GeometricAntiProduct<PointAtInfinity> for Magnitude {
     }
 }
 
-impl GeometricAntiProduct<Radial> for Magnitude {
+impl GeometricAntiProduct<RoundPoint> for Magnitude {
     type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: Radial) -> MultiVector {
+    fn geometric_anti_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -12299,6 +13086,32 @@ impl GeometricAntiProduct<Horizon> for MultiVector {
                 g8: Simd32x3::from(0.0) - self.group4() * Simd32x3::from(other.group0()) + self.group9() * Simd32x3::from(other.group0()),
                 g9: Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]) * Simd32x3::from(other.group0()),
                 g10: Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()]) + Simd32x2::from(self.group6()[3]) * Simd32x2::from([0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Infinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group2()[0]) * Simd32x2::from([0.0, other.group0()]) + Simd32x2::from(self.group10()[0]) * Simd32x2::from([other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]) * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()]) + Simd32x2::from(self.group6()[3]) * Simd32x2::from([0.0, other.group0()]),
+                g3: Simd32x3::from(0.0),
+                g4: self.group3() * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from([self.group4()[0], self.group4()[1], self.group4()[2], self.group4()[0]])
+                    * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0])
+                    + Simd32x4::from([self.group9()[0], self.group9()[1], self.group9()[2], self.group9()[0]])
+                        * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0])
+                    + Simd32x4::from(self.group10()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g6: Simd32x4::from(self.group2()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g7: Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]) * Simd32x3::from(other.group0()),
+                g8: self.group1() * Simd32x3::from(other.group0()) + self.group7() * Simd32x3::from(other.group0()),
+                g9: self.group3() * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()]) + Simd32x2::from(self.group5()[3]) * Simd32x2::from([0.0, -other.group0()]),
             },
         }
     }
@@ -13308,10 +14121,10 @@ impl GeometricAntiProduct<PointAtInfinity> for MultiVector {
     }
 }
 
-impl GeometricAntiProduct<Radial> for MultiVector {
+impl GeometricAntiProduct<RoundPoint> for MultiVector {
     type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: Radial) -> MultiVector {
+    fn geometric_anti_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
@@ -13574,13 +14387,24 @@ impl GeometricAntiProduct<Dipole> for Origin {
 }
 
 impl GeometricAntiProduct<Horizon> for Origin {
-    type Output = Radial;
+    type Output = Infinity;
 
-    fn geometric_anti_product(self, other: Horizon) -> Radial {
-        Radial {
-            groups: RadialGroups {
-                g0: Simd32x3::from(0.0),
-                g1: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()]),
+    fn geometric_anti_product(self, other: Horizon) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Infinity> for Origin {
+    type Output = Horizon;
+
+    fn geometric_anti_product(self, other: Infinity) -> Horizon {
+        Horizon {
+            groups: HorizonGroups {
+                g0: 0.0 - self.group0() * other.group0(),
             },
         }
     }
@@ -13756,10 +14580,10 @@ impl GeometricAntiProduct<PointAtInfinity> for Origin {
     }
 }
 
-impl GeometricAntiProduct<Radial> for Origin {
+impl GeometricAntiProduct<RoundPoint> for Origin {
     type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: Radial) -> MultiVector {
+    fn geometric_anti_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -13902,6 +14726,18 @@ impl GeometricAntiProduct<Horizon> for Plane {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Infinity> for Plane {
+    type Output = PointAtInfinity;
+
+    fn geometric_anti_product(self, other: Infinity) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
             },
         }
     }
@@ -14196,10 +15032,10 @@ impl GeometricAntiProduct<PointAtInfinity> for Plane {
     }
 }
 
-impl GeometricAntiProduct<Radial> for Plane {
+impl GeometricAntiProduct<RoundPoint> for Plane {
     type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: Radial) -> MultiVector {
+    fn geometric_anti_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], 0.0])
@@ -14225,11 +15061,11 @@ impl GeometricAntiProduct<Radial> for Plane {
 }
 
 impl GeometricAntiProduct<Scalar> for Plane {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn geometric_anti_product(self, other: Scalar) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn geometric_anti_product(self, other: Scalar) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
                 g1: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()]),
             },
@@ -14343,6 +15179,18 @@ impl GeometricAntiProduct<Horizon> for PlaneAtOrigin {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Infinity> for PlaneAtOrigin {
+    type Output = PointAtInfinity;
+
+    fn geometric_anti_product(self, other: Infinity) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
@@ -14610,10 +15458,10 @@ impl GeometricAntiProduct<PointAtInfinity> for PlaneAtOrigin {
     }
 }
 
-impl GeometricAntiProduct<Radial> for PlaneAtOrigin {
+impl GeometricAntiProduct<RoundPoint> for PlaneAtOrigin {
     type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: Radial) -> MultiVector {
+    fn geometric_anti_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], 0.0])
@@ -14638,11 +15486,11 @@ impl GeometricAntiProduct<Radial> for PlaneAtOrigin {
 }
 
 impl GeometricAntiProduct<Scalar> for PlaneAtOrigin {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn geometric_anti_product(self, other: Scalar) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn geometric_anti_product(self, other: Scalar) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
                 g1: Simd32x2::from(0.0),
             },
@@ -14762,13 +15610,24 @@ impl GeometricAntiProduct<Dipole> for Point {
 }
 
 impl GeometricAntiProduct<Horizon> for Point {
-    type Output = Radial;
+    type Output = Infinity;
 
-    fn geometric_anti_product(self, other: Horizon) -> Radial {
-        Radial {
-            groups: RadialGroups {
-                g0: Simd32x3::from(0.0),
-                g1: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, other.group0()]),
+    fn geometric_anti_product(self, other: Horizon) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: self.group0()[3] * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Infinity> for Point {
+    type Output = Horizon;
+
+    fn geometric_anti_product(self, other: Infinity) -> Horizon {
+        Horizon {
+            groups: HorizonGroups {
+                g0: 0.0 - self.group0()[3] * other.group0(),
             },
         }
     }
@@ -15035,10 +15894,10 @@ impl GeometricAntiProduct<PointAtInfinity> for Point {
     }
 }
 
-impl GeometricAntiProduct<Radial> for Point {
+impl GeometricAntiProduct<RoundPoint> for Point {
     type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: Radial) -> MultiVector {
+    fn geometric_anti_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -15388,10 +16247,10 @@ impl GeometricAntiProduct<Point> for PointAtInfinity {
     }
 }
 
-impl GeometricAntiProduct<Radial> for PointAtInfinity {
+impl GeometricAntiProduct<RoundPoint> for PointAtInfinity {
     type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: Radial) -> MultiVector {
+    fn geometric_anti_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -15452,12 +16311,12 @@ impl GeometricAntiProduct<Sphere> for PointAtInfinity {
     }
 }
 
-impl GeometricAntiProduct<AntiScalar> for Radial {
-    type Output = Radial;
+impl GeometricAntiProduct<AntiScalar> for RoundPoint {
+    type Output = RoundPoint;
 
-    fn geometric_anti_product(self, other: AntiScalar) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn geometric_anti_product(self, other: AntiScalar) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
                 g1: self.group1() * Simd32x2::from(other.group0()),
             },
@@ -15465,7 +16324,7 @@ impl GeometricAntiProduct<AntiScalar> for Radial {
     }
 }
 
-impl GeometricAntiProduct<Circle> for Radial {
+impl GeometricAntiProduct<Circle> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_anti_product(self, other: Circle) -> MultiVector {
@@ -15502,7 +16361,7 @@ impl GeometricAntiProduct<Circle> for Radial {
     }
 }
 
-impl GeometricAntiProduct<Dipole> for Radial {
+impl GeometricAntiProduct<Dipole> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_anti_product(self, other: Dipole) -> MultiVector {
@@ -15539,7 +16398,7 @@ impl GeometricAntiProduct<Dipole> for Radial {
     }
 }
 
-impl GeometricAntiProduct<Horizon> for Radial {
+impl GeometricAntiProduct<Horizon> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_anti_product(self, other: Horizon) -> MultiVector {
@@ -15563,7 +16422,29 @@ impl GeometricAntiProduct<Horizon> for Radial {
     }
 }
 
-impl GeometricAntiProduct<Line> for Radial {
+impl GeometricAntiProduct<Infinity> for RoundPoint {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g7: Simd32x3::from(0.0),
+                g8: self.group0() * Simd32x3::from(other.group0()),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Line> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_anti_product(self, other: Line) -> MultiVector {
@@ -15596,7 +16477,7 @@ impl GeometricAntiProduct<Line> for Radial {
     }
 }
 
-impl GeometricAntiProduct<LineAtInfinity> for Radial {
+impl GeometricAntiProduct<LineAtInfinity> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_anti_product(self, other: LineAtInfinity) -> MultiVector {
@@ -15622,7 +16503,7 @@ impl GeometricAntiProduct<LineAtInfinity> for Radial {
     }
 }
 
-impl GeometricAntiProduct<LineAtOrigin> for Radial {
+impl GeometricAntiProduct<LineAtOrigin> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_anti_product(self, other: LineAtOrigin) -> MultiVector {
@@ -15649,7 +16530,7 @@ impl GeometricAntiProduct<LineAtOrigin> for Radial {
     }
 }
 
-impl GeometricAntiProduct<Magnitude> for Radial {
+impl GeometricAntiProduct<Magnitude> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_anti_product(self, other: Magnitude) -> MultiVector {
@@ -15671,7 +16552,7 @@ impl GeometricAntiProduct<Magnitude> for Radial {
     }
 }
 
-impl GeometricAntiProduct<MultiVector> for Radial {
+impl GeometricAntiProduct<MultiVector> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_anti_product(self, other: MultiVector) -> MultiVector {
@@ -15739,7 +16620,7 @@ impl GeometricAntiProduct<MultiVector> for Radial {
     }
 }
 
-impl GeometricAntiProduct<Origin> for Radial {
+impl GeometricAntiProduct<Origin> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_anti_product(self, other: Origin) -> MultiVector {
@@ -15761,7 +16642,7 @@ impl GeometricAntiProduct<Origin> for Radial {
     }
 }
 
-impl GeometricAntiProduct<Plane> for Radial {
+impl GeometricAntiProduct<Plane> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_anti_product(self, other: Plane) -> MultiVector {
@@ -15790,7 +16671,7 @@ impl GeometricAntiProduct<Plane> for Radial {
     }
 }
 
-impl GeometricAntiProduct<PlaneAtOrigin> for Radial {
+impl GeometricAntiProduct<PlaneAtOrigin> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_anti_product(self, other: PlaneAtOrigin) -> MultiVector {
@@ -15816,7 +16697,7 @@ impl GeometricAntiProduct<PlaneAtOrigin> for Radial {
     }
 }
 
-impl GeometricAntiProduct<Point> for Radial {
+impl GeometricAntiProduct<Point> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_anti_product(self, other: Point) -> MultiVector {
@@ -15844,7 +16725,7 @@ impl GeometricAntiProduct<Point> for Radial {
     }
 }
 
-impl GeometricAntiProduct<PointAtInfinity> for Radial {
+impl GeometricAntiProduct<PointAtInfinity> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_anti_product(self, other: PointAtInfinity) -> MultiVector {
@@ -15870,10 +16751,10 @@ impl GeometricAntiProduct<PointAtInfinity> for Radial {
     }
 }
 
-impl GeometricAntiProduct<Radial> for Radial {
+impl GeometricAntiProduct<RoundPoint> for RoundPoint {
     type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: Radial) -> MultiVector {
+    fn geometric_anti_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
@@ -15901,7 +16782,7 @@ impl GeometricAntiProduct<Radial> for Radial {
     }
 }
 
-impl GeometricAntiProduct<Scalar> for Radial {
+impl GeometricAntiProduct<Scalar> for RoundPoint {
     type Output = Sphere;
 
     fn geometric_anti_product(self, other: Scalar) -> Sphere {
@@ -15914,7 +16795,7 @@ impl GeometricAntiProduct<Scalar> for Radial {
     }
 }
 
-impl GeometricAntiProduct<Sphere> for Radial {
+impl GeometricAntiProduct<Sphere> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_anti_product(self, other: Sphere) -> MultiVector {
@@ -15986,13 +16867,24 @@ impl GeometricAntiProduct<Dipole> for Scalar {
 }
 
 impl GeometricAntiProduct<Horizon> for Scalar {
-    type Output = Radial;
+    type Output = Infinity;
 
-    fn geometric_anti_product(self, other: Horizon) -> Radial {
-        Radial {
-            groups: RadialGroups {
-                g0: Simd32x3::from(0.0),
-                g1: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group0()]),
+    fn geometric_anti_product(self, other: Horizon) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: 0.0 - self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Infinity> for Scalar {
+    type Output = Horizon;
+
+    fn geometric_anti_product(self, other: Infinity) -> Horizon {
+        Horizon {
+            groups: HorizonGroups {
+                g0: self.group0() * other.group0(),
             },
         }
     }
@@ -16087,11 +16979,11 @@ impl GeometricAntiProduct<Origin> for Scalar {
 }
 
 impl GeometricAntiProduct<Plane> for Scalar {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn geometric_anti_product(self, other: Plane) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn geometric_anti_product(self, other: Plane) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
                 g1: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group0()[3]]),
             },
@@ -16100,11 +16992,11 @@ impl GeometricAntiProduct<Plane> for Scalar {
 }
 
 impl GeometricAntiProduct<PlaneAtOrigin> for Scalar {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn geometric_anti_product(self, other: PlaneAtOrigin) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn geometric_anti_product(self, other: PlaneAtOrigin) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
                 g1: Simd32x2::from(0.0),
             },
@@ -16138,10 +17030,10 @@ impl GeometricAntiProduct<PointAtInfinity> for Scalar {
     }
 }
 
-impl GeometricAntiProduct<Radial> for Scalar {
+impl GeometricAntiProduct<RoundPoint> for Scalar {
     type Output = Sphere;
 
-    fn geometric_anti_product(self, other: Radial) -> Sphere {
+    fn geometric_anti_product(self, other: RoundPoint) -> Sphere {
         Sphere {
             groups: SphereGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
@@ -16164,11 +17056,11 @@ impl GeometricAntiProduct<Scalar> for Scalar {
 }
 
 impl GeometricAntiProduct<Sphere> for Scalar {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn geometric_anti_product(self, other: Sphere) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn geometric_anti_product(self, other: Sphere) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
                 g1: Simd32x2::from(0.0) - Simd32x2::from(self.group0()) * other.group1(),
             },
@@ -16279,6 +17171,30 @@ impl GeometricAntiProduct<Horizon> for Sphere {
                 g6: Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
                 g7: Simd32x3::from(0.0),
                 g8: self.group0() * Simd32x3::from(other.group0()),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Infinity> for Sphere {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
+                    * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0])
+                    + Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -16590,10 +17506,10 @@ impl GeometricAntiProduct<PointAtInfinity> for Sphere {
     }
 }
 
-impl GeometricAntiProduct<Radial> for Sphere {
+impl GeometricAntiProduct<RoundPoint> for Sphere {
     type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: Radial) -> MultiVector {
+    fn geometric_anti_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], 0.0])
@@ -16622,11 +17538,11 @@ impl GeometricAntiProduct<Radial> for Sphere {
 }
 
 impl GeometricAntiProduct<Scalar> for Sphere {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn geometric_anti_product(self, other: Scalar) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn geometric_anti_product(self, other: Scalar) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
                 g1: Simd32x2::from(0.0) - self.group1() * Simd32x2::from(other.group0()),
             },
@@ -16706,13 +17622,24 @@ impl GeometricProduct<Dipole> for AntiScalar {
 }
 
 impl GeometricProduct<Horizon> for AntiScalar {
-    type Output = Radial;
+    type Output = Infinity;
 
-    fn geometric_product(self, other: Horizon) -> Radial {
-        Radial {
-            groups: RadialGroups {
-                g0: Simd32x3::from(0.0),
-                g1: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()]),
+    fn geometric_product(self, other: Horizon) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Infinity> for AntiScalar {
+    type Output = Horizon;
+
+    fn geometric_product(self, other: Infinity) -> Horizon {
+        Horizon {
+            groups: HorizonGroups {
+                g0: 0.0 - self.group0() * other.group0(),
             },
         }
     }
@@ -16807,11 +17734,11 @@ impl GeometricProduct<Origin> for AntiScalar {
 }
 
 impl GeometricProduct<Plane> for AntiScalar {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn geometric_product(self, other: Plane) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn geometric_product(self, other: Plane) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
                 g1: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()[3]]),
             },
@@ -16820,11 +17747,11 @@ impl GeometricProduct<Plane> for AntiScalar {
 }
 
 impl GeometricProduct<PlaneAtOrigin> for AntiScalar {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn geometric_product(self, other: PlaneAtOrigin) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn geometric_product(self, other: PlaneAtOrigin) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
                 g1: Simd32x2::from(0.0),
             },
@@ -16858,10 +17785,10 @@ impl GeometricProduct<PointAtInfinity> for AntiScalar {
     }
 }
 
-impl GeometricProduct<Radial> for AntiScalar {
+impl GeometricProduct<RoundPoint> for AntiScalar {
     type Output = Sphere;
 
-    fn geometric_product(self, other: Radial) -> Sphere {
+    fn geometric_product(self, other: RoundPoint) -> Sphere {
         Sphere {
             groups: SphereGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
@@ -16884,11 +17811,11 @@ impl GeometricProduct<Scalar> for AntiScalar {
 }
 
 impl GeometricProduct<Sphere> for AntiScalar {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn geometric_product(self, other: Sphere) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn geometric_product(self, other: Sphere) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
                 g1: Simd32x2::from(self.group0()) * other.group1(),
             },
@@ -17066,6 +17993,29 @@ impl GeometricProduct<Horizon> for Circle {
                 g8: self.group1() * Simd32x3::from(other.group0()),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Infinity> for Circle {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]])
+                    * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, other.group0()]),
             },
         }
     }
@@ -17526,10 +18476,10 @@ impl GeometricProduct<PointAtInfinity> for Circle {
     }
 }
 
-impl GeometricProduct<Radial> for Circle {
+impl GeometricProduct<RoundPoint> for Circle {
     type Output = MultiVector;
 
-    fn geometric_product(self, other: Radial) -> MultiVector {
+    fn geometric_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -17795,6 +18745,28 @@ impl GeometricProduct<Horizon> for Dipole {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
                 g10: Simd32x2::from(self.group2()[3]) * Simd32x2::from([0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Infinity> for Dipole {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: self.group0() * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(self.group2()[3]) * Simd32x2::from([0.0, other.group0()]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: self.group0() * Simd32x3::from(other.group0()),
+                g8: self.group1() * Simd32x3::from(other.group0()),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -18257,10 +19229,10 @@ impl GeometricProduct<PointAtInfinity> for Dipole {
     }
 }
 
-impl GeometricProduct<Radial> for Dipole {
+impl GeometricProduct<RoundPoint> for Dipole {
     type Output = MultiVector;
 
-    fn geometric_product(self, other: Radial) -> MultiVector {
+    fn geometric_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -18355,13 +19327,12 @@ impl GeometricProduct<Sphere> for Dipole {
 }
 
 impl GeometricProduct<AntiScalar> for Horizon {
-    type Output = Radial;
+    type Output = Infinity;
 
-    fn geometric_product(self, other: AntiScalar) -> Radial {
-        Radial {
-            groups: RadialGroups {
-                g0: Simd32x3::from(0.0),
-                g1: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()]),
+    fn geometric_product(self, other: AntiScalar) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: self.group0() * other.group0(),
             },
         }
     }
@@ -18528,10 +19499,10 @@ impl GeometricProduct<Point> for Horizon {
     }
 }
 
-impl GeometricProduct<Radial> for Horizon {
+impl GeometricProduct<RoundPoint> for Horizon {
     type Output = MultiVector;
 
-    fn geometric_product(self, other: Radial) -> MultiVector {
+    fn geometric_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group1()[0]]),
@@ -18577,6 +19548,235 @@ impl GeometricProduct<Sphere> for Horizon {
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<AntiScalar> for Infinity {
+    type Output = Horizon;
+
+    fn geometric_product(self, other: AntiScalar) -> Horizon {
+        Horizon {
+            groups: HorizonGroups {
+                g0: 0.0 - self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Circle> for Infinity {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Circle) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group1()[0], -other.group1()[1], -other.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Dipole> for Infinity {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Dipole) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group2()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(self.group0()) * other.group0(),
+                g8: Simd32x3::from(self.group0()) * other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Line> for Infinity {
+    type Output = PointAtInfinity;
+
+    fn geometric_product(self, other: Line) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<LineAtOrigin> for Infinity {
+    type Output = PointAtInfinity;
+
+    fn geometric_product(self, other: LineAtOrigin) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Magnitude> for Infinity {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Magnitude) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()[0]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group0()[1]]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<MultiVector> for Infinity {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group2()[0], other.group10()[0]]),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group3(),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group5()[3]]) + Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()[0]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group6()[0], other.group6()[1], other.group6()[2]]),
+                g5: Simd32x4::from(0.0) - Simd32x4::from(self.group0()) * Simd32x4::from([other.group7()[0], other.group7()[1], other.group7()[2], other.group2()[0]])
+                    + Simd32x4::from(self.group0()) * Simd32x4::from([-other.group1()[0], -other.group1()[1], -other.group1()[2], 0.0]),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group10()[0]]),
+                g7: Simd32x3::from(self.group0()) * other.group3(),
+                g8: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group9() + Simd32x3::from(self.group0()) * other.group4(),
+                g9: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group6()[0], other.group6()[1], other.group6()[2]]),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group6()[3]]) + Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group0()[1]]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Origin> for Infinity {
+    type Output = Infinity;
+
+    fn geometric_product(self, other: Origin) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: 0.0 - self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Plane> for Infinity {
+    type Output = LineAtInfinity;
+
+    fn geometric_product(self, other: Plane) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<PlaneAtOrigin> for Infinity {
+    type Output = LineAtInfinity;
+
+    fn geometric_product(self, other: PlaneAtOrigin) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Point> for Infinity {
+    type Output = Infinity;
+
+    fn geometric_product(self, other: Point) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: 0.0 - self.group0() * other.group0()[3],
+            },
+        }
+    }
+}
+
+impl GeometricProduct<RoundPoint> for Infinity {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: RoundPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group1()[0], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0) - Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[0]]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Scalar> for Infinity {
+    type Output = Infinity;
+
+    fn geometric_product(self, other: Scalar) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Sphere> for Infinity {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Sphere) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group1()[0]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group1()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -18704,6 +19904,18 @@ impl GeometricProduct<Horizon> for Line {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Infinity> for Line {
+    type Output = PointAtInfinity;
+
+    fn geometric_product(self, other: Infinity) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
@@ -19047,10 +20259,10 @@ impl GeometricProduct<PointAtInfinity> for Line {
     }
 }
 
-impl GeometricProduct<Radial> for Line {
+impl GeometricProduct<RoundPoint> for Line {
     type Output = MultiVector;
 
-    fn geometric_product(self, other: Radial) -> MultiVector {
+    fn geometric_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -19407,10 +20619,10 @@ impl GeometricProduct<Point> for LineAtInfinity {
     }
 }
 
-impl GeometricProduct<Radial> for LineAtInfinity {
+impl GeometricProduct<RoundPoint> for LineAtInfinity {
     type Output = MultiVector;
 
-    fn geometric_product(self, other: Radial) -> MultiVector {
+    fn geometric_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -19557,6 +20769,18 @@ impl GeometricProduct<Horizon> for LineAtOrigin {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Infinity> for LineAtOrigin {
+    type Output = PointAtInfinity;
+
+    fn geometric_product(self, other: Infinity) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
@@ -19712,11 +20936,11 @@ impl GeometricProduct<MultiVector> for LineAtOrigin {
 }
 
 impl GeometricProduct<Origin> for LineAtOrigin {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn geometric_product(self, other: Origin) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn geometric_product(self, other: Origin) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
                 g1: Simd32x2::from(0.0),
             },
@@ -19828,10 +21052,10 @@ impl GeometricProduct<PointAtInfinity> for LineAtOrigin {
     }
 }
 
-impl GeometricProduct<Radial> for LineAtOrigin {
+impl GeometricProduct<RoundPoint> for LineAtOrigin {
     type Output = MultiVector;
 
-    fn geometric_product(self, other: Radial) -> MultiVector {
+    fn geometric_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -19965,6 +21189,28 @@ impl GeometricProduct<Horizon> for Magnitude {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Infinity> for Magnitude {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()]),
             },
         }
     }
@@ -20184,10 +21430,10 @@ impl GeometricProduct<PointAtInfinity> for Magnitude {
     }
 }
 
-impl GeometricProduct<Radial> for Magnitude {
+impl GeometricProduct<RoundPoint> for Magnitude {
     type Output = MultiVector;
 
-    fn geometric_product(self, other: Radial) -> MultiVector {
+    fn geometric_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -20611,6 +21857,32 @@ impl GeometricProduct<Horizon> for MultiVector {
                 g8: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()) + self.group7() * Simd32x3::from(other.group0()),
                 g9: Simd32x3::from(0.0) - self.group3() * Simd32x3::from(other.group0()),
                 g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()]) + Simd32x2::from(self.group5()[3]) * Simd32x2::from([0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Infinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group2()[0]) * Simd32x2::from([-other.group0(), 0.0]) + Simd32x2::from(self.group10()[0]) * Simd32x2::from([0.0, other.group0()]),
+                g1: self.group3() * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()]) + Simd32x2::from(self.group5()[3]) * Simd32x2::from([0.0, other.group0()]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]) * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]])
+                    * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0])
+                    + Simd32x4::from(self.group2()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()])
+                    + Simd32x4::from([self.group7()[0], self.group7()[1], self.group7()[2], self.group7()[0]])
+                        * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0]),
+                g6: Simd32x4::from(self.group10()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g7: self.group3() * Simd32x3::from(other.group0()),
+                g8: self.group4() * Simd32x3::from(other.group0()) + self.group9() * Simd32x3::from(other.group0()),
+                g9: Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]) * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()]) + Simd32x2::from(self.group6()[3]) * Simd32x2::from([0.0, other.group0()]),
             },
         }
     }
@@ -21612,10 +22884,10 @@ impl GeometricProduct<PointAtInfinity> for MultiVector {
     }
 }
 
-impl GeometricProduct<Radial> for MultiVector {
+impl GeometricProduct<RoundPoint> for MultiVector {
     type Output = MultiVector;
 
-    fn geometric_product(self, other: Radial) -> MultiVector {
+    fn geometric_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([other.group0()[0], 0.0])
@@ -21887,6 +23159,18 @@ impl GeometricProduct<Horizon> for Origin {
     }
 }
 
+impl GeometricProduct<Infinity> for Origin {
+    type Output = Infinity;
+
+    fn geometric_product(self, other: Infinity) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
 impl GeometricProduct<Line> for Origin {
     type Output = MultiVector;
 
@@ -21922,11 +23206,11 @@ impl GeometricProduct<LineAtInfinity> for Origin {
 }
 
 impl GeometricProduct<LineAtOrigin> for Origin {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn geometric_product(self, other: LineAtOrigin) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn geometric_product(self, other: LineAtOrigin) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
                 g1: Simd32x2::from(0.0),
             },
@@ -22060,10 +23344,10 @@ impl GeometricProduct<PointAtInfinity> for Origin {
     }
 }
 
-impl GeometricProduct<Radial> for Origin {
+impl GeometricProduct<RoundPoint> for Origin {
     type Output = MultiVector;
 
-    fn geometric_product(self, other: Radial) -> MultiVector {
+    fn geometric_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -22117,11 +23401,11 @@ impl GeometricProduct<Sphere> for Origin {
 }
 
 impl GeometricProduct<AntiScalar> for Plane {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn geometric_product(self, other: AntiScalar) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn geometric_product(self, other: AntiScalar) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
                 g1: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, other.group0()]),
             },
@@ -22202,6 +23486,18 @@ impl GeometricProduct<Horizon> for Plane {
     fn geometric_product(self, other: Horizon) -> PointAtInfinity {
         PointAtInfinity {
             groups: PointAtInfinityGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Infinity> for Plane {
+    type Output = LineAtInfinity;
+
+    fn geometric_product(self, other: Infinity) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
             },
         }
@@ -22499,10 +23795,10 @@ impl GeometricProduct<PointAtInfinity> for Plane {
     }
 }
 
-impl GeometricProduct<Radial> for Plane {
+impl GeometricProduct<RoundPoint> for Plane {
     type Output = MultiVector;
 
-    fn geometric_product(self, other: Radial) -> MultiVector {
+    fn geometric_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
@@ -22567,11 +23863,11 @@ impl GeometricProduct<Sphere> for Plane {
 }
 
 impl GeometricProduct<AntiScalar> for PlaneAtOrigin {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn geometric_product(self, other: AntiScalar) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn geometric_product(self, other: AntiScalar) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
                 g1: Simd32x2::from(0.0),
             },
@@ -22645,6 +23941,18 @@ impl GeometricProduct<Horizon> for PlaneAtOrigin {
     fn geometric_product(self, other: Horizon) -> PointAtInfinity {
         PointAtInfinity {
             groups: PointAtInfinityGroups {
+                g0: self.group0() * Simd32x3::from(other.group0()),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Infinity> for PlaneAtOrigin {
+    type Output = LineAtInfinity;
+
+    fn geometric_product(self, other: Infinity) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
@@ -22918,10 +24226,10 @@ impl GeometricProduct<PointAtInfinity> for PlaneAtOrigin {
     }
 }
 
-impl GeometricProduct<Radial> for PlaneAtOrigin {
+impl GeometricProduct<RoundPoint> for PlaneAtOrigin {
     type Output = MultiVector;
 
-    fn geometric_product(self, other: Radial) -> MultiVector {
+    fn geometric_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
@@ -23076,6 +24384,18 @@ impl GeometricProduct<Horizon> for Point {
     fn geometric_product(self, other: Horizon) -> Horizon {
         Horizon {
             groups: HorizonGroups {
+                g0: self.group0()[3] * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Infinity> for Point {
+    type Output = Infinity;
+
+    fn geometric_product(self, other: Infinity) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
                 g0: self.group0()[3] * other.group0(),
             },
         }
@@ -23344,10 +24664,10 @@ impl GeometricProduct<PointAtInfinity> for Point {
     }
 }
 
-impl GeometricProduct<Radial> for Point {
+impl GeometricProduct<RoundPoint> for Point {
     type Output = MultiVector;
 
-    fn geometric_product(self, other: Radial) -> MultiVector {
+    fn geometric_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -23694,10 +25014,10 @@ impl GeometricProduct<Point> for PointAtInfinity {
     }
 }
 
-impl GeometricProduct<Radial> for PointAtInfinity {
+impl GeometricProduct<RoundPoint> for PointAtInfinity {
     type Output = MultiVector;
 
-    fn geometric_product(self, other: Radial) -> MultiVector {
+    fn geometric_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -23758,7 +25078,7 @@ impl GeometricProduct<Sphere> for PointAtInfinity {
     }
 }
 
-impl GeometricProduct<AntiScalar> for Radial {
+impl GeometricProduct<AntiScalar> for RoundPoint {
     type Output = Sphere;
 
     fn geometric_product(self, other: AntiScalar) -> Sphere {
@@ -23771,7 +25091,7 @@ impl GeometricProduct<AntiScalar> for Radial {
     }
 }
 
-impl GeometricProduct<Circle> for Radial {
+impl GeometricProduct<Circle> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_product(self, other: Circle) -> MultiVector {
@@ -23809,7 +25129,7 @@ impl GeometricProduct<Circle> for Radial {
     }
 }
 
-impl GeometricProduct<Dipole> for Radial {
+impl GeometricProduct<Dipole> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_product(self, other: Dipole) -> MultiVector {
@@ -23846,7 +25166,7 @@ impl GeometricProduct<Dipole> for Radial {
     }
 }
 
-impl GeometricProduct<Horizon> for Radial {
+impl GeometricProduct<Horizon> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_product(self, other: Horizon) -> MultiVector {
@@ -23868,7 +25188,31 @@ impl GeometricProduct<Horizon> for Radial {
     }
 }
 
-impl GeometricProduct<Line> for Radial {
+impl GeometricProduct<Infinity> for RoundPoint {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([-other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
+                    * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0])
+                    + Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Line> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_product(self, other: Line) -> MultiVector {
@@ -23898,7 +25242,7 @@ impl GeometricProduct<Line> for Radial {
     }
 }
 
-impl GeometricProduct<LineAtInfinity> for Radial {
+impl GeometricProduct<LineAtInfinity> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_product(self, other: LineAtInfinity) -> MultiVector {
@@ -23924,7 +25268,7 @@ impl GeometricProduct<LineAtInfinity> for Radial {
     }
 }
 
-impl GeometricProduct<LineAtOrigin> for Radial {
+impl GeometricProduct<LineAtOrigin> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_product(self, other: LineAtOrigin) -> MultiVector {
@@ -23951,7 +25295,7 @@ impl GeometricProduct<LineAtOrigin> for Radial {
     }
 }
 
-impl GeometricProduct<Magnitude> for Radial {
+impl GeometricProduct<Magnitude> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_product(self, other: Magnitude) -> MultiVector {
@@ -23973,7 +25317,7 @@ impl GeometricProduct<Magnitude> for Radial {
     }
 }
 
-impl GeometricProduct<MultiVector> for Radial {
+impl GeometricProduct<MultiVector> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_product(self, other: MultiVector) -> MultiVector {
@@ -24041,7 +25385,7 @@ impl GeometricProduct<MultiVector> for Radial {
     }
 }
 
-impl GeometricProduct<Origin> for Radial {
+impl GeometricProduct<Origin> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_product(self, other: Origin) -> MultiVector {
@@ -24063,7 +25407,7 @@ impl GeometricProduct<Origin> for Radial {
     }
 }
 
-impl GeometricProduct<Plane> for Radial {
+impl GeometricProduct<Plane> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_product(self, other: Plane) -> MultiVector {
@@ -24092,7 +25436,7 @@ impl GeometricProduct<Plane> for Radial {
     }
 }
 
-impl GeometricProduct<PlaneAtOrigin> for Radial {
+impl GeometricProduct<PlaneAtOrigin> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_product(self, other: PlaneAtOrigin) -> MultiVector {
@@ -24118,7 +25462,7 @@ impl GeometricProduct<PlaneAtOrigin> for Radial {
     }
 }
 
-impl GeometricProduct<Point> for Radial {
+impl GeometricProduct<Point> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_product(self, other: Point) -> MultiVector {
@@ -24146,7 +25490,7 @@ impl GeometricProduct<Point> for Radial {
     }
 }
 
-impl GeometricProduct<PointAtInfinity> for Radial {
+impl GeometricProduct<PointAtInfinity> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_product(self, other: PointAtInfinity) -> MultiVector {
@@ -24172,10 +25516,10 @@ impl GeometricProduct<PointAtInfinity> for Radial {
     }
 }
 
-impl GeometricProduct<Radial> for Radial {
+impl GeometricProduct<RoundPoint> for RoundPoint {
     type Output = MultiVector;
 
-    fn geometric_product(self, other: Radial) -> MultiVector {
+    fn geometric_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], 0.0])
@@ -24203,12 +25547,12 @@ impl GeometricProduct<Radial> for Radial {
     }
 }
 
-impl GeometricProduct<Scalar> for Radial {
-    type Output = Radial;
+impl GeometricProduct<Scalar> for RoundPoint {
+    type Output = RoundPoint;
 
-    fn geometric_product(self, other: Scalar) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn geometric_product(self, other: Scalar) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
                 g1: self.group1() * Simd32x2::from(other.group0()),
             },
@@ -24216,7 +25560,7 @@ impl GeometricProduct<Scalar> for Radial {
     }
 }
 
-impl GeometricProduct<Sphere> for Radial {
+impl GeometricProduct<Sphere> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_product(self, other: Sphere) -> MultiVector {
@@ -24293,6 +25637,18 @@ impl GeometricProduct<Horizon> for Scalar {
     fn geometric_product(self, other: Horizon) -> Horizon {
         Horizon {
             groups: HorizonGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Infinity> for Scalar {
+    type Output = Infinity;
+
+    fn geometric_product(self, other: Infinity) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
                 g0: self.group0() * other.group0(),
             },
         }
@@ -24430,12 +25786,12 @@ impl GeometricProduct<PointAtInfinity> for Scalar {
     }
 }
 
-impl GeometricProduct<Radial> for Scalar {
-    type Output = Radial;
+impl GeometricProduct<RoundPoint> for Scalar {
+    type Output = RoundPoint;
 
-    fn geometric_product(self, other: Radial) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn geometric_product(self, other: RoundPoint) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
                 g1: Simd32x2::from(self.group0()) * other.group1(),
             },
@@ -24469,11 +25825,11 @@ impl GeometricProduct<Sphere> for Scalar {
 }
 
 impl GeometricProduct<AntiScalar> for Sphere {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn geometric_product(self, other: AntiScalar) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn geometric_product(self, other: AntiScalar) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
                 g1: self.group1() * Simd32x2::from(other.group0()),
             },
@@ -24572,6 +25928,28 @@ impl GeometricProduct<Horizon> for Sphere {
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Infinity> for Sphere {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g7: Simd32x3::from(0.0),
+                g8: self.group0() * Simd32x3::from(other.group0()),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -24886,10 +26264,10 @@ impl GeometricProduct<PointAtInfinity> for Sphere {
     }
 }
 
-impl GeometricProduct<Radial> for Sphere {
+impl GeometricProduct<RoundPoint> for Sphere {
     type Output = MultiVector;
 
-    fn geometric_product(self, other: Radial) -> MultiVector {
+    fn geometric_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
@@ -25002,13 +26380,24 @@ impl WedgeDot<Dipole> for AntiScalar {
 }
 
 impl WedgeDot<Horizon> for AntiScalar {
-    type Output = Radial;
+    type Output = Infinity;
 
-    fn wedge_dot(self, other: Horizon) -> Radial {
-        Radial {
-            groups: RadialGroups {
-                g0: Simd32x3::from(0.0),
-                g1: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()]),
+    fn wedge_dot(self, other: Horizon) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Infinity> for AntiScalar {
+    type Output = Horizon;
+
+    fn wedge_dot(self, other: Infinity) -> Horizon {
+        Horizon {
+            groups: HorizonGroups {
+                g0: 0.0 - self.group0() * other.group0(),
             },
         }
     }
@@ -25103,11 +26492,11 @@ impl WedgeDot<Origin> for AntiScalar {
 }
 
 impl WedgeDot<Plane> for AntiScalar {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn wedge_dot(self, other: Plane) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn wedge_dot(self, other: Plane) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
                 g1: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()[3]]),
             },
@@ -25116,11 +26505,11 @@ impl WedgeDot<Plane> for AntiScalar {
 }
 
 impl WedgeDot<PlaneAtOrigin> for AntiScalar {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn wedge_dot(self, other: PlaneAtOrigin) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn wedge_dot(self, other: PlaneAtOrigin) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
                 g1: Simd32x2::from(0.0),
             },
@@ -25154,10 +26543,10 @@ impl WedgeDot<PointAtInfinity> for AntiScalar {
     }
 }
 
-impl WedgeDot<Radial> for AntiScalar {
+impl WedgeDot<RoundPoint> for AntiScalar {
     type Output = Sphere;
 
-    fn wedge_dot(self, other: Radial) -> Sphere {
+    fn wedge_dot(self, other: RoundPoint) -> Sphere {
         Sphere {
             groups: SphereGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
@@ -25180,11 +26569,11 @@ impl WedgeDot<Scalar> for AntiScalar {
 }
 
 impl WedgeDot<Sphere> for AntiScalar {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn wedge_dot(self, other: Sphere) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn wedge_dot(self, other: Sphere) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
                 g1: Simd32x2::from(self.group0()) * other.group1(),
             },
@@ -25362,6 +26751,29 @@ impl WedgeDot<Horizon> for Circle {
                 g8: self.group1() * Simd32x3::from(other.group0()),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Infinity> for Circle {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]])
+                    * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, other.group0()]),
             },
         }
     }
@@ -25822,10 +27234,10 @@ impl WedgeDot<PointAtInfinity> for Circle {
     }
 }
 
-impl WedgeDot<Radial> for Circle {
+impl WedgeDot<RoundPoint> for Circle {
     type Output = MultiVector;
 
-    fn wedge_dot(self, other: Radial) -> MultiVector {
+    fn wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -26091,6 +27503,28 @@ impl WedgeDot<Horizon> for Dipole {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
                 g10: Simd32x2::from(self.group2()[3]) * Simd32x2::from([0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Infinity> for Dipole {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: self.group0() * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(self.group2()[3]) * Simd32x2::from([0.0, other.group0()]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: self.group0() * Simd32x3::from(other.group0()),
+                g8: self.group1() * Simd32x3::from(other.group0()),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -26553,10 +27987,10 @@ impl WedgeDot<PointAtInfinity> for Dipole {
     }
 }
 
-impl WedgeDot<Radial> for Dipole {
+impl WedgeDot<RoundPoint> for Dipole {
     type Output = MultiVector;
 
-    fn wedge_dot(self, other: Radial) -> MultiVector {
+    fn wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -26651,13 +28085,12 @@ impl WedgeDot<Sphere> for Dipole {
 }
 
 impl WedgeDot<AntiScalar> for Horizon {
-    type Output = Radial;
+    type Output = Infinity;
 
-    fn wedge_dot(self, other: AntiScalar) -> Radial {
-        Radial {
-            groups: RadialGroups {
-                g0: Simd32x3::from(0.0),
-                g1: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()]),
+    fn wedge_dot(self, other: AntiScalar) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: self.group0() * other.group0(),
             },
         }
     }
@@ -26824,10 +28257,10 @@ impl WedgeDot<Point> for Horizon {
     }
 }
 
-impl WedgeDot<Radial> for Horizon {
+impl WedgeDot<RoundPoint> for Horizon {
     type Output = MultiVector;
 
-    fn wedge_dot(self, other: Radial) -> MultiVector {
+    fn wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group1()[0]]),
@@ -26873,6 +28306,235 @@ impl WedgeDot<Sphere> for Horizon {
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<AntiScalar> for Infinity {
+    type Output = Horizon;
+
+    fn wedge_dot(self, other: AntiScalar) -> Horizon {
+        Horizon {
+            groups: HorizonGroups {
+                g0: 0.0 - self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Circle> for Infinity {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Circle) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group1()[0], -other.group1()[1], -other.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Dipole> for Infinity {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Dipole) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group2()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(self.group0()) * other.group0(),
+                g8: Simd32x3::from(self.group0()) * other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Line> for Infinity {
+    type Output = PointAtInfinity;
+
+    fn wedge_dot(self, other: Line) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl WedgeDot<LineAtOrigin> for Infinity {
+    type Output = PointAtInfinity;
+
+    fn wedge_dot(self, other: LineAtOrigin) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Magnitude> for Infinity {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Magnitude) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()[0]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group0()[1]]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<MultiVector> for Infinity {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group2()[0], other.group10()[0]]),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group3(),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group5()[3]]) + Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()[0]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group6()[0], other.group6()[1], other.group6()[2]]),
+                g5: Simd32x4::from(0.0) - Simd32x4::from(self.group0()) * Simd32x4::from([other.group7()[0], other.group7()[1], other.group7()[2], other.group2()[0]])
+                    + Simd32x4::from(self.group0()) * Simd32x4::from([-other.group1()[0], -other.group1()[1], -other.group1()[2], 0.0]),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group10()[0]]),
+                g7: Simd32x3::from(self.group0()) * other.group3(),
+                g8: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group9() + Simd32x3::from(self.group0()) * other.group4(),
+                g9: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group6()[0], other.group6()[1], other.group6()[2]]),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group6()[3]]) + Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group0()[1]]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Origin> for Infinity {
+    type Output = Infinity;
+
+    fn wedge_dot(self, other: Origin) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: 0.0 - self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Plane> for Infinity {
+    type Output = LineAtInfinity;
+
+    fn wedge_dot(self, other: Plane) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<PlaneAtOrigin> for Infinity {
+    type Output = LineAtInfinity;
+
+    fn wedge_dot(self, other: PlaneAtOrigin) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Point> for Infinity {
+    type Output = Infinity;
+
+    fn wedge_dot(self, other: Point) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: 0.0 - self.group0() * other.group0()[3],
+            },
+        }
+    }
+}
+
+impl WedgeDot<RoundPoint> for Infinity {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: RoundPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group1()[0], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0) - Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[0]]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Scalar> for Infinity {
+    type Output = Infinity;
+
+    fn wedge_dot(self, other: Scalar) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Sphere> for Infinity {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Sphere) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group1()[0]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group1()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -27000,6 +28662,18 @@ impl WedgeDot<Horizon> for Line {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Infinity> for Line {
+    type Output = PointAtInfinity;
+
+    fn wedge_dot(self, other: Infinity) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
@@ -27343,10 +29017,10 @@ impl WedgeDot<PointAtInfinity> for Line {
     }
 }
 
-impl WedgeDot<Radial> for Line {
+impl WedgeDot<RoundPoint> for Line {
     type Output = MultiVector;
 
-    fn wedge_dot(self, other: Radial) -> MultiVector {
+    fn wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -27703,10 +29377,10 @@ impl WedgeDot<Point> for LineAtInfinity {
     }
 }
 
-impl WedgeDot<Radial> for LineAtInfinity {
+impl WedgeDot<RoundPoint> for LineAtInfinity {
     type Output = MultiVector;
 
-    fn wedge_dot(self, other: Radial) -> MultiVector {
+    fn wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -27853,6 +29527,18 @@ impl WedgeDot<Horizon> for LineAtOrigin {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Infinity> for LineAtOrigin {
+    type Output = PointAtInfinity;
+
+    fn wedge_dot(self, other: Infinity) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
@@ -28008,11 +29694,11 @@ impl WedgeDot<MultiVector> for LineAtOrigin {
 }
 
 impl WedgeDot<Origin> for LineAtOrigin {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn wedge_dot(self, other: Origin) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn wedge_dot(self, other: Origin) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
                 g1: Simd32x2::from(0.0),
             },
@@ -28124,10 +29810,10 @@ impl WedgeDot<PointAtInfinity> for LineAtOrigin {
     }
 }
 
-impl WedgeDot<Radial> for LineAtOrigin {
+impl WedgeDot<RoundPoint> for LineAtOrigin {
     type Output = MultiVector;
 
-    fn wedge_dot(self, other: Radial) -> MultiVector {
+    fn wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -28261,6 +29947,28 @@ impl WedgeDot<Horizon> for Magnitude {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Infinity> for Magnitude {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()]),
             },
         }
     }
@@ -28480,10 +30188,10 @@ impl WedgeDot<PointAtInfinity> for Magnitude {
     }
 }
 
-impl WedgeDot<Radial> for Magnitude {
+impl WedgeDot<RoundPoint> for Magnitude {
     type Output = MultiVector;
 
-    fn wedge_dot(self, other: Radial) -> MultiVector {
+    fn wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -28907,6 +30615,32 @@ impl WedgeDot<Horizon> for MultiVector {
                 g8: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()) + self.group7() * Simd32x3::from(other.group0()),
                 g9: Simd32x3::from(0.0) - self.group3() * Simd32x3::from(other.group0()),
                 g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()]) + Simd32x2::from(self.group5()[3]) * Simd32x2::from([0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Infinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group2()[0]) * Simd32x2::from([-other.group0(), 0.0]) + Simd32x2::from(self.group10()[0]) * Simd32x2::from([0.0, other.group0()]),
+                g1: self.group3() * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()]) + Simd32x2::from(self.group5()[3]) * Simd32x2::from([0.0, other.group0()]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]) * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]])
+                    * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0])
+                    + Simd32x4::from(self.group2()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()])
+                    + Simd32x4::from([self.group7()[0], self.group7()[1], self.group7()[2], self.group7()[0]])
+                        * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0]),
+                g6: Simd32x4::from(self.group10()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g7: self.group3() * Simd32x3::from(other.group0()),
+                g8: self.group4() * Simd32x3::from(other.group0()) + self.group9() * Simd32x3::from(other.group0()),
+                g9: Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]) * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()]) + Simd32x2::from(self.group6()[3]) * Simd32x2::from([0.0, other.group0()]),
             },
         }
     }
@@ -29908,10 +31642,10 @@ impl WedgeDot<PointAtInfinity> for MultiVector {
     }
 }
 
-impl WedgeDot<Radial> for MultiVector {
+impl WedgeDot<RoundPoint> for MultiVector {
     type Output = MultiVector;
 
-    fn wedge_dot(self, other: Radial) -> MultiVector {
+    fn wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([other.group0()[0], 0.0])
@@ -30183,6 +31917,18 @@ impl WedgeDot<Horizon> for Origin {
     }
 }
 
+impl WedgeDot<Infinity> for Origin {
+    type Output = Infinity;
+
+    fn wedge_dot(self, other: Infinity) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
 impl WedgeDot<Line> for Origin {
     type Output = MultiVector;
 
@@ -30218,11 +31964,11 @@ impl WedgeDot<LineAtInfinity> for Origin {
 }
 
 impl WedgeDot<LineAtOrigin> for Origin {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn wedge_dot(self, other: LineAtOrigin) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn wedge_dot(self, other: LineAtOrigin) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
                 g1: Simd32x2::from(0.0),
             },
@@ -30356,10 +32102,10 @@ impl WedgeDot<PointAtInfinity> for Origin {
     }
 }
 
-impl WedgeDot<Radial> for Origin {
+impl WedgeDot<RoundPoint> for Origin {
     type Output = MultiVector;
 
-    fn wedge_dot(self, other: Radial) -> MultiVector {
+    fn wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -30413,11 +32159,11 @@ impl WedgeDot<Sphere> for Origin {
 }
 
 impl WedgeDot<AntiScalar> for Plane {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn wedge_dot(self, other: AntiScalar) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn wedge_dot(self, other: AntiScalar) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
                 g1: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, other.group0()]),
             },
@@ -30498,6 +32244,18 @@ impl WedgeDot<Horizon> for Plane {
     fn wedge_dot(self, other: Horizon) -> PointAtInfinity {
         PointAtInfinity {
             groups: PointAtInfinityGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Infinity> for Plane {
+    type Output = LineAtInfinity;
+
+    fn wedge_dot(self, other: Infinity) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
             },
         }
@@ -30795,10 +32553,10 @@ impl WedgeDot<PointAtInfinity> for Plane {
     }
 }
 
-impl WedgeDot<Radial> for Plane {
+impl WedgeDot<RoundPoint> for Plane {
     type Output = MultiVector;
 
-    fn wedge_dot(self, other: Radial) -> MultiVector {
+    fn wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
@@ -30863,11 +32621,11 @@ impl WedgeDot<Sphere> for Plane {
 }
 
 impl WedgeDot<AntiScalar> for PlaneAtOrigin {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn wedge_dot(self, other: AntiScalar) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn wedge_dot(self, other: AntiScalar) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
                 g1: Simd32x2::from(0.0),
             },
@@ -30941,6 +32699,18 @@ impl WedgeDot<Horizon> for PlaneAtOrigin {
     fn wedge_dot(self, other: Horizon) -> PointAtInfinity {
         PointAtInfinity {
             groups: PointAtInfinityGroups {
+                g0: self.group0() * Simd32x3::from(other.group0()),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Infinity> for PlaneAtOrigin {
+    type Output = LineAtInfinity;
+
+    fn wedge_dot(self, other: Infinity) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
@@ -31214,10 +32984,10 @@ impl WedgeDot<PointAtInfinity> for PlaneAtOrigin {
     }
 }
 
-impl WedgeDot<Radial> for PlaneAtOrigin {
+impl WedgeDot<RoundPoint> for PlaneAtOrigin {
     type Output = MultiVector;
 
-    fn wedge_dot(self, other: Radial) -> MultiVector {
+    fn wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
@@ -31372,6 +33142,18 @@ impl WedgeDot<Horizon> for Point {
     fn wedge_dot(self, other: Horizon) -> Horizon {
         Horizon {
             groups: HorizonGroups {
+                g0: self.group0()[3] * other.group0(),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Infinity> for Point {
+    type Output = Infinity;
+
+    fn wedge_dot(self, other: Infinity) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
                 g0: self.group0()[3] * other.group0(),
             },
         }
@@ -31640,10 +33422,10 @@ impl WedgeDot<PointAtInfinity> for Point {
     }
 }
 
-impl WedgeDot<Radial> for Point {
+impl WedgeDot<RoundPoint> for Point {
     type Output = MultiVector;
 
-    fn wedge_dot(self, other: Radial) -> MultiVector {
+    fn wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -31990,10 +33772,10 @@ impl WedgeDot<Point> for PointAtInfinity {
     }
 }
 
-impl WedgeDot<Radial> for PointAtInfinity {
+impl WedgeDot<RoundPoint> for PointAtInfinity {
     type Output = MultiVector;
 
-    fn wedge_dot(self, other: Radial) -> MultiVector {
+    fn wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -32054,7 +33836,7 @@ impl WedgeDot<Sphere> for PointAtInfinity {
     }
 }
 
-impl WedgeDot<AntiScalar> for Radial {
+impl WedgeDot<AntiScalar> for RoundPoint {
     type Output = Sphere;
 
     fn wedge_dot(self, other: AntiScalar) -> Sphere {
@@ -32067,7 +33849,7 @@ impl WedgeDot<AntiScalar> for Radial {
     }
 }
 
-impl WedgeDot<Circle> for Radial {
+impl WedgeDot<Circle> for RoundPoint {
     type Output = MultiVector;
 
     fn wedge_dot(self, other: Circle) -> MultiVector {
@@ -32105,7 +33887,7 @@ impl WedgeDot<Circle> for Radial {
     }
 }
 
-impl WedgeDot<Dipole> for Radial {
+impl WedgeDot<Dipole> for RoundPoint {
     type Output = MultiVector;
 
     fn wedge_dot(self, other: Dipole) -> MultiVector {
@@ -32142,7 +33924,7 @@ impl WedgeDot<Dipole> for Radial {
     }
 }
 
-impl WedgeDot<Horizon> for Radial {
+impl WedgeDot<Horizon> for RoundPoint {
     type Output = MultiVector;
 
     fn wedge_dot(self, other: Horizon) -> MultiVector {
@@ -32164,7 +33946,31 @@ impl WedgeDot<Horizon> for Radial {
     }
 }
 
-impl WedgeDot<Line> for Radial {
+impl WedgeDot<Infinity> for RoundPoint {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([-other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
+                    * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0])
+                    + Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Line> for RoundPoint {
     type Output = MultiVector;
 
     fn wedge_dot(self, other: Line) -> MultiVector {
@@ -32194,7 +34000,7 @@ impl WedgeDot<Line> for Radial {
     }
 }
 
-impl WedgeDot<LineAtInfinity> for Radial {
+impl WedgeDot<LineAtInfinity> for RoundPoint {
     type Output = MultiVector;
 
     fn wedge_dot(self, other: LineAtInfinity) -> MultiVector {
@@ -32220,7 +34026,7 @@ impl WedgeDot<LineAtInfinity> for Radial {
     }
 }
 
-impl WedgeDot<LineAtOrigin> for Radial {
+impl WedgeDot<LineAtOrigin> for RoundPoint {
     type Output = MultiVector;
 
     fn wedge_dot(self, other: LineAtOrigin) -> MultiVector {
@@ -32247,7 +34053,7 @@ impl WedgeDot<LineAtOrigin> for Radial {
     }
 }
 
-impl WedgeDot<Magnitude> for Radial {
+impl WedgeDot<Magnitude> for RoundPoint {
     type Output = MultiVector;
 
     fn wedge_dot(self, other: Magnitude) -> MultiVector {
@@ -32269,7 +34075,7 @@ impl WedgeDot<Magnitude> for Radial {
     }
 }
 
-impl WedgeDot<MultiVector> for Radial {
+impl WedgeDot<MultiVector> for RoundPoint {
     type Output = MultiVector;
 
     fn wedge_dot(self, other: MultiVector) -> MultiVector {
@@ -32337,7 +34143,7 @@ impl WedgeDot<MultiVector> for Radial {
     }
 }
 
-impl WedgeDot<Origin> for Radial {
+impl WedgeDot<Origin> for RoundPoint {
     type Output = MultiVector;
 
     fn wedge_dot(self, other: Origin) -> MultiVector {
@@ -32359,7 +34165,7 @@ impl WedgeDot<Origin> for Radial {
     }
 }
 
-impl WedgeDot<Plane> for Radial {
+impl WedgeDot<Plane> for RoundPoint {
     type Output = MultiVector;
 
     fn wedge_dot(self, other: Plane) -> MultiVector {
@@ -32388,7 +34194,7 @@ impl WedgeDot<Plane> for Radial {
     }
 }
 
-impl WedgeDot<PlaneAtOrigin> for Radial {
+impl WedgeDot<PlaneAtOrigin> for RoundPoint {
     type Output = MultiVector;
 
     fn wedge_dot(self, other: PlaneAtOrigin) -> MultiVector {
@@ -32414,7 +34220,7 @@ impl WedgeDot<PlaneAtOrigin> for Radial {
     }
 }
 
-impl WedgeDot<Point> for Radial {
+impl WedgeDot<Point> for RoundPoint {
     type Output = MultiVector;
 
     fn wedge_dot(self, other: Point) -> MultiVector {
@@ -32442,7 +34248,7 @@ impl WedgeDot<Point> for Radial {
     }
 }
 
-impl WedgeDot<PointAtInfinity> for Radial {
+impl WedgeDot<PointAtInfinity> for RoundPoint {
     type Output = MultiVector;
 
     fn wedge_dot(self, other: PointAtInfinity) -> MultiVector {
@@ -32468,10 +34274,10 @@ impl WedgeDot<PointAtInfinity> for Radial {
     }
 }
 
-impl WedgeDot<Radial> for Radial {
+impl WedgeDot<RoundPoint> for RoundPoint {
     type Output = MultiVector;
 
-    fn wedge_dot(self, other: Radial) -> MultiVector {
+    fn wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], 0.0])
@@ -32499,12 +34305,12 @@ impl WedgeDot<Radial> for Radial {
     }
 }
 
-impl WedgeDot<Scalar> for Radial {
-    type Output = Radial;
+impl WedgeDot<Scalar> for RoundPoint {
+    type Output = RoundPoint;
 
-    fn wedge_dot(self, other: Scalar) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn wedge_dot(self, other: Scalar) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
                 g1: self.group1() * Simd32x2::from(other.group0()),
             },
@@ -32512,7 +34318,7 @@ impl WedgeDot<Scalar> for Radial {
     }
 }
 
-impl WedgeDot<Sphere> for Radial {
+impl WedgeDot<Sphere> for RoundPoint {
     type Output = MultiVector;
 
     fn wedge_dot(self, other: Sphere) -> MultiVector {
@@ -32589,6 +34395,18 @@ impl WedgeDot<Horizon> for Scalar {
     fn wedge_dot(self, other: Horizon) -> Horizon {
         Horizon {
             groups: HorizonGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Infinity> for Scalar {
+    type Output = Infinity;
+
+    fn wedge_dot(self, other: Infinity) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
                 g0: self.group0() * other.group0(),
             },
         }
@@ -32726,12 +34544,12 @@ impl WedgeDot<PointAtInfinity> for Scalar {
     }
 }
 
-impl WedgeDot<Radial> for Scalar {
-    type Output = Radial;
+impl WedgeDot<RoundPoint> for Scalar {
+    type Output = RoundPoint;
 
-    fn wedge_dot(self, other: Radial) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn wedge_dot(self, other: RoundPoint) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
                 g1: Simd32x2::from(self.group0()) * other.group1(),
             },
@@ -32765,11 +34583,11 @@ impl WedgeDot<Sphere> for Scalar {
 }
 
 impl WedgeDot<AntiScalar> for Sphere {
-    type Output = Radial;
+    type Output = RoundPoint;
 
-    fn wedge_dot(self, other: AntiScalar) -> Radial {
-        Radial {
-            groups: RadialGroups {
+    fn wedge_dot(self, other: AntiScalar) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
                 g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
                 g1: self.group1() * Simd32x2::from(other.group0()),
             },
@@ -32868,6 +34686,28 @@ impl WedgeDot<Horizon> for Sphere {
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Infinity> for Sphere {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g7: Simd32x3::from(0.0),
+                g8: self.group0() * Simd32x3::from(other.group0()),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -33182,10 +35022,10 @@ impl WedgeDot<PointAtInfinity> for Sphere {
     }
 }
 
-impl WedgeDot<Radial> for Sphere {
+impl WedgeDot<RoundPoint> for Sphere {
     type Output = MultiVector;
 
-    fn wedge_dot(self, other: Radial) -> MultiVector {
+    fn wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])

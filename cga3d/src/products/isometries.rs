@@ -59,6 +59,14 @@ impl Sandwich<Horizon> for AntiScalar {
     }
 }
 
+impl Sandwich<Infinity> for AntiScalar {
+    type Output = Infinity;
+
+    fn sandwich(self, other: Infinity) -> Infinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
 impl Sandwich<Line> for AntiScalar {
     type Output = Line;
 
@@ -131,10 +139,10 @@ impl Sandwich<PointAtInfinity> for AntiScalar {
     }
 }
 
-impl Sandwich<Radial> for AntiScalar {
-    type Output = Radial;
+impl Sandwich<RoundPoint> for AntiScalar {
+    type Output = RoundPoint;
 
-    fn sandwich(self, other: Radial) -> Radial {
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
@@ -167,6 +175,14 @@ impl Sandwich<Horizon> for Circle {
     type Output = Plane;
 
     fn sandwich(self, other: Horizon) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Infinity> for Circle {
+    type Output = RoundPoint;
+
+    fn sandwich(self, other: Infinity) -> RoundPoint {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -243,10 +259,10 @@ impl Sandwich<PointAtInfinity> for Circle {
     }
 }
 
-impl Sandwich<Radial> for Circle {
-    type Output = Radial;
+impl Sandwich<RoundPoint> for Circle {
+    type Output = RoundPoint;
 
-    fn sandwich(self, other: Radial) -> Radial {
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -279,6 +295,14 @@ impl Sandwich<Horizon> for Dipole {
     type Output = Plane;
 
     fn sandwich(self, other: Horizon) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Infinity> for Dipole {
+    type Output = RoundPoint;
+
+    fn sandwich(self, other: Infinity) -> RoundPoint {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -355,10 +379,10 @@ impl Sandwich<PointAtInfinity> for Dipole {
     }
 }
 
-impl Sandwich<Radial> for Dipole {
-    type Output = Radial;
+impl Sandwich<RoundPoint> for Dipole {
+    type Output = RoundPoint;
 
-    fn sandwich(self, other: Radial) -> Radial {
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -395,31 +419,55 @@ impl Sandwich<MultiVector> for Horizon {
     }
 }
 
-impl Sandwich<Origin> for Horizon {
-    type Output = Point;
+impl Sandwich<RoundPoint> for Horizon {
+    type Output = RoundPoint;
 
-    fn sandwich(self, other: Origin) -> Point {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Point> for Horizon {
-    type Output = Point;
-
-    fn sandwich(self, other: Point) -> Point {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Radial> for Horizon {
-    type Output = Radial;
-
-    fn sandwich(self, other: Radial) -> Radial {
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
 impl Sandwich<Sphere> for Horizon {
+    type Output = Sphere;
+
+    fn sandwich(self, other: Sphere) -> Sphere {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Circle> for Infinity {
+    type Output = Circle;
+
+    fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dipole> for Infinity {
+    type Output = Dipole;
+
+    fn sandwich(self, other: Dipole) -> Dipole {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<MultiVector> for Infinity {
+    type Output = MultiVector;
+
+    fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<RoundPoint> for Infinity {
+    type Output = RoundPoint;
+
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Sphere> for Infinity {
     type Output = Sphere;
 
     fn sandwich(self, other: Sphere) -> Sphere {
@@ -447,6 +495,14 @@ impl Sandwich<Horizon> for Line {
     type Output = Plane;
 
     fn sandwich(self, other: Horizon) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Infinity> for Line {
+    type Output = RoundPoint;
+
+    fn sandwich(self, other: Infinity) -> RoundPoint {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -523,10 +579,10 @@ impl Sandwich<PointAtInfinity> for Line {
     }
 }
 
-impl Sandwich<Radial> for Line {
-    type Output = Radial;
+impl Sandwich<RoundPoint> for Line {
+    type Output = RoundPoint;
 
-    fn sandwich(self, other: Radial) -> Radial {
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -595,10 +651,10 @@ impl Sandwich<PlaneAtOrigin> for LineAtInfinity {
     }
 }
 
-impl Sandwich<Radial> for LineAtInfinity {
-    type Output = Radial;
+impl Sandwich<RoundPoint> for LineAtInfinity {
+    type Output = RoundPoint;
 
-    fn sandwich(self, other: Radial) -> Radial {
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -631,6 +687,14 @@ impl Sandwich<Horizon> for LineAtOrigin {
     type Output = Plane;
 
     fn sandwich(self, other: Horizon) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Infinity> for LineAtOrigin {
+    type Output = RoundPoint;
+
+    fn sandwich(self, other: Infinity) -> RoundPoint {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -707,10 +771,10 @@ impl Sandwich<PointAtInfinity> for LineAtOrigin {
     }
 }
 
-impl Sandwich<Radial> for LineAtOrigin {
-    type Output = Radial;
+impl Sandwich<RoundPoint> for LineAtOrigin {
+    type Output = RoundPoint;
 
-    fn sandwich(self, other: Radial) -> Radial {
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -743,6 +807,14 @@ impl Sandwich<Horizon> for Magnitude {
     type Output = Plane;
 
     fn sandwich(self, other: Horizon) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Infinity> for Magnitude {
+    type Output = RoundPoint;
+
+    fn sandwich(self, other: Infinity) -> RoundPoint {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -819,10 +891,10 @@ impl Sandwich<PointAtInfinity> for Magnitude {
     }
 }
 
-impl Sandwich<Radial> for Magnitude {
-    type Output = Radial;
+impl Sandwich<RoundPoint> for Magnitude {
+    type Output = RoundPoint;
 
-    fn sandwich(self, other: Radial) -> Radial {
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -855,6 +927,14 @@ impl Sandwich<Horizon> for MultiVector {
     type Output = Plane;
 
     fn sandwich(self, other: Horizon) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Infinity> for MultiVector {
+    type Output = RoundPoint;
+
+    fn sandwich(self, other: Infinity) -> RoundPoint {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -931,10 +1011,10 @@ impl Sandwich<PointAtInfinity> for MultiVector {
     }
 }
 
-impl Sandwich<Radial> for MultiVector {
-    type Output = Radial;
+impl Sandwich<RoundPoint> for MultiVector {
+    type Output = RoundPoint;
 
-    fn sandwich(self, other: Radial) -> Radial {
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -964,10 +1044,18 @@ impl Sandwich<Dipole> for Origin {
 }
 
 impl Sandwich<Horizon> for Origin {
-    type Output = Plane;
+    type Output = Horizon;
 
-    fn sandwich(self, other: Horizon) -> Plane {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    fn sandwich(self, other: Horizon) -> Horizon {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Infinity> for Origin {
+    type Output = Infinity;
+
+    fn sandwich(self, other: Infinity) -> Infinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
@@ -1043,10 +1131,10 @@ impl Sandwich<PointAtInfinity> for Origin {
     }
 }
 
-impl Sandwich<Radial> for Origin {
-    type Output = Radial;
+impl Sandwich<RoundPoint> for Origin {
+    type Output = RoundPoint;
 
-    fn sandwich(self, other: Radial) -> Radial {
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1079,6 +1167,14 @@ impl Sandwich<Horizon> for Plane {
     type Output = Plane;
 
     fn sandwich(self, other: Horizon) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Infinity> for Plane {
+    type Output = RoundPoint;
+
+    fn sandwich(self, other: Infinity) -> RoundPoint {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1155,10 +1251,10 @@ impl Sandwich<PointAtInfinity> for Plane {
     }
 }
 
-impl Sandwich<Radial> for Plane {
-    type Output = Radial;
+impl Sandwich<RoundPoint> for Plane {
+    type Output = RoundPoint;
 
-    fn sandwich(self, other: Radial) -> Radial {
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1191,6 +1287,14 @@ impl Sandwich<Horizon> for PlaneAtOrigin {
     type Output = Plane;
 
     fn sandwich(self, other: Horizon) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Infinity> for PlaneAtOrigin {
+    type Output = RoundPoint;
+
+    fn sandwich(self, other: Infinity) -> RoundPoint {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1267,10 +1371,10 @@ impl Sandwich<PointAtInfinity> for PlaneAtOrigin {
     }
 }
 
-impl Sandwich<Radial> for PlaneAtOrigin {
-    type Output = Radial;
+impl Sandwich<RoundPoint> for PlaneAtOrigin {
+    type Output = RoundPoint;
 
-    fn sandwich(self, other: Radial) -> Radial {
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1300,10 +1404,18 @@ impl Sandwich<Dipole> for Point {
 }
 
 impl Sandwich<Horizon> for Point {
-    type Output = Plane;
+    type Output = Horizon;
 
-    fn sandwich(self, other: Horizon) -> Plane {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    fn sandwich(self, other: Horizon) -> Horizon {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Infinity> for Point {
+    type Output = Infinity;
+
+    fn sandwich(self, other: Infinity) -> Infinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
@@ -1379,10 +1491,10 @@ impl Sandwich<PointAtInfinity> for Point {
     }
 }
 
-impl Sandwich<Radial> for Point {
-    type Output = Radial;
+impl Sandwich<RoundPoint> for Point {
+    type Output = RoundPoint;
 
-    fn sandwich(self, other: Radial) -> Radial {
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1451,10 +1563,10 @@ impl Sandwich<PlaneAtOrigin> for PointAtInfinity {
     }
 }
 
-impl Sandwich<Radial> for PointAtInfinity {
-    type Output = Radial;
+impl Sandwich<RoundPoint> for PointAtInfinity {
+    type Output = RoundPoint;
 
-    fn sandwich(self, other: Radial) -> Radial {
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1467,7 +1579,7 @@ impl Sandwich<Sphere> for PointAtInfinity {
     }
 }
 
-impl Sandwich<Circle> for Radial {
+impl Sandwich<Circle> for RoundPoint {
     type Output = Circle;
 
     fn sandwich(self, other: Circle) -> Circle {
@@ -1475,7 +1587,7 @@ impl Sandwich<Circle> for Radial {
     }
 }
 
-impl Sandwich<Dipole> for Radial {
+impl Sandwich<Dipole> for RoundPoint {
     type Output = Dipole;
 
     fn sandwich(self, other: Dipole) -> Dipole {
@@ -1483,7 +1595,7 @@ impl Sandwich<Dipole> for Radial {
     }
 }
 
-impl Sandwich<Horizon> for Radial {
+impl Sandwich<Horizon> for RoundPoint {
     type Output = Plane;
 
     fn sandwich(self, other: Horizon) -> Plane {
@@ -1491,7 +1603,15 @@ impl Sandwich<Horizon> for Radial {
     }
 }
 
-impl Sandwich<Line> for Radial {
+impl Sandwich<Infinity> for RoundPoint {
+    type Output = RoundPoint;
+
+    fn sandwich(self, other: Infinity) -> RoundPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Line> for RoundPoint {
     type Output = Line;
 
     fn sandwich(self, other: Line) -> Line {
@@ -1499,7 +1619,7 @@ impl Sandwich<Line> for Radial {
     }
 }
 
-impl Sandwich<LineAtInfinity> for Radial {
+impl Sandwich<LineAtInfinity> for RoundPoint {
     type Output = Line;
 
     fn sandwich(self, other: LineAtInfinity) -> Line {
@@ -1507,7 +1627,7 @@ impl Sandwich<LineAtInfinity> for Radial {
     }
 }
 
-impl Sandwich<LineAtOrigin> for Radial {
+impl Sandwich<LineAtOrigin> for RoundPoint {
     type Output = Line;
 
     fn sandwich(self, other: LineAtOrigin) -> Line {
@@ -1515,7 +1635,7 @@ impl Sandwich<LineAtOrigin> for Radial {
     }
 }
 
-impl Sandwich<MultiVector> for Radial {
+impl Sandwich<MultiVector> for RoundPoint {
     type Output = MultiVector;
 
     fn sandwich(self, other: MultiVector) -> MultiVector {
@@ -1523,7 +1643,7 @@ impl Sandwich<MultiVector> for Radial {
     }
 }
 
-impl Sandwich<Origin> for Radial {
+impl Sandwich<Origin> for RoundPoint {
     type Output = Point;
 
     fn sandwich(self, other: Origin) -> Point {
@@ -1531,7 +1651,7 @@ impl Sandwich<Origin> for Radial {
     }
 }
 
-impl Sandwich<Plane> for Radial {
+impl Sandwich<Plane> for RoundPoint {
     type Output = Plane;
 
     fn sandwich(self, other: Plane) -> Plane {
@@ -1539,7 +1659,7 @@ impl Sandwich<Plane> for Radial {
     }
 }
 
-impl Sandwich<PlaneAtOrigin> for Radial {
+impl Sandwich<PlaneAtOrigin> for RoundPoint {
     type Output = Plane;
 
     fn sandwich(self, other: PlaneAtOrigin) -> Plane {
@@ -1547,7 +1667,7 @@ impl Sandwich<PlaneAtOrigin> for Radial {
     }
 }
 
-impl Sandwich<Point> for Radial {
+impl Sandwich<Point> for RoundPoint {
     type Output = Point;
 
     fn sandwich(self, other: Point) -> Point {
@@ -1555,7 +1675,7 @@ impl Sandwich<Point> for Radial {
     }
 }
 
-impl Sandwich<PointAtInfinity> for Radial {
+impl Sandwich<PointAtInfinity> for RoundPoint {
     type Output = Point;
 
     fn sandwich(self, other: PointAtInfinity) -> Point {
@@ -1563,15 +1683,15 @@ impl Sandwich<PointAtInfinity> for Radial {
     }
 }
 
-impl Sandwich<Radial> for Radial {
-    type Output = Radial;
+impl Sandwich<RoundPoint> for RoundPoint {
+    type Output = RoundPoint;
 
-    fn sandwich(self, other: Radial) -> Radial {
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<Sphere> for Radial {
+impl Sandwich<Sphere> for RoundPoint {
     type Output = Sphere;
 
     fn sandwich(self, other: Sphere) -> Sphere {
@@ -1596,10 +1716,18 @@ impl Sandwich<Dipole> for Scalar {
 }
 
 impl Sandwich<Horizon> for Scalar {
-    type Output = Plane;
+    type Output = Horizon;
 
-    fn sandwich(self, other: Horizon) -> Plane {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    fn sandwich(self, other: Horizon) -> Horizon {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Infinity> for Scalar {
+    type Output = Infinity;
+
+    fn sandwich(self, other: Infinity) -> Infinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
@@ -1675,10 +1803,10 @@ impl Sandwich<PointAtInfinity> for Scalar {
     }
 }
 
-impl Sandwich<Radial> for Scalar {
-    type Output = Radial;
+impl Sandwich<RoundPoint> for Scalar {
+    type Output = RoundPoint;
 
-    fn sandwich(self, other: Radial) -> Radial {
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
@@ -1711,6 +1839,14 @@ impl Sandwich<Horizon> for Sphere {
     type Output = Plane;
 
     fn sandwich(self, other: Horizon) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Infinity> for Sphere {
+    type Output = RoundPoint;
+
+    fn sandwich(self, other: Infinity) -> RoundPoint {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1787,10 +1923,10 @@ impl Sandwich<PointAtInfinity> for Sphere {
     }
 }
 
-impl Sandwich<Radial> for Sphere {
-    type Output = Radial;
+impl Sandwich<RoundPoint> for Sphere {
+    type Output = RoundPoint;
 
-    fn sandwich(self, other: Radial) -> Radial {
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1820,9 +1956,17 @@ impl Invert<Dipole> for Point {
 }
 
 impl Invert<Horizon> for Point {
-    type Output = Plane;
+    type Output = Horizon;
 
-    fn invert(self, other: Horizon) -> Plane {
+    fn invert(self, other: Horizon) -> Horizon {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Invert<Infinity> for Point {
+    type Output = Infinity;
+
+    fn invert(self, other: Infinity) -> Infinity {
         self.unitize().sandwich(other)
     }
 }
@@ -1899,10 +2043,10 @@ impl Invert<PointAtInfinity> for Point {
     }
 }
 
-impl Invert<Radial> for Point {
-    type Output = Radial;
+impl Invert<RoundPoint> for Point {
+    type Output = RoundPoint;
 
-    fn invert(self, other: Radial) -> Radial {
+    fn invert(self, other: RoundPoint) -> RoundPoint {
         self.unitize().sandwich(other)
     }
 }
@@ -1935,6 +2079,14 @@ impl Reflect<Horizon> for Plane {
     type Output = Plane;
 
     fn reflect(self, other: Horizon) -> Plane {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Infinity> for Plane {
+    type Output = RoundPoint;
+
+    fn reflect(self, other: Infinity) -> RoundPoint {
         self.unitize().sandwich(other)
     }
 }
@@ -2011,10 +2163,10 @@ impl Reflect<PointAtInfinity> for Plane {
     }
 }
 
-impl Reflect<Radial> for Plane {
-    type Output = Radial;
+impl Reflect<RoundPoint> for Plane {
+    type Output = RoundPoint;
 
-    fn reflect(self, other: Radial) -> Radial {
+    fn reflect(self, other: RoundPoint) -> RoundPoint {
         self.unitize().sandwich(other)
     }
 }

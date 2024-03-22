@@ -47,6 +47,14 @@ impl BulkExpansion<MultiVector> for Horizon {
     }
 }
 
+impl BulkExpansion<MultiVector> for Infinity {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkExpansion<MultiVector> for Line {
     type Output = MultiVector;
 
@@ -75,14 +83,6 @@ impl BulkExpansion<MultiVector> for MultiVector {
     type Output = MultiVector;
 
     fn bulk_expansion(self, other: MultiVector) -> MultiVector {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Radial> for MultiVector {
-    type Output = MultiVector;
-
-    fn bulk_expansion(self, other: Radial) -> MultiVector {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -127,18 +127,10 @@ impl BulkExpansion<MultiVector> for PointAtInfinity {
     }
 }
 
-impl BulkExpansion<MultiVector> for Radial {
+impl BulkExpansion<MultiVector> for RoundPoint {
     type Output = MultiVector;
 
     fn bulk_expansion(self, other: MultiVector) -> MultiVector {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Radial> for Radial {
-    type Output = AntiScalar;
-
-    fn bulk_expansion(self, other: Radial) -> AntiScalar {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -168,6 +160,14 @@ impl WeightExpansion<MultiVector> for Dipole {
 }
 
 impl WeightExpansion<MultiVector> for Horizon {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVector> for Infinity {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: MultiVector) -> MultiVector {
@@ -247,7 +247,7 @@ impl WeightExpansion<MultiVector> for PointAtInfinity {
     }
 }
 
-impl WeightExpansion<MultiVector> for Radial {
+impl WeightExpansion<MultiVector> for RoundPoint {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: MultiVector) -> MultiVector {

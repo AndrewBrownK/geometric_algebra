@@ -67,7 +67,7 @@ struct Horizon {
      g0: f32,
 }
 
-struct Radial {
+struct RoundPoint {
     // e1, e2, e3
      g0: vec3<f32>,
     // e4, e5
@@ -97,6 +97,11 @@ struct Sphere {
      g0: vec3<f32>,
     // e1234, -e1235
      g1: vec2<f32>,
+}
+
+struct Infinity {
+    // e5
+     g0: f32,
 }
 
 struct MultiVector {
@@ -140,6 +145,10 @@ fn horizon_one() -> Horizon {
     return Horizon(0.0);
 }
 
+fn infinity_one() -> Infinity {
+    return Infinity(0.0);
+}
+
 fn line_one() -> Line {
     return Line(vec3<f32>(0.0), vec3<f32>(0.0));
 }
@@ -180,8 +189,8 @@ fn point_at_infinity_one() -> PointAtInfinity {
     return PointAtInfinity(vec3<f32>(0.0));
 }
 
-fn radial_one() -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(0.0));
+fn round_point_one() -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
 fn scalar_one() -> Scalar {
@@ -206,6 +215,10 @@ fn dipole_zero() -> Dipole {
 
 fn horizon_zero() -> Horizon {
     return Horizon(0.0);
+}
+
+fn infinity_zero() -> Infinity {
+    return Infinity(0.0);
 }
 
 fn line_zero() -> Line {
@@ -248,8 +261,8 @@ fn point_at_infinity_zero() -> PointAtInfinity {
     return PointAtInfinity(vec3<f32>(0.0));
 }
 
-fn radial_zero() -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(0.0));
+fn round_point_zero() -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
 fn scalar_zero() -> Scalar {
@@ -274,6 +287,10 @@ fn dipole_neg(self_: Dipole) -> Dipole {
 
 fn horizon_neg(self_: Horizon) -> Horizon {
     return Horizon(self_.g0);
+}
+
+fn infinity_neg(self_: Infinity) -> Infinity {
+    return Infinity(-self_.g0);
 }
 
 fn line_neg(self_: Line) -> Line {
@@ -316,8 +333,8 @@ fn point_at_infinity_neg(self_: PointAtInfinity) -> PointAtInfinity {
     return PointAtInfinity(self_.g0 * vec3<f32>(-1.0));
 }
 
-fn radial_neg(self_: Radial) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(-1.0), self_.g1 * vec2<f32>(-1.0));
+fn round_point_neg(self_: RoundPoint) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(-1.0), self_.g1 * vec2<f32>(-1.0));
 }
 
 fn scalar_neg(self_: Scalar) -> Scalar {
@@ -402,6 +419,18 @@ fn horizon_plane_at_origin_add(self_: Horizon, other: PlaneAtOrigin) -> Plane {
 
 fn horizon_sphere_add(self_: Horizon, other: Sphere) -> Sphere {
     return Sphere(other.g0, vec2<f32>(0.0, self_.g0) + other.g1);
+}
+
+fn infinity_infinity_add(self_: Infinity, other: Infinity) -> Infinity {
+    return Infinity(self_.g0 + other.g0);
+}
+
+fn infinity_multi_vector_add(self_: Infinity, other: MultiVector) -> MultiVector {
+    return MultiVector(other.g0, other.g1, vec2<f32>(0.0, self_.g0) + other.g2, other.g3, other.g4, other.g5, other.g6, other.g7, other.g8, other.g9, other.g10);
+}
+
+fn infinity_round_point_add(self_: Infinity, other: RoundPoint) -> RoundPoint {
+    return RoundPoint(other.g0, vec2<f32>(0.0, self_.g0) + other.g1);
 }
 
 fn line_circle_add(self_: Line, other: Circle) -> Circle {
@@ -496,6 +525,10 @@ fn multi_vector_horizon_add(self_: MultiVector, other: Horizon) -> MultiVector {
     return MultiVector(self_.g0, self_.g1, self_.g2, self_.g3, self_.g4, self_.g5, self_.g6, self_.g7, self_.g8, self_.g9, self_.g10 + vec2<f32>(0.0, other.g0));
 }
 
+fn multi_vector_infinity_add(self_: MultiVector, other: Infinity) -> MultiVector {
+    return MultiVector(self_.g0, self_.g1, self_.g2 + vec2<f32>(0.0, other.g0), self_.g3, self_.g4, self_.g5, self_.g6, self_.g7, self_.g8, self_.g9, self_.g10);
+}
+
 fn multi_vector_line_add(self_: MultiVector, other: Line) -> MultiVector {
     return MultiVector(self_.g0, self_.g1, self_.g2, self_.g3, self_.g4, self_.g5, self_.g6, self_.g7 + other.g0, self_.g8 + other.g1, self_.g9, self_.g10);
 }
@@ -536,7 +569,7 @@ fn multi_vector_point_at_infinity_add(self_: MultiVector, other: PointAtInfinity
     return MultiVector(self_.g0, self_.g1, self_.g2, self_.g3, self_.g4, self_.g5 + vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), self_.g6, self_.g7, self_.g8, self_.g9, self_.g10);
 }
 
-fn multi_vector_radial_add(self_: MultiVector, other: Radial) -> MultiVector {
+fn multi_vector_round_point_add(self_: MultiVector, other: RoundPoint) -> MultiVector {
     return MultiVector(self_.g0, self_.g1 + other.g0, self_.g2 + other.g1, self_.g3, self_.g4, self_.g5, self_.g6, self_.g7, self_.g8, self_.g9, self_.g10);
 }
 
@@ -648,12 +681,16 @@ fn point_at_infinity_point_at_infinity_add(self_: PointAtInfinity, other: PointA
     return PointAtInfinity(self_.g0 + other.g0);
 }
 
-fn radial_multi_vector_add(self_: Radial, other: MultiVector) -> MultiVector {
+fn round_point_infinity_add(self_: RoundPoint, other: Infinity) -> RoundPoint {
+    return RoundPoint(self_.g0, self_.g1 + vec2<f32>(0.0, other.g0));
+}
+
+fn round_point_multi_vector_add(self_: RoundPoint, other: MultiVector) -> MultiVector {
     return MultiVector(other.g0, self_.g0 + other.g1, self_.g1 + other.g2, other.g3, other.g4, other.g5, other.g6, other.g7, other.g8, other.g9, other.g10);
 }
 
-fn radial_radial_add(self_: Radial, other: Radial) -> Radial {
-    return Radial(self_.g0 + other.g0, self_.g1 + other.g1);
+fn round_point_round_point_add(self_: RoundPoint, other: RoundPoint) -> RoundPoint {
+    return RoundPoint(self_.g0 + other.g0, self_.g1 + other.g1);
 }
 
 fn scalar_anti_scalar_add(self_: Scalar, other: AntiScalar) -> Magnitude {
@@ -708,6 +745,10 @@ fn horizon_horizon_div(self_: Horizon, other: Horizon) -> Horizon {
     return Horizon(self_.g0 * 1.0 / other.g0 * 1.0);
 }
 
+fn infinity_infinity_div(self_: Infinity, other: Infinity) -> Infinity {
+    return Infinity(self_.g0 * 1.0 / other.g0 * 1.0);
+}
+
 fn line_line_div(self_: Line, other: Line) -> Line {
     return Line(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(1.0, 1.0, 1.0) / vec3<f32>(other.g0.x, other.g0.y, other.g0.z) * vec3<f32>(1.0, 1.0, 1.0), vec3<f32>(self_.g1.x, self_.g1.y, self_.g1.z) * vec3<f32>(1.0, 1.0, 1.0) / vec3<f32>(other.g1.x, other.g1.y, other.g1.z) * vec3<f32>(1.0, 1.0, 1.0));
 }
@@ -748,8 +789,8 @@ fn point_at_infinity_point_at_infinity_div(self_: PointAtInfinity, other: PointA
     return PointAtInfinity(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(1.0, 1.0, 1.0) / vec3<f32>(other.g0.x, other.g0.y, other.g0.z) * vec3<f32>(1.0, 1.0, 1.0));
 }
 
-fn radial_radial_div(self_: Radial, other: Radial) -> Radial {
-    return Radial(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(1.0, 1.0, 1.0) / vec3<f32>(other.g0.x, other.g0.y, other.g0.z) * vec3<f32>(1.0, 1.0, 1.0), vec2<f32>(self_.g1.x, self_.g1.y) * vec2<f32>(1.0, 1.0) / vec2<f32>(other.g1.x, other.g1.y) * vec2<f32>(1.0, 1.0));
+fn round_point_round_point_div(self_: RoundPoint, other: RoundPoint) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(1.0, 1.0, 1.0) / vec3<f32>(other.g0.x, other.g0.y, other.g0.z) * vec3<f32>(1.0, 1.0, 1.0), vec2<f32>(self_.g1.x, self_.g1.y) * vec2<f32>(1.0, 1.0) / vec2<f32>(other.g1.x, other.g1.y) * vec2<f32>(1.0, 1.0));
 }
 
 fn scalar_scalar_div(self_: Scalar, other: Scalar) -> Scalar {
@@ -816,6 +857,10 @@ fn multi_vector_horizon_into(self_: MultiVector) -> Horizon {
     return Horizon(self_.g10.y);
 }
 
+fn multi_vector_infinity_into(self_: MultiVector) -> Infinity {
+    return Infinity(self_.g2.y);
+}
+
 fn multi_vector_line_into(self_: MultiVector) -> Line {
     return Line(self_.g7, self_.g8);
 }
@@ -852,8 +897,8 @@ fn multi_vector_point_at_infinity_into(self_: MultiVector) -> PointAtInfinity {
     return PointAtInfinity(vec3<f32>(self_.g5.x, self_.g5.y, self_.g5.z));
 }
 
-fn multi_vector_radial_into(self_: MultiVector) -> Radial {
-    return Radial(self_.g1, self_.g2);
+fn multi_vector_round_point_into(self_: MultiVector) -> RoundPoint {
+    return RoundPoint(self_.g1, self_.g2);
 }
 
 fn multi_vector_scalar_into(self_: MultiVector) -> Scalar {
@@ -878,6 +923,10 @@ fn point_origin_into(self_: Point) -> Origin {
 
 fn point_point_at_infinity_into(self_: Point) -> PointAtInfinity {
     return PointAtInfinity(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z));
+}
+
+fn round_point_infinity_into(self_: RoundPoint) -> Infinity {
+    return Infinity(self_.g1.y);
 }
 
 fn sphere_horizon_into(self_: Sphere) -> Horizon {
@@ -906,6 +955,10 @@ fn dipole_dipole_mul(self_: Dipole, other: Dipole) -> Dipole {
 
 fn horizon_horizon_mul(self_: Horizon, other: Horizon) -> Horizon {
     return Horizon(self_.g0 * other.g0);
+}
+
+fn infinity_infinity_mul(self_: Infinity, other: Infinity) -> Infinity {
+    return Infinity(self_.g0 * other.g0);
 }
 
 fn line_line_mul(self_: Line, other: Line) -> Line {
@@ -948,8 +1001,8 @@ fn point_at_infinity_point_at_infinity_mul(self_: PointAtInfinity, other: PointA
     return PointAtInfinity(self_.g0 * other.g0);
 }
 
-fn radial_radial_mul(self_: Radial, other: Radial) -> Radial {
-    return Radial(self_.g0 * other.g0, self_.g1 * other.g1);
+fn round_point_round_point_mul(self_: RoundPoint, other: RoundPoint) -> RoundPoint {
+    return RoundPoint(self_.g0 * other.g0, self_.g1 * other.g1);
 }
 
 fn scalar_scalar_mul(self_: Scalar, other: Scalar) -> Scalar {
@@ -1034,6 +1087,18 @@ fn horizon_plane_at_origin_sub(self_: Horizon, other: PlaneAtOrigin) -> Plane {
 
 fn horizon_sphere_sub(self_: Horizon, other: Sphere) -> Sphere {
     return Sphere(vec3<f32>(0.0) - other.g0, vec2<f32>(0.0, self_.g0) - other.g1);
+}
+
+fn infinity_infinity_sub(self_: Infinity, other: Infinity) -> Infinity {
+    return Infinity(self_.g0 - other.g0);
+}
+
+fn infinity_multi_vector_sub(self_: Infinity, other: MultiVector) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - other.g0, vec3<f32>(0.0) - other.g1, vec2<f32>(0.0, self_.g0) - other.g2, vec3<f32>(0.0) - other.g3, vec3<f32>(0.0) - other.g4, vec4<f32>(0.0) - other.g5, vec4<f32>(0.0) - other.g6, vec3<f32>(0.0) - other.g7, vec3<f32>(0.0) - other.g8, vec3<f32>(0.0) - other.g9, vec2<f32>(0.0) - other.g10);
+}
+
+fn infinity_round_point_sub(self_: Infinity, other: RoundPoint) -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0) - other.g0, vec2<f32>(0.0, self_.g0) - other.g1);
 }
 
 fn line_circle_sub(self_: Line, other: Circle) -> Circle {
@@ -1128,6 +1193,10 @@ fn multi_vector_horizon_sub(self_: MultiVector, other: Horizon) -> MultiVector {
     return MultiVector(self_.g0, self_.g1, self_.g2, self_.g3, self_.g4, self_.g5, self_.g6, self_.g7, self_.g8, self_.g9, self_.g10 - vec2<f32>(0.0, other.g0));
 }
 
+fn multi_vector_infinity_sub(self_: MultiVector, other: Infinity) -> MultiVector {
+    return MultiVector(self_.g0, self_.g1, self_.g2 - vec2<f32>(0.0, other.g0), self_.g3, self_.g4, self_.g5, self_.g6, self_.g7, self_.g8, self_.g9, self_.g10);
+}
+
 fn multi_vector_line_sub(self_: MultiVector, other: Line) -> MultiVector {
     return MultiVector(self_.g0, self_.g1, self_.g2, self_.g3, self_.g4, self_.g5, self_.g6, self_.g7 - other.g0, self_.g8 - other.g1, self_.g9, self_.g10);
 }
@@ -1168,7 +1237,7 @@ fn multi_vector_point_at_infinity_sub(self_: MultiVector, other: PointAtInfinity
     return MultiVector(self_.g0, self_.g1, self_.g2, self_.g3, self_.g4, self_.g5 - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), self_.g6, self_.g7, self_.g8, self_.g9, self_.g10);
 }
 
-fn multi_vector_radial_sub(self_: MultiVector, other: Radial) -> MultiVector {
+fn multi_vector_round_point_sub(self_: MultiVector, other: RoundPoint) -> MultiVector {
     return MultiVector(self_.g0, self_.g1 - other.g0, self_.g2 - other.g1, self_.g3, self_.g4, self_.g5, self_.g6, self_.g7, self_.g8, self_.g9, self_.g10);
 }
 
@@ -1280,12 +1349,16 @@ fn point_at_infinity_point_at_infinity_sub(self_: PointAtInfinity, other: PointA
     return PointAtInfinity(self_.g0 - other.g0);
 }
 
-fn radial_multi_vector_sub(self_: Radial, other: MultiVector) -> MultiVector {
+fn round_point_infinity_sub(self_: RoundPoint, other: Infinity) -> RoundPoint {
+    return RoundPoint(self_.g0, self_.g1 - vec2<f32>(0.0, other.g0));
+}
+
+fn round_point_multi_vector_sub(self_: RoundPoint, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(0.0) - other.g0, self_.g0 - other.g1, self_.g1 - other.g2, vec3<f32>(0.0) - other.g3, vec3<f32>(0.0) - other.g4, vec4<f32>(0.0) - other.g5, vec4<f32>(0.0) - other.g6, vec3<f32>(0.0) - other.g7, vec3<f32>(0.0) - other.g8, vec3<f32>(0.0) - other.g9, vec2<f32>(0.0) - other.g10);
 }
 
-fn radial_radial_sub(self_: Radial, other: Radial) -> Radial {
-    return Radial(self_.g0 - other.g0, self_.g1 - other.g1);
+fn round_point_round_point_sub(self_: RoundPoint, other: RoundPoint) -> RoundPoint {
+    return RoundPoint(self_.g0 - other.g0, self_.g1 - other.g1);
 }
 
 fn scalar_anti_scalar_sub(self_: Scalar, other: AntiScalar) -> Magnitude {
@@ -1340,6 +1413,10 @@ fn anti_scalar_horizon_anti_wedge_dot(self_: AntiScalar, other: Horizon) -> Hori
     return Horizon(self_.g0 * other.g0);
 }
 
+fn anti_scalar_infinity_anti_wedge_dot(self_: AntiScalar, other: Infinity) -> Infinity {
+    return Infinity(self_.g0 * other.g0);
+}
+
 fn anti_scalar_line_anti_wedge_dot(self_: AntiScalar, other: Line) -> Line {
     return Line(vec3<f32>(self_.g0) * other.g0, vec3<f32>(self_.g0) * other.g1);
 }
@@ -1380,8 +1457,8 @@ fn anti_scalar_point_at_infinity_anti_wedge_dot(self_: AntiScalar, other: PointA
     return PointAtInfinity(vec3<f32>(self_.g0) * other.g0);
 }
 
-fn anti_scalar_radial_anti_wedge_dot(self_: AntiScalar, other: Radial) -> Radial {
-    return Radial(vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * other.g1);
+fn anti_scalar_round_point_anti_wedge_dot(self_: AntiScalar, other: RoundPoint) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * other.g1);
 }
 
 fn anti_scalar_scalar_anti_wedge_dot(self_: AntiScalar, other: Scalar) -> Scalar {
@@ -1406,6 +1483,10 @@ fn circle_dipole_anti_wedge_dot(self_: Circle, other: Dipole) -> MultiVector {
 
 fn circle_horizon_anti_wedge_dot(self_: Circle, other: Horizon) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, self_.g1.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0), vec2<f32>(self_.g0.w) * vec2<f32>(0.0, other.g0));
+}
+
+fn circle_infinity_anti_wedge_dot(self_: Circle, other: Infinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0), vec2<f32>(self_.g0.w) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0), self_.g1 * vec3<f32>(other.g0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
 fn circle_line_anti_wedge_dot(self_: Circle, other: Line) -> MultiVector {
@@ -1448,7 +1529,7 @@ fn circle_point_at_infinity_anti_wedge_dot(self_: Circle, other: PointAtInfinity
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.y) + self_.g0.wwwz * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, -other.g0.z) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g1.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g1.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn circle_radial_anti_wedge_dot(self_: Circle, other: Radial) -> MultiVector {
+fn circle_round_point_anti_wedge_dot(self_: Circle, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.y) + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) + self_.g2 * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g0.w) * other.g1 * vec2<f32>(-1.0, 1.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g1.y) * vec4<f32>(0.0, other.g1.x, 0.0, -other.g0.y) + vec4<f32>(self_.g1.z) * vec4<f32>(0.0, 0.0, other.g1.x, -other.g0.z), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.y) + vec3<f32>(self_.g0.w) * other.g0 + self_.g2 * vec3<f32>(other.g1.x), self_.g1 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g2.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g2.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g2.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -1474,6 +1555,10 @@ fn dipole_dipole_anti_wedge_dot(self_: Dipole, other: Dipole) -> MultiVector {
 
 fn dipole_horizon_anti_wedge_dot(self_: Dipole, other: Horizon) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), self_.g0 * vec3<f32>(other.g0), vec2<f32>(self_.g2.w) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0), vec3<f32>(0.0) - self_.g1 * vec3<f32>(other.g0), vec3<f32>(0.0), vec2<f32>(0.0));
+}
+
+fn dipole_infinity_anti_wedge_dot(self_: Dipole, other: Infinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, self_.g1.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g0), vec2<f32>(self_.g2.w) * vec2<f32>(0.0, -other.g0));
 }
 
 fn dipole_line_anti_wedge_dot(self_: Dipole, other: Line) -> MultiVector {
@@ -1516,7 +1601,7 @@ fn dipole_point_at_infinity_anti_wedge_dot(self_: Dipole, other: PointAtInfinity
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(self_.g1.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.y) + vec4<f32>(self_.g0.z) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.z), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(self_.g1.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) + vec3<f32>(self_.g2.w) * other.g0, vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn dipole_radial_anti_wedge_dot(self_: Dipole, other: Radial) -> MultiVector {
+fn dipole_round_point_anti_wedge_dot(self_: Dipole, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) + self_.g1 * vec3<f32>(other.g1.x), self_.g0 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g2.x, self_.g2.y, self_.g2.z) * vec3<f32>(other.g1.x) - vec3<f32>(self_.g2.w) * other.g0, vec4<f32>(self_.g1.x) * vec4<f32>(other.g1.y, 0.0, 0.0, other.g0.x) + vec4<f32>(self_.g1.y) * vec4<f32>(0.0, other.g1.y, 0.0, other.g0.y) + vec4<f32>(self_.g1.z) * vec4<f32>(0.0, 0.0, other.g1.y, other.g0.z) + vec4<f32>(self_.g2.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, 0.0) + vec4<f32>(self_.g2.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4<f32>(self_.g2.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) - vec3<f32>(self_.g2.x, self_.g2.y, self_.g2.z) * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g2.w) * other.g1 * vec2<f32>(1.0, -1.0));
 }
 
@@ -1556,8 +1641,8 @@ fn horizon_multi_vector_anti_wedge_dot(self_: Horizon, other: MultiVector) -> Mu
     return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(other.g2.x, -other.g10.x), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g3, vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g5.w) + vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g0.x), vec3<f32>(0.0), vec3<f32>(self_.g0) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec4<f32>(self_.g0) * vec4<f32>(other.g7.x, other.g7.y, other.g7.z, -other.g2.x) + vec4<f32>(self_.g0) * vec4<f32>(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4<f32>(self_.g0) * vec4<f32>(0.0, 0.0, 0.0, -other.g10.x), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g3, vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g9 - vec3<f32>(self_.g0) * other.g4, vec3<f32>(0.0) - vec3<f32>(self_.g0) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g6.w) + vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0.y));
 }
 
-fn horizon_origin_anti_wedge_dot(self_: Horizon, other: Origin) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g0));
+fn horizon_origin_anti_wedge_dot(self_: Horizon, other: Origin) -> Infinity {
+    return Infinity(0.0 - self_.g0 * other.g0);
 }
 
 fn horizon_plane_anti_wedge_dot(self_: Horizon, other: Plane) -> LineAtInfinity {
@@ -1568,20 +1653,76 @@ fn horizon_plane_at_origin_anti_wedge_dot(self_: Horizon, other: PlaneAtOrigin) 
     return LineAtInfinity(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0);
 }
 
-fn horizon_point_anti_wedge_dot(self_: Horizon, other: Point) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g0.w));
+fn horizon_point_anti_wedge_dot(self_: Horizon, other: Point) -> Infinity {
+    return Infinity(0.0 - self_.g0 * other.g0.w);
 }
 
-fn horizon_radial_anti_wedge_dot(self_: Horizon, other: Radial) -> MultiVector {
+fn horizon_round_point_anti_wedge_dot(self_: Horizon, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(other.g1.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0) - vec4<f32>(self_.g0) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn horizon_scalar_anti_wedge_dot(self_: Horizon, other: Scalar) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g0));
+fn horizon_scalar_anti_wedge_dot(self_: Horizon, other: Scalar) -> Infinity {
+    return Infinity(0.0 - self_.g0 * other.g0);
 }
 
 fn horizon_sphere_anti_wedge_dot(self_: Horizon, other: Sphere) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g1.x), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0) * vec4<f32>(0.0, 0.0, 0.0, -other.g1.x), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec3<f32>(0.0), vec2<f32>(0.0));
+}
+
+fn infinity_anti_scalar_anti_wedge_dot(self_: Infinity, other: AntiScalar) -> Infinity {
+    return Infinity(self_.g0 * other.g0);
+}
+
+fn infinity_circle_anti_wedge_dot(self_: Infinity, other: Circle) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec3<f32>(self_.g0) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g0.w), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(self_.g0) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(self_.g0) * other.g1, vec3<f32>(0.0), vec2<f32>(0.0));
+}
+
+fn infinity_dipole_anti_wedge_dot(self_: Infinity, other: Dipole) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0) * other.g0, vec4<f32>(self_.g0) * vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g2.w));
+}
+
+fn infinity_line_anti_wedge_dot(self_: Infinity, other: Line) -> LineAtInfinity {
+    return LineAtInfinity(vec3<f32>(self_.g0) * other.g0);
+}
+
+fn infinity_line_at_origin_anti_wedge_dot(self_: Infinity, other: LineAtOrigin) -> LineAtInfinity {
+    return LineAtInfinity(vec3<f32>(self_.g0) * other.g0);
+}
+
+fn infinity_magnitude_anti_wedge_dot(self_: Infinity, other: Magnitude) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0.y), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0.x));
+}
+
+fn infinity_multi_vector_anti_wedge_dot(self_: Infinity, other: MultiVector) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(other.g10.x, other.g2.x), vec3<f32>(self_.g0) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g6.w) + vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0.y), vec3<f32>(0.0), vec3<f32>(self_.g0) * other.g3, vec4<f32>(self_.g0) * vec4<f32>(other.g9.x, other.g9.y, other.g9.z, -other.g10.x) + vec4<f32>(self_.g0) * vec4<f32>(other.g4.x, other.g4.y, other.g4.z, 0.0), vec4<f32>(self_.g0) * vec4<f32>(0.0, 0.0, 0.0, other.g2.x), vec3<f32>(self_.g0) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec3<f32>(self_.g0) * other.g7 - vec3<f32>(self_.g0) * other.g1, vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g3, vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g5.w) + vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0.x));
+}
+
+fn infinity_origin_anti_wedge_dot(self_: Infinity, other: Origin) -> Horizon {
+    return Horizon(self_.g0 * other.g0);
+}
+
+fn infinity_plane_anti_wedge_dot(self_: Infinity, other: Plane) -> PointAtInfinity {
+    return PointAtInfinity(vec3<f32>(self_.g0) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z));
+}
+
+fn infinity_plane_at_origin_anti_wedge_dot(self_: Infinity, other: PlaneAtOrigin) -> PointAtInfinity {
+    return PointAtInfinity(vec3<f32>(self_.g0) * other.g0);
+}
+
+fn infinity_point_anti_wedge_dot(self_: Infinity, other: Point) -> Horizon {
+    return Horizon(self_.g0 * other.g0.w);
+}
+
+fn infinity_round_point_anti_wedge_dot(self_: Infinity, other: RoundPoint) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g1.x), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0) * vec4<f32>(0.0, 0.0, 0.0, other.g1.x), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec3<f32>(0.0), vec2<f32>(0.0));
+}
+
+fn infinity_scalar_anti_wedge_dot(self_: Infinity, other: Scalar) -> Horizon {
+    return Horizon(self_.g0 * other.g0);
+}
+
+fn infinity_sphere_anti_wedge_dot(self_: Infinity, other: Sphere) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(other.g1.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, -other.g1.x), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
 fn line_anti_scalar_anti_wedge_dot(self_: Line, other: AntiScalar) -> Line {
@@ -1598,6 +1739,10 @@ fn line_dipole_anti_wedge_dot(self_: Line, other: Dipole) -> MultiVector {
 
 fn line_horizon_anti_wedge_dot(self_: Line, other: Horizon) -> PointAtInfinity {
     return PointAtInfinity(self_.g0 * vec3<f32>(other.g0));
+}
+
+fn line_infinity_anti_wedge_dot(self_: Line, other: Infinity) -> LineAtInfinity {
+    return LineAtInfinity(self_.g0 * vec3<f32>(other.g0));
 }
 
 fn line_line_anti_wedge_dot(self_: Line, other: Line) -> MultiVector {
@@ -1640,7 +1785,7 @@ fn line_point_at_infinity_anti_wedge_dot(self_: Line, other: PointAtInfinity) ->
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn line_radial_anti_wedge_dot(self_: Line, other: Radial) -> MultiVector {
+fn line_round_point_anti_wedge_dot(self_: Line, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) + self_.g1 * vec3<f32>(other.g1.x), vec2<f32>(self_.g1.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(0.0, other.g1.x, 0.0, -other.g0.y) + vec4<f32>(self_.g0.z) * vec4<f32>(0.0, 0.0, other.g1.x, -other.g0.z), self_.g1 * vec3<f32>(other.g1.x), self_.g0 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -1696,7 +1841,7 @@ fn line_at_infinity_point_anti_wedge_dot(self_: LineAtInfinity, other: Point) ->
     return PointAtInfinity(self_.g0 * vec3<f32>(other.g0.w));
 }
 
-fn line_at_infinity_radial_anti_wedge_dot(self_: LineAtInfinity, other: Radial) -> MultiVector {
+fn line_at_infinity_round_point_anti_wedge_dot(self_: LineAtInfinity, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), self_.g0 * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), self_.g0 * vec3<f32>(other.g1.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -1722,6 +1867,10 @@ fn line_at_origin_dipole_anti_wedge_dot(self_: LineAtOrigin, other: Dipole) -> M
 
 fn line_at_origin_horizon_anti_wedge_dot(self_: LineAtOrigin, other: Horizon) -> PointAtInfinity {
     return PointAtInfinity(self_.g0 * vec3<f32>(other.g0));
+}
+
+fn line_at_origin_infinity_anti_wedge_dot(self_: LineAtOrigin, other: Infinity) -> LineAtInfinity {
+    return LineAtInfinity(self_.g0 * vec3<f32>(other.g0));
 }
 
 fn line_at_origin_line_anti_wedge_dot(self_: LineAtOrigin, other: Line) -> MultiVector {
@@ -1764,7 +1913,7 @@ fn line_at_origin_point_at_infinity_anti_wedge_dot(self_: LineAtOrigin, other: P
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn line_at_origin_radial_anti_wedge_dot(self_: LineAtOrigin, other: Radial) -> MultiVector {
+fn line_at_origin_round_point_anti_wedge_dot(self_: LineAtOrigin, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(0.0, other.g1.x, 0.0, -other.g0.y) + vec4<f32>(self_.g0.z) * vec4<f32>(0.0, 0.0, other.g1.x, -other.g0.z), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g1.y), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -1790,6 +1939,10 @@ fn magnitude_dipole_anti_wedge_dot(self_: Magnitude, other: Dipole) -> MultiVect
 
 fn magnitude_horizon_anti_wedge_dot(self_: Magnitude, other: Horizon) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0));
+}
+
+fn magnitude_infinity_anti_wedge_dot(self_: Magnitude, other: Infinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0));
 }
 
 fn magnitude_line_anti_wedge_dot(self_: Magnitude, other: Line) -> MultiVector {
@@ -1832,7 +1985,7 @@ fn magnitude_point_at_infinity_anti_wedge_dot(self_: Magnitude, other: PointAtIn
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.y) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0.x) * other.g0, vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn magnitude_radial_anti_wedge_dot(self_: Magnitude, other: Radial) -> MultiVector {
+fn magnitude_round_point_anti_wedge_dot(self_: Magnitude, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(self_.g0.y) * other.g0, vec2<f32>(self_.g0.y) * other.g1, vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0.x) * other.g0, vec2<f32>(self_.g0.x) * other.g1);
 }
 
@@ -1858,6 +2011,10 @@ fn multi_vector_dipole_anti_wedge_dot(self_: MultiVector, other: Dipole) -> Mult
 
 fn multi_vector_horizon_anti_wedge_dot(self_: MultiVector, other: Horizon) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g2.x) * vec2<f32>(other.g0, 0.0) + vec2<f32>(self_.g10.x) * vec2<f32>(0.0, -other.g0), self_.g3 * vec3<f32>(other.g0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0) + vec2<f32>(self_.g5.w) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, self_.g1.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0) + vec4<f32>(self_.g2.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0) + vec4<f32>(self_.g7.x, self_.g7.y, self_.g7.z, self_.g7.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0), vec4<f32>(self_.g10.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0), vec3<f32>(0.0) - self_.g3 * vec3<f32>(other.g0), vec3<f32>(0.0) - self_.g4 * vec3<f32>(other.g0) + self_.g9 * vec3<f32>(other.g0), vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g0), vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0) + vec2<f32>(self_.g6.w) * vec2<f32>(0.0, other.g0));
+}
+
+fn multi_vector_infinity_anti_wedge_dot(self_: MultiVector, other: Infinity) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g0) + vec2<f32>(self_.g10.x) * vec2<f32>(other.g0, 0.0), vec3<f32>(0.0) - vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g0), vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0) + vec2<f32>(self_.g6.w) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), self_.g3 * vec3<f32>(other.g0), vec4<f32>(self_.g4.x, self_.g4.y, self_.g4.z, self_.g4.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0) + vec4<f32>(self_.g9.x, self_.g9.y, self_.g9.z, self_.g9.x) * vec4<f32>(-other.g0, -other.g0, -other.g0, 0.0) + vec4<f32>(self_.g10.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0), vec4<f32>(self_.g2.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0), vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g0), self_.g1 * vec3<f32>(other.g0) + self_.g7 * vec3<f32>(other.g0), self_.g3 * vec3<f32>(other.g0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0) + vec2<f32>(self_.g5.w) * vec2<f32>(0.0, -other.g0));
 }
 
 fn multi_vector_line_anti_wedge_dot(self_: MultiVector, other: Line) -> MultiVector {
@@ -1900,7 +2057,7 @@ fn multi_vector_point_at_infinity_anti_wedge_dot(self_: MultiVector, other: Poin
     return MultiVector(vec2<f32>(self_.g3.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g3.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g3.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g6.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g6.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g6.z) * vec2<f32>(-other.g0.z, 0.0), vec3<f32>(self_.g3.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g3.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g3.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) + vec3<f32>(self_.g10.x) * other.g0, vec2<f32>(self_.g4.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g4.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g4.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g9.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g9.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g9.z) * vec2<f32>(0.0, -other.g0.z), vec3<f32>(0.0), vec3<f32>(self_.g2.x) * other.g0 + vec3<f32>(self_.g6.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g6.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g6.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec4<f32>(self_.g0.y) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g1.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g1.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4<f32>(self_.g6.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g6.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.y) + self_.g6.wwwz * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, -other.g0.z) + vec4<f32>(self_.g7.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g7.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g7.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0), vec4<f32>(self_.g3.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g3.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.y) + vec4<f32>(self_.g3.z) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.z), vec3<f32>(self_.g3.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g3.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g3.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) - vec3<f32>(self_.g10.x) * other.g0, vec3<f32>(0.0) - vec3<f32>(self_.g0.x) * other.g0 + vec3<f32>(self_.g4.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g4.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g4.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) + vec3<f32>(self_.g5.w) * other.g0 + vec3<f32>(self_.g9.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g9.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g9.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec3<f32>(self_.g2.x) * other.g0 + vec3<f32>(self_.g6.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g6.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g6.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, -other.g0.z) + vec2<f32>(self_.g7.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g7.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g7.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn multi_vector_radial_anti_wedge_dot(self_: MultiVector, other: Radial) -> MultiVector {
+fn multi_vector_round_point_anti_wedge_dot(self_: MultiVector, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, -other.g0.z) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g1.y) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, other.g1.x) + vec2<f32>(self_.g9.x) * vec2<f32>(other.g0.x, 0.0) + vec2<f32>(self_.g9.y) * vec2<f32>(other.g0.y, 0.0) + vec2<f32>(self_.g9.z) * vec2<f32>(other.g0.z, 0.0) + vec2<f32>(self_.g10.x) * vec2<f32>(other.g1.y, 0.0) + vec2<f32>(self_.g10.y) * vec2<f32>(other.g1.x, 0.0), vec3<f32>(self_.g0.y) * other.g0 - vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g1.y) + vec3<f32>(self_.g7.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g7.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g7.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) + self_.g8 * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.y) * other.g1 + vec2<f32>(self_.g6.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g6.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g6.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g6.w) * other.g1 * vec2<f32>(-1.0, 1.0) + vec2<f32>(self_.g8.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g8.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g8.z) * vec2<f32>(0.0, other.g0.z), vec3<f32>(self_.g3.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g3.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g3.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) + self_.g4 * vec3<f32>(other.g1.x) + self_.g9 * vec3<f32>(other.g1.x) + vec3<f32>(self_.g10.x) * other.g0, self_.g3 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g5.x, self_.g5.y, self_.g5.z) * vec3<f32>(other.g1.x) - vec3<f32>(self_.g5.w) * other.g0 + vec3<f32>(self_.g9.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g9.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g9.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec4<f32>(self_.g4.x) * vec4<f32>(other.g1.y, 0.0, 0.0, other.g0.x) + vec4<f32>(self_.g4.y) * vec4<f32>(0.0, other.g1.y, 0.0, other.g0.y) + vec4<f32>(self_.g4.z) * vec4<f32>(0.0, 0.0, other.g1.y, other.g0.z) + vec4<f32>(self_.g5.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, 0.0) + vec4<f32>(self_.g5.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4<f32>(self_.g5.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, 0.0) + vec4<f32>(self_.g9.x, self_.g9.y, self_.g9.z, self_.g9.x) * vec4<f32>(-other.g1.y, -other.g1.y, -other.g1.y, 0.0) + vec4<f32>(self_.g10.x) * vec4<f32>(0.0, 0.0, 0.0, other.g1.y) - vec4<f32>(self_.g10.y) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, self_.g1.x) * vec4<f32>(-other.g1.x, -other.g1.x, -other.g1.x, 0.0) + vec4<f32>(self_.g2.x) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, -other.g1.y) + vec4<f32>(self_.g2.y) * vec4<f32>(0.0, 0.0, 0.0, other.g1.x) + vec4<f32>(self_.g6.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g6.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g6.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4<f32>(self_.g7.x) * vec4<f32>(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g7.y) * vec4<f32>(0.0, other.g1.x, 0.0, -other.g0.y) + vec4<f32>(self_.g7.z) * vec4<f32>(0.0, 0.0, other.g1.x, -other.g0.z), vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) + vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g1.y) + vec3<f32>(self_.g6.w) * other.g0 + self_.g8 * vec3<f32>(other.g1.x), self_.g1 * vec3<f32>(other.g1.y) - vec3<f32>(self_.g2.y) * other.g0 + self_.g7 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g8.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g8.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g8.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0.x) * other.g0 + self_.g3 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g4.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g4.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g4.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) - vec3<f32>(self_.g5.x, self_.g5.y, self_.g5.z) * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * other.g1 + vec2<f32>(self_.g3.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g3.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g3.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g5.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g5.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g5.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g5.w) * other.g1 * vec2<f32>(1.0, -1.0));
 }
 
@@ -1924,8 +2081,12 @@ fn origin_dipole_anti_wedge_dot(self_: Origin, other: Dipole) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g2.w), vec3<f32>(self_.g0) * other.g1, vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0) * vec4<f32>(-other.g0.x, -other.g0.y, -other.g0.z, 0.0), vec3<f32>(0.0), vec3<f32>(self_.g0) * vec3<f32>(other.g2.x, other.g2.y, other.g2.z), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn origin_horizon_anti_wedge_dot(self_: Origin, other: Horizon) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0));
+fn origin_horizon_anti_wedge_dot(self_: Origin, other: Horizon) -> Infinity {
+    return Infinity(self_.g0 * other.g0);
+}
+
+fn origin_infinity_anti_wedge_dot(self_: Origin, other: Infinity) -> Horizon {
+    return Horizon(0.0 - self_.g0 * other.g0);
 }
 
 fn origin_line_anti_wedge_dot(self_: Origin, other: Line) -> MultiVector {
@@ -1968,7 +2129,7 @@ fn origin_point_at_infinity_anti_wedge_dot(self_: Origin, other: PointAtInfinity
     return LineAtInfinity(vec3<f32>(self_.g0) * other.g0);
 }
 
-fn origin_radial_anti_wedge_dot(self_: Origin, other: Radial) -> MultiVector {
+fn origin_round_point_anti_wedge_dot(self_: Origin, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0) * other.g1 * vec2<f32>(1.0, -1.0));
 }
 
@@ -1994,6 +2155,10 @@ fn plane_dipole_anti_wedge_dot(self_: Plane, other: Dipole) -> MultiVector {
 
 fn plane_horizon_anti_wedge_dot(self_: Plane, other: Horizon) -> LineAtInfinity {
     return LineAtInfinity(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0));
+}
+
+fn plane_infinity_anti_wedge_dot(self_: Plane, other: Infinity) -> PointAtInfinity {
+    return PointAtInfinity(vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0));
 }
 
 fn plane_line_anti_wedge_dot(self_: Plane, other: Line) -> MultiVector {
@@ -2036,12 +2201,12 @@ fn plane_point_at_infinity_anti_wedge_dot(self_: Plane, other: PointAtInfinity) 
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn plane_radial_anti_wedge_dot(self_: Plane, other: Radial) -> MultiVector {
+fn plane_round_point_anti_wedge_dot(self_: Plane, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, 0.0) + vec2<f32>(self_.g0.w) * vec2<f32>(other.g1.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), self_.g0.xyzx * vec4<f32>(-other.g1.y, -other.g1.y, -other.g1.y, 0.0) - vec4<f32>(self_.g0.w) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn plane_scalar_anti_wedge_dot(self_: Plane, other: Scalar) -> Radial {
-    return Radial(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0), vec2<f32>(self_.g0.w) * vec2<f32>(0.0, -other.g0));
+fn plane_scalar_anti_wedge_dot(self_: Plane, other: Scalar) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0), vec2<f32>(self_.g0.w) * vec2<f32>(0.0, -other.g0));
 }
 
 fn plane_sphere_anti_wedge_dot(self_: Plane, other: Sphere) -> MultiVector {
@@ -2062,6 +2227,10 @@ fn plane_at_origin_dipole_anti_wedge_dot(self_: PlaneAtOrigin, other: Dipole) ->
 
 fn plane_at_origin_horizon_anti_wedge_dot(self_: PlaneAtOrigin, other: Horizon) -> LineAtInfinity {
     return LineAtInfinity(self_.g0 * vec3<f32>(other.g0));
+}
+
+fn plane_at_origin_infinity_anti_wedge_dot(self_: PlaneAtOrigin, other: Infinity) -> PointAtInfinity {
+    return PointAtInfinity(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0));
 }
 
 fn plane_at_origin_line_anti_wedge_dot(self_: PlaneAtOrigin, other: Line) -> MultiVector {
@@ -2104,12 +2273,12 @@ fn plane_at_origin_point_at_infinity_anti_wedge_dot(self_: PlaneAtOrigin, other:
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn plane_at_origin_radial_anti_wedge_dot(self_: PlaneAtOrigin, other: Radial) -> MultiVector {
+fn plane_at_origin_round_point_anti_wedge_dot(self_: PlaneAtOrigin, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), self_.g0 * vec3<f32>(other.g1.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(-other.g1.y, -other.g1.y, -other.g1.y, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn plane_at_origin_scalar_anti_wedge_dot(self_: PlaneAtOrigin, other: Scalar) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(other.g0), vec2<f32>(0.0));
+fn plane_at_origin_scalar_anti_wedge_dot(self_: PlaneAtOrigin, other: Scalar) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(other.g0), vec2<f32>(0.0));
 }
 
 fn plane_at_origin_sphere_anti_wedge_dot(self_: PlaneAtOrigin, other: Sphere) -> MultiVector {
@@ -2128,8 +2297,12 @@ fn point_dipole_anti_wedge_dot(self_: Point, other: Dipole) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g0.w) * vec2<f32>(0.0, -other.g2.w), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) + vec3<f32>(self_.g0.w) * other.g1, vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g1.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g1.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g1.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(0.0, 0.0, 0.0, other.g0.y) + self_.g0.wwwz * vec4<f32>(-other.g0.x, -other.g0.y, -other.g0.z, other.g0.z), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(self_.g0.x) * vec3<f32>(-other.g2.w, other.g1.z, -other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g1.z, -other.g2.w, other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g1.y, -other.g1.x, -other.g2.w) + vec3<f32>(self_.g0.w) * vec3<f32>(other.g2.x, other.g2.y, other.g2.z), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn point_horizon_anti_wedge_dot(self_: Point, other: Horizon) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.w) * vec2<f32>(0.0, other.g0));
+fn point_horizon_anti_wedge_dot(self_: Point, other: Horizon) -> Infinity {
+    return Infinity(self_.g0.w * other.g0);
+}
+
+fn point_infinity_anti_wedge_dot(self_: Point, other: Infinity) -> Horizon {
+    return Horizon(0.0 - self_.g0.w * other.g0);
 }
 
 fn point_line_anti_wedge_dot(self_: Point, other: Line) -> MultiVector {
@@ -2172,7 +2345,7 @@ fn point_point_at_infinity_anti_wedge_dot(self_: Point, other: PointAtInfinity) 
     return LineAtInfinity(vec3<f32>(self_.g0.w) * other.g0);
 }
 
-fn point_radial_anti_wedge_dot(self_: Point, other: Radial) -> MultiVector {
+fn point_round_point_anti_wedge_dot(self_: Point, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.x) - vec3<f32>(self_.g0.w) * other.g0, vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g0.w) * other.g1 * vec2<f32>(1.0, -1.0));
 }
 
@@ -2228,7 +2401,7 @@ fn point_at_infinity_point_anti_wedge_dot(self_: PointAtInfinity, other: Point) 
     return LineAtInfinity(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0.w));
 }
 
-fn point_at_infinity_radial_anti_wedge_dot(self_: PointAtInfinity, other: Radial) -> MultiVector {
+fn point_at_infinity_round_point_anti_wedge_dot(self_: PointAtInfinity, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g1.x), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z));
 }
 
@@ -2240,71 +2413,75 @@ fn point_at_infinity_sphere_anti_wedge_dot(self_: PointAtInfinity, other: Sphere
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_anti_scalar_anti_wedge_dot(self_: Radial, other: AntiScalar) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(other.g0), self_.g1 * vec2<f32>(other.g0));
+fn round_point_anti_scalar_anti_wedge_dot(self_: RoundPoint, other: AntiScalar) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(other.g0), self_.g1 * vec2<f32>(other.g0));
 }
 
-fn radial_circle_anti_wedge_dot(self_: Radial, other: Circle) -> MultiVector {
+fn round_point_circle_anti_wedge_dot(self_: RoundPoint, other: Circle) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g1.z, other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g1.z, 0.0, -other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g1.y, other.g1.x, 0.0) - vec3<f32>(self_.g1.x) * other.g2 + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, -other.g2.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, -other.g2.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, -other.g2.z) + self_.g1 * vec2<f32>(other.g0.w), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, -other.g1.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, -other.g1.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, -other.g1.z) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), self_.g0 * vec3<f32>(other.g0.w) + vec3<f32>(self_.g1.x) * other.g2 + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g2.z, other.g2.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g2.z, 0.0, -other.g2.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g2.y, other.g2.x, 0.0) + vec3<f32>(self_.g1.y) * other.g1, vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_dipole_anti_wedge_dot(self_: Radial, other: Dipole) -> MultiVector {
+fn round_point_dipole_anti_wedge_dot(self_: RoundPoint, other: Dipole) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) + vec3<f32>(self_.g1.x) * other.g1, vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g2.w) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g2.x, other.g2.y, other.g2.z) + vec3<f32>(self_.g1.y) * other.g0, vec4<f32>(self_.g0.x) * vec4<f32>(0.0, -other.g2.z, other.g2.y, other.g1.x) + vec4<f32>(self_.g0.y) * vec4<f32>(other.g2.z, 0.0, -other.g2.x, other.g1.y) + vec4<f32>(self_.g0.z) * vec4<f32>(-other.g2.y, other.g2.x, 0.0, other.g1.z) + vec4<f32>(self_.g1.y) * vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g1.z, -other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g1.z, 0.0, other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g1.y, -other.g1.x, 0.0) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g2.x, other.g2.y, other.g2.z) - vec3<f32>(self_.g1.y) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, -other.g2.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, -other.g2.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, -other.g2.z) + self_.g1 * vec2<f32>(-other.g2.w));
 }
 
-fn radial_horizon_anti_wedge_dot(self_: Radial, other: Horizon) -> MultiVector {
+fn round_point_horizon_anti_wedge_dot(self_: RoundPoint, other: Horizon) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g1.x) * vec2<f32>(other.g0, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_line_anti_wedge_dot(self_: Radial, other: Line) -> MultiVector {
+fn round_point_infinity_anti_wedge_dot(self_: RoundPoint, other: Infinity) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g1.x) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g0), vec3<f32>(0.0), vec2<f32>(0.0));
+}
+
+fn round_point_line_anti_wedge_dot(self_: RoundPoint, other: Line) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) - vec3<f32>(self_.g1.x) * other.g1, vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g1.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g1.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g1.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.y) + vec4<f32>(self_.g0.z) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.z) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(self_.g1.x) * other.g1, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g1.z, other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g1.z, 0.0, -other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g1.y, other.g1.x, 0.0) + vec3<f32>(self_.g1.y) * other.g0, vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_line_at_infinity_anti_wedge_dot(self_: Radial, other: LineAtInfinity) -> MultiVector {
+fn round_point_line_at_infinity_anti_wedge_dot(self_: RoundPoint, other: LineAtInfinity) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g1.x) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(self_.g1.x) * other.g0, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_line_at_origin_anti_wedge_dot(self_: Radial, other: LineAtOrigin) -> MultiVector {
+fn round_point_line_at_origin_anti_wedge_dot(self_: RoundPoint, other: LineAtOrigin) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.y) + vec4<f32>(self_.g0.z) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.z) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(0.0), vec3<f32>(self_.g1.y) * other.g0, vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_magnitude_anti_wedge_dot(self_: Radial, other: Magnitude) -> MultiVector {
+fn round_point_magnitude_anti_wedge_dot(self_: RoundPoint, other: Magnitude) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), self_.g0 * vec3<f32>(other.g0.y), self_.g1 * vec2<f32>(other.g0.y), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0.x), self_.g1 * vec2<f32>(other.g0.x));
 }
 
-fn radial_multi_vector_anti_wedge_dot(self_: Radial, other: MultiVector) -> MultiVector {
+fn round_point_multi_vector_anti_wedge_dot(self_: RoundPoint, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(other.g9.x, -other.g1.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g9.y, -other.g1.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g9.z, -other.g1.z) + vec2<f32>(self_.g1.x) * vec2<f32>(other.g10.y, other.g2.y) + vec2<f32>(self_.g1.y) * vec2<f32>(other.g10.x, other.g2.x), vec3<f32>(self_.g0.x) * vec3<f32>(other.g0.y, -other.g7.z, other.g7.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g7.z, other.g0.y, -other.g7.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g7.y, other.g7.x, other.g0.y) - vec3<f32>(self_.g1.x) * other.g8 + vec3<f32>(self_.g1.y) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec2<f32>(self_.g0.x) * vec2<f32>(other.g6.x, -other.g8.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g6.y, -other.g8.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g6.z, -other.g8.z) + self_.g1 * vec2<f32>(other.g6.w) + self_.g1 * vec2<f32>(other.g0.y), vec3<f32>(self_.g0.x) * vec3<f32>(-other.g10.x, other.g3.z, -other.g3.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g3.z, -other.g10.x, other.g3.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g3.y, -other.g3.x, -other.g10.x) - vec3<f32>(self_.g1.x) * other.g9 + vec3<f32>(self_.g1.x) * other.g4, vec3<f32>(self_.g0.x) * vec3<f32>(-other.g5.w, other.g9.z, -other.g9.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g9.z, -other.g5.w, other.g9.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g9.y, -other.g9.x, -other.g5.w) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g5.x, other.g5.y, other.g5.z) + vec3<f32>(self_.g1.y) * other.g3, vec4<f32>(self_.g0.x) * vec4<f32>(other.g10.y, -other.g5.z, other.g5.y, other.g4.x) + vec4<f32>(self_.g0.y) * vec4<f32>(other.g5.z, other.g10.y, -other.g5.x, other.g4.y) + vec4<f32>(self_.g0.z) * vec4<f32>(-other.g5.y, other.g5.x, other.g10.y, other.g4.z) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g10.y) + vec4<f32>(self_.g1.y) * vec4<f32>(other.g9.x, other.g9.y, other.g9.z, -other.g10.x) + vec4<f32>(self_.g1.y) * vec4<f32>(other.g4.x, other.g4.y, other.g4.z, 0.0), vec4<f32>(self_.g0.x) * vec4<f32>(-other.g2.x, other.g6.z, -other.g6.y, -other.g7.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g6.z, -other.g2.x, other.g6.x, -other.g7.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g6.y, -other.g6.x, -other.g2.x, -other.g7.z) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g7.x, other.g7.y, other.g7.z, -other.g2.y) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0) + vec4<f32>(self_.g1.y) * vec4<f32>(0.0, 0.0, 0.0, other.g2.x), vec3<f32>(self_.g0.x) * vec3<f32>(other.g6.w, -other.g1.z, other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g1.z, other.g6.w, -other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g1.y, other.g1.x, other.g6.w) + vec3<f32>(self_.g1.x) * other.g8 + vec3<f32>(self_.g1.y) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec3<f32>(self_.g0.x) * vec3<f32>(other.g2.y, -other.g8.z, other.g8.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g8.z, other.g2.y, -other.g8.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g8.y, other.g8.x, other.g2.y) + vec3<f32>(self_.g1.y) * other.g7 - vec3<f32>(self_.g1.y) * other.g1, vec3<f32>(self_.g0.x) * vec3<f32>(-other.g0.x, other.g4.z, -other.g4.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g4.z, -other.g0.x, other.g4.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g4.y, -other.g4.x, -other.g0.x) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g5.x, other.g5.y, other.g5.z) - vec3<f32>(self_.g1.y) * other.g3, vec2<f32>(self_.g0.x) * vec2<f32>(other.g3.x, -other.g5.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g3.y, -other.g5.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g3.z, -other.g5.z) + self_.g1 * vec2<f32>(-other.g5.w) + self_.g1 * vec2<f32>(other.g0.x));
 }
 
-fn radial_origin_anti_wedge_dot(self_: Radial, other: Origin) -> MultiVector {
+fn round_point_origin_anti_wedge_dot(self_: RoundPoint, other: Origin) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), self_.g1 * vec2<f32>(-other.g0));
 }
 
-fn radial_plane_anti_wedge_dot(self_: Radial, other: Plane) -> MultiVector {
+fn round_point_plane_anti_wedge_dot(self_: RoundPoint, other: Plane) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, 0.0) + vec2<f32>(self_.g1.x) * vec2<f32>(other.g0.w, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g1.x) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(other.g0.w, other.g0.w, other.g0.w, 0.0) + vec4<f32>(self_.g1.y, self_.g1.y, self_.g1.y, self_.g1.x) * other.g0, vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_plane_at_origin_anti_wedge_dot(self_: Radial, other: PlaneAtOrigin) -> MultiVector {
+fn round_point_plane_at_origin_anti_wedge_dot(self_: RoundPoint, other: PlaneAtOrigin) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g1.x) * other.g0, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec4<f32>(self_.g1.y) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_point_anti_wedge_dot(self_: Radial, other: Point) -> MultiVector {
+fn round_point_point_anti_wedge_dot(self_: RoundPoint, other: Point) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0.w) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g1.x) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z) + self_.g1 * vec2<f32>(-other.g0.w));
 }
 
-fn radial_point_at_infinity_anti_wedge_dot(self_: Radial, other: PointAtInfinity) -> MultiVector {
+fn round_point_point_at_infinity_anti_wedge_dot(self_: RoundPoint, other: PointAtInfinity) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g1.x) * other.g0, vec4<f32>(self_.g0.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g1.x) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn radial_radial_anti_wedge_dot(self_: Radial, other: Radial) -> MultiVector {
+fn round_point_round_point_anti_wedge_dot(self_: RoundPoint, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z) + vec2<f32>(self_.g1.x) * vec2<f32>(0.0, other.g1.y) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, other.g1.x), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(-other.g1.x, -other.g1.x, -other.g1.x, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, -other.g1.y) + vec4<f32>(self_.g1.y) * vec4<f32>(0.0, 0.0, 0.0, other.g1.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), self_.g0 * vec3<f32>(other.g1.y) - vec3<f32>(self_.g1.y) * other.g0, vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_scalar_anti_wedge_dot(self_: Radial, other: Scalar) -> Sphere {
+fn round_point_scalar_anti_wedge_dot(self_: RoundPoint, other: Scalar) -> Sphere {
     return Sphere(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0), self_.g1 * vec2<f32>(other.g0));
 }
 
-fn radial_sphere_anti_wedge_dot(self_: Radial, other: Sphere) -> MultiVector {
+fn round_point_sphere_anti_wedge_dot(self_: RoundPoint, other: Sphere) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, 0.0) + vec2<f32>(self_.g1.x) * vec2<f32>(other.g1.y, 0.0) + vec2<f32>(self_.g1.y) * vec2<f32>(other.g1.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.x) - vec3<f32>(self_.g1.x) * other.g0, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g1.y) + vec4<f32>(self_.g1.y) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, -other.g1.x), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -2320,8 +2497,12 @@ fn scalar_dipole_anti_wedge_dot(self_: Scalar, other: Dipole) -> Circle {
     return Circle(vec4<f32>(self_.g0) * vec4<f32>(-other.g0.x, -other.g0.y, -other.g0.z, other.g2.w), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g1, vec3<f32>(0.0) - vec3<f32>(self_.g0) * vec3<f32>(other.g2.x, other.g2.y, other.g2.z));
 }
 
-fn scalar_horizon_anti_wedge_dot(self_: Scalar, other: Horizon) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g0));
+fn scalar_horizon_anti_wedge_dot(self_: Scalar, other: Horizon) -> Infinity {
+    return Infinity(0.0 - self_.g0 * other.g0);
+}
+
+fn scalar_infinity_anti_wedge_dot(self_: Scalar, other: Infinity) -> Horizon {
+    return Horizon(self_.g0 * other.g0);
 }
 
 fn scalar_line_anti_wedge_dot(self_: Scalar, other: Line) -> Dipole {
@@ -2348,12 +2529,12 @@ fn scalar_origin_anti_wedge_dot(self_: Scalar, other: Origin) -> Circle {
     return Circle(vec4<f32>(self_.g0) * vec4<f32>(0.0, 0.0, 0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0));
 }
 
-fn scalar_plane_anti_wedge_dot(self_: Scalar, other: Plane) -> Radial {
-    return Radial(vec3<f32>(self_.g0) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g0.w));
+fn scalar_plane_anti_wedge_dot(self_: Scalar, other: Plane) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g0.w));
 }
 
-fn scalar_plane_at_origin_anti_wedge_dot(self_: Scalar, other: PlaneAtOrigin) -> Radial {
-    return Radial(vec3<f32>(self_.g0) * other.g0, vec2<f32>(0.0));
+fn scalar_plane_at_origin_anti_wedge_dot(self_: Scalar, other: PlaneAtOrigin) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0) * other.g0, vec2<f32>(0.0));
 }
 
 fn scalar_point_anti_wedge_dot(self_: Scalar, other: Point) -> Circle {
@@ -2364,7 +2545,7 @@ fn scalar_point_at_infinity_anti_wedge_dot(self_: Scalar, other: PointAtInfinity
     return LineAtInfinity(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0);
 }
 
-fn scalar_radial_anti_wedge_dot(self_: Scalar, other: Radial) -> Sphere {
+fn scalar_round_point_anti_wedge_dot(self_: Scalar, other: RoundPoint) -> Sphere {
     return Sphere(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * other.g1);
 }
 
@@ -2372,8 +2553,8 @@ fn scalar_scalar_anti_wedge_dot(self_: Scalar, other: Scalar) -> AntiScalar {
     return AntiScalar(0.0 - self_.g0 * other.g0);
 }
 
-fn scalar_sphere_anti_wedge_dot(self_: Scalar, other: Sphere) -> Radial {
-    return Radial(vec3<f32>(self_.g0) * other.g0, vec2<f32>(0.0) - vec2<f32>(self_.g0) * other.g1);
+fn scalar_sphere_anti_wedge_dot(self_: Scalar, other: Sphere) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0) * other.g0, vec2<f32>(0.0) - vec2<f32>(self_.g0) * other.g1);
 }
 
 fn sphere_anti_scalar_anti_wedge_dot(self_: Sphere, other: AntiScalar) -> Sphere {
@@ -2390,6 +2571,10 @@ fn sphere_dipole_anti_wedge_dot(self_: Sphere, other: Dipole) -> MultiVector {
 
 fn sphere_horizon_anti_wedge_dot(self_: Sphere, other: Horizon) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g0), vec3<f32>(0.0), vec2<f32>(0.0));
+}
+
+fn sphere_infinity_anti_wedge_dot(self_: Sphere, other: Infinity) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g1.x) * vec2<f32>(other.g0, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(-other.g0, -other.g0, -other.g0, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
 fn sphere_line_anti_wedge_dot(self_: Sphere, other: Line) -> MultiVector {
@@ -2432,12 +2617,12 @@ fn sphere_point_at_infinity_anti_wedge_dot(self_: Sphere, other: PointAtInfinity
     return MultiVector(vec2<f32>(0.0), vec3<f32>(self_.g1.x) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g1.x) * other.g0, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn sphere_radial_anti_wedge_dot(self_: Sphere, other: Radial) -> MultiVector {
+fn sphere_round_point_anti_wedge_dot(self_: Sphere, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, 0.0) + vec2<f32>(self_.g1.x) * vec2<f32>(other.g1.y, 0.0) + vec2<f32>(self_.g1.y) * vec2<f32>(other.g1.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), self_.g0 * vec3<f32>(other.g1.x) + vec3<f32>(self_.g1.x) * other.g0, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(-other.g1.y, -other.g1.y, -other.g1.y, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g1.y) - vec4<f32>(self_.g1.y) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn sphere_scalar_anti_wedge_dot(self_: Sphere, other: Scalar) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(other.g0), vec2<f32>(0.0) - self_.g1 * vec2<f32>(other.g0));
+fn sphere_scalar_anti_wedge_dot(self_: Sphere, other: Scalar) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(other.g0), vec2<f32>(0.0) - self_.g1 * vec2<f32>(other.g0));
 }
 
 fn sphere_sphere_anti_wedge_dot(self_: Sphere, other: Sphere) -> MultiVector {
@@ -2458,6 +2643,10 @@ fn anti_scalar_dipole_geometric_anti_product(self_: AntiScalar, other: Dipole) -
 
 fn anti_scalar_horizon_geometric_anti_product(self_: AntiScalar, other: Horizon) -> Horizon {
     return Horizon(self_.g0 * other.g0);
+}
+
+fn anti_scalar_infinity_geometric_anti_product(self_: AntiScalar, other: Infinity) -> Infinity {
+    return Infinity(self_.g0 * other.g0);
 }
 
 fn anti_scalar_line_geometric_anti_product(self_: AntiScalar, other: Line) -> Line {
@@ -2500,8 +2689,8 @@ fn anti_scalar_point_at_infinity_geometric_anti_product(self_: AntiScalar, other
     return PointAtInfinity(vec3<f32>(self_.g0) * other.g0);
 }
 
-fn anti_scalar_radial_geometric_anti_product(self_: AntiScalar, other: Radial) -> Radial {
-    return Radial(vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * other.g1);
+fn anti_scalar_round_point_geometric_anti_product(self_: AntiScalar, other: RoundPoint) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * other.g1);
 }
 
 fn anti_scalar_scalar_geometric_anti_product(self_: AntiScalar, other: Scalar) -> Scalar {
@@ -2526,6 +2715,10 @@ fn circle_dipole_geometric_anti_product(self_: Circle, other: Dipole) -> MultiVe
 
 fn circle_horizon_geometric_anti_product(self_: Circle, other: Horizon) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, self_.g1.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0), vec2<f32>(self_.g0.w) * vec2<f32>(0.0, other.g0));
+}
+
+fn circle_infinity_geometric_anti_product(self_: Circle, other: Infinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0), vec2<f32>(self_.g0.w) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0), self_.g1 * vec3<f32>(other.g0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
 fn circle_line_geometric_anti_product(self_: Circle, other: Line) -> MultiVector {
@@ -2568,7 +2761,7 @@ fn circle_point_at_infinity_geometric_anti_product(self_: Circle, other: PointAt
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.y) + self_.g0.wwwz * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, -other.g0.z) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g1.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g1.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn circle_radial_geometric_anti_product(self_: Circle, other: Radial) -> MultiVector {
+fn circle_round_point_geometric_anti_product(self_: Circle, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.y) + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) + self_.g2 * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g0.w) * other.g1 * vec2<f32>(-1.0, 1.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g1.y) * vec4<f32>(0.0, other.g1.x, 0.0, -other.g0.y) + vec4<f32>(self_.g1.z) * vec4<f32>(0.0, 0.0, other.g1.x, -other.g0.z), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.y) + vec3<f32>(self_.g0.w) * other.g0 + self_.g2 * vec3<f32>(other.g1.x), self_.g1 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g2.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g2.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g2.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -2594,6 +2787,10 @@ fn dipole_dipole_geometric_anti_product(self_: Dipole, other: Dipole) -> MultiVe
 
 fn dipole_horizon_geometric_anti_product(self_: Dipole, other: Horizon) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), self_.g0 * vec3<f32>(other.g0), vec2<f32>(self_.g2.w) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0), vec3<f32>(0.0) - self_.g1 * vec3<f32>(other.g0), vec3<f32>(0.0), vec2<f32>(0.0));
+}
+
+fn dipole_infinity_geometric_anti_product(self_: Dipole, other: Infinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, self_.g1.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g0), vec2<f32>(self_.g2.w) * vec2<f32>(0.0, -other.g0));
 }
 
 fn dipole_line_geometric_anti_product(self_: Dipole, other: Line) -> MultiVector {
@@ -2636,7 +2833,7 @@ fn dipole_point_at_infinity_geometric_anti_product(self_: Dipole, other: PointAt
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(self_.g1.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.y) + vec4<f32>(self_.g0.z) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.z), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(self_.g1.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) + vec3<f32>(self_.g2.w) * other.g0, vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn dipole_radial_geometric_anti_product(self_: Dipole, other: Radial) -> MultiVector {
+fn dipole_round_point_geometric_anti_product(self_: Dipole, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) + self_.g1 * vec3<f32>(other.g1.x), self_.g0 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g2.x, self_.g2.y, self_.g2.z) * vec3<f32>(other.g1.x) - vec3<f32>(self_.g2.w) * other.g0, vec4<f32>(self_.g1.x) * vec4<f32>(other.g1.y, 0.0, 0.0, other.g0.x) + vec4<f32>(self_.g1.y) * vec4<f32>(0.0, other.g1.y, 0.0, other.g0.y) + vec4<f32>(self_.g1.z) * vec4<f32>(0.0, 0.0, other.g1.y, other.g0.z) + vec4<f32>(self_.g2.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, 0.0) + vec4<f32>(self_.g2.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4<f32>(self_.g2.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) - vec3<f32>(self_.g2.x, self_.g2.y, self_.g2.z) * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g2.w) * other.g1 * vec2<f32>(1.0, -1.0));
 }
 
@@ -2676,8 +2873,8 @@ fn horizon_multi_vector_geometric_anti_product(self_: Horizon, other: MultiVecto
     return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(other.g2.x, -other.g10.x), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g3, vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g5.w) + vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g0.x), vec3<f32>(0.0), vec3<f32>(self_.g0) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec4<f32>(self_.g0) * vec4<f32>(other.g7.x, other.g7.y, other.g7.z, -other.g2.x) + vec4<f32>(self_.g0) * vec4<f32>(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4<f32>(self_.g0) * vec4<f32>(0.0, 0.0, 0.0, -other.g10.x), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g3, vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g9 - vec3<f32>(self_.g0) * other.g4, vec3<f32>(0.0) - vec3<f32>(self_.g0) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g6.w) + vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0.y));
 }
 
-fn horizon_origin_geometric_anti_product(self_: Horizon, other: Origin) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g0));
+fn horizon_origin_geometric_anti_product(self_: Horizon, other: Origin) -> Infinity {
+    return Infinity(0.0 - self_.g0 * other.g0);
 }
 
 fn horizon_plane_geometric_anti_product(self_: Horizon, other: Plane) -> LineAtInfinity {
@@ -2688,20 +2885,76 @@ fn horizon_plane_at_origin_geometric_anti_product(self_: Horizon, other: PlaneAt
     return LineAtInfinity(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0);
 }
 
-fn horizon_point_geometric_anti_product(self_: Horizon, other: Point) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g0.w));
+fn horizon_point_geometric_anti_product(self_: Horizon, other: Point) -> Infinity {
+    return Infinity(0.0 - self_.g0 * other.g0.w);
 }
 
-fn horizon_radial_geometric_anti_product(self_: Horizon, other: Radial) -> MultiVector {
+fn horizon_round_point_geometric_anti_product(self_: Horizon, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(other.g1.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0) - vec4<f32>(self_.g0) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn horizon_scalar_geometric_anti_product(self_: Horizon, other: Scalar) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g0));
+fn horizon_scalar_geometric_anti_product(self_: Horizon, other: Scalar) -> Infinity {
+    return Infinity(0.0 - self_.g0 * other.g0);
 }
 
 fn horizon_sphere_geometric_anti_product(self_: Horizon, other: Sphere) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g1.x), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0) * vec4<f32>(0.0, 0.0, 0.0, -other.g1.x), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec3<f32>(0.0), vec2<f32>(0.0));
+}
+
+fn infinity_anti_scalar_geometric_anti_product(self_: Infinity, other: AntiScalar) -> Infinity {
+    return Infinity(self_.g0 * other.g0);
+}
+
+fn infinity_circle_geometric_anti_product(self_: Infinity, other: Circle) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec3<f32>(self_.g0) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g0.w), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(self_.g0) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(self_.g0) * other.g1, vec3<f32>(0.0), vec2<f32>(0.0));
+}
+
+fn infinity_dipole_geometric_anti_product(self_: Infinity, other: Dipole) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0) * other.g0, vec4<f32>(self_.g0) * vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g2.w));
+}
+
+fn infinity_line_geometric_anti_product(self_: Infinity, other: Line) -> LineAtInfinity {
+    return LineAtInfinity(vec3<f32>(self_.g0) * other.g0);
+}
+
+fn infinity_line_at_origin_geometric_anti_product(self_: Infinity, other: LineAtOrigin) -> LineAtInfinity {
+    return LineAtInfinity(vec3<f32>(self_.g0) * other.g0);
+}
+
+fn infinity_magnitude_geometric_anti_product(self_: Infinity, other: Magnitude) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0.y), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0.x));
+}
+
+fn infinity_multi_vector_geometric_anti_product(self_: Infinity, other: MultiVector) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(other.g10.x, other.g2.x), vec3<f32>(self_.g0) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g6.w) + vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0.y), vec3<f32>(0.0), vec3<f32>(self_.g0) * other.g3, vec4<f32>(self_.g0) * vec4<f32>(other.g9.x, other.g9.y, other.g9.z, -other.g10.x) + vec4<f32>(self_.g0) * vec4<f32>(other.g4.x, other.g4.y, other.g4.z, 0.0), vec4<f32>(self_.g0) * vec4<f32>(0.0, 0.0, 0.0, other.g2.x), vec3<f32>(self_.g0) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec3<f32>(self_.g0) * other.g7 - vec3<f32>(self_.g0) * other.g1, vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g3, vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g5.w) + vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0.x));
+}
+
+fn infinity_origin_geometric_anti_product(self_: Infinity, other: Origin) -> Horizon {
+    return Horizon(self_.g0 * other.g0);
+}
+
+fn infinity_plane_geometric_anti_product(self_: Infinity, other: Plane) -> PointAtInfinity {
+    return PointAtInfinity(vec3<f32>(self_.g0) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z));
+}
+
+fn infinity_plane_at_origin_geometric_anti_product(self_: Infinity, other: PlaneAtOrigin) -> PointAtInfinity {
+    return PointAtInfinity(vec3<f32>(self_.g0) * other.g0);
+}
+
+fn infinity_point_geometric_anti_product(self_: Infinity, other: Point) -> Horizon {
+    return Horizon(self_.g0 * other.g0.w);
+}
+
+fn infinity_round_point_geometric_anti_product(self_: Infinity, other: RoundPoint) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g1.x), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0) * vec4<f32>(0.0, 0.0, 0.0, other.g1.x), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec3<f32>(0.0), vec2<f32>(0.0));
+}
+
+fn infinity_scalar_geometric_anti_product(self_: Infinity, other: Scalar) -> Horizon {
+    return Horizon(self_.g0 * other.g0);
+}
+
+fn infinity_sphere_geometric_anti_product(self_: Infinity, other: Sphere) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(other.g1.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, -other.g1.x), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
 fn line_anti_scalar_geometric_anti_product(self_: Line, other: AntiScalar) -> Line {
@@ -2718,6 +2971,10 @@ fn line_dipole_geometric_anti_product(self_: Line, other: Dipole) -> MultiVector
 
 fn line_horizon_geometric_anti_product(self_: Line, other: Horizon) -> PointAtInfinity {
     return PointAtInfinity(self_.g0 * vec3<f32>(other.g0));
+}
+
+fn line_infinity_geometric_anti_product(self_: Line, other: Infinity) -> LineAtInfinity {
+    return LineAtInfinity(self_.g0 * vec3<f32>(other.g0));
 }
 
 fn line_line_geometric_anti_product(self_: Line, other: Line) -> MultiVector {
@@ -2760,7 +3017,7 @@ fn line_point_at_infinity_geometric_anti_product(self_: Line, other: PointAtInfi
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn line_radial_geometric_anti_product(self_: Line, other: Radial) -> MultiVector {
+fn line_round_point_geometric_anti_product(self_: Line, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) + self_.g1 * vec3<f32>(other.g1.x), vec2<f32>(self_.g1.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(0.0, other.g1.x, 0.0, -other.g0.y) + vec4<f32>(self_.g0.z) * vec4<f32>(0.0, 0.0, other.g1.x, -other.g0.z), self_.g1 * vec3<f32>(other.g1.x), self_.g0 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -2816,7 +3073,7 @@ fn line_at_infinity_point_geometric_anti_product(self_: LineAtInfinity, other: P
     return PointAtInfinity(self_.g0 * vec3<f32>(other.g0.w));
 }
 
-fn line_at_infinity_radial_geometric_anti_product(self_: LineAtInfinity, other: Radial) -> MultiVector {
+fn line_at_infinity_round_point_geometric_anti_product(self_: LineAtInfinity, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), self_.g0 * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), self_.g0 * vec3<f32>(other.g1.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -2842,6 +3099,10 @@ fn line_at_origin_dipole_geometric_anti_product(self_: LineAtOrigin, other: Dipo
 
 fn line_at_origin_horizon_geometric_anti_product(self_: LineAtOrigin, other: Horizon) -> PointAtInfinity {
     return PointAtInfinity(self_.g0 * vec3<f32>(other.g0));
+}
+
+fn line_at_origin_infinity_geometric_anti_product(self_: LineAtOrigin, other: Infinity) -> LineAtInfinity {
+    return LineAtInfinity(self_.g0 * vec3<f32>(other.g0));
 }
 
 fn line_at_origin_line_geometric_anti_product(self_: LineAtOrigin, other: Line) -> MultiVector {
@@ -2884,7 +3145,7 @@ fn line_at_origin_point_at_infinity_geometric_anti_product(self_: LineAtOrigin, 
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn line_at_origin_radial_geometric_anti_product(self_: LineAtOrigin, other: Radial) -> MultiVector {
+fn line_at_origin_round_point_geometric_anti_product(self_: LineAtOrigin, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(0.0, other.g1.x, 0.0, -other.g0.y) + vec4<f32>(self_.g0.z) * vec4<f32>(0.0, 0.0, other.g1.x, -other.g0.z), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g1.y), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -2910,6 +3171,10 @@ fn magnitude_dipole_geometric_anti_product(self_: Magnitude, other: Dipole) -> M
 
 fn magnitude_horizon_geometric_anti_product(self_: Magnitude, other: Horizon) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0));
+}
+
+fn magnitude_infinity_geometric_anti_product(self_: Magnitude, other: Infinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0));
 }
 
 fn magnitude_line_geometric_anti_product(self_: Magnitude, other: Line) -> MultiVector {
@@ -2952,7 +3217,7 @@ fn magnitude_point_at_infinity_geometric_anti_product(self_: Magnitude, other: P
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.y) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0.x) * other.g0, vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn magnitude_radial_geometric_anti_product(self_: Magnitude, other: Radial) -> MultiVector {
+fn magnitude_round_point_geometric_anti_product(self_: Magnitude, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(self_.g0.y) * other.g0, vec2<f32>(self_.g0.y) * other.g1, vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0.x) * other.g0, vec2<f32>(self_.g0.x) * other.g1);
 }
 
@@ -2978,6 +3243,10 @@ fn multi_vector_dipole_geometric_anti_product(self_: MultiVector, other: Dipole)
 
 fn multi_vector_horizon_geometric_anti_product(self_: MultiVector, other: Horizon) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g2.x) * vec2<f32>(other.g0, 0.0) + vec2<f32>(self_.g10.x) * vec2<f32>(0.0, -other.g0), self_.g3 * vec3<f32>(other.g0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0) + vec2<f32>(self_.g5.w) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, self_.g1.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0) + vec4<f32>(self_.g2.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0) + vec4<f32>(self_.g7.x, self_.g7.y, self_.g7.z, self_.g7.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0), vec4<f32>(self_.g10.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0), vec3<f32>(0.0) - self_.g3 * vec3<f32>(other.g0), vec3<f32>(0.0) - self_.g4 * vec3<f32>(other.g0) + self_.g9 * vec3<f32>(other.g0), vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g0), vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0) + vec2<f32>(self_.g6.w) * vec2<f32>(0.0, other.g0));
+}
+
+fn multi_vector_infinity_geometric_anti_product(self_: MultiVector, other: Infinity) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g0) + vec2<f32>(self_.g10.x) * vec2<f32>(other.g0, 0.0), vec3<f32>(0.0) - vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g0), vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0) + vec2<f32>(self_.g6.w) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), self_.g3 * vec3<f32>(other.g0), vec4<f32>(self_.g4.x, self_.g4.y, self_.g4.z, self_.g4.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0) + vec4<f32>(self_.g9.x, self_.g9.y, self_.g9.z, self_.g9.x) * vec4<f32>(-other.g0, -other.g0, -other.g0, 0.0) + vec4<f32>(self_.g10.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0), vec4<f32>(self_.g2.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0), vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g0), self_.g1 * vec3<f32>(other.g0) + self_.g7 * vec3<f32>(other.g0), self_.g3 * vec3<f32>(other.g0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0) + vec2<f32>(self_.g5.w) * vec2<f32>(0.0, -other.g0));
 }
 
 fn multi_vector_line_geometric_anti_product(self_: MultiVector, other: Line) -> MultiVector {
@@ -3020,7 +3289,7 @@ fn multi_vector_point_at_infinity_geometric_anti_product(self_: MultiVector, oth
     return MultiVector(vec2<f32>(self_.g3.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g3.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g3.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g6.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g6.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g6.z) * vec2<f32>(-other.g0.z, 0.0), vec3<f32>(self_.g3.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g3.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g3.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) + vec3<f32>(self_.g10.x) * other.g0, vec2<f32>(self_.g4.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g4.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g4.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g9.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g9.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g9.z) * vec2<f32>(0.0, -other.g0.z), vec3<f32>(0.0), vec3<f32>(self_.g2.x) * other.g0 + vec3<f32>(self_.g6.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g6.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g6.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec4<f32>(self_.g0.y) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g1.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g1.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4<f32>(self_.g6.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g6.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.y) + self_.g6.wwwz * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, -other.g0.z) + vec4<f32>(self_.g7.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g7.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g7.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0), vec4<f32>(self_.g3.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g3.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.y) + vec4<f32>(self_.g3.z) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.z), vec3<f32>(self_.g3.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g3.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g3.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) - vec3<f32>(self_.g10.x) * other.g0, vec3<f32>(0.0) - vec3<f32>(self_.g0.x) * other.g0 + vec3<f32>(self_.g4.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g4.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g4.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) + vec3<f32>(self_.g5.w) * other.g0 + vec3<f32>(self_.g9.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g9.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g9.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec3<f32>(self_.g2.x) * other.g0 + vec3<f32>(self_.g6.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g6.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g6.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, -other.g0.z) + vec2<f32>(self_.g7.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g7.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g7.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn multi_vector_radial_geometric_anti_product(self_: MultiVector, other: Radial) -> MultiVector {
+fn multi_vector_round_point_geometric_anti_product(self_: MultiVector, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, -other.g0.z) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g1.y) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, other.g1.x) + vec2<f32>(self_.g9.x) * vec2<f32>(other.g0.x, 0.0) + vec2<f32>(self_.g9.y) * vec2<f32>(other.g0.y, 0.0) + vec2<f32>(self_.g9.z) * vec2<f32>(other.g0.z, 0.0) + vec2<f32>(self_.g10.x) * vec2<f32>(other.g1.y, 0.0) + vec2<f32>(self_.g10.y) * vec2<f32>(other.g1.x, 0.0), vec3<f32>(self_.g0.y) * other.g0 - vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g1.y) + vec3<f32>(self_.g7.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g7.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g7.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) + self_.g8 * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.y) * other.g1 + vec2<f32>(self_.g6.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g6.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g6.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g6.w) * other.g1 * vec2<f32>(-1.0, 1.0) + vec2<f32>(self_.g8.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g8.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g8.z) * vec2<f32>(0.0, other.g0.z), vec3<f32>(self_.g3.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g3.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g3.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) + self_.g4 * vec3<f32>(other.g1.x) + self_.g9 * vec3<f32>(other.g1.x) + vec3<f32>(self_.g10.x) * other.g0, self_.g3 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g5.x, self_.g5.y, self_.g5.z) * vec3<f32>(other.g1.x) - vec3<f32>(self_.g5.w) * other.g0 + vec3<f32>(self_.g9.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g9.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g9.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec4<f32>(self_.g4.x) * vec4<f32>(other.g1.y, 0.0, 0.0, other.g0.x) + vec4<f32>(self_.g4.y) * vec4<f32>(0.0, other.g1.y, 0.0, other.g0.y) + vec4<f32>(self_.g4.z) * vec4<f32>(0.0, 0.0, other.g1.y, other.g0.z) + vec4<f32>(self_.g5.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, 0.0) + vec4<f32>(self_.g5.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4<f32>(self_.g5.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, 0.0) + vec4<f32>(self_.g9.x, self_.g9.y, self_.g9.z, self_.g9.x) * vec4<f32>(-other.g1.y, -other.g1.y, -other.g1.y, 0.0) + vec4<f32>(self_.g10.x) * vec4<f32>(0.0, 0.0, 0.0, other.g1.y) - vec4<f32>(self_.g10.y) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, self_.g1.x) * vec4<f32>(-other.g1.x, -other.g1.x, -other.g1.x, 0.0) + vec4<f32>(self_.g2.x) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, -other.g1.y) + vec4<f32>(self_.g2.y) * vec4<f32>(0.0, 0.0, 0.0, other.g1.x) + vec4<f32>(self_.g6.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g6.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g6.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4<f32>(self_.g7.x) * vec4<f32>(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g7.y) * vec4<f32>(0.0, other.g1.x, 0.0, -other.g0.y) + vec4<f32>(self_.g7.z) * vec4<f32>(0.0, 0.0, other.g1.x, -other.g0.z), vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) + vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g1.y) + vec3<f32>(self_.g6.w) * other.g0 + self_.g8 * vec3<f32>(other.g1.x), self_.g1 * vec3<f32>(other.g1.y) - vec3<f32>(self_.g2.y) * other.g0 + self_.g7 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g8.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g8.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g8.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0.x) * other.g0 + self_.g3 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g4.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g4.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g4.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) - vec3<f32>(self_.g5.x, self_.g5.y, self_.g5.z) * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * other.g1 + vec2<f32>(self_.g3.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g3.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g3.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g5.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g5.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g5.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g5.w) * other.g1 * vec2<f32>(1.0, -1.0));
 }
 
@@ -3044,8 +3313,12 @@ fn origin_dipole_geometric_anti_product(self_: Origin, other: Dipole) -> MultiVe
     return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g2.w), vec3<f32>(self_.g0) * other.g1, vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0) * vec4<f32>(-other.g0.x, -other.g0.y, -other.g0.z, 0.0), vec3<f32>(0.0), vec3<f32>(self_.g0) * vec3<f32>(other.g2.x, other.g2.y, other.g2.z), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn origin_horizon_geometric_anti_product(self_: Origin, other: Horizon) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0));
+fn origin_horizon_geometric_anti_product(self_: Origin, other: Horizon) -> Infinity {
+    return Infinity(self_.g0 * other.g0);
+}
+
+fn origin_infinity_geometric_anti_product(self_: Origin, other: Infinity) -> Horizon {
+    return Horizon(0.0 - self_.g0 * other.g0);
 }
 
 fn origin_line_geometric_anti_product(self_: Origin, other: Line) -> MultiVector {
@@ -3088,7 +3361,7 @@ fn origin_point_at_infinity_geometric_anti_product(self_: Origin, other: PointAt
     return LineAtInfinity(vec3<f32>(self_.g0) * other.g0);
 }
 
-fn origin_radial_geometric_anti_product(self_: Origin, other: Radial) -> MultiVector {
+fn origin_round_point_geometric_anti_product(self_: Origin, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0) * other.g1 * vec2<f32>(1.0, -1.0));
 }
 
@@ -3114,6 +3387,10 @@ fn plane_dipole_geometric_anti_product(self_: Plane, other: Dipole) -> MultiVect
 
 fn plane_horizon_geometric_anti_product(self_: Plane, other: Horizon) -> LineAtInfinity {
     return LineAtInfinity(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0));
+}
+
+fn plane_infinity_geometric_anti_product(self_: Plane, other: Infinity) -> PointAtInfinity {
+    return PointAtInfinity(vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0));
 }
 
 fn plane_line_geometric_anti_product(self_: Plane, other: Line) -> MultiVector {
@@ -3156,12 +3433,12 @@ fn plane_point_at_infinity_geometric_anti_product(self_: Plane, other: PointAtIn
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn plane_radial_geometric_anti_product(self_: Plane, other: Radial) -> MultiVector {
+fn plane_round_point_geometric_anti_product(self_: Plane, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, 0.0) + vec2<f32>(self_.g0.w) * vec2<f32>(other.g1.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), self_.g0.xyzx * vec4<f32>(-other.g1.y, -other.g1.y, -other.g1.y, 0.0) - vec4<f32>(self_.g0.w) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn plane_scalar_geometric_anti_product(self_: Plane, other: Scalar) -> Radial {
-    return Radial(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0), vec2<f32>(self_.g0.w) * vec2<f32>(0.0, -other.g0));
+fn plane_scalar_geometric_anti_product(self_: Plane, other: Scalar) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0), vec2<f32>(self_.g0.w) * vec2<f32>(0.0, -other.g0));
 }
 
 fn plane_sphere_geometric_anti_product(self_: Plane, other: Sphere) -> MultiVector {
@@ -3182,6 +3459,10 @@ fn plane_at_origin_dipole_geometric_anti_product(self_: PlaneAtOrigin, other: Di
 
 fn plane_at_origin_horizon_geometric_anti_product(self_: PlaneAtOrigin, other: Horizon) -> LineAtInfinity {
     return LineAtInfinity(self_.g0 * vec3<f32>(other.g0));
+}
+
+fn plane_at_origin_infinity_geometric_anti_product(self_: PlaneAtOrigin, other: Infinity) -> PointAtInfinity {
+    return PointAtInfinity(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0));
 }
 
 fn plane_at_origin_line_geometric_anti_product(self_: PlaneAtOrigin, other: Line) -> MultiVector {
@@ -3224,12 +3505,12 @@ fn plane_at_origin_point_at_infinity_geometric_anti_product(self_: PlaneAtOrigin
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn plane_at_origin_radial_geometric_anti_product(self_: PlaneAtOrigin, other: Radial) -> MultiVector {
+fn plane_at_origin_round_point_geometric_anti_product(self_: PlaneAtOrigin, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), self_.g0 * vec3<f32>(other.g1.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(-other.g1.y, -other.g1.y, -other.g1.y, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn plane_at_origin_scalar_geometric_anti_product(self_: PlaneAtOrigin, other: Scalar) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(other.g0), vec2<f32>(0.0));
+fn plane_at_origin_scalar_geometric_anti_product(self_: PlaneAtOrigin, other: Scalar) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(other.g0), vec2<f32>(0.0));
 }
 
 fn plane_at_origin_sphere_geometric_anti_product(self_: PlaneAtOrigin, other: Sphere) -> MultiVector {
@@ -3248,8 +3529,12 @@ fn point_dipole_geometric_anti_product(self_: Point, other: Dipole) -> MultiVect
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g0.w) * vec2<f32>(0.0, -other.g2.w), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) + vec3<f32>(self_.g0.w) * other.g1, vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g1.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g1.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g1.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(0.0, 0.0, 0.0, other.g0.y) + self_.g0.wwwz * vec4<f32>(-other.g0.x, -other.g0.y, -other.g0.z, other.g0.z), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(self_.g0.x) * vec3<f32>(-other.g2.w, other.g1.z, -other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g1.z, -other.g2.w, other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g1.y, -other.g1.x, -other.g2.w) + vec3<f32>(self_.g0.w) * vec3<f32>(other.g2.x, other.g2.y, other.g2.z), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn point_horizon_geometric_anti_product(self_: Point, other: Horizon) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.w) * vec2<f32>(0.0, other.g0));
+fn point_horizon_geometric_anti_product(self_: Point, other: Horizon) -> Infinity {
+    return Infinity(self_.g0.w * other.g0);
+}
+
+fn point_infinity_geometric_anti_product(self_: Point, other: Infinity) -> Horizon {
+    return Horizon(0.0 - self_.g0.w * other.g0);
 }
 
 fn point_line_geometric_anti_product(self_: Point, other: Line) -> MultiVector {
@@ -3292,7 +3577,7 @@ fn point_point_at_infinity_geometric_anti_product(self_: Point, other: PointAtIn
     return LineAtInfinity(vec3<f32>(self_.g0.w) * other.g0);
 }
 
-fn point_radial_geometric_anti_product(self_: Point, other: Radial) -> MultiVector {
+fn point_round_point_geometric_anti_product(self_: Point, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.x) - vec3<f32>(self_.g0.w) * other.g0, vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g0.w) * other.g1 * vec2<f32>(1.0, -1.0));
 }
 
@@ -3348,7 +3633,7 @@ fn point_at_infinity_point_geometric_anti_product(self_: PointAtInfinity, other:
     return LineAtInfinity(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0.w));
 }
 
-fn point_at_infinity_radial_geometric_anti_product(self_: PointAtInfinity, other: Radial) -> MultiVector {
+fn point_at_infinity_round_point_geometric_anti_product(self_: PointAtInfinity, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g1.x), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z));
 }
 
@@ -3360,71 +3645,75 @@ fn point_at_infinity_sphere_geometric_anti_product(self_: PointAtInfinity, other
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_anti_scalar_geometric_anti_product(self_: Radial, other: AntiScalar) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(other.g0), self_.g1 * vec2<f32>(other.g0));
+fn round_point_anti_scalar_geometric_anti_product(self_: RoundPoint, other: AntiScalar) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(other.g0), self_.g1 * vec2<f32>(other.g0));
 }
 
-fn radial_circle_geometric_anti_product(self_: Radial, other: Circle) -> MultiVector {
+fn round_point_circle_geometric_anti_product(self_: RoundPoint, other: Circle) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g1.z, other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g1.z, 0.0, -other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g1.y, other.g1.x, 0.0) - vec3<f32>(self_.g1.x) * other.g2 + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, -other.g2.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, -other.g2.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, -other.g2.z) + self_.g1 * vec2<f32>(other.g0.w), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, -other.g1.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, -other.g1.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, -other.g1.z) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), self_.g0 * vec3<f32>(other.g0.w) + vec3<f32>(self_.g1.x) * other.g2 + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g2.z, other.g2.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g2.z, 0.0, -other.g2.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g2.y, other.g2.x, 0.0) + vec3<f32>(self_.g1.y) * other.g1, vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_dipole_geometric_anti_product(self_: Radial, other: Dipole) -> MultiVector {
+fn round_point_dipole_geometric_anti_product(self_: RoundPoint, other: Dipole) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) + vec3<f32>(self_.g1.x) * other.g1, vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g2.w) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g2.x, other.g2.y, other.g2.z) + vec3<f32>(self_.g1.y) * other.g0, vec4<f32>(self_.g0.x) * vec4<f32>(0.0, -other.g2.z, other.g2.y, other.g1.x) + vec4<f32>(self_.g0.y) * vec4<f32>(other.g2.z, 0.0, -other.g2.x, other.g1.y) + vec4<f32>(self_.g0.z) * vec4<f32>(-other.g2.y, other.g2.x, 0.0, other.g1.z) + vec4<f32>(self_.g1.y) * vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g1.z, -other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g1.z, 0.0, other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g1.y, -other.g1.x, 0.0) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g2.x, other.g2.y, other.g2.z) - vec3<f32>(self_.g1.y) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, -other.g2.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, -other.g2.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, -other.g2.z) + self_.g1 * vec2<f32>(-other.g2.w));
 }
 
-fn radial_horizon_geometric_anti_product(self_: Radial, other: Horizon) -> MultiVector {
+fn round_point_horizon_geometric_anti_product(self_: RoundPoint, other: Horizon) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g1.x) * vec2<f32>(other.g0, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_line_geometric_anti_product(self_: Radial, other: Line) -> MultiVector {
+fn round_point_infinity_geometric_anti_product(self_: RoundPoint, other: Infinity) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g1.x) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g0), vec3<f32>(0.0), vec2<f32>(0.0));
+}
+
+fn round_point_line_geometric_anti_product(self_: RoundPoint, other: Line) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) - vec3<f32>(self_.g1.x) * other.g1, vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g1.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g1.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g1.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.y) + vec4<f32>(self_.g0.z) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.z) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(self_.g1.x) * other.g1, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g1.z, other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g1.z, 0.0, -other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g1.y, other.g1.x, 0.0) + vec3<f32>(self_.g1.y) * other.g0, vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_line_at_infinity_geometric_anti_product(self_: Radial, other: LineAtInfinity) -> MultiVector {
+fn round_point_line_at_infinity_geometric_anti_product(self_: RoundPoint, other: LineAtInfinity) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g1.x) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(self_.g1.x) * other.g0, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_line_at_origin_geometric_anti_product(self_: Radial, other: LineAtOrigin) -> MultiVector {
+fn round_point_line_at_origin_geometric_anti_product(self_: RoundPoint, other: LineAtOrigin) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.y) + vec4<f32>(self_.g0.z) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.z) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(0.0), vec3<f32>(self_.g1.y) * other.g0, vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_magnitude_geometric_anti_product(self_: Radial, other: Magnitude) -> MultiVector {
+fn round_point_magnitude_geometric_anti_product(self_: RoundPoint, other: Magnitude) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), self_.g0 * vec3<f32>(other.g0.y), self_.g1 * vec2<f32>(other.g0.y), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0.x), self_.g1 * vec2<f32>(other.g0.x));
 }
 
-fn radial_multi_vector_geometric_anti_product(self_: Radial, other: MultiVector) -> MultiVector {
+fn round_point_multi_vector_geometric_anti_product(self_: RoundPoint, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(other.g9.x, -other.g1.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g9.y, -other.g1.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g9.z, -other.g1.z) + vec2<f32>(self_.g1.x) * vec2<f32>(other.g10.y, other.g2.y) + vec2<f32>(self_.g1.y) * vec2<f32>(other.g10.x, other.g2.x), vec3<f32>(self_.g0.x) * vec3<f32>(other.g0.y, -other.g7.z, other.g7.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g7.z, other.g0.y, -other.g7.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g7.y, other.g7.x, other.g0.y) - vec3<f32>(self_.g1.x) * other.g8 + vec3<f32>(self_.g1.y) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec2<f32>(self_.g0.x) * vec2<f32>(other.g6.x, -other.g8.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g6.y, -other.g8.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g6.z, -other.g8.z) + self_.g1 * vec2<f32>(other.g6.w) + self_.g1 * vec2<f32>(other.g0.y), vec3<f32>(self_.g0.x) * vec3<f32>(-other.g10.x, other.g3.z, -other.g3.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g3.z, -other.g10.x, other.g3.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g3.y, -other.g3.x, -other.g10.x) - vec3<f32>(self_.g1.x) * other.g9 + vec3<f32>(self_.g1.x) * other.g4, vec3<f32>(self_.g0.x) * vec3<f32>(-other.g5.w, other.g9.z, -other.g9.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g9.z, -other.g5.w, other.g9.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g9.y, -other.g9.x, -other.g5.w) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g5.x, other.g5.y, other.g5.z) + vec3<f32>(self_.g1.y) * other.g3, vec4<f32>(self_.g0.x) * vec4<f32>(other.g10.y, -other.g5.z, other.g5.y, other.g4.x) + vec4<f32>(self_.g0.y) * vec4<f32>(other.g5.z, other.g10.y, -other.g5.x, other.g4.y) + vec4<f32>(self_.g0.z) * vec4<f32>(-other.g5.y, other.g5.x, other.g10.y, other.g4.z) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g10.y) + vec4<f32>(self_.g1.y) * vec4<f32>(other.g9.x, other.g9.y, other.g9.z, -other.g10.x) + vec4<f32>(self_.g1.y) * vec4<f32>(other.g4.x, other.g4.y, other.g4.z, 0.0), vec4<f32>(self_.g0.x) * vec4<f32>(-other.g2.x, other.g6.z, -other.g6.y, -other.g7.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g6.z, -other.g2.x, other.g6.x, -other.g7.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g6.y, -other.g6.x, -other.g2.x, -other.g7.z) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g7.x, other.g7.y, other.g7.z, -other.g2.y) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0) + vec4<f32>(self_.g1.y) * vec4<f32>(0.0, 0.0, 0.0, other.g2.x), vec3<f32>(self_.g0.x) * vec3<f32>(other.g6.w, -other.g1.z, other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g1.z, other.g6.w, -other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g1.y, other.g1.x, other.g6.w) + vec3<f32>(self_.g1.x) * other.g8 + vec3<f32>(self_.g1.y) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec3<f32>(self_.g0.x) * vec3<f32>(other.g2.y, -other.g8.z, other.g8.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g8.z, other.g2.y, -other.g8.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g8.y, other.g8.x, other.g2.y) + vec3<f32>(self_.g1.y) * other.g7 - vec3<f32>(self_.g1.y) * other.g1, vec3<f32>(self_.g0.x) * vec3<f32>(-other.g0.x, other.g4.z, -other.g4.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g4.z, -other.g0.x, other.g4.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g4.y, -other.g4.x, -other.g0.x) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g5.x, other.g5.y, other.g5.z) - vec3<f32>(self_.g1.y) * other.g3, vec2<f32>(self_.g0.x) * vec2<f32>(other.g3.x, -other.g5.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g3.y, -other.g5.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g3.z, -other.g5.z) + self_.g1 * vec2<f32>(-other.g5.w) + self_.g1 * vec2<f32>(other.g0.x));
 }
 
-fn radial_origin_geometric_anti_product(self_: Radial, other: Origin) -> MultiVector {
+fn round_point_origin_geometric_anti_product(self_: RoundPoint, other: Origin) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), self_.g1 * vec2<f32>(-other.g0));
 }
 
-fn radial_plane_geometric_anti_product(self_: Radial, other: Plane) -> MultiVector {
+fn round_point_plane_geometric_anti_product(self_: RoundPoint, other: Plane) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, 0.0) + vec2<f32>(self_.g1.x) * vec2<f32>(other.g0.w, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g1.x) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(other.g0.w, other.g0.w, other.g0.w, 0.0) + vec4<f32>(self_.g1.y, self_.g1.y, self_.g1.y, self_.g1.x) * other.g0, vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_plane_at_origin_geometric_anti_product(self_: Radial, other: PlaneAtOrigin) -> MultiVector {
+fn round_point_plane_at_origin_geometric_anti_product(self_: RoundPoint, other: PlaneAtOrigin) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g1.x) * other.g0, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec4<f32>(self_.g1.y) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_point_geometric_anti_product(self_: Radial, other: Point) -> MultiVector {
+fn round_point_point_geometric_anti_product(self_: RoundPoint, other: Point) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0.w) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g1.x) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z) + self_.g1 * vec2<f32>(-other.g0.w));
 }
 
-fn radial_point_at_infinity_geometric_anti_product(self_: Radial, other: PointAtInfinity) -> MultiVector {
+fn round_point_point_at_infinity_geometric_anti_product(self_: RoundPoint, other: PointAtInfinity) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g1.x) * other.g0, vec4<f32>(self_.g0.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g1.x) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn radial_radial_geometric_anti_product(self_: Radial, other: Radial) -> MultiVector {
+fn round_point_round_point_geometric_anti_product(self_: RoundPoint, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z) + vec2<f32>(self_.g1.x) * vec2<f32>(0.0, other.g1.y) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, other.g1.x), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(-other.g1.x, -other.g1.x, -other.g1.x, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, -other.g1.y) + vec4<f32>(self_.g1.y) * vec4<f32>(0.0, 0.0, 0.0, other.g1.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), self_.g0 * vec3<f32>(other.g1.y) - vec3<f32>(self_.g1.y) * other.g0, vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_scalar_geometric_anti_product(self_: Radial, other: Scalar) -> Sphere {
+fn round_point_scalar_geometric_anti_product(self_: RoundPoint, other: Scalar) -> Sphere {
     return Sphere(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0), self_.g1 * vec2<f32>(other.g0));
 }
 
-fn radial_sphere_geometric_anti_product(self_: Radial, other: Sphere) -> MultiVector {
+fn round_point_sphere_geometric_anti_product(self_: RoundPoint, other: Sphere) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, 0.0) + vec2<f32>(self_.g1.x) * vec2<f32>(other.g1.y, 0.0) + vec2<f32>(self_.g1.y) * vec2<f32>(other.g1.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.x) - vec3<f32>(self_.g1.x) * other.g0, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g1.y) + vec4<f32>(self_.g1.y) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, -other.g1.x), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -3440,8 +3729,12 @@ fn scalar_dipole_geometric_anti_product(self_: Scalar, other: Dipole) -> Circle 
     return Circle(vec4<f32>(self_.g0) * vec4<f32>(-other.g0.x, -other.g0.y, -other.g0.z, other.g2.w), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g1, vec3<f32>(0.0) - vec3<f32>(self_.g0) * vec3<f32>(other.g2.x, other.g2.y, other.g2.z));
 }
 
-fn scalar_horizon_geometric_anti_product(self_: Scalar, other: Horizon) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g0));
+fn scalar_horizon_geometric_anti_product(self_: Scalar, other: Horizon) -> Infinity {
+    return Infinity(0.0 - self_.g0 * other.g0);
+}
+
+fn scalar_infinity_geometric_anti_product(self_: Scalar, other: Infinity) -> Horizon {
+    return Horizon(self_.g0 * other.g0);
 }
 
 fn scalar_line_geometric_anti_product(self_: Scalar, other: Line) -> Dipole {
@@ -3468,12 +3761,12 @@ fn scalar_origin_geometric_anti_product(self_: Scalar, other: Origin) -> Circle 
     return Circle(vec4<f32>(self_.g0) * vec4<f32>(0.0, 0.0, 0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0));
 }
 
-fn scalar_plane_geometric_anti_product(self_: Scalar, other: Plane) -> Radial {
-    return Radial(vec3<f32>(self_.g0) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g0.w));
+fn scalar_plane_geometric_anti_product(self_: Scalar, other: Plane) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g0.w));
 }
 
-fn scalar_plane_at_origin_geometric_anti_product(self_: Scalar, other: PlaneAtOrigin) -> Radial {
-    return Radial(vec3<f32>(self_.g0) * other.g0, vec2<f32>(0.0));
+fn scalar_plane_at_origin_geometric_anti_product(self_: Scalar, other: PlaneAtOrigin) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0) * other.g0, vec2<f32>(0.0));
 }
 
 fn scalar_point_geometric_anti_product(self_: Scalar, other: Point) -> Circle {
@@ -3484,7 +3777,7 @@ fn scalar_point_at_infinity_geometric_anti_product(self_: Scalar, other: PointAt
     return LineAtInfinity(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0);
 }
 
-fn scalar_radial_geometric_anti_product(self_: Scalar, other: Radial) -> Sphere {
+fn scalar_round_point_geometric_anti_product(self_: Scalar, other: RoundPoint) -> Sphere {
     return Sphere(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * other.g1);
 }
 
@@ -3492,8 +3785,8 @@ fn scalar_scalar_geometric_anti_product(self_: Scalar, other: Scalar) -> AntiSca
     return AntiScalar(0.0 - self_.g0 * other.g0);
 }
 
-fn scalar_sphere_geometric_anti_product(self_: Scalar, other: Sphere) -> Radial {
-    return Radial(vec3<f32>(self_.g0) * other.g0, vec2<f32>(0.0) - vec2<f32>(self_.g0) * other.g1);
+fn scalar_sphere_geometric_anti_product(self_: Scalar, other: Sphere) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0) * other.g0, vec2<f32>(0.0) - vec2<f32>(self_.g0) * other.g1);
 }
 
 fn sphere_anti_scalar_geometric_anti_product(self_: Sphere, other: AntiScalar) -> Sphere {
@@ -3510,6 +3803,10 @@ fn sphere_dipole_geometric_anti_product(self_: Sphere, other: Dipole) -> MultiVe
 
 fn sphere_horizon_geometric_anti_product(self_: Sphere, other: Horizon) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g0), vec3<f32>(0.0), vec2<f32>(0.0));
+}
+
+fn sphere_infinity_geometric_anti_product(self_: Sphere, other: Infinity) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g1.x) * vec2<f32>(other.g0, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(-other.g0, -other.g0, -other.g0, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
 fn sphere_line_geometric_anti_product(self_: Sphere, other: Line) -> MultiVector {
@@ -3552,12 +3849,12 @@ fn sphere_point_at_infinity_geometric_anti_product(self_: Sphere, other: PointAt
     return MultiVector(vec2<f32>(0.0), vec3<f32>(self_.g1.x) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g1.x) * other.g0, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn sphere_radial_geometric_anti_product(self_: Sphere, other: Radial) -> MultiVector {
+fn sphere_round_point_geometric_anti_product(self_: Sphere, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, 0.0) + vec2<f32>(self_.g1.x) * vec2<f32>(other.g1.y, 0.0) + vec2<f32>(self_.g1.y) * vec2<f32>(other.g1.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), self_.g0 * vec3<f32>(other.g1.x) + vec3<f32>(self_.g1.x) * other.g0, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(-other.g1.y, -other.g1.y, -other.g1.y, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g1.y) - vec4<f32>(self_.g1.y) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn sphere_scalar_geometric_anti_product(self_: Sphere, other: Scalar) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(other.g0), vec2<f32>(0.0) - self_.g1 * vec2<f32>(other.g0));
+fn sphere_scalar_geometric_anti_product(self_: Sphere, other: Scalar) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(other.g0), vec2<f32>(0.0) - self_.g1 * vec2<f32>(other.g0));
 }
 
 fn sphere_sphere_geometric_anti_product(self_: Sphere, other: Sphere) -> MultiVector {
@@ -3576,8 +3873,12 @@ fn anti_scalar_dipole_geometric_product(self_: AntiScalar, other: Dipole) -> Cir
     return Circle(vec4<f32>(self_.g0) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, -other.g2.w), vec3<f32>(self_.g0) * other.g1, vec3<f32>(self_.g0) * vec3<f32>(other.g2.x, other.g2.y, other.g2.z));
 }
 
-fn anti_scalar_horizon_geometric_product(self_: AntiScalar, other: Horizon) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0));
+fn anti_scalar_horizon_geometric_product(self_: AntiScalar, other: Horizon) -> Infinity {
+    return Infinity(self_.g0 * other.g0);
+}
+
+fn anti_scalar_infinity_geometric_product(self_: AntiScalar, other: Infinity) -> Horizon {
+    return Horizon(0.0 - self_.g0 * other.g0);
 }
 
 fn anti_scalar_line_geometric_product(self_: AntiScalar, other: Line) -> Dipole {
@@ -3604,12 +3905,12 @@ fn anti_scalar_origin_geometric_product(self_: AntiScalar, other: Origin) -> Cir
     return Circle(vec4<f32>(self_.g0) * vec4<f32>(0.0, 0.0, 0.0, -other.g0), vec3<f32>(0.0), vec3<f32>(0.0));
 }
 
-fn anti_scalar_plane_geometric_product(self_: AntiScalar, other: Plane) -> Radial {
-    return Radial(vec3<f32>(0.0) - vec3<f32>(self_.g0) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0.w));
+fn anti_scalar_plane_geometric_product(self_: AntiScalar, other: Plane) -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0) - vec3<f32>(self_.g0) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0.w));
 }
 
-fn anti_scalar_plane_at_origin_geometric_product(self_: AntiScalar, other: PlaneAtOrigin) -> Radial {
-    return Radial(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec2<f32>(0.0));
+fn anti_scalar_plane_at_origin_geometric_product(self_: AntiScalar, other: PlaneAtOrigin) -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec2<f32>(0.0));
 }
 
 fn anti_scalar_point_geometric_product(self_: AntiScalar, other: Point) -> Circle {
@@ -3620,7 +3921,7 @@ fn anti_scalar_point_at_infinity_geometric_product(self_: AntiScalar, other: Poi
     return LineAtInfinity(vec3<f32>(self_.g0) * other.g0);
 }
 
-fn anti_scalar_radial_geometric_product(self_: AntiScalar, other: Radial) -> Sphere {
+fn anti_scalar_round_point_geometric_product(self_: AntiScalar, other: RoundPoint) -> Sphere {
     return Sphere(vec3<f32>(self_.g0) * other.g0, vec2<f32>(0.0) - vec2<f32>(self_.g0) * other.g1);
 }
 
@@ -3628,8 +3929,8 @@ fn anti_scalar_scalar_geometric_product(self_: AntiScalar, other: Scalar) -> Ant
     return AntiScalar(self_.g0 * other.g0);
 }
 
-fn anti_scalar_sphere_geometric_product(self_: AntiScalar, other: Sphere) -> Radial {
-    return Radial(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * other.g1);
+fn anti_scalar_sphere_geometric_product(self_: AntiScalar, other: Sphere) -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * other.g1);
 }
 
 fn circle_anti_scalar_geometric_product(self_: Circle, other: AntiScalar) -> Dipole {
@@ -3646,6 +3947,10 @@ fn circle_dipole_geometric_product(self_: Circle, other: Dipole) -> MultiVector 
 
 fn circle_horizon_geometric_product(self_: Circle, other: Horizon) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0), vec2<f32>(self_.g0.w) * vec2<f32>(0.0, -other.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0), self_.g1 * vec3<f32>(other.g0), vec3<f32>(0.0), vec2<f32>(0.0));
+}
+
+fn circle_infinity_geometric_product(self_: Circle, other: Infinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, self_.g1.x) * vec4<f32>(-other.g0, -other.g0, -other.g0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0), vec2<f32>(self_.g0.w) * vec2<f32>(0.0, other.g0));
 }
 
 fn circle_line_geometric_product(self_: Circle, other: Line) -> MultiVector {
@@ -3688,7 +3993,7 @@ fn circle_point_at_infinity_geometric_product(self_: Circle, other: PointAtInfin
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, -other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.y) + vec4<f32>(self_.g0.z) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.z), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0.w) * other.g0 + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn circle_radial_geometric_product(self_: Circle, other: Radial) -> MultiVector {
+fn circle_round_point_geometric_product(self_: Circle, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) - self_.g1 * vec3<f32>(other.g1.x), vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.y) - vec3<f32>(self_.g0.w) * other.g0 - self_.g2 * vec3<f32>(other.g1.x), vec4<f32>(self_.g1.x) * vec4<f32>(-other.g1.y, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g1.y) * vec4<f32>(0.0, -other.g1.y, 0.0, -other.g0.y) + vec4<f32>(self_.g1.z) * vec4<f32>(0.0, 0.0, -other.g1.y, -other.g0.z) + vec4<f32>(self_.g2.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g2.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g2.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.y) + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) - self_.g2 * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g0.w) * other.g1 * vec2<f32>(-1.0, 1.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, other.g0.z));
 }
 
@@ -3714,6 +4019,10 @@ fn dipole_dipole_geometric_product(self_: Dipole, other: Dipole) -> MultiVector 
 
 fn dipole_horizon_geometric_product(self_: Dipole, other: Horizon) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, self_.g1.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0), vec2<f32>(self_.g2.w) * vec2<f32>(0.0, other.g0));
+}
+
+fn dipole_infinity_geometric_product(self_: Dipole, other: Infinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), self_.g0 * vec3<f32>(other.g0), vec2<f32>(self_.g2.w) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), self_.g0 * vec3<f32>(other.g0), self_.g1 * vec3<f32>(other.g0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
 fn dipole_line_geometric_product(self_: Dipole, other: Line) -> MultiVector {
@@ -3756,7 +4065,7 @@ fn dipole_point_at_infinity_geometric_product(self_: Dipole, other: PointAtInfin
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(0.0, 0.0, 0.0, other.g0.y) + vec4<f32>(self_.g0.z) * vec4<f32>(0.0, 0.0, 0.0, other.g0.z) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, 0.0) + vec4<f32>(self_.g1.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4<f32>(self_.g1.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, 0.0) + vec4<f32>(self_.g2.w) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn dipole_radial_geometric_product(self_: Dipole, other: Radial) -> MultiVector {
+fn dipole_round_point_geometric_product(self_: Dipole, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), self_.g0 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) - vec3<f32>(self_.g2.x, self_.g2.y, self_.g2.z) * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, 0.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, -other.g0.z) + vec2<f32>(self_.g2.w) * other.g1 * vec2<f32>(-1.0, 1.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g1.y) * vec4<f32>(0.0, other.g1.x, 0.0, -other.g0.y) + vec4<f32>(self_.g1.z) * vec4<f32>(0.0, 0.0, other.g1.x, -other.g0.z), self_.g0 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g2.x, self_.g2.y, self_.g2.z) * vec3<f32>(other.g1.x) - vec3<f32>(self_.g2.w) * other.g0, self_.g1 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g2.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g2.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g2.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -3768,8 +4077,8 @@ fn dipole_sphere_geometric_product(self_: Dipole, other: Sphere) -> MultiVector 
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) + self_.g1 * vec3<f32>(other.g1.x), self_.g0 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g2.x, self_.g2.y, self_.g2.z) * vec3<f32>(other.g1.x) + vec3<f32>(self_.g2.w) * other.g0, vec4<f32>(self_.g1.x) * vec4<f32>(other.g1.y, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g1.y) * vec4<f32>(0.0, other.g1.y, 0.0, -other.g0.y) + vec4<f32>(self_.g1.z) * vec4<f32>(0.0, 0.0, other.g1.y, -other.g0.z) + vec4<f32>(self_.g2.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g2.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g2.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) + vec3<f32>(self_.g2.x, self_.g2.y, self_.g2.z) * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g2.w) * other.g1 * vec2<f32>(-1.0, 1.0));
 }
 
-fn horizon_anti_scalar_geometric_product(self_: Horizon, other: AntiScalar) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0));
+fn horizon_anti_scalar_geometric_product(self_: Horizon, other: AntiScalar) -> Infinity {
+    return Infinity(self_.g0 * other.g0);
 }
 
 fn horizon_circle_geometric_product(self_: Horizon, other: Circle) -> MultiVector {
@@ -3812,7 +4121,7 @@ fn horizon_point_geometric_product(self_: Horizon, other: Point) -> Horizon {
     return Horizon(0.0 - self_.g0 * other.g0.w);
 }
 
-fn horizon_radial_geometric_product(self_: Horizon, other: Radial) -> MultiVector {
+fn horizon_round_point_geometric_product(self_: Horizon, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g1.x), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0) * vec4<f32>(0.0, 0.0, 0.0, -other.g1.x), vec3<f32>(0.0), vec3<f32>(self_.g0) * other.g0, vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -3822,6 +4131,62 @@ fn horizon_scalar_geometric_product(self_: Horizon, other: Scalar) -> Horizon {
 
 fn horizon_sphere_geometric_product(self_: Horizon, other: Sphere) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(other.g1.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0) * vec4<f32>(-other.g0.x, -other.g0.y, -other.g0.z, other.g1.x), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
+}
+
+fn infinity_anti_scalar_geometric_product(self_: Infinity, other: AntiScalar) -> Horizon {
+    return Horizon(0.0 - self_.g0 * other.g0);
+}
+
+fn infinity_circle_geometric_product(self_: Infinity, other: Circle) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(self_.g0) * vec4<f32>(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g0.w));
+}
+
+fn infinity_dipole_geometric_product(self_: Infinity, other: Dipole) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g2.w), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(self_.g0) * other.g0, vec3<f32>(self_.g0) * other.g1, vec3<f32>(0.0), vec2<f32>(0.0));
+}
+
+fn infinity_line_geometric_product(self_: Infinity, other: Line) -> PointAtInfinity {
+    return PointAtInfinity(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0);
+}
+
+fn infinity_line_at_origin_geometric_product(self_: Infinity, other: LineAtOrigin) -> PointAtInfinity {
+    return PointAtInfinity(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0);
+}
+
+fn infinity_magnitude_geometric_product(self_: Infinity, other: Magnitude) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0.x), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g0.y));
+}
+
+fn infinity_multi_vector_geometric_product(self_: Infinity, other: MultiVector) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(-other.g2.x, other.g10.x), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g3, vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g5.w) + vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0.x), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec4<f32>(0.0) - vec4<f32>(self_.g0) * vec4<f32>(other.g7.x, other.g7.y, other.g7.z, other.g2.x) + vec4<f32>(self_.g0) * vec4<f32>(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4<f32>(self_.g0) * vec4<f32>(0.0, 0.0, 0.0, -other.g10.x), vec3<f32>(self_.g0) * other.g3, vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g9 + vec3<f32>(self_.g0) * other.g4, vec3<f32>(0.0) - vec3<f32>(self_.g0) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g6.w) + vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g0.y));
+}
+
+fn infinity_origin_geometric_product(self_: Infinity, other: Origin) -> Infinity {
+    return Infinity(0.0 - self_.g0 * other.g0);
+}
+
+fn infinity_plane_geometric_product(self_: Infinity, other: Plane) -> LineAtInfinity {
+    return LineAtInfinity(vec3<f32>(0.0) - vec3<f32>(self_.g0) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z));
+}
+
+fn infinity_plane_at_origin_geometric_product(self_: Infinity, other: PlaneAtOrigin) -> LineAtInfinity {
+    return LineAtInfinity(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0);
+}
+
+fn infinity_point_geometric_product(self_: Infinity, other: Point) -> Infinity {
+    return Infinity(0.0 - self_.g0 * other.g0.w);
+}
+
+fn infinity_round_point_geometric_product(self_: Infinity, other: RoundPoint) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(-other.g1.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0) - vec4<f32>(self_.g0) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
+}
+
+fn infinity_scalar_geometric_product(self_: Infinity, other: Scalar) -> Infinity {
+    return Infinity(self_.g0 * other.g0);
+}
+
+fn infinity_sphere_geometric_product(self_: Infinity, other: Sphere) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g1.x), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0) * vec4<f32>(0.0, 0.0, 0.0, -other.g1.x), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
 fn line_anti_scalar_geometric_product(self_: Line, other: AntiScalar) -> Dipole {
@@ -3838,6 +4203,10 @@ fn line_dipole_geometric_product(self_: Line, other: Dipole) -> MultiVector {
 
 fn line_horizon_geometric_product(self_: Line, other: Horizon) -> LineAtInfinity {
     return LineAtInfinity(self_.g0 * vec3<f32>(other.g0));
+}
+
+fn line_infinity_geometric_product(self_: Line, other: Infinity) -> PointAtInfinity {
+    return PointAtInfinity(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0));
 }
 
 fn line_line_geometric_product(self_: Line, other: Line) -> MultiVector {
@@ -3880,7 +4249,7 @@ fn line_point_at_infinity_geometric_product(self_: Line, other: PointAtInfinity)
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn line_radial_geometric_product(self_: Line, other: Radial) -> MultiVector {
+fn line_round_point_geometric_product(self_: Line, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.x), vec3<f32>(0.0) - self_.g1 * vec3<f32>(other.g1.x), vec4<f32>(self_.g0.x) * vec4<f32>(-other.g1.y, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(0.0, -other.g1.y, 0.0, -other.g0.y) + vec4<f32>(self_.g0.z) * vec4<f32>(0.0, 0.0, -other.g1.y, -other.g0.z) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g1.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g1.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) - self_.g1 * vec3<f32>(other.g1.x), vec2<f32>(self_.g1.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, other.g0.z));
 }
 
@@ -3936,7 +4305,7 @@ fn line_at_infinity_point_geometric_product(self_: LineAtInfinity, other: Point)
     return LineAtInfinity(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0.w));
 }
 
-fn line_at_infinity_radial_geometric_product(self_: LineAtInfinity, other: Radial) -> MultiVector {
+fn line_at_infinity_round_point_geometric_product(self_: LineAtInfinity, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.x), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z));
 }
 
@@ -3964,6 +4333,10 @@ fn line_at_origin_horizon_geometric_product(self_: LineAtOrigin, other: Horizon)
     return LineAtInfinity(self_.g0 * vec3<f32>(other.g0));
 }
 
+fn line_at_origin_infinity_geometric_product(self_: LineAtOrigin, other: Infinity) -> PointAtInfinity {
+    return PointAtInfinity(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0));
+}
+
 fn line_at_origin_line_geometric_product(self_: LineAtOrigin, other: Line) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, -other.g1.z, other.g1.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(other.g1.z, 0.0, -other.g1.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(-other.g1.y, other.g1.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g1.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g1.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g1.z));
 }
@@ -3984,8 +4357,8 @@ fn line_at_origin_multi_vector_geometric_product(self_: LineAtOrigin, other: Mul
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(other.g7.x, -other.g4.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g7.y, -other.g4.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g7.z, -other.g4.z), vec3<f32>(self_.g0.x) * vec3<f32>(-other.g5.w, -other.g9.z, other.g9.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g9.z, -other.g5.w, -other.g9.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g9.y, other.g9.x, -other.g5.w), vec2<f32>(0.0) - vec2<f32>(self_.g0.x) * vec2<f32>(other.g3.x, other.g5.x) - vec2<f32>(self_.g0.y) * vec2<f32>(other.g3.y, other.g5.y) - vec2<f32>(self_.g0.z) * vec2<f32>(other.g3.z, other.g5.z), vec3<f32>(self_.g0.x) * vec3<f32>(-other.g2.x, -other.g6.z, other.g6.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g6.z, -other.g2.x, -other.g6.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g6.y, other.g6.x, -other.g2.x), vec3<f32>(self_.g0.x) * vec3<f32>(-other.g0.y, -other.g7.z, other.g7.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g7.z, -other.g0.y, -other.g7.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g7.y, other.g7.x, -other.g0.y), vec4<f32>(self_.g0.x) * vec4<f32>(-other.g2.y, -other.g8.z, other.g8.y, -other.g1.x) + vec4<f32>(self_.g0.y) * vec4<f32>(other.g8.z, -other.g2.y, -other.g8.x, -other.g1.y) + vec4<f32>(self_.g0.z) * vec4<f32>(-other.g8.y, other.g8.x, -other.g2.y, -other.g1.z), vec4<f32>(self_.g0.x) * vec4<f32>(other.g10.x, other.g3.z, -other.g3.y, other.g9.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g3.z, other.g10.x, other.g3.x, other.g9.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g3.y, -other.g3.x, other.g10.x, other.g9.z), vec3<f32>(self_.g0.x) * vec3<f32>(other.g0.x, other.g4.z, -other.g4.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g4.z, other.g0.x, other.g4.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g4.y, -other.g4.x, other.g0.x), vec3<f32>(self_.g0.x) * vec3<f32>(other.g10.y, other.g5.z, -other.g5.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g5.z, other.g10.y, other.g5.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g5.y, -other.g5.x, other.g10.y), vec3<f32>(self_.g0.x) * vec3<f32>(other.g6.w, other.g1.z, -other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g1.z, other.g6.w, other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g1.y, -other.g1.x, other.g6.w), vec2<f32>(self_.g0.x) * vec2<f32>(other.g6.x, other.g8.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g6.y, other.g8.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g6.z, other.g8.z));
 }
 
-fn line_at_origin_origin_geometric_product(self_: LineAtOrigin, other: Origin) -> Radial {
-    return Radial(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0), vec2<f32>(0.0));
+fn line_at_origin_origin_geometric_product(self_: LineAtOrigin, other: Origin) -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0), vec2<f32>(0.0));
 }
 
 fn line_at_origin_plane_geometric_product(self_: LineAtOrigin, other: Plane) -> MultiVector {
@@ -4004,7 +4377,7 @@ fn line_at_origin_point_at_infinity_geometric_product(self_: LineAtOrigin, other
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn line_at_origin_radial_geometric_product(self_: LineAtOrigin, other: Radial) -> MultiVector {
+fn line_at_origin_round_point_geometric_product(self_: LineAtOrigin, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.x), vec3<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(-other.g1.y, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(0.0, -other.g1.y, 0.0, -other.g0.y) + vec4<f32>(self_.g0.z) * vec4<f32>(0.0, 0.0, -other.g1.y, -other.g0.z), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec2<f32>(0.0));
 }
 
@@ -4030,6 +4403,10 @@ fn magnitude_dipole_geometric_product(self_: Magnitude, other: Dipole) -> MultiV
 
 fn magnitude_horizon_geometric_product(self_: Magnitude, other: Horizon) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0));
+}
+
+fn magnitude_infinity_geometric_product(self_: Magnitude, other: Infinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0));
 }
 
 fn magnitude_line_geometric_product(self_: Magnitude, other: Line) -> MultiVector {
@@ -4072,7 +4449,7 @@ fn magnitude_point_at_infinity_geometric_product(self_: Magnitude, other: PointA
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.y) * other.g0, vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn magnitude_radial_geometric_product(self_: Magnitude, other: Radial) -> MultiVector {
+fn magnitude_round_point_geometric_product(self_: Magnitude, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(self_.g0.x) * other.g0, vec2<f32>(self_.g0.x) * other.g1, vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.y) * other.g0, vec2<f32>(0.0) - vec2<f32>(self_.g0.y) * other.g1);
 }
 
@@ -4098,6 +4475,10 @@ fn multi_vector_dipole_geometric_product(self_: MultiVector, other: Dipole) -> M
 
 fn multi_vector_horizon_geometric_product(self_: MultiVector, other: Horizon) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g0) + vec2<f32>(self_.g10.x) * vec2<f32>(other.g0, 0.0), vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g0), vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0) + vec2<f32>(self_.g6.w) * vec2<f32>(0.0, -other.g0), vec3<f32>(0.0), self_.g3 * vec3<f32>(other.g0), vec4<f32>(self_.g4.x, self_.g4.y, self_.g4.z, self_.g4.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0) + vec4<f32>(self_.g9.x, self_.g9.y, self_.g9.z, self_.g9.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0) + vec4<f32>(self_.g10.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0), vec4<f32>(self_.g2.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0), vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g0), vec3<f32>(0.0) - self_.g1 * vec3<f32>(other.g0) + self_.g7 * vec3<f32>(other.g0), vec3<f32>(0.0) - self_.g3 * vec3<f32>(other.g0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0) + vec2<f32>(self_.g5.w) * vec2<f32>(0.0, other.g0));
+}
+
+fn multi_vector_infinity_geometric_product(self_: MultiVector, other: Infinity) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g2.x) * vec2<f32>(-other.g0, 0.0) + vec2<f32>(self_.g10.x) * vec2<f32>(0.0, other.g0), self_.g3 * vec3<f32>(other.g0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0) + vec2<f32>(self_.g5.w) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, self_.g1.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0) + vec4<f32>(self_.g2.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0) + vec4<f32>(self_.g7.x, self_.g7.y, self_.g7.z, self_.g7.x) * vec4<f32>(-other.g0, -other.g0, -other.g0, 0.0), vec4<f32>(self_.g10.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0), self_.g3 * vec3<f32>(other.g0), self_.g4 * vec3<f32>(other.g0) + self_.g9 * vec3<f32>(other.g0), vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g0), vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0) + vec2<f32>(self_.g6.w) * vec2<f32>(0.0, other.g0));
 }
 
 fn multi_vector_line_geometric_product(self_: MultiVector, other: Line) -> MultiVector {
@@ -4140,7 +4521,7 @@ fn multi_vector_point_at_infinity_geometric_product(self_: MultiVector, other: P
     return MultiVector(vec2<f32>(self_.g3.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g3.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g3.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g6.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g6.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g6.z) * vec2<f32>(0.0, -other.g0.z), vec3<f32>(self_.g2.x) * other.g0 + vec3<f32>(self_.g6.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g6.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g6.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec2<f32>(self_.g1.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g7.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g7.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g7.z) * vec2<f32>(0.0, -other.g0.z), vec3<f32>(0.0), vec3<f32>(self_.g3.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g3.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g3.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) + vec3<f32>(self_.g10.x) * other.g0, vec4<f32>(self_.g0.x) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0) + vec4<f32>(self_.g3.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0.x) + vec4<f32>(self_.g3.y) * vec4<f32>(0.0, 0.0, 0.0, other.g0.y) + vec4<f32>(self_.g3.z) * vec4<f32>(0.0, 0.0, 0.0, other.g0.z) + vec4<f32>(self_.g4.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, 0.0) + vec4<f32>(self_.g4.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4<f32>(self_.g4.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, 0.0) + vec4<f32>(self_.g5.w) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0) + vec4<f32>(self_.g9.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, 0.0) + vec4<f32>(self_.g9.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4<f32>(self_.g9.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, 0.0), vec4<f32>(self_.g6.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g6.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.y) + vec4<f32>(self_.g6.z) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.z), vec3<f32>(self_.g2.x) * other.g0 + vec3<f32>(self_.g6.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g6.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g6.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(self_.g0.y) * other.g0 + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) - vec3<f32>(self_.g6.w) * other.g0 + vec3<f32>(self_.g7.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g7.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g7.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(self_.g3.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g3.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g3.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) - vec3<f32>(self_.g10.x) * other.g0, vec2<f32>(self_.g4.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g4.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g4.z) * vec2<f32>(0.0, -other.g0.z) + vec2<f32>(self_.g9.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g9.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g9.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn multi_vector_radial_geometric_product(self_: MultiVector, other: Radial) -> MultiVector {
+fn multi_vector_round_point_geometric_product(self_: MultiVector, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g1.x) * vec2<f32>(other.g0.x, 0.0) + vec2<f32>(self_.g1.y) * vec2<f32>(other.g0.y, 0.0) + vec2<f32>(self_.g1.z) * vec2<f32>(other.g0.z, 0.0) + vec2<f32>(self_.g2.x) * vec2<f32>(-other.g1.y, 0.0) + vec2<f32>(self_.g2.y) * vec2<f32>(-other.g1.x, 0.0) + vec2<f32>(self_.g9.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g9.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g9.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g10.x) * vec2<f32>(0.0, other.g1.y) + vec2<f32>(self_.g10.y) * vec2<f32>(0.0, other.g1.x), vec3<f32>(self_.g0.x) * other.g0 + self_.g3 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g4.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g4.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g4.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) - vec3<f32>(self_.g5.x, self_.g5.y, self_.g5.z) * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * other.g1 + vec2<f32>(self_.g3.x) * vec2<f32>(other.g0.x, 0.0) + vec2<f32>(self_.g3.y) * vec2<f32>(other.g0.y, 0.0) + vec2<f32>(self_.g3.z) * vec2<f32>(other.g0.z, 0.0) + vec2<f32>(self_.g5.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g5.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g5.z) * vec2<f32>(0.0, -other.g0.z) + vec2<f32>(self_.g5.w) * other.g1 * vec2<f32>(-1.0, 1.0), vec3<f32>(0.0) - self_.g1 * vec3<f32>(other.g1.x) + vec3<f32>(self_.g2.x) * other.g0 + vec3<f32>(self_.g6.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g6.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g6.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) - self_.g7 * vec3<f32>(other.g1.x), vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) - vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g1.y) - vec3<f32>(self_.g6.w) * other.g0 - self_.g8 * vec3<f32>(other.g1.x), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, self_.g1.x) * vec4<f32>(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4<f32>(self_.g2.x) * vec4<f32>(0.0, 0.0, 0.0, other.g1.y) - vec4<f32>(self_.g2.y) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, other.g1.x) + vec4<f32>(self_.g7.x) * vec4<f32>(-other.g1.y, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g7.y) * vec4<f32>(0.0, -other.g1.y, 0.0, -other.g0.y) + vec4<f32>(self_.g7.z) * vec4<f32>(0.0, 0.0, -other.g1.y, -other.g0.z) + vec4<f32>(self_.g8.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g8.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g8.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0), vec4<f32>(self_.g3.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g3.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g3.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4<f32>(self_.g4.x) * vec4<f32>(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g4.y) * vec4<f32>(0.0, other.g1.x, 0.0, -other.g0.y) + vec4<f32>(self_.g4.z) * vec4<f32>(0.0, 0.0, other.g1.x, -other.g0.z) + vec4<f32>(self_.g9.x, self_.g9.y, self_.g9.z, self_.g9.x) * vec4<f32>(-other.g1.x, -other.g1.x, -other.g1.x, 0.0) + vec4<f32>(self_.g10.x) * vec4<f32>(-other.g0.x, -other.g0.y, -other.g0.z, other.g1.y) + vec4<f32>(self_.g10.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g1.x), self_.g3 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g5.x, self_.g5.y, self_.g5.z) * vec3<f32>(other.g1.x) - vec3<f32>(self_.g5.w) * other.g0 + vec3<f32>(self_.g9.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g9.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g9.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), self_.g4 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g5.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g5.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g5.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) + self_.g9 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g10.y) * other.g0, vec3<f32>(self_.g0.y) * other.g0 + vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g1.y) + vec3<f32>(self_.g7.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g7.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g7.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) - self_.g8 * vec3<f32>(other.g1.x), vec2<f32>(0.0) - vec2<f32>(self_.g0.y) * other.g1 + vec2<f32>(self_.g6.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g6.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g6.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g6.w) * other.g1 * vec2<f32>(-1.0, 1.0) + vec2<f32>(self_.g8.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g8.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g8.z) * vec2<f32>(0.0, other.g0.z));
 }
 
@@ -4168,6 +4549,10 @@ fn origin_horizon_geometric_product(self_: Origin, other: Horizon) -> Horizon {
     return Horizon(self_.g0 * other.g0);
 }
 
+fn origin_infinity_geometric_product(self_: Origin, other: Infinity) -> Infinity {
+    return Infinity(self_.g0 * other.g0);
+}
+
 fn origin_line_geometric_product(self_: Origin, other: Line) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0) * other.g1, vec3<f32>(0.0), vec2<f32>(0.0));
 }
@@ -4176,8 +4561,8 @@ fn origin_line_at_infinity_geometric_product(self_: Origin, other: LineAtInfinit
     return LineAtInfinity(vec3<f32>(self_.g0) * other.g0);
 }
 
-fn origin_line_at_origin_geometric_product(self_: Origin, other: LineAtOrigin) -> Radial {
-    return Radial(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec2<f32>(0.0));
+fn origin_line_at_origin_geometric_product(self_: Origin, other: LineAtOrigin) -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec2<f32>(0.0));
 }
 
 fn origin_magnitude_geometric_product(self_: Origin, other: Magnitude) -> MultiVector {
@@ -4208,7 +4593,7 @@ fn origin_point_at_infinity_geometric_product(self_: Origin, other: PointAtInfin
     return PointAtInfinity(vec3<f32>(self_.g0) * other.g0);
 }
 
-fn origin_radial_geometric_product(self_: Origin, other: Radial) -> MultiVector {
+fn origin_round_point_geometric_product(self_: Origin, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0) * other.g1 * vec2<f32>(-1.0, 1.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -4220,8 +4605,8 @@ fn origin_sphere_geometric_product(self_: Origin, other: Sphere) -> MultiVector 
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0) * other.g0, vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0) * other.g1 * vec2<f32>(-1.0, 1.0));
 }
 
-fn plane_anti_scalar_geometric_product(self_: Plane, other: AntiScalar) -> Radial {
-    return Radial(vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0), vec2<f32>(self_.g0.w) * vec2<f32>(0.0, other.g0));
+fn plane_anti_scalar_geometric_product(self_: Plane, other: AntiScalar) -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0), vec2<f32>(self_.g0.w) * vec2<f32>(0.0, other.g0));
 }
 
 fn plane_circle_geometric_product(self_: Plane, other: Circle) -> MultiVector {
@@ -4234,6 +4619,10 @@ fn plane_dipole_geometric_product(self_: Plane, other: Dipole) -> MultiVector {
 
 fn plane_horizon_geometric_product(self_: Plane, other: Horizon) -> PointAtInfinity {
     return PointAtInfinity(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0));
+}
+
+fn plane_infinity_geometric_product(self_: Plane, other: Infinity) -> LineAtInfinity {
+    return LineAtInfinity(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0));
 }
 
 fn plane_line_geometric_product(self_: Plane, other: Line) -> MultiVector {
@@ -4276,7 +4665,7 @@ fn plane_point_at_infinity_geometric_product(self_: Plane, other: PointAtInfinit
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn plane_radial_geometric_product(self_: Plane, other: Radial) -> MultiVector {
+fn plane_round_point_geometric_product(self_: Plane, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g0.w) * vec2<f32>(0.0, other.g1.x), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0) - self_.g0 * vec4<f32>(other.g1.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.y) + vec3<f32>(self_.g0.w) * other.g0, vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -4288,8 +4677,8 @@ fn plane_sphere_geometric_product(self_: Plane, other: Sphere) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g0.w) * vec2<f32>(other.g1.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), self_.g0.xyzx * vec4<f32>(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4<f32>(self_.g0.w) * vec4<f32>(-other.g0.x, -other.g0.y, -other.g0.z, other.g1.x), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn plane_at_origin_anti_scalar_geometric_product(self_: PlaneAtOrigin, other: AntiScalar) -> Radial {
-    return Radial(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0), vec2<f32>(0.0));
+fn plane_at_origin_anti_scalar_geometric_product(self_: PlaneAtOrigin, other: AntiScalar) -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0), vec2<f32>(0.0));
 }
 
 fn plane_at_origin_circle_geometric_product(self_: PlaneAtOrigin, other: Circle) -> MultiVector {
@@ -4302,6 +4691,10 @@ fn plane_at_origin_dipole_geometric_product(self_: PlaneAtOrigin, other: Dipole)
 
 fn plane_at_origin_horizon_geometric_product(self_: PlaneAtOrigin, other: Horizon) -> PointAtInfinity {
     return PointAtInfinity(self_.g0 * vec3<f32>(other.g0));
+}
+
+fn plane_at_origin_infinity_geometric_product(self_: PlaneAtOrigin, other: Infinity) -> LineAtInfinity {
+    return LineAtInfinity(self_.g0 * vec3<f32>(other.g0));
 }
 
 fn plane_at_origin_line_geometric_product(self_: PlaneAtOrigin, other: Line) -> MultiVector {
@@ -4344,7 +4737,7 @@ fn plane_at_origin_point_at_infinity_geometric_product(self_: PlaneAtOrigin, oth
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn plane_at_origin_radial_geometric_product(self_: PlaneAtOrigin, other: Radial) -> MultiVector {
+fn plane_at_origin_round_point_geometric_product(self_: PlaneAtOrigin, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(-other.g1.x, -other.g1.x, -other.g1.x, 0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), self_.g0 * vec3<f32>(other.g1.y), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -4370,6 +4763,10 @@ fn point_dipole_geometric_product(self_: Point, other: Dipole) -> MultiVector {
 
 fn point_horizon_geometric_product(self_: Point, other: Horizon) -> Horizon {
     return Horizon(self_.g0.w * other.g0);
+}
+
+fn point_infinity_geometric_product(self_: Point, other: Infinity) -> Infinity {
+    return Infinity(self_.g0.w * other.g0);
 }
 
 fn point_line_geometric_product(self_: Point, other: Line) -> MultiVector {
@@ -4412,7 +4809,7 @@ fn point_point_at_infinity_geometric_product(self_: Point, other: PointAtInfinit
     return PointAtInfinity(vec3<f32>(self_.g0.w) * other.g0);
 }
 
-fn point_radial_geometric_product(self_: Point, other: Radial) -> MultiVector {
+fn point_round_point_geometric_product(self_: Point, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z) + vec2<f32>(self_.g0.w) * other.g1 * vec2<f32>(-1.0, 1.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.x) - vec3<f32>(self_.g0.w) * other.g0, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -4468,7 +4865,7 @@ fn point_at_infinity_point_geometric_product(self_: PointAtInfinity, other: Poin
     return PointAtInfinity(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0.w));
 }
 
-fn point_at_infinity_radial_geometric_product(self_: PointAtInfinity, other: Radial) -> MultiVector {
+fn point_at_infinity_round_point_geometric_product(self_: PointAtInfinity, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), self_.g0 * vec3<f32>(other.g1.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -4480,71 +4877,75 @@ fn point_at_infinity_sphere_geometric_product(self_: PointAtInfinity, other: Sph
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g1.x), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z));
 }
 
-fn radial_anti_scalar_geometric_product(self_: Radial, other: AntiScalar) -> Sphere {
+fn round_point_anti_scalar_geometric_product(self_: RoundPoint, other: AntiScalar) -> Sphere {
     return Sphere(self_.g0 * vec3<f32>(other.g0), vec2<f32>(0.0) - self_.g1 * vec2<f32>(other.g0));
 }
 
-fn radial_circle_geometric_product(self_: Radial, other: Circle) -> MultiVector {
+fn round_point_circle_geometric_product(self_: RoundPoint, other: Circle) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) - vec3<f32>(self_.g1.x) * other.g1, vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0.w) - vec3<f32>(self_.g1.x) * other.g2 - vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g2.z, -other.g2.y, -other.g1.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g2.z, 0.0, other.g2.x, -other.g1.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g2.y, -other.g2.x, 0.0, -other.g1.z) + vec4<f32>(self_.g1.y) * vec4<f32>(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g1.z, -other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g1.z, 0.0, other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g1.y, -other.g1.x, 0.0) + vec3<f32>(self_.g1.x) * other.g2 - vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, -other.g2.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, -other.g2.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, -other.g2.z) + self_.g1 * vec2<f32>(other.g0.w));
 }
 
-fn radial_dipole_geometric_product(self_: Radial, other: Dipole) -> MultiVector {
+fn round_point_dipole_geometric_product(self_: RoundPoint, other: Dipole) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g1.z, -other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g1.z, 0.0, other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g1.y, -other.g1.x, 0.0) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g2.x, other.g2.y, other.g2.z) - vec3<f32>(self_.g1.y) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, other.g2.x) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, other.g2.y) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, other.g2.z) + self_.g1 * vec2<f32>(other.g2.w), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, -other.g1.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, -other.g1.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, -other.g1.z) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g2.w) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g2.x, other.g2.y, other.g2.z) + vec3<f32>(self_.g1.y) * other.g0, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g2.z, other.g2.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g2.z, 0.0, -other.g2.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g2.y, other.g2.x, 0.0) + vec3<f32>(self_.g1.y) * other.g1, vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_horizon_geometric_product(self_: Radial, other: Horizon) -> MultiVector {
+fn round_point_horizon_geometric_product(self_: RoundPoint, other: Horizon) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g1.x) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_line_geometric_product(self_: Radial, other: Line) -> MultiVector {
+fn round_point_infinity_geometric_product(self_: RoundPoint, other: Infinity) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g1.x) * vec2<f32>(-other.g0, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
+}
+
+fn round_point_line_geometric_product(self_: RoundPoint, other: Line) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g1.x) * other.g0, vec3<f32>(0.0) - vec3<f32>(self_.g1.x) * other.g1, vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g1.z, -other.g1.y, -other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g1.z, 0.0, other.g1.x, -other.g0.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g1.y, -other.g1.x, 0.0, -other.g0.z) + vec4<f32>(self_.g1.y) * vec4<f32>(-other.g0.x, -other.g0.y, -other.g0.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) + vec3<f32>(self_.g1.x) * other.g1, vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g1.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g1.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g1.z));
 }
 
-fn radial_line_at_infinity_geometric_product(self_: Radial, other: LineAtInfinity) -> MultiVector {
+fn round_point_line_at_infinity_geometric_product(self_: RoundPoint, other: LineAtInfinity) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g1.x) * other.g0, vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g1.x) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn radial_line_at_origin_geometric_product(self_: Radial, other: LineAtOrigin) -> MultiVector {
+fn round_point_line_at_origin_geometric_product(self_: RoundPoint, other: LineAtOrigin) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g1.x) * other.g0, vec3<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.y) + vec4<f32>(self_.g0.z) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.z) + vec4<f32>(self_.g1.y) * vec4<f32>(-other.g0.x, -other.g0.y, -other.g0.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec2<f32>(0.0));
 }
 
-fn radial_magnitude_geometric_product(self_: Radial, other: Magnitude) -> MultiVector {
+fn round_point_magnitude_geometric_product(self_: RoundPoint, other: Magnitude) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), self_.g0 * vec3<f32>(other.g0.x), self_.g1 * vec2<f32>(other.g0.x), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g0.y), vec2<f32>(0.0) - self_.g1 * vec2<f32>(other.g0.y));
 }
 
-fn radial_multi_vector_geometric_product(self_: Radial, other: MultiVector) -> MultiVector {
+fn round_point_multi_vector_geometric_product(self_: RoundPoint, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(other.g1.x, other.g9.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g1.y, other.g9.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g1.z, other.g9.z) + vec2<f32>(self_.g1.x) * vec2<f32>(-other.g2.y, other.g10.y) + vec2<f32>(self_.g1.y) * vec2<f32>(-other.g2.x, other.g10.x), vec3<f32>(self_.g0.x) * vec3<f32>(other.g0.x, other.g4.z, -other.g4.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g4.z, other.g0.x, other.g4.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g4.y, -other.g4.x, other.g0.x) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g5.x, other.g5.y, other.g5.z) - vec3<f32>(self_.g1.y) * other.g3, vec2<f32>(self_.g0.x) * vec2<f32>(-other.g3.x, other.g5.x) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g3.y, other.g5.y) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g3.z, other.g5.z) + self_.g1 * vec2<f32>(other.g5.w) + self_.g1 * vec2<f32>(other.g0.x), vec3<f32>(self_.g0.x) * vec3<f32>(-other.g2.x, -other.g6.z, other.g6.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g6.z, -other.g2.x, -other.g6.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g6.y, other.g6.x, -other.g2.x) - vec3<f32>(self_.g1.x) * other.g7 + vec3<f32>(self_.g1.x) * other.g1, vec3<f32>(self_.g0.x) * vec3<f32>(-other.g6.w, -other.g1.z, other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g1.z, -other.g6.w, -other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g1.y, other.g1.x, -other.g6.w) - vec3<f32>(self_.g1.x) * other.g8 - vec3<f32>(self_.g1.y) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec4<f32>(self_.g0.x) * vec4<f32>(other.g2.y, other.g8.z, -other.g8.y, -other.g7.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g8.z, other.g2.y, other.g8.x, -other.g7.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g8.y, -other.g8.x, other.g2.y, -other.g7.z) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g2.y) - vec4<f32>(self_.g1.y) * vec4<f32>(other.g7.x, other.g7.y, other.g7.z, other.g2.x) + vec4<f32>(self_.g1.y) * vec4<f32>(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4<f32>(self_.g0.x) * vec4<f32>(other.g10.x, other.g3.z, -other.g3.y, -other.g4.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g3.z, other.g10.x, other.g3.x, -other.g4.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g3.y, -other.g3.x, other.g10.x, -other.g4.z) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g9.x, other.g9.y, other.g9.z, other.g10.y) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g4.x, other.g4.y, other.g4.z, 0.0) + vec4<f32>(self_.g1.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g10.x), vec3<f32>(self_.g0.x) * vec3<f32>(-other.g5.w, -other.g9.z, other.g9.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g9.z, -other.g5.w, -other.g9.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g9.y, other.g9.x, -other.g5.w) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g5.x, other.g5.y, other.g5.z) + vec3<f32>(self_.g1.y) * other.g3, vec3<f32>(self_.g0.x) * vec3<f32>(-other.g10.y, -other.g5.z, other.g5.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g5.z, -other.g10.y, -other.g5.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g5.y, other.g5.x, -other.g10.y) - vec3<f32>(self_.g1.y) * other.g9 + vec3<f32>(self_.g1.y) * other.g4, vec3<f32>(self_.g0.x) * vec3<f32>(other.g0.y, other.g7.z, -other.g7.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g7.z, other.g0.y, other.g7.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g7.y, -other.g7.x, other.g0.y) + vec3<f32>(self_.g1.x) * other.g8 - vec3<f32>(self_.g1.y) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec2<f32>(self_.g0.x) * vec2<f32>(other.g6.x, -other.g8.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g6.y, -other.g8.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g6.z, -other.g8.z) + self_.g1 * vec2<f32>(other.g6.w) - self_.g1 * vec2<f32>(other.g0.y));
 }
 
-fn radial_origin_geometric_product(self_: Radial, other: Origin) -> MultiVector {
+fn round_point_origin_geometric_product(self_: RoundPoint, other: Origin) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), self_.g1 * vec2<f32>(other.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_plane_geometric_product(self_: Radial, other: Plane) -> MultiVector {
+fn round_point_plane_geometric_product(self_: RoundPoint, other: Plane) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g1.x) * vec2<f32>(0.0, other.g0.w), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g1.x) * other.g0, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0.w) - vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_plane_at_origin_geometric_product(self_: Radial, other: PlaneAtOrigin) -> MultiVector {
+fn round_point_plane_at_origin_geometric_product(self_: RoundPoint, other: PlaneAtOrigin) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g1.x) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec3<f32>(0.0) - vec3<f32>(self_.g1.y) * other.g0, vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_point_geometric_product(self_: Radial, other: Point) -> MultiVector {
+fn round_point_point_geometric_product(self_: RoundPoint, other: Point) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(self_.g1.x) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z) + self_.g1 * vec2<f32>(other.g0.w), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0.w) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_point_at_infinity_geometric_product(self_: Radial, other: PointAtInfinity) -> MultiVector {
+fn round_point_point_at_infinity_geometric_product(self_: RoundPoint, other: PointAtInfinity) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(self_.g1.x) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(self_.g1.x) * other.g0, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_radial_geometric_product(self_: Radial, other: Radial) -> MultiVector {
+fn round_point_round_point_geometric_product(self_: RoundPoint, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, 0.0) + vec2<f32>(self_.g1.x) * vec2<f32>(-other.g1.y, 0.0) + vec2<f32>(self_.g1.y) * vec2<f32>(-other.g1.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.x) + vec3<f32>(self_.g1.x) * other.g0, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g1.y) - vec4<f32>(self_.g1.y) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_scalar_geometric_product(self_: Radial, other: Scalar) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(other.g0), self_.g1 * vec2<f32>(other.g0));
+fn round_point_scalar_geometric_product(self_: RoundPoint, other: Scalar) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(other.g0), self_.g1 * vec2<f32>(other.g0));
 }
 
-fn radial_sphere_geometric_product(self_: Radial, other: Sphere) -> MultiVector {
+fn round_point_sphere_geometric_product(self_: RoundPoint, other: Sphere) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g1.x) * vec2<f32>(0.0, other.g1.y) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, other.g1.x), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(other.g1.x, other.g1.x, other.g1.x, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, other.g1.y) + vec4<f32>(self_.g1.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g1.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.y) - vec3<f32>(self_.g1.y) * other.g0, vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -4562,6 +4963,10 @@ fn scalar_dipole_geometric_product(self_: Scalar, other: Dipole) -> Dipole {
 
 fn scalar_horizon_geometric_product(self_: Scalar, other: Horizon) -> Horizon {
     return Horizon(self_.g0 * other.g0);
+}
+
+fn scalar_infinity_geometric_product(self_: Scalar, other: Infinity) -> Infinity {
+    return Infinity(self_.g0 * other.g0);
 }
 
 fn scalar_line_geometric_product(self_: Scalar, other: Line) -> Line {
@@ -4604,8 +5009,8 @@ fn scalar_point_at_infinity_geometric_product(self_: Scalar, other: PointAtInfin
     return PointAtInfinity(vec3<f32>(self_.g0) * other.g0);
 }
 
-fn scalar_radial_geometric_product(self_: Scalar, other: Radial) -> Radial {
-    return Radial(vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * other.g1);
+fn scalar_round_point_geometric_product(self_: Scalar, other: RoundPoint) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * other.g1);
 }
 
 fn scalar_scalar_geometric_product(self_: Scalar, other: Scalar) -> Scalar {
@@ -4616,8 +5021,8 @@ fn scalar_sphere_geometric_product(self_: Scalar, other: Sphere) -> Sphere {
     return Sphere(vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * other.g1);
 }
 
-fn sphere_anti_scalar_geometric_product(self_: Sphere, other: AntiScalar) -> Radial {
-    return Radial(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0), self_.g1 * vec2<f32>(other.g0));
+fn sphere_anti_scalar_geometric_product(self_: Sphere, other: AntiScalar) -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0), self_.g1 * vec2<f32>(other.g0));
 }
 
 fn sphere_circle_geometric_product(self_: Sphere, other: Circle) -> MultiVector {
@@ -4630,6 +5035,10 @@ fn sphere_dipole_geometric_product(self_: Sphere, other: Dipole) -> MultiVector 
 
 fn sphere_horizon_geometric_product(self_: Sphere, other: Horizon) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g1.x) * vec2<f32>(other.g0, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
+}
+
+fn sphere_infinity_geometric_product(self_: Sphere, other: Infinity) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g1.x) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
 fn sphere_line_geometric_product(self_: Sphere, other: Line) -> MultiVector {
@@ -4672,7 +5081,7 @@ fn sphere_point_at_infinity_geometric_product(self_: Sphere, other: PointAtInfin
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g1.x) * other.g0, vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g1.x) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn sphere_radial_geometric_product(self_: Sphere, other: Radial) -> MultiVector {
+fn sphere_round_point_geometric_product(self_: Sphere, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g1.x) * vec2<f32>(0.0, other.g1.y) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, other.g1.x), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(-other.g1.x, -other.g1.x, -other.g1.x, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(-other.g0.x, -other.g0.y, -other.g0.z, other.g1.y) + vec4<f32>(self_.g1.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g1.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), self_.g0 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g1.y) * other.g0, vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -4696,8 +5105,12 @@ fn anti_scalar_dipole_wedge_dot(self_: AntiScalar, other: Dipole) -> Circle {
     return Circle(vec4<f32>(self_.g0) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, -other.g2.w), vec3<f32>(self_.g0) * other.g1, vec3<f32>(self_.g0) * vec3<f32>(other.g2.x, other.g2.y, other.g2.z));
 }
 
-fn anti_scalar_horizon_wedge_dot(self_: AntiScalar, other: Horizon) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0));
+fn anti_scalar_horizon_wedge_dot(self_: AntiScalar, other: Horizon) -> Infinity {
+    return Infinity(self_.g0 * other.g0);
+}
+
+fn anti_scalar_infinity_wedge_dot(self_: AntiScalar, other: Infinity) -> Horizon {
+    return Horizon(0.0 - self_.g0 * other.g0);
 }
 
 fn anti_scalar_line_wedge_dot(self_: AntiScalar, other: Line) -> Dipole {
@@ -4724,12 +5137,12 @@ fn anti_scalar_origin_wedge_dot(self_: AntiScalar, other: Origin) -> Circle {
     return Circle(vec4<f32>(self_.g0) * vec4<f32>(0.0, 0.0, 0.0, -other.g0), vec3<f32>(0.0), vec3<f32>(0.0));
 }
 
-fn anti_scalar_plane_wedge_dot(self_: AntiScalar, other: Plane) -> Radial {
-    return Radial(vec3<f32>(0.0) - vec3<f32>(self_.g0) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0.w));
+fn anti_scalar_plane_wedge_dot(self_: AntiScalar, other: Plane) -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0) - vec3<f32>(self_.g0) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0.w));
 }
 
-fn anti_scalar_plane_at_origin_wedge_dot(self_: AntiScalar, other: PlaneAtOrigin) -> Radial {
-    return Radial(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec2<f32>(0.0));
+fn anti_scalar_plane_at_origin_wedge_dot(self_: AntiScalar, other: PlaneAtOrigin) -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec2<f32>(0.0));
 }
 
 fn anti_scalar_point_wedge_dot(self_: AntiScalar, other: Point) -> Circle {
@@ -4740,7 +5153,7 @@ fn anti_scalar_point_at_infinity_wedge_dot(self_: AntiScalar, other: PointAtInfi
     return LineAtInfinity(vec3<f32>(self_.g0) * other.g0);
 }
 
-fn anti_scalar_radial_wedge_dot(self_: AntiScalar, other: Radial) -> Sphere {
+fn anti_scalar_round_point_wedge_dot(self_: AntiScalar, other: RoundPoint) -> Sphere {
     return Sphere(vec3<f32>(self_.g0) * other.g0, vec2<f32>(0.0) - vec2<f32>(self_.g0) * other.g1);
 }
 
@@ -4748,8 +5161,8 @@ fn anti_scalar_scalar_wedge_dot(self_: AntiScalar, other: Scalar) -> AntiScalar 
     return AntiScalar(self_.g0 * other.g0);
 }
 
-fn anti_scalar_sphere_wedge_dot(self_: AntiScalar, other: Sphere) -> Radial {
-    return Radial(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * other.g1);
+fn anti_scalar_sphere_wedge_dot(self_: AntiScalar, other: Sphere) -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * other.g1);
 }
 
 fn circle_anti_scalar_wedge_dot(self_: Circle, other: AntiScalar) -> Dipole {
@@ -4766,6 +5179,10 @@ fn circle_dipole_wedge_dot(self_: Circle, other: Dipole) -> MultiVector {
 
 fn circle_horizon_wedge_dot(self_: Circle, other: Horizon) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0), vec2<f32>(self_.g0.w) * vec2<f32>(0.0, -other.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0), self_.g1 * vec3<f32>(other.g0), vec3<f32>(0.0), vec2<f32>(0.0));
+}
+
+fn circle_infinity_wedge_dot(self_: Circle, other: Infinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, self_.g1.x) * vec4<f32>(-other.g0, -other.g0, -other.g0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0), vec2<f32>(self_.g0.w) * vec2<f32>(0.0, other.g0));
 }
 
 fn circle_line_wedge_dot(self_: Circle, other: Line) -> MultiVector {
@@ -4808,7 +5225,7 @@ fn circle_point_at_infinity_wedge_dot(self_: Circle, other: PointAtInfinity) -> 
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, -other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.y) + vec4<f32>(self_.g0.z) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.z), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0.w) * other.g0 + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn circle_radial_wedge_dot(self_: Circle, other: Radial) -> MultiVector {
+fn circle_round_point_wedge_dot(self_: Circle, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) - self_.g1 * vec3<f32>(other.g1.x), vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.y) - vec3<f32>(self_.g0.w) * other.g0 - self_.g2 * vec3<f32>(other.g1.x), vec4<f32>(self_.g1.x) * vec4<f32>(-other.g1.y, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g1.y) * vec4<f32>(0.0, -other.g1.y, 0.0, -other.g0.y) + vec4<f32>(self_.g1.z) * vec4<f32>(0.0, 0.0, -other.g1.y, -other.g0.z) + vec4<f32>(self_.g2.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g2.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g2.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.y) + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) - self_.g2 * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g0.w) * other.g1 * vec2<f32>(-1.0, 1.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, other.g0.z));
 }
 
@@ -4834,6 +5251,10 @@ fn dipole_dipole_wedge_dot(self_: Dipole, other: Dipole) -> MultiVector {
 
 fn dipole_horizon_wedge_dot(self_: Dipole, other: Horizon) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, self_.g1.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0), vec2<f32>(self_.g2.w) * vec2<f32>(0.0, other.g0));
+}
+
+fn dipole_infinity_wedge_dot(self_: Dipole, other: Infinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), self_.g0 * vec3<f32>(other.g0), vec2<f32>(self_.g2.w) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), self_.g0 * vec3<f32>(other.g0), self_.g1 * vec3<f32>(other.g0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
 fn dipole_line_wedge_dot(self_: Dipole, other: Line) -> MultiVector {
@@ -4876,7 +5297,7 @@ fn dipole_point_at_infinity_wedge_dot(self_: Dipole, other: PointAtInfinity) -> 
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(0.0, 0.0, 0.0, other.g0.y) + vec4<f32>(self_.g0.z) * vec4<f32>(0.0, 0.0, 0.0, other.g0.z) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, 0.0) + vec4<f32>(self_.g1.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4<f32>(self_.g1.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, 0.0) + vec4<f32>(self_.g2.w) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn dipole_radial_wedge_dot(self_: Dipole, other: Radial) -> MultiVector {
+fn dipole_round_point_wedge_dot(self_: Dipole, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), self_.g0 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) - vec3<f32>(self_.g2.x, self_.g2.y, self_.g2.z) * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, 0.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, -other.g0.z) + vec2<f32>(self_.g2.w) * other.g1 * vec2<f32>(-1.0, 1.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g1.y) * vec4<f32>(0.0, other.g1.x, 0.0, -other.g0.y) + vec4<f32>(self_.g1.z) * vec4<f32>(0.0, 0.0, other.g1.x, -other.g0.z), self_.g0 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g2.x, self_.g2.y, self_.g2.z) * vec3<f32>(other.g1.x) - vec3<f32>(self_.g2.w) * other.g0, self_.g1 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g2.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g2.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g2.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -4888,8 +5309,8 @@ fn dipole_sphere_wedge_dot(self_: Dipole, other: Sphere) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) + self_.g1 * vec3<f32>(other.g1.x), self_.g0 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g2.x, self_.g2.y, self_.g2.z) * vec3<f32>(other.g1.x) + vec3<f32>(self_.g2.w) * other.g0, vec4<f32>(self_.g1.x) * vec4<f32>(other.g1.y, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g1.y) * vec4<f32>(0.0, other.g1.y, 0.0, -other.g0.y) + vec4<f32>(self_.g1.z) * vec4<f32>(0.0, 0.0, other.g1.y, -other.g0.z) + vec4<f32>(self_.g2.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g2.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g2.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) + vec3<f32>(self_.g2.x, self_.g2.y, self_.g2.z) * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g2.w) * other.g1 * vec2<f32>(-1.0, 1.0));
 }
 
-fn horizon_anti_scalar_wedge_dot(self_: Horizon, other: AntiScalar) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0));
+fn horizon_anti_scalar_wedge_dot(self_: Horizon, other: AntiScalar) -> Infinity {
+    return Infinity(self_.g0 * other.g0);
 }
 
 fn horizon_circle_wedge_dot(self_: Horizon, other: Circle) -> MultiVector {
@@ -4932,7 +5353,7 @@ fn horizon_point_wedge_dot(self_: Horizon, other: Point) -> Horizon {
     return Horizon(0.0 - self_.g0 * other.g0.w);
 }
 
-fn horizon_radial_wedge_dot(self_: Horizon, other: Radial) -> MultiVector {
+fn horizon_round_point_wedge_dot(self_: Horizon, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g1.x), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0) * vec4<f32>(0.0, 0.0, 0.0, -other.g1.x), vec3<f32>(0.0), vec3<f32>(self_.g0) * other.g0, vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -4942,6 +5363,62 @@ fn horizon_scalar_wedge_dot(self_: Horizon, other: Scalar) -> Horizon {
 
 fn horizon_sphere_wedge_dot(self_: Horizon, other: Sphere) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(other.g1.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0) * vec4<f32>(-other.g0.x, -other.g0.y, -other.g0.z, other.g1.x), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
+}
+
+fn infinity_anti_scalar_wedge_dot(self_: Infinity, other: AntiScalar) -> Horizon {
+    return Horizon(0.0 - self_.g0 * other.g0);
+}
+
+fn infinity_circle_wedge_dot(self_: Infinity, other: Circle) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(self_.g0) * vec4<f32>(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g0.w));
+}
+
+fn infinity_dipole_wedge_dot(self_: Infinity, other: Dipole) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g2.w), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(self_.g0) * other.g0, vec3<f32>(self_.g0) * other.g1, vec3<f32>(0.0), vec2<f32>(0.0));
+}
+
+fn infinity_line_wedge_dot(self_: Infinity, other: Line) -> PointAtInfinity {
+    return PointAtInfinity(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0);
+}
+
+fn infinity_line_at_origin_wedge_dot(self_: Infinity, other: LineAtOrigin) -> PointAtInfinity {
+    return PointAtInfinity(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0);
+}
+
+fn infinity_magnitude_wedge_dot(self_: Infinity, other: Magnitude) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0.x), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g0.y));
+}
+
+fn infinity_multi_vector_wedge_dot(self_: Infinity, other: MultiVector) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(-other.g2.x, other.g10.x), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g3, vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g5.w) + vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0.x), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec4<f32>(0.0) - vec4<f32>(self_.g0) * vec4<f32>(other.g7.x, other.g7.y, other.g7.z, other.g2.x) + vec4<f32>(self_.g0) * vec4<f32>(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4<f32>(self_.g0) * vec4<f32>(0.0, 0.0, 0.0, -other.g10.x), vec3<f32>(self_.g0) * other.g3, vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g9 + vec3<f32>(self_.g0) * other.g4, vec3<f32>(0.0) - vec3<f32>(self_.g0) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g6.w) + vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g0.y));
+}
+
+fn infinity_origin_wedge_dot(self_: Infinity, other: Origin) -> Infinity {
+    return Infinity(0.0 - self_.g0 * other.g0);
+}
+
+fn infinity_plane_wedge_dot(self_: Infinity, other: Plane) -> LineAtInfinity {
+    return LineAtInfinity(vec3<f32>(0.0) - vec3<f32>(self_.g0) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z));
+}
+
+fn infinity_plane_at_origin_wedge_dot(self_: Infinity, other: PlaneAtOrigin) -> LineAtInfinity {
+    return LineAtInfinity(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0);
+}
+
+fn infinity_point_wedge_dot(self_: Infinity, other: Point) -> Infinity {
+    return Infinity(0.0 - self_.g0 * other.g0.w);
+}
+
+fn infinity_round_point_wedge_dot(self_: Infinity, other: RoundPoint) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(-other.g1.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0) - vec4<f32>(self_.g0) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
+}
+
+fn infinity_scalar_wedge_dot(self_: Infinity, other: Scalar) -> Infinity {
+    return Infinity(self_.g0 * other.g0);
+}
+
+fn infinity_sphere_wedge_dot(self_: Infinity, other: Sphere) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g1.x), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0) * vec4<f32>(0.0, 0.0, 0.0, -other.g1.x), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
 fn line_anti_scalar_wedge_dot(self_: Line, other: AntiScalar) -> Dipole {
@@ -4958,6 +5435,10 @@ fn line_dipole_wedge_dot(self_: Line, other: Dipole) -> MultiVector {
 
 fn line_horizon_wedge_dot(self_: Line, other: Horizon) -> LineAtInfinity {
     return LineAtInfinity(self_.g0 * vec3<f32>(other.g0));
+}
+
+fn line_infinity_wedge_dot(self_: Line, other: Infinity) -> PointAtInfinity {
+    return PointAtInfinity(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0));
 }
 
 fn line_line_wedge_dot(self_: Line, other: Line) -> MultiVector {
@@ -5000,7 +5481,7 @@ fn line_point_at_infinity_wedge_dot(self_: Line, other: PointAtInfinity) -> Mult
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn line_radial_wedge_dot(self_: Line, other: Radial) -> MultiVector {
+fn line_round_point_wedge_dot(self_: Line, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.x), vec3<f32>(0.0) - self_.g1 * vec3<f32>(other.g1.x), vec4<f32>(self_.g0.x) * vec4<f32>(-other.g1.y, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(0.0, -other.g1.y, 0.0, -other.g0.y) + vec4<f32>(self_.g0.z) * vec4<f32>(0.0, 0.0, -other.g1.y, -other.g0.z) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g1.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g1.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) - self_.g1 * vec3<f32>(other.g1.x), vec2<f32>(self_.g1.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, other.g0.z));
 }
 
@@ -5056,7 +5537,7 @@ fn line_at_infinity_point_wedge_dot(self_: LineAtInfinity, other: Point) -> Line
     return LineAtInfinity(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0.w));
 }
 
-fn line_at_infinity_radial_wedge_dot(self_: LineAtInfinity, other: Radial) -> MultiVector {
+fn line_at_infinity_round_point_wedge_dot(self_: LineAtInfinity, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.x), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z));
 }
 
@@ -5084,6 +5565,10 @@ fn line_at_origin_horizon_wedge_dot(self_: LineAtOrigin, other: Horizon) -> Line
     return LineAtInfinity(self_.g0 * vec3<f32>(other.g0));
 }
 
+fn line_at_origin_infinity_wedge_dot(self_: LineAtOrigin, other: Infinity) -> PointAtInfinity {
+    return PointAtInfinity(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0));
+}
+
 fn line_at_origin_line_wedge_dot(self_: LineAtOrigin, other: Line) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, -other.g1.z, other.g1.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(other.g1.z, 0.0, -other.g1.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(-other.g1.y, other.g1.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g1.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g1.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g1.z));
 }
@@ -5104,8 +5589,8 @@ fn line_at_origin_multi_vector_wedge_dot(self_: LineAtOrigin, other: MultiVector
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(other.g7.x, -other.g4.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g7.y, -other.g4.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g7.z, -other.g4.z), vec3<f32>(self_.g0.x) * vec3<f32>(-other.g5.w, -other.g9.z, other.g9.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g9.z, -other.g5.w, -other.g9.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g9.y, other.g9.x, -other.g5.w), vec2<f32>(0.0) - vec2<f32>(self_.g0.x) * vec2<f32>(other.g3.x, other.g5.x) - vec2<f32>(self_.g0.y) * vec2<f32>(other.g3.y, other.g5.y) - vec2<f32>(self_.g0.z) * vec2<f32>(other.g3.z, other.g5.z), vec3<f32>(self_.g0.x) * vec3<f32>(-other.g2.x, -other.g6.z, other.g6.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g6.z, -other.g2.x, -other.g6.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g6.y, other.g6.x, -other.g2.x), vec3<f32>(self_.g0.x) * vec3<f32>(-other.g0.y, -other.g7.z, other.g7.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g7.z, -other.g0.y, -other.g7.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g7.y, other.g7.x, -other.g0.y), vec4<f32>(self_.g0.x) * vec4<f32>(-other.g2.y, -other.g8.z, other.g8.y, -other.g1.x) + vec4<f32>(self_.g0.y) * vec4<f32>(other.g8.z, -other.g2.y, -other.g8.x, -other.g1.y) + vec4<f32>(self_.g0.z) * vec4<f32>(-other.g8.y, other.g8.x, -other.g2.y, -other.g1.z), vec4<f32>(self_.g0.x) * vec4<f32>(other.g10.x, other.g3.z, -other.g3.y, other.g9.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g3.z, other.g10.x, other.g3.x, other.g9.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g3.y, -other.g3.x, other.g10.x, other.g9.z), vec3<f32>(self_.g0.x) * vec3<f32>(other.g0.x, other.g4.z, -other.g4.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g4.z, other.g0.x, other.g4.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g4.y, -other.g4.x, other.g0.x), vec3<f32>(self_.g0.x) * vec3<f32>(other.g10.y, other.g5.z, -other.g5.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g5.z, other.g10.y, other.g5.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g5.y, -other.g5.x, other.g10.y), vec3<f32>(self_.g0.x) * vec3<f32>(other.g6.w, other.g1.z, -other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g1.z, other.g6.w, other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g1.y, -other.g1.x, other.g6.w), vec2<f32>(self_.g0.x) * vec2<f32>(other.g6.x, other.g8.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g6.y, other.g8.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g6.z, other.g8.z));
 }
 
-fn line_at_origin_origin_wedge_dot(self_: LineAtOrigin, other: Origin) -> Radial {
-    return Radial(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0), vec2<f32>(0.0));
+fn line_at_origin_origin_wedge_dot(self_: LineAtOrigin, other: Origin) -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0), vec2<f32>(0.0));
 }
 
 fn line_at_origin_plane_wedge_dot(self_: LineAtOrigin, other: Plane) -> MultiVector {
@@ -5124,7 +5609,7 @@ fn line_at_origin_point_at_infinity_wedge_dot(self_: LineAtOrigin, other: PointA
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn line_at_origin_radial_wedge_dot(self_: LineAtOrigin, other: Radial) -> MultiVector {
+fn line_at_origin_round_point_wedge_dot(self_: LineAtOrigin, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.x), vec3<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(-other.g1.y, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(0.0, -other.g1.y, 0.0, -other.g0.y) + vec4<f32>(self_.g0.z) * vec4<f32>(0.0, 0.0, -other.g1.y, -other.g0.z), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec2<f32>(0.0));
 }
 
@@ -5150,6 +5635,10 @@ fn magnitude_dipole_wedge_dot(self_: Magnitude, other: Dipole) -> MultiVector {
 
 fn magnitude_horizon_wedge_dot(self_: Magnitude, other: Horizon) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0));
+}
+
+fn magnitude_infinity_wedge_dot(self_: Magnitude, other: Infinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0));
 }
 
 fn magnitude_line_wedge_dot(self_: Magnitude, other: Line) -> MultiVector {
@@ -5192,7 +5681,7 @@ fn magnitude_point_at_infinity_wedge_dot(self_: Magnitude, other: PointAtInfinit
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.y) * other.g0, vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn magnitude_radial_wedge_dot(self_: Magnitude, other: Radial) -> MultiVector {
+fn magnitude_round_point_wedge_dot(self_: Magnitude, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(self_.g0.x) * other.g0, vec2<f32>(self_.g0.x) * other.g1, vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.y) * other.g0, vec2<f32>(0.0) - vec2<f32>(self_.g0.y) * other.g1);
 }
 
@@ -5218,6 +5707,10 @@ fn multi_vector_dipole_wedge_dot(self_: MultiVector, other: Dipole) -> MultiVect
 
 fn multi_vector_horizon_wedge_dot(self_: MultiVector, other: Horizon) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g0) + vec2<f32>(self_.g10.x) * vec2<f32>(other.g0, 0.0), vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g0), vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0) + vec2<f32>(self_.g6.w) * vec2<f32>(0.0, -other.g0), vec3<f32>(0.0), self_.g3 * vec3<f32>(other.g0), vec4<f32>(self_.g4.x, self_.g4.y, self_.g4.z, self_.g4.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0) + vec4<f32>(self_.g9.x, self_.g9.y, self_.g9.z, self_.g9.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0) + vec4<f32>(self_.g10.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0), vec4<f32>(self_.g2.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0), vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g0), vec3<f32>(0.0) - self_.g1 * vec3<f32>(other.g0) + self_.g7 * vec3<f32>(other.g0), vec3<f32>(0.0) - self_.g3 * vec3<f32>(other.g0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0) + vec2<f32>(self_.g5.w) * vec2<f32>(0.0, other.g0));
+}
+
+fn multi_vector_infinity_wedge_dot(self_: MultiVector, other: Infinity) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g2.x) * vec2<f32>(-other.g0, 0.0) + vec2<f32>(self_.g10.x) * vec2<f32>(0.0, other.g0), self_.g3 * vec3<f32>(other.g0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0) + vec2<f32>(self_.g5.w) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, self_.g1.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0) + vec4<f32>(self_.g2.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0) + vec4<f32>(self_.g7.x, self_.g7.y, self_.g7.z, self_.g7.x) * vec4<f32>(-other.g0, -other.g0, -other.g0, 0.0), vec4<f32>(self_.g10.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0), self_.g3 * vec3<f32>(other.g0), self_.g4 * vec3<f32>(other.g0) + self_.g9 * vec3<f32>(other.g0), vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g0), vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0) + vec2<f32>(self_.g6.w) * vec2<f32>(0.0, other.g0));
 }
 
 fn multi_vector_line_wedge_dot(self_: MultiVector, other: Line) -> MultiVector {
@@ -5260,7 +5753,7 @@ fn multi_vector_point_at_infinity_wedge_dot(self_: MultiVector, other: PointAtIn
     return MultiVector(vec2<f32>(self_.g3.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g3.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g3.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g6.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g6.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g6.z) * vec2<f32>(0.0, -other.g0.z), vec3<f32>(self_.g2.x) * other.g0 + vec3<f32>(self_.g6.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g6.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g6.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec2<f32>(self_.g1.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g7.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g7.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g7.z) * vec2<f32>(0.0, -other.g0.z), vec3<f32>(0.0), vec3<f32>(self_.g3.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g3.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g3.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) + vec3<f32>(self_.g10.x) * other.g0, vec4<f32>(self_.g0.x) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0) + vec4<f32>(self_.g3.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0.x) + vec4<f32>(self_.g3.y) * vec4<f32>(0.0, 0.0, 0.0, other.g0.y) + vec4<f32>(self_.g3.z) * vec4<f32>(0.0, 0.0, 0.0, other.g0.z) + vec4<f32>(self_.g4.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, 0.0) + vec4<f32>(self_.g4.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4<f32>(self_.g4.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, 0.0) + vec4<f32>(self_.g5.w) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0) + vec4<f32>(self_.g9.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, 0.0) + vec4<f32>(self_.g9.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4<f32>(self_.g9.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, 0.0), vec4<f32>(self_.g6.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g6.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.y) + vec4<f32>(self_.g6.z) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.z), vec3<f32>(self_.g2.x) * other.g0 + vec3<f32>(self_.g6.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g6.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g6.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(self_.g0.y) * other.g0 + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) - vec3<f32>(self_.g6.w) * other.g0 + vec3<f32>(self_.g7.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g7.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g7.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(self_.g3.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g3.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g3.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) - vec3<f32>(self_.g10.x) * other.g0, vec2<f32>(self_.g4.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g4.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g4.z) * vec2<f32>(0.0, -other.g0.z) + vec2<f32>(self_.g9.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g9.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g9.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn multi_vector_radial_wedge_dot(self_: MultiVector, other: Radial) -> MultiVector {
+fn multi_vector_round_point_wedge_dot(self_: MultiVector, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g1.x) * vec2<f32>(other.g0.x, 0.0) + vec2<f32>(self_.g1.y) * vec2<f32>(other.g0.y, 0.0) + vec2<f32>(self_.g1.z) * vec2<f32>(other.g0.z, 0.0) + vec2<f32>(self_.g2.x) * vec2<f32>(-other.g1.y, 0.0) + vec2<f32>(self_.g2.y) * vec2<f32>(-other.g1.x, 0.0) + vec2<f32>(self_.g9.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g9.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g9.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g10.x) * vec2<f32>(0.0, other.g1.y) + vec2<f32>(self_.g10.y) * vec2<f32>(0.0, other.g1.x), vec3<f32>(self_.g0.x) * other.g0 + self_.g3 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g4.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g4.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g4.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) - vec3<f32>(self_.g5.x, self_.g5.y, self_.g5.z) * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * other.g1 + vec2<f32>(self_.g3.x) * vec2<f32>(other.g0.x, 0.0) + vec2<f32>(self_.g3.y) * vec2<f32>(other.g0.y, 0.0) + vec2<f32>(self_.g3.z) * vec2<f32>(other.g0.z, 0.0) + vec2<f32>(self_.g5.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g5.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g5.z) * vec2<f32>(0.0, -other.g0.z) + vec2<f32>(self_.g5.w) * other.g1 * vec2<f32>(-1.0, 1.0), vec3<f32>(0.0) - self_.g1 * vec3<f32>(other.g1.x) + vec3<f32>(self_.g2.x) * other.g0 + vec3<f32>(self_.g6.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g6.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g6.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) - self_.g7 * vec3<f32>(other.g1.x), vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) - vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g1.y) - vec3<f32>(self_.g6.w) * other.g0 - self_.g8 * vec3<f32>(other.g1.x), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, self_.g1.x) * vec4<f32>(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4<f32>(self_.g2.x) * vec4<f32>(0.0, 0.0, 0.0, other.g1.y) - vec4<f32>(self_.g2.y) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, other.g1.x) + vec4<f32>(self_.g7.x) * vec4<f32>(-other.g1.y, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g7.y) * vec4<f32>(0.0, -other.g1.y, 0.0, -other.g0.y) + vec4<f32>(self_.g7.z) * vec4<f32>(0.0, 0.0, -other.g1.y, -other.g0.z) + vec4<f32>(self_.g8.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g8.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g8.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0), vec4<f32>(self_.g3.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g3.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g3.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4<f32>(self_.g4.x) * vec4<f32>(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g4.y) * vec4<f32>(0.0, other.g1.x, 0.0, -other.g0.y) + vec4<f32>(self_.g4.z) * vec4<f32>(0.0, 0.0, other.g1.x, -other.g0.z) + vec4<f32>(self_.g9.x, self_.g9.y, self_.g9.z, self_.g9.x) * vec4<f32>(-other.g1.x, -other.g1.x, -other.g1.x, 0.0) + vec4<f32>(self_.g10.x) * vec4<f32>(-other.g0.x, -other.g0.y, -other.g0.z, other.g1.y) + vec4<f32>(self_.g10.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g1.x), self_.g3 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g5.x, self_.g5.y, self_.g5.z) * vec3<f32>(other.g1.x) - vec3<f32>(self_.g5.w) * other.g0 + vec3<f32>(self_.g9.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g9.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g9.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), self_.g4 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g5.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g5.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g5.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) + self_.g9 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g10.y) * other.g0, vec3<f32>(self_.g0.y) * other.g0 + vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g1.y) + vec3<f32>(self_.g7.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g7.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g7.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) - self_.g8 * vec3<f32>(other.g1.x), vec2<f32>(0.0) - vec2<f32>(self_.g0.y) * other.g1 + vec2<f32>(self_.g6.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g6.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g6.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g6.w) * other.g1 * vec2<f32>(-1.0, 1.0) + vec2<f32>(self_.g8.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g8.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g8.z) * vec2<f32>(0.0, other.g0.z));
 }
 
@@ -5288,6 +5781,10 @@ fn origin_horizon_wedge_dot(self_: Origin, other: Horizon) -> Horizon {
     return Horizon(self_.g0 * other.g0);
 }
 
+fn origin_infinity_wedge_dot(self_: Origin, other: Infinity) -> Infinity {
+    return Infinity(self_.g0 * other.g0);
+}
+
 fn origin_line_wedge_dot(self_: Origin, other: Line) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0) * other.g1, vec3<f32>(0.0), vec2<f32>(0.0));
 }
@@ -5296,8 +5793,8 @@ fn origin_line_at_infinity_wedge_dot(self_: Origin, other: LineAtInfinity) -> Li
     return LineAtInfinity(vec3<f32>(self_.g0) * other.g0);
 }
 
-fn origin_line_at_origin_wedge_dot(self_: Origin, other: LineAtOrigin) -> Radial {
-    return Radial(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec2<f32>(0.0));
+fn origin_line_at_origin_wedge_dot(self_: Origin, other: LineAtOrigin) -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec2<f32>(0.0));
 }
 
 fn origin_magnitude_wedge_dot(self_: Origin, other: Magnitude) -> MultiVector {
@@ -5328,7 +5825,7 @@ fn origin_point_at_infinity_wedge_dot(self_: Origin, other: PointAtInfinity) -> 
     return PointAtInfinity(vec3<f32>(self_.g0) * other.g0);
 }
 
-fn origin_radial_wedge_dot(self_: Origin, other: Radial) -> MultiVector {
+fn origin_round_point_wedge_dot(self_: Origin, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0) * other.g1 * vec2<f32>(-1.0, 1.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -5340,8 +5837,8 @@ fn origin_sphere_wedge_dot(self_: Origin, other: Sphere) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0) * other.g0, vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0) * other.g1 * vec2<f32>(-1.0, 1.0));
 }
 
-fn plane_anti_scalar_wedge_dot(self_: Plane, other: AntiScalar) -> Radial {
-    return Radial(vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0), vec2<f32>(self_.g0.w) * vec2<f32>(0.0, other.g0));
+fn plane_anti_scalar_wedge_dot(self_: Plane, other: AntiScalar) -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0), vec2<f32>(self_.g0.w) * vec2<f32>(0.0, other.g0));
 }
 
 fn plane_circle_wedge_dot(self_: Plane, other: Circle) -> MultiVector {
@@ -5354,6 +5851,10 @@ fn plane_dipole_wedge_dot(self_: Plane, other: Dipole) -> MultiVector {
 
 fn plane_horizon_wedge_dot(self_: Plane, other: Horizon) -> PointAtInfinity {
     return PointAtInfinity(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0));
+}
+
+fn plane_infinity_wedge_dot(self_: Plane, other: Infinity) -> LineAtInfinity {
+    return LineAtInfinity(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0));
 }
 
 fn plane_line_wedge_dot(self_: Plane, other: Line) -> MultiVector {
@@ -5396,7 +5897,7 @@ fn plane_point_at_infinity_wedge_dot(self_: Plane, other: PointAtInfinity) -> Mu
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn plane_radial_wedge_dot(self_: Plane, other: Radial) -> MultiVector {
+fn plane_round_point_wedge_dot(self_: Plane, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g0.w) * vec2<f32>(0.0, other.g1.x), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0) - self_.g0 * vec4<f32>(other.g1.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.y) + vec3<f32>(self_.g0.w) * other.g0, vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -5408,8 +5909,8 @@ fn plane_sphere_wedge_dot(self_: Plane, other: Sphere) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g0.w) * vec2<f32>(other.g1.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), self_.g0.xyzx * vec4<f32>(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4<f32>(self_.g0.w) * vec4<f32>(-other.g0.x, -other.g0.y, -other.g0.z, other.g1.x), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn plane_at_origin_anti_scalar_wedge_dot(self_: PlaneAtOrigin, other: AntiScalar) -> Radial {
-    return Radial(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0), vec2<f32>(0.0));
+fn plane_at_origin_anti_scalar_wedge_dot(self_: PlaneAtOrigin, other: AntiScalar) -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0), vec2<f32>(0.0));
 }
 
 fn plane_at_origin_circle_wedge_dot(self_: PlaneAtOrigin, other: Circle) -> MultiVector {
@@ -5422,6 +5923,10 @@ fn plane_at_origin_dipole_wedge_dot(self_: PlaneAtOrigin, other: Dipole) -> Mult
 
 fn plane_at_origin_horizon_wedge_dot(self_: PlaneAtOrigin, other: Horizon) -> PointAtInfinity {
     return PointAtInfinity(self_.g0 * vec3<f32>(other.g0));
+}
+
+fn plane_at_origin_infinity_wedge_dot(self_: PlaneAtOrigin, other: Infinity) -> LineAtInfinity {
+    return LineAtInfinity(self_.g0 * vec3<f32>(other.g0));
 }
 
 fn plane_at_origin_line_wedge_dot(self_: PlaneAtOrigin, other: Line) -> MultiVector {
@@ -5464,7 +5969,7 @@ fn plane_at_origin_point_at_infinity_wedge_dot(self_: PlaneAtOrigin, other: Poin
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn plane_at_origin_radial_wedge_dot(self_: PlaneAtOrigin, other: Radial) -> MultiVector {
+fn plane_at_origin_round_point_wedge_dot(self_: PlaneAtOrigin, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(-other.g1.x, -other.g1.x, -other.g1.x, 0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), self_.g0 * vec3<f32>(other.g1.y), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -5490,6 +5995,10 @@ fn point_dipole_wedge_dot(self_: Point, other: Dipole) -> MultiVector {
 
 fn point_horizon_wedge_dot(self_: Point, other: Horizon) -> Horizon {
     return Horizon(self_.g0.w * other.g0);
+}
+
+fn point_infinity_wedge_dot(self_: Point, other: Infinity) -> Infinity {
+    return Infinity(self_.g0.w * other.g0);
 }
 
 fn point_line_wedge_dot(self_: Point, other: Line) -> MultiVector {
@@ -5532,7 +6041,7 @@ fn point_point_at_infinity_wedge_dot(self_: Point, other: PointAtInfinity) -> Po
     return PointAtInfinity(vec3<f32>(self_.g0.w) * other.g0);
 }
 
-fn point_radial_wedge_dot(self_: Point, other: Radial) -> MultiVector {
+fn point_round_point_wedge_dot(self_: Point, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z) + vec2<f32>(self_.g0.w) * other.g1 * vec2<f32>(-1.0, 1.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.x) - vec3<f32>(self_.g0.w) * other.g0, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -5588,7 +6097,7 @@ fn point_at_infinity_point_wedge_dot(self_: PointAtInfinity, other: Point) -> Po
     return PointAtInfinity(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0.w));
 }
 
-fn point_at_infinity_radial_wedge_dot(self_: PointAtInfinity, other: Radial) -> MultiVector {
+fn point_at_infinity_round_point_wedge_dot(self_: PointAtInfinity, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), self_.g0 * vec3<f32>(other.g1.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -5600,71 +6109,75 @@ fn point_at_infinity_sphere_wedge_dot(self_: PointAtInfinity, other: Sphere) -> 
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g1.x), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z));
 }
 
-fn radial_anti_scalar_wedge_dot(self_: Radial, other: AntiScalar) -> Sphere {
+fn round_point_anti_scalar_wedge_dot(self_: RoundPoint, other: AntiScalar) -> Sphere {
     return Sphere(self_.g0 * vec3<f32>(other.g0), vec2<f32>(0.0) - self_.g1 * vec2<f32>(other.g0));
 }
 
-fn radial_circle_wedge_dot(self_: Radial, other: Circle) -> MultiVector {
+fn round_point_circle_wedge_dot(self_: RoundPoint, other: Circle) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) - vec3<f32>(self_.g1.x) * other.g1, vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0.w) - vec3<f32>(self_.g1.x) * other.g2 - vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g2.z, -other.g2.y, -other.g1.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g2.z, 0.0, other.g2.x, -other.g1.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g2.y, -other.g2.x, 0.0, -other.g1.z) + vec4<f32>(self_.g1.y) * vec4<f32>(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g1.z, -other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g1.z, 0.0, other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g1.y, -other.g1.x, 0.0) + vec3<f32>(self_.g1.x) * other.g2 - vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, -other.g2.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, -other.g2.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, -other.g2.z) + self_.g1 * vec2<f32>(other.g0.w));
 }
 
-fn radial_dipole_wedge_dot(self_: Radial, other: Dipole) -> MultiVector {
+fn round_point_dipole_wedge_dot(self_: RoundPoint, other: Dipole) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g1.z, -other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g1.z, 0.0, other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g1.y, -other.g1.x, 0.0) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g2.x, other.g2.y, other.g2.z) - vec3<f32>(self_.g1.y) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, other.g2.x) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, other.g2.y) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, other.g2.z) + self_.g1 * vec2<f32>(other.g2.w), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, -other.g1.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, -other.g1.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, -other.g1.z) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g2.w) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g2.x, other.g2.y, other.g2.z) + vec3<f32>(self_.g1.y) * other.g0, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g2.z, other.g2.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g2.z, 0.0, -other.g2.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g2.y, other.g2.x, 0.0) + vec3<f32>(self_.g1.y) * other.g1, vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_horizon_wedge_dot(self_: Radial, other: Horizon) -> MultiVector {
+fn round_point_horizon_wedge_dot(self_: RoundPoint, other: Horizon) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g1.x) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_line_wedge_dot(self_: Radial, other: Line) -> MultiVector {
+fn round_point_infinity_wedge_dot(self_: RoundPoint, other: Infinity) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g1.x) * vec2<f32>(-other.g0, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
+}
+
+fn round_point_line_wedge_dot(self_: RoundPoint, other: Line) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g1.x) * other.g0, vec3<f32>(0.0) - vec3<f32>(self_.g1.x) * other.g1, vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g1.z, -other.g1.y, -other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g1.z, 0.0, other.g1.x, -other.g0.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g1.y, -other.g1.x, 0.0, -other.g0.z) + vec4<f32>(self_.g1.y) * vec4<f32>(-other.g0.x, -other.g0.y, -other.g0.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) + vec3<f32>(self_.g1.x) * other.g1, vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g1.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g1.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g1.z));
 }
 
-fn radial_line_at_infinity_wedge_dot(self_: Radial, other: LineAtInfinity) -> MultiVector {
+fn round_point_line_at_infinity_wedge_dot(self_: RoundPoint, other: LineAtInfinity) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g1.x) * other.g0, vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g1.x) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn radial_line_at_origin_wedge_dot(self_: Radial, other: LineAtOrigin) -> MultiVector {
+fn round_point_line_at_origin_wedge_dot(self_: RoundPoint, other: LineAtOrigin) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g1.x) * other.g0, vec3<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.y) + vec4<f32>(self_.g0.z) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.z) + vec4<f32>(self_.g1.y) * vec4<f32>(-other.g0.x, -other.g0.y, -other.g0.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec2<f32>(0.0));
 }
 
-fn radial_magnitude_wedge_dot(self_: Radial, other: Magnitude) -> MultiVector {
+fn round_point_magnitude_wedge_dot(self_: RoundPoint, other: Magnitude) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), self_.g0 * vec3<f32>(other.g0.x), self_.g1 * vec2<f32>(other.g0.x), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g0.y), vec2<f32>(0.0) - self_.g1 * vec2<f32>(other.g0.y));
 }
 
-fn radial_multi_vector_wedge_dot(self_: Radial, other: MultiVector) -> MultiVector {
+fn round_point_multi_vector_wedge_dot(self_: RoundPoint, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(other.g1.x, other.g9.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g1.y, other.g9.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g1.z, other.g9.z) + vec2<f32>(self_.g1.x) * vec2<f32>(-other.g2.y, other.g10.y) + vec2<f32>(self_.g1.y) * vec2<f32>(-other.g2.x, other.g10.x), vec3<f32>(self_.g0.x) * vec3<f32>(other.g0.x, other.g4.z, -other.g4.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g4.z, other.g0.x, other.g4.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g4.y, -other.g4.x, other.g0.x) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g5.x, other.g5.y, other.g5.z) - vec3<f32>(self_.g1.y) * other.g3, vec2<f32>(self_.g0.x) * vec2<f32>(-other.g3.x, other.g5.x) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g3.y, other.g5.y) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g3.z, other.g5.z) + self_.g1 * vec2<f32>(other.g5.w) + self_.g1 * vec2<f32>(other.g0.x), vec3<f32>(self_.g0.x) * vec3<f32>(-other.g2.x, -other.g6.z, other.g6.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g6.z, -other.g2.x, -other.g6.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g6.y, other.g6.x, -other.g2.x) - vec3<f32>(self_.g1.x) * other.g7 + vec3<f32>(self_.g1.x) * other.g1, vec3<f32>(self_.g0.x) * vec3<f32>(-other.g6.w, -other.g1.z, other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g1.z, -other.g6.w, -other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g1.y, other.g1.x, -other.g6.w) - vec3<f32>(self_.g1.x) * other.g8 - vec3<f32>(self_.g1.y) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec4<f32>(self_.g0.x) * vec4<f32>(other.g2.y, other.g8.z, -other.g8.y, -other.g7.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g8.z, other.g2.y, other.g8.x, -other.g7.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g8.y, -other.g8.x, other.g2.y, -other.g7.z) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g2.y) - vec4<f32>(self_.g1.y) * vec4<f32>(other.g7.x, other.g7.y, other.g7.z, other.g2.x) + vec4<f32>(self_.g1.y) * vec4<f32>(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4<f32>(self_.g0.x) * vec4<f32>(other.g10.x, other.g3.z, -other.g3.y, -other.g4.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g3.z, other.g10.x, other.g3.x, -other.g4.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g3.y, -other.g3.x, other.g10.x, -other.g4.z) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g9.x, other.g9.y, other.g9.z, other.g10.y) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g4.x, other.g4.y, other.g4.z, 0.0) + vec4<f32>(self_.g1.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g10.x), vec3<f32>(self_.g0.x) * vec3<f32>(-other.g5.w, -other.g9.z, other.g9.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g9.z, -other.g5.w, -other.g9.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g9.y, other.g9.x, -other.g5.w) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g5.x, other.g5.y, other.g5.z) + vec3<f32>(self_.g1.y) * other.g3, vec3<f32>(self_.g0.x) * vec3<f32>(-other.g10.y, -other.g5.z, other.g5.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g5.z, -other.g10.y, -other.g5.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g5.y, other.g5.x, -other.g10.y) - vec3<f32>(self_.g1.y) * other.g9 + vec3<f32>(self_.g1.y) * other.g4, vec3<f32>(self_.g0.x) * vec3<f32>(other.g0.y, other.g7.z, -other.g7.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g7.z, other.g0.y, other.g7.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g7.y, -other.g7.x, other.g0.y) + vec3<f32>(self_.g1.x) * other.g8 - vec3<f32>(self_.g1.y) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec2<f32>(self_.g0.x) * vec2<f32>(other.g6.x, -other.g8.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g6.y, -other.g8.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g6.z, -other.g8.z) + self_.g1 * vec2<f32>(other.g6.w) - self_.g1 * vec2<f32>(other.g0.y));
 }
 
-fn radial_origin_wedge_dot(self_: Radial, other: Origin) -> MultiVector {
+fn round_point_origin_wedge_dot(self_: RoundPoint, other: Origin) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), self_.g1 * vec2<f32>(other.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_plane_wedge_dot(self_: Radial, other: Plane) -> MultiVector {
+fn round_point_plane_wedge_dot(self_: RoundPoint, other: Plane) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g1.x) * vec2<f32>(0.0, other.g0.w), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g1.x) * other.g0, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0.w) - vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_plane_at_origin_wedge_dot(self_: Radial, other: PlaneAtOrigin) -> MultiVector {
+fn round_point_plane_at_origin_wedge_dot(self_: RoundPoint, other: PlaneAtOrigin) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g1.x) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec3<f32>(0.0) - vec3<f32>(self_.g1.y) * other.g0, vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_point_wedge_dot(self_: Radial, other: Point) -> MultiVector {
+fn round_point_point_wedge_dot(self_: RoundPoint, other: Point) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(self_.g1.x) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z) + self_.g1 * vec2<f32>(other.g0.w), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0.w) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_point_at_infinity_wedge_dot(self_: Radial, other: PointAtInfinity) -> MultiVector {
+fn round_point_point_at_infinity_wedge_dot(self_: RoundPoint, other: PointAtInfinity) -> MultiVector {
     return MultiVector(vec2<f32>(0.0), vec3<f32>(self_.g1.x) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(self_.g1.x) * other.g0, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_radial_wedge_dot(self_: Radial, other: Radial) -> MultiVector {
+fn round_point_round_point_wedge_dot(self_: RoundPoint, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, 0.0) + vec2<f32>(self_.g1.x) * vec2<f32>(-other.g1.y, 0.0) + vec2<f32>(self_.g1.y) * vec2<f32>(-other.g1.x, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.x) + vec3<f32>(self_.g1.x) * other.g0, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g1.y) - vec4<f32>(self_.g1.y) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_scalar_wedge_dot(self_: Radial, other: Scalar) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(other.g0), self_.g1 * vec2<f32>(other.g0));
+fn round_point_scalar_wedge_dot(self_: RoundPoint, other: Scalar) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(other.g0), self_.g1 * vec2<f32>(other.g0));
 }
 
-fn radial_sphere_wedge_dot(self_: Radial, other: Sphere) -> MultiVector {
+fn round_point_sphere_wedge_dot(self_: RoundPoint, other: Sphere) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g1.x) * vec2<f32>(0.0, other.g1.y) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, other.g1.x), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(other.g1.x, other.g1.x, other.g1.x, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, other.g1.y) + vec4<f32>(self_.g1.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g1.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.y) - vec3<f32>(self_.g1.y) * other.g0, vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -5682,6 +6195,10 @@ fn scalar_dipole_wedge_dot(self_: Scalar, other: Dipole) -> Dipole {
 
 fn scalar_horizon_wedge_dot(self_: Scalar, other: Horizon) -> Horizon {
     return Horizon(self_.g0 * other.g0);
+}
+
+fn scalar_infinity_wedge_dot(self_: Scalar, other: Infinity) -> Infinity {
+    return Infinity(self_.g0 * other.g0);
 }
 
 fn scalar_line_wedge_dot(self_: Scalar, other: Line) -> Line {
@@ -5724,8 +6241,8 @@ fn scalar_point_at_infinity_wedge_dot(self_: Scalar, other: PointAtInfinity) -> 
     return PointAtInfinity(vec3<f32>(self_.g0) * other.g0);
 }
 
-fn scalar_radial_wedge_dot(self_: Scalar, other: Radial) -> Radial {
-    return Radial(vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * other.g1);
+fn scalar_round_point_wedge_dot(self_: Scalar, other: RoundPoint) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * other.g1);
 }
 
 fn scalar_scalar_wedge_dot(self_: Scalar, other: Scalar) -> Scalar {
@@ -5736,8 +6253,8 @@ fn scalar_sphere_wedge_dot(self_: Scalar, other: Sphere) -> Sphere {
     return Sphere(vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * other.g1);
 }
 
-fn sphere_anti_scalar_wedge_dot(self_: Sphere, other: AntiScalar) -> Radial {
-    return Radial(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0), self_.g1 * vec2<f32>(other.g0));
+fn sphere_anti_scalar_wedge_dot(self_: Sphere, other: AntiScalar) -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0), self_.g1 * vec2<f32>(other.g0));
 }
 
 fn sphere_circle_wedge_dot(self_: Sphere, other: Circle) -> MultiVector {
@@ -5750,6 +6267,10 @@ fn sphere_dipole_wedge_dot(self_: Sphere, other: Dipole) -> MultiVector {
 
 fn sphere_horizon_wedge_dot(self_: Sphere, other: Horizon) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g1.x) * vec2<f32>(other.g0, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
+}
+
+fn sphere_infinity_wedge_dot(self_: Sphere, other: Infinity) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g1.x) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
 fn sphere_line_wedge_dot(self_: Sphere, other: Line) -> MultiVector {
@@ -5792,7 +6313,7 @@ fn sphere_point_at_infinity_wedge_dot(self_: Sphere, other: PointAtInfinity) -> 
     return MultiVector(vec2<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g1.x) * other.g0, vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g1.x) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn sphere_radial_wedge_dot(self_: Sphere, other: Radial) -> MultiVector {
+fn sphere_round_point_wedge_dot(self_: Sphere, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g1.x) * vec2<f32>(0.0, other.g1.y) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, other.g1.x), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(-other.g1.x, -other.g1.x, -other.g1.x, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(-other.g0.x, -other.g0.y, -other.g0.z, other.g1.y) + vec4<f32>(self_.g1.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g1.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), self_.g0 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g1.y) * other.g0, vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -5818,6 +6339,10 @@ fn anti_scalar_dipole_anti_wedge(self_: AntiScalar, other: Dipole) -> Dipole {
 
 fn anti_scalar_horizon_anti_wedge(self_: AntiScalar, other: Horizon) -> Horizon {
     return Horizon(self_.g0 * other.g0);
+}
+
+fn anti_scalar_infinity_anti_wedge(self_: AntiScalar, other: Infinity) -> Infinity {
+    return Infinity(self_.g0 * other.g0);
 }
 
 fn anti_scalar_line_anti_wedge(self_: AntiScalar, other: Line) -> Line {
@@ -5860,8 +6385,8 @@ fn anti_scalar_point_at_infinity_anti_wedge(self_: AntiScalar, other: PointAtInf
     return PointAtInfinity(vec3<f32>(self_.g0) * other.g0);
 }
 
-fn anti_scalar_radial_anti_wedge(self_: AntiScalar, other: Radial) -> Radial {
-    return Radial(vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * other.g1);
+fn anti_scalar_round_point_anti_wedge(self_: AntiScalar, other: RoundPoint) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * other.g1);
 }
 
 fn anti_scalar_scalar_anti_wedge(self_: AntiScalar, other: Scalar) -> Scalar {
@@ -5876,8 +6401,8 @@ fn circle_anti_scalar_anti_wedge(self_: Circle, other: AntiScalar) -> Circle {
     return Circle(self_.g0 * vec4<f32>(other.g0), self_.g1 * vec3<f32>(other.g0), self_.g2 * vec3<f32>(other.g0));
 }
 
-fn circle_circle_anti_wedge(self_: Circle, other: Circle) -> Radial {
-    return Radial(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g2.z, -other.g2.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g2.z, 0.0, other.g2.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g2.y, -other.g2.x, 0.0) + vec3<f32>(self_.g0.w) * other.g1 + self_.g1 * vec3<f32>(other.g0.w) + vec3<f32>(self_.g2.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g2.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g2.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(self_.g0.x) * vec2<f32>(-other.g1.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g1.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g1.z, 0.0) - vec2<f32>(self_.g1.x) * vec2<f32>(other.g0.x, other.g2.x) - vec2<f32>(self_.g1.y) * vec2<f32>(other.g0.y, other.g2.y) - vec2<f32>(self_.g1.z) * vec2<f32>(other.g0.z, other.g2.z) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, -other.g1.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, -other.g1.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, -other.g1.z));
+fn circle_circle_anti_wedge(self_: Circle, other: Circle) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g2.z, -other.g2.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g2.z, 0.0, other.g2.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g2.y, -other.g2.x, 0.0) + vec3<f32>(self_.g0.w) * other.g1 + self_.g1 * vec3<f32>(other.g0.w) + vec3<f32>(self_.g2.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g2.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g2.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(self_.g0.x) * vec2<f32>(-other.g1.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g1.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g1.z, 0.0) - vec2<f32>(self_.g1.x) * vec2<f32>(other.g0.x, other.g2.x) - vec2<f32>(self_.g1.y) * vec2<f32>(other.g0.y, other.g2.y) - vec2<f32>(self_.g1.z) * vec2<f32>(other.g0.z, other.g2.z) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, -other.g1.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, -other.g1.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, -other.g1.z));
 }
 
 fn circle_dipole_anti_wedge(self_: Circle, other: Dipole) -> Scalar {
@@ -5888,16 +6413,16 @@ fn circle_horizon_anti_wedge(self_: Circle, other: Horizon) -> Dipole {
     return Dipole(vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, self_.g1.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0));
 }
 
-fn circle_line_anti_wedge(self_: Circle, other: Line) -> Radial {
-    return Radial(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g1.z, -other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g1.z, 0.0, other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g1.y, -other.g1.x, 0.0) + vec3<f32>(self_.g0.w) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g1.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, -other.g1.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, -other.g1.z) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, -other.g0.z));
+fn circle_line_anti_wedge(self_: Circle, other: Line) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g1.z, -other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g1.z, 0.0, other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g1.y, -other.g1.x, 0.0) + vec3<f32>(self_.g0.w) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g1.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, -other.g1.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, -other.g1.z) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn circle_line_at_infinity_anti_wedge(self_: Circle, other: LineAtInfinity) -> Radial {
-    return Radial(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, -other.g0.z));
+fn circle_line_at_infinity_anti_wedge(self_: Circle, other: LineAtInfinity) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn circle_line_at_origin_anti_wedge(self_: Circle, other: LineAtOrigin) -> Radial {
-    return Radial(vec3<f32>(self_.g0.w) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, -other.g0.z));
+fn circle_line_at_origin_anti_wedge(self_: Circle, other: LineAtOrigin) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0.w) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
 fn circle_magnitude_anti_wedge(self_: Circle, other: Magnitude) -> Circle {
@@ -5940,8 +6465,8 @@ fn dipole_circle_anti_wedge(self_: Dipole, other: Circle) -> Scalar {
     return Scalar(0.0 - self_.g0.x * other.g2.x - self_.g0.y * other.g2.y - self_.g0.z * other.g2.z - self_.g1.x * other.g1.x - self_.g1.y * other.g1.y - self_.g1.z * other.g1.z - self_.g2.x * other.g0.x - self_.g2.y * other.g0.y - self_.g2.z * other.g0.z - self_.g2.w * other.g0.w);
 }
 
-fn dipole_horizon_anti_wedge(self_: Dipole, other: Horizon) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(other.g0), vec2<f32>(self_.g2.w) * vec2<f32>(0.0, other.g0));
+fn dipole_horizon_anti_wedge(self_: Dipole, other: Horizon) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(other.g0), vec2<f32>(self_.g2.w) * vec2<f32>(0.0, other.g0));
 }
 
 fn dipole_line_anti_wedge(self_: Dipole, other: Line) -> Scalar {
@@ -5964,16 +6489,16 @@ fn dipole_multi_vector_anti_wedge(self_: Dipole, other: MultiVector) -> MultiVec
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(-other.g8.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g8.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g8.z, 0.0) + vec2<f32>(self_.g1.x) * vec2<f32>(-other.g7.x, 0.0) + vec2<f32>(self_.g1.y) * vec2<f32>(-other.g7.y, 0.0) + vec2<f32>(self_.g1.z) * vec2<f32>(-other.g7.z, 0.0) + vec2<f32>(self_.g2.x) * vec2<f32>(-other.g6.x, 0.0) + vec2<f32>(self_.g2.y) * vec2<f32>(-other.g6.y, 0.0) + vec2<f32>(self_.g2.z) * vec2<f32>(-other.g6.z, 0.0) + vec2<f32>(self_.g2.w) * vec2<f32>(-other.g6.w, 0.0), self_.g0 * vec3<f32>(other.g10.y) + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g9.z, other.g9.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g9.z, 0.0, -other.g9.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g9.y, other.g9.x, 0.0) - vec3<f32>(self_.g2.x, self_.g2.y, self_.g2.z) * vec3<f32>(other.g10.x), vec2<f32>(self_.g0.x) * vec2<f32>(-other.g9.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g9.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g9.z, 0.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g9.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, other.g9.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, other.g9.z) + vec2<f32>(self_.g2.w) * other.g10 * vec2<f32>(-1.0, 1.0), self_.g0 * vec3<f32>(other.g0.y), self_.g1 * vec3<f32>(other.g0.y), self_.g2 * vec4<f32>(other.g0.y), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn dipole_plane_anti_wedge(self_: Dipole, other: Plane) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(other.g0.w) + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g2.w) * vec2<f32>(0.0, other.g0.w));
+fn dipole_plane_anti_wedge(self_: Dipole, other: Plane) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(other.g0.w) + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g2.w) * vec2<f32>(0.0, other.g0.w));
 }
 
-fn dipole_plane_at_origin_anti_wedge(self_: Dipole, other: PlaneAtOrigin) -> Radial {
-    return Radial(vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, other.g0.z));
+fn dipole_plane_at_origin_anti_wedge(self_: Dipole, other: PlaneAtOrigin) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, other.g0.z));
 }
 
-fn dipole_sphere_anti_wedge(self_: Dipole, other: Sphere) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) - vec3<f32>(self_.g2.x, self_.g2.y, self_.g2.z) * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g2.w) * other.g1 * vec2<f32>(-1.0, 1.0));
+fn dipole_sphere_anti_wedge(self_: Dipole, other: Sphere) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) - vec3<f32>(self_.g2.x, self_.g2.y, self_.g2.z) * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g2.w) * other.g1 * vec2<f32>(-1.0, 1.0));
 }
 
 fn horizon_anti_scalar_anti_wedge(self_: Horizon, other: AntiScalar) -> Horizon {
@@ -5984,8 +6509,8 @@ fn horizon_circle_anti_wedge(self_: Horizon, other: Circle) -> Dipole {
     return Dipole(vec3<f32>(0.0), vec3<f32>(self_.g0) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(self_.g0) * vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0));
 }
 
-fn horizon_dipole_anti_wedge(self_: Horizon, other: Dipole) -> Radial {
-    return Radial(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g2.w));
+fn horizon_dipole_anti_wedge(self_: Horizon, other: Dipole) -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g2.w));
 }
 
 fn horizon_line_anti_wedge(self_: Horizon, other: Line) -> PointAtInfinity {
@@ -6004,8 +6529,8 @@ fn horizon_multi_vector_anti_wedge(self_: Horizon, other: MultiVector) -> MultiV
     return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(other.g2.x, 0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g3, vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g5.w), vec3<f32>(0.0), vec3<f32>(self_.g0) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec4<f32>(self_.g0) * vec4<f32>(other.g7.x, other.g7.y, other.g7.z, 0.0), vec4<f32>(self_.g0) * vec4<f32>(0.0, 0.0, 0.0, -other.g10.x), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g9, vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0.y));
 }
 
-fn horizon_origin_anti_wedge(self_: Horizon, other: Origin) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g0));
+fn horizon_origin_anti_wedge(self_: Horizon, other: Origin) -> Infinity {
+    return Infinity(0.0 - self_.g0 * other.g0);
 }
 
 fn horizon_plane_anti_wedge(self_: Horizon, other: Plane) -> LineAtInfinity {
@@ -6016,11 +6541,11 @@ fn horizon_plane_at_origin_anti_wedge(self_: Horizon, other: PlaneAtOrigin) -> L
     return LineAtInfinity(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0);
 }
 
-fn horizon_point_anti_wedge(self_: Horizon, other: Point) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g0.w));
+fn horizon_point_anti_wedge(self_: Horizon, other: Point) -> Infinity {
+    return Infinity(0.0 - self_.g0 * other.g0.w);
 }
 
-fn horizon_radial_anti_wedge(self_: Horizon, other: Radial) -> Scalar {
+fn horizon_round_point_anti_wedge(self_: Horizon, other: RoundPoint) -> Scalar {
     return Scalar(self_.g0 * other.g1.x);
 }
 
@@ -6028,12 +6553,28 @@ fn horizon_sphere_anti_wedge(self_: Horizon, other: Sphere) -> Circle {
     return Circle(vec4<f32>(self_.g0) * vec4<f32>(0.0, 0.0, 0.0, -other.g1.x), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0);
 }
 
+fn infinity_anti_scalar_anti_wedge(self_: Infinity, other: AntiScalar) -> Infinity {
+    return Infinity(self_.g0 * other.g0);
+}
+
+fn infinity_magnitude_anti_wedge(self_: Infinity, other: Magnitude) -> Infinity {
+    return Infinity(self_.g0 * other.g0.y);
+}
+
+fn infinity_multi_vector_anti_wedge(self_: Infinity, other: MultiVector) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(other.g10.x, 0.0), vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0.y), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
+}
+
+fn infinity_sphere_anti_wedge(self_: Infinity, other: Sphere) -> Scalar {
+    return Scalar(self_.g0 * other.g1.x);
+}
+
 fn line_anti_scalar_anti_wedge(self_: Line, other: AntiScalar) -> Line {
     return Line(self_.g0 * vec3<f32>(other.g0), self_.g1 * vec3<f32>(other.g0));
 }
 
-fn line_circle_anti_wedge(self_: Line, other: Circle) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(other.g0.w) + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(0.0) - vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, other.g2.x) - vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, other.g2.y) - vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, other.g2.z) + vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g1.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, -other.g1.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, -other.g1.z));
+fn line_circle_anti_wedge(self_: Line, other: Circle) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(other.g0.w) + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(0.0) - vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, other.g2.x) - vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, other.g2.y) - vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, other.g2.z) + vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g1.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, -other.g1.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, -other.g1.z));
 }
 
 fn line_dipole_anti_wedge(self_: Line, other: Dipole) -> Scalar {
@@ -6044,16 +6585,16 @@ fn line_horizon_anti_wedge(self_: Line, other: Horizon) -> PointAtInfinity {
     return PointAtInfinity(self_.g0 * vec3<f32>(other.g0));
 }
 
-fn line_line_anti_wedge(self_: Line, other: Line) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g1.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g1.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g1.z) + vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, -other.g0.z));
+fn line_line_anti_wedge(self_: Line, other: Line) -> Infinity {
+    return Infinity(0.0 - self_.g0.x * other.g1.x - self_.g0.y * other.g1.y - self_.g0.z * other.g1.z - self_.g1.x * other.g0.x - self_.g1.y * other.g0.y - self_.g1.z * other.g0.z);
 }
 
-fn line_line_at_infinity_anti_wedge(self_: Line, other: LineAtInfinity) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
+fn line_line_at_infinity_anti_wedge(self_: Line, other: LineAtInfinity) -> Infinity {
+    return Infinity(0.0 - self_.g0.x * other.g0.x - self_.g0.y * other.g0.y - self_.g0.z * other.g0.z);
 }
 
-fn line_line_at_origin_anti_wedge(self_: Line, other: LineAtOrigin) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, -other.g0.z));
+fn line_line_at_origin_anti_wedge(self_: Line, other: LineAtOrigin) -> Infinity {
+    return Infinity(0.0 - self_.g1.x * other.g0.x - self_.g1.y * other.g0.y - self_.g1.z * other.g0.z);
 }
 
 fn line_magnitude_anti_wedge(self_: Line, other: Magnitude) -> Line {
@@ -6080,20 +6621,20 @@ fn line_at_infinity_anti_scalar_anti_wedge(self_: LineAtInfinity, other: AntiSca
     return LineAtInfinity(self_.g0 * vec3<f32>(other.g0));
 }
 
-fn line_at_infinity_circle_anti_wedge(self_: LineAtInfinity, other: Circle) -> Radial {
-    return Radial(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g1.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g1.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g1.z));
+fn line_at_infinity_circle_anti_wedge(self_: LineAtInfinity, other: Circle) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g1.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g1.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g1.z));
 }
 
 fn line_at_infinity_dipole_anti_wedge(self_: LineAtInfinity, other: Dipole) -> Scalar {
     return Scalar(0.0 - self_.g0.x * other.g0.x - self_.g0.y * other.g0.y - self_.g0.z * other.g0.z);
 }
 
-fn line_at_infinity_line_anti_wedge(self_: LineAtInfinity, other: Line) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
+fn line_at_infinity_line_anti_wedge(self_: LineAtInfinity, other: Line) -> Infinity {
+    return Infinity(0.0 - self_.g0.x * other.g0.x - self_.g0.y * other.g0.y - self_.g0.z * other.g0.z);
 }
 
-fn line_at_infinity_line_at_origin_anti_wedge(self_: LineAtInfinity, other: LineAtOrigin) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
+fn line_at_infinity_line_at_origin_anti_wedge(self_: LineAtInfinity, other: LineAtOrigin) -> Infinity {
+    return Infinity(0.0 - self_.g0.x * other.g0.x - self_.g0.y * other.g0.y - self_.g0.z * other.g0.z);
 }
 
 fn line_at_infinity_magnitude_anti_wedge(self_: LineAtInfinity, other: Magnitude) -> LineAtInfinity {
@@ -6120,8 +6661,8 @@ fn line_at_origin_anti_scalar_anti_wedge(self_: LineAtOrigin, other: AntiScalar)
     return LineAtOrigin(self_.g0 * vec3<f32>(other.g0));
 }
 
-fn line_at_origin_circle_anti_wedge(self_: LineAtOrigin, other: Circle) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(other.g0.w), vec2<f32>(0.0) - vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, other.g2.x) - vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, other.g2.y) - vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, other.g2.z));
+fn line_at_origin_circle_anti_wedge(self_: LineAtOrigin, other: Circle) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(other.g0.w), vec2<f32>(0.0) - vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, other.g2.x) - vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, other.g2.y) - vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, other.g2.z));
 }
 
 fn line_at_origin_dipole_anti_wedge(self_: LineAtOrigin, other: Dipole) -> Scalar {
@@ -6132,12 +6673,12 @@ fn line_at_origin_horizon_anti_wedge(self_: LineAtOrigin, other: Horizon) -> Poi
     return PointAtInfinity(self_.g0 * vec3<f32>(other.g0));
 }
 
-fn line_at_origin_line_anti_wedge(self_: LineAtOrigin, other: Line) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g1.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g1.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g1.z));
+fn line_at_origin_line_anti_wedge(self_: LineAtOrigin, other: Line) -> Infinity {
+    return Infinity(0.0 - self_.g0.x * other.g1.x - self_.g0.y * other.g1.y - self_.g0.z * other.g1.z);
 }
 
-fn line_at_origin_line_at_infinity_anti_wedge(self_: LineAtOrigin, other: LineAtInfinity) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
+fn line_at_origin_line_at_infinity_anti_wedge(self_: LineAtOrigin, other: LineAtInfinity) -> Infinity {
+    return Infinity(0.0 - self_.g0.x * other.g0.x - self_.g0.y * other.g0.y - self_.g0.z * other.g0.z);
 }
 
 fn line_at_origin_magnitude_anti_wedge(self_: LineAtOrigin, other: Magnitude) -> LineAtOrigin {
@@ -6174,6 +6715,10 @@ fn magnitude_dipole_anti_wedge(self_: Magnitude, other: Dipole) -> Dipole {
 
 fn magnitude_horizon_anti_wedge(self_: Magnitude, other: Horizon) -> Horizon {
     return Horizon(self_.g0.y * other.g0);
+}
+
+fn magnitude_infinity_anti_wedge(self_: Magnitude, other: Infinity) -> Infinity {
+    return Infinity(self_.g0.y * other.g0);
 }
 
 fn magnitude_line_anti_wedge(self_: Magnitude, other: Line) -> Line {
@@ -6216,8 +6761,8 @@ fn magnitude_point_at_infinity_anti_wedge(self_: Magnitude, other: PointAtInfini
     return PointAtInfinity(vec3<f32>(self_.g0.y) * other.g0);
 }
 
-fn magnitude_radial_anti_wedge(self_: Magnitude, other: Radial) -> Radial {
-    return Radial(vec3<f32>(self_.g0.y) * other.g0, vec2<f32>(self_.g0.y) * other.g1);
+fn magnitude_round_point_anti_wedge(self_: Magnitude, other: RoundPoint) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0.y) * other.g0, vec2<f32>(self_.g0.y) * other.g1);
 }
 
 fn magnitude_scalar_anti_wedge(self_: Magnitude, other: Scalar) -> Scalar {
@@ -6242,6 +6787,10 @@ fn multi_vector_dipole_anti_wedge(self_: MultiVector, other: Dipole) -> MultiVec
 
 fn multi_vector_horizon_anti_wedge(self_: MultiVector, other: Horizon) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g2.x) * vec2<f32>(other.g0, 0.0), self_.g3 * vec3<f32>(other.g0), vec2<f32>(self_.g5.w) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g0), vec4<f32>(self_.g7.x, self_.g7.y, self_.g7.z, self_.g7.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0), vec4<f32>(self_.g10.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0), vec3<f32>(0.0), self_.g9 * vec3<f32>(other.g0), vec3<f32>(0.0), vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0));
+}
+
+fn multi_vector_infinity_anti_wedge(self_: MultiVector, other: Infinity) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g10.x) * vec2<f32>(other.g0, 0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
 fn multi_vector_line_anti_wedge(self_: MultiVector, other: Line) -> MultiVector {
@@ -6284,7 +6833,7 @@ fn multi_vector_point_at_infinity_anti_wedge(self_: MultiVector, other: PointAtI
     return MultiVector(vec2<f32>(self_.g6.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g6.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g6.z) * vec2<f32>(-other.g0.z, 0.0), vec3<f32>(self_.g10.x) * other.g0, vec2<f32>(self_.g9.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g9.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g9.z) * vec2<f32>(0.0, -other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.y) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn multi_vector_radial_anti_wedge(self_: MultiVector, other: Radial) -> MultiVector {
+fn multi_vector_round_point_anti_wedge(self_: MultiVector, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g9.x) * vec2<f32>(other.g0.x, 0.0) + vec2<f32>(self_.g9.y) * vec2<f32>(other.g0.y, 0.0) + vec2<f32>(self_.g9.z) * vec2<f32>(other.g0.z, 0.0) + vec2<f32>(self_.g10.x) * vec2<f32>(other.g1.y, 0.0) + vec2<f32>(self_.g10.y) * vec2<f32>(other.g1.x, 0.0), vec3<f32>(self_.g0.y) * other.g0, vec2<f32>(self_.g0.y) * other.g1, vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -6304,8 +6853,8 @@ fn origin_circle_anti_wedge(self_: Origin, other: Circle) -> Scalar {
     return Scalar(0.0 - self_.g0 * other.g0.w);
 }
 
-fn origin_horizon_anti_wedge(self_: Origin, other: Horizon) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0));
+fn origin_horizon_anti_wedge(self_: Origin, other: Horizon) -> Infinity {
+    return Infinity(self_.g0 * other.g0);
 }
 
 fn origin_magnitude_anti_wedge(self_: Origin, other: Magnitude) -> Origin {
@@ -6316,12 +6865,12 @@ fn origin_multi_vector_anti_wedge(self_: Origin, other: MultiVector) -> MultiVec
     return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(-other.g6.w, 0.0), vec3<f32>(0.0), vec2<f32>(self_.g0) * other.g10 * vec2<f32>(-1.0, 1.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0) * vec4<f32>(0.0, 0.0, 0.0, other.g0.y), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn origin_plane_anti_wedge(self_: Origin, other: Plane) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0.w));
+fn origin_plane_anti_wedge(self_: Origin, other: Plane) -> Infinity {
+    return Infinity(self_.g0 * other.g0.w);
 }
 
-fn origin_sphere_anti_wedge(self_: Origin, other: Sphere) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0) * other.g1 * vec2<f32>(-1.0, 1.0));
+fn origin_sphere_anti_wedge(self_: Origin, other: Sphere) -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0), vec2<f32>(self_.g0) * other.g1 * vec2<f32>(-1.0, 1.0));
 }
 
 fn plane_anti_scalar_anti_wedge(self_: Plane, other: AntiScalar) -> Plane {
@@ -6332,8 +6881,8 @@ fn plane_circle_anti_wedge(self_: Plane, other: Circle) -> Dipole {
     return Dipole(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0.w) + vec3<f32>(self_.g0.w) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g2.z, -other.g2.y, -other.g1.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g2.z, 0.0, other.g2.x, -other.g1.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g2.y, -other.g2.x, 0.0, -other.g1.z) + vec4<f32>(self_.g0.w) * vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0));
 }
 
-fn plane_dipole_anti_wedge(self_: Plane, other: Dipole) -> Radial {
-    return Radial(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g1.z, other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g1.z, 0.0, -other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g1.y, other.g1.x, 0.0) - vec3<f32>(self_.g0.w) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, -other.g2.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, -other.g2.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, -other.g2.z) + vec2<f32>(self_.g0.w) * vec2<f32>(0.0, -other.g2.w));
+fn plane_dipole_anti_wedge(self_: Plane, other: Dipole) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g1.z, other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g1.z, 0.0, -other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g1.y, other.g1.x, 0.0) - vec3<f32>(self_.g0.w) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, -other.g2.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, -other.g2.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, -other.g2.z) + vec2<f32>(self_.g0.w) * vec2<f32>(0.0, -other.g2.w));
 }
 
 fn plane_horizon_anti_wedge(self_: Plane, other: Horizon) -> LineAtInfinity {
@@ -6360,8 +6909,8 @@ fn plane_multi_vector_anti_wedge(self_: Plane, other: MultiVector) -> MultiVecto
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(other.g1.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g1.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g1.z, 0.0) + vec2<f32>(self_.g0.w) * vec2<f32>(other.g2.x, 0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g4.z, other.g4.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g4.z, 0.0, -other.g4.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g4.y, other.g4.x, 0.0) - vec3<f32>(self_.g0.w) * other.g3, vec2<f32>(self_.g0.x) * vec2<f32>(other.g3.x, -other.g5.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g3.y, -other.g5.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g3.z, -other.g5.z) + vec2<f32>(self_.g0.w) * vec2<f32>(0.0, -other.g5.w), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g6.z, other.g6.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g6.z, 0.0, -other.g6.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g6.y, other.g6.x, 0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g6.w) + vec3<f32>(self_.g0.w) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g8.z, -other.g8.y, -other.g7.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g8.z, 0.0, other.g8.x, -other.g7.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g8.y, -other.g8.x, 0.0, -other.g7.z) + vec4<f32>(self_.g0.w) * vec4<f32>(other.g7.x, other.g7.y, other.g7.z, 0.0), vec4<f32>(0.0) - self_.g0 * vec4<f32>(other.g10.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g9.z, -other.g9.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g9.z, 0.0, other.g9.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g9.y, -other.g9.x, 0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g10.y) - vec3<f32>(self_.g0.w) * other.g9, vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0.y), vec2<f32>(self_.g0.w) * vec2<f32>(0.0, other.g0.y));
 }
 
-fn plane_origin_anti_wedge(self_: Plane, other: Origin) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.w) * vec2<f32>(0.0, -other.g0));
+fn plane_origin_anti_wedge(self_: Plane, other: Origin) -> Infinity {
+    return Infinity(0.0 - self_.g0.w * other.g0);
 }
 
 fn plane_plane_anti_wedge(self_: Plane, other: Plane) -> Line {
@@ -6372,15 +6921,15 @@ fn plane_plane_at_origin_anti_wedge(self_: Plane, other: PlaneAtOrigin) -> Line 
     return Line(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0.w) * other.g0);
 }
 
-fn plane_point_anti_wedge(self_: Plane, other: Point) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z) + vec2<f32>(self_.g0.w) * vec2<f32>(0.0, -other.g0.w));
+fn plane_point_anti_wedge(self_: Plane, other: Point) -> Infinity {
+    return Infinity(0.0 - self_.g0.x * other.g0.x - self_.g0.y * other.g0.y - self_.g0.z * other.g0.z - self_.g0.w * other.g0.w);
 }
 
-fn plane_point_at_infinity_anti_wedge(self_: Plane, other: PointAtInfinity) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
+fn plane_point_at_infinity_anti_wedge(self_: Plane, other: PointAtInfinity) -> Infinity {
+    return Infinity(0.0 - self_.g0.x * other.g0.x - self_.g0.y * other.g0.y - self_.g0.z * other.g0.z);
 }
 
-fn plane_radial_anti_wedge(self_: Plane, other: Radial) -> Scalar {
+fn plane_round_point_anti_wedge(self_: Plane, other: RoundPoint) -> Scalar {
     return Scalar(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z + self_.g0.w * other.g1.x);
 }
 
@@ -6396,8 +6945,8 @@ fn plane_at_origin_circle_anti_wedge(self_: PlaneAtOrigin, other: Circle) -> Dip
     return Dipole(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0.w), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g2.z, -other.g2.y, -other.g1.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g2.z, 0.0, other.g2.x, -other.g1.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g2.y, -other.g2.x, 0.0, -other.g1.z));
 }
 
-fn plane_at_origin_dipole_anti_wedge(self_: PlaneAtOrigin, other: Dipole) -> Radial {
-    return Radial(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g1.z, other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g1.z, 0.0, -other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g1.y, other.g1.x, 0.0), vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, -other.g2.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, -other.g2.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, -other.g2.z));
+fn plane_at_origin_dipole_anti_wedge(self_: PlaneAtOrigin, other: Dipole) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g1.z, other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g1.z, 0.0, -other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g1.y, other.g1.x, 0.0), vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, -other.g2.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, -other.g2.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, -other.g2.z));
 }
 
 fn plane_at_origin_horizon_anti_wedge(self_: PlaneAtOrigin, other: Horizon) -> LineAtInfinity {
@@ -6432,15 +6981,15 @@ fn plane_at_origin_plane_at_origin_anti_wedge(self_: PlaneAtOrigin, other: Plane
     return LineAtOrigin(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0));
 }
 
-fn plane_at_origin_point_anti_wedge(self_: PlaneAtOrigin, other: Point) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
+fn plane_at_origin_point_anti_wedge(self_: PlaneAtOrigin, other: Point) -> Infinity {
+    return Infinity(0.0 - self_.g0.x * other.g0.x - self_.g0.y * other.g0.y - self_.g0.z * other.g0.z);
 }
 
-fn plane_at_origin_point_at_infinity_anti_wedge(self_: PlaneAtOrigin, other: PointAtInfinity) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
+fn plane_at_origin_point_at_infinity_anti_wedge(self_: PlaneAtOrigin, other: PointAtInfinity) -> Infinity {
+    return Infinity(0.0 - self_.g0.x * other.g0.x - self_.g0.y * other.g0.y - self_.g0.z * other.g0.z);
 }
 
-fn plane_at_origin_radial_anti_wedge(self_: PlaneAtOrigin, other: Radial) -> Scalar {
+fn plane_at_origin_round_point_anti_wedge(self_: PlaneAtOrigin, other: RoundPoint) -> Scalar {
     return Scalar(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z);
 }
 
@@ -6456,8 +7005,8 @@ fn point_circle_anti_wedge(self_: Point, other: Circle) -> Scalar {
     return Scalar(0.0 - self_.g0.x * other.g0.x - self_.g0.y * other.g0.y - self_.g0.z * other.g0.z - self_.g0.w * other.g0.w);
 }
 
-fn point_horizon_anti_wedge(self_: Point, other: Horizon) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.w) * vec2<f32>(0.0, other.g0));
+fn point_horizon_anti_wedge(self_: Point, other: Horizon) -> Infinity {
+    return Infinity(self_.g0.w * other.g0);
 }
 
 fn point_magnitude_anti_wedge(self_: Point, other: Magnitude) -> Point {
@@ -6468,16 +7017,16 @@ fn point_multi_vector_anti_wedge(self_: Point, other: MultiVector) -> MultiVecto
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(-other.g6.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g6.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g6.z, 0.0) + vec2<f32>(self_.g0.w) * vec2<f32>(-other.g6.w, 0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g10.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g9.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g9.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g9.z) + vec2<f32>(self_.g0.w) * other.g10 * vec2<f32>(-1.0, 1.0), vec3<f32>(0.0), vec3<f32>(0.0), self_.g0 * vec4<f32>(other.g0.y), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn point_plane_anti_wedge(self_: Point, other: Plane) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g0.w) * vec2<f32>(0.0, other.g0.w));
+fn point_plane_anti_wedge(self_: Point, other: Plane) -> Infinity {
+    return Infinity(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z + self_.g0.w * other.g0.w);
 }
 
-fn point_plane_at_origin_anti_wedge(self_: Point, other: PlaneAtOrigin) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z));
+fn point_plane_at_origin_anti_wedge(self_: Point, other: PlaneAtOrigin) -> Infinity {
+    return Infinity(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z);
 }
 
-fn point_sphere_anti_wedge(self_: Point, other: Sphere) -> Radial {
-    return Radial(vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g0.w) * other.g1 * vec2<f32>(-1.0, 1.0));
+fn point_sphere_anti_wedge(self_: Point, other: Sphere) -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g0.w) * other.g1 * vec2<f32>(-1.0, 1.0));
 }
 
 fn point_at_infinity_anti_scalar_anti_wedge(self_: PointAtInfinity, other: AntiScalar) -> PointAtInfinity {
@@ -6496,43 +7045,43 @@ fn point_at_infinity_multi_vector_anti_wedge(self_: PointAtInfinity, other: Mult
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(-other.g6.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g6.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g6.z, 0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g10.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g9.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g9.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g9.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(other.g0.y, other.g0.y, other.g0.y, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn point_at_infinity_plane_anti_wedge(self_: PointAtInfinity, other: Plane) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z));
+fn point_at_infinity_plane_anti_wedge(self_: PointAtInfinity, other: Plane) -> Infinity {
+    return Infinity(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z);
 }
 
-fn point_at_infinity_plane_at_origin_anti_wedge(self_: PointAtInfinity, other: PlaneAtOrigin) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z));
+fn point_at_infinity_plane_at_origin_anti_wedge(self_: PointAtInfinity, other: PlaneAtOrigin) -> Infinity {
+    return Infinity(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z);
 }
 
-fn point_at_infinity_sphere_anti_wedge(self_: PointAtInfinity, other: Sphere) -> Radial {
-    return Radial(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z));
+fn point_at_infinity_sphere_anti_wedge(self_: PointAtInfinity, other: Sphere) -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z));
 }
 
-fn radial_anti_scalar_anti_wedge(self_: Radial, other: AntiScalar) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(other.g0), self_.g1 * vec2<f32>(other.g0));
+fn round_point_anti_scalar_anti_wedge(self_: RoundPoint, other: AntiScalar) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(other.g0), self_.g1 * vec2<f32>(other.g0));
 }
 
-fn radial_horizon_anti_wedge(self_: Radial, other: Horizon) -> Scalar {
+fn round_point_horizon_anti_wedge(self_: RoundPoint, other: Horizon) -> Scalar {
     return Scalar(self_.g1.x * other.g0);
 }
 
-fn radial_magnitude_anti_wedge(self_: Radial, other: Magnitude) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(other.g0.y), self_.g1 * vec2<f32>(other.g0.y));
+fn round_point_magnitude_anti_wedge(self_: RoundPoint, other: Magnitude) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(other.g0.y), self_.g1 * vec2<f32>(other.g0.y));
 }
 
-fn radial_multi_vector_anti_wedge(self_: Radial, other: MultiVector) -> MultiVector {
+fn round_point_multi_vector_anti_wedge(self_: RoundPoint, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(other.g9.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g9.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g9.z, 0.0) + vec2<f32>(self_.g1.x) * vec2<f32>(other.g10.y, 0.0) + vec2<f32>(self_.g1.y) * vec2<f32>(other.g10.x, 0.0), self_.g0 * vec3<f32>(other.g0.y), self_.g1 * vec2<f32>(other.g0.y), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_plane_anti_wedge(self_: Radial, other: Plane) -> Scalar {
+fn round_point_plane_anti_wedge(self_: RoundPoint, other: Plane) -> Scalar {
     return Scalar(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z + self_.g1.x * other.g0.w);
 }
 
-fn radial_plane_at_origin_anti_wedge(self_: Radial, other: PlaneAtOrigin) -> Scalar {
+fn round_point_plane_at_origin_anti_wedge(self_: RoundPoint, other: PlaneAtOrigin) -> Scalar {
     return Scalar(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z);
 }
 
-fn radial_sphere_anti_wedge(self_: Radial, other: Sphere) -> Scalar {
+fn round_point_sphere_anti_wedge(self_: RoundPoint, other: Sphere) -> Scalar {
     return Scalar(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z + self_.g1.x * other.g1.y + self_.g1.y * other.g1.x);
 }
 
@@ -6556,12 +7105,16 @@ fn sphere_circle_anti_wedge(self_: Sphere, other: Circle) -> Dipole {
     return Dipole(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) + vec3<f32>(self_.g1.x) * other.g1, vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0.w) + vec3<f32>(self_.g1.x) * other.g2 + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g2.z, -other.g2.y, -other.g1.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g2.z, 0.0, other.g2.x, -other.g1.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g2.y, -other.g2.x, 0.0, -other.g1.z) + vec4<f32>(self_.g1.y) * vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0));
 }
 
-fn sphere_dipole_anti_wedge(self_: Sphere, other: Dipole) -> Radial {
-    return Radial(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g1.z, other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g1.z, 0.0, -other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g1.y, other.g1.x, 0.0) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g2.x, other.g2.y, other.g2.z) - vec3<f32>(self_.g1.y) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, -other.g2.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, -other.g2.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, -other.g2.z) + self_.g1 * vec2<f32>(other.g2.w));
+fn sphere_dipole_anti_wedge(self_: Sphere, other: Dipole) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g1.z, other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g1.z, 0.0, -other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g1.y, other.g1.x, 0.0) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g2.x, other.g2.y, other.g2.z) - vec3<f32>(self_.g1.y) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, -other.g2.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, -other.g2.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, -other.g2.z) + self_.g1 * vec2<f32>(other.g2.w));
 }
 
 fn sphere_horizon_anti_wedge(self_: Sphere, other: Horizon) -> Circle {
     return Circle(vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g0));
+}
+
+fn sphere_infinity_anti_wedge(self_: Sphere, other: Infinity) -> Scalar {
+    return Scalar(self_.g1.x * other.g0);
 }
 
 fn sphere_line_anti_wedge(self_: Sphere, other: Line) -> Dipole {
@@ -6584,8 +7137,8 @@ fn sphere_multi_vector_anti_wedge(self_: Sphere, other: MultiVector) -> MultiVec
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(other.g1.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g1.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g1.z, 0.0) + vec2<f32>(self_.g1.x) * vec2<f32>(other.g2.y, 0.0) + vec2<f32>(self_.g1.y) * vec2<f32>(other.g2.x, 0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g4.z, other.g4.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g4.z, 0.0, -other.g4.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g4.y, other.g4.x, 0.0) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g5.x, other.g5.y, other.g5.z) - vec3<f32>(self_.g1.y) * other.g3, vec2<f32>(self_.g0.x) * vec2<f32>(other.g3.x, -other.g5.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g3.y, -other.g5.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g3.z, -other.g5.z) + self_.g1 * vec2<f32>(other.g5.w), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g6.z, other.g6.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g6.z, 0.0, -other.g6.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g6.y, other.g6.x, 0.0) + vec3<f32>(self_.g1.x) * other.g7, vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g6.w) + vec3<f32>(self_.g1.x) * other.g8 + vec3<f32>(self_.g1.y) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g8.z, -other.g8.y, -other.g7.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g8.z, 0.0, other.g8.x, -other.g7.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g8.y, -other.g8.x, 0.0, -other.g7.z) + vec4<f32>(self_.g1.y) * vec4<f32>(other.g7.x, other.g7.y, other.g7.z, 0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(-other.g10.x, -other.g10.x, -other.g10.x, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g9.x, other.g9.y, other.g9.z, other.g10.y) + vec4<f32>(self_.g1.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g10.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g9.z, -other.g9.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g9.z, 0.0, other.g9.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g9.y, -other.g9.x, 0.0), self_.g0 * vec3<f32>(other.g10.y) - vec3<f32>(self_.g1.y) * other.g9, self_.g0 * vec3<f32>(other.g0.y), self_.g1 * vec2<f32>(other.g0.y));
 }
 
-fn sphere_origin_anti_wedge(self_: Sphere, other: Origin) -> Radial {
-    return Radial(vec3<f32>(0.0), self_.g1 * vec2<f32>(other.g0));
+fn sphere_origin_anti_wedge(self_: Sphere, other: Origin) -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0), self_.g1 * vec2<f32>(other.g0));
 }
 
 fn sphere_plane_anti_wedge(self_: Sphere, other: Plane) -> Circle {
@@ -6596,15 +7149,15 @@ fn sphere_plane_at_origin_anti_wedge(self_: Sphere, other: PlaneAtOrigin) -> Cir
     return Circle(vec4<f32>(self_.g1.x) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(0.0) - vec3<f32>(self_.g1.y) * other.g0);
 }
 
-fn sphere_point_anti_wedge(self_: Sphere, other: Point) -> Radial {
-    return Radial(vec3<f32>(self_.g1.x) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z) + self_.g1 * vec2<f32>(other.g0.w));
+fn sphere_point_anti_wedge(self_: Sphere, other: Point) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g1.x) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z) + self_.g1 * vec2<f32>(other.g0.w));
 }
 
-fn sphere_point_at_infinity_anti_wedge(self_: Sphere, other: PointAtInfinity) -> Radial {
-    return Radial(vec3<f32>(self_.g1.x) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
+fn sphere_point_at_infinity_anti_wedge(self_: Sphere, other: PointAtInfinity) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g1.x) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn sphere_radial_anti_wedge(self_: Sphere, other: Radial) -> Scalar {
+fn sphere_round_point_anti_wedge(self_: Sphere, other: RoundPoint) -> Scalar {
     return Scalar(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z + self_.g1.x * other.g1.y + self_.g1.y * other.g1.x);
 }
 
@@ -6628,6 +7181,10 @@ fn circle_dipole_join(self_: Circle, other: Dipole) -> AntiScalar {
     return AntiScalar(0.0 - self_.g0.x * other.g2.x - self_.g0.y * other.g2.y - self_.g0.z * other.g2.z - self_.g0.w * other.g2.w - self_.g1.x * other.g1.x - self_.g1.y * other.g1.y - self_.g1.z * other.g1.z - self_.g2.x * other.g0.x - self_.g2.y * other.g0.y - self_.g2.z * other.g0.z);
 }
 
+fn circle_infinity_join(self_: Circle, other: Infinity) -> Plane {
+    return Plane(self_.g0 * vec4<f32>(other.g0));
+}
+
 fn circle_magnitude_join(self_: Circle, other: Magnitude) -> Circle {
     return Circle(self_.g0 * vec4<f32>(other.g0.x), self_.g1 * vec3<f32>(other.g0.x), self_.g2 * vec3<f32>(other.g0.x));
 }
@@ -6648,7 +7205,7 @@ fn circle_point_at_infinity_join(self_: Circle, other: PointAtInfinity) -> AntiS
     return AntiScalar(0.0 - self_.g0.x * other.g0.x - self_.g0.y * other.g0.y - self_.g0.z * other.g0.z);
 }
 
-fn circle_radial_join(self_: Circle, other: Radial) -> Sphere {
+fn circle_round_point_join(self_: Circle, other: RoundPoint) -> Sphere {
     return Sphere(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.y) + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) - self_.g2 * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g0.w) * other.g1 * vec2<f32>(-1.0, 1.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, other.g0.z));
 }
 
@@ -6662,6 +7219,10 @@ fn dipole_circle_join(self_: Dipole, other: Circle) -> AntiScalar {
 
 fn dipole_dipole_join(self_: Dipole, other: Dipole) -> Sphere {
     return Sphere(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g2.z, other.g2.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g2.z, 0.0, -other.g2.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g2.y, other.g2.x, 0.0) + self_.g1 * vec3<f32>(other.g2.w) + vec3<f32>(self_.g2.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g2.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g2.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) + vec3<f32>(self_.g2.w) * other.g1, vec2<f32>(self_.g0.x) * vec2<f32>(-other.g1.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g1.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g1.z, 0.0) - vec2<f32>(self_.g1.x) * vec2<f32>(other.g0.x, other.g2.x) - vec2<f32>(self_.g1.y) * vec2<f32>(other.g0.y, other.g2.y) - vec2<f32>(self_.g1.z) * vec2<f32>(other.g0.z, other.g2.z) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, -other.g1.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, -other.g1.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, -other.g1.z));
+}
+
+fn dipole_infinity_join(self_: Dipole, other: Infinity) -> Line {
+    return Line(self_.g0 * vec3<f32>(other.g0), self_.g1 * vec3<f32>(other.g0));
 }
 
 fn dipole_line_join(self_: Dipole, other: Line) -> AntiScalar {
@@ -6696,7 +7257,7 @@ fn dipole_point_at_infinity_join(self_: Dipole, other: PointAtInfinity) -> Plane
     return Plane(vec4<f32>(self_.g0.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g1.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.y) + vec4<f32>(self_.g1.z) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.z));
 }
 
-fn dipole_radial_join(self_: Dipole, other: Radial) -> Circle {
+fn dipole_round_point_join(self_: Dipole, other: RoundPoint) -> Circle {
     return Circle(vec4<f32>(self_.g0.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g1.y) * vec4<f32>(0.0, other.g1.x, 0.0, -other.g0.y) + vec4<f32>(self_.g1.z) * vec4<f32>(0.0, 0.0, other.g1.x, -other.g0.z), self_.g0 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g2.x, self_.g2.y, self_.g2.z) * vec3<f32>(other.g1.x) - vec3<f32>(self_.g2.w) * other.g0, self_.g1 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g2.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g2.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g2.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0));
 }
 
@@ -6712,12 +7273,40 @@ fn horizon_multi_vector_join(self_: Horizon, other: MultiVector) -> MultiVector 
     return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g2.x), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0.x));
 }
 
-fn horizon_radial_join(self_: Horizon, other: Radial) -> AntiScalar {
+fn horizon_round_point_join(self_: Horizon, other: RoundPoint) -> AntiScalar {
     return AntiScalar(self_.g0 * other.g1.x);
 }
 
 fn horizon_scalar_join(self_: Horizon, other: Scalar) -> Horizon {
     return Horizon(self_.g0 * other.g0);
+}
+
+fn infinity_circle_join(self_: Infinity, other: Circle) -> Plane {
+    return Plane(vec4<f32>(0.0) - vec4<f32>(self_.g0) * other.g0);
+}
+
+fn infinity_dipole_join(self_: Infinity, other: Dipole) -> Line {
+    return Line(vec3<f32>(self_.g0) * other.g0, vec3<f32>(self_.g0) * other.g1);
+}
+
+fn infinity_magnitude_join(self_: Infinity, other: Magnitude) -> Infinity {
+    return Infinity(self_.g0 * other.g0.x);
+}
+
+fn infinity_multi_vector_join(self_: Infinity, other: MultiVector) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g10.x), vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0.x), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0) - vec4<f32>(self_.g0) * vec4<f32>(other.g1.x, other.g1.y, other.g1.z, other.g2.x), vec4<f32>(0.0), vec3<f32>(self_.g0) * other.g3, vec3<f32>(self_.g0) * other.g4, vec3<f32>(0.0) - vec3<f32>(self_.g0) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g6.w));
+}
+
+fn infinity_round_point_join(self_: Infinity, other: RoundPoint) -> Point {
+    return Point(vec4<f32>(0.0) - vec4<f32>(self_.g0) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, other.g1.x));
+}
+
+fn infinity_scalar_join(self_: Infinity, other: Scalar) -> Infinity {
+    return Infinity(self_.g0 * other.g0);
+}
+
+fn infinity_sphere_join(self_: Infinity, other: Sphere) -> AntiScalar {
+    return AntiScalar(self_.g0 * other.g1.x);
 }
 
 fn line_dipole_join(self_: Line, other: Dipole) -> AntiScalar {
@@ -6732,7 +7321,7 @@ fn line_multi_vector_join(self_: Line, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g4.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g4.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g4.z) + vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g3.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, -other.g3.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, -other.g3.z), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), self_.g0 * vec3<f32>(other.g0.x), self_.g1 * vec3<f32>(other.g0.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g1.z, -other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g1.z, 0.0, other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g1.y, -other.g1.x, 0.0) - self_.g1 * vec3<f32>(other.g2.x), vec2<f32>(self_.g1.x) * vec2<f32>(0.0, other.g1.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, other.g1.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, other.g1.z));
 }
 
-fn line_radial_join(self_: Line, other: Radial) -> Plane {
+fn line_round_point_join(self_: Line, other: RoundPoint) -> Plane {
     return Plane(vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(-other.g1.x, 0.0, 0.0, other.g0.x) + vec4<f32>(self_.g1.y) * vec4<f32>(0.0, -other.g1.x, 0.0, other.g0.y) + vec4<f32>(self_.g1.z) * vec4<f32>(0.0, 0.0, -other.g1.x, other.g0.z));
 }
 
@@ -6752,7 +7341,7 @@ fn line_at_infinity_multi_vector_join(self_: LineAtInfinity, other: MultiVector)
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g3.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g3.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g3.z), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g0.x), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g2.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g1.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g1.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g1.z));
 }
 
-fn line_at_infinity_radial_join(self_: LineAtInfinity, other: Radial) -> Plane {
+fn line_at_infinity_round_point_join(self_: LineAtInfinity, other: RoundPoint) -> Plane {
     return Plane(vec4<f32>(self_.g0.x) * vec4<f32>(-other.g1.x, 0.0, 0.0, other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(0.0, -other.g1.x, 0.0, other.g0.y) + vec4<f32>(self_.g0.z) * vec4<f32>(0.0, 0.0, -other.g1.x, other.g0.z));
 }
 
@@ -6772,7 +7361,7 @@ fn line_at_origin_multi_vector_join(self_: LineAtOrigin, other: MultiVector) -> 
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g4.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g4.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g4.z), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), self_.g0 * vec3<f32>(other.g0.x), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g1.z, -other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g1.z, 0.0, other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g1.y, -other.g1.x, 0.0), vec2<f32>(0.0));
 }
 
-fn line_at_origin_radial_join(self_: LineAtOrigin, other: Radial) -> PlaneAtOrigin {
+fn line_at_origin_round_point_join(self_: LineAtOrigin, other: RoundPoint) -> PlaneAtOrigin {
     return PlaneAtOrigin(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0));
 }
 
@@ -6794,6 +7383,10 @@ fn magnitude_dipole_join(self_: Magnitude, other: Dipole) -> Dipole {
 
 fn magnitude_horizon_join(self_: Magnitude, other: Horizon) -> Horizon {
     return Horizon(self_.g0.x * other.g0);
+}
+
+fn magnitude_infinity_join(self_: Magnitude, other: Infinity) -> Infinity {
+    return Infinity(self_.g0.x * other.g0);
 }
 
 fn magnitude_line_join(self_: Magnitude, other: Line) -> Line {
@@ -6836,8 +7429,8 @@ fn magnitude_point_at_infinity_join(self_: Magnitude, other: PointAtInfinity) ->
     return PointAtInfinity(vec3<f32>(self_.g0.x) * other.g0);
 }
 
-fn magnitude_radial_join(self_: Magnitude, other: Radial) -> Radial {
-    return Radial(vec3<f32>(self_.g0.x) * other.g0, vec2<f32>(self_.g0.x) * other.g1);
+fn magnitude_round_point_join(self_: Magnitude, other: RoundPoint) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0.x) * other.g0, vec2<f32>(self_.g0.x) * other.g1);
 }
 
 fn magnitude_scalar_join(self_: Magnitude, other: Scalar) -> Magnitude {
@@ -6862,6 +7455,10 @@ fn multi_vector_dipole_join(self_: MultiVector, other: Dipole) -> MultiVector {
 
 fn multi_vector_horizon_join(self_: MultiVector, other: Horizon) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0));
+}
+
+fn multi_vector_infinity_join(self_: MultiVector, other: Infinity) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g10.x) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, self_.g1.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0) + vec4<f32>(self_.g2.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0), vec4<f32>(0.0), self_.g3 * vec3<f32>(other.g0), self_.g4 * vec3<f32>(other.g0), vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g0), vec2<f32>(self_.g6.w) * vec2<f32>(0.0, other.g0));
 }
 
 fn multi_vector_line_join(self_: MultiVector, other: Line) -> MultiVector {
@@ -6904,7 +7501,7 @@ fn multi_vector_point_at_infinity_join(self_: MultiVector, other: PointAtInfinit
     return MultiVector(vec2<f32>(self_.g6.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g6.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g6.z) * vec2<f32>(0.0, -other.g0.z), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4<f32>(0.0), vec3<f32>(self_.g2.x) * other.g0, vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec3<f32>(self_.g3.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g3.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g3.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(self_.g4.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g4.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g4.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn multi_vector_radial_join(self_: MultiVector, other: Radial) -> MultiVector {
+fn multi_vector_round_point_join(self_: MultiVector, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g9.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g9.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g9.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g10.x) * vec2<f32>(0.0, other.g1.y) + vec2<f32>(self_.g10.y) * vec2<f32>(0.0, other.g1.x), vec3<f32>(self_.g0.x) * other.g0, vec2<f32>(self_.g0.x) * other.g1, vec3<f32>(0.0) - self_.g1 * vec3<f32>(other.g1.x) + vec3<f32>(self_.g2.x) * other.g0, vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, self_.g1.x) * vec4<f32>(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4<f32>(self_.g2.x) * vec4<f32>(0.0, 0.0, 0.0, other.g1.y) - vec4<f32>(self_.g2.y) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4<f32>(self_.g3.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g3.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g3.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4<f32>(self_.g4.x) * vec4<f32>(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g4.y) * vec4<f32>(0.0, other.g1.x, 0.0, -other.g0.y) + vec4<f32>(self_.g4.z) * vec4<f32>(0.0, 0.0, other.g1.x, -other.g0.z), self_.g3 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g5.x, self_.g5.y, self_.g5.z) * vec3<f32>(other.g1.x) - vec3<f32>(self_.g5.w) * other.g0, self_.g4 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g5.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g5.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g5.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g1.y) + vec3<f32>(self_.g7.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g7.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g7.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) - self_.g8 * vec3<f32>(other.g1.x), vec2<f32>(self_.g6.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g6.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g6.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g6.w) * other.g1 * vec2<f32>(-1.0, 1.0) + vec2<f32>(self_.g8.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g8.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g8.z) * vec2<f32>(0.0, other.g0.z));
 }
 
@@ -6932,7 +7529,7 @@ fn origin_multi_vector_join(self_: Origin, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g6.w), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0) * vec4<f32>(0.0, 0.0, 0.0, other.g0.x), vec4<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g1, vec3<f32>(0.0), vec3<f32>(self_.g0) * other.g4, vec2<f32>(0.0));
 }
 
-fn origin_radial_join(self_: Origin, other: Radial) -> LineAtOrigin {
+fn origin_round_point_join(self_: Origin, other: RoundPoint) -> LineAtOrigin {
     return LineAtOrigin(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0);
 }
 
@@ -6948,7 +7545,7 @@ fn plane_multi_vector_join(self_: Plane, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g1.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g1.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g1.z) + vec2<f32>(self_.g0.w) * vec2<f32>(0.0, other.g2.x), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0.x), vec2<f32>(self_.g0.w) * vec2<f32>(0.0, other.g0.x));
 }
 
-fn plane_radial_join(self_: Plane, other: Radial) -> AntiScalar {
+fn plane_round_point_join(self_: Plane, other: RoundPoint) -> AntiScalar {
     return AntiScalar(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z + self_.g0.w * other.g1.x);
 }
 
@@ -6964,7 +7561,7 @@ fn plane_at_origin_multi_vector_join(self_: PlaneAtOrigin, other: MultiVector) -
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g1.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g1.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g1.z), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g0.x), vec2<f32>(0.0));
 }
 
-fn plane_at_origin_radial_join(self_: PlaneAtOrigin, other: Radial) -> AntiScalar {
+fn plane_at_origin_round_point_join(self_: PlaneAtOrigin, other: RoundPoint) -> AntiScalar {
     return AntiScalar(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z);
 }
 
@@ -6988,7 +7585,7 @@ fn point_multi_vector_join(self_: Point, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g6.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g6.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g6.z) + vec2<f32>(self_.g0.w) * vec2<f32>(0.0, -other.g6.w), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), self_.g0 * vec4<f32>(other.g0.x), vec4<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g2.x) - vec3<f32>(self_.g0.w) * other.g1, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g1.z, -other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g1.z, 0.0, other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g1.y, -other.g1.x, 0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g3.z, -other.g3.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g3.z, 0.0, other.g3.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g3.y, -other.g3.x, 0.0) + vec3<f32>(self_.g0.w) * other.g4, vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g4.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g4.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g4.z));
 }
 
-fn point_radial_join(self_: Point, other: Radial) -> Line {
+fn point_round_point_join(self_: Point, other: RoundPoint) -> Line {
     return Line(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.x) - vec3<f32>(self_.g0.w) * other.g0, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0));
 }
 
@@ -7012,7 +7609,7 @@ fn point_at_infinity_multi_vector_join(self_: PointAtInfinity, other: MultiVecto
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g6.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g6.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g6.z), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(other.g0.x, other.g0.x, other.g0.x, 0.0), vec4<f32>(0.0), self_.g0 * vec3<f32>(other.g2.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g1.z, -other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g1.z, 0.0, other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g1.y, -other.g1.x, 0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g3.z, -other.g3.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g3.z, 0.0, other.g3.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g3.y, -other.g3.x, 0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g4.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g4.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g4.z));
 }
 
-fn point_at_infinity_radial_join(self_: PointAtInfinity, other: Radial) -> Line {
+fn point_at_infinity_round_point_join(self_: PointAtInfinity, other: RoundPoint) -> Line {
     return Line(self_.g0 * vec3<f32>(other.g1.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0));
 }
 
@@ -7020,67 +7617,71 @@ fn point_at_infinity_scalar_join(self_: PointAtInfinity, other: Scalar) -> Point
     return PointAtInfinity(self_.g0 * vec3<f32>(other.g0));
 }
 
-fn radial_circle_join(self_: Radial, other: Circle) -> Sphere {
+fn round_point_circle_join(self_: RoundPoint, other: Circle) -> Sphere {
     return Sphere(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g1.z, -other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g1.z, 0.0, other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g1.y, -other.g1.x, 0.0) + vec3<f32>(self_.g1.x) * other.g2 - vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, -other.g2.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, -other.g2.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, -other.g2.z) + self_.g1 * vec2<f32>(other.g0.w));
 }
 
-fn radial_dipole_join(self_: Radial, other: Dipole) -> Circle {
+fn round_point_dipole_join(self_: RoundPoint, other: Dipole) -> Circle {
     return Circle(vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, -other.g1.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, -other.g1.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, -other.g1.z) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g2.w) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g2.x, other.g2.y, other.g2.z) + vec3<f32>(self_.g1.y) * other.g0, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g2.z, other.g2.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g2.z, 0.0, -other.g2.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g2.y, other.g2.x, 0.0) + vec3<f32>(self_.g1.y) * other.g1);
 }
 
-fn radial_horizon_join(self_: Radial, other: Horizon) -> AntiScalar {
+fn round_point_horizon_join(self_: RoundPoint, other: Horizon) -> AntiScalar {
     return AntiScalar(self_.g1.x * other.g0);
 }
 
-fn radial_line_join(self_: Radial, other: Line) -> Plane {
+fn round_point_infinity_join(self_: RoundPoint, other: Infinity) -> Point {
+    return Point(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0));
+}
+
+fn round_point_line_join(self_: RoundPoint, other: Line) -> Plane {
     return Plane(vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, -other.g1.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, -other.g1.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, -other.g1.z) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0));
 }
 
-fn radial_line_at_infinity_join(self_: Radial, other: LineAtInfinity) -> Plane {
+fn round_point_line_at_infinity_join(self_: RoundPoint, other: LineAtInfinity) -> Plane {
     return Plane(vec4<f32>(self_.g0.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.y) + vec4<f32>(self_.g0.z) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.z) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
 }
 
-fn radial_line_at_origin_join(self_: Radial, other: LineAtOrigin) -> PlaneAtOrigin {
+fn round_point_line_at_origin_join(self_: RoundPoint, other: LineAtOrigin) -> PlaneAtOrigin {
     return PlaneAtOrigin(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0));
 }
 
-fn radial_magnitude_join(self_: Radial, other: Magnitude) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(other.g0.x), self_.g1 * vec2<f32>(other.g0.x));
+fn round_point_magnitude_join(self_: RoundPoint, other: Magnitude) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(other.g0.x), self_.g1 * vec2<f32>(other.g0.x));
 }
 
-fn radial_multi_vector_join(self_: Radial, other: MultiVector) -> MultiVector {
+fn round_point_multi_vector_join(self_: RoundPoint, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g9.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g9.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g9.z) + vec2<f32>(self_.g1.x) * vec2<f32>(0.0, other.g10.y) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, other.g10.x), self_.g0 * vec3<f32>(other.g0.x), self_.g1 * vec2<f32>(other.g0.x), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g2.x) + vec3<f32>(self_.g1.x) * other.g1, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g1.z, other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g1.z, 0.0, -other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g1.y, other.g1.x, 0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(other.g2.y, other.g2.y, other.g2.y, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g2.y) - vec4<f32>(self_.g1.y) * vec4<f32>(other.g1.x, other.g1.y, other.g1.z, other.g2.x), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g3.z, -other.g3.y, -other.g4.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g3.z, 0.0, other.g3.x, -other.g4.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g3.y, -other.g3.x, 0.0, -other.g4.z) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g4.x, other.g4.y, other.g4.z, 0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g5.w) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g5.x, other.g5.y, other.g5.z) + vec3<f32>(self_.g1.y) * other.g3, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g5.z, other.g5.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g5.z, 0.0, -other.g5.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g5.y, other.g5.x, 0.0) + vec3<f32>(self_.g1.y) * other.g4, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g7.z, -other.g7.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g7.z, 0.0, other.g7.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g7.y, -other.g7.x, 0.0) + vec3<f32>(self_.g1.x) * other.g8 - vec3<f32>(self_.g1.y) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec2<f32>(self_.g0.x) * vec2<f32>(other.g6.x, -other.g8.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g6.y, -other.g8.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g6.z, -other.g8.z) + self_.g1 * vec2<f32>(other.g6.w));
 }
 
-fn radial_origin_join(self_: Radial, other: Origin) -> LineAtOrigin {
+fn round_point_origin_join(self_: RoundPoint, other: Origin) -> LineAtOrigin {
     return LineAtOrigin(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0));
 }
 
-fn radial_plane_join(self_: Radial, other: Plane) -> AntiScalar {
+fn round_point_plane_join(self_: RoundPoint, other: Plane) -> AntiScalar {
     return AntiScalar(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z + self_.g1.x * other.g0.w);
 }
 
-fn radial_plane_at_origin_join(self_: Radial, other: PlaneAtOrigin) -> AntiScalar {
+fn round_point_plane_at_origin_join(self_: RoundPoint, other: PlaneAtOrigin) -> AntiScalar {
     return AntiScalar(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z);
 }
 
-fn radial_point_join(self_: Radial, other: Point) -> Line {
+fn round_point_point_join(self_: RoundPoint, other: Point) -> Line {
     return Line(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0.w) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0));
 }
 
-fn radial_point_at_infinity_join(self_: Radial, other: PointAtInfinity) -> Line {
+fn round_point_point_at_infinity_join(self_: RoundPoint, other: PointAtInfinity) -> Line {
     return Line(vec3<f32>(self_.g1.x) * other.g0, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0));
 }
 
-fn radial_radial_join(self_: Radial, other: Radial) -> Dipole {
+fn round_point_round_point_join(self_: RoundPoint, other: RoundPoint) -> Dipole {
     return Dipole(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.x) + vec3<f32>(self_.g1.x) * other.g0, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g1.y) - vec4<f32>(self_.g1.y) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, other.g1.x));
 }
 
-fn radial_scalar_join(self_: Radial, other: Scalar) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(other.g0), self_.g1 * vec2<f32>(other.g0));
+fn round_point_scalar_join(self_: RoundPoint, other: Scalar) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(other.g0), self_.g1 * vec2<f32>(other.g0));
 }
 
-fn radial_sphere_join(self_: Radial, other: Sphere) -> AntiScalar {
+fn round_point_sphere_join(self_: RoundPoint, other: Sphere) -> AntiScalar {
     return AntiScalar(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z + self_.g1.x * other.g1.y + self_.g1.y * other.g1.x);
 }
 
@@ -7098,6 +7699,10 @@ fn scalar_dipole_join(self_: Scalar, other: Dipole) -> Dipole {
 
 fn scalar_horizon_join(self_: Scalar, other: Horizon) -> Horizon {
     return Horizon(self_.g0 * other.g0);
+}
+
+fn scalar_infinity_join(self_: Scalar, other: Infinity) -> Infinity {
+    return Infinity(self_.g0 * other.g0);
 }
 
 fn scalar_line_join(self_: Scalar, other: Line) -> Line {
@@ -7140,8 +7745,8 @@ fn scalar_point_at_infinity_join(self_: Scalar, other: PointAtInfinity) -> Point
     return PointAtInfinity(vec3<f32>(self_.g0) * other.g0);
 }
 
-fn scalar_radial_join(self_: Scalar, other: Radial) -> Radial {
-    return Radial(vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * other.g1);
+fn scalar_round_point_join(self_: Scalar, other: RoundPoint) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * other.g1);
 }
 
 fn scalar_scalar_join(self_: Scalar, other: Scalar) -> Scalar {
@@ -7152,6 +7757,10 @@ fn scalar_sphere_join(self_: Scalar, other: Sphere) -> Sphere {
     return Sphere(vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * other.g1);
 }
 
+fn sphere_infinity_join(self_: Sphere, other: Infinity) -> AntiScalar {
+    return AntiScalar(self_.g1.x * other.g0);
+}
+
 fn sphere_magnitude_join(self_: Sphere, other: Magnitude) -> Sphere {
     return Sphere(self_.g0 * vec3<f32>(other.g0.x), self_.g1 * vec2<f32>(other.g0.x));
 }
@@ -7160,7 +7769,7 @@ fn sphere_multi_vector_join(self_: Sphere, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g1.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g1.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g1.z) + vec2<f32>(self_.g1.x) * vec2<f32>(0.0, other.g2.y) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, other.g2.x), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g0.x), self_.g1 * vec2<f32>(other.g0.x));
 }
 
-fn sphere_radial_join(self_: Sphere, other: Radial) -> AntiScalar {
+fn sphere_round_point_join(self_: Sphere, other: RoundPoint) -> AntiScalar {
     return AntiScalar(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z + self_.g1.x * other.g1.y + self_.g1.y * other.g1.x);
 }
 
@@ -7182,6 +7791,10 @@ fn anti_scalar_dipole_meet(self_: AntiScalar, other: Dipole) -> Dipole {
 
 fn anti_scalar_horizon_meet(self_: AntiScalar, other: Horizon) -> Horizon {
     return Horizon(self_.g0 * other.g0);
+}
+
+fn anti_scalar_infinity_meet(self_: AntiScalar, other: Infinity) -> Infinity {
+    return Infinity(self_.g0 * other.g0);
 }
 
 fn anti_scalar_line_meet(self_: AntiScalar, other: Line) -> Line {
@@ -7224,8 +7837,8 @@ fn anti_scalar_point_at_infinity_meet(self_: AntiScalar, other: PointAtInfinity)
     return PointAtInfinity(vec3<f32>(self_.g0) * other.g0);
 }
 
-fn anti_scalar_radial_meet(self_: AntiScalar, other: Radial) -> Radial {
-    return Radial(vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * other.g1);
+fn anti_scalar_round_point_meet(self_: AntiScalar, other: RoundPoint) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * other.g1);
 }
 
 fn anti_scalar_scalar_meet(self_: AntiScalar, other: Scalar) -> Scalar {
@@ -7240,8 +7853,8 @@ fn circle_anti_scalar_meet(self_: Circle, other: AntiScalar) -> Circle {
     return Circle(self_.g0 * vec4<f32>(other.g0), self_.g1 * vec3<f32>(other.g0), self_.g2 * vec3<f32>(other.g0));
 }
 
-fn circle_circle_meet(self_: Circle, other: Circle) -> Radial {
-    return Radial(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g2.z, -other.g2.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g2.z, 0.0, other.g2.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g2.y, -other.g2.x, 0.0) + vec3<f32>(self_.g0.w) * other.g1 + self_.g1 * vec3<f32>(other.g0.w) + vec3<f32>(self_.g2.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g2.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g2.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(self_.g0.x) * vec2<f32>(-other.g1.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g1.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g1.z, 0.0) - vec2<f32>(self_.g1.x) * vec2<f32>(other.g0.x, other.g2.x) - vec2<f32>(self_.g1.y) * vec2<f32>(other.g0.y, other.g2.y) - vec2<f32>(self_.g1.z) * vec2<f32>(other.g0.z, other.g2.z) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, -other.g1.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, -other.g1.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, -other.g1.z));
+fn circle_circle_meet(self_: Circle, other: Circle) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g2.z, -other.g2.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g2.z, 0.0, other.g2.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g2.y, -other.g2.x, 0.0) + vec3<f32>(self_.g0.w) * other.g1 + self_.g1 * vec3<f32>(other.g0.w) + vec3<f32>(self_.g2.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g2.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g2.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(self_.g0.x) * vec2<f32>(-other.g1.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g1.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g1.z, 0.0) - vec2<f32>(self_.g1.x) * vec2<f32>(other.g0.x, other.g2.x) - vec2<f32>(self_.g1.y) * vec2<f32>(other.g0.y, other.g2.y) - vec2<f32>(self_.g1.z) * vec2<f32>(other.g0.z, other.g2.z) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, -other.g1.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, -other.g1.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, -other.g1.z));
 }
 
 fn circle_dipole_meet(self_: Circle, other: Dipole) -> Scalar {
@@ -7252,16 +7865,16 @@ fn circle_horizon_meet(self_: Circle, other: Horizon) -> Dipole {
     return Dipole(vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, self_.g1.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0));
 }
 
-fn circle_line_meet(self_: Circle, other: Line) -> Radial {
-    return Radial(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g1.z, -other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g1.z, 0.0, other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g1.y, -other.g1.x, 0.0) + vec3<f32>(self_.g0.w) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g1.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, -other.g1.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, -other.g1.z) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, -other.g0.z));
+fn circle_line_meet(self_: Circle, other: Line) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g1.z, -other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g1.z, 0.0, other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g1.y, -other.g1.x, 0.0) + vec3<f32>(self_.g0.w) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g1.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, -other.g1.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, -other.g1.z) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn circle_line_at_infinity_meet(self_: Circle, other: LineAtInfinity) -> Radial {
-    return Radial(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, -other.g0.z));
+fn circle_line_at_infinity_meet(self_: Circle, other: LineAtInfinity) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn circle_line_at_origin_meet(self_: Circle, other: LineAtOrigin) -> Radial {
-    return Radial(vec3<f32>(self_.g0.w) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, -other.g0.z));
+fn circle_line_at_origin_meet(self_: Circle, other: LineAtOrigin) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0.w) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
 fn circle_magnitude_meet(self_: Circle, other: Magnitude) -> Circle {
@@ -7304,8 +7917,8 @@ fn dipole_circle_meet(self_: Dipole, other: Circle) -> Scalar {
     return Scalar(0.0 - self_.g0.x * other.g2.x - self_.g0.y * other.g2.y - self_.g0.z * other.g2.z - self_.g1.x * other.g1.x - self_.g1.y * other.g1.y - self_.g1.z * other.g1.z - self_.g2.x * other.g0.x - self_.g2.y * other.g0.y - self_.g2.z * other.g0.z - self_.g2.w * other.g0.w);
 }
 
-fn dipole_horizon_meet(self_: Dipole, other: Horizon) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(other.g0), vec2<f32>(self_.g2.w) * vec2<f32>(0.0, other.g0));
+fn dipole_horizon_meet(self_: Dipole, other: Horizon) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(other.g0), vec2<f32>(self_.g2.w) * vec2<f32>(0.0, other.g0));
 }
 
 fn dipole_line_meet(self_: Dipole, other: Line) -> Scalar {
@@ -7328,16 +7941,16 @@ fn dipole_multi_vector_meet(self_: Dipole, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(-other.g8.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g8.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g8.z, 0.0) + vec2<f32>(self_.g1.x) * vec2<f32>(-other.g7.x, 0.0) + vec2<f32>(self_.g1.y) * vec2<f32>(-other.g7.y, 0.0) + vec2<f32>(self_.g1.z) * vec2<f32>(-other.g7.z, 0.0) + vec2<f32>(self_.g2.x) * vec2<f32>(-other.g6.x, 0.0) + vec2<f32>(self_.g2.y) * vec2<f32>(-other.g6.y, 0.0) + vec2<f32>(self_.g2.z) * vec2<f32>(-other.g6.z, 0.0) + vec2<f32>(self_.g2.w) * vec2<f32>(-other.g6.w, 0.0), self_.g0 * vec3<f32>(other.g10.y) + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g9.z, other.g9.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g9.z, 0.0, -other.g9.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g9.y, other.g9.x, 0.0) - vec3<f32>(self_.g2.x, self_.g2.y, self_.g2.z) * vec3<f32>(other.g10.x), vec2<f32>(self_.g0.x) * vec2<f32>(-other.g9.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g9.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g9.z, 0.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g9.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, other.g9.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, other.g9.z) + vec2<f32>(self_.g2.w) * other.g10 * vec2<f32>(-1.0, 1.0), self_.g0 * vec3<f32>(other.g0.y), self_.g1 * vec3<f32>(other.g0.y), self_.g2 * vec4<f32>(other.g0.y), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn dipole_plane_meet(self_: Dipole, other: Plane) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(other.g0.w) + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g2.w) * vec2<f32>(0.0, other.g0.w));
+fn dipole_plane_meet(self_: Dipole, other: Plane) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(other.g0.w) + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g2.w) * vec2<f32>(0.0, other.g0.w));
 }
 
-fn dipole_plane_at_origin_meet(self_: Dipole, other: PlaneAtOrigin) -> Radial {
-    return Radial(vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, other.g0.z));
+fn dipole_plane_at_origin_meet(self_: Dipole, other: PlaneAtOrigin) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, other.g0.z));
 }
 
-fn dipole_sphere_meet(self_: Dipole, other: Sphere) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) - vec3<f32>(self_.g2.x, self_.g2.y, self_.g2.z) * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g2.w) * other.g1 * vec2<f32>(-1.0, 1.0));
+fn dipole_sphere_meet(self_: Dipole, other: Sphere) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) - vec3<f32>(self_.g2.x, self_.g2.y, self_.g2.z) * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g2.w) * other.g1 * vec2<f32>(-1.0, 1.0));
 }
 
 fn horizon_anti_scalar_meet(self_: Horizon, other: AntiScalar) -> Horizon {
@@ -7348,8 +7961,8 @@ fn horizon_circle_meet(self_: Horizon, other: Circle) -> Dipole {
     return Dipole(vec3<f32>(0.0), vec3<f32>(self_.g0) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(self_.g0) * vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0));
 }
 
-fn horizon_dipole_meet(self_: Horizon, other: Dipole) -> Radial {
-    return Radial(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g2.w));
+fn horizon_dipole_meet(self_: Horizon, other: Dipole) -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g2.w));
 }
 
 fn horizon_line_meet(self_: Horizon, other: Line) -> PointAtInfinity {
@@ -7368,8 +7981,8 @@ fn horizon_multi_vector_meet(self_: Horizon, other: MultiVector) -> MultiVector 
     return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(other.g2.x, 0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g3, vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g5.w), vec3<f32>(0.0), vec3<f32>(self_.g0) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec4<f32>(self_.g0) * vec4<f32>(other.g7.x, other.g7.y, other.g7.z, 0.0), vec4<f32>(self_.g0) * vec4<f32>(0.0, 0.0, 0.0, -other.g10.x), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g9, vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0.y));
 }
 
-fn horizon_origin_meet(self_: Horizon, other: Origin) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g0));
+fn horizon_origin_meet(self_: Horizon, other: Origin) -> Infinity {
+    return Infinity(0.0 - self_.g0 * other.g0);
 }
 
 fn horizon_plane_meet(self_: Horizon, other: Plane) -> LineAtInfinity {
@@ -7380,11 +7993,11 @@ fn horizon_plane_at_origin_meet(self_: Horizon, other: PlaneAtOrigin) -> LineAtI
     return LineAtInfinity(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0);
 }
 
-fn horizon_point_meet(self_: Horizon, other: Point) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g0.w));
+fn horizon_point_meet(self_: Horizon, other: Point) -> Infinity {
+    return Infinity(0.0 - self_.g0 * other.g0.w);
 }
 
-fn horizon_radial_meet(self_: Horizon, other: Radial) -> Scalar {
+fn horizon_round_point_meet(self_: Horizon, other: RoundPoint) -> Scalar {
     return Scalar(self_.g0 * other.g1.x);
 }
 
@@ -7392,12 +8005,28 @@ fn horizon_sphere_meet(self_: Horizon, other: Sphere) -> Circle {
     return Circle(vec4<f32>(self_.g0) * vec4<f32>(0.0, 0.0, 0.0, -other.g1.x), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0);
 }
 
+fn infinity_anti_scalar_meet(self_: Infinity, other: AntiScalar) -> Infinity {
+    return Infinity(self_.g0 * other.g0);
+}
+
+fn infinity_magnitude_meet(self_: Infinity, other: Magnitude) -> Infinity {
+    return Infinity(self_.g0 * other.g0.y);
+}
+
+fn infinity_multi_vector_meet(self_: Infinity, other: MultiVector) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(other.g10.x, 0.0), vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0.y), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
+}
+
+fn infinity_sphere_meet(self_: Infinity, other: Sphere) -> Scalar {
+    return Scalar(self_.g0 * other.g1.x);
+}
+
 fn line_anti_scalar_meet(self_: Line, other: AntiScalar) -> Line {
     return Line(self_.g0 * vec3<f32>(other.g0), self_.g1 * vec3<f32>(other.g0));
 }
 
-fn line_circle_meet(self_: Line, other: Circle) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(other.g0.w) + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(0.0) - vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, other.g2.x) - vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, other.g2.y) - vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, other.g2.z) + vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g1.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, -other.g1.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, -other.g1.z));
+fn line_circle_meet(self_: Line, other: Circle) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(other.g0.w) + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(0.0) - vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, other.g2.x) - vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, other.g2.y) - vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, other.g2.z) + vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g1.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, -other.g1.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, -other.g1.z));
 }
 
 fn line_dipole_meet(self_: Line, other: Dipole) -> Scalar {
@@ -7408,16 +8037,16 @@ fn line_horizon_meet(self_: Line, other: Horizon) -> PointAtInfinity {
     return PointAtInfinity(self_.g0 * vec3<f32>(other.g0));
 }
 
-fn line_line_meet(self_: Line, other: Line) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g1.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g1.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g1.z) + vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, -other.g0.z));
+fn line_line_meet(self_: Line, other: Line) -> Infinity {
+    return Infinity(0.0 - self_.g0.x * other.g1.x - self_.g0.y * other.g1.y - self_.g0.z * other.g1.z - self_.g1.x * other.g0.x - self_.g1.y * other.g0.y - self_.g1.z * other.g0.z);
 }
 
-fn line_line_at_infinity_meet(self_: Line, other: LineAtInfinity) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
+fn line_line_at_infinity_meet(self_: Line, other: LineAtInfinity) -> Infinity {
+    return Infinity(0.0 - self_.g0.x * other.g0.x - self_.g0.y * other.g0.y - self_.g0.z * other.g0.z);
 }
 
-fn line_line_at_origin_meet(self_: Line, other: LineAtOrigin) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, -other.g0.z));
+fn line_line_at_origin_meet(self_: Line, other: LineAtOrigin) -> Infinity {
+    return Infinity(0.0 - self_.g1.x * other.g0.x - self_.g1.y * other.g0.y - self_.g1.z * other.g0.z);
 }
 
 fn line_magnitude_meet(self_: Line, other: Magnitude) -> Line {
@@ -7444,20 +8073,20 @@ fn line_at_infinity_anti_scalar_meet(self_: LineAtInfinity, other: AntiScalar) -
     return LineAtInfinity(self_.g0 * vec3<f32>(other.g0));
 }
 
-fn line_at_infinity_circle_meet(self_: LineAtInfinity, other: Circle) -> Radial {
-    return Radial(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g1.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g1.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g1.z));
+fn line_at_infinity_circle_meet(self_: LineAtInfinity, other: Circle) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g1.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g1.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g1.z));
 }
 
 fn line_at_infinity_dipole_meet(self_: LineAtInfinity, other: Dipole) -> Scalar {
     return Scalar(0.0 - self_.g0.x * other.g0.x - self_.g0.y * other.g0.y - self_.g0.z * other.g0.z);
 }
 
-fn line_at_infinity_line_meet(self_: LineAtInfinity, other: Line) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
+fn line_at_infinity_line_meet(self_: LineAtInfinity, other: Line) -> Infinity {
+    return Infinity(0.0 - self_.g0.x * other.g0.x - self_.g0.y * other.g0.y - self_.g0.z * other.g0.z);
 }
 
-fn line_at_infinity_line_at_origin_meet(self_: LineAtInfinity, other: LineAtOrigin) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
+fn line_at_infinity_line_at_origin_meet(self_: LineAtInfinity, other: LineAtOrigin) -> Infinity {
+    return Infinity(0.0 - self_.g0.x * other.g0.x - self_.g0.y * other.g0.y - self_.g0.z * other.g0.z);
 }
 
 fn line_at_infinity_magnitude_meet(self_: LineAtInfinity, other: Magnitude) -> LineAtInfinity {
@@ -7484,8 +8113,8 @@ fn line_at_origin_anti_scalar_meet(self_: LineAtOrigin, other: AntiScalar) -> Li
     return LineAtOrigin(self_.g0 * vec3<f32>(other.g0));
 }
 
-fn line_at_origin_circle_meet(self_: LineAtOrigin, other: Circle) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(other.g0.w), vec2<f32>(0.0) - vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, other.g2.x) - vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, other.g2.y) - vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, other.g2.z));
+fn line_at_origin_circle_meet(self_: LineAtOrigin, other: Circle) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(other.g0.w), vec2<f32>(0.0) - vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, other.g2.x) - vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, other.g2.y) - vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, other.g2.z));
 }
 
 fn line_at_origin_dipole_meet(self_: LineAtOrigin, other: Dipole) -> Scalar {
@@ -7496,12 +8125,12 @@ fn line_at_origin_horizon_meet(self_: LineAtOrigin, other: Horizon) -> PointAtIn
     return PointAtInfinity(self_.g0 * vec3<f32>(other.g0));
 }
 
-fn line_at_origin_line_meet(self_: LineAtOrigin, other: Line) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g1.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g1.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g1.z));
+fn line_at_origin_line_meet(self_: LineAtOrigin, other: Line) -> Infinity {
+    return Infinity(0.0 - self_.g0.x * other.g1.x - self_.g0.y * other.g1.y - self_.g0.z * other.g1.z);
 }
 
-fn line_at_origin_line_at_infinity_meet(self_: LineAtOrigin, other: LineAtInfinity) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
+fn line_at_origin_line_at_infinity_meet(self_: LineAtOrigin, other: LineAtInfinity) -> Infinity {
+    return Infinity(0.0 - self_.g0.x * other.g0.x - self_.g0.y * other.g0.y - self_.g0.z * other.g0.z);
 }
 
 fn line_at_origin_magnitude_meet(self_: LineAtOrigin, other: Magnitude) -> LineAtOrigin {
@@ -7538,6 +8167,10 @@ fn magnitude_dipole_meet(self_: Magnitude, other: Dipole) -> Dipole {
 
 fn magnitude_horizon_meet(self_: Magnitude, other: Horizon) -> Horizon {
     return Horizon(self_.g0.y * other.g0);
+}
+
+fn magnitude_infinity_meet(self_: Magnitude, other: Infinity) -> Infinity {
+    return Infinity(self_.g0.y * other.g0);
 }
 
 fn magnitude_line_meet(self_: Magnitude, other: Line) -> Line {
@@ -7580,8 +8213,8 @@ fn magnitude_point_at_infinity_meet(self_: Magnitude, other: PointAtInfinity) ->
     return PointAtInfinity(vec3<f32>(self_.g0.y) * other.g0);
 }
 
-fn magnitude_radial_meet(self_: Magnitude, other: Radial) -> Radial {
-    return Radial(vec3<f32>(self_.g0.y) * other.g0, vec2<f32>(self_.g0.y) * other.g1);
+fn magnitude_round_point_meet(self_: Magnitude, other: RoundPoint) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0.y) * other.g0, vec2<f32>(self_.g0.y) * other.g1);
 }
 
 fn magnitude_scalar_meet(self_: Magnitude, other: Scalar) -> Scalar {
@@ -7606,6 +8239,10 @@ fn multi_vector_dipole_meet(self_: MultiVector, other: Dipole) -> MultiVector {
 
 fn multi_vector_horizon_meet(self_: MultiVector, other: Horizon) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g2.x) * vec2<f32>(other.g0, 0.0), self_.g3 * vec3<f32>(other.g0), vec2<f32>(self_.g5.w) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g0), vec4<f32>(self_.g7.x, self_.g7.y, self_.g7.z, self_.g7.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0), vec4<f32>(self_.g10.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0), vec3<f32>(0.0), self_.g9 * vec3<f32>(other.g0), vec3<f32>(0.0), vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0));
+}
+
+fn multi_vector_infinity_meet(self_: MultiVector, other: Infinity) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g10.x) * vec2<f32>(other.g0, 0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
 fn multi_vector_line_meet(self_: MultiVector, other: Line) -> MultiVector {
@@ -7648,7 +8285,7 @@ fn multi_vector_point_at_infinity_meet(self_: MultiVector, other: PointAtInfinit
     return MultiVector(vec2<f32>(self_.g6.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g6.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g6.z) * vec2<f32>(-other.g0.z, 0.0), vec3<f32>(self_.g10.x) * other.g0, vec2<f32>(self_.g9.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g9.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g9.z) * vec2<f32>(0.0, -other.g0.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.y) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn multi_vector_radial_meet(self_: MultiVector, other: Radial) -> MultiVector {
+fn multi_vector_round_point_meet(self_: MultiVector, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g9.x) * vec2<f32>(other.g0.x, 0.0) + vec2<f32>(self_.g9.y) * vec2<f32>(other.g0.y, 0.0) + vec2<f32>(self_.g9.z) * vec2<f32>(other.g0.z, 0.0) + vec2<f32>(self_.g10.x) * vec2<f32>(other.g1.y, 0.0) + vec2<f32>(self_.g10.y) * vec2<f32>(other.g1.x, 0.0), vec3<f32>(self_.g0.y) * other.g0, vec2<f32>(self_.g0.y) * other.g1, vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
@@ -7668,8 +8305,8 @@ fn origin_circle_meet(self_: Origin, other: Circle) -> Scalar {
     return Scalar(0.0 - self_.g0 * other.g0.w);
 }
 
-fn origin_horizon_meet(self_: Origin, other: Horizon) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0));
+fn origin_horizon_meet(self_: Origin, other: Horizon) -> Infinity {
+    return Infinity(self_.g0 * other.g0);
 }
 
 fn origin_magnitude_meet(self_: Origin, other: Magnitude) -> Origin {
@@ -7680,12 +8317,12 @@ fn origin_multi_vector_meet(self_: Origin, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(-other.g6.w, 0.0), vec3<f32>(0.0), vec2<f32>(self_.g0) * other.g10 * vec2<f32>(-1.0, 1.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0) * vec4<f32>(0.0, 0.0, 0.0, other.g0.y), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn origin_plane_meet(self_: Origin, other: Plane) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0.w));
+fn origin_plane_meet(self_: Origin, other: Plane) -> Infinity {
+    return Infinity(self_.g0 * other.g0.w);
 }
 
-fn origin_sphere_meet(self_: Origin, other: Sphere) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0) * other.g1 * vec2<f32>(-1.0, 1.0));
+fn origin_sphere_meet(self_: Origin, other: Sphere) -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0), vec2<f32>(self_.g0) * other.g1 * vec2<f32>(-1.0, 1.0));
 }
 
 fn plane_anti_scalar_meet(self_: Plane, other: AntiScalar) -> Plane {
@@ -7696,8 +8333,8 @@ fn plane_circle_meet(self_: Plane, other: Circle) -> Dipole {
     return Dipole(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0.w) + vec3<f32>(self_.g0.w) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g2.z, -other.g2.y, -other.g1.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g2.z, 0.0, other.g2.x, -other.g1.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g2.y, -other.g2.x, 0.0, -other.g1.z) + vec4<f32>(self_.g0.w) * vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0));
 }
 
-fn plane_dipole_meet(self_: Plane, other: Dipole) -> Radial {
-    return Radial(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g1.z, other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g1.z, 0.0, -other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g1.y, other.g1.x, 0.0) - vec3<f32>(self_.g0.w) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, -other.g2.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, -other.g2.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, -other.g2.z) + vec2<f32>(self_.g0.w) * vec2<f32>(0.0, -other.g2.w));
+fn plane_dipole_meet(self_: Plane, other: Dipole) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g1.z, other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g1.z, 0.0, -other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g1.y, other.g1.x, 0.0) - vec3<f32>(self_.g0.w) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, -other.g2.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, -other.g2.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, -other.g2.z) + vec2<f32>(self_.g0.w) * vec2<f32>(0.0, -other.g2.w));
 }
 
 fn plane_horizon_meet(self_: Plane, other: Horizon) -> LineAtInfinity {
@@ -7724,8 +8361,8 @@ fn plane_multi_vector_meet(self_: Plane, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(other.g1.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g1.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g1.z, 0.0) + vec2<f32>(self_.g0.w) * vec2<f32>(other.g2.x, 0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g4.z, other.g4.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g4.z, 0.0, -other.g4.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g4.y, other.g4.x, 0.0) - vec3<f32>(self_.g0.w) * other.g3, vec2<f32>(self_.g0.x) * vec2<f32>(other.g3.x, -other.g5.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g3.y, -other.g5.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g3.z, -other.g5.z) + vec2<f32>(self_.g0.w) * vec2<f32>(0.0, -other.g5.w), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g6.z, other.g6.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g6.z, 0.0, -other.g6.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g6.y, other.g6.x, 0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g6.w) + vec3<f32>(self_.g0.w) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g8.z, -other.g8.y, -other.g7.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g8.z, 0.0, other.g8.x, -other.g7.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g8.y, -other.g8.x, 0.0, -other.g7.z) + vec4<f32>(self_.g0.w) * vec4<f32>(other.g7.x, other.g7.y, other.g7.z, 0.0), vec4<f32>(0.0) - self_.g0 * vec4<f32>(other.g10.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g9.z, -other.g9.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g9.z, 0.0, other.g9.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g9.y, -other.g9.x, 0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g10.y) - vec3<f32>(self_.g0.w) * other.g9, vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0.y), vec2<f32>(self_.g0.w) * vec2<f32>(0.0, other.g0.y));
 }
 
-fn plane_origin_meet(self_: Plane, other: Origin) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.w) * vec2<f32>(0.0, -other.g0));
+fn plane_origin_meet(self_: Plane, other: Origin) -> Infinity {
+    return Infinity(0.0 - self_.g0.w * other.g0);
 }
 
 fn plane_plane_meet(self_: Plane, other: Plane) -> Line {
@@ -7736,15 +8373,15 @@ fn plane_plane_at_origin_meet(self_: Plane, other: PlaneAtOrigin) -> Line {
     return Line(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0.w) * other.g0);
 }
 
-fn plane_point_meet(self_: Plane, other: Point) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z) + vec2<f32>(self_.g0.w) * vec2<f32>(0.0, -other.g0.w));
+fn plane_point_meet(self_: Plane, other: Point) -> Infinity {
+    return Infinity(0.0 - self_.g0.x * other.g0.x - self_.g0.y * other.g0.y - self_.g0.z * other.g0.z - self_.g0.w * other.g0.w);
 }
 
-fn plane_point_at_infinity_meet(self_: Plane, other: PointAtInfinity) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
+fn plane_point_at_infinity_meet(self_: Plane, other: PointAtInfinity) -> Infinity {
+    return Infinity(0.0 - self_.g0.x * other.g0.x - self_.g0.y * other.g0.y - self_.g0.z * other.g0.z);
 }
 
-fn plane_radial_meet(self_: Plane, other: Radial) -> Scalar {
+fn plane_round_point_meet(self_: Plane, other: RoundPoint) -> Scalar {
     return Scalar(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z + self_.g0.w * other.g1.x);
 }
 
@@ -7760,8 +8397,8 @@ fn plane_at_origin_circle_meet(self_: PlaneAtOrigin, other: Circle) -> Dipole {
     return Dipole(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0.w), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g2.z, -other.g2.y, -other.g1.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g2.z, 0.0, other.g2.x, -other.g1.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g2.y, -other.g2.x, 0.0, -other.g1.z));
 }
 
-fn plane_at_origin_dipole_meet(self_: PlaneAtOrigin, other: Dipole) -> Radial {
-    return Radial(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g1.z, other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g1.z, 0.0, -other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g1.y, other.g1.x, 0.0), vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, -other.g2.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, -other.g2.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, -other.g2.z));
+fn plane_at_origin_dipole_meet(self_: PlaneAtOrigin, other: Dipole) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g1.z, other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g1.z, 0.0, -other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g1.y, other.g1.x, 0.0), vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, -other.g2.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, -other.g2.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, -other.g2.z));
 }
 
 fn plane_at_origin_horizon_meet(self_: PlaneAtOrigin, other: Horizon) -> LineAtInfinity {
@@ -7796,15 +8433,15 @@ fn plane_at_origin_plane_at_origin_meet(self_: PlaneAtOrigin, other: PlaneAtOrig
     return LineAtOrigin(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0));
 }
 
-fn plane_at_origin_point_meet(self_: PlaneAtOrigin, other: Point) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
+fn plane_at_origin_point_meet(self_: PlaneAtOrigin, other: Point) -> Infinity {
+    return Infinity(0.0 - self_.g0.x * other.g0.x - self_.g0.y * other.g0.y - self_.g0.z * other.g0.z);
 }
 
-fn plane_at_origin_point_at_infinity_meet(self_: PlaneAtOrigin, other: PointAtInfinity) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
+fn plane_at_origin_point_at_infinity_meet(self_: PlaneAtOrigin, other: PointAtInfinity) -> Infinity {
+    return Infinity(0.0 - self_.g0.x * other.g0.x - self_.g0.y * other.g0.y - self_.g0.z * other.g0.z);
 }
 
-fn plane_at_origin_radial_meet(self_: PlaneAtOrigin, other: Radial) -> Scalar {
+fn plane_at_origin_round_point_meet(self_: PlaneAtOrigin, other: RoundPoint) -> Scalar {
     return Scalar(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z);
 }
 
@@ -7820,8 +8457,8 @@ fn point_circle_meet(self_: Point, other: Circle) -> Scalar {
     return Scalar(0.0 - self_.g0.x * other.g0.x - self_.g0.y * other.g0.y - self_.g0.z * other.g0.z - self_.g0.w * other.g0.w);
 }
 
-fn point_horizon_meet(self_: Point, other: Horizon) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.w) * vec2<f32>(0.0, other.g0));
+fn point_horizon_meet(self_: Point, other: Horizon) -> Infinity {
+    return Infinity(self_.g0.w * other.g0);
 }
 
 fn point_magnitude_meet(self_: Point, other: Magnitude) -> Point {
@@ -7832,16 +8469,16 @@ fn point_multi_vector_meet(self_: Point, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(-other.g6.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g6.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g6.z, 0.0) + vec2<f32>(self_.g0.w) * vec2<f32>(-other.g6.w, 0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g10.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g9.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g9.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g9.z) + vec2<f32>(self_.g0.w) * other.g10 * vec2<f32>(-1.0, 1.0), vec3<f32>(0.0), vec3<f32>(0.0), self_.g0 * vec4<f32>(other.g0.y), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn point_plane_meet(self_: Point, other: Plane) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g0.w) * vec2<f32>(0.0, other.g0.w));
+fn point_plane_meet(self_: Point, other: Plane) -> Infinity {
+    return Infinity(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z + self_.g0.w * other.g0.w);
 }
 
-fn point_plane_at_origin_meet(self_: Point, other: PlaneAtOrigin) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z));
+fn point_plane_at_origin_meet(self_: Point, other: PlaneAtOrigin) -> Infinity {
+    return Infinity(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z);
 }
 
-fn point_sphere_meet(self_: Point, other: Sphere) -> Radial {
-    return Radial(vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g0.w) * other.g1 * vec2<f32>(-1.0, 1.0));
+fn point_sphere_meet(self_: Point, other: Sphere) -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0) - vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g0.w) * other.g1 * vec2<f32>(-1.0, 1.0));
 }
 
 fn point_at_infinity_anti_scalar_meet(self_: PointAtInfinity, other: AntiScalar) -> PointAtInfinity {
@@ -7860,43 +8497,43 @@ fn point_at_infinity_multi_vector_meet(self_: PointAtInfinity, other: MultiVecto
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(-other.g6.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g6.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g6.z, 0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g10.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g9.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g9.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g9.z), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(other.g0.y, other.g0.y, other.g0.y, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn point_at_infinity_plane_meet(self_: PointAtInfinity, other: Plane) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z));
+fn point_at_infinity_plane_meet(self_: PointAtInfinity, other: Plane) -> Infinity {
+    return Infinity(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z);
 }
 
-fn point_at_infinity_plane_at_origin_meet(self_: PointAtInfinity, other: PlaneAtOrigin) -> Radial {
-    return Radial(vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z));
+fn point_at_infinity_plane_at_origin_meet(self_: PointAtInfinity, other: PlaneAtOrigin) -> Infinity {
+    return Infinity(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z);
 }
 
-fn point_at_infinity_sphere_meet(self_: PointAtInfinity, other: Sphere) -> Radial {
-    return Radial(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z));
+fn point_at_infinity_sphere_meet(self_: PointAtInfinity, other: Sphere) -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g0.z));
 }
 
-fn radial_anti_scalar_meet(self_: Radial, other: AntiScalar) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(other.g0), self_.g1 * vec2<f32>(other.g0));
+fn round_point_anti_scalar_meet(self_: RoundPoint, other: AntiScalar) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(other.g0), self_.g1 * vec2<f32>(other.g0));
 }
 
-fn radial_horizon_meet(self_: Radial, other: Horizon) -> Scalar {
+fn round_point_horizon_meet(self_: RoundPoint, other: Horizon) -> Scalar {
     return Scalar(self_.g1.x * other.g0);
 }
 
-fn radial_magnitude_meet(self_: Radial, other: Magnitude) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(other.g0.y), self_.g1 * vec2<f32>(other.g0.y));
+fn round_point_magnitude_meet(self_: RoundPoint, other: Magnitude) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(other.g0.y), self_.g1 * vec2<f32>(other.g0.y));
 }
 
-fn radial_multi_vector_meet(self_: Radial, other: MultiVector) -> MultiVector {
+fn round_point_multi_vector_meet(self_: RoundPoint, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(other.g9.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g9.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g9.z, 0.0) + vec2<f32>(self_.g1.x) * vec2<f32>(other.g10.y, 0.0) + vec2<f32>(self_.g1.y) * vec2<f32>(other.g10.x, 0.0), self_.g0 * vec3<f32>(other.g0.y), self_.g1 * vec2<f32>(other.g0.y), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
-fn radial_plane_meet(self_: Radial, other: Plane) -> Scalar {
+fn round_point_plane_meet(self_: RoundPoint, other: Plane) -> Scalar {
     return Scalar(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z + self_.g1.x * other.g0.w);
 }
 
-fn radial_plane_at_origin_meet(self_: Radial, other: PlaneAtOrigin) -> Scalar {
+fn round_point_plane_at_origin_meet(self_: RoundPoint, other: PlaneAtOrigin) -> Scalar {
     return Scalar(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z);
 }
 
-fn radial_sphere_meet(self_: Radial, other: Sphere) -> Scalar {
+fn round_point_sphere_meet(self_: RoundPoint, other: Sphere) -> Scalar {
     return Scalar(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z + self_.g1.x * other.g1.y + self_.g1.y * other.g1.x);
 }
 
@@ -7920,12 +8557,16 @@ fn sphere_circle_meet(self_: Sphere, other: Circle) -> Dipole {
     return Dipole(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0) + vec3<f32>(self_.g1.x) * other.g1, vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0.w) + vec3<f32>(self_.g1.x) * other.g2 + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g2.z, -other.g2.y, -other.g1.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g2.z, 0.0, other.g2.x, -other.g1.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g2.y, -other.g2.x, 0.0, -other.g1.z) + vec4<f32>(self_.g1.y) * vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0));
 }
 
-fn sphere_dipole_meet(self_: Sphere, other: Dipole) -> Radial {
-    return Radial(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g1.z, other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g1.z, 0.0, -other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g1.y, other.g1.x, 0.0) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g2.x, other.g2.y, other.g2.z) - vec3<f32>(self_.g1.y) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, -other.g2.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, -other.g2.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, -other.g2.z) + self_.g1 * vec2<f32>(other.g2.w));
+fn sphere_dipole_meet(self_: Sphere, other: Dipole) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g1.z, other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g1.z, 0.0, -other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g1.y, other.g1.x, 0.0) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g2.x, other.g2.y, other.g2.z) - vec3<f32>(self_.g1.y) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, -other.g2.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, -other.g2.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, -other.g2.z) + self_.g1 * vec2<f32>(other.g2.w));
 }
 
 fn sphere_horizon_meet(self_: Sphere, other: Horizon) -> Circle {
     return Circle(vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g0));
+}
+
+fn sphere_infinity_meet(self_: Sphere, other: Infinity) -> Scalar {
+    return Scalar(self_.g1.x * other.g0);
 }
 
 fn sphere_line_meet(self_: Sphere, other: Line) -> Dipole {
@@ -7948,8 +8589,8 @@ fn sphere_multi_vector_meet(self_: Sphere, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(other.g1.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g1.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g1.z, 0.0) + vec2<f32>(self_.g1.x) * vec2<f32>(other.g2.y, 0.0) + vec2<f32>(self_.g1.y) * vec2<f32>(other.g2.x, 0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g4.z, other.g4.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g4.z, 0.0, -other.g4.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g4.y, other.g4.x, 0.0) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g5.x, other.g5.y, other.g5.z) - vec3<f32>(self_.g1.y) * other.g3, vec2<f32>(self_.g0.x) * vec2<f32>(other.g3.x, -other.g5.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g3.y, -other.g5.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g3.z, -other.g5.z) + self_.g1 * vec2<f32>(other.g5.w), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g6.z, other.g6.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g6.z, 0.0, -other.g6.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g6.y, other.g6.x, 0.0) + vec3<f32>(self_.g1.x) * other.g7, vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g6.w) + vec3<f32>(self_.g1.x) * other.g8 + vec3<f32>(self_.g1.y) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g8.z, -other.g8.y, -other.g7.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g8.z, 0.0, other.g8.x, -other.g7.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g8.y, -other.g8.x, 0.0, -other.g7.z) + vec4<f32>(self_.g1.y) * vec4<f32>(other.g7.x, other.g7.y, other.g7.z, 0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(-other.g10.x, -other.g10.x, -other.g10.x, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g9.x, other.g9.y, other.g9.z, other.g10.y) + vec4<f32>(self_.g1.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g10.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g9.z, -other.g9.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g9.z, 0.0, other.g9.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g9.y, -other.g9.x, 0.0), self_.g0 * vec3<f32>(other.g10.y) - vec3<f32>(self_.g1.y) * other.g9, self_.g0 * vec3<f32>(other.g0.y), self_.g1 * vec2<f32>(other.g0.y));
 }
 
-fn sphere_origin_meet(self_: Sphere, other: Origin) -> Radial {
-    return Radial(vec3<f32>(0.0), self_.g1 * vec2<f32>(other.g0));
+fn sphere_origin_meet(self_: Sphere, other: Origin) -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0), self_.g1 * vec2<f32>(other.g0));
 }
 
 fn sphere_plane_meet(self_: Sphere, other: Plane) -> Circle {
@@ -7960,15 +8601,15 @@ fn sphere_plane_at_origin_meet(self_: Sphere, other: PlaneAtOrigin) -> Circle {
     return Circle(vec4<f32>(self_.g1.x) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(0.0) - vec3<f32>(self_.g1.y) * other.g0);
 }
 
-fn sphere_point_meet(self_: Sphere, other: Point) -> Radial {
-    return Radial(vec3<f32>(self_.g1.x) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z) + self_.g1 * vec2<f32>(other.g0.w));
+fn sphere_point_meet(self_: Sphere, other: Point) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g1.x) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z) + self_.g1 * vec2<f32>(other.g0.w));
 }
 
-fn sphere_point_at_infinity_meet(self_: Sphere, other: PointAtInfinity) -> Radial {
-    return Radial(vec3<f32>(self_.g1.x) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
+fn sphere_point_at_infinity_meet(self_: Sphere, other: PointAtInfinity) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g1.x) * other.g0, vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn sphere_radial_meet(self_: Sphere, other: Radial) -> Scalar {
+fn sphere_round_point_meet(self_: Sphere, other: RoundPoint) -> Scalar {
     return Scalar(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z + self_.g1.x * other.g1.y + self_.g1.y * other.g1.x);
 }
 
@@ -7992,6 +8633,10 @@ fn circle_dipole_wedge(self_: Circle, other: Dipole) -> AntiScalar {
     return AntiScalar(0.0 - self_.g0.x * other.g2.x - self_.g0.y * other.g2.y - self_.g0.z * other.g2.z - self_.g0.w * other.g2.w - self_.g1.x * other.g1.x - self_.g1.y * other.g1.y - self_.g1.z * other.g1.z - self_.g2.x * other.g0.x - self_.g2.y * other.g0.y - self_.g2.z * other.g0.z);
 }
 
+fn circle_infinity_wedge(self_: Circle, other: Infinity) -> Plane {
+    return Plane(self_.g0 * vec4<f32>(other.g0));
+}
+
 fn circle_magnitude_wedge(self_: Circle, other: Magnitude) -> Circle {
     return Circle(self_.g0 * vec4<f32>(other.g0.x), self_.g1 * vec3<f32>(other.g0.x), self_.g2 * vec3<f32>(other.g0.x));
 }
@@ -8012,7 +8657,7 @@ fn circle_point_at_infinity_wedge(self_: Circle, other: PointAtInfinity) -> Anti
     return AntiScalar(0.0 - self_.g0.x * other.g0.x - self_.g0.y * other.g0.y - self_.g0.z * other.g0.z);
 }
 
-fn circle_radial_wedge(self_: Circle, other: Radial) -> Sphere {
+fn circle_round_point_wedge(self_: Circle, other: RoundPoint) -> Sphere {
     return Sphere(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.y) + vec3<f32>(self_.g1.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) - self_.g2 * vec3<f32>(other.g1.x), vec2<f32>(self_.g0.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g0.w) * other.g1 * vec2<f32>(-1.0, 1.0) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, other.g0.z));
 }
 
@@ -8026,6 +8671,10 @@ fn dipole_circle_wedge(self_: Dipole, other: Circle) -> AntiScalar {
 
 fn dipole_dipole_wedge(self_: Dipole, other: Dipole) -> Sphere {
     return Sphere(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g2.z, other.g2.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g2.z, 0.0, -other.g2.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g2.y, other.g2.x, 0.0) + self_.g1 * vec3<f32>(other.g2.w) + vec3<f32>(self_.g2.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g2.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g2.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) + vec3<f32>(self_.g2.w) * other.g1, vec2<f32>(self_.g0.x) * vec2<f32>(-other.g1.x, 0.0) + vec2<f32>(self_.g0.y) * vec2<f32>(-other.g1.y, 0.0) + vec2<f32>(self_.g0.z) * vec2<f32>(-other.g1.z, 0.0) - vec2<f32>(self_.g1.x) * vec2<f32>(other.g0.x, other.g2.x) - vec2<f32>(self_.g1.y) * vec2<f32>(other.g0.y, other.g2.y) - vec2<f32>(self_.g1.z) * vec2<f32>(other.g0.z, other.g2.z) + vec2<f32>(self_.g2.x) * vec2<f32>(0.0, -other.g1.x) + vec2<f32>(self_.g2.y) * vec2<f32>(0.0, -other.g1.y) + vec2<f32>(self_.g2.z) * vec2<f32>(0.0, -other.g1.z));
+}
+
+fn dipole_infinity_wedge(self_: Dipole, other: Infinity) -> Line {
+    return Line(self_.g0 * vec3<f32>(other.g0), self_.g1 * vec3<f32>(other.g0));
 }
 
 fn dipole_line_wedge(self_: Dipole, other: Line) -> AntiScalar {
@@ -8060,7 +8709,7 @@ fn dipole_point_at_infinity_wedge(self_: Dipole, other: PointAtInfinity) -> Plan
     return Plane(vec4<f32>(self_.g0.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g1.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.y) + vec4<f32>(self_.g1.z) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.z));
 }
 
-fn dipole_radial_wedge(self_: Dipole, other: Radial) -> Circle {
+fn dipole_round_point_wedge(self_: Dipole, other: RoundPoint) -> Circle {
     return Circle(vec4<f32>(self_.g0.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g1.y) * vec4<f32>(0.0, other.g1.x, 0.0, -other.g0.y) + vec4<f32>(self_.g1.z) * vec4<f32>(0.0, 0.0, other.g1.x, -other.g0.z), self_.g0 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g2.x, self_.g2.y, self_.g2.z) * vec3<f32>(other.g1.x) - vec3<f32>(self_.g2.w) * other.g0, self_.g1 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g2.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g2.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g2.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0));
 }
 
@@ -8076,12 +8725,40 @@ fn horizon_multi_vector_wedge(self_: Horizon, other: MultiVector) -> MultiVector
     return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g2.x), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0.x));
 }
 
-fn horizon_radial_wedge(self_: Horizon, other: Radial) -> AntiScalar {
+fn horizon_round_point_wedge(self_: Horizon, other: RoundPoint) -> AntiScalar {
     return AntiScalar(self_.g0 * other.g1.x);
 }
 
 fn horizon_scalar_wedge(self_: Horizon, other: Scalar) -> Horizon {
     return Horizon(self_.g0 * other.g0);
+}
+
+fn infinity_circle_wedge(self_: Infinity, other: Circle) -> Plane {
+    return Plane(vec4<f32>(0.0) - vec4<f32>(self_.g0) * other.g0);
+}
+
+fn infinity_dipole_wedge(self_: Infinity, other: Dipole) -> Line {
+    return Line(vec3<f32>(self_.g0) * other.g0, vec3<f32>(self_.g0) * other.g1);
+}
+
+fn infinity_magnitude_wedge(self_: Infinity, other: Magnitude) -> Infinity {
+    return Infinity(self_.g0 * other.g0.x);
+}
+
+fn infinity_multi_vector_wedge(self_: Infinity, other: MultiVector) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g10.x), vec3<f32>(0.0), vec2<f32>(self_.g0) * vec2<f32>(0.0, other.g0.x), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0) - vec4<f32>(self_.g0) * vec4<f32>(other.g1.x, other.g1.y, other.g1.z, other.g2.x), vec4<f32>(0.0), vec3<f32>(self_.g0) * other.g3, vec3<f32>(self_.g0) * other.g4, vec3<f32>(0.0) - vec3<f32>(self_.g0) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g6.w));
+}
+
+fn infinity_round_point_wedge(self_: Infinity, other: RoundPoint) -> Point {
+    return Point(vec4<f32>(0.0) - vec4<f32>(self_.g0) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, other.g1.x));
+}
+
+fn infinity_scalar_wedge(self_: Infinity, other: Scalar) -> Infinity {
+    return Infinity(self_.g0 * other.g0);
+}
+
+fn infinity_sphere_wedge(self_: Infinity, other: Sphere) -> AntiScalar {
+    return AntiScalar(self_.g0 * other.g1.x);
 }
 
 fn line_dipole_wedge(self_: Line, other: Dipole) -> AntiScalar {
@@ -8096,7 +8773,7 @@ fn line_multi_vector_wedge(self_: Line, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g4.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g4.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g4.z) + vec2<f32>(self_.g1.x) * vec2<f32>(0.0, -other.g3.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, -other.g3.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, -other.g3.z), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), self_.g0 * vec3<f32>(other.g0.x), self_.g1 * vec3<f32>(other.g0.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g1.z, -other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g1.z, 0.0, other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g1.y, -other.g1.x, 0.0) - self_.g1 * vec3<f32>(other.g2.x), vec2<f32>(self_.g1.x) * vec2<f32>(0.0, other.g1.x) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, other.g1.y) + vec2<f32>(self_.g1.z) * vec2<f32>(0.0, other.g1.z));
 }
 
-fn line_radial_wedge(self_: Line, other: Radial) -> Plane {
+fn line_round_point_wedge(self_: Line, other: RoundPoint) -> Plane {
     return Plane(vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, 0.0) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(-other.g1.x, 0.0, 0.0, other.g0.x) + vec4<f32>(self_.g1.y) * vec4<f32>(0.0, -other.g1.x, 0.0, other.g0.y) + vec4<f32>(self_.g1.z) * vec4<f32>(0.0, 0.0, -other.g1.x, other.g0.z));
 }
 
@@ -8116,7 +8793,7 @@ fn line_at_infinity_multi_vector_wedge(self_: LineAtInfinity, other: MultiVector
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g3.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g3.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g3.z), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g0.x), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g2.x), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g1.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g1.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g1.z));
 }
 
-fn line_at_infinity_radial_wedge(self_: LineAtInfinity, other: Radial) -> Plane {
+fn line_at_infinity_round_point_wedge(self_: LineAtInfinity, other: RoundPoint) -> Plane {
     return Plane(vec4<f32>(self_.g0.x) * vec4<f32>(-other.g1.x, 0.0, 0.0, other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(0.0, -other.g1.x, 0.0, other.g0.y) + vec4<f32>(self_.g0.z) * vec4<f32>(0.0, 0.0, -other.g1.x, other.g0.z));
 }
 
@@ -8136,7 +8813,7 @@ fn line_at_origin_multi_vector_wedge(self_: LineAtOrigin, other: MultiVector) ->
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g4.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g4.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g4.z), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), self_.g0 * vec3<f32>(other.g0.x), vec3<f32>(0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g1.z, -other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g1.z, 0.0, other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g1.y, -other.g1.x, 0.0), vec2<f32>(0.0));
 }
 
-fn line_at_origin_radial_wedge(self_: LineAtOrigin, other: Radial) -> PlaneAtOrigin {
+fn line_at_origin_round_point_wedge(self_: LineAtOrigin, other: RoundPoint) -> PlaneAtOrigin {
     return PlaneAtOrigin(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0));
 }
 
@@ -8158,6 +8835,10 @@ fn magnitude_dipole_wedge(self_: Magnitude, other: Dipole) -> Dipole {
 
 fn magnitude_horizon_wedge(self_: Magnitude, other: Horizon) -> Horizon {
     return Horizon(self_.g0.x * other.g0);
+}
+
+fn magnitude_infinity_wedge(self_: Magnitude, other: Infinity) -> Infinity {
+    return Infinity(self_.g0.x * other.g0);
 }
 
 fn magnitude_line_wedge(self_: Magnitude, other: Line) -> Line {
@@ -8200,8 +8881,8 @@ fn magnitude_point_at_infinity_wedge(self_: Magnitude, other: PointAtInfinity) -
     return PointAtInfinity(vec3<f32>(self_.g0.x) * other.g0);
 }
 
-fn magnitude_radial_wedge(self_: Magnitude, other: Radial) -> Radial {
-    return Radial(vec3<f32>(self_.g0.x) * other.g0, vec2<f32>(self_.g0.x) * other.g1);
+fn magnitude_round_point_wedge(self_: Magnitude, other: RoundPoint) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0.x) * other.g0, vec2<f32>(self_.g0.x) * other.g1);
 }
 
 fn magnitude_scalar_wedge(self_: Magnitude, other: Scalar) -> Magnitude {
@@ -8226,6 +8907,10 @@ fn multi_vector_dipole_wedge(self_: MultiVector, other: Dipole) -> MultiVector {
 
 fn multi_vector_horizon_wedge(self_: MultiVector, other: Horizon) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g2.x) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0));
+}
+
+fn multi_vector_infinity_wedge(self_: MultiVector, other: Infinity) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g10.x) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, self_.g1.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0) + vec4<f32>(self_.g2.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0), vec4<f32>(0.0), self_.g3 * vec3<f32>(other.g0), self_.g4 * vec3<f32>(other.g0), vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g0), vec2<f32>(self_.g6.w) * vec2<f32>(0.0, other.g0));
 }
 
 fn multi_vector_line_wedge(self_: MultiVector, other: Line) -> MultiVector {
@@ -8268,7 +8953,7 @@ fn multi_vector_point_at_infinity_wedge(self_: MultiVector, other: PointAtInfini
     return MultiVector(vec2<f32>(self_.g6.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g6.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g6.z) * vec2<f32>(0.0, -other.g0.z), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4<f32>(0.0), vec3<f32>(self_.g2.x) * other.g0, vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec3<f32>(self_.g3.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g3.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g3.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec2<f32>(self_.g4.x) * vec2<f32>(0.0, -other.g0.x) + vec2<f32>(self_.g4.y) * vec2<f32>(0.0, -other.g0.y) + vec2<f32>(self_.g4.z) * vec2<f32>(0.0, -other.g0.z));
 }
 
-fn multi_vector_radial_wedge(self_: MultiVector, other: Radial) -> MultiVector {
+fn multi_vector_round_point_wedge(self_: MultiVector, other: RoundPoint) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g9.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g9.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g9.z) * vec2<f32>(0.0, other.g0.z) + vec2<f32>(self_.g10.x) * vec2<f32>(0.0, other.g1.y) + vec2<f32>(self_.g10.y) * vec2<f32>(0.0, other.g1.x), vec3<f32>(self_.g0.x) * other.g0, vec2<f32>(self_.g0.x) * other.g1, vec3<f32>(0.0) - self_.g1 * vec3<f32>(other.g1.x) + vec3<f32>(self_.g2.x) * other.g0, vec3<f32>(self_.g1.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g1.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, self_.g1.x) * vec4<f32>(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4<f32>(self_.g2.x) * vec4<f32>(0.0, 0.0, 0.0, other.g1.y) - vec4<f32>(self_.g2.y) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4<f32>(self_.g3.x) * vec4<f32>(0.0, -other.g0.z, other.g0.y, 0.0) + vec4<f32>(self_.g3.y) * vec4<f32>(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4<f32>(self_.g3.z) * vec4<f32>(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4<f32>(self_.g4.x) * vec4<f32>(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g4.y) * vec4<f32>(0.0, other.g1.x, 0.0, -other.g0.y) + vec4<f32>(self_.g4.z) * vec4<f32>(0.0, 0.0, other.g1.x, -other.g0.z), self_.g3 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g5.x, self_.g5.y, self_.g5.z) * vec3<f32>(other.g1.x) - vec3<f32>(self_.g5.w) * other.g0, self_.g4 * vec3<f32>(other.g1.y) + vec3<f32>(self_.g5.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g5.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g5.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0), vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z) * vec3<f32>(other.g1.y) + vec3<f32>(self_.g7.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g7.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g7.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0) - self_.g8 * vec3<f32>(other.g1.x), vec2<f32>(self_.g6.x) * vec2<f32>(-other.g0.x, 0.0) + vec2<f32>(self_.g6.y) * vec2<f32>(-other.g0.y, 0.0) + vec2<f32>(self_.g6.z) * vec2<f32>(-other.g0.z, 0.0) + vec2<f32>(self_.g6.w) * other.g1 * vec2<f32>(-1.0, 1.0) + vec2<f32>(self_.g8.x) * vec2<f32>(0.0, other.g0.x) + vec2<f32>(self_.g8.y) * vec2<f32>(0.0, other.g0.y) + vec2<f32>(self_.g8.z) * vec2<f32>(0.0, other.g0.z));
 }
 
@@ -8296,7 +8981,7 @@ fn origin_multi_vector_wedge(self_: Origin, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0) * vec2<f32>(0.0, -other.g6.w), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0) * vec4<f32>(0.0, 0.0, 0.0, other.g0.x), vec4<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g1, vec3<f32>(0.0), vec3<f32>(self_.g0) * other.g4, vec2<f32>(0.0));
 }
 
-fn origin_radial_wedge(self_: Origin, other: Radial) -> LineAtOrigin {
+fn origin_round_point_wedge(self_: Origin, other: RoundPoint) -> LineAtOrigin {
     return LineAtOrigin(vec3<f32>(0.0) - vec3<f32>(self_.g0) * other.g0);
 }
 
@@ -8312,7 +8997,7 @@ fn plane_multi_vector_wedge(self_: Plane, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g1.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g1.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g1.z) + vec2<f32>(self_.g0.w) * vec2<f32>(0.0, other.g2.x), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g0.x), vec2<f32>(self_.g0.w) * vec2<f32>(0.0, other.g0.x));
 }
 
-fn plane_radial_wedge(self_: Plane, other: Radial) -> AntiScalar {
+fn plane_round_point_wedge(self_: Plane, other: RoundPoint) -> AntiScalar {
     return AntiScalar(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z + self_.g0.w * other.g1.x);
 }
 
@@ -8328,7 +9013,7 @@ fn plane_at_origin_multi_vector_wedge(self_: PlaneAtOrigin, other: MultiVector) 
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g1.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g1.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g1.z), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g0.x), vec2<f32>(0.0));
 }
 
-fn plane_at_origin_radial_wedge(self_: PlaneAtOrigin, other: Radial) -> AntiScalar {
+fn plane_at_origin_round_point_wedge(self_: PlaneAtOrigin, other: RoundPoint) -> AntiScalar {
     return AntiScalar(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z);
 }
 
@@ -8352,7 +9037,7 @@ fn point_multi_vector_wedge(self_: Point, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g6.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g6.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g6.z) + vec2<f32>(self_.g0.w) * vec2<f32>(0.0, -other.g6.w), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), self_.g0 * vec4<f32>(other.g0.x), vec4<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g2.x) - vec3<f32>(self_.g0.w) * other.g1, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g1.z, -other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g1.z, 0.0, other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g1.y, -other.g1.x, 0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g3.z, -other.g3.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g3.z, 0.0, other.g3.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g3.y, -other.g3.x, 0.0) + vec3<f32>(self_.g0.w) * other.g4, vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g4.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g4.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g4.z));
 }
 
-fn point_radial_wedge(self_: Point, other: Radial) -> Line {
+fn point_round_point_wedge(self_: Point, other: RoundPoint) -> Line {
     return Line(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) * vec3<f32>(other.g1.x) - vec3<f32>(self_.g0.w) * other.g0, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0));
 }
 
@@ -8376,7 +9061,7 @@ fn point_at_infinity_multi_vector_wedge(self_: PointAtInfinity, other: MultiVect
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g6.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g6.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g6.z), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(other.g0.x, other.g0.x, other.g0.x, 0.0), vec4<f32>(0.0), self_.g0 * vec3<f32>(other.g2.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g1.z, -other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g1.z, 0.0, other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g1.y, -other.g1.x, 0.0), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g3.z, -other.g3.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g3.z, 0.0, other.g3.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g3.y, -other.g3.x, 0.0), vec2<f32>(self_.g0.x) * vec2<f32>(0.0, -other.g4.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, -other.g4.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, -other.g4.z));
 }
 
-fn point_at_infinity_radial_wedge(self_: PointAtInfinity, other: Radial) -> Line {
+fn point_at_infinity_round_point_wedge(self_: PointAtInfinity, other: RoundPoint) -> Line {
     return Line(self_.g0 * vec3<f32>(other.g1.x), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0));
 }
 
@@ -8384,67 +9069,71 @@ fn point_at_infinity_scalar_wedge(self_: PointAtInfinity, other: Scalar) -> Poin
     return PointAtInfinity(self_.g0 * vec3<f32>(other.g0));
 }
 
-fn radial_circle_wedge(self_: Radial, other: Circle) -> Sphere {
+fn round_point_circle_wedge(self_: RoundPoint, other: Circle) -> Sphere {
     return Sphere(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g1.z, -other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g1.z, 0.0, other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g1.y, -other.g1.x, 0.0) + vec3<f32>(self_.g1.x) * other.g2 - vec3<f32>(self_.g1.y) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec2<f32>(self_.g0.x) * vec2<f32>(other.g0.x, -other.g2.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g0.y, -other.g2.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g0.z, -other.g2.z) + self_.g1 * vec2<f32>(other.g0.w));
 }
 
-fn radial_dipole_wedge(self_: Radial, other: Dipole) -> Circle {
+fn round_point_dipole_wedge(self_: RoundPoint, other: Dipole) -> Circle {
     return Circle(vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, -other.g1.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, -other.g1.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, -other.g1.z) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g2.w) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g2.x, other.g2.y, other.g2.z) + vec3<f32>(self_.g1.y) * other.g0, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g2.z, other.g2.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g2.z, 0.0, -other.g2.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g2.y, other.g2.x, 0.0) + vec3<f32>(self_.g1.y) * other.g1);
 }
 
-fn radial_horizon_wedge(self_: Radial, other: Horizon) -> AntiScalar {
+fn round_point_horizon_wedge(self_: RoundPoint, other: Horizon) -> AntiScalar {
     return AntiScalar(self_.g1.x * other.g0);
 }
 
-fn radial_line_wedge(self_: Radial, other: Line) -> Plane {
+fn round_point_infinity_wedge(self_: RoundPoint, other: Infinity) -> Point {
+    return Point(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(other.g0, other.g0, other.g0, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g0));
+}
+
+fn round_point_line_wedge(self_: RoundPoint, other: Line) -> Plane {
     return Plane(vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g0.z, -other.g0.y, -other.g1.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g0.z, 0.0, other.g0.x, -other.g1.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g0.y, -other.g0.x, 0.0, -other.g1.z) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0));
 }
 
-fn radial_line_at_infinity_wedge(self_: Radial, other: LineAtInfinity) -> Plane {
+fn round_point_line_at_infinity_wedge(self_: RoundPoint, other: LineAtInfinity) -> Plane {
     return Plane(vec4<f32>(self_.g0.x) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.x) + vec4<f32>(self_.g0.y) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.y) + vec4<f32>(self_.g0.z) * vec4<f32>(0.0, 0.0, 0.0, -other.g0.z) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
 }
 
-fn radial_line_at_origin_wedge(self_: Radial, other: LineAtOrigin) -> PlaneAtOrigin {
+fn round_point_line_at_origin_wedge(self_: RoundPoint, other: LineAtOrigin) -> PlaneAtOrigin {
     return PlaneAtOrigin(vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g0.z, -other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g0.z, 0.0, other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g0.y, -other.g0.x, 0.0));
 }
 
-fn radial_magnitude_wedge(self_: Radial, other: Magnitude) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(other.g0.x), self_.g1 * vec2<f32>(other.g0.x));
+fn round_point_magnitude_wedge(self_: RoundPoint, other: Magnitude) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(other.g0.x), self_.g1 * vec2<f32>(other.g0.x));
 }
 
-fn radial_multi_vector_wedge(self_: Radial, other: MultiVector) -> MultiVector {
+fn round_point_multi_vector_wedge(self_: RoundPoint, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g9.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g9.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g9.z) + vec2<f32>(self_.g1.x) * vec2<f32>(0.0, other.g10.y) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, other.g10.x), self_.g0 * vec3<f32>(other.g0.x), self_.g1 * vec2<f32>(other.g0.x), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g2.x) + vec3<f32>(self_.g1.x) * other.g1, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g1.z, other.g1.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g1.z, 0.0, -other.g1.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g1.y, other.g1.x, 0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(other.g2.y, other.g2.y, other.g2.y, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g2.y) - vec4<f32>(self_.g1.y) * vec4<f32>(other.g1.x, other.g1.y, other.g1.z, other.g2.x), vec4<f32>(self_.g0.x) * vec4<f32>(0.0, other.g3.z, -other.g3.y, -other.g4.x) + vec4<f32>(self_.g0.y) * vec4<f32>(-other.g3.z, 0.0, other.g3.x, -other.g4.y) + vec4<f32>(self_.g0.z) * vec4<f32>(other.g3.y, -other.g3.x, 0.0, -other.g4.z) + vec4<f32>(self_.g1.x) * vec4<f32>(other.g4.x, other.g4.y, other.g4.z, 0.0), vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g5.w) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g5.x, other.g5.y, other.g5.z) + vec3<f32>(self_.g1.y) * other.g3, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g5.z, other.g5.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g5.z, 0.0, -other.g5.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g5.y, other.g5.x, 0.0) + vec3<f32>(self_.g1.y) * other.g4, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, other.g7.z, -other.g7.y) + vec3<f32>(self_.g0.y) * vec3<f32>(-other.g7.z, 0.0, other.g7.x) + vec3<f32>(self_.g0.z) * vec3<f32>(other.g7.y, -other.g7.x, 0.0) + vec3<f32>(self_.g1.x) * other.g8 - vec3<f32>(self_.g1.y) * vec3<f32>(other.g6.x, other.g6.y, other.g6.z), vec2<f32>(self_.g0.x) * vec2<f32>(other.g6.x, -other.g8.x) + vec2<f32>(self_.g0.y) * vec2<f32>(other.g6.y, -other.g8.y) + vec2<f32>(self_.g0.z) * vec2<f32>(other.g6.z, -other.g8.z) + self_.g1 * vec2<f32>(other.g6.w));
 }
 
-fn radial_origin_wedge(self_: Radial, other: Origin) -> LineAtOrigin {
+fn round_point_origin_wedge(self_: RoundPoint, other: Origin) -> LineAtOrigin {
     return LineAtOrigin(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0));
 }
 
-fn radial_plane_wedge(self_: Radial, other: Plane) -> AntiScalar {
+fn round_point_plane_wedge(self_: RoundPoint, other: Plane) -> AntiScalar {
     return AntiScalar(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z + self_.g1.x * other.g0.w);
 }
 
-fn radial_plane_at_origin_wedge(self_: Radial, other: PlaneAtOrigin) -> AntiScalar {
+fn round_point_plane_at_origin_wedge(self_: RoundPoint, other: PlaneAtOrigin) -> AntiScalar {
     return AntiScalar(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z);
 }
 
-fn radial_point_wedge(self_: Radial, other: Point) -> Line {
+fn round_point_point_wedge(self_: RoundPoint, other: Point) -> Line {
     return Line(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g0.w) + vec3<f32>(self_.g1.x) * vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0));
 }
 
-fn radial_point_at_infinity_wedge(self_: Radial, other: PointAtInfinity) -> Line {
+fn round_point_point_at_infinity_wedge(self_: RoundPoint, other: PointAtInfinity) -> Line {
     return Line(vec3<f32>(self_.g1.x) * other.g0, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0));
 }
 
-fn radial_radial_wedge(self_: Radial, other: Radial) -> Dipole {
+fn round_point_round_point_wedge(self_: RoundPoint, other: RoundPoint) -> Dipole {
     return Dipole(vec3<f32>(0.0) - self_.g0 * vec3<f32>(other.g1.x) + vec3<f32>(self_.g1.x) * other.g0, vec3<f32>(self_.g0.x) * vec3<f32>(0.0, -other.g0.z, other.g0.y) + vec3<f32>(self_.g0.y) * vec3<f32>(other.g0.z, 0.0, -other.g0.x) + vec3<f32>(self_.g0.z) * vec3<f32>(-other.g0.y, other.g0.x, 0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, self_.g0.x) * vec4<f32>(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4<f32>(self_.g1.x) * vec4<f32>(0.0, 0.0, 0.0, other.g1.y) - vec4<f32>(self_.g1.y) * vec4<f32>(other.g0.x, other.g0.y, other.g0.z, other.g1.x));
 }
 
-fn radial_scalar_wedge(self_: Radial, other: Scalar) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(other.g0), self_.g1 * vec2<f32>(other.g0));
+fn round_point_scalar_wedge(self_: RoundPoint, other: Scalar) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(other.g0), self_.g1 * vec2<f32>(other.g0));
 }
 
-fn radial_sphere_wedge(self_: Radial, other: Sphere) -> AntiScalar {
+fn round_point_sphere_wedge(self_: RoundPoint, other: Sphere) -> AntiScalar {
     return AntiScalar(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z + self_.g1.x * other.g1.y + self_.g1.y * other.g1.x);
 }
 
@@ -8462,6 +9151,10 @@ fn scalar_dipole_wedge(self_: Scalar, other: Dipole) -> Dipole {
 
 fn scalar_horizon_wedge(self_: Scalar, other: Horizon) -> Horizon {
     return Horizon(self_.g0 * other.g0);
+}
+
+fn scalar_infinity_wedge(self_: Scalar, other: Infinity) -> Infinity {
+    return Infinity(self_.g0 * other.g0);
 }
 
 fn scalar_line_wedge(self_: Scalar, other: Line) -> Line {
@@ -8504,8 +9197,8 @@ fn scalar_point_at_infinity_wedge(self_: Scalar, other: PointAtInfinity) -> Poin
     return PointAtInfinity(vec3<f32>(self_.g0) * other.g0);
 }
 
-fn scalar_radial_wedge(self_: Scalar, other: Radial) -> Radial {
-    return Radial(vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * other.g1);
+fn scalar_round_point_wedge(self_: Scalar, other: RoundPoint) -> RoundPoint {
+    return RoundPoint(vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * other.g1);
 }
 
 fn scalar_scalar_wedge(self_: Scalar, other: Scalar) -> Scalar {
@@ -8516,6 +9209,10 @@ fn scalar_sphere_wedge(self_: Scalar, other: Sphere) -> Sphere {
     return Sphere(vec3<f32>(self_.g0) * other.g0, vec2<f32>(self_.g0) * other.g1);
 }
 
+fn sphere_infinity_wedge(self_: Sphere, other: Infinity) -> AntiScalar {
+    return AntiScalar(self_.g1.x * other.g0);
+}
+
 fn sphere_magnitude_wedge(self_: Sphere, other: Magnitude) -> Sphere {
     return Sphere(self_.g0 * vec3<f32>(other.g0.x), self_.g1 * vec2<f32>(other.g0.x));
 }
@@ -8524,7 +9221,7 @@ fn sphere_multi_vector_wedge(self_: Sphere, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(self_.g0.x) * vec2<f32>(0.0, other.g1.x) + vec2<f32>(self_.g0.y) * vec2<f32>(0.0, other.g1.y) + vec2<f32>(self_.g0.z) * vec2<f32>(0.0, other.g1.z) + vec2<f32>(self_.g1.x) * vec2<f32>(0.0, other.g2.y) + vec2<f32>(self_.g1.y) * vec2<f32>(0.0, other.g2.x), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), self_.g0 * vec3<f32>(other.g0.x), self_.g1 * vec2<f32>(other.g0.x));
 }
 
-fn sphere_radial_wedge(self_: Sphere, other: Radial) -> AntiScalar {
+fn sphere_round_point_wedge(self_: Sphere, other: RoundPoint) -> AntiScalar {
     return AntiScalar(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z + self_.g1.x * other.g1.y + self_.g1.y * other.g1.x);
 }
 
@@ -8590,6 +9287,14 @@ fn horizon_multi_vector_anti_dot(self_: Horizon, other: MultiVector) -> AntiScal
 
 fn horizon_sphere_anti_dot(self_: Horizon, other: Sphere) -> AntiScalar {
     return AntiScalar(0.0 - self_.g0 * other.g1.x);
+}
+
+fn infinity_multi_vector_anti_dot(self_: Infinity, other: MultiVector) -> AntiScalar {
+    return AntiScalar(self_.g0 * other.g2.x);
+}
+
+fn infinity_round_point_anti_dot(self_: Infinity, other: RoundPoint) -> AntiScalar {
+    return AntiScalar(self_.g0 * other.g1.x);
 }
 
 fn line_circle_anti_dot(self_: Line, other: Circle) -> AntiScalar {
@@ -8664,6 +9369,10 @@ fn multi_vector_horizon_anti_dot(self_: MultiVector, other: Horizon) -> AntiScal
     return AntiScalar(0.0 - self_.g10.x * other.g0);
 }
 
+fn multi_vector_infinity_anti_dot(self_: MultiVector, other: Infinity) -> AntiScalar {
+    return AntiScalar(self_.g2.x * other.g0);
+}
+
 fn multi_vector_line_anti_dot(self_: MultiVector, other: Line) -> AntiScalar {
     return AntiScalar(0.0 - self_.g6.x * other.g1.x - self_.g6.y * other.g1.y - self_.g6.z * other.g1.z - self_.g7.x * other.g0.x - self_.g7.y * other.g0.y - self_.g7.z * other.g0.z);
 }
@@ -8704,7 +9413,7 @@ fn multi_vector_point_at_infinity_anti_dot(self_: MultiVector, other: PointAtInf
     return AntiScalar(self_.g3.x * other.g0.x + self_.g3.y * other.g0.y + self_.g3.z * other.g0.z);
 }
 
-fn multi_vector_radial_anti_dot(self_: MultiVector, other: Radial) -> AntiScalar {
+fn multi_vector_round_point_anti_dot(self_: MultiVector, other: RoundPoint) -> AntiScalar {
     return AntiScalar(0.0 - self_.g1.x * other.g0.x - self_.g1.y * other.g0.y - self_.g1.z * other.g0.z + self_.g2.x * other.g1.y + self_.g2.y * other.g1.x);
 }
 
@@ -8788,11 +9497,15 @@ fn point_at_infinity_multi_vector_anti_dot(self_: PointAtInfinity, other: MultiV
     return AntiScalar(self_.g0.x * other.g3.x + self_.g0.y * other.g3.y + self_.g0.z * other.g3.z);
 }
 
-fn radial_multi_vector_anti_dot(self_: Radial, other: MultiVector) -> AntiScalar {
+fn round_point_infinity_anti_dot(self_: RoundPoint, other: Infinity) -> AntiScalar {
+    return AntiScalar(self_.g1.x * other.g0);
+}
+
+fn round_point_multi_vector_anti_dot(self_: RoundPoint, other: MultiVector) -> AntiScalar {
     return AntiScalar(0.0 - self_.g0.x * other.g1.x - self_.g0.y * other.g1.y - self_.g0.z * other.g1.z + self_.g1.x * other.g2.y + self_.g1.y * other.g2.x);
 }
 
-fn radial_radial_anti_dot(self_: Radial, other: Radial) -> AntiScalar {
+fn round_point_round_point_anti_dot(self_: RoundPoint, other: RoundPoint) -> AntiScalar {
     return AntiScalar(0.0 - self_.g0.x * other.g0.x - self_.g0.y * other.g0.y - self_.g0.z * other.g0.z + self_.g1.x * other.g1.y + self_.g1.y * other.g1.x);
 }
 
@@ -8888,6 +9601,14 @@ fn horizon_sphere_dot(self_: Horizon, other: Sphere) -> Scalar {
     return Scalar(self_.g0 * other.g1.x);
 }
 
+fn infinity_multi_vector_dot(self_: Infinity, other: MultiVector) -> Scalar {
+    return Scalar(0.0 - self_.g0 * other.g2.x);
+}
+
+fn infinity_round_point_dot(self_: Infinity, other: RoundPoint) -> Scalar {
+    return Scalar(0.0 - self_.g0 * other.g1.x);
+}
+
 fn line_circle_dot(self_: Line, other: Circle) -> Scalar {
     return Scalar(self_.g0.x * other.g1.x + self_.g0.y * other.g1.y + self_.g0.z * other.g1.z + self_.g1.x * other.g0.x + self_.g1.y * other.g0.y + self_.g1.z * other.g0.z);
 }
@@ -8960,6 +9681,10 @@ fn multi_vector_horizon_dot(self_: MultiVector, other: Horizon) -> Scalar {
     return Scalar(self_.g10.x * other.g0);
 }
 
+fn multi_vector_infinity_dot(self_: MultiVector, other: Infinity) -> Scalar {
+    return Scalar(0.0 - self_.g2.x * other.g0);
+}
+
 fn multi_vector_line_dot(self_: MultiVector, other: Line) -> Scalar {
     return Scalar(self_.g6.x * other.g1.x + self_.g6.y * other.g1.y + self_.g6.z * other.g1.z + self_.g7.x * other.g0.x + self_.g7.y * other.g0.y + self_.g7.z * other.g0.z);
 }
@@ -9000,7 +9725,7 @@ fn multi_vector_point_at_infinity_dot(self_: MultiVector, other: PointAtInfinity
     return Scalar(0.0 - self_.g3.x * other.g0.x - self_.g3.y * other.g0.y - self_.g3.z * other.g0.z);
 }
 
-fn multi_vector_radial_dot(self_: MultiVector, other: Radial) -> Scalar {
+fn multi_vector_round_point_dot(self_: MultiVector, other: RoundPoint) -> Scalar {
     return Scalar(self_.g1.x * other.g0.x + self_.g1.y * other.g0.y + self_.g1.z * other.g0.z - self_.g2.x * other.g1.y - self_.g2.y * other.g1.x);
 }
 
@@ -9084,11 +9809,15 @@ fn point_at_infinity_multi_vector_dot(self_: PointAtInfinity, other: MultiVector
     return Scalar(0.0 - self_.g0.x * other.g3.x - self_.g0.y * other.g3.y - self_.g0.z * other.g3.z);
 }
 
-fn radial_multi_vector_dot(self_: Radial, other: MultiVector) -> Scalar {
+fn round_point_infinity_dot(self_: RoundPoint, other: Infinity) -> Scalar {
+    return Scalar(0.0 - self_.g1.x * other.g0);
+}
+
+fn round_point_multi_vector_dot(self_: RoundPoint, other: MultiVector) -> Scalar {
     return Scalar(self_.g0.x * other.g1.x + self_.g0.y * other.g1.y + self_.g0.z * other.g1.z - self_.g1.x * other.g2.y - self_.g1.y * other.g2.x);
 }
 
-fn radial_radial_dot(self_: Radial, other: Radial) -> Scalar {
+fn round_point_round_point_dot(self_: RoundPoint, other: RoundPoint) -> Scalar {
     return Scalar(self_.g0.x * other.g0.x + self_.g0.y * other.g0.y + self_.g0.z * other.g0.z - self_.g1.x * other.g1.y - self_.g1.y * other.g1.x);
 }
 
@@ -9136,6 +9865,10 @@ fn horizon_bulk(self_: Horizon) -> Horizon {
     return self_;
 }
 
+fn infinity_bulk(self_: Infinity) -> Infinity {
+    return self_;
+}
+
 fn line_bulk(self_: Line) -> LineAtInfinity {
     return LineAtInfinity(self_.g1);
 }
@@ -9160,8 +9893,8 @@ fn point_at_infinity_bulk(self_: PointAtInfinity) -> PointAtInfinity {
     return self_;
 }
 
-fn radial_bulk(self_: Radial) -> Radial {
-    return Radial(vec3<f32>(0.0, 0.0, 0.0), self_.g1 * vec2<f32>(0.0, 1.0));
+fn round_point_bulk(self_: RoundPoint) -> Infinity {
+    return Infinity(self_.g1.y);
 }
 
 fn sphere_bulk(self_: Sphere) -> Horizon {
@@ -9184,8 +9917,8 @@ fn multi_vector_round_bulk(self_: MultiVector) -> MultiVector {
     return MultiVector(self_.g0 * vec2<f32>(1.0, 0.0), self_.g1, vec2<f32>(0.0, 0.0), vec3<f32>(0.0, 0.0, 0.0), self_.g4, vec4<f32>(0.0, 0.0, 0.0, 0.0), self_.g6 * vec4<f32>(0.0, 0.0, 0.0, 1.0), vec3<f32>(0.0, 0.0, 0.0), vec3<f32>(0.0, 0.0, 0.0), vec3<f32>(0.0, 0.0, 0.0), vec2<f32>(0.0, 0.0));
 }
 
-fn radial_round_bulk(self_: Radial) -> Radial {
-    return Radial(self_.g0, vec2<f32>(0.0, 0.0));
+fn round_point_round_bulk(self_: RoundPoint) -> RoundPoint {
+    return RoundPoint(self_.g0, vec2<f32>(0.0, 0.0));
 }
 
 fn scalar_round_bulk(self_: Scalar) -> Scalar {
@@ -9204,8 +9937,8 @@ fn multi_vector_round_weight(self_: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(0.0, 0.0), vec3<f32>(0.0, 0.0, 0.0), self_.g2 * vec2<f32>(1.0, 0.0), self_.g3, vec3<f32>(0.0, 0.0, 0.0), vec4<f32>(0.0, 0.0, 0.0, 0.0), self_.g6 * vec4<f32>(1.0, 1.0, 1.0, 0.0), vec3<f32>(0.0, 0.0, 0.0), vec3<f32>(0.0, 0.0, 0.0), vec3<f32>(0.0, 0.0, 0.0), self_.g10 * vec2<f32>(1.0, 0.0));
 }
 
-fn radial_round_weight(self_: Radial) -> Radial {
-    return Radial(vec3<f32>(0.0, 0.0, 0.0), self_.g1 * vec2<f32>(1.0, 0.0));
+fn round_point_round_weight(self_: RoundPoint) -> RoundPoint {
+    return RoundPoint(vec3<f32>(0.0, 0.0, 0.0), self_.g1 * vec2<f32>(1.0, 0.0));
 }
 
 fn sphere_round_weight(self_: Sphere) -> Sphere {
@@ -9276,6 +10009,10 @@ fn horizon_anti_reversal(self_: Horizon) -> Horizon {
     return Horizon(-self_.g0);
 }
 
+fn infinity_anti_reversal(self_: Infinity) -> Infinity {
+    return Infinity(self_.g0);
+}
+
 fn line_anti_reversal(self_: Line) -> Line {
     return Line(self_.g0 * vec3<f32>(1.0, -1.0, 1.0), self_.g1 * vec3<f32>(-1.0, 1.0, -1.0));
 }
@@ -9316,8 +10053,8 @@ fn point_at_infinity_anti_reversal(self_: PointAtInfinity) -> PointAtInfinity {
     return PointAtInfinity(self_.g0 * vec3<f32>(-1.0));
 }
 
-fn radial_anti_reversal(self_: Radial) -> Radial {
-    return Radial(self_.g0, self_.g1);
+fn round_point_anti_reversal(self_: RoundPoint) -> RoundPoint {
+    return RoundPoint(self_.g0, self_.g1);
 }
 
 fn scalar_anti_reversal(self_: Scalar) -> Scalar {
@@ -9342,6 +10079,10 @@ fn dipole_automorphism(self_: Dipole) -> Dipole {
 
 fn horizon_automorphism(self_: Horizon) -> Horizon {
     return Horizon(-self_.g0);
+}
+
+fn infinity_automorphism(self_: Infinity) -> Infinity {
+    return Infinity(-self_.g0);
 }
 
 fn line_automorphism(self_: Line) -> Line {
@@ -9384,8 +10125,8 @@ fn point_at_infinity_automorphism(self_: PointAtInfinity) -> PointAtInfinity {
     return PointAtInfinity(self_.g0);
 }
 
-fn radial_automorphism(self_: Radial) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(-1.0), self_.g1 * vec2<f32>(-1.0));
+fn round_point_automorphism(self_: RoundPoint) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(-1.0), self_.g1 * vec2<f32>(-1.0));
 }
 
 fn scalar_automorphism(self_: Scalar) -> Scalar {
@@ -9410,6 +10151,10 @@ fn dipole_conjugation(self_: Dipole) -> Dipole {
 
 fn horizon_conjugation(self_: Horizon) -> Horizon {
     return Horizon(-self_.g0);
+}
+
+fn infinity_conjugation(self_: Infinity) -> Infinity {
+    return Infinity(-self_.g0);
 }
 
 fn line_conjugation(self_: Line) -> Line {
@@ -9452,8 +10197,8 @@ fn point_at_infinity_conjugation(self_: PointAtInfinity) -> PointAtInfinity {
     return PointAtInfinity(self_.g0 * vec3<f32>(-1.0));
 }
 
-fn radial_conjugation(self_: Radial) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(-1.0), self_.g1 * vec2<f32>(-1.0));
+fn round_point_conjugation(self_: RoundPoint) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(-1.0), self_.g1 * vec2<f32>(-1.0));
 }
 
 fn scalar_conjugation(self_: Scalar) -> Scalar {
@@ -9478,6 +10223,10 @@ fn dipole_double_complement(self_: Dipole) -> Dipole {
 
 fn horizon_double_complement(self_: Horizon) -> Horizon {
     return Horizon(self_.g0);
+}
+
+fn infinity_double_complement(self_: Infinity) -> Infinity {
+    return Infinity(self_.g0);
 }
 
 fn line_double_complement(self_: Line) -> Line {
@@ -9520,8 +10269,8 @@ fn point_at_infinity_double_complement(self_: PointAtInfinity) -> PointAtInfinit
     return PointAtInfinity(self_.g0);
 }
 
-fn radial_double_complement(self_: Radial) -> Radial {
-    return Radial(self_.g0, self_.g1);
+fn round_point_double_complement(self_: RoundPoint) -> RoundPoint {
+    return RoundPoint(self_.g0, self_.g1);
 }
 
 fn scalar_double_complement(self_: Scalar) -> Scalar {
@@ -9544,6 +10293,14 @@ fn dipole_dual(self_: Dipole) -> Circle {
     return Circle(vec4<f32>(-self_.g0.x, -self_.g0.y, -self_.g0.z, self_.g2.w), self_.g1 * vec3<f32>(-1.0), vec3<f32>(-self_.g2.x, self_.g2.y, self_.g2.z));
 }
 
+fn horizon_dual(self_: Horizon) -> Infinity {
+    return Infinity(self_.g0);
+}
+
+fn infinity_dual(self_: Infinity) -> Horizon {
+    return Horizon(-self_.g0);
+}
+
 fn line_at_infinity_dual(self_: LineAtInfinity) -> PointAtInfinity {
     return PointAtInfinity(self_.g0);
 }
@@ -9560,7 +10317,7 @@ fn point_at_infinity_dual(self_: PointAtInfinity) -> LineAtInfinity {
     return LineAtInfinity(self_.g0 * vec3<f32>(-1.0));
 }
 
-fn radial_dual(self_: Radial) -> Sphere {
+fn round_point_dual(self_: RoundPoint) -> Sphere {
     return Sphere(self_.g0, self_.g1 * vec2<f32>(-1.0));
 }
 
@@ -9568,8 +10325,8 @@ fn scalar_dual(self_: Scalar) -> AntiScalar {
     return AntiScalar(self_.g0);
 }
 
-fn sphere_dual(self_: Sphere) -> Radial {
-    return Radial(self_.g0 * vec3<f32>(-1.0), self_.g1);
+fn sphere_dual(self_: Sphere) -> RoundPoint {
+    return RoundPoint(self_.g0 * vec3<f32>(-1.0), self_.g1);
 }
 
 fn anti_scalar_left_complement(self_: AntiScalar) -> Scalar {
@@ -9592,7 +10349,7 @@ fn multi_vector_left_complement(self_: MultiVector) -> MultiVector {
     return MultiVector(self_.g0.yx, self_.g9, self_.g10.yx, self_.g8 * vec3<f32>(-1.0), self_.g7 * vec3<f32>(-1.0), self_.g6 * vec4<f32>(-1.0), self_.g5 * vec4<f32>(-1.0), self_.g4 * vec3<f32>(-1.0), self_.g3 * vec3<f32>(-1.0), self_.g1, self_.g2.yx);
 }
 
-fn radial_left_complement(self_: Radial) -> Sphere {
+fn round_point_left_complement(self_: RoundPoint) -> Sphere {
     return Sphere(self_.g0, self_.g1.yx);
 }
 
@@ -9600,8 +10357,8 @@ fn scalar_left_complement(self_: Scalar) -> AntiScalar {
     return AntiScalar(self_.g0);
 }
 
-fn sphere_left_complement(self_: Sphere) -> Radial {
-    return Radial(self_.g0, self_.g1.yx);
+fn sphere_left_complement(self_: Sphere) -> RoundPoint {
+    return RoundPoint(self_.g0, self_.g1.yx);
 }
 
 fn anti_scalar_reversal(self_: AntiScalar) -> AntiScalar {
@@ -9618,6 +10375,10 @@ fn dipole_reversal(self_: Dipole) -> Dipole {
 
 fn horizon_reversal(self_: Horizon) -> Horizon {
     return Horizon(-self_.g0);
+}
+
+fn infinity_reversal(self_: Infinity) -> Infinity {
+    return Infinity(self_.g0);
 }
 
 fn line_reversal(self_: Line) -> Line {
@@ -9660,8 +10421,8 @@ fn point_at_infinity_reversal(self_: PointAtInfinity) -> PointAtInfinity {
     return PointAtInfinity(self_.g0 * vec3<f32>(-1.0));
 }
 
-fn radial_reversal(self_: Radial) -> Radial {
-    return Radial(self_.g0, self_.g1);
+fn round_point_reversal(self_: RoundPoint) -> RoundPoint {
+    return RoundPoint(self_.g0, self_.g1);
 }
 
 fn scalar_reversal(self_: Scalar) -> Scalar {
@@ -9692,7 +10453,7 @@ fn multi_vector_right_complement(self_: MultiVector) -> MultiVector {
     return MultiVector(self_.g0.yx, self_.g9, self_.g10.yx, self_.g8 * vec3<f32>(-1.0), self_.g7 * vec3<f32>(-1.0), self_.g6 * vec4<f32>(-1.0), self_.g5 * vec4<f32>(-1.0), self_.g4 * vec3<f32>(-1.0), self_.g3 * vec3<f32>(-1.0), self_.g1, self_.g2.yx);
 }
 
-fn radial_right_complement(self_: Radial) -> Sphere {
+fn round_point_right_complement(self_: RoundPoint) -> Sphere {
     return Sphere(self_.g0, self_.g1.yx);
 }
 
@@ -9700,16 +10461,12 @@ fn scalar_right_complement(self_: Scalar) -> AntiScalar {
     return AntiScalar(self_.g0);
 }
 
-fn sphere_right_complement(self_: Sphere) -> Radial {
-    return Radial(self_.g0, self_.g1.yx);
+fn sphere_right_complement(self_: Sphere) -> RoundPoint {
+    return RoundPoint(self_.g0, self_.g1.yx);
 }
 
 fn multi_vector_left_bulk_dual(self_: MultiVector) -> MultiVector {
     return multi_vector_left_complement(multi_vector_bulk(self_));
-}
-
-fn radial_left_bulk_dual(self_: Radial) -> Sphere {
-    return radial_left_complement(radial_bulk(self_));
 }
 
 fn anti_scalar_left_weight_dual(self_: AntiScalar) -> Scalar {
@@ -9726,10 +10483,6 @@ fn multi_vector_left_weight_dual(self_: MultiVector) -> MultiVector {
 
 fn multi_vector_right_bulk_dual(self_: MultiVector) -> MultiVector {
     return multi_vector_right_complement(multi_vector_bulk(self_));
-}
-
-fn radial_right_bulk_dual(self_: Radial) -> Sphere {
-    return radial_right_complement(radial_bulk(self_));
 }
 
 fn anti_scalar_right_weight_dual(self_: AntiScalar) -> Scalar {
@@ -9758,6 +10511,10 @@ fn dipole_anti_grade(self_: Dipole) -> i32 {
 
 fn horizon_anti_grade(self_: Horizon) -> i32 {
     return 1;
+}
+
+fn infinity_anti_grade(self_: Infinity) -> i32 {
+    return 4;
 }
 
 fn line_anti_grade(self_: Line) -> i32 {
@@ -9792,7 +10549,7 @@ fn point_at_infinity_anti_grade(self_: PointAtInfinity) -> i32 {
     return 3;
 }
 
-fn radial_anti_grade(self_: Radial) -> i32 {
+fn round_point_anti_grade(self_: RoundPoint) -> i32 {
     return 4;
 }
 
@@ -9818,6 +10575,10 @@ fn dipole_grade(self_: Dipole) -> i32 {
 
 fn horizon_grade(self_: Horizon) -> i32 {
     return 4;
+}
+
+fn infinity_grade(self_: Infinity) -> i32 {
+    return 1;
 }
 
 fn line_grade(self_: Line) -> i32 {
@@ -9852,7 +10613,7 @@ fn point_at_infinity_grade(self_: PointAtInfinity) -> i32 {
     return 2;
 }
 
-fn radial_grade(self_: Radial) -> i32 {
+fn round_point_grade(self_: RoundPoint) -> i32 {
     return 1;
 }
 
@@ -9872,7 +10633,7 @@ fn circle_attitude(self_: Circle) -> Dipole {
     return circle_horizon_anti_wedge(self_, horizon_one());
 }
 
-fn dipole_attitude(self_: Dipole) -> Radial {
+fn dipole_attitude(self_: Dipole) -> RoundPoint {
     return dipole_horizon_anti_wedge(self_, horizon_one());
 }
 
@@ -9892,7 +10653,7 @@ fn multi_vector_attitude(self_: MultiVector) -> MultiVector {
     return multi_vector_horizon_anti_wedge(self_, horizon_one());
 }
 
-fn origin_attitude(self_: Origin) -> Radial {
+fn origin_attitude(self_: Origin) -> Infinity {
     return origin_horizon_anti_wedge(self_, horizon_one());
 }
 
@@ -9904,16 +10665,44 @@ fn plane_at_origin_attitude(self_: PlaneAtOrigin) -> LineAtInfinity {
     return plane_at_origin_horizon_anti_wedge(self_, horizon_one());
 }
 
-fn point_attitude(self_: Point) -> Radial {
+fn point_attitude(self_: Point) -> Infinity {
     return point_horizon_anti_wedge(self_, horizon_one());
 }
 
-fn radial_attitude(self_: Radial) -> Scalar {
-    return radial_horizon_anti_wedge(self_, horizon_one());
+fn round_point_attitude(self_: RoundPoint) -> Scalar {
+    return round_point_horizon_anti_wedge(self_, horizon_one());
 }
 
 fn sphere_attitude(self_: Sphere) -> Circle {
     return sphere_horizon_anti_wedge(self_, horizon_one());
+}
+
+fn circle_carrier(self_: Circle) -> Plane {
+    return circle_infinity_wedge(self_, Infinity(1.0));
+}
+
+fn dipole_carrier(self_: Dipole) -> Line {
+    return dipole_infinity_wedge(self_, Infinity(1.0));
+}
+
+fn magnitude_carrier(self_: Magnitude) -> Infinity {
+    return magnitude_infinity_wedge(self_, Infinity(1.0));
+}
+
+fn multi_vector_carrier(self_: MultiVector) -> MultiVector {
+    return multi_vector_infinity_wedge(self_, Infinity(1.0));
+}
+
+fn round_point_carrier(self_: RoundPoint) -> Point {
+    return round_point_infinity_wedge(self_, Infinity(1.0));
+}
+
+fn scalar_carrier(self_: Scalar) -> Infinity {
+    return scalar_infinity_wedge(self_, Infinity(1.0));
+}
+
+fn sphere_carrier(self_: Sphere) -> AntiScalar {
+    return sphere_infinity_wedge(self_, Infinity(1.0));
 }
 
 fn anti_scalar_sqrt(self_: AntiScalar) -> AntiScalar {
@@ -9968,8 +10757,8 @@ fn point_bulk_norm(self_: Point) -> Scalar {
     return scalar_sqrt(point_point_dot(self_, self_));
 }
 
-fn radial_bulk_norm(self_: Radial) -> Scalar {
-    return scalar_sqrt(radial_radial_dot(self_, self_));
+fn round_point_bulk_norm(self_: RoundPoint) -> Scalar {
+    return scalar_sqrt(round_point_round_point_dot(self_, self_));
 }
 
 fn scalar_bulk_norm(self_: Scalar) -> Scalar {
@@ -10024,8 +10813,8 @@ fn point_bulk_norm_squared(self_: Point) -> Scalar {
     return point_point_dot(self_, self_);
 }
 
-fn radial_bulk_norm_squared(self_: Radial) -> Scalar {
-    return radial_radial_dot(self_, self_);
+fn round_point_bulk_norm_squared(self_: RoundPoint) -> Scalar {
+    return round_point_round_point_dot(self_, self_);
 }
 
 fn scalar_bulk_norm_squared(self_: Scalar) -> Scalar {
@@ -10080,8 +10869,8 @@ fn point_weight_norm(self_: Point) -> AntiScalar {
     return anti_scalar_sqrt(point_point_anti_dot(self_, self_));
 }
 
-fn radial_weight_norm(self_: Radial) -> AntiScalar {
-    return anti_scalar_sqrt(radial_radial_anti_dot(self_, self_));
+fn round_point_weight_norm(self_: RoundPoint) -> AntiScalar {
+    return anti_scalar_sqrt(round_point_round_point_anti_dot(self_, self_));
 }
 
 fn scalar_weight_norm(self_: Scalar) -> AntiScalar {
@@ -10136,8 +10925,8 @@ fn point_weight_norm_squared(self_: Point) -> AntiScalar {
     return point_point_anti_dot(self_, self_);
 }
 
-fn radial_weight_norm_squared(self_: Radial) -> AntiScalar {
-    return radial_radial_anti_dot(self_, self_);
+fn round_point_weight_norm_squared(self_: RoundPoint) -> AntiScalar {
+    return round_point_round_point_anti_dot(self_, self_);
 }
 
 fn scalar_weight_norm_squared(self_: Scalar) -> AntiScalar {
@@ -10192,8 +10981,8 @@ fn point_geometric_norm(self_: Point) -> Magnitude {
     return scalar_anti_scalar_add(point_bulk_norm(self_), point_weight_norm(self_));
 }
 
-fn radial_geometric_norm(self_: Radial) -> Magnitude {
-    return scalar_anti_scalar_add(radial_bulk_norm(self_), radial_weight_norm(self_));
+fn round_point_geometric_norm(self_: RoundPoint) -> Magnitude {
+    return scalar_anti_scalar_add(round_point_bulk_norm(self_), round_point_weight_norm(self_));
 }
 
 fn scalar_geometric_norm(self_: Scalar) -> Magnitude {
@@ -10248,8 +11037,8 @@ fn point_unitize(self_: Point) -> Point {
     return point_scalar_geometric_product(self_, Scalar(1.0 / point_weight_norm(self_).g0));
 }
 
-fn radial_unitize(self_: Radial) -> Radial {
-    return radial_scalar_geometric_product(self_, Scalar(1.0 / radial_weight_norm(self_).g0));
+fn round_point_unitize(self_: RoundPoint) -> RoundPoint {
+    return round_point_scalar_geometric_product(self_, Scalar(1.0 / round_point_weight_norm(self_).g0));
 }
 
 fn scalar_unitize(self_: Scalar) -> Scalar {
@@ -10270,6 +11059,10 @@ fn anti_scalar_dipole_sandwich(self_: AntiScalar, other: Dipole) -> Dipole {
 
 fn anti_scalar_horizon_sandwich(self_: AntiScalar, other: Horizon) -> Horizon {
     return horizon_anti_scalar_geometric_anti_product(anti_scalar_horizon_geometric_anti_product(self_, other), anti_scalar_anti_reversal(self_));
+}
+
+fn anti_scalar_infinity_sandwich(self_: AntiScalar, other: Infinity) -> Infinity {
+    return infinity_anti_scalar_geometric_anti_product(anti_scalar_infinity_geometric_anti_product(self_, other), anti_scalar_anti_reversal(self_));
 }
 
 fn anti_scalar_line_sandwich(self_: AntiScalar, other: Line) -> Line {
@@ -10308,8 +11101,8 @@ fn anti_scalar_point_at_infinity_sandwich(self_: AntiScalar, other: PointAtInfin
     return point_at_infinity_anti_scalar_geometric_anti_product(anti_scalar_point_at_infinity_geometric_anti_product(self_, other), anti_scalar_anti_reversal(self_));
 }
 
-fn anti_scalar_radial_sandwich(self_: AntiScalar, other: Radial) -> Radial {
-    return radial_anti_scalar_geometric_anti_product(anti_scalar_radial_geometric_anti_product(self_, other), anti_scalar_anti_reversal(self_));
+fn anti_scalar_round_point_sandwich(self_: AntiScalar, other: RoundPoint) -> RoundPoint {
+    return round_point_anti_scalar_geometric_anti_product(anti_scalar_round_point_geometric_anti_product(self_, other), anti_scalar_anti_reversal(self_));
 }
 
 fn anti_scalar_sphere_sandwich(self_: AntiScalar, other: Sphere) -> Sphere {
@@ -10326,6 +11119,10 @@ fn circle_dipole_sandwich(self_: Circle, other: Dipole) -> Dipole {
 
 fn circle_horizon_sandwich(self_: Circle, other: Horizon) -> Plane {
     return multi_vector_plane_into(multi_vector_circle_geometric_anti_product(circle_horizon_geometric_anti_product(self_, other), circle_anti_reversal(self_)));
+}
+
+fn circle_infinity_sandwich(self_: Circle, other: Infinity) -> RoundPoint {
+    return multi_vector_round_point_into(multi_vector_circle_geometric_anti_product(circle_infinity_geometric_anti_product(self_, other), circle_anti_reversal(self_)));
 }
 
 fn circle_line_sandwich(self_: Circle, other: Line) -> Line {
@@ -10364,8 +11161,8 @@ fn circle_point_at_infinity_sandwich(self_: Circle, other: PointAtInfinity) -> P
     return multi_vector_point_into(multi_vector_circle_geometric_anti_product(circle_point_at_infinity_geometric_anti_product(self_, other), circle_anti_reversal(self_)));
 }
 
-fn circle_radial_sandwich(self_: Circle, other: Radial) -> Radial {
-    return multi_vector_radial_into(multi_vector_circle_geometric_anti_product(circle_radial_geometric_anti_product(self_, other), circle_anti_reversal(self_)));
+fn circle_round_point_sandwich(self_: Circle, other: RoundPoint) -> RoundPoint {
+    return multi_vector_round_point_into(multi_vector_circle_geometric_anti_product(circle_round_point_geometric_anti_product(self_, other), circle_anti_reversal(self_)));
 }
 
 fn circle_sphere_sandwich(self_: Circle, other: Sphere) -> Sphere {
@@ -10382,6 +11179,10 @@ fn dipole_dipole_sandwich(self_: Dipole, other: Dipole) -> Dipole {
 
 fn dipole_horizon_sandwich(self_: Dipole, other: Horizon) -> Plane {
     return multi_vector_plane_into(multi_vector_dipole_geometric_anti_product(dipole_horizon_geometric_anti_product(self_, other), dipole_anti_reversal(self_)));
+}
+
+fn dipole_infinity_sandwich(self_: Dipole, other: Infinity) -> RoundPoint {
+    return multi_vector_round_point_into(multi_vector_dipole_geometric_anti_product(dipole_infinity_geometric_anti_product(self_, other), dipole_anti_reversal(self_)));
 }
 
 fn dipole_line_sandwich(self_: Dipole, other: Line) -> Line {
@@ -10420,8 +11221,8 @@ fn dipole_point_at_infinity_sandwich(self_: Dipole, other: PointAtInfinity) -> P
     return multi_vector_point_into(multi_vector_dipole_geometric_anti_product(dipole_point_at_infinity_geometric_anti_product(self_, other), dipole_anti_reversal(self_)));
 }
 
-fn dipole_radial_sandwich(self_: Dipole, other: Radial) -> Radial {
-    return multi_vector_radial_into(multi_vector_dipole_geometric_anti_product(dipole_radial_geometric_anti_product(self_, other), dipole_anti_reversal(self_)));
+fn dipole_round_point_sandwich(self_: Dipole, other: RoundPoint) -> RoundPoint {
+    return multi_vector_round_point_into(multi_vector_dipole_geometric_anti_product(dipole_round_point_geometric_anti_product(self_, other), dipole_anti_reversal(self_)));
 }
 
 fn dipole_sphere_sandwich(self_: Dipole, other: Sphere) -> Sphere {
@@ -10440,20 +11241,32 @@ fn horizon_multi_vector_sandwich(self_: Horizon, other: MultiVector) -> MultiVec
     return multi_vector_horizon_geometric_anti_product(horizon_multi_vector_geometric_anti_product(self_, other), horizon_anti_reversal(self_));
 }
 
-fn horizon_origin_sandwich(self_: Horizon, other: Origin) -> Point {
-    return multi_vector_point_into(radial_horizon_geometric_anti_product(horizon_origin_geometric_anti_product(self_, other), horizon_anti_reversal(self_)));
-}
-
-fn horizon_point_sandwich(self_: Horizon, other: Point) -> Point {
-    return multi_vector_point_into(radial_horizon_geometric_anti_product(horizon_point_geometric_anti_product(self_, other), horizon_anti_reversal(self_)));
-}
-
-fn horizon_radial_sandwich(self_: Horizon, other: Radial) -> Radial {
-    return multi_vector_radial_into(multi_vector_horizon_geometric_anti_product(horizon_radial_geometric_anti_product(self_, other), horizon_anti_reversal(self_)));
+fn horizon_round_point_sandwich(self_: Horizon, other: RoundPoint) -> RoundPoint {
+    return multi_vector_round_point_into(multi_vector_horizon_geometric_anti_product(horizon_round_point_geometric_anti_product(self_, other), horizon_anti_reversal(self_)));
 }
 
 fn horizon_sphere_sandwich(self_: Horizon, other: Sphere) -> Sphere {
     return multi_vector_sphere_into(multi_vector_horizon_geometric_anti_product(horizon_sphere_geometric_anti_product(self_, other), horizon_anti_reversal(self_)));
+}
+
+fn infinity_circle_sandwich(self_: Infinity, other: Circle) -> Circle {
+    return multi_vector_circle_into(multi_vector_infinity_geometric_anti_product(infinity_circle_geometric_anti_product(self_, other), infinity_anti_reversal(self_)));
+}
+
+fn infinity_dipole_sandwich(self_: Infinity, other: Dipole) -> Dipole {
+    return multi_vector_dipole_into(multi_vector_infinity_geometric_anti_product(infinity_dipole_geometric_anti_product(self_, other), infinity_anti_reversal(self_)));
+}
+
+fn infinity_multi_vector_sandwich(self_: Infinity, other: MultiVector) -> MultiVector {
+    return multi_vector_infinity_geometric_anti_product(infinity_multi_vector_geometric_anti_product(self_, other), infinity_anti_reversal(self_));
+}
+
+fn infinity_round_point_sandwich(self_: Infinity, other: RoundPoint) -> RoundPoint {
+    return multi_vector_round_point_into(multi_vector_infinity_geometric_anti_product(infinity_round_point_geometric_anti_product(self_, other), infinity_anti_reversal(self_)));
+}
+
+fn infinity_sphere_sandwich(self_: Infinity, other: Sphere) -> Sphere {
+    return multi_vector_sphere_into(multi_vector_infinity_geometric_anti_product(infinity_sphere_geometric_anti_product(self_, other), infinity_anti_reversal(self_)));
 }
 
 fn line_circle_sandwich(self_: Line, other: Circle) -> Circle {
@@ -10466,6 +11279,10 @@ fn line_dipole_sandwich(self_: Line, other: Dipole) -> Dipole {
 
 fn line_horizon_sandwich(self_: Line, other: Horizon) -> Plane {
     return multi_vector_plane_into(point_at_infinity_line_geometric_anti_product(line_horizon_geometric_anti_product(self_, other), line_anti_reversal(self_)));
+}
+
+fn line_infinity_sandwich(self_: Line, other: Infinity) -> RoundPoint {
+    return multi_vector_round_point_into(line_at_infinity_line_geometric_anti_product(line_infinity_geometric_anti_product(self_, other), line_anti_reversal(self_)));
 }
 
 fn line_line_sandwich(self_: Line, other: Line) -> Line {
@@ -10504,8 +11321,8 @@ fn line_point_at_infinity_sandwich(self_: Line, other: PointAtInfinity) -> Point
     return multi_vector_point_into(multi_vector_line_geometric_anti_product(line_point_at_infinity_geometric_anti_product(self_, other), line_anti_reversal(self_)));
 }
 
-fn line_radial_sandwich(self_: Line, other: Radial) -> Radial {
-    return multi_vector_radial_into(multi_vector_line_geometric_anti_product(line_radial_geometric_anti_product(self_, other), line_anti_reversal(self_)));
+fn line_round_point_sandwich(self_: Line, other: RoundPoint) -> RoundPoint {
+    return multi_vector_round_point_into(multi_vector_line_geometric_anti_product(line_round_point_geometric_anti_product(self_, other), line_anti_reversal(self_)));
 }
 
 fn line_sphere_sandwich(self_: Line, other: Sphere) -> Sphere {
@@ -10540,8 +11357,8 @@ fn line_at_infinity_plane_at_origin_sandwich(self_: LineAtInfinity, other: Plane
     return multi_vector_plane_into(multi_vector_line_at_infinity_geometric_anti_product(line_at_infinity_plane_at_origin_geometric_anti_product(self_, other), line_at_infinity_anti_reversal(self_)));
 }
 
-fn line_at_infinity_radial_sandwich(self_: LineAtInfinity, other: Radial) -> Radial {
-    return multi_vector_radial_into(multi_vector_line_at_infinity_geometric_anti_product(line_at_infinity_radial_geometric_anti_product(self_, other), line_at_infinity_anti_reversal(self_)));
+fn line_at_infinity_round_point_sandwich(self_: LineAtInfinity, other: RoundPoint) -> RoundPoint {
+    return multi_vector_round_point_into(multi_vector_line_at_infinity_geometric_anti_product(line_at_infinity_round_point_geometric_anti_product(self_, other), line_at_infinity_anti_reversal(self_)));
 }
 
 fn line_at_infinity_sphere_sandwich(self_: LineAtInfinity, other: Sphere) -> Sphere {
@@ -10558,6 +11375,10 @@ fn line_at_origin_dipole_sandwich(self_: LineAtOrigin, other: Dipole) -> Dipole 
 
 fn line_at_origin_horizon_sandwich(self_: LineAtOrigin, other: Horizon) -> Plane {
     return multi_vector_plane_into(point_at_infinity_line_at_origin_geometric_anti_product(line_at_origin_horizon_geometric_anti_product(self_, other), line_at_origin_anti_reversal(self_)));
+}
+
+fn line_at_origin_infinity_sandwich(self_: LineAtOrigin, other: Infinity) -> RoundPoint {
+    return multi_vector_round_point_into(line_at_infinity_line_at_origin_geometric_anti_product(line_at_origin_infinity_geometric_anti_product(self_, other), line_at_origin_anti_reversal(self_)));
 }
 
 fn line_at_origin_line_sandwich(self_: LineAtOrigin, other: Line) -> Line {
@@ -10596,8 +11417,8 @@ fn line_at_origin_point_at_infinity_sandwich(self_: LineAtOrigin, other: PointAt
     return multi_vector_point_into(multi_vector_line_at_origin_geometric_anti_product(line_at_origin_point_at_infinity_geometric_anti_product(self_, other), line_at_origin_anti_reversal(self_)));
 }
 
-fn line_at_origin_radial_sandwich(self_: LineAtOrigin, other: Radial) -> Radial {
-    return multi_vector_radial_into(multi_vector_line_at_origin_geometric_anti_product(line_at_origin_radial_geometric_anti_product(self_, other), line_at_origin_anti_reversal(self_)));
+fn line_at_origin_round_point_sandwich(self_: LineAtOrigin, other: RoundPoint) -> RoundPoint {
+    return multi_vector_round_point_into(multi_vector_line_at_origin_geometric_anti_product(line_at_origin_round_point_geometric_anti_product(self_, other), line_at_origin_anti_reversal(self_)));
 }
 
 fn line_at_origin_sphere_sandwich(self_: LineAtOrigin, other: Sphere) -> Sphere {
@@ -10614,6 +11435,10 @@ fn magnitude_dipole_sandwich(self_: Magnitude, other: Dipole) -> Dipole {
 
 fn magnitude_horizon_sandwich(self_: Magnitude, other: Horizon) -> Plane {
     return multi_vector_plane_into(multi_vector_magnitude_geometric_anti_product(magnitude_horizon_geometric_anti_product(self_, other), magnitude_anti_reversal(self_)));
+}
+
+fn magnitude_infinity_sandwich(self_: Magnitude, other: Infinity) -> RoundPoint {
+    return multi_vector_round_point_into(multi_vector_magnitude_geometric_anti_product(magnitude_infinity_geometric_anti_product(self_, other), magnitude_anti_reversal(self_)));
 }
 
 fn magnitude_line_sandwich(self_: Magnitude, other: Line) -> Line {
@@ -10652,8 +11477,8 @@ fn magnitude_point_at_infinity_sandwich(self_: Magnitude, other: PointAtInfinity
     return multi_vector_point_into(multi_vector_magnitude_geometric_anti_product(magnitude_point_at_infinity_geometric_anti_product(self_, other), magnitude_anti_reversal(self_)));
 }
 
-fn magnitude_radial_sandwich(self_: Magnitude, other: Radial) -> Radial {
-    return multi_vector_radial_into(multi_vector_magnitude_geometric_anti_product(magnitude_radial_geometric_anti_product(self_, other), magnitude_anti_reversal(self_)));
+fn magnitude_round_point_sandwich(self_: Magnitude, other: RoundPoint) -> RoundPoint {
+    return multi_vector_round_point_into(multi_vector_magnitude_geometric_anti_product(magnitude_round_point_geometric_anti_product(self_, other), magnitude_anti_reversal(self_)));
 }
 
 fn magnitude_sphere_sandwich(self_: Magnitude, other: Sphere) -> Sphere {
@@ -10670,6 +11495,10 @@ fn multi_vector_dipole_sandwich(self_: MultiVector, other: Dipole) -> Dipole {
 
 fn multi_vector_horizon_sandwich(self_: MultiVector, other: Horizon) -> Plane {
     return multi_vector_plane_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_horizon_geometric_anti_product(self_, other), multi_vector_anti_reversal(self_)));
+}
+
+fn multi_vector_infinity_sandwich(self_: MultiVector, other: Infinity) -> RoundPoint {
+    return multi_vector_round_point_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_infinity_geometric_anti_product(self_, other), multi_vector_anti_reversal(self_)));
 }
 
 fn multi_vector_line_sandwich(self_: MultiVector, other: Line) -> Line {
@@ -10708,8 +11537,8 @@ fn multi_vector_point_at_infinity_sandwich(self_: MultiVector, other: PointAtInf
     return multi_vector_point_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_point_at_infinity_geometric_anti_product(self_, other), multi_vector_anti_reversal(self_)));
 }
 
-fn multi_vector_radial_sandwich(self_: MultiVector, other: Radial) -> Radial {
-    return multi_vector_radial_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_radial_geometric_anti_product(self_, other), multi_vector_anti_reversal(self_)));
+fn multi_vector_round_point_sandwich(self_: MultiVector, other: RoundPoint) -> RoundPoint {
+    return multi_vector_round_point_into(multi_vector_multi_vector_geometric_anti_product(multi_vector_round_point_geometric_anti_product(self_, other), multi_vector_anti_reversal(self_)));
 }
 
 fn multi_vector_sphere_sandwich(self_: MultiVector, other: Sphere) -> Sphere {
@@ -10724,8 +11553,12 @@ fn origin_dipole_sandwich(self_: Origin, other: Dipole) -> Dipole {
     return multi_vector_dipole_into(multi_vector_origin_geometric_anti_product(origin_dipole_geometric_anti_product(self_, other), origin_anti_reversal(self_)));
 }
 
-fn origin_horizon_sandwich(self_: Origin, other: Horizon) -> Plane {
-    return multi_vector_plane_into(radial_origin_geometric_anti_product(origin_horizon_geometric_anti_product(self_, other), origin_anti_reversal(self_)));
+fn origin_horizon_sandwich(self_: Origin, other: Horizon) -> Horizon {
+    return infinity_origin_geometric_anti_product(origin_horizon_geometric_anti_product(self_, other), origin_anti_reversal(self_));
+}
+
+fn origin_infinity_sandwich(self_: Origin, other: Infinity) -> Infinity {
+    return horizon_origin_geometric_anti_product(origin_infinity_geometric_anti_product(self_, other), origin_anti_reversal(self_));
 }
 
 fn origin_line_sandwich(self_: Origin, other: Line) -> Line {
@@ -10764,8 +11597,8 @@ fn origin_point_at_infinity_sandwich(self_: Origin, other: PointAtInfinity) -> P
     return line_at_infinity_origin_geometric_anti_product(origin_point_at_infinity_geometric_anti_product(self_, other), origin_anti_reversal(self_));
 }
 
-fn origin_radial_sandwich(self_: Origin, other: Radial) -> Radial {
-    return multi_vector_radial_into(multi_vector_origin_geometric_anti_product(origin_radial_geometric_anti_product(self_, other), origin_anti_reversal(self_)));
+fn origin_round_point_sandwich(self_: Origin, other: RoundPoint) -> RoundPoint {
+    return multi_vector_round_point_into(multi_vector_origin_geometric_anti_product(origin_round_point_geometric_anti_product(self_, other), origin_anti_reversal(self_)));
 }
 
 fn origin_sphere_sandwich(self_: Origin, other: Sphere) -> Sphere {
@@ -10782,6 +11615,10 @@ fn plane_dipole_sandwich(self_: Plane, other: Dipole) -> Dipole {
 
 fn plane_horizon_sandwich(self_: Plane, other: Horizon) -> Plane {
     return multi_vector_plane_into(line_at_infinity_plane_geometric_anti_product(plane_horizon_geometric_anti_product(self_, other), plane_anti_reversal(self_)));
+}
+
+fn plane_infinity_sandwich(self_: Plane, other: Infinity) -> RoundPoint {
+    return multi_vector_round_point_into(point_at_infinity_plane_geometric_anti_product(plane_infinity_geometric_anti_product(self_, other), plane_anti_reversal(self_)));
 }
 
 fn plane_line_sandwich(self_: Plane, other: Line) -> Line {
@@ -10820,8 +11657,8 @@ fn plane_point_at_infinity_sandwich(self_: Plane, other: PointAtInfinity) -> Poi
     return multi_vector_point_into(multi_vector_plane_geometric_anti_product(plane_point_at_infinity_geometric_anti_product(self_, other), plane_anti_reversal(self_)));
 }
 
-fn plane_radial_sandwich(self_: Plane, other: Radial) -> Radial {
-    return multi_vector_radial_into(multi_vector_plane_geometric_anti_product(plane_radial_geometric_anti_product(self_, other), plane_anti_reversal(self_)));
+fn plane_round_point_sandwich(self_: Plane, other: RoundPoint) -> RoundPoint {
+    return multi_vector_round_point_into(multi_vector_plane_geometric_anti_product(plane_round_point_geometric_anti_product(self_, other), plane_anti_reversal(self_)));
 }
 
 fn plane_sphere_sandwich(self_: Plane, other: Sphere) -> Sphere {
@@ -10838,6 +11675,10 @@ fn plane_at_origin_dipole_sandwich(self_: PlaneAtOrigin, other: Dipole) -> Dipol
 
 fn plane_at_origin_horizon_sandwich(self_: PlaneAtOrigin, other: Horizon) -> Plane {
     return multi_vector_plane_into(line_at_infinity_plane_at_origin_geometric_anti_product(plane_at_origin_horizon_geometric_anti_product(self_, other), plane_at_origin_anti_reversal(self_)));
+}
+
+fn plane_at_origin_infinity_sandwich(self_: PlaneAtOrigin, other: Infinity) -> RoundPoint {
+    return multi_vector_round_point_into(point_at_infinity_plane_at_origin_geometric_anti_product(plane_at_origin_infinity_geometric_anti_product(self_, other), plane_at_origin_anti_reversal(self_)));
 }
 
 fn plane_at_origin_line_sandwich(self_: PlaneAtOrigin, other: Line) -> Line {
@@ -10876,8 +11717,8 @@ fn plane_at_origin_point_at_infinity_sandwich(self_: PlaneAtOrigin, other: Point
     return multi_vector_point_into(multi_vector_plane_at_origin_geometric_anti_product(plane_at_origin_point_at_infinity_geometric_anti_product(self_, other), plane_at_origin_anti_reversal(self_)));
 }
 
-fn plane_at_origin_radial_sandwich(self_: PlaneAtOrigin, other: Radial) -> Radial {
-    return multi_vector_radial_into(multi_vector_plane_at_origin_geometric_anti_product(plane_at_origin_radial_geometric_anti_product(self_, other), plane_at_origin_anti_reversal(self_)));
+fn plane_at_origin_round_point_sandwich(self_: PlaneAtOrigin, other: RoundPoint) -> RoundPoint {
+    return multi_vector_round_point_into(multi_vector_plane_at_origin_geometric_anti_product(plane_at_origin_round_point_geometric_anti_product(self_, other), plane_at_origin_anti_reversal(self_)));
 }
 
 fn plane_at_origin_sphere_sandwich(self_: PlaneAtOrigin, other: Sphere) -> Sphere {
@@ -10892,8 +11733,12 @@ fn point_dipole_sandwich(self_: Point, other: Dipole) -> Dipole {
     return multi_vector_dipole_into(multi_vector_point_geometric_anti_product(point_dipole_geometric_anti_product(self_, other), point_anti_reversal(self_)));
 }
 
-fn point_horizon_sandwich(self_: Point, other: Horizon) -> Plane {
-    return multi_vector_plane_into(radial_point_geometric_anti_product(point_horizon_geometric_anti_product(self_, other), point_anti_reversal(self_)));
+fn point_horizon_sandwich(self_: Point, other: Horizon) -> Horizon {
+    return infinity_point_geometric_anti_product(point_horizon_geometric_anti_product(self_, other), point_anti_reversal(self_));
+}
+
+fn point_infinity_sandwich(self_: Point, other: Infinity) -> Infinity {
+    return horizon_point_geometric_anti_product(point_infinity_geometric_anti_product(self_, other), point_anti_reversal(self_));
 }
 
 fn point_line_sandwich(self_: Point, other: Line) -> Line {
@@ -10932,8 +11777,8 @@ fn point_point_at_infinity_sandwich(self_: Point, other: PointAtInfinity) -> Poi
     return line_at_infinity_point_geometric_anti_product(point_point_at_infinity_geometric_anti_product(self_, other), point_anti_reversal(self_));
 }
 
-fn point_radial_sandwich(self_: Point, other: Radial) -> Radial {
-    return multi_vector_radial_into(multi_vector_point_geometric_anti_product(point_radial_geometric_anti_product(self_, other), point_anti_reversal(self_)));
+fn point_round_point_sandwich(self_: Point, other: RoundPoint) -> RoundPoint {
+    return multi_vector_round_point_into(multi_vector_point_geometric_anti_product(point_round_point_geometric_anti_product(self_, other), point_anti_reversal(self_)));
 }
 
 fn point_sphere_sandwich(self_: Point, other: Sphere) -> Sphere {
@@ -10968,68 +11813,72 @@ fn point_at_infinity_plane_at_origin_sandwich(self_: PointAtInfinity, other: Pla
     return multi_vector_plane_into(multi_vector_point_at_infinity_geometric_anti_product(point_at_infinity_plane_at_origin_geometric_anti_product(self_, other), point_at_infinity_anti_reversal(self_)));
 }
 
-fn point_at_infinity_radial_sandwich(self_: PointAtInfinity, other: Radial) -> Radial {
-    return multi_vector_radial_into(multi_vector_point_at_infinity_geometric_anti_product(point_at_infinity_radial_geometric_anti_product(self_, other), point_at_infinity_anti_reversal(self_)));
+fn point_at_infinity_round_point_sandwich(self_: PointAtInfinity, other: RoundPoint) -> RoundPoint {
+    return multi_vector_round_point_into(multi_vector_point_at_infinity_geometric_anti_product(point_at_infinity_round_point_geometric_anti_product(self_, other), point_at_infinity_anti_reversal(self_)));
 }
 
 fn point_at_infinity_sphere_sandwich(self_: PointAtInfinity, other: Sphere) -> Sphere {
     return multi_vector_sphere_into(multi_vector_point_at_infinity_geometric_anti_product(point_at_infinity_sphere_geometric_anti_product(self_, other), point_at_infinity_anti_reversal(self_)));
 }
 
-fn radial_circle_sandwich(self_: Radial, other: Circle) -> Circle {
-    return multi_vector_circle_into(multi_vector_radial_geometric_anti_product(radial_circle_geometric_anti_product(self_, other), radial_anti_reversal(self_)));
+fn round_point_circle_sandwich(self_: RoundPoint, other: Circle) -> Circle {
+    return multi_vector_circle_into(multi_vector_round_point_geometric_anti_product(round_point_circle_geometric_anti_product(self_, other), round_point_anti_reversal(self_)));
 }
 
-fn radial_dipole_sandwich(self_: Radial, other: Dipole) -> Dipole {
-    return multi_vector_dipole_into(multi_vector_radial_geometric_anti_product(radial_dipole_geometric_anti_product(self_, other), radial_anti_reversal(self_)));
+fn round_point_dipole_sandwich(self_: RoundPoint, other: Dipole) -> Dipole {
+    return multi_vector_dipole_into(multi_vector_round_point_geometric_anti_product(round_point_dipole_geometric_anti_product(self_, other), round_point_anti_reversal(self_)));
 }
 
-fn radial_horizon_sandwich(self_: Radial, other: Horizon) -> Plane {
-    return multi_vector_plane_into(multi_vector_radial_geometric_anti_product(radial_horizon_geometric_anti_product(self_, other), radial_anti_reversal(self_)));
+fn round_point_horizon_sandwich(self_: RoundPoint, other: Horizon) -> Plane {
+    return multi_vector_plane_into(multi_vector_round_point_geometric_anti_product(round_point_horizon_geometric_anti_product(self_, other), round_point_anti_reversal(self_)));
 }
 
-fn radial_line_sandwich(self_: Radial, other: Line) -> Line {
-    return multi_vector_line_into(multi_vector_radial_geometric_anti_product(radial_line_geometric_anti_product(self_, other), radial_anti_reversal(self_)));
+fn round_point_infinity_sandwich(self_: RoundPoint, other: Infinity) -> RoundPoint {
+    return multi_vector_round_point_into(multi_vector_round_point_geometric_anti_product(round_point_infinity_geometric_anti_product(self_, other), round_point_anti_reversal(self_)));
 }
 
-fn radial_line_at_infinity_sandwich(self_: Radial, other: LineAtInfinity) -> Line {
-    return multi_vector_line_into(multi_vector_radial_geometric_anti_product(radial_line_at_infinity_geometric_anti_product(self_, other), radial_anti_reversal(self_)));
+fn round_point_line_sandwich(self_: RoundPoint, other: Line) -> Line {
+    return multi_vector_line_into(multi_vector_round_point_geometric_anti_product(round_point_line_geometric_anti_product(self_, other), round_point_anti_reversal(self_)));
 }
 
-fn radial_line_at_origin_sandwich(self_: Radial, other: LineAtOrigin) -> Line {
-    return multi_vector_line_into(multi_vector_radial_geometric_anti_product(radial_line_at_origin_geometric_anti_product(self_, other), radial_anti_reversal(self_)));
+fn round_point_line_at_infinity_sandwich(self_: RoundPoint, other: LineAtInfinity) -> Line {
+    return multi_vector_line_into(multi_vector_round_point_geometric_anti_product(round_point_line_at_infinity_geometric_anti_product(self_, other), round_point_anti_reversal(self_)));
 }
 
-fn radial_multi_vector_sandwich(self_: Radial, other: MultiVector) -> MultiVector {
-    return multi_vector_radial_geometric_anti_product(radial_multi_vector_geometric_anti_product(self_, other), radial_anti_reversal(self_));
+fn round_point_line_at_origin_sandwich(self_: RoundPoint, other: LineAtOrigin) -> Line {
+    return multi_vector_line_into(multi_vector_round_point_geometric_anti_product(round_point_line_at_origin_geometric_anti_product(self_, other), round_point_anti_reversal(self_)));
 }
 
-fn radial_origin_sandwich(self_: Radial, other: Origin) -> Point {
-    return multi_vector_point_into(multi_vector_radial_geometric_anti_product(radial_origin_geometric_anti_product(self_, other), radial_anti_reversal(self_)));
+fn round_point_multi_vector_sandwich(self_: RoundPoint, other: MultiVector) -> MultiVector {
+    return multi_vector_round_point_geometric_anti_product(round_point_multi_vector_geometric_anti_product(self_, other), round_point_anti_reversal(self_));
 }
 
-fn radial_plane_sandwich(self_: Radial, other: Plane) -> Plane {
-    return multi_vector_plane_into(multi_vector_radial_geometric_anti_product(radial_plane_geometric_anti_product(self_, other), radial_anti_reversal(self_)));
+fn round_point_origin_sandwich(self_: RoundPoint, other: Origin) -> Point {
+    return multi_vector_point_into(multi_vector_round_point_geometric_anti_product(round_point_origin_geometric_anti_product(self_, other), round_point_anti_reversal(self_)));
 }
 
-fn radial_plane_at_origin_sandwich(self_: Radial, other: PlaneAtOrigin) -> Plane {
-    return multi_vector_plane_into(multi_vector_radial_geometric_anti_product(radial_plane_at_origin_geometric_anti_product(self_, other), radial_anti_reversal(self_)));
+fn round_point_plane_sandwich(self_: RoundPoint, other: Plane) -> Plane {
+    return multi_vector_plane_into(multi_vector_round_point_geometric_anti_product(round_point_plane_geometric_anti_product(self_, other), round_point_anti_reversal(self_)));
 }
 
-fn radial_point_sandwich(self_: Radial, other: Point) -> Point {
-    return multi_vector_point_into(multi_vector_radial_geometric_anti_product(radial_point_geometric_anti_product(self_, other), radial_anti_reversal(self_)));
+fn round_point_plane_at_origin_sandwich(self_: RoundPoint, other: PlaneAtOrigin) -> Plane {
+    return multi_vector_plane_into(multi_vector_round_point_geometric_anti_product(round_point_plane_at_origin_geometric_anti_product(self_, other), round_point_anti_reversal(self_)));
 }
 
-fn radial_point_at_infinity_sandwich(self_: Radial, other: PointAtInfinity) -> Point {
-    return multi_vector_point_into(multi_vector_radial_geometric_anti_product(radial_point_at_infinity_geometric_anti_product(self_, other), radial_anti_reversal(self_)));
+fn round_point_point_sandwich(self_: RoundPoint, other: Point) -> Point {
+    return multi_vector_point_into(multi_vector_round_point_geometric_anti_product(round_point_point_geometric_anti_product(self_, other), round_point_anti_reversal(self_)));
 }
 
-fn radial_radial_sandwich(self_: Radial, other: Radial) -> Radial {
-    return multi_vector_radial_into(multi_vector_radial_geometric_anti_product(radial_radial_geometric_anti_product(self_, other), radial_anti_reversal(self_)));
+fn round_point_point_at_infinity_sandwich(self_: RoundPoint, other: PointAtInfinity) -> Point {
+    return multi_vector_point_into(multi_vector_round_point_geometric_anti_product(round_point_point_at_infinity_geometric_anti_product(self_, other), round_point_anti_reversal(self_)));
 }
 
-fn radial_sphere_sandwich(self_: Radial, other: Sphere) -> Sphere {
-    return multi_vector_sphere_into(multi_vector_radial_geometric_anti_product(radial_sphere_geometric_anti_product(self_, other), radial_anti_reversal(self_)));
+fn round_point_round_point_sandwich(self_: RoundPoint, other: RoundPoint) -> RoundPoint {
+    return multi_vector_round_point_into(multi_vector_round_point_geometric_anti_product(round_point_round_point_geometric_anti_product(self_, other), round_point_anti_reversal(self_)));
+}
+
+fn round_point_sphere_sandwich(self_: RoundPoint, other: Sphere) -> Sphere {
+    return multi_vector_sphere_into(multi_vector_round_point_geometric_anti_product(round_point_sphere_geometric_anti_product(self_, other), round_point_anti_reversal(self_)));
 }
 
 fn scalar_circle_sandwich(self_: Scalar, other: Circle) -> Circle {
@@ -11040,8 +11889,12 @@ fn scalar_dipole_sandwich(self_: Scalar, other: Dipole) -> Dipole {
     return circle_scalar_geometric_anti_product(scalar_dipole_geometric_anti_product(self_, other), scalar_anti_reversal(self_));
 }
 
-fn scalar_horizon_sandwich(self_: Scalar, other: Horizon) -> Plane {
-    return sphere_plane_into(radial_scalar_geometric_anti_product(scalar_horizon_geometric_anti_product(self_, other), scalar_anti_reversal(self_)));
+fn scalar_horizon_sandwich(self_: Scalar, other: Horizon) -> Horizon {
+    return infinity_scalar_geometric_anti_product(scalar_horizon_geometric_anti_product(self_, other), scalar_anti_reversal(self_));
+}
+
+fn scalar_infinity_sandwich(self_: Scalar, other: Infinity) -> Infinity {
+    return horizon_scalar_geometric_anti_product(scalar_infinity_geometric_anti_product(self_, other), scalar_anti_reversal(self_));
 }
 
 fn scalar_line_sandwich(self_: Scalar, other: Line) -> Line {
@@ -11065,11 +11918,11 @@ fn scalar_origin_sandwich(self_: Scalar, other: Origin) -> Point {
 }
 
 fn scalar_plane_sandwich(self_: Scalar, other: Plane) -> Plane {
-    return sphere_plane_into(radial_scalar_geometric_anti_product(scalar_plane_geometric_anti_product(self_, other), scalar_anti_reversal(self_)));
+    return sphere_plane_into(round_point_scalar_geometric_anti_product(scalar_plane_geometric_anti_product(self_, other), scalar_anti_reversal(self_)));
 }
 
 fn scalar_plane_at_origin_sandwich(self_: Scalar, other: PlaneAtOrigin) -> Plane {
-    return sphere_plane_into(radial_scalar_geometric_anti_product(scalar_plane_at_origin_geometric_anti_product(self_, other), scalar_anti_reversal(self_)));
+    return sphere_plane_into(round_point_scalar_geometric_anti_product(scalar_plane_at_origin_geometric_anti_product(self_, other), scalar_anti_reversal(self_)));
 }
 
 fn scalar_point_sandwich(self_: Scalar, other: Point) -> Point {
@@ -11080,12 +11933,12 @@ fn scalar_point_at_infinity_sandwich(self_: Scalar, other: PointAtInfinity) -> P
     return line_at_infinity_scalar_geometric_anti_product(scalar_point_at_infinity_geometric_anti_product(self_, other), scalar_anti_reversal(self_));
 }
 
-fn scalar_radial_sandwich(self_: Scalar, other: Radial) -> Radial {
-    return sphere_scalar_geometric_anti_product(scalar_radial_geometric_anti_product(self_, other), scalar_anti_reversal(self_));
+fn scalar_round_point_sandwich(self_: Scalar, other: RoundPoint) -> RoundPoint {
+    return sphere_scalar_geometric_anti_product(scalar_round_point_geometric_anti_product(self_, other), scalar_anti_reversal(self_));
 }
 
 fn scalar_sphere_sandwich(self_: Scalar, other: Sphere) -> Sphere {
-    return radial_scalar_geometric_anti_product(scalar_sphere_geometric_anti_product(self_, other), scalar_anti_reversal(self_));
+    return round_point_scalar_geometric_anti_product(scalar_sphere_geometric_anti_product(self_, other), scalar_anti_reversal(self_));
 }
 
 fn sphere_circle_sandwich(self_: Sphere, other: Circle) -> Circle {
@@ -11098,6 +11951,10 @@ fn sphere_dipole_sandwich(self_: Sphere, other: Dipole) -> Dipole {
 
 fn sphere_horizon_sandwich(self_: Sphere, other: Horizon) -> Plane {
     return multi_vector_plane_into(multi_vector_sphere_geometric_anti_product(sphere_horizon_geometric_anti_product(self_, other), sphere_anti_reversal(self_)));
+}
+
+fn sphere_infinity_sandwich(self_: Sphere, other: Infinity) -> RoundPoint {
+    return multi_vector_round_point_into(multi_vector_sphere_geometric_anti_product(sphere_infinity_geometric_anti_product(self_, other), sphere_anti_reversal(self_)));
 }
 
 fn sphere_line_sandwich(self_: Sphere, other: Line) -> Line {
@@ -11136,8 +11993,8 @@ fn sphere_point_at_infinity_sandwich(self_: Sphere, other: PointAtInfinity) -> P
     return multi_vector_point_into(multi_vector_sphere_geometric_anti_product(sphere_point_at_infinity_geometric_anti_product(self_, other), sphere_anti_reversal(self_)));
 }
 
-fn sphere_radial_sandwich(self_: Sphere, other: Radial) -> Radial {
-    return multi_vector_radial_into(multi_vector_sphere_geometric_anti_product(sphere_radial_geometric_anti_product(self_, other), sphere_anti_reversal(self_)));
+fn sphere_round_point_sandwich(self_: Sphere, other: RoundPoint) -> RoundPoint {
+    return multi_vector_round_point_into(multi_vector_sphere_geometric_anti_product(sphere_round_point_geometric_anti_product(self_, other), sphere_anti_reversal(self_)));
 }
 
 fn sphere_sphere_sandwich(self_: Sphere, other: Sphere) -> Sphere {
@@ -11152,8 +12009,12 @@ fn point_dipole_invert(self_: Point, other: Dipole) -> Dipole {
     return point_dipole_sandwich(point_unitize(self_), other);
 }
 
-fn point_horizon_invert(self_: Point, other: Horizon) -> Plane {
+fn point_horizon_invert(self_: Point, other: Horizon) -> Horizon {
     return point_horizon_sandwich(point_unitize(self_), other);
+}
+
+fn point_infinity_invert(self_: Point, other: Infinity) -> Infinity {
+    return point_infinity_sandwich(point_unitize(self_), other);
 }
 
 fn point_line_invert(self_: Point, other: Line) -> Line {
@@ -11192,8 +12053,8 @@ fn point_point_at_infinity_invert(self_: Point, other: PointAtInfinity) -> Point
     return point_point_at_infinity_sandwich(point_unitize(self_), other);
 }
 
-fn point_radial_invert(self_: Point, other: Radial) -> Radial {
-    return point_radial_sandwich(point_unitize(self_), other);
+fn point_round_point_invert(self_: Point, other: RoundPoint) -> RoundPoint {
+    return point_round_point_sandwich(point_unitize(self_), other);
 }
 
 fn point_sphere_invert(self_: Point, other: Sphere) -> Sphere {
@@ -11210,6 +12071,10 @@ fn plane_dipole_reflect(self_: Plane, other: Dipole) -> Dipole {
 
 fn plane_horizon_reflect(self_: Plane, other: Horizon) -> Plane {
     return plane_horizon_sandwich(plane_unitize(self_), other);
+}
+
+fn plane_infinity_reflect(self_: Plane, other: Infinity) -> RoundPoint {
+    return plane_infinity_sandwich(plane_unitize(self_), other);
 }
 
 fn plane_line_reflect(self_: Plane, other: Line) -> Line {
@@ -11248,8 +12113,8 @@ fn plane_point_at_infinity_reflect(self_: Plane, other: PointAtInfinity) -> Poin
     return plane_point_at_infinity_sandwich(plane_unitize(self_), other);
 }
 
-fn plane_radial_reflect(self_: Plane, other: Radial) -> Radial {
-    return plane_radial_sandwich(plane_unitize(self_), other);
+fn plane_round_point_reflect(self_: Plane, other: RoundPoint) -> RoundPoint {
+    return plane_round_point_sandwich(plane_unitize(self_), other);
 }
 
 fn plane_sphere_reflect(self_: Plane, other: Sphere) -> Sphere {
@@ -11260,112 +12125,60 @@ fn circle_multi_vector_bulk_contraction(self_: Circle, other: MultiVector) -> Mu
     return circle_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
 }
 
-fn circle_radial_bulk_contraction(self_: Circle, other: Radial) -> Dipole {
-    return circle_sphere_anti_wedge(self_, radial_right_bulk_dual(other));
-}
-
 fn dipole_multi_vector_bulk_contraction(self_: Dipole, other: MultiVector) -> MultiVector {
     return dipole_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
-}
-
-fn dipole_radial_bulk_contraction(self_: Dipole, other: Radial) -> Radial {
-    return dipole_sphere_anti_wedge(self_, radial_right_bulk_dual(other));
 }
 
 fn horizon_multi_vector_bulk_contraction(self_: Horizon, other: MultiVector) -> MultiVector {
     return horizon_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
 }
 
-fn horizon_radial_bulk_contraction(self_: Horizon, other: Radial) -> Circle {
-    return horizon_sphere_anti_wedge(self_, radial_right_bulk_dual(other));
+fn infinity_multi_vector_bulk_contraction(self_: Infinity, other: MultiVector) -> MultiVector {
+    return infinity_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
 }
 
 fn line_multi_vector_bulk_contraction(self_: Line, other: MultiVector) -> MultiVector {
     return line_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
 }
 
-fn line_radial_bulk_contraction(self_: Line, other: Radial) -> Dipole {
-    return line_sphere_anti_wedge(self_, radial_right_bulk_dual(other));
-}
-
 fn line_at_infinity_multi_vector_bulk_contraction(self_: LineAtInfinity, other: MultiVector) -> MultiVector {
     return line_at_infinity_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
-}
-
-fn line_at_infinity_radial_bulk_contraction(self_: LineAtInfinity, other: Radial) -> Dipole {
-    return line_at_infinity_sphere_anti_wedge(self_, radial_right_bulk_dual(other));
 }
 
 fn line_at_origin_multi_vector_bulk_contraction(self_: LineAtOrigin, other: MultiVector) -> MultiVector {
     return line_at_origin_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
 }
 
-fn line_at_origin_radial_bulk_contraction(self_: LineAtOrigin, other: Radial) -> Dipole {
-    return line_at_origin_sphere_anti_wedge(self_, radial_right_bulk_dual(other));
-}
-
 fn multi_vector_multi_vector_bulk_contraction(self_: MultiVector, other: MultiVector) -> MultiVector {
     return multi_vector_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
-}
-
-fn multi_vector_radial_bulk_contraction(self_: MultiVector, other: Radial) -> MultiVector {
-    return multi_vector_sphere_anti_wedge(self_, radial_right_bulk_dual(other));
 }
 
 fn origin_multi_vector_bulk_contraction(self_: Origin, other: MultiVector) -> MultiVector {
     return origin_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
 }
 
-fn origin_radial_bulk_contraction(self_: Origin, other: Radial) -> Radial {
-    return origin_sphere_anti_wedge(self_, radial_right_bulk_dual(other));
-}
-
 fn plane_multi_vector_bulk_contraction(self_: Plane, other: MultiVector) -> MultiVector {
     return plane_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
-}
-
-fn plane_radial_bulk_contraction(self_: Plane, other: Radial) -> Circle {
-    return plane_sphere_anti_wedge(self_, radial_right_bulk_dual(other));
 }
 
 fn plane_at_origin_multi_vector_bulk_contraction(self_: PlaneAtOrigin, other: MultiVector) -> MultiVector {
     return plane_at_origin_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
 }
 
-fn plane_at_origin_radial_bulk_contraction(self_: PlaneAtOrigin, other: Radial) -> Circle {
-    return plane_at_origin_sphere_anti_wedge(self_, radial_right_bulk_dual(other));
-}
-
 fn point_multi_vector_bulk_contraction(self_: Point, other: MultiVector) -> MultiVector {
     return point_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
-}
-
-fn point_radial_bulk_contraction(self_: Point, other: Radial) -> Radial {
-    return point_sphere_anti_wedge(self_, radial_right_bulk_dual(other));
 }
 
 fn point_at_infinity_multi_vector_bulk_contraction(self_: PointAtInfinity, other: MultiVector) -> MultiVector {
     return point_at_infinity_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
 }
 
-fn point_at_infinity_radial_bulk_contraction(self_: PointAtInfinity, other: Radial) -> Radial {
-    return point_at_infinity_sphere_anti_wedge(self_, radial_right_bulk_dual(other));
-}
-
-fn radial_multi_vector_bulk_contraction(self_: Radial, other: MultiVector) -> MultiVector {
-    return radial_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
-}
-
-fn radial_radial_bulk_contraction(self_: Radial, other: Radial) -> Scalar {
-    return radial_sphere_anti_wedge(self_, radial_right_bulk_dual(other));
+fn round_point_multi_vector_bulk_contraction(self_: RoundPoint, other: MultiVector) -> MultiVector {
+    return round_point_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
 }
 
 fn sphere_multi_vector_bulk_contraction(self_: Sphere, other: MultiVector) -> MultiVector {
     return sphere_multi_vector_anti_wedge(self_, multi_vector_right_bulk_dual(other));
-}
-
-fn sphere_radial_bulk_contraction(self_: Sphere, other: Radial) -> Circle {
-    return sphere_sphere_anti_wedge(self_, radial_right_bulk_dual(other));
 }
 
 fn circle_multi_vector_weight_contraction(self_: Circle, other: MultiVector) -> MultiVector {
@@ -11378,6 +12191,10 @@ fn dipole_multi_vector_weight_contraction(self_: Dipole, other: MultiVector) -> 
 
 fn horizon_multi_vector_weight_contraction(self_: Horizon, other: MultiVector) -> MultiVector {
     return horizon_multi_vector_anti_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn infinity_multi_vector_weight_contraction(self_: Infinity, other: MultiVector) -> MultiVector {
+    return infinity_multi_vector_anti_wedge(self_, multi_vector_right_weight_dual(other));
 }
 
 fn line_multi_vector_weight_contraction(self_: Line, other: MultiVector) -> MultiVector {
@@ -11416,8 +12233,8 @@ fn point_at_infinity_multi_vector_weight_contraction(self_: PointAtInfinity, oth
     return point_at_infinity_multi_vector_anti_wedge(self_, multi_vector_right_weight_dual(other));
 }
 
-fn radial_multi_vector_weight_contraction(self_: Radial, other: MultiVector) -> MultiVector {
-    return radial_multi_vector_anti_wedge(self_, multi_vector_right_weight_dual(other));
+fn round_point_multi_vector_weight_contraction(self_: RoundPoint, other: MultiVector) -> MultiVector {
+    return round_point_multi_vector_anti_wedge(self_, multi_vector_right_weight_dual(other));
 }
 
 fn sphere_multi_vector_weight_contraction(self_: Sphere, other: MultiVector) -> MultiVector {
@@ -11436,6 +12253,10 @@ fn horizon_multi_vector_bulk_expansion(self_: Horizon, other: MultiVector) -> Mu
     return horizon_multi_vector_wedge(self_, multi_vector_right_bulk_dual(other));
 }
 
+fn infinity_multi_vector_bulk_expansion(self_: Infinity, other: MultiVector) -> MultiVector {
+    return infinity_multi_vector_wedge(self_, multi_vector_right_bulk_dual(other));
+}
+
 fn line_multi_vector_bulk_expansion(self_: Line, other: MultiVector) -> MultiVector {
     return line_multi_vector_wedge(self_, multi_vector_right_bulk_dual(other));
 }
@@ -11450,10 +12271,6 @@ fn line_at_origin_multi_vector_bulk_expansion(self_: LineAtOrigin, other: MultiV
 
 fn multi_vector_multi_vector_bulk_expansion(self_: MultiVector, other: MultiVector) -> MultiVector {
     return multi_vector_multi_vector_wedge(self_, multi_vector_right_bulk_dual(other));
-}
-
-fn multi_vector_radial_bulk_expansion(self_: MultiVector, other: Radial) -> MultiVector {
-    return multi_vector_sphere_wedge(self_, radial_right_bulk_dual(other));
 }
 
 fn origin_multi_vector_bulk_expansion(self_: Origin, other: MultiVector) -> MultiVector {
@@ -11476,12 +12293,8 @@ fn point_at_infinity_multi_vector_bulk_expansion(self_: PointAtInfinity, other: 
     return point_at_infinity_multi_vector_wedge(self_, multi_vector_right_bulk_dual(other));
 }
 
-fn radial_multi_vector_bulk_expansion(self_: Radial, other: MultiVector) -> MultiVector {
-    return radial_multi_vector_wedge(self_, multi_vector_right_bulk_dual(other));
-}
-
-fn radial_radial_bulk_expansion(self_: Radial, other: Radial) -> AntiScalar {
-    return radial_sphere_wedge(self_, radial_right_bulk_dual(other));
+fn round_point_multi_vector_bulk_expansion(self_: RoundPoint, other: MultiVector) -> MultiVector {
+    return round_point_multi_vector_wedge(self_, multi_vector_right_bulk_dual(other));
 }
 
 fn sphere_multi_vector_bulk_expansion(self_: Sphere, other: MultiVector) -> MultiVector {
@@ -11498,6 +12311,10 @@ fn dipole_multi_vector_weight_expansion(self_: Dipole, other: MultiVector) -> Mu
 
 fn horizon_multi_vector_weight_expansion(self_: Horizon, other: MultiVector) -> MultiVector {
     return horizon_multi_vector_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn infinity_multi_vector_weight_expansion(self_: Infinity, other: MultiVector) -> MultiVector {
+    return infinity_multi_vector_wedge(self_, multi_vector_right_weight_dual(other));
 }
 
 fn line_multi_vector_weight_expansion(self_: Line, other: MultiVector) -> MultiVector {
@@ -11536,8 +12353,8 @@ fn point_at_infinity_multi_vector_weight_expansion(self_: PointAtInfinity, other
     return point_at_infinity_multi_vector_wedge(self_, multi_vector_right_weight_dual(other));
 }
 
-fn radial_multi_vector_weight_expansion(self_: Radial, other: MultiVector) -> MultiVector {
-    return radial_multi_vector_wedge(self_, multi_vector_right_weight_dual(other));
+fn round_point_multi_vector_weight_expansion(self_: RoundPoint, other: MultiVector) -> MultiVector {
+    return round_point_multi_vector_wedge(self_, multi_vector_right_weight_dual(other));
 }
 
 fn sphere_multi_vector_weight_expansion(self_: Sphere, other: MultiVector) -> MultiVector {
@@ -11548,112 +12365,60 @@ fn circle_multi_vector_anti_project_via_horizon_onto(self_: Circle, other: Multi
     return multi_vector_multi_vector_wedge(other, circle_multi_vector_bulk_contraction(self_, other));
 }
 
-fn circle_radial_anti_project_via_horizon_onto(self_: Circle, other: Radial) -> Circle {
-    return radial_dipole_wedge(other, circle_radial_bulk_contraction(self_, other));
-}
-
 fn dipole_multi_vector_anti_project_via_horizon_onto(self_: Dipole, other: MultiVector) -> MultiVector {
     return multi_vector_multi_vector_wedge(other, dipole_multi_vector_bulk_contraction(self_, other));
-}
-
-fn dipole_radial_anti_project_via_horizon_onto(self_: Dipole, other: Radial) -> Dipole {
-    return radial_radial_wedge(other, dipole_radial_bulk_contraction(self_, other));
 }
 
 fn horizon_multi_vector_anti_project_via_horizon_onto(self_: Horizon, other: MultiVector) -> MultiVector {
     return multi_vector_multi_vector_wedge(other, horizon_multi_vector_bulk_contraction(self_, other));
 }
 
-fn horizon_radial_anti_project_via_horizon_onto(self_: Horizon, other: Radial) -> Sphere {
-    return radial_circle_wedge(other, horizon_radial_bulk_contraction(self_, other));
+fn infinity_multi_vector_anti_project_via_horizon_onto(self_: Infinity, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_wedge(other, infinity_multi_vector_bulk_contraction(self_, other));
 }
 
 fn line_multi_vector_anti_project_via_horizon_onto(self_: Line, other: MultiVector) -> MultiVector {
     return multi_vector_multi_vector_wedge(other, line_multi_vector_bulk_contraction(self_, other));
 }
 
-fn line_radial_anti_project_via_horizon_onto(self_: Line, other: Radial) -> Circle {
-    return radial_dipole_wedge(other, line_radial_bulk_contraction(self_, other));
-}
-
 fn line_at_infinity_multi_vector_anti_project_via_horizon_onto(self_: LineAtInfinity, other: MultiVector) -> MultiVector {
     return multi_vector_multi_vector_wedge(other, line_at_infinity_multi_vector_bulk_contraction(self_, other));
-}
-
-fn line_at_infinity_radial_anti_project_via_horizon_onto(self_: LineAtInfinity, other: Radial) -> Circle {
-    return radial_dipole_wedge(other, line_at_infinity_radial_bulk_contraction(self_, other));
 }
 
 fn line_at_origin_multi_vector_anti_project_via_horizon_onto(self_: LineAtOrigin, other: MultiVector) -> MultiVector {
     return multi_vector_multi_vector_wedge(other, line_at_origin_multi_vector_bulk_contraction(self_, other));
 }
 
-fn line_at_origin_radial_anti_project_via_horizon_onto(self_: LineAtOrigin, other: Radial) -> Circle {
-    return radial_dipole_wedge(other, line_at_origin_radial_bulk_contraction(self_, other));
-}
-
 fn multi_vector_multi_vector_anti_project_via_horizon_onto(self_: MultiVector, other: MultiVector) -> MultiVector {
     return multi_vector_multi_vector_wedge(other, multi_vector_multi_vector_bulk_contraction(self_, other));
-}
-
-fn multi_vector_radial_anti_project_via_horizon_onto(self_: MultiVector, other: Radial) -> MultiVector {
-    return radial_multi_vector_wedge(other, multi_vector_radial_bulk_contraction(self_, other));
 }
 
 fn origin_multi_vector_anti_project_via_horizon_onto(self_: Origin, other: MultiVector) -> MultiVector {
     return multi_vector_multi_vector_wedge(other, origin_multi_vector_bulk_contraction(self_, other));
 }
 
-fn origin_radial_anti_project_via_horizon_onto(self_: Origin, other: Radial) -> Dipole {
-    return radial_radial_wedge(other, origin_radial_bulk_contraction(self_, other));
-}
-
 fn plane_multi_vector_anti_project_via_horizon_onto(self_: Plane, other: MultiVector) -> MultiVector {
     return multi_vector_multi_vector_wedge(other, plane_multi_vector_bulk_contraction(self_, other));
-}
-
-fn plane_radial_anti_project_via_horizon_onto(self_: Plane, other: Radial) -> Sphere {
-    return radial_circle_wedge(other, plane_radial_bulk_contraction(self_, other));
 }
 
 fn plane_at_origin_multi_vector_anti_project_via_horizon_onto(self_: PlaneAtOrigin, other: MultiVector) -> MultiVector {
     return multi_vector_multi_vector_wedge(other, plane_at_origin_multi_vector_bulk_contraction(self_, other));
 }
 
-fn plane_at_origin_radial_anti_project_via_horizon_onto(self_: PlaneAtOrigin, other: Radial) -> Sphere {
-    return radial_circle_wedge(other, plane_at_origin_radial_bulk_contraction(self_, other));
-}
-
 fn point_multi_vector_anti_project_via_horizon_onto(self_: Point, other: MultiVector) -> MultiVector {
     return multi_vector_multi_vector_wedge(other, point_multi_vector_bulk_contraction(self_, other));
-}
-
-fn point_radial_anti_project_via_horizon_onto(self_: Point, other: Radial) -> Dipole {
-    return radial_radial_wedge(other, point_radial_bulk_contraction(self_, other));
 }
 
 fn point_at_infinity_multi_vector_anti_project_via_horizon_onto(self_: PointAtInfinity, other: MultiVector) -> MultiVector {
     return multi_vector_multi_vector_wedge(other, point_at_infinity_multi_vector_bulk_contraction(self_, other));
 }
 
-fn point_at_infinity_radial_anti_project_via_horizon_onto(self_: PointAtInfinity, other: Radial) -> Dipole {
-    return radial_radial_wedge(other, point_at_infinity_radial_bulk_contraction(self_, other));
-}
-
-fn radial_multi_vector_anti_project_via_horizon_onto(self_: Radial, other: MultiVector) -> MultiVector {
-    return multi_vector_multi_vector_wedge(other, radial_multi_vector_bulk_contraction(self_, other));
-}
-
-fn radial_radial_anti_project_via_horizon_onto(self_: Radial, other: Radial) -> Radial {
-    return radial_scalar_wedge(other, radial_radial_bulk_contraction(self_, other));
+fn round_point_multi_vector_anti_project_via_horizon_onto(self_: RoundPoint, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_wedge(other, round_point_multi_vector_bulk_contraction(self_, other));
 }
 
 fn sphere_multi_vector_anti_project_via_horizon_onto(self_: Sphere, other: MultiVector) -> MultiVector {
     return multi_vector_multi_vector_wedge(other, sphere_multi_vector_bulk_contraction(self_, other));
-}
-
-fn sphere_radial_anti_project_via_horizon_onto(self_: Sphere, other: Radial) -> Sphere {
-    return radial_circle_wedge(other, sphere_radial_bulk_contraction(self_, other));
 }
 
 fn circle_multi_vector_project_orthogonally_onto(self_: Circle, other: MultiVector) -> MultiVector {
@@ -11666,6 +12431,10 @@ fn dipole_multi_vector_project_orthogonally_onto(self_: Dipole, other: MultiVect
 
 fn horizon_multi_vector_project_orthogonally_onto(self_: Horizon, other: MultiVector) -> MultiVector {
     return multi_vector_multi_vector_anti_wedge(other, horizon_multi_vector_weight_expansion(self_, other));
+}
+
+fn infinity_multi_vector_project_orthogonally_onto(self_: Infinity, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, infinity_multi_vector_weight_expansion(self_, other));
 }
 
 fn line_multi_vector_project_orthogonally_onto(self_: Line, other: MultiVector) -> MultiVector {
@@ -11704,8 +12473,8 @@ fn point_at_infinity_multi_vector_project_orthogonally_onto(self_: PointAtInfini
     return multi_vector_multi_vector_anti_wedge(other, point_at_infinity_multi_vector_weight_expansion(self_, other));
 }
 
-fn radial_multi_vector_project_orthogonally_onto(self_: Radial, other: MultiVector) -> MultiVector {
-    return multi_vector_multi_vector_anti_wedge(other, radial_multi_vector_weight_expansion(self_, other));
+fn round_point_multi_vector_project_orthogonally_onto(self_: RoundPoint, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, round_point_multi_vector_weight_expansion(self_, other));
 }
 
 fn sphere_multi_vector_project_orthogonally_onto(self_: Sphere, other: MultiVector) -> MultiVector {
@@ -11724,6 +12493,10 @@ fn horizon_multi_vector_project_via_origin_onto(self_: Horizon, other: MultiVect
     return multi_vector_multi_vector_anti_wedge(other, horizon_multi_vector_bulk_expansion(self_, other));
 }
 
+fn infinity_multi_vector_project_via_origin_onto(self_: Infinity, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, infinity_multi_vector_bulk_expansion(self_, other));
+}
+
 fn line_multi_vector_project_via_origin_onto(self_: Line, other: MultiVector) -> MultiVector {
     return multi_vector_multi_vector_anti_wedge(other, line_multi_vector_bulk_expansion(self_, other));
 }
@@ -11738,10 +12511,6 @@ fn line_at_origin_multi_vector_project_via_origin_onto(self_: LineAtOrigin, othe
 
 fn multi_vector_multi_vector_project_via_origin_onto(self_: MultiVector, other: MultiVector) -> MultiVector {
     return multi_vector_multi_vector_anti_wedge(other, multi_vector_multi_vector_bulk_expansion(self_, other));
-}
-
-fn multi_vector_radial_project_via_origin_onto(self_: MultiVector, other: Radial) -> MultiVector {
-    return radial_multi_vector_anti_wedge(other, multi_vector_radial_bulk_expansion(self_, other));
 }
 
 fn origin_multi_vector_project_via_origin_onto(self_: Origin, other: MultiVector) -> MultiVector {
@@ -11764,12 +12533,8 @@ fn point_at_infinity_multi_vector_project_via_origin_onto(self_: PointAtInfinity
     return multi_vector_multi_vector_anti_wedge(other, point_at_infinity_multi_vector_bulk_expansion(self_, other));
 }
 
-fn radial_multi_vector_project_via_origin_onto(self_: Radial, other: MultiVector) -> MultiVector {
-    return multi_vector_multi_vector_anti_wedge(other, radial_multi_vector_bulk_expansion(self_, other));
-}
-
-fn radial_radial_project_via_origin_onto(self_: Radial, other: Radial) -> Radial {
-    return radial_anti_scalar_anti_wedge(other, radial_radial_bulk_expansion(self_, other));
+fn round_point_multi_vector_project_via_origin_onto(self_: RoundPoint, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(other, round_point_multi_vector_bulk_expansion(self_, other));
 }
 
 fn sphere_multi_vector_project_via_origin_onto(self_: Sphere, other: MultiVector) -> MultiVector {
@@ -11780,24 +12545,28 @@ fn circle_multi_vector_distance(self_: Circle, other: MultiVector) -> Magnitude 
     return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(circle_multi_vector_wedge(self_, other))), multi_vector_weight_norm(circle_multi_vector_wedge(self_, multi_vector_attitude(other))));
 }
 
-fn circle_radial_distance(self_: Circle, other: Radial) -> Magnitude {
-    return scalar_anti_scalar_add(circle_bulk_norm(sphere_attitude(circle_radial_wedge(self_, other))), circle_weight_norm(circle_scalar_wedge(self_, radial_attitude(other))));
+fn circle_round_point_distance(self_: Circle, other: RoundPoint) -> Magnitude {
+    return scalar_anti_scalar_add(circle_bulk_norm(sphere_attitude(circle_round_point_wedge(self_, other))), circle_weight_norm(circle_scalar_wedge(self_, round_point_attitude(other))));
 }
 
 fn dipole_dipole_distance(self_: Dipole, other: Dipole) -> Magnitude {
-    return scalar_anti_scalar_add(circle_bulk_norm(sphere_attitude(dipole_dipole_wedge(self_, other))), circle_weight_norm(dipole_radial_wedge(self_, dipole_attitude(other))));
+    return scalar_anti_scalar_add(circle_bulk_norm(sphere_attitude(dipole_dipole_wedge(self_, other))), circle_weight_norm(dipole_round_point_wedge(self_, dipole_attitude(other))));
 }
 
 fn dipole_multi_vector_distance(self_: Dipole, other: MultiVector) -> Magnitude {
     return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(dipole_multi_vector_wedge(self_, other))), multi_vector_weight_norm(dipole_multi_vector_wedge(self_, multi_vector_attitude(other))));
 }
 
-fn dipole_radial_distance(self_: Dipole, other: Radial) -> Magnitude {
-    return scalar_anti_scalar_add(dipole_bulk_norm(circle_attitude(dipole_radial_wedge(self_, other))), dipole_weight_norm(dipole_scalar_wedge(self_, radial_attitude(other))));
+fn dipole_round_point_distance(self_: Dipole, other: RoundPoint) -> Magnitude {
+    return scalar_anti_scalar_add(dipole_bulk_norm(circle_attitude(dipole_round_point_wedge(self_, other))), dipole_weight_norm(dipole_scalar_wedge(self_, round_point_attitude(other))));
 }
 
 fn horizon_multi_vector_distance(self_: Horizon, other: MultiVector) -> Magnitude {
     return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(horizon_multi_vector_wedge(self_, other))), multi_vector_weight_norm(horizon_multi_vector_wedge(self_, multi_vector_attitude(other))));
+}
+
+fn infinity_multi_vector_distance(self_: Infinity, other: MultiVector) -> Magnitude {
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(infinity_multi_vector_wedge(self_, other))), multi_vector_weight_norm(infinity_multi_vector_wedge(self_, multi_vector_attitude(other))));
 }
 
 fn line_multi_vector_distance(self_: Line, other: MultiVector) -> Magnitude {
@@ -11817,23 +12586,15 @@ fn magnitude_circle_distance(self_: Magnitude, other: Circle) -> Magnitude {
 }
 
 fn magnitude_dipole_distance(self_: Magnitude, other: Dipole) -> Magnitude {
-    return scalar_anti_scalar_add(radial_bulk_norm(dipole_attitude(magnitude_dipole_wedge(self_, other))), radial_weight_norm(magnitude_radial_wedge(self_, dipole_attitude(other))));
+    return scalar_anti_scalar_add(round_point_bulk_norm(dipole_attitude(magnitude_dipole_wedge(self_, other))), round_point_weight_norm(magnitude_round_point_wedge(self_, dipole_attitude(other))));
 }
 
 fn magnitude_multi_vector_distance(self_: Magnitude, other: MultiVector) -> Magnitude {
     return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(magnitude_multi_vector_wedge(self_, other))), multi_vector_weight_norm(magnitude_multi_vector_wedge(self_, multi_vector_attitude(other))));
 }
 
-fn magnitude_origin_distance(self_: Magnitude, other: Origin) -> Magnitude {
-    return scalar_anti_scalar_add(radial_bulk_norm(origin_attitude(magnitude_origin_wedge(self_, other))), radial_weight_norm(magnitude_radial_wedge(self_, origin_attitude(other))));
-}
-
-fn magnitude_point_distance(self_: Magnitude, other: Point) -> Magnitude {
-    return scalar_anti_scalar_add(radial_bulk_norm(point_attitude(magnitude_point_wedge(self_, other))), radial_weight_norm(magnitude_radial_wedge(self_, point_attitude(other))));
-}
-
-fn magnitude_radial_distance(self_: Magnitude, other: Radial) -> Magnitude {
-    return scalar_anti_scalar_add(scalar_bulk_norm(radial_attitude(magnitude_radial_wedge(self_, other))), magnitude_weight_norm(magnitude_scalar_wedge(self_, radial_attitude(other))));
+fn magnitude_round_point_distance(self_: Magnitude, other: RoundPoint) -> Magnitude {
+    return scalar_anti_scalar_add(scalar_bulk_norm(round_point_attitude(magnitude_round_point_wedge(self_, other))), magnitude_weight_norm(magnitude_scalar_wedge(self_, round_point_attitude(other))));
 }
 
 fn magnitude_sphere_distance(self_: Magnitude, other: Sphere) -> Magnitude {
@@ -11845,7 +12606,7 @@ fn multi_vector_circle_distance(self_: MultiVector, other: Circle) -> Magnitude 
 }
 
 fn multi_vector_dipole_distance(self_: MultiVector, other: Dipole) -> Magnitude {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_dipole_wedge(self_, other))), multi_vector_weight_norm(multi_vector_radial_wedge(self_, dipole_attitude(other))));
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_dipole_wedge(self_, other))), multi_vector_weight_norm(multi_vector_round_point_wedge(self_, dipole_attitude(other))));
 }
 
 fn multi_vector_line_distance(self_: MultiVector, other: Line) -> Magnitude {
@@ -11865,7 +12626,7 @@ fn multi_vector_multi_vector_distance(self_: MultiVector, other: MultiVector) ->
 }
 
 fn multi_vector_origin_distance(self_: MultiVector, other: Origin) -> Magnitude {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_origin_wedge(self_, other))), multi_vector_weight_norm(multi_vector_radial_wedge(self_, origin_attitude(other))));
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_origin_wedge(self_, other))), multi_vector_weight_norm(multi_vector_infinity_wedge(self_, origin_attitude(other))));
 }
 
 fn multi_vector_plane_distance(self_: MultiVector, other: Plane) -> Magnitude {
@@ -11877,11 +12638,11 @@ fn multi_vector_plane_at_origin_distance(self_: MultiVector, other: PlaneAtOrigi
 }
 
 fn multi_vector_point_distance(self_: MultiVector, other: Point) -> Magnitude {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_point_wedge(self_, other))), multi_vector_weight_norm(multi_vector_radial_wedge(self_, point_attitude(other))));
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_point_wedge(self_, other))), multi_vector_weight_norm(multi_vector_infinity_wedge(self_, point_attitude(other))));
 }
 
-fn multi_vector_radial_distance(self_: MultiVector, other: Radial) -> Magnitude {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_radial_wedge(self_, other))), multi_vector_weight_norm(multi_vector_scalar_wedge(self_, radial_attitude(other))));
+fn multi_vector_round_point_distance(self_: MultiVector, other: RoundPoint) -> Magnitude {
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(multi_vector_round_point_wedge(self_, other))), multi_vector_weight_norm(multi_vector_scalar_wedge(self_, round_point_attitude(other))));
 }
 
 fn multi_vector_sphere_distance(self_: MultiVector, other: Sphere) -> Magnitude {
@@ -11908,24 +12669,24 @@ fn point_at_infinity_multi_vector_distance(self_: PointAtInfinity, other: MultiV
     return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(point_at_infinity_multi_vector_wedge(self_, other))), multi_vector_weight_norm(point_at_infinity_multi_vector_wedge(self_, multi_vector_attitude(other))));
 }
 
-fn radial_circle_distance(self_: Radial, other: Circle) -> Magnitude {
-    return scalar_anti_scalar_add(circle_bulk_norm(sphere_attitude(radial_circle_wedge(self_, other))), circle_weight_norm(radial_dipole_wedge(self_, circle_attitude(other))));
+fn round_point_circle_distance(self_: RoundPoint, other: Circle) -> Magnitude {
+    return scalar_anti_scalar_add(circle_bulk_norm(sphere_attitude(round_point_circle_wedge(self_, other))), circle_weight_norm(round_point_dipole_wedge(self_, circle_attitude(other))));
 }
 
-fn radial_dipole_distance(self_: Radial, other: Dipole) -> Magnitude {
-    return scalar_anti_scalar_add(dipole_bulk_norm(circle_attitude(radial_dipole_wedge(self_, other))), dipole_weight_norm(radial_radial_wedge(self_, dipole_attitude(other))));
+fn round_point_dipole_distance(self_: RoundPoint, other: Dipole) -> Magnitude {
+    return scalar_anti_scalar_add(dipole_bulk_norm(circle_attitude(round_point_dipole_wedge(self_, other))), dipole_weight_norm(round_point_round_point_wedge(self_, dipole_attitude(other))));
 }
 
-fn radial_magnitude_distance(self_: Radial, other: Magnitude) -> Magnitude {
-    return scalar_anti_scalar_add(scalar_bulk_norm(radial_attitude(radial_magnitude_wedge(self_, other))), anti_scalar_weight_norm(radial_horizon_wedge(self_, magnitude_attitude(other))));
+fn round_point_magnitude_distance(self_: RoundPoint, other: Magnitude) -> Magnitude {
+    return scalar_anti_scalar_add(scalar_bulk_norm(round_point_attitude(round_point_magnitude_wedge(self_, other))), anti_scalar_weight_norm(round_point_horizon_wedge(self_, magnitude_attitude(other))));
 }
 
-fn radial_multi_vector_distance(self_: Radial, other: MultiVector) -> Magnitude {
-    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(radial_multi_vector_wedge(self_, other))), multi_vector_weight_norm(radial_multi_vector_wedge(self_, multi_vector_attitude(other))));
+fn round_point_multi_vector_distance(self_: RoundPoint, other: MultiVector) -> Magnitude {
+    return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(round_point_multi_vector_wedge(self_, other))), multi_vector_weight_norm(round_point_multi_vector_wedge(self_, multi_vector_attitude(other))));
 }
 
-fn radial_radial_distance(self_: Radial, other: Radial) -> Magnitude {
-    return scalar_anti_scalar_add(radial_bulk_norm(dipole_attitude(radial_radial_wedge(self_, other))), radial_weight_norm(radial_scalar_wedge(self_, radial_attitude(other))));
+fn round_point_round_point_distance(self_: RoundPoint, other: RoundPoint) -> Magnitude {
+    return scalar_anti_scalar_add(round_point_bulk_norm(dipole_attitude(round_point_round_point_wedge(self_, other))), round_point_weight_norm(round_point_scalar_wedge(self_, round_point_attitude(other))));
 }
 
 fn scalar_circle_distance(self_: Scalar, other: Circle) -> Magnitude {
@@ -11933,23 +12694,15 @@ fn scalar_circle_distance(self_: Scalar, other: Circle) -> Magnitude {
 }
 
 fn scalar_dipole_distance(self_: Scalar, other: Dipole) -> Magnitude {
-    return scalar_anti_scalar_add(radial_bulk_norm(dipole_attitude(scalar_dipole_wedge(self_, other))), radial_weight_norm(scalar_radial_wedge(self_, dipole_attitude(other))));
+    return scalar_anti_scalar_add(round_point_bulk_norm(dipole_attitude(scalar_dipole_wedge(self_, other))), round_point_weight_norm(scalar_round_point_wedge(self_, dipole_attitude(other))));
 }
 
 fn scalar_multi_vector_distance(self_: Scalar, other: MultiVector) -> Magnitude {
     return scalar_anti_scalar_add(multi_vector_bulk_norm(multi_vector_attitude(scalar_multi_vector_wedge(self_, other))), multi_vector_weight_norm(scalar_multi_vector_wedge(self_, multi_vector_attitude(other))));
 }
 
-fn scalar_origin_distance(self_: Scalar, other: Origin) -> Magnitude {
-    return scalar_anti_scalar_add(radial_bulk_norm(origin_attitude(scalar_origin_wedge(self_, other))), radial_weight_norm(scalar_radial_wedge(self_, origin_attitude(other))));
-}
-
-fn scalar_point_distance(self_: Scalar, other: Point) -> Magnitude {
-    return scalar_anti_scalar_add(radial_bulk_norm(point_attitude(scalar_point_wedge(self_, other))), radial_weight_norm(scalar_radial_wedge(self_, point_attitude(other))));
-}
-
-fn scalar_radial_distance(self_: Scalar, other: Radial) -> Magnitude {
-    return scalar_anti_scalar_add(scalar_bulk_norm(radial_attitude(scalar_radial_wedge(self_, other))), scalar_weight_norm(scalar_scalar_wedge(self_, radial_attitude(other))));
+fn scalar_round_point_distance(self_: Scalar, other: RoundPoint) -> Magnitude {
+    return scalar_anti_scalar_add(scalar_bulk_norm(round_point_attitude(scalar_round_point_wedge(self_, other))), scalar_weight_norm(scalar_scalar_wedge(self_, round_point_attitude(other))));
 }
 
 fn scalar_sphere_distance(self_: Scalar, other: Sphere) -> Magnitude {

@@ -148,10 +148,10 @@ impl Unitize for Point {
     }
 }
 
-impl Unitize for Radial {
-    type Output = Radial;
+impl Unitize for RoundPoint {
+    type Output = RoundPoint;
 
-    fn unitize(self) -> Radial {
+    fn unitize(self) -> RoundPoint {
         self.geometric_product(Scalar {
             groups: ScalarGroups {
                 g0: 1.0 / self.weight_norm().group0(),
