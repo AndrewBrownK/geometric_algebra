@@ -1118,6 +1118,13 @@ fn conformal_3d_geometric_products() {
         correct_products.insert((a.index, b.index), (a.coefficient * b.coefficient, products_set));
     }
 
+    // TODO the cayley table is correct, but the sorted_basis()
+    //  is returning incorrect BasisElements. For example, we expect
+    //  e412 to equal e124, but sorted_basis() is giving us -e124.
+    //  This is because sorted_basis uses basis, which then uses right_complement,
+    //  so it must be my right_complement implementation that is incorrect.
+    //  Also I investigated the git history and this test passes before some
+    //  right_complement changes, and fails after.
     for a in cga3d.sorted_basis() {
         for b in cga3d.sorted_basis() {
             let mut calculated_product = vec![];
