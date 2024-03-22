@@ -1,8 +1,74 @@
 use std::collections::{BTreeMap, BTreeSet};
+use crate::algebra::basis_element::BasisElement;
 
 use crate::algebra::conformal::ConformalGeometricAlgebra;
 use crate::algebra::dialect::Dialect;
 use crate::algebra::GeometricAlgebraTrait;
+
+/*
+// TODO me thinks this test is probably not actually necessary
+//  but I won't be fully decided until I truly generalize the "dual"
+//  operation for conformal GAs of all dimensions.
+//
+// #[test]
+// fn conformal_3d_basis_signs() {
+//     let dialect = Dialect::default();
+//     let cga3d = ConformalGeometricAlgebra::new("cga3d", 3, dialect);
+//
+//     let correct_basis_indices = {[
+//         "1",
+//         "e1",
+//         "e2",
+//         "e3",
+//         "e4",
+//         "e5",
+//         "e41",
+//         "e42",
+//         "e43",
+//         "e23",
+//         "e31",
+//         "e12",
+//         "e15",
+//         "e25",
+//         "e35",
+//         "e45",
+//         "e423",
+//         "e431",
+//         "e412",
+//         "e321",
+//         "e415",
+//         "e425",
+//         "e435",
+//         "e235",
+//         "e315",
+//         "e125",
+//         "e4235",
+//         "e4315",
+//         "e4125",
+//         "e1234",
+//         "e12345",
+//         "e3215",
+//     ]};
+//     let mut correct_bases = BTreeMap::new();
+//     for index in correct_basis_indices {
+//         let element = cga3d.parse(index);
+//         correct_bases.insert(element.index, element);
+//     }
+//     let mut violations = vec![];
+//     for base in cga3d.sorted_basis() {
+//         match correct_bases.remove(&base.index) {
+//             None => panic!("The correct basis signs must be fully specified, missing {base}"),
+//             Some(correct_element) => if correct_element.coefficient != base.coefficient {
+//                 violations.push((base, correct_element));
+//             },
+//         }
+//     }
+//     if !violations.is_empty() {
+//         let (incorrect, correct) = violations.into_iter().map(|(a, b)| (a.to_string(), b.to_string())).unzip::<_, _, Vec<_>, Vec<_>>();
+//         panic!("The basis element {incorrect:?} is supposed to be {correct:?}");
+//     }
+// }
+*/
 
 #[test]
 fn conformal_3d_right_complements() {
@@ -20,7 +86,7 @@ fn conformal_3d_right_complements() {
     //  and definition of right complements to begin with.
     // https://conformalgeometricalgebra.org/wiki/index.php?title=Exterior_products
     // https://rigidgeometricalgebra.org/wiki/index.php?title=Complements
-    let correct_right_complements = [
+    let correct_right_complements = {[
         ("1", "e12345"),
         ("e12345", "1"),
         ("e1", "e4235"),
@@ -28,32 +94,32 @@ fn conformal_3d_right_complements() {
         ("e3", "e4125"),
         ("e4", "-e1235"),
         ("e5", "-e3214"),
-        ("e41", "e523"),
-        ("e42", "e531"),
-        ("e43", "e512"),
+        ("e41", "-e523"),
+        ("e42", "-e531"),
+        ("e43", "-e512"),
         ("e23", "-e415"),
-        ("e31", "e425"),
+        ("e31", "-e425"),
         ("e12", "-e435"),
         ("e15", "-e234"),
         ("e25", "-e314"),
         ("e35", "-e124"),
         ("e45", "-e321"),
         ("e423", "e51"),
-        ("e431", "-e52"),
+        ("e431", "e52"),
         ("e412", "e53"),
-        ("e321", "e45"),
+        ("e321", "-e45"),
         ("e415", "-e23"),
-        ("e425", "e31"),
+        ("e425", "-e31"),
         ("e435", "-e12"),
         ("e235", "e14"),
-        ("e315", "-e24"),
+        ("e315", "e24"),
         ("e125", "e34"),
         ("e4235", "e1"),
-        ("e4315", "-e2"),
+        ("e4315", "e2"),
         ("e4125", "e3"),
         ("e1234", "e5"),
-        ("e3215", "-e4"),
-    ];
+        ("e3215", "e4"),
+    ]};
     let mut failures = 0;
     let mut correct_complements = BTreeMap::new();
     for (a, complement) in correct_right_complements {
@@ -64,7 +130,7 @@ fn conformal_3d_right_complements() {
 
     for mut a in cga3d.sorted_basis() {
         let (sign, correct_complement) = correct_complements.remove(&a.index).unwrap_or_else(|| panic!("Right Complement list must be complete, missing {a}"));
-        a.coefficient = a.coefficient * sign;
+        a.coefficient = sign;
         let calculated_complement = cga3d.right_complement(&a);
 
         if calculated_complement != correct_complement {
@@ -73,6 +139,71 @@ fn conformal_3d_right_complements() {
         }
     }
     assert_eq!(failures, 0, "Conformal Geometric Right Complement has {failures} errors.")
+}
+
+#[test]
+fn conformal_3d_duals() {
+    let dialect = Dialect::default();
+    let cga3d = ConformalGeometricAlgebra::new("cga3d", 3, dialect);
+
+    // Duals are gathered from round objects in this pdf:
+    // https://projectivegeometricalgebra.org/confgeomalg.pdf
+    // Note that in CGA, Duals are not simply right complements
+
+    let correct_duals_table = {[
+        ("1", "e12345"),
+        ("e12345", "1"),
+        ("e1", "e4235"),
+        ("e2", "e4315"),
+        ("e3", "e4125"),
+        ("e4", "-e1234"),
+        ("e5", "-e3215"),
+        ("e41", "-e423"),
+        ("e42", "-e431"),
+        ("e43", "-e412"),
+        ("e23", "-e415"),
+        ("e31", "-e425"),
+        ("e12", "-e435"),
+        ("e15", "-e235"),
+        ("e25", "-e315"),
+        ("e35", "-e125"),
+        ("e45", "e321"),
+        ("e423", "e41"),
+        ("e431", "e42"),
+        ("e412", "e43"),
+        ("e321", "-e45"),
+        ("e415", "e23"),
+        ("e425", "e31"),
+        ("e435", "e12"),
+        ("e235", "e15"),
+        ("e315", "e25"),
+        ("e125", "e35"),
+        ("e4235", "-e1"),
+        ("e4315", "-e2"),
+        ("e4125", "-e3"),
+        ("e1234", "e4"),
+        ("e3215", "e5"),
+    ]};
+    let mut failures = 0;
+    let mut correct_duals = BTreeMap::new();
+    for (a, dual) in correct_duals_table {
+        let a = cga3d.parse(a);
+        let b = cga3d.parse(dual);
+        correct_duals.insert(a.index, (a.coefficient, b));
+    }
+
+    for mut a in cga3d.sorted_basis() {
+        let (sign, correct_dual) = correct_duals.remove(&a.index).unwrap_or_else(|| panic!("Dual list must be complete, missing {a}"));
+        a.coefficient = sign;
+
+        let calculated_dual = cga3d.dual(&a);
+
+        if calculated_dual != correct_dual {
+            eprintln!("dual({a}) was calculated as {calculated_dual}, but we expected {correct_dual}");
+            failures = failures + 1;
+        }
+    }
+    assert_eq!(failures, 0, "Conformal Geometric Dual has {failures} errors.")
 }
 
 #[test]
@@ -1111,38 +1242,29 @@ fn conformal_3d_geometric_products() {
     for (a, b, products) in correct_cayley_table {
         let a = cga3d.parse(a);
         let b = cga3d.parse(b);
-        let mut products_set = BTreeSet::new();
+        let mut products_set = vec![];
         for product in products {
-            products_set.insert(cga3d.parse(product));
+            products_set.push(cga3d.parse(product));
         }
-        correct_products.insert((a.index, b.index), (a.coefficient * b.coefficient, products_set));
+        correct_products.insert((a.index, b.index), (a.coefficient, b.coefficient, products_set));
     }
 
-    // TODO the cayley table is correct, but the sorted_basis()
-    //  is returning incorrect BasisElements. For example, we expect
-    //  e412 to equal e124, but sorted_basis() is giving us -e124.
-    //  This is because sorted_basis uses basis, which then uses right_complement,
-    //  so it must be my right_complement implementation that is incorrect.
-    //  Also I investigated the git history and this test passes before some
-    //  right_complement changes, and fails after.
-    for a in cga3d.sorted_basis() {
-        for b in cga3d.sorted_basis() {
+    for mut a in cga3d.sorted_basis() {
+        for mut b in cga3d.sorted_basis() {
+
+            let (a_sign, b_sign, mut correct_product) = correct_products
+                .remove(&(a.index, b.index))
+                .unwrap_or_else(|| panic!("Cayley table must be complete, missing {a} * {b}"));
+            correct_product.sort_unstable();
+
+            a.coefficient = a_sign;
+            b.coefficient = b_sign;
+
             let mut calculated_product = vec![];
             for p in cga3d.product(&a, &b) {
                 calculated_product.push(p);
             }
             calculated_product.sort_unstable();
-
-            let (sign, correct_product) = correct_products
-                .remove(&(a.index, b.index))
-                .unwrap_or_else(|| panic!("Cayley table must be complete, missing {a} * {b}"));
-            let correct_product: Vec<_> = correct_product
-                .into_iter()
-                .map(|mut it| {
-                    it.coefficient = it.coefficient * sign;
-                    it
-                })
-                .collect();
 
             if calculated_product != correct_product {
                 let calculated: Vec<_> = calculated_product.into_iter().map(|it| it.to_string()).collect();

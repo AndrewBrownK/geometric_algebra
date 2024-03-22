@@ -71,6 +71,10 @@ impl<'a> GeometricAlgebraTrait for RigidGeometricAlgebra<'a> {
         result
     }
 
+    fn dual(&self, a: &BasisElement) -> BasisElement {
+        return self.right_complement(a);
+    }
+
     fn product(&self, a: &BasisElement, b: &BasisElement) -> Vec<BasisElement> {
         let result = a.primitive_product(b, &self.generator_squares);
         if result.coefficient == 0 {

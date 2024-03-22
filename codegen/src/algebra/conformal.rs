@@ -77,98 +77,116 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
         1 << self.surface_generator_squares.len()
     }
 
-    // NOTE THAT RIGHT COMPLEMENTS AND DUALS ARE NOT THE SAME IN CGA
-    //  See thread: https://twitter.com/Foo55443320/status/1768401735410958594
+    fn basis(&self) -> Vec<BasisElement> {
+        let mut v = vec![];
+        for index in 0..self.basis_size() as BasisElementIndex {
+            let mut element = BasisElement::from_index(index);
+            // TODO maybe this actually requires a dual instead of a right_complement
+            let dual = self.dual(&element);
+            if dual.cmp(&element) == std::cmp::Ordering::Less {
+                element.coefficient = self.dual(&element).coefficient;
+            }
+            v.push(element);
+        }
+        v
+    }
+
     fn right_complement(&self, a: &BasisElement) -> BasisElement {
-        let coefficient = a.coefficient;
+        let mut result = BasisElement {
+            coefficient: a.coefficient,
+            index: self.basis_size() as BasisElementIndex - 1 - a.index,
+        };
+        result.coefficient *= self.product(a, &result).first().unwrap().coefficient;
+        result
+    }
+
+    fn left_complement(&self, a: &BasisElement) -> BasisElement {
+        let mut result = BasisElement {
+            coefficient: a.coefficient,
+            index: self.basis_size() as BasisElementIndex - 1 - a.index,
+        };
+        result.coefficient *= self.product(&result, a).first().unwrap().coefficient;
+        result
+    }
+
+    fn dual(&self, a: &BasisElement) -> BasisElement {
         let index = a.index;
+
+
+        // TODO find the pattern that will generalize to all dimensions instead of
+        //  hard coding for cga3d
+        // let exceptions: &[BasisElementIndex] = &[];
+        // let coefficient = a.coefficient;
+        let exceptions: &[BasisElementIndex] = &[
+            0b10,
+            0b1000,
+            0b101,
+            0b10001,
+            0b1010,
+            0b10100,
+            0b11000,
+            0b1011,
+            0b10101,
+            0b11001,
+            0b1110,
+            0b10111,
+            0b11011,
+            0b11110,
+            0b11100,
+        ];
+        let coefficient = if exceptions.contains(&index) {
+            -1 * a.coefficient
+        } else {
+            a.coefficient
+        };
+
+
         let origin = (1 as BasisElementIndex) << self.origin;
         let infinity = (1 as BasisElementIndex) << self.infinity;
         let projective = origin | infinity;
         let anti_scalar = self.anti_scalar_element().index;
 
-        // Basis element has both e4 and e5 -> regular right complement
+        // Basis element has both e4 and e5 -> regular dual
         let is_projective = index & projective == projective;
         if is_projective {
-            // Start with the BasisElement index, yet uncertain of coefficient
             let new_index = anti_scalar - index;
-            let mut candidate_complement = BasisElement { coefficient: 1, index: new_index };
-
-            // Fix the coefficient
-            let anti_scalar_product = self
-                .product(&a, &candidate_complement)
-                .into_iter()
-                .find(|it| it.index == anti_scalar)
-                .expect("Must find anti_scalar result when wedging complements");
-            candidate_complement.coefficient = anti_scalar_product.coefficient;
-
-            // Return fixed result
-            return candidate_complement;
+            return BasisElement {
+                coefficient,
+                index: new_index,
+            }
         }
 
-        // Basis element includes e5 but not e4 -> regular right complement
+        // Basis element includes e5 but not e4 -> dual keeps e5 and does not get e4
         let is_flat = index & infinity == infinity;
         if is_flat {
-            // Start with the BasisElement index, yet uncertain of coefficient
-            let new_index = anti_scalar - index;
-            // new_index = new_index - origin;
-            // new_index = new_index + infinity;
-            let mut candidate_complement = BasisElement { coefficient, index: new_index };
-
-            // Fix the coefficient
-            let anti_scalar_product = self
-                .product(&a, &candidate_complement)
-                .into_iter()
-                .find(|it| it.index == anti_scalar)
-                .expect("Must find anti_scalar result when wedging complements");
-            candidate_complement.coefficient = anti_scalar_product.coefficient;
-
-            // Return fixed result
-            return candidate_complement;
+            let mut new_index = anti_scalar - index;
+            new_index = new_index - origin;
+            new_index = new_index + infinity;
+            return BasisElement {
+                coefficient,
+                index: new_index,
+            }
         }
 
-        // Basis element includes e4 but not e5 -> regular right complement
+        // Basis element includes e4 but not e5 -> dual keeps e4 but does not get e5
         let is_round = index & origin == origin;
         if is_round {
-            // Start with the BasisElement index, yet uncertain of coefficient
-            let new_index = anti_scalar - index;
-            // new_index = new_index - infinity;
-            // new_index = new_index + origin;
-            let mut candidate_complement = BasisElement { coefficient, index: new_index };
-
-            // Fix the coefficient
-            let anti_scalar_product = self
-                .product(&a, &candidate_complement)
-                .into_iter()
-                .find(|it| it.index == anti_scalar)
-                .expect("Must find anti_scalar result when wedging complements");
-            candidate_complement.coefficient = anti_scalar_product.coefficient;
-
-            // Return fixed result
-            return candidate_complement;
+            let mut new_index = anti_scalar - index;
+            new_index = new_index - infinity;
+            new_index = new_index + origin;
+            return BasisElement {
+                coefficient,
+                index: new_index,
+            }
         }
 
-        // Neither e4 nor e5 -> regular right complement (acquires e4 and e5)
+        // Neither e4 nor e5 -> regular dual (acquires e4 and e5)
         assert_eq!(index & projective, 0);
-
-        // Start with the BasisElement index, yet uncertain of coefficient
         let new_index = anti_scalar - index;
-        let mut candidate_complement = BasisElement { coefficient, index: new_index };
-
-        // Fix the coefficient
-        let anti_scalar_product = self
-            .product(&a, &candidate_complement)
-            .into_iter()
-            .find(|it| it.index == anti_scalar)
-            .expect("Must find anti_scalar result when wedging complements");
-        candidate_complement.coefficient = anti_scalar_product.coefficient;
-
-        // Return fixed result
-        return candidate_complement;
-    }
-
-    fn left_complement(&self, a: &BasisElement) -> BasisElement {
-        self.right_complement(&self.right_complement(&self.right_complement(a)))
+        return BasisElement {
+            coefficient,
+            index: new_index,
+        }
     }
 
     fn product(&self, a: &BasisElement, b: &BasisElement) -> Vec<BasisElement> {

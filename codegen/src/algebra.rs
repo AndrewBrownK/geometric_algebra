@@ -19,9 +19,10 @@ pub trait GeometricAlgebraTrait {
         let mut v = vec![];
         for index in 0..self.basis_size() as BasisElementIndex {
             let mut element = BasisElement::from_index(index);
-            let dual = self.right_complement(&element);
+            // TODO maybe this actually requires a dual instead of a right_complement
+            let dual = self.dual(&element);
             if dual.cmp(&element) == std::cmp::Ordering::Less {
-                element.coefficient = self.right_complement(&element).coefficient;
+                element.coefficient = self.dual(&element).coefficient;
             }
             v.push(element);
         }
@@ -43,6 +44,7 @@ pub trait GeometricAlgebraTrait {
     // https://conformalgeometricalgebra.org/wiki/index.php?title=Exterior_products
     fn right_complement(&self, a: &BasisElement) -> BasisElement;
     fn left_complement(&self, a: &BasisElement) -> BasisElement;
+    fn dual(&self, a: &BasisElement) -> BasisElement;
     fn product(&self, a: &BasisElement, b: &BasisElement) -> Vec<BasisElement>;
     fn anti_product(&self, a: &BasisElement, b: &BasisElement) -> Vec<BasisElement>;
 }
