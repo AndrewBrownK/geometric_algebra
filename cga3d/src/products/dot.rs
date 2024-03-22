@@ -63,11 +63,10 @@ impl AntiDot<Circle> for Circle {
     fn anti_dot(self, other: Circle) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0 - self.group0()[0] * other.group2()[0] - self.group0()[1] * other.group2()[1] - self.group0()[2] * other.group2()[2]
-                    + self.group0()[3] * other.group0()[3]
-                    + self.group1()[0] * other.group1()[0]
-                    + self.group1()[1] * other.group1()[1]
-                    + self.group1()[2] * other.group1()[2]
+                g0: 0.0 - self.group0()[0] * other.group2()[0] - self.group0()[1] * other.group2()[1] - self.group0()[2] * other.group2()[2] + self.group0()[3] * other.group0()[3]
+                    - self.group1()[0] * other.group1()[0]
+                    - self.group1()[1] * other.group1()[1]
+                    - self.group1()[2] * other.group1()[2]
                     - self.group2()[0] * other.group0()[0]
                     - self.group2()[1] * other.group0()[1]
                     - self.group2()[2] * other.group0()[2],
@@ -82,10 +81,13 @@ impl AntiDot<Line> for Circle {
     fn anti_dot(self, other: Line) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2]
-                    + self.group1()[0] * other.group0()[0]
-                    + self.group1()[1] * other.group0()[1]
-                    + self.group1()[2] * other.group0()[2],
+                g0: 0.0
+                    - self.group0()[0] * other.group1()[0]
+                    - self.group0()[1] * other.group1()[1]
+                    - self.group0()[2] * other.group1()[2]
+                    - self.group1()[0] * other.group0()[0]
+                    - self.group1()[1] * other.group0()[1]
+                    - self.group1()[2] * other.group0()[2],
             },
         }
     }
@@ -109,7 +111,7 @@ impl AntiDot<LineAtOrigin> for Circle {
     fn anti_dot(self, other: LineAtOrigin) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2],
+                g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2],
             },
         }
     }
@@ -121,11 +123,10 @@ impl AntiDot<MultiVector> for Circle {
     fn anti_dot(self, other: MultiVector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0 - self.group0()[0] * other.group8()[0] - self.group0()[1] * other.group8()[1] - self.group0()[2] * other.group8()[2]
-                    + self.group0()[3] * other.group6()[3]
-                    + self.group1()[0] * other.group7()[0]
-                    + self.group1()[1] * other.group7()[1]
-                    + self.group1()[2] * other.group7()[2]
+                g0: 0.0 - self.group0()[0] * other.group8()[0] - self.group0()[1] * other.group8()[1] - self.group0()[2] * other.group8()[2] + self.group0()[3] * other.group6()[3]
+                    - self.group1()[0] * other.group7()[0]
+                    - self.group1()[1] * other.group7()[1]
+                    - self.group1()[2] * other.group7()[2]
                     - self.group2()[0] * other.group6()[0]
                     - self.group2()[1] * other.group6()[1]
                     - self.group2()[2] * other.group6()[2],
@@ -149,7 +150,7 @@ impl AntiDot<Dipole> for Dipole {
                     + self.group2()[0] * other.group0()[0]
                     + self.group2()[1] * other.group0()[1]
                     + self.group2()[2] * other.group0()[2]
-                    + self.group2()[3] * other.group2()[3],
+                    - self.group2()[3] * other.group2()[3],
             },
         }
     }
@@ -170,7 +171,7 @@ impl AntiDot<MultiVector> for Dipole {
                     + self.group2()[0] * other.group3()[0]
                     + self.group2()[1] * other.group3()[1]
                     + self.group2()[2] * other.group3()[2]
-                    + self.group2()[3] * other.group5()[3],
+                    - self.group2()[3] * other.group5()[3],
             },
         }
     }
@@ -182,7 +183,7 @@ impl AntiDot<Origin> for Dipole {
     fn anti_dot(self, other: Origin) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group2()[3] * other.group0(),
+                g0: 0.0 - self.group2()[3] * other.group0(),
             },
         }
     }
@@ -194,7 +195,7 @@ impl AntiDot<Point> for Dipole {
     fn anti_dot(self, other: Point) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group2()[3] * other.group0()[3],
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] - self.group2()[3] * other.group0()[3],
             },
         }
     }
@@ -218,7 +219,7 @@ impl AntiDot<MultiVector> for Horizon {
     fn anti_dot(self, other: MultiVector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0() * other.group10()[0],
+                g0: 0.0 - self.group0() * other.group10()[0],
             },
         }
     }
@@ -230,7 +231,7 @@ impl AntiDot<Sphere> for Horizon {
     fn anti_dot(self, other: Sphere) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0() * other.group1()[0],
+                g0: 0.0 - self.group0() * other.group1()[0],
             },
         }
     }
@@ -242,7 +243,10 @@ impl AntiDot<Circle> for Line {
     fn anti_dot(self, other: Circle) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2]
+                g0: 0.0
+                    - self.group0()[0] * other.group1()[0]
+                    - self.group0()[1] * other.group1()[1]
+                    - self.group0()[2] * other.group1()[2]
                     - self.group1()[0] * other.group0()[0]
                     - self.group1()[1] * other.group0()[1]
                     - self.group1()[2] * other.group0()[2],
@@ -257,7 +261,7 @@ impl AntiDot<Line> for Line {
     fn anti_dot(self, other: Line) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -269,7 +273,7 @@ impl AntiDot<LineAtOrigin> for Line {
     fn anti_dot(self, other: LineAtOrigin) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -281,7 +285,10 @@ impl AntiDot<MultiVector> for Line {
     fn anti_dot(self, other: MultiVector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group7()[0] + self.group0()[1] * other.group7()[1] + self.group0()[2] * other.group7()[2]
+                g0: 0.0
+                    - self.group0()[0] * other.group7()[0]
+                    - self.group0()[1] * other.group7()[1]
+                    - self.group0()[2] * other.group7()[2]
                     - self.group1()[0] * other.group6()[0]
                     - self.group1()[1] * other.group6()[1]
                     - self.group1()[2] * other.group6()[2],
@@ -320,7 +327,7 @@ impl AntiDot<Circle> for LineAtOrigin {
     fn anti_dot(self, other: Circle) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2],
+                g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2],
             },
         }
     }
@@ -332,7 +339,7 @@ impl AntiDot<Line> for LineAtOrigin {
     fn anti_dot(self, other: Line) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -344,7 +351,7 @@ impl AntiDot<LineAtOrigin> for LineAtOrigin {
     fn anti_dot(self, other: LineAtOrigin) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -356,7 +363,7 @@ impl AntiDot<MultiVector> for LineAtOrigin {
     fn anti_dot(self, other: MultiVector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group7()[0] + self.group0()[1] * other.group7()[1] + self.group0()[2] * other.group7()[2],
+                g0: 0.0 - self.group0()[0] * other.group7()[0] - self.group0()[1] * other.group7()[1] - self.group0()[2] * other.group7()[2],
             },
         }
     }
@@ -380,7 +387,7 @@ impl AntiDot<Magnitude> for Magnitude {
     fn anti_dot(self, other: Magnitude) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1],
+                g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1],
             },
         }
     }
@@ -392,7 +399,7 @@ impl AntiDot<MultiVector> for Magnitude {
     fn anti_dot(self, other: MultiVector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1],
+                g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1],
             },
         }
     }
@@ -404,7 +411,7 @@ impl AntiDot<Scalar> for Magnitude {
     fn anti_dot(self, other: Scalar) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group0(),
+                g0: 0.0 - self.group0()[0] * other.group0(),
             },
         }
     }
@@ -428,11 +435,10 @@ impl AntiDot<Circle> for MultiVector {
     fn anti_dot(self, other: Circle) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0 - self.group6()[0] * other.group2()[0] - self.group6()[1] * other.group2()[1] - self.group6()[2] * other.group2()[2]
-                    + self.group6()[3] * other.group0()[3]
-                    + self.group7()[0] * other.group1()[0]
-                    + self.group7()[1] * other.group1()[1]
-                    + self.group7()[2] * other.group1()[2]
+                g0: 0.0 - self.group6()[0] * other.group2()[0] - self.group6()[1] * other.group2()[1] - self.group6()[2] * other.group2()[2] + self.group6()[3] * other.group0()[3]
+                    - self.group7()[0] * other.group1()[0]
+                    - self.group7()[1] * other.group1()[1]
+                    - self.group7()[2] * other.group1()[2]
                     - self.group8()[0] * other.group0()[0]
                     - self.group8()[1] * other.group0()[1]
                     - self.group8()[2] * other.group0()[2],
@@ -456,7 +462,7 @@ impl AntiDot<Dipole> for MultiVector {
                     + self.group5()[0] * other.group0()[0]
                     + self.group5()[1] * other.group0()[1]
                     + self.group5()[2] * other.group0()[2]
-                    + self.group5()[3] * other.group2()[3],
+                    - self.group5()[3] * other.group2()[3],
             },
         }
     }
@@ -468,7 +474,7 @@ impl AntiDot<Horizon> for MultiVector {
     fn anti_dot(self, other: Horizon) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group10()[0] * other.group0(),
+                g0: 0.0 - self.group10()[0] * other.group0(),
             },
         }
     }
@@ -480,10 +486,13 @@ impl AntiDot<Line> for MultiVector {
     fn anti_dot(self, other: Line) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: 0.0 - self.group6()[0] * other.group1()[0] - self.group6()[1] * other.group1()[1] - self.group6()[2] * other.group1()[2]
-                    + self.group7()[0] * other.group0()[0]
-                    + self.group7()[1] * other.group0()[1]
-                    + self.group7()[2] * other.group0()[2],
+                g0: 0.0
+                    - self.group6()[0] * other.group1()[0]
+                    - self.group6()[1] * other.group1()[1]
+                    - self.group6()[2] * other.group1()[2]
+                    - self.group7()[0] * other.group0()[0]
+                    - self.group7()[1] * other.group0()[1]
+                    - self.group7()[2] * other.group0()[2],
             },
         }
     }
@@ -507,7 +516,7 @@ impl AntiDot<LineAtOrigin> for MultiVector {
     fn anti_dot(self, other: LineAtOrigin) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group7()[0] * other.group0()[0] + self.group7()[1] * other.group0()[1] + self.group7()[2] * other.group0()[2],
+                g0: 0.0 - self.group7()[0] * other.group0()[0] - self.group7()[1] * other.group0()[1] - self.group7()[2] * other.group0()[2],
             },
         }
     }
@@ -519,7 +528,7 @@ impl AntiDot<Magnitude> for MultiVector {
     fn anti_dot(self, other: Magnitude) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1],
+                g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1],
             },
         }
     }
@@ -531,13 +540,12 @@ impl AntiDot<MultiVector> for MultiVector {
     fn anti_dot(self, other: MultiVector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group0()[0]
-                    + self.group0()[1] * other.group0()[1]
-                    + self.group1()[0] * other.group1()[0]
-                    + self.group1()[1] * other.group1()[1]
-                    + self.group1()[2] * other.group1()[2]
-                    - self.group2()[0] * other.group2()[1]
-                    - self.group2()[1] * other.group2()[0]
+                g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1]
+                    - self.group1()[0] * other.group1()[0]
+                    - self.group1()[1] * other.group1()[1]
+                    - self.group1()[2] * other.group1()[2]
+                    + self.group2()[0] * other.group2()[1]
+                    + self.group2()[1] * other.group2()[0]
                     + self.group3()[0] * other.group5()[0]
                     + self.group3()[1] * other.group5()[1]
                     + self.group3()[2] * other.group5()[2]
@@ -547,22 +555,22 @@ impl AntiDot<MultiVector> for MultiVector {
                     + self.group5()[0] * other.group3()[0]
                     + self.group5()[1] * other.group3()[1]
                     + self.group5()[2] * other.group3()[2]
-                    + self.group5()[3] * other.group5()[3]
+                    - self.group5()[3] * other.group5()[3]
                     - self.group6()[0] * other.group8()[0]
                     - self.group6()[1] * other.group8()[1]
                     - self.group6()[2] * other.group8()[2]
                     + self.group6()[3] * other.group6()[3]
-                    + self.group7()[0] * other.group7()[0]
-                    + self.group7()[1] * other.group7()[1]
-                    + self.group7()[2] * other.group7()[2]
+                    - self.group7()[0] * other.group7()[0]
+                    - self.group7()[1] * other.group7()[1]
+                    - self.group7()[2] * other.group7()[2]
                     - self.group8()[0] * other.group6()[0]
                     - self.group8()[1] * other.group6()[1]
                     - self.group8()[2] * other.group6()[2]
                     + self.group9()[0] * other.group9()[0]
                     + self.group9()[1] * other.group9()[1]
                     + self.group9()[2] * other.group9()[2]
-                    + self.group10()[0] * other.group10()[1]
-                    + self.group10()[1] * other.group10()[0],
+                    - self.group10()[0] * other.group10()[1]
+                    - self.group10()[1] * other.group10()[0],
             },
         }
     }
@@ -574,7 +582,7 @@ impl AntiDot<Origin> for MultiVector {
     fn anti_dot(self, other: Origin) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group5()[3] * other.group0(),
+                g0: 0.0 - self.group5()[3] * other.group0(),
             },
         }
     }
@@ -586,7 +594,7 @@ impl AntiDot<Plane> for MultiVector {
     fn anti_dot(self, other: Plane) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group9()[0] * other.group0()[0] + self.group9()[1] * other.group0()[1] + self.group9()[2] * other.group0()[2] + self.group10()[0] * other.group0()[3],
+                g0: self.group9()[0] * other.group0()[0] + self.group9()[1] * other.group0()[1] + self.group9()[2] * other.group0()[2] - self.group10()[0] * other.group0()[3],
             },
         }
     }
@@ -610,7 +618,7 @@ impl AntiDot<Point> for MultiVector {
     fn anti_dot(self, other: Point) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group3()[0] * other.group0()[0] + self.group3()[1] * other.group0()[1] + self.group3()[2] * other.group0()[2] + self.group5()[3] * other.group0()[3],
+                g0: self.group3()[0] * other.group0()[0] + self.group3()[1] * other.group0()[1] + self.group3()[2] * other.group0()[2] - self.group5()[3] * other.group0()[3],
             },
         }
     }
@@ -634,9 +642,9 @@ impl AntiDot<Radial> for MultiVector {
     fn anti_dot(self, other: Radial) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2]
-                    - self.group2()[0] * other.group1()[1]
-                    - self.group2()[1] * other.group1()[0],
+                g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2]
+                    + self.group2()[0] * other.group1()[1]
+                    + self.group2()[1] * other.group1()[0],
             },
         }
     }
@@ -648,7 +656,7 @@ impl AntiDot<Scalar> for MultiVector {
     fn anti_dot(self, other: Scalar) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group0(),
+                g0: 0.0 - self.group0()[0] * other.group0(),
             },
         }
     }
@@ -660,11 +668,9 @@ impl AntiDot<Sphere> for MultiVector {
     fn anti_dot(self, other: Sphere) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group9()[0] * other.group0()[0]
-                    + self.group9()[1] * other.group0()[1]
-                    + self.group9()[2] * other.group0()[2]
-                    + self.group10()[0] * other.group1()[1]
-                    + self.group10()[1] * other.group1()[0],
+                g0: self.group9()[0] * other.group0()[0] + self.group9()[1] * other.group0()[1] + self.group9()[2] * other.group0()[2]
+                    - self.group10()[0] * other.group1()[1]
+                    - self.group10()[1] * other.group1()[0],
             },
         }
     }
@@ -676,7 +682,7 @@ impl AntiDot<Dipole> for Origin {
     fn anti_dot(self, other: Dipole) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0() * other.group2()[3],
+                g0: 0.0 - self.group0() * other.group2()[3],
             },
         }
     }
@@ -688,7 +694,7 @@ impl AntiDot<MultiVector> for Origin {
     fn anti_dot(self, other: MultiVector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0() * other.group5()[3],
+                g0: 0.0 - self.group0() * other.group5()[3],
             },
         }
     }
@@ -700,7 +706,7 @@ impl AntiDot<Origin> for Origin {
     fn anti_dot(self, other: Origin) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0() * other.group0(),
+                g0: 0.0 - self.group0() * other.group0(),
             },
         }
     }
@@ -712,7 +718,7 @@ impl AntiDot<Point> for Origin {
     fn anti_dot(self, other: Point) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0() * other.group0()[3],
+                g0: 0.0 - self.group0() * other.group0()[3],
             },
         }
     }
@@ -724,7 +730,7 @@ impl AntiDot<MultiVector> for Plane {
     fn anti_dot(self, other: MultiVector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group9()[0] + self.group0()[1] * other.group9()[1] + self.group0()[2] * other.group9()[2] + self.group0()[3] * other.group10()[0],
+                g0: self.group0()[0] * other.group9()[0] + self.group0()[1] * other.group9()[1] + self.group0()[2] * other.group9()[2] - self.group0()[3] * other.group10()[0],
             },
         }
     }
@@ -760,7 +766,7 @@ impl AntiDot<Sphere> for Plane {
     fn anti_dot(self, other: Sphere) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group1()[0],
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] - self.group0()[3] * other.group1()[0],
             },
         }
     }
@@ -820,7 +826,7 @@ impl AntiDot<Dipole> for Point {
     fn anti_dot(self, other: Dipole) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group2()[3],
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] - self.group0()[3] * other.group2()[3],
             },
         }
     }
@@ -832,7 +838,7 @@ impl AntiDot<MultiVector> for Point {
     fn anti_dot(self, other: MultiVector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group3()[0] + self.group0()[1] * other.group3()[1] + self.group0()[2] * other.group3()[2] + self.group0()[3] * other.group5()[3],
+                g0: self.group0()[0] * other.group3()[0] + self.group0()[1] * other.group3()[1] + self.group0()[2] * other.group3()[2] - self.group0()[3] * other.group5()[3],
             },
         }
     }
@@ -844,7 +850,7 @@ impl AntiDot<Origin> for Point {
     fn anti_dot(self, other: Origin) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[3] * other.group0(),
+                g0: 0.0 - self.group0()[3] * other.group0(),
             },
         }
     }
@@ -856,7 +862,7 @@ impl AntiDot<Point> for Point {
     fn anti_dot(self, other: Point) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[3] * other.group0()[3],
+                g0: 0.0 - self.group0()[3] * other.group0()[3],
             },
         }
     }
@@ -892,9 +898,9 @@ impl AntiDot<MultiVector> for Radial {
     fn anti_dot(self, other: MultiVector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2]
-                    - self.group1()[0] * other.group2()[1]
-                    - self.group1()[1] * other.group2()[0],
+                g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2]
+                    + self.group1()[0] * other.group2()[1]
+                    + self.group1()[1] * other.group2()[0],
             },
         }
     }
@@ -906,9 +912,9 @@ impl AntiDot<Radial> for Radial {
     fn anti_dot(self, other: Radial) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2]
-                    - self.group1()[0] * other.group1()[1]
-                    - self.group1()[1] * other.group1()[0],
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2]
+                    + self.group1()[0] * other.group1()[1]
+                    + self.group1()[1] * other.group1()[0],
             },
         }
     }
@@ -920,7 +926,7 @@ impl AntiDot<Magnitude> for Scalar {
     fn anti_dot(self, other: Magnitude) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0() * other.group0()[0],
+                g0: 0.0 - self.group0() * other.group0()[0],
             },
         }
     }
@@ -932,7 +938,7 @@ impl AntiDot<MultiVector> for Scalar {
     fn anti_dot(self, other: MultiVector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0() * other.group0()[0],
+                g0: 0.0 - self.group0() * other.group0()[0],
             },
         }
     }
@@ -944,7 +950,7 @@ impl AntiDot<Scalar> for Scalar {
     fn anti_dot(self, other: Scalar) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0() * other.group0(),
+                g0: 0.0 - self.group0() * other.group0(),
             },
         }
     }
@@ -956,7 +962,7 @@ impl AntiDot<Horizon> for Sphere {
     fn anti_dot(self, other: Horizon) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group1()[0] * other.group0(),
+                g0: 0.0 - self.group1()[0] * other.group0(),
             },
         }
     }
@@ -968,11 +974,9 @@ impl AntiDot<MultiVector> for Sphere {
     fn anti_dot(self, other: MultiVector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group9()[0]
-                    + self.group0()[1] * other.group9()[1]
-                    + self.group0()[2] * other.group9()[2]
-                    + self.group1()[0] * other.group10()[1]
-                    + self.group1()[1] * other.group10()[0],
+                g0: self.group0()[0] * other.group9()[0] + self.group0()[1] * other.group9()[1] + self.group0()[2] * other.group9()[2]
+                    - self.group1()[0] * other.group10()[1]
+                    - self.group1()[1] * other.group10()[0],
             },
         }
     }
@@ -984,7 +988,7 @@ impl AntiDot<Plane> for Sphere {
     fn anti_dot(self, other: Plane) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group1()[0] * other.group0()[3],
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] - self.group1()[0] * other.group0()[3],
             },
         }
     }
@@ -1008,11 +1012,9 @@ impl AntiDot<Sphere> for Sphere {
     fn anti_dot(self, other: Sphere) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group0()[0]
-                    + self.group0()[1] * other.group0()[1]
-                    + self.group0()[2] * other.group0()[2]
-                    + self.group1()[0] * other.group1()[1]
-                    + self.group1()[1] * other.group1()[0],
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2]
+                    - self.group1()[0] * other.group1()[1]
+                    - self.group1()[1] * other.group1()[0],
             },
         }
     }

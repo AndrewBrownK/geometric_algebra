@@ -268,7 +268,7 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
         return result;
     }
 
-    // TODO see page 49 of the book, I can reuse the normal product to derive the anti_product
+
     fn anti_product(&self, a: &BasisElement, b: &BasisElement) -> Vec<BasisElement> {
         // We need to reproduce this Cayley table.
         // https://conformalgeometricalgebra.org/wiki/index.php?title=Geometric_products

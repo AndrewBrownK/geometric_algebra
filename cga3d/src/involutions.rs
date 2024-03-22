@@ -83,7 +83,7 @@ impl AntiReversal for Circle {
         Circle {
             groups: CircleGroups {
                 g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
-                g1: self.group1() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g1: self.group1() * Simd32x3::from([1.0, -1.0, 1.0]),
                 g2: self.group2() * Simd32x3::from([-1.0, 1.0, -1.0]),
             },
         }
@@ -120,7 +120,7 @@ impl AntiReversal for Line {
     fn anti_reversal(self) -> Line {
         Line {
             groups: LineGroups {
-                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
                 g1: self.group1() * Simd32x3::from([-1.0, 1.0, -1.0]),
             },
         }
@@ -145,7 +145,7 @@ impl AntiReversal for LineAtOrigin {
     fn anti_reversal(self) -> LineAtOrigin {
         LineAtOrigin {
             groups: LineAtOriginGroups {
-                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
             },
         }
     }
@@ -174,9 +174,9 @@ impl AntiReversal for MultiVector {
                 g4: self.group4() * Simd32x3::from(-1.0),
                 g5: self.group5() * Simd32x4::from(-1.0),
                 g6: self.group6() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
-                g7: self.group7() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g7: self.group7() * Simd32x3::from([1.0, -1.0, 1.0]),
                 g8: self.group8() * Simd32x3::from([-1.0, 1.0, -1.0]),
-                g9: self.group9() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g9: self.group9() * Simd32x3::from([-1.0, 1.0, -1.0]),
                 g10: self.group10() * Simd32x2::from([1.0, -1.0]),
             },
         }
@@ -199,7 +199,7 @@ impl AntiReversal for Plane {
     fn anti_reversal(self) -> Plane {
         Plane {
             groups: PlaneGroups {
-                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]),
             },
         }
     }
@@ -211,7 +211,7 @@ impl AntiReversal for PlaneAtOrigin {
     fn anti_reversal(self) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
-                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
             },
         }
     }
@@ -270,7 +270,7 @@ impl AntiReversal for Sphere {
     fn anti_reversal(self) -> Sphere {
         Sphere {
             groups: SphereGroups {
-                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
                 g1: self.group1() * Simd32x2::from([1.0, -1.0]),
             },
         }
@@ -294,7 +294,7 @@ impl Automorphism for Circle {
         Circle {
             groups: CircleGroups {
                 g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
-                g1: self.group1() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g1: self.group1() * Simd32x3::from([1.0, -1.0, 1.0]),
                 g2: self.group2() * Simd32x3::from([-1.0, 1.0, -1.0]),
             },
         }
@@ -331,7 +331,7 @@ impl Automorphism for Line {
     fn automorphism(self) -> Line {
         Line {
             groups: LineGroups {
-                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
                 g1: self.group1() * Simd32x3::from([-1.0, 1.0, -1.0]),
             },
         }
@@ -356,7 +356,7 @@ impl Automorphism for LineAtOrigin {
     fn automorphism(self) -> LineAtOrigin {
         LineAtOrigin {
             groups: LineAtOriginGroups {
-                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
             },
         }
     }
@@ -387,9 +387,9 @@ impl Automorphism for MultiVector {
                 g4: self.group4(),
                 g5: self.group5(),
                 g6: self.group6() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
-                g7: self.group7() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g7: self.group7() * Simd32x3::from([1.0, -1.0, 1.0]),
                 g8: self.group8() * Simd32x3::from([-1.0, 1.0, -1.0]),
-                g9: self.group9() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g9: self.group9() * Simd32x3::from([-1.0, 1.0, -1.0]),
                 g10: self.group10() * Simd32x2::from([1.0, -1.0]),
             },
         }
@@ -412,7 +412,7 @@ impl Automorphism for Plane {
     fn automorphism(self) -> Plane {
         Plane {
             groups: PlaneGroups {
-                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]),
             },
         }
     }
@@ -424,7 +424,7 @@ impl Automorphism for PlaneAtOrigin {
     fn automorphism(self) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
-                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
             },
         }
     }
@@ -479,7 +479,7 @@ impl Automorphism for Sphere {
     fn automorphism(self) -> Sphere {
         Sphere {
             groups: SphereGroups {
-                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
                 g1: self.group1() * Simd32x2::from([1.0, -1.0]),
             },
         }
@@ -503,7 +503,7 @@ impl Conjugation for Circle {
         Circle {
             groups: CircleGroups {
                 g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
-                g1: self.group1() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g1: self.group1() * Simd32x3::from([-1.0, 1.0, -1.0]),
                 g2: self.group2() * Simd32x3::from([1.0, -1.0, 1.0]),
             },
         }
@@ -540,7 +540,7 @@ impl Conjugation for Line {
     fn conjugation(self) -> Line {
         Line {
             groups: LineGroups {
-                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
                 g1: self.group1() * Simd32x3::from([1.0, -1.0, 1.0]),
             },
         }
@@ -565,7 +565,7 @@ impl Conjugation for LineAtOrigin {
     fn conjugation(self) -> LineAtOrigin {
         LineAtOrigin {
             groups: LineAtOriginGroups {
-                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
             },
         }
     }
@@ -596,9 +596,9 @@ impl Conjugation for MultiVector {
                 g4: self.group4() * Simd32x3::from(-1.0),
                 g5: self.group5() * Simd32x4::from(-1.0),
                 g6: self.group6() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
-                g7: self.group7() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g7: self.group7() * Simd32x3::from([-1.0, 1.0, -1.0]),
                 g8: self.group8() * Simd32x3::from([1.0, -1.0, 1.0]),
-                g9: self.group9() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g9: self.group9() * Simd32x3::from([-1.0, 1.0, -1.0]),
                 g10: self.group10() * Simd32x2::from([1.0, -1.0]),
             },
         }
@@ -621,7 +621,7 @@ impl Conjugation for Plane {
     fn conjugation(self) -> Plane {
         Plane {
             groups: PlaneGroups {
-                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]),
             },
         }
     }
@@ -633,7 +633,7 @@ impl Conjugation for PlaneAtOrigin {
     fn conjugation(self) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
-                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
             },
         }
     }
@@ -692,7 +692,7 @@ impl Conjugation for Sphere {
     fn conjugation(self) -> Sphere {
         Sphere {
             groups: SphereGroups {
-                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
                 g1: self.group1() * Simd32x2::from([1.0, -1.0]),
             },
         }
@@ -729,9 +729,9 @@ impl DoubleComplement for Dipole {
     fn double_complement(self) -> Dipole {
         Dipole {
             groups: DipoleGroups {
-                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g0: self.group0(),
                 g1: self.group1(),
-                g2: self.group2() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
+                g2: self.group2(),
             },
         }
     }
@@ -798,10 +798,10 @@ impl DoubleComplement for MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
                 g1: self.group1(),
-                g2: self.group2() * Simd32x2::from([-1.0, 1.0]),
-                g3: self.group3() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g2: self.group2(),
+                g3: self.group3(),
                 g4: self.group4(),
-                g5: self.group5() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
+                g5: self.group5(),
                 g6: self.group6(),
                 g7: self.group7(),
                 g8: self.group8(),
@@ -847,9 +847,7 @@ impl DoubleComplement for Point {
 
     fn double_complement(self) -> Point {
         Point {
-            groups: PointGroups {
-                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
-            },
+            groups: PointGroups { g0: self.group0() },
         }
     }
 }
@@ -859,9 +857,7 @@ impl DoubleComplement for PointAtInfinity {
 
     fn double_complement(self) -> PointAtInfinity {
         PointAtInfinity {
-            groups: PointAtInfinityGroups {
-                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
-            },
+            groups: PointAtInfinityGroups { g0: self.group0() },
         }
     }
 }
@@ -873,7 +869,7 @@ impl DoubleComplement for Radial {
         Radial {
             groups: RadialGroups {
                 g0: self.group0(),
-                g1: self.group1() * Simd32x2::from([-1.0, 1.0]),
+                g1: self.group1(),
             },
         }
     }
@@ -918,9 +914,9 @@ impl Dual for Circle {
     fn dual(self) -> Dipole {
         Dipole {
             groups: DipoleGroups {
-                g0: self.group2() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g0: self.group2() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
-                g2: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g2: self.group0() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -960,10 +956,10 @@ impl Dual for MultiVector {
             groups: MultiVectorGroups {
                 g0: swizzle!(self.group0(), 1, 0),
                 g1: self.group9(),
-                g2: swizzle!(self.group10(), 1, 0) * Simd32x2::from([-1.0, 1.0]),
-                g3: self.group8() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g2: swizzle!(self.group10(), 1, 0),
+                g3: self.group8() * Simd32x3::from(-1.0),
                 g4: self.group7() * Simd32x3::from(-1.0),
-                g5: self.group6() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g5: self.group6() * Simd32x4::from(-1.0),
                 g6: self.group5() * Simd32x4::from(-1.0),
                 g7: self.group4() * Simd32x3::from(-1.0),
                 g8: self.group3() * Simd32x3::from(-1.0),
@@ -1004,7 +1000,7 @@ impl Dual for Sphere {
         Radial {
             groups: RadialGroups {
                 g0: self.group0(),
-                g1: swizzle!(self.group1(), 1, 0) * Simd32x2::from([-1.0, 1.0]),
+                g1: swizzle!(self.group1(), 1, 0),
             },
         }
     }
@@ -1026,9 +1022,9 @@ impl LeftComplement for Circle {
     fn left_complement(self) -> Dipole {
         Dipole {
             groups: DipoleGroups {
-                g0: self.group2() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g0: self.group2() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
-                g2: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g2: self.group0() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -1068,10 +1064,10 @@ impl LeftComplement for MultiVector {
             groups: MultiVectorGroups {
                 g0: swizzle!(self.group0(), 1, 0),
                 g1: self.group9(),
-                g2: swizzle!(self.group10(), 1, 0) * Simd32x2::from([-1.0, 1.0]),
-                g3: self.group8() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g2: swizzle!(self.group10(), 1, 0),
+                g3: self.group8() * Simd32x3::from(-1.0),
                 g4: self.group7() * Simd32x3::from(-1.0),
-                g5: self.group6() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g5: self.group6() * Simd32x4::from(-1.0),
                 g6: self.group5() * Simd32x4::from(-1.0),
                 g7: self.group4() * Simd32x3::from(-1.0),
                 g8: self.group3() * Simd32x3::from(-1.0),
@@ -1112,7 +1108,7 @@ impl LeftComplement for Sphere {
         Radial {
             groups: RadialGroups {
                 g0: self.group0(),
-                g1: swizzle!(self.group1(), 1, 0) * Simd32x2::from([-1.0, 1.0]),
+                g1: swizzle!(self.group1(), 1, 0),
             },
         }
     }
@@ -1135,7 +1131,7 @@ impl Reversal for Circle {
         Circle {
             groups: CircleGroups {
                 g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
-                g1: self.group1() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g1: self.group1() * Simd32x3::from([1.0, -1.0, 1.0]),
                 g2: self.group2() * Simd32x3::from([-1.0, 1.0, -1.0]),
             },
         }
@@ -1172,7 +1168,7 @@ impl Reversal for Line {
     fn reversal(self) -> Line {
         Line {
             groups: LineGroups {
-                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
                 g1: self.group1() * Simd32x3::from([-1.0, 1.0, -1.0]),
             },
         }
@@ -1197,7 +1193,7 @@ impl Reversal for LineAtOrigin {
     fn reversal(self) -> LineAtOrigin {
         LineAtOrigin {
             groups: LineAtOriginGroups {
-                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
             },
         }
     }
@@ -1226,9 +1222,9 @@ impl Reversal for MultiVector {
                 g4: self.group4() * Simd32x3::from(-1.0),
                 g5: self.group5() * Simd32x4::from(-1.0),
                 g6: self.group6() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
-                g7: self.group7() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g7: self.group7() * Simd32x3::from([1.0, -1.0, 1.0]),
                 g8: self.group8() * Simd32x3::from([-1.0, 1.0, -1.0]),
-                g9: self.group9() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g9: self.group9() * Simd32x3::from([-1.0, 1.0, -1.0]),
                 g10: self.group10() * Simd32x2::from([1.0, -1.0]),
             },
         }
@@ -1251,7 +1247,7 @@ impl Reversal for Plane {
     fn reversal(self) -> Plane {
         Plane {
             groups: PlaneGroups {
-                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]),
             },
         }
     }
@@ -1263,7 +1259,7 @@ impl Reversal for PlaneAtOrigin {
     fn reversal(self) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
-                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
             },
         }
     }
@@ -1322,7 +1318,7 @@ impl Reversal for Sphere {
     fn reversal(self) -> Sphere {
         Sphere {
             groups: SphereGroups {
-                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
                 g1: self.group1() * Simd32x2::from([1.0, -1.0]),
             },
         }
@@ -1345,9 +1341,9 @@ impl RightComplement for Circle {
     fn right_complement(self) -> Dipole {
         Dipole {
             groups: DipoleGroups {
-                g0: self.group2() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g0: self.group2() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
-                g2: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g2: self.group0() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -1387,10 +1383,10 @@ impl RightComplement for MultiVector {
             groups: MultiVectorGroups {
                 g0: swizzle!(self.group0(), 1, 0),
                 g1: self.group9(),
-                g2: swizzle!(self.group10(), 1, 0) * Simd32x2::from([-1.0, 1.0]),
-                g3: self.group8() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g2: swizzle!(self.group10(), 1, 0),
+                g3: self.group8() * Simd32x3::from(-1.0),
                 g4: self.group7() * Simd32x3::from(-1.0),
-                g5: self.group6() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g5: self.group6() * Simd32x4::from(-1.0),
                 g6: self.group5() * Simd32x4::from(-1.0),
                 g7: self.group4() * Simd32x3::from(-1.0),
                 g8: self.group3() * Simd32x3::from(-1.0),
@@ -1431,7 +1427,7 @@ impl RightComplement for Sphere {
         Radial {
             groups: RadialGroups {
                 g0: self.group0(),
-                g1: swizzle!(self.group1(), 1, 0) * Simd32x2::from([-1.0, 1.0]),
+                g1: swizzle!(self.group1(), 1, 0),
             },
         }
     }

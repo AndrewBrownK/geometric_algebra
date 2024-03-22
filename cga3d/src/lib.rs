@@ -1899,7 +1899,7 @@ impl Neg for Circle {
         Circle {
             groups: CircleGroups {
                 g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
-                g1: self.group1() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g1: self.group1() * Simd32x3::from([1.0, -1.0, 1.0]),
                 g2: self.group2() * Simd32x3::from([-1.0, 1.0, -1.0]),
             },
         }
@@ -1936,7 +1936,7 @@ impl Neg for Line {
     fn neg(self) -> Line {
         Line {
             groups: LineGroups {
-                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
                 g1: self.group1() * Simd32x3::from([-1.0, 1.0, -1.0]),
             },
         }
@@ -1961,7 +1961,7 @@ impl Neg for LineAtOrigin {
     fn neg(self) -> LineAtOrigin {
         LineAtOrigin {
             groups: LineAtOriginGroups {
-                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
             },
         }
     }
@@ -1992,9 +1992,9 @@ impl Neg for MultiVector {
                 g4: self.group4() * Simd32x3::from(-1.0),
                 g5: self.group5() * Simd32x4::from(-1.0),
                 g6: self.group6() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
-                g7: self.group7() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g7: self.group7() * Simd32x3::from([1.0, -1.0, 1.0]),
                 g8: self.group8() * Simd32x3::from([-1.0, 1.0, -1.0]),
-                g9: self.group9() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g9: self.group9() * Simd32x3::from([1.0, -1.0, 1.0]),
                 g10: self.group10() * Simd32x2::from([-1.0, 1.0]),
             },
         }
@@ -2017,7 +2017,7 @@ impl Neg for Plane {
     fn neg(self) -> Plane {
         Plane {
             groups: PlaneGroups {
-                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
+                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, 1.0]),
             },
         }
     }
@@ -2029,7 +2029,7 @@ impl Neg for PlaneAtOrigin {
     fn neg(self) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
-                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
             },
         }
     }
@@ -2088,7 +2088,7 @@ impl Neg for Sphere {
     fn neg(self) -> Sphere {
         Sphere {
             groups: SphereGroups {
-                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
                 g1: self.group1() * Simd32x2::from([-1.0, 1.0]),
             },
         }
