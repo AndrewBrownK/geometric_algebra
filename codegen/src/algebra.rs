@@ -84,6 +84,12 @@ impl Involution {
         }
     }
 
+    pub fn dual<GA: GeometricAlgebraTrait>(&self, algebra: &GA) -> Self {
+        Self {
+            terms: self.terms.iter().map(|(key, value)| (key.clone(), algebra.dual(value))).collect(),
+        }
+    }
+
     pub fn right_complement<GA: GeometricAlgebraTrait>(&self, algebra: &GA) -> Self {
         Self {
             terms: self.terms.iter().map(|(key, value)| (key.clone(), algebra.right_complement(value))).collect(),
@@ -132,7 +138,7 @@ impl Involution {
             ),
             (
                 "Dual",
-                involution.right_complement(algebra),
+                involution.dual(algebra),
                 "\nElement order reversed\nAlso known as Right Complement\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Complements",
             ),
             (

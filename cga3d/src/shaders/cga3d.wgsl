@@ -9505,11 +9505,15 @@ fn anti_scalar_dual(self_: AntiScalar) -> Scalar {
 }
 
 fn circle_dual(self_: Circle) -> Dipole {
-    return Dipole(self_.g2 * vec3<f32>(-1.0), self_.g1 * vec3<f32>(-1.0), self_.g0 * vec4<f32>(-1.0));
+    return Dipole(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), self_.g1, vec4<f32>(self_.g2.x, self_.g2.y, self_.g2.z, -self_.g0.w));
 }
 
 fn dipole_dual(self_: Dipole) -> Circle {
-    return Circle(self_.g2 * vec4<f32>(-1.0), self_.g1 * vec3<f32>(-1.0), self_.g0 * vec3<f32>(-1.0));
+    return Circle(vec4<f32>(-self_.g0.x, -self_.g0.y, -self_.g0.z, self_.g2.w), self_.g1 * vec3<f32>(-1.0), vec3<f32>(-self_.g2.x, self_.g2.y, self_.g2.z));
+}
+
+fn line_at_infinity_dual(self_: LineAtInfinity) -> PointAtInfinity {
+    return PointAtInfinity(self_.g0);
 }
 
 fn magnitude_dual(self_: Magnitude) -> Magnitude {
@@ -9517,11 +9521,15 @@ fn magnitude_dual(self_: Magnitude) -> Magnitude {
 }
 
 fn multi_vector_dual(self_: MultiVector) -> MultiVector {
-    return MultiVector(self_.g0.yx, self_.g9, self_.g10.yx, self_.g8 * vec3<f32>(-1.0), self_.g7 * vec3<f32>(-1.0), self_.g6 * vec4<f32>(-1.0), self_.g5 * vec4<f32>(-1.0), self_.g4 * vec3<f32>(-1.0), self_.g3 * vec3<f32>(-1.0), self_.g1, self_.g2.yx);
+    return MultiVector(self_.g0.yx, self_.g9 * vec3<f32>(-1.0), self_.g10, vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z), self_.g7, vec4<f32>(self_.g8.x, self_.g8.y, self_.g8.z, -self_.g6.w), vec4<f32>(-self_.g3.x, -self_.g3.y, -self_.g3.z, self_.g5.w), self_.g4 * vec3<f32>(-1.0), vec3<f32>(-self_.g5.x, self_.g5.y, self_.g5.z), self_.g1, self_.g2 * vec2<f32>(-1.0));
+}
+
+fn point_at_infinity_dual(self_: PointAtInfinity) -> LineAtInfinity {
+    return LineAtInfinity(self_.g0 * vec3<f32>(-1.0));
 }
 
 fn radial_dual(self_: Radial) -> Sphere {
-    return Sphere(self_.g0, self_.g1.yx);
+    return Sphere(self_.g0, self_.g1 * vec2<f32>(-1.0));
 }
 
 fn scalar_dual(self_: Scalar) -> AntiScalar {
@@ -9529,7 +9537,7 @@ fn scalar_dual(self_: Scalar) -> AntiScalar {
 }
 
 fn sphere_dual(self_: Sphere) -> Radial {
-    return Radial(self_.g0, self_.g1.yx);
+    return Radial(self_.g0 * vec3<f32>(-1.0), self_.g1);
 }
 
 fn anti_scalar_left_complement(self_: AntiScalar) -> Scalar {

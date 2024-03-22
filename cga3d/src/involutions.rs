@@ -914,9 +914,9 @@ impl Dual for Circle {
     fn dual(self) -> Dipole {
         Dipole {
             groups: DipoleGroups {
-                g0: self.group2() * Simd32x3::from(-1.0),
-                g1: self.group1() * Simd32x3::from(-1.0),
-                g2: self.group0() * Simd32x4::from(-1.0),
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g1: self.group1(),
+                g2: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], -self.group0()[3]]),
             },
         }
     }
@@ -928,10 +928,20 @@ impl Dual for Dipole {
     fn dual(self) -> Circle {
         Circle {
             groups: CircleGroups {
-                g0: self.group2() * Simd32x4::from(-1.0),
+                g0: Simd32x4::from([-self.group0()[0], -self.group0()[1], -self.group0()[2], self.group2()[3]]),
                 g1: self.group1() * Simd32x3::from(-1.0),
-                g2: self.group0() * Simd32x3::from(-1.0),
+                g2: Simd32x3::from([-self.group2()[0], self.group2()[1], self.group2()[2]]),
             },
+        }
+    }
+}
+
+impl Dual for LineAtInfinity {
+    type Output = PointAtInfinity;
+
+    fn dual(self) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups { g0: self.group0() },
         }
     }
 }
@@ -955,16 +965,28 @@ impl Dual for MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: swizzle!(self.group0(), 1, 0),
-                g1: self.group9(),
-                g2: swizzle!(self.group10(), 1, 0),
-                g3: self.group8() * Simd32x3::from(-1.0),
-                g4: self.group7() * Simd32x3::from(-1.0),
-                g5: self.group6() * Simd32x4::from(-1.0),
-                g6: self.group5() * Simd32x4::from(-1.0),
+                g1: self.group9() * Simd32x3::from(-1.0),
+                g2: self.group10(),
+                g3: Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]),
+                g4: self.group7(),
+                g5: Simd32x4::from([self.group8()[0], self.group8()[1], self.group8()[2], -self.group6()[3]]),
+                g6: Simd32x4::from([-self.group3()[0], -self.group3()[1], -self.group3()[2], self.group5()[3]]),
                 g7: self.group4() * Simd32x3::from(-1.0),
-                g8: self.group3() * Simd32x3::from(-1.0),
+                g8: Simd32x3::from([-self.group5()[0], self.group5()[1], self.group5()[2]]),
                 g9: self.group1(),
-                g10: swizzle!(self.group2(), 1, 0),
+                g10: self.group2() * Simd32x2::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Dual for PointAtInfinity {
+    type Output = LineAtInfinity;
+
+    fn dual(self) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -977,7 +999,7 @@ impl Dual for Radial {
         Sphere {
             groups: SphereGroups {
                 g0: self.group0(),
-                g1: swizzle!(self.group1(), 1, 0),
+                g1: self.group1() * Simd32x2::from(-1.0),
             },
         }
     }
@@ -999,8 +1021,8 @@ impl Dual for Sphere {
     fn dual(self) -> Radial {
         Radial {
             groups: RadialGroups {
-                g0: self.group0(),
-                g1: swizzle!(self.group1(), 1, 0),
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1(),
             },
         }
     }

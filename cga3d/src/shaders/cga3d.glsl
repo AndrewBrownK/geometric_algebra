@@ -9505,11 +9505,15 @@ Scalar anti_scalar_dual(AntiScalar self) {
 }
 
 Dipole circle_dual(Circle self) {
-    return Dipole(self.g2 * vec3(-1.0), self.g1 * vec3(-1.0), self.g0 * vec4(-1.0));
+    return Dipole(vec3(self.g0.x, self.g0.y, self.g0.z), self.g1, vec4(self.g2.x, self.g2.y, self.g2.z, -self.g0.w));
 }
 
 Circle dipole_dual(Dipole self) {
-    return Circle(self.g2 * vec4(-1.0), self.g1 * vec3(-1.0), self.g0 * vec3(-1.0));
+    return Circle(vec4(-self.g0.x, -self.g0.y, -self.g0.z, self.g2.w), self.g1 * vec3(-1.0), vec3(-self.g2.x, self.g2.y, self.g2.z));
+}
+
+PointAtInfinity line_at_infinity_dual(LineAtInfinity self) {
+    return PointAtInfinity(self.g0);
 }
 
 Magnitude magnitude_dual(Magnitude self) {
@@ -9517,11 +9521,15 @@ Magnitude magnitude_dual(Magnitude self) {
 }
 
 MultiVector multi_vector_dual(MultiVector self) {
-    return MultiVector(self.g0.yx, self.g9, self.g10.yx, self.g8 * vec3(-1.0), self.g7 * vec3(-1.0), self.g6 * vec4(-1.0), self.g5 * vec4(-1.0), self.g4 * vec3(-1.0), self.g3 * vec3(-1.0), self.g1, self.g2.yx);
+    return MultiVector(self.g0.yx, self.g9 * vec3(-1.0), self.g10, vec3(self.g6.x, self.g6.y, self.g6.z), self.g7, vec4(self.g8.x, self.g8.y, self.g8.z, -self.g6.w), vec4(-self.g3.x, -self.g3.y, -self.g3.z, self.g5.w), self.g4 * vec3(-1.0), vec3(-self.g5.x, self.g5.y, self.g5.z), self.g1, self.g2 * vec2(-1.0));
+}
+
+LineAtInfinity point_at_infinity_dual(PointAtInfinity self) {
+    return LineAtInfinity(self.g0 * vec3(-1.0));
 }
 
 Sphere radial_dual(Radial self) {
-    return Sphere(self.g0, self.g1.yx);
+    return Sphere(self.g0, self.g1 * vec2(-1.0));
 }
 
 AntiScalar scalar_dual(Scalar self) {
@@ -9529,7 +9537,7 @@ AntiScalar scalar_dual(Scalar self) {
 }
 
 Radial sphere_dual(Sphere self) {
-    return Radial(self.g0, self.g1.yx);
+    return Radial(self.g0 * vec3(-1.0), self.g1);
 }
 
 Scalar anti_scalar_left_complement(AntiScalar self) {
