@@ -509,6 +509,46 @@ impl Carrier for Sphere {
     }
 }
 
+impl Center for Circle {
+    type Output = RoundPoint;
+
+    fn center(self) -> RoundPoint {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
+impl Center for Dipole {
+    type Output = RoundPoint;
+
+    fn center(self) -> RoundPoint {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
+impl Center for MultiVector {
+    type Output = MultiVector;
+
+    fn center(self) -> MultiVector {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
+impl Center for RoundPoint {
+    type Output = RoundPoint;
+
+    fn center(self) -> RoundPoint {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
+impl Center for Sphere {
+    type Output = RoundPoint;
+
+    fn center(self) -> RoundPoint {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
 impl CoCarrier for Circle {
     type Output = Line;
 

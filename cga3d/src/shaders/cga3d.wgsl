@@ -11129,6 +11129,26 @@ fn sphere_carrier(self_: Sphere) -> AntiScalar {
     return sphere_infinity_wedge(self_, Infinity(1.0));
 }
 
+fn circle_center(self_: Circle) -> RoundPoint {
+    return line_circle_anti_wedge(circle_co_carrier(self_), self_);
+}
+
+fn dipole_center(self_: Dipole) -> RoundPoint {
+    return plane_dipole_anti_wedge(dipole_co_carrier(self_), self_);
+}
+
+fn multi_vector_center(self_: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(multi_vector_co_carrier(self_), self_);
+}
+
+fn round_point_center(self_: RoundPoint) -> RoundPoint {
+    return anti_scalar_round_point_anti_wedge(round_point_co_carrier(self_), self_);
+}
+
+fn sphere_center(self_: Sphere) -> RoundPoint {
+    return point_sphere_anti_wedge(sphere_co_carrier(self_), self_);
+}
+
 fn circle_co_carrier(self_: Circle) -> Line {
     return dipole_infinity_wedge(circle_right_round_weight_dual(self_), Infinity(1.0));
 }

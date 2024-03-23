@@ -949,7 +949,8 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let name = "Carrier";
             let _: Option<()> = try {
                 let construct = construct_infinity.clone()?;
-                let wedge = self.trait_impls.get_pair_invocation("Wedge", variable(&param_a), construct)?;
+                let wedge_name = self.algebra.dialect().exterior_product.first()?;
+                let wedge = self.trait_impls.get_pair_invocation(wedge_name, variable(&param_a), construct)?;
                 let carrier = single_expression_single_trait_impl(name, &param_a, wedge);
                 self.trait_impls.add_single_impl(name, param_a.clone(), carrier)
             };
@@ -957,11 +958,23 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let name = "CoCarrier";
             let _: Option<()> = try {
                 let construct = construct_infinity.clone()?;
+                let wedge_name = self.algebra.dialect().exterior_product.first()?;
                 let right_weight_dual = self.trait_impls.get_single_invocation("RightRoundWeightDual", variable(&param_a))?;
-                let wedge = self.trait_impls.get_pair_invocation("Wedge", right_weight_dual, construct)?;
+                let wedge = self.trait_impls.get_pair_invocation(wedge_name, right_weight_dual, construct)?;
                 let carrier = single_expression_single_trait_impl(name, &param_a, wedge);
                 self.trait_impls.add_single_impl(name, param_a.clone(), carrier)
             };
+
+            let name = "Center";
+            let _: Option<()> = try {
+                let anti_wedge_name = self.algebra.dialect().exterior_anti_product.first()?;
+                let ccr = self.trait_impls.get_single_invocation("CoCarrier", variable(&param_a))?;
+                let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge_name, ccr, variable(&param_a))?;
+                let center = single_expression_single_trait_impl(name, &param_a, anti_wedge);
+                self.trait_impls.add_single_impl(name, param_a.clone(), center)
+            };
+
+            // TODO Container, Partner
         }
     }
 
