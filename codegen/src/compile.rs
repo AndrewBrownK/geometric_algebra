@@ -1635,19 +1635,17 @@ impl MultiVectorClass {
         }
     }
 
-    pub fn derive_bulk_or_weight<'a, GA: GeometricAlgebraTrait>(
+    pub fn derive_bulk_or_weight<'a>(
         name: &'static str,
         parameter_a: &Parameter<'a>,
         projective_basis: &BasisElement,
         is_projective: bool,
         flat_basis: Option<BasisElement>,
         is_flat: bool,
-        algebra: &GA,
         registry: &'a MultiVectorClassRegistry,
     ) -> AstNode<'a> {
         let mut result_signature = Vec::new();
-        let a_flat_basis = parameter_a.multi_vector_class().flat_basis();
-        for a_element in a_flat_basis.iter() {
+        for a_element in parameter_a.multi_vector_class().flat_basis().iter() {
             let basis_is_projective = projective_basis.index == (a_element.index & projective_basis.index);
             let basis_is_flat = if let Some(flat_basis) = &flat_basis {
                 flat_basis.index == (a_element.index & flat_basis.index)
@@ -1699,7 +1697,7 @@ impl MultiVectorClass {
             let (factors, a_indices): (Vec<_>, Vec<_>) = (0..size)
                 .map(|index_in_group| {
                     let result_element = &result_flat_basis[base_index + index_in_group];
-                    let index_in_a = a_flat_basis.iter().position(|a_element| a_element == result_element).unwrap();
+                    let index_in_a = parameter_a.multi_vector_class().flat_basis().iter().position(|a_element| a_element == result_element).unwrap();
                     let scalar = if result_signature.contains(&result_element.index) { 1isize } else { 0isize };
                     let (group, element) = parameter_a.multi_vector_class().index_in_group(index_in_a);
                     let group_size = parameter_a.multi_vector_class().grouped_basis[group].len();

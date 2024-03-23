@@ -597,73 +597,49 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 Some(pb) => pb,
             };
 
-            let bulk = MultiVectorClass::derive_bulk_or_weight("Bulk", &param_a, &projective_basis, false, flat_basis.clone(), true, &self.algebra, registry);
+            let bulk = MultiVectorClass::derive_bulk_or_weight("Bulk", &param_a, &projective_basis, false, flat_basis.clone(), true, registry);
             if bulk != AstNode::None {
                 self.trait_impls.add_single_impl("Bulk", param_a.clone(), bulk);
             }
 
-            let weight = MultiVectorClass::derive_bulk_or_weight("Weight", &param_a, &projective_basis, true, flat_basis.clone(), true, &self.algebra, registry);
+            let weight = MultiVectorClass::derive_bulk_or_weight("Weight", &param_a, &projective_basis, true, flat_basis.clone(), true, registry);
             if weight != AstNode::None {
                 self.trait_impls.add_single_impl("Weight", param_a.clone(), weight);
             }
 
             if self.algebra.algebra_name().contains("cga") {
 
-                let round_bulk = MultiVectorClass::derive_bulk_or_weight("RoundBulk", &param_a, &projective_basis, false, flat_basis.clone(), false, &self.algebra, registry);
+                let round_bulk = MultiVectorClass::derive_bulk_or_weight("RoundBulk", &param_a, &projective_basis, false, flat_basis.clone(), false, registry);
                 if round_bulk != AstNode::None {
                     self.trait_impls.add_single_impl("RoundBulk", param_a.clone(), round_bulk);
                 }
 
-                let round_weight = MultiVectorClass::derive_bulk_or_weight("RoundWeight", &param_a, &projective_basis, true, flat_basis.clone(), false, &self.algebra, registry);
+                let round_weight = MultiVectorClass::derive_bulk_or_weight("RoundWeight", &param_a, &projective_basis, true, flat_basis.clone(), false, registry);
                 if round_weight != AstNode::None {
                     self.trait_impls.add_single_impl("RoundWeight", param_a, round_weight);
                 }
             }
         }
 
-        for param_a in registry.single_parameters() {
-            let name = "RightBulkDual";
-            let _: Option<()> = try {
-                // Right bulk dual is right complement of bulk
-                let bulk = self.trait_impls.get_single_invocation("Bulk", variable(&param_a))?;
-                // TODO maybe this should be "Dual" instead of "RightComplement"?
-                let right_comp = self.trait_impls.get_single_invocation("RightComplement", bulk)?;
-                let rbd = single_expression_single_trait_impl(name, &param_a, right_comp);
-                self.trait_impls.add_single_impl(name, param_a, rbd);
-            };
-        }
-        for param_a in registry.single_parameters() {
-            let name = "RightWeightDual";
-            let _: Option<()> = try {
-                // Right weight dual is right complement of weight
-                let weight = self.trait_impls.get_single_invocation("Weight", variable(&param_a))?;
-                // TODO maybe this should be "Dual" instead of "RightComplement"?
-                let right_comp = self.trait_impls.get_single_invocation("RightComplement", weight)?;
-                let rwd = single_expression_single_trait_impl(name, &param_a, right_comp);
-                self.trait_impls.add_single_impl(name, param_a, rwd);
-            };
-        }
-        for param_a in registry.single_parameters() {
-            let name = "LeftBulkDual";
-            let _: Option<()> = try {
-                // Left bulk dual is left complement of bulk
-                let bulk = self.trait_impls.get_single_invocation("Bulk", variable(&param_a))?;
-                // TODO maybe this should be some kind of "Dual" instead of "LeftComplement"?
-                let left_comp = self.trait_impls.get_single_invocation("LeftComplement", bulk)?;
-                let lbd = single_expression_single_trait_impl(name, &param_a, left_comp);
-                self.trait_impls.add_single_impl(name, param_a, lbd);
-            };
-        }
-        for param_a in registry.single_parameters() {
-            let name = "LeftWeightDual";
-            let _: Option<()> = try {
-                // Left weight dual is left complement of weight
-                let weight = self.trait_impls.get_single_invocation("Weight", variable(&param_a))?;
-                // TODO maybe this should be some kind of "Dual" instead of "LeftComplement"?
-                let left_comp = self.trait_impls.get_single_invocation("LeftComplement", weight)?;
-                let lwd = single_expression_single_trait_impl(name, &param_a, left_comp);
-                self.trait_impls.add_single_impl(name, param_a, lwd);
-            };
+        let aspect_duals = [
+            ("RightBulkDual", "Bulk", "RightComplement"),
+            ("RightWeightDual", "Weight", "RightComplement"),
+            ("LeftBulkDual", "Bulk", "LeftComplement"),
+            ("LeftWeightDual", "Weight", "LeftComplement"),
+            ("RightRoundBulkDual", "RoundBulk", "RightComplement"),
+            ("RightRoundWeightDual", "RoundWeight", "RightComplement"),
+            ("LeftRoundBulkDual", "RoundBulk", "LeftComplement"),
+            ("LeftRoundWeightDual", "RoundWeight", "LeftComplement"),
+        ];
+        for (name, bulkOrWeight, complement) in aspect_duals.into_iter() {
+            for param_a in registry.single_parameters() {
+                let _: Option<()> = try {
+                    let aspect = self.trait_impls.get_single_invocation(bulkOrWeight, variable(&param_a))?;
+                    let comp = self.trait_impls.get_single_invocation(complement, aspect)?;
+                    let the_impl = single_expression_single_trait_impl(name, &param_a, comp);
+                    self.trait_impls.add_single_impl(name, param_a, the_impl);
+                };
+            }
         }
 
         // We can end up with some very strange expansions, contractions, and projections
@@ -939,22 +915,17 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             if is_all_flat {
                 continue;
             }
+
             // The object is round
 
-            // TODO if I ever create a dedicated MultiVectorClass for e5 then use that
-            //  here instead of RoundPoint. In fact... Carrier(Circle) is giving us Sphere,
-            //  but we are expecting a Plane. So yeah RoundPoint (or "Radial") is too broad.
             let mut e5_candidates: Vec<_> = registry.classes.iter().filter_map(|it| {
                 if it.0.flat_basis().contains(&flat_basis) { Some(&it.0) } else { None }
             }).collect();
             e5_candidates.sort_by(|a, b| a.flat_basis().len().cmp(&b.flat_basis().len()));
-
-
-            let name = "Carrier";
-            let _: Option<()> = try {
-                let round_point = *e5_candidates.first()?;
+            let mut construct_infinity = None;
+            if let Some(mvc) = e5_candidates.first() {
                 let mut body = vec![];
-                for group in &round_point.grouped_basis {
+                for group in &mvc.grouped_basis {
                     let mut elements = vec![];
                     for element in group {
                         let v = if *element == flat_basis { 1 } else { 0 };
@@ -967,12 +938,27 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                     };
                     body.push((DataType::SimdVector(group.len()), e));
                 }
-                let construct = Expression {
+                construct_infinity = Some(Expression {
                     size: 1,
-                    data_type_hint: Some(DataType::MultiVector(round_point)),
-                    content: ExpressionContent::InvokeClassMethod(round_point, "Constructor", body),
-                };
+                    data_type_hint: Some(DataType::MultiVector(mvc)),
+                    content: ExpressionContent::InvokeClassMethod(mvc, "Constructor", body),
+                });
+            }
+
+
+            let name = "Carrier";
+            let _: Option<()> = try {
+                let construct = construct_infinity.clone()?;
                 let wedge = self.trait_impls.get_pair_invocation("Wedge", variable(&param_a), construct)?;
+                let carrier = single_expression_single_trait_impl(name, &param_a, wedge);
+                self.trait_impls.add_single_impl(name, param_a.clone(), carrier)
+            };
+
+            let name = "CoCarrier";
+            let _: Option<()> = try {
+                let construct = construct_infinity.clone()?;
+                let right_weight_dual = self.trait_impls.get_single_invocation("RightRoundWeightDual", variable(&param_a))?;
+                let wedge = self.trait_impls.get_pair_invocation("Wedge", right_weight_dual, construct)?;
                 let carrier = single_expression_single_trait_impl(name, &param_a, wedge);
                 self.trait_impls.add_single_impl(name, param_a.clone(), carrier)
             };
@@ -1213,6 +1199,13 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         trait_names.insert("RightWeightDual".to_string());
         trait_names.insert("LeftBulkDual".to_string());
         trait_names.insert("LeftWeightDual".to_string());
+        let is_cga = self.algebra.algebra_name().contains("cga");
+        if is_cga {
+            trait_names.insert("RightRoundBulkDual".to_string());
+            trait_names.insert("RightRoundWeightDual".to_string());
+            trait_names.insert("LeftRoundBulkDual".to_string());
+            trait_names.insert("LeftRoundWeightDual".to_string());
+        }
 
         emitter.emit(&AstNode::TraitDefinition {
             name: "RightBulkDual".to_string(),
@@ -1220,8 +1213,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             docs: "
             Right Bulk Dual
             https://projectivegeometricalgebra.org/projgeomalg.pdf
-        "
-            .to_string(),
+            ".to_string(),
         })?;
         emitter.emit(&AstNode::TraitDefinition {
             name: "RightWeightDual".to_string(),
@@ -1229,8 +1221,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             docs: "
             Right Weight Dual
             https://projectivegeometricalgebra.org/projgeomalg.pdf
-        "
-            .to_string(),
+            ".to_string(),
         })?;
         emitter.emit(&AstNode::TraitDefinition {
             name: "LeftBulkDual".to_string(),
@@ -1238,8 +1229,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             docs: "
             Left Bulk Dual
             https://projectivegeometricalgebra.org/projgeomalg.pdf
-        "
-            .to_string(),
+            ".to_string(),
         })?;
         emitter.emit(&AstNode::TraitDefinition {
             name: "LeftWeightDual".to_string(),
@@ -1247,9 +1237,47 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             docs: "
             Left Weight Dual
             https://projectivegeometricalgebra.org/projgeomalg.pdf
-        "
-            .to_string(),
+            ".to_string(),
         })?;
+
+        if is_cga {
+            emitter.emit(&AstNode::TraitDefinition {
+                name: "RightRoundBulkDual".to_string(),
+                params: 1,
+                docs: "
+                Right Round Bulk Dual
+                https://projectivegeometricalgebra.org/projgeomalg.pdf
+                https://projectivegeometricalgebra.org/confgeomalg.pdf
+                ".to_string(),
+            })?;
+            emitter.emit(&AstNode::TraitDefinition {
+                name: "RightRoundWeightDual".to_string(),
+                params: 1,
+                docs: "
+                Right Round Weight Dual. Needed to implement CoCarriers.
+                https://projectivegeometricalgebra.org/projgeomalg.pdf
+                https://projectivegeometricalgebra.org/confgeomalg.pdf
+                ".to_string(),
+            })?;
+            emitter.emit(&AstNode::TraitDefinition {
+                name: "LeftRoundBulkDual".to_string(),
+                params: 1,
+                docs: "
+                Left Round Bulk Dual
+                https://projectivegeometricalgebra.org/projgeomalg.pdf
+                https://projectivegeometricalgebra.org/confgeomalg.pdf
+                ".to_string(),
+            })?;
+            emitter.emit(&AstNode::TraitDefinition {
+                name: "LeftRoundWeightDual".to_string(),
+                params: 1,
+                docs: "
+                Left Round Weight Dual
+                https://projectivegeometricalgebra.org/projgeomalg.pdf
+                https://projectivegeometricalgebra.org/confgeomalg.pdf
+                ".to_string(),
+            })?;
+        }
 
         let trait_names: Vec<_> = trait_names.iter().map(|it| it.as_str()).collect();
         self.emit_exact_name_match_trait_impls(trait_names.as_slice(), emitter)?;
@@ -1342,8 +1370,8 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             name: "Sqrt".to_string(),
             params: 1,
             docs: "
-            Square Root"
-                .to_string(),
+            Square Root
+            ".to_string(),
         })?;
 
         // TODO make grade and anti_grade class-level traits
@@ -1352,16 +1380,17 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             params: 1,
             docs: "
             Grade
-            https://rigidgeometricalgebra.org/wiki/index.php?title=Grade_and_antigrade"
-                .to_string(),
+            https://rigidgeometricalgebra.org/wiki/index.php?title=Grade_and_antigrade
+            ".to_string(),
         })?;
+
         emitter.emit(&AstNode::TraitDefinition {
             name: "AntiGrade".to_string(),
             params: 1,
             docs: "
             Anti-Grade
-            https://rigidgeometricalgebra.org/wiki/index.php?title=Grade_and_antigrade"
-                .to_string(),
+            https://rigidgeometricalgebra.org/wiki/index.php?title=Grade_and_antigrade
+            ".to_string(),
         })?;
 
         emitter.emit(&AstNode::TraitDefinition {
@@ -1370,8 +1399,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             docs: "
             Attitude
             https://rigidgeometricalgebra.org/wiki/index.php?title=Attitude
-        "
-            .to_string(),
+            ".to_string(),
         })?;
 
         if self.algebra.algebra_name().contains("cga") {
@@ -1379,40 +1407,40 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 name: "Carrier".to_string(),
                 params: 1,
                 docs: "
-            Carrier
-            The Carrier of a round object is the lowest dimensional flat object that contains it.
-            https://conformalgeometricalgebra.org/wiki/index.php?title=Carriers
-            ".to_string(),
+                Carrier
+                The Carrier of a round object is the lowest dimensional flat object that contains it.
+                https://conformalgeometricalgebra.org/wiki/index.php?title=Carriers
+                ".to_string(),
             })?;
 
             emitter.emit(&AstNode::TraitDefinition {
                 name: "CoCarrier".to_string(),
                 params: 1,
                 docs: "
-            CoCarrier
-            The CoCarrier of a round object is the Carrier of its antidual.
-            https://conformalgeometricalgebra.org/wiki/index.php?title=Carriers
-            ".to_string(),
+                CoCarrier
+                The CoCarrier of a round object is the Carrier of its antidual.
+                https://conformalgeometricalgebra.org/wiki/index.php?title=Carriers
+                ".to_string(),
             })?;
 
             emitter.emit(&AstNode::TraitDefinition {
                 name: "Container".to_string(),
                 params: 1,
                 docs: "
-            Container
-            The Container of a round object is the smallest Sphere that contains it.
-            https://conformalgeometricalgebra.org/wiki/index.php?title=Containers
-            ".to_string(),
+                Container
+                The Container of a round object is the smallest Sphere that contains it.
+                https://conformalgeometricalgebra.org/wiki/index.php?title=Containers
+                ".to_string(),
             })?;
 
             emitter.emit(&AstNode::TraitDefinition {
                 name: "Center".to_string(),
                 params: 1,
                 docs: "
-            Center
-            The Center of a round object is the Radial (RoundPoint) having the same center and radius.
-            https://conformalgeometricalgebra.org/wiki/index.php?title=Centers
-            ".to_string(),
+                Center
+                The Center of a round object is the Radial (RoundPoint) having the same center and radius.
+                https://conformalgeometricalgebra.org/wiki/index.php?title=Centers
+                ".to_string(),
             })?;
 
             emitter.emit(&AstNode::TraitDefinition {

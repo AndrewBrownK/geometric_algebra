@@ -74,12 +74,12 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
     let mut code_gen = CodeGenerator::new(cga3d);
     code_gen.preamble_and_universal_traits(&registry).unwrap();
     code_gen.basic_norms(&registry);
-    code_gen.round_features(flat_basis, &registry);
 
     // TODO fancy norms
     // code_gen.fancy_norms(&registry);
 
     code_gen.post_norm_universal_stuff(&registry);
+    code_gen.round_features(flat_basis, &registry);
     code_gen.attitude_and_dependencies("Horizon", &registry);
 
     let mut file_path = Path::new("src/").to_path_buf();
@@ -159,7 +159,7 @@ use std::ops::{Add, Div, Mul, Neg, Sub};",
 use geometric_algebra::{simd::*, *};
 use crate::*;
 use std::ops::{Add, Div, Mul, Neg, Sub};
-use crate::aspects::{Bulk, Weight};
+use crate::aspects::{Bulk, Weight, RoundBulk, RoundWeight};
 use crate::involutions::*;",
     )?;
     code_gen.emit_aspect_duals(&mut emitter)?;
@@ -169,7 +169,8 @@ use crate::involutions::*;",
         "
 use crate::*;
 use crate::products::exterior::AntiWedge;
-use crate::products::exterior::Wedge;",
+use crate::products::exterior::Wedge;
+use crate::aspect_duals::*;",
     )?;
     code_gen.emit_characteristic_features(&mut emitter)?;
 

@@ -10689,6 +10689,50 @@ RoundPoint sphere_left_bulk_dual(Sphere self) {
     return horizon_left_complement(sphere_bulk(self));
 }
 
+Dipole circle_left_round_bulk_dual(Circle self) {
+    return circle_left_complement(circle_round_bulk(self));
+}
+
+Circle dipole_left_round_bulk_dual(Dipole self) {
+    return dipole_left_complement(dipole_round_bulk(self));
+}
+
+AntiScalar magnitude_left_round_bulk_dual(Magnitude self) {
+    return scalar_left_complement(magnitude_round_bulk(self));
+}
+
+MultiVector multi_vector_left_round_bulk_dual(MultiVector self) {
+    return multi_vector_left_complement(multi_vector_round_bulk(self));
+}
+
+Sphere round_point_left_round_bulk_dual(RoundPoint self) {
+    return round_point_left_complement(round_point_round_bulk(self));
+}
+
+AntiScalar scalar_left_round_bulk_dual(Scalar self) {
+    return scalar_left_complement(scalar_round_bulk(self));
+}
+
+Dipole circle_left_round_weight_dual(Circle self) {
+    return circle_left_complement(circle_round_weight(self));
+}
+
+Circle dipole_left_round_weight_dual(Dipole self) {
+    return dipole_left_complement(dipole_round_weight(self));
+}
+
+MultiVector multi_vector_left_round_weight_dual(MultiVector self) {
+    return multi_vector_left_complement(multi_vector_round_weight(self));
+}
+
+Sphere round_point_left_round_weight_dual(RoundPoint self) {
+    return round_point_left_complement(round_point_round_weight(self));
+}
+
+RoundPoint sphere_left_round_weight_dual(Sphere self) {
+    return sphere_left_complement(sphere_round_weight(self));
+}
+
 Scalar anti_scalar_left_weight_dual(AntiScalar self) {
     return anti_scalar_left_complement(anti_scalar_weight(self));
 }
@@ -10783,6 +10827,50 @@ Sphere round_point_right_bulk_dual(RoundPoint self) {
 
 RoundPoint sphere_right_bulk_dual(Sphere self) {
     return horizon_right_complement(sphere_bulk(self));
+}
+
+Dipole circle_right_round_bulk_dual(Circle self) {
+    return circle_right_complement(circle_round_bulk(self));
+}
+
+Circle dipole_right_round_bulk_dual(Dipole self) {
+    return dipole_right_complement(dipole_round_bulk(self));
+}
+
+AntiScalar magnitude_right_round_bulk_dual(Magnitude self) {
+    return scalar_right_complement(magnitude_round_bulk(self));
+}
+
+MultiVector multi_vector_right_round_bulk_dual(MultiVector self) {
+    return multi_vector_right_complement(multi_vector_round_bulk(self));
+}
+
+Sphere round_point_right_round_bulk_dual(RoundPoint self) {
+    return round_point_right_complement(round_point_round_bulk(self));
+}
+
+AntiScalar scalar_right_round_bulk_dual(Scalar self) {
+    return scalar_right_complement(scalar_round_bulk(self));
+}
+
+Dipole circle_right_round_weight_dual(Circle self) {
+    return circle_right_complement(circle_round_weight(self));
+}
+
+Circle dipole_right_round_weight_dual(Dipole self) {
+    return dipole_right_complement(dipole_round_weight(self));
+}
+
+MultiVector multi_vector_right_round_weight_dual(MultiVector self) {
+    return multi_vector_right_complement(multi_vector_round_weight(self));
+}
+
+Sphere round_point_right_round_weight_dual(RoundPoint self) {
+    return round_point_right_complement(round_point_round_weight(self));
+}
+
+RoundPoint sphere_right_round_weight_dual(Sphere self) {
+    return sphere_right_complement(sphere_round_weight(self));
 }
 
 Scalar anti_scalar_right_weight_dual(AntiScalar self) {
@@ -11039,6 +11127,26 @@ Infinity scalar_carrier(Scalar self) {
 
 AntiScalar sphere_carrier(Sphere self) {
     return sphere_infinity_wedge(self, Infinity(1.0));
+}
+
+Line circle_co_carrier(Circle self) {
+    return dipole_infinity_wedge(circle_right_round_weight_dual(self), Infinity(1.0));
+}
+
+Plane dipole_co_carrier(Dipole self) {
+    return circle_infinity_wedge(dipole_right_round_weight_dual(self), Infinity(1.0));
+}
+
+MultiVector multi_vector_co_carrier(MultiVector self) {
+    return multi_vector_infinity_wedge(multi_vector_right_round_weight_dual(self), Infinity(1.0));
+}
+
+AntiScalar round_point_co_carrier(RoundPoint self) {
+    return sphere_infinity_wedge(round_point_right_round_weight_dual(self), Infinity(1.0));
+}
+
+Point sphere_co_carrier(Sphere self) {
+    return round_point_infinity_wedge(sphere_right_round_weight_dual(self), Infinity(1.0));
 }
 
 AntiScalar anti_scalar_sqrt(AntiScalar self) {

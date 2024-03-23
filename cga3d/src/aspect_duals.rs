@@ -5,7 +5,7 @@
 // https://github.com/AndrewBrownK/geometric_algebra/
 //
 
-use crate::aspects::{Bulk, Weight};
+use crate::aspects::{Bulk, RoundBulk, RoundWeight, Weight};
 use crate::involutions::*;
 use crate::*;
 use geometric_algebra::{simd::*, *};
@@ -37,6 +37,38 @@ pub trait LeftBulkDual {
 pub trait LeftWeightDual {
     type Output;
     fn left_weight_dual(self) -> Self::Output;
+}
+
+/// Right Round Bulk Dual
+/// https://projectivegeometricalgebra.org/projgeomalg.pdf
+/// https://projectivegeometricalgebra.org/confgeomalg.pdf
+pub trait RightRoundBulkDual {
+    type Output;
+    fn right_round_bulk_dual(self) -> Self::Output;
+}
+
+/// Right Round Weight Dual. Needed to implement CoCarriers.
+/// https://projectivegeometricalgebra.org/projgeomalg.pdf
+/// https://projectivegeometricalgebra.org/confgeomalg.pdf
+pub trait RightRoundWeightDual {
+    type Output;
+    fn right_round_weight_dual(self) -> Self::Output;
+}
+
+/// Left Round Bulk Dual
+/// https://projectivegeometricalgebra.org/projgeomalg.pdf
+/// https://projectivegeometricalgebra.org/confgeomalg.pdf
+pub trait LeftRoundBulkDual {
+    type Output;
+    fn left_round_bulk_dual(self) -> Self::Output;
+}
+
+/// Left Round Weight Dual
+/// https://projectivegeometricalgebra.org/projgeomalg.pdf
+/// https://projectivegeometricalgebra.org/confgeomalg.pdf
+pub trait LeftRoundWeightDual {
+    type Output;
+    fn left_round_weight_dual(self) -> Self::Output;
 }
 
 impl LeftBulkDual for Circle {
@@ -132,6 +164,94 @@ impl LeftBulkDual for Sphere {
 
     fn left_bulk_dual(self) -> RoundPoint {
         self.bulk().left_complement()
+    }
+}
+
+impl LeftRoundBulkDual for Circle {
+    type Output = Dipole;
+
+    fn left_round_bulk_dual(self) -> Dipole {
+        self.round_bulk().left_complement()
+    }
+}
+
+impl LeftRoundBulkDual for Dipole {
+    type Output = Circle;
+
+    fn left_round_bulk_dual(self) -> Circle {
+        self.round_bulk().left_complement()
+    }
+}
+
+impl LeftRoundBulkDual for Magnitude {
+    type Output = AntiScalar;
+
+    fn left_round_bulk_dual(self) -> AntiScalar {
+        self.round_bulk().left_complement()
+    }
+}
+
+impl LeftRoundBulkDual for MultiVector {
+    type Output = MultiVector;
+
+    fn left_round_bulk_dual(self) -> MultiVector {
+        self.round_bulk().left_complement()
+    }
+}
+
+impl LeftRoundBulkDual for RoundPoint {
+    type Output = Sphere;
+
+    fn left_round_bulk_dual(self) -> Sphere {
+        self.round_bulk().left_complement()
+    }
+}
+
+impl LeftRoundBulkDual for Scalar {
+    type Output = AntiScalar;
+
+    fn left_round_bulk_dual(self) -> AntiScalar {
+        self.round_bulk().left_complement()
+    }
+}
+
+impl LeftRoundWeightDual for Circle {
+    type Output = Dipole;
+
+    fn left_round_weight_dual(self) -> Dipole {
+        self.round_weight().left_complement()
+    }
+}
+
+impl LeftRoundWeightDual for Dipole {
+    type Output = Circle;
+
+    fn left_round_weight_dual(self) -> Circle {
+        self.round_weight().left_complement()
+    }
+}
+
+impl LeftRoundWeightDual for MultiVector {
+    type Output = MultiVector;
+
+    fn left_round_weight_dual(self) -> MultiVector {
+        self.round_weight().left_complement()
+    }
+}
+
+impl LeftRoundWeightDual for RoundPoint {
+    type Output = Sphere;
+
+    fn left_round_weight_dual(self) -> Sphere {
+        self.round_weight().left_complement()
+    }
+}
+
+impl LeftRoundWeightDual for Sphere {
+    type Output = RoundPoint;
+
+    fn left_round_weight_dual(self) -> RoundPoint {
+        self.round_weight().left_complement()
     }
 }
 
@@ -324,6 +444,94 @@ impl RightBulkDual for Sphere {
 
     fn right_bulk_dual(self) -> RoundPoint {
         self.bulk().right_complement()
+    }
+}
+
+impl RightRoundBulkDual for Circle {
+    type Output = Dipole;
+
+    fn right_round_bulk_dual(self) -> Dipole {
+        self.round_bulk().right_complement()
+    }
+}
+
+impl RightRoundBulkDual for Dipole {
+    type Output = Circle;
+
+    fn right_round_bulk_dual(self) -> Circle {
+        self.round_bulk().right_complement()
+    }
+}
+
+impl RightRoundBulkDual for Magnitude {
+    type Output = AntiScalar;
+
+    fn right_round_bulk_dual(self) -> AntiScalar {
+        self.round_bulk().right_complement()
+    }
+}
+
+impl RightRoundBulkDual for MultiVector {
+    type Output = MultiVector;
+
+    fn right_round_bulk_dual(self) -> MultiVector {
+        self.round_bulk().right_complement()
+    }
+}
+
+impl RightRoundBulkDual for RoundPoint {
+    type Output = Sphere;
+
+    fn right_round_bulk_dual(self) -> Sphere {
+        self.round_bulk().right_complement()
+    }
+}
+
+impl RightRoundBulkDual for Scalar {
+    type Output = AntiScalar;
+
+    fn right_round_bulk_dual(self) -> AntiScalar {
+        self.round_bulk().right_complement()
+    }
+}
+
+impl RightRoundWeightDual for Circle {
+    type Output = Dipole;
+
+    fn right_round_weight_dual(self) -> Dipole {
+        self.round_weight().right_complement()
+    }
+}
+
+impl RightRoundWeightDual for Dipole {
+    type Output = Circle;
+
+    fn right_round_weight_dual(self) -> Circle {
+        self.round_weight().right_complement()
+    }
+}
+
+impl RightRoundWeightDual for MultiVector {
+    type Output = MultiVector;
+
+    fn right_round_weight_dual(self) -> MultiVector {
+        self.round_weight().right_complement()
+    }
+}
+
+impl RightRoundWeightDual for RoundPoint {
+    type Output = Sphere;
+
+    fn right_round_weight_dual(self) -> Sphere {
+        self.round_weight().right_complement()
+    }
+}
+
+impl RightRoundWeightDual for Sphere {
+    type Output = RoundPoint;
+
+    fn right_round_weight_dual(self) -> RoundPoint {
+        self.round_weight().right_complement()
     }
 }
 

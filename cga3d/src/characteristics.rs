@@ -5,6 +5,7 @@
 // https://github.com/AndrewBrownK/geometric_algebra/
 //
 
+use crate::aspect_duals::*;
 use crate::products::exterior::AntiWedge;
 use crate::products::exterior::Wedge;
 use crate::*;
@@ -503,6 +504,56 @@ impl Carrier for Sphere {
 
     fn carrier(self) -> AntiScalar {
         self.wedge(Infinity {
+            groups: InfinityGroups { g0: 1.0 },
+        })
+    }
+}
+
+impl CoCarrier for Circle {
+    type Output = Line;
+
+    fn co_carrier(self) -> Line {
+        self.right_round_weight_dual().wedge(Infinity {
+            groups: InfinityGroups { g0: 1.0 },
+        })
+    }
+}
+
+impl CoCarrier for Dipole {
+    type Output = Plane;
+
+    fn co_carrier(self) -> Plane {
+        self.right_round_weight_dual().wedge(Infinity {
+            groups: InfinityGroups { g0: 1.0 },
+        })
+    }
+}
+
+impl CoCarrier for MultiVector {
+    type Output = MultiVector;
+
+    fn co_carrier(self) -> MultiVector {
+        self.right_round_weight_dual().wedge(Infinity {
+            groups: InfinityGroups { g0: 1.0 },
+        })
+    }
+}
+
+impl CoCarrier for RoundPoint {
+    type Output = AntiScalar;
+
+    fn co_carrier(self) -> AntiScalar {
+        self.right_round_weight_dual().wedge(Infinity {
+            groups: InfinityGroups { g0: 1.0 },
+        })
+    }
+}
+
+impl CoCarrier for Sphere {
+    type Output = Point;
+
+    fn co_carrier(self) -> Point {
+        self.right_round_weight_dual().wedge(Infinity {
             groups: InfinityGroups { g0: 1.0 },
         })
     }
