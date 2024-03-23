@@ -599,6 +599,46 @@ impl CoCarrier for Sphere {
     }
 }
 
+impl Container for Circle {
+    type Output = Sphere;
+
+    fn container(self) -> Sphere {
+        self.wedge(self.carrier().right_weight_dual())
+    }
+}
+
+impl Container for Dipole {
+    type Output = Sphere;
+
+    fn container(self) -> Sphere {
+        self.wedge(self.carrier().right_weight_dual())
+    }
+}
+
+impl Container for MultiVector {
+    type Output = MultiVector;
+
+    fn container(self) -> MultiVector {
+        self.wedge(self.carrier().right_weight_dual())
+    }
+}
+
+impl Container for RoundPoint {
+    type Output = Sphere;
+
+    fn container(self) -> Sphere {
+        self.wedge(self.carrier().right_weight_dual())
+    }
+}
+
+impl Container for Sphere {
+    type Output = Sphere;
+
+    fn container(self) -> Sphere {
+        self.wedge(self.carrier().right_weight_dual())
+    }
+}
+
 impl Sqrt for AntiScalar {
     type Output = AntiScalar;
 

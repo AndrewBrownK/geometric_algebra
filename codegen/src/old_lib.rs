@@ -945,6 +945,14 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 });
             }
 
+            // TODO a lot of these have "simpler" more direct implementations per object
+            //  You can see on the tables on the wiki pages
+            //  It is nice to have old reliable formulas that always work
+            //  but it might also be nice to (eventually) write out most direct formulations
+            //  instead, since they'll definitely use less CPU power. The same could possibly
+            //  be said for almost all other trait impls. So maybe the right solution is
+            //  an alternate version of "simplify_and_legalize" that inlines trait
+            //  invocations.
 
             let name = "Carrier";
             let _: Option<()> = try {
@@ -974,7 +982,17 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 self.trait_impls.add_single_impl(name, param_a.clone(), center)
             };
 
-            // TODO Container, Partner
+            let name = "Container";
+            let _: Option<()> = try {
+                let wedge_name = self.algebra.dialect().exterior_product.first()?;
+                let car = self.trait_impls.get_single_invocation("Carrier", variable(&param_a))?;
+                let weight_dual = self.trait_impls.get_single_invocation("RightWeightDual", car)?;
+                let anti_wedge = self.trait_impls.get_pair_invocation(wedge_name, variable(&param_a), weight_dual)?;
+                let container = single_expression_single_trait_impl(name, &param_a, anti_wedge);
+                self.trait_impls.add_single_impl(name, param_a.clone(), container)
+            };
+
+            // TODO Partner
         }
     }
 

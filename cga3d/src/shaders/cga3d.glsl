@@ -11169,6 +11169,26 @@ Point sphere_co_carrier(Sphere self) {
     return round_point_infinity_wedge(sphere_right_round_weight_dual(self), Infinity(1.0));
 }
 
+Sphere circle_container(Circle self) {
+    return circle_round_point_wedge(self, plane_right_weight_dual(circle_carrier(self)));
+}
+
+Sphere dipole_container(Dipole self) {
+    return dipole_dipole_wedge(self, line_right_weight_dual(dipole_carrier(self)));
+}
+
+MultiVector multi_vector_container(MultiVector self) {
+    return multi_vector_multi_vector_wedge(self, multi_vector_right_weight_dual(multi_vector_carrier(self)));
+}
+
+Sphere round_point_container(RoundPoint self) {
+    return round_point_circle_wedge(self, point_right_weight_dual(round_point_carrier(self)));
+}
+
+Sphere sphere_container(Sphere self) {
+    return sphere_scalar_wedge(self, anti_scalar_right_weight_dual(sphere_carrier(self)));
+}
+
 AntiScalar anti_scalar_sqrt(AntiScalar self) {
     return AntiScalar(sqrt(self.g0));
 }
