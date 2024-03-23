@@ -175,6 +175,14 @@ impl LeftWeightDual for Magnitude {
     }
 }
 
+impl LeftWeightDual for Motor {
+    type Output = MultiVector;
+
+    fn left_weight_dual(self) -> MultiVector {
+        self.weight().left_complement()
+    }
+}
+
 impl LeftWeightDual for MultiVector {
     type Output = MultiVector;
 
@@ -211,6 +219,14 @@ impl LeftWeightDual for Point {
     type Output = Horizon;
 
     fn left_weight_dual(self) -> Horizon {
+        self.weight().left_complement()
+    }
+}
+
+impl LeftWeightDual for Rotor {
+    type Output = MultiVector;
+
+    fn left_weight_dual(self) -> MultiVector {
         self.weight().left_complement()
     }
 }
@@ -359,6 +375,14 @@ impl RightWeightDual for Magnitude {
     }
 }
 
+impl RightWeightDual for Motor {
+    type Output = MultiVector;
+
+    fn right_weight_dual(self) -> MultiVector {
+        self.weight().right_complement()
+    }
+}
+
 impl RightWeightDual for MultiVector {
     type Output = MultiVector;
 
@@ -395,6 +419,14 @@ impl RightWeightDual for Point {
     type Output = Horizon;
 
     fn right_weight_dual(self) -> Horizon {
+        self.weight().right_complement()
+    }
+}
+
+impl RightWeightDual for Rotor {
+    type Output = MultiVector;
+
+    fn right_weight_dual(self) -> MultiVector {
         self.weight().right_complement()
     }
 }

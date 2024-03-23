@@ -45,6 +45,14 @@ pub trait Dual {
     fn dual(self) -> Self::Output;
 }
 
+/// AntiDuals are a special kind a Dual.
+/// https://conformalgeometricalgebra.org/wiki/index.php?title=Duals
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Complements
+pub trait AntiDual {
+    type Output;
+    fn anti_dual(self) -> Self::Output;
+}
+
 /// Right Complement
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Complements
 pub trait RightComplement {
@@ -64,6 +72,216 @@ pub trait LeftComplement {
 pub trait DoubleComplement {
     type Output;
     fn double_complement(self) -> Self::Output;
+}
+
+impl AntiDual for AntiScalar {
+    type Output = Scalar;
+
+    fn anti_dual(self) -> Scalar {
+        Scalar {
+            groups: ScalarGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl AntiDual for Flector {
+    type Output = Flector;
+
+    fn anti_dual(self) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group1(),
+                g1: self.group0() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl AntiDual for Horizon {
+    type Output = Origin;
+
+    fn anti_dual(self) -> Origin {
+        Origin {
+            groups: OriginGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl AntiDual for Line {
+    type Output = Line;
+
+    fn anti_dual(self) -> Line {
+        Line {
+            groups: LineGroups {
+                g0: self.group1() * Simd32x3::from(-1.0),
+                g1: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl AntiDual for LineAtInfinity {
+    type Output = LineAtOrigin;
+
+    fn anti_dual(self) -> LineAtOrigin {
+        LineAtOrigin {
+            groups: LineAtOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl AntiDual for LineAtOrigin {
+    type Output = LineAtInfinity;
+
+    fn anti_dual(self) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl AntiDual for Magnitude {
+    type Output = Magnitude;
+
+    fn anti_dual(self) -> Magnitude {
+        Magnitude {
+            groups: MagnitudeGroups {
+                g0: swizzle!(self.group0(), 1, 0),
+            },
+        }
+    }
+}
+
+impl AntiDual for Motor {
+    type Output = MultiVector;
+
+    fn anti_dual(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0()[3], 0.0]),
+                g1: Simd32x4::from(0.0),
+                g2: self.group1() * Simd32x3::from(-1.0),
+                g3: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g4: Simd32x4::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiDual for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_dual(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: swizzle!(self.group0(), 1, 0),
+                g1: self.group4(),
+                g2: self.group3() * Simd32x3::from(-1.0),
+                g3: self.group2() * Simd32x3::from(-1.0),
+                g4: self.group1() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl AntiDual for Origin {
+    type Output = Horizon;
+
+    fn anti_dual(self) -> Horizon {
+        Horizon {
+            groups: HorizonGroups { g0: -self.group0() },
+        }
+    }
+}
+
+impl AntiDual for Plane {
+    type Output = Point;
+
+    fn anti_dual(self) -> Point {
+        Point {
+            groups: PointGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl AntiDual for PlaneAtOrigin {
+    type Output = PointAtInfinity;
+
+    fn anti_dual(self) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl AntiDual for Point {
+    type Output = Plane;
+
+    fn anti_dual(self) -> Plane {
+        Plane {
+            groups: PlaneGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl AntiDual for PointAtInfinity {
+    type Output = PlaneAtOrigin;
+
+    fn anti_dual(self) -> PlaneAtOrigin {
+        PlaneAtOrigin {
+            groups: PlaneAtOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl AntiDual for Rotor {
+    type Output = MultiVector;
+
+    fn anti_dual(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0()[3], 0.0]),
+                g1: Simd32x4::from(0.0),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g4: Simd32x4::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiDual for Scalar {
+    type Output = AntiScalar;
+
+    fn anti_dual(self) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl AntiDual for Translator {
+    type Output = MultiVector;
+
+    fn anti_dual(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0()[3], 0.0]),
+                g1: Simd32x4::from(0.0),
+                g2: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x4::from(0.0),
+            },
+        }
+    }
 }
 
 impl AntiReversal for AntiScalar {
@@ -940,6 +1158,22 @@ impl Dual for Magnitude {
     }
 }
 
+impl Dual for Motor {
+    type Output = MultiVector;
+
+    fn dual(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0()[3], 0.0]),
+                g1: Simd32x4::from(0.0),
+                g2: self.group1() * Simd32x3::from(-1.0),
+                g3: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g4: Simd32x4::from(0.0),
+            },
+        }
+    }
+}
+
 impl Dual for MultiVector {
     type Output = MultiVector;
 
@@ -1010,12 +1244,44 @@ impl Dual for PointAtInfinity {
     }
 }
 
+impl Dual for Rotor {
+    type Output = MultiVector;
+
+    fn dual(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0()[3], 0.0]),
+                g1: Simd32x4::from(0.0),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g4: Simd32x4::from(0.0),
+            },
+        }
+    }
+}
+
 impl Dual for Scalar {
     type Output = AntiScalar;
 
     fn dual(self) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Dual for Translator {
+    type Output = MultiVector;
+
+    fn dual(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0()[3], 0.0]),
+                g1: Simd32x4::from(0.0),
+                g2: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x4::from(0.0),
+            },
         }
     }
 }
@@ -1102,6 +1368,22 @@ impl LeftComplement for Magnitude {
     }
 }
 
+impl LeftComplement for Motor {
+    type Output = MultiVector;
+
+    fn left_complement(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0()[3], 0.0]),
+                g1: Simd32x4::from(0.0),
+                g2: self.group1() * Simd32x3::from(-1.0),
+                g3: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g4: Simd32x4::from(0.0),
+            },
+        }
+    }
+}
+
 impl LeftComplement for MultiVector {
     type Output = MultiVector;
 
@@ -1172,12 +1454,44 @@ impl LeftComplement for PointAtInfinity {
     }
 }
 
+impl LeftComplement for Rotor {
+    type Output = MultiVector;
+
+    fn left_complement(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0()[3], 0.0]),
+                g1: Simd32x4::from(0.0),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g4: Simd32x4::from(0.0),
+            },
+        }
+    }
+}
+
 impl LeftComplement for Scalar {
     type Output = AntiScalar;
 
     fn left_complement(self) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl LeftComplement for Translator {
+    type Output = MultiVector;
+
+    fn left_complement(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0()[3], 0.0]),
+                g1: Simd32x4::from(0.0),
+                g2: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x4::from(0.0),
+            },
         }
     }
 }
@@ -1461,6 +1775,22 @@ impl RightComplement for Magnitude {
     }
 }
 
+impl RightComplement for Motor {
+    type Output = MultiVector;
+
+    fn right_complement(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0()[3], 0.0]),
+                g1: Simd32x4::from(0.0),
+                g2: self.group1() * Simd32x3::from(-1.0),
+                g3: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g4: Simd32x4::from(0.0),
+            },
+        }
+    }
+}
+
 impl RightComplement for MultiVector {
     type Output = MultiVector;
 
@@ -1531,12 +1861,44 @@ impl RightComplement for PointAtInfinity {
     }
 }
 
+impl RightComplement for Rotor {
+    type Output = MultiVector;
+
+    fn right_complement(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0()[3], 0.0]),
+                g1: Simd32x4::from(0.0),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g4: Simd32x4::from(0.0),
+            },
+        }
+    }
+}
+
 impl RightComplement for Scalar {
     type Output = AntiScalar;
 
     fn right_complement(self) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl RightComplement for Translator {
+    type Output = MultiVector;
+
+    fn right_complement(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0()[3], 0.0]),
+                g1: Simd32x4::from(0.0),
+                g2: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x4::from(0.0),
+            },
         }
     }
 }

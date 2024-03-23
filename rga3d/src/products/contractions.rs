@@ -911,6 +911,14 @@ impl WeightContraction<LineAtOrigin> for Flector {
     }
 }
 
+impl WeightContraction<Motor> for Flector {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Motor) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
 impl WeightContraction<MultiVector> for Flector {
     type Output = MultiVector;
 
@@ -951,6 +959,14 @@ impl WeightContraction<Point> for Flector {
     }
 }
 
+impl WeightContraction<Rotor> for Flector {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
 impl WeightContraction<Flector> for Horizon {
     type Output = MultiVector;
 
@@ -959,10 +975,26 @@ impl WeightContraction<Flector> for Horizon {
     }
 }
 
+impl WeightContraction<Motor> for Horizon {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Motor) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
 impl WeightContraction<MultiVector> for Horizon {
     type Output = MultiVector;
 
     fn weight_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Rotor> for Horizon {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Rotor) -> MultiVector {
         self.anti_wedge(other.right_weight_dual())
     }
 }
@@ -991,6 +1023,14 @@ impl WeightContraction<LineAtOrigin> for Line {
     }
 }
 
+impl WeightContraction<Motor> for Line {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Motor) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
 impl WeightContraction<MultiVector> for Line {
     type Output = MultiVector;
 
@@ -1015,6 +1055,14 @@ impl WeightContraction<Point> for Line {
     }
 }
 
+impl WeightContraction<Rotor> for Line {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
 impl WeightContraction<Flector> for LineAtInfinity {
     type Output = PointAtInfinity;
 
@@ -1023,10 +1071,26 @@ impl WeightContraction<Flector> for LineAtInfinity {
     }
 }
 
+impl WeightContraction<Motor> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Motor) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
 impl WeightContraction<MultiVector> for LineAtInfinity {
     type Output = MultiVector;
 
     fn weight_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Rotor> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Rotor) -> MultiVector {
         self.anti_wedge(other.right_weight_dual())
     }
 }
@@ -1055,6 +1119,14 @@ impl WeightContraction<LineAtOrigin> for LineAtOrigin {
     }
 }
 
+impl WeightContraction<Motor> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Motor) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
 impl WeightContraction<MultiVector> for LineAtOrigin {
     type Output = MultiVector;
 
@@ -1079,6 +1151,14 @@ impl WeightContraction<Point> for LineAtOrigin {
     }
 }
 
+impl WeightContraction<Rotor> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
 impl WeightContraction<Flector> for Motor {
     type Output = Flector;
 
@@ -1099,6 +1179,14 @@ impl WeightContraction<LineAtOrigin> for Motor {
     type Output = MultiVector;
 
     fn weight_contraction(self, other: LineAtOrigin) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Motor> for Motor {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Motor) -> MultiVector {
         self.anti_wedge(other.right_weight_dual())
     }
 }
@@ -1143,6 +1231,14 @@ impl WeightContraction<Point> for Motor {
     }
 }
 
+impl WeightContraction<Rotor> for Motor {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
 impl WeightContraction<Translator> for Motor {
     type Output = Scalar;
 
@@ -1171,6 +1267,14 @@ impl WeightContraction<LineAtOrigin> for MultiVector {
     type Output = MultiVector;
 
     fn weight_contraction(self, other: LineAtOrigin) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Motor> for MultiVector {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Motor) -> MultiVector {
         self.anti_wedge(other.right_weight_dual())
     }
 }
@@ -1215,6 +1319,14 @@ impl WeightContraction<Point> for MultiVector {
     }
 }
 
+impl WeightContraction<Rotor> for MultiVector {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
 impl WeightContraction<Translator> for MultiVector {
     type Output = Scalar;
 
@@ -1227,6 +1339,14 @@ impl WeightContraction<Flector> for Origin {
     type Output = Scalar;
 
     fn weight_contraction(self, other: Flector) -> Scalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Motor> for Origin {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Motor) -> MultiVector {
         self.anti_wedge(other.right_weight_dual())
     }
 }
@@ -1255,6 +1375,14 @@ impl WeightContraction<Point> for Origin {
     }
 }
 
+impl WeightContraction<Rotor> for Origin {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
 impl WeightContraction<Flector> for Plane {
     type Output = MultiVector;
 
@@ -1275,6 +1403,14 @@ impl WeightContraction<LineAtOrigin> for Plane {
     type Output = PointAtInfinity;
 
     fn weight_contraction(self, other: LineAtOrigin) -> PointAtInfinity {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Motor> for Plane {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Motor) -> MultiVector {
         self.anti_wedge(other.right_weight_dual())
     }
 }
@@ -1319,6 +1455,14 @@ impl WeightContraction<Point> for Plane {
     }
 }
 
+impl WeightContraction<Rotor> for Plane {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
 impl WeightContraction<Flector> for PlaneAtOrigin {
     type Output = MultiVector;
 
@@ -1339,6 +1483,14 @@ impl WeightContraction<LineAtOrigin> for PlaneAtOrigin {
     type Output = PointAtInfinity;
 
     fn weight_contraction(self, other: LineAtOrigin) -> PointAtInfinity {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Motor> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Motor) -> MultiVector {
         self.anti_wedge(other.right_weight_dual())
     }
 }
@@ -1383,10 +1535,26 @@ impl WeightContraction<Point> for PlaneAtOrigin {
     }
 }
 
+impl WeightContraction<Rotor> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
 impl WeightContraction<Flector> for Point {
     type Output = Scalar;
 
     fn weight_contraction(self, other: Flector) -> Scalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Motor> for Point {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Motor) -> MultiVector {
         self.anti_wedge(other.right_weight_dual())
     }
 }
@@ -1415,6 +1583,14 @@ impl WeightContraction<Point> for Point {
     }
 }
 
+impl WeightContraction<Rotor> for Point {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
 impl WeightContraction<Flector> for PointAtInfinity {
     type Output = Scalar;
 
@@ -1423,10 +1599,26 @@ impl WeightContraction<Flector> for PointAtInfinity {
     }
 }
 
+impl WeightContraction<Motor> for PointAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Motor) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
 impl WeightContraction<MultiVector> for PointAtInfinity {
     type Output = MultiVector;
 
     fn weight_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Rotor> for PointAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Rotor) -> MultiVector {
         self.anti_wedge(other.right_weight_dual())
     }
 }
@@ -1451,6 +1643,14 @@ impl WeightContraction<LineAtOrigin> for Rotor {
     type Output = MultiVector;
 
     fn weight_contraction(self, other: LineAtOrigin) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Motor> for Rotor {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Motor) -> MultiVector {
         self.anti_wedge(other.right_weight_dual())
     }
 }
@@ -1495,6 +1695,14 @@ impl WeightContraction<Point> for Rotor {
     }
 }
 
+impl WeightContraction<Rotor> for Rotor {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
 impl WeightContraction<Translator> for Rotor {
     type Output = Scalar;
 
@@ -1523,6 +1731,14 @@ impl WeightContraction<LineAtOrigin> for Translator {
     type Output = LineAtInfinity;
 
     fn weight_contraction(self, other: LineAtOrigin) -> LineAtInfinity {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Motor> for Translator {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Motor) -> MultiVector {
         self.anti_wedge(other.right_weight_dual())
     }
 }
@@ -1563,6 +1779,14 @@ impl WeightContraction<Point> for Translator {
     type Output = Horizon;
 
     fn weight_contraction(self, other: Point) -> Horizon {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Rotor> for Translator {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Rotor) -> MultiVector {
         self.anti_wedge(other.right_weight_dual())
     }
 }

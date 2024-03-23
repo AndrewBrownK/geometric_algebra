@@ -109,6 +109,11 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
     }
 
     fn dual(&self, a: &BasisElement) -> BasisElement {
+        // TODO between the RGA poster and the page on CGA Duals...
+        //  https://projectivegeometricalgebra.org/projgeomalg.pdf
+        //  https://conformalgeometricalgebra.org/wiki/index.php?title=Duals
+        //  It seems the "RightBulkDual" is what we're looking for
+
         let index = a.index;
 
 
@@ -186,6 +191,14 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
             coefficient,
             index: new_index,
         }
+    }
+
+    fn anti_dual(&self, a: &BasisElement) -> BasisElement {
+        // TODO between the RGA poster and the page on CGA Duals...
+        //  https://projectivegeometricalgebra.org/projgeomalg.pdf
+        //  https://conformalgeometricalgebra.org/wiki/index.php?title=Duals
+        //  It seems the "RightWeightDual" is what we're looking for
+        return self.dual(a)
     }
 
     fn product(&self, a: &BasisElement, b: &BasisElement) -> Vec<BasisElement> {

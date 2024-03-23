@@ -44,6 +44,7 @@ pub trait GeometricAlgebraTrait {
     fn right_complement(&self, a: &BasisElement) -> BasisElement;
     fn left_complement(&self, a: &BasisElement) -> BasisElement;
     fn dual(&self, a: &BasisElement) -> BasisElement;
+    fn anti_dual(&self, a: &BasisElement) -> BasisElement;
     fn product(&self, a: &BasisElement, b: &BasisElement) -> Vec<BasisElement>;
     fn anti_product(&self, a: &BasisElement, b: &BasisElement) -> Vec<BasisElement>;
 }
@@ -86,6 +87,12 @@ impl Involution {
     pub fn dual<GA: GeometricAlgebraTrait>(&self, algebra: &GA) -> Self {
         Self {
             terms: self.terms.iter().map(|(key, value)| (key.clone(), algebra.dual(value))).collect(),
+        }
+    }
+
+    pub fn anti_dual<GA: GeometricAlgebraTrait>(&self, algebra: &GA) -> Self {
+        Self {
+            terms: self.terms.iter().map(|(key, value)| (key.clone(), algebra.anti_dual(value))).collect(),
         }
     }
 
@@ -139,6 +146,11 @@ impl Involution {
                 "Dual",
                 involution.dual(algebra),
                 "\nElement order reversed\nAlso known as Right Complement\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Complements",
+            ),
+            (
+                "AntiDual",
+                involution.anti_dual(algebra),
+                "\nAntiDuals are a special kind a Dual.\nhttps://conformalgeometricalgebra.org/wiki/index.php?title=Duals\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Complements",
             ),
             (
                 "RightComplement",

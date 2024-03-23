@@ -9921,7 +9921,7 @@ fn motor_bulk(self_: Motor) -> LineAtInfinity {
 }
 
 fn multi_vector_bulk(self_: MultiVector) -> MultiVector {
-    return MultiVector(self_.g0 * vec2<f32>(1.0, 0.0), self_.g1 * vec4<f32>(1.0, 1.0, 1.0, 0.0), vec3<f32>(0.0, 0.0, 0.0), self_.g3, self_.g4 * vec4<f32>(0.0, 0.0, 0.0, 1.0));
+    return MultiVector(self_.g0 * vec2<f32>(1.0, 0.0), self_.g1 * vec4<f32>(1.0, 1.0, 1.0, 0.0), vec3<f32>(0.0), self_.g3, self_.g4 * vec4<f32>(0.0, 0.0, 0.0, 1.0));
 }
 
 fn plane_bulk(self_: Plane) -> Horizon {
@@ -9969,7 +9969,7 @@ fn motor_weight(self_: Motor) -> Rotor {
 }
 
 fn multi_vector_weight(self_: MultiVector) -> MultiVector {
-    return MultiVector(self_.g0 * vec2<f32>(0.0, 1.0), self_.g1 * vec4<f32>(0.0, 0.0, 0.0, 1.0), self_.g2, vec3<f32>(0.0, 0.0, 0.0), self_.g4 * vec4<f32>(1.0, 1.0, 1.0, 0.0));
+    return MultiVector(self_.g0 * vec2<f32>(0.0, 1.0), self_.g1 * vec4<f32>(0.0, 0.0, 0.0, 1.0), self_.g2, vec3<f32>(0.0), self_.g4 * vec4<f32>(1.0, 1.0, 1.0, 0.0));
 }
 
 fn origin_weight(self_: Origin) -> Origin {
@@ -9994,6 +9994,74 @@ fn rotor_weight(self_: Rotor) -> Rotor {
 
 fn translator_weight(self_: Translator) -> AntiScalar {
     return AntiScalar(self_.g0.w);
+}
+
+fn anti_scalar_anti_dual(self_: AntiScalar) -> Scalar {
+    return Scalar(self_.g0);
+}
+
+fn flector_anti_dual(self_: Flector) -> Flector {
+    return Flector(self_.g1, self_.g0 * vec4<f32>(-1.0));
+}
+
+fn horizon_anti_dual(self_: Horizon) -> Origin {
+    return Origin(self_.g0);
+}
+
+fn line_anti_dual(self_: Line) -> Line {
+    return Line(self_.g1 * vec3<f32>(-1.0), self_.g0 * vec3<f32>(-1.0));
+}
+
+fn line_at_infinity_anti_dual(self_: LineAtInfinity) -> LineAtOrigin {
+    return LineAtOrigin(self_.g0 * vec3<f32>(-1.0));
+}
+
+fn line_at_origin_anti_dual(self_: LineAtOrigin) -> LineAtInfinity {
+    return LineAtInfinity(self_.g0 * vec3<f32>(-1.0));
+}
+
+fn magnitude_anti_dual(self_: Magnitude) -> Magnitude {
+    return Magnitude(self_.g0.yx);
+}
+
+fn motor_anti_dual(self_: Motor) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.w, 0.0), vec4<f32>(0.0), self_.g1 * vec3<f32>(-1.0), vec3<f32>(-self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0));
+}
+
+fn multi_vector_anti_dual(self_: MultiVector) -> MultiVector {
+    return MultiVector(self_.g0.yx, self_.g4, self_.g3 * vec3<f32>(-1.0), self_.g2 * vec3<f32>(-1.0), self_.g1 * vec4<f32>(-1.0));
+}
+
+fn origin_anti_dual(self_: Origin) -> Horizon {
+    return Horizon(-self_.g0);
+}
+
+fn plane_anti_dual(self_: Plane) -> Point {
+    return Point(self_.g0);
+}
+
+fn plane_at_origin_anti_dual(self_: PlaneAtOrigin) -> PointAtInfinity {
+    return PointAtInfinity(self_.g0);
+}
+
+fn point_anti_dual(self_: Point) -> Plane {
+    return Plane(self_.g0 * vec4<f32>(-1.0));
+}
+
+fn point_at_infinity_anti_dual(self_: PointAtInfinity) -> PlaneAtOrigin {
+    return PlaneAtOrigin(self_.g0 * vec3<f32>(-1.0));
+}
+
+fn rotor_anti_dual(self_: Rotor) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.w, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(-self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0));
+}
+
+fn scalar_anti_dual(self_: Scalar) -> AntiScalar {
+    return AntiScalar(self_.g0);
+}
+
+fn translator_anti_dual(self_: Translator) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.w, 0.0), vec4<f32>(0.0), vec3<f32>(-self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0), vec4<f32>(0.0));
 }
 
 fn anti_scalar_anti_reversal(self_: AntiScalar) -> AntiScalar {
@@ -10296,6 +10364,10 @@ fn magnitude_dual(self_: Magnitude) -> Magnitude {
     return Magnitude(self_.g0.yx);
 }
 
+fn motor_dual(self_: Motor) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.w, 0.0), vec4<f32>(0.0), self_.g1 * vec3<f32>(-1.0), vec3<f32>(-self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0));
+}
+
 fn multi_vector_dual(self_: MultiVector) -> MultiVector {
     return MultiVector(self_.g0.yx, self_.g4 * vec4<f32>(-1.0), self_.g3 * vec3<f32>(-1.0), self_.g2 * vec3<f32>(-1.0), self_.g1);
 }
@@ -10320,8 +10392,16 @@ fn point_at_infinity_dual(self_: PointAtInfinity) -> PlaneAtOrigin {
     return PlaneAtOrigin(self_.g0);
 }
 
+fn rotor_dual(self_: Rotor) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.w, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(-self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0));
+}
+
 fn scalar_dual(self_: Scalar) -> AntiScalar {
     return AntiScalar(self_.g0);
+}
+
+fn translator_dual(self_: Translator) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.w, 0.0), vec4<f32>(0.0), vec3<f32>(-self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0), vec4<f32>(0.0));
 }
 
 fn anti_scalar_left_complement(self_: AntiScalar) -> Scalar {
@@ -10352,6 +10432,10 @@ fn magnitude_left_complement(self_: Magnitude) -> Magnitude {
     return Magnitude(self_.g0.yx);
 }
 
+fn motor_left_complement(self_: Motor) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.w, 0.0), vec4<f32>(0.0), self_.g1 * vec3<f32>(-1.0), vec3<f32>(-self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0));
+}
+
 fn multi_vector_left_complement(self_: MultiVector) -> MultiVector {
     return MultiVector(self_.g0.yx, self_.g4, self_.g3 * vec3<f32>(-1.0), self_.g2 * vec3<f32>(-1.0), self_.g1 * vec4<f32>(-1.0));
 }
@@ -10376,8 +10460,16 @@ fn point_at_infinity_left_complement(self_: PointAtInfinity) -> PlaneAtOrigin {
     return PlaneAtOrigin(self_.g0 * vec3<f32>(-1.0));
 }
 
+fn rotor_left_complement(self_: Rotor) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.w, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(-self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0));
+}
+
 fn scalar_left_complement(self_: Scalar) -> AntiScalar {
     return AntiScalar(self_.g0);
+}
+
+fn translator_left_complement(self_: Translator) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.w, 0.0), vec4<f32>(0.0), vec3<f32>(-self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0), vec4<f32>(0.0));
 }
 
 fn anti_scalar_reversal(self_: AntiScalar) -> AntiScalar {
@@ -10476,6 +10568,10 @@ fn magnitude_right_complement(self_: Magnitude) -> Magnitude {
     return Magnitude(self_.g0.yx);
 }
 
+fn motor_right_complement(self_: Motor) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.w, 0.0), vec4<f32>(0.0), self_.g1 * vec3<f32>(-1.0), vec3<f32>(-self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0));
+}
+
 fn multi_vector_right_complement(self_: MultiVector) -> MultiVector {
     return MultiVector(self_.g0.yx, self_.g4 * vec4<f32>(-1.0), self_.g3 * vec3<f32>(-1.0), self_.g2 * vec3<f32>(-1.0), self_.g1);
 }
@@ -10500,8 +10596,16 @@ fn point_at_infinity_right_complement(self_: PointAtInfinity) -> PlaneAtOrigin {
     return PlaneAtOrigin(self_.g0);
 }
 
+fn rotor_right_complement(self_: Rotor) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.w, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(-self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0));
+}
+
 fn scalar_right_complement(self_: Scalar) -> AntiScalar {
     return AntiScalar(self_.g0);
+}
+
+fn translator_right_complement(self_: Translator) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.w, 0.0), vec4<f32>(0.0), vec3<f32>(-self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0), vec4<f32>(0.0));
 }
 
 fn flector_left_bulk_dual(self_: Flector) -> Flector {
@@ -10572,6 +10676,10 @@ fn magnitude_left_weight_dual(self_: Magnitude) -> Scalar {
     return anti_scalar_left_complement(magnitude_weight(self_));
 }
 
+fn motor_left_weight_dual(self_: Motor) -> MultiVector {
+    return rotor_left_complement(motor_weight(self_));
+}
+
 fn multi_vector_left_weight_dual(self_: MultiVector) -> MultiVector {
     return multi_vector_left_complement(multi_vector_weight(self_));
 }
@@ -10590,6 +10698,10 @@ fn plane_at_origin_left_weight_dual(self_: PlaneAtOrigin) -> PointAtInfinity {
 
 fn point_left_weight_dual(self_: Point) -> Horizon {
     return origin_left_complement(point_weight(self_));
+}
+
+fn rotor_left_weight_dual(self_: Rotor) -> MultiVector {
+    return rotor_left_complement(rotor_weight(self_));
 }
 
 fn translator_left_weight_dual(self_: Translator) -> Scalar {
@@ -10664,6 +10776,10 @@ fn magnitude_right_weight_dual(self_: Magnitude) -> Scalar {
     return anti_scalar_right_complement(magnitude_weight(self_));
 }
 
+fn motor_right_weight_dual(self_: Motor) -> MultiVector {
+    return rotor_right_complement(motor_weight(self_));
+}
+
 fn multi_vector_right_weight_dual(self_: MultiVector) -> MultiVector {
     return multi_vector_right_complement(multi_vector_weight(self_));
 }
@@ -10682,6 +10798,10 @@ fn plane_at_origin_right_weight_dual(self_: PlaneAtOrigin) -> PointAtInfinity {
 
 fn point_right_weight_dual(self_: Point) -> Horizon {
     return origin_right_complement(point_weight(self_));
+}
+
+fn rotor_right_weight_dual(self_: Rotor) -> MultiVector {
+    return rotor_right_complement(rotor_weight(self_));
 }
 
 fn translator_right_weight_dual(self_: Translator) -> Scalar {
@@ -12500,6 +12620,10 @@ fn flector_line_at_origin_weight_contraction(self_: Flector, other: LineAtOrigin
     return flector_line_at_infinity_anti_wedge(self_, line_at_origin_right_weight_dual(other));
 }
 
+fn flector_motor_weight_contraction(self_: Flector, other: Motor) -> MultiVector {
+    return flector_multi_vector_anti_wedge(self_, motor_right_weight_dual(other));
+}
+
 fn flector_multi_vector_weight_contraction(self_: Flector, other: MultiVector) -> MultiVector {
     return flector_multi_vector_anti_wedge(self_, multi_vector_right_weight_dual(other));
 }
@@ -12520,12 +12644,24 @@ fn flector_point_weight_contraction(self_: Flector, other: Point) -> MultiVector
     return flector_horizon_anti_wedge(self_, point_right_weight_dual(other));
 }
 
+fn flector_rotor_weight_contraction(self_: Flector, other: Rotor) -> MultiVector {
+    return flector_multi_vector_anti_wedge(self_, rotor_right_weight_dual(other));
+}
+
 fn horizon_flector_weight_contraction(self_: Horizon, other: Flector) -> MultiVector {
     return horizon_flector_anti_wedge(self_, flector_right_weight_dual(other));
 }
 
+fn horizon_motor_weight_contraction(self_: Horizon, other: Motor) -> MultiVector {
+    return horizon_multi_vector_anti_wedge(self_, motor_right_weight_dual(other));
+}
+
 fn horizon_multi_vector_weight_contraction(self_: Horizon, other: MultiVector) -> MultiVector {
     return horizon_multi_vector_anti_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn horizon_rotor_weight_contraction(self_: Horizon, other: Rotor) -> MultiVector {
+    return horizon_multi_vector_anti_wedge(self_, rotor_right_weight_dual(other));
 }
 
 fn line_flector_weight_contraction(self_: Line, other: Flector) -> Point {
@@ -12540,6 +12676,10 @@ fn line_line_at_origin_weight_contraction(self_: Line, other: LineAtOrigin) -> S
     return line_line_at_infinity_anti_wedge(self_, line_at_origin_right_weight_dual(other));
 }
 
+fn line_motor_weight_contraction(self_: Line, other: Motor) -> MultiVector {
+    return line_multi_vector_anti_wedge(self_, motor_right_weight_dual(other));
+}
+
 fn line_multi_vector_weight_contraction(self_: Line, other: MultiVector) -> MultiVector {
     return line_multi_vector_anti_wedge(self_, multi_vector_right_weight_dual(other));
 }
@@ -12552,12 +12692,24 @@ fn line_point_weight_contraction(self_: Line, other: Point) -> PointAtInfinity {
     return line_horizon_anti_wedge(self_, point_right_weight_dual(other));
 }
 
+fn line_rotor_weight_contraction(self_: Line, other: Rotor) -> MultiVector {
+    return line_multi_vector_anti_wedge(self_, rotor_right_weight_dual(other));
+}
+
 fn line_at_infinity_flector_weight_contraction(self_: LineAtInfinity, other: Flector) -> PointAtInfinity {
     return line_at_infinity_flector_anti_wedge(self_, flector_right_weight_dual(other));
 }
 
+fn line_at_infinity_motor_weight_contraction(self_: LineAtInfinity, other: Motor) -> MultiVector {
+    return line_at_infinity_multi_vector_anti_wedge(self_, motor_right_weight_dual(other));
+}
+
 fn line_at_infinity_multi_vector_weight_contraction(self_: LineAtInfinity, other: MultiVector) -> MultiVector {
     return line_at_infinity_multi_vector_anti_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn line_at_infinity_rotor_weight_contraction(self_: LineAtInfinity, other: Rotor) -> MultiVector {
+    return line_at_infinity_multi_vector_anti_wedge(self_, rotor_right_weight_dual(other));
 }
 
 fn line_at_origin_flector_weight_contraction(self_: LineAtOrigin, other: Flector) -> Point {
@@ -12572,6 +12724,10 @@ fn line_at_origin_line_at_origin_weight_contraction(self_: LineAtOrigin, other: 
     return line_at_origin_line_at_infinity_anti_wedge(self_, line_at_origin_right_weight_dual(other));
 }
 
+fn line_at_origin_motor_weight_contraction(self_: LineAtOrigin, other: Motor) -> MultiVector {
+    return line_at_origin_multi_vector_anti_wedge(self_, motor_right_weight_dual(other));
+}
+
 fn line_at_origin_multi_vector_weight_contraction(self_: LineAtOrigin, other: MultiVector) -> MultiVector {
     return line_at_origin_multi_vector_anti_wedge(self_, multi_vector_right_weight_dual(other));
 }
@@ -12584,6 +12740,10 @@ fn line_at_origin_point_weight_contraction(self_: LineAtOrigin, other: Point) ->
     return line_at_origin_horizon_anti_wedge(self_, point_right_weight_dual(other));
 }
 
+fn line_at_origin_rotor_weight_contraction(self_: LineAtOrigin, other: Rotor) -> MultiVector {
+    return line_at_origin_multi_vector_anti_wedge(self_, rotor_right_weight_dual(other));
+}
+
 fn motor_flector_weight_contraction(self_: Motor, other: Flector) -> Flector {
     return motor_flector_anti_wedge(self_, flector_right_weight_dual(other));
 }
@@ -12594,6 +12754,10 @@ fn motor_line_weight_contraction(self_: Motor, other: Line) -> MultiVector {
 
 fn motor_line_at_origin_weight_contraction(self_: Motor, other: LineAtOrigin) -> MultiVector {
     return motor_line_at_infinity_anti_wedge(self_, line_at_origin_right_weight_dual(other));
+}
+
+fn motor_motor_weight_contraction(self_: Motor, other: Motor) -> MultiVector {
+    return motor_multi_vector_anti_wedge(self_, motor_right_weight_dual(other));
 }
 
 fn motor_multi_vector_weight_contraction(self_: Motor, other: MultiVector) -> MultiVector {
@@ -12616,6 +12780,10 @@ fn motor_point_weight_contraction(self_: Motor, other: Point) -> Flector {
     return motor_horizon_anti_wedge(self_, point_right_weight_dual(other));
 }
 
+fn motor_rotor_weight_contraction(self_: Motor, other: Rotor) -> MultiVector {
+    return motor_multi_vector_anti_wedge(self_, rotor_right_weight_dual(other));
+}
+
 fn motor_translator_weight_contraction(self_: Motor, other: Translator) -> Scalar {
     return motor_scalar_anti_wedge(self_, translator_right_weight_dual(other));
 }
@@ -12630,6 +12798,10 @@ fn multi_vector_line_weight_contraction(self_: MultiVector, other: Line) -> Mult
 
 fn multi_vector_line_at_origin_weight_contraction(self_: MultiVector, other: LineAtOrigin) -> MultiVector {
     return multi_vector_line_at_infinity_anti_wedge(self_, line_at_origin_right_weight_dual(other));
+}
+
+fn multi_vector_motor_weight_contraction(self_: MultiVector, other: Motor) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(self_, motor_right_weight_dual(other));
 }
 
 fn multi_vector_multi_vector_weight_contraction(self_: MultiVector, other: MultiVector) -> MultiVector {
@@ -12652,12 +12824,20 @@ fn multi_vector_point_weight_contraction(self_: MultiVector, other: Point) -> Mu
     return multi_vector_horizon_anti_wedge(self_, point_right_weight_dual(other));
 }
 
+fn multi_vector_rotor_weight_contraction(self_: MultiVector, other: Rotor) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(self_, rotor_right_weight_dual(other));
+}
+
 fn multi_vector_translator_weight_contraction(self_: MultiVector, other: Translator) -> Scalar {
     return multi_vector_scalar_anti_wedge(self_, translator_right_weight_dual(other));
 }
 
 fn origin_flector_weight_contraction(self_: Origin, other: Flector) -> Scalar {
     return origin_flector_anti_wedge(self_, flector_right_weight_dual(other));
+}
+
+fn origin_motor_weight_contraction(self_: Origin, other: Motor) -> MultiVector {
+    return origin_multi_vector_anti_wedge(self_, motor_right_weight_dual(other));
 }
 
 fn origin_multi_vector_weight_contraction(self_: Origin, other: MultiVector) -> MultiVector {
@@ -12672,6 +12852,10 @@ fn origin_point_weight_contraction(self_: Origin, other: Point) -> Scalar {
     return origin_horizon_anti_wedge(self_, point_right_weight_dual(other));
 }
 
+fn origin_rotor_weight_contraction(self_: Origin, other: Rotor) -> MultiVector {
+    return origin_multi_vector_anti_wedge(self_, rotor_right_weight_dual(other));
+}
+
 fn plane_flector_weight_contraction(self_: Plane, other: Flector) -> MultiVector {
     return plane_flector_anti_wedge(self_, flector_right_weight_dual(other));
 }
@@ -12682,6 +12866,10 @@ fn plane_line_weight_contraction(self_: Plane, other: Line) -> PointAtInfinity {
 
 fn plane_line_at_origin_weight_contraction(self_: Plane, other: LineAtOrigin) -> PointAtInfinity {
     return plane_line_at_infinity_anti_wedge(self_, line_at_origin_right_weight_dual(other));
+}
+
+fn plane_motor_weight_contraction(self_: Plane, other: Motor) -> MultiVector {
+    return plane_multi_vector_anti_wedge(self_, motor_right_weight_dual(other));
 }
 
 fn plane_multi_vector_weight_contraction(self_: Plane, other: MultiVector) -> MultiVector {
@@ -12704,6 +12892,10 @@ fn plane_point_weight_contraction(self_: Plane, other: Point) -> LineAtInfinity 
     return plane_horizon_anti_wedge(self_, point_right_weight_dual(other));
 }
 
+fn plane_rotor_weight_contraction(self_: Plane, other: Rotor) -> MultiVector {
+    return plane_multi_vector_anti_wedge(self_, rotor_right_weight_dual(other));
+}
+
 fn plane_at_origin_flector_weight_contraction(self_: PlaneAtOrigin, other: Flector) -> MultiVector {
     return plane_at_origin_flector_anti_wedge(self_, flector_right_weight_dual(other));
 }
@@ -12714,6 +12906,10 @@ fn plane_at_origin_line_weight_contraction(self_: PlaneAtOrigin, other: Line) ->
 
 fn plane_at_origin_line_at_origin_weight_contraction(self_: PlaneAtOrigin, other: LineAtOrigin) -> PointAtInfinity {
     return plane_at_origin_line_at_infinity_anti_wedge(self_, line_at_origin_right_weight_dual(other));
+}
+
+fn plane_at_origin_motor_weight_contraction(self_: PlaneAtOrigin, other: Motor) -> MultiVector {
+    return plane_at_origin_multi_vector_anti_wedge(self_, motor_right_weight_dual(other));
 }
 
 fn plane_at_origin_multi_vector_weight_contraction(self_: PlaneAtOrigin, other: MultiVector) -> MultiVector {
@@ -12736,8 +12932,16 @@ fn plane_at_origin_point_weight_contraction(self_: PlaneAtOrigin, other: Point) 
     return plane_at_origin_horizon_anti_wedge(self_, point_right_weight_dual(other));
 }
 
+fn plane_at_origin_rotor_weight_contraction(self_: PlaneAtOrigin, other: Rotor) -> MultiVector {
+    return plane_at_origin_multi_vector_anti_wedge(self_, rotor_right_weight_dual(other));
+}
+
 fn point_flector_weight_contraction(self_: Point, other: Flector) -> Scalar {
     return point_flector_anti_wedge(self_, flector_right_weight_dual(other));
+}
+
+fn point_motor_weight_contraction(self_: Point, other: Motor) -> MultiVector {
+    return point_multi_vector_anti_wedge(self_, motor_right_weight_dual(other));
 }
 
 fn point_multi_vector_weight_contraction(self_: Point, other: MultiVector) -> MultiVector {
@@ -12752,12 +12956,24 @@ fn point_point_weight_contraction(self_: Point, other: Point) -> Scalar {
     return point_horizon_anti_wedge(self_, point_right_weight_dual(other));
 }
 
+fn point_rotor_weight_contraction(self_: Point, other: Rotor) -> MultiVector {
+    return point_multi_vector_anti_wedge(self_, rotor_right_weight_dual(other));
+}
+
 fn point_at_infinity_flector_weight_contraction(self_: PointAtInfinity, other: Flector) -> Scalar {
     return point_at_infinity_flector_anti_wedge(self_, flector_right_weight_dual(other));
 }
 
+fn point_at_infinity_motor_weight_contraction(self_: PointAtInfinity, other: Motor) -> MultiVector {
+    return point_at_infinity_multi_vector_anti_wedge(self_, motor_right_weight_dual(other));
+}
+
 fn point_at_infinity_multi_vector_weight_contraction(self_: PointAtInfinity, other: MultiVector) -> MultiVector {
     return point_at_infinity_multi_vector_anti_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn point_at_infinity_rotor_weight_contraction(self_: PointAtInfinity, other: Rotor) -> MultiVector {
+    return point_at_infinity_multi_vector_anti_wedge(self_, rotor_right_weight_dual(other));
 }
 
 fn rotor_flector_weight_contraction(self_: Rotor, other: Flector) -> Flector {
@@ -12770,6 +12986,10 @@ fn rotor_line_weight_contraction(self_: Rotor, other: Line) -> MultiVector {
 
 fn rotor_line_at_origin_weight_contraction(self_: Rotor, other: LineAtOrigin) -> MultiVector {
     return rotor_line_at_infinity_anti_wedge(self_, line_at_origin_right_weight_dual(other));
+}
+
+fn rotor_motor_weight_contraction(self_: Rotor, other: Motor) -> MultiVector {
+    return rotor_multi_vector_anti_wedge(self_, motor_right_weight_dual(other));
 }
 
 fn rotor_multi_vector_weight_contraction(self_: Rotor, other: MultiVector) -> MultiVector {
@@ -12792,6 +13012,10 @@ fn rotor_point_weight_contraction(self_: Rotor, other: Point) -> Flector {
     return rotor_horizon_anti_wedge(self_, point_right_weight_dual(other));
 }
 
+fn rotor_rotor_weight_contraction(self_: Rotor, other: Rotor) -> MultiVector {
+    return rotor_multi_vector_anti_wedge(self_, rotor_right_weight_dual(other));
+}
+
 fn rotor_translator_weight_contraction(self_: Rotor, other: Translator) -> Scalar {
     return rotor_scalar_anti_wedge(self_, translator_right_weight_dual(other));
 }
@@ -12806,6 +13030,10 @@ fn translator_line_weight_contraction(self_: Translator, other: Line) -> LineAtI
 
 fn translator_line_at_origin_weight_contraction(self_: Translator, other: LineAtOrigin) -> LineAtInfinity {
     return translator_line_at_infinity_anti_wedge(self_, line_at_origin_right_weight_dual(other));
+}
+
+fn translator_motor_weight_contraction(self_: Translator, other: Motor) -> MultiVector {
+    return translator_multi_vector_anti_wedge(self_, motor_right_weight_dual(other));
 }
 
 fn translator_multi_vector_weight_contraction(self_: Translator, other: MultiVector) -> MultiVector {
@@ -12826,6 +13054,10 @@ fn translator_plane_at_origin_weight_contraction(self_: Translator, other: Plane
 
 fn translator_point_weight_contraction(self_: Translator, other: Point) -> Horizon {
     return translator_horizon_anti_wedge(self_, point_right_weight_dual(other));
+}
+
+fn translator_rotor_weight_contraction(self_: Translator, other: Rotor) -> MultiVector {
+    return translator_multi_vector_anti_wedge(self_, rotor_right_weight_dual(other));
 }
 
 fn translator_translator_weight_contraction(self_: Translator, other: Translator) -> Scalar {
@@ -13196,6 +13428,10 @@ fn flector_line_at_origin_weight_expansion(self_: Flector, other: LineAtOrigin) 
     return flector_line_at_infinity_wedge(self_, line_at_origin_right_weight_dual(other));
 }
 
+fn flector_motor_weight_expansion(self_: Flector, other: Motor) -> MultiVector {
+    return flector_multi_vector_wedge(self_, motor_right_weight_dual(other));
+}
+
 fn flector_multi_vector_weight_expansion(self_: Flector, other: MultiVector) -> MultiVector {
     return flector_multi_vector_wedge(self_, multi_vector_right_weight_dual(other));
 }
@@ -13216,6 +13452,10 @@ fn flector_point_weight_expansion(self_: Flector, other: Point) -> AntiScalar {
     return flector_horizon_wedge(self_, point_right_weight_dual(other));
 }
 
+fn flector_rotor_weight_expansion(self_: Flector, other: Rotor) -> MultiVector {
+    return flector_multi_vector_wedge(self_, rotor_right_weight_dual(other));
+}
+
 fn flector_translator_weight_expansion(self_: Flector, other: Translator) -> Flector {
     return flector_scalar_wedge(self_, translator_right_weight_dual(other));
 }
@@ -13224,8 +13464,16 @@ fn horizon_flector_weight_expansion(self_: Horizon, other: Flector) -> AntiScala
     return horizon_flector_wedge(self_, flector_right_weight_dual(other));
 }
 
+fn horizon_motor_weight_expansion(self_: Horizon, other: Motor) -> MultiVector {
+    return horizon_multi_vector_wedge(self_, motor_right_weight_dual(other));
+}
+
 fn horizon_multi_vector_weight_expansion(self_: Horizon, other: MultiVector) -> MultiVector {
     return horizon_multi_vector_wedge(self_, multi_vector_right_weight_dual(other));
+}
+
+fn horizon_rotor_weight_expansion(self_: Horizon, other: Rotor) -> MultiVector {
+    return horizon_multi_vector_wedge(self_, rotor_right_weight_dual(other));
 }
 
 fn horizon_translator_weight_expansion(self_: Horizon, other: Translator) -> Horizon {
@@ -13244,6 +13492,10 @@ fn line_line_at_origin_weight_expansion(self_: Line, other: LineAtOrigin) -> Ant
     return line_line_at_infinity_wedge(self_, line_at_origin_right_weight_dual(other));
 }
 
+fn line_motor_weight_expansion(self_: Line, other: Motor) -> MultiVector {
+    return line_multi_vector_wedge(self_, motor_right_weight_dual(other));
+}
+
 fn line_multi_vector_weight_expansion(self_: Line, other: MultiVector) -> MultiVector {
     return line_multi_vector_wedge(self_, multi_vector_right_weight_dual(other));
 }
@@ -13256,12 +13508,20 @@ fn line_plane_at_origin_weight_expansion(self_: Line, other: PlaneAtOrigin) -> P
     return line_point_at_infinity_wedge(self_, plane_at_origin_right_weight_dual(other));
 }
 
+fn line_rotor_weight_expansion(self_: Line, other: Rotor) -> MultiVector {
+    return line_multi_vector_wedge(self_, rotor_right_weight_dual(other));
+}
+
 fn line_translator_weight_expansion(self_: Line, other: Translator) -> Line {
     return line_scalar_wedge(self_, translator_right_weight_dual(other));
 }
 
 fn line_at_infinity_flector_weight_expansion(self_: LineAtInfinity, other: Flector) -> Plane {
     return line_at_infinity_flector_wedge(self_, flector_right_weight_dual(other));
+}
+
+fn line_at_infinity_motor_weight_expansion(self_: LineAtInfinity, other: Motor) -> MultiVector {
+    return line_at_infinity_multi_vector_wedge(self_, motor_right_weight_dual(other));
 }
 
 fn line_at_infinity_multi_vector_weight_expansion(self_: LineAtInfinity, other: MultiVector) -> MultiVector {
@@ -13274,6 +13534,10 @@ fn line_at_infinity_plane_weight_expansion(self_: LineAtInfinity, other: Plane) 
 
 fn line_at_infinity_plane_at_origin_weight_expansion(self_: LineAtInfinity, other: PlaneAtOrigin) -> Horizon {
     return line_at_infinity_point_at_infinity_wedge(self_, plane_at_origin_right_weight_dual(other));
+}
+
+fn line_at_infinity_rotor_weight_expansion(self_: LineAtInfinity, other: Rotor) -> MultiVector {
+    return line_at_infinity_multi_vector_wedge(self_, rotor_right_weight_dual(other));
 }
 
 fn line_at_infinity_translator_weight_expansion(self_: LineAtInfinity, other: Translator) -> LineAtInfinity {
@@ -13292,6 +13556,10 @@ fn line_at_origin_line_at_origin_weight_expansion(self_: LineAtOrigin, other: Li
     return line_at_origin_line_at_infinity_wedge(self_, line_at_origin_right_weight_dual(other));
 }
 
+fn line_at_origin_motor_weight_expansion(self_: LineAtOrigin, other: Motor) -> MultiVector {
+    return line_at_origin_multi_vector_wedge(self_, motor_right_weight_dual(other));
+}
+
 fn line_at_origin_multi_vector_weight_expansion(self_: LineAtOrigin, other: MultiVector) -> MultiVector {
     return line_at_origin_multi_vector_wedge(self_, multi_vector_right_weight_dual(other));
 }
@@ -13302,6 +13570,10 @@ fn line_at_origin_plane_weight_expansion(self_: LineAtOrigin, other: Plane) -> P
 
 fn line_at_origin_plane_at_origin_weight_expansion(self_: LineAtOrigin, other: PlaneAtOrigin) -> PlaneAtOrigin {
     return line_at_origin_point_at_infinity_wedge(self_, plane_at_origin_right_weight_dual(other));
+}
+
+fn line_at_origin_rotor_weight_expansion(self_: LineAtOrigin, other: Rotor) -> MultiVector {
+    return line_at_origin_multi_vector_wedge(self_, rotor_right_weight_dual(other));
 }
 
 fn line_at_origin_translator_weight_expansion(self_: LineAtOrigin, other: Translator) -> LineAtOrigin {
@@ -13320,6 +13592,10 @@ fn motor_line_at_origin_weight_expansion(self_: Motor, other: LineAtOrigin) -> A
     return motor_line_at_infinity_wedge(self_, line_at_origin_right_weight_dual(other));
 }
 
+fn motor_motor_weight_expansion(self_: Motor, other: Motor) -> MultiVector {
+    return motor_multi_vector_wedge(self_, motor_right_weight_dual(other));
+}
+
 fn motor_multi_vector_weight_expansion(self_: Motor, other: MultiVector) -> MultiVector {
     return motor_multi_vector_wedge(self_, multi_vector_right_weight_dual(other));
 }
@@ -13330,6 +13606,10 @@ fn motor_plane_weight_expansion(self_: Motor, other: Plane) -> Plane {
 
 fn motor_plane_at_origin_weight_expansion(self_: Motor, other: PlaneAtOrigin) -> Plane {
     return motor_point_at_infinity_wedge(self_, plane_at_origin_right_weight_dual(other));
+}
+
+fn motor_rotor_weight_expansion(self_: Motor, other: Rotor) -> MultiVector {
+    return motor_multi_vector_wedge(self_, rotor_right_weight_dual(other));
 }
 
 fn motor_translator_weight_expansion(self_: Motor, other: Translator) -> Motor {
@@ -13346,6 +13626,10 @@ fn multi_vector_line_weight_expansion(self_: MultiVector, other: Line) -> MultiV
 
 fn multi_vector_line_at_origin_weight_expansion(self_: MultiVector, other: LineAtOrigin) -> MultiVector {
     return multi_vector_line_at_infinity_wedge(self_, line_at_origin_right_weight_dual(other));
+}
+
+fn multi_vector_motor_weight_expansion(self_: MultiVector, other: Motor) -> MultiVector {
+    return multi_vector_multi_vector_wedge(self_, motor_right_weight_dual(other));
 }
 
 fn multi_vector_multi_vector_weight_expansion(self_: MultiVector, other: MultiVector) -> MultiVector {
@@ -13368,6 +13652,10 @@ fn multi_vector_point_weight_expansion(self_: MultiVector, other: Point) -> Mult
     return multi_vector_horizon_wedge(self_, point_right_weight_dual(other));
 }
 
+fn multi_vector_rotor_weight_expansion(self_: MultiVector, other: Rotor) -> MultiVector {
+    return multi_vector_multi_vector_wedge(self_, rotor_right_weight_dual(other));
+}
+
 fn multi_vector_translator_weight_expansion(self_: MultiVector, other: Translator) -> MultiVector {
     return multi_vector_scalar_wedge(self_, translator_right_weight_dual(other));
 }
@@ -13382,6 +13670,10 @@ fn origin_line_weight_expansion(self_: Origin, other: Line) -> PlaneAtOrigin {
 
 fn origin_line_at_origin_weight_expansion(self_: Origin, other: LineAtOrigin) -> PlaneAtOrigin {
     return origin_line_at_infinity_wedge(self_, line_at_origin_right_weight_dual(other));
+}
+
+fn origin_motor_weight_expansion(self_: Origin, other: Motor) -> MultiVector {
+    return origin_multi_vector_wedge(self_, motor_right_weight_dual(other));
 }
 
 fn origin_multi_vector_weight_expansion(self_: Origin, other: MultiVector) -> MultiVector {
@@ -13404,12 +13696,20 @@ fn origin_point_weight_expansion(self_: Origin, other: Point) -> AntiScalar {
     return origin_horizon_wedge(self_, point_right_weight_dual(other));
 }
 
+fn origin_rotor_weight_expansion(self_: Origin, other: Rotor) -> MultiVector {
+    return origin_multi_vector_wedge(self_, rotor_right_weight_dual(other));
+}
+
 fn origin_translator_weight_expansion(self_: Origin, other: Translator) -> Origin {
     return origin_scalar_wedge(self_, translator_right_weight_dual(other));
 }
 
 fn plane_flector_weight_expansion(self_: Plane, other: Flector) -> AntiScalar {
     return plane_flector_wedge(self_, flector_right_weight_dual(other));
+}
+
+fn plane_motor_weight_expansion(self_: Plane, other: Motor) -> MultiVector {
+    return plane_multi_vector_wedge(self_, motor_right_weight_dual(other));
 }
 
 fn plane_multi_vector_weight_expansion(self_: Plane, other: MultiVector) -> MultiVector {
@@ -13424,12 +13724,20 @@ fn plane_plane_at_origin_weight_expansion(self_: Plane, other: PlaneAtOrigin) ->
     return plane_point_at_infinity_wedge(self_, plane_at_origin_right_weight_dual(other));
 }
 
+fn plane_rotor_weight_expansion(self_: Plane, other: Rotor) -> MultiVector {
+    return plane_multi_vector_wedge(self_, rotor_right_weight_dual(other));
+}
+
 fn plane_translator_weight_expansion(self_: Plane, other: Translator) -> Plane {
     return plane_scalar_wedge(self_, translator_right_weight_dual(other));
 }
 
 fn plane_at_origin_flector_weight_expansion(self_: PlaneAtOrigin, other: Flector) -> AntiScalar {
     return plane_at_origin_flector_wedge(self_, flector_right_weight_dual(other));
+}
+
+fn plane_at_origin_motor_weight_expansion(self_: PlaneAtOrigin, other: Motor) -> MultiVector {
+    return plane_at_origin_multi_vector_wedge(self_, motor_right_weight_dual(other));
 }
 
 fn plane_at_origin_multi_vector_weight_expansion(self_: PlaneAtOrigin, other: MultiVector) -> MultiVector {
@@ -13442,6 +13750,10 @@ fn plane_at_origin_plane_weight_expansion(self_: PlaneAtOrigin, other: Plane) ->
 
 fn plane_at_origin_plane_at_origin_weight_expansion(self_: PlaneAtOrigin, other: PlaneAtOrigin) -> AntiScalar {
     return plane_at_origin_point_at_infinity_wedge(self_, plane_at_origin_right_weight_dual(other));
+}
+
+fn plane_at_origin_rotor_weight_expansion(self_: PlaneAtOrigin, other: Rotor) -> MultiVector {
+    return plane_at_origin_multi_vector_wedge(self_, rotor_right_weight_dual(other));
 }
 
 fn plane_at_origin_translator_weight_expansion(self_: PlaneAtOrigin, other: Translator) -> PlaneAtOrigin {
@@ -13458,6 +13770,10 @@ fn point_line_weight_expansion(self_: Point, other: Line) -> Plane {
 
 fn point_line_at_origin_weight_expansion(self_: Point, other: LineAtOrigin) -> Plane {
     return point_line_at_infinity_wedge(self_, line_at_origin_right_weight_dual(other));
+}
+
+fn point_motor_weight_expansion(self_: Point, other: Motor) -> MultiVector {
+    return point_multi_vector_wedge(self_, motor_right_weight_dual(other));
 }
 
 fn point_multi_vector_weight_expansion(self_: Point, other: MultiVector) -> MultiVector {
@@ -13480,6 +13796,10 @@ fn point_point_weight_expansion(self_: Point, other: Point) -> AntiScalar {
     return point_horizon_wedge(self_, point_right_weight_dual(other));
 }
 
+fn point_rotor_weight_expansion(self_: Point, other: Rotor) -> MultiVector {
+    return point_multi_vector_wedge(self_, rotor_right_weight_dual(other));
+}
+
 fn point_translator_weight_expansion(self_: Point, other: Translator) -> Point {
     return point_scalar_wedge(self_, translator_right_weight_dual(other));
 }
@@ -13496,6 +13816,10 @@ fn point_at_infinity_line_at_origin_weight_expansion(self_: PointAtInfinity, oth
     return point_at_infinity_line_at_infinity_wedge(self_, line_at_origin_right_weight_dual(other));
 }
 
+fn point_at_infinity_motor_weight_expansion(self_: PointAtInfinity, other: Motor) -> MultiVector {
+    return point_at_infinity_multi_vector_wedge(self_, motor_right_weight_dual(other));
+}
+
 fn point_at_infinity_multi_vector_weight_expansion(self_: PointAtInfinity, other: MultiVector) -> MultiVector {
     return point_at_infinity_multi_vector_wedge(self_, multi_vector_right_weight_dual(other));
 }
@@ -13506,6 +13830,10 @@ fn point_at_infinity_plane_weight_expansion(self_: PointAtInfinity, other: Plane
 
 fn point_at_infinity_plane_at_origin_weight_expansion(self_: PointAtInfinity, other: PlaneAtOrigin) -> LineAtInfinity {
     return point_at_infinity_point_at_infinity_wedge(self_, plane_at_origin_right_weight_dual(other));
+}
+
+fn point_at_infinity_rotor_weight_expansion(self_: PointAtInfinity, other: Rotor) -> MultiVector {
+    return point_at_infinity_multi_vector_wedge(self_, rotor_right_weight_dual(other));
 }
 
 fn point_at_infinity_translator_weight_expansion(self_: PointAtInfinity, other: Translator) -> PointAtInfinity {
@@ -13524,6 +13852,10 @@ fn rotor_line_at_origin_weight_expansion(self_: Rotor, other: LineAtOrigin) -> A
     return rotor_line_at_infinity_wedge(self_, line_at_origin_right_weight_dual(other));
 }
 
+fn rotor_motor_weight_expansion(self_: Rotor, other: Motor) -> MultiVector {
+    return rotor_multi_vector_wedge(self_, motor_right_weight_dual(other));
+}
+
 fn rotor_multi_vector_weight_expansion(self_: Rotor, other: MultiVector) -> MultiVector {
     return rotor_multi_vector_wedge(self_, multi_vector_right_weight_dual(other));
 }
@@ -13536,12 +13868,20 @@ fn rotor_plane_at_origin_weight_expansion(self_: Rotor, other: PlaneAtOrigin) ->
     return rotor_point_at_infinity_wedge(self_, plane_at_origin_right_weight_dual(other));
 }
 
+fn rotor_rotor_weight_expansion(self_: Rotor, other: Rotor) -> MultiVector {
+    return rotor_multi_vector_wedge(self_, rotor_right_weight_dual(other));
+}
+
 fn rotor_translator_weight_expansion(self_: Rotor, other: Translator) -> Rotor {
     return rotor_scalar_wedge(self_, translator_right_weight_dual(other));
 }
 
 fn translator_flector_weight_expansion(self_: Translator, other: Flector) -> Plane {
     return translator_flector_wedge(self_, flector_right_weight_dual(other));
+}
+
+fn translator_motor_weight_expansion(self_: Translator, other: Motor) -> MultiVector {
+    return translator_multi_vector_wedge(self_, motor_right_weight_dual(other));
 }
 
 fn translator_multi_vector_weight_expansion(self_: Translator, other: MultiVector) -> MultiVector {
@@ -13554,6 +13894,10 @@ fn translator_plane_weight_expansion(self_: Translator, other: Plane) -> Horizon
 
 fn translator_plane_at_origin_weight_expansion(self_: Translator, other: PlaneAtOrigin) -> Horizon {
     return translator_point_at_infinity_wedge(self_, plane_at_origin_right_weight_dual(other));
+}
+
+fn translator_rotor_weight_expansion(self_: Translator, other: Rotor) -> MultiVector {
+    return translator_multi_vector_wedge(self_, rotor_right_weight_dual(other));
 }
 
 fn translator_translator_weight_expansion(self_: Translator, other: Translator) -> Translator {
@@ -14004,6 +14348,10 @@ fn flector_line_at_origin_project_orthogonally_onto(self_: Flector, other: LineA
     return line_at_origin_plane_anti_wedge(other, flector_line_at_origin_weight_expansion(self_, other));
 }
 
+fn flector_motor_project_orthogonally_onto(self_: Flector, other: Motor) -> MultiVector {
+    return motor_multi_vector_anti_wedge(other, flector_motor_weight_expansion(self_, other));
+}
+
 fn flector_multi_vector_project_orthogonally_onto(self_: Flector, other: MultiVector) -> MultiVector {
     return multi_vector_multi_vector_anti_wedge(other, flector_multi_vector_weight_expansion(self_, other));
 }
@@ -14024,6 +14372,10 @@ fn flector_point_project_orthogonally_onto(self_: Flector, other: Point) -> Poin
     return point_anti_scalar_anti_wedge(other, flector_point_weight_expansion(self_, other));
 }
 
+fn flector_rotor_project_orthogonally_onto(self_: Flector, other: Rotor) -> MultiVector {
+    return rotor_multi_vector_anti_wedge(other, flector_rotor_weight_expansion(self_, other));
+}
+
 fn flector_translator_project_orthogonally_onto(self_: Flector, other: Translator) -> Flector {
     return translator_flector_anti_wedge(other, flector_translator_weight_expansion(self_, other));
 }
@@ -14032,8 +14384,16 @@ fn horizon_flector_project_orthogonally_onto(self_: Horizon, other: Flector) -> 
     return flector_anti_scalar_anti_wedge(other, horizon_flector_weight_expansion(self_, other));
 }
 
+fn horizon_motor_project_orthogonally_onto(self_: Horizon, other: Motor) -> MultiVector {
+    return motor_multi_vector_anti_wedge(other, horizon_motor_weight_expansion(self_, other));
+}
+
 fn horizon_multi_vector_project_orthogonally_onto(self_: Horizon, other: MultiVector) -> MultiVector {
     return multi_vector_multi_vector_anti_wedge(other, horizon_multi_vector_weight_expansion(self_, other));
+}
+
+fn horizon_rotor_project_orthogonally_onto(self_: Horizon, other: Rotor) -> MultiVector {
+    return rotor_multi_vector_anti_wedge(other, horizon_rotor_weight_expansion(self_, other));
 }
 
 fn horizon_translator_project_orthogonally_onto(self_: Horizon, other: Translator) -> Horizon {
@@ -14052,6 +14412,10 @@ fn line_line_at_origin_project_orthogonally_onto(self_: Line, other: LineAtOrigi
     return line_at_origin_anti_scalar_anti_wedge(other, line_line_at_origin_weight_expansion(self_, other));
 }
 
+fn line_motor_project_orthogonally_onto(self_: Line, other: Motor) -> MultiVector {
+    return motor_multi_vector_anti_wedge(other, line_motor_weight_expansion(self_, other));
+}
+
 fn line_multi_vector_project_orthogonally_onto(self_: Line, other: MultiVector) -> MultiVector {
     return multi_vector_multi_vector_anti_wedge(other, line_multi_vector_weight_expansion(self_, other));
 }
@@ -14064,12 +14428,20 @@ fn line_plane_at_origin_project_orthogonally_onto(self_: Line, other: PlaneAtOri
     return plane_at_origin_plane_anti_wedge(other, line_plane_at_origin_weight_expansion(self_, other));
 }
 
+fn line_rotor_project_orthogonally_onto(self_: Line, other: Rotor) -> MultiVector {
+    return rotor_multi_vector_anti_wedge(other, line_rotor_weight_expansion(self_, other));
+}
+
 fn line_translator_project_orthogonally_onto(self_: Line, other: Translator) -> MultiVector {
     return translator_line_anti_wedge(other, line_translator_weight_expansion(self_, other));
 }
 
 fn line_at_infinity_flector_project_orthogonally_onto(self_: LineAtInfinity, other: Flector) -> MultiVector {
     return flector_plane_anti_wedge(other, line_at_infinity_flector_weight_expansion(self_, other));
+}
+
+fn line_at_infinity_motor_project_orthogonally_onto(self_: LineAtInfinity, other: Motor) -> MultiVector {
+    return motor_multi_vector_anti_wedge(other, line_at_infinity_motor_weight_expansion(self_, other));
 }
 
 fn line_at_infinity_multi_vector_project_orthogonally_onto(self_: LineAtInfinity, other: MultiVector) -> MultiVector {
@@ -14082,6 +14454,10 @@ fn line_at_infinity_plane_project_orthogonally_onto(self_: LineAtInfinity, other
 
 fn line_at_infinity_plane_at_origin_project_orthogonally_onto(self_: LineAtInfinity, other: PlaneAtOrigin) -> LineAtInfinity {
     return plane_at_origin_horizon_anti_wedge(other, line_at_infinity_plane_at_origin_weight_expansion(self_, other));
+}
+
+fn line_at_infinity_rotor_project_orthogonally_onto(self_: LineAtInfinity, other: Rotor) -> MultiVector {
+    return rotor_multi_vector_anti_wedge(other, line_at_infinity_rotor_weight_expansion(self_, other));
 }
 
 fn line_at_infinity_translator_project_orthogonally_onto(self_: LineAtInfinity, other: Translator) -> LineAtInfinity {
@@ -14100,6 +14476,10 @@ fn line_at_origin_line_at_origin_project_orthogonally_onto(self_: LineAtOrigin, 
     return line_at_origin_anti_scalar_anti_wedge(other, line_at_origin_line_at_origin_weight_expansion(self_, other));
 }
 
+fn line_at_origin_motor_project_orthogonally_onto(self_: LineAtOrigin, other: Motor) -> MultiVector {
+    return motor_multi_vector_anti_wedge(other, line_at_origin_motor_weight_expansion(self_, other));
+}
+
 fn line_at_origin_multi_vector_project_orthogonally_onto(self_: LineAtOrigin, other: MultiVector) -> MultiVector {
     return multi_vector_multi_vector_anti_wedge(other, line_at_origin_multi_vector_weight_expansion(self_, other));
 }
@@ -14110,6 +14490,10 @@ fn line_at_origin_plane_project_orthogonally_onto(self_: LineAtOrigin, other: Pl
 
 fn line_at_origin_plane_at_origin_project_orthogonally_onto(self_: LineAtOrigin, other: PlaneAtOrigin) -> LineAtOrigin {
     return plane_at_origin_plane_at_origin_anti_wedge(other, line_at_origin_plane_at_origin_weight_expansion(self_, other));
+}
+
+fn line_at_origin_rotor_project_orthogonally_onto(self_: LineAtOrigin, other: Rotor) -> MultiVector {
+    return rotor_multi_vector_anti_wedge(other, line_at_origin_rotor_weight_expansion(self_, other));
 }
 
 fn line_at_origin_translator_project_orthogonally_onto(self_: LineAtOrigin, other: Translator) -> MultiVector {
@@ -14128,6 +14512,10 @@ fn motor_line_at_origin_project_orthogonally_onto(self_: Motor, other: LineAtOri
     return line_at_origin_anti_scalar_anti_wedge(other, motor_line_at_origin_weight_expansion(self_, other));
 }
 
+fn motor_motor_project_orthogonally_onto(self_: Motor, other: Motor) -> MultiVector {
+    return motor_multi_vector_anti_wedge(other, motor_motor_weight_expansion(self_, other));
+}
+
 fn motor_multi_vector_project_orthogonally_onto(self_: Motor, other: MultiVector) -> MultiVector {
     return multi_vector_multi_vector_anti_wedge(other, motor_multi_vector_weight_expansion(self_, other));
 }
@@ -14138,6 +14526,10 @@ fn motor_plane_project_orthogonally_onto(self_: Motor, other: Plane) -> Line {
 
 fn motor_plane_at_origin_project_orthogonally_onto(self_: Motor, other: PlaneAtOrigin) -> Line {
     return plane_at_origin_plane_anti_wedge(other, motor_plane_at_origin_weight_expansion(self_, other));
+}
+
+fn motor_rotor_project_orthogonally_onto(self_: Motor, other: Rotor) -> MultiVector {
+    return rotor_multi_vector_anti_wedge(other, motor_rotor_weight_expansion(self_, other));
 }
 
 fn motor_translator_project_orthogonally_onto(self_: Motor, other: Translator) -> MultiVector {
@@ -14154,6 +14546,10 @@ fn multi_vector_line_project_orthogonally_onto(self_: MultiVector, other: Line) 
 
 fn multi_vector_line_at_origin_project_orthogonally_onto(self_: MultiVector, other: LineAtOrigin) -> MultiVector {
     return line_at_origin_multi_vector_anti_wedge(other, multi_vector_line_at_origin_weight_expansion(self_, other));
+}
+
+fn multi_vector_motor_project_orthogonally_onto(self_: MultiVector, other: Motor) -> MultiVector {
+    return motor_multi_vector_anti_wedge(other, multi_vector_motor_weight_expansion(self_, other));
 }
 
 fn multi_vector_multi_vector_project_orthogonally_onto(self_: MultiVector, other: MultiVector) -> MultiVector {
@@ -14176,6 +14572,10 @@ fn multi_vector_point_project_orthogonally_onto(self_: MultiVector, other: Point
     return point_multi_vector_anti_wedge(other, multi_vector_point_weight_expansion(self_, other));
 }
 
+fn multi_vector_rotor_project_orthogonally_onto(self_: MultiVector, other: Rotor) -> MultiVector {
+    return rotor_multi_vector_anti_wedge(other, multi_vector_rotor_weight_expansion(self_, other));
+}
+
 fn multi_vector_translator_project_orthogonally_onto(self_: MultiVector, other: Translator) -> MultiVector {
     return translator_multi_vector_anti_wedge(other, multi_vector_translator_weight_expansion(self_, other));
 }
@@ -14190,6 +14590,10 @@ fn origin_line_project_orthogonally_onto(self_: Origin, other: Line) -> Point {
 
 fn origin_line_at_origin_project_orthogonally_onto(self_: Origin, other: LineAtOrigin) -> Origin {
     return line_at_origin_plane_at_origin_anti_wedge(other, origin_line_at_origin_weight_expansion(self_, other));
+}
+
+fn origin_motor_project_orthogonally_onto(self_: Origin, other: Motor) -> MultiVector {
+    return motor_multi_vector_anti_wedge(other, origin_motor_weight_expansion(self_, other));
 }
 
 fn origin_multi_vector_project_orthogonally_onto(self_: Origin, other: MultiVector) -> MultiVector {
@@ -14212,12 +14616,20 @@ fn origin_point_project_orthogonally_onto(self_: Origin, other: Point) -> Point 
     return point_anti_scalar_anti_wedge(other, origin_point_weight_expansion(self_, other));
 }
 
+fn origin_rotor_project_orthogonally_onto(self_: Origin, other: Rotor) -> MultiVector {
+    return rotor_multi_vector_anti_wedge(other, origin_rotor_weight_expansion(self_, other));
+}
+
 fn origin_translator_project_orthogonally_onto(self_: Origin, other: Translator) -> Origin {
     return translator_origin_anti_wedge(other, origin_translator_weight_expansion(self_, other));
 }
 
 fn plane_flector_project_orthogonally_onto(self_: Plane, other: Flector) -> Flector {
     return flector_anti_scalar_anti_wedge(other, plane_flector_weight_expansion(self_, other));
+}
+
+fn plane_motor_project_orthogonally_onto(self_: Plane, other: Motor) -> MultiVector {
+    return motor_multi_vector_anti_wedge(other, plane_motor_weight_expansion(self_, other));
 }
 
 fn plane_multi_vector_project_orthogonally_onto(self_: Plane, other: MultiVector) -> MultiVector {
@@ -14232,12 +14644,20 @@ fn plane_plane_at_origin_project_orthogonally_onto(self_: Plane, other: PlaneAtO
     return plane_at_origin_anti_scalar_anti_wedge(other, plane_plane_at_origin_weight_expansion(self_, other));
 }
 
+fn plane_rotor_project_orthogonally_onto(self_: Plane, other: Rotor) -> MultiVector {
+    return rotor_multi_vector_anti_wedge(other, plane_rotor_weight_expansion(self_, other));
+}
+
 fn plane_translator_project_orthogonally_onto(self_: Plane, other: Translator) -> Flector {
     return translator_plane_anti_wedge(other, plane_translator_weight_expansion(self_, other));
 }
 
 fn plane_at_origin_flector_project_orthogonally_onto(self_: PlaneAtOrigin, other: Flector) -> Flector {
     return flector_anti_scalar_anti_wedge(other, plane_at_origin_flector_weight_expansion(self_, other));
+}
+
+fn plane_at_origin_motor_project_orthogonally_onto(self_: PlaneAtOrigin, other: Motor) -> MultiVector {
+    return motor_multi_vector_anti_wedge(other, plane_at_origin_motor_weight_expansion(self_, other));
 }
 
 fn plane_at_origin_multi_vector_project_orthogonally_onto(self_: PlaneAtOrigin, other: MultiVector) -> MultiVector {
@@ -14250,6 +14670,10 @@ fn plane_at_origin_plane_project_orthogonally_onto(self_: PlaneAtOrigin, other: 
 
 fn plane_at_origin_plane_at_origin_project_orthogonally_onto(self_: PlaneAtOrigin, other: PlaneAtOrigin) -> PlaneAtOrigin {
     return plane_at_origin_anti_scalar_anti_wedge(other, plane_at_origin_plane_at_origin_weight_expansion(self_, other));
+}
+
+fn plane_at_origin_rotor_project_orthogonally_onto(self_: PlaneAtOrigin, other: Rotor) -> MultiVector {
+    return rotor_multi_vector_anti_wedge(other, plane_at_origin_rotor_weight_expansion(self_, other));
 }
 
 fn plane_at_origin_translator_project_orthogonally_onto(self_: PlaneAtOrigin, other: Translator) -> Flector {
@@ -14266,6 +14690,10 @@ fn point_line_project_orthogonally_onto(self_: Point, other: Line) -> Point {
 
 fn point_line_at_origin_project_orthogonally_onto(self_: Point, other: LineAtOrigin) -> Point {
     return line_at_origin_plane_anti_wedge(other, point_line_at_origin_weight_expansion(self_, other));
+}
+
+fn point_motor_project_orthogonally_onto(self_: Point, other: Motor) -> MultiVector {
+    return motor_multi_vector_anti_wedge(other, point_motor_weight_expansion(self_, other));
 }
 
 fn point_multi_vector_project_orthogonally_onto(self_: Point, other: MultiVector) -> MultiVector {
@@ -14288,6 +14716,10 @@ fn point_point_project_orthogonally_onto(self_: Point, other: Point) -> Point {
     return point_anti_scalar_anti_wedge(other, point_point_weight_expansion(self_, other));
 }
 
+fn point_rotor_project_orthogonally_onto(self_: Point, other: Rotor) -> MultiVector {
+    return rotor_multi_vector_anti_wedge(other, point_rotor_weight_expansion(self_, other));
+}
+
 fn point_translator_project_orthogonally_onto(self_: Point, other: Translator) -> Point {
     return translator_point_anti_wedge(other, point_translator_weight_expansion(self_, other));
 }
@@ -14304,6 +14736,10 @@ fn point_at_infinity_line_at_origin_project_orthogonally_onto(self_: PointAtInfi
     return line_at_origin_horizon_anti_wedge(other, point_at_infinity_line_at_origin_weight_expansion(self_, other));
 }
 
+fn point_at_infinity_motor_project_orthogonally_onto(self_: PointAtInfinity, other: Motor) -> MultiVector {
+    return motor_multi_vector_anti_wedge(other, point_at_infinity_motor_weight_expansion(self_, other));
+}
+
 fn point_at_infinity_multi_vector_project_orthogonally_onto(self_: PointAtInfinity, other: MultiVector) -> MultiVector {
     return multi_vector_multi_vector_anti_wedge(other, point_at_infinity_multi_vector_weight_expansion(self_, other));
 }
@@ -14314,6 +14750,10 @@ fn point_at_infinity_plane_project_orthogonally_onto(self_: PointAtInfinity, oth
 
 fn point_at_infinity_plane_at_origin_project_orthogonally_onto(self_: PointAtInfinity, other: PlaneAtOrigin) -> PointAtInfinity {
     return plane_at_origin_line_at_infinity_anti_wedge(other, point_at_infinity_plane_at_origin_weight_expansion(self_, other));
+}
+
+fn point_at_infinity_rotor_project_orthogonally_onto(self_: PointAtInfinity, other: Rotor) -> MultiVector {
+    return rotor_multi_vector_anti_wedge(other, point_at_infinity_rotor_weight_expansion(self_, other));
 }
 
 fn point_at_infinity_translator_project_orthogonally_onto(self_: PointAtInfinity, other: Translator) -> PointAtInfinity {
@@ -14332,6 +14772,10 @@ fn rotor_line_at_origin_project_orthogonally_onto(self_: Rotor, other: LineAtOri
     return line_at_origin_anti_scalar_anti_wedge(other, rotor_line_at_origin_weight_expansion(self_, other));
 }
 
+fn rotor_motor_project_orthogonally_onto(self_: Rotor, other: Motor) -> MultiVector {
+    return motor_multi_vector_anti_wedge(other, rotor_motor_weight_expansion(self_, other));
+}
+
 fn rotor_multi_vector_project_orthogonally_onto(self_: Rotor, other: MultiVector) -> MultiVector {
     return multi_vector_multi_vector_anti_wedge(other, rotor_multi_vector_weight_expansion(self_, other));
 }
@@ -14344,12 +14788,20 @@ fn rotor_plane_at_origin_project_orthogonally_onto(self_: Rotor, other: PlaneAtO
     return plane_at_origin_plane_at_origin_anti_wedge(other, rotor_plane_at_origin_weight_expansion(self_, other));
 }
 
+fn rotor_rotor_project_orthogonally_onto(self_: Rotor, other: Rotor) -> MultiVector {
+    return rotor_multi_vector_anti_wedge(other, rotor_rotor_weight_expansion(self_, other));
+}
+
 fn rotor_translator_project_orthogonally_onto(self_: Rotor, other: Translator) -> MultiVector {
     return translator_rotor_anti_wedge(other, rotor_translator_weight_expansion(self_, other));
 }
 
 fn translator_flector_project_orthogonally_onto(self_: Translator, other: Flector) -> MultiVector {
     return flector_plane_anti_wedge(other, translator_flector_weight_expansion(self_, other));
+}
+
+fn translator_motor_project_orthogonally_onto(self_: Translator, other: Motor) -> MultiVector {
+    return motor_multi_vector_anti_wedge(other, translator_motor_weight_expansion(self_, other));
 }
 
 fn translator_multi_vector_project_orthogonally_onto(self_: Translator, other: MultiVector) -> MultiVector {
@@ -14362,6 +14814,10 @@ fn translator_plane_project_orthogonally_onto(self_: Translator, other: Plane) -
 
 fn translator_plane_at_origin_project_orthogonally_onto(self_: Translator, other: PlaneAtOrigin) -> LineAtInfinity {
     return plane_at_origin_horizon_anti_wedge(other, translator_plane_at_origin_weight_expansion(self_, other));
+}
+
+fn translator_rotor_project_orthogonally_onto(self_: Translator, other: Rotor) -> MultiVector {
+    return rotor_multi_vector_anti_wedge(other, translator_rotor_weight_expansion(self_, other));
 }
 
 fn translator_translator_project_orthogonally_onto(self_: Translator, other: Translator) -> Translator {

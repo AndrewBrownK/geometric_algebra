@@ -101,16 +101,16 @@ impl Bulk for MultiVector {
     fn bulk(self) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, 0.0]),
-                g1: Simd32x3::from([0.0, 0.0, 0.0]),
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
                 g2: self.group2() * Simd32x2::from([0.0, 1.0]),
-                g3: Simd32x3::from([0.0, 0.0, 0.0]),
-                g4: Simd32x3::from([0.0, 0.0, 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
                 g5: self.group5() * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
-                g6: Simd32x4::from([0.0, 0.0, 0.0, 0.0]),
-                g7: Simd32x3::from([0.0, 0.0, 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
                 g8: self.group8(),
-                g9: Simd32x3::from([0.0, 0.0, 0.0]),
+                g9: Simd32x3::from(0.0),
                 g10: self.group10() * Simd32x2::from([0.0, 1.0]),
             },
         }
@@ -174,8 +174,8 @@ impl RoundBulk for Circle {
         Circle {
             groups: CircleGroups {
                 g0: self.group0() * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
-                g1: Simd32x3::from([0.0, 0.0, 0.0]),
-                g2: Simd32x3::from([0.0, 0.0, 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
             },
         }
     }
@@ -187,9 +187,9 @@ impl RoundBulk for Dipole {
     fn round_bulk(self) -> Dipole {
         Dipole {
             groups: DipoleGroups {
-                g0: Simd32x3::from([0.0, 0.0, 0.0]),
+                g0: Simd32x3::from(0.0),
                 g1: self.group1(),
-                g2: Simd32x4::from([0.0, 0.0, 0.0, 0.0]),
+                g2: Simd32x4::from(0.0),
             },
         }
     }
@@ -213,15 +213,15 @@ impl RoundBulk for MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0() * Simd32x2::from([1.0, 0.0]),
                 g1: self.group1(),
-                g2: Simd32x2::from([0.0, 0.0]),
-                g3: Simd32x3::from([0.0, 0.0, 0.0]),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
                 g4: self.group4(),
-                g5: Simd32x4::from([0.0, 0.0, 0.0, 0.0]),
+                g5: Simd32x4::from(0.0),
                 g6: self.group6() * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
-                g7: Simd32x3::from([0.0, 0.0, 0.0]),
-                g8: Simd32x3::from([0.0, 0.0, 0.0]),
-                g9: Simd32x3::from([0.0, 0.0, 0.0]),
-                g10: Simd32x2::from([0.0, 0.0]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -234,7 +234,7 @@ impl RoundBulk for RoundPoint {
         RoundPoint {
             groups: RoundPointGroups {
                 g0: self.group0(),
-                g1: Simd32x2::from([0.0, 0.0]),
+                g1: Simd32x2::from(0.0),
             },
         }
     }
@@ -255,8 +255,8 @@ impl RoundWeight for Circle {
         Circle {
             groups: CircleGroups {
                 g0: self.group0() * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
-                g1: Simd32x3::from([0.0, 0.0, 0.0]),
-                g2: Simd32x3::from([0.0, 0.0, 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
             },
         }
     }
@@ -269,8 +269,8 @@ impl RoundWeight for Dipole {
         Dipole {
             groups: DipoleGroups {
                 g0: self.group0(),
-                g1: Simd32x3::from([0.0, 0.0, 0.0]),
-                g2: Simd32x4::from([0.0, 0.0, 0.0, 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x4::from(0.0),
             },
         }
     }
@@ -282,16 +282,16 @@ impl RoundWeight for MultiVector {
     fn round_weight(self) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, 0.0]),
-                g1: Simd32x3::from([0.0, 0.0, 0.0]),
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
                 g2: self.group2() * Simd32x2::from([1.0, 0.0]),
                 g3: self.group3(),
-                g4: Simd32x3::from([0.0, 0.0, 0.0]),
-                g5: Simd32x4::from([0.0, 0.0, 0.0, 0.0]),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
                 g6: self.group6() * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
-                g7: Simd32x3::from([0.0, 0.0, 0.0]),
-                g8: Simd32x3::from([0.0, 0.0, 0.0]),
-                g9: Simd32x3::from([0.0, 0.0, 0.0]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
                 g10: self.group10() * Simd32x2::from([1.0, 0.0]),
             },
         }
@@ -304,7 +304,7 @@ impl RoundWeight for RoundPoint {
     fn round_weight(self) -> RoundPoint {
         RoundPoint {
             groups: RoundPointGroups {
-                g0: Simd32x3::from([0.0, 0.0, 0.0]),
+                g0: Simd32x3::from(0.0),
                 g1: self.group1() * Simd32x2::from([1.0, 0.0]),
             },
         }
@@ -317,7 +317,7 @@ impl RoundWeight for Sphere {
     fn round_weight(self) -> Sphere {
         Sphere {
             groups: SphereGroups {
-                g0: Simd32x3::from([0.0, 0.0, 0.0]),
+                g0: Simd32x3::from(0.0),
                 g1: self.group1() * Simd32x2::from([1.0, 0.0]),
             },
         }
@@ -387,16 +387,16 @@ impl Weight for MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0() * Simd32x2::from([0.0, 1.0]),
-                g1: Simd32x3::from([0.0, 0.0, 0.0]),
-                g2: Simd32x2::from([0.0, 0.0]),
-                g3: Simd32x3::from([0.0, 0.0, 0.0]),
-                g4: Simd32x3::from([0.0, 0.0, 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
                 g5: self.group5() * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
-                g6: Simd32x4::from([0.0, 0.0, 0.0, 0.0]),
+                g6: Simd32x4::from(0.0),
                 g7: self.group7(),
-                g8: Simd32x3::from([0.0, 0.0, 0.0]),
+                g8: Simd32x3::from(0.0),
                 g9: self.group9(),
-                g10: Simd32x2::from([0.0, 0.0]),
+                g10: Simd32x2::from(0.0),
             },
         }
     }

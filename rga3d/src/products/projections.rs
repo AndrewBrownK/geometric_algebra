@@ -933,6 +933,14 @@ impl ProjectOrthogonallyOnto<LineAtOrigin> for Flector {
     }
 }
 
+impl ProjectOrthogonallyOnto<Motor> for Flector {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<MultiVector> for Flector {
     type Output = MultiVector;
 
@@ -973,6 +981,14 @@ impl ProjectOrthogonallyOnto<Point> for Flector {
     }
 }
 
+impl ProjectOrthogonallyOnto<Rotor> for Flector {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Translator> for Flector {
     type Output = Flector;
 
@@ -989,10 +1005,26 @@ impl ProjectOrthogonallyOnto<Flector> for Horizon {
     }
 }
 
+impl ProjectOrthogonallyOnto<Motor> for Horizon {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<MultiVector> for Horizon {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Rotor> for Horizon {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1029,6 +1061,14 @@ impl ProjectOrthogonallyOnto<LineAtOrigin> for Line {
     }
 }
 
+impl ProjectOrthogonallyOnto<Motor> for Line {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<MultiVector> for Line {
     type Output = MultiVector;
 
@@ -1053,6 +1093,14 @@ impl ProjectOrthogonallyOnto<PlaneAtOrigin> for Line {
     }
 }
 
+impl ProjectOrthogonallyOnto<Rotor> for Line {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Translator> for Line {
     type Output = MultiVector;
 
@@ -1065,6 +1113,14 @@ impl ProjectOrthogonallyOnto<Flector> for LineAtInfinity {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Motor> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1089,6 +1145,14 @@ impl ProjectOrthogonallyOnto<PlaneAtOrigin> for LineAtInfinity {
     type Output = LineAtInfinity;
 
     fn project_orthogonally_onto(self, other: PlaneAtOrigin) -> LineAtInfinity {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Rotor> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1125,6 +1189,14 @@ impl ProjectOrthogonallyOnto<LineAtOrigin> for LineAtOrigin {
     }
 }
 
+impl ProjectOrthogonallyOnto<Motor> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<MultiVector> for LineAtOrigin {
     type Output = MultiVector;
 
@@ -1145,6 +1217,14 @@ impl ProjectOrthogonallyOnto<PlaneAtOrigin> for LineAtOrigin {
     type Output = LineAtOrigin;
 
     fn project_orthogonally_onto(self, other: PlaneAtOrigin) -> LineAtOrigin {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Rotor> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1181,6 +1261,14 @@ impl ProjectOrthogonallyOnto<LineAtOrigin> for Motor {
     }
 }
 
+impl ProjectOrthogonallyOnto<Motor> for Motor {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<MultiVector> for Motor {
     type Output = MultiVector;
 
@@ -1201,6 +1289,14 @@ impl ProjectOrthogonallyOnto<PlaneAtOrigin> for Motor {
     type Output = Line;
 
     fn project_orthogonally_onto(self, other: PlaneAtOrigin) -> Line {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Rotor> for Motor {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1233,6 +1329,14 @@ impl ProjectOrthogonallyOnto<LineAtOrigin> for MultiVector {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: LineAtOrigin) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Motor> for MultiVector {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1277,6 +1381,14 @@ impl ProjectOrthogonallyOnto<Point> for MultiVector {
     }
 }
 
+impl ProjectOrthogonallyOnto<Rotor> for MultiVector {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Translator> for MultiVector {
     type Output = MultiVector;
 
@@ -1305,6 +1417,14 @@ impl ProjectOrthogonallyOnto<LineAtOrigin> for Origin {
     type Output = Origin;
 
     fn project_orthogonally_onto(self, other: LineAtOrigin) -> Origin {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Motor> for Origin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1349,6 +1469,14 @@ impl ProjectOrthogonallyOnto<Point> for Origin {
     }
 }
 
+impl ProjectOrthogonallyOnto<Rotor> for Origin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Translator> for Origin {
     type Output = Origin;
 
@@ -1361,6 +1489,14 @@ impl ProjectOrthogonallyOnto<Flector> for Plane {
     type Output = Flector;
 
     fn project_orthogonally_onto(self, other: Flector) -> Flector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Motor> for Plane {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1389,6 +1525,14 @@ impl ProjectOrthogonallyOnto<PlaneAtOrigin> for Plane {
     }
 }
 
+impl ProjectOrthogonallyOnto<Rotor> for Plane {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Translator> for Plane {
     type Output = Flector;
 
@@ -1401,6 +1545,14 @@ impl ProjectOrthogonallyOnto<Flector> for PlaneAtOrigin {
     type Output = Flector;
 
     fn project_orthogonally_onto(self, other: Flector) -> Flector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Motor> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1425,6 +1577,14 @@ impl ProjectOrthogonallyOnto<PlaneAtOrigin> for PlaneAtOrigin {
     type Output = PlaneAtOrigin;
 
     fn project_orthogonally_onto(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Rotor> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1457,6 +1617,14 @@ impl ProjectOrthogonallyOnto<LineAtOrigin> for Point {
     type Output = Point;
 
     fn project_orthogonally_onto(self, other: LineAtOrigin) -> Point {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Motor> for Point {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1501,6 +1669,14 @@ impl ProjectOrthogonallyOnto<Point> for Point {
     }
 }
 
+impl ProjectOrthogonallyOnto<Rotor> for Point {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Translator> for Point {
     type Output = Point;
 
@@ -1533,6 +1709,14 @@ impl ProjectOrthogonallyOnto<LineAtOrigin> for PointAtInfinity {
     }
 }
 
+impl ProjectOrthogonallyOnto<Motor> for PointAtInfinity {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<MultiVector> for PointAtInfinity {
     type Output = MultiVector;
 
@@ -1553,6 +1737,14 @@ impl ProjectOrthogonallyOnto<PlaneAtOrigin> for PointAtInfinity {
     type Output = PointAtInfinity;
 
     fn project_orthogonally_onto(self, other: PlaneAtOrigin) -> PointAtInfinity {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Rotor> for PointAtInfinity {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1589,6 +1781,14 @@ impl ProjectOrthogonallyOnto<LineAtOrigin> for Rotor {
     }
 }
 
+impl ProjectOrthogonallyOnto<Motor> for Rotor {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<MultiVector> for Rotor {
     type Output = MultiVector;
 
@@ -1613,6 +1813,14 @@ impl ProjectOrthogonallyOnto<PlaneAtOrigin> for Rotor {
     }
 }
 
+impl ProjectOrthogonallyOnto<Rotor> for Rotor {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Translator> for Rotor {
     type Output = MultiVector;
 
@@ -1625,6 +1833,14 @@ impl ProjectOrthogonallyOnto<Flector> for Translator {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Motor> for Translator {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1649,6 +1865,14 @@ impl ProjectOrthogonallyOnto<PlaneAtOrigin> for Translator {
     type Output = LineAtInfinity;
 
     fn project_orthogonally_onto(self, other: PlaneAtOrigin) -> LineAtInfinity {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Rotor> for Translator {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }

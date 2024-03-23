@@ -92,7 +92,7 @@ impl Bulk for MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0() * Simd32x2::from([1.0, 0.0]),
                 g1: self.group1() * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
-                g2: Simd32x3::from([0.0, 0.0, 0.0]),
+                g2: Simd32x3::from(0.0),
                 g3: self.group3(),
                 g4: self.group4() * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
             },
@@ -218,7 +218,7 @@ impl Weight for MultiVector {
                 g0: self.group0() * Simd32x2::from([0.0, 1.0]),
                 g1: self.group1() * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
                 g2: self.group2(),
-                g3: Simd32x3::from([0.0, 0.0, 0.0]),
+                g3: Simd32x3::from(0.0),
                 g4: self.group4() * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
             },
         }

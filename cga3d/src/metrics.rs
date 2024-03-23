@@ -36,6 +36,438 @@ pub trait SineAngle<T> {
     fn sine_angle(self, other: T) -> Self::Output;
 }
 
+impl CosineAngle<Circle> for Circle {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Circle) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Dipole> for Circle {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Dipole) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Line> for Circle {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Line) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<LineAtOrigin> for Circle {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: LineAtOrigin) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Origin> for Circle {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Origin) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Point> for Circle {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Point) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Dipole> for Dipole {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Dipole) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Origin> for Dipole {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Origin) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Point> for Dipole {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Point) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Circle> for Line {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Circle) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Dipole> for Line {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Dipole) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Line> for Line {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Line) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<LineAtOrigin> for Line {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: LineAtOrigin) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Origin> for Line {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Origin) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Point> for Line {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Point) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Circle> for LineAtOrigin {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Circle) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Dipole> for LineAtOrigin {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Dipole) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Line> for LineAtOrigin {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Line) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<LineAtOrigin> for LineAtOrigin {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: LineAtOrigin) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Origin> for LineAtOrigin {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Origin) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Point> for LineAtOrigin {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Point) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Dipole> for Origin {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Dipole) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Origin> for Origin {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Origin) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Point> for Origin {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Point) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Circle> for Plane {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Circle) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Dipole> for Plane {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Dipole) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Line> for Plane {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Line) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<LineAtOrigin> for Plane {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: LineAtOrigin) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Origin> for Plane {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Origin) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Plane> for Plane {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Plane) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<PlaneAtOrigin> for Plane {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: PlaneAtOrigin) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Point> for Plane {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Point) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Sphere> for Plane {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Sphere) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Circle> for PlaneAtOrigin {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Circle) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Dipole> for PlaneAtOrigin {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Dipole) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Line> for PlaneAtOrigin {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Line) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<LineAtOrigin> for PlaneAtOrigin {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: LineAtOrigin) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Origin> for PlaneAtOrigin {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Origin) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Plane> for PlaneAtOrigin {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Plane) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<PlaneAtOrigin> for PlaneAtOrigin {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: PlaneAtOrigin) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Point> for PlaneAtOrigin {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Point) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Sphere> for PlaneAtOrigin {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Sphere) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Dipole> for Point {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Dipole) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Origin> for Point {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Origin) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Point> for Point {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Point) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Circle> for Sphere {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Circle) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Dipole> for Sphere {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Dipole) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Line> for Sphere {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Line) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<LineAtOrigin> for Sphere {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: LineAtOrigin) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Origin> for Sphere {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Origin) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Plane> for Sphere {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Plane) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<PlaneAtOrigin> for Sphere {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: PlaneAtOrigin) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Point> for Sphere {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Point) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
+impl CosineAngle<Sphere> for Sphere {
+    type Output = Scalar;
+
+    fn cosine_angle(self, other: Sphere) -> Scalar {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    }
+}
+
 impl Distance<MultiVector> for Circle {
     type Output = Magnitude;
 

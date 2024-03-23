@@ -25,7 +25,7 @@ pub fn simplify_and_legalize(expression: Box<Expression>) -> Box<Expression> {
                 GatherData::RawZero => true,
             });
             if is_all_consts {
-                let the_consts: Vec<_> = indices
+                let mut the_consts: Vec<_> = indices
                     .iter()
                     .map(|it| match it {
                         GatherData::RawZero => 0isize,
@@ -33,6 +33,12 @@ pub fn simplify_and_legalize(expression: Box<Expression>) -> Box<Expression> {
                     })
                     .collect();
                 let size = the_consts.len();
+                let first = the_consts.first();
+                if let Some(first) = first {
+                    if the_consts.iter().all(|it| *it == *first) {
+                        the_consts = vec![*first];
+                    }
+                }
                 return Box::new(Expression {
                     size,
                     data_type_hint: None,
@@ -135,17 +141,27 @@ pub fn simplify_and_legalize(expression: Box<Expression>) -> Box<Expression> {
             a = simplify_and_legalize(a);
             b = simplify_and_legalize(b);
             if a.content == ExpressionContent::None {
-                b
-            } else if b.content == ExpressionContent::None {
-                a
-            } else {
-                let data_type_hint = if a.data_type_hint == b.data_type_hint { a.data_type_hint.clone() } else { None };
-                Box::new(Expression {
-                    size: expression.size,
-                    content: ExpressionContent::Add(a, b),
-                    data_type_hint,
-                })
+                return b
             }
+            if b.content == ExpressionContent::None {
+                return a
+            }
+            if let ExpressionContent::Constant(_dt, coefficients) = &a.content {
+                if coefficients.iter().all(|it| *it == 0) {
+                    return b
+                }
+            }
+            if let ExpressionContent::Constant(_dt, coefficients) = &b.content {
+                if coefficients.iter().all(|it| *it == 0) {
+                    return a
+                }
+            }
+            let data_type_hint = if a.data_type_hint == b.data_type_hint { a.data_type_hint.clone() } else { None };
+            return Box::new(Expression {
+                size: expression.size,
+                content: ExpressionContent::Add(a, b),
+                data_type_hint,
+            })
         }
         ExpressionContent::Subtract(mut a, mut b) => {
             a = simplify_and_legalize(a);
@@ -156,20 +172,26 @@ pub fn simplify_and_legalize(expression: Box<Expression>) -> Box<Expression> {
                     content: ExpressionContent::Constant(DataType::SimdVector(expression.size), vec![0]),
                     data_type_hint: None,
                 };
-                Box::new(Expression {
+                return Box::new(Expression {
                     size: expression.size,
                     data_type_hint: b.data_type_hint.clone(),
                     content: ExpressionContent::Subtract(Box::new(constant), b),
                 })
-            } else if b.content == ExpressionContent::None {
-                a
-            } else {
-                Box::new(Expression {
-                    size: expression.size,
-                    data_type_hint: a.data_type_hint.clone(),
-                    content: ExpressionContent::Subtract(a, b),
-                })
             }
+            if b.content == ExpressionContent::None {
+                return a
+            }
+            if let ExpressionContent::Constant(_dt, coefficients) = &b.content {
+                if coefficients.iter().all(|it| *it == 0) {
+                    return a
+                }
+            }
+
+            return Box::new(Expression {
+                size: expression.size,
+                data_type_hint: a.data_type_hint.clone(),
+                content: ExpressionContent::Subtract(a, b),
+            })
         }
         ExpressionContent::Multiply(mut a, mut b) => {
             a = simplify_and_legalize(a);
@@ -180,16 +202,10 @@ pub fn simplify_and_legalize(expression: Box<Expression>) -> Box<Expression> {
             if a.content == ExpressionContent::None {
                 return b;
             }
-            match b.content {
+            match &b.content {
                 ExpressionContent::None => return a,
                 ExpressionContent::Constant(_, c) if c.iter().all(|c| *c == 1) => return a,
-                ExpressionContent::Constant(_, c) if c.iter().all(|c| *c == 0) => {
-                    return Box::new(Expression {
-                        size: expression.size,
-                        content: ExpressionContent::None,
-                        data_type_hint: None,
-                    })
-                }
+                ExpressionContent::Constant(_, c) if c.iter().all(|c| *c == 0) => return b,
                 _ => {}
             }
 
@@ -299,9 +315,15 @@ impl MultiVectorClass {
             }
         }
         result_signature.sort_unstable();
-        let result_class = match registry.get(&result_signature) {
+        let mut result_candidates: Vec<_> = registry.classes.iter().filter_map(|it| {
+            let rc_fb: Vec<_> = it.0.flat_basis().iter().map(|it| it.index).collect();
+            if result_signature.iter().all(|it| rc_fb.contains(&it)) { Some(&it.0) } else { None }
+        }).collect();
+        result_candidates.sort_by(|a, b| a.flat_basis().len().cmp(&b.flat_basis().len()));
+
+        let result_class = match result_candidates.first() {
             None => return AstNode::None,
-            Some(rc) => rc,
+            Some(rc) => *rc,
         };
         let result_flat_basis = result_class.flat_basis();
         let mut body = Vec::new();
@@ -309,31 +331,36 @@ impl MultiVectorClass {
         for result_group in result_class.grouped_basis.iter() {
             let size = result_group.len();
             let mut a_group_index = None;
-            let (factors, a_indices): (Vec<_>, Vec<_>) = (0..size)
-                .map(|index_in_group| {
-                    let result_element = &result_flat_basis[base_index + index_in_group];
-                    let involution_element = involution.terms.iter().position(|(_in_element, out_element)| out_element.index == result_element.index).unwrap();
-                    let (in_element, out_element) = &involution.terms[involution_element];
-                    let index_in_a = a_flat_basis.iter().position(|a_element| a_element.index == in_element.index).unwrap();
-                    let coefficients = out_element.coefficient * result_element.coefficient * in_element.coefficient * a_flat_basis[index_in_a].coefficient;
-                    let (group, element) = parameter_a.multi_vector_class().index_in_group(index_in_a);
-                    let group_size = parameter_a.multi_vector_class().grouped_basis[group].len();
-                    if a_group_index.is_none() {
-                        a_group_index = Some(group);
-                    }
-                    let negate = false;
-                    (
-                        coefficients,
-                        GatherData::Usual(UsualGatherData {
-                            negate,
-                            group,
-                            element,
-                            group_size,
-                        }),
-                    )
-                })
-                .unzip();
-            let a_group_index = a_group_index.unwrap();
+            let mut factors = vec![];
+            let mut a_indices = vec![];
+            'for_index_in_group: for index_in_group in 0..size {
+                let result_element = &result_flat_basis[base_index + index_in_group];
+                let (in_element, out_element) = involution.terms.iter().find(|(_in, out)| out.index == result_element.index).unwrap();
+
+                let index_in_a = a_flat_basis.iter().position(|a_element| a_element.index == in_element.index);
+                let index_in_a = match index_in_a {
+                    None => {
+                        factors.push(0);
+                        a_indices.push(GatherData::RawZero);
+                        continue 'for_index_in_group;
+                    },
+                    Some(index_in_a) => index_in_a,
+                };
+                let coefficient = out_element.coefficient * result_element.coefficient * in_element.coefficient * a_flat_basis[index_in_a].coefficient;
+                let (group, element) = parameter_a.multi_vector_class().index_in_group(index_in_a);
+                let group_size = parameter_a.multi_vector_class().grouped_basis[group].len();
+                if a_group_index.is_none() {
+                    a_group_index = Some(group);
+                }
+                let negate = false;
+                factors.push(coefficient);
+                a_indices.push(GatherData::Usual(UsualGatherData {
+                    negate,
+                    group,
+                    element,
+                    group_size,
+                }));
+            }
             let expression = Expression {
                 size,
                 content: ExpressionContent::Multiply(
@@ -341,7 +368,7 @@ impl MultiVectorClass {
                         size,
                         content: ExpressionContent::Gather(
                             Box::new(Expression {
-                                size: parameter_a.multi_vector_class().grouped_basis[a_group_index].len(),
+                                size,
                                 content: ExpressionContent::Variable(parameter_a.name),
                                 data_type_hint: None,
                             }),
