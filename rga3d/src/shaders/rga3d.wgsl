@@ -15240,100 +15240,100 @@ fn translator_translator_project_via_origin_onto(self_: Translator, other: Trans
     return translator_anti_scalar_anti_wedge(other, translator_translator_bulk_expansion(self_, other));
 }
 
-fn line_line_cosine_angle(self_: Line, other: Line) -> Scalar {
-    return scalar_bulk_norm(line_line_weight_contraction(line_unitize(self_), line_unitize(other)));
+fn line_line_cosine_angle(self_: Line, other: Line) -> f32 {
+    return scalar_bulk_norm(line_line_weight_contraction(line_unitize(self_), line_unitize(other))).g0;
 }
 
-fn line_line_at_origin_cosine_angle(self_: Line, other: LineAtOrigin) -> Scalar {
-    return scalar_bulk_norm(line_line_at_origin_weight_contraction(line_unitize(self_), line_at_origin_unitize(other)));
+fn line_line_at_origin_cosine_angle(self_: Line, other: LineAtOrigin) -> f32 {
+    return scalar_bulk_norm(line_line_at_origin_weight_contraction(line_unitize(self_), line_at_origin_unitize(other))).g0;
 }
 
-fn line_origin_cosine_angle(self_: Line, other: Origin) -> Scalar {
-    return point_at_infinity_bulk_norm(line_origin_weight_contraction(line_unitize(self_), origin_unitize(other)));
+fn line_origin_cosine_angle(self_: Line, other: Origin) -> f32 {
+    return point_at_infinity_bulk_norm(line_origin_weight_contraction(line_unitize(self_), origin_unitize(other))).g0;
 }
 
-fn line_point_cosine_angle(self_: Line, other: Point) -> Scalar {
-    return point_at_infinity_bulk_norm(line_point_weight_contraction(line_unitize(self_), point_unitize(other)));
+fn line_point_cosine_angle(self_: Line, other: Point) -> f32 {
+    return point_at_infinity_bulk_norm(line_point_weight_contraction(line_unitize(self_), point_unitize(other))).g0;
 }
 
-fn line_at_origin_line_cosine_angle(self_: LineAtOrigin, other: Line) -> Scalar {
-    return scalar_bulk_norm(line_at_origin_line_weight_contraction(line_at_origin_unitize(self_), line_unitize(other)));
+fn line_at_origin_line_cosine_angle(self_: LineAtOrigin, other: Line) -> f32 {
+    return scalar_bulk_norm(line_at_origin_line_weight_contraction(line_at_origin_unitize(self_), line_unitize(other))).g0;
 }
 
-fn line_at_origin_line_at_origin_cosine_angle(self_: LineAtOrigin, other: LineAtOrigin) -> Scalar {
-    return scalar_bulk_norm(line_at_origin_line_at_origin_weight_contraction(line_at_origin_unitize(self_), line_at_origin_unitize(other)));
+fn line_at_origin_line_at_origin_cosine_angle(self_: LineAtOrigin, other: LineAtOrigin) -> f32 {
+    return scalar_bulk_norm(line_at_origin_line_at_origin_weight_contraction(line_at_origin_unitize(self_), line_at_origin_unitize(other))).g0;
 }
 
-fn line_at_origin_origin_cosine_angle(self_: LineAtOrigin, other: Origin) -> Scalar {
-    return point_at_infinity_bulk_norm(line_at_origin_origin_weight_contraction(line_at_origin_unitize(self_), origin_unitize(other)));
+fn line_at_origin_origin_cosine_angle(self_: LineAtOrigin, other: Origin) -> f32 {
+    return point_at_infinity_bulk_norm(line_at_origin_origin_weight_contraction(line_at_origin_unitize(self_), origin_unitize(other))).g0;
 }
 
-fn line_at_origin_point_cosine_angle(self_: LineAtOrigin, other: Point) -> Scalar {
-    return point_at_infinity_bulk_norm(line_at_origin_point_weight_contraction(line_at_origin_unitize(self_), point_unitize(other)));
+fn line_at_origin_point_cosine_angle(self_: LineAtOrigin, other: Point) -> f32 {
+    return point_at_infinity_bulk_norm(line_at_origin_point_weight_contraction(line_at_origin_unitize(self_), point_unitize(other))).g0;
 }
 
-fn origin_origin_cosine_angle(self_: Origin, other: Origin) -> Scalar {
-    return scalar_bulk_norm(origin_origin_weight_contraction(origin_unitize(self_), origin_unitize(other)));
+fn origin_origin_cosine_angle(self_: Origin, other: Origin) -> f32 {
+    return scalar_bulk_norm(origin_origin_weight_contraction(origin_unitize(self_), origin_unitize(other))).g0;
 }
 
-fn origin_point_cosine_angle(self_: Origin, other: Point) -> Scalar {
-    return scalar_bulk_norm(origin_point_weight_contraction(origin_unitize(self_), point_unitize(other)));
+fn origin_point_cosine_angle(self_: Origin, other: Point) -> f32 {
+    return scalar_bulk_norm(origin_point_weight_contraction(origin_unitize(self_), point_unitize(other))).g0;
 }
 
-fn plane_line_cosine_angle(self_: Plane, other: Line) -> Scalar {
-    return point_at_infinity_bulk_norm(plane_line_weight_contraction(plane_unitize(self_), line_unitize(other)));
+fn plane_line_cosine_angle(self_: Plane, other: Line) -> f32 {
+    return point_at_infinity_bulk_norm(plane_line_weight_contraction(plane_unitize(self_), line_unitize(other))).g0;
 }
 
-fn plane_line_at_origin_cosine_angle(self_: Plane, other: LineAtOrigin) -> Scalar {
-    return point_at_infinity_bulk_norm(plane_line_at_origin_weight_contraction(plane_unitize(self_), line_at_origin_unitize(other)));
+fn plane_line_at_origin_cosine_angle(self_: Plane, other: LineAtOrigin) -> f32 {
+    return point_at_infinity_bulk_norm(plane_line_at_origin_weight_contraction(plane_unitize(self_), line_at_origin_unitize(other))).g0;
 }
 
-fn plane_origin_cosine_angle(self_: Plane, other: Origin) -> Scalar {
-    return line_at_infinity_bulk_norm(plane_origin_weight_contraction(plane_unitize(self_), origin_unitize(other)));
+fn plane_origin_cosine_angle(self_: Plane, other: Origin) -> f32 {
+    return line_at_infinity_bulk_norm(plane_origin_weight_contraction(plane_unitize(self_), origin_unitize(other))).g0;
 }
 
-fn plane_plane_cosine_angle(self_: Plane, other: Plane) -> Scalar {
-    return scalar_bulk_norm(plane_plane_weight_contraction(plane_unitize(self_), plane_unitize(other)));
+fn plane_plane_cosine_angle(self_: Plane, other: Plane) -> f32 {
+    return scalar_bulk_norm(plane_plane_weight_contraction(plane_unitize(self_), plane_unitize(other))).g0;
 }
 
-fn plane_plane_at_origin_cosine_angle(self_: Plane, other: PlaneAtOrigin) -> Scalar {
-    return scalar_bulk_norm(plane_plane_at_origin_weight_contraction(plane_unitize(self_), plane_at_origin_unitize(other)));
+fn plane_plane_at_origin_cosine_angle(self_: Plane, other: PlaneAtOrigin) -> f32 {
+    return scalar_bulk_norm(plane_plane_at_origin_weight_contraction(plane_unitize(self_), plane_at_origin_unitize(other))).g0;
 }
 
-fn plane_point_cosine_angle(self_: Plane, other: Point) -> Scalar {
-    return line_at_infinity_bulk_norm(plane_point_weight_contraction(plane_unitize(self_), point_unitize(other)));
+fn plane_point_cosine_angle(self_: Plane, other: Point) -> f32 {
+    return line_at_infinity_bulk_norm(plane_point_weight_contraction(plane_unitize(self_), point_unitize(other))).g0;
 }
 
-fn plane_at_origin_line_cosine_angle(self_: PlaneAtOrigin, other: Line) -> Scalar {
-    return point_at_infinity_bulk_norm(plane_at_origin_line_weight_contraction(plane_at_origin_unitize(self_), line_unitize(other)));
+fn plane_at_origin_line_cosine_angle(self_: PlaneAtOrigin, other: Line) -> f32 {
+    return point_at_infinity_bulk_norm(plane_at_origin_line_weight_contraction(plane_at_origin_unitize(self_), line_unitize(other))).g0;
 }
 
-fn plane_at_origin_line_at_origin_cosine_angle(self_: PlaneAtOrigin, other: LineAtOrigin) -> Scalar {
-    return point_at_infinity_bulk_norm(plane_at_origin_line_at_origin_weight_contraction(plane_at_origin_unitize(self_), line_at_origin_unitize(other)));
+fn plane_at_origin_line_at_origin_cosine_angle(self_: PlaneAtOrigin, other: LineAtOrigin) -> f32 {
+    return point_at_infinity_bulk_norm(plane_at_origin_line_at_origin_weight_contraction(plane_at_origin_unitize(self_), line_at_origin_unitize(other))).g0;
 }
 
-fn plane_at_origin_origin_cosine_angle(self_: PlaneAtOrigin, other: Origin) -> Scalar {
-    return line_at_infinity_bulk_norm(plane_at_origin_origin_weight_contraction(plane_at_origin_unitize(self_), origin_unitize(other)));
+fn plane_at_origin_origin_cosine_angle(self_: PlaneAtOrigin, other: Origin) -> f32 {
+    return line_at_infinity_bulk_norm(plane_at_origin_origin_weight_contraction(plane_at_origin_unitize(self_), origin_unitize(other))).g0;
 }
 
-fn plane_at_origin_plane_cosine_angle(self_: PlaneAtOrigin, other: Plane) -> Scalar {
-    return scalar_bulk_norm(plane_at_origin_plane_weight_contraction(plane_at_origin_unitize(self_), plane_unitize(other)));
+fn plane_at_origin_plane_cosine_angle(self_: PlaneAtOrigin, other: Plane) -> f32 {
+    return scalar_bulk_norm(plane_at_origin_plane_weight_contraction(plane_at_origin_unitize(self_), plane_unitize(other))).g0;
 }
 
-fn plane_at_origin_plane_at_origin_cosine_angle(self_: PlaneAtOrigin, other: PlaneAtOrigin) -> Scalar {
-    return scalar_bulk_norm(plane_at_origin_plane_at_origin_weight_contraction(plane_at_origin_unitize(self_), plane_at_origin_unitize(other)));
+fn plane_at_origin_plane_at_origin_cosine_angle(self_: PlaneAtOrigin, other: PlaneAtOrigin) -> f32 {
+    return scalar_bulk_norm(plane_at_origin_plane_at_origin_weight_contraction(plane_at_origin_unitize(self_), plane_at_origin_unitize(other))).g0;
 }
 
-fn plane_at_origin_point_cosine_angle(self_: PlaneAtOrigin, other: Point) -> Scalar {
-    return line_at_infinity_bulk_norm(plane_at_origin_point_weight_contraction(plane_at_origin_unitize(self_), point_unitize(other)));
+fn plane_at_origin_point_cosine_angle(self_: PlaneAtOrigin, other: Point) -> f32 {
+    return line_at_infinity_bulk_norm(plane_at_origin_point_weight_contraction(plane_at_origin_unitize(self_), point_unitize(other))).g0;
 }
 
-fn point_origin_cosine_angle(self_: Point, other: Origin) -> Scalar {
-    return scalar_bulk_norm(point_origin_weight_contraction(point_unitize(self_), origin_unitize(other)));
+fn point_origin_cosine_angle(self_: Point, other: Origin) -> f32 {
+    return scalar_bulk_norm(point_origin_weight_contraction(point_unitize(self_), origin_unitize(other))).g0;
 }
 
-fn point_point_cosine_angle(self_: Point, other: Point) -> Scalar {
-    return scalar_bulk_norm(point_point_weight_contraction(point_unitize(self_), point_unitize(other)));
+fn point_point_cosine_angle(self_: Point, other: Point) -> f32 {
+    return scalar_bulk_norm(point_point_weight_contraction(point_unitize(self_), point_unitize(other))).g0;
 }
 
 fn anti_scalar_multi_vector_distance(self_: AntiScalar, other: MultiVector) -> Magnitude {
@@ -15754,5 +15754,173 @@ fn translator_point_distance(self_: Translator, other: Point) -> Magnitude {
 
 fn translator_rotor_distance(self_: Translator, other: Rotor) -> Magnitude {
     return scalar_anti_scalar_add(horizon_bulk_norm(anti_scalar_attitude(translator_rotor_wedge(self_, other))), plane_weight_norm(translator_flector_wedge(self_, rotor_attitude(other))));
+}
+
+fn line_line_sine_angle(self_: Line, other: Line) -> f32 {
+    let cos: f32 = line_line_cosine_angle(self_, other);
+    let cos_squared: f32 = cos * cos;
+    let sub: f32 = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+fn line_line_at_origin_sine_angle(self_: Line, other: LineAtOrigin) -> f32 {
+    let cos: f32 = line_line_at_origin_cosine_angle(self_, other);
+    let cos_squared: f32 = cos * cos;
+    let sub: f32 = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+fn line_origin_sine_angle(self_: Line, other: Origin) -> f32 {
+    let cos: f32 = line_origin_cosine_angle(self_, other);
+    let cos_squared: f32 = cos * cos;
+    let sub: f32 = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+fn line_point_sine_angle(self_: Line, other: Point) -> f32 {
+    let cos: f32 = line_point_cosine_angle(self_, other);
+    let cos_squared: f32 = cos * cos;
+    let sub: f32 = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+fn line_at_origin_line_sine_angle(self_: LineAtOrigin, other: Line) -> f32 {
+    let cos: f32 = line_at_origin_line_cosine_angle(self_, other);
+    let cos_squared: f32 = cos * cos;
+    let sub: f32 = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+fn line_at_origin_line_at_origin_sine_angle(self_: LineAtOrigin, other: LineAtOrigin) -> f32 {
+    let cos: f32 = line_at_origin_line_at_origin_cosine_angle(self_, other);
+    let cos_squared: f32 = cos * cos;
+    let sub: f32 = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+fn line_at_origin_origin_sine_angle(self_: LineAtOrigin, other: Origin) -> f32 {
+    let cos: f32 = line_at_origin_origin_cosine_angle(self_, other);
+    let cos_squared: f32 = cos * cos;
+    let sub: f32 = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+fn line_at_origin_point_sine_angle(self_: LineAtOrigin, other: Point) -> f32 {
+    let cos: f32 = line_at_origin_point_cosine_angle(self_, other);
+    let cos_squared: f32 = cos * cos;
+    let sub: f32 = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+fn origin_origin_sine_angle(self_: Origin, other: Origin) -> f32 {
+    let cos: f32 = origin_origin_cosine_angle(self_, other);
+    let cos_squared: f32 = cos * cos;
+    let sub: f32 = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+fn origin_point_sine_angle(self_: Origin, other: Point) -> f32 {
+    let cos: f32 = origin_point_cosine_angle(self_, other);
+    let cos_squared: f32 = cos * cos;
+    let sub: f32 = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+fn plane_line_sine_angle(self_: Plane, other: Line) -> f32 {
+    let cos: f32 = plane_line_cosine_angle(self_, other);
+    let cos_squared: f32 = cos * cos;
+    let sub: f32 = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+fn plane_line_at_origin_sine_angle(self_: Plane, other: LineAtOrigin) -> f32 {
+    let cos: f32 = plane_line_at_origin_cosine_angle(self_, other);
+    let cos_squared: f32 = cos * cos;
+    let sub: f32 = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+fn plane_origin_sine_angle(self_: Plane, other: Origin) -> f32 {
+    let cos: f32 = plane_origin_cosine_angle(self_, other);
+    let cos_squared: f32 = cos * cos;
+    let sub: f32 = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+fn plane_plane_sine_angle(self_: Plane, other: Plane) -> f32 {
+    let cos: f32 = plane_plane_cosine_angle(self_, other);
+    let cos_squared: f32 = cos * cos;
+    let sub: f32 = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+fn plane_plane_at_origin_sine_angle(self_: Plane, other: PlaneAtOrigin) -> f32 {
+    let cos: f32 = plane_plane_at_origin_cosine_angle(self_, other);
+    let cos_squared: f32 = cos * cos;
+    let sub: f32 = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+fn plane_point_sine_angle(self_: Plane, other: Point) -> f32 {
+    let cos: f32 = plane_point_cosine_angle(self_, other);
+    let cos_squared: f32 = cos * cos;
+    let sub: f32 = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+fn plane_at_origin_line_sine_angle(self_: PlaneAtOrigin, other: Line) -> f32 {
+    let cos: f32 = plane_at_origin_line_cosine_angle(self_, other);
+    let cos_squared: f32 = cos * cos;
+    let sub: f32 = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+fn plane_at_origin_line_at_origin_sine_angle(self_: PlaneAtOrigin, other: LineAtOrigin) -> f32 {
+    let cos: f32 = plane_at_origin_line_at_origin_cosine_angle(self_, other);
+    let cos_squared: f32 = cos * cos;
+    let sub: f32 = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+fn plane_at_origin_origin_sine_angle(self_: PlaneAtOrigin, other: Origin) -> f32 {
+    let cos: f32 = plane_at_origin_origin_cosine_angle(self_, other);
+    let cos_squared: f32 = cos * cos;
+    let sub: f32 = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+fn plane_at_origin_plane_sine_angle(self_: PlaneAtOrigin, other: Plane) -> f32 {
+    let cos: f32 = plane_at_origin_plane_cosine_angle(self_, other);
+    let cos_squared: f32 = cos * cos;
+    let sub: f32 = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+fn plane_at_origin_plane_at_origin_sine_angle(self_: PlaneAtOrigin, other: PlaneAtOrigin) -> f32 {
+    let cos: f32 = plane_at_origin_plane_at_origin_cosine_angle(self_, other);
+    let cos_squared: f32 = cos * cos;
+    let sub: f32 = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+fn plane_at_origin_point_sine_angle(self_: PlaneAtOrigin, other: Point) -> f32 {
+    let cos: f32 = plane_at_origin_point_cosine_angle(self_, other);
+    let cos_squared: f32 = cos * cos;
+    let sub: f32 = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+fn point_origin_sine_angle(self_: Point, other: Origin) -> f32 {
+    let cos: f32 = point_origin_cosine_angle(self_, other);
+    let cos_squared: f32 = cos * cos;
+    let sub: f32 = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+fn point_point_sine_angle(self_: Point, other: Point) -> f32 {
+    let cos: f32 = point_point_cosine_angle(self_, other);
+    let cos_squared: f32 = cos * cos;
+    let sub: f32 = 1.0 - cos_squared;
+    return sqrt(sub);
 }
 

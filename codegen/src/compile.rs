@@ -2433,10 +2433,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         in the big chart.
         */
 
-        // TODO make CosineAngle and SineAngle return plain floats instead of Scalars.
-        //  I mean... unless you figure out some special reason for them to be Scalars, like
-        //  if it is somehow possible to feed back into GA operations in a useful manner.
-
         for (param_a, param_b) in registry.pair_parameters() {
             let name = "CosineAngle";
             let _: Option<()> = try {
@@ -2451,7 +2447,12 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 // The actual cosine part of the definition
                 let wc = self.trait_impls.get_pair_invocation("WeightContraction", a_unitize, b_unitize)?;
                 let bn = self.trait_impls.get_single_invocation("BulkNorm", wc)?;
-                let cosine = single_expression_pair_trait_impl(name, &param_a, &param_b, bn);
+                let raw_float = Expression {
+                    size: 1,
+                    data_type_hint: Some(DataType::SimdVector(1)),
+                    content: ExpressionContent::Access(Box::new(bn), 0),
+                };
+                let cosine = single_expression_pair_trait_impl(name, &param_a, &param_b, raw_float);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, cosine);
             };
         }
@@ -2460,21 +2461,67 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let name = "SineAngle";
             let _: Option<()> = try {
                 let cos = self.trait_impls.get_pair_invocation("CosineAngle", variable(&param_a), variable(&param_b))?;
-                let scalar = match cos.data_type_hint {
-                    Some(DataType::MultiVector(scalar)) => scalar,
-                    _ => continue,
+                let var_assign_cos = AstNode::VariableAssignment {
+                    name: "cos",
+                    data_type: Some(DataType::SimdVector(1)),
+                    expression: Box::new(cos),
                 };
-                let one = self.trait_impls.get_class_invocation("One", scalar)?;
-                let const2 = Expression {
+                let var_cos = Box::new(Expression {
                     size: 1,
-                    content: ExpressionContent::Constant(DataType::Integer, vec![2]),
-                    data_type_hint: Some(DataType::Integer),
+                    content: ExpressionContent::Variable("cos"),
+                    data_type_hint: Some(DataType::SimdVector(1)),
+                });
+                let one = Box::new(Expression {
+                    size: 1,
+                    data_type_hint: Some(DataType::SimdVector(1)),
+                    content: ExpressionContent::Constant(DataType::SimdVector(1), vec![1])
+                });
+                let cos_squared = Box::new(Expression {
+                    size: 1,
+                    data_type_hint: Some(DataType::SimdVector(1)),
+                    content: ExpressionContent::Multiply(var_cos.clone(), var_cos),
+                });
+                let var_assign_cos_squared = AstNode::VariableAssignment {
+                    name: "cos_squared",
+                    data_type: Some(DataType::SimdVector(1)),
+                    expression: cos_squared,
                 };
-                // TODO this is failing because no Powi implementation
-                let pow2 = self.trait_impls.get_pair_invocation("Powi", cos, const2)?;
-                let sub = self.trait_impls.get_pair_invocation("Sub", one, pow2)?;
-                let sqrt = self.trait_impls.get_single_invocation("Sqrt", sub)?;
-                let sine = single_expression_pair_trait_impl(name, &param_a, &param_b, sqrt);
+                let var_cos_squared = Box::new(Expression {
+                    size: 1,
+                    content: ExpressionContent::Variable("cos_squared"),
+                    data_type_hint: Some(DataType::SimdVector(1)),
+                });
+                let sub = Box::new(Expression {
+                    size: 1,
+                    data_type_hint: Some(DataType::SimdVector(1)),
+                    content: ExpressionContent::Subtract(one, var_cos_squared)
+                });
+                let var_assign_sub = AstNode::VariableAssignment {
+                    name: "sub",
+                    data_type: Some(DataType::SimdVector(1)),
+                    expression: sub,
+                };
+                let var_sub = Box::new(Expression {
+                    size: 1,
+                    content: ExpressionContent::Variable("sub"),
+                    data_type_hint: Some(DataType::SimdVector(1)),
+                });
+                let sqrt = Box::new(Expression {
+                    size: 1,
+                    data_type_hint: Some(DataType::SimdVector(1)),
+                    content: ExpressionContent::SquareRoot(var_sub)
+                });
+                let sine = AstNode::TraitImplementation {
+                    result: Parameter { name, data_type: DataType::SimdVector(1), },
+                    class: param_a.multi_vector_class(),
+                    parameters: vec![param_a.clone(), param_b.clone()],
+                    body: vec![
+                        var_assign_cos,
+                        var_assign_cos_squared,
+                        var_assign_sub,
+                        AstNode::ReturnStatement { expression: sqrt },
+                    ],
+                };
                 self.trait_impls.add_pair_impl(name, param_a, param_b, sine);
             };
         }

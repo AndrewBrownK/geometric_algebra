@@ -15240,100 +15240,100 @@ Translator translator_translator_project_via_origin_onto(Translator self, Transl
     return translator_anti_scalar_anti_wedge(other, translator_translator_bulk_expansion(self, other));
 }
 
-Scalar line_line_cosine_angle(Line self, Line other) {
-    return scalar_bulk_norm(line_line_weight_contraction(line_unitize(self), line_unitize(other)));
+float line_line_cosine_angle(Line self, Line other) {
+    return scalar_bulk_norm(line_line_weight_contraction(line_unitize(self), line_unitize(other))).g0;
 }
 
-Scalar line_line_at_origin_cosine_angle(Line self, LineAtOrigin other) {
-    return scalar_bulk_norm(line_line_at_origin_weight_contraction(line_unitize(self), line_at_origin_unitize(other)));
+float line_line_at_origin_cosine_angle(Line self, LineAtOrigin other) {
+    return scalar_bulk_norm(line_line_at_origin_weight_contraction(line_unitize(self), line_at_origin_unitize(other))).g0;
 }
 
-Scalar line_origin_cosine_angle(Line self, Origin other) {
-    return point_at_infinity_bulk_norm(line_origin_weight_contraction(line_unitize(self), origin_unitize(other)));
+float line_origin_cosine_angle(Line self, Origin other) {
+    return point_at_infinity_bulk_norm(line_origin_weight_contraction(line_unitize(self), origin_unitize(other))).g0;
 }
 
-Scalar line_point_cosine_angle(Line self, Point other) {
-    return point_at_infinity_bulk_norm(line_point_weight_contraction(line_unitize(self), point_unitize(other)));
+float line_point_cosine_angle(Line self, Point other) {
+    return point_at_infinity_bulk_norm(line_point_weight_contraction(line_unitize(self), point_unitize(other))).g0;
 }
 
-Scalar line_at_origin_line_cosine_angle(LineAtOrigin self, Line other) {
-    return scalar_bulk_norm(line_at_origin_line_weight_contraction(line_at_origin_unitize(self), line_unitize(other)));
+float line_at_origin_line_cosine_angle(LineAtOrigin self, Line other) {
+    return scalar_bulk_norm(line_at_origin_line_weight_contraction(line_at_origin_unitize(self), line_unitize(other))).g0;
 }
 
-Scalar line_at_origin_line_at_origin_cosine_angle(LineAtOrigin self, LineAtOrigin other) {
-    return scalar_bulk_norm(line_at_origin_line_at_origin_weight_contraction(line_at_origin_unitize(self), line_at_origin_unitize(other)));
+float line_at_origin_line_at_origin_cosine_angle(LineAtOrigin self, LineAtOrigin other) {
+    return scalar_bulk_norm(line_at_origin_line_at_origin_weight_contraction(line_at_origin_unitize(self), line_at_origin_unitize(other))).g0;
 }
 
-Scalar line_at_origin_origin_cosine_angle(LineAtOrigin self, Origin other) {
-    return point_at_infinity_bulk_norm(line_at_origin_origin_weight_contraction(line_at_origin_unitize(self), origin_unitize(other)));
+float line_at_origin_origin_cosine_angle(LineAtOrigin self, Origin other) {
+    return point_at_infinity_bulk_norm(line_at_origin_origin_weight_contraction(line_at_origin_unitize(self), origin_unitize(other))).g0;
 }
 
-Scalar line_at_origin_point_cosine_angle(LineAtOrigin self, Point other) {
-    return point_at_infinity_bulk_norm(line_at_origin_point_weight_contraction(line_at_origin_unitize(self), point_unitize(other)));
+float line_at_origin_point_cosine_angle(LineAtOrigin self, Point other) {
+    return point_at_infinity_bulk_norm(line_at_origin_point_weight_contraction(line_at_origin_unitize(self), point_unitize(other))).g0;
 }
 
-Scalar origin_origin_cosine_angle(Origin self, Origin other) {
-    return scalar_bulk_norm(origin_origin_weight_contraction(origin_unitize(self), origin_unitize(other)));
+float origin_origin_cosine_angle(Origin self, Origin other) {
+    return scalar_bulk_norm(origin_origin_weight_contraction(origin_unitize(self), origin_unitize(other))).g0;
 }
 
-Scalar origin_point_cosine_angle(Origin self, Point other) {
-    return scalar_bulk_norm(origin_point_weight_contraction(origin_unitize(self), point_unitize(other)));
+float origin_point_cosine_angle(Origin self, Point other) {
+    return scalar_bulk_norm(origin_point_weight_contraction(origin_unitize(self), point_unitize(other))).g0;
 }
 
-Scalar plane_line_cosine_angle(Plane self, Line other) {
-    return point_at_infinity_bulk_norm(plane_line_weight_contraction(plane_unitize(self), line_unitize(other)));
+float plane_line_cosine_angle(Plane self, Line other) {
+    return point_at_infinity_bulk_norm(plane_line_weight_contraction(plane_unitize(self), line_unitize(other))).g0;
 }
 
-Scalar plane_line_at_origin_cosine_angle(Plane self, LineAtOrigin other) {
-    return point_at_infinity_bulk_norm(plane_line_at_origin_weight_contraction(plane_unitize(self), line_at_origin_unitize(other)));
+float plane_line_at_origin_cosine_angle(Plane self, LineAtOrigin other) {
+    return point_at_infinity_bulk_norm(plane_line_at_origin_weight_contraction(plane_unitize(self), line_at_origin_unitize(other))).g0;
 }
 
-Scalar plane_origin_cosine_angle(Plane self, Origin other) {
-    return line_at_infinity_bulk_norm(plane_origin_weight_contraction(plane_unitize(self), origin_unitize(other)));
+float plane_origin_cosine_angle(Plane self, Origin other) {
+    return line_at_infinity_bulk_norm(plane_origin_weight_contraction(plane_unitize(self), origin_unitize(other))).g0;
 }
 
-Scalar plane_plane_cosine_angle(Plane self, Plane other) {
-    return scalar_bulk_norm(plane_plane_weight_contraction(plane_unitize(self), plane_unitize(other)));
+float plane_plane_cosine_angle(Plane self, Plane other) {
+    return scalar_bulk_norm(plane_plane_weight_contraction(plane_unitize(self), plane_unitize(other))).g0;
 }
 
-Scalar plane_plane_at_origin_cosine_angle(Plane self, PlaneAtOrigin other) {
-    return scalar_bulk_norm(plane_plane_at_origin_weight_contraction(plane_unitize(self), plane_at_origin_unitize(other)));
+float plane_plane_at_origin_cosine_angle(Plane self, PlaneAtOrigin other) {
+    return scalar_bulk_norm(plane_plane_at_origin_weight_contraction(plane_unitize(self), plane_at_origin_unitize(other))).g0;
 }
 
-Scalar plane_point_cosine_angle(Plane self, Point other) {
-    return line_at_infinity_bulk_norm(plane_point_weight_contraction(plane_unitize(self), point_unitize(other)));
+float plane_point_cosine_angle(Plane self, Point other) {
+    return line_at_infinity_bulk_norm(plane_point_weight_contraction(plane_unitize(self), point_unitize(other))).g0;
 }
 
-Scalar plane_at_origin_line_cosine_angle(PlaneAtOrigin self, Line other) {
-    return point_at_infinity_bulk_norm(plane_at_origin_line_weight_contraction(plane_at_origin_unitize(self), line_unitize(other)));
+float plane_at_origin_line_cosine_angle(PlaneAtOrigin self, Line other) {
+    return point_at_infinity_bulk_norm(plane_at_origin_line_weight_contraction(plane_at_origin_unitize(self), line_unitize(other))).g0;
 }
 
-Scalar plane_at_origin_line_at_origin_cosine_angle(PlaneAtOrigin self, LineAtOrigin other) {
-    return point_at_infinity_bulk_norm(plane_at_origin_line_at_origin_weight_contraction(plane_at_origin_unitize(self), line_at_origin_unitize(other)));
+float plane_at_origin_line_at_origin_cosine_angle(PlaneAtOrigin self, LineAtOrigin other) {
+    return point_at_infinity_bulk_norm(plane_at_origin_line_at_origin_weight_contraction(plane_at_origin_unitize(self), line_at_origin_unitize(other))).g0;
 }
 
-Scalar plane_at_origin_origin_cosine_angle(PlaneAtOrigin self, Origin other) {
-    return line_at_infinity_bulk_norm(plane_at_origin_origin_weight_contraction(plane_at_origin_unitize(self), origin_unitize(other)));
+float plane_at_origin_origin_cosine_angle(PlaneAtOrigin self, Origin other) {
+    return line_at_infinity_bulk_norm(plane_at_origin_origin_weight_contraction(plane_at_origin_unitize(self), origin_unitize(other))).g0;
 }
 
-Scalar plane_at_origin_plane_cosine_angle(PlaneAtOrigin self, Plane other) {
-    return scalar_bulk_norm(plane_at_origin_plane_weight_contraction(plane_at_origin_unitize(self), plane_unitize(other)));
+float plane_at_origin_plane_cosine_angle(PlaneAtOrigin self, Plane other) {
+    return scalar_bulk_norm(plane_at_origin_plane_weight_contraction(plane_at_origin_unitize(self), plane_unitize(other))).g0;
 }
 
-Scalar plane_at_origin_plane_at_origin_cosine_angle(PlaneAtOrigin self, PlaneAtOrigin other) {
-    return scalar_bulk_norm(plane_at_origin_plane_at_origin_weight_contraction(plane_at_origin_unitize(self), plane_at_origin_unitize(other)));
+float plane_at_origin_plane_at_origin_cosine_angle(PlaneAtOrigin self, PlaneAtOrigin other) {
+    return scalar_bulk_norm(plane_at_origin_plane_at_origin_weight_contraction(plane_at_origin_unitize(self), plane_at_origin_unitize(other))).g0;
 }
 
-Scalar plane_at_origin_point_cosine_angle(PlaneAtOrigin self, Point other) {
-    return line_at_infinity_bulk_norm(plane_at_origin_point_weight_contraction(plane_at_origin_unitize(self), point_unitize(other)));
+float plane_at_origin_point_cosine_angle(PlaneAtOrigin self, Point other) {
+    return line_at_infinity_bulk_norm(plane_at_origin_point_weight_contraction(plane_at_origin_unitize(self), point_unitize(other))).g0;
 }
 
-Scalar point_origin_cosine_angle(Point self, Origin other) {
-    return scalar_bulk_norm(point_origin_weight_contraction(point_unitize(self), origin_unitize(other)));
+float point_origin_cosine_angle(Point self, Origin other) {
+    return scalar_bulk_norm(point_origin_weight_contraction(point_unitize(self), origin_unitize(other))).g0;
 }
 
-Scalar point_point_cosine_angle(Point self, Point other) {
-    return scalar_bulk_norm(point_point_weight_contraction(point_unitize(self), point_unitize(other)));
+float point_point_cosine_angle(Point self, Point other) {
+    return scalar_bulk_norm(point_point_weight_contraction(point_unitize(self), point_unitize(other))).g0;
 }
 
 Magnitude anti_scalar_multi_vector_distance(AntiScalar self, MultiVector other) {
@@ -15754,5 +15754,173 @@ Magnitude translator_point_distance(Translator self, Point other) {
 
 Magnitude translator_rotor_distance(Translator self, Rotor other) {
     return scalar_anti_scalar_add(horizon_bulk_norm(anti_scalar_attitude(translator_rotor_wedge(self, other))), plane_weight_norm(translator_flector_wedge(self, rotor_attitude(other))));
+}
+
+float line_line_sine_angle(Line self, Line other) {
+    float cos = line_line_cosine_angle(self, other);
+    float cos_squared = cos * cos;
+    float sub = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+float line_line_at_origin_sine_angle(Line self, LineAtOrigin other) {
+    float cos = line_line_at_origin_cosine_angle(self, other);
+    float cos_squared = cos * cos;
+    float sub = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+float line_origin_sine_angle(Line self, Origin other) {
+    float cos = line_origin_cosine_angle(self, other);
+    float cos_squared = cos * cos;
+    float sub = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+float line_point_sine_angle(Line self, Point other) {
+    float cos = line_point_cosine_angle(self, other);
+    float cos_squared = cos * cos;
+    float sub = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+float line_at_origin_line_sine_angle(LineAtOrigin self, Line other) {
+    float cos = line_at_origin_line_cosine_angle(self, other);
+    float cos_squared = cos * cos;
+    float sub = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+float line_at_origin_line_at_origin_sine_angle(LineAtOrigin self, LineAtOrigin other) {
+    float cos = line_at_origin_line_at_origin_cosine_angle(self, other);
+    float cos_squared = cos * cos;
+    float sub = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+float line_at_origin_origin_sine_angle(LineAtOrigin self, Origin other) {
+    float cos = line_at_origin_origin_cosine_angle(self, other);
+    float cos_squared = cos * cos;
+    float sub = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+float line_at_origin_point_sine_angle(LineAtOrigin self, Point other) {
+    float cos = line_at_origin_point_cosine_angle(self, other);
+    float cos_squared = cos * cos;
+    float sub = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+float origin_origin_sine_angle(Origin self, Origin other) {
+    float cos = origin_origin_cosine_angle(self, other);
+    float cos_squared = cos * cos;
+    float sub = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+float origin_point_sine_angle(Origin self, Point other) {
+    float cos = origin_point_cosine_angle(self, other);
+    float cos_squared = cos * cos;
+    float sub = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+float plane_line_sine_angle(Plane self, Line other) {
+    float cos = plane_line_cosine_angle(self, other);
+    float cos_squared = cos * cos;
+    float sub = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+float plane_line_at_origin_sine_angle(Plane self, LineAtOrigin other) {
+    float cos = plane_line_at_origin_cosine_angle(self, other);
+    float cos_squared = cos * cos;
+    float sub = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+float plane_origin_sine_angle(Plane self, Origin other) {
+    float cos = plane_origin_cosine_angle(self, other);
+    float cos_squared = cos * cos;
+    float sub = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+float plane_plane_sine_angle(Plane self, Plane other) {
+    float cos = plane_plane_cosine_angle(self, other);
+    float cos_squared = cos * cos;
+    float sub = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+float plane_plane_at_origin_sine_angle(Plane self, PlaneAtOrigin other) {
+    float cos = plane_plane_at_origin_cosine_angle(self, other);
+    float cos_squared = cos * cos;
+    float sub = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+float plane_point_sine_angle(Plane self, Point other) {
+    float cos = plane_point_cosine_angle(self, other);
+    float cos_squared = cos * cos;
+    float sub = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+float plane_at_origin_line_sine_angle(PlaneAtOrigin self, Line other) {
+    float cos = plane_at_origin_line_cosine_angle(self, other);
+    float cos_squared = cos * cos;
+    float sub = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+float plane_at_origin_line_at_origin_sine_angle(PlaneAtOrigin self, LineAtOrigin other) {
+    float cos = plane_at_origin_line_at_origin_cosine_angle(self, other);
+    float cos_squared = cos * cos;
+    float sub = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+float plane_at_origin_origin_sine_angle(PlaneAtOrigin self, Origin other) {
+    float cos = plane_at_origin_origin_cosine_angle(self, other);
+    float cos_squared = cos * cos;
+    float sub = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+float plane_at_origin_plane_sine_angle(PlaneAtOrigin self, Plane other) {
+    float cos = plane_at_origin_plane_cosine_angle(self, other);
+    float cos_squared = cos * cos;
+    float sub = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+float plane_at_origin_plane_at_origin_sine_angle(PlaneAtOrigin self, PlaneAtOrigin other) {
+    float cos = plane_at_origin_plane_at_origin_cosine_angle(self, other);
+    float cos_squared = cos * cos;
+    float sub = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+float plane_at_origin_point_sine_angle(PlaneAtOrigin self, Point other) {
+    float cos = plane_at_origin_point_cosine_angle(self, other);
+    float cos_squared = cos * cos;
+    float sub = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+float point_origin_sine_angle(Point self, Origin other) {
+    float cos = point_origin_cosine_angle(self, other);
+    float cos_squared = cos * cos;
+    float sub = 1.0 - cos_squared;
+    return sqrt(sub);
+}
+
+float point_point_sine_angle(Point self, Point other) {
+    float cos = point_point_cosine_angle(self, other);
+    float cos_squared = cos * cos;
+    float sub = 1.0 - cos_squared;
+    return sqrt(sub);
 }
 

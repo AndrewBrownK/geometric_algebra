@@ -37,194 +37,194 @@ pub trait SineAngle<T> {
 }
 
 impl CosineAngle<Line> for Line {
-    type Output = Scalar;
+    type Output = f32;
 
-    fn cosine_angle(self, other: Line) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    fn cosine_angle(self, other: Line) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
 
 impl CosineAngle<LineAtOrigin> for Line {
-    type Output = Scalar;
+    type Output = f32;
 
-    fn cosine_angle(self, other: LineAtOrigin) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    fn cosine_angle(self, other: LineAtOrigin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
 
 impl CosineAngle<Origin> for Line {
-    type Output = Scalar;
+    type Output = f32;
 
-    fn cosine_angle(self, other: Origin) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    fn cosine_angle(self, other: Origin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
 
 impl CosineAngle<Point> for Line {
-    type Output = Scalar;
+    type Output = f32;
 
-    fn cosine_angle(self, other: Point) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    fn cosine_angle(self, other: Point) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
 
 impl CosineAngle<Line> for LineAtOrigin {
-    type Output = Scalar;
+    type Output = f32;
 
-    fn cosine_angle(self, other: Line) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    fn cosine_angle(self, other: Line) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
 
 impl CosineAngle<LineAtOrigin> for LineAtOrigin {
-    type Output = Scalar;
+    type Output = f32;
 
-    fn cosine_angle(self, other: LineAtOrigin) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    fn cosine_angle(self, other: LineAtOrigin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
 
 impl CosineAngle<Origin> for LineAtOrigin {
-    type Output = Scalar;
+    type Output = f32;
 
-    fn cosine_angle(self, other: Origin) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    fn cosine_angle(self, other: Origin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
 
 impl CosineAngle<Point> for LineAtOrigin {
-    type Output = Scalar;
+    type Output = f32;
 
-    fn cosine_angle(self, other: Point) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    fn cosine_angle(self, other: Point) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
 
 impl CosineAngle<Origin> for Origin {
-    type Output = Scalar;
+    type Output = f32;
 
-    fn cosine_angle(self, other: Origin) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    fn cosine_angle(self, other: Origin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
 
 impl CosineAngle<Point> for Origin {
-    type Output = Scalar;
+    type Output = f32;
 
-    fn cosine_angle(self, other: Point) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    fn cosine_angle(self, other: Point) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
 
 impl CosineAngle<Line> for Plane {
-    type Output = Scalar;
+    type Output = f32;
 
-    fn cosine_angle(self, other: Line) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    fn cosine_angle(self, other: Line) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
 
 impl CosineAngle<LineAtOrigin> for Plane {
-    type Output = Scalar;
+    type Output = f32;
 
-    fn cosine_angle(self, other: LineAtOrigin) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    fn cosine_angle(self, other: LineAtOrigin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
 
 impl CosineAngle<Origin> for Plane {
-    type Output = Scalar;
+    type Output = f32;
 
-    fn cosine_angle(self, other: Origin) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    fn cosine_angle(self, other: Origin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
 
 impl CosineAngle<Plane> for Plane {
-    type Output = Scalar;
+    type Output = f32;
 
-    fn cosine_angle(self, other: Plane) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    fn cosine_angle(self, other: Plane) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
 
 impl CosineAngle<PlaneAtOrigin> for Plane {
-    type Output = Scalar;
+    type Output = f32;
 
-    fn cosine_angle(self, other: PlaneAtOrigin) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    fn cosine_angle(self, other: PlaneAtOrigin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
 
 impl CosineAngle<Point> for Plane {
-    type Output = Scalar;
+    type Output = f32;
 
-    fn cosine_angle(self, other: Point) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    fn cosine_angle(self, other: Point) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
 
 impl CosineAngle<Line> for PlaneAtOrigin {
-    type Output = Scalar;
+    type Output = f32;
 
-    fn cosine_angle(self, other: Line) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    fn cosine_angle(self, other: Line) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
 
 impl CosineAngle<LineAtOrigin> for PlaneAtOrigin {
-    type Output = Scalar;
+    type Output = f32;
 
-    fn cosine_angle(self, other: LineAtOrigin) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    fn cosine_angle(self, other: LineAtOrigin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
 
 impl CosineAngle<Origin> for PlaneAtOrigin {
-    type Output = Scalar;
+    type Output = f32;
 
-    fn cosine_angle(self, other: Origin) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    fn cosine_angle(self, other: Origin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
 
 impl CosineAngle<Plane> for PlaneAtOrigin {
-    type Output = Scalar;
+    type Output = f32;
 
-    fn cosine_angle(self, other: Plane) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    fn cosine_angle(self, other: Plane) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
 
 impl CosineAngle<PlaneAtOrigin> for PlaneAtOrigin {
-    type Output = Scalar;
+    type Output = f32;
 
-    fn cosine_angle(self, other: PlaneAtOrigin) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    fn cosine_angle(self, other: PlaneAtOrigin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
 
 impl CosineAngle<Point> for PlaneAtOrigin {
-    type Output = Scalar;
+    type Output = f32;
 
-    fn cosine_angle(self, other: Point) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    fn cosine_angle(self, other: Point) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
 
 impl CosineAngle<Origin> for Point {
-    type Output = Scalar;
+    type Output = f32;
 
-    fn cosine_angle(self, other: Origin) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    fn cosine_angle(self, other: Origin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
 
 impl CosineAngle<Point> for Point {
-    type Output = Scalar;
+    type Output = f32;
 
-    fn cosine_angle(self, other: Point) -> Scalar {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm()
+    fn cosine_angle(self, other: Point) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
 
@@ -1065,5 +1065,269 @@ impl Distance<Rotor> for Translator {
 
     fn distance(self, other: Rotor) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl SineAngle<Line> for Line {
+    type Output = f32;
+
+    fn sine_angle(self, other: Line) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<LineAtOrigin> for Line {
+    type Output = f32;
+
+    fn sine_angle(self, other: LineAtOrigin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<Origin> for Line {
+    type Output = f32;
+
+    fn sine_angle(self, other: Origin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<Point> for Line {
+    type Output = f32;
+
+    fn sine_angle(self, other: Point) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<Line> for LineAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: Line) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<LineAtOrigin> for LineAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: LineAtOrigin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<Origin> for LineAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: Origin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<Point> for LineAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: Point) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<Origin> for Origin {
+    type Output = f32;
+
+    fn sine_angle(self, other: Origin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<Point> for Origin {
+    type Output = f32;
+
+    fn sine_angle(self, other: Point) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<Line> for Plane {
+    type Output = f32;
+
+    fn sine_angle(self, other: Line) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<LineAtOrigin> for Plane {
+    type Output = f32;
+
+    fn sine_angle(self, other: LineAtOrigin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<Origin> for Plane {
+    type Output = f32;
+
+    fn sine_angle(self, other: Origin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<Plane> for Plane {
+    type Output = f32;
+
+    fn sine_angle(self, other: Plane) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<PlaneAtOrigin> for Plane {
+    type Output = f32;
+
+    fn sine_angle(self, other: PlaneAtOrigin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<Point> for Plane {
+    type Output = f32;
+
+    fn sine_angle(self, other: Point) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<Line> for PlaneAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: Line) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<LineAtOrigin> for PlaneAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: LineAtOrigin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<Origin> for PlaneAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: Origin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<Plane> for PlaneAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: Plane) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<PlaneAtOrigin> for PlaneAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: PlaneAtOrigin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<Point> for PlaneAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: Point) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<Origin> for Point {
+    type Output = f32;
+
+    fn sine_angle(self, other: Origin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<Point> for Point {
+    type Output = f32;
+
+    fn sine_angle(self, other: Point) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
     }
 }
