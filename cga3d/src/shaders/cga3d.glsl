@@ -11189,6 +11189,26 @@ Sphere sphere_container(Sphere self) {
     return sphere_scalar_wedge(self, anti_scalar_right_weight_dual(sphere_carrier(self)));
 }
 
+Circle circle_partner(Circle self) {
+    return sphere_plane_anti_wedge(sphere_neg(dipole_container(circle_right_bulk_dual(self))), circle_carrier(self));
+}
+
+Dipole dipole_partner(Dipole self) {
+    return sphere_line_anti_wedge(sphere_neg(circle_container(dipole_right_bulk_dual(self))), dipole_carrier(self));
+}
+
+MultiVector multi_vector_partner(MultiVector self) {
+    return multi_vector_multi_vector_anti_wedge(multi_vector_neg(multi_vector_container(multi_vector_right_bulk_dual(self))), multi_vector_carrier(self));
+}
+
+RoundPoint round_point_partner(RoundPoint self) {
+    return sphere_point_anti_wedge(sphere_neg(sphere_container(round_point_right_bulk_dual(self))), round_point_carrier(self));
+}
+
+Sphere sphere_partner(Sphere self) {
+    return sphere_anti_scalar_anti_wedge(sphere_neg(round_point_container(sphere_right_bulk_dual(self))), sphere_carrier(self));
+}
+
 AntiScalar anti_scalar_sqrt(AntiScalar self) {
     return AntiScalar(sqrt(self.g0));
 }

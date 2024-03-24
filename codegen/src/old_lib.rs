@@ -991,8 +991,49 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let container = single_expression_single_trait_impl(name, &param_a, anti_wedge);
                 self.trait_impls.add_single_impl(name, param_a.clone(), container)
             };
+        }
 
-            // TODO Partner
+        for param_a in registry.single_parameters() {
+            let is_all_flat = param_a.multi_vector_class().flat_basis().iter().all(|it| {
+                flat_basis.index == (flat_basis.index & it.index)
+            });
+            if is_all_flat {
+                continue;
+            }
+
+            // The object is round
+
+            let name = "Partner";
+            let _: Option<()> = try {
+                // let mut debug = false;
+                // if param_a.multi_vector_class().class_name == "RoundPoint" {
+                //     debug = true;
+                //     eprintln!("Implementing partner for RoundPoint");
+                // }
+                let anti_wedge_name = self.algebra.dialect().exterior_anti_product.first()?;
+                let car = self.trait_impls.get_single_invocation("Carrier", variable(&param_a))?;
+                // if debug {
+                //     eprintln!("Found Carrier for RoundPoint");
+                // }
+                let bulk_dual = self.trait_impls.get_single_invocation("RightBulkDual", variable(&param_a))?;
+                // if debug {
+                //     eprintln!("Found RightBulkDual for RoundPoint");
+                // }
+                let container = self.trait_impls.get_single_invocation("Container", bulk_dual)?;
+                // if debug {
+                //     eprintln!("Found Container");
+                // }
+                let neg = self.trait_impls.get_single_invocation("Neg", container)?;
+                // if debug {
+                //     eprintln!("Found Neg");
+                // }
+                let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge_name, neg, car)?;
+                // if debug {
+                //     eprintln!("Found AntiWedge");
+                // }
+                let partner = single_expression_single_trait_impl(name, &param_a, anti_wedge);
+                self.trait_impls.add_single_impl(name, param_a.clone(), partner)
+            };
         }
     }
 

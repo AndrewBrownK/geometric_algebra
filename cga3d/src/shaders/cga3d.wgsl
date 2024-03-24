@@ -11189,6 +11189,26 @@ fn sphere_container(self_: Sphere) -> Sphere {
     return sphere_scalar_wedge(self_, anti_scalar_right_weight_dual(sphere_carrier(self_)));
 }
 
+fn circle_partner(self_: Circle) -> Circle {
+    return sphere_plane_anti_wedge(sphere_neg(dipole_container(circle_right_bulk_dual(self_))), circle_carrier(self_));
+}
+
+fn dipole_partner(self_: Dipole) -> Dipole {
+    return sphere_line_anti_wedge(sphere_neg(circle_container(dipole_right_bulk_dual(self_))), dipole_carrier(self_));
+}
+
+fn multi_vector_partner(self_: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_anti_wedge(multi_vector_neg(multi_vector_container(multi_vector_right_bulk_dual(self_))), multi_vector_carrier(self_));
+}
+
+fn round_point_partner(self_: RoundPoint) -> RoundPoint {
+    return sphere_point_anti_wedge(sphere_neg(sphere_container(round_point_right_bulk_dual(self_))), round_point_carrier(self_));
+}
+
+fn sphere_partner(self_: Sphere) -> Sphere {
+    return sphere_anti_scalar_anti_wedge(sphere_neg(round_point_container(sphere_right_bulk_dual(self_))), sphere_carrier(self_));
+}
+
 fn anti_scalar_sqrt(self_: AntiScalar) -> AntiScalar {
     return AntiScalar(sqrt(self_.g0));
 }

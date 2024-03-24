@@ -639,6 +639,46 @@ impl Container for Sphere {
     }
 }
 
+impl Partner for Circle {
+    type Output = Circle;
+
+    fn partner(self) -> Circle {
+        self.right_bulk_dual().container().neg().anti_wedge(self.carrier())
+    }
+}
+
+impl Partner for Dipole {
+    type Output = Dipole;
+
+    fn partner(self) -> Dipole {
+        self.right_bulk_dual().container().neg().anti_wedge(self.carrier())
+    }
+}
+
+impl Partner for MultiVector {
+    type Output = MultiVector;
+
+    fn partner(self) -> MultiVector {
+        self.right_bulk_dual().container().neg().anti_wedge(self.carrier())
+    }
+}
+
+impl Partner for RoundPoint {
+    type Output = RoundPoint;
+
+    fn partner(self) -> RoundPoint {
+        self.right_bulk_dual().container().neg().anti_wedge(self.carrier())
+    }
+}
+
+impl Partner for Sphere {
+    type Output = Sphere;
+
+    fn partner(self) -> Sphere {
+        self.right_bulk_dual().container().neg().anti_wedge(self.carrier())
+    }
+}
+
 impl Sqrt for AntiScalar {
     type Output = AntiScalar;
 
