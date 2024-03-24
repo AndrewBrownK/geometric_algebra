@@ -40,8 +40,8 @@ pub union Scalar {
 
 impl Scalar {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32) -> Self {
-        Self { elements: [element0] }
+    pub const fn new(scalar: f32) -> Self {
+        Self { elements: [scalar] }
     }
     pub const fn from_groups(g0: f32) -> Self {
         Self { groups: ScalarGroups { g0 } }
@@ -105,8 +105,8 @@ pub union AntiScalar {
 
 impl AntiScalar {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32) -> Self {
-        Self { elements: [element0] }
+    pub const fn new(e1234: f32) -> Self {
+        Self { elements: [e1234] }
     }
     pub const fn from_groups(g0: f32) -> Self {
         Self { groups: AntiScalarGroups { g0 } }
@@ -170,9 +170,9 @@ pub union Magnitude {
 
 impl Magnitude {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32, element1: f32) -> Self {
+    pub const fn new(scalar: f32, e1234: f32) -> Self {
         Self {
-            elements: [element0, element1, 0.0, 0.0],
+            elements: [scalar, e1234, 0.0, 0.0],
         }
     }
     pub const fn from_groups(g0: Simd32x2) -> Self {
@@ -239,10 +239,8 @@ pub union Point {
 
 impl Point {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32, element1: f32, element2: f32, element3: f32) -> Self {
-        Self {
-            elements: [element0, element1, element2, element3],
-        }
+    pub const fn new(e1: f32, e2: f32, e3: f32, e4: f32) -> Self {
+        Self { elements: [e1, e2, e3, e4] }
     }
     pub const fn from_groups(g0: Simd32x4) -> Self {
         Self { groups: PointGroups { g0 } }
@@ -316,8 +314,8 @@ pub union Origin {
 
 impl Origin {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32) -> Self {
-        Self { elements: [element0] }
+    pub const fn new(e4: f32) -> Self {
+        Self { elements: [e4] }
     }
     pub const fn from_groups(g0: f32) -> Self {
         Self { groups: OriginGroups { g0 } }
@@ -381,10 +379,8 @@ pub union PointAtInfinity {
 
 impl PointAtInfinity {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32, element1: f32, element2: f32) -> Self {
-        Self {
-            elements: [element0, element1, element2, 0.0],
-        }
+    pub const fn new(e1: f32, e2: f32, e3: f32) -> Self {
+        Self { elements: [e1, e2, e3, 0.0] }
     }
     pub const fn from_groups(g0: Simd32x3) -> Self {
         Self {
@@ -454,9 +450,9 @@ pub union Line {
 
 impl Line {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32, element1: f32, element2: f32, element3: f32, element4: f32, element5: f32) -> Self {
+    pub const fn new(neg_e14: f32, neg_e24: f32, neg_e34: f32, e23: f32, neg_e13: f32, e12: f32) -> Self {
         Self {
-            elements: [element0, element1, element2, 0.0, element3, element4, element5, 0.0],
+            elements: [neg_e14, neg_e24, neg_e34, 0.0, e23, neg_e13, e12, 0.0],
         }
     }
     pub const fn from_groups(g0: Simd32x3, g1: Simd32x3) -> Self {
@@ -539,9 +535,9 @@ pub union LineAtOrigin {
 
 impl LineAtOrigin {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32, element1: f32, element2: f32) -> Self {
+    pub const fn new(neg_e14: f32, neg_e24: f32, neg_e34: f32) -> Self {
         Self {
-            elements: [element0, element1, element2, 0.0],
+            elements: [neg_e14, neg_e24, neg_e34, 0.0],
         }
     }
     pub const fn from_groups(g0: Simd32x3) -> Self {
@@ -610,9 +606,9 @@ pub union LineAtInfinity {
 
 impl LineAtInfinity {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32, element1: f32, element2: f32) -> Self {
+    pub const fn new(e23: f32, neg_e13: f32, e12: f32) -> Self {
         Self {
-            elements: [element0, element1, element2, 0.0],
+            elements: [e23, neg_e13, e12, 0.0],
         }
     }
     pub const fn from_groups(g0: Simd32x3) -> Self {
@@ -681,9 +677,9 @@ pub union Plane {
 
 impl Plane {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32, element1: f32, element2: f32, element3: f32) -> Self {
+    pub const fn new(e234: f32, neg_e134: f32, e124: f32, neg_e123: f32) -> Self {
         Self {
-            elements: [element0, element1, element2, element3],
+            elements: [e234, neg_e134, e124, neg_e123],
         }
     }
     pub const fn from_groups(g0: Simd32x4) -> Self {
@@ -756,9 +752,9 @@ pub union PlaneAtOrigin {
 
 impl PlaneAtOrigin {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32, element1: f32, element2: f32) -> Self {
+    pub const fn new(e234: f32, neg_e134: f32, e124: f32) -> Self {
         Self {
-            elements: [element0, element1, element2, 0.0],
+            elements: [e234, neg_e134, e124, 0.0],
         }
     }
     pub const fn from_groups(g0: Simd32x3) -> Self {
@@ -834,8 +830,8 @@ pub union Horizon {
 
 impl Horizon {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32) -> Self {
-        Self { elements: [element0] }
+    pub const fn new(neg_e123: f32) -> Self {
+        Self { elements: [neg_e123] }
     }
     pub const fn from_groups(g0: f32) -> Self {
         Self { groups: HorizonGroups { g0 } }
@@ -901,9 +897,9 @@ pub union Motor {
 
 impl Motor {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32, element1: f32, element2: f32, element3: f32, element4: f32, element5: f32, element6: f32) -> Self {
+    pub const fn new(neg_e14: f32, neg_e24: f32, neg_e34: f32, e1234: f32, e23: f32, neg_e13: f32, e12: f32) -> Self {
         Self {
-            elements: [element0, element1, element2, element3, element4, element5, element6, 0.0],
+            elements: [neg_e14, neg_e24, neg_e34, e1234, e23, neg_e13, e12, 0.0],
         }
     }
     pub const fn from_groups(g0: Simd32x4, g1: Simd32x3) -> Self {
@@ -991,9 +987,9 @@ pub union Rotor {
 
 impl Rotor {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32, element1: f32, element2: f32, element3: f32) -> Self {
+    pub const fn new(neg_e14: f32, neg_e24: f32, neg_e34: f32, e1234: f32) -> Self {
         Self {
-            elements: [element0, element1, element2, element3],
+            elements: [neg_e14, neg_e24, neg_e34, e1234],
         }
     }
     pub const fn from_groups(g0: Simd32x4) -> Self {
@@ -1066,9 +1062,9 @@ pub union Translator {
 
 impl Translator {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32, element1: f32, element2: f32, element3: f32) -> Self {
+    pub const fn new(e23: f32, neg_e13: f32, e12: f32, e1234: f32) -> Self {
         Self {
-            elements: [element0, element1, element2, element3],
+            elements: [e23, neg_e13, e12, e1234],
         }
     }
     pub const fn from_groups(g0: Simd32x4) -> Self {
@@ -1143,9 +1139,9 @@ pub union Flector {
 
 impl Flector {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32, element1: f32, element2: f32, element3: f32, element4: f32, element5: f32, element6: f32, element7: f32) -> Self {
+    pub const fn new(e1: f32, e2: f32, e3: f32, e4: f32, e234: f32, neg_e134: f32, e124: f32, neg_e123: f32) -> Self {
         Self {
-            elements: [element0, element1, element2, element3, element4, element5, element6, element7],
+            elements: [e1, e2, e3, e4, e234, neg_e134, e124, neg_e123],
         }
     }
     pub const fn from_groups(g0: Simd32x4, g1: Simd32x4) -> Self {
@@ -1243,27 +1239,26 @@ pub union MultiVector {
 impl MultiVector {
     #[allow(clippy::too_many_arguments)]
     pub const fn new(
-        element0: f32,
-        element1: f32,
-        element2: f32,
-        element3: f32,
-        element4: f32,
-        element5: f32,
-        element6: f32,
-        element7: f32,
-        element8: f32,
-        element9: f32,
-        element10: f32,
-        element11: f32,
-        element12: f32,
-        element13: f32,
-        element14: f32,
-        element15: f32,
+        scalar: f32,
+        e1234: f32,
+        e1: f32,
+        e2: f32,
+        e3: f32,
+        e4: f32,
+        neg_e14: f32,
+        neg_e24: f32,
+        neg_e34: f32,
+        e23: f32,
+        neg_e13: f32,
+        e12: f32,
+        e234: f32,
+        neg_e134: f32,
+        e124: f32,
+        neg_e123: f32,
     ) -> Self {
         Self {
             elements: [
-                element0, element1, 0.0, 0.0, element2, element3, element4, element5, element6, element7, element8, 0.0, element9, element10, element11, 0.0, element12, element13,
-                element14, element15,
+                scalar, e1234, 0.0, 0.0, e1, e2, e3, e4, neg_e14, neg_e24, neg_e34, 0.0, e23, neg_e13, e12, 0.0, e234, neg_e134, e124, neg_e123,
             ],
         }
     }

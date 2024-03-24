@@ -1,3 +1,4 @@
+use std::io::Write;
 use crate::ast::GatherData;
 use crate::{
     ast::{AstNode, DataType, Expression, ExpressionContent, Parameter},
@@ -299,12 +300,25 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
             collector.write_all(b"#[allow(clippy::too_many_arguments)]\n")?;
             emit_indentation(collector, indentation + 1)?;
             collector.write_all(b"pub const fn new(")?;
+            let elements = class.flat_basis().into_iter().map(|mut it| {
+                assert_ne!(it.coefficient, 0);
+                let negative = it.coefficient == -1;
+                it.coefficient = 1;
+                let mut n = it.to_string();
+                if n == "1" {
+                    n = "scalar".to_string();
+                }
+                if negative {
+                    n = format!("neg_{n}");
+                }
+                n
+            }).collect::<Vec<_>>();
             for i in 0..element_count {
                 if i > 0 {
                     collector.write_all(b", ")?;
                 }
-                // TODO better parameter names
-                collector.write_fmt(format_args!("element{}: f32", i))?;
+                let element = &elements[i];
+                collector.write_fmt(format_args!("{}: f32", element))?;
             }
             collector.write_all(b") -> Self {\n")?;
             emit_indentation(collector, indentation + 2)?;
@@ -315,7 +329,8 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
                     if element_index > 0 {
                         collector.write_all(b", ")?;
                     }
-                    collector.write_fmt(format_args!("element{}", element_index))?;
+                    let element = &elements[element_index];
+                    collector.write_all(element.as_bytes())?;
                     element_index += 1;
                 }
                 for _ in group.len()..simd_widths[j] {

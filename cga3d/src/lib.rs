@@ -40,8 +40,8 @@ pub union Scalar {
 
 impl Scalar {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32) -> Self {
-        Self { elements: [element0] }
+    pub const fn new(scalar: f32) -> Self {
+        Self { elements: [scalar] }
     }
     pub const fn from_groups(g0: f32) -> Self {
         Self { groups: ScalarGroups { g0 } }
@@ -105,8 +105,8 @@ pub union AntiScalar {
 
 impl AntiScalar {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32) -> Self {
-        Self { elements: [element0] }
+    pub const fn new(e12345: f32) -> Self {
+        Self { elements: [e12345] }
     }
     pub const fn from_groups(g0: f32) -> Self {
         Self { groups: AntiScalarGroups { g0 } }
@@ -170,9 +170,9 @@ pub union Magnitude {
 
 impl Magnitude {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32, element1: f32) -> Self {
+    pub const fn new(scalar: f32, e12345: f32) -> Self {
         Self {
-            elements: [element0, element1, 0.0, 0.0],
+            elements: [scalar, e12345, 0.0, 0.0],
         }
     }
     pub const fn from_groups(g0: Simd32x2) -> Self {
@@ -239,10 +239,8 @@ pub union Point {
 
 impl Point {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32, element1: f32, element2: f32, element3: f32) -> Self {
-        Self {
-            elements: [element0, element1, element2, element3],
-        }
+    pub const fn new(e15: f32, e25: f32, e35: f32, e45: f32) -> Self {
+        Self { elements: [e15, e25, e35, e45] }
     }
     pub const fn from_groups(g0: Simd32x4) -> Self {
         Self { groups: PointGroups { g0 } }
@@ -316,8 +314,8 @@ pub union Origin {
 
 impl Origin {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32) -> Self {
-        Self { elements: [element0] }
+    pub const fn new(e45: f32) -> Self {
+        Self { elements: [e45] }
     }
     pub const fn from_groups(g0: f32) -> Self {
         Self { groups: OriginGroups { g0 } }
@@ -381,10 +379,8 @@ pub union PointAtInfinity {
 
 impl PointAtInfinity {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32, element1: f32, element2: f32) -> Self {
-        Self {
-            elements: [element0, element1, element2, 0.0],
-        }
+    pub const fn new(e15: f32, e25: f32, e35: f32) -> Self {
+        Self { elements: [e15, e25, e35, 0.0] }
     }
     pub const fn from_groups(g0: Simd32x3) -> Self {
         Self {
@@ -454,9 +450,9 @@ pub union Line {
 
 impl Line {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32, element1: f32, element2: f32, element3: f32, element4: f32, element5: f32) -> Self {
+    pub const fn new(neg_e145: f32, neg_e245: f32, neg_e345: f32, e235: f32, neg_e135: f32, e125: f32) -> Self {
         Self {
-            elements: [element0, element1, element2, 0.0, element3, element4, element5, 0.0],
+            elements: [neg_e145, neg_e245, neg_e345, 0.0, e235, neg_e135, e125, 0.0],
         }
     }
     pub const fn from_groups(g0: Simd32x3, g1: Simd32x3) -> Self {
@@ -539,9 +535,9 @@ pub union LineAtOrigin {
 
 impl LineAtOrigin {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32, element1: f32, element2: f32) -> Self {
+    pub const fn new(neg_e145: f32, neg_e245: f32, neg_e345: f32) -> Self {
         Self {
-            elements: [element0, element1, element2, 0.0],
+            elements: [neg_e145, neg_e245, neg_e345, 0.0],
         }
     }
     pub const fn from_groups(g0: Simd32x3) -> Self {
@@ -615,9 +611,9 @@ pub union LineAtInfinity {
 
 impl LineAtInfinity {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32, element1: f32, element2: f32) -> Self {
+    pub const fn new(e235: f32, neg_e135: f32, e125: f32) -> Self {
         Self {
-            elements: [element0, element1, element2, 0.0],
+            elements: [e235, neg_e135, e125, 0.0],
         }
     }
     pub const fn from_groups(g0: Simd32x3) -> Self {
@@ -691,9 +687,9 @@ pub union Plane {
 
 impl Plane {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32, element1: f32, element2: f32, element3: f32) -> Self {
+    pub const fn new(e2345: f32, neg_e1345: f32, e1245: f32, neg_e1235: f32) -> Self {
         Self {
-            elements: [element0, element1, element2, element3],
+            elements: [e2345, neg_e1345, e1245, neg_e1235],
         }
     }
     pub const fn from_groups(g0: Simd32x4) -> Self {
@@ -766,9 +762,9 @@ pub union PlaneAtOrigin {
 
 impl PlaneAtOrigin {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32, element1: f32, element2: f32) -> Self {
+    pub const fn new(e2345: f32, neg_e1345: f32, e1245: f32) -> Self {
         Self {
-            elements: [element0, element1, element2, 0.0],
+            elements: [e2345, neg_e1345, e1245, 0.0],
         }
     }
     pub const fn from_groups(g0: Simd32x3) -> Self {
@@ -844,8 +840,8 @@ pub union Horizon {
 
 impl Horizon {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32) -> Self {
-        Self { elements: [element0] }
+    pub const fn new(neg_e1235: f32) -> Self {
+        Self { elements: [neg_e1235] }
     }
     pub const fn from_groups(g0: f32) -> Self {
         Self { groups: HorizonGroups { g0 } }
@@ -911,9 +907,9 @@ pub union RoundPoint {
 
 impl RoundPoint {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32, element1: f32, element2: f32, element3: f32, element4: f32) -> Self {
+    pub const fn new(e1: f32, e2: f32, e3: f32, e4: f32, e5: f32) -> Self {
         Self {
-            elements: [element0, element1, element2, 0.0, element3, element4, 0.0, 0.0],
+            elements: [e1, e2, e3, 0.0, e4, e5, 0.0, 0.0],
         }
     }
     pub const fn from_groups(g0: Simd32x3, g1: Simd32x2) -> Self {
@@ -1001,9 +997,9 @@ pub union Dipole {
 
 impl Dipole {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32, element1: f32, element2: f32, element3: f32, element4: f32, element5: f32, element6: f32, element7: f32, element8: f32, element9: f32) -> Self {
+    pub const fn new(neg_e14: f32, neg_e24: f32, neg_e34: f32, e23: f32, neg_e13: f32, e12: f32, e15: f32, e25: f32, e35: f32, e45: f32) -> Self {
         Self {
-            elements: [element0, element1, element2, 0.0, element3, element4, element5, 0.0, element6, element7, element8, element9],
+            elements: [neg_e14, neg_e24, neg_e34, 0.0, e23, neg_e13, e12, 0.0, e15, e25, e35, e45],
         }
     }
     pub const fn from_groups(g0: Simd32x3, g1: Simd32x3, g2: Simd32x4) -> Self {
@@ -1109,9 +1105,9 @@ pub union Circle {
 
 impl Circle {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32, element1: f32, element2: f32, element3: f32, element4: f32, element5: f32, element6: f32, element7: f32, element8: f32, element9: f32) -> Self {
+    pub const fn new(e234: f32, neg_e134: f32, e124: f32, neg_e123: f32, neg_e145: f32, neg_e245: f32, neg_e345: f32, e235: f32, neg_e135: f32, e125: f32) -> Self {
         Self {
-            elements: [element0, element1, element2, element3, element4, element5, element6, 0.0, element7, element8, element9, 0.0],
+            elements: [e234, neg_e134, e124, neg_e123, neg_e145, neg_e245, neg_e345, 0.0, e235, neg_e135, e125, 0.0],
         }
     }
     pub const fn from_groups(g0: Simd32x4, g1: Simd32x3, g2: Simd32x3) -> Self {
@@ -1215,9 +1211,9 @@ pub union Sphere {
 
 impl Sphere {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32, element1: f32, element2: f32, element3: f32, element4: f32) -> Self {
+    pub const fn new(e2345: f32, neg_e1345: f32, e1245: f32, e1234: f32, neg_e1235: f32) -> Self {
         Self {
-            elements: [element0, element1, element2, 0.0, element3, element4, 0.0, 0.0],
+            elements: [e2345, neg_e1345, e1245, 0.0, e1234, neg_e1235, 0.0, 0.0],
         }
     }
     pub const fn from_groups(g0: Simd32x3, g1: Simd32x2) -> Self {
@@ -1299,8 +1295,8 @@ pub union Infinity {
 
 impl Infinity {
     #[allow(clippy::too_many_arguments)]
-    pub const fn new(element0: f32) -> Self {
-        Self { elements: [element0] }
+    pub const fn new(e5: f32) -> Self {
+        Self { elements: [e5] }
     }
     pub const fn from_groups(g0: f32) -> Self {
         Self { groups: InfinityGroups { g0 } }
@@ -1385,44 +1381,43 @@ pub union MultiVector {
 impl MultiVector {
     #[allow(clippy::too_many_arguments)]
     pub const fn new(
-        element0: f32,
-        element1: f32,
-        element2: f32,
-        element3: f32,
-        element4: f32,
-        element5: f32,
-        element6: f32,
-        element7: f32,
-        element8: f32,
-        element9: f32,
-        element10: f32,
-        element11: f32,
-        element12: f32,
-        element13: f32,
-        element14: f32,
-        element15: f32,
-        element16: f32,
-        element17: f32,
-        element18: f32,
-        element19: f32,
-        element20: f32,
-        element21: f32,
-        element22: f32,
-        element23: f32,
-        element24: f32,
-        element25: f32,
-        element26: f32,
-        element27: f32,
-        element28: f32,
-        element29: f32,
-        element30: f32,
-        element31: f32,
+        scalar: f32,
+        e12345: f32,
+        e1: f32,
+        e2: f32,
+        e3: f32,
+        e4: f32,
+        e5: f32,
+        neg_e14: f32,
+        neg_e24: f32,
+        neg_e34: f32,
+        e23: f32,
+        neg_e13: f32,
+        e12: f32,
+        e15: f32,
+        e25: f32,
+        e35: f32,
+        e45: f32,
+        e234: f32,
+        neg_e134: f32,
+        e124: f32,
+        neg_e123: f32,
+        neg_e145: f32,
+        neg_e245: f32,
+        neg_e345: f32,
+        e235: f32,
+        neg_e135: f32,
+        e125: f32,
+        e2345: f32,
+        neg_e1345: f32,
+        e1245: f32,
+        e1234: f32,
+        neg_e1235: f32,
     ) -> Self {
         Self {
             elements: [
-                element0, element1, 0.0, 0.0, element2, element3, element4, 0.0, element5, element6, 0.0, 0.0, element7, element8, element9, 0.0, element10, element11, element12,
-                0.0, element13, element14, element15, element16, element17, element18, element19, element20, element21, element22, element23, 0.0, element24, element25, element26,
-                0.0, element27, element28, element29, 0.0, element30, element31, 0.0, 0.0,
+                scalar, e12345, 0.0, 0.0, e1, e2, e3, 0.0, e4, e5, 0.0, 0.0, neg_e14, neg_e24, neg_e34, 0.0, e23, neg_e13, e12, 0.0, e15, e25, e35, e45, e234, neg_e134, e124,
+                neg_e123, neg_e145, neg_e245, neg_e345, 0.0, e235, neg_e135, e125, 0.0, e2345, neg_e1345, e1245, 0.0, e1234, neg_e1235, 0.0, 0.0,
             ],
         }
     }
