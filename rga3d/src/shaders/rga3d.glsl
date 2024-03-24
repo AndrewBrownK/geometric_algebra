@@ -11188,6 +11188,70 @@ Magnitude translator_geometric_norm(Translator self) {
     return scalar_anti_scalar_add(translator_bulk_norm(self), translator_weight_norm(self));
 }
 
+float flector_unitized_norm_squared(Flector self) {
+    return flector_bulk_norm_squared(self).g0 / flector_weight_norm_squared(self).g0;
+}
+
+float line_unitized_norm_squared(Line self) {
+    return line_bulk_norm_squared(self).g0 / line_weight_norm_squared(self).g0;
+}
+
+float magnitude_unitized_norm_squared(Magnitude self) {
+    return magnitude_bulk_norm_squared(self).g0 / magnitude_weight_norm_squared(self).g0;
+}
+
+float motor_unitized_norm_squared(Motor self) {
+    return motor_bulk_norm_squared(self).g0 / motor_weight_norm_squared(self).g0;
+}
+
+float multi_vector_unitized_norm_squared(MultiVector self) {
+    return multi_vector_bulk_norm_squared(self).g0 / multi_vector_weight_norm_squared(self).g0;
+}
+
+float plane_unitized_norm_squared(Plane self) {
+    return plane_bulk_norm_squared(self).g0 / plane_weight_norm_squared(self).g0;
+}
+
+float point_unitized_norm_squared(Point self) {
+    return point_bulk_norm_squared(self).g0 / point_weight_norm_squared(self).g0;
+}
+
+float translator_unitized_norm_squared(Translator self) {
+    return translator_bulk_norm_squared(self).g0 / translator_weight_norm_squared(self).g0;
+}
+
+float flector_unitized_norm(Flector self) {
+    return sqrt(flector_unitized_norm_squared(self));
+}
+
+float line_unitized_norm(Line self) {
+    return sqrt(line_unitized_norm_squared(self));
+}
+
+float magnitude_unitized_norm(Magnitude self) {
+    return sqrt(magnitude_unitized_norm_squared(self));
+}
+
+float motor_unitized_norm(Motor self) {
+    return sqrt(motor_unitized_norm_squared(self));
+}
+
+float multi_vector_unitized_norm(MultiVector self) {
+    return sqrt(multi_vector_unitized_norm_squared(self));
+}
+
+float plane_unitized_norm(Plane self) {
+    return sqrt(plane_unitized_norm_squared(self));
+}
+
+float point_unitized_norm(Point self) {
+    return sqrt(point_unitized_norm_squared(self));
+}
+
+float translator_unitized_norm(Translator self) {
+    return sqrt(translator_unitized_norm_squared(self));
+}
+
 AntiScalar anti_scalar_unitize(AntiScalar self) {
     return anti_scalar_scalar_geometric_product(self, Scalar(1.0 / anti_scalar_weight_norm(self).g0));
 }

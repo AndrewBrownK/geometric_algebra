@@ -11188,6 +11188,70 @@ fn translator_geometric_norm(self_: Translator) -> Magnitude {
     return scalar_anti_scalar_add(translator_bulk_norm(self_), translator_weight_norm(self_));
 }
 
+fn flector_unitized_norm_squared(self_: Flector) -> f32 {
+    return flector_bulk_norm_squared(self_).g0 / flector_weight_norm_squared(self_).g0;
+}
+
+fn line_unitized_norm_squared(self_: Line) -> f32 {
+    return line_bulk_norm_squared(self_).g0 / line_weight_norm_squared(self_).g0;
+}
+
+fn magnitude_unitized_norm_squared(self_: Magnitude) -> f32 {
+    return magnitude_bulk_norm_squared(self_).g0 / magnitude_weight_norm_squared(self_).g0;
+}
+
+fn motor_unitized_norm_squared(self_: Motor) -> f32 {
+    return motor_bulk_norm_squared(self_).g0 / motor_weight_norm_squared(self_).g0;
+}
+
+fn multi_vector_unitized_norm_squared(self_: MultiVector) -> f32 {
+    return multi_vector_bulk_norm_squared(self_).g0 / multi_vector_weight_norm_squared(self_).g0;
+}
+
+fn plane_unitized_norm_squared(self_: Plane) -> f32 {
+    return plane_bulk_norm_squared(self_).g0 / plane_weight_norm_squared(self_).g0;
+}
+
+fn point_unitized_norm_squared(self_: Point) -> f32 {
+    return point_bulk_norm_squared(self_).g0 / point_weight_norm_squared(self_).g0;
+}
+
+fn translator_unitized_norm_squared(self_: Translator) -> f32 {
+    return translator_bulk_norm_squared(self_).g0 / translator_weight_norm_squared(self_).g0;
+}
+
+fn flector_unitized_norm(self_: Flector) -> f32 {
+    return sqrt(flector_unitized_norm_squared(self_));
+}
+
+fn line_unitized_norm(self_: Line) -> f32 {
+    return sqrt(line_unitized_norm_squared(self_));
+}
+
+fn magnitude_unitized_norm(self_: Magnitude) -> f32 {
+    return sqrt(magnitude_unitized_norm_squared(self_));
+}
+
+fn motor_unitized_norm(self_: Motor) -> f32 {
+    return sqrt(motor_unitized_norm_squared(self_));
+}
+
+fn multi_vector_unitized_norm(self_: MultiVector) -> f32 {
+    return sqrt(multi_vector_unitized_norm_squared(self_));
+}
+
+fn plane_unitized_norm(self_: Plane) -> f32 {
+    return sqrt(plane_unitized_norm_squared(self_));
+}
+
+fn point_unitized_norm(self_: Point) -> f32 {
+    return sqrt(point_unitized_norm_squared(self_));
+}
+
+fn translator_unitized_norm(self_: Translator) -> f32 {
+    return sqrt(translator_unitized_norm_squared(self_));
+}
+
 fn anti_scalar_unitize(self_: AntiScalar) -> AntiScalar {
     return anti_scalar_scalar_geometric_product(self_, Scalar(1.0 / anti_scalar_weight_norm(self_).g0));
 }

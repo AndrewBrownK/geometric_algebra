@@ -11497,6 +11497,118 @@ Magnitude sphere_geometric_norm(Sphere self) {
     return scalar_anti_scalar_add(sphere_bulk_norm(self), sphere_weight_norm(self));
 }
 
+float anti_scalar_unitized_norm_squared(AntiScalar self) {
+    return anti_scalar_bulk_norm_squared(self).g0 / anti_scalar_weight_norm_squared(self).g0;
+}
+
+float circle_unitized_norm_squared(Circle self) {
+    return circle_bulk_norm_squared(self).g0 / circle_weight_norm_squared(self).g0;
+}
+
+float dipole_unitized_norm_squared(Dipole self) {
+    return dipole_bulk_norm_squared(self).g0 / dipole_weight_norm_squared(self).g0;
+}
+
+float line_unitized_norm_squared(Line self) {
+    return line_bulk_norm_squared(self).g0 / line_weight_norm_squared(self).g0;
+}
+
+float line_at_origin_unitized_norm_squared(LineAtOrigin self) {
+    return line_at_origin_bulk_norm_squared(self).g0 / line_at_origin_weight_norm_squared(self).g0;
+}
+
+float magnitude_unitized_norm_squared(Magnitude self) {
+    return magnitude_bulk_norm_squared(self).g0 / magnitude_weight_norm_squared(self).g0;
+}
+
+float multi_vector_unitized_norm_squared(MultiVector self) {
+    return multi_vector_bulk_norm_squared(self).g0 / multi_vector_weight_norm_squared(self).g0;
+}
+
+float origin_unitized_norm_squared(Origin self) {
+    return origin_bulk_norm_squared(self).g0 / origin_weight_norm_squared(self).g0;
+}
+
+float plane_unitized_norm_squared(Plane self) {
+    return plane_bulk_norm_squared(self).g0 / plane_weight_norm_squared(self).g0;
+}
+
+float plane_at_origin_unitized_norm_squared(PlaneAtOrigin self) {
+    return plane_at_origin_bulk_norm_squared(self).g0 / plane_at_origin_weight_norm_squared(self).g0;
+}
+
+float point_unitized_norm_squared(Point self) {
+    return point_bulk_norm_squared(self).g0 / point_weight_norm_squared(self).g0;
+}
+
+float round_point_unitized_norm_squared(RoundPoint self) {
+    return round_point_bulk_norm_squared(self).g0 / round_point_weight_norm_squared(self).g0;
+}
+
+float scalar_unitized_norm_squared(Scalar self) {
+    return scalar_bulk_norm_squared(self).g0 / scalar_weight_norm_squared(self).g0;
+}
+
+float sphere_unitized_norm_squared(Sphere self) {
+    return sphere_bulk_norm_squared(self).g0 / sphere_weight_norm_squared(self).g0;
+}
+
+float anti_scalar_unitized_norm(AntiScalar self) {
+    return sqrt(anti_scalar_unitized_norm_squared(self));
+}
+
+float circle_unitized_norm(Circle self) {
+    return sqrt(circle_unitized_norm_squared(self));
+}
+
+float dipole_unitized_norm(Dipole self) {
+    return sqrt(dipole_unitized_norm_squared(self));
+}
+
+float line_unitized_norm(Line self) {
+    return sqrt(line_unitized_norm_squared(self));
+}
+
+float line_at_origin_unitized_norm(LineAtOrigin self) {
+    return sqrt(line_at_origin_unitized_norm_squared(self));
+}
+
+float magnitude_unitized_norm(Magnitude self) {
+    return sqrt(magnitude_unitized_norm_squared(self));
+}
+
+float multi_vector_unitized_norm(MultiVector self) {
+    return sqrt(multi_vector_unitized_norm_squared(self));
+}
+
+float origin_unitized_norm(Origin self) {
+    return sqrt(origin_unitized_norm_squared(self));
+}
+
+float plane_unitized_norm(Plane self) {
+    return sqrt(plane_unitized_norm_squared(self));
+}
+
+float plane_at_origin_unitized_norm(PlaneAtOrigin self) {
+    return sqrt(plane_at_origin_unitized_norm_squared(self));
+}
+
+float point_unitized_norm(Point self) {
+    return sqrt(point_unitized_norm_squared(self));
+}
+
+float round_point_unitized_norm(RoundPoint self) {
+    return sqrt(round_point_unitized_norm_squared(self));
+}
+
+float scalar_unitized_norm(Scalar self) {
+    return sqrt(scalar_unitized_norm_squared(self));
+}
+
+float sphere_unitized_norm(Sphere self) {
+    return sqrt(sphere_unitized_norm_squared(self));
+}
+
 AntiScalar anti_scalar_unitize(AntiScalar self) {
     return anti_scalar_scalar_geometric_product(self, Scalar(1.0 / anti_scalar_weight_norm(self).g0));
 }

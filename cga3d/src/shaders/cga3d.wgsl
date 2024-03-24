@@ -11497,6 +11497,118 @@ fn sphere_geometric_norm(self_: Sphere) -> Magnitude {
     return scalar_anti_scalar_add(sphere_bulk_norm(self_), sphere_weight_norm(self_));
 }
 
+fn anti_scalar_unitized_norm_squared(self_: AntiScalar) -> f32 {
+    return anti_scalar_bulk_norm_squared(self_).g0 / anti_scalar_weight_norm_squared(self_).g0;
+}
+
+fn circle_unitized_norm_squared(self_: Circle) -> f32 {
+    return circle_bulk_norm_squared(self_).g0 / circle_weight_norm_squared(self_).g0;
+}
+
+fn dipole_unitized_norm_squared(self_: Dipole) -> f32 {
+    return dipole_bulk_norm_squared(self_).g0 / dipole_weight_norm_squared(self_).g0;
+}
+
+fn line_unitized_norm_squared(self_: Line) -> f32 {
+    return line_bulk_norm_squared(self_).g0 / line_weight_norm_squared(self_).g0;
+}
+
+fn line_at_origin_unitized_norm_squared(self_: LineAtOrigin) -> f32 {
+    return line_at_origin_bulk_norm_squared(self_).g0 / line_at_origin_weight_norm_squared(self_).g0;
+}
+
+fn magnitude_unitized_norm_squared(self_: Magnitude) -> f32 {
+    return magnitude_bulk_norm_squared(self_).g0 / magnitude_weight_norm_squared(self_).g0;
+}
+
+fn multi_vector_unitized_norm_squared(self_: MultiVector) -> f32 {
+    return multi_vector_bulk_norm_squared(self_).g0 / multi_vector_weight_norm_squared(self_).g0;
+}
+
+fn origin_unitized_norm_squared(self_: Origin) -> f32 {
+    return origin_bulk_norm_squared(self_).g0 / origin_weight_norm_squared(self_).g0;
+}
+
+fn plane_unitized_norm_squared(self_: Plane) -> f32 {
+    return plane_bulk_norm_squared(self_).g0 / plane_weight_norm_squared(self_).g0;
+}
+
+fn plane_at_origin_unitized_norm_squared(self_: PlaneAtOrigin) -> f32 {
+    return plane_at_origin_bulk_norm_squared(self_).g0 / plane_at_origin_weight_norm_squared(self_).g0;
+}
+
+fn point_unitized_norm_squared(self_: Point) -> f32 {
+    return point_bulk_norm_squared(self_).g0 / point_weight_norm_squared(self_).g0;
+}
+
+fn round_point_unitized_norm_squared(self_: RoundPoint) -> f32 {
+    return round_point_bulk_norm_squared(self_).g0 / round_point_weight_norm_squared(self_).g0;
+}
+
+fn scalar_unitized_norm_squared(self_: Scalar) -> f32 {
+    return scalar_bulk_norm_squared(self_).g0 / scalar_weight_norm_squared(self_).g0;
+}
+
+fn sphere_unitized_norm_squared(self_: Sphere) -> f32 {
+    return sphere_bulk_norm_squared(self_).g0 / sphere_weight_norm_squared(self_).g0;
+}
+
+fn anti_scalar_unitized_norm(self_: AntiScalar) -> f32 {
+    return sqrt(anti_scalar_unitized_norm_squared(self_));
+}
+
+fn circle_unitized_norm(self_: Circle) -> f32 {
+    return sqrt(circle_unitized_norm_squared(self_));
+}
+
+fn dipole_unitized_norm(self_: Dipole) -> f32 {
+    return sqrt(dipole_unitized_norm_squared(self_));
+}
+
+fn line_unitized_norm(self_: Line) -> f32 {
+    return sqrt(line_unitized_norm_squared(self_));
+}
+
+fn line_at_origin_unitized_norm(self_: LineAtOrigin) -> f32 {
+    return sqrt(line_at_origin_unitized_norm_squared(self_));
+}
+
+fn magnitude_unitized_norm(self_: Magnitude) -> f32 {
+    return sqrt(magnitude_unitized_norm_squared(self_));
+}
+
+fn multi_vector_unitized_norm(self_: MultiVector) -> f32 {
+    return sqrt(multi_vector_unitized_norm_squared(self_));
+}
+
+fn origin_unitized_norm(self_: Origin) -> f32 {
+    return sqrt(origin_unitized_norm_squared(self_));
+}
+
+fn plane_unitized_norm(self_: Plane) -> f32 {
+    return sqrt(plane_unitized_norm_squared(self_));
+}
+
+fn plane_at_origin_unitized_norm(self_: PlaneAtOrigin) -> f32 {
+    return sqrt(plane_at_origin_unitized_norm_squared(self_));
+}
+
+fn point_unitized_norm(self_: Point) -> f32 {
+    return sqrt(point_unitized_norm_squared(self_));
+}
+
+fn round_point_unitized_norm(self_: RoundPoint) -> f32 {
+    return sqrt(round_point_unitized_norm_squared(self_));
+}
+
+fn scalar_unitized_norm(self_: Scalar) -> f32 {
+    return sqrt(scalar_unitized_norm_squared(self_));
+}
+
+fn sphere_unitized_norm(self_: Sphere) -> f32 {
+    return sqrt(sphere_unitized_norm_squared(self_));
+}
+
 fn anti_scalar_unitize(self_: AntiScalar) -> AntiScalar {
     return anti_scalar_scalar_geometric_product(self_, Scalar(1.0 / anti_scalar_weight_norm(self_).g0));
 }

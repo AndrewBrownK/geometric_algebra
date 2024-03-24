@@ -1919,12 +1919,44 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
         }
 
-        // TODO create a unitized norm that takes GeometricNorm, then
-        //  divides the bulk by the weight and returns a plain float (not a multivector class)
-        //  https://projectivegeometricalgebra.org/projgeomalg.pdf
-        //  (and then similar unitized norms for round objects center/radius)
-        //  Might be best to call it "projected" instead of "unitized", in accordance with the poster,
-        //  but who knows.
+        for param_a in registry.single_parameters() {
+            let name = "UnitizedNormSquared";
+            let _: Option<()> = try {
+                let bn = self.trait_impls.get_single_invocation("BulkNormSquared", variable(&param_a))?;
+                let wn = self.trait_impls.get_single_invocation("WeightNormSquared", variable(&param_a))?;
+                let access_bn = Expression {
+                    size: 1,
+                    data_type_hint: Some(DataType::SimdVector(1)),
+                    content: ExpressionContent::Access(Box::new(bn), 0),
+                };
+                let access_wn = Expression {
+                    size: 1,
+                    data_type_hint: Some(DataType::SimdVector(1)),
+                    content: ExpressionContent::Access(Box::new(wn), 0),
+                };
+                let div = Expression {
+                    size: 1,
+                    data_type_hint: Some(DataType::SimdVector(1)),
+                    content: ExpressionContent::Divide(Box::new(access_bn), Box::new(access_wn)),
+                };
+                let uns = single_expression_single_trait_impl(name, &param_a, div);
+                self.trait_impls.add_single_impl(name, param_a.clone(), uns);
+            };
+        }
+
+        for param_a in registry.single_parameters() {
+            let name = "UnitizedNorm";
+            let _: Option<()> = try {
+                let uns = self.trait_impls.get_single_invocation("UnitizedNormSquared", variable(&param_a))?;
+                let sqrt = Expression {
+                    size: 1,
+                    data_type_hint: Some(DataType::SimdVector(1)),
+                    content: ExpressionContent::SquareRoot(Box::new(uns)),
+                };
+                let un = single_expression_single_trait_impl(name, &param_a, sqrt);
+                self.trait_impls.add_single_impl(name, param_a.clone(), un);
+            };
+        }
     }
 
     /// Step 3: Create some fancy norms
@@ -3021,11 +3053,13 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             })?;
         }
         for ((name, _), ast) in &self.trait_impls.single_args {
-            if trait_names.contains(name) && name.as_str() != "GeometricNorm" {
+            if trait_names.contains(name) && name.as_str() != "GeometricNorm" && !name.contains("Unitized") {
                 emitter.emit(ast)?;
             }
         }
         self.emit_exact_name_match_trait_impls(&["GeometricNorm"], emitter)?;
+        self.emit_exact_name_match_trait_impls(&["UnitizedNormSquared"], emitter)?;
+        self.emit_exact_name_match_trait_impls(&["UnitizedNorm"], emitter)?;
         Ok(())
     }
 
