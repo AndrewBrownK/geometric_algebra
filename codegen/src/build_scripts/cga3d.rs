@@ -45,12 +45,12 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         // "RoundPoint/RoundOrigin:e4",
         "RoundPoint/Infinity:e5",
 
-        // TODO figure out these objects
-        // "Motor:e41,e42,e43,e1234|e23,e31,e12",
-        // "Motor/Rotor:e41,e42,e43,e1234",
-        // "Motor/Translator:e23,e31,e12,e1234",
-        //
-        // "Flector:e1,e2,e3,e4|e423,e431,e412,e321",
+        // Operator Objects
+        "Motor:e415,e425,e435,e12345|e235,e315,e125",
+        "Motor/Rotor:e415,e425,e435,e12345",
+        "Motor/Translator:e235,e315,e125,e12345",
+        "Flector:e15,e25,e35,e45|e4235,e4315,e4125,e3215",
+
         "MultiVector:\
             1,e12345|\
             e1,e2,e3|e4,e5|\

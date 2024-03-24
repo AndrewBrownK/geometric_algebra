@@ -1346,6 +1346,341 @@ impl std::fmt::Debug for Infinity {
 }
 
 #[derive(Clone, Copy)]
+struct MotorGroups {
+    /// -e145, -e245, -e345, e12345
+    g0: Simd32x4,
+    /// e235, -e135, e125
+    g1: Simd32x3,
+}
+
+#[derive(Clone, Copy)]
+pub union Motor {
+    groups: MotorGroups,
+    /// -e145, -e245, -e345, e12345, e235, -e135, e125, 0
+    elements: [f32; 8],
+}
+
+impl Motor {
+    #[allow(clippy::too_many_arguments)]
+    pub const fn new(neg_e145: f32, neg_e245: f32, neg_e345: f32, e12345: f32, e235: f32, neg_e135: f32, e125: f32) -> Self {
+        Self {
+            elements: [neg_e145, neg_e245, neg_e345, e12345, e235, neg_e135, e125, 0.0],
+        }
+    }
+    pub const fn from_groups(g0: Simd32x4, g1: Simd32x3) -> Self {
+        Self { groups: MotorGroups { g0, g1 } }
+    }
+    #[inline(always)]
+    pub fn group0(&self) -> Simd32x4 {
+        unsafe { self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group0_mut(&mut self) -> &mut Simd32x4 {
+        unsafe { &mut self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group1(&self) -> Simd32x3 {
+        unsafe { self.groups.g1 }
+    }
+    #[inline(always)]
+    pub fn group1_mut(&mut self) -> &mut Simd32x3 {
+        unsafe { &mut self.groups.g1 }
+    }
+}
+
+const MOTOR_INDEX_REMAP: [usize; 7] = [0, 1, 2, 3, 4, 5, 6];
+
+impl std::ops::Index<usize> for Motor {
+    type Output = f32;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        unsafe { &self.elements[MOTOR_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::ops::IndexMut<usize> for Motor {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        unsafe { &mut self.elements[MOTOR_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::convert::From<Motor> for [f32; 7] {
+    fn from(vector: Motor) -> Self {
+        unsafe {
+            [
+                vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[3], vector.elements[4], vector.elements[5], vector.elements[6],
+            ]
+        }
+    }
+}
+
+impl std::convert::From<[f32; 7]> for Motor {
+    fn from(array: [f32; 7]) -> Self {
+        Self {
+            elements: [array[0], array[1], array[2], array[3], array[4], array[5], array[6], 0.0],
+        }
+    }
+}
+
+impl std::fmt::Debug for Motor {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter
+            .debug_struct("Motor")
+            .field("-e145", &self[0])
+            .field("-e245", &self[1])
+            .field("-e345", &self[2])
+            .field("e12345", &self[3])
+            .field("e235", &self[4])
+            .field("-e135", &self[5])
+            .field("e125", &self[6])
+            .finish()
+    }
+}
+
+#[derive(Clone, Copy)]
+struct RotorGroups {
+    /// -e145, -e245, -e345, e12345
+    g0: Simd32x4,
+}
+
+#[derive(Clone, Copy)]
+pub union Rotor {
+    groups: RotorGroups,
+    /// -e145, -e245, -e345, e12345
+    elements: [f32; 4],
+}
+
+impl Rotor {
+    #[allow(clippy::too_many_arguments)]
+    pub const fn new(neg_e145: f32, neg_e245: f32, neg_e345: f32, e12345: f32) -> Self {
+        Self {
+            elements: [neg_e145, neg_e245, neg_e345, e12345],
+        }
+    }
+    pub const fn from_groups(g0: Simd32x4) -> Self {
+        Self { groups: RotorGroups { g0 } }
+    }
+    #[inline(always)]
+    pub fn group0(&self) -> Simd32x4 {
+        unsafe { self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group0_mut(&mut self) -> &mut Simd32x4 {
+        unsafe { &mut self.groups.g0 }
+    }
+}
+
+const ROTOR_INDEX_REMAP: [usize; 4] = [0, 1, 2, 3];
+
+impl std::ops::Index<usize> for Rotor {
+    type Output = f32;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        unsafe { &self.elements[ROTOR_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::ops::IndexMut<usize> for Rotor {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        unsafe { &mut self.elements[ROTOR_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::convert::From<Rotor> for [f32; 4] {
+    fn from(vector: Rotor) -> Self {
+        unsafe { [vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[3]] }
+    }
+}
+
+impl std::convert::From<[f32; 4]> for Rotor {
+    fn from(array: [f32; 4]) -> Self {
+        Self {
+            elements: [array[0], array[1], array[2], array[3]],
+        }
+    }
+}
+
+impl std::fmt::Debug for Rotor {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter
+            .debug_struct("Rotor")
+            .field("-e145", &self[0])
+            .field("-e245", &self[1])
+            .field("-e345", &self[2])
+            .field("e12345", &self[3])
+            .finish()
+    }
+}
+
+#[derive(Clone, Copy)]
+struct TranslatorGroups {
+    /// e235, -e135, e125, e12345
+    g0: Simd32x4,
+}
+
+#[derive(Clone, Copy)]
+pub union Translator {
+    groups: TranslatorGroups,
+    /// e235, -e135, e125, e12345
+    elements: [f32; 4],
+}
+
+impl Translator {
+    #[allow(clippy::too_many_arguments)]
+    pub const fn new(e235: f32, neg_e135: f32, e125: f32, e12345: f32) -> Self {
+        Self {
+            elements: [e235, neg_e135, e125, e12345],
+        }
+    }
+    pub const fn from_groups(g0: Simd32x4) -> Self {
+        Self { groups: TranslatorGroups { g0 } }
+    }
+    #[inline(always)]
+    pub fn group0(&self) -> Simd32x4 {
+        unsafe { self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group0_mut(&mut self) -> &mut Simd32x4 {
+        unsafe { &mut self.groups.g0 }
+    }
+}
+
+const TRANSLATOR_INDEX_REMAP: [usize; 4] = [0, 1, 2, 3];
+
+impl std::ops::Index<usize> for Translator {
+    type Output = f32;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        unsafe { &self.elements[TRANSLATOR_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::ops::IndexMut<usize> for Translator {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        unsafe { &mut self.elements[TRANSLATOR_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::convert::From<Translator> for [f32; 4] {
+    fn from(vector: Translator) -> Self {
+        unsafe { [vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[3]] }
+    }
+}
+
+impl std::convert::From<[f32; 4]> for Translator {
+    fn from(array: [f32; 4]) -> Self {
+        Self {
+            elements: [array[0], array[1], array[2], array[3]],
+        }
+    }
+}
+
+impl std::fmt::Debug for Translator {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter
+            .debug_struct("Translator")
+            .field("e235", &self[0])
+            .field("-e135", &self[1])
+            .field("e125", &self[2])
+            .field("e12345", &self[3])
+            .finish()
+    }
+}
+
+#[derive(Clone, Copy)]
+struct FlectorGroups {
+    /// e15, e25, e35, e45
+    g0: Simd32x4,
+    /// e2345, -e1345, e1245, -e1235
+    g1: Simd32x4,
+}
+
+#[derive(Clone, Copy)]
+pub union Flector {
+    groups: FlectorGroups,
+    /// e15, e25, e35, e45, e2345, -e1345, e1245, -e1235
+    elements: [f32; 8],
+}
+
+impl Flector {
+    #[allow(clippy::too_many_arguments)]
+    pub const fn new(e15: f32, e25: f32, e35: f32, e45: f32, e2345: f32, neg_e1345: f32, e1245: f32, neg_e1235: f32) -> Self {
+        Self {
+            elements: [e15, e25, e35, e45, e2345, neg_e1345, e1245, neg_e1235],
+        }
+    }
+    pub const fn from_groups(g0: Simd32x4, g1: Simd32x4) -> Self {
+        Self { groups: FlectorGroups { g0, g1 } }
+    }
+    #[inline(always)]
+    pub fn group0(&self) -> Simd32x4 {
+        unsafe { self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group0_mut(&mut self) -> &mut Simd32x4 {
+        unsafe { &mut self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group1(&self) -> Simd32x4 {
+        unsafe { self.groups.g1 }
+    }
+    #[inline(always)]
+    pub fn group1_mut(&mut self) -> &mut Simd32x4 {
+        unsafe { &mut self.groups.g1 }
+    }
+}
+
+const FLECTOR_INDEX_REMAP: [usize; 8] = [0, 1, 2, 3, 4, 5, 6, 7];
+
+impl std::ops::Index<usize> for Flector {
+    type Output = f32;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        unsafe { &self.elements[FLECTOR_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::ops::IndexMut<usize> for Flector {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        unsafe { &mut self.elements[FLECTOR_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::convert::From<Flector> for [f32; 8] {
+    fn from(vector: Flector) -> Self {
+        unsafe {
+            [
+                vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[3], vector.elements[4], vector.elements[5], vector.elements[6], vector.elements[7],
+            ]
+        }
+    }
+}
+
+impl std::convert::From<[f32; 8]> for Flector {
+    fn from(array: [f32; 8]) -> Self {
+        Self {
+            elements: [array[0], array[1], array[2], array[3], array[4], array[5], array[6], array[7]],
+        }
+    }
+}
+
+impl std::fmt::Debug for Flector {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter
+            .debug_struct("Flector")
+            .field("e15", &self[0])
+            .field("e25", &self[1])
+            .field("e35", &self[2])
+            .field("e45", &self[3])
+            .field("e2345", &self[4])
+            .field("-e1345", &self[5])
+            .field("e1245", &self[6])
+            .field("-e1235", &self[7])
+            .finish()
+    }
+}
+
+#[derive(Clone, Copy)]
 struct MultiVectorGroups {
     /// 1, e12345
     g0: Simd32x2,
@@ -1654,6 +1989,17 @@ impl One for Dipole {
     }
 }
 
+impl One for Flector {
+    fn one() -> Self {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(0.0),
+                g1: Simd32x4::from(0.0),
+            },
+        }
+    }
+}
+
 impl One for Horizon {
     fn one() -> Self {
         Horizon {
@@ -1701,6 +2047,17 @@ impl One for Magnitude {
     fn one() -> Self {
         Magnitude {
             groups: MagnitudeGroups { g0: Simd32x2::from([1.0, 0.0]) },
+        }
+    }
+}
+
+impl One for Motor {
+    fn one() -> Self {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from(0.0),
+                g1: Simd32x3::from(0.0),
+            },
         }
     }
 }
@@ -1763,6 +2120,14 @@ impl One for PointAtInfinity {
     }
 }
 
+impl One for Rotor {
+    fn one() -> Self {
+        Rotor {
+            groups: RotorGroups { g0: Simd32x4::from(0.0) },
+        }
+    }
+}
+
 impl One for RoundPoint {
     fn one() -> Self {
         RoundPoint {
@@ -1787,6 +2152,14 @@ impl One for Sphere {
                 g0: Simd32x3::from(0.0),
                 g1: Simd32x2::from(0.0),
             },
+        }
+    }
+}
+
+impl One for Translator {
+    fn one() -> Self {
+        Translator {
+            groups: TranslatorGroups { g0: Simd32x4::from(0.0) },
         }
     }
 }
@@ -1818,6 +2191,17 @@ impl Zero for Dipole {
                 g0: Simd32x3::from(0.0),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x4::from(0.0),
+            },
+        }
+    }
+}
+
+impl Zero for Flector {
+    fn zero() -> Self {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(0.0),
+                g1: Simd32x4::from(0.0),
             },
         }
     }
@@ -1870,6 +2254,17 @@ impl Zero for Magnitude {
     fn zero() -> Self {
         Magnitude {
             groups: MagnitudeGroups { g0: Simd32x2::from(0.0) },
+        }
+    }
+}
+
+impl Zero for Motor {
+    fn zero() -> Self {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from(0.0),
+                g1: Simd32x3::from(0.0),
+            },
         }
     }
 }
@@ -1932,6 +2327,14 @@ impl Zero for PointAtInfinity {
     }
 }
 
+impl Zero for Rotor {
+    fn zero() -> Self {
+        Rotor {
+            groups: RotorGroups { g0: Simd32x4::from(0.0) },
+        }
+    }
+}
+
 impl Zero for RoundPoint {
     fn zero() -> Self {
         RoundPoint {
@@ -1956,6 +2359,14 @@ impl Zero for Sphere {
                 g0: Simd32x3::from(0.0),
                 g1: Simd32x2::from(0.0),
             },
+        }
+    }
+}
+
+impl Zero for Translator {
+    fn zero() -> Self {
+        Translator {
+            groups: TranslatorGroups { g0: Simd32x4::from(0.0) },
         }
     }
 }
@@ -1993,6 +2404,19 @@ impl Neg for Dipole {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
                 g2: self.group2() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Neg for Flector {
+    type Output = Flector;
+
+    fn neg(self) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
+                g1: self.group1() * Simd32x4::from([1.0, -1.0, 1.0, 1.0]),
             },
         }
     }
@@ -2062,6 +2486,19 @@ impl Neg for Magnitude {
         Magnitude {
             groups: MagnitudeGroups {
                 g0: self.group0() * Simd32x2::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Neg for Motor {
+    type Output = Motor;
+
+    fn neg(self) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g1: self.group1() * Simd32x3::from([-1.0, 1.0, -1.0]),
             },
         }
     }
@@ -2147,6 +2584,18 @@ impl Neg for PointAtInfinity {
     }
 }
 
+impl Neg for Rotor {
+    type Output = Rotor;
+
+    fn neg(self) -> Rotor {
+        Rotor {
+            groups: RotorGroups {
+                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+            },
+        }
+    }
+}
+
 impl Neg for RoundPoint {
     type Output = RoundPoint;
 
@@ -2183,6 +2632,18 @@ impl Neg for Sphere {
     }
 }
 
+impl Neg for Translator {
+    type Output = Translator;
+
+    fn neg(self) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]),
+            },
+        }
+    }
+}
+
 impl Add<AntiScalar> for AntiScalar {
     type Output = AntiScalar;
 
@@ -2201,6 +2662,43 @@ impl AddAssign<AntiScalar> for AntiScalar {
     }
 }
 
+impl Add<Line> for AntiScalar {
+    type Output = Motor;
+
+    fn add(self, other: Line) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g1: other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<LineAtInfinity> for AntiScalar {
+    type Output = Translator;
+
+    fn add(self, other: LineAtInfinity) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl Add<LineAtOrigin> for AntiScalar {
+    type Output = Rotor;
+
+    fn add(self, other: LineAtOrigin) -> Rotor {
+        Rotor {
+            groups: RotorGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
 impl Add<Magnitude> for AntiScalar {
     type Output = Magnitude;
 
@@ -2208,6 +2706,19 @@ impl Add<Magnitude> for AntiScalar {
         Magnitude {
             groups: MagnitudeGroups {
                 g0: Simd32x2::from([0.0, self.group0()]) + other.group0(),
+            },
+        }
+    }
+}
+
+impl Add<Motor> for AntiScalar {
+    type Output = Motor;
+
+    fn add(self, other: Motor) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group0(),
+                g1: other.group1(),
             },
         }
     }
@@ -2235,6 +2746,18 @@ impl Add<MultiVector> for AntiScalar {
     }
 }
 
+impl Add<Rotor> for AntiScalar {
+    type Output = Rotor;
+
+    fn add(self, other: Rotor) -> Rotor {
+        Rotor {
+            groups: RotorGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group0(),
+            },
+        }
+    }
+}
+
 impl Add<Scalar> for AntiScalar {
     type Output = Magnitude;
 
@@ -2242,6 +2765,18 @@ impl Add<Scalar> for AntiScalar {
         Magnitude {
             groups: MagnitudeGroups {
                 g0: Simd32x2::from([0.0, self.group0()]) + Simd32x2::from([other.group0(), 0.0]),
+            },
+        }
+    }
+}
+
+impl Add<Translator> for AntiScalar {
+    type Output = Translator;
+
+    fn add(self, other: Translator) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group0(),
             },
         }
     }
@@ -2451,6 +2986,174 @@ impl AddAssign<PointAtInfinity> for Dipole {
     }
 }
 
+impl Add<Flector> for Flector {
+    type Output = Flector;
+
+    fn add(self, other: Flector) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0() + other.group0(),
+                g1: self.group1() + other.group1(),
+            },
+        }
+    }
+}
+
+impl AddAssign<Flector> for Flector {
+    fn add_assign(&mut self, other: Flector) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<Horizon> for Flector {
+    type Output = Flector;
+
+    fn add(self, other: Horizon) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0(),
+                g1: self.group1() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl AddAssign<Horizon> for Flector {
+    fn add_assign(&mut self, other: Horizon) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<MultiVector> for Flector {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
+                g3: other.group3(),
+                g4: other.group4(),
+                g5: self.group0() + other.group5(),
+                g6: other.group6(),
+                g7: other.group7(),
+                g8: other.group8(),
+                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) + other.group9(),
+                g10: Simd32x2::from([0.0, self.group1()[3]]) + other.group10(),
+            },
+        }
+    }
+}
+
+impl Add<Origin> for Flector {
+    type Output = Flector;
+
+    fn add(self, other: Origin) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl AddAssign<Origin> for Flector {
+    fn add_assign(&mut self, other: Origin) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<Plane> for Flector {
+    type Output = Flector;
+
+    fn add(self, other: Plane) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0(),
+                g1: self.group1() + other.group0(),
+            },
+        }
+    }
+}
+
+impl AddAssign<Plane> for Flector {
+    fn add_assign(&mut self, other: Plane) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<PlaneAtOrigin> for Flector {
+    type Output = Flector;
+
+    fn add(self, other: PlaneAtOrigin) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0(),
+                g1: self.group1() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl AddAssign<PlaneAtOrigin> for Flector {
+    fn add_assign(&mut self, other: PlaneAtOrigin) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<Point> for Flector {
+    type Output = Flector;
+
+    fn add(self, other: Point) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0() + other.group0(),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl AddAssign<Point> for Flector {
+    fn add_assign(&mut self, other: Point) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<PointAtInfinity> for Flector {
+    type Output = Flector;
+
+    fn add(self, other: PointAtInfinity) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl AddAssign<PointAtInfinity> for Flector {
+    fn add_assign(&mut self, other: PointAtInfinity) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<Flector> for Horizon {
+    type Output = Flector;
+
+    fn add(self, other: Flector) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: other.group0(),
+                g1: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group1(),
+            },
+        }
+    }
+}
+
 impl Add<Horizon> for Horizon {
     type Output = Horizon;
 
@@ -2581,6 +3284,19 @@ impl Add<RoundPoint> for Infinity {
     }
 }
 
+impl Add<AntiScalar> for Line {
+    type Output = Motor;
+
+    fn add(self, other: AntiScalar) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
 impl Add<Circle> for Line {
     type Output = Circle;
 
@@ -2652,6 +3368,19 @@ impl AddAssign<LineAtOrigin> for Line {
     }
 }
 
+impl Add<Motor> for Line {
+    type Output = Motor;
+
+    fn add(self, other: Motor) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group0(),
+                g1: self.group1() + other.group1(),
+            },
+        }
+    }
+}
+
 impl Add<MultiVector> for Line {
     type Output = MultiVector;
 
@@ -2669,6 +3398,44 @@ impl Add<MultiVector> for Line {
                 g8: self.group1() + other.group8(),
                 g9: other.group9(),
                 g10: other.group10(),
+            },
+        }
+    }
+}
+
+impl Add<Rotor> for Line {
+    type Output = Motor;
+
+    fn add(self, other: Rotor) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group0(),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl Add<Translator> for Line {
+    type Output = Motor;
+
+    fn add(self, other: Translator) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+                g1: self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl Add<AntiScalar> for LineAtInfinity {
+    type Output = Translator;
+
+    fn add(self, other: AntiScalar) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
             },
         }
     }
@@ -2732,6 +3499,19 @@ impl Add<LineAtOrigin> for LineAtInfinity {
     }
 }
 
+impl Add<Motor> for LineAtInfinity {
+    type Output = Motor;
+
+    fn add(self, other: Motor) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: other.group0(),
+                g1: self.group0() + other.group1(),
+            },
+        }
+    }
+}
+
 impl Add<MultiVector> for LineAtInfinity {
     type Output = MultiVector;
 
@@ -2749,6 +3529,43 @@ impl Add<MultiVector> for LineAtInfinity {
                 g8: self.group0() + other.group8(),
                 g9: other.group9(),
                 g10: other.group10(),
+            },
+        }
+    }
+}
+
+impl Add<Rotor> for LineAtInfinity {
+    type Output = Motor;
+
+    fn add(self, other: Rotor) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: other.group0(),
+                g1: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<Translator> for LineAtInfinity {
+    type Output = Translator;
+
+    fn add(self, other: Translator) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group0(),
+            },
+        }
+    }
+}
+
+impl Add<AntiScalar> for LineAtOrigin {
+    type Output = Rotor;
+
+    fn add(self, other: AntiScalar) -> Rotor {
+        Rotor {
+            groups: RotorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
             },
         }
     }
@@ -2812,6 +3629,19 @@ impl AddAssign<LineAtOrigin> for LineAtOrigin {
     }
 }
 
+impl Add<Motor> for LineAtOrigin {
+    type Output = Motor;
+
+    fn add(self, other: Motor) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group0(),
+                g1: other.group1(),
+            },
+        }
+    }
+}
+
 impl Add<MultiVector> for LineAtOrigin {
     type Output = MultiVector;
 
@@ -2829,6 +3659,31 @@ impl Add<MultiVector> for LineAtOrigin {
                 g8: other.group8(),
                 g9: other.group9(),
                 g10: other.group10(),
+            },
+        }
+    }
+}
+
+impl Add<Rotor> for LineAtOrigin {
+    type Output = Rotor;
+
+    fn add(self, other: Rotor) -> Rotor {
+        Rotor {
+            groups: RotorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group0(),
+            },
+        }
+    }
+}
+
+impl Add<Translator> for LineAtOrigin {
+    type Output = Motor;
+
+    fn add(self, other: Translator) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+                g1: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
             },
         }
     }
@@ -2906,6 +3761,161 @@ impl Add<Scalar> for Magnitude {
 
 impl AddAssign<Scalar> for Magnitude {
     fn add_assign(&mut self, other: Scalar) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<AntiScalar> for Motor {
+    type Output = Motor;
+
+    fn add(self, other: AntiScalar) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl AddAssign<AntiScalar> for Motor {
+    fn add_assign(&mut self, other: AntiScalar) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<Line> for Motor {
+    type Output = Motor;
+
+    fn add(self, other: Line) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g1: self.group1() + other.group1(),
+            },
+        }
+    }
+}
+
+impl AddAssign<Line> for Motor {
+    fn add_assign(&mut self, other: Line) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<LineAtInfinity> for Motor {
+    type Output = Motor;
+
+    fn add(self, other: LineAtInfinity) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0(),
+                g1: self.group1() + other.group0(),
+            },
+        }
+    }
+}
+
+impl AddAssign<LineAtInfinity> for Motor {
+    fn add_assign(&mut self, other: LineAtInfinity) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<LineAtOrigin> for Motor {
+    type Output = Motor;
+
+    fn add(self, other: LineAtOrigin) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl AddAssign<LineAtOrigin> for Motor {
+    fn add_assign(&mut self, other: LineAtOrigin) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<Motor> for Motor {
+    type Output = Motor;
+
+    fn add(self, other: Motor) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0() + other.group0(),
+                g1: self.group1() + other.group1(),
+            },
+        }
+    }
+}
+
+impl AddAssign<Motor> for Motor {
+    fn add_assign(&mut self, other: Motor) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<MultiVector> for Motor {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()[3]]) + other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
+                g3: other.group3(),
+                g4: other.group4(),
+                g5: other.group5(),
+                g6: other.group6(),
+                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group7(),
+                g8: self.group1() + other.group8(),
+                g9: other.group9(),
+                g10: other.group10(),
+            },
+        }
+    }
+}
+
+impl Add<Rotor> for Motor {
+    type Output = Motor;
+
+    fn add(self, other: Rotor) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0() + other.group0(),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl AddAssign<Rotor> for Motor {
+    fn add_assign(&mut self, other: Rotor) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<Translator> for Motor {
+    type Output = Motor;
+
+    fn add(self, other: Translator) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+                g1: self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl AddAssign<Translator> for Motor {
+    fn add_assign(&mut self, other: Translator) {
         *self = (*self).add(other);
     }
 }
@@ -2990,6 +4000,34 @@ impl Add<Dipole> for MultiVector {
 
 impl AddAssign<Dipole> for MultiVector {
     fn add_assign(&mut self, other: Dipole) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<Flector> for MultiVector {
+    type Output = MultiVector;
+
+    fn add(self, other: Flector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5() + other.group0(),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9() + Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g10: self.group10() + Simd32x2::from([0.0, other.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl AddAssign<Flector> for MultiVector {
+    fn add_assign(&mut self, other: Flector) {
         *self = (*self).add(other);
     }
 }
@@ -3162,6 +4200,34 @@ impl AddAssign<Magnitude> for MultiVector {
     }
 }
 
+impl Add<Motor> for MultiVector {
+    type Output = MultiVector;
+
+    fn add(self, other: Motor) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0() + Simd32x2::from([0.0, other.group0()[3]]),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6(),
+                g7: self.group7() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: self.group8() + other.group1(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl AddAssign<Motor> for MultiVector {
+    fn add_assign(&mut self, other: Motor) {
+        *self = (*self).add(other);
+    }
+}
+
 impl Add<MultiVector> for MultiVector {
     type Output = MultiVector;
 
@@ -3330,6 +4396,34 @@ impl AddAssign<PointAtInfinity> for MultiVector {
     }
 }
 
+impl Add<Rotor> for MultiVector {
+    type Output = MultiVector;
+
+    fn add(self, other: Rotor) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0() + Simd32x2::from([0.0, other.group0()[3]]),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6(),
+                g7: self.group7() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl AddAssign<Rotor> for MultiVector {
+    fn add_assign(&mut self, other: Rotor) {
+        *self = (*self).add(other);
+    }
+}
+
 impl Add<RoundPoint> for MultiVector {
     type Output = MultiVector;
 
@@ -3414,6 +4508,34 @@ impl AddAssign<Sphere> for MultiVector {
     }
 }
 
+impl Add<Translator> for MultiVector {
+    type Output = MultiVector;
+
+    fn add(self, other: Translator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0() + Simd32x2::from([0.0, other.group0()[3]]),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl AddAssign<Translator> for MultiVector {
+    fn add_assign(&mut self, other: Translator) {
+        *self = (*self).add(other);
+    }
+}
+
 impl Add<Dipole> for Origin {
     type Output = Dipole;
 
@@ -3423,6 +4545,19 @@ impl Add<Dipole> for Origin {
                 g0: other.group0(),
                 g1: other.group1(),
                 g2: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group2(),
+            },
+        }
+    }
+}
+
+impl Add<Flector> for Origin {
+    type Output = Flector;
+
+    fn add(self, other: Flector) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group0(),
+                g1: other.group1(),
             },
         }
     }
@@ -3487,6 +4622,19 @@ impl Add<PointAtInfinity> for Origin {
         Point {
             groups: PointGroups {
                 g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl Add<Flector> for Plane {
+    type Output = Flector;
+
+    fn add(self, other: Flector) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: other.group0(),
+                g1: self.group0() + other.group1(),
             },
         }
     }
@@ -3568,6 +4716,19 @@ impl AddAssign<PlaneAtOrigin> for Plane {
     }
 }
 
+impl Add<Point> for Plane {
+    type Output = Flector;
+
+    fn add(self, other: Point) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: other.group0(),
+                g1: self.group0(),
+            },
+        }
+    }
+}
+
 impl Add<Sphere> for Plane {
     type Output = Sphere;
 
@@ -3576,6 +4737,19 @@ impl Add<Sphere> for Plane {
             groups: SphereGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group0(),
                 g1: Simd32x2::from([0.0, self.group0()[3]]) + other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<Flector> for PlaneAtOrigin {
+    type Output = Flector;
+
+    fn add(self, other: Flector) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: other.group0(),
+                g1: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group1(),
             },
         }
     }
@@ -3672,6 +4846,19 @@ impl Add<Dipole> for Point {
     }
 }
 
+impl Add<Flector> for Point {
+    type Output = Flector;
+
+    fn add(self, other: Flector) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0() + other.group0(),
+                g1: other.group1(),
+            },
+        }
+    }
+}
+
 impl Add<MultiVector> for Point {
     type Output = MultiVector;
 
@@ -3709,6 +4896,19 @@ impl Add<Origin> for Point {
 impl AddAssign<Origin> for Point {
     fn add_assign(&mut self, other: Origin) {
         *self = (*self).add(other);
+    }
+}
+
+impl Add<Plane> for Point {
+    type Output = Flector;
+
+    fn add(self, other: Plane) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0(),
+                g1: other.group0(),
+            },
+        }
     }
 }
 
@@ -3757,6 +4957,19 @@ impl Add<Dipole> for PointAtInfinity {
                 g0: other.group0(),
                 g1: other.group1(),
                 g2: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group2(),
+            },
+        }
+    }
+}
+
+impl Add<Flector> for PointAtInfinity {
+    type Output = Flector;
+
+    fn add(self, other: Flector) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group0(),
+                g1: other.group1(),
             },
         }
     }
@@ -3823,6 +5036,134 @@ impl Add<PointAtInfinity> for PointAtInfinity {
 impl AddAssign<PointAtInfinity> for PointAtInfinity {
     fn add_assign(&mut self, other: PointAtInfinity) {
         *self = (*self).add(other);
+    }
+}
+
+impl Add<AntiScalar> for Rotor {
+    type Output = Rotor;
+
+    fn add(self, other: AntiScalar) -> Rotor {
+        Rotor {
+            groups: RotorGroups {
+                g0: self.group0() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl AddAssign<AntiScalar> for Rotor {
+    fn add_assign(&mut self, other: AntiScalar) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<Line> for Rotor {
+    type Output = Motor;
+
+    fn add(self, other: Line) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g1: other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<LineAtInfinity> for Rotor {
+    type Output = Motor;
+
+    fn add(self, other: LineAtInfinity) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0(),
+                g1: other.group0(),
+            },
+        }
+    }
+}
+
+impl Add<LineAtOrigin> for Rotor {
+    type Output = Rotor;
+
+    fn add(self, other: LineAtOrigin) -> Rotor {
+        Rotor {
+            groups: RotorGroups {
+                g0: self.group0() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl AddAssign<LineAtOrigin> for Rotor {
+    fn add_assign(&mut self, other: LineAtOrigin) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<Motor> for Rotor {
+    type Output = Motor;
+
+    fn add(self, other: Motor) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0() + other.group0(),
+                g1: other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<MultiVector> for Rotor {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()[3]]) + other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
+                g3: other.group3(),
+                g4: other.group4(),
+                g5: other.group5(),
+                g6: other.group6(),
+                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group7(),
+                g8: other.group8(),
+                g9: other.group9(),
+                g10: other.group10(),
+            },
+        }
+    }
+}
+
+impl Add<Rotor> for Rotor {
+    type Output = Rotor;
+
+    fn add(self, other: Rotor) -> Rotor {
+        Rotor {
+            groups: RotorGroups {
+                g0: self.group0() + other.group0(),
+            },
+        }
+    }
+}
+
+impl AddAssign<Rotor> for Rotor {
+    fn add_assign(&mut self, other: Rotor) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<Translator> for Rotor {
+    type Output = Motor;
+
+    fn add(self, other: Translator) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+                g1: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+            },
+        }
     }
 }
 
@@ -4048,6 +5389,134 @@ impl AddAssign<Sphere> for Sphere {
     }
 }
 
+impl Add<AntiScalar> for Translator {
+    type Output = Translator;
+
+    fn add(self, other: AntiScalar) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: self.group0() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl AddAssign<AntiScalar> for Translator {
+    fn add_assign(&mut self, other: AntiScalar) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<Line> for Translator {
+    type Output = Motor;
+
+    fn add(self, other: Line) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]) + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<LineAtInfinity> for Translator {
+    type Output = Translator;
+
+    fn add(self, other: LineAtInfinity) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: self.group0() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl AddAssign<LineAtInfinity> for Translator {
+    fn add_assign(&mut self, other: LineAtInfinity) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<LineAtOrigin> for Translator {
+    type Output = Motor;
+
+    fn add(self, other: LineAtOrigin) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]) + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl Add<Motor> for Translator {
+    type Output = Motor;
+
+    fn add(self, other: Motor) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]) + other.group0(),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<MultiVector> for Translator {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()[3]]) + other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
+                g3: other.group3(),
+                g4: other.group4(),
+                g5: other.group5(),
+                g6: other.group6(),
+                g7: other.group7(),
+                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group8(),
+                g9: other.group9(),
+                g10: other.group10(),
+            },
+        }
+    }
+}
+
+impl Add<Rotor> for Translator {
+    type Output = Motor;
+
+    fn add(self, other: Rotor) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]) + other.group0(),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl Add<Translator> for Translator {
+    type Output = Translator;
+
+    fn add(self, other: Translator) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: self.group0() + other.group0(),
+            },
+        }
+    }
+}
+
+impl AddAssign<Translator> for Translator {
+    fn add_assign(&mut self, other: Translator) {
+        *self = (*self).add(other);
+    }
+}
+
 impl Div<AntiScalar> for AntiScalar {
     type Output = AntiScalar;
 
@@ -4114,6 +5583,29 @@ impl Div<Dipole> for Dipole {
 
 impl DivAssign<Dipole> for Dipole {
     fn div_assign(&mut self, other: Dipole) {
+        *self = (*self).div(other);
+    }
+}
+
+impl Div<Flector> for Flector {
+    type Output = Flector;
+
+    fn div(self, other: Flector) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 1.0])
+                    / Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group0()[3]])
+                    * Simd32x4::from([1.0, 1.0, 1.0, 1.0]),
+                g1: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 1.0])
+                    / Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group1()[3]])
+                    * Simd32x4::from([1.0, 1.0, 1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl DivAssign<Flector> for Flector {
+    fn div_assign(&mut self, other: Flector) {
         *self = (*self).div(other);
     }
 }
@@ -4232,6 +5724,29 @@ impl Div<Magnitude> for Magnitude {
 
 impl DivAssign<Magnitude> for Magnitude {
     fn div_assign(&mut self, other: Magnitude) {
+        *self = (*self).div(other);
+    }
+}
+
+impl Div<Motor> for Motor {
+    type Output = Motor;
+
+    fn div(self, other: Motor) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 1.0])
+                    / Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group0()[3]])
+                    * Simd32x4::from([1.0, 1.0, 1.0, 1.0]),
+                g1: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
+                    / Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])
+                    * Simd32x3::from([1.0, 1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl DivAssign<Motor> for Motor {
+    fn div_assign(&mut self, other: Motor) {
         *self = (*self).div(other);
     }
 }
@@ -4381,6 +5896,26 @@ impl DivAssign<PointAtInfinity> for PointAtInfinity {
     }
 }
 
+impl Div<Rotor> for Rotor {
+    type Output = Rotor;
+
+    fn div(self, other: Rotor) -> Rotor {
+        Rotor {
+            groups: RotorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 1.0])
+                    / Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group0()[3]])
+                    * Simd32x4::from([1.0, 1.0, 1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl DivAssign<Rotor> for Rotor {
+    fn div_assign(&mut self, other: Rotor) {
+        *self = (*self).div(other);
+    }
+}
+
 impl Div<RoundPoint> for RoundPoint {
     type Output = RoundPoint;
 
@@ -4443,6 +5978,26 @@ impl DivAssign<Sphere> for Sphere {
     }
 }
 
+impl Div<Translator> for Translator {
+    type Output = Translator;
+
+    fn div(self, other: Translator) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 1.0])
+                    / Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group0()[3]])
+                    * Simd32x4::from([1.0, 1.0, 1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl DivAssign<Translator> for Translator {
+    fn div_assign(&mut self, other: Translator) {
+        *self = (*self).div(other);
+    }
+}
+
 impl Into<Line> for Circle {
     fn into(self) -> Line {
         Line {
@@ -4496,6 +6051,58 @@ impl Into<PointAtInfinity> for Dipole {
     }
 }
 
+impl Into<Horizon> for Flector {
+    fn into(self) -> Horizon {
+        Horizon {
+            groups: HorizonGroups { g0: self.group1()[3] },
+        }
+    }
+}
+
+impl Into<Origin> for Flector {
+    fn into(self) -> Origin {
+        Origin {
+            groups: OriginGroups { g0: self.group0()[3] },
+        }
+    }
+}
+
+impl Into<Plane> for Flector {
+    fn into(self) -> Plane {
+        Plane {
+            groups: PlaneGroups { g0: self.group1() },
+        }
+    }
+}
+
+impl Into<PlaneAtOrigin> for Flector {
+    fn into(self) -> PlaneAtOrigin {
+        PlaneAtOrigin {
+            groups: PlaneAtOriginGroups {
+                g0: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+            },
+        }
+    }
+}
+
+impl Into<Point> for Flector {
+    fn into(self) -> Point {
+        Point {
+            groups: PointGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Into<PointAtInfinity> for Flector {
+    fn into(self) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            },
+        }
+    }
+}
+
 impl Into<LineAtInfinity> for Line {
     fn into(self) -> LineAtInfinity {
         LineAtInfinity {
@@ -4528,6 +6135,61 @@ impl Into<Scalar> for Magnitude {
     }
 }
 
+impl Into<AntiScalar> for Motor {
+    fn into(self) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups { g0: self.group0()[3] },
+        }
+    }
+}
+
+impl Into<Line> for Motor {
+    fn into(self) -> Line {
+        Line {
+            groups: LineGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl Into<LineAtInfinity> for Motor {
+    fn into(self) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups { g0: self.group1() },
+        }
+    }
+}
+
+impl Into<LineAtOrigin> for Motor {
+    fn into(self) -> LineAtOrigin {
+        LineAtOrigin {
+            groups: LineAtOriginGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl Into<Rotor> for Motor {
+    fn into(self) -> Rotor {
+        Rotor {
+            groups: RotorGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Into<Translator> for Motor {
+    fn into(self) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group0()[3]]),
+            },
+        }
+    }
+}
+
 impl Into<AntiScalar> for MultiVector {
     fn into(self) -> AntiScalar {
         AntiScalar {
@@ -4555,6 +6217,17 @@ impl Into<Dipole> for MultiVector {
                 g0: self.group3(),
                 g1: self.group4(),
                 g2: self.group5(),
+            },
+        }
+    }
+}
+
+impl Into<Flector> for MultiVector {
+    fn into(self) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group5(),
+                g1: Simd32x4::from([self.group9()[0], self.group9()[1], self.group9()[2], self.group10()[1]]),
             },
         }
     }
@@ -4611,6 +6284,17 @@ impl Into<Magnitude> for MultiVector {
     }
 }
 
+impl Into<Motor> for MultiVector {
+    fn into(self) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from([self.group7()[0], self.group7()[1], self.group7()[2], self.group0()[1]]),
+                g1: self.group8(),
+            },
+        }
+    }
+}
+
 impl Into<Origin> for MultiVector {
     fn into(self) -> Origin {
         Origin {
@@ -4655,6 +6339,16 @@ impl Into<PointAtInfinity> for MultiVector {
     }
 }
 
+impl Into<Rotor> for MultiVector {
+    fn into(self) -> Rotor {
+        Rotor {
+            groups: RotorGroups {
+                g0: Simd32x4::from([self.group7()[0], self.group7()[1], self.group7()[2], self.group0()[1]]),
+            },
+        }
+    }
+}
+
 impl Into<RoundPoint> for MultiVector {
     fn into(self) -> RoundPoint {
         RoundPoint {
@@ -4680,6 +6374,16 @@ impl Into<Sphere> for MultiVector {
             groups: SphereGroups {
                 g0: self.group9(),
                 g1: self.group10(),
+            },
+        }
+    }
+}
+
+impl Into<Translator> for MultiVector {
+    fn into(self) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: Simd32x4::from([self.group8()[0], self.group8()[1], self.group8()[2], self.group0()[1]]),
             },
         }
     }
@@ -4721,6 +6425,24 @@ impl Into<PointAtInfinity> for Point {
     }
 }
 
+impl Into<AntiScalar> for Rotor {
+    fn into(self) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups { g0: self.group0()[3] },
+        }
+    }
+}
+
+impl Into<LineAtOrigin> for Rotor {
+    fn into(self) -> LineAtOrigin {
+        LineAtOrigin {
+            groups: LineAtOriginGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            },
+        }
+    }
+}
+
 impl Into<Infinity> for RoundPoint {
     fn into(self) -> Infinity {
         Infinity {
@@ -4751,6 +6473,24 @@ impl Into<PlaneAtOrigin> for Sphere {
     fn into(self) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Into<AntiScalar> for Translator {
+    fn into(self) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups { g0: self.group0()[3] },
+        }
+    }
+}
+
+impl Into<LineAtInfinity> for Translator {
+    fn into(self) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            },
         }
     }
 }
@@ -4809,6 +6549,25 @@ impl Mul<Dipole> for Dipole {
 
 impl MulAssign<Dipole> for Dipole {
     fn mul_assign(&mut self, other: Dipole) {
+        *self = (*self).mul(other);
+    }
+}
+
+impl Mul<Flector> for Flector {
+    type Output = Flector;
+
+    fn mul(self, other: Flector) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0() * other.group0(),
+                g1: self.group1() * other.group1(),
+            },
+        }
+    }
+}
+
+impl MulAssign<Flector> for Flector {
+    fn mul_assign(&mut self, other: Flector) {
         *self = (*self).mul(other);
     }
 }
@@ -4918,6 +6677,25 @@ impl Mul<Magnitude> for Magnitude {
 
 impl MulAssign<Magnitude> for Magnitude {
     fn mul_assign(&mut self, other: Magnitude) {
+        *self = (*self).mul(other);
+    }
+}
+
+impl Mul<Motor> for Motor {
+    type Output = Motor;
+
+    fn mul(self, other: Motor) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0() * other.group0(),
+                g1: self.group1() * other.group1(),
+            },
+        }
+    }
+}
+
+impl MulAssign<Motor> for Motor {
+    fn mul_assign(&mut self, other: Motor) {
         *self = (*self).mul(other);
     }
 }
@@ -5040,6 +6818,24 @@ impl MulAssign<PointAtInfinity> for PointAtInfinity {
     }
 }
 
+impl Mul<Rotor> for Rotor {
+    type Output = Rotor;
+
+    fn mul(self, other: Rotor) -> Rotor {
+        Rotor {
+            groups: RotorGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl MulAssign<Rotor> for Rotor {
+    fn mul_assign(&mut self, other: Rotor) {
+        *self = (*self).mul(other);
+    }
+}
+
 impl Mul<RoundPoint> for RoundPoint {
     type Output = RoundPoint;
 
@@ -5096,6 +6892,24 @@ impl MulAssign<Sphere> for Sphere {
     }
 }
 
+impl Mul<Translator> for Translator {
+    type Output = Translator;
+
+    fn mul(self, other: Translator) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl MulAssign<Translator> for Translator {
+    fn mul_assign(&mut self, other: Translator) {
+        *self = (*self).mul(other);
+    }
+}
+
 impl Sub<AntiScalar> for AntiScalar {
     type Output = AntiScalar;
 
@@ -5114,6 +6928,43 @@ impl SubAssign<AntiScalar> for AntiScalar {
     }
 }
 
+impl Sub<Line> for AntiScalar {
+    type Output = Motor;
+
+    fn sub(self, other: Line) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g1: Simd32x3::from(0.0) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<LineAtInfinity> for AntiScalar {
+    type Output = Translator;
+
+    fn sub(self, other: LineAtInfinity) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl Sub<LineAtOrigin> for AntiScalar {
+    type Output = Rotor;
+
+    fn sub(self, other: LineAtOrigin) -> Rotor {
+        Rotor {
+            groups: RotorGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
 impl Sub<Magnitude> for AntiScalar {
     type Output = Magnitude;
 
@@ -5121,6 +6972,19 @@ impl Sub<Magnitude> for AntiScalar {
         Magnitude {
             groups: MagnitudeGroups {
                 g0: Simd32x2::from([0.0, self.group0()]) - other.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<Motor> for AntiScalar {
+    type Output = Motor;
+
+    fn sub(self, other: Motor) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
             },
         }
     }
@@ -5148,6 +7012,18 @@ impl Sub<MultiVector> for AntiScalar {
     }
 }
 
+impl Sub<Rotor> for AntiScalar {
+    type Output = Rotor;
+
+    fn sub(self, other: Rotor) -> Rotor {
+        Rotor {
+            groups: RotorGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group0(),
+            },
+        }
+    }
+}
+
 impl Sub<Scalar> for AntiScalar {
     type Output = Magnitude;
 
@@ -5155,6 +7031,18 @@ impl Sub<Scalar> for AntiScalar {
         Magnitude {
             groups: MagnitudeGroups {
                 g0: Simd32x2::from([0.0, self.group0()]) - Simd32x2::from([other.group0(), 0.0]),
+            },
+        }
+    }
+}
+
+impl Sub<Translator> for AntiScalar {
+    type Output = Translator;
+
+    fn sub(self, other: Translator) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group0(),
             },
         }
     }
@@ -5364,6 +7252,174 @@ impl SubAssign<PointAtInfinity> for Dipole {
     }
 }
 
+impl Sub<Flector> for Flector {
+    type Output = Flector;
+
+    fn sub(self, other: Flector) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0() - other.group0(),
+                g1: self.group1() - other.group1(),
+            },
+        }
+    }
+}
+
+impl SubAssign<Flector> for Flector {
+    fn sub_assign(&mut self, other: Flector) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Horizon> for Flector {
+    type Output = Flector;
+
+    fn sub(self, other: Horizon) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0(),
+                g1: self.group1() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl SubAssign<Horizon> for Flector {
+    fn sub_assign(&mut self, other: Horizon) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<MultiVector> for Flector {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x2::from(0.0) - other.group2(),
+                g3: Simd32x3::from(0.0) - other.group3(),
+                g4: Simd32x3::from(0.0) - other.group4(),
+                g5: self.group0() - other.group5(),
+                g6: Simd32x4::from(0.0) - other.group6(),
+                g7: Simd32x3::from(0.0) - other.group7(),
+                g8: Simd32x3::from(0.0) - other.group8(),
+                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) - other.group9(),
+                g10: Simd32x2::from([0.0, self.group1()[3]]) - other.group10(),
+            },
+        }
+    }
+}
+
+impl Sub<Origin> for Flector {
+    type Output = Flector;
+
+    fn sub(self, other: Origin) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl SubAssign<Origin> for Flector {
+    fn sub_assign(&mut self, other: Origin) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Plane> for Flector {
+    type Output = Flector;
+
+    fn sub(self, other: Plane) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0(),
+                g1: self.group1() - other.group0(),
+            },
+        }
+    }
+}
+
+impl SubAssign<Plane> for Flector {
+    fn sub_assign(&mut self, other: Plane) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<PlaneAtOrigin> for Flector {
+    type Output = Flector;
+
+    fn sub(self, other: PlaneAtOrigin) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0(),
+                g1: self.group1() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl SubAssign<PlaneAtOrigin> for Flector {
+    fn sub_assign(&mut self, other: PlaneAtOrigin) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Point> for Flector {
+    type Output = Flector;
+
+    fn sub(self, other: Point) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0() - other.group0(),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl SubAssign<Point> for Flector {
+    fn sub_assign(&mut self, other: Point) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<PointAtInfinity> for Flector {
+    type Output = Flector;
+
+    fn sub(self, other: PointAtInfinity) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl SubAssign<PointAtInfinity> for Flector {
+    fn sub_assign(&mut self, other: PointAtInfinity) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Flector> for Horizon {
+    type Output = Flector;
+
+    fn sub(self, other: Flector) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(0.0) - other.group0(),
+                g1: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group1(),
+            },
+        }
+    }
+}
+
 impl Sub<Horizon> for Horizon {
     type Output = Horizon;
 
@@ -5494,6 +7550,19 @@ impl Sub<RoundPoint> for Infinity {
     }
 }
 
+impl Sub<AntiScalar> for Line {
+    type Output = Motor;
+
+    fn sub(self, other: AntiScalar) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
 impl Sub<Circle> for Line {
     type Output = Circle;
 
@@ -5565,6 +7634,19 @@ impl SubAssign<LineAtOrigin> for Line {
     }
 }
 
+impl Sub<Motor> for Line {
+    type Output = Motor;
+
+    fn sub(self, other: Motor) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group0(),
+                g1: self.group1() - other.group1(),
+            },
+        }
+    }
+}
+
 impl Sub<MultiVector> for Line {
     type Output = MultiVector;
 
@@ -5582,6 +7664,44 @@ impl Sub<MultiVector> for Line {
                 g8: self.group1() - other.group8(),
                 g9: Simd32x3::from(0.0) - other.group9(),
                 g10: Simd32x2::from(0.0) - other.group10(),
+            },
+        }
+    }
+}
+
+impl Sub<Rotor> for Line {
+    type Output = Motor;
+
+    fn sub(self, other: Rotor) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group0(),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<Translator> for Line {
+    type Output = Motor;
+
+    fn sub(self, other: Translator) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+                g1: self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl Sub<AntiScalar> for LineAtInfinity {
+    type Output = Translator;
+
+    fn sub(self, other: AntiScalar) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
             },
         }
     }
@@ -5645,6 +7765,19 @@ impl Sub<LineAtOrigin> for LineAtInfinity {
     }
 }
 
+impl Sub<Motor> for LineAtInfinity {
+    type Output = Motor;
+
+    fn sub(self, other: Motor) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from(0.0) - other.group0(),
+                g1: self.group0() - other.group1(),
+            },
+        }
+    }
+}
+
 impl Sub<MultiVector> for LineAtInfinity {
     type Output = MultiVector;
 
@@ -5662,6 +7795,43 @@ impl Sub<MultiVector> for LineAtInfinity {
                 g8: self.group0() - other.group8(),
                 g9: Simd32x3::from(0.0) - other.group9(),
                 g10: Simd32x2::from(0.0) - other.group10(),
+            },
+        }
+    }
+}
+
+impl Sub<Rotor> for LineAtInfinity {
+    type Output = Motor;
+
+    fn sub(self, other: Rotor) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from(0.0) - other.group0(),
+                g1: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<Translator> for LineAtInfinity {
+    type Output = Translator;
+
+    fn sub(self, other: Translator) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<AntiScalar> for LineAtOrigin {
+    type Output = Rotor;
+
+    fn sub(self, other: AntiScalar) -> Rotor {
+        Rotor {
+            groups: RotorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
             },
         }
     }
@@ -5725,6 +7895,19 @@ impl SubAssign<LineAtOrigin> for LineAtOrigin {
     }
 }
 
+impl Sub<Motor> for LineAtOrigin {
+    type Output = Motor;
+
+    fn sub(self, other: Motor) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+            },
+        }
+    }
+}
+
 impl Sub<MultiVector> for LineAtOrigin {
     type Output = MultiVector;
 
@@ -5742,6 +7925,31 @@ impl Sub<MultiVector> for LineAtOrigin {
                 g8: Simd32x3::from(0.0) - other.group8(),
                 g9: Simd32x3::from(0.0) - other.group9(),
                 g10: Simd32x2::from(0.0) - other.group10(),
+            },
+        }
+    }
+}
+
+impl Sub<Rotor> for LineAtOrigin {
+    type Output = Rotor;
+
+    fn sub(self, other: Rotor) -> Rotor {
+        Rotor {
+            groups: RotorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<Translator> for LineAtOrigin {
+    type Output = Motor;
+
+    fn sub(self, other: Translator) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
             },
         }
     }
@@ -5819,6 +8027,161 @@ impl Sub<Scalar> for Magnitude {
 
 impl SubAssign<Scalar> for Magnitude {
     fn sub_assign(&mut self, other: Scalar) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<AntiScalar> for Motor {
+    type Output = Motor;
+
+    fn sub(self, other: AntiScalar) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl SubAssign<AntiScalar> for Motor {
+    fn sub_assign(&mut self, other: AntiScalar) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Line> for Motor {
+    type Output = Motor;
+
+    fn sub(self, other: Line) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g1: self.group1() - other.group1(),
+            },
+        }
+    }
+}
+
+impl SubAssign<Line> for Motor {
+    fn sub_assign(&mut self, other: Line) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<LineAtInfinity> for Motor {
+    type Output = Motor;
+
+    fn sub(self, other: LineAtInfinity) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0(),
+                g1: self.group1() - other.group0(),
+            },
+        }
+    }
+}
+
+impl SubAssign<LineAtInfinity> for Motor {
+    fn sub_assign(&mut self, other: LineAtInfinity) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<LineAtOrigin> for Motor {
+    type Output = Motor;
+
+    fn sub(self, other: LineAtOrigin) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl SubAssign<LineAtOrigin> for Motor {
+    fn sub_assign(&mut self, other: LineAtOrigin) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Motor> for Motor {
+    type Output = Motor;
+
+    fn sub(self, other: Motor) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0() - other.group0(),
+                g1: self.group1() - other.group1(),
+            },
+        }
+    }
+}
+
+impl SubAssign<Motor> for Motor {
+    fn sub_assign(&mut self, other: Motor) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<MultiVector> for Motor {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()[3]]) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x2::from(0.0) - other.group2(),
+                g3: Simd32x3::from(0.0) - other.group3(),
+                g4: Simd32x3::from(0.0) - other.group4(),
+                g5: Simd32x4::from(0.0) - other.group5(),
+                g6: Simd32x4::from(0.0) - other.group6(),
+                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group7(),
+                g8: self.group1() - other.group8(),
+                g9: Simd32x3::from(0.0) - other.group9(),
+                g10: Simd32x2::from(0.0) - other.group10(),
+            },
+        }
+    }
+}
+
+impl Sub<Rotor> for Motor {
+    type Output = Motor;
+
+    fn sub(self, other: Rotor) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0() - other.group0(),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl SubAssign<Rotor> for Motor {
+    fn sub_assign(&mut self, other: Rotor) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Translator> for Motor {
+    type Output = Motor;
+
+    fn sub(self, other: Translator) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+                g1: self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl SubAssign<Translator> for Motor {
+    fn sub_assign(&mut self, other: Translator) {
         *self = (*self).sub(other);
     }
 }
@@ -5903,6 +8266,34 @@ impl Sub<Dipole> for MultiVector {
 
 impl SubAssign<Dipole> for MultiVector {
     fn sub_assign(&mut self, other: Dipole) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Flector> for MultiVector {
+    type Output = MultiVector;
+
+    fn sub(self, other: Flector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5() - other.group0(),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9() - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g10: self.group10() - Simd32x2::from([0.0, other.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl SubAssign<Flector> for MultiVector {
+    fn sub_assign(&mut self, other: Flector) {
         *self = (*self).sub(other);
     }
 }
@@ -6075,6 +8466,34 @@ impl SubAssign<Magnitude> for MultiVector {
     }
 }
 
+impl Sub<Motor> for MultiVector {
+    type Output = MultiVector;
+
+    fn sub(self, other: Motor) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0() - Simd32x2::from([0.0, other.group0()[3]]),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6(),
+                g7: self.group7() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: self.group8() - other.group1(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl SubAssign<Motor> for MultiVector {
+    fn sub_assign(&mut self, other: Motor) {
+        *self = (*self).sub(other);
+    }
+}
+
 impl Sub<MultiVector> for MultiVector {
     type Output = MultiVector;
 
@@ -6243,6 +8662,34 @@ impl SubAssign<PointAtInfinity> for MultiVector {
     }
 }
 
+impl Sub<Rotor> for MultiVector {
+    type Output = MultiVector;
+
+    fn sub(self, other: Rotor) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0() - Simd32x2::from([0.0, other.group0()[3]]),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6(),
+                g7: self.group7() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl SubAssign<Rotor> for MultiVector {
+    fn sub_assign(&mut self, other: Rotor) {
+        *self = (*self).sub(other);
+    }
+}
+
 impl Sub<RoundPoint> for MultiVector {
     type Output = MultiVector;
 
@@ -6327,6 +8774,34 @@ impl SubAssign<Sphere> for MultiVector {
     }
 }
 
+impl Sub<Translator> for MultiVector {
+    type Output = MultiVector;
+
+    fn sub(self, other: Translator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0() - Simd32x2::from([0.0, other.group0()[3]]),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl SubAssign<Translator> for MultiVector {
+    fn sub_assign(&mut self, other: Translator) {
+        *self = (*self).sub(other);
+    }
+}
+
 impl Sub<Dipole> for Origin {
     type Output = Dipole;
 
@@ -6336,6 +8811,19 @@ impl Sub<Dipole> for Origin {
                 g0: Simd32x3::from(0.0) - other.group0(),
                 g1: Simd32x3::from(0.0) - other.group1(),
                 g2: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group2(),
+            },
+        }
+    }
+}
+
+impl Sub<Flector> for Origin {
+    type Output = Flector;
+
+    fn sub(self, other: Flector) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group0(),
+                g1: Simd32x4::from(0.0) - other.group1(),
             },
         }
     }
@@ -6400,6 +8888,19 @@ impl Sub<PointAtInfinity> for Origin {
         Point {
             groups: PointGroups {
                 g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl Sub<Flector> for Plane {
+    type Output = Flector;
+
+    fn sub(self, other: Flector) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(0.0) - other.group0(),
+                g1: self.group0() - other.group1(),
             },
         }
     }
@@ -6481,6 +8982,19 @@ impl SubAssign<PlaneAtOrigin> for Plane {
     }
 }
 
+impl Sub<Point> for Plane {
+    type Output = Flector;
+
+    fn sub(self, other: Point) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(0.0) - other.group0(),
+                g1: self.group0(),
+            },
+        }
+    }
+}
+
 impl Sub<Sphere> for Plane {
     type Output = Sphere;
 
@@ -6489,6 +9003,19 @@ impl Sub<Sphere> for Plane {
             groups: SphereGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group0(),
                 g1: Simd32x2::from([0.0, self.group0()[3]]) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<Flector> for PlaneAtOrigin {
+    type Output = Flector;
+
+    fn sub(self, other: Flector) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(0.0) - other.group0(),
+                g1: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group1(),
             },
         }
     }
@@ -6585,6 +9112,19 @@ impl Sub<Dipole> for Point {
     }
 }
 
+impl Sub<Flector> for Point {
+    type Output = Flector;
+
+    fn sub(self, other: Flector) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0() - other.group0(),
+                g1: Simd32x4::from(0.0) - other.group1(),
+            },
+        }
+    }
+}
+
 impl Sub<MultiVector> for Point {
     type Output = MultiVector;
 
@@ -6622,6 +9162,19 @@ impl Sub<Origin> for Point {
 impl SubAssign<Origin> for Point {
     fn sub_assign(&mut self, other: Origin) {
         *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Plane> for Point {
+    type Output = Flector;
+
+    fn sub(self, other: Plane) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0(),
+                g1: Simd32x4::from(0.0) - other.group0(),
+            },
+        }
     }
 }
 
@@ -6670,6 +9223,19 @@ impl Sub<Dipole> for PointAtInfinity {
                 g0: Simd32x3::from(0.0) - other.group0(),
                 g1: Simd32x3::from(0.0) - other.group1(),
                 g2: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group2(),
+            },
+        }
+    }
+}
+
+impl Sub<Flector> for PointAtInfinity {
+    type Output = Flector;
+
+    fn sub(self, other: Flector) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group0(),
+                g1: Simd32x4::from(0.0) - other.group1(),
             },
         }
     }
@@ -6736,6 +9302,134 @@ impl Sub<PointAtInfinity> for PointAtInfinity {
 impl SubAssign<PointAtInfinity> for PointAtInfinity {
     fn sub_assign(&mut self, other: PointAtInfinity) {
         *self = (*self).sub(other);
+    }
+}
+
+impl Sub<AntiScalar> for Rotor {
+    type Output = Rotor;
+
+    fn sub(self, other: AntiScalar) -> Rotor {
+        Rotor {
+            groups: RotorGroups {
+                g0: self.group0() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl SubAssign<AntiScalar> for Rotor {
+    fn sub_assign(&mut self, other: AntiScalar) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Line> for Rotor {
+    type Output = Motor;
+
+    fn sub(self, other: Line) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g1: Simd32x3::from(0.0) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<LineAtInfinity> for Rotor {
+    type Output = Motor;
+
+    fn sub(self, other: LineAtInfinity) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0(),
+                g1: Simd32x3::from(0.0) - other.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<LineAtOrigin> for Rotor {
+    type Output = Rotor;
+
+    fn sub(self, other: LineAtOrigin) -> Rotor {
+        Rotor {
+            groups: RotorGroups {
+                g0: self.group0() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl SubAssign<LineAtOrigin> for Rotor {
+    fn sub_assign(&mut self, other: LineAtOrigin) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Motor> for Rotor {
+    type Output = Motor;
+
+    fn sub(self, other: Motor) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0() - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<MultiVector> for Rotor {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()[3]]) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x2::from(0.0) - other.group2(),
+                g3: Simd32x3::from(0.0) - other.group3(),
+                g4: Simd32x3::from(0.0) - other.group4(),
+                g5: Simd32x4::from(0.0) - other.group5(),
+                g6: Simd32x4::from(0.0) - other.group6(),
+                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group7(),
+                g8: Simd32x3::from(0.0) - other.group8(),
+                g9: Simd32x3::from(0.0) - other.group9(),
+                g10: Simd32x2::from(0.0) - other.group10(),
+            },
+        }
+    }
+}
+
+impl Sub<Rotor> for Rotor {
+    type Output = Rotor;
+
+    fn sub(self, other: Rotor) -> Rotor {
+        Rotor {
+            groups: RotorGroups {
+                g0: self.group0() - other.group0(),
+            },
+        }
+    }
+}
+
+impl SubAssign<Rotor> for Rotor {
+    fn sub_assign(&mut self, other: Rotor) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Translator> for Rotor {
+    type Output = Motor;
+
+    fn sub(self, other: Translator) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+            },
+        }
     }
 }
 
@@ -6957,6 +9651,134 @@ impl Sub<Sphere> for Sphere {
 
 impl SubAssign<Sphere> for Sphere {
     fn sub_assign(&mut self, other: Sphere) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<AntiScalar> for Translator {
+    type Output = Translator;
+
+    fn sub(self, other: AntiScalar) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: self.group0() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl SubAssign<AntiScalar> for Translator {
+    fn sub_assign(&mut self, other: AntiScalar) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Line> for Translator {
+    type Output = Motor;
+
+    fn sub(self, other: Line) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<LineAtInfinity> for Translator {
+    type Output = Translator;
+
+    fn sub(self, other: LineAtInfinity) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: self.group0() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl SubAssign<LineAtInfinity> for Translator {
+    fn sub_assign(&mut self, other: LineAtInfinity) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<LineAtOrigin> for Translator {
+    type Output = Motor;
+
+    fn sub(self, other: LineAtOrigin) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl Sub<Motor> for Translator {
+    type Output = Motor;
+
+    fn sub(self, other: Motor) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]) - other.group0(),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<MultiVector> for Translator {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()[3]]) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x2::from(0.0) - other.group2(),
+                g3: Simd32x3::from(0.0) - other.group3(),
+                g4: Simd32x3::from(0.0) - other.group4(),
+                g5: Simd32x4::from(0.0) - other.group5(),
+                g6: Simd32x4::from(0.0) - other.group6(),
+                g7: Simd32x3::from(0.0) - other.group7(),
+                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group8(),
+                g9: Simd32x3::from(0.0) - other.group9(),
+                g10: Simd32x2::from(0.0) - other.group10(),
+            },
+        }
+    }
+}
+
+impl Sub<Rotor> for Translator {
+    type Output = Motor;
+
+    fn sub(self, other: Rotor) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]) - other.group0(),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl Sub<Translator> for Translator {
+    type Output = Translator;
+
+    fn sub(self, other: Translator) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: self.group0() - other.group0(),
+            },
+        }
+    }
+}
+
+impl SubAssign<Translator> for Translator {
+    fn sub_assign(&mut self, other: Translator) {
         *self = (*self).sub(other);
     }
 }

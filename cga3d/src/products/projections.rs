@@ -61,6 +61,14 @@ impl AntiProjectViaHorizonOnto<Dipole> for Circle {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Flector> for Circle {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Infinity> for Circle {
     type Output = Line;
 
@@ -81,6 +89,14 @@ impl AntiProjectViaHorizonOnto<LineAtInfinity> for Circle {
     type Output = LineAtInfinity;
 
     fn anti_project_via_horizon_onto(self, other: LineAtInfinity) -> LineAtInfinity {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Motor> for Circle {
+    type Output = Motor;
+
+    fn anti_project_via_horizon_onto(self, other: Motor) -> Motor {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -117,10 +133,26 @@ impl AntiProjectViaHorizonOnto<RoundPoint> for Circle {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Translator> for Circle {
+    type Output = Translator;
+
+    fn anti_project_via_horizon_onto(self, other: Translator) -> Translator {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Dipole> for Dipole {
     type Output = Dipole;
 
     fn anti_project_via_horizon_onto(self, other: Dipole) -> Dipole {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Flector> for Dipole {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -165,6 +197,126 @@ impl AntiProjectViaHorizonOnto<RoundPoint> for Dipole {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Circle> for Flector {
+    type Output = Sphere;
+
+    fn anti_project_via_horizon_onto(self, other: Circle) -> Sphere {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Dipole> for Flector {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dipole) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Flector> for Flector {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Horizon> for Flector {
+    type Output = Horizon;
+
+    fn anti_project_via_horizon_onto(self, other: Horizon) -> Horizon {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Infinity> for Flector {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Infinity) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Line> for Flector {
+    type Output = Plane;
+
+    fn anti_project_via_horizon_onto(self, other: Line) -> Plane {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<LineAtInfinity> for Flector {
+    type Output = Plane;
+
+    fn anti_project_via_horizon_onto(self, other: LineAtInfinity) -> Plane {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Motor> for Flector {
+    type Output = Plane;
+
+    fn anti_project_via_horizon_onto(self, other: Motor) -> Plane {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<MultiVector> for Flector {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Plane> for Flector {
+    type Output = Plane;
+
+    fn anti_project_via_horizon_onto(self, other: Plane) -> Plane {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Point> for Flector {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Point) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<PointAtInfinity> for Flector {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: PointAtInfinity) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<RoundPoint> for Flector {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: RoundPoint) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Sphere> for Flector {
+    type Output = Sphere;
+
+    fn anti_project_via_horizon_onto(self, other: Sphere) -> Sphere {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Translator> for Flector {
+    type Output = Plane;
+
+    fn anti_project_via_horizon_onto(self, other: Translator) -> Plane {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Circle> for Horizon {
     type Output = Sphere;
 
@@ -177,6 +329,14 @@ impl AntiProjectViaHorizonOnto<Dipole> for Horizon {
     type Output = Sphere;
 
     fn anti_project_via_horizon_onto(self, other: Dipole) -> Sphere {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Flector> for Horizon {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -209,6 +369,14 @@ impl AntiProjectViaHorizonOnto<LineAtInfinity> for Horizon {
     type Output = Plane;
 
     fn anti_project_via_horizon_onto(self, other: LineAtInfinity) -> Plane {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Motor> for Horizon {
+    type Output = Plane;
+
+    fn anti_project_via_horizon_onto(self, other: Motor) -> Plane {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -261,6 +429,22 @@ impl AntiProjectViaHorizonOnto<Sphere> for Horizon {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Translator> for Horizon {
+    type Output = Plane;
+
+    fn anti_project_via_horizon_onto(self, other: Translator) -> Plane {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Flector> for Infinity {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Infinity> for Infinity {
     type Output = Infinity;
 
@@ -301,6 +485,14 @@ impl AntiProjectViaHorizonOnto<Dipole> for Line {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Flector> for Line {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Infinity> for Line {
     type Output = Line;
 
@@ -321,6 +513,14 @@ impl AntiProjectViaHorizonOnto<LineAtInfinity> for Line {
     type Output = LineAtInfinity;
 
     fn anti_project_via_horizon_onto(self, other: LineAtInfinity) -> LineAtInfinity {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Motor> for Line {
+    type Output = Motor;
+
+    fn anti_project_via_horizon_onto(self, other: Motor) -> Motor {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -357,6 +557,14 @@ impl AntiProjectViaHorizonOnto<RoundPoint> for Line {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Translator> for Line {
+    type Output = Translator;
+
+    fn anti_project_via_horizon_onto(self, other: Translator) -> Translator {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Circle> for LineAtInfinity {
     type Output = Circle;
 
@@ -369,6 +577,14 @@ impl AntiProjectViaHorizonOnto<Dipole> for LineAtInfinity {
     type Output = Circle;
 
     fn anti_project_via_horizon_onto(self, other: Dipole) -> Circle {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Flector> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -393,6 +609,14 @@ impl AntiProjectViaHorizonOnto<LineAtInfinity> for LineAtInfinity {
     type Output = LineAtInfinity;
 
     fn anti_project_via_horizon_onto(self, other: LineAtInfinity) -> LineAtInfinity {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Motor> for LineAtInfinity {
+    type Output = Motor;
+
+    fn anti_project_via_horizon_onto(self, other: Motor) -> Motor {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -429,6 +653,14 @@ impl AntiProjectViaHorizonOnto<RoundPoint> for LineAtInfinity {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Translator> for LineAtInfinity {
+    type Output = Translator;
+
+    fn anti_project_via_horizon_onto(self, other: Translator) -> Translator {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Circle> for LineAtOrigin {
     type Output = Circle;
 
@@ -441,6 +673,14 @@ impl AntiProjectViaHorizonOnto<Dipole> for LineAtOrigin {
     type Output = Circle;
 
     fn anti_project_via_horizon_onto(self, other: Dipole) -> Circle {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Flector> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -465,6 +705,14 @@ impl AntiProjectViaHorizonOnto<LineAtInfinity> for LineAtOrigin {
     type Output = LineAtInfinity;
 
     fn anti_project_via_horizon_onto(self, other: LineAtInfinity) -> LineAtInfinity {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Motor> for LineAtOrigin {
+    type Output = Motor;
+
+    fn anti_project_via_horizon_onto(self, other: Motor) -> Motor {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -501,6 +749,134 @@ impl AntiProjectViaHorizonOnto<RoundPoint> for LineAtOrigin {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Translator> for LineAtOrigin {
+    type Output = Translator;
+
+    fn anti_project_via_horizon_onto(self, other: Translator) -> Translator {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Circle> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Circle) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Dipole> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dipole) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Flector> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Horizon> for Motor {
+    type Output = AntiScalar;
+
+    fn anti_project_via_horizon_onto(self, other: Horizon) -> AntiScalar {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Infinity> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Infinity) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Line> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Line) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<LineAtInfinity> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: LineAtInfinity) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Motor> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<MultiVector> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Plane> for Motor {
+    type Output = AntiScalar;
+
+    fn anti_project_via_horizon_onto(self, other: Plane) -> AntiScalar {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Point> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Point) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<PointAtInfinity> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: PointAtInfinity) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<RoundPoint> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: RoundPoint) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Sphere> for Motor {
+    type Output = AntiScalar;
+
+    fn anti_project_via_horizon_onto(self, other: Sphere) -> AntiScalar {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Translator> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Circle> for MultiVector {
     type Output = MultiVector;
 
@@ -513,6 +889,14 @@ impl AntiProjectViaHorizonOnto<Dipole> for MultiVector {
     type Output = MultiVector;
 
     fn anti_project_via_horizon_onto(self, other: Dipole) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Flector> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -545,6 +929,14 @@ impl AntiProjectViaHorizonOnto<LineAtInfinity> for MultiVector {
     type Output = MultiVector;
 
     fn anti_project_via_horizon_onto(self, other: LineAtInfinity) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Motor> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Motor) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -597,10 +989,26 @@ impl AntiProjectViaHorizonOnto<Sphere> for MultiVector {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Translator> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Dipole> for Origin {
     type Output = Dipole;
 
     fn anti_project_via_horizon_onto(self, other: Dipole) -> Dipole {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Flector> for Origin {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -661,6 +1069,14 @@ impl AntiProjectViaHorizonOnto<Dipole> for Plane {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Flector> for Plane {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Horizon> for Plane {
     type Output = Horizon;
 
@@ -689,6 +1105,14 @@ impl AntiProjectViaHorizonOnto<LineAtInfinity> for Plane {
     type Output = Plane;
 
     fn anti_project_via_horizon_onto(self, other: LineAtInfinity) -> Plane {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Motor> for Plane {
+    type Output = Plane;
+
+    fn anti_project_via_horizon_onto(self, other: Motor) -> Plane {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -741,6 +1165,14 @@ impl AntiProjectViaHorizonOnto<Sphere> for Plane {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Translator> for Plane {
+    type Output = Plane;
+
+    fn anti_project_via_horizon_onto(self, other: Translator) -> Plane {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Circle> for PlaneAtOrigin {
     type Output = Sphere;
 
@@ -753,6 +1185,14 @@ impl AntiProjectViaHorizonOnto<Dipole> for PlaneAtOrigin {
     type Output = Sphere;
 
     fn anti_project_via_horizon_onto(self, other: Dipole) -> Sphere {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Flector> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -785,6 +1225,14 @@ impl AntiProjectViaHorizonOnto<LineAtInfinity> for PlaneAtOrigin {
     type Output = Plane;
 
     fn anti_project_via_horizon_onto(self, other: LineAtInfinity) -> Plane {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Motor> for PlaneAtOrigin {
+    type Output = Plane;
+
+    fn anti_project_via_horizon_onto(self, other: Motor) -> Plane {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -837,10 +1285,26 @@ impl AntiProjectViaHorizonOnto<Sphere> for PlaneAtOrigin {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Translator> for PlaneAtOrigin {
+    type Output = Plane;
+
+    fn anti_project_via_horizon_onto(self, other: Translator) -> Plane {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Dipole> for Point {
     type Output = Dipole;
 
     fn anti_project_via_horizon_onto(self, other: Dipole) -> Dipole {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Flector> for Point {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -893,6 +1357,14 @@ impl AntiProjectViaHorizonOnto<Dipole> for PointAtInfinity {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Flector> for PointAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Infinity> for PointAtInfinity {
     type Output = Point;
 
@@ -929,6 +1401,134 @@ impl AntiProjectViaHorizonOnto<RoundPoint> for PointAtInfinity {
     type Output = Dipole;
 
     fn anti_project_via_horizon_onto(self, other: RoundPoint) -> Dipole {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Circle> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Circle) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Dipole> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dipole) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Flector> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Horizon> for Rotor {
+    type Output = AntiScalar;
+
+    fn anti_project_via_horizon_onto(self, other: Horizon) -> AntiScalar {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Infinity> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Infinity) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Line> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Line) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<LineAtInfinity> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: LineAtInfinity) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Motor> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<MultiVector> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Plane> for Rotor {
+    type Output = AntiScalar;
+
+    fn anti_project_via_horizon_onto(self, other: Plane) -> AntiScalar {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Point> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Point) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<PointAtInfinity> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: PointAtInfinity) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<RoundPoint> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: RoundPoint) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Sphere> for Rotor {
+    type Output = AntiScalar;
+
+    fn anti_project_via_horizon_onto(self, other: Sphere) -> AntiScalar {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Translator> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Flector> for RoundPoint {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -973,6 +1573,14 @@ impl AntiProjectViaHorizonOnto<Dipole> for Sphere {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Flector> for Sphere {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Horizon> for Sphere {
     type Output = Horizon;
 
@@ -1001,6 +1609,14 @@ impl AntiProjectViaHorizonOnto<LineAtInfinity> for Sphere {
     type Output = Plane;
 
     fn anti_project_via_horizon_onto(self, other: LineAtInfinity) -> Plane {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Motor> for Sphere {
+    type Output = Plane;
+
+    fn anti_project_via_horizon_onto(self, other: Motor) -> Plane {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -1053,10 +1669,146 @@ impl AntiProjectViaHorizonOnto<Sphere> for Sphere {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Translator> for Sphere {
+    type Output = Plane;
+
+    fn anti_project_via_horizon_onto(self, other: Translator) -> Plane {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Circle> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Circle) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Dipole> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dipole) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Flector> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Horizon> for Translator {
+    type Output = AntiScalar;
+
+    fn anti_project_via_horizon_onto(self, other: Horizon) -> AntiScalar {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Infinity> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Infinity) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Line> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Line) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<LineAtInfinity> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: LineAtInfinity) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Motor> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<MultiVector> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Plane> for Translator {
+    type Output = AntiScalar;
+
+    fn anti_project_via_horizon_onto(self, other: Plane) -> AntiScalar {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Point> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Point) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<PointAtInfinity> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: PointAtInfinity) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<RoundPoint> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: RoundPoint) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Sphere> for Translator {
+    type Output = AntiScalar;
+
+    fn anti_project_via_horizon_onto(self, other: Sphere) -> AntiScalar {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Translator> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.bulk_contraction(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Circle> for Circle {
     type Output = Circle;
 
     fn project_orthogonally_onto(self, other: Circle) -> Circle {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Flector> for Circle {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1073,6 +1825,14 @@ impl ProjectOrthogonallyOnto<LineAtOrigin> for Circle {
     type Output = LineAtOrigin;
 
     fn project_orthogonally_onto(self, other: LineAtOrigin) -> LineAtOrigin {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Motor> for Circle {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1101,10 +1861,26 @@ impl ProjectOrthogonallyOnto<PlaneAtOrigin> for Circle {
     }
 }
 
+impl ProjectOrthogonallyOnto<Rotor> for Circle {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for Circle {
     type Output = Circle;
 
     fn project_orthogonally_onto(self, other: Sphere) -> Circle {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Translator> for Circle {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1125,6 +1901,14 @@ impl ProjectOrthogonallyOnto<Dipole> for Dipole {
     }
 }
 
+impl ProjectOrthogonallyOnto<Flector> for Dipole {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Line> for Dipole {
     type Output = Dipole;
 
@@ -1137,6 +1921,14 @@ impl ProjectOrthogonallyOnto<LineAtOrigin> for Dipole {
     type Output = Dipole;
 
     fn project_orthogonally_onto(self, other: LineAtOrigin) -> Dipole {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Motor> for Dipole {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1181,10 +1973,154 @@ impl ProjectOrthogonallyOnto<Point> for Dipole {
     }
 }
 
+impl ProjectOrthogonallyOnto<Rotor> for Dipole {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for Dipole {
     type Output = Dipole;
 
     fn project_orthogonally_onto(self, other: Sphere) -> Dipole {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Translator> for Dipole {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Circle> for Flector {
+    type Output = Dipole;
+
+    fn project_orthogonally_onto(self, other: Circle) -> Dipole {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Dipole> for Flector {
+    type Output = Dipole;
+
+    fn project_orthogonally_onto(self, other: Dipole) -> Dipole {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Flector> for Flector {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Line> for Flector {
+    type Output = Point;
+
+    fn project_orthogonally_onto(self, other: Line) -> Point {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<LineAtOrigin> for Flector {
+    type Output = Point;
+
+    fn project_orthogonally_onto(self, other: LineAtOrigin) -> Point {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Motor> for Flector {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<MultiVector> for Flector {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Origin> for Flector {
+    type Output = Origin;
+
+    fn project_orthogonally_onto(self, other: Origin) -> Origin {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Plane> for Flector {
+    type Output = Flector;
+
+    fn project_orthogonally_onto(self, other: Plane) -> Flector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<PlaneAtOrigin> for Flector {
+    type Output = Flector;
+
+    fn project_orthogonally_onto(self, other: PlaneAtOrigin) -> Flector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Point> for Flector {
+    type Output = Point;
+
+    fn project_orthogonally_onto(self, other: Point) -> Point {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Rotor> for Flector {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Sphere> for Flector {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Sphere) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Translator> for Flector {
+    type Output = Flector;
+
+    fn project_orthogonally_onto(self, other: Translator) -> Flector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Flector> for Horizon {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Motor> for Horizon {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1213,10 +2149,26 @@ impl ProjectOrthogonallyOnto<PlaneAtOrigin> for Horizon {
     }
 }
 
+impl ProjectOrthogonallyOnto<Rotor> for Horizon {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for Horizon {
     type Output = Sphere;
 
     fn project_orthogonally_onto(self, other: Sphere) -> Sphere {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Translator> for Horizon {
+    type Output = Horizon;
+
+    fn project_orthogonally_onto(self, other: Translator) -> Horizon {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1237,6 +2189,14 @@ impl ProjectOrthogonallyOnto<Dipole> for Infinity {
     }
 }
 
+impl ProjectOrthogonallyOnto<Flector> for Infinity {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Line> for Infinity {
     type Output = Infinity;
 
@@ -1249,6 +2209,14 @@ impl ProjectOrthogonallyOnto<LineAtOrigin> for Infinity {
     type Output = Infinity;
 
     fn project_orthogonally_onto(self, other: LineAtOrigin) -> Infinity {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Motor> for Infinity {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1293,6 +2261,14 @@ impl ProjectOrthogonallyOnto<Point> for Infinity {
     }
 }
 
+impl ProjectOrthogonallyOnto<Rotor> for Infinity {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for Infinity {
     type Output = RoundPoint;
 
@@ -1301,10 +2277,26 @@ impl ProjectOrthogonallyOnto<Sphere> for Infinity {
     }
 }
 
+impl ProjectOrthogonallyOnto<Translator> for Infinity {
+    type Output = Infinity;
+
+    fn project_orthogonally_onto(self, other: Translator) -> Infinity {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Circle> for Line {
     type Output = Circle;
 
     fn project_orthogonally_onto(self, other: Circle) -> Circle {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Flector> for Line {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1321,6 +2313,14 @@ impl ProjectOrthogonallyOnto<LineAtOrigin> for Line {
     type Output = LineAtOrigin;
 
     fn project_orthogonally_onto(self, other: LineAtOrigin) -> LineAtOrigin {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Motor> for Line {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1349,6 +2349,14 @@ impl ProjectOrthogonallyOnto<PlaneAtOrigin> for Line {
     }
 }
 
+impl ProjectOrthogonallyOnto<Rotor> for Line {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for Line {
     type Output = Circle;
 
@@ -1357,10 +2365,26 @@ impl ProjectOrthogonallyOnto<Sphere> for Line {
     }
 }
 
+impl ProjectOrthogonallyOnto<Translator> for Line {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Circle> for LineAtInfinity {
     type Output = Circle;
 
     fn project_orthogonally_onto(self, other: Circle) -> Circle {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Flector> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1377,6 +2401,14 @@ impl ProjectOrthogonallyOnto<LineAtOrigin> for LineAtInfinity {
     type Output = LineAtOrigin;
 
     fn project_orthogonally_onto(self, other: LineAtOrigin) -> LineAtOrigin {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Motor> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1405,6 +2437,14 @@ impl ProjectOrthogonallyOnto<PlaneAtOrigin> for LineAtInfinity {
     }
 }
 
+impl ProjectOrthogonallyOnto<Rotor> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for LineAtInfinity {
     type Output = Circle;
 
@@ -1413,10 +2453,26 @@ impl ProjectOrthogonallyOnto<Sphere> for LineAtInfinity {
     }
 }
 
+impl ProjectOrthogonallyOnto<Translator> for LineAtInfinity {
+    type Output = LineAtInfinity;
+
+    fn project_orthogonally_onto(self, other: Translator) -> LineAtInfinity {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Circle> for LineAtOrigin {
     type Output = Circle;
 
     fn project_orthogonally_onto(self, other: Circle) -> Circle {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Flector> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1433,6 +2489,14 @@ impl ProjectOrthogonallyOnto<LineAtOrigin> for LineAtOrigin {
     type Output = LineAtOrigin;
 
     fn project_orthogonally_onto(self, other: LineAtOrigin) -> LineAtOrigin {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Motor> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1461,10 +2525,114 @@ impl ProjectOrthogonallyOnto<PlaneAtOrigin> for LineAtOrigin {
     }
 }
 
+impl ProjectOrthogonallyOnto<Rotor> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for LineAtOrigin {
     type Output = Circle;
 
     fn project_orthogonally_onto(self, other: Sphere) -> Circle {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Translator> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Circle> for Motor {
+    type Output = Circle;
+
+    fn project_orthogonally_onto(self, other: Circle) -> Circle {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Flector> for Motor {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Line> for Motor {
+    type Output = Line;
+
+    fn project_orthogonally_onto(self, other: Line) -> Line {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<LineAtOrigin> for Motor {
+    type Output = LineAtOrigin;
+
+    fn project_orthogonally_onto(self, other: LineAtOrigin) -> LineAtOrigin {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Motor> for Motor {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<MultiVector> for Motor {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Plane> for Motor {
+    type Output = Line;
+
+    fn project_orthogonally_onto(self, other: Plane) -> Line {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<PlaneAtOrigin> for Motor {
+    type Output = Line;
+
+    fn project_orthogonally_onto(self, other: PlaneAtOrigin) -> Line {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Rotor> for Motor {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Sphere> for Motor {
+    type Output = Circle;
+
+    fn project_orthogonally_onto(self, other: Sphere) -> Circle {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Translator> for Motor {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1485,6 +2653,14 @@ impl ProjectOrthogonallyOnto<Dipole> for MultiVector {
     }
 }
 
+impl ProjectOrthogonallyOnto<Flector> for MultiVector {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Line> for MultiVector {
     type Output = MultiVector;
 
@@ -1497,6 +2673,14 @@ impl ProjectOrthogonallyOnto<LineAtOrigin> for MultiVector {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: LineAtOrigin) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Motor> for MultiVector {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1541,10 +2725,26 @@ impl ProjectOrthogonallyOnto<Point> for MultiVector {
     }
 }
 
+impl ProjectOrthogonallyOnto<Rotor> for MultiVector {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for MultiVector {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: Sphere) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Translator> for MultiVector {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1565,6 +2765,14 @@ impl ProjectOrthogonallyOnto<Dipole> for Origin {
     }
 }
 
+impl ProjectOrthogonallyOnto<Flector> for Origin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Line> for Origin {
     type Output = Point;
 
@@ -1577,6 +2785,14 @@ impl ProjectOrthogonallyOnto<LineAtOrigin> for Origin {
     type Output = Origin;
 
     fn project_orthogonally_onto(self, other: LineAtOrigin) -> Origin {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Motor> for Origin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1621,10 +2837,42 @@ impl ProjectOrthogonallyOnto<Point> for Origin {
     }
 }
 
+impl ProjectOrthogonallyOnto<Rotor> for Origin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for Origin {
     type Output = Dipole;
 
     fn project_orthogonally_onto(self, other: Sphere) -> Dipole {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Translator> for Origin {
+    type Output = Origin;
+
+    fn project_orthogonally_onto(self, other: Translator) -> Origin {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Flector> for Plane {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Motor> for Plane {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1653,10 +2901,42 @@ impl ProjectOrthogonallyOnto<PlaneAtOrigin> for Plane {
     }
 }
 
+impl ProjectOrthogonallyOnto<Rotor> for Plane {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for Plane {
     type Output = Sphere;
 
     fn project_orthogonally_onto(self, other: Sphere) -> Sphere {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Translator> for Plane {
+    type Output = Flector;
+
+    fn project_orthogonally_onto(self, other: Translator) -> Flector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Flector> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Motor> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1685,10 +2965,26 @@ impl ProjectOrthogonallyOnto<PlaneAtOrigin> for PlaneAtOrigin {
     }
 }
 
+impl ProjectOrthogonallyOnto<Rotor> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for PlaneAtOrigin {
     type Output = Sphere;
 
     fn project_orthogonally_onto(self, other: Sphere) -> Sphere {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Translator> for PlaneAtOrigin {
+    type Output = Flector;
+
+    fn project_orthogonally_onto(self, other: Translator) -> Flector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1709,6 +3005,14 @@ impl ProjectOrthogonallyOnto<Dipole> for Point {
     }
 }
 
+impl ProjectOrthogonallyOnto<Flector> for Point {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Line> for Point {
     type Output = Point;
 
@@ -1721,6 +3025,14 @@ impl ProjectOrthogonallyOnto<LineAtOrigin> for Point {
     type Output = Point;
 
     fn project_orthogonally_onto(self, other: LineAtOrigin) -> Point {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Motor> for Point {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1765,10 +3077,26 @@ impl ProjectOrthogonallyOnto<Point> for Point {
     }
 }
 
+impl ProjectOrthogonallyOnto<Rotor> for Point {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for Point {
     type Output = Dipole;
 
     fn project_orthogonally_onto(self, other: Sphere) -> Dipole {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Translator> for Point {
+    type Output = Point;
+
+    fn project_orthogonally_onto(self, other: Translator) -> Point {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1789,6 +3117,14 @@ impl ProjectOrthogonallyOnto<Dipole> for PointAtInfinity {
     }
 }
 
+impl ProjectOrthogonallyOnto<Flector> for PointAtInfinity {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Line> for PointAtInfinity {
     type Output = Point;
 
@@ -1801,6 +3137,14 @@ impl ProjectOrthogonallyOnto<LineAtOrigin> for PointAtInfinity {
     type Output = Point;
 
     fn project_orthogonally_onto(self, other: LineAtOrigin) -> Point {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Motor> for PointAtInfinity {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1845,10 +3189,114 @@ impl ProjectOrthogonallyOnto<Point> for PointAtInfinity {
     }
 }
 
+impl ProjectOrthogonallyOnto<Rotor> for PointAtInfinity {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for PointAtInfinity {
     type Output = Dipole;
 
     fn project_orthogonally_onto(self, other: Sphere) -> Dipole {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Translator> for PointAtInfinity {
+    type Output = PointAtInfinity;
+
+    fn project_orthogonally_onto(self, other: Translator) -> PointAtInfinity {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Circle> for Rotor {
+    type Output = Circle;
+
+    fn project_orthogonally_onto(self, other: Circle) -> Circle {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Flector> for Rotor {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Line> for Rotor {
+    type Output = Line;
+
+    fn project_orthogonally_onto(self, other: Line) -> Line {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<LineAtOrigin> for Rotor {
+    type Output = LineAtOrigin;
+
+    fn project_orthogonally_onto(self, other: LineAtOrigin) -> LineAtOrigin {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Motor> for Rotor {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<MultiVector> for Rotor {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Plane> for Rotor {
+    type Output = Line;
+
+    fn project_orthogonally_onto(self, other: Plane) -> Line {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<PlaneAtOrigin> for Rotor {
+    type Output = LineAtOrigin;
+
+    fn project_orthogonally_onto(self, other: PlaneAtOrigin) -> LineAtOrigin {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Rotor> for Rotor {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Sphere> for Rotor {
+    type Output = Circle;
+
+    fn project_orthogonally_onto(self, other: Sphere) -> Circle {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Translator> for Rotor {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1869,6 +3317,14 @@ impl ProjectOrthogonallyOnto<Dipole> for RoundPoint {
     }
 }
 
+impl ProjectOrthogonallyOnto<Flector> for RoundPoint {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Line> for RoundPoint {
     type Output = RoundPoint;
 
@@ -1881,6 +3337,14 @@ impl ProjectOrthogonallyOnto<LineAtOrigin> for RoundPoint {
     type Output = RoundPoint;
 
     fn project_orthogonally_onto(self, other: LineAtOrigin) -> RoundPoint {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Motor> for RoundPoint {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1925,10 +3389,42 @@ impl ProjectOrthogonallyOnto<Point> for RoundPoint {
     }
 }
 
+impl ProjectOrthogonallyOnto<Rotor> for RoundPoint {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for RoundPoint {
     type Output = RoundPoint;
 
     fn project_orthogonally_onto(self, other: Sphere) -> RoundPoint {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Translator> for RoundPoint {
+    type Output = RoundPoint;
+
+    fn project_orthogonally_onto(self, other: Translator) -> RoundPoint {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Flector> for Sphere {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Motor> for Sphere {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1957,6 +3453,14 @@ impl ProjectOrthogonallyOnto<PlaneAtOrigin> for Sphere {
     }
 }
 
+impl ProjectOrthogonallyOnto<Rotor> for Sphere {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for Sphere {
     type Output = Sphere;
 
@@ -1965,10 +3469,114 @@ impl ProjectOrthogonallyOnto<Sphere> for Sphere {
     }
 }
 
+impl ProjectOrthogonallyOnto<Translator> for Sphere {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Circle> for Translator {
+    type Output = Circle;
+
+    fn project_orthogonally_onto(self, other: Circle) -> Circle {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Flector> for Translator {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Line> for Translator {
+    type Output = Line;
+
+    fn project_orthogonally_onto(self, other: Line) -> Line {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<LineAtOrigin> for Translator {
+    type Output = LineAtOrigin;
+
+    fn project_orthogonally_onto(self, other: LineAtOrigin) -> LineAtOrigin {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Motor> for Translator {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<MultiVector> for Translator {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Plane> for Translator {
+    type Output = Line;
+
+    fn project_orthogonally_onto(self, other: Plane) -> Line {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<PlaneAtOrigin> for Translator {
+    type Output = Line;
+
+    fn project_orthogonally_onto(self, other: PlaneAtOrigin) -> Line {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Rotor> for Translator {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Sphere> for Translator {
+    type Output = Circle;
+
+    fn project_orthogonally_onto(self, other: Sphere) -> Circle {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Translator> for Translator {
+    type Output = Translator;
+
+    fn project_orthogonally_onto(self, other: Translator) -> Translator {
+        other.anti_wedge(self.weight_expansion(other))
+    }
+}
+
 impl ProjectViaOriginOnto<Circle> for Circle {
     type Output = Circle;
 
     fn project_via_origin_onto(self, other: Circle) -> Circle {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Flector> for Circle {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -1997,6 +3605,14 @@ impl ProjectViaOriginOnto<LineAtInfinity> for Circle {
     }
 }
 
+impl ProjectViaOriginOnto<Motor> for Circle {
+    type Output = Motor;
+
+    fn project_via_origin_onto(self, other: Motor) -> Motor {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
 impl ProjectViaOriginOnto<MultiVector> for Circle {
     type Output = MultiVector;
 
@@ -2021,6 +3637,14 @@ impl ProjectViaOriginOnto<Sphere> for Circle {
     }
 }
 
+impl ProjectViaOriginOnto<Translator> for Circle {
+    type Output = Translator;
+
+    fn project_via_origin_onto(self, other: Translator) -> Translator {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
 impl ProjectViaOriginOnto<Circle> for Dipole {
     type Output = Dipole;
 
@@ -2033,6 +3657,14 @@ impl ProjectViaOriginOnto<Dipole> for Dipole {
     type Output = Dipole;
 
     fn project_via_origin_onto(self, other: Dipole) -> Dipole {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Flector> for Dipole {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -2057,6 +3689,14 @@ impl ProjectViaOriginOnto<LineAtInfinity> for Dipole {
     type Output = Dipole;
 
     fn project_via_origin_onto(self, other: LineAtInfinity) -> Dipole {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Motor> for Dipole {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Motor) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -2097,6 +3737,126 @@ impl ProjectViaOriginOnto<Sphere> for Dipole {
     type Output = Dipole;
 
     fn project_via_origin_onto(self, other: Sphere) -> Dipole {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Translator> for Dipole {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Translator) -> MultiVector {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Circle> for Flector {
+    type Output = Dipole;
+
+    fn project_via_origin_onto(self, other: Circle) -> Dipole {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Dipole> for Flector {
+    type Output = Dipole;
+
+    fn project_via_origin_onto(self, other: Dipole) -> Dipole {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Flector> for Flector {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Horizon> for Flector {
+    type Output = Flector;
+
+    fn project_via_origin_onto(self, other: Horizon) -> Flector {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Line> for Flector {
+    type Output = Point;
+
+    fn project_via_origin_onto(self, other: Line) -> Point {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<LineAtInfinity> for Flector {
+    type Output = PointAtInfinity;
+
+    fn project_via_origin_onto(self, other: LineAtInfinity) -> PointAtInfinity {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Motor> for Flector {
+    type Output = Flector;
+
+    fn project_via_origin_onto(self, other: Motor) -> Flector {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<MultiVector> for Flector {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: MultiVector) -> MultiVector {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Plane> for Flector {
+    type Output = Flector;
+
+    fn project_via_origin_onto(self, other: Plane) -> Flector {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Point> for Flector {
+    type Output = Point;
+
+    fn project_via_origin_onto(self, other: Point) -> Point {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<PointAtInfinity> for Flector {
+    type Output = PointAtInfinity;
+
+    fn project_via_origin_onto(self, other: PointAtInfinity) -> PointAtInfinity {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Sphere> for Flector {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Sphere) -> MultiVector {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Translator> for Flector {
+    type Output = Flector;
+
+    fn project_via_origin_onto(self, other: Translator) -> Flector {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Flector> for Horizon {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -2149,6 +3909,14 @@ impl ProjectViaOriginOnto<Dipole> for Infinity {
     }
 }
 
+impl ProjectViaOriginOnto<Flector> for Infinity {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
 impl ProjectViaOriginOnto<Horizon> for Infinity {
     type Output = Infinity;
 
@@ -2177,6 +3945,14 @@ impl ProjectViaOriginOnto<LineAtInfinity> for Infinity {
     type Output = Infinity;
 
     fn project_via_origin_onto(self, other: LineAtInfinity) -> Infinity {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Motor> for Infinity {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Motor) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -2229,10 +4005,26 @@ impl ProjectViaOriginOnto<Sphere> for Infinity {
     }
 }
 
+impl ProjectViaOriginOnto<Translator> for Infinity {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Translator) -> MultiVector {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
 impl ProjectViaOriginOnto<Circle> for Line {
     type Output = Circle;
 
     fn project_via_origin_onto(self, other: Circle) -> Circle {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Flector> for Line {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -2261,6 +4053,14 @@ impl ProjectViaOriginOnto<LineAtInfinity> for Line {
     }
 }
 
+impl ProjectViaOriginOnto<Motor> for Line {
+    type Output = Motor;
+
+    fn project_via_origin_onto(self, other: Motor) -> Motor {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
 impl ProjectViaOriginOnto<MultiVector> for Line {
     type Output = MultiVector;
 
@@ -2285,10 +4085,26 @@ impl ProjectViaOriginOnto<Sphere> for Line {
     }
 }
 
+impl ProjectViaOriginOnto<Translator> for Line {
+    type Output = Translator;
+
+    fn project_via_origin_onto(self, other: Translator) -> Translator {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
 impl ProjectViaOriginOnto<Circle> for LineAtInfinity {
     type Output = Circle;
 
     fn project_via_origin_onto(self, other: Circle) -> Circle {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Flector> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -2317,6 +4133,14 @@ impl ProjectViaOriginOnto<LineAtInfinity> for LineAtInfinity {
     }
 }
 
+impl ProjectViaOriginOnto<Motor> for LineAtInfinity {
+    type Output = Motor;
+
+    fn project_via_origin_onto(self, other: Motor) -> Motor {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
 impl ProjectViaOriginOnto<MultiVector> for LineAtInfinity {
     type Output = MultiVector;
 
@@ -2341,10 +4165,26 @@ impl ProjectViaOriginOnto<Sphere> for LineAtInfinity {
     }
 }
 
+impl ProjectViaOriginOnto<Translator> for LineAtInfinity {
+    type Output = Translator;
+
+    fn project_via_origin_onto(self, other: Translator) -> Translator {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
 impl ProjectViaOriginOnto<Circle> for LineAtOrigin {
     type Output = Circle;
 
     fn project_via_origin_onto(self, other: Circle) -> Circle {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Flector> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -2373,6 +4213,14 @@ impl ProjectViaOriginOnto<LineAtInfinity> for LineAtOrigin {
     }
 }
 
+impl ProjectViaOriginOnto<Motor> for LineAtOrigin {
+    type Output = Motor;
+
+    fn project_via_origin_onto(self, other: Motor) -> Motor {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
 impl ProjectViaOriginOnto<MultiVector> for LineAtOrigin {
     type Output = MultiVector;
 
@@ -2397,6 +4245,94 @@ impl ProjectViaOriginOnto<Sphere> for LineAtOrigin {
     }
 }
 
+impl ProjectViaOriginOnto<Translator> for LineAtOrigin {
+    type Output = Translator;
+
+    fn project_via_origin_onto(self, other: Translator) -> Translator {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Circle> for Motor {
+    type Output = Circle;
+
+    fn project_via_origin_onto(self, other: Circle) -> Circle {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Flector> for Motor {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Horizon> for Motor {
+    type Output = LineAtInfinity;
+
+    fn project_via_origin_onto(self, other: Horizon) -> LineAtInfinity {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Line> for Motor {
+    type Output = Line;
+
+    fn project_via_origin_onto(self, other: Line) -> Line {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<LineAtInfinity> for Motor {
+    type Output = LineAtInfinity;
+
+    fn project_via_origin_onto(self, other: LineAtInfinity) -> LineAtInfinity {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Motor> for Motor {
+    type Output = Motor;
+
+    fn project_via_origin_onto(self, other: Motor) -> Motor {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<MultiVector> for Motor {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: MultiVector) -> MultiVector {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Plane> for Motor {
+    type Output = Line;
+
+    fn project_via_origin_onto(self, other: Plane) -> Line {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Sphere> for Motor {
+    type Output = Circle;
+
+    fn project_via_origin_onto(self, other: Sphere) -> Circle {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Translator> for Motor {
+    type Output = Translator;
+
+    fn project_via_origin_onto(self, other: Translator) -> Translator {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
 impl ProjectViaOriginOnto<Circle> for MultiVector {
     type Output = MultiVector;
 
@@ -2409,6 +4345,14 @@ impl ProjectViaOriginOnto<Dipole> for MultiVector {
     type Output = MultiVector;
 
     fn project_via_origin_onto(self, other: Dipole) -> MultiVector {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Flector> for MultiVector {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -2441,6 +4385,14 @@ impl ProjectViaOriginOnto<LineAtInfinity> for MultiVector {
     type Output = MultiVector;
 
     fn project_via_origin_onto(self, other: LineAtInfinity) -> MultiVector {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Motor> for MultiVector {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Motor) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -2493,6 +4445,14 @@ impl ProjectViaOriginOnto<Sphere> for MultiVector {
     }
 }
 
+impl ProjectViaOriginOnto<Translator> for MultiVector {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Translator) -> MultiVector {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
 impl ProjectViaOriginOnto<Circle> for Origin {
     type Output = Dipole;
 
@@ -2505,6 +4465,14 @@ impl ProjectViaOriginOnto<Dipole> for Origin {
     type Output = Dipole;
 
     fn project_via_origin_onto(self, other: Dipole) -> Dipole {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Flector> for Origin {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -2529,6 +4497,14 @@ impl ProjectViaOriginOnto<LineAtInfinity> for Origin {
     type Output = PointAtInfinity;
 
     fn project_via_origin_onto(self, other: LineAtInfinity) -> PointAtInfinity {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Motor> for Origin {
+    type Output = Flector;
+
+    fn project_via_origin_onto(self, other: Motor) -> Flector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -2573,6 +4549,22 @@ impl ProjectViaOriginOnto<Sphere> for Origin {
     }
 }
 
+impl ProjectViaOriginOnto<Translator> for Origin {
+    type Output = Flector;
+
+    fn project_via_origin_onto(self, other: Translator) -> Flector {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Flector> for Plane {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
 impl ProjectViaOriginOnto<Horizon> for Plane {
     type Output = Horizon;
 
@@ -2601,6 +4593,14 @@ impl ProjectViaOriginOnto<Sphere> for Plane {
     type Output = Sphere;
 
     fn project_via_origin_onto(self, other: Sphere) -> Sphere {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Flector> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -2653,6 +4653,14 @@ impl ProjectViaOriginOnto<Dipole> for Point {
     }
 }
 
+impl ProjectViaOriginOnto<Flector> for Point {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
 impl ProjectViaOriginOnto<Horizon> for Point {
     type Output = PointAtInfinity;
 
@@ -2673,6 +4681,14 @@ impl ProjectViaOriginOnto<LineAtInfinity> for Point {
     type Output = PointAtInfinity;
 
     fn project_via_origin_onto(self, other: LineAtInfinity) -> PointAtInfinity {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Motor> for Point {
+    type Output = Flector;
+
+    fn project_via_origin_onto(self, other: Motor) -> Flector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -2717,6 +4733,14 @@ impl ProjectViaOriginOnto<Sphere> for Point {
     }
 }
 
+impl ProjectViaOriginOnto<Translator> for Point {
+    type Output = Flector;
+
+    fn project_via_origin_onto(self, other: Translator) -> Flector {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
 impl ProjectViaOriginOnto<Circle> for PointAtInfinity {
     type Output = Dipole;
 
@@ -2729,6 +4753,14 @@ impl ProjectViaOriginOnto<Dipole> for PointAtInfinity {
     type Output = Dipole;
 
     fn project_via_origin_onto(self, other: Dipole) -> Dipole {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Flector> for PointAtInfinity {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -2753,6 +4785,14 @@ impl ProjectViaOriginOnto<LineAtInfinity> for PointAtInfinity {
     type Output = PointAtInfinity;
 
     fn project_via_origin_onto(self, other: LineAtInfinity) -> PointAtInfinity {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Motor> for PointAtInfinity {
+    type Output = Flector;
+
+    fn project_via_origin_onto(self, other: Motor) -> Flector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -2797,6 +4837,94 @@ impl ProjectViaOriginOnto<Sphere> for PointAtInfinity {
     }
 }
 
+impl ProjectViaOriginOnto<Translator> for PointAtInfinity {
+    type Output = Flector;
+
+    fn project_via_origin_onto(self, other: Translator) -> Flector {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Circle> for Rotor {
+    type Output = Circle;
+
+    fn project_via_origin_onto(self, other: Circle) -> Circle {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Flector> for Rotor {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Horizon> for Rotor {
+    type Output = LineAtInfinity;
+
+    fn project_via_origin_onto(self, other: Horizon) -> LineAtInfinity {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Line> for Rotor {
+    type Output = Line;
+
+    fn project_via_origin_onto(self, other: Line) -> Line {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<LineAtInfinity> for Rotor {
+    type Output = LineAtInfinity;
+
+    fn project_via_origin_onto(self, other: LineAtInfinity) -> LineAtInfinity {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Motor> for Rotor {
+    type Output = Motor;
+
+    fn project_via_origin_onto(self, other: Motor) -> Motor {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<MultiVector> for Rotor {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: MultiVector) -> MultiVector {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Plane> for Rotor {
+    type Output = Line;
+
+    fn project_via_origin_onto(self, other: Plane) -> Line {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Sphere> for Rotor {
+    type Output = Circle;
+
+    fn project_via_origin_onto(self, other: Sphere) -> Circle {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Translator> for Rotor {
+    type Output = Translator;
+
+    fn project_via_origin_onto(self, other: Translator) -> Translator {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
 impl ProjectViaOriginOnto<Circle> for RoundPoint {
     type Output = RoundPoint;
 
@@ -2809,6 +4937,14 @@ impl ProjectViaOriginOnto<Dipole> for RoundPoint {
     type Output = RoundPoint;
 
     fn project_via_origin_onto(self, other: Dipole) -> RoundPoint {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Flector> for RoundPoint {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -2841,6 +4977,14 @@ impl ProjectViaOriginOnto<LineAtInfinity> for RoundPoint {
     type Output = RoundPoint;
 
     fn project_via_origin_onto(self, other: LineAtInfinity) -> RoundPoint {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Motor> for RoundPoint {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Motor) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -2893,6 +5037,22 @@ impl ProjectViaOriginOnto<Sphere> for RoundPoint {
     }
 }
 
+impl ProjectViaOriginOnto<Translator> for RoundPoint {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Translator) -> MultiVector {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Flector> for Sphere {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
 impl ProjectViaOriginOnto<Horizon> for Sphere {
     type Output = Horizon;
 
@@ -2921,6 +5081,86 @@ impl ProjectViaOriginOnto<Sphere> for Sphere {
     type Output = Sphere;
 
     fn project_via_origin_onto(self, other: Sphere) -> Sphere {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Circle> for Translator {
+    type Output = Circle;
+
+    fn project_via_origin_onto(self, other: Circle) -> Circle {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Flector> for Translator {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Horizon> for Translator {
+    type Output = LineAtInfinity;
+
+    fn project_via_origin_onto(self, other: Horizon) -> LineAtInfinity {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Line> for Translator {
+    type Output = Line;
+
+    fn project_via_origin_onto(self, other: Line) -> Line {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<LineAtInfinity> for Translator {
+    type Output = LineAtInfinity;
+
+    fn project_via_origin_onto(self, other: LineAtInfinity) -> LineAtInfinity {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Motor> for Translator {
+    type Output = Motor;
+
+    fn project_via_origin_onto(self, other: Motor) -> Motor {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<MultiVector> for Translator {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: MultiVector) -> MultiVector {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Plane> for Translator {
+    type Output = Line;
+
+    fn project_via_origin_onto(self, other: Plane) -> Line {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Sphere> for Translator {
+    type Output = Circle;
+
+    fn project_via_origin_onto(self, other: Sphere) -> Circle {
+        other.anti_wedge(self.bulk_expansion(other))
+    }
+}
+
+impl ProjectViaOriginOnto<Translator> for Translator {
+    type Output = Translator;
+
+    fn project_via_origin_onto(self, other: Translator) -> Translator {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }

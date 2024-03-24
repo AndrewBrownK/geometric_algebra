@@ -359,6 +359,14 @@ impl Attitude for Dipole {
     }
 }
 
+impl Attitude for Flector {
+    type Output = MultiVector;
+
+    fn attitude(self) -> MultiVector {
+        self.anti_wedge(Horizon::one())
+    }
+}
+
 impl Attitude for Line {
     type Output = PointAtInfinity;
 
@@ -379,6 +387,14 @@ impl Attitude for Magnitude {
     type Output = Horizon;
 
     fn attitude(self) -> Horizon {
+        self.anti_wedge(Horizon::one())
+    }
+}
+
+impl Attitude for Motor {
+    type Output = Flector;
+
+    fn attitude(self) -> Flector {
         self.anti_wedge(Horizon::one())
     }
 }
@@ -423,6 +439,14 @@ impl Attitude for Point {
     }
 }
 
+impl Attitude for Rotor {
+    type Output = Flector;
+
+    fn attitude(self) -> Flector {
+        self.anti_wedge(Horizon::one())
+    }
+}
+
 impl Attitude for RoundPoint {
     type Output = Scalar;
 
@@ -435,6 +459,14 @@ impl Attitude for Sphere {
     type Output = Circle;
 
     fn attitude(self) -> Circle {
+        self.anti_wedge(Horizon::one())
+    }
+}
+
+impl Attitude for Translator {
+    type Output = Horizon;
+
+    fn attitude(self) -> Horizon {
         self.anti_wedge(Horizon::one())
     }
 }

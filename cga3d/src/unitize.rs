@@ -52,6 +52,18 @@ impl Unitize for Dipole {
     }
 }
 
+impl Unitize for Flector {
+    type Output = Flector;
+
+    fn unitize(self) -> Flector {
+        self.geometric_product(Scalar {
+            groups: ScalarGroups {
+                g0: 1.0 / self.weight_norm().group0(),
+            },
+        })
+    }
+}
+
 impl Unitize for Line {
     type Output = Line;
 
@@ -80,6 +92,18 @@ impl Unitize for Magnitude {
     type Output = Magnitude;
 
     fn unitize(self) -> Magnitude {
+        self.geometric_product(Scalar {
+            groups: ScalarGroups {
+                g0: 1.0 / self.weight_norm().group0(),
+            },
+        })
+    }
+}
+
+impl Unitize for Motor {
+    type Output = Motor;
+
+    fn unitize(self) -> Motor {
         self.geometric_product(Scalar {
             groups: ScalarGroups {
                 g0: 1.0 / self.weight_norm().group0(),
@@ -148,6 +172,18 @@ impl Unitize for Point {
     }
 }
 
+impl Unitize for Rotor {
+    type Output = Rotor;
+
+    fn unitize(self) -> Rotor {
+        self.geometric_product(Scalar {
+            groups: ScalarGroups {
+                g0: 1.0 / self.weight_norm().group0(),
+            },
+        })
+    }
+}
+
 impl Unitize for RoundPoint {
     type Output = RoundPoint;
 
@@ -176,6 +212,18 @@ impl Unitize for Sphere {
     type Output = Sphere;
 
     fn unitize(self) -> Sphere {
+        self.geometric_product(Scalar {
+            groups: ScalarGroups {
+                g0: 1.0 / self.weight_norm().group0(),
+            },
+        })
+    }
+}
+
+impl Unitize for Translator {
+    type Output = Translator;
+
+    fn unitize(self) -> Translator {
         self.geometric_product(Scalar {
             groups: ScalarGroups {
                 g0: 1.0 / self.weight_norm().group0(),

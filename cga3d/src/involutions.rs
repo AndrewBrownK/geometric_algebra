@@ -112,6 +112,28 @@ impl AntiDual for Dipole {
     }
 }
 
+impl AntiDual for Flector {
+    type Output = MultiVector;
+
+    fn anti_dual(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from([-self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g2: Simd32x2::from([0.0, self.group1()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl AntiDual for Horizon {
     type Output = Infinity;
 
@@ -177,6 +199,28 @@ impl AntiDual for Magnitude {
         Magnitude {
             groups: MagnitudeGroups {
                 g0: swizzle!(self.group0(), 1, 0),
+            },
+        }
+    }
+}
+
+impl AntiDual for Motor {
+    type Output = MultiVector;
+
+    fn anti_dual(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -270,6 +314,28 @@ impl AntiDual for PointAtInfinity {
     }
 }
 
+impl AntiDual for Rotor {
+    type Output = MultiVector;
+
+    fn anti_dual(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl AntiDual for RoundPoint {
     type Output = Sphere;
 
@@ -301,6 +367,28 @@ impl AntiDual for Sphere {
             groups: RoundPointGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl AntiDual for Translator {
+    type Output = MultiVector;
+
+    fn anti_dual(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -339,6 +427,19 @@ impl AntiReversal for Dipole {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
                 g2: self.group2() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl AntiReversal for Flector {
+    type Output = Flector;
+
+    fn anti_reversal(self) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
+                g1: self.group1() * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]),
             },
         }
     }
@@ -407,6 +508,19 @@ impl AntiReversal for Magnitude {
     fn anti_reversal(self) -> Magnitude {
         Magnitude {
             groups: MagnitudeGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl AntiReversal for Motor {
+    type Output = Motor;
+
+    fn anti_reversal(self) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, 1.0]),
+                g1: self.group1() * Simd32x3::from([-1.0, 1.0, -1.0]),
+            },
         }
     }
 }
@@ -491,6 +605,18 @@ impl AntiReversal for PointAtInfinity {
     }
 }
 
+impl AntiReversal for Rotor {
+    type Output = Rotor;
+
+    fn anti_reversal(self) -> Rotor {
+        Rotor {
+            groups: RotorGroups {
+                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, 1.0]),
+            },
+        }
+    }
+}
+
 impl AntiReversal for RoundPoint {
     type Output = RoundPoint;
 
@@ -522,6 +648,18 @@ impl AntiReversal for Sphere {
             groups: SphereGroups {
                 g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
                 g1: self.group1() * Simd32x2::from([1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl AntiReversal for Translator {
+    type Output = Translator;
+
+    fn anti_reversal(self) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
             },
         }
     }
@@ -560,6 +698,19 @@ impl Automorphism for Dipole {
                 g0: self.group0(),
                 g1: self.group1(),
                 g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl Automorphism for Flector {
+    type Output = Flector;
+
+    fn automorphism(self) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0(),
+                g1: self.group1() * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]),
             },
         }
     }
@@ -629,6 +780,19 @@ impl Automorphism for Magnitude {
         Magnitude {
             groups: MagnitudeGroups {
                 g0: self.group0() * Simd32x2::from([1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl Automorphism for Motor {
+    type Output = Motor;
+
+    fn automorphism(self) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g1: self.group1() * Simd32x3::from([-1.0, 1.0, -1.0]),
             },
         }
     }
@@ -710,6 +874,18 @@ impl Automorphism for PointAtInfinity {
     }
 }
 
+impl Automorphism for Rotor {
+    type Output = Rotor;
+
+    fn automorphism(self) -> Rotor {
+        Rotor {
+            groups: RotorGroups {
+                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+            },
+        }
+    }
+}
+
 impl Automorphism for RoundPoint {
     type Output = RoundPoint;
 
@@ -741,6 +917,18 @@ impl Automorphism for Sphere {
             groups: SphereGroups {
                 g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
                 g1: self.group1() * Simd32x2::from([1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl Automorphism for Translator {
+    type Output = Translator;
+
+    fn automorphism(self) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]),
             },
         }
     }
@@ -779,6 +967,19 @@ impl Conjugation for Dipole {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
                 g2: self.group2() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Conjugation for Flector {
+    type Output = Flector;
+
+    fn conjugation(self) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
+                g1: self.group1() * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]),
             },
         }
     }
@@ -848,6 +1049,19 @@ impl Conjugation for Magnitude {
         Magnitude {
             groups: MagnitudeGroups {
                 g0: self.group0() * Simd32x2::from([1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl Conjugation for Motor {
+    type Output = Motor;
+
+    fn conjugation(self) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]),
+                g1: self.group1() * Simd32x3::from([1.0, -1.0, 1.0]),
             },
         }
     }
@@ -933,6 +1147,18 @@ impl Conjugation for PointAtInfinity {
     }
 }
 
+impl Conjugation for Rotor {
+    type Output = Rotor;
+
+    fn conjugation(self) -> Rotor {
+        Rotor {
+            groups: RotorGroups {
+                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]),
+            },
+        }
+    }
+}
+
 impl Conjugation for RoundPoint {
     type Output = RoundPoint;
 
@@ -964,6 +1190,18 @@ impl Conjugation for Sphere {
             groups: SphereGroups {
                 g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
                 g1: self.group1() * Simd32x2::from([1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl Conjugation for Translator {
+    type Output = Translator;
+
+    fn conjugation(self) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
             },
         }
     }
@@ -1002,6 +1240,19 @@ impl DoubleComplement for Dipole {
                 g0: self.group0(),
                 g1: self.group1(),
                 g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl DoubleComplement for Flector {
+    type Output = Flector;
+
+    fn double_complement(self) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
             },
         }
     }
@@ -1066,6 +1317,19 @@ impl DoubleComplement for Magnitude {
     fn double_complement(self) -> Magnitude {
         Magnitude {
             groups: MagnitudeGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl DoubleComplement for Motor {
+    type Output = Motor;
+
+    fn double_complement(self) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+            },
         }
     }
 }
@@ -1142,6 +1406,16 @@ impl DoubleComplement for PointAtInfinity {
     }
 }
 
+impl DoubleComplement for Rotor {
+    type Output = Rotor;
+
+    fn double_complement(self) -> Rotor {
+        Rotor {
+            groups: RotorGroups { g0: self.group0() },
+        }
+    }
+}
+
 impl DoubleComplement for RoundPoint {
     type Output = RoundPoint;
 
@@ -1174,6 +1448,16 @@ impl DoubleComplement for Sphere {
                 g0: self.group0(),
                 g1: self.group1(),
             },
+        }
+    }
+}
+
+impl DoubleComplement for Translator {
+    type Output = Translator;
+
+    fn double_complement(self) -> Translator {
+        Translator {
+            groups: TranslatorGroups { g0: self.group0() },
         }
     }
 }
@@ -1211,6 +1495,28 @@ impl Dual for Dipole {
                 g0: Simd32x4::from([-self.group0()[0], -self.group0()[1], -self.group0()[2], self.group2()[3]]),
                 g1: self.group1() * Simd32x3::from(-1.0),
                 g2: Simd32x3::from([-self.group2()[0], self.group2()[1], self.group2()[2]]),
+            },
+        }
+    }
+}
+
+impl Dual for Flector {
+    type Output = MultiVector;
+
+    fn dual(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from([-self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g2: Simd32x2::from([0.0, self.group1()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -1281,6 +1587,28 @@ impl Dual for Magnitude {
         Magnitude {
             groups: MagnitudeGroups {
                 g0: swizzle!(self.group0(), 1, 0),
+            },
+        }
+    }
+}
+
+impl Dual for Motor {
+    type Output = MultiVector;
+
+    fn dual(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -1374,6 +1702,28 @@ impl Dual for PointAtInfinity {
     }
 }
 
+impl Dual for Rotor {
+    type Output = MultiVector;
+
+    fn dual(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Dual for RoundPoint {
     type Output = Sphere;
 
@@ -1405,6 +1755,28 @@ impl Dual for Sphere {
             groups: RoundPointGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl Dual for Translator {
+    type Output = MultiVector;
+
+    fn dual(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -1443,6 +1815,28 @@ impl LeftComplement for Dipole {
                 g0: self.group2() * Simd32x4::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
                 g2: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl LeftComplement for Flector {
+    type Output = MultiVector;
+
+    fn left_complement(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g2: Simd32x2::from([self.group1()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: self.group0() * Simd32x4::from(-1.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -1523,6 +1917,28 @@ impl LeftComplement for Magnitude {
         Magnitude {
             groups: MagnitudeGroups {
                 g0: swizzle!(self.group0(), 1, 0),
+            },
+        }
+    }
+}
+
+impl LeftComplement for Motor {
+    type Output = MultiVector;
+
+    fn left_complement(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: self.group1() * Simd32x3::from(-1.0),
+                g4: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -1618,6 +2034,28 @@ impl LeftComplement for PointAtInfinity {
     }
 }
 
+impl LeftComplement for Rotor {
+    type Output = MultiVector;
+
+    fn left_complement(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl LeftComplement for RoundPoint {
     type Output = Sphere;
 
@@ -1649,6 +2087,28 @@ impl LeftComplement for Sphere {
             groups: RoundPointGroups {
                 g0: self.group0(),
                 g1: swizzle!(self.group1(), 1, 0),
+            },
+        }
+    }
+}
+
+impl LeftComplement for Translator {
+    type Output = MultiVector;
+
+    fn left_complement(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -1687,6 +2147,19 @@ impl Reversal for Dipole {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
                 g2: self.group2() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Reversal for Flector {
+    type Output = Flector;
+
+    fn reversal(self) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
+                g1: self.group1() * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]),
             },
         }
     }
@@ -1755,6 +2228,19 @@ impl Reversal for Magnitude {
     fn reversal(self) -> Magnitude {
         Magnitude {
             groups: MagnitudeGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Reversal for Motor {
+    type Output = Motor;
+
+    fn reversal(self) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, 1.0]),
+                g1: self.group1() * Simd32x3::from([-1.0, 1.0, -1.0]),
+            },
         }
     }
 }
@@ -1839,6 +2325,18 @@ impl Reversal for PointAtInfinity {
     }
 }
 
+impl Reversal for Rotor {
+    type Output = Rotor;
+
+    fn reversal(self) -> Rotor {
+        Rotor {
+            groups: RotorGroups {
+                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, 1.0]),
+            },
+        }
+    }
+}
+
 impl Reversal for RoundPoint {
     type Output = RoundPoint;
 
@@ -1870,6 +2368,18 @@ impl Reversal for Sphere {
             groups: SphereGroups {
                 g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
                 g1: self.group1() * Simd32x2::from([1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl Reversal for Translator {
+    type Output = Translator;
+
+    fn reversal(self) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
             },
         }
     }
@@ -1908,6 +2418,28 @@ impl RightComplement for Dipole {
                 g0: self.group2() * Simd32x4::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
                 g2: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl RightComplement for Flector {
+    type Output = MultiVector;
+
+    fn right_complement(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g2: Simd32x2::from([self.group1()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: self.group0() * Simd32x4::from(-1.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -1988,6 +2520,28 @@ impl RightComplement for Magnitude {
         Magnitude {
             groups: MagnitudeGroups {
                 g0: swizzle!(self.group0(), 1, 0),
+            },
+        }
+    }
+}
+
+impl RightComplement for Motor {
+    type Output = MultiVector;
+
+    fn right_complement(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: self.group1() * Simd32x3::from(-1.0),
+                g4: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -2083,6 +2637,28 @@ impl RightComplement for PointAtInfinity {
     }
 }
 
+impl RightComplement for Rotor {
+    type Output = MultiVector;
+
+    fn right_complement(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl RightComplement for RoundPoint {
     type Output = Sphere;
 
@@ -2114,6 +2690,28 @@ impl RightComplement for Sphere {
             groups: RoundPointGroups {
                 g0: self.group0(),
                 g1: swizzle!(self.group1(), 1, 0),
+            },
+        }
+    }
+}
+
+impl RightComplement for Translator {
+    type Output = MultiVector;
+
+    fn right_complement(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }

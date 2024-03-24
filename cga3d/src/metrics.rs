@@ -508,6 +508,22 @@ impl Distance<RoundPoint> for Dipole {
     }
 }
 
+impl Distance<MultiVector> for Flector {
+    type Output = Magnitude;
+
+    fn distance(self, other: MultiVector) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<RoundPoint> for Flector {
+    type Output = Magnitude;
+
+    fn distance(self, other: RoundPoint) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
 impl Distance<MultiVector> for Horizon {
     type Output = Magnitude;
 
@@ -564,10 +580,34 @@ impl Distance<Dipole> for Magnitude {
     }
 }
 
+impl Distance<Flector> for Magnitude {
+    type Output = Magnitude;
+
+    fn distance(self, other: Flector) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Motor> for Magnitude {
+    type Output = Magnitude;
+
+    fn distance(self, other: Motor) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
 impl Distance<MultiVector> for Magnitude {
     type Output = Magnitude;
 
     fn distance(self, other: MultiVector) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Rotor> for Magnitude {
+    type Output = Magnitude;
+
+    fn distance(self, other: Rotor) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -588,6 +628,14 @@ impl Distance<Sphere> for Magnitude {
     }
 }
 
+impl Distance<MultiVector> for Motor {
+    type Output = Magnitude;
+
+    fn distance(self, other: MultiVector) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
 impl Distance<Circle> for MultiVector {
     type Output = Magnitude;
 
@@ -600,6 +648,14 @@ impl Distance<Dipole> for MultiVector {
     type Output = Magnitude;
 
     fn distance(self, other: Dipole) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Flector> for MultiVector {
+    type Output = Magnitude;
+
+    fn distance(self, other: Flector) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -624,6 +680,14 @@ impl Distance<Magnitude> for MultiVector {
     type Output = Magnitude;
 
     fn distance(self, other: Magnitude) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Motor> for MultiVector {
+    type Output = Magnitude;
+
+    fn distance(self, other: Motor) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -668,6 +732,14 @@ impl Distance<Point> for MultiVector {
     }
 }
 
+impl Distance<Rotor> for MultiVector {
+    type Output = Magnitude;
+
+    fn distance(self, other: Rotor) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
 impl Distance<RoundPoint> for MultiVector {
     type Output = Magnitude;
 
@@ -680,6 +752,14 @@ impl Distance<Sphere> for MultiVector {
     type Output = Magnitude;
 
     fn distance(self, other: Sphere) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Translator> for MultiVector {
+    type Output = Magnitude;
+
+    fn distance(self, other: Translator) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -724,6 +804,14 @@ impl Distance<MultiVector> for PointAtInfinity {
     }
 }
 
+impl Distance<MultiVector> for Rotor {
+    type Output = Magnitude;
+
+    fn distance(self, other: MultiVector) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
 impl Distance<Circle> for RoundPoint {
     type Output = Magnitude;
 
@@ -736,6 +824,14 @@ impl Distance<Dipole> for RoundPoint {
     type Output = Magnitude;
 
     fn distance(self, other: Dipole) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Flector> for RoundPoint {
+    type Output = Magnitude;
+
+    fn distance(self, other: Flector) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -780,10 +876,34 @@ impl Distance<Dipole> for Scalar {
     }
 }
 
+impl Distance<Flector> for Scalar {
+    type Output = Magnitude;
+
+    fn distance(self, other: Flector) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Motor> for Scalar {
+    type Output = Magnitude;
+
+    fn distance(self, other: Motor) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
 impl Distance<MultiVector> for Scalar {
     type Output = Magnitude;
 
     fn distance(self, other: MultiVector) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Rotor> for Scalar {
+    type Output = Magnitude;
+
+    fn distance(self, other: Rotor) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -805,6 +925,14 @@ impl Distance<Sphere> for Scalar {
 }
 
 impl Distance<MultiVector> for Sphere {
+    type Output = Magnitude;
+
+    fn distance(self, other: MultiVector) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<MultiVector> for Translator {
     type Output = Magnitude;
 
     fn distance(self, other: MultiVector) -> Magnitude {

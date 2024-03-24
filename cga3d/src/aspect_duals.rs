@@ -87,6 +87,14 @@ impl LeftBulkDual for Dipole {
     }
 }
 
+impl LeftBulkDual for Flector {
+    type Output = MultiVector;
+
+    fn left_bulk_dual(self) -> MultiVector {
+        self.bulk().left_complement()
+    }
+}
+
 impl LeftBulkDual for Horizon {
     type Output = RoundPoint;
 
@@ -112,6 +120,14 @@ impl LeftBulkDual for Line {
 }
 
 impl LeftBulkDual for LineAtInfinity {
+    type Output = Dipole;
+
+    fn left_bulk_dual(self) -> Dipole {
+        self.bulk().left_complement()
+    }
+}
+
+impl LeftBulkDual for Motor {
     type Output = Dipole;
 
     fn left_bulk_dual(self) -> Dipole {
@@ -163,6 +179,14 @@ impl LeftBulkDual for Sphere {
     type Output = RoundPoint;
 
     fn left_bulk_dual(self) -> RoundPoint {
+        self.bulk().left_complement()
+    }
+}
+
+impl LeftBulkDual for Translator {
+    type Output = Dipole;
+
+    fn left_bulk_dual(self) -> Dipole {
         self.bulk().left_complement()
     }
 }
@@ -279,6 +303,14 @@ impl LeftWeightDual for Dipole {
     }
 }
 
+impl LeftWeightDual for Flector {
+    type Output = MultiVector;
+
+    fn left_weight_dual(self) -> MultiVector {
+        self.weight().left_complement()
+    }
+}
+
 impl LeftWeightDual for Line {
     type Output = Dipole;
 
@@ -299,6 +331,14 @@ impl LeftWeightDual for Magnitude {
     type Output = Scalar;
 
     fn left_weight_dual(self) -> Scalar {
+        self.weight().left_complement()
+    }
+}
+
+impl LeftWeightDual for Motor {
+    type Output = MultiVector;
+
+    fn left_weight_dual(self) -> MultiVector {
         self.weight().left_complement()
     }
 }
@@ -343,10 +383,26 @@ impl LeftWeightDual for Point {
     }
 }
 
+impl LeftWeightDual for Rotor {
+    type Output = MultiVector;
+
+    fn left_weight_dual(self) -> MultiVector {
+        self.weight().left_complement()
+    }
+}
+
 impl LeftWeightDual for Sphere {
     type Output = RoundPoint;
 
     fn left_weight_dual(self) -> RoundPoint {
+        self.weight().left_complement()
+    }
+}
+
+impl LeftWeightDual for Translator {
+    type Output = Scalar;
+
+    fn left_weight_dual(self) -> Scalar {
         self.weight().left_complement()
     }
 }
@@ -363,6 +419,14 @@ impl RightBulkDual for Dipole {
     type Output = Circle;
 
     fn right_bulk_dual(self) -> Circle {
+        self.bulk().right_complement()
+    }
+}
+
+impl RightBulkDual for Flector {
+    type Output = MultiVector;
+
+    fn right_bulk_dual(self) -> MultiVector {
         self.bulk().right_complement()
     }
 }
@@ -392,6 +456,14 @@ impl RightBulkDual for Line {
 }
 
 impl RightBulkDual for LineAtInfinity {
+    type Output = Dipole;
+
+    fn right_bulk_dual(self) -> Dipole {
+        self.bulk().right_complement()
+    }
+}
+
+impl RightBulkDual for Motor {
     type Output = Dipole;
 
     fn right_bulk_dual(self) -> Dipole {
@@ -443,6 +515,14 @@ impl RightBulkDual for Sphere {
     type Output = RoundPoint;
 
     fn right_bulk_dual(self) -> RoundPoint {
+        self.bulk().right_complement()
+    }
+}
+
+impl RightBulkDual for Translator {
+    type Output = Dipole;
+
+    fn right_bulk_dual(self) -> Dipole {
         self.bulk().right_complement()
     }
 }
@@ -559,6 +639,14 @@ impl RightWeightDual for Dipole {
     }
 }
 
+impl RightWeightDual for Flector {
+    type Output = MultiVector;
+
+    fn right_weight_dual(self) -> MultiVector {
+        self.weight().right_complement()
+    }
+}
+
 impl RightWeightDual for Line {
     type Output = Dipole;
 
@@ -579,6 +667,14 @@ impl RightWeightDual for Magnitude {
     type Output = Scalar;
 
     fn right_weight_dual(self) -> Scalar {
+        self.weight().right_complement()
+    }
+}
+
+impl RightWeightDual for Motor {
+    type Output = MultiVector;
+
+    fn right_weight_dual(self) -> MultiVector {
         self.weight().right_complement()
     }
 }
@@ -623,10 +719,26 @@ impl RightWeightDual for Point {
     }
 }
 
+impl RightWeightDual for Rotor {
+    type Output = MultiVector;
+
+    fn right_weight_dual(self) -> MultiVector {
+        self.weight().right_complement()
+    }
+}
+
 impl RightWeightDual for Sphere {
     type Output = RoundPoint;
 
     fn right_weight_dual(self) -> RoundPoint {
+        self.weight().right_complement()
+    }
+}
+
+impl RightWeightDual for Translator {
+    type Output = Scalar;
+
+    fn right_weight_dual(self) -> Scalar {
         self.weight().right_complement()
     }
 }

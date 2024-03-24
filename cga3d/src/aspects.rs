@@ -61,6 +61,19 @@ impl Bulk for Dipole {
     }
 }
 
+impl Bulk for Flector {
+    type Output = Flector;
+
+    fn bulk(self) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0() * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+                g1: self.group1() * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+            },
+        }
+    }
+}
+
 impl Bulk for Horizon {
     type Output = Horizon;
 
@@ -92,6 +105,16 @@ impl Bulk for LineAtInfinity {
 
     fn bulk(self) -> LineAtInfinity {
         self
+    }
+}
+
+impl Bulk for Motor {
+    type Output = LineAtInfinity;
+
+    fn bulk(self) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups { g0: self.group1() },
+        }
     }
 }
 
@@ -163,6 +186,18 @@ impl Bulk for Sphere {
     fn bulk(self) -> Horizon {
         Horizon {
             groups: HorizonGroups { g0: self.group1()[1] },
+        }
+    }
+}
+
+impl Bulk for Translator {
+    type Output = LineAtInfinity;
+
+    fn bulk(self) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            },
         }
     }
 }
@@ -352,6 +387,19 @@ impl Weight for Dipole {
     }
 }
 
+impl Weight for Flector {
+    type Output = Flector;
+
+    fn weight(self) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0() * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+                g1: self.group1() * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+            },
+        }
+    }
+}
+
 impl Weight for Line {
     type Output = LineAtOrigin;
 
@@ -376,6 +424,16 @@ impl Weight for Magnitude {
     fn weight(self) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups { g0: self.group0()[1] },
+        }
+    }
+}
+
+impl Weight for Motor {
+    type Output = Rotor;
+
+    fn weight(self) -> Rotor {
+        Rotor {
+            groups: RotorGroups { g0: self.group0() },
         }
     }
 }
@@ -440,12 +498,30 @@ impl Weight for Point {
     }
 }
 
+impl Weight for Rotor {
+    type Output = Rotor;
+
+    fn weight(self) -> Rotor {
+        self
+    }
+}
+
 impl Weight for Sphere {
     type Output = PlaneAtOrigin;
 
     fn weight(self) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Weight for Translator {
+    type Output = AntiScalar;
+
+    fn weight(self) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups { g0: self.group0()[3] },
         }
     }
 }
