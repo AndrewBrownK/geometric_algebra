@@ -455,3 +455,24 @@ pub struct MultiVectorClass {
     pub class_name: String,
     pub grouped_basis: Vec<Vec<BasisElement>>,
 }
+
+pub fn read_multi_vector_from_str<GA: GeometricAlgebraTrait>(multi_vector_descriptor: &str, algebra: &GA) -> (MultiVectorClass, Option<String>) {
+    let mut multi_vector_descriptor_iter = multi_vector_descriptor.split(':');
+    let mut class_name = multi_vector_descriptor_iter.next().unwrap().to_owned();
+    let mut superclass_name = None;
+    if class_name.contains('/') {
+        let mut split = class_name.split('/').map(|it| it.to_string());
+        superclass_name = split.next();
+        class_name = split.next().unwrap();
+    }
+    let mvc = MultiVectorClass {
+        class_name,
+        grouped_basis: multi_vector_descriptor_iter
+            .next()
+            .unwrap()
+            .split('|')
+            .map(|group_descriptor| group_descriptor.split(',').map(|element_name| algebra.parse(element_name)).collect::<Vec<_>>())
+            .collect::<Vec<_>>(),
+    };
+    (mvc, superclass_name)
+}

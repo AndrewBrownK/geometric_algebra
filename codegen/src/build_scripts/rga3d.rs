@@ -4,8 +4,12 @@ use std::path::Path;
 use crate::algebra::dialect::Dialect;
 use crate::algebra::rigid::RigidGeometricAlgebra;
 use crate::algebra::MultiVectorClassRegistry;
+use crate::compile::CodeGenerator;
 use crate::emit::Emitter;
-use crate::old_lib::{read_multi_vector_from_str, CodeGenerator};
+use crate::algebra::read_multi_vector_from_str;
+
+#[cfg(test)]
+mod test;
 
 const RGA3D: &str = "rga3d";
 const RGA3D_CRATE_PREFIX: &str = "rga3d/";
@@ -236,34 +240,4 @@ use crate::products::contractions::WeightContraction;",
     // validate_wgsl(RGA3D, file_path);
 
     Ok(())
-}
-
-#[cfg(test)]
-mod test {
-    use crate::build_scripts::rga3d::{script_custom, RGA3D, RGA3D_CRATE_PREFIX};
-    use crate::old_lib::{validate_glsl, validate_wgsl};
-    use std::path::Path;
-
-    #[test]
-    fn build_without_disk_writes() {
-        script_custom(false, RGA3D_CRATE_PREFIX).unwrap()
-    }
-
-    #[test]
-    fn glsl_validation() {
-        let file_path = Path::new("../")
-            .join(Path::new(RGA3D_CRATE_PREFIX))
-            .join(Path::new("src/shaders/")
-            .join(RGA3D));
-        validate_glsl(RGA3D, file_path);
-    }
-
-    #[test]
-    fn wgsl_validation() {
-        let file_path = Path::new("../")
-            .join(Path::new(RGA3D_CRATE_PREFIX))
-            .join(Path::new("src/shaders/")
-            .join(RGA3D));
-        validate_wgsl(RGA3D, file_path);
-    }
 }

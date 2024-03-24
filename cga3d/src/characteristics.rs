@@ -62,7 +62,7 @@ pub trait Container {
 }
 
 /// Center
-/// The Center of a round object is the Radial (RoundPoint) having the same center and radius.
+/// The Center of a round object is the RoundPoint having the same center and radius.
 /// https://conformalgeometricalgebra.org/wiki/index.php?title=Centers
 pub trait Center {
     type Output;

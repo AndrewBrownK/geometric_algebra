@@ -2,10 +2,13 @@ use crate::algebra::conformal::ConformalGeometricAlgebra;
 use crate::algebra::dialect::Dialect;
 use crate::algebra::{GeometricAlgebraTrait, MultiVectorClassRegistry};
 use crate::emit::Emitter;
-use crate::old_lib::{read_multi_vector_from_str, CodeGenerator};
+use crate::algebra::read_multi_vector_from_str;
 use std::io::Write;
 use std::path::Path;
-use crate::algebra::basis_element::BasisElement;
+use crate::compile::CodeGenerator;
+
+#[cfg(test)]
+mod test;
 
 const CGA3D: &str = "cga3d";
 const CGA3D_CRATE_PREFIX: &str = "cga3d/";
@@ -251,34 +254,4 @@ use crate::products::contractions::WeightContraction;",
     // validate_wgsl(CGA3D, file_path);
 
     Ok(())
-}
-
-#[cfg(test)]
-mod test {
-    use crate::build_scripts::cga3d::{script_custom, CGA3D, CGA3D_CRATE_PREFIX};
-    use crate::old_lib::{validate_glsl, validate_wgsl};
-    use std::path::Path;
-
-    #[test]
-    fn build_without_disk_writes() {
-        script_custom(false, CGA3D_CRATE_PREFIX).unwrap()
-    }
-
-    #[test]
-    fn glsl_validation() {
-        let file_path = Path::new("../")
-                .join(Path::new(CGA3D_CRATE_PREFIX))
-                .join(Path::new("src/shaders/")
-                .join(CGA3D));
-        validate_glsl(CGA3D, file_path);
-    }
-
-    #[test]
-    fn wgsl_validation() {
-        let file_path = Path::new("../")
-                .join(Path::new(CGA3D_CRATE_PREFIX))
-                .join(Path::new("src/shaders/")
-                .join(CGA3D));
-        validate_wgsl(CGA3D, file_path);
-    }
 }

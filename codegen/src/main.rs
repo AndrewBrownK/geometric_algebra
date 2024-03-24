@@ -5,9 +5,10 @@
 mod algebra;
 mod ast;
 mod compile;
-pub mod emit;
+mod emit;
 
-mod old_lib;
+mod impls;
+mod validate;
 
 mod build_scripts {
     pub mod cga3d;
