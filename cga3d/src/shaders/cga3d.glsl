@@ -11129,26 +11129,6 @@ AntiScalar sphere_carrier(Sphere self) {
     return sphere_infinity_wedge(self, Infinity(1.0));
 }
 
-RoundPoint circle_center(Circle self) {
-    return line_circle_anti_wedge(circle_co_carrier(self), self);
-}
-
-RoundPoint dipole_center(Dipole self) {
-    return plane_dipole_anti_wedge(dipole_co_carrier(self), self);
-}
-
-MultiVector multi_vector_center(MultiVector self) {
-    return multi_vector_multi_vector_anti_wedge(multi_vector_co_carrier(self), self);
-}
-
-RoundPoint round_point_center(RoundPoint self) {
-    return anti_scalar_round_point_anti_wedge(round_point_co_carrier(self), self);
-}
-
-RoundPoint sphere_center(Sphere self) {
-    return point_sphere_anti_wedge(sphere_co_carrier(self), self);
-}
-
 Line circle_co_carrier(Circle self) {
     return dipole_infinity_wedge(circle_right_round_weight_dual(self), Infinity(1.0));
 }
@@ -11167,6 +11147,34 @@ AntiScalar round_point_co_carrier(RoundPoint self) {
 
 Point sphere_co_carrier(Sphere self) {
     return round_point_infinity_wedge(sphere_right_round_weight_dual(self), Infinity(1.0));
+}
+
+AntiScalar anti_scalar_sqrt(AntiScalar self) {
+    return AntiScalar(sqrt(self.g0));
+}
+
+Scalar scalar_sqrt(Scalar self) {
+    return Scalar(sqrt(self.g0));
+}
+
+RoundPoint circle_center(Circle self) {
+    return line_circle_anti_wedge(circle_co_carrier(self), self);
+}
+
+RoundPoint dipole_center(Dipole self) {
+    return plane_dipole_anti_wedge(dipole_co_carrier(self), self);
+}
+
+MultiVector multi_vector_center(MultiVector self) {
+    return multi_vector_multi_vector_anti_wedge(multi_vector_co_carrier(self), self);
+}
+
+RoundPoint round_point_center(RoundPoint self) {
+    return anti_scalar_round_point_anti_wedge(round_point_co_carrier(self), self);
+}
+
+RoundPoint sphere_center(Sphere self) {
+    return point_sphere_anti_wedge(sphere_co_carrier(self), self);
 }
 
 Sphere circle_container(Circle self) {
@@ -11207,14 +11215,6 @@ RoundPoint round_point_partner(RoundPoint self) {
 
 Sphere sphere_partner(Sphere self) {
     return sphere_anti_scalar_anti_wedge(sphere_neg(round_point_container(sphere_right_bulk_dual(self))), sphere_carrier(self));
-}
-
-AntiScalar anti_scalar_sqrt(AntiScalar self) {
-    return AntiScalar(sqrt(self.g0));
-}
-
-Scalar scalar_sqrt(Scalar self) {
-    return Scalar(sqrt(self.g0));
 }
 
 Scalar anti_scalar_bulk_norm(AntiScalar self) {

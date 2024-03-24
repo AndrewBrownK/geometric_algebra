@@ -509,46 +509,6 @@ impl Carrier for Sphere {
     }
 }
 
-impl Center for Circle {
-    type Output = RoundPoint;
-
-    fn center(self) -> RoundPoint {
-        self.co_carrier().anti_wedge(self)
-    }
-}
-
-impl Center for Dipole {
-    type Output = RoundPoint;
-
-    fn center(self) -> RoundPoint {
-        self.co_carrier().anti_wedge(self)
-    }
-}
-
-impl Center for MultiVector {
-    type Output = MultiVector;
-
-    fn center(self) -> MultiVector {
-        self.co_carrier().anti_wedge(self)
-    }
-}
-
-impl Center for RoundPoint {
-    type Output = RoundPoint;
-
-    fn center(self) -> RoundPoint {
-        self.co_carrier().anti_wedge(self)
-    }
-}
-
-impl Center for Sphere {
-    type Output = RoundPoint;
-
-    fn center(self) -> RoundPoint {
-        self.co_carrier().anti_wedge(self)
-    }
-}
-
 impl CoCarrier for Circle {
     type Output = Line;
 
@@ -596,6 +556,66 @@ impl CoCarrier for Sphere {
         self.right_round_weight_dual().wedge(Infinity {
             groups: InfinityGroups { g0: 1.0 },
         })
+    }
+}
+
+impl Sqrt for AntiScalar {
+    type Output = AntiScalar;
+
+    fn sqrt(self) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups { g0: self.group0().sqrt() },
+        }
+    }
+}
+
+impl Sqrt for Scalar {
+    type Output = Scalar;
+
+    fn sqrt(self) -> Scalar {
+        Scalar {
+            groups: ScalarGroups { g0: self.group0().sqrt() },
+        }
+    }
+}
+
+impl Center for Circle {
+    type Output = RoundPoint;
+
+    fn center(self) -> RoundPoint {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
+impl Center for Dipole {
+    type Output = RoundPoint;
+
+    fn center(self) -> RoundPoint {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
+impl Center for MultiVector {
+    type Output = MultiVector;
+
+    fn center(self) -> MultiVector {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
+impl Center for RoundPoint {
+    type Output = RoundPoint;
+
+    fn center(self) -> RoundPoint {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
+impl Center for Sphere {
+    type Output = RoundPoint;
+
+    fn center(self) -> RoundPoint {
+        self.co_carrier().anti_wedge(self)
     }
 }
 
@@ -676,25 +696,5 @@ impl Partner for Sphere {
 
     fn partner(self) -> Sphere {
         self.right_bulk_dual().container().neg().anti_wedge(self.carrier())
-    }
-}
-
-impl Sqrt for AntiScalar {
-    type Output = AntiScalar;
-
-    fn sqrt(self) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups { g0: self.group0().sqrt() },
-        }
-    }
-}
-
-impl Sqrt for Scalar {
-    type Output = Scalar;
-
-    fn sqrt(self) -> Scalar {
-        Scalar {
-            groups: ScalarGroups { g0: self.group0().sqrt() },
-        }
     }
 }

@@ -1528,7 +1528,11 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             })?;
         }
 
-        let trait_names = ["Sqrt", "Grade", "AntiGrade", "Attitude", "Carrier", "CoCarrier", "Container", "Center", "Partner"];
+        let trait_names = ["Sqrt", "Grade", "AntiGrade", "Attitude", "Carrier", "CoCarrier"];
+        self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
+        let trait_names = ["Container", "Center"];
+        self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
+        let trait_names = ["Partner"];
         self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
         Ok(())
     }

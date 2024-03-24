@@ -269,13 +269,19 @@ mod test {
 
     #[test]
     fn glsl_validation() {
-        let file_path = Path::new(CGA3D_CRATE_PREFIX).join(Path::new("src/").join(CGA3D));
+        let file_path = Path::new("../")
+                .join(Path::new(CGA3D_CRATE_PREFIX))
+                .join(Path::new("src/shaders/")
+                .join(CGA3D));
         validate_glsl(CGA3D, file_path);
     }
 
     #[test]
     fn wgsl_validation() {
-        let file_path = Path::new(CGA3D_CRATE_PREFIX).join(Path::new("src/").join(CGA3D));
+        let file_path = Path::new("../")
+                .join(Path::new(CGA3D_CRATE_PREFIX))
+                .join(Path::new("src/shaders/")
+                .join(CGA3D));
         validate_wgsl(CGA3D, file_path);
     }
 }
