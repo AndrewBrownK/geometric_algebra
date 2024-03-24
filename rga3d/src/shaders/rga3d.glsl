@@ -10808,91 +10808,91 @@ Scalar translator_right_weight_dual(Translator self) {
     return anti_scalar_right_complement(translator_weight(self));
 }
 
-int anti_scalar_anti_grade(AntiScalar self) {
+int anti_scalar_anti_grade() {
     return 0;
 }
 
-int horizon_anti_grade(Horizon self) {
+int horizon_anti_grade() {
     return 1;
 }
 
-int line_anti_grade(Line self) {
+int line_anti_grade() {
     return 2;
 }
 
-int line_at_infinity_anti_grade(LineAtInfinity self) {
+int line_at_infinity_anti_grade() {
     return 2;
 }
 
-int line_at_origin_anti_grade(LineAtOrigin self) {
+int line_at_origin_anti_grade() {
     return 2;
 }
 
-int origin_anti_grade(Origin self) {
+int origin_anti_grade() {
     return 3;
 }
 
-int plane_anti_grade(Plane self) {
+int plane_anti_grade() {
     return 1;
 }
 
-int plane_at_origin_anti_grade(PlaneAtOrigin self) {
+int plane_at_origin_anti_grade() {
     return 1;
 }
 
-int point_anti_grade(Point self) {
+int point_anti_grade() {
     return 3;
 }
 
-int point_at_infinity_anti_grade(PointAtInfinity self) {
+int point_at_infinity_anti_grade() {
     return 3;
 }
 
-int scalar_anti_grade(Scalar self) {
+int scalar_anti_grade() {
     return 4;
 }
 
-int anti_scalar_grade(AntiScalar self) {
+int anti_scalar_grade() {
     return 4;
 }
 
-int horizon_grade(Horizon self) {
+int horizon_grade() {
     return 3;
 }
 
-int line_grade(Line self) {
+int line_grade() {
     return 2;
 }
 
-int line_at_infinity_grade(LineAtInfinity self) {
+int line_at_infinity_grade() {
     return 2;
 }
 
-int line_at_origin_grade(LineAtOrigin self) {
+int line_at_origin_grade() {
     return 2;
 }
 
-int origin_grade(Origin self) {
+int origin_grade() {
     return 1;
 }
 
-int plane_grade(Plane self) {
+int plane_grade() {
     return 3;
 }
 
-int plane_at_origin_grade(PlaneAtOrigin self) {
+int plane_at_origin_grade() {
     return 3;
 }
 
-int point_grade(Point self) {
+int point_grade() {
     return 1;
 }
 
-int point_at_infinity_grade(PointAtInfinity self) {
+int point_at_infinity_grade() {
     return 1;
 }
 
-int scalar_grade(Scalar self) {
+int scalar_grade() {
     return 0;
 }
 

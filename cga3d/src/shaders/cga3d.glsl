@@ -10921,131 +10921,131 @@ RoundPoint sphere_right_weight_dual(Sphere self) {
     return plane_at_origin_right_complement(sphere_weight(self));
 }
 
-int anti_scalar_anti_grade(AntiScalar self) {
+int anti_scalar_anti_grade() {
     return 0;
 }
 
-int circle_anti_grade(Circle self) {
+int circle_anti_grade() {
     return 2;
 }
 
-int dipole_anti_grade(Dipole self) {
+int dipole_anti_grade() {
     return 3;
 }
 
-int horizon_anti_grade(Horizon self) {
+int horizon_anti_grade() {
     return 1;
 }
 
-int infinity_anti_grade(Infinity self) {
+int infinity_anti_grade() {
     return 4;
 }
 
-int line_anti_grade(Line self) {
+int line_anti_grade() {
     return 2;
 }
 
-int line_at_infinity_anti_grade(LineAtInfinity self) {
+int line_at_infinity_anti_grade() {
     return 2;
 }
 
-int line_at_origin_anti_grade(LineAtOrigin self) {
+int line_at_origin_anti_grade() {
     return 2;
 }
 
-int origin_anti_grade(Origin self) {
+int origin_anti_grade() {
     return 3;
 }
 
-int plane_anti_grade(Plane self) {
+int plane_anti_grade() {
     return 1;
 }
 
-int plane_at_origin_anti_grade(PlaneAtOrigin self) {
+int plane_at_origin_anti_grade() {
     return 1;
 }
 
-int point_anti_grade(Point self) {
+int point_anti_grade() {
     return 3;
 }
 
-int point_at_infinity_anti_grade(PointAtInfinity self) {
+int point_at_infinity_anti_grade() {
     return 3;
 }
 
-int round_point_anti_grade(RoundPoint self) {
+int round_point_anti_grade() {
     return 4;
 }
 
-int scalar_anti_grade(Scalar self) {
+int scalar_anti_grade() {
     return 5;
 }
 
-int sphere_anti_grade(Sphere self) {
+int sphere_anti_grade() {
     return 1;
 }
 
-int anti_scalar_grade(AntiScalar self) {
+int anti_scalar_grade() {
     return 5;
 }
 
-int circle_grade(Circle self) {
+int circle_grade() {
     return 3;
 }
 
-int dipole_grade(Dipole self) {
+int dipole_grade() {
     return 2;
 }
 
-int horizon_grade(Horizon self) {
+int horizon_grade() {
     return 4;
 }
 
-int infinity_grade(Infinity self) {
+int infinity_grade() {
     return 1;
 }
 
-int line_grade(Line self) {
+int line_grade() {
     return 3;
 }
 
-int line_at_infinity_grade(LineAtInfinity self) {
+int line_at_infinity_grade() {
     return 3;
 }
 
-int line_at_origin_grade(LineAtOrigin self) {
+int line_at_origin_grade() {
     return 3;
 }
 
-int origin_grade(Origin self) {
+int origin_grade() {
     return 2;
 }
 
-int plane_grade(Plane self) {
+int plane_grade() {
     return 4;
 }
 
-int plane_at_origin_grade(PlaneAtOrigin self) {
+int plane_at_origin_grade() {
     return 4;
 }
 
-int point_grade(Point self) {
+int point_grade() {
     return 2;
 }
 
-int point_at_infinity_grade(PointAtInfinity self) {
+int point_at_infinity_grade() {
     return 2;
 }
 
-int round_point_grade(RoundPoint self) {
+int round_point_grade() {
     return 1;
 }
 
-int scalar_grade(Scalar self) {
+int scalar_grade() {
     return 0;
 }
 
-int sphere_grade(Sphere self) {
+int sphere_grade() {
     return 4;
 }
 

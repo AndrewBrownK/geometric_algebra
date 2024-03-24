@@ -10808,91 +10808,91 @@ fn translator_right_weight_dual(self_: Translator) -> Scalar {
     return anti_scalar_right_complement(translator_weight(self_));
 }
 
-fn anti_scalar_anti_grade(self_: AntiScalar) -> i32 {
+fn anti_scalar_anti_grade() -> i32 {
     return 0;
 }
 
-fn horizon_anti_grade(self_: Horizon) -> i32 {
+fn horizon_anti_grade() -> i32 {
     return 1;
 }
 
-fn line_anti_grade(self_: Line) -> i32 {
+fn line_anti_grade() -> i32 {
     return 2;
 }
 
-fn line_at_infinity_anti_grade(self_: LineAtInfinity) -> i32 {
+fn line_at_infinity_anti_grade() -> i32 {
     return 2;
 }
 
-fn line_at_origin_anti_grade(self_: LineAtOrigin) -> i32 {
+fn line_at_origin_anti_grade() -> i32 {
     return 2;
 }
 
-fn origin_anti_grade(self_: Origin) -> i32 {
+fn origin_anti_grade() -> i32 {
     return 3;
 }
 
-fn plane_anti_grade(self_: Plane) -> i32 {
+fn plane_anti_grade() -> i32 {
     return 1;
 }
 
-fn plane_at_origin_anti_grade(self_: PlaneAtOrigin) -> i32 {
+fn plane_at_origin_anti_grade() -> i32 {
     return 1;
 }
 
-fn point_anti_grade(self_: Point) -> i32 {
+fn point_anti_grade() -> i32 {
     return 3;
 }
 
-fn point_at_infinity_anti_grade(self_: PointAtInfinity) -> i32 {
+fn point_at_infinity_anti_grade() -> i32 {
     return 3;
 }
 
-fn scalar_anti_grade(self_: Scalar) -> i32 {
+fn scalar_anti_grade() -> i32 {
     return 4;
 }
 
-fn anti_scalar_grade(self_: AntiScalar) -> i32 {
+fn anti_scalar_grade() -> i32 {
     return 4;
 }
 
-fn horizon_grade(self_: Horizon) -> i32 {
+fn horizon_grade() -> i32 {
     return 3;
 }
 
-fn line_grade(self_: Line) -> i32 {
+fn line_grade() -> i32 {
     return 2;
 }
 
-fn line_at_infinity_grade(self_: LineAtInfinity) -> i32 {
+fn line_at_infinity_grade() -> i32 {
     return 2;
 }
 
-fn line_at_origin_grade(self_: LineAtOrigin) -> i32 {
+fn line_at_origin_grade() -> i32 {
     return 2;
 }
 
-fn origin_grade(self_: Origin) -> i32 {
+fn origin_grade() -> i32 {
     return 1;
 }
 
-fn plane_grade(self_: Plane) -> i32 {
+fn plane_grade() -> i32 {
     return 3;
 }
 
-fn plane_at_origin_grade(self_: PlaneAtOrigin) -> i32 {
+fn plane_at_origin_grade() -> i32 {
     return 3;
 }
 
-fn point_grade(self_: Point) -> i32 {
+fn point_grade() -> i32 {
     return 1;
 }
 
-fn point_at_infinity_grade(self_: PointAtInfinity) -> i32 {
+fn point_at_infinity_grade() -> i32 {
     return 1;
 }
 
-fn scalar_grade(self_: Scalar) -> i32 {
+fn scalar_grade() -> i32 {
     return 0;
 }
 

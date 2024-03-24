@@ -6,7 +6,6 @@ mod algebra;
 mod ast;
 mod compile;
 mod emit;
-
 mod impls;
 mod validate;
 

@@ -225,10 +225,10 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
             emit_indentation(collector, indentation)?;
             collector.write_all(b"}\n")?;
         }
-        AstNode::TraitImplementation { result, parameters, body } => {
+        AstNode::TraitImplementation { result, class, parameters, body } => {
             collector.write_all(b"fn ")?;
             match parameters.len() {
-                0 => camel_to_snake_case(collector, &result.data_type.data_class_name())?,
+                0 => camel_to_snake_case(collector, class.class_name.as_str())?,
                 1 if result.name == "Into" => {
                     camel_to_snake_case(collector, &parameters[0].data_type.data_class_name())?;
                     collector.write_all(b"_")?;

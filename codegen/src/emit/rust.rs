@@ -504,27 +504,28 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
             emit_indentation(collector, indentation)?;
             collector.write_all(b"}\n")?;
         }
-        AstNode::TraitImplementation { result, parameters, body } => {
+        AstNode::TraitImplementation { result, class,  parameters, body } => {
             let result_type_name = get_data_type(&result.data_type);
             match parameters.len() {
-                0 => collector.write_fmt(format_args!("impl {} for {}", result.name, result_type_name))?,
+                0 => collector.write_fmt(format_args!("impl {} for {}", result.name, class.class_name))?,
                 1 if result.name == "Into" => {
                     collector.write_fmt(format_args!("impl {}<{}> for {}", result.name, result_type_name, parameters[0].multi_vector_class().class_name,))?
                 }
-                1 => collector.write_fmt(format_args!("impl {} for {}", result.name, parameters[0].multi_vector_class().class_name))?,
+                1 => collector.write_fmt(format_args!("impl {} for {}", result.name, class.class_name))?,
                 2 if !matches!(parameters[1].data_type, DataType::MultiVector(_)) => {
-                    collector.write_fmt(format_args!("impl {} for {}", result.name, parameters[0].multi_vector_class().class_name))?
+                    collector.write_fmt(format_args!("impl {} for {}", result.name, class.class_name))?
                 }
                 2 => collector.write_fmt(format_args!(
                     "impl {}<{}> for {}",
                     result.name,
                     parameters[1].multi_vector_class().class_name,
-                    parameters[0].multi_vector_class().class_name,
+                    class.class_name,
                 ))?,
                 _ => unreachable!(),
             }
             collector.write_all(b" {\n")?;
-            if !parameters.is_empty() && result.name != "Into" {
+            let returns_self = result.data_type == DataType::MultiVector(class);
+            if result.name != "Into" && (!parameters.is_empty() || !returns_self) {
                 emit_indentation(collector, indentation + 1)?;
                 collector.write_fmt(format_args!("type Output = {};\n\n", result_type_name))?;
             }
@@ -532,7 +533,14 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
             collector.write_all(b"fn ")?;
             camel_to_snake_case(collector, result.name)?;
             match parameters.len() {
-                0 => collector.write_all(b"() -> Self")?,
+                0 => {
+                    collector.write_all(b"() -> ")?;
+                    if returns_self {
+                        collector.write_all(b"Self")?;
+                    } else {
+                        emit_data_type(collector, &result.data_type)?;
+                    }
+                },
                 1 => {
                     collector.write_fmt(format_args!("({}) -> ", parameters[0].name))?;
                     emit_data_type(collector, &result.data_type)?;

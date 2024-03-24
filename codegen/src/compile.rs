@@ -287,6 +287,7 @@ impl MultiVectorClass {
                 name,
                 data_type: DataType::MultiVector(self),
             },
+            class: self,
             parameters: vec![],
             body: vec![AstNode::ReturnStatement {
                 expression: Box::new(Expression {
@@ -395,6 +396,7 @@ pub fn derive_involution<'a>(name: &'static str, involution: &Involution, parame
             name,
             data_type: DataType::MultiVector(result_class),
         },
+        class: parameter_a.multi_vector_class(),
         parameters: vec![parameter_a.clone()],
         body: vec![AstNode::ReturnStatement {
             expression: Box::new(Expression {
@@ -487,6 +489,7 @@ pub fn element_wise<'a>(name: &'static str, parameter_a: &Parameter<'a>, paramet
                 name,
                 data_type: DataType::MultiVector(result_class),
             },
+            class: parameter_a.multi_vector_class(),
             parameters: vec![parameter_a.clone(), parameter_b.clone()],
             body: vec![AstNode::ReturnStatement {
                 expression: Box::new(Expression {
@@ -826,6 +829,7 @@ pub fn derive_product<'a>(name: &'static str, product: &Product, parameter_a: &P
             name,
             data_type: DataType::MultiVector(result_class),
         },
+        class: parameter_a.multi_vector_class(),
         parameters: vec![parameter_a.clone(), parameter_b.clone()],
         body: vec![AstNode::ReturnStatement {
             expression: Box::new(Expression {
@@ -851,6 +855,7 @@ pub fn derive_unitize<'a>(
             name,
             data_type: geometric_product_result.data_type.clone(),
         },
+        class: parameter_a.multi_vector_class(),
         parameters: vec![parameter_a.clone()],
         body: vec![AstNode::ReturnStatement {
             expression: Box::new(Expression {
@@ -923,6 +928,7 @@ pub fn derive_scale<'a>(name: &'static str, geometric_product: &AstNode<'a>, par
             name,
             data_type: geometric_product_result.data_type.clone(),
         },
+        class: parameter_a.multi_vector_class(),
         parameters: vec![
             parameter_a.clone(),
             Parameter {
@@ -975,6 +981,7 @@ pub fn derive_signum<'a>(name: &'static str, geometric_product: &AstNode<'a>, ma
             name,
             data_type: geometric_product_result.data_type.clone(),
         },
+        class: parameter_a.multi_vector_class(),
         parameters: vec![parameter_a.clone()],
         body: vec![AstNode::ReturnStatement {
             expression: Box::new(Expression {
@@ -1055,6 +1062,7 @@ pub fn derive_inverse<'a>(
             name,
             data_type: geometric_product_result.data_type.clone(),
         },
+        class: parameter_a.multi_vector_class(),
         parameters: vec![parameter_a.clone()],
         body: vec![AstNode::ReturnStatement {
             expression: Box::new(Expression {
@@ -1145,6 +1153,7 @@ pub fn derive_power_of_integer<'a>(
             name,
             data_type: parameter_a.data_type.clone(),
         },
+        class: parameter_a.multi_vector_class(),
         parameters: vec![parameter_a.clone(), parameter_b.clone()],
         body: vec![
             AstNode::IfThenBlock {
@@ -1404,6 +1413,7 @@ pub fn derive_division<'a>(
             name,
             data_type: geometric_product_result.data_type.clone(),
         },
+        class: parameter_a.multi_vector_class(),
         parameters: vec![parameter_a.clone(), parameter_b.clone()],
         body: vec![AstNode::ReturnStatement {
             expression: Box::new(Expression {
@@ -1509,6 +1519,7 @@ pub fn derive_sandwich_product<'a>(
             name,
             data_type: conversion_result.data_type.clone(),
         },
+        class: parameter_a.multi_vector_class(),
         parameters: vec![parameter_a.clone(), parameter_b.clone()],
         body: vec![AstNode::ReturnStatement {
             expression: if conversion.is_some() {
@@ -1530,7 +1541,8 @@ pub fn derive_grade<'a>(name: &'static str, parameter_a: &Parameter<'a>, grade: 
             name,
             data_type: DataType::Integer,
         },
-        parameters: vec![parameter_a.clone()],
+        class: parameter_a.multi_vector_class(),
+        parameters: vec![],
         body: vec![AstNode::ReturnStatement {
             expression: Box::new(Expression {
                 size: 0,
@@ -1666,6 +1678,7 @@ pub fn derive_bulk_or_weight<'a>(
             name,
             data_type: DataType::MultiVector(result_class),
         },
+        class: parameter_a.multi_vector_class(),
         parameters: vec![parameter_a.clone()],
         body: vec![AstNode::ReturnStatement {
             expression: Box::new(Expression {
@@ -1692,6 +1705,7 @@ pub fn single_expression_pair_trait_impl<'a>(name: &'static str, parameter_a: &P
     };
     AstNode::TraitImplementation {
         result: Parameter { name, data_type },
+        class: parameter_a.multi_vector_class(),
         parameters: vec![parameter_a.clone(), parameter_b.clone()],
         body: vec![AstNode::ReturnStatement { expression: Box::new(expression) }],
     }
@@ -1704,6 +1718,7 @@ pub fn single_expression_single_trait_impl<'a>(name: &'static str, parameter_a: 
     };
     AstNode::TraitImplementation {
         result: Parameter { name, data_type },
+        class: parameter_a.multi_vector_class(),
         parameters: vec![parameter_a.clone()],
         body: vec![AstNode::ReturnStatement { expression: Box::new(expression) }],
     }
@@ -1715,6 +1730,7 @@ pub fn single_expression_class_trait_impl<'a>(name: &'static str, mvc: &'a Multi
             name,
             data_type: DataType::MultiVector(mvc),
         },
+        class: mvc,
         parameters: vec![],
         body: vec![AstNode::ReturnStatement { expression: Box::new(expression) }],
     }
@@ -3074,10 +3090,9 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             ".to_string(),
         })?;
 
-        // TODO make grade and anti_grade class-level traits
         emitter.emit(&AstNode::TraitDefinition {
             name: "Grade".to_string(),
-            params: 1,
+            params: 0,
             docs: "
             Grade
             https://rigidgeometricalgebra.org/wiki/index.php?title=Grade_and_antigrade
@@ -3086,7 +3101,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
         emitter.emit(&AstNode::TraitDefinition {
             name: "AntiGrade".to_string(),
-            params: 1,
+            params: 0,
             docs: "
             Anti-Grade
             https://rigidgeometricalgebra.org/wiki/index.php?title=Grade_and_antigrade

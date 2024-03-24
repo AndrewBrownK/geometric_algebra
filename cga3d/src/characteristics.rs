@@ -20,14 +20,14 @@ pub trait Sqrt {
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Grade_and_antigrade
 pub trait Grade {
     type Output;
-    fn grade(self) -> Self::Output;
+    fn grade() -> Self::Output;
 }
 
 /// Anti-Grade
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Grade_and_antigrade
 pub trait AntiGrade {
     type Output;
-    fn anti_grade(self) -> Self::Output;
+    fn anti_grade() -> Self::Output;
 }
 
 /// Attitude
@@ -82,7 +82,7 @@ pub trait Partner {
 impl AntiGrade for AntiScalar {
     type Output = isize;
 
-    fn anti_grade(self) -> isize {
+    fn anti_grade() -> isize {
         0
     }
 }
@@ -90,7 +90,7 @@ impl AntiGrade for AntiScalar {
 impl AntiGrade for Circle {
     type Output = isize;
 
-    fn anti_grade(self) -> isize {
+    fn anti_grade() -> isize {
         2
     }
 }
@@ -98,7 +98,7 @@ impl AntiGrade for Circle {
 impl AntiGrade for Dipole {
     type Output = isize;
 
-    fn anti_grade(self) -> isize {
+    fn anti_grade() -> isize {
         3
     }
 }
@@ -106,7 +106,7 @@ impl AntiGrade for Dipole {
 impl AntiGrade for Horizon {
     type Output = isize;
 
-    fn anti_grade(self) -> isize {
+    fn anti_grade() -> isize {
         1
     }
 }
@@ -114,7 +114,7 @@ impl AntiGrade for Horizon {
 impl AntiGrade for Infinity {
     type Output = isize;
 
-    fn anti_grade(self) -> isize {
+    fn anti_grade() -> isize {
         4
     }
 }
@@ -122,7 +122,7 @@ impl AntiGrade for Infinity {
 impl AntiGrade for Line {
     type Output = isize;
 
-    fn anti_grade(self) -> isize {
+    fn anti_grade() -> isize {
         2
     }
 }
@@ -130,7 +130,7 @@ impl AntiGrade for Line {
 impl AntiGrade for LineAtInfinity {
     type Output = isize;
 
-    fn anti_grade(self) -> isize {
+    fn anti_grade() -> isize {
         2
     }
 }
@@ -138,7 +138,7 @@ impl AntiGrade for LineAtInfinity {
 impl AntiGrade for LineAtOrigin {
     type Output = isize;
 
-    fn anti_grade(self) -> isize {
+    fn anti_grade() -> isize {
         2
     }
 }
@@ -146,7 +146,7 @@ impl AntiGrade for LineAtOrigin {
 impl AntiGrade for Origin {
     type Output = isize;
 
-    fn anti_grade(self) -> isize {
+    fn anti_grade() -> isize {
         3
     }
 }
@@ -154,7 +154,7 @@ impl AntiGrade for Origin {
 impl AntiGrade for Plane {
     type Output = isize;
 
-    fn anti_grade(self) -> isize {
+    fn anti_grade() -> isize {
         1
     }
 }
@@ -162,7 +162,7 @@ impl AntiGrade for Plane {
 impl AntiGrade for PlaneAtOrigin {
     type Output = isize;
 
-    fn anti_grade(self) -> isize {
+    fn anti_grade() -> isize {
         1
     }
 }
@@ -170,7 +170,7 @@ impl AntiGrade for PlaneAtOrigin {
 impl AntiGrade for Point {
     type Output = isize;
 
-    fn anti_grade(self) -> isize {
+    fn anti_grade() -> isize {
         3
     }
 }
@@ -178,7 +178,7 @@ impl AntiGrade for Point {
 impl AntiGrade for PointAtInfinity {
     type Output = isize;
 
-    fn anti_grade(self) -> isize {
+    fn anti_grade() -> isize {
         3
     }
 }
@@ -186,7 +186,7 @@ impl AntiGrade for PointAtInfinity {
 impl AntiGrade for RoundPoint {
     type Output = isize;
 
-    fn anti_grade(self) -> isize {
+    fn anti_grade() -> isize {
         4
     }
 }
@@ -194,7 +194,7 @@ impl AntiGrade for RoundPoint {
 impl AntiGrade for Scalar {
     type Output = isize;
 
-    fn anti_grade(self) -> isize {
+    fn anti_grade() -> isize {
         5
     }
 }
@@ -202,7 +202,7 @@ impl AntiGrade for Scalar {
 impl AntiGrade for Sphere {
     type Output = isize;
 
-    fn anti_grade(self) -> isize {
+    fn anti_grade() -> isize {
         1
     }
 }
@@ -210,7 +210,7 @@ impl AntiGrade for Sphere {
 impl Grade for AntiScalar {
     type Output = isize;
 
-    fn grade(self) -> isize {
+    fn grade() -> isize {
         5
     }
 }
@@ -218,7 +218,7 @@ impl Grade for AntiScalar {
 impl Grade for Circle {
     type Output = isize;
 
-    fn grade(self) -> isize {
+    fn grade() -> isize {
         3
     }
 }
@@ -226,7 +226,7 @@ impl Grade for Circle {
 impl Grade for Dipole {
     type Output = isize;
 
-    fn grade(self) -> isize {
+    fn grade() -> isize {
         2
     }
 }
@@ -234,7 +234,7 @@ impl Grade for Dipole {
 impl Grade for Horizon {
     type Output = isize;
 
-    fn grade(self) -> isize {
+    fn grade() -> isize {
         4
     }
 }
@@ -242,7 +242,7 @@ impl Grade for Horizon {
 impl Grade for Infinity {
     type Output = isize;
 
-    fn grade(self) -> isize {
+    fn grade() -> isize {
         1
     }
 }
@@ -250,7 +250,7 @@ impl Grade for Infinity {
 impl Grade for Line {
     type Output = isize;
 
-    fn grade(self) -> isize {
+    fn grade() -> isize {
         3
     }
 }
@@ -258,7 +258,7 @@ impl Grade for Line {
 impl Grade for LineAtInfinity {
     type Output = isize;
 
-    fn grade(self) -> isize {
+    fn grade() -> isize {
         3
     }
 }
@@ -266,7 +266,7 @@ impl Grade for LineAtInfinity {
 impl Grade for LineAtOrigin {
     type Output = isize;
 
-    fn grade(self) -> isize {
+    fn grade() -> isize {
         3
     }
 }
@@ -274,7 +274,7 @@ impl Grade for LineAtOrigin {
 impl Grade for Origin {
     type Output = isize;
 
-    fn grade(self) -> isize {
+    fn grade() -> isize {
         2
     }
 }
@@ -282,7 +282,7 @@ impl Grade for Origin {
 impl Grade for Plane {
     type Output = isize;
 
-    fn grade(self) -> isize {
+    fn grade() -> isize {
         4
     }
 }
@@ -290,7 +290,7 @@ impl Grade for Plane {
 impl Grade for PlaneAtOrigin {
     type Output = isize;
 
-    fn grade(self) -> isize {
+    fn grade() -> isize {
         4
     }
 }
@@ -298,7 +298,7 @@ impl Grade for PlaneAtOrigin {
 impl Grade for Point {
     type Output = isize;
 
-    fn grade(self) -> isize {
+    fn grade() -> isize {
         2
     }
 }
@@ -306,7 +306,7 @@ impl Grade for Point {
 impl Grade for PointAtInfinity {
     type Output = isize;
 
-    fn grade(self) -> isize {
+    fn grade() -> isize {
         2
     }
 }
@@ -314,7 +314,7 @@ impl Grade for PointAtInfinity {
 impl Grade for RoundPoint {
     type Output = isize;
 
-    fn grade(self) -> isize {
+    fn grade() -> isize {
         1
     }
 }
@@ -322,7 +322,7 @@ impl Grade for RoundPoint {
 impl Grade for Scalar {
     type Output = isize;
 
-    fn grade(self) -> isize {
+    fn grade() -> isize {
         0
     }
 }
@@ -330,7 +330,7 @@ impl Grade for Scalar {
 impl Grade for Sphere {
     type Output = isize;
 
-    fn grade(self) -> isize {
+    fn grade() -> isize {
         4
     }
 }

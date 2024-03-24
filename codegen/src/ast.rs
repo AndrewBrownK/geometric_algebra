@@ -110,6 +110,7 @@ pub enum AstNode<'a> {
     },
     TraitImplementation {
         result: Parameter<'a>,
+        class: &'a MultiVectorClass,
         parameters: Vec<Parameter<'a>>,
         body: Vec<AstNode<'a>>,
     },
