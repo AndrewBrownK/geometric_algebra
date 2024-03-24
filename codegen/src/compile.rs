@@ -1450,7 +1450,6 @@ pub fn derive_division<'a>(
     }
 }
 
-// TODO I can probably make this more succinct, even with the conditional Into stuff
 pub fn derive_sandwich_product<'a>(
     name: &'static str,
     geometric_product: &AstNode<'a>,
@@ -2028,6 +2027,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         // ...unless I convert to Center anyway...
 
 
+        // TODO here?
         todo!()
     }
 
@@ -2220,25 +2220,17 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
         }
 
-        // TODO find a way to generalize these hard coded basis elements
-        let projective_basis = if self.algebra.algebra_name() == "rga3d" {
-            Some(self.algebra.parse("e4"))
-        } else if self.algebra.algebra_name() == "cga3d" {
-            Some(self.algebra.parse("e4"))
-        } else {
-            None
+        let projective_basis = {
+            let e4_idx = self.algebra.represented_dimensions() + 1;
+            self.algebra.parse(format!("e{e4_idx}").as_str())
         };
-        let flat_basis = if self.algebra.algebra_name() == "cga3d" {
-            Some(self.algebra.parse("e5"))
+        let flat_basis = if self.algebra.algebra_name().contains("cga") {
+            let e5_idx = self.algebra.represented_dimensions() + 2;
+            Some(self.algebra.parse(format!("e{e5_idx}").as_str()))
         } else {
             None
         };
         for param_a in registry.single_parameters() {
-            let projective_basis = match projective_basis.clone() {
-                None => continue,
-                Some(pb) => pb,
-            };
-
             let bulk = derive_bulk_or_weight("Bulk", &param_a, &projective_basis, false, flat_basis.clone(), true, registry);
             if bulk != AstNode::None {
                 self.trait_impls.add_single_impl("Bulk", param_a.clone(), bulk);

@@ -12,6 +12,7 @@ pub trait GeometricAlgebraTrait {
     fn algebra_name(&self) -> &'static str;
     fn dialect(&self) -> &Dialect;
     fn parse(&self, name: &str) -> BasisElement;
+    fn represented_dimensions(&self) -> usize;
 
     fn basis_size(&self) -> usize;
 

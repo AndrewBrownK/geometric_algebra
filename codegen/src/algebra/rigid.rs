@@ -95,4 +95,8 @@ impl<'a> GeometricAlgebraTrait for RigidGeometricAlgebra<'a> {
         }
         vec![result]
     }
+
+    fn represented_dimensions(&self) -> usize {
+        self.generator_squares.len() - 1
+    }
 }

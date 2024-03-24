@@ -73,6 +73,10 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
         result
     }
 
+    fn represented_dimensions(&self) -> usize {
+        self.surface_generator_squares.len() - 2
+    }
+
     fn basis_size(&self) -> usize {
         1 << self.surface_generator_squares.len()
     }
