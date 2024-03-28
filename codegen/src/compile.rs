@@ -1977,7 +1977,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     /// Step 3: Create some fancy norms
     /// These items require some special insight per Geometric Algebra, for example if there are
     /// multiple/special projective dimensions with different meanings.
-    pub fn fancy_norms(&mut self, _prefix: &'static str, _projective_basis: BasisElement, _registry: &'r MultiVectorClassRegistry) {
+    pub fn fancy_norms(&mut self, registry: &'r MultiVectorClassRegistry) {
 
         // It is not elaborated very much, but one can infer/detect a few things from the CGA poster.
         // Flat objects have a Position Norm, but no Center Norm or Radius Norm.
@@ -2026,9 +2026,156 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         // But like.... really fricken complicated for Dipole/Circle....
         // ...unless I convert to Center anyway...
 
+        for param_a in registry.single_parameters() {
+            let center = match self.trait_impls.get_single_invocation("Center", variable(&param_a)) {
+                None => continue,
+                Some(c) => c
+            };
+            let d = self.algebra.represented_dimensions();
+            let projective_basis = BasisElement::from_index(1 << d as BasisElementIndex);
 
-        // TODO here?
-        todo!()
+            let center_bulk_norm_squared = "CenterBulkNormSquared";
+            let center_bulk_norm = "CenterBulkNorm";
+            let center_weight_norm_squared = "CenterWeightNormSquared";
+            let center_weight_norm = "CenterWeightNorm";
+            let center_geometric_norm = "CenterGeometricNorm";
+            let center_unitized_norm_squared = "CenterUnitizedNormSquared";
+            let center_unitized_norm = "CenterUnitizedNorm";
+
+            let radius_bulk_norm_squared = "RadiusBulkNormSquared";
+            let radius_bulk_norm = "RadiusBulkNorm";
+            let radius_weight_norm_squared = "RadiusWeightNormSquared";
+            let radius_weight_norm = "RadiusWeightNorm";
+            let radius_geometric_norm = "RadiusGeometricNorm";
+            let radius_unitized_norm_squared = "RadiusUnitizedNormSquared";
+            let radius_unitized_norm = "RadiusUnitizedNorm";
+
+            let _: Option<()> = try {
+                let center = self.trait_impls.get_single_invocation("Center", variable(&param_a))?;
+
+
+                // Center Bulk Norm Squared
+
+                let round_bulk = self.trait_impls.get_single_invocation("RoundBulk", center.clone())?;
+                let round_bulk_datatype = round_bulk.data_type_hint.clone()?;
+                let var_round_bulk = Expression {
+                    size: round_bulk.size.clone(),
+                    data_type_hint: Some(round_bulk_datatype.clone()),
+                    content: ExpressionContent::Variable("round_bulk"),
+                };
+                let assign_round_bulk = AstNode::VariableAssignment {
+                    name: "round_bulk",
+                    data_type: Some(round_bulk_datatype),
+                    expression: Box::new(round_bulk),
+                };
+                let dot = self.algebra.dialect().dot_product.first()?;
+                let rb_dot_rb = self.trait_impls.get_pair_invocation(dot, var_round_bulk.clone(), var_round_bulk)?;
+                let dot_datatype = rb_dot_rb.data_type_hint.clone()?;
+
+                let the_return = AstNode::ReturnStatement {
+                    expression: Box::new(rb_dot_rb.clone()),
+                };
+                let the_impl = AstNode::TraitImplementation {
+                    result: Parameter { name: center_bulk_norm_squared, data_type: dot_datatype.clone() },
+                    class: param_a.multi_vector_class(),
+                    parameters: vec![param_a.clone()],
+                    body: vec![assign_round_bulk.clone(), the_return],
+                };
+                self.trait_impls.add_single_impl(center_bulk_norm_squared, param_a.clone(), the_impl);
+
+
+                // Center Bulk Norm
+
+                let bns = self.trait_impls.get_single_invocation(center_bulk_norm_squared, variable(&param_a))?;
+                let sqrt = self.trait_impls.get_single_invocation("Sqrt", bns)?;
+                let the_impl = single_expression_single_trait_impl(center_bulk_norm, &param_a, sqrt);
+                self.trait_impls.add_single_impl(center_bulk_norm, param_a.clone(), the_impl);
+
+
+                // Center Weight Norm Squared
+
+                let round_weight = self.trait_impls.get_single_invocation("RoundWeight", center.clone())?;
+                let round_weight_datatype = round_weight.data_type_hint.clone()?;
+                let var_round_weight = Expression {
+                    size: round_weight.size.clone(),
+                    data_type_hint: Some(round_weight_datatype.clone()),
+                    content: ExpressionContent::Variable("round_weight"),
+                };
+                let assign_round_weight = AstNode::VariableAssignment {
+                    name: "round_weight",
+                    data_type: Some(round_weight_datatype),
+                    expression: Box::new(round_weight),
+                };
+                let anti_dot = self.algebra.dialect().anti_dot_product.first()?;
+                let rw_anti_dot_rw = self.trait_impls.get_pair_invocation(anti_dot, var_round_weight.clone(), var_round_weight)?;
+                let anti_dot_datatype = rw_anti_dot_rw.data_type_hint.clone()?;
+
+                let the_return = AstNode::ReturnStatement {
+                    expression: Box::new(rw_anti_dot_rw.clone()),
+                };
+                let the_impl = AstNode::TraitImplementation {
+                    result: Parameter { name: center_weight_norm_squared, data_type: anti_dot_datatype.clone() },
+                    class: param_a.multi_vector_class(),
+                    parameters: vec![param_a.clone()],
+                    body: vec![assign_round_weight.clone(), the_return],
+                };
+                self.trait_impls.add_single_impl(center_weight_norm_squared, param_a.clone(), the_impl);
+
+
+                // Center Weight Norm
+
+                let bns = self.trait_impls.get_single_invocation(center_weight_norm_squared, variable(&param_a))?;
+                let sqrt = self.trait_impls.get_single_invocation("Sqrt", bns)?;
+                let the_impl = single_expression_single_trait_impl(center_weight_norm, &param_a, sqrt);
+                self.trait_impls.add_single_impl(center_weight_norm, param_a.clone(), the_impl);
+
+
+                // Center Geometric Norm
+
+                let bn = self.trait_impls.get_single_invocation(center_bulk_norm, variable(&param_a))?;
+                let wn = self.trait_impls.get_single_invocation(center_weight_norm, variable(&param_a))?;
+                let add = self.trait_impls.get_pair_invocation("Add", bn, wn)?;
+                let the_impl = single_expression_single_trait_impl(center_geometric_norm, &param_a, add);
+                self.trait_impls.add_single_impl(center_geometric_norm, param_a.clone(), the_impl);
+
+
+                // Center Unitized Norm Squared
+
+                let mv = param_a.multi_vector_class().class_name.clone();
+
+                let bn = self.trait_impls.get_single_invocation(center_bulk_norm_squared, variable(&param_a))?;
+                let wn = self.trait_impls.get_single_invocation(center_weight_norm_squared, variable(&param_a))?;
+                let access_bn = Expression {
+                    size: 1,
+                    data_type_hint: Some(DataType::SimdVector(1)),
+                    content: ExpressionContent::Access(Box::new(bn), 0),
+                };
+                let access_wn = Expression {
+                    size: 1,
+                    data_type_hint: Some(DataType::SimdVector(1)),
+                    content: ExpressionContent::Access(Box::new(wn), 0),
+                };
+                let div = Expression {
+                    size: 1,
+                    data_type_hint: Some(DataType::SimdVector(1)),
+                    content: ExpressionContent::Divide(Box::new(access_bn), Box::new(access_wn)),
+                };
+                let the_impl = single_expression_single_trait_impl(center_unitized_norm_squared, &param_a, div);
+                self.trait_impls.add_single_impl(center_unitized_norm_squared, param_a.clone(), the_impl);
+
+
+                // Center Unitized Norm
+
+                let uns = self.trait_impls.get_single_invocation(center_unitized_norm_squared, variable(&param_a))?;
+                let sqrt = Expression {
+                    size: 1,
+                    data_type_hint: Some(DataType::SimdVector(1)),
+                    content: ExpressionContent::SquareRoot(Box::new(uns)),
+                };
+                let un = single_expression_single_trait_impl(center_unitized_norm, &param_a, sqrt);
+                self.trait_impls.add_single_impl(center_unitized_norm, param_a.clone(), un);
+            };
+        }
     }
 
     /// Step 4: Create some more stuff that depends on norms
@@ -2686,32 +2833,12 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
             let name = "Partner";
             let _: Option<()> = try {
-                // let mut debug = false;
-                // if param_a.multi_vector_class().class_name == "RoundPoint" {
-                //     debug = true;
-                //     eprintln!("Implementing partner for RoundPoint");
-                // }
                 let anti_wedge_name = self.algebra.dialect().exterior_anti_product.first()?;
                 let car = self.trait_impls.get_single_invocation("Carrier", variable(&param_a))?;
-                // if debug {
-                //     eprintln!("Found Carrier for RoundPoint");
-                // }
                 let bulk_dual = self.trait_impls.get_single_invocation("RightBulkDual", variable(&param_a))?;
-                // if debug {
-                //     eprintln!("Found RightBulkDual for RoundPoint");
-                // }
                 let container = self.trait_impls.get_single_invocation("Container", bulk_dual)?;
-                // if debug {
-                //     eprintln!("Found Container");
-                // }
                 let neg = self.trait_impls.get_single_invocation("Neg", container)?;
-                // if debug {
-                //     eprintln!("Found Neg");
-                // }
                 let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge_name, neg, car)?;
-                // if debug {
-                //     eprintln!("Found AntiWedge");
-                // }
                 let partner = single_expression_single_trait_impl(name, &param_a, anti_wedge);
                 self.trait_impls.add_single_impl(name, param_a.clone(), partner)
             };
@@ -3107,14 +3234,31 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 docs,
             })?;
         }
-        for ((name, _), ast) in &self.trait_impls.single_args {
-            if trait_names.contains(name) && name.as_str() != "GeometricNorm" && !name.contains("Unitized") {
-                emitter.emit(ast)?;
-            }
-        }
+
+        self.emit_exact_name_match_trait_impls(&["BulkNormSquared"], emitter)?;
+        self.emit_exact_name_match_trait_impls(&["BulkNorm"], emitter)?;
+        self.emit_exact_name_match_trait_impls(&["WeightNormSquared"], emitter)?;
+        self.emit_exact_name_match_trait_impls(&["WeightNorm"], emitter)?;
         self.emit_exact_name_match_trait_impls(&["GeometricNorm"], emitter)?;
         self.emit_exact_name_match_trait_impls(&["UnitizedNormSquared"], emitter)?;
         self.emit_exact_name_match_trait_impls(&["UnitizedNorm"], emitter)?;
+
+        self.emit_exact_name_match_trait_impls(&["CenterBulkNormSquared"], emitter)?;
+        self.emit_exact_name_match_trait_impls(&["CenterBulkNorm"], emitter)?;
+        self.emit_exact_name_match_trait_impls(&["CenterWeightNormSquared"], emitter)?;
+        self.emit_exact_name_match_trait_impls(&["CenterWeightNorm"], emitter)?;
+        self.emit_exact_name_match_trait_impls(&["CenterGeometricNorm"], emitter)?;
+        self.emit_exact_name_match_trait_impls(&["CenterUnitizedNormSquared"], emitter)?;
+        self.emit_exact_name_match_trait_impls(&["CenterUnitizedNorm"], emitter)?;
+
+        self.emit_exact_name_match_trait_impls(&["RadiusBulkNormSquared"], emitter)?;
+        self.emit_exact_name_match_trait_impls(&["RadiusBulkNorm"], emitter)?;
+        self.emit_exact_name_match_trait_impls(&["RadiusWeightNormSquared"], emitter)?;
+        self.emit_exact_name_match_trait_impls(&["RadiusWeightNorm"], emitter)?;
+        self.emit_exact_name_match_trait_impls(&["RadiusGeometricNorm"], emitter)?;
+        self.emit_exact_name_match_trait_impls(&["RadiusUnitizedNormSquared"], emitter)?;
+        self.emit_exact_name_match_trait_impls(&["RadiusUnitizedNorm"], emitter)?;
+
         Ok(())
     }
 

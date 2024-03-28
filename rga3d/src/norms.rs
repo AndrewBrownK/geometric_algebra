@@ -58,102 +58,6 @@ pub trait WeightNormSquared {
     fn weight_norm_squared(self) -> Self::Output;
 }
 
-impl BulkNorm for Flector {
-    type Output = Scalar;
-
-    fn bulk_norm(self) -> Scalar {
-        self.dot(self).sqrt()
-    }
-}
-
-impl BulkNorm for Horizon {
-    type Output = Scalar;
-
-    fn bulk_norm(self) -> Scalar {
-        self.dot(self).sqrt()
-    }
-}
-
-impl BulkNorm for Line {
-    type Output = Scalar;
-
-    fn bulk_norm(self) -> Scalar {
-        self.dot(self).sqrt()
-    }
-}
-
-impl BulkNorm for LineAtInfinity {
-    type Output = Scalar;
-
-    fn bulk_norm(self) -> Scalar {
-        self.dot(self).sqrt()
-    }
-}
-
-impl BulkNorm for Magnitude {
-    type Output = Scalar;
-
-    fn bulk_norm(self) -> Scalar {
-        self.dot(self).sqrt()
-    }
-}
-
-impl BulkNorm for Motor {
-    type Output = Scalar;
-
-    fn bulk_norm(self) -> Scalar {
-        self.dot(self).sqrt()
-    }
-}
-
-impl BulkNorm for MultiVector {
-    type Output = Scalar;
-
-    fn bulk_norm(self) -> Scalar {
-        self.dot(self).sqrt()
-    }
-}
-
-impl BulkNorm for Plane {
-    type Output = Scalar;
-
-    fn bulk_norm(self) -> Scalar {
-        self.dot(self).sqrt()
-    }
-}
-
-impl BulkNorm for Point {
-    type Output = Scalar;
-
-    fn bulk_norm(self) -> Scalar {
-        self.dot(self).sqrt()
-    }
-}
-
-impl BulkNorm for PointAtInfinity {
-    type Output = Scalar;
-
-    fn bulk_norm(self) -> Scalar {
-        self.dot(self).sqrt()
-    }
-}
-
-impl BulkNorm for Scalar {
-    type Output = Scalar;
-
-    fn bulk_norm(self) -> Scalar {
-        self.dot(self).sqrt()
-    }
-}
-
-impl BulkNorm for Translator {
-    type Output = Scalar;
-
-    fn bulk_norm(self) -> Scalar {
-        self.dot(self).sqrt()
-    }
-}
-
 impl BulkNormSquared for Flector {
     type Output = Scalar;
 
@@ -250,107 +154,99 @@ impl BulkNormSquared for Translator {
     }
 }
 
-impl WeightNorm for AntiScalar {
-    type Output = AntiScalar;
+impl BulkNorm for Flector {
+    type Output = Scalar;
 
-    fn weight_norm(self) -> AntiScalar {
-        self.anti_dot(self).sqrt()
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
     }
 }
 
-impl WeightNorm for Flector {
-    type Output = AntiScalar;
+impl BulkNorm for Horizon {
+    type Output = Scalar;
 
-    fn weight_norm(self) -> AntiScalar {
-        self.anti_dot(self).sqrt()
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
     }
 }
 
-impl WeightNorm for Line {
-    type Output = AntiScalar;
+impl BulkNorm for Line {
+    type Output = Scalar;
 
-    fn weight_norm(self) -> AntiScalar {
-        self.anti_dot(self).sqrt()
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
     }
 }
 
-impl WeightNorm for LineAtOrigin {
-    type Output = AntiScalar;
+impl BulkNorm for LineAtInfinity {
+    type Output = Scalar;
 
-    fn weight_norm(self) -> AntiScalar {
-        self.anti_dot(self).sqrt()
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
     }
 }
 
-impl WeightNorm for Magnitude {
-    type Output = AntiScalar;
+impl BulkNorm for Magnitude {
+    type Output = Scalar;
 
-    fn weight_norm(self) -> AntiScalar {
-        self.anti_dot(self).sqrt()
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
     }
 }
 
-impl WeightNorm for Motor {
-    type Output = AntiScalar;
+impl BulkNorm for Motor {
+    type Output = Scalar;
 
-    fn weight_norm(self) -> AntiScalar {
-        self.anti_dot(self).sqrt()
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
     }
 }
 
-impl WeightNorm for MultiVector {
-    type Output = AntiScalar;
+impl BulkNorm for MultiVector {
+    type Output = Scalar;
 
-    fn weight_norm(self) -> AntiScalar {
-        self.anti_dot(self).sqrt()
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
     }
 }
 
-impl WeightNorm for Origin {
-    type Output = AntiScalar;
+impl BulkNorm for Plane {
+    type Output = Scalar;
 
-    fn weight_norm(self) -> AntiScalar {
-        self.anti_dot(self).sqrt()
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
     }
 }
 
-impl WeightNorm for Plane {
-    type Output = AntiScalar;
+impl BulkNorm for Point {
+    type Output = Scalar;
 
-    fn weight_norm(self) -> AntiScalar {
-        self.anti_dot(self).sqrt()
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
     }
 }
 
-impl WeightNorm for PlaneAtOrigin {
-    type Output = AntiScalar;
+impl BulkNorm for PointAtInfinity {
+    type Output = Scalar;
 
-    fn weight_norm(self) -> AntiScalar {
-        self.anti_dot(self).sqrt()
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
     }
 }
 
-impl WeightNorm for Point {
-    type Output = AntiScalar;
+impl BulkNorm for Scalar {
+    type Output = Scalar;
 
-    fn weight_norm(self) -> AntiScalar {
-        self.anti_dot(self).sqrt()
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
     }
 }
 
-impl WeightNorm for Rotor {
-    type Output = AntiScalar;
+impl BulkNorm for Translator {
+    type Output = Scalar;
 
-    fn weight_norm(self) -> AntiScalar {
-        self.anti_dot(self).sqrt()
-    }
-}
-
-impl WeightNorm for Translator {
-    type Output = AntiScalar;
-
-    fn weight_norm(self) -> AntiScalar {
-        self.anti_dot(self).sqrt()
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
     }
 }
 
@@ -455,6 +351,110 @@ impl WeightNormSquared for Translator {
 
     fn weight_norm_squared(self) -> AntiScalar {
         self.anti_dot(self)
+    }
+}
+
+impl WeightNorm for AntiScalar {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).sqrt()
+    }
+}
+
+impl WeightNorm for Flector {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).sqrt()
+    }
+}
+
+impl WeightNorm for Line {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).sqrt()
+    }
+}
+
+impl WeightNorm for LineAtOrigin {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).sqrt()
+    }
+}
+
+impl WeightNorm for Magnitude {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).sqrt()
+    }
+}
+
+impl WeightNorm for Motor {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).sqrt()
+    }
+}
+
+impl WeightNorm for MultiVector {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).sqrt()
+    }
+}
+
+impl WeightNorm for Origin {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).sqrt()
+    }
+}
+
+impl WeightNorm for Plane {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).sqrt()
+    }
+}
+
+impl WeightNorm for PlaneAtOrigin {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).sqrt()
+    }
+}
+
+impl WeightNorm for Point {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).sqrt()
+    }
+}
+
+impl WeightNorm for Rotor {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).sqrt()
+    }
+}
+
+impl WeightNorm for Translator {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).sqrt()
     }
 }
 

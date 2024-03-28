@@ -79,7 +79,7 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
     code_gen.basic_norms(&registry);
     code_gen.post_norm_universal_stuff(&registry);
     code_gen.round_features(flat_basis, &registry);
-    // code_gen.fancy_norms(&registry);
+    code_gen.fancy_norms(&registry);
     code_gen.attitude_and_dependencies("Horizon", &registry);
 
     let mut file_path = Path::new("src/").to_path_buf();
@@ -178,7 +178,8 @@ use crate::aspect_duals::*;",
     emitter.emit_rust_preamble(
         "
 use crate::*;
-use crate::characteristics::Sqrt;
+use crate::characteristics::*;
+use crate::aspects::*;
 use crate::products::dot::{AntiDot, Dot};",
     )?;
     code_gen.emit_norms(&mut emitter)?;

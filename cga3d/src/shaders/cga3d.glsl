@@ -16733,78 +16733,6 @@ Sphere sphere_partner(Sphere self) {
     return sphere_anti_scalar_anti_wedge(sphere_neg(round_point_container(sphere_right_bulk_dual(self))), sphere_carrier(self));
 }
 
-Scalar anti_scalar_bulk_norm(AntiScalar self) {
-    return scalar_sqrt(anti_scalar_anti_scalar_dot(self, self));
-}
-
-Scalar circle_bulk_norm(Circle self) {
-    return scalar_sqrt(circle_circle_dot(self, self));
-}
-
-Scalar dipole_bulk_norm(Dipole self) {
-    return scalar_sqrt(dipole_dipole_dot(self, self));
-}
-
-Scalar flector_bulk_norm(Flector self) {
-    return scalar_sqrt(flector_flector_dot(self, self));
-}
-
-Scalar line_bulk_norm(Line self) {
-    return scalar_sqrt(line_line_dot(self, self));
-}
-
-Scalar line_at_origin_bulk_norm(LineAtOrigin self) {
-    return scalar_sqrt(line_at_origin_line_at_origin_dot(self, self));
-}
-
-Scalar magnitude_bulk_norm(Magnitude self) {
-    return scalar_sqrt(magnitude_magnitude_dot(self, self));
-}
-
-Scalar motor_bulk_norm(Motor self) {
-    return scalar_sqrt(motor_motor_dot(self, self));
-}
-
-Scalar multi_vector_bulk_norm(MultiVector self) {
-    return scalar_sqrt(multi_vector_multi_vector_dot(self, self));
-}
-
-Scalar origin_bulk_norm(Origin self) {
-    return scalar_sqrt(origin_origin_dot(self, self));
-}
-
-Scalar plane_bulk_norm(Plane self) {
-    return scalar_sqrt(plane_plane_dot(self, self));
-}
-
-Scalar plane_at_origin_bulk_norm(PlaneAtOrigin self) {
-    return scalar_sqrt(plane_at_origin_plane_at_origin_dot(self, self));
-}
-
-Scalar point_bulk_norm(Point self) {
-    return scalar_sqrt(point_point_dot(self, self));
-}
-
-Scalar rotor_bulk_norm(Rotor self) {
-    return scalar_sqrt(rotor_rotor_dot(self, self));
-}
-
-Scalar round_point_bulk_norm(RoundPoint self) {
-    return scalar_sqrt(round_point_round_point_dot(self, self));
-}
-
-Scalar scalar_bulk_norm(Scalar self) {
-    return scalar_sqrt(scalar_scalar_dot(self, self));
-}
-
-Scalar sphere_bulk_norm(Sphere self) {
-    return scalar_sqrt(sphere_sphere_dot(self, self));
-}
-
-Scalar translator_bulk_norm(Translator self) {
-    return scalar_sqrt(translator_translator_dot(self, self));
-}
-
 Scalar anti_scalar_bulk_norm_squared(AntiScalar self) {
     return anti_scalar_anti_scalar_dot(self, self);
 }
@@ -16877,76 +16805,76 @@ Scalar translator_bulk_norm_squared(Translator self) {
     return translator_translator_dot(self, self);
 }
 
-AntiScalar anti_scalar_weight_norm(AntiScalar self) {
-    return anti_scalar_sqrt(anti_scalar_anti_scalar_anti_dot(self, self));
+Scalar anti_scalar_bulk_norm(AntiScalar self) {
+    return scalar_sqrt(anti_scalar_anti_scalar_dot(self, self));
 }
 
-AntiScalar circle_weight_norm(Circle self) {
-    return anti_scalar_sqrt(circle_circle_anti_dot(self, self));
+Scalar circle_bulk_norm(Circle self) {
+    return scalar_sqrt(circle_circle_dot(self, self));
 }
 
-AntiScalar dipole_weight_norm(Dipole self) {
-    return anti_scalar_sqrt(dipole_dipole_anti_dot(self, self));
+Scalar dipole_bulk_norm(Dipole self) {
+    return scalar_sqrt(dipole_dipole_dot(self, self));
 }
 
-AntiScalar flector_weight_norm(Flector self) {
-    return anti_scalar_sqrt(flector_flector_anti_dot(self, self));
+Scalar flector_bulk_norm(Flector self) {
+    return scalar_sqrt(flector_flector_dot(self, self));
 }
 
-AntiScalar line_weight_norm(Line self) {
-    return anti_scalar_sqrt(line_line_anti_dot(self, self));
+Scalar line_bulk_norm(Line self) {
+    return scalar_sqrt(line_line_dot(self, self));
 }
 
-AntiScalar line_at_origin_weight_norm(LineAtOrigin self) {
-    return anti_scalar_sqrt(line_at_origin_line_at_origin_anti_dot(self, self));
+Scalar line_at_origin_bulk_norm(LineAtOrigin self) {
+    return scalar_sqrt(line_at_origin_line_at_origin_dot(self, self));
 }
 
-AntiScalar magnitude_weight_norm(Magnitude self) {
-    return anti_scalar_sqrt(magnitude_magnitude_anti_dot(self, self));
+Scalar magnitude_bulk_norm(Magnitude self) {
+    return scalar_sqrt(magnitude_magnitude_dot(self, self));
 }
 
-AntiScalar motor_weight_norm(Motor self) {
-    return anti_scalar_sqrt(motor_motor_anti_dot(self, self));
+Scalar motor_bulk_norm(Motor self) {
+    return scalar_sqrt(motor_motor_dot(self, self));
 }
 
-AntiScalar multi_vector_weight_norm(MultiVector self) {
-    return anti_scalar_sqrt(multi_vector_multi_vector_anti_dot(self, self));
+Scalar multi_vector_bulk_norm(MultiVector self) {
+    return scalar_sqrt(multi_vector_multi_vector_dot(self, self));
 }
 
-AntiScalar origin_weight_norm(Origin self) {
-    return anti_scalar_sqrt(origin_origin_anti_dot(self, self));
+Scalar origin_bulk_norm(Origin self) {
+    return scalar_sqrt(origin_origin_dot(self, self));
 }
 
-AntiScalar plane_weight_norm(Plane self) {
-    return anti_scalar_sqrt(plane_plane_anti_dot(self, self));
+Scalar plane_bulk_norm(Plane self) {
+    return scalar_sqrt(plane_plane_dot(self, self));
 }
 
-AntiScalar plane_at_origin_weight_norm(PlaneAtOrigin self) {
-    return anti_scalar_sqrt(plane_at_origin_plane_at_origin_anti_dot(self, self));
+Scalar plane_at_origin_bulk_norm(PlaneAtOrigin self) {
+    return scalar_sqrt(plane_at_origin_plane_at_origin_dot(self, self));
 }
 
-AntiScalar point_weight_norm(Point self) {
-    return anti_scalar_sqrt(point_point_anti_dot(self, self));
+Scalar point_bulk_norm(Point self) {
+    return scalar_sqrt(point_point_dot(self, self));
 }
 
-AntiScalar rotor_weight_norm(Rotor self) {
-    return anti_scalar_sqrt(rotor_rotor_anti_dot(self, self));
+Scalar rotor_bulk_norm(Rotor self) {
+    return scalar_sqrt(rotor_rotor_dot(self, self));
 }
 
-AntiScalar round_point_weight_norm(RoundPoint self) {
-    return anti_scalar_sqrt(round_point_round_point_anti_dot(self, self));
+Scalar round_point_bulk_norm(RoundPoint self) {
+    return scalar_sqrt(round_point_round_point_dot(self, self));
 }
 
-AntiScalar scalar_weight_norm(Scalar self) {
-    return anti_scalar_sqrt(scalar_scalar_anti_dot(self, self));
+Scalar scalar_bulk_norm(Scalar self) {
+    return scalar_sqrt(scalar_scalar_dot(self, self));
 }
 
-AntiScalar sphere_weight_norm(Sphere self) {
-    return anti_scalar_sqrt(sphere_sphere_anti_dot(self, self));
+Scalar sphere_bulk_norm(Sphere self) {
+    return scalar_sqrt(sphere_sphere_dot(self, self));
 }
 
-AntiScalar translator_weight_norm(Translator self) {
-    return anti_scalar_sqrt(translator_translator_anti_dot(self, self));
+Scalar translator_bulk_norm(Translator self) {
+    return scalar_sqrt(translator_translator_dot(self, self));
 }
 
 AntiScalar anti_scalar_weight_norm_squared(AntiScalar self) {
@@ -17019,6 +16947,78 @@ AntiScalar sphere_weight_norm_squared(Sphere self) {
 
 AntiScalar translator_weight_norm_squared(Translator self) {
     return translator_translator_anti_dot(self, self);
+}
+
+AntiScalar anti_scalar_weight_norm(AntiScalar self) {
+    return anti_scalar_sqrt(anti_scalar_anti_scalar_anti_dot(self, self));
+}
+
+AntiScalar circle_weight_norm(Circle self) {
+    return anti_scalar_sqrt(circle_circle_anti_dot(self, self));
+}
+
+AntiScalar dipole_weight_norm(Dipole self) {
+    return anti_scalar_sqrt(dipole_dipole_anti_dot(self, self));
+}
+
+AntiScalar flector_weight_norm(Flector self) {
+    return anti_scalar_sqrt(flector_flector_anti_dot(self, self));
+}
+
+AntiScalar line_weight_norm(Line self) {
+    return anti_scalar_sqrt(line_line_anti_dot(self, self));
+}
+
+AntiScalar line_at_origin_weight_norm(LineAtOrigin self) {
+    return anti_scalar_sqrt(line_at_origin_line_at_origin_anti_dot(self, self));
+}
+
+AntiScalar magnitude_weight_norm(Magnitude self) {
+    return anti_scalar_sqrt(magnitude_magnitude_anti_dot(self, self));
+}
+
+AntiScalar motor_weight_norm(Motor self) {
+    return anti_scalar_sqrt(motor_motor_anti_dot(self, self));
+}
+
+AntiScalar multi_vector_weight_norm(MultiVector self) {
+    return anti_scalar_sqrt(multi_vector_multi_vector_anti_dot(self, self));
+}
+
+AntiScalar origin_weight_norm(Origin self) {
+    return anti_scalar_sqrt(origin_origin_anti_dot(self, self));
+}
+
+AntiScalar plane_weight_norm(Plane self) {
+    return anti_scalar_sqrt(plane_plane_anti_dot(self, self));
+}
+
+AntiScalar plane_at_origin_weight_norm(PlaneAtOrigin self) {
+    return anti_scalar_sqrt(plane_at_origin_plane_at_origin_anti_dot(self, self));
+}
+
+AntiScalar point_weight_norm(Point self) {
+    return anti_scalar_sqrt(point_point_anti_dot(self, self));
+}
+
+AntiScalar rotor_weight_norm(Rotor self) {
+    return anti_scalar_sqrt(rotor_rotor_anti_dot(self, self));
+}
+
+AntiScalar round_point_weight_norm(RoundPoint self) {
+    return anti_scalar_sqrt(round_point_round_point_anti_dot(self, self));
+}
+
+AntiScalar scalar_weight_norm(Scalar self) {
+    return anti_scalar_sqrt(scalar_scalar_anti_dot(self, self));
+}
+
+AntiScalar sphere_weight_norm(Sphere self) {
+    return anti_scalar_sqrt(sphere_sphere_anti_dot(self, self));
+}
+
+AntiScalar translator_weight_norm(Translator self) {
+    return anti_scalar_sqrt(translator_translator_anti_dot(self, self));
 }
 
 Magnitude anti_scalar_geometric_norm(AntiScalar self) {
@@ -17235,6 +17235,156 @@ float sphere_unitized_norm(Sphere self) {
 
 float translator_unitized_norm(Translator self) {
     return sqrt(translator_unitized_norm_squared(self));
+}
+
+Scalar circle_center_bulk_norm_squared(Circle self) {
+    RoundPoint round_bulk = round_point_round_bulk(circle_center(self));
+    return round_point_round_point_dot(round_bulk, round_bulk);
+}
+
+Scalar dipole_center_bulk_norm_squared(Dipole self) {
+    RoundPoint round_bulk = round_point_round_bulk(dipole_center(self));
+    return round_point_round_point_dot(round_bulk, round_bulk);
+}
+
+Scalar multi_vector_center_bulk_norm_squared(MultiVector self) {
+    MultiVector round_bulk = multi_vector_round_bulk(multi_vector_center(self));
+    return multi_vector_multi_vector_dot(round_bulk, round_bulk);
+}
+
+Scalar round_point_center_bulk_norm_squared(RoundPoint self) {
+    RoundPoint round_bulk = round_point_round_bulk(round_point_center(self));
+    return round_point_round_point_dot(round_bulk, round_bulk);
+}
+
+Scalar sphere_center_bulk_norm_squared(Sphere self) {
+    RoundPoint round_bulk = round_point_round_bulk(sphere_center(self));
+    return round_point_round_point_dot(round_bulk, round_bulk);
+}
+
+Scalar circle_center_bulk_norm(Circle self) {
+    return scalar_sqrt(circle_center_bulk_norm_squared(self));
+}
+
+Scalar dipole_center_bulk_norm(Dipole self) {
+    return scalar_sqrt(dipole_center_bulk_norm_squared(self));
+}
+
+Scalar multi_vector_center_bulk_norm(MultiVector self) {
+    return scalar_sqrt(multi_vector_center_bulk_norm_squared(self));
+}
+
+Scalar round_point_center_bulk_norm(RoundPoint self) {
+    return scalar_sqrt(round_point_center_bulk_norm_squared(self));
+}
+
+Scalar sphere_center_bulk_norm(Sphere self) {
+    return scalar_sqrt(sphere_center_bulk_norm_squared(self));
+}
+
+AntiScalar circle_center_weight_norm_squared(Circle self) {
+    RoundPoint round_weight = round_point_round_weight(circle_center(self));
+    return round_point_round_point_anti_dot(round_weight, round_weight);
+}
+
+AntiScalar dipole_center_weight_norm_squared(Dipole self) {
+    RoundPoint round_weight = round_point_round_weight(dipole_center(self));
+    return round_point_round_point_anti_dot(round_weight, round_weight);
+}
+
+AntiScalar multi_vector_center_weight_norm_squared(MultiVector self) {
+    MultiVector round_weight = multi_vector_round_weight(multi_vector_center(self));
+    return multi_vector_multi_vector_anti_dot(round_weight, round_weight);
+}
+
+AntiScalar round_point_center_weight_norm_squared(RoundPoint self) {
+    RoundPoint round_weight = round_point_round_weight(round_point_center(self));
+    return round_point_round_point_anti_dot(round_weight, round_weight);
+}
+
+AntiScalar sphere_center_weight_norm_squared(Sphere self) {
+    RoundPoint round_weight = round_point_round_weight(sphere_center(self));
+    return round_point_round_point_anti_dot(round_weight, round_weight);
+}
+
+AntiScalar circle_center_weight_norm(Circle self) {
+    return anti_scalar_sqrt(circle_center_weight_norm_squared(self));
+}
+
+AntiScalar dipole_center_weight_norm(Dipole self) {
+    return anti_scalar_sqrt(dipole_center_weight_norm_squared(self));
+}
+
+AntiScalar multi_vector_center_weight_norm(MultiVector self) {
+    return anti_scalar_sqrt(multi_vector_center_weight_norm_squared(self));
+}
+
+AntiScalar round_point_center_weight_norm(RoundPoint self) {
+    return anti_scalar_sqrt(round_point_center_weight_norm_squared(self));
+}
+
+AntiScalar sphere_center_weight_norm(Sphere self) {
+    return anti_scalar_sqrt(sphere_center_weight_norm_squared(self));
+}
+
+Magnitude circle_center_geometric_norm(Circle self) {
+    return scalar_anti_scalar_add(circle_center_bulk_norm(self), circle_center_weight_norm(self));
+}
+
+Magnitude dipole_center_geometric_norm(Dipole self) {
+    return scalar_anti_scalar_add(dipole_center_bulk_norm(self), dipole_center_weight_norm(self));
+}
+
+Magnitude multi_vector_center_geometric_norm(MultiVector self) {
+    return scalar_anti_scalar_add(multi_vector_center_bulk_norm(self), multi_vector_center_weight_norm(self));
+}
+
+Magnitude round_point_center_geometric_norm(RoundPoint self) {
+    return scalar_anti_scalar_add(round_point_center_bulk_norm(self), round_point_center_weight_norm(self));
+}
+
+Magnitude sphere_center_geometric_norm(Sphere self) {
+    return scalar_anti_scalar_add(sphere_center_bulk_norm(self), sphere_center_weight_norm(self));
+}
+
+float circle_center_unitized_norm_squared(Circle self) {
+    return circle_center_bulk_norm_squared(self).g0 / circle_center_weight_norm_squared(self).g0;
+}
+
+float dipole_center_unitized_norm_squared(Dipole self) {
+    return dipole_center_bulk_norm_squared(self).g0 / dipole_center_weight_norm_squared(self).g0;
+}
+
+float multi_vector_center_unitized_norm_squared(MultiVector self) {
+    return multi_vector_center_bulk_norm_squared(self).g0 / multi_vector_center_weight_norm_squared(self).g0;
+}
+
+float round_point_center_unitized_norm_squared(RoundPoint self) {
+    return round_point_center_bulk_norm_squared(self).g0 / round_point_center_weight_norm_squared(self).g0;
+}
+
+float sphere_center_unitized_norm_squared(Sphere self) {
+    return sphere_center_bulk_norm_squared(self).g0 / sphere_center_weight_norm_squared(self).g0;
+}
+
+float circle_center_unitized_norm(Circle self) {
+    return sqrt(circle_center_unitized_norm_squared(self));
+}
+
+float dipole_center_unitized_norm(Dipole self) {
+    return sqrt(dipole_center_unitized_norm_squared(self));
+}
+
+float multi_vector_center_unitized_norm(MultiVector self) {
+    return sqrt(multi_vector_center_unitized_norm_squared(self));
+}
+
+float round_point_center_unitized_norm(RoundPoint self) {
+    return sqrt(round_point_center_unitized_norm_squared(self));
+}
+
+float sphere_center_unitized_norm(Sphere self) {
+    return sqrt(sphere_center_unitized_norm_squared(self));
 }
 
 AntiScalar anti_scalar_unitize(AntiScalar self) {

@@ -10956,54 +10956,6 @@ Scalar scalar_sqrt(Scalar self) {
     return Scalar(sqrt(self.g0));
 }
 
-Scalar flector_bulk_norm(Flector self) {
-    return scalar_sqrt(flector_flector_dot(self, self));
-}
-
-Scalar horizon_bulk_norm(Horizon self) {
-    return scalar_sqrt(horizon_horizon_dot(self, self));
-}
-
-Scalar line_bulk_norm(Line self) {
-    return scalar_sqrt(line_line_dot(self, self));
-}
-
-Scalar line_at_infinity_bulk_norm(LineAtInfinity self) {
-    return scalar_sqrt(line_at_infinity_line_at_infinity_dot(self, self));
-}
-
-Scalar magnitude_bulk_norm(Magnitude self) {
-    return scalar_sqrt(magnitude_magnitude_dot(self, self));
-}
-
-Scalar motor_bulk_norm(Motor self) {
-    return scalar_sqrt(motor_motor_dot(self, self));
-}
-
-Scalar multi_vector_bulk_norm(MultiVector self) {
-    return scalar_sqrt(multi_vector_multi_vector_dot(self, self));
-}
-
-Scalar plane_bulk_norm(Plane self) {
-    return scalar_sqrt(plane_plane_dot(self, self));
-}
-
-Scalar point_bulk_norm(Point self) {
-    return scalar_sqrt(point_point_dot(self, self));
-}
-
-Scalar point_at_infinity_bulk_norm(PointAtInfinity self) {
-    return scalar_sqrt(point_at_infinity_point_at_infinity_dot(self, self));
-}
-
-Scalar scalar_bulk_norm(Scalar self) {
-    return scalar_sqrt(scalar_scalar_dot(self, self));
-}
-
-Scalar translator_bulk_norm(Translator self) {
-    return scalar_sqrt(translator_translator_dot(self, self));
-}
-
 Scalar flector_bulk_norm_squared(Flector self) {
     return flector_flector_dot(self, self);
 }
@@ -11052,56 +11004,52 @@ Scalar translator_bulk_norm_squared(Translator self) {
     return translator_translator_dot(self, self);
 }
 
-AntiScalar anti_scalar_weight_norm(AntiScalar self) {
-    return anti_scalar_sqrt(anti_scalar_anti_scalar_anti_dot(self, self));
+Scalar flector_bulk_norm(Flector self) {
+    return scalar_sqrt(flector_flector_dot(self, self));
 }
 
-AntiScalar flector_weight_norm(Flector self) {
-    return anti_scalar_sqrt(flector_flector_anti_dot(self, self));
+Scalar horizon_bulk_norm(Horizon self) {
+    return scalar_sqrt(horizon_horizon_dot(self, self));
 }
 
-AntiScalar line_weight_norm(Line self) {
-    return anti_scalar_sqrt(line_line_anti_dot(self, self));
+Scalar line_bulk_norm(Line self) {
+    return scalar_sqrt(line_line_dot(self, self));
 }
 
-AntiScalar line_at_origin_weight_norm(LineAtOrigin self) {
-    return anti_scalar_sqrt(line_at_origin_line_at_origin_anti_dot(self, self));
+Scalar line_at_infinity_bulk_norm(LineAtInfinity self) {
+    return scalar_sqrt(line_at_infinity_line_at_infinity_dot(self, self));
 }
 
-AntiScalar magnitude_weight_norm(Magnitude self) {
-    return anti_scalar_sqrt(magnitude_magnitude_anti_dot(self, self));
+Scalar magnitude_bulk_norm(Magnitude self) {
+    return scalar_sqrt(magnitude_magnitude_dot(self, self));
 }
 
-AntiScalar motor_weight_norm(Motor self) {
-    return anti_scalar_sqrt(motor_motor_anti_dot(self, self));
+Scalar motor_bulk_norm(Motor self) {
+    return scalar_sqrt(motor_motor_dot(self, self));
 }
 
-AntiScalar multi_vector_weight_norm(MultiVector self) {
-    return anti_scalar_sqrt(multi_vector_multi_vector_anti_dot(self, self));
+Scalar multi_vector_bulk_norm(MultiVector self) {
+    return scalar_sqrt(multi_vector_multi_vector_dot(self, self));
 }
 
-AntiScalar origin_weight_norm(Origin self) {
-    return anti_scalar_sqrt(origin_origin_anti_dot(self, self));
+Scalar plane_bulk_norm(Plane self) {
+    return scalar_sqrt(plane_plane_dot(self, self));
 }
 
-AntiScalar plane_weight_norm(Plane self) {
-    return anti_scalar_sqrt(plane_plane_anti_dot(self, self));
+Scalar point_bulk_norm(Point self) {
+    return scalar_sqrt(point_point_dot(self, self));
 }
 
-AntiScalar plane_at_origin_weight_norm(PlaneAtOrigin self) {
-    return anti_scalar_sqrt(plane_at_origin_plane_at_origin_anti_dot(self, self));
+Scalar point_at_infinity_bulk_norm(PointAtInfinity self) {
+    return scalar_sqrt(point_at_infinity_point_at_infinity_dot(self, self));
 }
 
-AntiScalar point_weight_norm(Point self) {
-    return anti_scalar_sqrt(point_point_anti_dot(self, self));
+Scalar scalar_bulk_norm(Scalar self) {
+    return scalar_sqrt(scalar_scalar_dot(self, self));
 }
 
-AntiScalar rotor_weight_norm(Rotor self) {
-    return anti_scalar_sqrt(rotor_rotor_anti_dot(self, self));
-}
-
-AntiScalar translator_weight_norm(Translator self) {
-    return anti_scalar_sqrt(translator_translator_anti_dot(self, self));
+Scalar translator_bulk_norm(Translator self) {
+    return scalar_sqrt(translator_translator_dot(self, self));
 }
 
 AntiScalar anti_scalar_weight_norm_squared(AntiScalar self) {
@@ -11154,6 +11102,58 @@ AntiScalar rotor_weight_norm_squared(Rotor self) {
 
 AntiScalar translator_weight_norm_squared(Translator self) {
     return translator_translator_anti_dot(self, self);
+}
+
+AntiScalar anti_scalar_weight_norm(AntiScalar self) {
+    return anti_scalar_sqrt(anti_scalar_anti_scalar_anti_dot(self, self));
+}
+
+AntiScalar flector_weight_norm(Flector self) {
+    return anti_scalar_sqrt(flector_flector_anti_dot(self, self));
+}
+
+AntiScalar line_weight_norm(Line self) {
+    return anti_scalar_sqrt(line_line_anti_dot(self, self));
+}
+
+AntiScalar line_at_origin_weight_norm(LineAtOrigin self) {
+    return anti_scalar_sqrt(line_at_origin_line_at_origin_anti_dot(self, self));
+}
+
+AntiScalar magnitude_weight_norm(Magnitude self) {
+    return anti_scalar_sqrt(magnitude_magnitude_anti_dot(self, self));
+}
+
+AntiScalar motor_weight_norm(Motor self) {
+    return anti_scalar_sqrt(motor_motor_anti_dot(self, self));
+}
+
+AntiScalar multi_vector_weight_norm(MultiVector self) {
+    return anti_scalar_sqrt(multi_vector_multi_vector_anti_dot(self, self));
+}
+
+AntiScalar origin_weight_norm(Origin self) {
+    return anti_scalar_sqrt(origin_origin_anti_dot(self, self));
+}
+
+AntiScalar plane_weight_norm(Plane self) {
+    return anti_scalar_sqrt(plane_plane_anti_dot(self, self));
+}
+
+AntiScalar plane_at_origin_weight_norm(PlaneAtOrigin self) {
+    return anti_scalar_sqrt(plane_at_origin_plane_at_origin_anti_dot(self, self));
+}
+
+AntiScalar point_weight_norm(Point self) {
+    return anti_scalar_sqrt(point_point_anti_dot(self, self));
+}
+
+AntiScalar rotor_weight_norm(Rotor self) {
+    return anti_scalar_sqrt(rotor_rotor_anti_dot(self, self));
+}
+
+AntiScalar translator_weight_norm(Translator self) {
+    return anti_scalar_sqrt(translator_translator_anti_dot(self, self));
 }
 
 Magnitude flector_geometric_norm(Flector self) {

@@ -16733,78 +16733,6 @@ fn sphere_partner(self_: Sphere) -> Sphere {
     return sphere_anti_scalar_anti_wedge(sphere_neg(round_point_container(sphere_right_bulk_dual(self_))), sphere_carrier(self_));
 }
 
-fn anti_scalar_bulk_norm(self_: AntiScalar) -> Scalar {
-    return scalar_sqrt(anti_scalar_anti_scalar_dot(self_, self_));
-}
-
-fn circle_bulk_norm(self_: Circle) -> Scalar {
-    return scalar_sqrt(circle_circle_dot(self_, self_));
-}
-
-fn dipole_bulk_norm(self_: Dipole) -> Scalar {
-    return scalar_sqrt(dipole_dipole_dot(self_, self_));
-}
-
-fn flector_bulk_norm(self_: Flector) -> Scalar {
-    return scalar_sqrt(flector_flector_dot(self_, self_));
-}
-
-fn line_bulk_norm(self_: Line) -> Scalar {
-    return scalar_sqrt(line_line_dot(self_, self_));
-}
-
-fn line_at_origin_bulk_norm(self_: LineAtOrigin) -> Scalar {
-    return scalar_sqrt(line_at_origin_line_at_origin_dot(self_, self_));
-}
-
-fn magnitude_bulk_norm(self_: Magnitude) -> Scalar {
-    return scalar_sqrt(magnitude_magnitude_dot(self_, self_));
-}
-
-fn motor_bulk_norm(self_: Motor) -> Scalar {
-    return scalar_sqrt(motor_motor_dot(self_, self_));
-}
-
-fn multi_vector_bulk_norm(self_: MultiVector) -> Scalar {
-    return scalar_sqrt(multi_vector_multi_vector_dot(self_, self_));
-}
-
-fn origin_bulk_norm(self_: Origin) -> Scalar {
-    return scalar_sqrt(origin_origin_dot(self_, self_));
-}
-
-fn plane_bulk_norm(self_: Plane) -> Scalar {
-    return scalar_sqrt(plane_plane_dot(self_, self_));
-}
-
-fn plane_at_origin_bulk_norm(self_: PlaneAtOrigin) -> Scalar {
-    return scalar_sqrt(plane_at_origin_plane_at_origin_dot(self_, self_));
-}
-
-fn point_bulk_norm(self_: Point) -> Scalar {
-    return scalar_sqrt(point_point_dot(self_, self_));
-}
-
-fn rotor_bulk_norm(self_: Rotor) -> Scalar {
-    return scalar_sqrt(rotor_rotor_dot(self_, self_));
-}
-
-fn round_point_bulk_norm(self_: RoundPoint) -> Scalar {
-    return scalar_sqrt(round_point_round_point_dot(self_, self_));
-}
-
-fn scalar_bulk_norm(self_: Scalar) -> Scalar {
-    return scalar_sqrt(scalar_scalar_dot(self_, self_));
-}
-
-fn sphere_bulk_norm(self_: Sphere) -> Scalar {
-    return scalar_sqrt(sphere_sphere_dot(self_, self_));
-}
-
-fn translator_bulk_norm(self_: Translator) -> Scalar {
-    return scalar_sqrt(translator_translator_dot(self_, self_));
-}
-
 fn anti_scalar_bulk_norm_squared(self_: AntiScalar) -> Scalar {
     return anti_scalar_anti_scalar_dot(self_, self_);
 }
@@ -16877,76 +16805,76 @@ fn translator_bulk_norm_squared(self_: Translator) -> Scalar {
     return translator_translator_dot(self_, self_);
 }
 
-fn anti_scalar_weight_norm(self_: AntiScalar) -> AntiScalar {
-    return anti_scalar_sqrt(anti_scalar_anti_scalar_anti_dot(self_, self_));
+fn anti_scalar_bulk_norm(self_: AntiScalar) -> Scalar {
+    return scalar_sqrt(anti_scalar_anti_scalar_dot(self_, self_));
 }
 
-fn circle_weight_norm(self_: Circle) -> AntiScalar {
-    return anti_scalar_sqrt(circle_circle_anti_dot(self_, self_));
+fn circle_bulk_norm(self_: Circle) -> Scalar {
+    return scalar_sqrt(circle_circle_dot(self_, self_));
 }
 
-fn dipole_weight_norm(self_: Dipole) -> AntiScalar {
-    return anti_scalar_sqrt(dipole_dipole_anti_dot(self_, self_));
+fn dipole_bulk_norm(self_: Dipole) -> Scalar {
+    return scalar_sqrt(dipole_dipole_dot(self_, self_));
 }
 
-fn flector_weight_norm(self_: Flector) -> AntiScalar {
-    return anti_scalar_sqrt(flector_flector_anti_dot(self_, self_));
+fn flector_bulk_norm(self_: Flector) -> Scalar {
+    return scalar_sqrt(flector_flector_dot(self_, self_));
 }
 
-fn line_weight_norm(self_: Line) -> AntiScalar {
-    return anti_scalar_sqrt(line_line_anti_dot(self_, self_));
+fn line_bulk_norm(self_: Line) -> Scalar {
+    return scalar_sqrt(line_line_dot(self_, self_));
 }
 
-fn line_at_origin_weight_norm(self_: LineAtOrigin) -> AntiScalar {
-    return anti_scalar_sqrt(line_at_origin_line_at_origin_anti_dot(self_, self_));
+fn line_at_origin_bulk_norm(self_: LineAtOrigin) -> Scalar {
+    return scalar_sqrt(line_at_origin_line_at_origin_dot(self_, self_));
 }
 
-fn magnitude_weight_norm(self_: Magnitude) -> AntiScalar {
-    return anti_scalar_sqrt(magnitude_magnitude_anti_dot(self_, self_));
+fn magnitude_bulk_norm(self_: Magnitude) -> Scalar {
+    return scalar_sqrt(magnitude_magnitude_dot(self_, self_));
 }
 
-fn motor_weight_norm(self_: Motor) -> AntiScalar {
-    return anti_scalar_sqrt(motor_motor_anti_dot(self_, self_));
+fn motor_bulk_norm(self_: Motor) -> Scalar {
+    return scalar_sqrt(motor_motor_dot(self_, self_));
 }
 
-fn multi_vector_weight_norm(self_: MultiVector) -> AntiScalar {
-    return anti_scalar_sqrt(multi_vector_multi_vector_anti_dot(self_, self_));
+fn multi_vector_bulk_norm(self_: MultiVector) -> Scalar {
+    return scalar_sqrt(multi_vector_multi_vector_dot(self_, self_));
 }
 
-fn origin_weight_norm(self_: Origin) -> AntiScalar {
-    return anti_scalar_sqrt(origin_origin_anti_dot(self_, self_));
+fn origin_bulk_norm(self_: Origin) -> Scalar {
+    return scalar_sqrt(origin_origin_dot(self_, self_));
 }
 
-fn plane_weight_norm(self_: Plane) -> AntiScalar {
-    return anti_scalar_sqrt(plane_plane_anti_dot(self_, self_));
+fn plane_bulk_norm(self_: Plane) -> Scalar {
+    return scalar_sqrt(plane_plane_dot(self_, self_));
 }
 
-fn plane_at_origin_weight_norm(self_: PlaneAtOrigin) -> AntiScalar {
-    return anti_scalar_sqrt(plane_at_origin_plane_at_origin_anti_dot(self_, self_));
+fn plane_at_origin_bulk_norm(self_: PlaneAtOrigin) -> Scalar {
+    return scalar_sqrt(plane_at_origin_plane_at_origin_dot(self_, self_));
 }
 
-fn point_weight_norm(self_: Point) -> AntiScalar {
-    return anti_scalar_sqrt(point_point_anti_dot(self_, self_));
+fn point_bulk_norm(self_: Point) -> Scalar {
+    return scalar_sqrt(point_point_dot(self_, self_));
 }
 
-fn rotor_weight_norm(self_: Rotor) -> AntiScalar {
-    return anti_scalar_sqrt(rotor_rotor_anti_dot(self_, self_));
+fn rotor_bulk_norm(self_: Rotor) -> Scalar {
+    return scalar_sqrt(rotor_rotor_dot(self_, self_));
 }
 
-fn round_point_weight_norm(self_: RoundPoint) -> AntiScalar {
-    return anti_scalar_sqrt(round_point_round_point_anti_dot(self_, self_));
+fn round_point_bulk_norm(self_: RoundPoint) -> Scalar {
+    return scalar_sqrt(round_point_round_point_dot(self_, self_));
 }
 
-fn scalar_weight_norm(self_: Scalar) -> AntiScalar {
-    return anti_scalar_sqrt(scalar_scalar_anti_dot(self_, self_));
+fn scalar_bulk_norm(self_: Scalar) -> Scalar {
+    return scalar_sqrt(scalar_scalar_dot(self_, self_));
 }
 
-fn sphere_weight_norm(self_: Sphere) -> AntiScalar {
-    return anti_scalar_sqrt(sphere_sphere_anti_dot(self_, self_));
+fn sphere_bulk_norm(self_: Sphere) -> Scalar {
+    return scalar_sqrt(sphere_sphere_dot(self_, self_));
 }
 
-fn translator_weight_norm(self_: Translator) -> AntiScalar {
-    return anti_scalar_sqrt(translator_translator_anti_dot(self_, self_));
+fn translator_bulk_norm(self_: Translator) -> Scalar {
+    return scalar_sqrt(translator_translator_dot(self_, self_));
 }
 
 fn anti_scalar_weight_norm_squared(self_: AntiScalar) -> AntiScalar {
@@ -17019,6 +16947,78 @@ fn sphere_weight_norm_squared(self_: Sphere) -> AntiScalar {
 
 fn translator_weight_norm_squared(self_: Translator) -> AntiScalar {
     return translator_translator_anti_dot(self_, self_);
+}
+
+fn anti_scalar_weight_norm(self_: AntiScalar) -> AntiScalar {
+    return anti_scalar_sqrt(anti_scalar_anti_scalar_anti_dot(self_, self_));
+}
+
+fn circle_weight_norm(self_: Circle) -> AntiScalar {
+    return anti_scalar_sqrt(circle_circle_anti_dot(self_, self_));
+}
+
+fn dipole_weight_norm(self_: Dipole) -> AntiScalar {
+    return anti_scalar_sqrt(dipole_dipole_anti_dot(self_, self_));
+}
+
+fn flector_weight_norm(self_: Flector) -> AntiScalar {
+    return anti_scalar_sqrt(flector_flector_anti_dot(self_, self_));
+}
+
+fn line_weight_norm(self_: Line) -> AntiScalar {
+    return anti_scalar_sqrt(line_line_anti_dot(self_, self_));
+}
+
+fn line_at_origin_weight_norm(self_: LineAtOrigin) -> AntiScalar {
+    return anti_scalar_sqrt(line_at_origin_line_at_origin_anti_dot(self_, self_));
+}
+
+fn magnitude_weight_norm(self_: Magnitude) -> AntiScalar {
+    return anti_scalar_sqrt(magnitude_magnitude_anti_dot(self_, self_));
+}
+
+fn motor_weight_norm(self_: Motor) -> AntiScalar {
+    return anti_scalar_sqrt(motor_motor_anti_dot(self_, self_));
+}
+
+fn multi_vector_weight_norm(self_: MultiVector) -> AntiScalar {
+    return anti_scalar_sqrt(multi_vector_multi_vector_anti_dot(self_, self_));
+}
+
+fn origin_weight_norm(self_: Origin) -> AntiScalar {
+    return anti_scalar_sqrt(origin_origin_anti_dot(self_, self_));
+}
+
+fn plane_weight_norm(self_: Plane) -> AntiScalar {
+    return anti_scalar_sqrt(plane_plane_anti_dot(self_, self_));
+}
+
+fn plane_at_origin_weight_norm(self_: PlaneAtOrigin) -> AntiScalar {
+    return anti_scalar_sqrt(plane_at_origin_plane_at_origin_anti_dot(self_, self_));
+}
+
+fn point_weight_norm(self_: Point) -> AntiScalar {
+    return anti_scalar_sqrt(point_point_anti_dot(self_, self_));
+}
+
+fn rotor_weight_norm(self_: Rotor) -> AntiScalar {
+    return anti_scalar_sqrt(rotor_rotor_anti_dot(self_, self_));
+}
+
+fn round_point_weight_norm(self_: RoundPoint) -> AntiScalar {
+    return anti_scalar_sqrt(round_point_round_point_anti_dot(self_, self_));
+}
+
+fn scalar_weight_norm(self_: Scalar) -> AntiScalar {
+    return anti_scalar_sqrt(scalar_scalar_anti_dot(self_, self_));
+}
+
+fn sphere_weight_norm(self_: Sphere) -> AntiScalar {
+    return anti_scalar_sqrt(sphere_sphere_anti_dot(self_, self_));
+}
+
+fn translator_weight_norm(self_: Translator) -> AntiScalar {
+    return anti_scalar_sqrt(translator_translator_anti_dot(self_, self_));
 }
 
 fn anti_scalar_geometric_norm(self_: AntiScalar) -> Magnitude {
@@ -17235,6 +17235,156 @@ fn sphere_unitized_norm(self_: Sphere) -> f32 {
 
 fn translator_unitized_norm(self_: Translator) -> f32 {
     return sqrt(translator_unitized_norm_squared(self_));
+}
+
+fn circle_center_bulk_norm_squared(self_: Circle) -> Scalar {
+    let round_bulk: RoundPoint = round_point_round_bulk(circle_center(self_));
+    return round_point_round_point_dot(round_bulk, round_bulk);
+}
+
+fn dipole_center_bulk_norm_squared(self_: Dipole) -> Scalar {
+    let round_bulk: RoundPoint = round_point_round_bulk(dipole_center(self_));
+    return round_point_round_point_dot(round_bulk, round_bulk);
+}
+
+fn multi_vector_center_bulk_norm_squared(self_: MultiVector) -> Scalar {
+    let round_bulk: MultiVector = multi_vector_round_bulk(multi_vector_center(self_));
+    return multi_vector_multi_vector_dot(round_bulk, round_bulk);
+}
+
+fn round_point_center_bulk_norm_squared(self_: RoundPoint) -> Scalar {
+    let round_bulk: RoundPoint = round_point_round_bulk(round_point_center(self_));
+    return round_point_round_point_dot(round_bulk, round_bulk);
+}
+
+fn sphere_center_bulk_norm_squared(self_: Sphere) -> Scalar {
+    let round_bulk: RoundPoint = round_point_round_bulk(sphere_center(self_));
+    return round_point_round_point_dot(round_bulk, round_bulk);
+}
+
+fn circle_center_bulk_norm(self_: Circle) -> Scalar {
+    return scalar_sqrt(circle_center_bulk_norm_squared(self_));
+}
+
+fn dipole_center_bulk_norm(self_: Dipole) -> Scalar {
+    return scalar_sqrt(dipole_center_bulk_norm_squared(self_));
+}
+
+fn multi_vector_center_bulk_norm(self_: MultiVector) -> Scalar {
+    return scalar_sqrt(multi_vector_center_bulk_norm_squared(self_));
+}
+
+fn round_point_center_bulk_norm(self_: RoundPoint) -> Scalar {
+    return scalar_sqrt(round_point_center_bulk_norm_squared(self_));
+}
+
+fn sphere_center_bulk_norm(self_: Sphere) -> Scalar {
+    return scalar_sqrt(sphere_center_bulk_norm_squared(self_));
+}
+
+fn circle_center_weight_norm_squared(self_: Circle) -> AntiScalar {
+    let round_weight: RoundPoint = round_point_round_weight(circle_center(self_));
+    return round_point_round_point_anti_dot(round_weight, round_weight);
+}
+
+fn dipole_center_weight_norm_squared(self_: Dipole) -> AntiScalar {
+    let round_weight: RoundPoint = round_point_round_weight(dipole_center(self_));
+    return round_point_round_point_anti_dot(round_weight, round_weight);
+}
+
+fn multi_vector_center_weight_norm_squared(self_: MultiVector) -> AntiScalar {
+    let round_weight: MultiVector = multi_vector_round_weight(multi_vector_center(self_));
+    return multi_vector_multi_vector_anti_dot(round_weight, round_weight);
+}
+
+fn round_point_center_weight_norm_squared(self_: RoundPoint) -> AntiScalar {
+    let round_weight: RoundPoint = round_point_round_weight(round_point_center(self_));
+    return round_point_round_point_anti_dot(round_weight, round_weight);
+}
+
+fn sphere_center_weight_norm_squared(self_: Sphere) -> AntiScalar {
+    let round_weight: RoundPoint = round_point_round_weight(sphere_center(self_));
+    return round_point_round_point_anti_dot(round_weight, round_weight);
+}
+
+fn circle_center_weight_norm(self_: Circle) -> AntiScalar {
+    return anti_scalar_sqrt(circle_center_weight_norm_squared(self_));
+}
+
+fn dipole_center_weight_norm(self_: Dipole) -> AntiScalar {
+    return anti_scalar_sqrt(dipole_center_weight_norm_squared(self_));
+}
+
+fn multi_vector_center_weight_norm(self_: MultiVector) -> AntiScalar {
+    return anti_scalar_sqrt(multi_vector_center_weight_norm_squared(self_));
+}
+
+fn round_point_center_weight_norm(self_: RoundPoint) -> AntiScalar {
+    return anti_scalar_sqrt(round_point_center_weight_norm_squared(self_));
+}
+
+fn sphere_center_weight_norm(self_: Sphere) -> AntiScalar {
+    return anti_scalar_sqrt(sphere_center_weight_norm_squared(self_));
+}
+
+fn circle_center_geometric_norm(self_: Circle) -> Magnitude {
+    return scalar_anti_scalar_add(circle_center_bulk_norm(self_), circle_center_weight_norm(self_));
+}
+
+fn dipole_center_geometric_norm(self_: Dipole) -> Magnitude {
+    return scalar_anti_scalar_add(dipole_center_bulk_norm(self_), dipole_center_weight_norm(self_));
+}
+
+fn multi_vector_center_geometric_norm(self_: MultiVector) -> Magnitude {
+    return scalar_anti_scalar_add(multi_vector_center_bulk_norm(self_), multi_vector_center_weight_norm(self_));
+}
+
+fn round_point_center_geometric_norm(self_: RoundPoint) -> Magnitude {
+    return scalar_anti_scalar_add(round_point_center_bulk_norm(self_), round_point_center_weight_norm(self_));
+}
+
+fn sphere_center_geometric_norm(self_: Sphere) -> Magnitude {
+    return scalar_anti_scalar_add(sphere_center_bulk_norm(self_), sphere_center_weight_norm(self_));
+}
+
+fn circle_center_unitized_norm_squared(self_: Circle) -> f32 {
+    return circle_center_bulk_norm_squared(self_).g0 / circle_center_weight_norm_squared(self_).g0;
+}
+
+fn dipole_center_unitized_norm_squared(self_: Dipole) -> f32 {
+    return dipole_center_bulk_norm_squared(self_).g0 / dipole_center_weight_norm_squared(self_).g0;
+}
+
+fn multi_vector_center_unitized_norm_squared(self_: MultiVector) -> f32 {
+    return multi_vector_center_bulk_norm_squared(self_).g0 / multi_vector_center_weight_norm_squared(self_).g0;
+}
+
+fn round_point_center_unitized_norm_squared(self_: RoundPoint) -> f32 {
+    return round_point_center_bulk_norm_squared(self_).g0 / round_point_center_weight_norm_squared(self_).g0;
+}
+
+fn sphere_center_unitized_norm_squared(self_: Sphere) -> f32 {
+    return sphere_center_bulk_norm_squared(self_).g0 / sphere_center_weight_norm_squared(self_).g0;
+}
+
+fn circle_center_unitized_norm(self_: Circle) -> f32 {
+    return sqrt(circle_center_unitized_norm_squared(self_));
+}
+
+fn dipole_center_unitized_norm(self_: Dipole) -> f32 {
+    return sqrt(dipole_center_unitized_norm_squared(self_));
+}
+
+fn multi_vector_center_unitized_norm(self_: MultiVector) -> f32 {
+    return sqrt(multi_vector_center_unitized_norm_squared(self_));
+}
+
+fn round_point_center_unitized_norm(self_: RoundPoint) -> f32 {
+    return sqrt(round_point_center_unitized_norm_squared(self_));
+}
+
+fn sphere_center_unitized_norm(self_: Sphere) -> f32 {
+    return sqrt(sphere_center_unitized_norm_squared(self_));
 }
 
 fn anti_scalar_unitize(self_: AntiScalar) -> AntiScalar {
