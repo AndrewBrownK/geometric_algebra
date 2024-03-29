@@ -2052,6 +2052,14 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
             let _: Option<()> = try {
                 let center = self.trait_impls.get_single_invocation("Center", variable(&param_a))?;
+                let center_data_type = center.data_type_hint.clone()?;
+                let center_mv = match center_data_type {
+                    DataType::MultiVector(mv) => mv,
+                    _ => continue,
+                };
+                if center_mv.class_name != "RoundPoint" {
+                    continue
+                }
 
 
                 // Center Bulk Norm Squared
@@ -2174,6 +2182,103 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 };
                 let un = single_expression_single_trait_impl(center_unitized_norm, &param_a, sqrt);
                 self.trait_impls.add_single_impl(center_unitized_norm, param_a.clone(), un);
+
+
+                // Radius Bulk Norm Squared
+
+
+                let center_data_type = center.data_type_hint.clone()?;
+                let var_center = Expression {
+                    size: center.size.clone(),
+                    data_type_hint: Some(center_data_type.clone()),
+                    content: ExpressionContent::Variable("center"),
+                };
+                let assign_center = AstNode::VariableAssignment {
+                    name: "center",
+                    data_type: Some(center_data_type.clone()),
+                    expression: Box::new(center.clone())
+                };
+
+                let round_bulk = self.trait_impls.get_single_invocation("RoundBulk", center.clone())?;
+                let round_bulk_datatype = round_bulk.data_type_hint.clone()?;
+                let var_round_bulk = Expression {
+                    size: round_bulk.size.clone(),
+                    data_type_hint: Some(round_bulk_datatype.clone()),
+                    content: ExpressionContent::Variable("round_bulk"),
+                };
+                let assign_round_bulk = AstNode::VariableAssignment {
+                    name: "round_bulk",
+                    data_type: Some(round_bulk_datatype),
+                    expression: Box::new(round_bulk),
+                };
+                let dot = self.algebra.dialect().dot_product.first()?;
+                let rb_dot_rb = self.trait_impls.get_pair_invocation(dot, var_round_bulk.clone(), var_round_bulk)?;
+                let dot_data_type = rb_dot_rb.data_type_hint.clone()?;
+                // formula calls for "2 * aw * au"
+                // but when we invoke "center", the e5 component becomes "aw * au" instead of just "au"
+                // so by taking the "flat bulk" of the center result, we get the coefficient we need
+                // Just have to multiply it by 2. Or add it with itself.
+                // Ah... except the flat bulk is not a scalar... it is an e5... hmmm....
+                // Okay so yeah I have to manually dig into the insides of the thing either way.
+                let flat_bulk = self.trait_impls.get_single_invocation("Bulk", var_center.clone())?;
+                let scalar_mv = match rb_dot_rb.data_type_hint {
+                    Some(DataType::MultiVector(mv)) => mv,
+                    _ => None?
+                };
+                let e5_element = Expression {
+                    size: 1,
+                    data_type_hint: Some(DataType::SimdVector(1)),
+                    content: ExpressionContent::Access(Box::new(flat_bulk), 0)
+                };
+                let two = Expression {
+                    size: 1,
+                    data_type_hint: Some(DataType::SimdVector(1)),
+                    content: ExpressionContent::Constant(DataType::SimdVector(1), vec![2])
+                };
+                let two_aw_au = Expression {
+                    size: 1,
+                    data_type_hint: Some(DataType::SimdVector(1)),
+                    content: ExpressionContent::Multiply(Box::new(two), Box::new(e5_element)),
+                };
+                let two_aw_au_scalar = Expression {
+                    size: 1,
+                    data_type_hint: Some(dot_data_type.clone()),
+                    content: ExpressionContent::InvokeClassMethod(scalar_mv, "Constructor", vec![(DataType::SimdVector(1), two_aw_au)]),
+                };
+                let var_taas = Expression {
+                    size: 1,
+                    data_type_hint: Some(dot_data_type.clone()),
+                    content: ExpressionContent::Variable("two_aw_au"),
+                };
+                let assign_taas = AstNode::VariableAssignment {
+                    name: "two_aw_au",
+                    data_type: Some(dot_data_type.clone()),
+                    expression: Box::new(two_aw_au_scalar),
+                };
+                let sub = self.trait_impls.get_pair_invocation("Sub", var_taas, rb_dot_rb)?;
+
+                let the_return = AstNode::ReturnStatement {
+                    expression: Box::new(sub.clone()),
+                };
+                let the_impl = AstNode::TraitImplementation {
+                    result: Parameter { name: radius_bulk_norm_squared, data_type: DataType::MultiVector(scalar_mv) },
+                    class: param_a.multi_vector_class(),
+                    parameters: vec![param_a.clone()],
+                    body: vec![assign_center.clone(), assign_round_bulk, assign_taas, the_return],
+                };
+                self.trait_impls.add_single_impl(radius_bulk_norm_squared, param_a.clone(), the_impl);
+
+
+                // Radius Bulk Norm
+
+                let bns = self.trait_impls.get_single_invocation(radius_bulk_norm_squared, variable(&param_a))?;
+                let sqrt = self.trait_impls.get_single_invocation("Sqrt", bns)?;
+                let the_impl = single_expression_single_trait_impl(radius_bulk_norm, &param_a, sqrt);
+                self.trait_impls.add_single_impl(radius_bulk_norm, param_a.clone(), the_impl);
+
+
+
+
             };
         }
     }
