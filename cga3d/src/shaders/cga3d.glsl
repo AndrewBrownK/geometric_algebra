@@ -17437,6 +17437,54 @@ AntiScalar sphere_radius_weight_norm(Sphere self) {
     return anti_scalar_sqrt(sphere_radius_weight_norm_squared(self));
 }
 
+Magnitude circle_radius_geometric_norm(Circle self) {
+    return scalar_anti_scalar_add(circle_radius_bulk_norm(self), circle_radius_weight_norm(self));
+}
+
+Magnitude dipole_radius_geometric_norm(Dipole self) {
+    return scalar_anti_scalar_add(dipole_radius_bulk_norm(self), dipole_radius_weight_norm(self));
+}
+
+Magnitude round_point_radius_geometric_norm(RoundPoint self) {
+    return scalar_anti_scalar_add(round_point_radius_bulk_norm(self), round_point_radius_weight_norm(self));
+}
+
+Magnitude sphere_radius_geometric_norm(Sphere self) {
+    return scalar_anti_scalar_add(sphere_radius_bulk_norm(self), sphere_radius_weight_norm(self));
+}
+
+float circle_radius_unitized_norm_squared(Circle self) {
+    return circle_radius_bulk_norm_squared(self).g0 / circle_radius_weight_norm_squared(self).g0;
+}
+
+float dipole_radius_unitized_norm_squared(Dipole self) {
+    return dipole_radius_bulk_norm_squared(self).g0 / dipole_radius_weight_norm_squared(self).g0;
+}
+
+float round_point_radius_unitized_norm_squared(RoundPoint self) {
+    return round_point_radius_bulk_norm_squared(self).g0 / round_point_radius_weight_norm_squared(self).g0;
+}
+
+float sphere_radius_unitized_norm_squared(Sphere self) {
+    return sphere_radius_bulk_norm_squared(self).g0 / sphere_radius_weight_norm_squared(self).g0;
+}
+
+float circle_radius_unitized_norm(Circle self) {
+    return sqrt(circle_radius_unitized_norm_squared(self));
+}
+
+float dipole_radius_unitized_norm(Dipole self) {
+    return sqrt(dipole_radius_unitized_norm_squared(self));
+}
+
+float round_point_radius_unitized_norm(RoundPoint self) {
+    return sqrt(round_point_radius_unitized_norm_squared(self));
+}
+
+float sphere_radius_unitized_norm(Sphere self) {
+    return sqrt(sphere_radius_unitized_norm_squared(self));
+}
+
 AntiScalar anti_scalar_unitize(AntiScalar self) {
     return anti_scalar_scalar_geometric_product(self, Scalar(1.0 / anti_scalar_weight_norm(self).g0));
 }

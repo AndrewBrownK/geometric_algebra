@@ -94,6 +94,27 @@ pub trait RadiusBulkNormSquared {
     fn radius_bulk_norm_squared(self) -> Self::Output;
 }
 
+/// RadiusGeometricNorm
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+pub trait RadiusGeometricNorm {
+    type Output;
+    fn radius_geometric_norm(self) -> Self::Output;
+}
+
+/// RadiusUnitizedNorm
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+pub trait RadiusUnitizedNorm {
+    type Output;
+    fn radius_unitized_norm(self) -> Self::Output;
+}
+
+/// RadiusUnitizedNormSquared
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+pub trait RadiusUnitizedNormSquared {
+    type Output;
+    fn radius_unitized_norm_squared(self) -> Self::Output;
+}
+
 /// RadiusWeightNorm
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
 pub trait RadiusWeightNorm {
@@ -1525,5 +1546,101 @@ impl RadiusWeightNorm for Sphere {
 
     fn radius_weight_norm(self) -> AntiScalar {
         self.radius_weight_norm_squared().sqrt()
+    }
+}
+
+impl RadiusGeometricNorm for Circle {
+    type Output = Magnitude;
+
+    fn radius_geometric_norm(self) -> Magnitude {
+        self.radius_bulk_norm().add(self.radius_weight_norm())
+    }
+}
+
+impl RadiusGeometricNorm for Dipole {
+    type Output = Magnitude;
+
+    fn radius_geometric_norm(self) -> Magnitude {
+        self.radius_bulk_norm().add(self.radius_weight_norm())
+    }
+}
+
+impl RadiusGeometricNorm for RoundPoint {
+    type Output = Magnitude;
+
+    fn radius_geometric_norm(self) -> Magnitude {
+        self.radius_bulk_norm().add(self.radius_weight_norm())
+    }
+}
+
+impl RadiusGeometricNorm for Sphere {
+    type Output = Magnitude;
+
+    fn radius_geometric_norm(self) -> Magnitude {
+        self.radius_bulk_norm().add(self.radius_weight_norm())
+    }
+}
+
+impl RadiusUnitizedNormSquared for Circle {
+    type Output = f32;
+
+    fn radius_unitized_norm_squared(self) -> f32 {
+        self.radius_bulk_norm_squared().group0() / self.radius_weight_norm_squared().group0()
+    }
+}
+
+impl RadiusUnitizedNormSquared for Dipole {
+    type Output = f32;
+
+    fn radius_unitized_norm_squared(self) -> f32 {
+        self.radius_bulk_norm_squared().group0() / self.radius_weight_norm_squared().group0()
+    }
+}
+
+impl RadiusUnitizedNormSquared for RoundPoint {
+    type Output = f32;
+
+    fn radius_unitized_norm_squared(self) -> f32 {
+        self.radius_bulk_norm_squared().group0() / self.radius_weight_norm_squared().group0()
+    }
+}
+
+impl RadiusUnitizedNormSquared for Sphere {
+    type Output = f32;
+
+    fn radius_unitized_norm_squared(self) -> f32 {
+        self.radius_bulk_norm_squared().group0() / self.radius_weight_norm_squared().group0()
+    }
+}
+
+impl RadiusUnitizedNorm for Circle {
+    type Output = f32;
+
+    fn radius_unitized_norm(self) -> f32 {
+        self.radius_unitized_norm_squared().sqrt()
+    }
+}
+
+impl RadiusUnitizedNorm for Dipole {
+    type Output = f32;
+
+    fn radius_unitized_norm(self) -> f32 {
+        self.radius_unitized_norm_squared().sqrt()
+    }
+}
+
+impl RadiusUnitizedNorm for RoundPoint {
+    type Output = f32;
+
+    fn radius_unitized_norm(self) -> f32 {
+        self.radius_unitized_norm_squared().sqrt()
+    }
+}
+
+impl RadiusUnitizedNorm for Sphere {
+    type Output = f32;
+
+    fn radius_unitized_norm(self) -> f32 {
+        self.radius_unitized_norm_squared().sqrt()
     }
 }

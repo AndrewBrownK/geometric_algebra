@@ -17437,6 +17437,54 @@ fn sphere_radius_weight_norm(self_: Sphere) -> AntiScalar {
     return anti_scalar_sqrt(sphere_radius_weight_norm_squared(self_));
 }
 
+fn circle_radius_geometric_norm(self_: Circle) -> Magnitude {
+    return scalar_anti_scalar_add(circle_radius_bulk_norm(self_), circle_radius_weight_norm(self_));
+}
+
+fn dipole_radius_geometric_norm(self_: Dipole) -> Magnitude {
+    return scalar_anti_scalar_add(dipole_radius_bulk_norm(self_), dipole_radius_weight_norm(self_));
+}
+
+fn round_point_radius_geometric_norm(self_: RoundPoint) -> Magnitude {
+    return scalar_anti_scalar_add(round_point_radius_bulk_norm(self_), round_point_radius_weight_norm(self_));
+}
+
+fn sphere_radius_geometric_norm(self_: Sphere) -> Magnitude {
+    return scalar_anti_scalar_add(sphere_radius_bulk_norm(self_), sphere_radius_weight_norm(self_));
+}
+
+fn circle_radius_unitized_norm_squared(self_: Circle) -> f32 {
+    return circle_radius_bulk_norm_squared(self_).g0 / circle_radius_weight_norm_squared(self_).g0;
+}
+
+fn dipole_radius_unitized_norm_squared(self_: Dipole) -> f32 {
+    return dipole_radius_bulk_norm_squared(self_).g0 / dipole_radius_weight_norm_squared(self_).g0;
+}
+
+fn round_point_radius_unitized_norm_squared(self_: RoundPoint) -> f32 {
+    return round_point_radius_bulk_norm_squared(self_).g0 / round_point_radius_weight_norm_squared(self_).g0;
+}
+
+fn sphere_radius_unitized_norm_squared(self_: Sphere) -> f32 {
+    return sphere_radius_bulk_norm_squared(self_).g0 / sphere_radius_weight_norm_squared(self_).g0;
+}
+
+fn circle_radius_unitized_norm(self_: Circle) -> f32 {
+    return sqrt(circle_radius_unitized_norm_squared(self_));
+}
+
+fn dipole_radius_unitized_norm(self_: Dipole) -> f32 {
+    return sqrt(dipole_radius_unitized_norm_squared(self_));
+}
+
+fn round_point_radius_unitized_norm(self_: RoundPoint) -> f32 {
+    return sqrt(round_point_radius_unitized_norm_squared(self_));
+}
+
+fn sphere_radius_unitized_norm(self_: Sphere) -> f32 {
+    return sqrt(sphere_radius_unitized_norm_squared(self_));
+}
+
 fn anti_scalar_unitize(self_: AntiScalar) -> AntiScalar {
     return anti_scalar_scalar_geometric_product(self_, Scalar(1.0 / anti_scalar_weight_norm(self_).g0));
 }

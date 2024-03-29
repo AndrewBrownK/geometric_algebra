@@ -2149,8 +2149,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
                 // Center Unitized Norm Squared
 
-                let mv = param_a.multi_vector_class().class_name.clone();
-
                 let bn = self.trait_impls.get_single_invocation(center_bulk_norm_squared, variable(&param_a))?;
                 let wn = self.trait_impls.get_single_invocation(center_weight_norm_squared, variable(&param_a))?;
                 let access_bn = Expression {
@@ -2315,6 +2313,48 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 self.trait_impls.add_single_impl(radius_weight_norm, param_a.clone(), the_impl);
 
 
+                // Radius Geometric Norm
+
+                let bn = self.trait_impls.get_single_invocation(radius_bulk_norm, variable(&param_a))?;
+                let wn = self.trait_impls.get_single_invocation(radius_weight_norm, variable(&param_a))?;
+                let add = self.trait_impls.get_pair_invocation("Add", bn, wn)?;
+                let the_impl = single_expression_single_trait_impl(radius_geometric_norm, &param_a, add);
+                self.trait_impls.add_single_impl(radius_geometric_norm, param_a.clone(), the_impl);
+
+
+                // Radius Unitized Norm Squared
+
+                let bn = self.trait_impls.get_single_invocation(radius_bulk_norm_squared, variable(&param_a))?;
+                let wn = self.trait_impls.get_single_invocation(radius_weight_norm_squared, variable(&param_a))?;
+                let access_bn = Expression {
+                    size: 1,
+                    data_type_hint: Some(DataType::SimdVector(1)),
+                    content: ExpressionContent::Access(Box::new(bn), 0),
+                };
+                let access_wn = Expression {
+                    size: 1,
+                    data_type_hint: Some(DataType::SimdVector(1)),
+                    content: ExpressionContent::Access(Box::new(wn), 0),
+                };
+                let div = Expression {
+                    size: 1,
+                    data_type_hint: Some(DataType::SimdVector(1)),
+                    content: ExpressionContent::Divide(Box::new(access_bn), Box::new(access_wn)),
+                };
+                let the_impl = single_expression_single_trait_impl(radius_unitized_norm_squared, &param_a, div);
+                self.trait_impls.add_single_impl(radius_unitized_norm_squared, param_a.clone(), the_impl);
+
+
+                // Center Unitized Norm
+
+                let uns = self.trait_impls.get_single_invocation(radius_unitized_norm_squared, variable(&param_a))?;
+                let sqrt = Expression {
+                    size: 1,
+                    data_type_hint: Some(DataType::SimdVector(1)),
+                    content: ExpressionContent::SquareRoot(Box::new(uns)),
+                };
+                let un = single_expression_single_trait_impl(radius_unitized_norm, &param_a, sqrt);
+                self.trait_impls.add_single_impl(radius_unitized_norm, param_a.clone(), un);
             };
         }
     }
