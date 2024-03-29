@@ -94,6 +94,20 @@ pub trait RadiusBulkNormSquared {
     fn radius_bulk_norm_squared(self) -> Self::Output;
 }
 
+/// RadiusWeightNorm
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+pub trait RadiusWeightNorm {
+    type Output;
+    fn radius_weight_norm(self) -> Self::Output;
+}
+
+/// RadiusWeightNormSquared
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+pub trait RadiusWeightNormSquared {
+    type Output;
+    fn radius_weight_norm_squared(self) -> Self::Output;
+}
+
 /// UnitizedNorm
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
 pub trait UnitizedNorm {
@@ -1443,5 +1457,73 @@ impl RadiusBulkNorm for Sphere {
 
     fn radius_bulk_norm(self) -> Scalar {
         self.radius_bulk_norm_squared().sqrt()
+    }
+}
+
+impl RadiusWeightNormSquared for Circle {
+    type Output = AntiScalar;
+
+    fn radius_weight_norm_squared(self) -> AntiScalar {
+        let mut round_weight: RoundPoint = self.center().round_weight();
+        round_weight.anti_dot(round_weight)
+    }
+}
+
+impl RadiusWeightNormSquared for Dipole {
+    type Output = AntiScalar;
+
+    fn radius_weight_norm_squared(self) -> AntiScalar {
+        let mut round_weight: RoundPoint = self.center().round_weight();
+        round_weight.anti_dot(round_weight)
+    }
+}
+
+impl RadiusWeightNormSquared for RoundPoint {
+    type Output = AntiScalar;
+
+    fn radius_weight_norm_squared(self) -> AntiScalar {
+        let mut round_weight: RoundPoint = self.center().round_weight();
+        round_weight.anti_dot(round_weight)
+    }
+}
+
+impl RadiusWeightNormSquared for Sphere {
+    type Output = AntiScalar;
+
+    fn radius_weight_norm_squared(self) -> AntiScalar {
+        let mut round_weight: RoundPoint = self.center().round_weight();
+        round_weight.anti_dot(round_weight)
+    }
+}
+
+impl RadiusWeightNorm for Circle {
+    type Output = AntiScalar;
+
+    fn radius_weight_norm(self) -> AntiScalar {
+        self.radius_weight_norm_squared().sqrt()
+    }
+}
+
+impl RadiusWeightNorm for Dipole {
+    type Output = AntiScalar;
+
+    fn radius_weight_norm(self) -> AntiScalar {
+        self.radius_weight_norm_squared().sqrt()
+    }
+}
+
+impl RadiusWeightNorm for RoundPoint {
+    type Output = AntiScalar;
+
+    fn radius_weight_norm(self) -> AntiScalar {
+        self.radius_weight_norm_squared().sqrt()
+    }
+}
+
+impl RadiusWeightNorm for Sphere {
+    type Output = AntiScalar;
+
+    fn radius_weight_norm(self) -> AntiScalar {
+        self.radius_weight_norm_squared().sqrt()
     }
 }

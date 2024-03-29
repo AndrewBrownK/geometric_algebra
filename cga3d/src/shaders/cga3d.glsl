@@ -17401,6 +17401,42 @@ Scalar sphere_radius_bulk_norm(Sphere self) {
     return scalar_sqrt(sphere_radius_bulk_norm_squared(self));
 }
 
+AntiScalar circle_radius_weight_norm_squared(Circle self) {
+    RoundPoint round_weight = round_point_round_weight(circle_center(self));
+    return round_point_round_point_anti_dot(round_weight, round_weight);
+}
+
+AntiScalar dipole_radius_weight_norm_squared(Dipole self) {
+    RoundPoint round_weight = round_point_round_weight(dipole_center(self));
+    return round_point_round_point_anti_dot(round_weight, round_weight);
+}
+
+AntiScalar round_point_radius_weight_norm_squared(RoundPoint self) {
+    RoundPoint round_weight = round_point_round_weight(round_point_center(self));
+    return round_point_round_point_anti_dot(round_weight, round_weight);
+}
+
+AntiScalar sphere_radius_weight_norm_squared(Sphere self) {
+    RoundPoint round_weight = round_point_round_weight(sphere_center(self));
+    return round_point_round_point_anti_dot(round_weight, round_weight);
+}
+
+AntiScalar circle_radius_weight_norm(Circle self) {
+    return anti_scalar_sqrt(circle_radius_weight_norm_squared(self));
+}
+
+AntiScalar dipole_radius_weight_norm(Dipole self) {
+    return anti_scalar_sqrt(dipole_radius_weight_norm_squared(self));
+}
+
+AntiScalar round_point_radius_weight_norm(RoundPoint self) {
+    return anti_scalar_sqrt(round_point_radius_weight_norm_squared(self));
+}
+
+AntiScalar sphere_radius_weight_norm(Sphere self) {
+    return anti_scalar_sqrt(sphere_radius_weight_norm_squared(self));
+}
+
 AntiScalar anti_scalar_unitize(AntiScalar self) {
     return anti_scalar_scalar_geometric_product(self, Scalar(1.0 / anti_scalar_weight_norm(self).g0));
 }

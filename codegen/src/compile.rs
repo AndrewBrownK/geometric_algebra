@@ -2277,6 +2277,42 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 self.trait_impls.add_single_impl(radius_bulk_norm, param_a.clone(), the_impl);
 
 
+                // Radius Weight Norm Squared
+
+                let round_weight = self.trait_impls.get_single_invocation("RoundWeight", center.clone())?;
+                let round_weight_datatype = round_weight.data_type_hint.clone()?;
+                let var_round_weight = Expression {
+                    size: round_weight.size.clone(),
+                    data_type_hint: Some(round_weight_datatype.clone()),
+                    content: ExpressionContent::Variable("round_weight"),
+                };
+                let assign_round_weight = AstNode::VariableAssignment {
+                    name: "round_weight",
+                    data_type: Some(round_weight_datatype),
+                    expression: Box::new(round_weight),
+                };
+                let anti_dot = self.algebra.dialect().anti_dot_product.first()?;
+                let rw_anti_dot_rw = self.trait_impls.get_pair_invocation(anti_dot, var_round_weight.clone(), var_round_weight)?;
+                let anti_dot_datatype = rw_anti_dot_rw.data_type_hint.clone()?;
+
+                let the_return = AstNode::ReturnStatement {
+                    expression: Box::new(rw_anti_dot_rw.clone()),
+                };
+                let the_impl = AstNode::TraitImplementation {
+                    result: Parameter { name: radius_weight_norm_squared, data_type: anti_dot_datatype.clone() },
+                    class: param_a.multi_vector_class(),
+                    parameters: vec![param_a.clone()],
+                    body: vec![assign_round_weight.clone(), the_return],
+                };
+                self.trait_impls.add_single_impl(radius_weight_norm_squared, param_a.clone(), the_impl);
+
+
+                // Center Weight Norm
+
+                let wns = self.trait_impls.get_single_invocation(radius_weight_norm_squared, variable(&param_a))?;
+                let sqrt = self.trait_impls.get_single_invocation("Sqrt", wns)?;
+                let the_impl = single_expression_single_trait_impl(radius_weight_norm, &param_a, sqrt);
+                self.trait_impls.add_single_impl(radius_weight_norm, param_a.clone(), the_impl);
 
 
             };
