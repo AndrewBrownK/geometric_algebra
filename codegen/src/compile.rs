@@ -2120,18 +2120,23 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 // Only allow angle between uniform Grade MultiVectorClasses.
                 let _ = self.trait_impls.get_class_impl("Grade", param_a.multi_vector_class())?;
                 let _ = self.trait_impls.get_class_impl("Grade", param_b.multi_vector_class())?;
+                let a_grade = param_a.multi_vector_class().flat_basis().first()?.grade();
+                let b_grade = param_b.multi_vector_class().flat_basis().first()?.grade();
+                let same_grade = a_grade == b_grade;
 
                 // We can return a Scalar and ignore the HomogeneousMagnitude fluff if we Unitize up front
                 let a_unitize = self.trait_impls.get_single_invocation("Unitize", variable(&param_a))?;
                 let b_unitize = self.trait_impls.get_single_invocation("Unitize", variable(&param_b))?;
 
                 // The actual cosine part of the definition
-                let wc = self.trait_impls.get_pair_invocation("WeightContraction", a_unitize, b_unitize)?;
-                let bn = self.trait_impls.get_single_invocation("BulkNorm", wc)?;
+                let mut exp = self.trait_impls.get_pair_invocation("WeightContraction", a_unitize, b_unitize)?;
+                if !same_grade {
+                    exp = self.trait_impls.get_single_invocation("BulkNorm", exp)?;
+                }
                 let raw_float = Expression {
                     size: 1,
                     data_type_hint: Some(DataType::SimdVector(1)),
-                    content: ExpressionContent::Access(Box::new(bn), 0),
+                    content: ExpressionContent::Access(Box::new(exp), 0),
                 };
                 let cosine = single_expression_pair_trait_impl(name, &param_a, &param_b, raw_float);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, cosine);

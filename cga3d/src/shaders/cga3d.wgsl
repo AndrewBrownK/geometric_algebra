@@ -25146,7 +25146,7 @@ fn translator_translator_project_via_origin_onto(self_: Translator, other: Trans
 }
 
 fn circle_circle_cosine_angle(self_: Circle, other: Circle) -> f32 {
-    return scalar_bulk_norm(circle_circle_weight_contraction(circle_unitize(self_), circle_unitize(other))).g0;
+    return circle_circle_weight_contraction(circle_unitize(self_), circle_unitize(other)).g0;
 }
 
 fn circle_dipole_cosine_angle(self_: Circle, other: Dipole) -> f32 {
@@ -25154,11 +25154,11 @@ fn circle_dipole_cosine_angle(self_: Circle, other: Dipole) -> f32 {
 }
 
 fn circle_line_cosine_angle(self_: Circle, other: Line) -> f32 {
-    return scalar_bulk_norm(circle_line_weight_contraction(circle_unitize(self_), line_unitize(other))).g0;
+    return circle_line_weight_contraction(circle_unitize(self_), line_unitize(other)).g0;
 }
 
 fn circle_line_at_origin_cosine_angle(self_: Circle, other: LineAtOrigin) -> f32 {
-    return scalar_bulk_norm(circle_line_at_origin_weight_contraction(circle_unitize(self_), line_at_origin_unitize(other))).g0;
+    return circle_line_at_origin_weight_contraction(circle_unitize(self_), line_at_origin_unitize(other)).g0;
 }
 
 fn circle_origin_cosine_angle(self_: Circle, other: Origin) -> f32 {
@@ -25170,19 +25170,19 @@ fn circle_point_cosine_angle(self_: Circle, other: Point) -> f32 {
 }
 
 fn dipole_dipole_cosine_angle(self_: Dipole, other: Dipole) -> f32 {
-    return scalar_bulk_norm(dipole_dipole_weight_contraction(dipole_unitize(self_), dipole_unitize(other))).g0;
+    return dipole_dipole_weight_contraction(dipole_unitize(self_), dipole_unitize(other)).g0;
 }
 
 fn dipole_origin_cosine_angle(self_: Dipole, other: Origin) -> f32 {
-    return scalar_bulk_norm(dipole_origin_weight_contraction(dipole_unitize(self_), origin_unitize(other))).g0;
+    return dipole_origin_weight_contraction(dipole_unitize(self_), origin_unitize(other)).g0;
 }
 
 fn dipole_point_cosine_angle(self_: Dipole, other: Point) -> f32 {
-    return scalar_bulk_norm(dipole_point_weight_contraction(dipole_unitize(self_), point_unitize(other))).g0;
+    return dipole_point_weight_contraction(dipole_unitize(self_), point_unitize(other)).g0;
 }
 
 fn line_circle_cosine_angle(self_: Line, other: Circle) -> f32 {
-    return scalar_bulk_norm(line_circle_weight_contraction(line_unitize(self_), circle_unitize(other))).g0;
+    return line_circle_weight_contraction(line_unitize(self_), circle_unitize(other)).g0;
 }
 
 fn line_dipole_cosine_angle(self_: Line, other: Dipole) -> f32 {
@@ -25190,11 +25190,11 @@ fn line_dipole_cosine_angle(self_: Line, other: Dipole) -> f32 {
 }
 
 fn line_line_cosine_angle(self_: Line, other: Line) -> f32 {
-    return scalar_bulk_norm(line_line_weight_contraction(line_unitize(self_), line_unitize(other))).g0;
+    return line_line_weight_contraction(line_unitize(self_), line_unitize(other)).g0;
 }
 
 fn line_line_at_origin_cosine_angle(self_: Line, other: LineAtOrigin) -> f32 {
-    return scalar_bulk_norm(line_line_at_origin_weight_contraction(line_unitize(self_), line_at_origin_unitize(other))).g0;
+    return line_line_at_origin_weight_contraction(line_unitize(self_), line_at_origin_unitize(other)).g0;
 }
 
 fn line_origin_cosine_angle(self_: Line, other: Origin) -> f32 {
@@ -25206,7 +25206,7 @@ fn line_point_cosine_angle(self_: Line, other: Point) -> f32 {
 }
 
 fn line_at_origin_circle_cosine_angle(self_: LineAtOrigin, other: Circle) -> f32 {
-    return scalar_bulk_norm(line_at_origin_circle_weight_contraction(line_at_origin_unitize(self_), circle_unitize(other))).g0;
+    return line_at_origin_circle_weight_contraction(line_at_origin_unitize(self_), circle_unitize(other)).g0;
 }
 
 fn line_at_origin_dipole_cosine_angle(self_: LineAtOrigin, other: Dipole) -> f32 {
@@ -25214,11 +25214,11 @@ fn line_at_origin_dipole_cosine_angle(self_: LineAtOrigin, other: Dipole) -> f32
 }
 
 fn line_at_origin_line_cosine_angle(self_: LineAtOrigin, other: Line) -> f32 {
-    return scalar_bulk_norm(line_at_origin_line_weight_contraction(line_at_origin_unitize(self_), line_unitize(other))).g0;
+    return line_at_origin_line_weight_contraction(line_at_origin_unitize(self_), line_unitize(other)).g0;
 }
 
 fn line_at_origin_line_at_origin_cosine_angle(self_: LineAtOrigin, other: LineAtOrigin) -> f32 {
-    return scalar_bulk_norm(line_at_origin_line_at_origin_weight_contraction(line_at_origin_unitize(self_), line_at_origin_unitize(other))).g0;
+    return line_at_origin_line_at_origin_weight_contraction(line_at_origin_unitize(self_), line_at_origin_unitize(other)).g0;
 }
 
 fn line_at_origin_origin_cosine_angle(self_: LineAtOrigin, other: Origin) -> f32 {
@@ -25230,15 +25230,15 @@ fn line_at_origin_point_cosine_angle(self_: LineAtOrigin, other: Point) -> f32 {
 }
 
 fn origin_dipole_cosine_angle(self_: Origin, other: Dipole) -> f32 {
-    return scalar_bulk_norm(origin_dipole_weight_contraction(origin_unitize(self_), dipole_unitize(other))).g0;
+    return origin_dipole_weight_contraction(origin_unitize(self_), dipole_unitize(other)).g0;
 }
 
 fn origin_origin_cosine_angle(self_: Origin, other: Origin) -> f32 {
-    return scalar_bulk_norm(origin_origin_weight_contraction(origin_unitize(self_), origin_unitize(other))).g0;
+    return origin_origin_weight_contraction(origin_unitize(self_), origin_unitize(other)).g0;
 }
 
 fn origin_point_cosine_angle(self_: Origin, other: Point) -> f32 {
-    return scalar_bulk_norm(origin_point_weight_contraction(origin_unitize(self_), point_unitize(other))).g0;
+    return origin_point_weight_contraction(origin_unitize(self_), point_unitize(other)).g0;
 }
 
 fn plane_circle_cosine_angle(self_: Plane, other: Circle) -> f32 {
@@ -25262,11 +25262,11 @@ fn plane_origin_cosine_angle(self_: Plane, other: Origin) -> f32 {
 }
 
 fn plane_plane_cosine_angle(self_: Plane, other: Plane) -> f32 {
-    return scalar_bulk_norm(plane_plane_weight_contraction(plane_unitize(self_), plane_unitize(other))).g0;
+    return plane_plane_weight_contraction(plane_unitize(self_), plane_unitize(other)).g0;
 }
 
 fn plane_plane_at_origin_cosine_angle(self_: Plane, other: PlaneAtOrigin) -> f32 {
-    return scalar_bulk_norm(plane_plane_at_origin_weight_contraction(plane_unitize(self_), plane_at_origin_unitize(other))).g0;
+    return plane_plane_at_origin_weight_contraction(plane_unitize(self_), plane_at_origin_unitize(other)).g0;
 }
 
 fn plane_point_cosine_angle(self_: Plane, other: Point) -> f32 {
@@ -25274,7 +25274,7 @@ fn plane_point_cosine_angle(self_: Plane, other: Point) -> f32 {
 }
 
 fn plane_sphere_cosine_angle(self_: Plane, other: Sphere) -> f32 {
-    return scalar_bulk_norm(plane_sphere_weight_contraction(plane_unitize(self_), sphere_unitize(other))).g0;
+    return plane_sphere_weight_contraction(plane_unitize(self_), sphere_unitize(other)).g0;
 }
 
 fn plane_at_origin_circle_cosine_angle(self_: PlaneAtOrigin, other: Circle) -> f32 {
@@ -25298,11 +25298,11 @@ fn plane_at_origin_origin_cosine_angle(self_: PlaneAtOrigin, other: Origin) -> f
 }
 
 fn plane_at_origin_plane_cosine_angle(self_: PlaneAtOrigin, other: Plane) -> f32 {
-    return scalar_bulk_norm(plane_at_origin_plane_weight_contraction(plane_at_origin_unitize(self_), plane_unitize(other))).g0;
+    return plane_at_origin_plane_weight_contraction(plane_at_origin_unitize(self_), plane_unitize(other)).g0;
 }
 
 fn plane_at_origin_plane_at_origin_cosine_angle(self_: PlaneAtOrigin, other: PlaneAtOrigin) -> f32 {
-    return scalar_bulk_norm(plane_at_origin_plane_at_origin_weight_contraction(plane_at_origin_unitize(self_), plane_at_origin_unitize(other))).g0;
+    return plane_at_origin_plane_at_origin_weight_contraction(plane_at_origin_unitize(self_), plane_at_origin_unitize(other)).g0;
 }
 
 fn plane_at_origin_point_cosine_angle(self_: PlaneAtOrigin, other: Point) -> f32 {
@@ -25310,19 +25310,19 @@ fn plane_at_origin_point_cosine_angle(self_: PlaneAtOrigin, other: Point) -> f32
 }
 
 fn plane_at_origin_sphere_cosine_angle(self_: PlaneAtOrigin, other: Sphere) -> f32 {
-    return scalar_bulk_norm(plane_at_origin_sphere_weight_contraction(plane_at_origin_unitize(self_), sphere_unitize(other))).g0;
+    return plane_at_origin_sphere_weight_contraction(plane_at_origin_unitize(self_), sphere_unitize(other)).g0;
 }
 
 fn point_dipole_cosine_angle(self_: Point, other: Dipole) -> f32 {
-    return scalar_bulk_norm(point_dipole_weight_contraction(point_unitize(self_), dipole_unitize(other))).g0;
+    return point_dipole_weight_contraction(point_unitize(self_), dipole_unitize(other)).g0;
 }
 
 fn point_origin_cosine_angle(self_: Point, other: Origin) -> f32 {
-    return scalar_bulk_norm(point_origin_weight_contraction(point_unitize(self_), origin_unitize(other))).g0;
+    return point_origin_weight_contraction(point_unitize(self_), origin_unitize(other)).g0;
 }
 
 fn point_point_cosine_angle(self_: Point, other: Point) -> f32 {
-    return scalar_bulk_norm(point_point_weight_contraction(point_unitize(self_), point_unitize(other))).g0;
+    return point_point_weight_contraction(point_unitize(self_), point_unitize(other)).g0;
 }
 
 fn sphere_circle_cosine_angle(self_: Sphere, other: Circle) -> f32 {
@@ -25346,11 +25346,11 @@ fn sphere_origin_cosine_angle(self_: Sphere, other: Origin) -> f32 {
 }
 
 fn sphere_plane_cosine_angle(self_: Sphere, other: Plane) -> f32 {
-    return scalar_bulk_norm(sphere_plane_weight_contraction(sphere_unitize(self_), plane_unitize(other))).g0;
+    return sphere_plane_weight_contraction(sphere_unitize(self_), plane_unitize(other)).g0;
 }
 
 fn sphere_plane_at_origin_cosine_angle(self_: Sphere, other: PlaneAtOrigin) -> f32 {
-    return scalar_bulk_norm(sphere_plane_at_origin_weight_contraction(sphere_unitize(self_), plane_at_origin_unitize(other))).g0;
+    return sphere_plane_at_origin_weight_contraction(sphere_unitize(self_), plane_at_origin_unitize(other)).g0;
 }
 
 fn sphere_point_cosine_angle(self_: Sphere, other: Point) -> f32 {
@@ -25358,7 +25358,7 @@ fn sphere_point_cosine_angle(self_: Sphere, other: Point) -> f32 {
 }
 
 fn sphere_sphere_cosine_angle(self_: Sphere, other: Sphere) -> f32 {
-    return scalar_bulk_norm(sphere_sphere_weight_contraction(sphere_unitize(self_), sphere_unitize(other))).g0;
+    return sphere_sphere_weight_contraction(sphere_unitize(self_), sphere_unitize(other)).g0;
 }
 
 fn circle_multi_vector_distance(self_: Circle, other: MultiVector) -> Magnitude {

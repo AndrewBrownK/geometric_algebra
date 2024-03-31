@@ -114,6 +114,7 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
 
     fn dual(&self, a: &BasisElement) -> BasisElement {
         // TODO here
+        // TODO yeah here next
 
         // TODO between the RGA poster and the page on CGA Duals...
         //  https://projectivegeometricalgebra.org/projgeomalg.pdf
@@ -206,6 +207,10 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
         //  It seems the "RightWeightDual" is what we're looking for
 
         // TODO what is anti_dual in conformal?
+        //  It is the right complement of the anti-metric
+        //  Not the left complement of whatever
+        //  You can also just do right complement first and normal-metric second, if you
+        //  don't want to define the anti-metric.
         return self.dual(a)
     }
 

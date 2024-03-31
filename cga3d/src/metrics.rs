@@ -40,7 +40,7 @@ impl CosineAngle<Circle> for Circle {
     type Output = f32;
 
     fn cosine_angle(self, other: Circle) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+        self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
@@ -56,7 +56,7 @@ impl CosineAngle<Line> for Circle {
     type Output = f32;
 
     fn cosine_angle(self, other: Line) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+        self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
@@ -64,7 +64,7 @@ impl CosineAngle<LineAtOrigin> for Circle {
     type Output = f32;
 
     fn cosine_angle(self, other: LineAtOrigin) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+        self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
@@ -88,7 +88,7 @@ impl CosineAngle<Dipole> for Dipole {
     type Output = f32;
 
     fn cosine_angle(self, other: Dipole) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+        self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
@@ -96,7 +96,7 @@ impl CosineAngle<Origin> for Dipole {
     type Output = f32;
 
     fn cosine_angle(self, other: Origin) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+        self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
@@ -104,7 +104,7 @@ impl CosineAngle<Point> for Dipole {
     type Output = f32;
 
     fn cosine_angle(self, other: Point) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+        self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
@@ -112,7 +112,7 @@ impl CosineAngle<Circle> for Line {
     type Output = f32;
 
     fn cosine_angle(self, other: Circle) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+        self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
@@ -128,7 +128,7 @@ impl CosineAngle<Line> for Line {
     type Output = f32;
 
     fn cosine_angle(self, other: Line) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+        self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
@@ -136,7 +136,7 @@ impl CosineAngle<LineAtOrigin> for Line {
     type Output = f32;
 
     fn cosine_angle(self, other: LineAtOrigin) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+        self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
@@ -160,7 +160,7 @@ impl CosineAngle<Circle> for LineAtOrigin {
     type Output = f32;
 
     fn cosine_angle(self, other: Circle) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+        self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
@@ -176,7 +176,7 @@ impl CosineAngle<Line> for LineAtOrigin {
     type Output = f32;
 
     fn cosine_angle(self, other: Line) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+        self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
@@ -184,7 +184,7 @@ impl CosineAngle<LineAtOrigin> for LineAtOrigin {
     type Output = f32;
 
     fn cosine_angle(self, other: LineAtOrigin) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+        self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
@@ -208,7 +208,7 @@ impl CosineAngle<Dipole> for Origin {
     type Output = f32;
 
     fn cosine_angle(self, other: Dipole) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+        self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
@@ -216,7 +216,7 @@ impl CosineAngle<Origin> for Origin {
     type Output = f32;
 
     fn cosine_angle(self, other: Origin) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+        self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
@@ -224,7 +224,7 @@ impl CosineAngle<Point> for Origin {
     type Output = f32;
 
     fn cosine_angle(self, other: Point) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+        self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
@@ -272,7 +272,7 @@ impl CosineAngle<Plane> for Plane {
     type Output = f32;
 
     fn cosine_angle(self, other: Plane) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+        self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
@@ -280,7 +280,7 @@ impl CosineAngle<PlaneAtOrigin> for Plane {
     type Output = f32;
 
     fn cosine_angle(self, other: PlaneAtOrigin) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+        self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
@@ -296,7 +296,7 @@ impl CosineAngle<Sphere> for Plane {
     type Output = f32;
 
     fn cosine_angle(self, other: Sphere) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+        self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
@@ -344,7 +344,7 @@ impl CosineAngle<Plane> for PlaneAtOrigin {
     type Output = f32;
 
     fn cosine_angle(self, other: Plane) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+        self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
@@ -352,7 +352,7 @@ impl CosineAngle<PlaneAtOrigin> for PlaneAtOrigin {
     type Output = f32;
 
     fn cosine_angle(self, other: PlaneAtOrigin) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+        self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
@@ -368,7 +368,7 @@ impl CosineAngle<Sphere> for PlaneAtOrigin {
     type Output = f32;
 
     fn cosine_angle(self, other: Sphere) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+        self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
@@ -376,7 +376,7 @@ impl CosineAngle<Dipole> for Point {
     type Output = f32;
 
     fn cosine_angle(self, other: Dipole) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+        self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
@@ -384,7 +384,7 @@ impl CosineAngle<Origin> for Point {
     type Output = f32;
 
     fn cosine_angle(self, other: Origin) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+        self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
@@ -392,7 +392,7 @@ impl CosineAngle<Point> for Point {
     type Output = f32;
 
     fn cosine_angle(self, other: Point) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+        self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
@@ -440,7 +440,7 @@ impl CosineAngle<Plane> for Sphere {
     type Output = f32;
 
     fn cosine_angle(self, other: Plane) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+        self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
@@ -448,7 +448,7 @@ impl CosineAngle<PlaneAtOrigin> for Sphere {
     type Output = f32;
 
     fn cosine_angle(self, other: PlaneAtOrigin) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+        self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
@@ -464,7 +464,7 @@ impl CosineAngle<Sphere> for Sphere {
     type Output = f32;
 
     fn cosine_angle(self, other: Sphere) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+        self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
