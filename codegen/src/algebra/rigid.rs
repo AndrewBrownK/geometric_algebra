@@ -76,8 +76,11 @@ impl<'a> GeometricAlgebraTrait for RigidGeometricAlgebra<'a> {
     }
 
     fn anti_dual(&self, a: &BasisElement) -> BasisElement {
-        // TODO not actually sure if it is the left_complement
-        return self.left_complement(a);
+        // See pages 81 and 83 of the book
+        let mut result = self.left_complement(&a);
+        result = self.dual(&result);
+        result = self.right_complement(&result);
+        return result;
     }
 
     fn product(&self, a: &BasisElement, b: &BasisElement) -> Vec<BasisElement> {

@@ -2376,7 +2376,7 @@ impl Neg for AntiScalar {
 
     fn neg(self) -> AntiScalar {
         AntiScalar {
-            groups: AntiScalarGroups { g0: -self.group0() },
+            groups: AntiScalarGroups { g0: self.group0() },
         }
     }
 }
@@ -2485,7 +2485,7 @@ impl Neg for Magnitude {
     fn neg(self) -> Magnitude {
         Magnitude {
             groups: MagnitudeGroups {
-                g0: self.group0() * Simd32x2::from(-1.0),
+                g0: self.group0() * Simd32x2::from([-1.0, 1.0]),
             },
         }
     }
@@ -2497,7 +2497,7 @@ impl Neg for Motor {
     fn neg(self) -> Motor {
         Motor {
             groups: MotorGroups {
-                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, 1.0]),
                 g1: self.group1() * Simd32x3::from([-1.0, 1.0, -1.0]),
             },
         }
@@ -2510,7 +2510,7 @@ impl Neg for MultiVector {
     fn neg(self) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: self.group0() * Simd32x2::from(-1.0),
+                g0: self.group0() * Simd32x2::from([-1.0, 1.0]),
                 g1: self.group1() * Simd32x3::from(-1.0),
                 g2: self.group2() * Simd32x2::from(-1.0),
                 g3: self.group3() * Simd32x3::from(-1.0),
@@ -2590,7 +2590,7 @@ impl Neg for Rotor {
     fn neg(self) -> Rotor {
         Rotor {
             groups: RotorGroups {
-                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, 1.0]),
             },
         }
     }
@@ -2638,7 +2638,7 @@ impl Neg for Translator {
     fn neg(self) -> Translator {
         Translator {
             groups: TranslatorGroups {
-                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]),
+                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
             },
         }
     }

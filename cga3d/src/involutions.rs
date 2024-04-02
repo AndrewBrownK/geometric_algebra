@@ -90,9 +90,9 @@ impl AntiDual for Circle {
     fn anti_dual(self) -> Dipole {
         Dipole {
             groups: DipoleGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g1: self.group1(),
-                g2: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], -self.group0()[3]]),
+                g0: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: Simd32x4::from([-self.group2()[0], -self.group2()[1], -self.group2()[2], self.group0()[3]]),
             },
         }
     }
@@ -104,9 +104,9 @@ impl AntiDual for Dipole {
     fn anti_dual(self) -> Circle {
         Circle {
             groups: CircleGroups {
-                g0: Simd32x4::from([-self.group0()[0], -self.group0()[1], -self.group0()[2], self.group2()[3]]),
-                g1: self.group1() * Simd32x3::from(-1.0),
-                g2: Simd32x3::from([-self.group2()[0], self.group2()[1], self.group2()[2]]),
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], -self.group2()[3]]),
+                g1: self.group1(),
+                g2: Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]),
             },
         }
     }
@@ -119,14 +119,14 @@ impl AntiDual for Flector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from([-self.group1()[0], self.group1()[1], self.group1()[2]]),
-                g2: Simd32x2::from([0.0, self.group1()[3]]),
+                g1: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g2: Simd32x2::from([0.0, -self.group1()[3]]),
                 g3: Simd32x3::from(0.0),
                 g4: Simd32x3::from(0.0),
                 g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, -self.group0()[3]]),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -139,7 +139,7 @@ impl AntiDual for Horizon {
 
     fn anti_dual(self) -> Infinity {
         Infinity {
-            groups: InfinityGroups { g0: self.group0() },
+            groups: InfinityGroups { g0: -self.group0() },
         }
     }
 }
@@ -149,7 +149,7 @@ impl AntiDual for Infinity {
 
     fn anti_dual(self) -> Horizon {
         Horizon {
-            groups: HorizonGroups { g0: -self.group0() },
+            groups: HorizonGroups { g0: self.group0() },
         }
     }
 }
@@ -161,8 +161,8 @@ impl AntiDual for Line {
         Dipole {
             groups: DipoleGroups {
                 g0: Simd32x3::from(0.0),
-                g1: self.group0(),
-                g2: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g1: self.group0() * Simd32x3::from(-1.0),
+                g2: Simd32x4::from([-self.group1()[0], -self.group1()[1], -self.group1()[2], 0.0]),
             },
         }
     }
@@ -173,7 +173,9 @@ impl AntiDual for LineAtInfinity {
 
     fn anti_dual(self) -> PointAtInfinity {
         PointAtInfinity {
-            groups: PointAtInfinityGroups { g0: self.group0() },
+            groups: PointAtInfinityGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+            },
         }
     }
 }
@@ -185,7 +187,7 @@ impl AntiDual for LineAtOrigin {
         Dipole {
             groups: DipoleGroups {
                 g0: Simd32x3::from(0.0),
-                g1: self.group0(),
+                g1: self.group0() * Simd32x3::from(-1.0),
                 g2: Simd32x4::from(0.0),
             },
         }
@@ -198,7 +200,7 @@ impl AntiDual for Magnitude {
     fn anti_dual(self) -> Magnitude {
         Magnitude {
             groups: MagnitudeGroups {
-                g0: swizzle!(self.group0(), 1, 0),
+                g0: swizzle!(self.group0(), 1, 0) * Simd32x2::from([1.0, -1.0]),
             },
         }
     }
@@ -214,8 +216,8 @@ impl AntiDual for Motor {
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
                 g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g4: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g5: Simd32x4::from([-self.group1()[0], -self.group1()[1], -self.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -232,17 +234,17 @@ impl AntiDual for MultiVector {
     fn anti_dual(self) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: swizzle!(self.group0(), 1, 0),
-                g1: self.group9() * Simd32x3::from(-1.0),
-                g2: self.group10(),
-                g3: Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]),
-                g4: self.group7(),
-                g5: Simd32x4::from([self.group8()[0], self.group8()[1], self.group8()[2], -self.group6()[3]]),
-                g6: Simd32x4::from([-self.group3()[0], -self.group3()[1], -self.group3()[2], self.group5()[3]]),
-                g7: self.group4() * Simd32x3::from(-1.0),
-                g8: Simd32x3::from([-self.group5()[0], self.group5()[1], self.group5()[2]]),
-                g9: self.group1(),
-                g10: self.group2() * Simd32x2::from(-1.0),
+                g0: swizzle!(self.group0(), 1, 0) * Simd32x2::from([1.0, -1.0]),
+                g1: self.group9(),
+                g2: self.group10() * Simd32x2::from(-1.0),
+                g3: Simd32x3::from([-self.group6()[0], self.group6()[1], self.group6()[2]]),
+                g4: self.group7() * Simd32x3::from(-1.0),
+                g5: Simd32x4::from([-self.group8()[0], -self.group8()[1], -self.group8()[2], self.group6()[3]]),
+                g6: Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], -self.group5()[3]]),
+                g7: self.group4(),
+                g8: Simd32x3::from([self.group5()[0], self.group5()[1], self.group5()[2]]),
+                g9: self.group1() * Simd32x3::from(-1.0),
+                g10: self.group2(),
             },
         }
     }
@@ -254,7 +256,7 @@ impl AntiDual for Origin {
     fn anti_dual(self) -> Circle {
         Circle {
             groups: CircleGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]),
+                g0: Simd32x4::from([0.0, 0.0, 0.0, -self.group0()]),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x3::from(0.0),
             },
@@ -268,8 +270,8 @@ impl AntiDual for Plane {
     fn anti_dual(self) -> RoundPoint {
         RoundPoint {
             groups: RoundPointGroups {
-                g0: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g1: Simd32x2::from([0.0, self.group0()[3]]),
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g1: Simd32x2::from([0.0, -self.group0()[3]]),
             },
         }
     }
@@ -281,7 +283,7 @@ impl AntiDual for PlaneAtOrigin {
     fn anti_dual(self) -> RoundPoint {
         RoundPoint {
             groups: RoundPointGroups {
-                g0: self.group0() * Simd32x3::from(-1.0),
+                g0: self.group0(),
                 g1: Simd32x2::from(0.0),
             },
         }
@@ -294,9 +296,9 @@ impl AntiDual for Point {
     fn anti_dual(self) -> Circle {
         Circle {
             groups: CircleGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
+                g0: Simd32x4::from([0.0, 0.0, 0.0, -self.group0()[3]]),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
             },
         }
     }
@@ -307,9 +309,7 @@ impl AntiDual for PointAtInfinity {
 
     fn anti_dual(self) -> LineAtInfinity {
         LineAtInfinity {
-            groups: LineAtInfinityGroups {
-                g0: self.group0() * Simd32x3::from(-1.0),
-            },
+            groups: LineAtInfinityGroups { g0: self.group0() },
         }
     }
 }
@@ -324,7 +324,7 @@ impl AntiDual for Rotor {
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
                 g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g4: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
                 g5: Simd32x4::from(0.0),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
@@ -342,8 +342,8 @@ impl AntiDual for RoundPoint {
     fn anti_dual(self) -> Sphere {
         Sphere {
             groups: SphereGroups {
-                g0: self.group0(),
-                g1: self.group1() * Simd32x2::from(-1.0),
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1(),
             },
         }
     }
@@ -354,7 +354,7 @@ impl AntiDual for Scalar {
 
     fn anti_dual(self) -> AntiScalar {
         AntiScalar {
-            groups: AntiScalarGroups { g0: self.group0() },
+            groups: AntiScalarGroups { g0: -self.group0() },
         }
     }
 }
@@ -365,8 +365,8 @@ impl AntiDual for Sphere {
     fn anti_dual(self) -> RoundPoint {
         RoundPoint {
             groups: RoundPointGroups {
-                g0: self.group0() * Simd32x3::from(-1.0),
-                g1: self.group1(),
+                g0: self.group0(),
+                g1: self.group1() * Simd32x2::from(-1.0),
             },
         }
     }
@@ -383,7 +383,7 @@ impl AntiDual for Translator {
                 g2: Simd32x2::from(0.0),
                 g3: Simd32x3::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+                g5: Simd32x4::from([-self.group0()[0], -self.group0()[1], -self.group0()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -399,7 +399,7 @@ impl AntiReversal for AntiScalar {
 
     fn anti_reversal(self) -> AntiScalar {
         AntiScalar {
-            groups: AntiScalarGroups { g0: self.group0() },
+            groups: AntiScalarGroups { g0: -self.group0() },
         }
     }
 }
@@ -507,7 +507,9 @@ impl AntiReversal for Magnitude {
 
     fn anti_reversal(self) -> Magnitude {
         Magnitude {
-            groups: MagnitudeGroups { g0: self.group0() },
+            groups: MagnitudeGroups {
+                g0: self.group0() * Simd32x2::from([1.0, -1.0]),
+            },
         }
     }
 }
@@ -518,7 +520,7 @@ impl AntiReversal for Motor {
     fn anti_reversal(self) -> Motor {
         Motor {
             groups: MotorGroups {
-                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, 1.0]),
+                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
                 g1: self.group1() * Simd32x3::from([-1.0, 1.0, -1.0]),
             },
         }
@@ -531,7 +533,7 @@ impl AntiReversal for MultiVector {
     fn anti_reversal(self) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: self.group0(),
+                g0: self.group0() * Simd32x2::from([1.0, -1.0]),
                 g1: self.group1(),
                 g2: self.group2(),
                 g3: self.group3() * Simd32x3::from(-1.0),
@@ -611,7 +613,7 @@ impl AntiReversal for Rotor {
     fn anti_reversal(self) -> Rotor {
         Rotor {
             groups: RotorGroups {
-                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, 1.0]),
+                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
             },
         }
     }
@@ -659,7 +661,7 @@ impl AntiReversal for Translator {
     fn anti_reversal(self) -> Translator {
         Translator {
             groups: TranslatorGroups {
-                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
+                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]),
             },
         }
     }
@@ -670,7 +672,7 @@ impl Automorphism for AntiScalar {
 
     fn automorphism(self) -> AntiScalar {
         AntiScalar {
-            groups: AntiScalarGroups { g0: -self.group0() },
+            groups: AntiScalarGroups { g0: self.group0() },
         }
     }
 }
@@ -778,9 +780,7 @@ impl Automorphism for Magnitude {
 
     fn automorphism(self) -> Magnitude {
         Magnitude {
-            groups: MagnitudeGroups {
-                g0: self.group0() * Simd32x2::from([1.0, -1.0]),
-            },
+            groups: MagnitudeGroups { g0: self.group0() },
         }
     }
 }
@@ -791,7 +791,7 @@ impl Automorphism for Motor {
     fn automorphism(self) -> Motor {
         Motor {
             groups: MotorGroups {
-                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, 1.0]),
                 g1: self.group1() * Simd32x3::from([-1.0, 1.0, -1.0]),
             },
         }
@@ -804,7 +804,7 @@ impl Automorphism for MultiVector {
     fn automorphism(self) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: self.group0() * Simd32x2::from([1.0, -1.0]),
+                g0: self.group0(),
                 g1: self.group1() * Simd32x3::from(-1.0),
                 g2: self.group2() * Simd32x2::from(-1.0),
                 g3: self.group3(),
@@ -880,7 +880,7 @@ impl Automorphism for Rotor {
     fn automorphism(self) -> Rotor {
         Rotor {
             groups: RotorGroups {
-                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, 1.0]),
             },
         }
     }
@@ -928,7 +928,7 @@ impl Automorphism for Translator {
     fn automorphism(self) -> Translator {
         Translator {
             groups: TranslatorGroups {
-                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]),
+                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
             },
         }
     }
@@ -939,7 +939,7 @@ impl Conjugation for AntiScalar {
 
     fn conjugation(self) -> AntiScalar {
         AntiScalar {
-            groups: AntiScalarGroups { g0: -self.group0() },
+            groups: AntiScalarGroups { g0: self.group0() },
         }
     }
 }
@@ -1047,9 +1047,7 @@ impl Conjugation for Magnitude {
 
     fn conjugation(self) -> Magnitude {
         Magnitude {
-            groups: MagnitudeGroups {
-                g0: self.group0() * Simd32x2::from([1.0, -1.0]),
-            },
+            groups: MagnitudeGroups { g0: self.group0() },
         }
     }
 }
@@ -1060,7 +1058,7 @@ impl Conjugation for Motor {
     fn conjugation(self) -> Motor {
         Motor {
             groups: MotorGroups {
-                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]),
+                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
                 g1: self.group1() * Simd32x3::from([1.0, -1.0, 1.0]),
             },
         }
@@ -1073,7 +1071,7 @@ impl Conjugation for MultiVector {
     fn conjugation(self) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: self.group0() * Simd32x2::from([1.0, -1.0]),
+                g0: self.group0(),
                 g1: self.group1() * Simd32x3::from(-1.0),
                 g2: self.group2() * Simd32x2::from(-1.0),
                 g3: self.group3() * Simd32x3::from(-1.0),
@@ -1153,7 +1151,7 @@ impl Conjugation for Rotor {
     fn conjugation(self) -> Rotor {
         Rotor {
             groups: RotorGroups {
-                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]),
+                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
             },
         }
     }
@@ -1201,7 +1199,7 @@ impl Conjugation for Translator {
     fn conjugation(self) -> Translator {
         Translator {
             groups: TranslatorGroups {
-                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, 1.0]),
             },
         }
     }
@@ -1467,7 +1465,7 @@ impl Dual for AntiScalar {
 
     fn dual(self) -> Scalar {
         Scalar {
-            groups: ScalarGroups { g0: self.group0() },
+            groups: ScalarGroups { g0: -self.group0() },
         }
     }
 }
@@ -1586,7 +1584,7 @@ impl Dual for Magnitude {
     fn dual(self) -> Magnitude {
         Magnitude {
             groups: MagnitudeGroups {
-                g0: swizzle!(self.group0(), 1, 0),
+                g0: swizzle!(self.group0(), 1, 0) * Simd32x2::from([-1.0, 1.0]),
             },
         }
     }
@@ -1598,7 +1596,7 @@ impl Dual for Motor {
     fn dual(self) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from([self.group0()[3], 0.0]),
+                g0: Simd32x2::from([-self.group0()[3], 0.0]),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
                 g3: Simd32x3::from(0.0),
@@ -1620,7 +1618,7 @@ impl Dual for MultiVector {
     fn dual(self) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: swizzle!(self.group0(), 1, 0),
+                g0: swizzle!(self.group0(), 1, 0) * Simd32x2::from([-1.0, 1.0]),
                 g1: self.group9() * Simd32x3::from(-1.0),
                 g2: self.group10(),
                 g3: Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]),
@@ -1708,7 +1706,7 @@ impl Dual for Rotor {
     fn dual(self) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from([self.group0()[3], 0.0]),
+                g0: Simd32x2::from([-self.group0()[3], 0.0]),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
                 g3: Simd32x3::from(0.0),
@@ -1766,7 +1764,7 @@ impl Dual for Translator {
     fn dual(self) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from([self.group0()[3], 0.0]),
+                g0: Simd32x2::from([-self.group0()[3], 0.0]),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
                 g3: Simd32x3::from(0.0),
@@ -2119,7 +2117,7 @@ impl Reversal for AntiScalar {
 
     fn reversal(self) -> AntiScalar {
         AntiScalar {
-            groups: AntiScalarGroups { g0: self.group0() },
+            groups: AntiScalarGroups { g0: -self.group0() },
         }
     }
 }
@@ -2227,7 +2225,9 @@ impl Reversal for Magnitude {
 
     fn reversal(self) -> Magnitude {
         Magnitude {
-            groups: MagnitudeGroups { g0: self.group0() },
+            groups: MagnitudeGroups {
+                g0: self.group0() * Simd32x2::from([1.0, -1.0]),
+            },
         }
     }
 }
@@ -2238,7 +2238,7 @@ impl Reversal for Motor {
     fn reversal(self) -> Motor {
         Motor {
             groups: MotorGroups {
-                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, 1.0]),
+                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
                 g1: self.group1() * Simd32x3::from([-1.0, 1.0, -1.0]),
             },
         }
@@ -2251,7 +2251,7 @@ impl Reversal for MultiVector {
     fn reversal(self) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: self.group0(),
+                g0: self.group0() * Simd32x2::from([1.0, -1.0]),
                 g1: self.group1(),
                 g2: self.group2(),
                 g3: self.group3() * Simd32x3::from(-1.0),
@@ -2331,7 +2331,7 @@ impl Reversal for Rotor {
     fn reversal(self) -> Rotor {
         Rotor {
             groups: RotorGroups {
-                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, 1.0]),
+                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
             },
         }
     }
@@ -2379,7 +2379,7 @@ impl Reversal for Translator {
     fn reversal(self) -> Translator {
         Translator {
             groups: TranslatorGroups {
-                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
+                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]),
             },
         }
     }

@@ -36,12 +36,6 @@ pub trait GeometricAlgebraTrait {
         BasisElement::from_index(self.basis_size() as BasisElementIndex - 1)
     }
 
-    // Good news...
-    // Can confirm between these two pages that the complement of a BasisElement is always just one BasisElement
-    // Bad news...
-    // Not sure how to determine the sign yet.
-    // https://rigidgeometricalgebra.org/wiki/index.php?title=Complements
-    // https://conformalgeometricalgebra.org/wiki/index.php?title=Exterior_products
     fn right_complement(&self, a: &BasisElement) -> BasisElement;
     fn left_complement(&self, a: &BasisElement) -> BasisElement;
     fn dual(&self, a: &BasisElement) -> BasisElement;

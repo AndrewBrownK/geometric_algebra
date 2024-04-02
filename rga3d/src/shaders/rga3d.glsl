@@ -10409,11 +10409,11 @@ Scalar anti_scalar_left_complement(AntiScalar self) {
 }
 
 Flector flector_left_complement(Flector self) {
-    return Flector(self.g1, self.g0 * vec4(-1.0));
+    return Flector(self.g1 * vec4(-1.0), self.g0);
 }
 
 Origin horizon_left_complement(Horizon self) {
-    return Origin(self.g0);
+    return Origin(-self.g0);
 }
 
 Line line_left_complement(Line self) {
@@ -10437,27 +10437,27 @@ MultiVector motor_left_complement(Motor self) {
 }
 
 MultiVector multi_vector_left_complement(MultiVector self) {
-    return MultiVector(self.g0.yx, self.g4, self.g3 * vec3(-1.0), self.g2 * vec3(-1.0), self.g1 * vec4(-1.0));
+    return MultiVector(self.g0.yx, self.g4 * vec4(-1.0), self.g3 * vec3(-1.0), self.g2 * vec3(-1.0), self.g1);
 }
 
 Horizon origin_left_complement(Origin self) {
-    return Horizon(-self.g0);
+    return Horizon(self.g0);
 }
 
 Point plane_left_complement(Plane self) {
-    return Point(self.g0);
+    return Point(self.g0 * vec4(-1.0));
 }
 
 PointAtInfinity plane_at_origin_left_complement(PlaneAtOrigin self) {
-    return PointAtInfinity(self.g0);
+    return PointAtInfinity(self.g0 * vec3(-1.0));
 }
 
 Plane point_left_complement(Point self) {
-    return Plane(self.g0 * vec4(-1.0));
+    return Plane(self.g0);
 }
 
 PlaneAtOrigin point_at_infinity_left_complement(PointAtInfinity self) {
-    return PlaneAtOrigin(self.g0 * vec3(-1.0));
+    return PlaneAtOrigin(self.g0);
 }
 
 MultiVector rotor_left_complement(Rotor self) {

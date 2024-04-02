@@ -99,7 +99,7 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
             coefficient: a.coefficient,
             index: self.basis_size() as BasisElementIndex - 1 - a.index,
         };
-        result.coefficient *= self.product(a, &result).first().unwrap().coefficient;
+        result.coefficient *= a.primitive_product(&result, &self.surface_generator_squares).coefficient;
         result
     }
 
@@ -108,112 +108,60 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
             coefficient: a.coefficient,
             index: self.basis_size() as BasisElementIndex - 1 - a.index,
         };
-        result.coefficient *= self.product(&result, a).first().unwrap().coefficient;
+        result.coefficient *= a.primitive_product(&result, &self.surface_generator_squares).coefficient;
         result
     }
 
     fn dual(&self, a: &BasisElement) -> BasisElement {
-        //
-        // let origin = (1 as BasisElementIndex) << self.origin;
-        // let infinity = (1 as BasisElementIndex) << self.infinity;
-        // // let projective = origin | infinity;
-        // let anti_scalar = self.anti_scalar_element().index;
-
-
-
-
-
-
-
-
-
-
-
-
-        // TODO here
-        // TODO yeah here next
-
-        // TODO between the RGA poster and the page on CGA Duals...
-        //  https://projectivegeometricalgebra.org/projgeomalg.pdf
-        //  https://conformalgeometricalgebra.org/wiki/index.php?title=Duals
-        //  It seems the "RightBulkDual" is what we're looking for
-
-        let index = a.index;
-        let coefficient = a.coefficient;
-
-
-        // TODO find the pattern that will generalize to all dimensions instead of
-        //  hard coding for cga3d
-        // let exceptions: &[BasisElementIndex] = &[];
-        // let coefficient = a.coefficient;
-        let exceptions: &[BasisElementIndex] = &[
-            0b10,
-            0b1000,
-            0b101,
-            0b10001,
-            0b1010,
-            0b10100,
-            0b11000,
-            0b1011,
-            0b10101,
-            0b11001,
-            0b1110,
-            0b10111,
-            0b11011,
-            0b11110,
-            0b11100,
-            0b11111
-        ];
-        let coefficient = if exceptions.contains(&index) {
-            -1 * a.coefficient
-        } else {
-            a.coefficient
-        };
-
-        let mut result = a.clone();
-        result.coefficient = coefficient;
-        let mut pre_complement = a.clone();
-
-
         let origin = (1 as BasisElementIndex) << self.origin;
         let infinity = (1 as BasisElementIndex) << self.infinity;
-        // let projective = origin | infinity;
-        let anti_scalar = self.anti_scalar_element().index;
 
-        let aligned_infinity = index & infinity == infinity;
-        let aligned_origin = index & origin == origin;
-        if aligned_infinity && !aligned_origin {
-            let new_index = (index + origin) - infinity;
-            result.index = new_index;
-            pre_complement = result.clone();
-            result.index = anti_scalar - new_index;
+        // exomoriphism metric result
+        let mut result = a.clone();
+        let aligned_origin = result.index & origin == origin;
+        let aligned_infinity = result.index & infinity == infinity;
+
+        match (aligned_origin, aligned_infinity) {
+            (true, false) => {
+                result.index -= origin;
+                result.index += infinity;
+                result.coefficient *= -1
+            }
+            (false, true) => {
+                result.index -= infinity;
+                result.index += origin;
+                result.coefficient *= -1
+            }
+            (true, true) => {
+                result.coefficient *= -1;
+            }
+            (false, false) => {
+                // No funny business
+            }
         }
-        if !aligned_infinity && aligned_origin {
-            let new_index = (index + infinity) - origin;
-            result.index = new_index;
-            pre_complement = result.clone();
-            result.index = anti_scalar - new_index;
-        }
-        if aligned_origin == aligned_infinity {
-            result.index = anti_scalar - index;
-        }
-        // result.coefficient *= pre_complement.primitive_product(&result, &self.surface_generator_squares).coefficient;
-        // result.coefficient *= a.primitive_product(&self.right_complement(&a), &self.surface_generator_squares).coefficient;
-        result
+
+        // Take (right) complement of the exomorphism metric result
+        return self.right_complement(&result);
     }
 
     fn anti_dual(&self, a: &BasisElement) -> BasisElement {
-        // TODO between the RGA poster and the page on CGA Duals...
-        //  https://projectivegeometricalgebra.org/projgeomalg.pdf
-        //  https://conformalgeometricalgebra.org/wiki/index.php?title=Duals
-        //  It seems the "RightWeightDual" is what we're looking for
+        // Wat is anti_dual in conformal?
+        //  See pages 68, 81, 83, and 185 of the book
+        //  Could be a lot simpler in the conventional cga3d case, but I want
+        //  to generalize to higher dimensional CGA
 
-        // TODO what is anti_dual in conformal?
-        //  It is the right complement of the anti-metric
-        //  Not the left complement of whatever
-        //  You can also just do right complement first and normal-metric second, if you
-        //  don't want to define the anti-metric.
-        return self.dual(a)
+        // First take the left complement according to the latter formulation of the
+        // anti-metric on page 68
+        let mut result = self.left_complement(&a);
+
+        // Then apply the exo-metric and right complement at once by applying dual
+        // This gives us the result of applying the exo-anti-metric
+        result = self.dual(&result);
+
+        // Then right complement again to get the anti-dual
+        result = self.right_complement(&result);
+
+        return result
     }
 
     fn product(&self, a: &BasisElement, b: &BasisElement) -> Vec<BasisElement> {

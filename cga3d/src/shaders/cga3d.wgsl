@@ -330,7 +330,7 @@ fn translator_zero() -> Translator {
 }
 
 fn anti_scalar_neg(self_: AntiScalar) -> AntiScalar {
-    return AntiScalar(-self_.g0);
+    return AntiScalar(self_.g0);
 }
 
 fn circle_neg(self_: Circle) -> Circle {
@@ -366,15 +366,15 @@ fn line_at_origin_neg(self_: LineAtOrigin) -> LineAtOrigin {
 }
 
 fn magnitude_neg(self_: Magnitude) -> Magnitude {
-    return Magnitude(self_.g0 * vec2<f32>(-1.0));
+    return Magnitude(self_.g0 * vec2<f32>(-1.0, 1.0));
 }
 
 fn motor_neg(self_: Motor) -> Motor {
-    return Motor(self_.g0 * vec4<f32>(1.0, -1.0, 1.0, -1.0), self_.g1 * vec3<f32>(-1.0, 1.0, -1.0));
+    return Motor(self_.g0 * vec4<f32>(1.0, -1.0, 1.0, 1.0), self_.g1 * vec3<f32>(-1.0, 1.0, -1.0));
 }
 
 fn multi_vector_neg(self_: MultiVector) -> MultiVector {
-    return MultiVector(self_.g0 * vec2<f32>(-1.0), self_.g1 * vec3<f32>(-1.0), self_.g2 * vec2<f32>(-1.0), self_.g3 * vec3<f32>(-1.0), self_.g4 * vec3<f32>(-1.0), self_.g5 * vec4<f32>(-1.0), self_.g6 * vec4<f32>(1.0, -1.0, 1.0, -1.0), self_.g7 * vec3<f32>(1.0, -1.0, 1.0), self_.g8 * vec3<f32>(-1.0, 1.0, -1.0), self_.g9 * vec3<f32>(1.0, -1.0, 1.0), self_.g10 * vec2<f32>(-1.0, 1.0));
+    return MultiVector(self_.g0 * vec2<f32>(-1.0, 1.0), self_.g1 * vec3<f32>(-1.0), self_.g2 * vec2<f32>(-1.0), self_.g3 * vec3<f32>(-1.0), self_.g4 * vec3<f32>(-1.0), self_.g5 * vec4<f32>(-1.0), self_.g6 * vec4<f32>(1.0, -1.0, 1.0, -1.0), self_.g7 * vec3<f32>(1.0, -1.0, 1.0), self_.g8 * vec3<f32>(-1.0, 1.0, -1.0), self_.g9 * vec3<f32>(1.0, -1.0, 1.0), self_.g10 * vec2<f32>(-1.0, 1.0));
 }
 
 fn origin_neg(self_: Origin) -> Origin {
@@ -398,7 +398,7 @@ fn point_at_infinity_neg(self_: PointAtInfinity) -> PointAtInfinity {
 }
 
 fn rotor_neg(self_: Rotor) -> Rotor {
-    return Rotor(self_.g0 * vec4<f32>(1.0, -1.0, 1.0, -1.0));
+    return Rotor(self_.g0 * vec4<f32>(1.0, -1.0, 1.0, 1.0));
 }
 
 fn round_point_neg(self_: RoundPoint) -> RoundPoint {
@@ -414,7 +414,7 @@ fn sphere_neg(self_: Sphere) -> Sphere {
 }
 
 fn translator_neg(self_: Translator) -> Translator {
-    return Translator(self_.g0 * vec4<f32>(-1.0, 1.0, -1.0, -1.0));
+    return Translator(self_.g0 * vec4<f32>(-1.0, 1.0, -1.0, 1.0));
 }
 
 fn anti_scalar_anti_scalar_add(self_: AntiScalar, other: AntiScalar) -> AntiScalar {
@@ -15298,91 +15298,91 @@ fn anti_scalar_anti_dual(self_: AntiScalar) -> Scalar {
 }
 
 fn circle_anti_dual(self_: Circle) -> Dipole {
-    return Dipole(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), self_.g1, vec4<f32>(self_.g2.x, self_.g2.y, self_.g2.z, -self_.g0.w));
+    return Dipole(vec3<f32>(-self_.g0.x, self_.g0.y, self_.g0.z), self_.g1 * vec3<f32>(-1.0), vec4<f32>(-self_.g2.x, -self_.g2.y, -self_.g2.z, self_.g0.w));
 }
 
 fn dipole_anti_dual(self_: Dipole) -> Circle {
-    return Circle(vec4<f32>(-self_.g0.x, -self_.g0.y, -self_.g0.z, self_.g2.w), self_.g1 * vec3<f32>(-1.0), vec3<f32>(-self_.g2.x, self_.g2.y, self_.g2.z));
+    return Circle(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, -self_.g2.w), self_.g1, vec3<f32>(self_.g2.x, self_.g2.y, self_.g2.z));
 }
 
 fn flector_anti_dual(self_: Flector) -> MultiVector {
-    return MultiVector(vec2<f32>(0.0), vec3<f32>(-self_.g1.x, self_.g1.y, self_.g1.z), vec2<f32>(0.0, self_.g1.w), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0.w), vec3<f32>(0.0), vec3<f32>(-self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0), vec2<f32>(0.0));
+    return MultiVector(vec2<f32>(0.0), vec3<f32>(self_.g1.x, self_.g1.y, self_.g1.z), vec2<f32>(0.0, -self_.g1.w), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, -self_.g0.w), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
 fn horizon_anti_dual(self_: Horizon) -> Infinity {
-    return Infinity(self_.g0);
+    return Infinity(-self_.g0);
 }
 
 fn infinity_anti_dual(self_: Infinity) -> Horizon {
-    return Horizon(-self_.g0);
+    return Horizon(self_.g0);
 }
 
 fn line_anti_dual(self_: Line) -> Dipole {
-    return Dipole(vec3<f32>(0.0), self_.g0, vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0));
+    return Dipole(vec3<f32>(0.0), self_.g0 * vec3<f32>(-1.0), vec4<f32>(-self_.g1.x, -self_.g1.y, -self_.g1.z, 0.0));
 }
 
 fn line_at_infinity_anti_dual(self_: LineAtInfinity) -> PointAtInfinity {
-    return PointAtInfinity(self_.g0);
+    return PointAtInfinity(self_.g0 * vec3<f32>(-1.0));
 }
 
 fn line_at_origin_anti_dual(self_: LineAtOrigin) -> Dipole {
-    return Dipole(vec3<f32>(0.0), self_.g0, vec4<f32>(0.0));
+    return Dipole(vec3<f32>(0.0), self_.g0 * vec3<f32>(-1.0), vec4<f32>(0.0));
 }
 
 fn magnitude_anti_dual(self_: Magnitude) -> Magnitude {
-    return Magnitude(self_.g0.yx);
+    return Magnitude(self_.g0.yx * vec2<f32>(1.0, -1.0));
 }
 
 fn motor_anti_dual(self_: Motor) -> MultiVector {
-    return MultiVector(vec2<f32>(self_.g0.w, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
+    return MultiVector(vec2<f32>(self_.g0.w, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(-self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(-self_.g1.x, -self_.g1.y, -self_.g1.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
 fn multi_vector_anti_dual(self_: MultiVector) -> MultiVector {
-    return MultiVector(self_.g0.yx, self_.g9 * vec3<f32>(-1.0), self_.g10, vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z), self_.g7, vec4<f32>(self_.g8.x, self_.g8.y, self_.g8.z, -self_.g6.w), vec4<f32>(-self_.g3.x, -self_.g3.y, -self_.g3.z, self_.g5.w), self_.g4 * vec3<f32>(-1.0), vec3<f32>(-self_.g5.x, self_.g5.y, self_.g5.z), self_.g1, self_.g2 * vec2<f32>(-1.0));
+    return MultiVector(self_.g0.yx * vec2<f32>(1.0, -1.0), self_.g9, self_.g10 * vec2<f32>(-1.0), vec3<f32>(-self_.g6.x, self_.g6.y, self_.g6.z), self_.g7 * vec3<f32>(-1.0), vec4<f32>(-self_.g8.x, -self_.g8.y, -self_.g8.z, self_.g6.w), vec4<f32>(self_.g3.x, self_.g3.y, self_.g3.z, -self_.g5.w), self_.g4, vec3<f32>(self_.g5.x, self_.g5.y, self_.g5.z), self_.g1 * vec3<f32>(-1.0), self_.g2);
 }
 
 fn origin_anti_dual(self_: Origin) -> Circle {
-    return Circle(vec4<f32>(0.0, 0.0, 0.0, self_.g0), vec3<f32>(0.0), vec3<f32>(0.0));
+    return Circle(vec4<f32>(0.0, 0.0, 0.0, -self_.g0), vec3<f32>(0.0), vec3<f32>(0.0));
 }
 
 fn plane_anti_dual(self_: Plane) -> RoundPoint {
-    return RoundPoint(vec3<f32>(-self_.g0.x, self_.g0.y, self_.g0.z), vec2<f32>(0.0, self_.g0.w));
+    return RoundPoint(vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec2<f32>(0.0, -self_.g0.w));
 }
 
 fn plane_at_origin_anti_dual(self_: PlaneAtOrigin) -> RoundPoint {
-    return RoundPoint(self_.g0 * vec3<f32>(-1.0), vec2<f32>(0.0));
+    return RoundPoint(self_.g0, vec2<f32>(0.0));
 }
 
 fn point_anti_dual(self_: Point) -> Circle {
-    return Circle(vec4<f32>(0.0, 0.0, 0.0, self_.g0.w), vec3<f32>(0.0), vec3<f32>(-self_.g0.x, self_.g0.y, self_.g0.z));
+    return Circle(vec4<f32>(0.0, 0.0, 0.0, -self_.g0.w), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z));
 }
 
 fn point_at_infinity_anti_dual(self_: PointAtInfinity) -> LineAtInfinity {
-    return LineAtInfinity(self_.g0 * vec3<f32>(-1.0));
+    return LineAtInfinity(self_.g0);
 }
 
 fn rotor_anti_dual(self_: Rotor) -> MultiVector {
-    return MultiVector(vec2<f32>(self_.g0.w, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
+    return MultiVector(vec2<f32>(self_.g0.w, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(-self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
 fn round_point_anti_dual(self_: RoundPoint) -> Sphere {
-    return Sphere(self_.g0, self_.g1 * vec2<f32>(-1.0));
+    return Sphere(self_.g0 * vec3<f32>(-1.0), self_.g1);
 }
 
 fn scalar_anti_dual(self_: Scalar) -> AntiScalar {
-    return AntiScalar(self_.g0);
+    return AntiScalar(-self_.g0);
 }
 
 fn sphere_anti_dual(self_: Sphere) -> RoundPoint {
-    return RoundPoint(self_.g0 * vec3<f32>(-1.0), self_.g1);
+    return RoundPoint(self_.g0, self_.g1 * vec2<f32>(-1.0));
 }
 
 fn translator_anti_dual(self_: Translator) -> MultiVector {
-    return MultiVector(vec2<f32>(self_.g0.w, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
+    return MultiVector(vec2<f32>(self_.g0.w, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(-self_.g0.x, -self_.g0.y, -self_.g0.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
 fn anti_scalar_anti_reversal(self_: AntiScalar) -> AntiScalar {
-    return AntiScalar(self_.g0);
+    return AntiScalar(-self_.g0);
 }
 
 fn circle_anti_reversal(self_: Circle) -> Circle {
@@ -15418,15 +15418,15 @@ fn line_at_origin_anti_reversal(self_: LineAtOrigin) -> LineAtOrigin {
 }
 
 fn magnitude_anti_reversal(self_: Magnitude) -> Magnitude {
-    return Magnitude(self_.g0);
+    return Magnitude(self_.g0 * vec2<f32>(1.0, -1.0));
 }
 
 fn motor_anti_reversal(self_: Motor) -> Motor {
-    return Motor(self_.g0 * vec4<f32>(1.0, -1.0, 1.0, 1.0), self_.g1 * vec3<f32>(-1.0, 1.0, -1.0));
+    return Motor(self_.g0 * vec4<f32>(1.0, -1.0, 1.0, -1.0), self_.g1 * vec3<f32>(-1.0, 1.0, -1.0));
 }
 
 fn multi_vector_anti_reversal(self_: MultiVector) -> MultiVector {
-    return MultiVector(self_.g0, self_.g1, self_.g2, self_.g3 * vec3<f32>(-1.0), self_.g4 * vec3<f32>(-1.0), self_.g5 * vec4<f32>(-1.0), self_.g6 * vec4<f32>(1.0, -1.0, 1.0, -1.0), self_.g7 * vec3<f32>(1.0, -1.0, 1.0), self_.g8 * vec3<f32>(-1.0, 1.0, -1.0), self_.g9 * vec3<f32>(-1.0, 1.0, -1.0), self_.g10 * vec2<f32>(1.0, -1.0));
+    return MultiVector(self_.g0 * vec2<f32>(1.0, -1.0), self_.g1, self_.g2, self_.g3 * vec3<f32>(-1.0), self_.g4 * vec3<f32>(-1.0), self_.g5 * vec4<f32>(-1.0), self_.g6 * vec4<f32>(1.0, -1.0, 1.0, -1.0), self_.g7 * vec3<f32>(1.0, -1.0, 1.0), self_.g8 * vec3<f32>(-1.0, 1.0, -1.0), self_.g9 * vec3<f32>(-1.0, 1.0, -1.0), self_.g10 * vec2<f32>(1.0, -1.0));
 }
 
 fn origin_anti_reversal(self_: Origin) -> Origin {
@@ -15450,7 +15450,7 @@ fn point_at_infinity_anti_reversal(self_: PointAtInfinity) -> PointAtInfinity {
 }
 
 fn rotor_anti_reversal(self_: Rotor) -> Rotor {
-    return Rotor(self_.g0 * vec4<f32>(1.0, -1.0, 1.0, 1.0));
+    return Rotor(self_.g0 * vec4<f32>(1.0, -1.0, 1.0, -1.0));
 }
 
 fn round_point_anti_reversal(self_: RoundPoint) -> RoundPoint {
@@ -15466,11 +15466,11 @@ fn sphere_anti_reversal(self_: Sphere) -> Sphere {
 }
 
 fn translator_anti_reversal(self_: Translator) -> Translator {
-    return Translator(self_.g0 * vec4<f32>(-1.0, 1.0, -1.0, 1.0));
+    return Translator(self_.g0 * vec4<f32>(-1.0, 1.0, -1.0, -1.0));
 }
 
 fn anti_scalar_automorphism(self_: AntiScalar) -> AntiScalar {
-    return AntiScalar(-self_.g0);
+    return AntiScalar(self_.g0);
 }
 
 fn circle_automorphism(self_: Circle) -> Circle {
@@ -15506,15 +15506,15 @@ fn line_at_origin_automorphism(self_: LineAtOrigin) -> LineAtOrigin {
 }
 
 fn magnitude_automorphism(self_: Magnitude) -> Magnitude {
-    return Magnitude(self_.g0 * vec2<f32>(1.0, -1.0));
+    return Magnitude(self_.g0);
 }
 
 fn motor_automorphism(self_: Motor) -> Motor {
-    return Motor(self_.g0 * vec4<f32>(1.0, -1.0, 1.0, -1.0), self_.g1 * vec3<f32>(-1.0, 1.0, -1.0));
+    return Motor(self_.g0 * vec4<f32>(1.0, -1.0, 1.0, 1.0), self_.g1 * vec3<f32>(-1.0, 1.0, -1.0));
 }
 
 fn multi_vector_automorphism(self_: MultiVector) -> MultiVector {
-    return MultiVector(self_.g0 * vec2<f32>(1.0, -1.0), self_.g1 * vec3<f32>(-1.0), self_.g2 * vec2<f32>(-1.0), self_.g3, self_.g4, self_.g5, self_.g6 * vec4<f32>(1.0, -1.0, 1.0, -1.0), self_.g7 * vec3<f32>(1.0, -1.0, 1.0), self_.g8 * vec3<f32>(-1.0, 1.0, -1.0), self_.g9 * vec3<f32>(-1.0, 1.0, -1.0), self_.g10 * vec2<f32>(1.0, -1.0));
+    return MultiVector(self_.g0, self_.g1 * vec3<f32>(-1.0), self_.g2 * vec2<f32>(-1.0), self_.g3, self_.g4, self_.g5, self_.g6 * vec4<f32>(1.0, -1.0, 1.0, -1.0), self_.g7 * vec3<f32>(1.0, -1.0, 1.0), self_.g8 * vec3<f32>(-1.0, 1.0, -1.0), self_.g9 * vec3<f32>(-1.0, 1.0, -1.0), self_.g10 * vec2<f32>(1.0, -1.0));
 }
 
 fn origin_automorphism(self_: Origin) -> Origin {
@@ -15538,7 +15538,7 @@ fn point_at_infinity_automorphism(self_: PointAtInfinity) -> PointAtInfinity {
 }
 
 fn rotor_automorphism(self_: Rotor) -> Rotor {
-    return Rotor(self_.g0 * vec4<f32>(1.0, -1.0, 1.0, -1.0));
+    return Rotor(self_.g0 * vec4<f32>(1.0, -1.0, 1.0, 1.0));
 }
 
 fn round_point_automorphism(self_: RoundPoint) -> RoundPoint {
@@ -15554,11 +15554,11 @@ fn sphere_automorphism(self_: Sphere) -> Sphere {
 }
 
 fn translator_automorphism(self_: Translator) -> Translator {
-    return Translator(self_.g0 * vec4<f32>(-1.0, 1.0, -1.0, -1.0));
+    return Translator(self_.g0 * vec4<f32>(-1.0, 1.0, -1.0, 1.0));
 }
 
 fn anti_scalar_conjugation(self_: AntiScalar) -> AntiScalar {
-    return AntiScalar(-self_.g0);
+    return AntiScalar(self_.g0);
 }
 
 fn circle_conjugation(self_: Circle) -> Circle {
@@ -15594,15 +15594,15 @@ fn line_at_origin_conjugation(self_: LineAtOrigin) -> LineAtOrigin {
 }
 
 fn magnitude_conjugation(self_: Magnitude) -> Magnitude {
-    return Magnitude(self_.g0 * vec2<f32>(1.0, -1.0));
+    return Magnitude(self_.g0);
 }
 
 fn motor_conjugation(self_: Motor) -> Motor {
-    return Motor(self_.g0 * vec4<f32>(-1.0, 1.0, -1.0, -1.0), self_.g1 * vec3<f32>(1.0, -1.0, 1.0));
+    return Motor(self_.g0 * vec4<f32>(-1.0, 1.0, -1.0, 1.0), self_.g1 * vec3<f32>(1.0, -1.0, 1.0));
 }
 
 fn multi_vector_conjugation(self_: MultiVector) -> MultiVector {
-    return MultiVector(self_.g0 * vec2<f32>(1.0, -1.0), self_.g1 * vec3<f32>(-1.0), self_.g2 * vec2<f32>(-1.0), self_.g3 * vec3<f32>(-1.0), self_.g4 * vec3<f32>(-1.0), self_.g5 * vec4<f32>(-1.0), self_.g6 * vec4<f32>(-1.0, 1.0, -1.0, 1.0), self_.g7 * vec3<f32>(-1.0, 1.0, -1.0), self_.g8 * vec3<f32>(1.0, -1.0, 1.0), self_.g9 * vec3<f32>(-1.0, 1.0, -1.0), self_.g10 * vec2<f32>(1.0, -1.0));
+    return MultiVector(self_.g0, self_.g1 * vec3<f32>(-1.0), self_.g2 * vec2<f32>(-1.0), self_.g3 * vec3<f32>(-1.0), self_.g4 * vec3<f32>(-1.0), self_.g5 * vec4<f32>(-1.0), self_.g6 * vec4<f32>(-1.0, 1.0, -1.0, 1.0), self_.g7 * vec3<f32>(-1.0, 1.0, -1.0), self_.g8 * vec3<f32>(1.0, -1.0, 1.0), self_.g9 * vec3<f32>(-1.0, 1.0, -1.0), self_.g10 * vec2<f32>(1.0, -1.0));
 }
 
 fn origin_conjugation(self_: Origin) -> Origin {
@@ -15626,7 +15626,7 @@ fn point_at_infinity_conjugation(self_: PointAtInfinity) -> PointAtInfinity {
 }
 
 fn rotor_conjugation(self_: Rotor) -> Rotor {
-    return Rotor(self_.g0 * vec4<f32>(-1.0, 1.0, -1.0, -1.0));
+    return Rotor(self_.g0 * vec4<f32>(-1.0, 1.0, -1.0, 1.0));
 }
 
 fn round_point_conjugation(self_: RoundPoint) -> RoundPoint {
@@ -15642,7 +15642,7 @@ fn sphere_conjugation(self_: Sphere) -> Sphere {
 }
 
 fn translator_conjugation(self_: Translator) -> Translator {
-    return Translator(self_.g0 * vec4<f32>(1.0, -1.0, 1.0, -1.0));
+    return Translator(self_.g0 * vec4<f32>(1.0, -1.0, 1.0, 1.0));
 }
 
 fn anti_scalar_double_complement(self_: AntiScalar) -> AntiScalar {
@@ -15734,7 +15734,7 @@ fn translator_double_complement(self_: Translator) -> Translator {
 }
 
 fn anti_scalar_dual(self_: AntiScalar) -> Scalar {
-    return Scalar(self_.g0);
+    return Scalar(-self_.g0);
 }
 
 fn circle_dual(self_: Circle) -> Dipole {
@@ -15770,15 +15770,15 @@ fn line_at_origin_dual(self_: LineAtOrigin) -> Dipole {
 }
 
 fn magnitude_dual(self_: Magnitude) -> Magnitude {
-    return Magnitude(self_.g0.yx);
+    return Magnitude(self_.g0.yx * vec2<f32>(-1.0, 1.0));
 }
 
 fn motor_dual(self_: Motor) -> MultiVector {
-    return MultiVector(vec2<f32>(self_.g0.w, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
+    return MultiVector(vec2<f32>(-self_.g0.w, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
 fn multi_vector_dual(self_: MultiVector) -> MultiVector {
-    return MultiVector(self_.g0.yx, self_.g9 * vec3<f32>(-1.0), self_.g10, vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z), self_.g7, vec4<f32>(self_.g8.x, self_.g8.y, self_.g8.z, -self_.g6.w), vec4<f32>(-self_.g3.x, -self_.g3.y, -self_.g3.z, self_.g5.w), self_.g4 * vec3<f32>(-1.0), vec3<f32>(-self_.g5.x, self_.g5.y, self_.g5.z), self_.g1, self_.g2 * vec2<f32>(-1.0));
+    return MultiVector(self_.g0.yx * vec2<f32>(-1.0, 1.0), self_.g9 * vec3<f32>(-1.0), self_.g10, vec3<f32>(self_.g6.x, self_.g6.y, self_.g6.z), self_.g7, vec4<f32>(self_.g8.x, self_.g8.y, self_.g8.z, -self_.g6.w), vec4<f32>(-self_.g3.x, -self_.g3.y, -self_.g3.z, self_.g5.w), self_.g4 * vec3<f32>(-1.0), vec3<f32>(-self_.g5.x, self_.g5.y, self_.g5.z), self_.g1, self_.g2 * vec2<f32>(-1.0));
 }
 
 fn origin_dual(self_: Origin) -> Circle {
@@ -15802,7 +15802,7 @@ fn point_at_infinity_dual(self_: PointAtInfinity) -> LineAtInfinity {
 }
 
 fn rotor_dual(self_: Rotor) -> MultiVector {
-    return MultiVector(vec2<f32>(self_.g0.w, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
+    return MultiVector(vec2<f32>(-self_.g0.w, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
 fn round_point_dual(self_: RoundPoint) -> Sphere {
@@ -15818,7 +15818,7 @@ fn sphere_dual(self_: Sphere) -> RoundPoint {
 }
 
 fn translator_dual(self_: Translator) -> MultiVector {
-    return MultiVector(vec2<f32>(self_.g0.w, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
+    return MultiVector(vec2<f32>(-self_.g0.w, 0.0), vec3<f32>(0.0), vec2<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec2<f32>(0.0));
 }
 
 fn anti_scalar_left_complement(self_: AntiScalar) -> Scalar {
@@ -15910,7 +15910,7 @@ fn translator_left_complement(self_: Translator) -> MultiVector {
 }
 
 fn anti_scalar_reversal(self_: AntiScalar) -> AntiScalar {
-    return AntiScalar(self_.g0);
+    return AntiScalar(-self_.g0);
 }
 
 fn circle_reversal(self_: Circle) -> Circle {
@@ -15946,15 +15946,15 @@ fn line_at_origin_reversal(self_: LineAtOrigin) -> LineAtOrigin {
 }
 
 fn magnitude_reversal(self_: Magnitude) -> Magnitude {
-    return Magnitude(self_.g0);
+    return Magnitude(self_.g0 * vec2<f32>(1.0, -1.0));
 }
 
 fn motor_reversal(self_: Motor) -> Motor {
-    return Motor(self_.g0 * vec4<f32>(1.0, -1.0, 1.0, 1.0), self_.g1 * vec3<f32>(-1.0, 1.0, -1.0));
+    return Motor(self_.g0 * vec4<f32>(1.0, -1.0, 1.0, -1.0), self_.g1 * vec3<f32>(-1.0, 1.0, -1.0));
 }
 
 fn multi_vector_reversal(self_: MultiVector) -> MultiVector {
-    return MultiVector(self_.g0, self_.g1, self_.g2, self_.g3 * vec3<f32>(-1.0), self_.g4 * vec3<f32>(-1.0), self_.g5 * vec4<f32>(-1.0), self_.g6 * vec4<f32>(1.0, -1.0, 1.0, -1.0), self_.g7 * vec3<f32>(1.0, -1.0, 1.0), self_.g8 * vec3<f32>(-1.0, 1.0, -1.0), self_.g9 * vec3<f32>(-1.0, 1.0, -1.0), self_.g10 * vec2<f32>(1.0, -1.0));
+    return MultiVector(self_.g0 * vec2<f32>(1.0, -1.0), self_.g1, self_.g2, self_.g3 * vec3<f32>(-1.0), self_.g4 * vec3<f32>(-1.0), self_.g5 * vec4<f32>(-1.0), self_.g6 * vec4<f32>(1.0, -1.0, 1.0, -1.0), self_.g7 * vec3<f32>(1.0, -1.0, 1.0), self_.g8 * vec3<f32>(-1.0, 1.0, -1.0), self_.g9 * vec3<f32>(-1.0, 1.0, -1.0), self_.g10 * vec2<f32>(1.0, -1.0));
 }
 
 fn origin_reversal(self_: Origin) -> Origin {
@@ -15978,7 +15978,7 @@ fn point_at_infinity_reversal(self_: PointAtInfinity) -> PointAtInfinity {
 }
 
 fn rotor_reversal(self_: Rotor) -> Rotor {
-    return Rotor(self_.g0 * vec4<f32>(1.0, -1.0, 1.0, 1.0));
+    return Rotor(self_.g0 * vec4<f32>(1.0, -1.0, 1.0, -1.0));
 }
 
 fn round_point_reversal(self_: RoundPoint) -> RoundPoint {
@@ -15994,7 +15994,7 @@ fn sphere_reversal(self_: Sphere) -> Sphere {
 }
 
 fn translator_reversal(self_: Translator) -> Translator {
-    return Translator(self_.g0 * vec4<f32>(-1.0, 1.0, -1.0, 1.0));
+    return Translator(self_.g0 * vec4<f32>(-1.0, 1.0, -1.0, -1.0));
 }
 
 fn anti_scalar_right_complement(self_: AntiScalar) -> Scalar {

@@ -330,7 +330,7 @@ Translator translator_zero() {
 }
 
 AntiScalar anti_scalar_neg(AntiScalar self) {
-    return AntiScalar(-self.g0);
+    return AntiScalar(self.g0);
 }
 
 Circle circle_neg(Circle self) {
@@ -366,15 +366,15 @@ LineAtOrigin line_at_origin_neg(LineAtOrigin self) {
 }
 
 Magnitude magnitude_neg(Magnitude self) {
-    return Magnitude(self.g0 * vec2(-1.0));
+    return Magnitude(self.g0 * vec2(-1.0, 1.0));
 }
 
 Motor motor_neg(Motor self) {
-    return Motor(self.g0 * vec4(1.0, -1.0, 1.0, -1.0), self.g1 * vec3(-1.0, 1.0, -1.0));
+    return Motor(self.g0 * vec4(1.0, -1.0, 1.0, 1.0), self.g1 * vec3(-1.0, 1.0, -1.0));
 }
 
 MultiVector multi_vector_neg(MultiVector self) {
-    return MultiVector(self.g0 * vec2(-1.0), self.g1 * vec3(-1.0), self.g2 * vec2(-1.0), self.g3 * vec3(-1.0), self.g4 * vec3(-1.0), self.g5 * vec4(-1.0), self.g6 * vec4(1.0, -1.0, 1.0, -1.0), self.g7 * vec3(1.0, -1.0, 1.0), self.g8 * vec3(-1.0, 1.0, -1.0), self.g9 * vec3(1.0, -1.0, 1.0), self.g10 * vec2(-1.0, 1.0));
+    return MultiVector(self.g0 * vec2(-1.0, 1.0), self.g1 * vec3(-1.0), self.g2 * vec2(-1.0), self.g3 * vec3(-1.0), self.g4 * vec3(-1.0), self.g5 * vec4(-1.0), self.g6 * vec4(1.0, -1.0, 1.0, -1.0), self.g7 * vec3(1.0, -1.0, 1.0), self.g8 * vec3(-1.0, 1.0, -1.0), self.g9 * vec3(1.0, -1.0, 1.0), self.g10 * vec2(-1.0, 1.0));
 }
 
 Origin origin_neg(Origin self) {
@@ -398,7 +398,7 @@ PointAtInfinity point_at_infinity_neg(PointAtInfinity self) {
 }
 
 Rotor rotor_neg(Rotor self) {
-    return Rotor(self.g0 * vec4(1.0, -1.0, 1.0, -1.0));
+    return Rotor(self.g0 * vec4(1.0, -1.0, 1.0, 1.0));
 }
 
 RoundPoint round_point_neg(RoundPoint self) {
@@ -414,7 +414,7 @@ Sphere sphere_neg(Sphere self) {
 }
 
 Translator translator_neg(Translator self) {
-    return Translator(self.g0 * vec4(-1.0, 1.0, -1.0, -1.0));
+    return Translator(self.g0 * vec4(-1.0, 1.0, -1.0, 1.0));
 }
 
 AntiScalar anti_scalar_anti_scalar_add(AntiScalar self, AntiScalar other) {
@@ -15298,91 +15298,91 @@ Scalar anti_scalar_anti_dual(AntiScalar self) {
 }
 
 Dipole circle_anti_dual(Circle self) {
-    return Dipole(vec3(self.g0.x, self.g0.y, self.g0.z), self.g1, vec4(self.g2.x, self.g2.y, self.g2.z, -self.g0.w));
+    return Dipole(vec3(-self.g0.x, self.g0.y, self.g0.z), self.g1 * vec3(-1.0), vec4(-self.g2.x, -self.g2.y, -self.g2.z, self.g0.w));
 }
 
 Circle dipole_anti_dual(Dipole self) {
-    return Circle(vec4(-self.g0.x, -self.g0.y, -self.g0.z, self.g2.w), self.g1 * vec3(-1.0), vec3(-self.g2.x, self.g2.y, self.g2.z));
+    return Circle(vec4(self.g0.x, self.g0.y, self.g0.z, -self.g2.w), self.g1, vec3(self.g2.x, self.g2.y, self.g2.z));
 }
 
 MultiVector flector_anti_dual(Flector self) {
-    return MultiVector(vec2(0.0), vec3(-self.g1.x, self.g1.y, self.g1.z), vec2(0.0, self.g1.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0, 0.0, 0.0, self.g0.w), vec3(0.0), vec3(-self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec2(0.0));
+    return MultiVector(vec2(0.0), vec3(self.g1.x, self.g1.y, self.g1.z), vec2(0.0, -self.g1.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0, 0.0, 0.0, -self.g0.w), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec2(0.0));
 }
 
 Infinity horizon_anti_dual(Horizon self) {
-    return Infinity(self.g0);
+    return Infinity(-self.g0);
 }
 
 Horizon infinity_anti_dual(Infinity self) {
-    return Horizon(-self.g0);
+    return Horizon(self.g0);
 }
 
 Dipole line_anti_dual(Line self) {
-    return Dipole(vec3(0.0), self.g0, vec4(self.g1.x, self.g1.y, self.g1.z, 0.0));
+    return Dipole(vec3(0.0), self.g0 * vec3(-1.0), vec4(-self.g1.x, -self.g1.y, -self.g1.z, 0.0));
 }
 
 PointAtInfinity line_at_infinity_anti_dual(LineAtInfinity self) {
-    return PointAtInfinity(self.g0);
+    return PointAtInfinity(self.g0 * vec3(-1.0));
 }
 
 Dipole line_at_origin_anti_dual(LineAtOrigin self) {
-    return Dipole(vec3(0.0), self.g0, vec4(0.0));
+    return Dipole(vec3(0.0), self.g0 * vec3(-1.0), vec4(0.0));
 }
 
 Magnitude magnitude_anti_dual(Magnitude self) {
-    return Magnitude(self.g0.yx);
+    return Magnitude(self.g0.yx * vec2(1.0, -1.0));
 }
 
 MultiVector motor_anti_dual(Motor self) {
-    return MultiVector(vec2(self.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec4(self.g1.x, self.g1.y, self.g1.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
+    return MultiVector(vec2(self.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(-self.g0.x, self.g0.y, self.g0.z), vec4(-self.g1.x, -self.g1.y, -self.g1.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
 MultiVector multi_vector_anti_dual(MultiVector self) {
-    return MultiVector(self.g0.yx, self.g9 * vec3(-1.0), self.g10, vec3(self.g6.x, self.g6.y, self.g6.z), self.g7, vec4(self.g8.x, self.g8.y, self.g8.z, -self.g6.w), vec4(-self.g3.x, -self.g3.y, -self.g3.z, self.g5.w), self.g4 * vec3(-1.0), vec3(-self.g5.x, self.g5.y, self.g5.z), self.g1, self.g2 * vec2(-1.0));
+    return MultiVector(self.g0.yx * vec2(1.0, -1.0), self.g9, self.g10 * vec2(-1.0), vec3(-self.g6.x, self.g6.y, self.g6.z), self.g7 * vec3(-1.0), vec4(-self.g8.x, -self.g8.y, -self.g8.z, self.g6.w), vec4(self.g3.x, self.g3.y, self.g3.z, -self.g5.w), self.g4, vec3(self.g5.x, self.g5.y, self.g5.z), self.g1 * vec3(-1.0), self.g2);
 }
 
 Circle origin_anti_dual(Origin self) {
-    return Circle(vec4(0.0, 0.0, 0.0, self.g0), vec3(0.0), vec3(0.0));
+    return Circle(vec4(0.0, 0.0, 0.0, -self.g0), vec3(0.0), vec3(0.0));
 }
 
 RoundPoint plane_anti_dual(Plane self) {
-    return RoundPoint(vec3(-self.g0.x, self.g0.y, self.g0.z), vec2(0.0, self.g0.w));
+    return RoundPoint(vec3(self.g0.x, self.g0.y, self.g0.z), vec2(0.0, -self.g0.w));
 }
 
 RoundPoint plane_at_origin_anti_dual(PlaneAtOrigin self) {
-    return RoundPoint(self.g0 * vec3(-1.0), vec2(0.0));
+    return RoundPoint(self.g0, vec2(0.0));
 }
 
 Circle point_anti_dual(Point self) {
-    return Circle(vec4(0.0, 0.0, 0.0, self.g0.w), vec3(0.0), vec3(-self.g0.x, self.g0.y, self.g0.z));
+    return Circle(vec4(0.0, 0.0, 0.0, -self.g0.w), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z));
 }
 
 LineAtInfinity point_at_infinity_anti_dual(PointAtInfinity self) {
-    return LineAtInfinity(self.g0 * vec3(-1.0));
+    return LineAtInfinity(self.g0);
 }
 
 MultiVector rotor_anti_dual(Rotor self) {
-    return MultiVector(vec2(self.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
+    return MultiVector(vec2(self.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(-self.g0.x, self.g0.y, self.g0.z), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
 Sphere round_point_anti_dual(RoundPoint self) {
-    return Sphere(self.g0, self.g1 * vec2(-1.0));
+    return Sphere(self.g0 * vec3(-1.0), self.g1);
 }
 
 AntiScalar scalar_anti_dual(Scalar self) {
-    return AntiScalar(self.g0);
+    return AntiScalar(-self.g0);
 }
 
 RoundPoint sphere_anti_dual(Sphere self) {
-    return RoundPoint(self.g0 * vec3(-1.0), self.g1);
+    return RoundPoint(self.g0, self.g1 * vec2(-1.0));
 }
 
 MultiVector translator_anti_dual(Translator self) {
-    return MultiVector(vec2(self.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
+    return MultiVector(vec2(self.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(-self.g0.x, -self.g0.y, -self.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
 AntiScalar anti_scalar_anti_reversal(AntiScalar self) {
-    return AntiScalar(self.g0);
+    return AntiScalar(-self.g0);
 }
 
 Circle circle_anti_reversal(Circle self) {
@@ -15418,15 +15418,15 @@ LineAtOrigin line_at_origin_anti_reversal(LineAtOrigin self) {
 }
 
 Magnitude magnitude_anti_reversal(Magnitude self) {
-    return Magnitude(self.g0);
+    return Magnitude(self.g0 * vec2(1.0, -1.0));
 }
 
 Motor motor_anti_reversal(Motor self) {
-    return Motor(self.g0 * vec4(1.0, -1.0, 1.0, 1.0), self.g1 * vec3(-1.0, 1.0, -1.0));
+    return Motor(self.g0 * vec4(1.0, -1.0, 1.0, -1.0), self.g1 * vec3(-1.0, 1.0, -1.0));
 }
 
 MultiVector multi_vector_anti_reversal(MultiVector self) {
-    return MultiVector(self.g0, self.g1, self.g2, self.g3 * vec3(-1.0), self.g4 * vec3(-1.0), self.g5 * vec4(-1.0), self.g6 * vec4(1.0, -1.0, 1.0, -1.0), self.g7 * vec3(1.0, -1.0, 1.0), self.g8 * vec3(-1.0, 1.0, -1.0), self.g9 * vec3(-1.0, 1.0, -1.0), self.g10 * vec2(1.0, -1.0));
+    return MultiVector(self.g0 * vec2(1.0, -1.0), self.g1, self.g2, self.g3 * vec3(-1.0), self.g4 * vec3(-1.0), self.g5 * vec4(-1.0), self.g6 * vec4(1.0, -1.0, 1.0, -1.0), self.g7 * vec3(1.0, -1.0, 1.0), self.g8 * vec3(-1.0, 1.0, -1.0), self.g9 * vec3(-1.0, 1.0, -1.0), self.g10 * vec2(1.0, -1.0));
 }
 
 Origin origin_anti_reversal(Origin self) {
@@ -15450,7 +15450,7 @@ PointAtInfinity point_at_infinity_anti_reversal(PointAtInfinity self) {
 }
 
 Rotor rotor_anti_reversal(Rotor self) {
-    return Rotor(self.g0 * vec4(1.0, -1.0, 1.0, 1.0));
+    return Rotor(self.g0 * vec4(1.0, -1.0, 1.0, -1.0));
 }
 
 RoundPoint round_point_anti_reversal(RoundPoint self) {
@@ -15466,11 +15466,11 @@ Sphere sphere_anti_reversal(Sphere self) {
 }
 
 Translator translator_anti_reversal(Translator self) {
-    return Translator(self.g0 * vec4(-1.0, 1.0, -1.0, 1.0));
+    return Translator(self.g0 * vec4(-1.0, 1.0, -1.0, -1.0));
 }
 
 AntiScalar anti_scalar_automorphism(AntiScalar self) {
-    return AntiScalar(-self.g0);
+    return AntiScalar(self.g0);
 }
 
 Circle circle_automorphism(Circle self) {
@@ -15506,15 +15506,15 @@ LineAtOrigin line_at_origin_automorphism(LineAtOrigin self) {
 }
 
 Magnitude magnitude_automorphism(Magnitude self) {
-    return Magnitude(self.g0 * vec2(1.0, -1.0));
+    return Magnitude(self.g0);
 }
 
 Motor motor_automorphism(Motor self) {
-    return Motor(self.g0 * vec4(1.0, -1.0, 1.0, -1.0), self.g1 * vec3(-1.0, 1.0, -1.0));
+    return Motor(self.g0 * vec4(1.0, -1.0, 1.0, 1.0), self.g1 * vec3(-1.0, 1.0, -1.0));
 }
 
 MultiVector multi_vector_automorphism(MultiVector self) {
-    return MultiVector(self.g0 * vec2(1.0, -1.0), self.g1 * vec3(-1.0), self.g2 * vec2(-1.0), self.g3, self.g4, self.g5, self.g6 * vec4(1.0, -1.0, 1.0, -1.0), self.g7 * vec3(1.0, -1.0, 1.0), self.g8 * vec3(-1.0, 1.0, -1.0), self.g9 * vec3(-1.0, 1.0, -1.0), self.g10 * vec2(1.0, -1.0));
+    return MultiVector(self.g0, self.g1 * vec3(-1.0), self.g2 * vec2(-1.0), self.g3, self.g4, self.g5, self.g6 * vec4(1.0, -1.0, 1.0, -1.0), self.g7 * vec3(1.0, -1.0, 1.0), self.g8 * vec3(-1.0, 1.0, -1.0), self.g9 * vec3(-1.0, 1.0, -1.0), self.g10 * vec2(1.0, -1.0));
 }
 
 Origin origin_automorphism(Origin self) {
@@ -15538,7 +15538,7 @@ PointAtInfinity point_at_infinity_automorphism(PointAtInfinity self) {
 }
 
 Rotor rotor_automorphism(Rotor self) {
-    return Rotor(self.g0 * vec4(1.0, -1.0, 1.0, -1.0));
+    return Rotor(self.g0 * vec4(1.0, -1.0, 1.0, 1.0));
 }
 
 RoundPoint round_point_automorphism(RoundPoint self) {
@@ -15554,11 +15554,11 @@ Sphere sphere_automorphism(Sphere self) {
 }
 
 Translator translator_automorphism(Translator self) {
-    return Translator(self.g0 * vec4(-1.0, 1.0, -1.0, -1.0));
+    return Translator(self.g0 * vec4(-1.0, 1.0, -1.0, 1.0));
 }
 
 AntiScalar anti_scalar_conjugation(AntiScalar self) {
-    return AntiScalar(-self.g0);
+    return AntiScalar(self.g0);
 }
 
 Circle circle_conjugation(Circle self) {
@@ -15594,15 +15594,15 @@ LineAtOrigin line_at_origin_conjugation(LineAtOrigin self) {
 }
 
 Magnitude magnitude_conjugation(Magnitude self) {
-    return Magnitude(self.g0 * vec2(1.0, -1.0));
+    return Magnitude(self.g0);
 }
 
 Motor motor_conjugation(Motor self) {
-    return Motor(self.g0 * vec4(-1.0, 1.0, -1.0, -1.0), self.g1 * vec3(1.0, -1.0, 1.0));
+    return Motor(self.g0 * vec4(-1.0, 1.0, -1.0, 1.0), self.g1 * vec3(1.0, -1.0, 1.0));
 }
 
 MultiVector multi_vector_conjugation(MultiVector self) {
-    return MultiVector(self.g0 * vec2(1.0, -1.0), self.g1 * vec3(-1.0), self.g2 * vec2(-1.0), self.g3 * vec3(-1.0), self.g4 * vec3(-1.0), self.g5 * vec4(-1.0), self.g6 * vec4(-1.0, 1.0, -1.0, 1.0), self.g7 * vec3(-1.0, 1.0, -1.0), self.g8 * vec3(1.0, -1.0, 1.0), self.g9 * vec3(-1.0, 1.0, -1.0), self.g10 * vec2(1.0, -1.0));
+    return MultiVector(self.g0, self.g1 * vec3(-1.0), self.g2 * vec2(-1.0), self.g3 * vec3(-1.0), self.g4 * vec3(-1.0), self.g5 * vec4(-1.0), self.g6 * vec4(-1.0, 1.0, -1.0, 1.0), self.g7 * vec3(-1.0, 1.0, -1.0), self.g8 * vec3(1.0, -1.0, 1.0), self.g9 * vec3(-1.0, 1.0, -1.0), self.g10 * vec2(1.0, -1.0));
 }
 
 Origin origin_conjugation(Origin self) {
@@ -15626,7 +15626,7 @@ PointAtInfinity point_at_infinity_conjugation(PointAtInfinity self) {
 }
 
 Rotor rotor_conjugation(Rotor self) {
-    return Rotor(self.g0 * vec4(-1.0, 1.0, -1.0, -1.0));
+    return Rotor(self.g0 * vec4(-1.0, 1.0, -1.0, 1.0));
 }
 
 RoundPoint round_point_conjugation(RoundPoint self) {
@@ -15642,7 +15642,7 @@ Sphere sphere_conjugation(Sphere self) {
 }
 
 Translator translator_conjugation(Translator self) {
-    return Translator(self.g0 * vec4(1.0, -1.0, 1.0, -1.0));
+    return Translator(self.g0 * vec4(1.0, -1.0, 1.0, 1.0));
 }
 
 AntiScalar anti_scalar_double_complement(AntiScalar self) {
@@ -15734,7 +15734,7 @@ Translator translator_double_complement(Translator self) {
 }
 
 Scalar anti_scalar_dual(AntiScalar self) {
-    return Scalar(self.g0);
+    return Scalar(-self.g0);
 }
 
 Dipole circle_dual(Circle self) {
@@ -15770,15 +15770,15 @@ Dipole line_at_origin_dual(LineAtOrigin self) {
 }
 
 Magnitude magnitude_dual(Magnitude self) {
-    return Magnitude(self.g0.yx);
+    return Magnitude(self.g0.yx * vec2(-1.0, 1.0));
 }
 
 MultiVector motor_dual(Motor self) {
-    return MultiVector(vec2(self.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec4(self.g1.x, self.g1.y, self.g1.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
+    return MultiVector(vec2(-self.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec4(self.g1.x, self.g1.y, self.g1.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
 MultiVector multi_vector_dual(MultiVector self) {
-    return MultiVector(self.g0.yx, self.g9 * vec3(-1.0), self.g10, vec3(self.g6.x, self.g6.y, self.g6.z), self.g7, vec4(self.g8.x, self.g8.y, self.g8.z, -self.g6.w), vec4(-self.g3.x, -self.g3.y, -self.g3.z, self.g5.w), self.g4 * vec3(-1.0), vec3(-self.g5.x, self.g5.y, self.g5.z), self.g1, self.g2 * vec2(-1.0));
+    return MultiVector(self.g0.yx * vec2(-1.0, 1.0), self.g9 * vec3(-1.0), self.g10, vec3(self.g6.x, self.g6.y, self.g6.z), self.g7, vec4(self.g8.x, self.g8.y, self.g8.z, -self.g6.w), vec4(-self.g3.x, -self.g3.y, -self.g3.z, self.g5.w), self.g4 * vec3(-1.0), vec3(-self.g5.x, self.g5.y, self.g5.z), self.g1, self.g2 * vec2(-1.0));
 }
 
 Circle origin_dual(Origin self) {
@@ -15802,7 +15802,7 @@ LineAtInfinity point_at_infinity_dual(PointAtInfinity self) {
 }
 
 MultiVector rotor_dual(Rotor self) {
-    return MultiVector(vec2(self.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
+    return MultiVector(vec2(-self.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
 Sphere round_point_dual(RoundPoint self) {
@@ -15818,7 +15818,7 @@ RoundPoint sphere_dual(Sphere self) {
 }
 
 MultiVector translator_dual(Translator self) {
-    return MultiVector(vec2(self.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
+    return MultiVector(vec2(-self.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
 Scalar anti_scalar_left_complement(AntiScalar self) {
@@ -15910,7 +15910,7 @@ MultiVector translator_left_complement(Translator self) {
 }
 
 AntiScalar anti_scalar_reversal(AntiScalar self) {
-    return AntiScalar(self.g0);
+    return AntiScalar(-self.g0);
 }
 
 Circle circle_reversal(Circle self) {
@@ -15946,15 +15946,15 @@ LineAtOrigin line_at_origin_reversal(LineAtOrigin self) {
 }
 
 Magnitude magnitude_reversal(Magnitude self) {
-    return Magnitude(self.g0);
+    return Magnitude(self.g0 * vec2(1.0, -1.0));
 }
 
 Motor motor_reversal(Motor self) {
-    return Motor(self.g0 * vec4(1.0, -1.0, 1.0, 1.0), self.g1 * vec3(-1.0, 1.0, -1.0));
+    return Motor(self.g0 * vec4(1.0, -1.0, 1.0, -1.0), self.g1 * vec3(-1.0, 1.0, -1.0));
 }
 
 MultiVector multi_vector_reversal(MultiVector self) {
-    return MultiVector(self.g0, self.g1, self.g2, self.g3 * vec3(-1.0), self.g4 * vec3(-1.0), self.g5 * vec4(-1.0), self.g6 * vec4(1.0, -1.0, 1.0, -1.0), self.g7 * vec3(1.0, -1.0, 1.0), self.g8 * vec3(-1.0, 1.0, -1.0), self.g9 * vec3(-1.0, 1.0, -1.0), self.g10 * vec2(1.0, -1.0));
+    return MultiVector(self.g0 * vec2(1.0, -1.0), self.g1, self.g2, self.g3 * vec3(-1.0), self.g4 * vec3(-1.0), self.g5 * vec4(-1.0), self.g6 * vec4(1.0, -1.0, 1.0, -1.0), self.g7 * vec3(1.0, -1.0, 1.0), self.g8 * vec3(-1.0, 1.0, -1.0), self.g9 * vec3(-1.0, 1.0, -1.0), self.g10 * vec2(1.0, -1.0));
 }
 
 Origin origin_reversal(Origin self) {
@@ -15978,7 +15978,7 @@ PointAtInfinity point_at_infinity_reversal(PointAtInfinity self) {
 }
 
 Rotor rotor_reversal(Rotor self) {
-    return Rotor(self.g0 * vec4(1.0, -1.0, 1.0, 1.0));
+    return Rotor(self.g0 * vec4(1.0, -1.0, 1.0, -1.0));
 }
 
 RoundPoint round_point_reversal(RoundPoint self) {
@@ -15994,7 +15994,7 @@ Sphere sphere_reversal(Sphere self) {
 }
 
 Translator translator_reversal(Translator self) {
-    return Translator(self.g0 * vec4(-1.0, 1.0, -1.0, 1.0));
+    return Translator(self.g0 * vec4(-1.0, 1.0, -1.0, -1.0));
 }
 
 Scalar anti_scalar_right_complement(AntiScalar self) {

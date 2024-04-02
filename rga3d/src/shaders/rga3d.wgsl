@@ -10409,11 +10409,11 @@ fn anti_scalar_left_complement(self_: AntiScalar) -> Scalar {
 }
 
 fn flector_left_complement(self_: Flector) -> Flector {
-    return Flector(self_.g1, self_.g0 * vec4<f32>(-1.0));
+    return Flector(self_.g1 * vec4<f32>(-1.0), self_.g0);
 }
 
 fn horizon_left_complement(self_: Horizon) -> Origin {
-    return Origin(self_.g0);
+    return Origin(-self_.g0);
 }
 
 fn line_left_complement(self_: Line) -> Line {
@@ -10437,27 +10437,27 @@ fn motor_left_complement(self_: Motor) -> MultiVector {
 }
 
 fn multi_vector_left_complement(self_: MultiVector) -> MultiVector {
-    return MultiVector(self_.g0.yx, self_.g4, self_.g3 * vec3<f32>(-1.0), self_.g2 * vec3<f32>(-1.0), self_.g1 * vec4<f32>(-1.0));
+    return MultiVector(self_.g0.yx, self_.g4 * vec4<f32>(-1.0), self_.g3 * vec3<f32>(-1.0), self_.g2 * vec3<f32>(-1.0), self_.g1);
 }
 
 fn origin_left_complement(self_: Origin) -> Horizon {
-    return Horizon(-self_.g0);
+    return Horizon(self_.g0);
 }
 
 fn plane_left_complement(self_: Plane) -> Point {
-    return Point(self_.g0);
+    return Point(self_.g0 * vec4<f32>(-1.0));
 }
 
 fn plane_at_origin_left_complement(self_: PlaneAtOrigin) -> PointAtInfinity {
-    return PointAtInfinity(self_.g0);
+    return PointAtInfinity(self_.g0 * vec3<f32>(-1.0));
 }
 
 fn point_left_complement(self_: Point) -> Plane {
-    return Plane(self_.g0 * vec4<f32>(-1.0));
+    return Plane(self_.g0);
 }
 
 fn point_at_infinity_left_complement(self_: PointAtInfinity) -> PlaneAtOrigin {
-    return PlaneAtOrigin(self_.g0 * vec3<f32>(-1.0));
+    return PlaneAtOrigin(self_.g0);
 }
 
 fn rotor_left_complement(self_: Rotor) -> MultiVector {

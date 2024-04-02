@@ -1302,8 +1302,8 @@ impl LeftComplement for Flector {
     fn left_complement(self) -> Flector {
         Flector {
             groups: FlectorGroups {
-                g0: self.group1(),
-                g1: self.group0() * Simd32x4::from(-1.0),
+                g0: self.group1() * Simd32x4::from(-1.0),
+                g1: self.group0(),
             },
         }
     }
@@ -1314,7 +1314,7 @@ impl LeftComplement for Horizon {
 
     fn left_complement(self) -> Origin {
         Origin {
-            groups: OriginGroups { g0: self.group0() },
+            groups: OriginGroups { g0: -self.group0() },
         }
     }
 }
@@ -1391,10 +1391,10 @@ impl LeftComplement for MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: swizzle!(self.group0(), 1, 0),
-                g1: self.group4(),
+                g1: self.group4() * Simd32x4::from(-1.0),
                 g2: self.group3() * Simd32x3::from(-1.0),
                 g3: self.group2() * Simd32x3::from(-1.0),
-                g4: self.group1() * Simd32x4::from(-1.0),
+                g4: self.group1(),
             },
         }
     }
@@ -1405,7 +1405,7 @@ impl LeftComplement for Origin {
 
     fn left_complement(self) -> Horizon {
         Horizon {
-            groups: HorizonGroups { g0: -self.group0() },
+            groups: HorizonGroups { g0: self.group0() },
         }
     }
 }
@@ -1415,7 +1415,9 @@ impl LeftComplement for Plane {
 
     fn left_complement(self) -> Point {
         Point {
-            groups: PointGroups { g0: self.group0() },
+            groups: PointGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
+            },
         }
     }
 }
@@ -1425,7 +1427,9 @@ impl LeftComplement for PlaneAtOrigin {
 
     fn left_complement(self) -> PointAtInfinity {
         PointAtInfinity {
-            groups: PointAtInfinityGroups { g0: self.group0() },
+            groups: PointAtInfinityGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+            },
         }
     }
 }
@@ -1435,9 +1439,7 @@ impl LeftComplement for Point {
 
     fn left_complement(self) -> Plane {
         Plane {
-            groups: PlaneGroups {
-                g0: self.group0() * Simd32x4::from(-1.0),
-            },
+            groups: PlaneGroups { g0: self.group0() },
         }
     }
 }
@@ -1447,9 +1449,7 @@ impl LeftComplement for PointAtInfinity {
 
     fn left_complement(self) -> PlaneAtOrigin {
         PlaneAtOrigin {
-            groups: PlaneAtOriginGroups {
-                g0: self.group0() * Simd32x3::from(-1.0),
-            },
+            groups: PlaneAtOriginGroups { g0: self.group0() },
         }
     }
 }
