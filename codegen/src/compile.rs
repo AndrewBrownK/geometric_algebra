@@ -1450,6 +1450,8 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     /// multiple/special projective dimensions with different meanings.
     pub fn fancy_norms(&mut self, registry: &'r MultiVectorClassRegistry) {
 
+        // TODO see page 197 of the book (and onward) for formulas to check against
+
         // It is not elaborated very much, but one can infer/detect a few things from the CGA poster.
         // Flat objects have a Position Norm, but no Center Norm or Radius Norm.
         // Round objects have a Center Norm and Radius Norm, but no Position Norm.
@@ -2056,6 +2058,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         //  origin presumably rotate in a similar fashion, although I'm not certain around
         //  which point. Heck... probably the origin again.
         // TODO play with this at runtime to get a better feel, and reach 100% certainty it's okay.
+        // TODO see page 104 of the book
         for (param_a, param_b) in registry.pair_parameters() {
             let name = "AntiProjectViaHorizonOnto";
             let _: Option<()> = try {

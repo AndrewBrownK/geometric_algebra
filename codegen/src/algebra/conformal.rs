@@ -113,6 +113,23 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
     }
 
     fn dual(&self, a: &BasisElement) -> BasisElement {
+        //
+        // let origin = (1 as BasisElementIndex) << self.origin;
+        // let infinity = (1 as BasisElementIndex) << self.infinity;
+        // // let projective = origin | infinity;
+        // let anti_scalar = self.anti_scalar_element().index;
+
+
+
+
+
+
+
+
+
+
+
+
         // TODO here
         // TODO yeah here next
 
@@ -122,6 +139,7 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
         //  It seems the "RightBulkDual" is what we're looking for
 
         let index = a.index;
+        let coefficient = a.coefficient;
 
 
         // TODO find the pattern that will generalize to all dimensions instead of
@@ -144,6 +162,7 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
             0b11011,
             0b11110,
             0b11100,
+            0b11111
         ];
         let coefficient = if exceptions.contains(&index) {
             -1 * a.coefficient
@@ -151,53 +170,36 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
             a.coefficient
         };
 
+        let mut result = a.clone();
+        result.coefficient = coefficient;
+        let mut pre_complement = a.clone();
+
 
         let origin = (1 as BasisElementIndex) << self.origin;
         let infinity = (1 as BasisElementIndex) << self.infinity;
-        let projective = origin | infinity;
+        // let projective = origin | infinity;
         let anti_scalar = self.anti_scalar_element().index;
 
-        // Basis element has both e4 and e5 -> regular dual
-        let is_projective = index & projective == projective;
-        if is_projective {
-            let new_index = anti_scalar - index;
-            return BasisElement {
-                coefficient,
-                index: new_index,
-            }
+        let aligned_infinity = index & infinity == infinity;
+        let aligned_origin = index & origin == origin;
+        if aligned_infinity && !aligned_origin {
+            let new_index = (index + origin) - infinity;
+            result.index = new_index;
+            pre_complement = result.clone();
+            result.index = anti_scalar - new_index;
         }
-
-        // Basis element includes e5 but not e4 -> dual keeps e5 and does not get e4
-        let is_flat = index & infinity == infinity;
-        if is_flat {
-            let mut new_index = anti_scalar - index;
-            new_index = new_index - origin;
-            new_index = new_index + infinity;
-            return BasisElement {
-                coefficient,
-                index: new_index,
-            }
+        if !aligned_infinity && aligned_origin {
+            let new_index = (index + infinity) - origin;
+            result.index = new_index;
+            pre_complement = result.clone();
+            result.index = anti_scalar - new_index;
         }
-
-        // Basis element includes e4 but not e5 -> dual keeps e4 but does not get e5
-        let is_round = index & origin == origin;
-        if is_round {
-            let mut new_index = anti_scalar - index;
-            new_index = new_index - infinity;
-            new_index = new_index + origin;
-            return BasisElement {
-                coefficient,
-                index: new_index,
-            }
+        if aligned_origin == aligned_infinity {
+            result.index = anti_scalar - index;
         }
-
-        // Neither e4 nor e5 -> regular dual (acquires e4 and e5)
-        assert_eq!(index & projective, 0);
-        let new_index = anti_scalar - index;
-        return BasisElement {
-            coefficient,
-            index: new_index,
-        }
+        // result.coefficient *= pre_complement.primitive_product(&result, &self.surface_generator_squares).coefficient;
+        // result.coefficient *= a.primitive_product(&self.right_complement(&a), &self.surface_generator_squares).coefficient;
+        result
     }
 
     fn anti_dual(&self, a: &BasisElement) -> BasisElement {

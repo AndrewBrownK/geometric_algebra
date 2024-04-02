@@ -58,7 +58,7 @@ impl<'a> GeometricAlgebraTrait for RigidGeometricAlgebra<'a> {
             coefficient: a.coefficient,
             index: self.basis_size() as BasisElementIndex - 1 - a.index,
         };
-        result.coefficient *= self.product(a, &result).first().unwrap().coefficient;
+        result.coefficient *= a.primitive_product(&result, &self.generator_squares).coefficient;
         result
     }
 
@@ -67,7 +67,7 @@ impl<'a> GeometricAlgebraTrait for RigidGeometricAlgebra<'a> {
             coefficient: a.coefficient,
             index: self.basis_size() as BasisElementIndex - 1 - a.index,
         };
-        result.coefficient *= self.product(&result, a).first().unwrap().coefficient;
+        result.coefficient *= a.primitive_product(&result, &self.generator_squares).coefficient;
         result
     }
 
