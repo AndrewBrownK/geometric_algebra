@@ -24,15 +24,19 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         "Scalar:1",
         "AntiScalar:e12345",
         "Magnitude:1,e12345",
+
         "FlatPoint:e15,e25,e35,e45",
-        "FlatPoint/PointAtOrigin:e45",
-        "FlatPoint/PointAtInfinity:e15,e25,e35",
+        "FlatPoint/FlatPointAtOrigin:e45",
+        "FlatPoint/FlatPointAtInfinity:e15,e25,e35",
+
         "Line:e415,e425,e435|e235,e315,e125",
         "Line/LineAtOrigin:e415,e425,e435",
         "Line/LineAtInfinity:e235,e315,e125",
+
         "Plane:e4235,e4315,e4125,e3215",
         "Plane/PlaneAtOrigin:e4235,e4315,e4125",
         "Plane/Horizon:e3215",
+
         // TODO not yet sure on what kinds of "superclassing" I want with round objects
         //  it partly depends on how the sandwich operators (are supposed to) turn out
         //  Maybe the flat objects should be subclassed to these round objects,
@@ -42,9 +46,22 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         "Circle:e423,e431,e412,e321|e415,e425,e435|e235,e315,e125",
         "Sphere:e4235,e4315,e4125|e1234,e3215",
 
-        // "RoundPoint/RoundOrigin:e4",
         "RoundPoint/Infinity:e5",
         "RoundPoint/Origin:e4",
+        "RoundPoint/RoundPointAtOrigin:e4,e5",
+        "RoundPoint/RoundPointAtInfinity:e1,e2,e3,e5",
+
+        // TODO can I get more interesting/intuitive names for these?
+        "RoundPoint/RoundPointBulk:e1,e2,e3",
+        "RoundPoint/RoundPointCarrierAspect:e1,e2,e3,e4",
+        "Dipole/DipoleBulk:e23,e31,e12",
+        "Dipole/DipoleWeight:e41,e42,e43",
+        "Dipole/DipoleCarrierAspect:e41,e42,e43|e23,e31,e12",
+        "Circle/CircleBulk:e321",
+        "Circle/CircleWeight:e423,e431,e412",
+        "Circle/CircleCarrierAspect:e423,e431,e412,e321",
+        "Sphere/SphereWeight:e1234",
+
 
         // Operator Objects
         "Motor:e415,e425,e435,e12345|e235,e315,e125",

@@ -298,26 +298,26 @@ impl std::fmt::Debug for FlatPoint {
 }
 
 #[derive(Clone, Copy)]
-struct PointAtOriginGroups {
+struct FlatPointAtOriginGroups {
     /// e45
     g0: f32,
 }
 
 #[derive(Clone, Copy)]
-pub union PointAtOrigin {
-    groups: PointAtOriginGroups,
+pub union FlatPointAtOrigin {
+    groups: FlatPointAtOriginGroups,
     /// e45
     elements: [f32; 1],
 }
 
-impl PointAtOrigin {
+impl FlatPointAtOrigin {
     #[allow(clippy::too_many_arguments)]
     pub const fn new(e45: f32) -> Self {
         Self { elements: [e45] }
     }
     pub const fn from_groups(g0: f32) -> Self {
         Self {
-            groups: PointAtOriginGroups { g0 },
+            groups: FlatPointAtOriginGroups { g0 },
         }
     }
     #[inline(always)]
@@ -330,61 +330,61 @@ impl PointAtOrigin {
     }
 }
 
-const POINTATORIGIN_INDEX_REMAP: [usize; 1] = [0];
+const FLATPOINTATORIGIN_INDEX_REMAP: [usize; 1] = [0];
 
-impl std::ops::Index<usize> for PointAtOrigin {
+impl std::ops::Index<usize> for FlatPointAtOrigin {
     type Output = f32;
 
     fn index(&self, index: usize) -> &Self::Output {
-        unsafe { &self.elements[POINTATORIGIN_INDEX_REMAP[index]] }
+        unsafe { &self.elements[FLATPOINTATORIGIN_INDEX_REMAP[index]] }
     }
 }
 
-impl std::ops::IndexMut<usize> for PointAtOrigin {
+impl std::ops::IndexMut<usize> for FlatPointAtOrigin {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        unsafe { &mut self.elements[POINTATORIGIN_INDEX_REMAP[index]] }
+        unsafe { &mut self.elements[FLATPOINTATORIGIN_INDEX_REMAP[index]] }
     }
 }
 
-impl std::convert::From<PointAtOrigin> for [f32; 1] {
-    fn from(vector: PointAtOrigin) -> Self {
+impl std::convert::From<FlatPointAtOrigin> for [f32; 1] {
+    fn from(vector: FlatPointAtOrigin) -> Self {
         unsafe { [vector.elements[0]] }
     }
 }
 
-impl std::convert::From<[f32; 1]> for PointAtOrigin {
+impl std::convert::From<[f32; 1]> for FlatPointAtOrigin {
     fn from(array: [f32; 1]) -> Self {
         Self { elements: [array[0]] }
     }
 }
 
-impl std::fmt::Debug for PointAtOrigin {
+impl std::fmt::Debug for FlatPointAtOrigin {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        formatter.debug_struct("PointAtOrigin").field("e45", &self[0]).finish()
+        formatter.debug_struct("FlatPointAtOrigin").field("e45", &self[0]).finish()
     }
 }
 
 #[derive(Clone, Copy)]
-struct PointAtInfinityGroups {
+struct FlatPointAtInfinityGroups {
     /// e15, e25, e35
     g0: Simd32x3,
 }
 
 #[derive(Clone, Copy)]
-pub union PointAtInfinity {
-    groups: PointAtInfinityGroups,
+pub union FlatPointAtInfinity {
+    groups: FlatPointAtInfinityGroups,
     /// e15, e25, e35, 0
     elements: [f32; 4],
 }
 
-impl PointAtInfinity {
+impl FlatPointAtInfinity {
     #[allow(clippy::too_many_arguments)]
     pub const fn new(e15: f32, e25: f32, e35: f32) -> Self {
         Self { elements: [e15, e25, e35, 0.0] }
     }
     pub const fn from_groups(g0: Simd32x3) -> Self {
         Self {
-            groups: PointAtInfinityGroups { g0 },
+            groups: FlatPointAtInfinityGroups { g0 },
         }
     }
     #[inline(always)]
@@ -397,29 +397,29 @@ impl PointAtInfinity {
     }
 }
 
-const POINTATINFINITY_INDEX_REMAP: [usize; 3] = [0, 1, 2];
+const FLATPOINTATINFINITY_INDEX_REMAP: [usize; 3] = [0, 1, 2];
 
-impl std::ops::Index<usize> for PointAtInfinity {
+impl std::ops::Index<usize> for FlatPointAtInfinity {
     type Output = f32;
 
     fn index(&self, index: usize) -> &Self::Output {
-        unsafe { &self.elements[POINTATINFINITY_INDEX_REMAP[index]] }
+        unsafe { &self.elements[FLATPOINTATINFINITY_INDEX_REMAP[index]] }
     }
 }
 
-impl std::ops::IndexMut<usize> for PointAtInfinity {
+impl std::ops::IndexMut<usize> for FlatPointAtInfinity {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        unsafe { &mut self.elements[POINTATINFINITY_INDEX_REMAP[index]] }
+        unsafe { &mut self.elements[FLATPOINTATINFINITY_INDEX_REMAP[index]] }
     }
 }
 
-impl std::convert::From<PointAtInfinity> for [f32; 3] {
-    fn from(vector: PointAtInfinity) -> Self {
+impl std::convert::From<FlatPointAtInfinity> for [f32; 3] {
+    fn from(vector: FlatPointAtInfinity) -> Self {
         unsafe { [vector.elements[0], vector.elements[1], vector.elements[2]] }
     }
 }
 
-impl std::convert::From<[f32; 3]> for PointAtInfinity {
+impl std::convert::From<[f32; 3]> for FlatPointAtInfinity {
     fn from(array: [f32; 3]) -> Self {
         Self {
             elements: [array[0], array[1], array[2], 0.0],
@@ -427,9 +427,14 @@ impl std::convert::From<[f32; 3]> for PointAtInfinity {
     }
 }
 
-impl std::fmt::Debug for PointAtInfinity {
+impl std::fmt::Debug for FlatPointAtInfinity {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        formatter.debug_struct("PointAtInfinity").field("e15", &self[0]).field("e25", &self[1]).field("e35", &self[2]).finish()
+        formatter
+            .debug_struct("FlatPointAtInfinity")
+            .field("e15", &self[0])
+            .field("e25", &self[1])
+            .field("e35", &self[2])
+            .finish()
     }
 }
 
@@ -1411,6 +1416,803 @@ impl std::fmt::Debug for Origin {
 }
 
 #[derive(Clone, Copy)]
+struct RoundPointAtOriginGroups {
+    /// e4, e5
+    g0: Simd32x2,
+}
+
+#[derive(Clone, Copy)]
+pub union RoundPointAtOrigin {
+    groups: RoundPointAtOriginGroups,
+    /// e4, e5, 0, 0
+    elements: [f32; 4],
+}
+
+impl RoundPointAtOrigin {
+    #[allow(clippy::too_many_arguments)]
+    pub const fn new(e4: f32, e5: f32) -> Self {
+        Self { elements: [e4, e5, 0.0, 0.0] }
+    }
+    pub const fn from_groups(g0: Simd32x2) -> Self {
+        Self {
+            groups: RoundPointAtOriginGroups { g0 },
+        }
+    }
+    #[inline(always)]
+    pub fn group0(&self) -> Simd32x2 {
+        unsafe { self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group0_mut(&mut self) -> &mut Simd32x2 {
+        unsafe { &mut self.groups.g0 }
+    }
+}
+
+const ROUNDPOINTATORIGIN_INDEX_REMAP: [usize; 2] = [0, 1];
+
+impl std::ops::Index<usize> for RoundPointAtOrigin {
+    type Output = f32;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        unsafe { &self.elements[ROUNDPOINTATORIGIN_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::ops::IndexMut<usize> for RoundPointAtOrigin {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        unsafe { &mut self.elements[ROUNDPOINTATORIGIN_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::convert::From<RoundPointAtOrigin> for [f32; 2] {
+    fn from(vector: RoundPointAtOrigin) -> Self {
+        unsafe { [vector.elements[0], vector.elements[1]] }
+    }
+}
+
+impl std::convert::From<[f32; 2]> for RoundPointAtOrigin {
+    fn from(array: [f32; 2]) -> Self {
+        Self {
+            elements: [array[0], array[1], 0.0, 0.0],
+        }
+    }
+}
+
+impl std::fmt::Debug for RoundPointAtOrigin {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter.debug_struct("RoundPointAtOrigin").field("e4", &self[0]).field("e5", &self[1]).finish()
+    }
+}
+
+#[derive(Clone, Copy)]
+struct RoundPointAtInfinityGroups {
+    /// e1, e2, e3, e5
+    g0: Simd32x4,
+}
+
+#[derive(Clone, Copy)]
+pub union RoundPointAtInfinity {
+    groups: RoundPointAtInfinityGroups,
+    /// e1, e2, e3, e5
+    elements: [f32; 4],
+}
+
+impl RoundPointAtInfinity {
+    #[allow(clippy::too_many_arguments)]
+    pub const fn new(e1: f32, e2: f32, e3: f32, e5: f32) -> Self {
+        Self { elements: [e1, e2, e3, e5] }
+    }
+    pub const fn from_groups(g0: Simd32x4) -> Self {
+        Self {
+            groups: RoundPointAtInfinityGroups { g0 },
+        }
+    }
+    #[inline(always)]
+    pub fn group0(&self) -> Simd32x4 {
+        unsafe { self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group0_mut(&mut self) -> &mut Simd32x4 {
+        unsafe { &mut self.groups.g0 }
+    }
+}
+
+const ROUNDPOINTATINFINITY_INDEX_REMAP: [usize; 4] = [0, 1, 2, 3];
+
+impl std::ops::Index<usize> for RoundPointAtInfinity {
+    type Output = f32;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        unsafe { &self.elements[ROUNDPOINTATINFINITY_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::ops::IndexMut<usize> for RoundPointAtInfinity {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        unsafe { &mut self.elements[ROUNDPOINTATINFINITY_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::convert::From<RoundPointAtInfinity> for [f32; 4] {
+    fn from(vector: RoundPointAtInfinity) -> Self {
+        unsafe { [vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[3]] }
+    }
+}
+
+impl std::convert::From<[f32; 4]> for RoundPointAtInfinity {
+    fn from(array: [f32; 4]) -> Self {
+        Self {
+            elements: [array[0], array[1], array[2], array[3]],
+        }
+    }
+}
+
+impl std::fmt::Debug for RoundPointAtInfinity {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter
+            .debug_struct("RoundPointAtInfinity")
+            .field("e1", &self[0])
+            .field("e2", &self[1])
+            .field("e3", &self[2])
+            .field("e5", &self[3])
+            .finish()
+    }
+}
+
+#[derive(Clone, Copy)]
+struct RoundPointBulkGroups {
+    /// e1, e2, e3
+    g0: Simd32x3,
+}
+
+#[derive(Clone, Copy)]
+pub union RoundPointBulk {
+    groups: RoundPointBulkGroups,
+    /// e1, e2, e3, 0
+    elements: [f32; 4],
+}
+
+impl RoundPointBulk {
+    #[allow(clippy::too_many_arguments)]
+    pub const fn new(e1: f32, e2: f32, e3: f32) -> Self {
+        Self { elements: [e1, e2, e3, 0.0] }
+    }
+    pub const fn from_groups(g0: Simd32x3) -> Self {
+        Self {
+            groups: RoundPointBulkGroups { g0 },
+        }
+    }
+    #[inline(always)]
+    pub fn group0(&self) -> Simd32x3 {
+        unsafe { self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group0_mut(&mut self) -> &mut Simd32x3 {
+        unsafe { &mut self.groups.g0 }
+    }
+}
+
+const ROUNDPOINTBULK_INDEX_REMAP: [usize; 3] = [0, 1, 2];
+
+impl std::ops::Index<usize> for RoundPointBulk {
+    type Output = f32;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        unsafe { &self.elements[ROUNDPOINTBULK_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::ops::IndexMut<usize> for RoundPointBulk {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        unsafe { &mut self.elements[ROUNDPOINTBULK_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::convert::From<RoundPointBulk> for [f32; 3] {
+    fn from(vector: RoundPointBulk) -> Self {
+        unsafe { [vector.elements[0], vector.elements[1], vector.elements[2]] }
+    }
+}
+
+impl std::convert::From<[f32; 3]> for RoundPointBulk {
+    fn from(array: [f32; 3]) -> Self {
+        Self {
+            elements: [array[0], array[1], array[2], 0.0],
+        }
+    }
+}
+
+impl std::fmt::Debug for RoundPointBulk {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter.debug_struct("RoundPointBulk").field("e1", &self[0]).field("e2", &self[1]).field("e3", &self[2]).finish()
+    }
+}
+
+#[derive(Clone, Copy)]
+struct RoundPointCarrierAspectGroups {
+    /// e1, e2, e3, e4
+    g0: Simd32x4,
+}
+
+#[derive(Clone, Copy)]
+pub union RoundPointCarrierAspect {
+    groups: RoundPointCarrierAspectGroups,
+    /// e1, e2, e3, e4
+    elements: [f32; 4],
+}
+
+impl RoundPointCarrierAspect {
+    #[allow(clippy::too_many_arguments)]
+    pub const fn new(e1: f32, e2: f32, e3: f32, e4: f32) -> Self {
+        Self { elements: [e1, e2, e3, e4] }
+    }
+    pub const fn from_groups(g0: Simd32x4) -> Self {
+        Self {
+            groups: RoundPointCarrierAspectGroups { g0 },
+        }
+    }
+    #[inline(always)]
+    pub fn group0(&self) -> Simd32x4 {
+        unsafe { self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group0_mut(&mut self) -> &mut Simd32x4 {
+        unsafe { &mut self.groups.g0 }
+    }
+}
+
+const ROUNDPOINTCARRIERASPECT_INDEX_REMAP: [usize; 4] = [0, 1, 2, 3];
+
+impl std::ops::Index<usize> for RoundPointCarrierAspect {
+    type Output = f32;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        unsafe { &self.elements[ROUNDPOINTCARRIERASPECT_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::ops::IndexMut<usize> for RoundPointCarrierAspect {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        unsafe { &mut self.elements[ROUNDPOINTCARRIERASPECT_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::convert::From<RoundPointCarrierAspect> for [f32; 4] {
+    fn from(vector: RoundPointCarrierAspect) -> Self {
+        unsafe { [vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[3]] }
+    }
+}
+
+impl std::convert::From<[f32; 4]> for RoundPointCarrierAspect {
+    fn from(array: [f32; 4]) -> Self {
+        Self {
+            elements: [array[0], array[1], array[2], array[3]],
+        }
+    }
+}
+
+impl std::fmt::Debug for RoundPointCarrierAspect {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter
+            .debug_struct("RoundPointCarrierAspect")
+            .field("e1", &self[0])
+            .field("e2", &self[1])
+            .field("e3", &self[2])
+            .field("e4", &self[3])
+            .finish()
+    }
+}
+
+#[derive(Clone, Copy)]
+struct DipoleBulkGroups {
+    /// e23, -e13, e12
+    g0: Simd32x3,
+}
+
+#[derive(Clone, Copy)]
+pub union DipoleBulk {
+    groups: DipoleBulkGroups,
+    /// e23, -e13, e12, 0
+    elements: [f32; 4],
+}
+
+impl DipoleBulk {
+    #[allow(clippy::too_many_arguments)]
+    pub const fn new(e23: f32, neg_e13: f32, e12: f32) -> Self {
+        Self {
+            elements: [e23, neg_e13, e12, 0.0],
+        }
+    }
+    pub const fn from_groups(g0: Simd32x3) -> Self {
+        Self { groups: DipoleBulkGroups { g0 } }
+    }
+    #[inline(always)]
+    pub fn group0(&self) -> Simd32x3 {
+        unsafe { self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group0_mut(&mut self) -> &mut Simd32x3 {
+        unsafe { &mut self.groups.g0 }
+    }
+}
+
+const DIPOLEBULK_INDEX_REMAP: [usize; 3] = [0, 1, 2];
+
+impl std::ops::Index<usize> for DipoleBulk {
+    type Output = f32;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        unsafe { &self.elements[DIPOLEBULK_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::ops::IndexMut<usize> for DipoleBulk {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        unsafe { &mut self.elements[DIPOLEBULK_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::convert::From<DipoleBulk> for [f32; 3] {
+    fn from(vector: DipoleBulk) -> Self {
+        unsafe { [vector.elements[0], vector.elements[1], vector.elements[2]] }
+    }
+}
+
+impl std::convert::From<[f32; 3]> for DipoleBulk {
+    fn from(array: [f32; 3]) -> Self {
+        Self {
+            elements: [array[0], array[1], array[2], 0.0],
+        }
+    }
+}
+
+impl std::fmt::Debug for DipoleBulk {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter.debug_struct("DipoleBulk").field("e23", &self[0]).field("-e13", &self[1]).field("e12", &self[2]).finish()
+    }
+}
+
+#[derive(Clone, Copy)]
+struct DipoleWeightGroups {
+    /// -e14, -e24, -e34
+    g0: Simd32x3,
+}
+
+#[derive(Clone, Copy)]
+pub union DipoleWeight {
+    groups: DipoleWeightGroups,
+    /// -e14, -e24, -e34, 0
+    elements: [f32; 4],
+}
+
+impl DipoleWeight {
+    #[allow(clippy::too_many_arguments)]
+    pub const fn new(neg_e14: f32, neg_e24: f32, neg_e34: f32) -> Self {
+        Self {
+            elements: [neg_e14, neg_e24, neg_e34, 0.0],
+        }
+    }
+    pub const fn from_groups(g0: Simd32x3) -> Self {
+        Self {
+            groups: DipoleWeightGroups { g0 },
+        }
+    }
+    #[inline(always)]
+    pub fn group0(&self) -> Simd32x3 {
+        unsafe { self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group0_mut(&mut self) -> &mut Simd32x3 {
+        unsafe { &mut self.groups.g0 }
+    }
+}
+
+const DIPOLEWEIGHT_INDEX_REMAP: [usize; 3] = [0, 1, 2];
+
+impl std::ops::Index<usize> for DipoleWeight {
+    type Output = f32;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        unsafe { &self.elements[DIPOLEWEIGHT_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::ops::IndexMut<usize> for DipoleWeight {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        unsafe { &mut self.elements[DIPOLEWEIGHT_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::convert::From<DipoleWeight> for [f32; 3] {
+    fn from(vector: DipoleWeight) -> Self {
+        unsafe { [vector.elements[0], vector.elements[1], vector.elements[2]] }
+    }
+}
+
+impl std::convert::From<[f32; 3]> for DipoleWeight {
+    fn from(array: [f32; 3]) -> Self {
+        Self {
+            elements: [array[0], array[1], array[2], 0.0],
+        }
+    }
+}
+
+impl std::fmt::Debug for DipoleWeight {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter.debug_struct("DipoleWeight").field("-e14", &self[0]).field("-e24", &self[1]).field("-e34", &self[2]).finish()
+    }
+}
+
+#[derive(Clone, Copy)]
+struct DipoleCarrierAspectGroups {
+    /// -e14, -e24, -e34
+    g0: Simd32x3,
+    /// e23, -e13, e12
+    g1: Simd32x3,
+}
+
+#[derive(Clone, Copy)]
+pub union DipoleCarrierAspect {
+    groups: DipoleCarrierAspectGroups,
+    /// -e14, -e24, -e34, 0, e23, -e13, e12, 0
+    elements: [f32; 8],
+}
+
+impl DipoleCarrierAspect {
+    #[allow(clippy::too_many_arguments)]
+    pub const fn new(neg_e14: f32, neg_e24: f32, neg_e34: f32, e23: f32, neg_e13: f32, e12: f32) -> Self {
+        Self {
+            elements: [neg_e14, neg_e24, neg_e34, 0.0, e23, neg_e13, e12, 0.0],
+        }
+    }
+    pub const fn from_groups(g0: Simd32x3, g1: Simd32x3) -> Self {
+        Self {
+            groups: DipoleCarrierAspectGroups { g0, g1 },
+        }
+    }
+    #[inline(always)]
+    pub fn group0(&self) -> Simd32x3 {
+        unsafe { self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group0_mut(&mut self) -> &mut Simd32x3 {
+        unsafe { &mut self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group1(&self) -> Simd32x3 {
+        unsafe { self.groups.g1 }
+    }
+    #[inline(always)]
+    pub fn group1_mut(&mut self) -> &mut Simd32x3 {
+        unsafe { &mut self.groups.g1 }
+    }
+}
+
+const DIPOLECARRIERASPECT_INDEX_REMAP: [usize; 6] = [0, 1, 2, 4, 5, 6];
+
+impl std::ops::Index<usize> for DipoleCarrierAspect {
+    type Output = f32;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        unsafe { &self.elements[DIPOLECARRIERASPECT_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::ops::IndexMut<usize> for DipoleCarrierAspect {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        unsafe { &mut self.elements[DIPOLECARRIERASPECT_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::convert::From<DipoleCarrierAspect> for [f32; 6] {
+    fn from(vector: DipoleCarrierAspect) -> Self {
+        unsafe { [vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[4], vector.elements[5], vector.elements[6]] }
+    }
+}
+
+impl std::convert::From<[f32; 6]> for DipoleCarrierAspect {
+    fn from(array: [f32; 6]) -> Self {
+        Self {
+            elements: [array[0], array[1], array[2], 0.0, array[3], array[4], array[5], 0.0],
+        }
+    }
+}
+
+impl std::fmt::Debug for DipoleCarrierAspect {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter
+            .debug_struct("DipoleCarrierAspect")
+            .field("-e14", &self[0])
+            .field("-e24", &self[1])
+            .field("-e34", &self[2])
+            .field("e23", &self[3])
+            .field("-e13", &self[4])
+            .field("e12", &self[5])
+            .finish()
+    }
+}
+
+#[derive(Clone, Copy)]
+struct CircleBulkGroups {
+    /// -e123
+    g0: f32,
+}
+
+#[derive(Clone, Copy)]
+pub union CircleBulk {
+    groups: CircleBulkGroups,
+    /// -e123
+    elements: [f32; 1],
+}
+
+impl CircleBulk {
+    #[allow(clippy::too_many_arguments)]
+    pub const fn new(neg_e123: f32) -> Self {
+        Self { elements: [neg_e123] }
+    }
+    pub const fn from_groups(g0: f32) -> Self {
+        Self { groups: CircleBulkGroups { g0 } }
+    }
+    #[inline(always)]
+    pub fn group0(&self) -> f32 {
+        unsafe { self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group0_mut(&mut self) -> &mut f32 {
+        unsafe { &mut self.groups.g0 }
+    }
+}
+
+const CIRCLEBULK_INDEX_REMAP: [usize; 1] = [0];
+
+impl std::ops::Index<usize> for CircleBulk {
+    type Output = f32;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        unsafe { &self.elements[CIRCLEBULK_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::ops::IndexMut<usize> for CircleBulk {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        unsafe { &mut self.elements[CIRCLEBULK_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::convert::From<CircleBulk> for [f32; 1] {
+    fn from(vector: CircleBulk) -> Self {
+        unsafe { [vector.elements[0]] }
+    }
+}
+
+impl std::convert::From<[f32; 1]> for CircleBulk {
+    fn from(array: [f32; 1]) -> Self {
+        Self { elements: [array[0]] }
+    }
+}
+
+impl std::fmt::Debug for CircleBulk {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter.debug_struct("CircleBulk").field("-e123", &self[0]).finish()
+    }
+}
+
+#[derive(Clone, Copy)]
+struct CircleWeightGroups {
+    /// e234, -e134, e124
+    g0: Simd32x3,
+}
+
+#[derive(Clone, Copy)]
+pub union CircleWeight {
+    groups: CircleWeightGroups,
+    /// e234, -e134, e124, 0
+    elements: [f32; 4],
+}
+
+impl CircleWeight {
+    #[allow(clippy::too_many_arguments)]
+    pub const fn new(e234: f32, neg_e134: f32, e124: f32) -> Self {
+        Self {
+            elements: [e234, neg_e134, e124, 0.0],
+        }
+    }
+    pub const fn from_groups(g0: Simd32x3) -> Self {
+        Self {
+            groups: CircleWeightGroups { g0 },
+        }
+    }
+    #[inline(always)]
+    pub fn group0(&self) -> Simd32x3 {
+        unsafe { self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group0_mut(&mut self) -> &mut Simd32x3 {
+        unsafe { &mut self.groups.g0 }
+    }
+}
+
+const CIRCLEWEIGHT_INDEX_REMAP: [usize; 3] = [0, 1, 2];
+
+impl std::ops::Index<usize> for CircleWeight {
+    type Output = f32;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        unsafe { &self.elements[CIRCLEWEIGHT_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::ops::IndexMut<usize> for CircleWeight {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        unsafe { &mut self.elements[CIRCLEWEIGHT_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::convert::From<CircleWeight> for [f32; 3] {
+    fn from(vector: CircleWeight) -> Self {
+        unsafe { [vector.elements[0], vector.elements[1], vector.elements[2]] }
+    }
+}
+
+impl std::convert::From<[f32; 3]> for CircleWeight {
+    fn from(array: [f32; 3]) -> Self {
+        Self {
+            elements: [array[0], array[1], array[2], 0.0],
+        }
+    }
+}
+
+impl std::fmt::Debug for CircleWeight {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter.debug_struct("CircleWeight").field("e234", &self[0]).field("-e134", &self[1]).field("e124", &self[2]).finish()
+    }
+}
+
+#[derive(Clone, Copy)]
+struct CircleCarrierAspectGroups {
+    /// e234, -e134, e124, -e123
+    g0: Simd32x4,
+}
+
+#[derive(Clone, Copy)]
+pub union CircleCarrierAspect {
+    groups: CircleCarrierAspectGroups,
+    /// e234, -e134, e124, -e123
+    elements: [f32; 4],
+}
+
+impl CircleCarrierAspect {
+    #[allow(clippy::too_many_arguments)]
+    pub const fn new(e234: f32, neg_e134: f32, e124: f32, neg_e123: f32) -> Self {
+        Self {
+            elements: [e234, neg_e134, e124, neg_e123],
+        }
+    }
+    pub const fn from_groups(g0: Simd32x4) -> Self {
+        Self {
+            groups: CircleCarrierAspectGroups { g0 },
+        }
+    }
+    #[inline(always)]
+    pub fn group0(&self) -> Simd32x4 {
+        unsafe { self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group0_mut(&mut self) -> &mut Simd32x4 {
+        unsafe { &mut self.groups.g0 }
+    }
+}
+
+const CIRCLECARRIERASPECT_INDEX_REMAP: [usize; 4] = [0, 1, 2, 3];
+
+impl std::ops::Index<usize> for CircleCarrierAspect {
+    type Output = f32;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        unsafe { &self.elements[CIRCLECARRIERASPECT_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::ops::IndexMut<usize> for CircleCarrierAspect {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        unsafe { &mut self.elements[CIRCLECARRIERASPECT_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::convert::From<CircleCarrierAspect> for [f32; 4] {
+    fn from(vector: CircleCarrierAspect) -> Self {
+        unsafe { [vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[3]] }
+    }
+}
+
+impl std::convert::From<[f32; 4]> for CircleCarrierAspect {
+    fn from(array: [f32; 4]) -> Self {
+        Self {
+            elements: [array[0], array[1], array[2], array[3]],
+        }
+    }
+}
+
+impl std::fmt::Debug for CircleCarrierAspect {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter
+            .debug_struct("CircleCarrierAspect")
+            .field("e234", &self[0])
+            .field("-e134", &self[1])
+            .field("e124", &self[2])
+            .field("-e123", &self[3])
+            .finish()
+    }
+}
+
+#[derive(Clone, Copy)]
+struct SphereWeightGroups {
+    /// e1234
+    g0: f32,
+}
+
+#[derive(Clone, Copy)]
+pub union SphereWeight {
+    groups: SphereWeightGroups,
+    /// e1234
+    elements: [f32; 1],
+}
+
+impl SphereWeight {
+    #[allow(clippy::too_many_arguments)]
+    pub const fn new(e1234: f32) -> Self {
+        Self { elements: [e1234] }
+    }
+    pub const fn from_groups(g0: f32) -> Self {
+        Self {
+            groups: SphereWeightGroups { g0 },
+        }
+    }
+    #[inline(always)]
+    pub fn group0(&self) -> f32 {
+        unsafe { self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group0_mut(&mut self) -> &mut f32 {
+        unsafe { &mut self.groups.g0 }
+    }
+}
+
+const SPHEREWEIGHT_INDEX_REMAP: [usize; 1] = [0];
+
+impl std::ops::Index<usize> for SphereWeight {
+    type Output = f32;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        unsafe { &self.elements[SPHEREWEIGHT_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::ops::IndexMut<usize> for SphereWeight {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        unsafe { &mut self.elements[SPHEREWEIGHT_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::convert::From<SphereWeight> for [f32; 1] {
+    fn from(vector: SphereWeight) -> Self {
+        unsafe { [vector.elements[0]] }
+    }
+}
+
+impl std::convert::From<[f32; 1]> for SphereWeight {
+    fn from(array: [f32; 1]) -> Self {
+        Self { elements: [array[0]] }
+    }
+}
+
+impl std::fmt::Debug for SphereWeight {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter.debug_struct("SphereWeight").field("e1234", &self[0]).finish()
+    }
+}
+
+#[derive(Clone, Copy)]
 struct MotorGroups {
     /// -e145, -e245, -e345, e12345
     g0: Simd32x4,
@@ -2042,6 +2844,30 @@ impl One for Circle {
     }
 }
 
+impl One for CircleBulk {
+    fn one() -> Self {
+        CircleBulk {
+            groups: CircleBulkGroups { g0: 0.0 },
+        }
+    }
+}
+
+impl One for CircleCarrierAspect {
+    fn one() -> Self {
+        CircleCarrierAspect {
+            groups: CircleCarrierAspectGroups { g0: Simd32x4::from(0.0) },
+        }
+    }
+}
+
+impl One for CircleWeight {
+    fn one() -> Self {
+        CircleWeight {
+            groups: CircleWeightGroups { g0: Simd32x3::from(0.0) },
+        }
+    }
+}
+
 impl One for Dipole {
     fn one() -> Self {
         Dipole {
@@ -2054,10 +2880,53 @@ impl One for Dipole {
     }
 }
 
+impl One for DipoleBulk {
+    fn one() -> Self {
+        DipoleBulk {
+            groups: DipoleBulkGroups { g0: Simd32x3::from(0.0) },
+        }
+    }
+}
+
+impl One for DipoleCarrierAspect {
+    fn one() -> Self {
+        DipoleCarrierAspect {
+            groups: DipoleCarrierAspectGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x3::from(0.0),
+            },
+        }
+    }
+}
+
+impl One for DipoleWeight {
+    fn one() -> Self {
+        DipoleWeight {
+            groups: DipoleWeightGroups { g0: Simd32x3::from(0.0) },
+        }
+    }
+}
+
 impl One for FlatPoint {
     fn one() -> Self {
         FlatPoint {
             groups: FlatPointGroups { g0: Simd32x4::from(0.0) },
+        }
+    }
+}
+
+impl One for FlatPointAtInfinity {
+    fn one() -> Self {
+        FlatPointAtInfinity {
+            groups: FlatPointAtInfinityGroups { g0: Simd32x3::from(0.0) },
+        }
+    }
+}
+
+impl One for FlatPointAtOrigin {
+    fn one() -> Self {
+        FlatPointAtOrigin {
+            groups: FlatPointAtOriginGroups { g0: 0.0 },
         }
     }
 }
@@ -2177,22 +3046,6 @@ impl One for PlaneAtOrigin {
     }
 }
 
-impl One for PointAtInfinity {
-    fn one() -> Self {
-        PointAtInfinity {
-            groups: PointAtInfinityGroups { g0: Simd32x3::from(0.0) },
-        }
-    }
-}
-
-impl One for PointAtOrigin {
-    fn one() -> Self {
-        PointAtOrigin {
-            groups: PointAtOriginGroups { g0: 0.0 },
-        }
-    }
-}
-
 impl One for Rotor {
     fn one() -> Self {
         Rotor {
@@ -2212,6 +3065,38 @@ impl One for RoundPoint {
     }
 }
 
+impl One for RoundPointAtInfinity {
+    fn one() -> Self {
+        RoundPointAtInfinity {
+            groups: RoundPointAtInfinityGroups { g0: Simd32x4::from(0.0) },
+        }
+    }
+}
+
+impl One for RoundPointAtOrigin {
+    fn one() -> Self {
+        RoundPointAtOrigin {
+            groups: RoundPointAtOriginGroups { g0: Simd32x2::from(0.0) },
+        }
+    }
+}
+
+impl One for RoundPointBulk {
+    fn one() -> Self {
+        RoundPointBulk {
+            groups: RoundPointBulkGroups { g0: Simd32x3::from(0.0) },
+        }
+    }
+}
+
+impl One for RoundPointCarrierAspect {
+    fn one() -> Self {
+        RoundPointCarrierAspect {
+            groups: RoundPointCarrierAspectGroups { g0: Simd32x4::from(0.0) },
+        }
+    }
+}
+
 impl One for Scalar {
     fn one() -> Self {
         Scalar { groups: ScalarGroups { g0: 1.0 } }
@@ -2225,6 +3110,14 @@ impl One for Sphere {
                 g0: Simd32x3::from(0.0),
                 g1: Simd32x2::from(0.0),
             },
+        }
+    }
+}
+
+impl One for SphereWeight {
+    fn one() -> Self {
+        SphereWeight {
+            groups: SphereWeightGroups { g0: 0.0 },
         }
     }
 }
@@ -2257,6 +3150,30 @@ impl Zero for Circle {
     }
 }
 
+impl Zero for CircleBulk {
+    fn zero() -> Self {
+        CircleBulk {
+            groups: CircleBulkGroups { g0: 0.0 },
+        }
+    }
+}
+
+impl Zero for CircleCarrierAspect {
+    fn zero() -> Self {
+        CircleCarrierAspect {
+            groups: CircleCarrierAspectGroups { g0: Simd32x4::from(0.0) },
+        }
+    }
+}
+
+impl Zero for CircleWeight {
+    fn zero() -> Self {
+        CircleWeight {
+            groups: CircleWeightGroups { g0: Simd32x3::from(0.0) },
+        }
+    }
+}
+
 impl Zero for Dipole {
     fn zero() -> Self {
         Dipole {
@@ -2269,10 +3186,53 @@ impl Zero for Dipole {
     }
 }
 
+impl Zero for DipoleBulk {
+    fn zero() -> Self {
+        DipoleBulk {
+            groups: DipoleBulkGroups { g0: Simd32x3::from(0.0) },
+        }
+    }
+}
+
+impl Zero for DipoleCarrierAspect {
+    fn zero() -> Self {
+        DipoleCarrierAspect {
+            groups: DipoleCarrierAspectGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x3::from(0.0),
+            },
+        }
+    }
+}
+
+impl Zero for DipoleWeight {
+    fn zero() -> Self {
+        DipoleWeight {
+            groups: DipoleWeightGroups { g0: Simd32x3::from(0.0) },
+        }
+    }
+}
+
 impl Zero for FlatPoint {
     fn zero() -> Self {
         FlatPoint {
             groups: FlatPointGroups { g0: Simd32x4::from(0.0) },
+        }
+    }
+}
+
+impl Zero for FlatPointAtInfinity {
+    fn zero() -> Self {
+        FlatPointAtInfinity {
+            groups: FlatPointAtInfinityGroups { g0: Simd32x3::from(0.0) },
+        }
+    }
+}
+
+impl Zero for FlatPointAtOrigin {
+    fn zero() -> Self {
+        FlatPointAtOrigin {
+            groups: FlatPointAtOriginGroups { g0: 0.0 },
         }
     }
 }
@@ -2392,22 +3352,6 @@ impl Zero for PlaneAtOrigin {
     }
 }
 
-impl Zero for PointAtInfinity {
-    fn zero() -> Self {
-        PointAtInfinity {
-            groups: PointAtInfinityGroups { g0: Simd32x3::from(0.0) },
-        }
-    }
-}
-
-impl Zero for PointAtOrigin {
-    fn zero() -> Self {
-        PointAtOrigin {
-            groups: PointAtOriginGroups { g0: 0.0 },
-        }
-    }
-}
-
 impl Zero for Rotor {
     fn zero() -> Self {
         Rotor {
@@ -2427,6 +3371,38 @@ impl Zero for RoundPoint {
     }
 }
 
+impl Zero for RoundPointAtInfinity {
+    fn zero() -> Self {
+        RoundPointAtInfinity {
+            groups: RoundPointAtInfinityGroups { g0: Simd32x4::from(0.0) },
+        }
+    }
+}
+
+impl Zero for RoundPointAtOrigin {
+    fn zero() -> Self {
+        RoundPointAtOrigin {
+            groups: RoundPointAtOriginGroups { g0: Simd32x2::from(0.0) },
+        }
+    }
+}
+
+impl Zero for RoundPointBulk {
+    fn zero() -> Self {
+        RoundPointBulk {
+            groups: RoundPointBulkGroups { g0: Simd32x3::from(0.0) },
+        }
+    }
+}
+
+impl Zero for RoundPointCarrierAspect {
+    fn zero() -> Self {
+        RoundPointCarrierAspect {
+            groups: RoundPointCarrierAspectGroups { g0: Simd32x4::from(0.0) },
+        }
+    }
+}
+
 impl Zero for Scalar {
     fn zero() -> Self {
         Scalar { groups: ScalarGroups { g0: 0.0 } }
@@ -2440,6 +3416,14 @@ impl Zero for Sphere {
                 g0: Simd32x3::from(0.0),
                 g1: Simd32x2::from(0.0),
             },
+        }
+    }
+}
+
+impl Zero for SphereWeight {
+    fn zero() -> Self {
+        SphereWeight {
+            groups: SphereWeightGroups { g0: 0.0 },
         }
     }
 }
@@ -2476,6 +3460,40 @@ impl Neg for Circle {
     }
 }
 
+impl Neg for CircleBulk {
+    type Output = CircleBulk;
+
+    fn neg(self) -> CircleBulk {
+        CircleBulk {
+            groups: CircleBulkGroups { g0: -self.group0() },
+        }
+    }
+}
+
+impl Neg for CircleCarrierAspect {
+    type Output = CircleCarrierAspect;
+
+    fn neg(self) -> CircleCarrierAspect {
+        CircleCarrierAspect {
+            groups: CircleCarrierAspectGroups {
+                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl Neg for CircleWeight {
+    type Output = CircleWeight;
+
+    fn neg(self) -> CircleWeight {
+        CircleWeight {
+            groups: CircleWeightGroups {
+                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
+            },
+        }
+    }
+}
+
 impl Neg for Dipole {
     type Output = Dipole;
 
@@ -2490,6 +3508,43 @@ impl Neg for Dipole {
     }
 }
 
+impl Neg for DipoleBulk {
+    type Output = DipoleBulk;
+
+    fn neg(self) -> DipoleBulk {
+        DipoleBulk {
+            groups: DipoleBulkGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Neg for DipoleCarrierAspect {
+    type Output = DipoleCarrierAspect;
+
+    fn neg(self) -> DipoleCarrierAspect {
+        DipoleCarrierAspect {
+            groups: DipoleCarrierAspectGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Neg for DipoleWeight {
+    type Output = DipoleWeight;
+
+    fn neg(self) -> DipoleWeight {
+        DipoleWeight {
+            groups: DipoleWeightGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
 impl Neg for FlatPoint {
     type Output = FlatPoint;
 
@@ -2498,6 +3553,28 @@ impl Neg for FlatPoint {
             groups: FlatPointGroups {
                 g0: self.group0() * Simd32x4::from(-1.0),
             },
+        }
+    }
+}
+
+impl Neg for FlatPointAtInfinity {
+    type Output = FlatPointAtInfinity;
+
+    fn neg(self) -> FlatPointAtInfinity {
+        FlatPointAtInfinity {
+            groups: FlatPointAtInfinityGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Neg for FlatPointAtOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn neg(self) -> FlatPointAtOrigin {
+        FlatPointAtOrigin {
+            groups: FlatPointAtOriginGroups { g0: -self.group0() },
         }
     }
 }
@@ -2653,28 +3730,6 @@ impl Neg for PlaneAtOrigin {
     }
 }
 
-impl Neg for PointAtInfinity {
-    type Output = PointAtInfinity;
-
-    fn neg(self) -> PointAtInfinity {
-        PointAtInfinity {
-            groups: PointAtInfinityGroups {
-                g0: self.group0() * Simd32x3::from(-1.0),
-            },
-        }
-    }
-}
-
-impl Neg for PointAtOrigin {
-    type Output = PointAtOrigin;
-
-    fn neg(self) -> PointAtOrigin {
-        PointAtOrigin {
-            groups: PointAtOriginGroups { g0: -self.group0() },
-        }
-    }
-}
-
 impl Neg for Rotor {
     type Output = Rotor;
 
@@ -2700,6 +3755,54 @@ impl Neg for RoundPoint {
     }
 }
 
+impl Neg for RoundPointAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn neg(self) -> RoundPointAtInfinity {
+        RoundPointAtInfinity {
+            groups: RoundPointAtInfinityGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Neg for RoundPointAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn neg(self) -> RoundPointAtOrigin {
+        RoundPointAtOrigin {
+            groups: RoundPointAtOriginGroups {
+                g0: self.group0() * Simd32x2::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Neg for RoundPointBulk {
+    type Output = RoundPointBulk;
+
+    fn neg(self) -> RoundPointBulk {
+        RoundPointBulk {
+            groups: RoundPointBulkGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Neg for RoundPointCarrierAspect {
+    type Output = RoundPointCarrierAspect;
+
+    fn neg(self) -> RoundPointCarrierAspect {
+        RoundPointCarrierAspect {
+            groups: RoundPointCarrierAspectGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
 impl Neg for Scalar {
     type Output = Scalar;
 
@@ -2719,6 +3822,16 @@ impl Neg for Sphere {
                 g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
                 g1: self.group1() * Simd32x2::from([-1.0, 1.0]),
             },
+        }
+    }
+}
+
+impl Neg for SphereWeight {
+    type Output = SphereWeight;
+
+    fn neg(self) -> SphereWeight {
+        SphereWeight {
+            groups: SphereWeightGroups { g0: -self.group0() },
         }
     }
 }
@@ -2893,6 +4006,66 @@ impl AddAssign<Circle> for Circle {
     }
 }
 
+impl Add<CircleBulk> for Circle {
+    type Output = Circle;
+
+    fn add(self, other: CircleBulk) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: self.group0() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g1: self.group1(),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl AddAssign<CircleBulk> for Circle {
+    fn add_assign(&mut self, other: CircleBulk) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<CircleCarrierAspect> for Circle {
+    type Output = Circle;
+
+    fn add(self, other: CircleCarrierAspect) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: self.group0() + other.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl AddAssign<CircleCarrierAspect> for Circle {
+    fn add_assign(&mut self, other: CircleCarrierAspect) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<CircleWeight> for Circle {
+    type Output = Circle;
+
+    fn add(self, other: CircleWeight) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: self.group0() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g1: self.group1(),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl AddAssign<CircleWeight> for Circle {
+    fn add_assign(&mut self, other: CircleWeight) {
+        *self = (*self).add(other);
+    }
+}
+
 impl Add<Line> for Circle {
     type Output = Circle;
 
@@ -2975,6 +4148,266 @@ impl Add<MultiVector> for Circle {
     }
 }
 
+impl Add<Circle> for CircleBulk {
+    type Output = Circle;
+
+    fn add(self, other: Circle) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
+            },
+        }
+    }
+}
+
+impl Add<CircleBulk> for CircleBulk {
+    type Output = CircleBulk;
+
+    fn add(self, other: CircleBulk) -> CircleBulk {
+        CircleBulk {
+            groups: CircleBulkGroups {
+                g0: self.group0() + other.group0(),
+            },
+        }
+    }
+}
+
+impl AddAssign<CircleBulk> for CircleBulk {
+    fn add_assign(&mut self, other: CircleBulk) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<CircleCarrierAspect> for CircleBulk {
+    type Output = CircleCarrierAspect;
+
+    fn add(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+        CircleCarrierAspect {
+            groups: CircleCarrierAspectGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group0(),
+            },
+        }
+    }
+}
+
+impl Add<CircleWeight> for CircleBulk {
+    type Output = CircleCarrierAspect;
+
+    fn add(self, other: CircleWeight) -> CircleCarrierAspect {
+        CircleCarrierAspect {
+            groups: CircleCarrierAspectGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl Add<MultiVector> for CircleBulk {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
+                g3: other.group3(),
+                g4: other.group4(),
+                g5: other.group5(),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group6(),
+                g7: other.group7(),
+                g8: other.group8(),
+                g9: other.group9(),
+                g10: other.group10(),
+            },
+        }
+    }
+}
+
+impl Add<Circle> for CircleCarrierAspect {
+    type Output = Circle;
+
+    fn add(self, other: Circle) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: self.group0() + other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
+            },
+        }
+    }
+}
+
+impl Add<CircleBulk> for CircleCarrierAspect {
+    type Output = CircleCarrierAspect;
+
+    fn add(self, other: CircleBulk) -> CircleCarrierAspect {
+        CircleCarrierAspect {
+            groups: CircleCarrierAspectGroups {
+                g0: self.group0() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl AddAssign<CircleBulk> for CircleCarrierAspect {
+    fn add_assign(&mut self, other: CircleBulk) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<CircleCarrierAspect> for CircleCarrierAspect {
+    type Output = CircleCarrierAspect;
+
+    fn add(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+        CircleCarrierAspect {
+            groups: CircleCarrierAspectGroups {
+                g0: self.group0() + other.group0(),
+            },
+        }
+    }
+}
+
+impl AddAssign<CircleCarrierAspect> for CircleCarrierAspect {
+    fn add_assign(&mut self, other: CircleCarrierAspect) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<CircleWeight> for CircleCarrierAspect {
+    type Output = CircleCarrierAspect;
+
+    fn add(self, other: CircleWeight) -> CircleCarrierAspect {
+        CircleCarrierAspect {
+            groups: CircleCarrierAspectGroups {
+                g0: self.group0() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl AddAssign<CircleWeight> for CircleCarrierAspect {
+    fn add_assign(&mut self, other: CircleWeight) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<Line> for CircleCarrierAspect {
+    type Output = Circle;
+
+    fn add(self, other: Line) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: self.group0(),
+                g1: other.group0(),
+                g2: other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<MultiVector> for CircleCarrierAspect {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
+                g3: other.group3(),
+                g4: other.group4(),
+                g5: other.group5(),
+                g6: self.group0() + other.group6(),
+                g7: other.group7(),
+                g8: other.group8(),
+                g9: other.group9(),
+                g10: other.group10(),
+            },
+        }
+    }
+}
+
+impl Add<Circle> for CircleWeight {
+    type Output = Circle;
+
+    fn add(self, other: Circle) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
+            },
+        }
+    }
+}
+
+impl Add<CircleBulk> for CircleWeight {
+    type Output = CircleCarrierAspect;
+
+    fn add(self, other: CircleBulk) -> CircleCarrierAspect {
+        CircleCarrierAspect {
+            groups: CircleCarrierAspectGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl Add<CircleCarrierAspect> for CircleWeight {
+    type Output = CircleCarrierAspect;
+
+    fn add(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+        CircleCarrierAspect {
+            groups: CircleCarrierAspectGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group0(),
+            },
+        }
+    }
+}
+
+impl Add<CircleWeight> for CircleWeight {
+    type Output = CircleWeight;
+
+    fn add(self, other: CircleWeight) -> CircleWeight {
+        CircleWeight {
+            groups: CircleWeightGroups {
+                g0: self.group0() + other.group0(),
+            },
+        }
+    }
+}
+
+impl AddAssign<CircleWeight> for CircleWeight {
+    fn add_assign(&mut self, other: CircleWeight) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<MultiVector> for CircleWeight {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
+                g3: other.group3(),
+                g4: other.group4(),
+                g5: other.group5(),
+                g6: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group6(),
+                g7: other.group7(),
+                g8: other.group8(),
+                g9: other.group9(),
+                g10: other.group10(),
+            },
+        }
+    }
+}
+
 impl Add<Dipole> for Dipole {
     type Output = Dipole;
 
@@ -2995,6 +4428,66 @@ impl AddAssign<Dipole> for Dipole {
     }
 }
 
+impl Add<DipoleBulk> for Dipole {
+    type Output = Dipole;
+
+    fn add(self, other: DipoleBulk) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: self.group0(),
+                g1: self.group1() + other.group0(),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl AddAssign<DipoleBulk> for Dipole {
+    fn add_assign(&mut self, other: DipoleBulk) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<DipoleCarrierAspect> for Dipole {
+    type Output = Dipole;
+
+    fn add(self, other: DipoleCarrierAspect) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: self.group0() + other.group0(),
+                g1: self.group1() + other.group1(),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl AddAssign<DipoleCarrierAspect> for Dipole {
+    fn add_assign(&mut self, other: DipoleCarrierAspect) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<DipoleWeight> for Dipole {
+    type Output = Dipole;
+
+    fn add(self, other: DipoleWeight) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: self.group0() + other.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl AddAssign<DipoleWeight> for Dipole {
+    fn add_assign(&mut self, other: DipoleWeight) {
+        *self = (*self).add(other);
+    }
+}
+
 impl Add<FlatPoint> for Dipole {
     type Output = Dipole;
 
@@ -3011,6 +4504,46 @@ impl Add<FlatPoint> for Dipole {
 
 impl AddAssign<FlatPoint> for Dipole {
     fn add_assign(&mut self, other: FlatPoint) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<FlatPointAtInfinity> for Dipole {
+    type Output = Dipole;
+
+    fn add(self, other: FlatPointAtInfinity) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl AddAssign<FlatPointAtInfinity> for Dipole {
+    fn add_assign(&mut self, other: FlatPointAtInfinity) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<FlatPointAtOrigin> for Dipole {
+    type Output = Dipole;
+
+    fn add(self, other: FlatPointAtOrigin) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl AddAssign<FlatPointAtOrigin> for Dipole {
+    fn add_assign(&mut self, other: FlatPointAtOrigin) {
         *self = (*self).add(other);
     }
 }
@@ -3037,43 +4570,270 @@ impl Add<MultiVector> for Dipole {
     }
 }
 
-impl Add<PointAtInfinity> for Dipole {
+impl Add<Dipole> for DipoleBulk {
     type Output = Dipole;
 
-    fn add(self, other: PointAtInfinity) -> Dipole {
+    fn add(self, other: Dipole) -> Dipole {
         Dipole {
             groups: DipoleGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-                g2: self.group2() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g0: other.group0(),
+                g1: self.group0() + other.group1(),
+                g2: other.group2(),
             },
         }
     }
 }
 
-impl AddAssign<PointAtInfinity> for Dipole {
-    fn add_assign(&mut self, other: PointAtInfinity) {
-        *self = (*self).add(other);
-    }
-}
+impl Add<DipoleBulk> for DipoleBulk {
+    type Output = DipoleBulk;
 
-impl Add<PointAtOrigin> for Dipole {
-    type Output = Dipole;
-
-    fn add(self, other: PointAtOrigin) -> Dipole {
-        Dipole {
-            groups: DipoleGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-                g2: self.group2() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+    fn add(self, other: DipoleBulk) -> DipoleBulk {
+        DipoleBulk {
+            groups: DipoleBulkGroups {
+                g0: self.group0() + other.group0(),
             },
         }
     }
 }
 
-impl AddAssign<PointAtOrigin> for Dipole {
-    fn add_assign(&mut self, other: PointAtOrigin) {
+impl AddAssign<DipoleBulk> for DipoleBulk {
+    fn add_assign(&mut self, other: DipoleBulk) {
         *self = (*self).add(other);
+    }
+}
+
+impl Add<DipoleCarrierAspect> for DipoleBulk {
+    type Output = DipoleCarrierAspect;
+
+    fn add(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+        DipoleCarrierAspect {
+            groups: DipoleCarrierAspectGroups {
+                g0: other.group0(),
+                g1: self.group0() + other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<DipoleWeight> for DipoleBulk {
+    type Output = DipoleCarrierAspect;
+
+    fn add(self, other: DipoleWeight) -> DipoleCarrierAspect {
+        DipoleCarrierAspect {
+            groups: DipoleCarrierAspectGroups {
+                g0: other.group0(),
+                g1: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<MultiVector> for DipoleBulk {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
+                g3: other.group3(),
+                g4: self.group0() + other.group4(),
+                g5: other.group5(),
+                g6: other.group6(),
+                g7: other.group7(),
+                g8: other.group8(),
+                g9: other.group9(),
+                g10: other.group10(),
+            },
+        }
+    }
+}
+
+impl Add<Dipole> for DipoleCarrierAspect {
+    type Output = Dipole;
+
+    fn add(self, other: Dipole) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: self.group0() + other.group0(),
+                g1: self.group1() + other.group1(),
+                g2: other.group2(),
+            },
+        }
+    }
+}
+
+impl Add<DipoleBulk> for DipoleCarrierAspect {
+    type Output = DipoleCarrierAspect;
+
+    fn add(self, other: DipoleBulk) -> DipoleCarrierAspect {
+        DipoleCarrierAspect {
+            groups: DipoleCarrierAspectGroups {
+                g0: self.group0(),
+                g1: self.group1() + other.group0(),
+            },
+        }
+    }
+}
+
+impl AddAssign<DipoleBulk> for DipoleCarrierAspect {
+    fn add_assign(&mut self, other: DipoleBulk) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<DipoleCarrierAspect> for DipoleCarrierAspect {
+    type Output = DipoleCarrierAspect;
+
+    fn add(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+        DipoleCarrierAspect {
+            groups: DipoleCarrierAspectGroups {
+                g0: self.group0() + other.group0(),
+                g1: self.group1() + other.group1(),
+            },
+        }
+    }
+}
+
+impl AddAssign<DipoleCarrierAspect> for DipoleCarrierAspect {
+    fn add_assign(&mut self, other: DipoleCarrierAspect) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<DipoleWeight> for DipoleCarrierAspect {
+    type Output = DipoleCarrierAspect;
+
+    fn add(self, other: DipoleWeight) -> DipoleCarrierAspect {
+        DipoleCarrierAspect {
+            groups: DipoleCarrierAspectGroups {
+                g0: self.group0() + other.group0(),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl AddAssign<DipoleWeight> for DipoleCarrierAspect {
+    fn add_assign(&mut self, other: DipoleWeight) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<FlatPoint> for DipoleCarrierAspect {
+    type Output = Dipole;
+
+    fn add(self, other: FlatPoint) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: other.group0(),
+            },
+        }
+    }
+}
+
+impl Add<MultiVector> for DipoleCarrierAspect {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
+                g3: self.group0() + other.group3(),
+                g4: self.group1() + other.group4(),
+                g5: other.group5(),
+                g6: other.group6(),
+                g7: other.group7(),
+                g8: other.group8(),
+                g9: other.group9(),
+                g10: other.group10(),
+            },
+        }
+    }
+}
+
+impl Add<Dipole> for DipoleWeight {
+    type Output = Dipole;
+
+    fn add(self, other: Dipole) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: self.group0() + other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
+            },
+        }
+    }
+}
+
+impl Add<DipoleBulk> for DipoleWeight {
+    type Output = DipoleCarrierAspect;
+
+    fn add(self, other: DipoleBulk) -> DipoleCarrierAspect {
+        DipoleCarrierAspect {
+            groups: DipoleCarrierAspectGroups {
+                g0: self.group0(),
+                g1: other.group0(),
+            },
+        }
+    }
+}
+
+impl Add<DipoleCarrierAspect> for DipoleWeight {
+    type Output = DipoleCarrierAspect;
+
+    fn add(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+        DipoleCarrierAspect {
+            groups: DipoleCarrierAspectGroups {
+                g0: self.group0() + other.group0(),
+                g1: other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<DipoleWeight> for DipoleWeight {
+    type Output = DipoleWeight;
+
+    fn add(self, other: DipoleWeight) -> DipoleWeight {
+        DipoleWeight {
+            groups: DipoleWeightGroups {
+                g0: self.group0() + other.group0(),
+            },
+        }
+    }
+}
+
+impl AddAssign<DipoleWeight> for DipoleWeight {
+    fn add_assign(&mut self, other: DipoleWeight) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<MultiVector> for DipoleWeight {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
+                g3: self.group0() + other.group3(),
+                g4: other.group4(),
+                g5: other.group5(),
+                g6: other.group6(),
+                g7: other.group7(),
+                g8: other.group8(),
+                g9: other.group9(),
+                g10: other.group10(),
+            },
+        }
     }
 }
 
@@ -3086,6 +4846,20 @@ impl Add<Dipole> for FlatPoint {
                 g0: other.group0(),
                 g1: other.group1(),
                 g2: self.group0() + other.group2(),
+            },
+        }
+    }
+}
+
+impl Add<DipoleCarrierAspect> for FlatPoint {
+    type Output = Dipole;
+
+    fn add(self, other: DipoleCarrierAspect) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: other.group0(),
+                g1: other.group1(),
+                g2: self.group0(),
             },
         }
     }
@@ -3105,6 +4879,42 @@ impl Add<FlatPoint> for FlatPoint {
 
 impl AddAssign<FlatPoint> for FlatPoint {
     fn add_assign(&mut self, other: FlatPoint) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<FlatPointAtInfinity> for FlatPoint {
+    type Output = FlatPoint;
+
+    fn add(self, other: FlatPointAtInfinity) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: self.group0() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl AddAssign<FlatPointAtInfinity> for FlatPoint {
+    fn add_assign(&mut self, other: FlatPointAtInfinity) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<FlatPointAtOrigin> for FlatPoint {
+    type Output = FlatPoint;
+
+    fn add(self, other: FlatPointAtOrigin) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: self.group0() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl AddAssign<FlatPointAtOrigin> for FlatPoint {
+    fn add_assign(&mut self, other: FlatPointAtOrigin) {
         *self = (*self).add(other);
     }
 }
@@ -3157,39 +4967,185 @@ impl Add<Plane> for FlatPoint {
     }
 }
 
-impl Add<PointAtInfinity> for FlatPoint {
-    type Output = FlatPoint;
+impl Add<Dipole> for FlatPointAtInfinity {
+    type Output = Dipole;
 
-    fn add(self, other: PointAtInfinity) -> FlatPoint {
-        FlatPoint {
-            groups: FlatPointGroups {
-                g0: self.group0() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+    fn add(self, other: Dipole) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: other.group0(),
+                g1: other.group1(),
+                g2: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group2(),
             },
         }
     }
 }
 
-impl AddAssign<PointAtInfinity> for FlatPoint {
-    fn add_assign(&mut self, other: PointAtInfinity) {
-        *self = (*self).add(other);
-    }
-}
-
-impl Add<PointAtOrigin> for FlatPoint {
+impl Add<FlatPoint> for FlatPointAtInfinity {
     type Output = FlatPoint;
 
-    fn add(self, other: PointAtOrigin) -> FlatPoint {
+    fn add(self, other: FlatPoint) -> FlatPoint {
         FlatPoint {
             groups: FlatPointGroups {
-                g0: self.group0() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group0(),
             },
         }
     }
 }
 
-impl AddAssign<PointAtOrigin> for FlatPoint {
-    fn add_assign(&mut self, other: PointAtOrigin) {
+impl Add<FlatPointAtInfinity> for FlatPointAtInfinity {
+    type Output = FlatPointAtInfinity;
+
+    fn add(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        FlatPointAtInfinity {
+            groups: FlatPointAtInfinityGroups {
+                g0: self.group0() + other.group0(),
+            },
+        }
+    }
+}
+
+impl AddAssign<FlatPointAtInfinity> for FlatPointAtInfinity {
+    fn add_assign(&mut self, other: FlatPointAtInfinity) {
         *self = (*self).add(other);
+    }
+}
+
+impl Add<FlatPointAtOrigin> for FlatPointAtInfinity {
+    type Output = FlatPoint;
+
+    fn add(self, other: FlatPointAtOrigin) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl Add<Flector> for FlatPointAtInfinity {
+    type Output = Flector;
+
+    fn add(self, other: Flector) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group0(),
+                g1: other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<MultiVector> for FlatPointAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
+                g3: other.group3(),
+                g4: other.group4(),
+                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group5(),
+                g6: other.group6(),
+                g7: other.group7(),
+                g8: other.group8(),
+                g9: other.group9(),
+                g10: other.group10(),
+            },
+        }
+    }
+}
+
+impl Add<Dipole> for FlatPointAtOrigin {
+    type Output = Dipole;
+
+    fn add(self, other: Dipole) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: other.group0(),
+                g1: other.group1(),
+                g2: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group2(),
+            },
+        }
+    }
+}
+
+impl Add<FlatPoint> for FlatPointAtOrigin {
+    type Output = FlatPoint;
+
+    fn add(self, other: FlatPoint) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group0(),
+            },
+        }
+    }
+}
+
+impl Add<FlatPointAtInfinity> for FlatPointAtOrigin {
+    type Output = FlatPoint;
+
+    fn add(self, other: FlatPointAtInfinity) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl Add<FlatPointAtOrigin> for FlatPointAtOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn add(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        FlatPointAtOrigin {
+            groups: FlatPointAtOriginGroups {
+                g0: self.group0() + other.group0(),
+            },
+        }
+    }
+}
+
+impl AddAssign<FlatPointAtOrigin> for FlatPointAtOrigin {
+    fn add_assign(&mut self, other: FlatPointAtOrigin) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<Flector> for FlatPointAtOrigin {
+    type Output = Flector;
+
+    fn add(self, other: Flector) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group0(),
+                g1: other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<MultiVector> for FlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
+                g3: other.group3(),
+                g4: other.group4(),
+                g5: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group5(),
+                g6: other.group6(),
+                g7: other.group7(),
+                g8: other.group8(),
+                g9: other.group9(),
+                g10: other.group10(),
+            },
+        }
     }
 }
 
@@ -3208,6 +5164,44 @@ impl Add<FlatPoint> for Flector {
 
 impl AddAssign<FlatPoint> for Flector {
     fn add_assign(&mut self, other: FlatPoint) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<FlatPointAtInfinity> for Flector {
+    type Output = Flector;
+
+    fn add(self, other: FlatPointAtInfinity) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl AddAssign<FlatPointAtInfinity> for Flector {
+    fn add_assign(&mut self, other: FlatPointAtInfinity) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<FlatPointAtOrigin> for Flector {
+    type Output = Flector;
+
+    fn add(self, other: FlatPointAtOrigin) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl AddAssign<FlatPointAtOrigin> for Flector {
+    fn add_assign(&mut self, other: FlatPointAtOrigin) {
         *self = (*self).add(other);
     }
 }
@@ -3306,44 +5300,6 @@ impl Add<PlaneAtOrigin> for Flector {
 
 impl AddAssign<PlaneAtOrigin> for Flector {
     fn add_assign(&mut self, other: PlaneAtOrigin) {
-        *self = (*self).add(other);
-    }
-}
-
-impl Add<PointAtInfinity> for Flector {
-    type Output = Flector;
-
-    fn add(self, other: PointAtInfinity) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: self.group0() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g1: self.group1(),
-            },
-        }
-    }
-}
-
-impl AddAssign<PointAtInfinity> for Flector {
-    fn add_assign(&mut self, other: PointAtInfinity) {
-        *self = (*self).add(other);
-    }
-}
-
-impl Add<PointAtOrigin> for Flector {
-    type Output = Flector;
-
-    fn add(self, other: PointAtOrigin) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: self.group0() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-                g1: self.group1(),
-            },
-        }
-    }
-}
-
-impl AddAssign<PointAtOrigin> for Flector {
-    fn add_assign(&mut self, other: PointAtOrigin) {
         *self = (*self).add(other);
     }
 }
@@ -3478,6 +5434,18 @@ impl Add<MultiVector> for Infinity {
     }
 }
 
+impl Add<Origin> for Infinity {
+    type Output = RoundPointAtOrigin;
+
+    fn add(self, other: Origin) -> RoundPointAtOrigin {
+        RoundPointAtOrigin {
+            groups: RoundPointAtOriginGroups {
+                g0: Simd32x2::from([0.0, self.group0()]) + Simd32x2::from([other.group0(), 0.0]),
+            },
+        }
+    }
+}
+
 impl Add<RoundPoint> for Infinity {
     type Output = RoundPoint;
 
@@ -3486,6 +5454,55 @@ impl Add<RoundPoint> for Infinity {
             groups: RoundPointGroups {
                 g0: other.group0(),
                 g1: Simd32x2::from([0.0, self.group0()]) + other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointAtInfinity> for Infinity {
+    type Output = RoundPointAtInfinity;
+
+    fn add(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
+        RoundPointAtInfinity {
+            groups: RoundPointAtInfinityGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group0(),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointAtOrigin> for Infinity {
+    type Output = RoundPointAtOrigin;
+
+    fn add(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        RoundPointAtOrigin {
+            groups: RoundPointAtOriginGroups {
+                g0: Simd32x2::from([0.0, self.group0()]) + other.group0(),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointBulk> for Infinity {
+    type Output = RoundPointAtInfinity;
+
+    fn add(self, other: RoundPointBulk) -> RoundPointAtInfinity {
+        RoundPointAtInfinity {
+            groups: RoundPointAtInfinityGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointCarrierAspect> for Infinity {
+    type Output = RoundPoint;
+
+    fn add(self, other: RoundPointCarrierAspect) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g1: Simd32x2::from([0.0, self.group0()]) + Simd32x2::from([other.group0()[3], 0.0]),
             },
         }
     }
@@ -3513,6 +5530,20 @@ impl Add<Circle> for Line {
                 g0: other.group0(),
                 g1: self.group0() + other.group1(),
                 g2: self.group1() + other.group2(),
+            },
+        }
+    }
+}
+
+impl Add<CircleCarrierAspect> for Line {
+    type Output = Circle;
+
+    fn add(self, other: CircleCarrierAspect) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: other.group0(),
+                g1: self.group0(),
+                g2: self.group1(),
             },
         }
     }
@@ -4183,6 +6214,90 @@ impl AddAssign<Circle> for MultiVector {
     }
 }
 
+impl Add<CircleBulk> for MultiVector {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleBulk) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl AddAssign<CircleBulk> for MultiVector {
+    fn add_assign(&mut self, other: CircleBulk) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<CircleCarrierAspect> for MultiVector {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleCarrierAspect) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6() + other.group0(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl AddAssign<CircleCarrierAspect> for MultiVector {
+    fn add_assign(&mut self, other: CircleCarrierAspect) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<CircleWeight> for MultiVector {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleWeight) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl AddAssign<CircleWeight> for MultiVector {
+    fn add_assign(&mut self, other: CircleWeight) {
+        *self = (*self).add(other);
+    }
+}
+
 impl Add<Dipole> for MultiVector {
     type Output = MultiVector;
 
@@ -4211,6 +6326,90 @@ impl AddAssign<Dipole> for MultiVector {
     }
 }
 
+impl Add<DipoleBulk> for MultiVector {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleBulk) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4() + other.group0(),
+                g5: self.group5(),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl AddAssign<DipoleBulk> for MultiVector {
+    fn add_assign(&mut self, other: DipoleBulk) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<DipoleCarrierAspect> for MultiVector {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleCarrierAspect) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3() + other.group0(),
+                g4: self.group4() + other.group1(),
+                g5: self.group5(),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl AddAssign<DipoleCarrierAspect> for MultiVector {
+    fn add_assign(&mut self, other: DipoleCarrierAspect) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<DipoleWeight> for MultiVector {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleWeight) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3() + other.group0(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl AddAssign<DipoleWeight> for MultiVector {
+    fn add_assign(&mut self, other: DipoleWeight) {
+        *self = (*self).add(other);
+    }
+}
+
 impl Add<FlatPoint> for MultiVector {
     type Output = MultiVector;
 
@@ -4235,6 +6434,62 @@ impl Add<FlatPoint> for MultiVector {
 
 impl AddAssign<FlatPoint> for MultiVector {
     fn add_assign(&mut self, other: FlatPoint) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<FlatPointAtInfinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn add(self, other: FlatPointAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl AddAssign<FlatPointAtInfinity> for MultiVector {
+    fn add_assign(&mut self, other: FlatPointAtInfinity) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<FlatPointAtOrigin> for MultiVector {
+    type Output = MultiVector;
+
+    fn add(self, other: FlatPointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl AddAssign<FlatPointAtOrigin> for MultiVector {
+    fn add_assign(&mut self, other: FlatPointAtOrigin) {
         *self = (*self).add(other);
     }
 }
@@ -4575,62 +6830,6 @@ impl AddAssign<PlaneAtOrigin> for MultiVector {
     }
 }
 
-impl Add<PointAtInfinity> for MultiVector {
-    type Output = MultiVector;
-
-    fn add(self, other: PointAtInfinity) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-                g2: self.group2(),
-                g3: self.group3(),
-                g4: self.group4(),
-                g5: self.group5() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: self.group6(),
-                g7: self.group7(),
-                g8: self.group8(),
-                g9: self.group9(),
-                g10: self.group10(),
-            },
-        }
-    }
-}
-
-impl AddAssign<PointAtInfinity> for MultiVector {
-    fn add_assign(&mut self, other: PointAtInfinity) {
-        *self = (*self).add(other);
-    }
-}
-
-impl Add<PointAtOrigin> for MultiVector {
-    type Output = MultiVector;
-
-    fn add(self, other: PointAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-                g2: self.group2(),
-                g3: self.group3(),
-                g4: self.group4(),
-                g5: self.group5() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-                g6: self.group6(),
-                g7: self.group7(),
-                g8: self.group8(),
-                g9: self.group9(),
-                g10: self.group10(),
-            },
-        }
-    }
-}
-
-impl AddAssign<PointAtOrigin> for MultiVector {
-    fn add_assign(&mut self, other: PointAtOrigin) {
-        *self = (*self).add(other);
-    }
-}
-
 impl Add<Rotor> for MultiVector {
     type Output = MultiVector;
 
@@ -4683,6 +6882,118 @@ impl Add<RoundPoint> for MultiVector {
 
 impl AddAssign<RoundPoint> for MultiVector {
     fn add_assign(&mut self, other: RoundPoint) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<RoundPointAtInfinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn add(self, other: RoundPointAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: self.group2() + Simd32x2::from([0.0, other.group0()[3]]),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl AddAssign<RoundPointAtInfinity> for MultiVector {
+    fn add_assign(&mut self, other: RoundPointAtInfinity) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<RoundPointAtOrigin> for MultiVector {
+    type Output = MultiVector;
+
+    fn add(self, other: RoundPointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2() + other.group0(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl AddAssign<RoundPointAtOrigin> for MultiVector {
+    fn add_assign(&mut self, other: RoundPointAtOrigin) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<RoundPointBulk> for MultiVector {
+    type Output = MultiVector;
+
+    fn add(self, other: RoundPointBulk) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1() + other.group0(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl AddAssign<RoundPointBulk> for MultiVector {
+    fn add_assign(&mut self, other: RoundPointBulk) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<RoundPointCarrierAspect> for MultiVector {
+    type Output = MultiVector;
+
+    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: self.group2() + Simd32x2::from([other.group0()[3], 0.0]),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl AddAssign<RoundPointCarrierAspect> for MultiVector {
+    fn add_assign(&mut self, other: RoundPointCarrierAspect) {
         *self = (*self).add(other);
     }
 }
@@ -4743,6 +7054,34 @@ impl AddAssign<Sphere> for MultiVector {
     }
 }
 
+impl Add<SphereWeight> for MultiVector {
+    type Output = MultiVector;
+
+    fn add(self, other: SphereWeight) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10() + Simd32x2::from([other.group0(), 0.0]),
+            },
+        }
+    }
+}
+
+impl AddAssign<SphereWeight> for MultiVector {
+    fn add_assign(&mut self, other: SphereWeight) {
+        *self = (*self).add(other);
+    }
+}
+
 impl Add<Translator> for MultiVector {
     type Output = MultiVector;
 
@@ -4768,6 +7107,18 @@ impl Add<Translator> for MultiVector {
 impl AddAssign<Translator> for MultiVector {
     fn add_assign(&mut self, other: Translator) {
         *self = (*self).add(other);
+    }
+}
+
+impl Add<Infinity> for Origin {
+    type Output = RoundPointAtOrigin;
+
+    fn add(self, other: Infinity) -> RoundPointAtOrigin {
+        RoundPointAtOrigin {
+            groups: RoundPointAtOriginGroups {
+                g0: Simd32x2::from([self.group0(), 0.0]) + Simd32x2::from([0.0, other.group0()]),
+            },
+        }
     }
 }
 
@@ -4819,6 +7170,55 @@ impl Add<RoundPoint> for Origin {
             groups: RoundPointGroups {
                 g0: other.group0(),
                 g1: Simd32x2::from([self.group0(), 0.0]) + other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointAtInfinity> for Origin {
+    type Output = RoundPoint;
+
+    fn add(self, other: RoundPointAtInfinity) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g1: Simd32x2::from([self.group0(), 0.0]) + Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointAtOrigin> for Origin {
+    type Output = RoundPointAtOrigin;
+
+    fn add(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        RoundPointAtOrigin {
+            groups: RoundPointAtOriginGroups {
+                g0: Simd32x2::from([self.group0(), 0.0]) + other.group0(),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointBulk> for Origin {
+    type Output = RoundPointCarrierAspect;
+
+    fn add(self, other: RoundPointBulk) -> RoundPointCarrierAspect {
+        RoundPointCarrierAspect {
+            groups: RoundPointCarrierAspectGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointCarrierAspect> for Origin {
+    type Output = RoundPointCarrierAspect;
+
+    fn add(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+        RoundPointCarrierAspect {
+            groups: RoundPointCarrierAspectGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group0(),
             },
         }
     }
@@ -4939,6 +7339,19 @@ impl Add<Sphere> for Plane {
     }
 }
 
+impl Add<SphereWeight> for Plane {
+    type Output = Sphere;
+
+    fn add(self, other: SphereWeight) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g1: Simd32x2::from([0.0, self.group0()[3]]) + Simd32x2::from([other.group0(), 0.0]),
+            },
+        }
+    }
+}
+
 impl Add<Flector> for PlaneAtOrigin {
     type Output = Flector;
 
@@ -5026,188 +7439,6 @@ impl Add<Sphere> for PlaneAtOrigin {
                 g1: other.group1(),
             },
         }
-    }
-}
-
-impl Add<Dipole> for PointAtInfinity {
-    type Output = Dipole;
-
-    fn add(self, other: Dipole) -> Dipole {
-        Dipole {
-            groups: DipoleGroups {
-                g0: other.group0(),
-                g1: other.group1(),
-                g2: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group2(),
-            },
-        }
-    }
-}
-
-impl Add<FlatPoint> for PointAtInfinity {
-    type Output = FlatPoint;
-
-    fn add(self, other: FlatPoint) -> FlatPoint {
-        FlatPoint {
-            groups: FlatPointGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group0(),
-            },
-        }
-    }
-}
-
-impl Add<Flector> for PointAtInfinity {
-    type Output = Flector;
-
-    fn add(self, other: Flector) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group0(),
-                g1: other.group1(),
-            },
-        }
-    }
-}
-
-impl Add<MultiVector> for PointAtInfinity {
-    type Output = MultiVector;
-
-    fn add(self, other: MultiVector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: other.group0(),
-                g1: other.group1(),
-                g2: other.group2(),
-                g3: other.group3(),
-                g4: other.group4(),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group5(),
-                g6: other.group6(),
-                g7: other.group7(),
-                g8: other.group8(),
-                g9: other.group9(),
-                g10: other.group10(),
-            },
-        }
-    }
-}
-
-impl Add<PointAtInfinity> for PointAtInfinity {
-    type Output = PointAtInfinity;
-
-    fn add(self, other: PointAtInfinity) -> PointAtInfinity {
-        PointAtInfinity {
-            groups: PointAtInfinityGroups {
-                g0: self.group0() + other.group0(),
-            },
-        }
-    }
-}
-
-impl AddAssign<PointAtInfinity> for PointAtInfinity {
-    fn add_assign(&mut self, other: PointAtInfinity) {
-        *self = (*self).add(other);
-    }
-}
-
-impl Add<PointAtOrigin> for PointAtInfinity {
-    type Output = FlatPoint;
-
-    fn add(self, other: PointAtOrigin) -> FlatPoint {
-        FlatPoint {
-            groups: FlatPointGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-            },
-        }
-    }
-}
-
-impl Add<Dipole> for PointAtOrigin {
-    type Output = Dipole;
-
-    fn add(self, other: Dipole) -> Dipole {
-        Dipole {
-            groups: DipoleGroups {
-                g0: other.group0(),
-                g1: other.group1(),
-                g2: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group2(),
-            },
-        }
-    }
-}
-
-impl Add<FlatPoint> for PointAtOrigin {
-    type Output = FlatPoint;
-
-    fn add(self, other: FlatPoint) -> FlatPoint {
-        FlatPoint {
-            groups: FlatPointGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group0(),
-            },
-        }
-    }
-}
-
-impl Add<Flector> for PointAtOrigin {
-    type Output = Flector;
-
-    fn add(self, other: Flector) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group0(),
-                g1: other.group1(),
-            },
-        }
-    }
-}
-
-impl Add<MultiVector> for PointAtOrigin {
-    type Output = MultiVector;
-
-    fn add(self, other: MultiVector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: other.group0(),
-                g1: other.group1(),
-                g2: other.group2(),
-                g3: other.group3(),
-                g4: other.group4(),
-                g5: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group5(),
-                g6: other.group6(),
-                g7: other.group7(),
-                g8: other.group8(),
-                g9: other.group9(),
-                g10: other.group10(),
-            },
-        }
-    }
-}
-
-impl Add<PointAtInfinity> for PointAtOrigin {
-    type Output = FlatPoint;
-
-    fn add(self, other: PointAtInfinity) -> FlatPoint {
-        FlatPoint {
-            groups: FlatPointGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-            },
-        }
-    }
-}
-
-impl Add<PointAtOrigin> for PointAtOrigin {
-    type Output = PointAtOrigin;
-
-    fn add(self, other: PointAtOrigin) -> PointAtOrigin {
-        PointAtOrigin {
-            groups: PointAtOriginGroups {
-                g0: self.group0() + other.group0(),
-            },
-        }
-    }
-}
-
-impl AddAssign<PointAtOrigin> for PointAtOrigin {
-    fn add_assign(&mut self, other: PointAtOrigin) {
-        *self = (*self).add(other);
     }
 }
 
@@ -5418,6 +7649,580 @@ impl AddAssign<RoundPoint> for RoundPoint {
     }
 }
 
+impl Add<RoundPointAtInfinity> for RoundPoint {
+    type Output = RoundPoint;
+
+    fn add(self, other: RoundPointAtInfinity) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: self.group0() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g1: self.group1() + Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl AddAssign<RoundPointAtInfinity> for RoundPoint {
+    fn add_assign(&mut self, other: RoundPointAtInfinity) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<RoundPointAtOrigin> for RoundPoint {
+    type Output = RoundPoint;
+
+    fn add(self, other: RoundPointAtOrigin) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: self.group0(),
+                g1: self.group1() + other.group0(),
+            },
+        }
+    }
+}
+
+impl AddAssign<RoundPointAtOrigin> for RoundPoint {
+    fn add_assign(&mut self, other: RoundPointAtOrigin) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<RoundPointBulk> for RoundPoint {
+    type Output = RoundPoint;
+
+    fn add(self, other: RoundPointBulk) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: self.group0() + other.group0(),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl AddAssign<RoundPointBulk> for RoundPoint {
+    fn add_assign(&mut self, other: RoundPointBulk) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<RoundPointCarrierAspect> for RoundPoint {
+    type Output = RoundPoint;
+
+    fn add(self, other: RoundPointCarrierAspect) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: self.group0() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g1: self.group1() + Simd32x2::from([other.group0()[3], 0.0]),
+            },
+        }
+    }
+}
+
+impl AddAssign<RoundPointCarrierAspect> for RoundPoint {
+    fn add_assign(&mut self, other: RoundPointCarrierAspect) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<Infinity> for RoundPointAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn add(self, other: Infinity) -> RoundPointAtInfinity {
+        RoundPointAtInfinity {
+            groups: RoundPointAtInfinityGroups {
+                g0: self.group0() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl AddAssign<Infinity> for RoundPointAtInfinity {
+    fn add_assign(&mut self, other: Infinity) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<MultiVector> for RoundPointAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: other.group0(),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group1(),
+                g2: Simd32x2::from([0.0, self.group0()[3]]) + other.group2(),
+                g3: other.group3(),
+                g4: other.group4(),
+                g5: other.group5(),
+                g6: other.group6(),
+                g7: other.group7(),
+                g8: other.group8(),
+                g9: other.group9(),
+                g10: other.group10(),
+            },
+        }
+    }
+}
+
+impl Add<Origin> for RoundPointAtInfinity {
+    type Output = RoundPoint;
+
+    fn add(self, other: Origin) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g1: Simd32x2::from([0.0, self.group0()[3]]) + Simd32x2::from([other.group0(), 0.0]),
+            },
+        }
+    }
+}
+
+impl Add<RoundPoint> for RoundPointAtInfinity {
+    type Output = RoundPoint;
+
+    fn add(self, other: RoundPoint) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group0(),
+                g1: Simd32x2::from([0.0, self.group0()[3]]) + other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointAtInfinity> for RoundPointAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn add(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
+        RoundPointAtInfinity {
+            groups: RoundPointAtInfinityGroups {
+                g0: self.group0() + other.group0(),
+            },
+        }
+    }
+}
+
+impl AddAssign<RoundPointAtInfinity> for RoundPointAtInfinity {
+    fn add_assign(&mut self, other: RoundPointAtInfinity) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<RoundPointAtOrigin> for RoundPointAtInfinity {
+    type Output = RoundPoint;
+
+    fn add(self, other: RoundPointAtOrigin) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g1: Simd32x2::from([0.0, self.group0()[3]]) + other.group0(),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointBulk> for RoundPointAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn add(self, other: RoundPointBulk) -> RoundPointAtInfinity {
+        RoundPointAtInfinity {
+            groups: RoundPointAtInfinityGroups {
+                g0: self.group0() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl AddAssign<RoundPointBulk> for RoundPointAtInfinity {
+    fn add_assign(&mut self, other: RoundPointBulk) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<RoundPointCarrierAspect> for RoundPointAtInfinity {
+    type Output = RoundPoint;
+
+    fn add(self, other: RoundPointCarrierAspect) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g1: Simd32x2::from([0.0, self.group0()[3]]) + Simd32x2::from([other.group0()[3], 0.0]),
+            },
+        }
+    }
+}
+
+impl Add<Infinity> for RoundPointAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn add(self, other: Infinity) -> RoundPointAtOrigin {
+        RoundPointAtOrigin {
+            groups: RoundPointAtOriginGroups {
+                g0: self.group0() + Simd32x2::from([0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl AddAssign<Infinity> for RoundPointAtOrigin {
+    fn add_assign(&mut self, other: Infinity) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<MultiVector> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: other.group0(),
+                g1: other.group1(),
+                g2: self.group0() + other.group2(),
+                g3: other.group3(),
+                g4: other.group4(),
+                g5: other.group5(),
+                g6: other.group6(),
+                g7: other.group7(),
+                g8: other.group8(),
+                g9: other.group9(),
+                g10: other.group10(),
+            },
+        }
+    }
+}
+
+impl Add<Origin> for RoundPointAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn add(self, other: Origin) -> RoundPointAtOrigin {
+        RoundPointAtOrigin {
+            groups: RoundPointAtOriginGroups {
+                g0: self.group0() + Simd32x2::from([other.group0(), 0.0]),
+            },
+        }
+    }
+}
+
+impl AddAssign<Origin> for RoundPointAtOrigin {
+    fn add_assign(&mut self, other: Origin) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<RoundPoint> for RoundPointAtOrigin {
+    type Output = RoundPoint;
+
+    fn add(self, other: RoundPoint) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: other.group0(),
+                g1: self.group0() + other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointAtInfinity> for RoundPointAtOrigin {
+    type Output = RoundPoint;
+
+    fn add(self, other: RoundPointAtInfinity) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g1: self.group0() + Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointAtOrigin> for RoundPointAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn add(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        RoundPointAtOrigin {
+            groups: RoundPointAtOriginGroups {
+                g0: self.group0() + other.group0(),
+            },
+        }
+    }
+}
+
+impl AddAssign<RoundPointAtOrigin> for RoundPointAtOrigin {
+    fn add_assign(&mut self, other: RoundPointAtOrigin) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<RoundPointBulk> for RoundPointAtOrigin {
+    type Output = RoundPoint;
+
+    fn add(self, other: RoundPointBulk) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: other.group0(),
+                g1: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointCarrierAspect> for RoundPointAtOrigin {
+    type Output = RoundPoint;
+
+    fn add(self, other: RoundPointCarrierAspect) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g1: self.group0() + Simd32x2::from([other.group0()[3], 0.0]),
+            },
+        }
+    }
+}
+
+impl Add<Infinity> for RoundPointBulk {
+    type Output = RoundPointAtInfinity;
+
+    fn add(self, other: Infinity) -> RoundPointAtInfinity {
+        RoundPointAtInfinity {
+            groups: RoundPointAtInfinityGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl Add<MultiVector> for RoundPointBulk {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: other.group0(),
+                g1: self.group0() + other.group1(),
+                g2: other.group2(),
+                g3: other.group3(),
+                g4: other.group4(),
+                g5: other.group5(),
+                g6: other.group6(),
+                g7: other.group7(),
+                g8: other.group8(),
+                g9: other.group9(),
+                g10: other.group10(),
+            },
+        }
+    }
+}
+
+impl Add<Origin> for RoundPointBulk {
+    type Output = RoundPointCarrierAspect;
+
+    fn add(self, other: Origin) -> RoundPointCarrierAspect {
+        RoundPointCarrierAspect {
+            groups: RoundPointCarrierAspectGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl Add<RoundPoint> for RoundPointBulk {
+    type Output = RoundPoint;
+
+    fn add(self, other: RoundPoint) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: self.group0() + other.group0(),
+                g1: other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointAtInfinity> for RoundPointBulk {
+    type Output = RoundPointAtInfinity;
+
+    fn add(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
+        RoundPointAtInfinity {
+            groups: RoundPointAtInfinityGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group0(),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointAtOrigin> for RoundPointBulk {
+    type Output = RoundPoint;
+
+    fn add(self, other: RoundPointAtOrigin) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: self.group0(),
+                g1: other.group0(),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointBulk> for RoundPointBulk {
+    type Output = RoundPointBulk;
+
+    fn add(self, other: RoundPointBulk) -> RoundPointBulk {
+        RoundPointBulk {
+            groups: RoundPointBulkGroups {
+                g0: self.group0() + other.group0(),
+            },
+        }
+    }
+}
+
+impl AddAssign<RoundPointBulk> for RoundPointBulk {
+    fn add_assign(&mut self, other: RoundPointBulk) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<RoundPointCarrierAspect> for RoundPointBulk {
+    type Output = RoundPointCarrierAspect;
+
+    fn add(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+        RoundPointCarrierAspect {
+            groups: RoundPointCarrierAspectGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group0(),
+            },
+        }
+    }
+}
+
+impl Add<Infinity> for RoundPointCarrierAspect {
+    type Output = RoundPoint;
+
+    fn add(self, other: Infinity) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g1: Simd32x2::from([self.group0()[3], 0.0]) + Simd32x2::from([0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl Add<MultiVector> for RoundPointCarrierAspect {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: other.group0(),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group1(),
+                g2: Simd32x2::from([self.group0()[3], 0.0]) + other.group2(),
+                g3: other.group3(),
+                g4: other.group4(),
+                g5: other.group5(),
+                g6: other.group6(),
+                g7: other.group7(),
+                g8: other.group8(),
+                g9: other.group9(),
+                g10: other.group10(),
+            },
+        }
+    }
+}
+
+impl Add<Origin> for RoundPointCarrierAspect {
+    type Output = RoundPointCarrierAspect;
+
+    fn add(self, other: Origin) -> RoundPointCarrierAspect {
+        RoundPointCarrierAspect {
+            groups: RoundPointCarrierAspectGroups {
+                g0: self.group0() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl AddAssign<Origin> for RoundPointCarrierAspect {
+    fn add_assign(&mut self, other: Origin) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<RoundPoint> for RoundPointCarrierAspect {
+    type Output = RoundPoint;
+
+    fn add(self, other: RoundPoint) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group0(),
+                g1: Simd32x2::from([self.group0()[3], 0.0]) + other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointAtInfinity> for RoundPointCarrierAspect {
+    type Output = RoundPoint;
+
+    fn add(self, other: RoundPointAtInfinity) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g1: Simd32x2::from([self.group0()[3], 0.0]) + Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointAtOrigin> for RoundPointCarrierAspect {
+    type Output = RoundPoint;
+
+    fn add(self, other: RoundPointAtOrigin) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g1: Simd32x2::from([self.group0()[3], 0.0]) + other.group0(),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointBulk> for RoundPointCarrierAspect {
+    type Output = RoundPointCarrierAspect;
+
+    fn add(self, other: RoundPointBulk) -> RoundPointCarrierAspect {
+        RoundPointCarrierAspect {
+            groups: RoundPointCarrierAspectGroups {
+                g0: self.group0() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl AddAssign<RoundPointBulk> for RoundPointCarrierAspect {
+    fn add_assign(&mut self, other: RoundPointBulk) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<RoundPointCarrierAspect> for RoundPointCarrierAspect {
+    type Output = RoundPointCarrierAspect;
+
+    fn add(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+        RoundPointCarrierAspect {
+            groups: RoundPointCarrierAspectGroups {
+                g0: self.group0() + other.group0(),
+            },
+        }
+    }
+}
+
+impl AddAssign<RoundPointCarrierAspect> for RoundPointCarrierAspect {
+    fn add_assign(&mut self, other: RoundPointCarrierAspect) {
+        *self = (*self).add(other);
+    }
+}
+
 impl Add<AntiScalar> for Scalar {
     type Output = Magnitude;
 
@@ -5576,6 +8381,91 @@ impl Add<Sphere> for Sphere {
 
 impl AddAssign<Sphere> for Sphere {
     fn add_assign(&mut self, other: Sphere) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<SphereWeight> for Sphere {
+    type Output = Sphere;
+
+    fn add(self, other: SphereWeight) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: self.group0(),
+                g1: self.group1() + Simd32x2::from([other.group0(), 0.0]),
+            },
+        }
+    }
+}
+
+impl AddAssign<SphereWeight> for Sphere {
+    fn add_assign(&mut self, other: SphereWeight) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<MultiVector> for SphereWeight {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
+                g3: other.group3(),
+                g4: other.group4(),
+                g5: other.group5(),
+                g6: other.group6(),
+                g7: other.group7(),
+                g8: other.group8(),
+                g9: other.group9(),
+                g10: Simd32x2::from([self.group0(), 0.0]) + other.group10(),
+            },
+        }
+    }
+}
+
+impl Add<Plane> for SphereWeight {
+    type Output = Sphere;
+
+    fn add(self, other: Plane) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g1: Simd32x2::from([self.group0(), 0.0]) + Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<Sphere> for SphereWeight {
+    type Output = Sphere;
+
+    fn add(self, other: Sphere) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: other.group0(),
+                g1: Simd32x2::from([self.group0(), 0.0]) + other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<SphereWeight> for SphereWeight {
+    type Output = SphereWeight;
+
+    fn add(self, other: SphereWeight) -> SphereWeight {
+        SphereWeight {
+            groups: SphereWeightGroups {
+                g0: self.group0() + other.group0(),
+            },
+        }
+    }
+}
+
+impl AddAssign<SphereWeight> for SphereWeight {
+    fn add_assign(&mut self, other: SphereWeight) {
         *self = (*self).add(other);
     }
 }
@@ -5752,6 +8642,64 @@ impl DivAssign<Circle> for Circle {
     }
 }
 
+impl Div<CircleBulk> for CircleBulk {
+    type Output = CircleBulk;
+
+    fn div(self, other: CircleBulk) -> CircleBulk {
+        CircleBulk {
+            groups: CircleBulkGroups {
+                g0: self.group0() * 1.0 / other.group0() * 1.0,
+            },
+        }
+    }
+}
+
+impl DivAssign<CircleBulk> for CircleBulk {
+    fn div_assign(&mut self, other: CircleBulk) {
+        *self = (*self).div(other);
+    }
+}
+
+impl Div<CircleCarrierAspect> for CircleCarrierAspect {
+    type Output = CircleCarrierAspect;
+
+    fn div(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+        CircleCarrierAspect {
+            groups: CircleCarrierAspectGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 1.0])
+                    / Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group0()[3]])
+                    * Simd32x4::from([1.0, 1.0, 1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl DivAssign<CircleCarrierAspect> for CircleCarrierAspect {
+    fn div_assign(&mut self, other: CircleCarrierAspect) {
+        *self = (*self).div(other);
+    }
+}
+
+impl Div<CircleWeight> for CircleWeight {
+    type Output = CircleWeight;
+
+    fn div(self, other: CircleWeight) -> CircleWeight {
+        CircleWeight {
+            groups: CircleWeightGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
+                    / Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
+                    * Simd32x3::from([1.0, 1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl DivAssign<CircleWeight> for CircleWeight {
+    fn div_assign(&mut self, other: CircleWeight) {
+        *self = (*self).div(other);
+    }
+}
+
 impl Div<Dipole> for Dipole {
     type Output = Dipole;
 
@@ -5778,6 +8726,69 @@ impl DivAssign<Dipole> for Dipole {
     }
 }
 
+impl Div<DipoleBulk> for DipoleBulk {
+    type Output = DipoleBulk;
+
+    fn div(self, other: DipoleBulk) -> DipoleBulk {
+        DipoleBulk {
+            groups: DipoleBulkGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
+                    / Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
+                    * Simd32x3::from([1.0, 1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl DivAssign<DipoleBulk> for DipoleBulk {
+    fn div_assign(&mut self, other: DipoleBulk) {
+        *self = (*self).div(other);
+    }
+}
+
+impl Div<DipoleCarrierAspect> for DipoleCarrierAspect {
+    type Output = DipoleCarrierAspect;
+
+    fn div(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+        DipoleCarrierAspect {
+            groups: DipoleCarrierAspectGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
+                    / Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
+                    * Simd32x3::from([1.0, 1.0, 1.0]),
+                g1: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
+                    / Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])
+                    * Simd32x3::from([1.0, 1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl DivAssign<DipoleCarrierAspect> for DipoleCarrierAspect {
+    fn div_assign(&mut self, other: DipoleCarrierAspect) {
+        *self = (*self).div(other);
+    }
+}
+
+impl Div<DipoleWeight> for DipoleWeight {
+    type Output = DipoleWeight;
+
+    fn div(self, other: DipoleWeight) -> DipoleWeight {
+        DipoleWeight {
+            groups: DipoleWeightGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
+                    / Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
+                    * Simd32x3::from([1.0, 1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl DivAssign<DipoleWeight> for DipoleWeight {
+    fn div_assign(&mut self, other: DipoleWeight) {
+        *self = (*self).div(other);
+    }
+}
+
 impl Div<FlatPoint> for FlatPoint {
     type Output = FlatPoint;
 
@@ -5794,6 +8805,44 @@ impl Div<FlatPoint> for FlatPoint {
 
 impl DivAssign<FlatPoint> for FlatPoint {
     fn div_assign(&mut self, other: FlatPoint) {
+        *self = (*self).div(other);
+    }
+}
+
+impl Div<FlatPointAtInfinity> for FlatPointAtInfinity {
+    type Output = FlatPointAtInfinity;
+
+    fn div(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        FlatPointAtInfinity {
+            groups: FlatPointAtInfinityGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
+                    / Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
+                    * Simd32x3::from([1.0, 1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl DivAssign<FlatPointAtInfinity> for FlatPointAtInfinity {
+    fn div_assign(&mut self, other: FlatPointAtInfinity) {
+        *self = (*self).div(other);
+    }
+}
+
+impl Div<FlatPointAtOrigin> for FlatPointAtOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn div(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        FlatPointAtOrigin {
+            groups: FlatPointAtOriginGroups {
+                g0: self.group0() * 1.0 / other.group0() * 1.0,
+            },
+        }
+    }
+}
+
+impl DivAssign<FlatPointAtOrigin> for FlatPointAtOrigin {
+    fn div_assign(&mut self, other: FlatPointAtOrigin) {
         *self = (*self).div(other);
     }
 }
@@ -6067,44 +9116,6 @@ impl DivAssign<PlaneAtOrigin> for PlaneAtOrigin {
     }
 }
 
-impl Div<PointAtInfinity> for PointAtInfinity {
-    type Output = PointAtInfinity;
-
-    fn div(self, other: PointAtInfinity) -> PointAtInfinity {
-        PointAtInfinity {
-            groups: PointAtInfinityGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
-                    / Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    * Simd32x3::from([1.0, 1.0, 1.0]),
-            },
-        }
-    }
-}
-
-impl DivAssign<PointAtInfinity> for PointAtInfinity {
-    fn div_assign(&mut self, other: PointAtInfinity) {
-        *self = (*self).div(other);
-    }
-}
-
-impl Div<PointAtOrigin> for PointAtOrigin {
-    type Output = PointAtOrigin;
-
-    fn div(self, other: PointAtOrigin) -> PointAtOrigin {
-        PointAtOrigin {
-            groups: PointAtOriginGroups {
-                g0: self.group0() * 1.0 / other.group0() * 1.0,
-            },
-        }
-    }
-}
-
-impl DivAssign<PointAtOrigin> for PointAtOrigin {
-    fn div_assign(&mut self, other: PointAtOrigin) {
-        *self = (*self).div(other);
-    }
-}
-
 impl Div<Rotor> for Rotor {
     type Output = Rotor;
 
@@ -6143,6 +9154,85 @@ impl Div<RoundPoint> for RoundPoint {
 
 impl DivAssign<RoundPoint> for RoundPoint {
     fn div_assign(&mut self, other: RoundPoint) {
+        *self = (*self).div(other);
+    }
+}
+
+impl Div<RoundPointAtInfinity> for RoundPointAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn div(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
+        RoundPointAtInfinity {
+            groups: RoundPointAtInfinityGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 1.0])
+                    / Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group0()[3]])
+                    * Simd32x4::from([1.0, 1.0, 1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl DivAssign<RoundPointAtInfinity> for RoundPointAtInfinity {
+    fn div_assign(&mut self, other: RoundPointAtInfinity) {
+        *self = (*self).div(other);
+    }
+}
+
+impl Div<RoundPointAtOrigin> for RoundPointAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn div(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        RoundPointAtOrigin {
+            groups: RoundPointAtOriginGroups {
+                g0: Simd32x2::from([self.group0()[0], self.group0()[1]]) * Simd32x2::from([1.0, 1.0]) / Simd32x2::from([other.group0()[0], other.group0()[1]])
+                    * Simd32x2::from([1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl DivAssign<RoundPointAtOrigin> for RoundPointAtOrigin {
+    fn div_assign(&mut self, other: RoundPointAtOrigin) {
+        *self = (*self).div(other);
+    }
+}
+
+impl Div<RoundPointBulk> for RoundPointBulk {
+    type Output = RoundPointBulk;
+
+    fn div(self, other: RoundPointBulk) -> RoundPointBulk {
+        RoundPointBulk {
+            groups: RoundPointBulkGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
+                    / Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
+                    * Simd32x3::from([1.0, 1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl DivAssign<RoundPointBulk> for RoundPointBulk {
+    fn div_assign(&mut self, other: RoundPointBulk) {
+        *self = (*self).div(other);
+    }
+}
+
+impl Div<RoundPointCarrierAspect> for RoundPointCarrierAspect {
+    type Output = RoundPointCarrierAspect;
+
+    fn div(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+        RoundPointCarrierAspect {
+            groups: RoundPointCarrierAspectGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 1.0])
+                    / Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group0()[3]])
+                    * Simd32x4::from([1.0, 1.0, 1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl DivAssign<RoundPointCarrierAspect> for RoundPointCarrierAspect {
+    fn div_assign(&mut self, other: RoundPointCarrierAspect) {
         *self = (*self).div(other);
     }
 }
@@ -6187,6 +9277,24 @@ impl DivAssign<Sphere> for Sphere {
     }
 }
 
+impl Div<SphereWeight> for SphereWeight {
+    type Output = SphereWeight;
+
+    fn div(self, other: SphereWeight) -> SphereWeight {
+        SphereWeight {
+            groups: SphereWeightGroups {
+                g0: self.group0() * 1.0 / other.group0() * 1.0,
+            },
+        }
+    }
+}
+
+impl DivAssign<SphereWeight> for SphereWeight {
+    fn div_assign(&mut self, other: SphereWeight) {
+        *self = (*self).div(other);
+    }
+}
+
 impl Div<Translator> for Translator {
     type Output = Translator;
 
@@ -6204,6 +9312,32 @@ impl Div<Translator> for Translator {
 impl DivAssign<Translator> for Translator {
     fn div_assign(&mut self, other: Translator) {
         *self = (*self).div(other);
+    }
+}
+
+impl Into<CircleBulk> for Circle {
+    fn into(self) -> CircleBulk {
+        CircleBulk {
+            groups: CircleBulkGroups { g0: self.group0()[3] },
+        }
+    }
+}
+
+impl Into<CircleCarrierAspect> for Circle {
+    fn into(self) -> CircleCarrierAspect {
+        CircleCarrierAspect {
+            groups: CircleCarrierAspectGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Into<CircleWeight> for Circle {
+    fn into(self) -> CircleWeight {
+        CircleWeight {
+            groups: CircleWeightGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            },
+        }
     }
 }
 
@@ -6234,6 +9368,51 @@ impl Into<LineAtOrigin> for Circle {
     }
 }
 
+impl Into<CircleBulk> for CircleCarrierAspect {
+    fn into(self) -> CircleBulk {
+        CircleBulk {
+            groups: CircleBulkGroups { g0: self.group0()[3] },
+        }
+    }
+}
+
+impl Into<CircleWeight> for CircleCarrierAspect {
+    fn into(self) -> CircleWeight {
+        CircleWeight {
+            groups: CircleWeightGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl Into<DipoleBulk> for Dipole {
+    fn into(self) -> DipoleBulk {
+        DipoleBulk {
+            groups: DipoleBulkGroups { g0: self.group1() },
+        }
+    }
+}
+
+impl Into<DipoleCarrierAspect> for Dipole {
+    fn into(self) -> DipoleCarrierAspect {
+        DipoleCarrierAspect {
+            groups: DipoleCarrierAspectGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl Into<DipoleWeight> for Dipole {
+    fn into(self) -> DipoleWeight {
+        DipoleWeight {
+            groups: DipoleWeightGroups { g0: self.group0() },
+        }
+    }
+}
+
 impl Into<FlatPoint> for Dipole {
     fn into(self) -> FlatPoint {
         FlatPoint {
@@ -6242,38 +9421,54 @@ impl Into<FlatPoint> for Dipole {
     }
 }
 
-impl Into<PointAtInfinity> for Dipole {
-    fn into(self) -> PointAtInfinity {
-        PointAtInfinity {
-            groups: PointAtInfinityGroups {
+impl Into<FlatPointAtInfinity> for Dipole {
+    fn into(self) -> FlatPointAtInfinity {
+        FlatPointAtInfinity {
+            groups: FlatPointAtInfinityGroups {
                 g0: Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]),
             },
         }
     }
 }
 
-impl Into<PointAtOrigin> for Dipole {
-    fn into(self) -> PointAtOrigin {
-        PointAtOrigin {
-            groups: PointAtOriginGroups { g0: self.group2()[3] },
+impl Into<FlatPointAtOrigin> for Dipole {
+    fn into(self) -> FlatPointAtOrigin {
+        FlatPointAtOrigin {
+            groups: FlatPointAtOriginGroups { g0: self.group2()[3] },
         }
     }
 }
 
-impl Into<PointAtInfinity> for FlatPoint {
-    fn into(self) -> PointAtInfinity {
-        PointAtInfinity {
-            groups: PointAtInfinityGroups {
+impl Into<DipoleBulk> for DipoleCarrierAspect {
+    fn into(self) -> DipoleBulk {
+        DipoleBulk {
+            groups: DipoleBulkGroups { g0: self.group1() },
+        }
+    }
+}
+
+impl Into<DipoleWeight> for DipoleCarrierAspect {
+    fn into(self) -> DipoleWeight {
+        DipoleWeight {
+            groups: DipoleWeightGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Into<FlatPointAtInfinity> for FlatPoint {
+    fn into(self) -> FlatPointAtInfinity {
+        FlatPointAtInfinity {
+            groups: FlatPointAtInfinityGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
             },
         }
     }
 }
 
-impl Into<PointAtOrigin> for FlatPoint {
-    fn into(self) -> PointAtOrigin {
-        PointAtOrigin {
-            groups: PointAtOriginGroups { g0: self.group0()[3] },
+impl Into<FlatPointAtOrigin> for FlatPoint {
+    fn into(self) -> FlatPointAtOrigin {
+        FlatPointAtOrigin {
+            groups: FlatPointAtOriginGroups { g0: self.group0()[3] },
         }
     }
 }
@@ -6282,6 +9477,24 @@ impl Into<FlatPoint> for Flector {
     fn into(self) -> FlatPoint {
         FlatPoint {
             groups: FlatPointGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Into<FlatPointAtInfinity> for Flector {
+    fn into(self) -> FlatPointAtInfinity {
+        FlatPointAtInfinity {
+            groups: FlatPointAtInfinityGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl Into<FlatPointAtOrigin> for Flector {
+    fn into(self) -> FlatPointAtOrigin {
+        FlatPointAtOrigin {
+            groups: FlatPointAtOriginGroups { g0: self.group0()[3] },
         }
     }
 }
@@ -6308,24 +9521,6 @@ impl Into<PlaneAtOrigin> for Flector {
             groups: PlaneAtOriginGroups {
                 g0: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
             },
-        }
-    }
-}
-
-impl Into<PointAtInfinity> for Flector {
-    fn into(self) -> PointAtInfinity {
-        PointAtInfinity {
-            groups: PointAtInfinityGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-            },
-        }
-    }
-}
-
-impl Into<PointAtOrigin> for Flector {
-    fn into(self) -> PointAtOrigin {
-        PointAtOrigin {
-            groups: PointAtOriginGroups { g0: self.group0()[3] },
         }
     }
 }
@@ -6437,6 +9632,32 @@ impl Into<Circle> for MultiVector {
     }
 }
 
+impl Into<CircleBulk> for MultiVector {
+    fn into(self) -> CircleBulk {
+        CircleBulk {
+            groups: CircleBulkGroups { g0: self.group6()[3] },
+        }
+    }
+}
+
+impl Into<CircleCarrierAspect> for MultiVector {
+    fn into(self) -> CircleCarrierAspect {
+        CircleCarrierAspect {
+            groups: CircleCarrierAspectGroups { g0: self.group6() },
+        }
+    }
+}
+
+impl Into<CircleWeight> for MultiVector {
+    fn into(self) -> CircleWeight {
+        CircleWeight {
+            groups: CircleWeightGroups {
+                g0: Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]),
+            },
+        }
+    }
+}
+
 impl Into<Dipole> for MultiVector {
     fn into(self) -> Dipole {
         Dipole {
@@ -6449,10 +9670,55 @@ impl Into<Dipole> for MultiVector {
     }
 }
 
+impl Into<DipoleBulk> for MultiVector {
+    fn into(self) -> DipoleBulk {
+        DipoleBulk {
+            groups: DipoleBulkGroups { g0: self.group4() },
+        }
+    }
+}
+
+impl Into<DipoleCarrierAspect> for MultiVector {
+    fn into(self) -> DipoleCarrierAspect {
+        DipoleCarrierAspect {
+            groups: DipoleCarrierAspectGroups {
+                g0: self.group3(),
+                g1: self.group4(),
+            },
+        }
+    }
+}
+
+impl Into<DipoleWeight> for MultiVector {
+    fn into(self) -> DipoleWeight {
+        DipoleWeight {
+            groups: DipoleWeightGroups { g0: self.group3() },
+        }
+    }
+}
+
 impl Into<FlatPoint> for MultiVector {
     fn into(self) -> FlatPoint {
         FlatPoint {
             groups: FlatPointGroups { g0: self.group5() },
+        }
+    }
+}
+
+impl Into<FlatPointAtInfinity> for MultiVector {
+    fn into(self) -> FlatPointAtInfinity {
+        FlatPointAtInfinity {
+            groups: FlatPointAtInfinityGroups {
+                g0: Simd32x3::from([self.group5()[0], self.group5()[1], self.group5()[2]]),
+            },
+        }
+    }
+}
+
+impl Into<FlatPointAtOrigin> for MultiVector {
+    fn into(self) -> FlatPointAtOrigin {
+        FlatPointAtOrigin {
+            groups: FlatPointAtOriginGroups { g0: self.group5()[3] },
         }
     }
 }
@@ -6556,24 +9822,6 @@ impl Into<PlaneAtOrigin> for MultiVector {
     }
 }
 
-impl Into<PointAtInfinity> for MultiVector {
-    fn into(self) -> PointAtInfinity {
-        PointAtInfinity {
-            groups: PointAtInfinityGroups {
-                g0: Simd32x3::from([self.group5()[0], self.group5()[1], self.group5()[2]]),
-            },
-        }
-    }
-}
-
-impl Into<PointAtOrigin> for MultiVector {
-    fn into(self) -> PointAtOrigin {
-        PointAtOrigin {
-            groups: PointAtOriginGroups { g0: self.group5()[3] },
-        }
-    }
-}
-
 impl Into<Rotor> for MultiVector {
     fn into(self) -> Rotor {
         Rotor {
@@ -6595,6 +9843,42 @@ impl Into<RoundPoint> for MultiVector {
     }
 }
 
+impl Into<RoundPointAtInfinity> for MultiVector {
+    fn into(self) -> RoundPointAtInfinity {
+        RoundPointAtInfinity {
+            groups: RoundPointAtInfinityGroups {
+                g0: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group2()[1]]),
+            },
+        }
+    }
+}
+
+impl Into<RoundPointAtOrigin> for MultiVector {
+    fn into(self) -> RoundPointAtOrigin {
+        RoundPointAtOrigin {
+            groups: RoundPointAtOriginGroups { g0: self.group2() },
+        }
+    }
+}
+
+impl Into<RoundPointBulk> for MultiVector {
+    fn into(self) -> RoundPointBulk {
+        RoundPointBulk {
+            groups: RoundPointBulkGroups { g0: self.group1() },
+        }
+    }
+}
+
+impl Into<RoundPointCarrierAspect> for MultiVector {
+    fn into(self) -> RoundPointCarrierAspect {
+        RoundPointCarrierAspect {
+            groups: RoundPointCarrierAspectGroups {
+                g0: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group2()[0]]),
+            },
+        }
+    }
+}
+
 impl Into<Scalar> for MultiVector {
     fn into(self) -> Scalar {
         Scalar {
@@ -6610,6 +9894,14 @@ impl Into<Sphere> for MultiVector {
                 g0: self.group9(),
                 g1: self.group10(),
             },
+        }
+    }
+}
+
+impl Into<SphereWeight> for MultiVector {
+    fn into(self) -> SphereWeight {
+        SphereWeight {
+            groups: SphereWeightGroups { g0: self.group10()[0] },
         }
     }
 }
@@ -6676,6 +9968,94 @@ impl Into<Origin> for RoundPoint {
     }
 }
 
+impl Into<RoundPointAtInfinity> for RoundPoint {
+    fn into(self) -> RoundPointAtInfinity {
+        RoundPointAtInfinity {
+            groups: RoundPointAtInfinityGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[1]]),
+            },
+        }
+    }
+}
+
+impl Into<RoundPointAtOrigin> for RoundPoint {
+    fn into(self) -> RoundPointAtOrigin {
+        RoundPointAtOrigin {
+            groups: RoundPointAtOriginGroups { g0: self.group1() },
+        }
+    }
+}
+
+impl Into<RoundPointBulk> for RoundPoint {
+    fn into(self) -> RoundPointBulk {
+        RoundPointBulk {
+            groups: RoundPointBulkGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Into<RoundPointCarrierAspect> for RoundPoint {
+    fn into(self) -> RoundPointCarrierAspect {
+        RoundPointCarrierAspect {
+            groups: RoundPointCarrierAspectGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[0]]),
+            },
+        }
+    }
+}
+
+impl Into<Infinity> for RoundPointAtInfinity {
+    fn into(self) -> Infinity {
+        Infinity {
+            groups: InfinityGroups { g0: self.group0()[3] },
+        }
+    }
+}
+
+impl Into<RoundPointBulk> for RoundPointAtInfinity {
+    fn into(self) -> RoundPointBulk {
+        RoundPointBulk {
+            groups: RoundPointBulkGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl Into<Infinity> for RoundPointAtOrigin {
+    fn into(self) -> Infinity {
+        Infinity {
+            groups: InfinityGroups { g0: self.group0()[1] },
+        }
+    }
+}
+
+impl Into<Origin> for RoundPointAtOrigin {
+    fn into(self) -> Origin {
+        Origin {
+            groups: OriginGroups { g0: self.group0()[0] },
+        }
+    }
+}
+
+impl Into<Origin> for RoundPointCarrierAspect {
+    fn into(self) -> Origin {
+        Origin {
+            groups: OriginGroups { g0: self.group0()[3] },
+        }
+    }
+}
+
+impl Into<RoundPointBulk> for RoundPointCarrierAspect {
+    fn into(self) -> RoundPointBulk {
+        RoundPointBulk {
+            groups: RoundPointBulkGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            },
+        }
+    }
+}
+
 impl Into<Horizon> for Sphere {
     fn into(self) -> Horizon {
         Horizon {
@@ -6698,6 +10078,14 @@ impl Into<PlaneAtOrigin> for Sphere {
     fn into(self) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Into<SphereWeight> for Sphere {
+    fn into(self) -> SphereWeight {
+        SphereWeight {
+            groups: SphereWeightGroups { g0: self.group1()[0] },
         }
     }
 }
@@ -6758,6 +10146,60 @@ impl MulAssign<Circle> for Circle {
     }
 }
 
+impl Mul<CircleBulk> for CircleBulk {
+    type Output = CircleBulk;
+
+    fn mul(self, other: CircleBulk) -> CircleBulk {
+        CircleBulk {
+            groups: CircleBulkGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl MulAssign<CircleBulk> for CircleBulk {
+    fn mul_assign(&mut self, other: CircleBulk) {
+        *self = (*self).mul(other);
+    }
+}
+
+impl Mul<CircleCarrierAspect> for CircleCarrierAspect {
+    type Output = CircleCarrierAspect;
+
+    fn mul(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+        CircleCarrierAspect {
+            groups: CircleCarrierAspectGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl MulAssign<CircleCarrierAspect> for CircleCarrierAspect {
+    fn mul_assign(&mut self, other: CircleCarrierAspect) {
+        *self = (*self).mul(other);
+    }
+}
+
+impl Mul<CircleWeight> for CircleWeight {
+    type Output = CircleWeight;
+
+    fn mul(self, other: CircleWeight) -> CircleWeight {
+        CircleWeight {
+            groups: CircleWeightGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl MulAssign<CircleWeight> for CircleWeight {
+    fn mul_assign(&mut self, other: CircleWeight) {
+        *self = (*self).mul(other);
+    }
+}
+
 impl Mul<Dipole> for Dipole {
     type Output = Dipole;
 
@@ -6778,6 +10220,61 @@ impl MulAssign<Dipole> for Dipole {
     }
 }
 
+impl Mul<DipoleBulk> for DipoleBulk {
+    type Output = DipoleBulk;
+
+    fn mul(self, other: DipoleBulk) -> DipoleBulk {
+        DipoleBulk {
+            groups: DipoleBulkGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl MulAssign<DipoleBulk> for DipoleBulk {
+    fn mul_assign(&mut self, other: DipoleBulk) {
+        *self = (*self).mul(other);
+    }
+}
+
+impl Mul<DipoleCarrierAspect> for DipoleCarrierAspect {
+    type Output = DipoleCarrierAspect;
+
+    fn mul(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+        DipoleCarrierAspect {
+            groups: DipoleCarrierAspectGroups {
+                g0: self.group0() * other.group0(),
+                g1: self.group1() * other.group1(),
+            },
+        }
+    }
+}
+
+impl MulAssign<DipoleCarrierAspect> for DipoleCarrierAspect {
+    fn mul_assign(&mut self, other: DipoleCarrierAspect) {
+        *self = (*self).mul(other);
+    }
+}
+
+impl Mul<DipoleWeight> for DipoleWeight {
+    type Output = DipoleWeight;
+
+    fn mul(self, other: DipoleWeight) -> DipoleWeight {
+        DipoleWeight {
+            groups: DipoleWeightGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl MulAssign<DipoleWeight> for DipoleWeight {
+    fn mul_assign(&mut self, other: DipoleWeight) {
+        *self = (*self).mul(other);
+    }
+}
+
 impl Mul<FlatPoint> for FlatPoint {
     type Output = FlatPoint;
 
@@ -6792,6 +10289,42 @@ impl Mul<FlatPoint> for FlatPoint {
 
 impl MulAssign<FlatPoint> for FlatPoint {
     fn mul_assign(&mut self, other: FlatPoint) {
+        *self = (*self).mul(other);
+    }
+}
+
+impl Mul<FlatPointAtInfinity> for FlatPointAtInfinity {
+    type Output = FlatPointAtInfinity;
+
+    fn mul(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        FlatPointAtInfinity {
+            groups: FlatPointAtInfinityGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl MulAssign<FlatPointAtInfinity> for FlatPointAtInfinity {
+    fn mul_assign(&mut self, other: FlatPointAtInfinity) {
+        *self = (*self).mul(other);
+    }
+}
+
+impl Mul<FlatPointAtOrigin> for FlatPointAtOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn mul(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        FlatPointAtOrigin {
+            groups: FlatPointAtOriginGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl MulAssign<FlatPointAtOrigin> for FlatPointAtOrigin {
+    fn mul_assign(&mut self, other: FlatPointAtOrigin) {
         *self = (*self).mul(other);
     }
 }
@@ -7025,42 +10558,6 @@ impl MulAssign<PlaneAtOrigin> for PlaneAtOrigin {
     }
 }
 
-impl Mul<PointAtInfinity> for PointAtInfinity {
-    type Output = PointAtInfinity;
-
-    fn mul(self, other: PointAtInfinity) -> PointAtInfinity {
-        PointAtInfinity {
-            groups: PointAtInfinityGroups {
-                g0: self.group0() * other.group0(),
-            },
-        }
-    }
-}
-
-impl MulAssign<PointAtInfinity> for PointAtInfinity {
-    fn mul_assign(&mut self, other: PointAtInfinity) {
-        *self = (*self).mul(other);
-    }
-}
-
-impl Mul<PointAtOrigin> for PointAtOrigin {
-    type Output = PointAtOrigin;
-
-    fn mul(self, other: PointAtOrigin) -> PointAtOrigin {
-        PointAtOrigin {
-            groups: PointAtOriginGroups {
-                g0: self.group0() * other.group0(),
-            },
-        }
-    }
-}
-
-impl MulAssign<PointAtOrigin> for PointAtOrigin {
-    fn mul_assign(&mut self, other: PointAtOrigin) {
-        *self = (*self).mul(other);
-    }
-}
-
 impl Mul<Rotor> for Rotor {
     type Output = Rotor;
 
@@ -7098,6 +10595,78 @@ impl MulAssign<RoundPoint> for RoundPoint {
     }
 }
 
+impl Mul<RoundPointAtInfinity> for RoundPointAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn mul(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
+        RoundPointAtInfinity {
+            groups: RoundPointAtInfinityGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl MulAssign<RoundPointAtInfinity> for RoundPointAtInfinity {
+    fn mul_assign(&mut self, other: RoundPointAtInfinity) {
+        *self = (*self).mul(other);
+    }
+}
+
+impl Mul<RoundPointAtOrigin> for RoundPointAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn mul(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        RoundPointAtOrigin {
+            groups: RoundPointAtOriginGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl MulAssign<RoundPointAtOrigin> for RoundPointAtOrigin {
+    fn mul_assign(&mut self, other: RoundPointAtOrigin) {
+        *self = (*self).mul(other);
+    }
+}
+
+impl Mul<RoundPointBulk> for RoundPointBulk {
+    type Output = RoundPointBulk;
+
+    fn mul(self, other: RoundPointBulk) -> RoundPointBulk {
+        RoundPointBulk {
+            groups: RoundPointBulkGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl MulAssign<RoundPointBulk> for RoundPointBulk {
+    fn mul_assign(&mut self, other: RoundPointBulk) {
+        *self = (*self).mul(other);
+    }
+}
+
+impl Mul<RoundPointCarrierAspect> for RoundPointCarrierAspect {
+    type Output = RoundPointCarrierAspect;
+
+    fn mul(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+        RoundPointCarrierAspect {
+            groups: RoundPointCarrierAspectGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl MulAssign<RoundPointCarrierAspect> for RoundPointCarrierAspect {
+    fn mul_assign(&mut self, other: RoundPointCarrierAspect) {
+        *self = (*self).mul(other);
+    }
+}
+
 impl Mul<Scalar> for Scalar {
     type Output = Scalar;
 
@@ -7131,6 +10700,24 @@ impl Mul<Sphere> for Sphere {
 
 impl MulAssign<Sphere> for Sphere {
     fn mul_assign(&mut self, other: Sphere) {
+        *self = (*self).mul(other);
+    }
+}
+
+impl Mul<SphereWeight> for SphereWeight {
+    type Output = SphereWeight;
+
+    fn mul(self, other: SphereWeight) -> SphereWeight {
+        SphereWeight {
+            groups: SphereWeightGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl MulAssign<SphereWeight> for SphereWeight {
+    fn mul_assign(&mut self, other: SphereWeight) {
         *self = (*self).mul(other);
     }
 }
@@ -7311,6 +10898,66 @@ impl SubAssign<Circle> for Circle {
     }
 }
 
+impl Sub<CircleBulk> for Circle {
+    type Output = Circle;
+
+    fn sub(self, other: CircleBulk) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: self.group0() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g1: self.group1(),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl SubAssign<CircleBulk> for Circle {
+    fn sub_assign(&mut self, other: CircleBulk) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<CircleCarrierAspect> for Circle {
+    type Output = Circle;
+
+    fn sub(self, other: CircleCarrierAspect) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: self.group0() - other.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl SubAssign<CircleCarrierAspect> for Circle {
+    fn sub_assign(&mut self, other: CircleCarrierAspect) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<CircleWeight> for Circle {
+    type Output = Circle;
+
+    fn sub(self, other: CircleWeight) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: self.group0() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g1: self.group1(),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl SubAssign<CircleWeight> for Circle {
+    fn sub_assign(&mut self, other: CircleWeight) {
+        *self = (*self).sub(other);
+    }
+}
+
 impl Sub<Line> for Circle {
     type Output = Circle;
 
@@ -7393,6 +11040,266 @@ impl Sub<MultiVector> for Circle {
     }
 }
 
+impl Sub<Circle> for CircleBulk {
+    type Output = Circle;
+
+    fn sub(self, other: Circle) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x3::from(0.0) - other.group2(),
+            },
+        }
+    }
+}
+
+impl Sub<CircleBulk> for CircleBulk {
+    type Output = CircleBulk;
+
+    fn sub(self, other: CircleBulk) -> CircleBulk {
+        CircleBulk {
+            groups: CircleBulkGroups {
+                g0: self.group0() - other.group0(),
+            },
+        }
+    }
+}
+
+impl SubAssign<CircleBulk> for CircleBulk {
+    fn sub_assign(&mut self, other: CircleBulk) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<CircleCarrierAspect> for CircleBulk {
+    type Output = CircleCarrierAspect;
+
+    fn sub(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+        CircleCarrierAspect {
+            groups: CircleCarrierAspectGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<CircleWeight> for CircleBulk {
+    type Output = CircleCarrierAspect;
+
+    fn sub(self, other: CircleWeight) -> CircleCarrierAspect {
+        CircleCarrierAspect {
+            groups: CircleCarrierAspectGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl Sub<MultiVector> for CircleBulk {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x2::from(0.0) - other.group2(),
+                g3: Simd32x3::from(0.0) - other.group3(),
+                g4: Simd32x3::from(0.0) - other.group4(),
+                g5: Simd32x4::from(0.0) - other.group5(),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group6(),
+                g7: Simd32x3::from(0.0) - other.group7(),
+                g8: Simd32x3::from(0.0) - other.group8(),
+                g9: Simd32x3::from(0.0) - other.group9(),
+                g10: Simd32x2::from(0.0) - other.group10(),
+            },
+        }
+    }
+}
+
+impl Sub<Circle> for CircleCarrierAspect {
+    type Output = Circle;
+
+    fn sub(self, other: Circle) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: self.group0() - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x3::from(0.0) - other.group2(),
+            },
+        }
+    }
+}
+
+impl Sub<CircleBulk> for CircleCarrierAspect {
+    type Output = CircleCarrierAspect;
+
+    fn sub(self, other: CircleBulk) -> CircleCarrierAspect {
+        CircleCarrierAspect {
+            groups: CircleCarrierAspectGroups {
+                g0: self.group0() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl SubAssign<CircleBulk> for CircleCarrierAspect {
+    fn sub_assign(&mut self, other: CircleBulk) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<CircleCarrierAspect> for CircleCarrierAspect {
+    type Output = CircleCarrierAspect;
+
+    fn sub(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+        CircleCarrierAspect {
+            groups: CircleCarrierAspectGroups {
+                g0: self.group0() - other.group0(),
+            },
+        }
+    }
+}
+
+impl SubAssign<CircleCarrierAspect> for CircleCarrierAspect {
+    fn sub_assign(&mut self, other: CircleCarrierAspect) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<CircleWeight> for CircleCarrierAspect {
+    type Output = CircleCarrierAspect;
+
+    fn sub(self, other: CircleWeight) -> CircleCarrierAspect {
+        CircleCarrierAspect {
+            groups: CircleCarrierAspectGroups {
+                g0: self.group0() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl SubAssign<CircleWeight> for CircleCarrierAspect {
+    fn sub_assign(&mut self, other: CircleWeight) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Line> for CircleCarrierAspect {
+    type Output = Circle;
+
+    fn sub(self, other: Line) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: self.group0(),
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x3::from(0.0) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<MultiVector> for CircleCarrierAspect {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x2::from(0.0) - other.group2(),
+                g3: Simd32x3::from(0.0) - other.group3(),
+                g4: Simd32x3::from(0.0) - other.group4(),
+                g5: Simd32x4::from(0.0) - other.group5(),
+                g6: self.group0() - other.group6(),
+                g7: Simd32x3::from(0.0) - other.group7(),
+                g8: Simd32x3::from(0.0) - other.group8(),
+                g9: Simd32x3::from(0.0) - other.group9(),
+                g10: Simd32x2::from(0.0) - other.group10(),
+            },
+        }
+    }
+}
+
+impl Sub<Circle> for CircleWeight {
+    type Output = Circle;
+
+    fn sub(self, other: Circle) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x3::from(0.0) - other.group2(),
+            },
+        }
+    }
+}
+
+impl Sub<CircleBulk> for CircleWeight {
+    type Output = CircleCarrierAspect;
+
+    fn sub(self, other: CircleBulk) -> CircleCarrierAspect {
+        CircleCarrierAspect {
+            groups: CircleCarrierAspectGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl Sub<CircleCarrierAspect> for CircleWeight {
+    type Output = CircleCarrierAspect;
+
+    fn sub(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+        CircleCarrierAspect {
+            groups: CircleCarrierAspectGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<CircleWeight> for CircleWeight {
+    type Output = CircleWeight;
+
+    fn sub(self, other: CircleWeight) -> CircleWeight {
+        CircleWeight {
+            groups: CircleWeightGroups {
+                g0: self.group0() - other.group0(),
+            },
+        }
+    }
+}
+
+impl SubAssign<CircleWeight> for CircleWeight {
+    fn sub_assign(&mut self, other: CircleWeight) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<MultiVector> for CircleWeight {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x2::from(0.0) - other.group2(),
+                g3: Simd32x3::from(0.0) - other.group3(),
+                g4: Simd32x3::from(0.0) - other.group4(),
+                g5: Simd32x4::from(0.0) - other.group5(),
+                g6: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group6(),
+                g7: Simd32x3::from(0.0) - other.group7(),
+                g8: Simd32x3::from(0.0) - other.group8(),
+                g9: Simd32x3::from(0.0) - other.group9(),
+                g10: Simd32x2::from(0.0) - other.group10(),
+            },
+        }
+    }
+}
+
 impl Sub<Dipole> for Dipole {
     type Output = Dipole;
 
@@ -7413,6 +11320,66 @@ impl SubAssign<Dipole> for Dipole {
     }
 }
 
+impl Sub<DipoleBulk> for Dipole {
+    type Output = Dipole;
+
+    fn sub(self, other: DipoleBulk) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: self.group0(),
+                g1: self.group1() - other.group0(),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl SubAssign<DipoleBulk> for Dipole {
+    fn sub_assign(&mut self, other: DipoleBulk) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<DipoleCarrierAspect> for Dipole {
+    type Output = Dipole;
+
+    fn sub(self, other: DipoleCarrierAspect) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: self.group0() - other.group0(),
+                g1: self.group1() - other.group1(),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl SubAssign<DipoleCarrierAspect> for Dipole {
+    fn sub_assign(&mut self, other: DipoleCarrierAspect) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<DipoleWeight> for Dipole {
+    type Output = Dipole;
+
+    fn sub(self, other: DipoleWeight) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: self.group0() - other.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl SubAssign<DipoleWeight> for Dipole {
+    fn sub_assign(&mut self, other: DipoleWeight) {
+        *self = (*self).sub(other);
+    }
+}
+
 impl Sub<FlatPoint> for Dipole {
     type Output = Dipole;
 
@@ -7429,6 +11396,46 @@ impl Sub<FlatPoint> for Dipole {
 
 impl SubAssign<FlatPoint> for Dipole {
     fn sub_assign(&mut self, other: FlatPoint) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<FlatPointAtInfinity> for Dipole {
+    type Output = Dipole;
+
+    fn sub(self, other: FlatPointAtInfinity) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl SubAssign<FlatPointAtInfinity> for Dipole {
+    fn sub_assign(&mut self, other: FlatPointAtInfinity) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<FlatPointAtOrigin> for Dipole {
+    type Output = Dipole;
+
+    fn sub(self, other: FlatPointAtOrigin) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl SubAssign<FlatPointAtOrigin> for Dipole {
+    fn sub_assign(&mut self, other: FlatPointAtOrigin) {
         *self = (*self).sub(other);
     }
 }
@@ -7455,43 +11462,270 @@ impl Sub<MultiVector> for Dipole {
     }
 }
 
-impl Sub<PointAtInfinity> for Dipole {
+impl Sub<Dipole> for DipoleBulk {
     type Output = Dipole;
 
-    fn sub(self, other: PointAtInfinity) -> Dipole {
+    fn sub(self, other: Dipole) -> Dipole {
         Dipole {
             groups: DipoleGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-                g2: self.group2() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g0: Simd32x3::from(0.0) - other.group0(),
+                g1: self.group0() - other.group1(),
+                g2: Simd32x4::from(0.0) - other.group2(),
             },
         }
     }
 }
 
-impl SubAssign<PointAtInfinity> for Dipole {
-    fn sub_assign(&mut self, other: PointAtInfinity) {
-        *self = (*self).sub(other);
-    }
-}
+impl Sub<DipoleBulk> for DipoleBulk {
+    type Output = DipoleBulk;
 
-impl Sub<PointAtOrigin> for Dipole {
-    type Output = Dipole;
-
-    fn sub(self, other: PointAtOrigin) -> Dipole {
-        Dipole {
-            groups: DipoleGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-                g2: self.group2() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+    fn sub(self, other: DipoleBulk) -> DipoleBulk {
+        DipoleBulk {
+            groups: DipoleBulkGroups {
+                g0: self.group0() - other.group0(),
             },
         }
     }
 }
 
-impl SubAssign<PointAtOrigin> for Dipole {
-    fn sub_assign(&mut self, other: PointAtOrigin) {
+impl SubAssign<DipoleBulk> for DipoleBulk {
+    fn sub_assign(&mut self, other: DipoleBulk) {
         *self = (*self).sub(other);
+    }
+}
+
+impl Sub<DipoleCarrierAspect> for DipoleBulk {
+    type Output = DipoleCarrierAspect;
+
+    fn sub(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+        DipoleCarrierAspect {
+            groups: DipoleCarrierAspectGroups {
+                g0: Simd32x3::from(0.0) - other.group0(),
+                g1: self.group0() - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleWeight> for DipoleBulk {
+    type Output = DipoleCarrierAspect;
+
+    fn sub(self, other: DipoleWeight) -> DipoleCarrierAspect {
+        DipoleCarrierAspect {
+            groups: DipoleCarrierAspectGroups {
+                g0: Simd32x3::from(0.0) - other.group0(),
+                g1: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<MultiVector> for DipoleBulk {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x2::from(0.0) - other.group2(),
+                g3: Simd32x3::from(0.0) - other.group3(),
+                g4: self.group0() - other.group4(),
+                g5: Simd32x4::from(0.0) - other.group5(),
+                g6: Simd32x4::from(0.0) - other.group6(),
+                g7: Simd32x3::from(0.0) - other.group7(),
+                g8: Simd32x3::from(0.0) - other.group8(),
+                g9: Simd32x3::from(0.0) - other.group9(),
+                g10: Simd32x2::from(0.0) - other.group10(),
+            },
+        }
+    }
+}
+
+impl Sub<Dipole> for DipoleCarrierAspect {
+    type Output = Dipole;
+
+    fn sub(self, other: Dipole) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: self.group0() - other.group0(),
+                g1: self.group1() - other.group1(),
+                g2: Simd32x4::from(0.0) - other.group2(),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleBulk> for DipoleCarrierAspect {
+    type Output = DipoleCarrierAspect;
+
+    fn sub(self, other: DipoleBulk) -> DipoleCarrierAspect {
+        DipoleCarrierAspect {
+            groups: DipoleCarrierAspectGroups {
+                g0: self.group0(),
+                g1: self.group1() - other.group0(),
+            },
+        }
+    }
+}
+
+impl SubAssign<DipoleBulk> for DipoleCarrierAspect {
+    fn sub_assign(&mut self, other: DipoleBulk) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<DipoleCarrierAspect> for DipoleCarrierAspect {
+    type Output = DipoleCarrierAspect;
+
+    fn sub(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+        DipoleCarrierAspect {
+            groups: DipoleCarrierAspectGroups {
+                g0: self.group0() - other.group0(),
+                g1: self.group1() - other.group1(),
+            },
+        }
+    }
+}
+
+impl SubAssign<DipoleCarrierAspect> for DipoleCarrierAspect {
+    fn sub_assign(&mut self, other: DipoleCarrierAspect) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<DipoleWeight> for DipoleCarrierAspect {
+    type Output = DipoleCarrierAspect;
+
+    fn sub(self, other: DipoleWeight) -> DipoleCarrierAspect {
+        DipoleCarrierAspect {
+            groups: DipoleCarrierAspectGroups {
+                g0: self.group0() - other.group0(),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl SubAssign<DipoleWeight> for DipoleCarrierAspect {
+    fn sub_assign(&mut self, other: DipoleWeight) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<FlatPoint> for DipoleCarrierAspect {
+    type Output = Dipole;
+
+    fn sub(self, other: FlatPoint) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: Simd32x4::from(0.0) - other.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<MultiVector> for DipoleCarrierAspect {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x2::from(0.0) - other.group2(),
+                g3: self.group0() - other.group3(),
+                g4: self.group1() - other.group4(),
+                g5: Simd32x4::from(0.0) - other.group5(),
+                g6: Simd32x4::from(0.0) - other.group6(),
+                g7: Simd32x3::from(0.0) - other.group7(),
+                g8: Simd32x3::from(0.0) - other.group8(),
+                g9: Simd32x3::from(0.0) - other.group9(),
+                g10: Simd32x2::from(0.0) - other.group10(),
+            },
+        }
+    }
+}
+
+impl Sub<Dipole> for DipoleWeight {
+    type Output = Dipole;
+
+    fn sub(self, other: Dipole) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: self.group0() - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x4::from(0.0) - other.group2(),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleBulk> for DipoleWeight {
+    type Output = DipoleCarrierAspect;
+
+    fn sub(self, other: DipoleBulk) -> DipoleCarrierAspect {
+        DipoleCarrierAspect {
+            groups: DipoleCarrierAspectGroups {
+                g0: self.group0(),
+                g1: Simd32x3::from(0.0) - other.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleCarrierAspect> for DipoleWeight {
+    type Output = DipoleCarrierAspect;
+
+    fn sub(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+        DipoleCarrierAspect {
+            groups: DipoleCarrierAspectGroups {
+                g0: self.group0() - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleWeight> for DipoleWeight {
+    type Output = DipoleWeight;
+
+    fn sub(self, other: DipoleWeight) -> DipoleWeight {
+        DipoleWeight {
+            groups: DipoleWeightGroups {
+                g0: self.group0() - other.group0(),
+            },
+        }
+    }
+}
+
+impl SubAssign<DipoleWeight> for DipoleWeight {
+    fn sub_assign(&mut self, other: DipoleWeight) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<MultiVector> for DipoleWeight {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x2::from(0.0) - other.group2(),
+                g3: self.group0() - other.group3(),
+                g4: Simd32x3::from(0.0) - other.group4(),
+                g5: Simd32x4::from(0.0) - other.group5(),
+                g6: Simd32x4::from(0.0) - other.group6(),
+                g7: Simd32x3::from(0.0) - other.group7(),
+                g8: Simd32x3::from(0.0) - other.group8(),
+                g9: Simd32x3::from(0.0) - other.group9(),
+                g10: Simd32x2::from(0.0) - other.group10(),
+            },
+        }
     }
 }
 
@@ -7504,6 +11738,20 @@ impl Sub<Dipole> for FlatPoint {
                 g0: Simd32x3::from(0.0) - other.group0(),
                 g1: Simd32x3::from(0.0) - other.group1(),
                 g2: self.group0() - other.group2(),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleCarrierAspect> for FlatPoint {
+    type Output = Dipole;
+
+    fn sub(self, other: DipoleCarrierAspect) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: Simd32x3::from(0.0) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: self.group0(),
             },
         }
     }
@@ -7523,6 +11771,42 @@ impl Sub<FlatPoint> for FlatPoint {
 
 impl SubAssign<FlatPoint> for FlatPoint {
     fn sub_assign(&mut self, other: FlatPoint) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<FlatPointAtInfinity> for FlatPoint {
+    type Output = FlatPoint;
+
+    fn sub(self, other: FlatPointAtInfinity) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: self.group0() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl SubAssign<FlatPointAtInfinity> for FlatPoint {
+    fn sub_assign(&mut self, other: FlatPointAtInfinity) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<FlatPointAtOrigin> for FlatPoint {
+    type Output = FlatPoint;
+
+    fn sub(self, other: FlatPointAtOrigin) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: self.group0() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl SubAssign<FlatPointAtOrigin> for FlatPoint {
+    fn sub_assign(&mut self, other: FlatPointAtOrigin) {
         *self = (*self).sub(other);
     }
 }
@@ -7575,39 +11859,185 @@ impl Sub<Plane> for FlatPoint {
     }
 }
 
-impl Sub<PointAtInfinity> for FlatPoint {
-    type Output = FlatPoint;
+impl Sub<Dipole> for FlatPointAtInfinity {
+    type Output = Dipole;
 
-    fn sub(self, other: PointAtInfinity) -> FlatPoint {
-        FlatPoint {
-            groups: FlatPointGroups {
-                g0: self.group0() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+    fn sub(self, other: Dipole) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: Simd32x3::from(0.0) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group2(),
             },
         }
     }
 }
 
-impl SubAssign<PointAtInfinity> for FlatPoint {
-    fn sub_assign(&mut self, other: PointAtInfinity) {
-        *self = (*self).sub(other);
-    }
-}
-
-impl Sub<PointAtOrigin> for FlatPoint {
+impl Sub<FlatPoint> for FlatPointAtInfinity {
     type Output = FlatPoint;
 
-    fn sub(self, other: PointAtOrigin) -> FlatPoint {
+    fn sub(self, other: FlatPoint) -> FlatPoint {
         FlatPoint {
             groups: FlatPointGroups {
-                g0: self.group0() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group0(),
             },
         }
     }
 }
 
-impl SubAssign<PointAtOrigin> for FlatPoint {
-    fn sub_assign(&mut self, other: PointAtOrigin) {
+impl Sub<FlatPointAtInfinity> for FlatPointAtInfinity {
+    type Output = FlatPointAtInfinity;
+
+    fn sub(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        FlatPointAtInfinity {
+            groups: FlatPointAtInfinityGroups {
+                g0: self.group0() - other.group0(),
+            },
+        }
+    }
+}
+
+impl SubAssign<FlatPointAtInfinity> for FlatPointAtInfinity {
+    fn sub_assign(&mut self, other: FlatPointAtInfinity) {
         *self = (*self).sub(other);
+    }
+}
+
+impl Sub<FlatPointAtOrigin> for FlatPointAtInfinity {
+    type Output = FlatPoint;
+
+    fn sub(self, other: FlatPointAtOrigin) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl Sub<Flector> for FlatPointAtInfinity {
+    type Output = Flector;
+
+    fn sub(self, other: Flector) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group0(),
+                g1: Simd32x4::from(0.0) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<MultiVector> for FlatPointAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x2::from(0.0) - other.group2(),
+                g3: Simd32x3::from(0.0) - other.group3(),
+                g4: Simd32x3::from(0.0) - other.group4(),
+                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group5(),
+                g6: Simd32x4::from(0.0) - other.group6(),
+                g7: Simd32x3::from(0.0) - other.group7(),
+                g8: Simd32x3::from(0.0) - other.group8(),
+                g9: Simd32x3::from(0.0) - other.group9(),
+                g10: Simd32x2::from(0.0) - other.group10(),
+            },
+        }
+    }
+}
+
+impl Sub<Dipole> for FlatPointAtOrigin {
+    type Output = Dipole;
+
+    fn sub(self, other: Dipole) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: Simd32x3::from(0.0) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group2(),
+            },
+        }
+    }
+}
+
+impl Sub<FlatPoint> for FlatPointAtOrigin {
+    type Output = FlatPoint;
+
+    fn sub(self, other: FlatPoint) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<FlatPointAtInfinity> for FlatPointAtOrigin {
+    type Output = FlatPoint;
+
+    fn sub(self, other: FlatPointAtInfinity) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl Sub<FlatPointAtOrigin> for FlatPointAtOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn sub(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        FlatPointAtOrigin {
+            groups: FlatPointAtOriginGroups {
+                g0: self.group0() - other.group0(),
+            },
+        }
+    }
+}
+
+impl SubAssign<FlatPointAtOrigin> for FlatPointAtOrigin {
+    fn sub_assign(&mut self, other: FlatPointAtOrigin) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Flector> for FlatPointAtOrigin {
+    type Output = Flector;
+
+    fn sub(self, other: Flector) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group0(),
+                g1: Simd32x4::from(0.0) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<MultiVector> for FlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x2::from(0.0) - other.group2(),
+                g3: Simd32x3::from(0.0) - other.group3(),
+                g4: Simd32x3::from(0.0) - other.group4(),
+                g5: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group5(),
+                g6: Simd32x4::from(0.0) - other.group6(),
+                g7: Simd32x3::from(0.0) - other.group7(),
+                g8: Simd32x3::from(0.0) - other.group8(),
+                g9: Simd32x3::from(0.0) - other.group9(),
+                g10: Simd32x2::from(0.0) - other.group10(),
+            },
+        }
     }
 }
 
@@ -7626,6 +12056,44 @@ impl Sub<FlatPoint> for Flector {
 
 impl SubAssign<FlatPoint> for Flector {
     fn sub_assign(&mut self, other: FlatPoint) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<FlatPointAtInfinity> for Flector {
+    type Output = Flector;
+
+    fn sub(self, other: FlatPointAtInfinity) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl SubAssign<FlatPointAtInfinity> for Flector {
+    fn sub_assign(&mut self, other: FlatPointAtInfinity) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<FlatPointAtOrigin> for Flector {
+    type Output = Flector;
+
+    fn sub(self, other: FlatPointAtOrigin) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl SubAssign<FlatPointAtOrigin> for Flector {
+    fn sub_assign(&mut self, other: FlatPointAtOrigin) {
         *self = (*self).sub(other);
     }
 }
@@ -7724,44 +12192,6 @@ impl Sub<PlaneAtOrigin> for Flector {
 
 impl SubAssign<PlaneAtOrigin> for Flector {
     fn sub_assign(&mut self, other: PlaneAtOrigin) {
-        *self = (*self).sub(other);
-    }
-}
-
-impl Sub<PointAtInfinity> for Flector {
-    type Output = Flector;
-
-    fn sub(self, other: PointAtInfinity) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: self.group0() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g1: self.group1(),
-            },
-        }
-    }
-}
-
-impl SubAssign<PointAtInfinity> for Flector {
-    fn sub_assign(&mut self, other: PointAtInfinity) {
-        *self = (*self).sub(other);
-    }
-}
-
-impl Sub<PointAtOrigin> for Flector {
-    type Output = Flector;
-
-    fn sub(self, other: PointAtOrigin) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: self.group0() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-                g1: self.group1(),
-            },
-        }
-    }
-}
-
-impl SubAssign<PointAtOrigin> for Flector {
-    fn sub_assign(&mut self, other: PointAtOrigin) {
         *self = (*self).sub(other);
     }
 }
@@ -7896,6 +12326,18 @@ impl Sub<MultiVector> for Infinity {
     }
 }
 
+impl Sub<Origin> for Infinity {
+    type Output = RoundPointAtOrigin;
+
+    fn sub(self, other: Origin) -> RoundPointAtOrigin {
+        RoundPointAtOrigin {
+            groups: RoundPointAtOriginGroups {
+                g0: Simd32x2::from([0.0, self.group0()]) - Simd32x2::from([other.group0(), 0.0]),
+            },
+        }
+    }
+}
+
 impl Sub<RoundPoint> for Infinity {
     type Output = RoundPoint;
 
@@ -7904,6 +12346,55 @@ impl Sub<RoundPoint> for Infinity {
             groups: RoundPointGroups {
                 g0: Simd32x3::from(0.0) - other.group0(),
                 g1: Simd32x2::from([0.0, self.group0()]) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointAtInfinity> for Infinity {
+    type Output = RoundPointAtInfinity;
+
+    fn sub(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
+        RoundPointAtInfinity {
+            groups: RoundPointAtInfinityGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointAtOrigin> for Infinity {
+    type Output = RoundPointAtOrigin;
+
+    fn sub(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        RoundPointAtOrigin {
+            groups: RoundPointAtOriginGroups {
+                g0: Simd32x2::from([0.0, self.group0()]) - other.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointBulk> for Infinity {
+    type Output = RoundPointAtInfinity;
+
+    fn sub(self, other: RoundPointBulk) -> RoundPointAtInfinity {
+        RoundPointAtInfinity {
+            groups: RoundPointAtInfinityGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointCarrierAspect> for Infinity {
+    type Output = RoundPoint;
+
+    fn sub(self, other: RoundPointCarrierAspect) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g1: Simd32x2::from([0.0, self.group0()]) - Simd32x2::from([other.group0()[3], 0.0]),
             },
         }
     }
@@ -7931,6 +12422,20 @@ impl Sub<Circle> for Line {
                 g0: Simd32x4::from(0.0) - other.group0(),
                 g1: self.group0() - other.group1(),
                 g2: self.group1() - other.group2(),
+            },
+        }
+    }
+}
+
+impl Sub<CircleCarrierAspect> for Line {
+    type Output = Circle;
+
+    fn sub(self, other: CircleCarrierAspect) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(0.0) - other.group0(),
+                g1: self.group0(),
+                g2: self.group1(),
             },
         }
     }
@@ -8601,6 +13106,90 @@ impl SubAssign<Circle> for MultiVector {
     }
 }
 
+impl Sub<CircleBulk> for MultiVector {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleBulk) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl SubAssign<CircleBulk> for MultiVector {
+    fn sub_assign(&mut self, other: CircleBulk) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<CircleCarrierAspect> for MultiVector {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleCarrierAspect) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6() - other.group0(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl SubAssign<CircleCarrierAspect> for MultiVector {
+    fn sub_assign(&mut self, other: CircleCarrierAspect) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<CircleWeight> for MultiVector {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleWeight) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl SubAssign<CircleWeight> for MultiVector {
+    fn sub_assign(&mut self, other: CircleWeight) {
+        *self = (*self).sub(other);
+    }
+}
+
 impl Sub<Dipole> for MultiVector {
     type Output = MultiVector;
 
@@ -8629,6 +13218,90 @@ impl SubAssign<Dipole> for MultiVector {
     }
 }
 
+impl Sub<DipoleBulk> for MultiVector {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleBulk) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4() - other.group0(),
+                g5: self.group5(),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl SubAssign<DipoleBulk> for MultiVector {
+    fn sub_assign(&mut self, other: DipoleBulk) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<DipoleCarrierAspect> for MultiVector {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleCarrierAspect) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3() - other.group0(),
+                g4: self.group4() - other.group1(),
+                g5: self.group5(),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl SubAssign<DipoleCarrierAspect> for MultiVector {
+    fn sub_assign(&mut self, other: DipoleCarrierAspect) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<DipoleWeight> for MultiVector {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleWeight) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3() - other.group0(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl SubAssign<DipoleWeight> for MultiVector {
+    fn sub_assign(&mut self, other: DipoleWeight) {
+        *self = (*self).sub(other);
+    }
+}
+
 impl Sub<FlatPoint> for MultiVector {
     type Output = MultiVector;
 
@@ -8653,6 +13326,62 @@ impl Sub<FlatPoint> for MultiVector {
 
 impl SubAssign<FlatPoint> for MultiVector {
     fn sub_assign(&mut self, other: FlatPoint) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<FlatPointAtInfinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn sub(self, other: FlatPointAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl SubAssign<FlatPointAtInfinity> for MultiVector {
+    fn sub_assign(&mut self, other: FlatPointAtInfinity) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<FlatPointAtOrigin> for MultiVector {
+    type Output = MultiVector;
+
+    fn sub(self, other: FlatPointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl SubAssign<FlatPointAtOrigin> for MultiVector {
+    fn sub_assign(&mut self, other: FlatPointAtOrigin) {
         *self = (*self).sub(other);
     }
 }
@@ -8993,62 +13722,6 @@ impl SubAssign<PlaneAtOrigin> for MultiVector {
     }
 }
 
-impl Sub<PointAtInfinity> for MultiVector {
-    type Output = MultiVector;
-
-    fn sub(self, other: PointAtInfinity) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-                g2: self.group2(),
-                g3: self.group3(),
-                g4: self.group4(),
-                g5: self.group5() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: self.group6(),
-                g7: self.group7(),
-                g8: self.group8(),
-                g9: self.group9(),
-                g10: self.group10(),
-            },
-        }
-    }
-}
-
-impl SubAssign<PointAtInfinity> for MultiVector {
-    fn sub_assign(&mut self, other: PointAtInfinity) {
-        *self = (*self).sub(other);
-    }
-}
-
-impl Sub<PointAtOrigin> for MultiVector {
-    type Output = MultiVector;
-
-    fn sub(self, other: PointAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-                g2: self.group2(),
-                g3: self.group3(),
-                g4: self.group4(),
-                g5: self.group5() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-                g6: self.group6(),
-                g7: self.group7(),
-                g8: self.group8(),
-                g9: self.group9(),
-                g10: self.group10(),
-            },
-        }
-    }
-}
-
-impl SubAssign<PointAtOrigin> for MultiVector {
-    fn sub_assign(&mut self, other: PointAtOrigin) {
-        *self = (*self).sub(other);
-    }
-}
-
 impl Sub<Rotor> for MultiVector {
     type Output = MultiVector;
 
@@ -9101,6 +13774,118 @@ impl Sub<RoundPoint> for MultiVector {
 
 impl SubAssign<RoundPoint> for MultiVector {
     fn sub_assign(&mut self, other: RoundPoint) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<RoundPointAtInfinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn sub(self, other: RoundPointAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: self.group2() - Simd32x2::from([0.0, other.group0()[3]]),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl SubAssign<RoundPointAtInfinity> for MultiVector {
+    fn sub_assign(&mut self, other: RoundPointAtInfinity) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<RoundPointAtOrigin> for MultiVector {
+    type Output = MultiVector;
+
+    fn sub(self, other: RoundPointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2() - other.group0(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl SubAssign<RoundPointAtOrigin> for MultiVector {
+    fn sub_assign(&mut self, other: RoundPointAtOrigin) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<RoundPointBulk> for MultiVector {
+    type Output = MultiVector;
+
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1() - other.group0(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl SubAssign<RoundPointBulk> for MultiVector {
+    fn sub_assign(&mut self, other: RoundPointBulk) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<RoundPointCarrierAspect> for MultiVector {
+    type Output = MultiVector;
+
+    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: self.group2() - Simd32x2::from([other.group0()[3], 0.0]),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl SubAssign<RoundPointCarrierAspect> for MultiVector {
+    fn sub_assign(&mut self, other: RoundPointCarrierAspect) {
         *self = (*self).sub(other);
     }
 }
@@ -9161,6 +13946,34 @@ impl SubAssign<Sphere> for MultiVector {
     }
 }
 
+impl Sub<SphereWeight> for MultiVector {
+    type Output = MultiVector;
+
+    fn sub(self, other: SphereWeight) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10() - Simd32x2::from([other.group0(), 0.0]),
+            },
+        }
+    }
+}
+
+impl SubAssign<SphereWeight> for MultiVector {
+    fn sub_assign(&mut self, other: SphereWeight) {
+        *self = (*self).sub(other);
+    }
+}
+
 impl Sub<Translator> for MultiVector {
     type Output = MultiVector;
 
@@ -9186,6 +13999,18 @@ impl Sub<Translator> for MultiVector {
 impl SubAssign<Translator> for MultiVector {
     fn sub_assign(&mut self, other: Translator) {
         *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Infinity> for Origin {
+    type Output = RoundPointAtOrigin;
+
+    fn sub(self, other: Infinity) -> RoundPointAtOrigin {
+        RoundPointAtOrigin {
+            groups: RoundPointAtOriginGroups {
+                g0: Simd32x2::from([self.group0(), 0.0]) - Simd32x2::from([0.0, other.group0()]),
+            },
+        }
     }
 }
 
@@ -9237,6 +14062,55 @@ impl Sub<RoundPoint> for Origin {
             groups: RoundPointGroups {
                 g0: Simd32x3::from(0.0) - other.group0(),
                 g1: Simd32x2::from([self.group0(), 0.0]) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointAtInfinity> for Origin {
+    type Output = RoundPoint;
+
+    fn sub(self, other: RoundPointAtInfinity) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g1: Simd32x2::from([self.group0(), 0.0]) - Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointAtOrigin> for Origin {
+    type Output = RoundPointAtOrigin;
+
+    fn sub(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        RoundPointAtOrigin {
+            groups: RoundPointAtOriginGroups {
+                g0: Simd32x2::from([self.group0(), 0.0]) - other.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointBulk> for Origin {
+    type Output = RoundPointCarrierAspect;
+
+    fn sub(self, other: RoundPointBulk) -> RoundPointCarrierAspect {
+        RoundPointCarrierAspect {
+            groups: RoundPointCarrierAspectGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointCarrierAspect> for Origin {
+    type Output = RoundPointCarrierAspect;
+
+    fn sub(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+        RoundPointCarrierAspect {
+            groups: RoundPointCarrierAspectGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group0(),
             },
         }
     }
@@ -9357,6 +14231,19 @@ impl Sub<Sphere> for Plane {
     }
 }
 
+impl Sub<SphereWeight> for Plane {
+    type Output = Sphere;
+
+    fn sub(self, other: SphereWeight) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g1: Simd32x2::from([0.0, self.group0()[3]]) - Simd32x2::from([other.group0(), 0.0]),
+            },
+        }
+    }
+}
+
 impl Sub<Flector> for PlaneAtOrigin {
     type Output = Flector;
 
@@ -9444,188 +14331,6 @@ impl Sub<Sphere> for PlaneAtOrigin {
                 g1: Simd32x2::from(0.0) - other.group1(),
             },
         }
-    }
-}
-
-impl Sub<Dipole> for PointAtInfinity {
-    type Output = Dipole;
-
-    fn sub(self, other: Dipole) -> Dipole {
-        Dipole {
-            groups: DipoleGroups {
-                g0: Simd32x3::from(0.0) - other.group0(),
-                g1: Simd32x3::from(0.0) - other.group1(),
-                g2: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group2(),
-            },
-        }
-    }
-}
-
-impl Sub<FlatPoint> for PointAtInfinity {
-    type Output = FlatPoint;
-
-    fn sub(self, other: FlatPoint) -> FlatPoint {
-        FlatPoint {
-            groups: FlatPointGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group0(),
-            },
-        }
-    }
-}
-
-impl Sub<Flector> for PointAtInfinity {
-    type Output = Flector;
-
-    fn sub(self, other: Flector) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group0(),
-                g1: Simd32x4::from(0.0) - other.group1(),
-            },
-        }
-    }
-}
-
-impl Sub<MultiVector> for PointAtInfinity {
-    type Output = MultiVector;
-
-    fn sub(self, other: MultiVector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - other.group0(),
-                g1: Simd32x3::from(0.0) - other.group1(),
-                g2: Simd32x2::from(0.0) - other.group2(),
-                g3: Simd32x3::from(0.0) - other.group3(),
-                g4: Simd32x3::from(0.0) - other.group4(),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group5(),
-                g6: Simd32x4::from(0.0) - other.group6(),
-                g7: Simd32x3::from(0.0) - other.group7(),
-                g8: Simd32x3::from(0.0) - other.group8(),
-                g9: Simd32x3::from(0.0) - other.group9(),
-                g10: Simd32x2::from(0.0) - other.group10(),
-            },
-        }
-    }
-}
-
-impl Sub<PointAtInfinity> for PointAtInfinity {
-    type Output = PointAtInfinity;
-
-    fn sub(self, other: PointAtInfinity) -> PointAtInfinity {
-        PointAtInfinity {
-            groups: PointAtInfinityGroups {
-                g0: self.group0() - other.group0(),
-            },
-        }
-    }
-}
-
-impl SubAssign<PointAtInfinity> for PointAtInfinity {
-    fn sub_assign(&mut self, other: PointAtInfinity) {
-        *self = (*self).sub(other);
-    }
-}
-
-impl Sub<PointAtOrigin> for PointAtInfinity {
-    type Output = FlatPoint;
-
-    fn sub(self, other: PointAtOrigin) -> FlatPoint {
-        FlatPoint {
-            groups: FlatPointGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-            },
-        }
-    }
-}
-
-impl Sub<Dipole> for PointAtOrigin {
-    type Output = Dipole;
-
-    fn sub(self, other: Dipole) -> Dipole {
-        Dipole {
-            groups: DipoleGroups {
-                g0: Simd32x3::from(0.0) - other.group0(),
-                g1: Simd32x3::from(0.0) - other.group1(),
-                g2: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group2(),
-            },
-        }
-    }
-}
-
-impl Sub<FlatPoint> for PointAtOrigin {
-    type Output = FlatPoint;
-
-    fn sub(self, other: FlatPoint) -> FlatPoint {
-        FlatPoint {
-            groups: FlatPointGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group0(),
-            },
-        }
-    }
-}
-
-impl Sub<Flector> for PointAtOrigin {
-    type Output = Flector;
-
-    fn sub(self, other: Flector) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group0(),
-                g1: Simd32x4::from(0.0) - other.group1(),
-            },
-        }
-    }
-}
-
-impl Sub<MultiVector> for PointAtOrigin {
-    type Output = MultiVector;
-
-    fn sub(self, other: MultiVector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - other.group0(),
-                g1: Simd32x3::from(0.0) - other.group1(),
-                g2: Simd32x2::from(0.0) - other.group2(),
-                g3: Simd32x3::from(0.0) - other.group3(),
-                g4: Simd32x3::from(0.0) - other.group4(),
-                g5: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group5(),
-                g6: Simd32x4::from(0.0) - other.group6(),
-                g7: Simd32x3::from(0.0) - other.group7(),
-                g8: Simd32x3::from(0.0) - other.group8(),
-                g9: Simd32x3::from(0.0) - other.group9(),
-                g10: Simd32x2::from(0.0) - other.group10(),
-            },
-        }
-    }
-}
-
-impl Sub<PointAtInfinity> for PointAtOrigin {
-    type Output = FlatPoint;
-
-    fn sub(self, other: PointAtInfinity) -> FlatPoint {
-        FlatPoint {
-            groups: FlatPointGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-            },
-        }
-    }
-}
-
-impl Sub<PointAtOrigin> for PointAtOrigin {
-    type Output = PointAtOrigin;
-
-    fn sub(self, other: PointAtOrigin) -> PointAtOrigin {
-        PointAtOrigin {
-            groups: PointAtOriginGroups {
-                g0: self.group0() - other.group0(),
-            },
-        }
-    }
-}
-
-impl SubAssign<PointAtOrigin> for PointAtOrigin {
-    fn sub_assign(&mut self, other: PointAtOrigin) {
-        *self = (*self).sub(other);
     }
 }
 
@@ -9836,6 +14541,580 @@ impl SubAssign<RoundPoint> for RoundPoint {
     }
 }
 
+impl Sub<RoundPointAtInfinity> for RoundPoint {
+    type Output = RoundPoint;
+
+    fn sub(self, other: RoundPointAtInfinity) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: self.group0() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g1: self.group1() - Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl SubAssign<RoundPointAtInfinity> for RoundPoint {
+    fn sub_assign(&mut self, other: RoundPointAtInfinity) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<RoundPointAtOrigin> for RoundPoint {
+    type Output = RoundPoint;
+
+    fn sub(self, other: RoundPointAtOrigin) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: self.group0(),
+                g1: self.group1() - other.group0(),
+            },
+        }
+    }
+}
+
+impl SubAssign<RoundPointAtOrigin> for RoundPoint {
+    fn sub_assign(&mut self, other: RoundPointAtOrigin) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<RoundPointBulk> for RoundPoint {
+    type Output = RoundPoint;
+
+    fn sub(self, other: RoundPointBulk) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: self.group0() - other.group0(),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl SubAssign<RoundPointBulk> for RoundPoint {
+    fn sub_assign(&mut self, other: RoundPointBulk) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<RoundPointCarrierAspect> for RoundPoint {
+    type Output = RoundPoint;
+
+    fn sub(self, other: RoundPointCarrierAspect) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: self.group0() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g1: self.group1() - Simd32x2::from([other.group0()[3], 0.0]),
+            },
+        }
+    }
+}
+
+impl SubAssign<RoundPointCarrierAspect> for RoundPoint {
+    fn sub_assign(&mut self, other: RoundPointCarrierAspect) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Infinity> for RoundPointAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn sub(self, other: Infinity) -> RoundPointAtInfinity {
+        RoundPointAtInfinity {
+            groups: RoundPointAtInfinityGroups {
+                g0: self.group0() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl SubAssign<Infinity> for RoundPointAtInfinity {
+    fn sub_assign(&mut self, other: Infinity) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<MultiVector> for RoundPointAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - other.group0(),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group1(),
+                g2: Simd32x2::from([0.0, self.group0()[3]]) - other.group2(),
+                g3: Simd32x3::from(0.0) - other.group3(),
+                g4: Simd32x3::from(0.0) - other.group4(),
+                g5: Simd32x4::from(0.0) - other.group5(),
+                g6: Simd32x4::from(0.0) - other.group6(),
+                g7: Simd32x3::from(0.0) - other.group7(),
+                g8: Simd32x3::from(0.0) - other.group8(),
+                g9: Simd32x3::from(0.0) - other.group9(),
+                g10: Simd32x2::from(0.0) - other.group10(),
+            },
+        }
+    }
+}
+
+impl Sub<Origin> for RoundPointAtInfinity {
+    type Output = RoundPoint;
+
+    fn sub(self, other: Origin) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g1: Simd32x2::from([0.0, self.group0()[3]]) - Simd32x2::from([other.group0(), 0.0]),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPoint> for RoundPointAtInfinity {
+    type Output = RoundPoint;
+
+    fn sub(self, other: RoundPoint) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group0(),
+                g1: Simd32x2::from([0.0, self.group0()[3]]) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointAtInfinity> for RoundPointAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn sub(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
+        RoundPointAtInfinity {
+            groups: RoundPointAtInfinityGroups {
+                g0: self.group0() - other.group0(),
+            },
+        }
+    }
+}
+
+impl SubAssign<RoundPointAtInfinity> for RoundPointAtInfinity {
+    fn sub_assign(&mut self, other: RoundPointAtInfinity) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<RoundPointAtOrigin> for RoundPointAtInfinity {
+    type Output = RoundPoint;
+
+    fn sub(self, other: RoundPointAtOrigin) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g1: Simd32x2::from([0.0, self.group0()[3]]) - other.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointBulk> for RoundPointAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn sub(self, other: RoundPointBulk) -> RoundPointAtInfinity {
+        RoundPointAtInfinity {
+            groups: RoundPointAtInfinityGroups {
+                g0: self.group0() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl SubAssign<RoundPointBulk> for RoundPointAtInfinity {
+    fn sub_assign(&mut self, other: RoundPointBulk) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<RoundPointCarrierAspect> for RoundPointAtInfinity {
+    type Output = RoundPoint;
+
+    fn sub(self, other: RoundPointCarrierAspect) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g1: Simd32x2::from([0.0, self.group0()[3]]) - Simd32x2::from([other.group0()[3], 0.0]),
+            },
+        }
+    }
+}
+
+impl Sub<Infinity> for RoundPointAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn sub(self, other: Infinity) -> RoundPointAtOrigin {
+        RoundPointAtOrigin {
+            groups: RoundPointAtOriginGroups {
+                g0: self.group0() - Simd32x2::from([0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl SubAssign<Infinity> for RoundPointAtOrigin {
+    fn sub_assign(&mut self, other: Infinity) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<MultiVector> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: self.group0() - other.group2(),
+                g3: Simd32x3::from(0.0) - other.group3(),
+                g4: Simd32x3::from(0.0) - other.group4(),
+                g5: Simd32x4::from(0.0) - other.group5(),
+                g6: Simd32x4::from(0.0) - other.group6(),
+                g7: Simd32x3::from(0.0) - other.group7(),
+                g8: Simd32x3::from(0.0) - other.group8(),
+                g9: Simd32x3::from(0.0) - other.group9(),
+                g10: Simd32x2::from(0.0) - other.group10(),
+            },
+        }
+    }
+}
+
+impl Sub<Origin> for RoundPointAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn sub(self, other: Origin) -> RoundPointAtOrigin {
+        RoundPointAtOrigin {
+            groups: RoundPointAtOriginGroups {
+                g0: self.group0() - Simd32x2::from([other.group0(), 0.0]),
+            },
+        }
+    }
+}
+
+impl SubAssign<Origin> for RoundPointAtOrigin {
+    fn sub_assign(&mut self, other: Origin) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<RoundPoint> for RoundPointAtOrigin {
+    type Output = RoundPoint;
+
+    fn sub(self, other: RoundPoint) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from(0.0) - other.group0(),
+                g1: self.group0() - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointAtInfinity> for RoundPointAtOrigin {
+    type Output = RoundPoint;
+
+    fn sub(self, other: RoundPointAtInfinity) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g1: self.group0() - Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointAtOrigin> for RoundPointAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn sub(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        RoundPointAtOrigin {
+            groups: RoundPointAtOriginGroups {
+                g0: self.group0() - other.group0(),
+            },
+        }
+    }
+}
+
+impl SubAssign<RoundPointAtOrigin> for RoundPointAtOrigin {
+    fn sub_assign(&mut self, other: RoundPointAtOrigin) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<RoundPointBulk> for RoundPointAtOrigin {
+    type Output = RoundPoint;
+
+    fn sub(self, other: RoundPointBulk) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from(0.0) - other.group0(),
+                g1: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointCarrierAspect> for RoundPointAtOrigin {
+    type Output = RoundPoint;
+
+    fn sub(self, other: RoundPointCarrierAspect) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g1: self.group0() - Simd32x2::from([other.group0()[3], 0.0]),
+            },
+        }
+    }
+}
+
+impl Sub<Infinity> for RoundPointBulk {
+    type Output = RoundPointAtInfinity;
+
+    fn sub(self, other: Infinity) -> RoundPointAtInfinity {
+        RoundPointAtInfinity {
+            groups: RoundPointAtInfinityGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl Sub<MultiVector> for RoundPointBulk {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - other.group0(),
+                g1: self.group0() - other.group1(),
+                g2: Simd32x2::from(0.0) - other.group2(),
+                g3: Simd32x3::from(0.0) - other.group3(),
+                g4: Simd32x3::from(0.0) - other.group4(),
+                g5: Simd32x4::from(0.0) - other.group5(),
+                g6: Simd32x4::from(0.0) - other.group6(),
+                g7: Simd32x3::from(0.0) - other.group7(),
+                g8: Simd32x3::from(0.0) - other.group8(),
+                g9: Simd32x3::from(0.0) - other.group9(),
+                g10: Simd32x2::from(0.0) - other.group10(),
+            },
+        }
+    }
+}
+
+impl Sub<Origin> for RoundPointBulk {
+    type Output = RoundPointCarrierAspect;
+
+    fn sub(self, other: Origin) -> RoundPointCarrierAspect {
+        RoundPointCarrierAspect {
+            groups: RoundPointCarrierAspectGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPoint> for RoundPointBulk {
+    type Output = RoundPoint;
+
+    fn sub(self, other: RoundPoint) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: self.group0() - other.group0(),
+                g1: Simd32x2::from(0.0) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointAtInfinity> for RoundPointBulk {
+    type Output = RoundPointAtInfinity;
+
+    fn sub(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
+        RoundPointAtInfinity {
+            groups: RoundPointAtInfinityGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointAtOrigin> for RoundPointBulk {
+    type Output = RoundPoint;
+
+    fn sub(self, other: RoundPointAtOrigin) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: self.group0(),
+                g1: Simd32x2::from(0.0) - other.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointBulk> for RoundPointBulk {
+    type Output = RoundPointBulk;
+
+    fn sub(self, other: RoundPointBulk) -> RoundPointBulk {
+        RoundPointBulk {
+            groups: RoundPointBulkGroups {
+                g0: self.group0() - other.group0(),
+            },
+        }
+    }
+}
+
+impl SubAssign<RoundPointBulk> for RoundPointBulk {
+    fn sub_assign(&mut self, other: RoundPointBulk) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<RoundPointCarrierAspect> for RoundPointBulk {
+    type Output = RoundPointCarrierAspect;
+
+    fn sub(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+        RoundPointCarrierAspect {
+            groups: RoundPointCarrierAspectGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<Infinity> for RoundPointCarrierAspect {
+    type Output = RoundPoint;
+
+    fn sub(self, other: Infinity) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g1: Simd32x2::from([self.group0()[3], 0.0]) - Simd32x2::from([0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl Sub<MultiVector> for RoundPointCarrierAspect {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - other.group0(),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group1(),
+                g2: Simd32x2::from([self.group0()[3], 0.0]) - other.group2(),
+                g3: Simd32x3::from(0.0) - other.group3(),
+                g4: Simd32x3::from(0.0) - other.group4(),
+                g5: Simd32x4::from(0.0) - other.group5(),
+                g6: Simd32x4::from(0.0) - other.group6(),
+                g7: Simd32x3::from(0.0) - other.group7(),
+                g8: Simd32x3::from(0.0) - other.group8(),
+                g9: Simd32x3::from(0.0) - other.group9(),
+                g10: Simd32x2::from(0.0) - other.group10(),
+            },
+        }
+    }
+}
+
+impl Sub<Origin> for RoundPointCarrierAspect {
+    type Output = RoundPointCarrierAspect;
+
+    fn sub(self, other: Origin) -> RoundPointCarrierAspect {
+        RoundPointCarrierAspect {
+            groups: RoundPointCarrierAspectGroups {
+                g0: self.group0() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl SubAssign<Origin> for RoundPointCarrierAspect {
+    fn sub_assign(&mut self, other: Origin) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<RoundPoint> for RoundPointCarrierAspect {
+    type Output = RoundPoint;
+
+    fn sub(self, other: RoundPoint) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group0(),
+                g1: Simd32x2::from([self.group0()[3], 0.0]) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointAtInfinity> for RoundPointCarrierAspect {
+    type Output = RoundPoint;
+
+    fn sub(self, other: RoundPointAtInfinity) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g1: Simd32x2::from([self.group0()[3], 0.0]) - Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointAtOrigin> for RoundPointCarrierAspect {
+    type Output = RoundPoint;
+
+    fn sub(self, other: RoundPointAtOrigin) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g1: Simd32x2::from([self.group0()[3], 0.0]) - other.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointBulk> for RoundPointCarrierAspect {
+    type Output = RoundPointCarrierAspect;
+
+    fn sub(self, other: RoundPointBulk) -> RoundPointCarrierAspect {
+        RoundPointCarrierAspect {
+            groups: RoundPointCarrierAspectGroups {
+                g0: self.group0() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl SubAssign<RoundPointBulk> for RoundPointCarrierAspect {
+    fn sub_assign(&mut self, other: RoundPointBulk) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<RoundPointCarrierAspect> for RoundPointCarrierAspect {
+    type Output = RoundPointCarrierAspect;
+
+    fn sub(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+        RoundPointCarrierAspect {
+            groups: RoundPointCarrierAspectGroups {
+                g0: self.group0() - other.group0(),
+            },
+        }
+    }
+}
+
+impl SubAssign<RoundPointCarrierAspect> for RoundPointCarrierAspect {
+    fn sub_assign(&mut self, other: RoundPointCarrierAspect) {
+        *self = (*self).sub(other);
+    }
+}
+
 impl Sub<AntiScalar> for Scalar {
     type Output = Magnitude;
 
@@ -9994,6 +15273,91 @@ impl Sub<Sphere> for Sphere {
 
 impl SubAssign<Sphere> for Sphere {
     fn sub_assign(&mut self, other: Sphere) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<SphereWeight> for Sphere {
+    type Output = Sphere;
+
+    fn sub(self, other: SphereWeight) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: self.group0(),
+                g1: self.group1() - Simd32x2::from([other.group0(), 0.0]),
+            },
+        }
+    }
+}
+
+impl SubAssign<SphereWeight> for Sphere {
+    fn sub_assign(&mut self, other: SphereWeight) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<MultiVector> for SphereWeight {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x2::from(0.0) - other.group2(),
+                g3: Simd32x3::from(0.0) - other.group3(),
+                g4: Simd32x3::from(0.0) - other.group4(),
+                g5: Simd32x4::from(0.0) - other.group5(),
+                g6: Simd32x4::from(0.0) - other.group6(),
+                g7: Simd32x3::from(0.0) - other.group7(),
+                g8: Simd32x3::from(0.0) - other.group8(),
+                g9: Simd32x3::from(0.0) - other.group9(),
+                g10: Simd32x2::from([self.group0(), 0.0]) - other.group10(),
+            },
+        }
+    }
+}
+
+impl Sub<Plane> for SphereWeight {
+    type Output = Sphere;
+
+    fn sub(self, other: Plane) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g1: Simd32x2::from([self.group0(), 0.0]) - Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<Sphere> for SphereWeight {
+    type Output = Sphere;
+
+    fn sub(self, other: Sphere) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: Simd32x3::from(0.0) - other.group0(),
+                g1: Simd32x2::from([self.group0(), 0.0]) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<SphereWeight> for SphereWeight {
+    type Output = SphereWeight;
+
+    fn sub(self, other: SphereWeight) -> SphereWeight {
+        SphereWeight {
+            groups: SphereWeightGroups {
+                g0: self.group0() - other.group0(),
+            },
+        }
+    }
+}
+
+impl SubAssign<SphereWeight> for SphereWeight {
+    fn sub_assign(&mut self, other: SphereWeight) {
         *self = (*self).sub(other);
     }
 }

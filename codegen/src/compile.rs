@@ -1948,6 +1948,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             }
         }
 
+        // TODO get rid of left/right distinction in GA's that only have one complement
         let aspect_duals = [
             ("RightBulkDual", "Bulk", "RightComplement"),
             ("RightWeightDual", "Weight", "RightComplement"),
