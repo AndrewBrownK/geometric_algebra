@@ -24,9 +24,9 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         "Scalar:1",
         "AntiScalar:e12345",
         "Magnitude:1,e12345",
-        "Point:e15,e25,e35,e45",
-        "Point/Origin:e45",
-        "Point/PointAtInfinity:e15,e25,e35",
+        "FlatPoint:e15,e25,e35,e45",
+        "FlatPoint/PointAtOrigin:e45",
+        "FlatPoint/PointAtInfinity:e15,e25,e35",
         "Line:e415,e425,e435|e235,e315,e125",
         "Line/LineAtOrigin:e415,e425,e435",
         "Line/LineAtInfinity:e235,e315,e125",
@@ -44,6 +44,7 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
 
         // "RoundPoint/RoundOrigin:e4",
         "RoundPoint/Infinity:e5",
+        "RoundPoint/Origin:e4",
 
         // Operator Objects
         "Motor:e415,e425,e435,e12345|e235,e315,e125",
@@ -81,6 +82,9 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
     code_gen.round_features(flat_basis, &registry);
     code_gen.fancy_norms(&registry);
     code_gen.attitude_and_dependencies("Horizon", &registry);
+    // TODO dilation and any remaining stuff
+    // TODO inverse, quotient, rejection (ala projection) see page 122 it actually seems useful
+    // TODO see loads of DualNum operations on page 126
 
     let mut file_path = Path::new("src/").to_path_buf();
     if !path_prefix.is_empty() {
@@ -170,6 +174,7 @@ use crate::involutions::*;",
 use crate::*;
 use crate::products::exterior::AntiWedge;
 use crate::products::exterior::Wedge;
+use crate::involutions::*;
 use crate::aspect_duals::*;",
     )?;
     code_gen.emit_characteristic_features(&mut emitter)?;

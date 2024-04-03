@@ -112,6 +112,20 @@ impl AntiDual for Dipole {
     }
 }
 
+impl AntiDual for FlatPoint {
+    type Output = Circle;
+
+    fn anti_dual(self) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, -self.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            },
+        }
+    }
+}
+
 impl AntiDual for Flector {
     type Output = MultiVector;
 
@@ -251,14 +265,13 @@ impl AntiDual for MultiVector {
 }
 
 impl AntiDual for Origin {
-    type Output = Circle;
+    type Output = Sphere;
 
-    fn anti_dual(self) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, -self.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from(0.0),
+    fn anti_dual(self) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x2::from([self.group0(), 0.0]),
             },
         }
     }
@@ -290,26 +303,26 @@ impl AntiDual for PlaneAtOrigin {
     }
 }
 
-impl AntiDual for Point {
-    type Output = Circle;
-
-    fn anti_dual(self) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, -self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-            },
-        }
-    }
-}
-
 impl AntiDual for PointAtInfinity {
     type Output = LineAtInfinity;
 
     fn anti_dual(self) -> LineAtInfinity {
         LineAtInfinity {
             groups: LineAtInfinityGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl AntiDual for PointAtOrigin {
+    type Output = Circle;
+
+    fn anti_dual(self) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, -self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
+            },
         }
     }
 }
@@ -427,6 +440,18 @@ impl AntiReversal for Dipole {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
                 g2: self.group2() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl AntiReversal for FlatPoint {
+    type Output = FlatPoint;
+
+    fn anti_reversal(self) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -554,7 +579,7 @@ impl AntiReversal for Origin {
 
     fn anti_reversal(self) -> Origin {
         Origin {
-            groups: OriginGroups { g0: -self.group0() },
+            groups: OriginGroups { g0: self.group0() },
         }
     }
 }
@@ -583,18 +608,6 @@ impl AntiReversal for PlaneAtOrigin {
     }
 }
 
-impl AntiReversal for Point {
-    type Output = Point;
-
-    fn anti_reversal(self) -> Point {
-        Point {
-            groups: PointGroups {
-                g0: self.group0() * Simd32x4::from(-1.0),
-            },
-        }
-    }
-}
-
 impl AntiReversal for PointAtInfinity {
     type Output = PointAtInfinity;
 
@@ -603,6 +616,16 @@ impl AntiReversal for PointAtInfinity {
             groups: PointAtInfinityGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
             },
+        }
+    }
+}
+
+impl AntiReversal for PointAtOrigin {
+    type Output = PointAtOrigin;
+
+    fn anti_reversal(self) -> PointAtOrigin {
+        PointAtOrigin {
+            groups: PointAtOriginGroups { g0: -self.group0() },
         }
     }
 }
@@ -701,6 +724,16 @@ impl Automorphism for Dipole {
                 g1: self.group1(),
                 g2: self.group2(),
             },
+        }
+    }
+}
+
+impl Automorphism for FlatPoint {
+    type Output = FlatPoint;
+
+    fn automorphism(self) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups { g0: self.group0() },
         }
     }
 }
@@ -825,7 +858,7 @@ impl Automorphism for Origin {
 
     fn automorphism(self) -> Origin {
         Origin {
-            groups: OriginGroups { g0: self.group0() },
+            groups: OriginGroups { g0: -self.group0() },
         }
     }
 }
@@ -854,22 +887,22 @@ impl Automorphism for PlaneAtOrigin {
     }
 }
 
-impl Automorphism for Point {
-    type Output = Point;
-
-    fn automorphism(self) -> Point {
-        Point {
-            groups: PointGroups { g0: self.group0() },
-        }
-    }
-}
-
 impl Automorphism for PointAtInfinity {
     type Output = PointAtInfinity;
 
     fn automorphism(self) -> PointAtInfinity {
         PointAtInfinity {
             groups: PointAtInfinityGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Automorphism for PointAtOrigin {
+    type Output = PointAtOrigin;
+
+    fn automorphism(self) -> PointAtOrigin {
+        PointAtOrigin {
+            groups: PointAtOriginGroups { g0: self.group0() },
         }
     }
 }
@@ -967,6 +1000,18 @@ impl Conjugation for Dipole {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
                 g2: self.group2() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Conjugation for FlatPoint {
+    type Output = FlatPoint;
+
+    fn conjugation(self) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -1121,18 +1166,6 @@ impl Conjugation for PlaneAtOrigin {
     }
 }
 
-impl Conjugation for Point {
-    type Output = Point;
-
-    fn conjugation(self) -> Point {
-        Point {
-            groups: PointGroups {
-                g0: self.group0() * Simd32x4::from(-1.0),
-            },
-        }
-    }
-}
-
 impl Conjugation for PointAtInfinity {
     type Output = PointAtInfinity;
 
@@ -1141,6 +1174,16 @@ impl Conjugation for PointAtInfinity {
             groups: PointAtInfinityGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
             },
+        }
+    }
+}
+
+impl Conjugation for PointAtOrigin {
+    type Output = PointAtOrigin;
+
+    fn conjugation(self) -> PointAtOrigin {
+        PointAtOrigin {
+            groups: PointAtOriginGroups { g0: -self.group0() },
         }
     }
 }
@@ -1239,6 +1282,16 @@ impl DoubleComplement for Dipole {
                 g1: self.group1(),
                 g2: self.group2(),
             },
+        }
+    }
+}
+
+impl DoubleComplement for FlatPoint {
+    type Output = FlatPoint;
+
+    fn double_complement(self) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups { g0: self.group0() },
         }
     }
 }
@@ -1384,22 +1437,22 @@ impl DoubleComplement for PlaneAtOrigin {
     }
 }
 
-impl DoubleComplement for Point {
-    type Output = Point;
-
-    fn double_complement(self) -> Point {
-        Point {
-            groups: PointGroups { g0: self.group0() },
-        }
-    }
-}
-
 impl DoubleComplement for PointAtInfinity {
     type Output = PointAtInfinity;
 
     fn double_complement(self) -> PointAtInfinity {
         PointAtInfinity {
             groups: PointAtInfinityGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl DoubleComplement for PointAtOrigin {
+    type Output = PointAtOrigin;
+
+    fn double_complement(self) -> PointAtOrigin {
+        PointAtOrigin {
+            groups: PointAtOriginGroups { g0: self.group0() },
         }
     }
 }
@@ -1493,6 +1546,20 @@ impl Dual for Dipole {
                 g0: Simd32x4::from([-self.group0()[0], -self.group0()[1], -self.group0()[2], self.group2()[3]]),
                 g1: self.group1() * Simd32x3::from(-1.0),
                 g2: Simd32x3::from([-self.group2()[0], self.group2()[1], self.group2()[2]]),
+            },
+        }
+    }
+}
+
+impl Dual for FlatPoint {
+    type Output = Circle;
+
+    fn dual(self) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
             },
         }
     }
@@ -1635,14 +1702,13 @@ impl Dual for MultiVector {
 }
 
 impl Dual for Origin {
-    type Output = Circle;
+    type Output = Sphere;
 
-    fn dual(self) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from(0.0),
+    fn dual(self) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x2::from([-self.group0(), 0.0]),
             },
         }
     }
@@ -1674,20 +1740,6 @@ impl Dual for PlaneAtOrigin {
     }
 }
 
-impl Dual for Point {
-    type Output = Circle;
-
-    fn dual(self) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
-            },
-        }
-    }
-}
-
 impl Dual for PointAtInfinity {
     type Output = LineAtInfinity;
 
@@ -1695,6 +1747,20 @@ impl Dual for PointAtInfinity {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Dual for PointAtOrigin {
+    type Output = Circle;
+
+    fn dual(self) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
             },
         }
     }
@@ -1818,6 +1884,20 @@ impl LeftComplement for Dipole {
     }
 }
 
+impl LeftComplement for FlatPoint {
+    type Output = Circle;
+
+    fn left_complement(self) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
+            },
+        }
+    }
+}
+
 impl LeftComplement for Flector {
     type Output = MultiVector;
 
@@ -1841,14 +1921,11 @@ impl LeftComplement for Flector {
 }
 
 impl LeftComplement for Horizon {
-    type Output = RoundPoint;
+    type Output = Origin;
 
-    fn left_complement(self) -> RoundPoint {
-        RoundPoint {
-            groups: RoundPointGroups {
-                g0: Simd32x3::from(0.0),
-                g1: Simd32x2::from([self.group0(), 0.0]),
-            },
+    fn left_complement(self) -> Origin {
+        Origin {
+            groups: OriginGroups { g0: self.group0() },
         }
     }
 }
@@ -1965,15 +2042,11 @@ impl LeftComplement for MultiVector {
 }
 
 impl LeftComplement for Origin {
-    type Output = Circle;
+    type Output = Horizon;
 
-    fn left_complement(self) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, -self.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from(0.0),
-            },
+    fn left_complement(self) -> Horizon {
+        Horizon {
+            groups: HorizonGroups { g0: self.group0() },
         }
     }
 }
@@ -2004,20 +2077,6 @@ impl LeftComplement for PlaneAtOrigin {
     }
 }
 
-impl LeftComplement for Point {
-    type Output = Circle;
-
-    fn left_complement(self) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: self.group0() * Simd32x4::from(-1.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from(0.0),
-            },
-        }
-    }
-}
-
 impl LeftComplement for PointAtInfinity {
     type Output = Circle;
 
@@ -2025,6 +2084,20 @@ impl LeftComplement for PointAtInfinity {
         Circle {
             groups: CircleGroups {
                 g0: Simd32x4::from([-self.group0()[0], -self.group0()[1], -self.group0()[2], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
+            },
+        }
+    }
+}
+
+impl LeftComplement for PointAtOrigin {
+    type Output = Circle;
+
+    fn left_complement(self) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, -self.group0()]),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x3::from(0.0),
             },
@@ -2145,6 +2218,18 @@ impl Reversal for Dipole {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
                 g2: self.group2() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Reversal for FlatPoint {
+    type Output = FlatPoint;
+
+    fn reversal(self) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -2272,7 +2357,7 @@ impl Reversal for Origin {
 
     fn reversal(self) -> Origin {
         Origin {
-            groups: OriginGroups { g0: -self.group0() },
+            groups: OriginGroups { g0: self.group0() },
         }
     }
 }
@@ -2301,18 +2386,6 @@ impl Reversal for PlaneAtOrigin {
     }
 }
 
-impl Reversal for Point {
-    type Output = Point;
-
-    fn reversal(self) -> Point {
-        Point {
-            groups: PointGroups {
-                g0: self.group0() * Simd32x4::from(-1.0),
-            },
-        }
-    }
-}
-
 impl Reversal for PointAtInfinity {
     type Output = PointAtInfinity;
 
@@ -2321,6 +2394,16 @@ impl Reversal for PointAtInfinity {
             groups: PointAtInfinityGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
             },
+        }
+    }
+}
+
+impl Reversal for PointAtOrigin {
+    type Output = PointAtOrigin;
+
+    fn reversal(self) -> PointAtOrigin {
+        PointAtOrigin {
+            groups: PointAtOriginGroups { g0: -self.group0() },
         }
     }
 }
@@ -2423,6 +2506,20 @@ impl RightComplement for Dipole {
     }
 }
 
+impl RightComplement for FlatPoint {
+    type Output = Circle;
+
+    fn right_complement(self) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
+            },
+        }
+    }
+}
+
 impl RightComplement for Flector {
     type Output = MultiVector;
 
@@ -2446,14 +2543,11 @@ impl RightComplement for Flector {
 }
 
 impl RightComplement for Horizon {
-    type Output = RoundPoint;
+    type Output = Origin;
 
-    fn right_complement(self) -> RoundPoint {
-        RoundPoint {
-            groups: RoundPointGroups {
-                g0: Simd32x3::from(0.0),
-                g1: Simd32x2::from([self.group0(), 0.0]),
-            },
+    fn right_complement(self) -> Origin {
+        Origin {
+            groups: OriginGroups { g0: self.group0() },
         }
     }
 }
@@ -2570,15 +2664,11 @@ impl RightComplement for MultiVector {
 }
 
 impl RightComplement for Origin {
-    type Output = Circle;
+    type Output = Horizon;
 
-    fn right_complement(self) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, -self.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from(0.0),
-            },
+    fn right_complement(self) -> Horizon {
+        Horizon {
+            groups: HorizonGroups { g0: self.group0() },
         }
     }
 }
@@ -2609,20 +2699,6 @@ impl RightComplement for PlaneAtOrigin {
     }
 }
 
-impl RightComplement for Point {
-    type Output = Circle;
-
-    fn right_complement(self) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: self.group0() * Simd32x4::from(-1.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from(0.0),
-            },
-        }
-    }
-}
-
 impl RightComplement for PointAtInfinity {
     type Output = Circle;
 
@@ -2630,6 +2706,20 @@ impl RightComplement for PointAtInfinity {
         Circle {
             groups: CircleGroups {
                 g0: Simd32x4::from([-self.group0()[0], -self.group0()[1], -self.group0()[2], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
+            },
+        }
+    }
+}
+
+impl RightComplement for PointAtOrigin {
+    type Output = Circle;
+
+    fn right_complement(self) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, -self.group0()]),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x3::from(0.0),
             },

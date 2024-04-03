@@ -6,6 +6,7 @@
 //
 
 use crate::aspect_duals::*;
+use crate::involutions::*;
 use crate::products::exterior::AntiWedge;
 use crate::products::exterior::Wedge;
 use crate::*;
@@ -103,6 +104,14 @@ impl AntiGrade for Dipole {
     }
 }
 
+impl AntiGrade for FlatPoint {
+    type Output = isize;
+
+    fn anti_grade() -> isize {
+        3
+    }
+}
+
 impl AntiGrade for Horizon {
     type Output = isize;
 
@@ -147,7 +156,7 @@ impl AntiGrade for Origin {
     type Output = isize;
 
     fn anti_grade() -> isize {
-        3
+        4
     }
 }
 
@@ -167,7 +176,7 @@ impl AntiGrade for PlaneAtOrigin {
     }
 }
 
-impl AntiGrade for Point {
+impl AntiGrade for PointAtInfinity {
     type Output = isize;
 
     fn anti_grade() -> isize {
@@ -175,7 +184,7 @@ impl AntiGrade for Point {
     }
 }
 
-impl AntiGrade for PointAtInfinity {
+impl AntiGrade for PointAtOrigin {
     type Output = isize;
 
     fn anti_grade() -> isize {
@@ -231,6 +240,14 @@ impl Grade for Dipole {
     }
 }
 
+impl Grade for FlatPoint {
+    type Output = isize;
+
+    fn grade() -> isize {
+        2
+    }
+}
+
 impl Grade for Horizon {
     type Output = isize;
 
@@ -275,7 +292,7 @@ impl Grade for Origin {
     type Output = isize;
 
     fn grade() -> isize {
-        2
+        1
     }
 }
 
@@ -295,7 +312,7 @@ impl Grade for PlaneAtOrigin {
     }
 }
 
-impl Grade for Point {
+impl Grade for PointAtInfinity {
     type Output = isize;
 
     fn grade() -> isize {
@@ -303,7 +320,7 @@ impl Grade for Point {
     }
 }
 
-impl Grade for PointAtInfinity {
+impl Grade for PointAtOrigin {
     type Output = isize;
 
     fn grade() -> isize {
@@ -359,6 +376,14 @@ impl Attitude for Dipole {
     }
 }
 
+impl Attitude for FlatPoint {
+    type Output = Infinity;
+
+    fn attitude(self) -> Infinity {
+        self.anti_wedge(Horizon::one())
+    }
+}
+
 impl Attitude for Flector {
     type Output = MultiVector;
 
@@ -408,9 +433,9 @@ impl Attitude for MultiVector {
 }
 
 impl Attitude for Origin {
-    type Output = Infinity;
+    type Output = Scalar;
 
-    fn attitude(self) -> Infinity {
+    fn attitude(self) -> Scalar {
         self.anti_wedge(Horizon::one())
     }
 }
@@ -431,7 +456,7 @@ impl Attitude for PlaneAtOrigin {
     }
 }
 
-impl Attitude for Point {
+impl Attitude for PointAtOrigin {
     type Output = Infinity;
 
     fn attitude(self) -> Infinity {
@@ -475,9 +500,7 @@ impl Carrier for Circle {
     type Output = Plane;
 
     fn carrier(self) -> Plane {
-        self.wedge(Infinity {
-            groups: InfinityGroups { g0: 1.0 },
-        })
+        self.wedge(Infinity::one())
     }
 }
 
@@ -485,9 +508,7 @@ impl Carrier for Dipole {
     type Output = Line;
 
     fn carrier(self) -> Line {
-        self.wedge(Infinity {
-            groups: InfinityGroups { g0: 1.0 },
-        })
+        self.wedge(Infinity::one())
     }
 }
 
@@ -495,9 +516,7 @@ impl Carrier for Magnitude {
     type Output = Infinity;
 
     fn carrier(self) -> Infinity {
-        self.wedge(Infinity {
-            groups: InfinityGroups { g0: 1.0 },
-        })
+        self.wedge(Infinity::one())
     }
 }
 
@@ -505,19 +524,23 @@ impl Carrier for MultiVector {
     type Output = MultiVector;
 
     fn carrier(self) -> MultiVector {
-        self.wedge(Infinity {
-            groups: InfinityGroups { g0: 1.0 },
-        })
+        self.wedge(Infinity::one())
+    }
+}
+
+impl Carrier for Origin {
+    type Output = PointAtOrigin;
+
+    fn carrier(self) -> PointAtOrigin {
+        self.wedge(Infinity::one())
     }
 }
 
 impl Carrier for RoundPoint {
-    type Output = Point;
+    type Output = FlatPoint;
 
-    fn carrier(self) -> Point {
-        self.wedge(Infinity {
-            groups: InfinityGroups { g0: 1.0 },
-        })
+    fn carrier(self) -> FlatPoint {
+        self.wedge(Infinity::one())
     }
 }
 
@@ -525,9 +548,7 @@ impl Carrier for Scalar {
     type Output = Infinity;
 
     fn carrier(self) -> Infinity {
-        self.wedge(Infinity {
-            groups: InfinityGroups { g0: 1.0 },
-        })
+        self.wedge(Infinity::one())
     }
 }
 
@@ -535,9 +556,7 @@ impl Carrier for Sphere {
     type Output = AntiScalar;
 
     fn carrier(self) -> AntiScalar {
-        self.wedge(Infinity {
-            groups: InfinityGroups { g0: 1.0 },
-        })
+        self.wedge(Infinity::one())
     }
 }
 
@@ -545,9 +564,7 @@ impl CoCarrier for Circle {
     type Output = Line;
 
     fn co_carrier(self) -> Line {
-        self.right_round_weight_dual().wedge(Infinity {
-            groups: InfinityGroups { g0: 1.0 },
-        })
+        self.anti_dual().wedge(Infinity::one())
     }
 }
 
@@ -555,9 +572,15 @@ impl CoCarrier for Dipole {
     type Output = Plane;
 
     fn co_carrier(self) -> Plane {
-        self.right_round_weight_dual().wedge(Infinity {
-            groups: InfinityGroups { g0: 1.0 },
-        })
+        self.anti_dual().wedge(Infinity::one())
+    }
+}
+
+impl CoCarrier for Magnitude {
+    type Output = Infinity;
+
+    fn co_carrier(self) -> Infinity {
+        self.anti_dual().wedge(Infinity::one())
     }
 }
 
@@ -565,9 +588,15 @@ impl CoCarrier for MultiVector {
     type Output = MultiVector;
 
     fn co_carrier(self) -> MultiVector {
-        self.right_round_weight_dual().wedge(Infinity {
-            groups: InfinityGroups { g0: 1.0 },
-        })
+        self.anti_dual().wedge(Infinity::one())
+    }
+}
+
+impl CoCarrier for Origin {
+    type Output = AntiScalar;
+
+    fn co_carrier(self) -> AntiScalar {
+        self.anti_dual().wedge(Infinity::one())
     }
 }
 
@@ -575,19 +604,15 @@ impl CoCarrier for RoundPoint {
     type Output = AntiScalar;
 
     fn co_carrier(self) -> AntiScalar {
-        self.right_round_weight_dual().wedge(Infinity {
-            groups: InfinityGroups { g0: 1.0 },
-        })
+        self.anti_dual().wedge(Infinity::one())
     }
 }
 
 impl CoCarrier for Sphere {
-    type Output = Point;
+    type Output = FlatPoint;
 
-    fn co_carrier(self) -> Point {
-        self.right_round_weight_dual().wedge(Infinity {
-            groups: InfinityGroups { g0: 1.0 },
-        })
+    fn co_carrier(self) -> FlatPoint {
+        self.anti_dual().wedge(Infinity::one())
     }
 }
 
@@ -627,10 +652,26 @@ impl Center for Dipole {
     }
 }
 
+impl Center for Magnitude {
+    type Output = Infinity;
+
+    fn center(self) -> Infinity {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
 impl Center for MultiVector {
     type Output = MultiVector;
 
     fn center(self) -> MultiVector {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
+impl Center for Origin {
+    type Output = Origin;
+
+    fn center(self) -> Origin {
         self.co_carrier().anti_wedge(self)
     }
 }
@@ -655,7 +696,7 @@ impl Container for Circle {
     type Output = Sphere;
 
     fn container(self) -> Sphere {
-        self.wedge(self.carrier().right_weight_dual())
+        self.wedge(self.carrier().anti_dual())
     }
 }
 
@@ -663,7 +704,15 @@ impl Container for Dipole {
     type Output = Sphere;
 
     fn container(self) -> Sphere {
-        self.wedge(self.carrier().right_weight_dual())
+        self.wedge(self.carrier().anti_dual())
+    }
+}
+
+impl Container for Magnitude {
+    type Output = Horizon;
+
+    fn container(self) -> Horizon {
+        self.wedge(self.carrier().anti_dual())
     }
 }
 
@@ -671,7 +720,15 @@ impl Container for MultiVector {
     type Output = MultiVector;
 
     fn container(self) -> MultiVector {
-        self.wedge(self.carrier().right_weight_dual())
+        self.wedge(self.carrier().anti_dual())
+    }
+}
+
+impl Container for Origin {
+    type Output = Sphere;
+
+    fn container(self) -> Sphere {
+        self.wedge(self.carrier().anti_dual())
     }
 }
 
@@ -679,7 +736,15 @@ impl Container for RoundPoint {
     type Output = Sphere;
 
     fn container(self) -> Sphere {
-        self.wedge(self.carrier().right_weight_dual())
+        self.wedge(self.carrier().anti_dual())
+    }
+}
+
+impl Container for Scalar {
+    type Output = Horizon;
+
+    fn container(self) -> Horizon {
+        self.wedge(self.carrier().anti_dual())
     }
 }
 
@@ -687,7 +752,7 @@ impl Container for Sphere {
     type Output = Sphere;
 
     fn container(self) -> Sphere {
-        self.wedge(self.carrier().right_weight_dual())
+        self.wedge(self.carrier().anti_dual())
     }
 }
 

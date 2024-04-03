@@ -52,6 +52,18 @@ impl Unitize for Dipole {
     }
 }
 
+impl Unitize for FlatPoint {
+    type Output = FlatPoint;
+
+    fn unitize(self) -> FlatPoint {
+        self.geometric_product(Scalar {
+            groups: ScalarGroups {
+                g0: 1.0 / self.weight_norm().group0(),
+            },
+        })
+    }
+}
+
 impl Unitize for Flector {
     type Output = Flector;
 
@@ -124,18 +136,6 @@ impl Unitize for MultiVector {
     }
 }
 
-impl Unitize for Origin {
-    type Output = Origin;
-
-    fn unitize(self) -> Origin {
-        self.geometric_product(Scalar {
-            groups: ScalarGroups {
-                g0: 1.0 / self.weight_norm().group0(),
-            },
-        })
-    }
-}
-
 impl Unitize for Plane {
     type Output = Plane;
 
@@ -160,10 +160,10 @@ impl Unitize for PlaneAtOrigin {
     }
 }
 
-impl Unitize for Point {
-    type Output = Point;
+impl Unitize for PointAtOrigin {
+    type Output = PointAtOrigin;
 
-    fn unitize(self) -> Point {
+    fn unitize(self) -> PointAtOrigin {
         self.geometric_product(Scalar {
             groups: ScalarGroups {
                 g0: 1.0 / self.weight_norm().group0(),

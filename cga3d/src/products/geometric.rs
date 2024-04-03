@@ -79,6 +79,18 @@ impl AntiWedgeDot<Dipole> for AntiScalar {
     }
 }
 
+impl AntiWedgeDot<FlatPoint> for AntiScalar {
+    type Output = FlatPoint;
+
+    fn anti_wedge_dot(self, other: FlatPoint) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: Simd32x4::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
 impl AntiWedgeDot<Flector> for AntiScalar {
     type Output = Flector;
 
@@ -236,18 +248,6 @@ impl AntiWedgeDot<PlaneAtOrigin> for AntiScalar {
     }
 }
 
-impl AntiWedgeDot<Point> for AntiScalar {
-    type Output = Point;
-
-    fn anti_wedge_dot(self, other: Point) -> Point {
-        Point {
-            groups: PointGroups {
-                g0: Simd32x4::from(self.group0()) * other.group0(),
-            },
-        }
-    }
-}
-
 impl AntiWedgeDot<PointAtInfinity> for AntiScalar {
     type Output = PointAtInfinity;
 
@@ -255,6 +255,18 @@ impl AntiWedgeDot<PointAtInfinity> for AntiScalar {
         PointAtInfinity {
             groups: PointAtInfinityGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<PointAtOrigin> for AntiScalar {
+    type Output = PointAtOrigin;
+
+    fn anti_wedge_dot(self, other: PointAtOrigin) -> PointAtOrigin {
+        PointAtOrigin {
+            groups: PointAtOriginGroups {
+                g0: self.group0() * other.group0(),
             },
         }
     }
@@ -468,6 +480,45 @@ impl AntiWedgeDot<Dipole> for Circle {
                     + Simd32x2::from(self.group2()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
                     + Simd32x2::from(self.group2()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
                     + Simd32x2::from(self.group2()[2]) * Simd32x2::from([0.0, -other.group1()[2]]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<FlatPoint> for Circle {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([-other.group0()[1], 0.0])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([-other.group0()[2], 0.0])
+                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([-other.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3]),
+                g4: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
+                    + swizzle!(self.group0(), 3, 3, 3, 2) * swizzle!(other.group0(), 0, 1, 2, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0])
+                    + Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group1()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0])
+                    + Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group2()[0]])
+                        * Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
+                    + self.group1() * Simd32x3::from(other.group0()[3]),
+                g10: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
             },
         }
     }
@@ -912,17 +963,17 @@ impl AntiWedgeDot<Origin> for Circle {
     fn anti_wedge_dot(self, other: Origin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([-other.group0(), 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g0: Simd32x2::from(0.0),
+                g1: self.group2() * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(self.group0()[3]) * Simd32x2::from([-other.group0(), 0.0]),
+                g3: Simd32x3::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group2()[0]])
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]])
                     * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
+                g7: self.group2() * Simd32x3::from(other.group0()),
                 g8: Simd32x3::from(0.0),
-                g9: self.group1() * Simd32x3::from(other.group0()),
+                g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
         }
@@ -1003,45 +1054,6 @@ impl AntiWedgeDot<PlaneAtOrigin> for Circle {
     }
 }
 
-impl AntiWedgeDot<Point> for Circle {
-    type Output = MultiVector;
-
-    fn anti_wedge_dot(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([-other.group0()[1], 0.0])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([-other.group0()[2], 0.0])
-                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([-other.group0()[3], 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3]),
-                g4: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
-                    + swizzle!(self.group0(), 3, 3, 3, 2) * swizzle!(other.group0(), 0, 1, 2, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0])
-                    + Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group1()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0])
-                    + Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group2()[0]])
-                        * Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
-                    + self.group1() * Simd32x3::from(other.group0()[3]),
-                g10: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-            },
-        }
-    }
-}
-
 impl AntiWedgeDot<PointAtInfinity> for Circle {
     type Output = MultiVector;
 
@@ -1072,6 +1084,29 @@ impl AntiWedgeDot<PointAtInfinity> for Circle {
                 g10: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
                     + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
                     + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<PointAtOrigin> for Circle {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([-other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group2()[0]])
+                    * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: self.group1() * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -1393,6 +1428,44 @@ impl AntiWedgeDot<Dipole> for Dipole {
                     + Simd32x3::from(self.group2()[1]) * Simd32x3::from([-other.group1()[2], -other.group2()[3], other.group1()[0]])
                     + Simd32x3::from(self.group2()[2]) * Simd32x3::from([other.group1()[1], -other.group1()[0], -other.group2()[3]])
                     + Simd32x3::from(self.group2()[3]) * Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<FlatPoint> for Dipole {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
+                    + Simd32x2::from(self.group2()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
+                g1: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
+                    + self.group1() * Simd32x3::from(other.group0()[3]),
+                g2: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, other.group0()[0]])
+                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, other.group0()[1]])
+                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, other.group0()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
+                g7: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
+                g8: Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group1()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group1()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    - Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]) * Simd32x3::from(other.group0()[3])
+                    + Simd32x3::from(self.group2()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -1846,18 +1919,17 @@ impl AntiWedgeDot<Origin> for Dipole {
     fn anti_wedge_dot(self, other: Origin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group2()[3]) * Simd32x2::from([0.0, -other.group0()]),
-                g1: self.group1() * Simd32x3::from(other.group0()),
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
+                g3: self.group1() * Simd32x3::from(other.group0()),
+                g4: Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]) * Simd32x3::from(other.group0()),
                 g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
-                    * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0) - Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]) * Simd32x3::from(other.group0()),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]) * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(self.group2()[3]) * Simd32x2::from([other.group0(), 0.0]),
             },
         }
     }
@@ -1940,44 +2012,6 @@ impl AntiWedgeDot<PlaneAtOrigin> for Dipole {
     }
 }
 
-impl AntiWedgeDot<Point> for Dipole {
-    type Output = MultiVector;
-
-    fn anti_wedge_dot(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
-                    + Simd32x2::from(self.group2()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
-                g1: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
-                    + self.group1() * Simd32x3::from(other.group0()[3]),
-                g2: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, other.group0()[0]])
-                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, other.group0()[1]])
-                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, other.group0()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
-                g7: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
-                g8: Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group1()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group1()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    - Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]) * Simd32x3::from(other.group0()[3])
-                    + Simd32x3::from(self.group2()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl AntiWedgeDot<PointAtInfinity> for Dipole {
     type Output = MultiVector;
 
@@ -2006,6 +2040,29 @@ impl AntiWedgeDot<PointAtInfinity> for Dipole {
                     + Simd32x3::from(self.group1()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group1()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
                     + Simd32x3::from(self.group2()[3]) * other.group0(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<PointAtOrigin> for Dipole {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group2()[3]) * Simd32x2::from([0.0, -other.group0()]),
+                g1: self.group1() * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
+                    * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]) * Simd32x3::from(other.group0()),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -2186,6 +2243,505 @@ impl AntiWedgeDot<Translator> for Dipole {
     }
 }
 
+impl AntiWedgeDot<AntiScalar> for FlatPoint {
+    type Output = FlatPoint;
+
+    fn anti_wedge_dot(self, other: AntiScalar) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: self.group0() * Simd32x4::from(other.group0()),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Circle> for FlatPoint {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: Circle) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([-other.group0()[1], 0.0])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([-other.group0()[2], 0.0])
+                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([-other.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g4: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([-other.group0()[3], -other.group1()[2], other.group1()[1], other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[2], -other.group0()[3], -other.group1()[0], other.group0()[1]])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group1()[1], other.group1()[0], -other.group0()[3], other.group0()[2]])
+                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([-other.group2()[0], -other.group2()[1], -other.group2()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    + Simd32x3::from(self.group0()[3]) * other.group1(),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group1()[2]]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Dipole> for FlatPoint {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: Dipole) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
+                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group2()[3]]),
+                g1: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    + Simd32x3::from(self.group0()[3]) * other.group1(),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group1()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group1()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group1()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]])
+                    + swizzle!(self.group0(), 3, 3, 3, 2) * Simd32x4::from([-other.group0()[0], -other.group0()[1], -other.group0()[2], other.group0()[2]]),
+                g7: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group2()[3], other.group1()[2], -other.group1()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group1()[2], -other.group2()[3], other.group1()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group1()[1], -other.group1()[0], -other.group2()[3]])
+                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<FlatPoint> for FlatPoint {
+    type Output = Translator;
+
+    fn anti_wedge_dot(self, other: FlatPoint) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([-other.group0()[3], -other.group0()[3], -other.group0()[3], 0.0])
+                    + Simd32x4::from(self.group0()[3]) * other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Flector> for FlatPoint {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: Flector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group1()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group1()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group1()[2]])
+                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, other.group1()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group0()[3], other.group1()[2], -other.group1()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group1()[2], -other.group0()[3], other.group1()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group1()[1], -other.group1()[0], -other.group0()[3]])
+                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Horizon> for FlatPoint {
+    type Output = Infinity;
+
+    fn anti_wedge_dot(self, other: Horizon) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: self.group0()[3] * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Infinity> for FlatPoint {
+    type Output = Horizon;
+
+    fn anti_wedge_dot(self, other: Infinity) -> Horizon {
+        Horizon {
+            groups: HorizonGroups {
+                g0: 0.0 - self.group0()[3] * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Line> for FlatPoint {
+    type Output = Flector;
+
+    fn anti_wedge_dot(self, other: Line) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0])
+                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([-other.group1()[0], -other.group1()[1], -other.group1()[2], 0.0]),
+                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
+                    + swizzle!(self.group0(), 3, 3, 3, 2) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<LineAtInfinity> for FlatPoint {
+    type Output = PointAtInfinity;
+
+    fn anti_wedge_dot(self, other: LineAtInfinity) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<LineAtOrigin> for FlatPoint {
+    type Output = Flector;
+
+    fn anti_wedge_dot(self, other: LineAtOrigin) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0]),
+                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
+                    + swizzle!(self.group0(), 3, 3, 3, 2) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Magnitude> for FlatPoint {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: Magnitude) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: self.group0() * Simd32x4::from(other.group0()[1]),
+                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[0]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Motor> for FlatPoint {
+    type Output = Flector;
+
+    fn anti_wedge_dot(self, other: Motor) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], other.group0()[3], -other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], other.group0()[3], 0.0])
+                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([-other.group1()[0], -other.group1()[1], -other.group1()[2], other.group0()[3]]),
+                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
+                    + swizzle!(self.group0(), 3, 3, 3, 2) * swizzle!(other.group0(), 0, 1, 2, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<MultiVector> for FlatPoint {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group6()[0], other.group3()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([-other.group6()[1], other.group3()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([-other.group6()[2], other.group3()[2]])
+                    - Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group6()[3], other.group5()[3]]),
+                g1: Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group10()[0], other.group3()[2], -other.group3()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group3()[2], -other.group10()[0], other.group3()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group3()[1], -other.group3()[0], -other.group10()[0]])
+                    + Simd32x3::from(self.group0()[3]) * other.group4(),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group9()[0]])
+                    + Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group4()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group9()[1]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group4()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group9()[2]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group4()[2]])
+                    + Simd32x2::from(self.group0()[3]) * other.group10() * Simd32x2::from([-1.0, 1.0]),
+                g3: Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group6()[0], other.group6()[1], other.group6()[2]]),
+                g4: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group2()[0], -other.group6()[2], other.group6()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group6()[2], other.group2()[0], -other.group6()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group6()[1], other.group6()[0], other.group2()[0]])
+                    - Simd32x3::from(self.group0()[3]) * other.group1(),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([-other.group6()[3], -other.group7()[2], other.group7()[1], other.group6()[0]])
+                    + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[1], other.group1()[2], -other.group1()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group7()[2], -other.group6()[3], -other.group7()[0], other.group6()[1]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group1()[2], other.group0()[1], other.group1()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group7()[1], other.group7()[0], -other.group6()[3], other.group6()[2]])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[1], -other.group1()[0], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([-other.group8()[0], -other.group8()[1], -other.group8()[2], other.group0()[1]]),
+                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group3()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group3()[1]])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, 0.0, other.group3()[2]])
+                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([-other.group3()[0], -other.group3()[1], -other.group3()[2], other.group0()[0]]),
+                g7: Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group10()[0], other.group3()[2], -other.group3()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group3()[2], -other.group10()[0], other.group3()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group3()[1], -other.group3()[0], -other.group10()[0]])
+                    - Simd32x3::from(self.group0()[3]) * other.group9(),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group5()[3], other.group9()[2], -other.group9()[1]])
+                    + Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group0()[0], other.group4()[2], -other.group4()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group9()[2], -other.group5()[3], other.group9()[0]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group4()[2], -other.group0()[0], other.group4()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group9()[1], -other.group9()[0], -other.group5()[3]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group4()[1], -other.group4()[0], -other.group0()[0]])
+                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group5()[0], other.group5()[1], other.group5()[2]]),
+                g9: Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group2()[0], other.group6()[2], -other.group6()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group6()[2], -other.group2()[0], other.group6()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group6()[1], -other.group6()[0], -other.group2()[0]])
+                    + Simd32x3::from(self.group0()[3]) * other.group7(),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group7()[0]])
+                    + Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group1()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group7()[1]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group1()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group7()[2]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group1()[2]])
+                    + Simd32x2::from(self.group0()[3]) * other.group2() * Simd32x2::from([1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Origin> for FlatPoint {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0(), 0.0]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Plane> for FlatPoint {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: Plane) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
+                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, other.group0()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<PlaneAtOrigin> for FlatPoint {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: PlaneAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group0(),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<PointAtInfinity> for FlatPoint {
+    type Output = LineAtInfinity;
+
+    fn anti_wedge_dot(self, other: PointAtInfinity) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: Simd32x3::from(self.group0()[3]) * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<PointAtOrigin> for FlatPoint {
+    type Output = Translator;
+
+    fn anti_wedge_dot(self, other: PointAtOrigin) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: Simd32x4::from(0.0) - self.group0() * Simd32x4::from(other.group0()),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Rotor> for FlatPoint {
+    type Output = Flector;
+
+    fn anti_wedge_dot(self, other: Rotor) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], other.group0()[3], -other.group0()[0], 0.0])
+                    + swizzle!(self.group0(), 2, 2, 2, 3) * swizzle!(other.group0(), 1, 0, 3, 3) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]),
+                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
+                    + swizzle!(self.group0(), 3, 3, 3, 2) * swizzle!(other.group0(), 0, 1, 2, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<RoundPoint> for FlatPoint {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: RoundPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0]) - Simd32x3::from(self.group0()[3]) * other.group0(),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0]),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
+                    + Simd32x2::from(self.group0()[3]) * other.group1() * Simd32x2::from([1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Scalar> for FlatPoint {
+    type Output = Circle;
+
+    fn anti_wedge_dot(self, other: Scalar) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Sphere> for FlatPoint {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: Sphere) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0]),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
+                    + Simd32x2::from(self.group0()[3]) * other.group1() * Simd32x2::from([-1.0, 1.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0)
+                    - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0])
+                    - Simd32x3::from(self.group0()[3]) * other.group0(),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Translator> for FlatPoint {
+    type Output = FlatPoint;
+
+    fn anti_wedge_dot(self, other: Translator) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], 0.0])
+                    + Simd32x4::from(self.group0()[3]) * other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            },
+        }
+    }
+}
+
 impl AntiWedgeDot<AntiScalar> for Flector {
     type Output = Flector;
 
@@ -2298,6 +2854,35 @@ impl AntiWedgeDot<Dipole> for Flector {
                     + Simd32x3::from(self.group1()[1]) * Simd32x3::from([other.group2()[2], 0.0, -other.group2()[0]])
                     + Simd32x3::from(self.group1()[2]) * Simd32x3::from([-other.group2()[1], other.group2()[0], 0.0])
                     - Simd32x3::from(self.group1()[3]) * other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<FlatPoint> for Flector {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + Simd32x2::from(self.group1()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()[3]),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3])
+                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
+                    + Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group1()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group1()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -2613,17 +3198,17 @@ impl AntiWedgeDot<Origin> for Flector {
     fn anti_wedge_dot(self, other: Origin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()]),
+                g0: Simd32x2::from(self.group1()[3]) * Simd32x2::from([other.group0(), 0.0]),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(self.group1()[3]) * Simd32x2::from([0.0, -other.group0()]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()),
+                g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from(self.group1()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
                 g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()),
-                g8: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0(), 0.0]),
             },
         }
     }
@@ -2695,35 +3280,6 @@ impl AntiWedgeDot<PlaneAtOrigin> for Flector {
     }
 }
 
-impl AntiWedgeDot<Point> for Flector {
-    type Output = MultiVector;
-
-    fn anti_wedge_dot(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + Simd32x2::from(self.group1()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()[3]),
-                g8: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3])
-                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    + Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group1()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group1()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl AntiWedgeDot<PointAtInfinity> for Flector {
     type Output = MultiVector;
 
@@ -2744,6 +3300,28 @@ impl AntiWedgeDot<PointAtInfinity> for Flector {
                     + Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group1()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group1()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<PointAtOrigin> for Flector {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group1()[3]) * Simd32x2::from([0.0, -other.group0()]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -2944,6 +3522,18 @@ impl AntiWedgeDot<Dipole> for Horizon {
     }
 }
 
+impl AntiWedgeDot<FlatPoint> for Horizon {
+    type Output = Infinity;
+
+    fn anti_wedge_dot(self, other: FlatPoint) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: 0.0 - self.group0() * other.group0()[3],
+            },
+        }
+    }
+}
+
 impl AntiWedgeDot<Flector> for Horizon {
     type Output = MultiVector;
 
@@ -3049,12 +3639,22 @@ impl AntiWedgeDot<MultiVector> for Horizon {
 }
 
 impl AntiWedgeDot<Origin> for Horizon {
-    type Output = Infinity;
+    type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: Origin) -> Infinity {
-        Infinity {
-            groups: InfinityGroups {
-                g0: 0.0 - self.group0() * other.group0(),
+    fn anti_wedge_dot(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -3084,13 +3684,13 @@ impl AntiWedgeDot<PlaneAtOrigin> for Horizon {
     }
 }
 
-impl AntiWedgeDot<Point> for Horizon {
+impl AntiWedgeDot<PointAtOrigin> for Horizon {
     type Output = Infinity;
 
-    fn anti_wedge_dot(self, other: Point) -> Infinity {
+    fn anti_wedge_dot(self, other: PointAtOrigin) -> Infinity {
         Infinity {
             groups: InfinityGroups {
-                g0: 0.0 - self.group0() * other.group0()[3],
+                g0: 0.0 - self.group0() * other.group0(),
             },
         }
     }
@@ -3233,6 +3833,18 @@ impl AntiWedgeDot<Dipole> for Infinity {
     }
 }
 
+impl AntiWedgeDot<FlatPoint> for Infinity {
+    type Output = Horizon;
+
+    fn anti_wedge_dot(self, other: FlatPoint) -> Horizon {
+        Horizon {
+            groups: HorizonGroups {
+                g0: self.group0() * other.group0()[3],
+            },
+        }
+    }
+}
+
 impl AntiWedgeDot<Flector> for Infinity {
     type Output = Flector;
 
@@ -3338,12 +3950,22 @@ impl AntiWedgeDot<MultiVector> for Infinity {
 }
 
 impl AntiWedgeDot<Origin> for Infinity {
-    type Output = Horizon;
+    type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: Origin) -> Horizon {
-        Horizon {
-            groups: HorizonGroups {
-                g0: self.group0() * other.group0(),
+    fn anti_wedge_dot(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -3373,13 +3995,13 @@ impl AntiWedgeDot<PlaneAtOrigin> for Infinity {
     }
 }
 
-impl AntiWedgeDot<Point> for Infinity {
+impl AntiWedgeDot<PointAtOrigin> for Infinity {
     type Output = Horizon;
 
-    fn anti_wedge_dot(self, other: Point) -> Horizon {
+    fn anti_wedge_dot(self, other: PointAtOrigin) -> Horizon {
         Horizon {
             groups: HorizonGroups {
-                g0: self.group0() * other.group0()[3],
+                g0: self.group0() * other.group0(),
             },
         }
     }
@@ -3582,6 +4204,25 @@ impl AntiWedgeDot<Dipole> for Line {
                     + Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
                     + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
                     + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group1()[2]]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<FlatPoint> for Line {
+    type Output = Flector;
+
+    fn anti_wedge_dot(self, other: FlatPoint) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0])
+                    + Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]])
+                        * Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], 0.0]),
+                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
             },
         }
     }
@@ -3875,15 +4516,23 @@ impl AntiWedgeDot<MultiVector> for Line {
 }
 
 impl AntiWedgeDot<Origin> for Line {
-    type Output = Flector;
+    type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: Origin) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]])
+    fn anti_wedge_dot(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: self.group1() * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
                     * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
-                g1: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
-                    * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g7: self.group1() * Simd32x3::from(other.group0()),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -3935,25 +4584,6 @@ impl AntiWedgeDot<PlaneAtOrigin> for Line {
     }
 }
 
-impl AntiWedgeDot<Point> for Line {
-    type Output = Flector;
-
-    fn anti_wedge_dot(self, other: Point) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0])
-                    + Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]])
-                        * Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], 0.0]),
-                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
-            },
-        }
-    }
-}
-
 impl AntiWedgeDot<PointAtInfinity> for Line {
     type Output = Flector;
 
@@ -3966,6 +4596,21 @@ impl AntiWedgeDot<PointAtInfinity> for Line {
                 g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
                     + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
                     + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<PointAtOrigin> for Line {
+    type Output = Flector;
+
+    fn anti_wedge_dot(self, other: PointAtOrigin) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]])
+                    * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g1: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
+                    * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
             },
         }
     }
@@ -4185,6 +4830,18 @@ impl AntiWedgeDot<Dipole> for LineAtInfinity {
     }
 }
 
+impl AntiWedgeDot<FlatPoint> for LineAtInfinity {
+    type Output = PointAtInfinity;
+
+    fn anti_wedge_dot(self, other: FlatPoint) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: self.group0() * Simd32x3::from(other.group0()[3]),
+            },
+        }
+    }
+}
+
 impl AntiWedgeDot<Flector> for LineAtInfinity {
     type Output = Flector;
 
@@ -4359,12 +5016,22 @@ impl AntiWedgeDot<MultiVector> for LineAtInfinity {
 }
 
 impl AntiWedgeDot<Origin> for LineAtInfinity {
-    type Output = PointAtInfinity;
+    type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: Origin) -> PointAtInfinity {
-        PointAtInfinity {
-            groups: PointAtInfinityGroups {
-                g0: self.group0() * Simd32x3::from(other.group0()),
+    fn anti_wedge_dot(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: self.group0() * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: self.group0() * Simd32x3::from(other.group0()),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -4404,13 +5071,13 @@ impl AntiWedgeDot<PlaneAtOrigin> for LineAtInfinity {
     }
 }
 
-impl AntiWedgeDot<Point> for LineAtInfinity {
+impl AntiWedgeDot<PointAtOrigin> for LineAtInfinity {
     type Output = PointAtInfinity;
 
-    fn anti_wedge_dot(self, other: Point) -> PointAtInfinity {
+    fn anti_wedge_dot(self, other: PointAtOrigin) -> PointAtInfinity {
         PointAtInfinity {
             groups: PointAtInfinityGroups {
-                g0: self.group0() * Simd32x3::from(other.group0()[3]),
+                g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
@@ -4591,6 +5258,23 @@ impl AntiWedgeDot<Dipole> for LineAtOrigin {
                     - Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], other.group2()[0]])
                     - Simd32x2::from(self.group0()[1]) * Simd32x2::from([other.group0()[1], other.group2()[1]])
                     - Simd32x2::from(self.group0()[2]) * Simd32x2::from([other.group0()[2], other.group2()[2]]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<FlatPoint> for LineAtOrigin {
+    type Output = Flector;
+
+    fn anti_wedge_dot(self, other: FlatPoint) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0]),
+                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
             },
         }
     }
@@ -4807,12 +5491,15 @@ impl AntiWedgeDot<MultiVector> for LineAtOrigin {
 }
 
 impl AntiWedgeDot<Origin> for LineAtOrigin {
-    type Output = PlaneAtOrigin;
+    type Output = Circle;
 
-    fn anti_wedge_dot(self, other: Origin) -> PlaneAtOrigin {
-        PlaneAtOrigin {
-            groups: PlaneAtOriginGroups {
-                g0: self.group0() * Simd32x3::from(other.group0()),
+    fn anti_wedge_dot(self, other: Origin) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
+                    * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
             },
         }
     }
@@ -4852,23 +5539,6 @@ impl AntiWedgeDot<PlaneAtOrigin> for LineAtOrigin {
     }
 }
 
-impl AntiWedgeDot<Point> for LineAtOrigin {
-    type Output = Flector;
-
-    fn anti_wedge_dot(self, other: Point) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0]),
-                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
-            },
-        }
-    }
-}
-
 impl AntiWedgeDot<PointAtInfinity> for LineAtOrigin {
     type Output = Flector;
 
@@ -4881,6 +5551,18 @@ impl AntiWedgeDot<PointAtInfinity> for LineAtOrigin {
                 g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
                     + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
                     + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<PointAtOrigin> for LineAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn anti_wedge_dot(self, other: PointAtOrigin) -> PlaneAtOrigin {
+        PlaneAtOrigin {
+            groups: PlaneAtOriginGroups {
+                g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
@@ -5041,6 +5723,28 @@ impl AntiWedgeDot<Dipole> for Magnitude {
                 g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([-other.group0()[0], -other.group0()[1], -other.group0()[2], other.group2()[3]]),
                 g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[0]) * other.group1(),
                 g8: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<FlatPoint> for Magnitude {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(self.group0()[1]) * other.group0(),
+                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -5248,15 +5952,15 @@ impl AntiWedgeDot<Origin> for Magnitude {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
+                g2: Simd32x2::from(self.group0()[1]) * Simd32x2::from([other.group0(), 0.0]),
                 g3: Simd32x3::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0(), 0.0]),
             },
         }
     }
@@ -5306,28 +6010,6 @@ impl AntiWedgeDot<PlaneAtOrigin> for Magnitude {
     }
 }
 
-impl AntiWedgeDot<Point> for Magnitude {
-    type Output = MultiVector;
-
-    fn anti_wedge_dot(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(self.group0()[1]) * other.group0(),
-                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl AntiWedgeDot<PointAtInfinity> for Magnitude {
     type Output = MultiVector;
 
@@ -5343,6 +6025,28 @@ impl AntiWedgeDot<PointAtInfinity> for Magnitude {
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[0]) * other.group0(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<PointAtOrigin> for Magnitude {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -5563,6 +6267,26 @@ impl AntiWedgeDot<Dipole> for Motor {
                     + Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
                     + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
                     + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group1()[2]]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<FlatPoint> for Motor {
+    type Output = Flector;
+
+    fn anti_wedge_dot(self, other: FlatPoint) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0])
+                    + Simd32x4::from(self.group0()[3]) * other.group0()
+                    + Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]])
+                        * Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], 0.0]),
+                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
             },
         }
     }
@@ -5887,15 +6611,22 @@ impl AntiWedgeDot<MultiVector> for Motor {
 }
 
 impl AntiWedgeDot<Origin> for Motor {
-    type Output = Flector;
+    type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: Origin) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()])
-                    + Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]])
-                        * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
-                g1: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+    fn anti_wedge_dot(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: self.group1() * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0(), 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g7: self.group1() * Simd32x3::from(other.group0()),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -5949,26 +6680,6 @@ impl AntiWedgeDot<PlaneAtOrigin> for Motor {
     }
 }
 
-impl AntiWedgeDot<Point> for Motor {
-    type Output = Flector;
-
-    fn anti_wedge_dot(self, other: Point) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0])
-                    + Simd32x4::from(self.group0()[3]) * other.group0()
-                    + Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]])
-                        * Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], 0.0]),
-                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
-            },
-        }
-    }
-}
-
 impl AntiWedgeDot<PointAtInfinity> for Motor {
     type Output = Flector;
 
@@ -5982,6 +6693,21 @@ impl AntiWedgeDot<PointAtInfinity> for Motor {
                 g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
                     + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
                     + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<PointAtOrigin> for Motor {
+    type Output = Flector;
+
+    fn anti_wedge_dot(self, other: PointAtOrigin) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()])
+                    + Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]])
+                        * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g1: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
             },
         }
     }
@@ -6478,6 +7204,85 @@ impl AntiWedgeDot<Dipole> for MultiVector {
                     + Simd32x2::from(self.group8()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
                     + Simd32x2::from(self.group8()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
                     + Simd32x2::from(self.group8()[2]) * Simd32x2::from([0.0, -other.group1()[2]]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<FlatPoint> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group3()[0]) * Simd32x2::from([0.0, other.group0()[0]])
+                    + Simd32x2::from(self.group3()[1]) * Simd32x2::from([0.0, other.group0()[1]])
+                    + Simd32x2::from(self.group3()[2]) * Simd32x2::from([0.0, other.group0()[2]])
+                    + Simd32x2::from(self.group5()[3]) * Simd32x2::from([0.0, -other.group0()[3]])
+                    + Simd32x2::from(self.group6()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
+                    + Simd32x2::from(self.group6()[1]) * Simd32x2::from([-other.group0()[1], 0.0])
+                    + Simd32x2::from(self.group6()[2]) * Simd32x2::from([-other.group0()[2], 0.0])
+                    + Simd32x2::from(self.group6()[3]) * Simd32x2::from([-other.group0()[3], 0.0]),
+                g1: Simd32x3::from(self.group3()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group3()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group3()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
+                    + self.group4() * Simd32x3::from(other.group0()[3])
+                    + Simd32x3::from(self.group10()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(self.group4()[0]) * Simd32x2::from([0.0, other.group0()[0]])
+                    + Simd32x2::from(self.group4()[1]) * Simd32x2::from([0.0, other.group0()[1]])
+                    + Simd32x2::from(self.group4()[2]) * Simd32x2::from([0.0, other.group0()[2]])
+                    + Simd32x2::from(self.group9()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group9()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group9()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + self.group10() * Simd32x2::from(other.group0()[3]),
+                g3: Simd32x3::from(0.0) - Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]) * Simd32x3::from(other.group0()[3]),
+                g4: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()[3])
+                    + Simd32x3::from(self.group2()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
+                    + Simd32x3::from(self.group6()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group6()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group6()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
+                g5: Simd32x4::from(self.group0()[1]) * other.group0()
+                    + Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group1()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0])
+                    + Simd32x4::from(self.group6()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
+                    + Simd32x4::from(self.group6()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
+                    + swizzle!(self.group6(), 3, 3, 3, 2) * swizzle!(other.group0(), 0, 1, 2, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0])
+                    + Simd32x4::from(self.group7()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group7()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group7()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0])
+                    + Simd32x4::from([self.group8()[0], self.group8()[1], self.group8()[2], self.group8()[0]])
+                        * Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], 0.0]),
+                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]])
+                    + Simd32x4::from(self.group3()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
+                    + Simd32x4::from(self.group3()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
+                    + Simd32x4::from(self.group3()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
+                g7: Simd32x3::from(self.group3()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group3()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group3()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    - self.group9() * Simd32x3::from(other.group0()[3])
+                    - Simd32x3::from(self.group10()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
+                    + Simd32x3::from(self.group4()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group4()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group4()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    - Simd32x3::from([self.group5()[0], self.group5()[1], self.group5()[2]]) * Simd32x3::from(other.group0()[3])
+                    + Simd32x3::from(self.group5()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
+                    + Simd32x3::from(self.group9()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group9()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group9()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
+                g9: Simd32x3::from(self.group2()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
+                    + Simd32x3::from(self.group6()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group6()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group6()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
+                    + self.group7() * Simd32x3::from(other.group0()[3]),
+                g10: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + self.group2() * Simd32x2::from(-other.group0()[3])
+                    + Simd32x2::from(self.group7()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group7()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group7()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
             },
         }
     }
@@ -7472,21 +8277,21 @@ impl AntiWedgeDot<Origin> for MultiVector {
     fn anti_wedge_dot(self, other: Origin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group5()[3]) * Simd32x2::from([0.0, -other.group0()]) + Simd32x2::from(self.group6()[3]) * Simd32x2::from([-other.group0(), 0.0]),
-                g1: self.group4() * Simd32x3::from(other.group0()),
-                g2: self.group10() * Simd32x2::from(other.group0()),
-                g3: Simd32x3::from(0.0) - Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]) * Simd32x3::from(other.group0()),
-                g4: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
-                g5: Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()])
-                    + Simd32x4::from([self.group8()[0], self.group8()[1], self.group8()[2], self.group8()[0]])
+                g0: Simd32x2::from(self.group2()[1]) * Simd32x2::from([0.0, other.group0()]) + Simd32x2::from(self.group10()[1]) * Simd32x2::from([other.group0(), 0.0]),
+                g1: self.group8() * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(self.group0()[1]) * Simd32x2::from([other.group0(), 0.0]) + Simd32x2::from(self.group6()[3]) * Simd32x2::from([-other.group0(), 0.0]),
+                g3: self.group4() * Simd32x3::from(other.group0()) + self.group9() * Simd32x3::from(other.group0()),
+                g4: Simd32x3::from([self.group5()[0], self.group5()[1], self.group5()[2]]) * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from(self.group10()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g6: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]])
+                    * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0])
+                    + Simd32x4::from(self.group2()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()])
+                    + Simd32x4::from([self.group7()[0], self.group7()[1], self.group7()[2], self.group7()[0]])
                         * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
-                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()])
-                    + Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group3()[0]])
-                        * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
-                g7: Simd32x3::from(0.0) - self.group9() * Simd32x3::from(other.group0()),
-                g8: Simd32x3::from(0.0) - Simd32x3::from([self.group5()[0], self.group5()[1], self.group5()[2]]) * Simd32x3::from(other.group0()),
-                g9: self.group7() * Simd32x3::from(other.group0()),
-                g10: self.group2() * Simd32x2::from(-other.group0()),
+                g7: self.group8() * Simd32x3::from(other.group0()),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - Simd32x3::from([self.group5()[0], self.group5()[1], self.group5()[2]]) * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0(), 0.0]) + Simd32x2::from(self.group5()[3]) * Simd32x2::from([other.group0(), 0.0]),
             },
         }
     }
@@ -7640,85 +8445,6 @@ impl AntiWedgeDot<PlaneAtOrigin> for MultiVector {
     }
 }
 
-impl AntiWedgeDot<Point> for MultiVector {
-    type Output = MultiVector;
-
-    fn anti_wedge_dot(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group3()[0]) * Simd32x2::from([0.0, other.group0()[0]])
-                    + Simd32x2::from(self.group3()[1]) * Simd32x2::from([0.0, other.group0()[1]])
-                    + Simd32x2::from(self.group3()[2]) * Simd32x2::from([0.0, other.group0()[2]])
-                    + Simd32x2::from(self.group5()[3]) * Simd32x2::from([0.0, -other.group0()[3]])
-                    + Simd32x2::from(self.group6()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
-                    + Simd32x2::from(self.group6()[1]) * Simd32x2::from([-other.group0()[1], 0.0])
-                    + Simd32x2::from(self.group6()[2]) * Simd32x2::from([-other.group0()[2], 0.0])
-                    + Simd32x2::from(self.group6()[3]) * Simd32x2::from([-other.group0()[3], 0.0]),
-                g1: Simd32x3::from(self.group3()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group3()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group3()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
-                    + self.group4() * Simd32x3::from(other.group0()[3])
-                    + Simd32x3::from(self.group10()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g2: Simd32x2::from(self.group4()[0]) * Simd32x2::from([0.0, other.group0()[0]])
-                    + Simd32x2::from(self.group4()[1]) * Simd32x2::from([0.0, other.group0()[1]])
-                    + Simd32x2::from(self.group4()[2]) * Simd32x2::from([0.0, other.group0()[2]])
-                    + Simd32x2::from(self.group9()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group9()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group9()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + self.group10() * Simd32x2::from(other.group0()[3]),
-                g3: Simd32x3::from(0.0) - Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]) * Simd32x3::from(other.group0()[3]),
-                g4: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()[3])
-                    + Simd32x3::from(self.group2()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    + Simd32x3::from(self.group6()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group6()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group6()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
-                g5: Simd32x4::from(self.group0()[1]) * other.group0()
-                    + Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group1()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0])
-                    + Simd32x4::from(self.group6()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
-                    + Simd32x4::from(self.group6()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
-                    + swizzle!(self.group6(), 3, 3, 3, 2) * swizzle!(other.group0(), 0, 1, 2, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0])
-                    + Simd32x4::from(self.group7()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group7()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group7()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0])
-                    + Simd32x4::from([self.group8()[0], self.group8()[1], self.group8()[2], self.group8()[0]])
-                        * Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], 0.0]),
-                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]])
-                    + Simd32x4::from(self.group3()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
-                    + Simd32x4::from(self.group3()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
-                    + Simd32x4::from(self.group3()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
-                g7: Simd32x3::from(self.group3()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group3()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group3()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    - self.group9() * Simd32x3::from(other.group0()[3])
-                    - Simd32x3::from(self.group10()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    + Simd32x3::from(self.group4()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group4()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group4()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    - Simd32x3::from([self.group5()[0], self.group5()[1], self.group5()[2]]) * Simd32x3::from(other.group0()[3])
-                    + Simd32x3::from(self.group5()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    + Simd32x3::from(self.group9()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group9()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group9()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
-                g9: Simd32x3::from(self.group2()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    + Simd32x3::from(self.group6()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group6()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group6()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
-                    + self.group7() * Simd32x3::from(other.group0()[3]),
-                g10: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + self.group2() * Simd32x2::from(-other.group0()[3])
-                    + Simd32x2::from(self.group7()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group7()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group7()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-            },
-        }
-    }
-}
-
 impl AntiWedgeDot<PointAtInfinity> for MultiVector {
     type Output = MultiVector;
 
@@ -7781,6 +8507,32 @@ impl AntiWedgeDot<PointAtInfinity> for MultiVector {
                     + Simd32x2::from(self.group7()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
                     + Simd32x2::from(self.group7()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
                     + Simd32x2::from(self.group7()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<PointAtOrigin> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group5()[3]) * Simd32x2::from([0.0, -other.group0()]) + Simd32x2::from(self.group6()[3]) * Simd32x2::from([-other.group0(), 0.0]),
+                g1: self.group4() * Simd32x3::from(other.group0()),
+                g2: self.group10() * Simd32x2::from(other.group0()),
+                g3: Simd32x3::from(0.0) - Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]) * Simd32x3::from(other.group0()),
+                g4: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()])
+                    + Simd32x4::from([self.group8()[0], self.group8()[1], self.group8()[2], self.group8()[0]])
+                        * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()])
+                    + Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group3()[0]])
+                        * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g7: Simd32x3::from(0.0) - self.group9() * Simd32x3::from(other.group0()),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([self.group5()[0], self.group5()[1], self.group5()[2]]) * Simd32x3::from(other.group0()),
+                g9: self.group7() * Simd32x3::from(other.group0()),
+                g10: self.group2() * Simd32x2::from(-other.group0()),
             },
         }
     }
@@ -8161,16 +8913,16 @@ impl AntiWedgeDot<Circle> for Origin {
     fn anti_wedge_dot(self, other: Circle) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group0()[3], 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group2(),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group2()[0], -other.group2()[1], -other.group2()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+                g7: Simd32x3::from(self.group0()) * other.group2(),
                 g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(self.group0()) * other.group1(),
+                g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
         }
@@ -8183,17 +8935,39 @@ impl AntiWedgeDot<Dipole> for Origin {
     fn anti_wedge_dot(self, other: Dipole) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group2()[3]]),
-                g1: Simd32x3::from(self.group0()) * other.group1(),
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(self.group0()) * other.group1(),
+                g4: Simd32x3::from(self.group0()) * Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()) * Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group2()[3], 0.0]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<FlatPoint> for Origin {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
                 g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
+                g4: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
                 g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group0()[0], -other.group0()[1], -other.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(self.group0()) * Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group0()[3], 0.0]),
             },
         }
     }
@@ -8205,15 +8979,37 @@ impl AntiWedgeDot<Flector> for Origin {
     fn anti_wedge_dot(self, other: Flector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group0()[3]]),
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group1()[3], 0.0]),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group1()[3]]),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g4: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group1()[3]]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group0()[3], 0.0]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Horizon> for Origin {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: Horizon) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
                 g3: Simd32x3::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
                 g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g8: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -8221,62 +9017,81 @@ impl AntiWedgeDot<Flector> for Origin {
     }
 }
 
-impl AntiWedgeDot<Horizon> for Origin {
-    type Output = Infinity;
-
-    fn anti_wedge_dot(self, other: Horizon) -> Infinity {
-        Infinity {
-            groups: InfinityGroups {
-                g0: self.group0() * other.group0(),
-            },
-        }
-    }
-}
-
 impl AntiWedgeDot<Infinity> for Origin {
-    type Output = Horizon;
+    type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: Infinity) -> Horizon {
-        Horizon {
-            groups: HorizonGroups {
-                g0: 0.0 - self.group0() * other.group0(),
+    fn anti_wedge_dot(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
 }
 
 impl AntiWedgeDot<Line> for Origin {
-    type Output = Flector;
+    type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: Line) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group1()[0], -other.group1()[1], -other.group1()[2], 0.0]),
-                g1: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+    fn anti_wedge_dot(self, other: Line) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group1(),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g7: Simd32x3::from(self.group0()) * other.group1(),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
 }
 
 impl AntiWedgeDot<LineAtInfinity> for Origin {
-    type Output = PointAtInfinity;
+    type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: LineAtInfinity) -> PointAtInfinity {
-        PointAtInfinity {
-            groups: PointAtInfinityGroups {
-                g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+    fn anti_wedge_dot(self, other: LineAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(self.group0()) * other.group0(),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
 }
 
 impl AntiWedgeDot<LineAtOrigin> for Origin {
-    type Output = PlaneAtOrigin;
+    type Output = Circle;
 
-    fn anti_wedge_dot(self, other: LineAtOrigin) -> PlaneAtOrigin {
-        PlaneAtOrigin {
-            groups: PlaneAtOriginGroups {
-                g0: Simd32x3::from(self.group0()) * other.group0(),
+    fn anti_wedge_dot(self, other: LineAtOrigin) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
             },
         }
     }
@@ -8290,28 +9105,37 @@ impl AntiWedgeDot<Magnitude> for Origin {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[1], 0.0]),
                 g3: Simd32x3::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]]),
-                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[0], 0.0]),
             },
         }
     }
 }
 
 impl AntiWedgeDot<Motor> for Origin {
-    type Output = Flector;
+    type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: Motor) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group1()[0], -other.group1()[1], -other.group1()[2], other.group0()[3]]),
-                g1: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+    fn anti_wedge_dot(self, other: Motor) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group1(),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g7: Simd32x3::from(self.group0()) * other.group1(),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -8323,29 +9147,18 @@ impl AntiWedgeDot<MultiVector> for Origin {
     fn anti_wedge_dot(self, other: MultiVector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from(self.group0()) * Simd32x2::from([other.group6()[3], other.group5()[3]]),
-                g1: Simd32x3::from(self.group0()) * other.group4(),
-                g2: Simd32x2::from(self.group0()) * other.group10() * Simd32x2::from([-1.0, 1.0]),
-                g3: Simd32x3::from(self.group0()) * Simd32x3::from([other.group6()[0], other.group6()[1], other.group6()[2]]),
-                g4: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group1(),
-                g5: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group8()[0], -other.group8()[1], -other.group8()[2], other.group0()[1]]),
-                g6: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group3()[0], -other.group3()[1], -other.group3()[2], other.group0()[0]]),
-                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group9(),
-                g8: Simd32x3::from(self.group0()) * Simd32x3::from([other.group5()[0], other.group5()[1], other.group5()[2]]),
-                g9: Simd32x3::from(self.group0()) * other.group7(),
-                g10: Simd32x2::from(self.group0()) * other.group2() * Simd32x2::from([1.0, -1.0]),
-            },
-        }
-    }
-}
-
-impl AntiWedgeDot<Origin> for Origin {
-    type Output = AntiScalar;
-
-    fn anti_wedge_dot(self, other: Origin) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: 0.0 - self.group0() * other.group0(),
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group10()[1], other.group2()[1]]),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group8(),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([other.group6()[3], 0.0]) + Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[1], 0.0]),
+                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group9() + Simd32x3::from(self.group0()) * other.group4(),
+                g4: Simd32x3::from(self.group0()) * Simd32x3::from([other.group5()[0], other.group5()[1], other.group5()[2]]),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group10()[1]]),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([other.group7()[0], other.group7()[1], other.group7()[2], -other.group2()[1]])
+                    + Simd32x4::from(self.group0()) * Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+                g7: Simd32x3::from(self.group0()) * other.group8(),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()) * Simd32x3::from([other.group5()[0], other.group5()[1], other.group5()[2]]),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group5()[3], 0.0]) + Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[0], 0.0]),
             },
         }
     }
@@ -8357,14 +9170,14 @@ impl AntiWedgeDot<Plane> for Origin {
     fn anti_wedge_dot(self, other: Plane) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[3], 0.0]),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()[3]]),
-                g3: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
                 g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
@@ -8374,49 +9187,71 @@ impl AntiWedgeDot<Plane> for Origin {
 }
 
 impl AntiWedgeDot<PlaneAtOrigin> for Origin {
-    type Output = LineAtOrigin;
+    type Output = Dipole;
 
-    fn anti_wedge_dot(self, other: PlaneAtOrigin) -> LineAtOrigin {
-        LineAtOrigin {
-            groups: LineAtOriginGroups {
+    fn anti_wedge_dot(self, other: PlaneAtOrigin) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
-            },
-        }
-    }
-}
-
-impl AntiWedgeDot<Point> for Origin {
-    type Output = Translator;
-
-    fn anti_wedge_dot(self, other: Point) -> Translator {
-        Translator {
-            groups: TranslatorGroups {
-                g0: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x4::from(0.0),
             },
         }
     }
 }
 
 impl AntiWedgeDot<PointAtInfinity> for Origin {
-    type Output = LineAtInfinity;
+    type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: PointAtInfinity) -> LineAtInfinity {
-        LineAtInfinity {
-            groups: LineAtInfinityGroups {
-                g0: Simd32x3::from(self.group0()) * other.group0(),
+    fn anti_wedge_dot(self, other: PointAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(self.group0()) * other.group0(),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()) * other.group0(),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<PointAtOrigin> for Origin {
+    type Output = Sphere;
+
+    fn anti_wedge_dot(self, other: PointAtOrigin) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group0(), 0.0]),
             },
         }
     }
 }
 
 impl AntiWedgeDot<Rotor> for Origin {
-    type Output = Flector;
+    type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: Rotor) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
-                g1: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+    fn anti_wedge_dot(self, other: Rotor) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -8428,31 +9263,30 @@ impl AntiWedgeDot<RoundPoint> for Origin {
     fn anti_wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group1()[1]]),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
                 g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g4: Simd32x3::from(0.0),
                 g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], -other.group1()[1]]),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(self.group0()) * other.group1() * Simd32x2::from([1.0, -1.0]),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
 }
 
 impl AntiWedgeDot<Scalar> for Origin {
-    type Output = Circle;
+    type Output = Sphere;
 
-    fn anti_wedge_dot(self, other: Scalar) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from(0.0),
+    fn anti_wedge_dot(self, other: Scalar) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0(), 0.0]),
             },
         }
     }
@@ -8464,14 +9298,14 @@ impl AntiWedgeDot<Sphere> for Origin {
     fn anti_wedge_dot(self, other: Sphere) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group1()[1], 0.0]),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(self.group0()) * other.group1() * Simd32x2::from([-1.0, 1.0]),
-                g3: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group1()[1]]),
                 g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
@@ -8481,12 +9315,22 @@ impl AntiWedgeDot<Sphere> for Origin {
 }
 
 impl AntiWedgeDot<Translator> for Origin {
-    type Output = Point;
+    type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: Translator) -> Point {
-        Point {
-            groups: PointGroups {
-                g0: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+    fn anti_wedge_dot(self, other: Translator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -8566,6 +9410,33 @@ impl AntiWedgeDot<Dipole> for Plane {
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group2()[2], 0.0, -other.group2()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group2()[1], other.group2()[0], 0.0])
                     - Simd32x3::from(self.group0()[3]) * other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<FlatPoint> for Plane {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3]),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -8786,14 +9657,14 @@ impl AntiWedgeDot<Origin> for Plane {
     fn anti_wedge_dot(self, other: Origin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
+                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0(), 0.0]),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()]),
-                g3: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
+                g5: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
                 g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
@@ -8833,33 +9704,6 @@ impl AntiWedgeDot<PlaneAtOrigin> for Plane {
     }
 }
 
-impl AntiWedgeDot<Point> for Plane {
-    type Output = MultiVector;
-
-    fn anti_wedge_dot(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3]),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl AntiWedgeDot<PointAtInfinity> for Plane {
     type Output = MultiVector;
 
@@ -8879,6 +9723,28 @@ impl AntiWedgeDot<PointAtInfinity> for Plane {
                 g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<PointAtOrigin> for Plane {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -9054,6 +9920,32 @@ impl AntiWedgeDot<Dipole> for PlaneAtOrigin {
                 g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group2()[2], other.group2()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group2()[2], 0.0, -other.group2()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group2()[1], other.group2()[0], 0.0]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<FlatPoint> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3]),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -9250,12 +10142,14 @@ impl AntiWedgeDot<MultiVector> for PlaneAtOrigin {
 }
 
 impl AntiWedgeDot<Origin> for PlaneAtOrigin {
-    type Output = LineAtOrigin;
+    type Output = Dipole;
 
-    fn anti_wedge_dot(self, other: Origin) -> LineAtOrigin {
-        LineAtOrigin {
-            groups: LineAtOriginGroups {
-                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+    fn anti_wedge_dot(self, other: Origin) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: self.group0() * Simd32x3::from(other.group0()),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x4::from(0.0),
             },
         }
     }
@@ -9290,32 +10184,6 @@ impl AntiWedgeDot<PlaneAtOrigin> for PlaneAtOrigin {
     }
 }
 
-impl AntiWedgeDot<Point> for PlaneAtOrigin {
-    type Output = MultiVector;
-
-    fn anti_wedge_dot(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3]),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl AntiWedgeDot<PointAtInfinity> for PlaneAtOrigin {
     type Output = MultiVector;
 
@@ -9337,6 +10205,18 @@ impl AntiWedgeDot<PointAtInfinity> for PlaneAtOrigin {
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<PointAtOrigin> for PlaneAtOrigin {
+    type Output = LineAtOrigin;
+
+    fn anti_wedge_dot(self, other: PointAtOrigin) -> LineAtOrigin {
+        LineAtOrigin {
+            groups: LineAtOriginGroups {
+                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
@@ -9443,483 +10323,6 @@ impl AntiWedgeDot<Translator> for PlaneAtOrigin {
     }
 }
 
-impl AntiWedgeDot<AntiScalar> for Point {
-    type Output = Point;
-
-    fn anti_wedge_dot(self, other: AntiScalar) -> Point {
-        Point {
-            groups: PointGroups {
-                g0: self.group0() * Simd32x4::from(other.group0()),
-            },
-        }
-    }
-}
-
-impl AntiWedgeDot<Circle> for Point {
-    type Output = MultiVector;
-
-    fn anti_wedge_dot(self, other: Circle) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([-other.group0()[1], 0.0])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([-other.group0()[2], 0.0])
-                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([-other.group0()[3], 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g4: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([-other.group0()[3], -other.group1()[2], other.group1()[1], other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[2], -other.group0()[3], -other.group1()[0], other.group0()[1]])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group1()[1], other.group1()[0], -other.group0()[3], other.group0()[2]])
-                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([-other.group2()[0], -other.group2()[1], -other.group2()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    + Simd32x3::from(self.group0()[3]) * other.group1(),
-                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group1()[2]]),
-            },
-        }
-    }
-}
-
-impl AntiWedgeDot<Dipole> for Point {
-    type Output = MultiVector;
-
-    fn anti_wedge_dot(self, other: Dipole) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
-                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group2()[3]]),
-                g1: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    + Simd32x3::from(self.group0()[3]) * other.group1(),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group1()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group1()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group1()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]])
-                    + swizzle!(self.group0(), 3, 3, 3, 2) * Simd32x4::from([-other.group0()[0], -other.group0()[1], -other.group0()[2], other.group0()[2]]),
-                g7: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group2()[3], other.group1()[2], -other.group1()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group1()[2], -other.group2()[3], other.group1()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group1()[1], -other.group1()[0], -other.group2()[3]])
-                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl AntiWedgeDot<Flector> for Point {
-    type Output = MultiVector;
-
-    fn anti_wedge_dot(self, other: Flector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group1()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group1()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group1()[2]])
-                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, other.group1()[3]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group0()[3], other.group1()[2], -other.group1()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group1()[2], -other.group0()[3], other.group1()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group1()[1], -other.group1()[0], -other.group0()[3]])
-                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl AntiWedgeDot<Horizon> for Point {
-    type Output = Infinity;
-
-    fn anti_wedge_dot(self, other: Horizon) -> Infinity {
-        Infinity {
-            groups: InfinityGroups {
-                g0: self.group0()[3] * other.group0(),
-            },
-        }
-    }
-}
-
-impl AntiWedgeDot<Infinity> for Point {
-    type Output = Horizon;
-
-    fn anti_wedge_dot(self, other: Infinity) -> Horizon {
-        Horizon {
-            groups: HorizonGroups {
-                g0: 0.0 - self.group0()[3] * other.group0(),
-            },
-        }
-    }
-}
-
-impl AntiWedgeDot<Line> for Point {
-    type Output = Flector;
-
-    fn anti_wedge_dot(self, other: Line) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0])
-                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([-other.group1()[0], -other.group1()[1], -other.group1()[2], 0.0]),
-                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
-                    + swizzle!(self.group0(), 3, 3, 3, 2) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], -other.group0()[2]]),
-            },
-        }
-    }
-}
-
-impl AntiWedgeDot<LineAtInfinity> for Point {
-    type Output = PointAtInfinity;
-
-    fn anti_wedge_dot(self, other: LineAtInfinity) -> PointAtInfinity {
-        PointAtInfinity {
-            groups: PointAtInfinityGroups {
-                g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group0(),
-            },
-        }
-    }
-}
-
-impl AntiWedgeDot<LineAtOrigin> for Point {
-    type Output = Flector;
-
-    fn anti_wedge_dot(self, other: LineAtOrigin) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0]),
-                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
-                    + swizzle!(self.group0(), 3, 3, 3, 2) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], -other.group0()[2]]),
-            },
-        }
-    }
-}
-
-impl AntiWedgeDot<Magnitude> for Point {
-    type Output = MultiVector;
-
-    fn anti_wedge_dot(self, other: Magnitude) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: self.group0() * Simd32x4::from(other.group0()[1]),
-                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl AntiWedgeDot<Motor> for Point {
-    type Output = Flector;
-
-    fn anti_wedge_dot(self, other: Motor) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], other.group0()[3], -other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], other.group0()[3], 0.0])
-                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([-other.group1()[0], -other.group1()[1], -other.group1()[2], other.group0()[3]]),
-                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
-                    + swizzle!(self.group0(), 3, 3, 3, 2) * swizzle!(other.group0(), 0, 1, 2, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            },
-        }
-    }
-}
-
-impl AntiWedgeDot<MultiVector> for Point {
-    type Output = MultiVector;
-
-    fn anti_wedge_dot(self, other: MultiVector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group6()[0], other.group3()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([-other.group6()[1], other.group3()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([-other.group6()[2], other.group3()[2]])
-                    - Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group6()[3], other.group5()[3]]),
-                g1: Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group10()[0], other.group3()[2], -other.group3()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group3()[2], -other.group10()[0], other.group3()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group3()[1], -other.group3()[0], -other.group10()[0]])
-                    + Simd32x3::from(self.group0()[3]) * other.group4(),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group9()[0]])
-                    + Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group4()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group9()[1]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group4()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group9()[2]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group4()[2]])
-                    + Simd32x2::from(self.group0()[3]) * other.group10() * Simd32x2::from([-1.0, 1.0]),
-                g3: Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group6()[0], other.group6()[1], other.group6()[2]]),
-                g4: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group2()[0], -other.group6()[2], other.group6()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group6()[2], other.group2()[0], -other.group6()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group6()[1], other.group6()[0], other.group2()[0]])
-                    - Simd32x3::from(self.group0()[3]) * other.group1(),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([-other.group6()[3], -other.group7()[2], other.group7()[1], other.group6()[0]])
-                    + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[1], other.group1()[2], -other.group1()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group7()[2], -other.group6()[3], -other.group7()[0], other.group6()[1]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group1()[2], other.group0()[1], other.group1()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group7()[1], other.group7()[0], -other.group6()[3], other.group6()[2]])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[1], -other.group1()[0], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([-other.group8()[0], -other.group8()[1], -other.group8()[2], other.group0()[1]]),
-                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group3()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group3()[1]])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, 0.0, other.group3()[2]])
-                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([-other.group3()[0], -other.group3()[1], -other.group3()[2], other.group0()[0]]),
-                g7: Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group10()[0], other.group3()[2], -other.group3()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group3()[2], -other.group10()[0], other.group3()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group3()[1], -other.group3()[0], -other.group10()[0]])
-                    - Simd32x3::from(self.group0()[3]) * other.group9(),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group5()[3], other.group9()[2], -other.group9()[1]])
-                    + Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group0()[0], other.group4()[2], -other.group4()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group9()[2], -other.group5()[3], other.group9()[0]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group4()[2], -other.group0()[0], other.group4()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group9()[1], -other.group9()[0], -other.group5()[3]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group4()[1], -other.group4()[0], -other.group0()[0]])
-                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group5()[0], other.group5()[1], other.group5()[2]]),
-                g9: Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group2()[0], other.group6()[2], -other.group6()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group6()[2], -other.group2()[0], other.group6()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group6()[1], -other.group6()[0], -other.group2()[0]])
-                    + Simd32x3::from(self.group0()[3]) * other.group7(),
-                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group7()[0]])
-                    + Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group1()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group7()[1]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group1()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group7()[2]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group1()[2]])
-                    + Simd32x2::from(self.group0()[3]) * other.group2() * Simd32x2::from([1.0, -1.0]),
-            },
-        }
-    }
-}
-
-impl AntiWedgeDot<Origin> for Point {
-    type Output = Translator;
-
-    fn anti_wedge_dot(self, other: Origin) -> Translator {
-        Translator {
-            groups: TranslatorGroups {
-                g0: Simd32x4::from(0.0) - self.group0() * Simd32x4::from(other.group0()),
-            },
-        }
-    }
-}
-
-impl AntiWedgeDot<Plane> for Point {
-    type Output = MultiVector;
-
-    fn anti_wedge_dot(self, other: Plane) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
-                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, other.group0()[3]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl AntiWedgeDot<PlaneAtOrigin> for Point {
-    type Output = MultiVector;
-
-    fn anti_wedge_dot(self, other: PlaneAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group0(),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl AntiWedgeDot<Point> for Point {
-    type Output = Translator;
-
-    fn anti_wedge_dot(self, other: Point) -> Translator {
-        Translator {
-            groups: TranslatorGroups {
-                g0: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([-other.group0()[3], -other.group0()[3], -other.group0()[3], 0.0])
-                    + Simd32x4::from(self.group0()[3]) * other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            },
-        }
-    }
-}
-
-impl AntiWedgeDot<PointAtInfinity> for Point {
-    type Output = LineAtInfinity;
-
-    fn anti_wedge_dot(self, other: PointAtInfinity) -> LineAtInfinity {
-        LineAtInfinity {
-            groups: LineAtInfinityGroups {
-                g0: Simd32x3::from(self.group0()[3]) * other.group0(),
-            },
-        }
-    }
-}
-
-impl AntiWedgeDot<Rotor> for Point {
-    type Output = Flector;
-
-    fn anti_wedge_dot(self, other: Rotor) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], other.group0()[3], -other.group0()[0], 0.0])
-                    + swizzle!(self.group0(), 2, 2, 2, 3) * swizzle!(other.group0(), 1, 0, 3, 3) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]),
-                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
-                    + swizzle!(self.group0(), 3, 3, 3, 2) * swizzle!(other.group0(), 0, 1, 2, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            },
-        }
-    }
-}
-
-impl AntiWedgeDot<RoundPoint> for Point {
-    type Output = MultiVector;
-
-    fn anti_wedge_dot(self, other: RoundPoint) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0]) - Simd32x3::from(self.group0()[3]) * other.group0(),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0]),
-                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
-                    + Simd32x2::from(self.group0()[3]) * other.group1() * Simd32x2::from([1.0, -1.0]),
-            },
-        }
-    }
-}
-
-impl AntiWedgeDot<Scalar> for Point {
-    type Output = Circle;
-
-    fn anti_wedge_dot(self, other: Scalar) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
-            },
-        }
-    }
-}
-
-impl AntiWedgeDot<Sphere> for Point {
-    type Output = MultiVector;
-
-    fn anti_wedge_dot(self, other: Sphere) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0]),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
-                    + Simd32x2::from(self.group0()[3]) * other.group1() * Simd32x2::from([-1.0, 1.0]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0)
-                    - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0])
-                    - Simd32x3::from(self.group0()[3]) * other.group0(),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl AntiWedgeDot<Translator> for Point {
-    type Output = Point;
-
-    fn anti_wedge_dot(self, other: Translator) -> Point {
-        Point {
-            groups: PointGroups {
-                g0: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], 0.0])
-                    + Simd32x4::from(self.group0()[3]) * other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            },
-        }
-    }
-}
-
 impl AntiWedgeDot<AntiScalar> for PointAtInfinity {
     type Output = PointAtInfinity;
 
@@ -9993,6 +10396,18 @@ impl AntiWedgeDot<Dipole> for PointAtInfinity {
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group1()[1], -other.group1()[0], -other.group2()[3]]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<FlatPoint> for PointAtInfinity {
+    type Output = LineAtInfinity;
+
+    fn anti_wedge_dot(self, other: FlatPoint) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3]),
             },
         }
     }
@@ -10153,12 +10568,22 @@ impl AntiWedgeDot<MultiVector> for PointAtInfinity {
 }
 
 impl AntiWedgeDot<Origin> for PointAtInfinity {
-    type Output = LineAtInfinity;
+    type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: Origin) -> LineAtInfinity {
-        LineAtInfinity {
-            groups: LineAtInfinityGroups {
-                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+    fn anti_wedge_dot(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0() * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -10216,13 +10641,13 @@ impl AntiWedgeDot<PlaneAtOrigin> for PointAtInfinity {
     }
 }
 
-impl AntiWedgeDot<Point> for PointAtInfinity {
+impl AntiWedgeDot<PointAtOrigin> for PointAtInfinity {
     type Output = LineAtInfinity;
 
-    fn anti_wedge_dot(self, other: Point) -> LineAtInfinity {
+    fn anti_wedge_dot(self, other: PointAtOrigin) -> LineAtInfinity {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
-                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3]),
+                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
@@ -10321,6 +10746,368 @@ impl AntiWedgeDot<Translator> for PointAtInfinity {
     }
 }
 
+impl AntiWedgeDot<AntiScalar> for PointAtOrigin {
+    type Output = PointAtOrigin;
+
+    fn anti_wedge_dot(self, other: AntiScalar) -> PointAtOrigin {
+        PointAtOrigin {
+            groups: PointAtOriginGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Circle> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: Circle) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group2()[0], -other.group2()[1], -other.group2()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()) * other.group1(),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Dipole> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: Dipole) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group2()[3]]),
+                g1: Simd32x3::from(self.group0()) * other.group1(),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group0()[0], -other.group0()[1], -other.group0()[2], 0.0]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(self.group0()) * Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<FlatPoint> for PointAtOrigin {
+    type Output = Translator;
+
+    fn anti_wedge_dot(self, other: FlatPoint) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Flector> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: Flector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group1()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g8: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Horizon> for PointAtOrigin {
+    type Output = Infinity;
+
+    fn anti_wedge_dot(self, other: Horizon) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Infinity> for PointAtOrigin {
+    type Output = Horizon;
+
+    fn anti_wedge_dot(self, other: Infinity) -> Horizon {
+        Horizon {
+            groups: HorizonGroups {
+                g0: 0.0 - self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Line> for PointAtOrigin {
+    type Output = Flector;
+
+    fn anti_wedge_dot(self, other: Line) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group1()[0], -other.group1()[1], -other.group1()[2], 0.0]),
+                g1: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<LineAtInfinity> for PointAtOrigin {
+    type Output = PointAtInfinity;
+
+    fn anti_wedge_dot(self, other: LineAtInfinity) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<LineAtOrigin> for PointAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn anti_wedge_dot(self, other: LineAtOrigin) -> PlaneAtOrigin {
+        PlaneAtOrigin {
+            groups: PlaneAtOriginGroups {
+                g0: Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Magnitude> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: Magnitude) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]]),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Motor> for PointAtOrigin {
+    type Output = Flector;
+
+    fn anti_wedge_dot(self, other: Motor) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group1()[0], -other.group1()[1], -other.group1()[2], other.group0()[3]]),
+                g1: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<MultiVector> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from(self.group0()) * Simd32x2::from([other.group6()[3], other.group5()[3]]),
+                g1: Simd32x3::from(self.group0()) * other.group4(),
+                g2: Simd32x2::from(self.group0()) * other.group10() * Simd32x2::from([-1.0, 1.0]),
+                g3: Simd32x3::from(self.group0()) * Simd32x3::from([other.group6()[0], other.group6()[1], other.group6()[2]]),
+                g4: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group1(),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group8()[0], -other.group8()[1], -other.group8()[2], other.group0()[1]]),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group3()[0], -other.group3()[1], -other.group3()[2], other.group0()[0]]),
+                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group9(),
+                g8: Simd32x3::from(self.group0()) * Simd32x3::from([other.group5()[0], other.group5()[1], other.group5()[2]]),
+                g9: Simd32x3::from(self.group0()) * other.group7(),
+                g10: Simd32x2::from(self.group0()) * other.group2() * Simd32x2::from([1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Origin> for PointAtOrigin {
+    type Output = Sphere;
+
+    fn anti_wedge_dot(self, other: Origin) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0(), 0.0]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Plane> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: Plane) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<PlaneAtOrigin> for PointAtOrigin {
+    type Output = LineAtOrigin;
+
+    fn anti_wedge_dot(self, other: PlaneAtOrigin) -> LineAtOrigin {
+        LineAtOrigin {
+            groups: LineAtOriginGroups {
+                g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<PointAtInfinity> for PointAtOrigin {
+    type Output = LineAtInfinity;
+
+    fn anti_wedge_dot(self, other: PointAtInfinity) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<PointAtOrigin> for PointAtOrigin {
+    type Output = AntiScalar;
+
+    fn anti_wedge_dot(self, other: PointAtOrigin) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Rotor> for PointAtOrigin {
+    type Output = Flector;
+
+    fn anti_wedge_dot(self, other: Rotor) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+                g1: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<RoundPoint> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: RoundPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group0()) * other.group1() * Simd32x2::from([1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Scalar> for PointAtOrigin {
+    type Output = Circle;
+
+    fn anti_wedge_dot(self, other: Scalar) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Sphere> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: Sphere) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()) * other.group1() * Simd32x2::from([-1.0, 1.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<Translator> for PointAtOrigin {
+    type Output = FlatPoint;
+
+    fn anti_wedge_dot(self, other: Translator) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            },
+        }
+    }
+}
+
 impl AntiWedgeDot<AntiScalar> for Rotor {
     type Output = Rotor;
 
@@ -10400,6 +11187,24 @@ impl AntiWedgeDot<Dipole> for Rotor {
                     - Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], other.group2()[0]])
                     - Simd32x2::from(self.group0()[1]) * Simd32x2::from([other.group0()[1], other.group2()[1]])
                     - Simd32x2::from(self.group0()[2]) * Simd32x2::from([other.group0()[2], other.group2()[2]]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<FlatPoint> for Rotor {
+    type Output = Flector;
+
+    fn anti_wedge_dot(self, other: FlatPoint) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0])
+                    + Simd32x4::from(self.group0()[3]) * other.group0(),
+                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
             },
         }
     }
@@ -10647,13 +11452,22 @@ impl AntiWedgeDot<MultiVector> for Rotor {
 }
 
 impl AntiWedgeDot<Origin> for Rotor {
-    type Output = Flector;
+    type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: Origin) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-                g1: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+    fn anti_wedge_dot(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0(), 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -10695,24 +11509,6 @@ impl AntiWedgeDot<PlaneAtOrigin> for Rotor {
     }
 }
 
-impl AntiWedgeDot<Point> for Rotor {
-    type Output = Flector;
-
-    fn anti_wedge_dot(self, other: Point) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0])
-                    + Simd32x4::from(self.group0()[3]) * other.group0(),
-                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
-            },
-        }
-    }
-}
-
 impl AntiWedgeDot<PointAtInfinity> for Rotor {
     type Output = Flector;
 
@@ -10726,6 +11522,19 @@ impl AntiWedgeDot<PointAtInfinity> for Rotor {
                 g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
                     + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
                     + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<PointAtOrigin> for Rotor {
+    type Output = Flector;
+
+    fn anti_wedge_dot(self, other: PointAtOrigin) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g1: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
             },
         }
     }
@@ -10931,6 +11740,34 @@ impl AntiWedgeDot<Dipole> for RoundPoint {
                     + Simd32x2::from(self.group0()[1]) * Simd32x2::from([other.group0()[1], -other.group2()[1]])
                     + Simd32x2::from(self.group0()[2]) * Simd32x2::from([other.group0()[2], -other.group2()[2]])
                     + self.group1() * Simd32x2::from(-other.group2()[3]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<FlatPoint> for RoundPoint {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3])
+                    + Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + self.group1() * Simd32x2::from(-other.group0()[3]),
             },
         }
     }
@@ -11232,17 +12069,19 @@ impl AntiWedgeDot<Origin> for RoundPoint {
     fn anti_wedge_dot(self, other: Origin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
+                g0: Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, other.group0()]),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
                 g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+                g4: Simd32x3::from(0.0),
                 g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
+                g6: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
+                    * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0])
+                    + Simd32x4::from(self.group1()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
-                g10: self.group1() * Simd32x2::from(-other.group0()),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -11303,34 +12142,6 @@ impl AntiWedgeDot<PlaneAtOrigin> for RoundPoint {
     }
 }
 
-impl AntiWedgeDot<Point> for RoundPoint {
-    type Output = MultiVector;
-
-    fn anti_wedge_dot(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3])
-                    + Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + self.group1() * Simd32x2::from(-other.group0()[3]),
-            },
-        }
-    }
-}
-
 impl AntiWedgeDot<PointAtInfinity> for RoundPoint {
     type Output = MultiVector;
 
@@ -11352,6 +12163,28 @@ impl AntiWedgeDot<PointAtInfinity> for RoundPoint {
                 g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
                     + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
                     + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<PointAtOrigin> for RoundPoint {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group1() * Simd32x2::from(-other.group0()),
             },
         }
     }
@@ -11527,6 +12360,20 @@ impl AntiWedgeDot<Dipole> for Scalar {
     }
 }
 
+impl AntiWedgeDot<FlatPoint> for Scalar {
+    type Output = Circle;
+
+    fn anti_wedge_dot(self, other: FlatPoint) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+            },
+        }
+    }
+}
+
 impl AntiWedgeDot<Flector> for Scalar {
     type Output = MultiVector;
 
@@ -11670,14 +12517,13 @@ impl AntiWedgeDot<MultiVector> for Scalar {
 }
 
 impl AntiWedgeDot<Origin> for Scalar {
-    type Output = Circle;
+    type Output = Sphere;
 
-    fn anti_wedge_dot(self, other: Origin) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from(0.0),
+    fn anti_wedge_dot(self, other: Origin) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0(), 0.0]),
             },
         }
     }
@@ -11709,20 +12555,6 @@ impl AntiWedgeDot<PlaneAtOrigin> for Scalar {
     }
 }
 
-impl AntiWedgeDot<Point> for Scalar {
-    type Output = Circle;
-
-    fn anti_wedge_dot(self, other: Point) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-            },
-        }
-    }
-}
-
 impl AntiWedgeDot<PointAtInfinity> for Scalar {
     type Output = LineAtInfinity;
 
@@ -11730,6 +12562,20 @@ impl AntiWedgeDot<PointAtInfinity> for Scalar {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<PointAtOrigin> for Scalar {
+    type Output = Circle;
+
+    fn anti_wedge_dot(self, other: PointAtOrigin) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
             },
         }
     }
@@ -11898,6 +12744,35 @@ impl AntiWedgeDot<Dipole> for Sphere {
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group2()[2], 0.0, -other.group2()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group2()[1], other.group2()[0], 0.0])
                     - Simd32x3::from(self.group1()[1]) * other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<FlatPoint> for Sphere {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + self.group1() * Simd32x2::from(other.group0()[3]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0)
+                    - self.group0() * Simd32x3::from(other.group0()[3])
+                    - Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -12195,14 +13070,14 @@ impl AntiWedgeDot<Origin> for Sphere {
     fn anti_wedge_dot(self, other: Origin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
+                g0: Simd32x2::from(self.group1()[1]) * Simd32x2::from([other.group0(), 0.0]),
                 g1: Simd32x3::from(0.0),
-                g2: self.group1() * Simd32x2::from(other.group0()),
-                g3: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: self.group0() * Simd32x3::from(other.group0()),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
+                g5: Simd32x4::from(self.group1()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
                 g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+                g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
@@ -12265,35 +13140,6 @@ impl AntiWedgeDot<PlaneAtOrigin> for Sphere {
     }
 }
 
-impl AntiWedgeDot<Point> for Sphere {
-    type Output = MultiVector;
-
-    fn anti_wedge_dot(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + self.group1() * Simd32x2::from(other.group0()[3]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0)
-                    - self.group0() * Simd32x3::from(other.group0()[3])
-                    - Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl AntiWedgeDot<PointAtInfinity> for Sphere {
     type Output = MultiVector;
 
@@ -12313,6 +13159,28 @@ impl AntiWedgeDot<PointAtInfinity> for Sphere {
                 g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<PointAtOrigin> for Sphere {
+    type Output = MultiVector;
+
+    fn anti_wedge_dot(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: self.group1() * Simd32x2::from(other.group0()),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+                g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -12528,6 +13396,19 @@ impl AntiWedgeDot<Dipole> for Translator {
                 g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
                     + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
                     + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group1()[2]]),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<FlatPoint> for Translator {
+    type Output = FlatPoint;
+
+    fn anti_wedge_dot(self, other: FlatPoint) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], 0.0])
+                    + Simd32x4::from(self.group0()[3]) * other.group0(),
             },
         }
     }
@@ -12756,12 +13637,22 @@ impl AntiWedgeDot<MultiVector> for Translator {
 }
 
 impl AntiWedgeDot<Origin> for Translator {
-    type Output = Point;
+    type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: Origin) -> Point {
-        Point {
-            groups: PointGroups {
-                g0: self.group0() * Simd32x4::from(other.group0()),
+    fn anti_wedge_dot(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0(), 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -12802,19 +13693,6 @@ impl AntiWedgeDot<PlaneAtOrigin> for Translator {
     }
 }
 
-impl AntiWedgeDot<Point> for Translator {
-    type Output = Point;
-
-    fn anti_wedge_dot(self, other: Point) -> Point {
-        Point {
-            groups: PointGroups {
-                g0: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], 0.0])
-                    + Simd32x4::from(self.group0()[3]) * other.group0(),
-            },
-        }
-    }
-}
-
 impl AntiWedgeDot<PointAtInfinity> for Translator {
     type Output = PointAtInfinity;
 
@@ -12822,6 +13700,18 @@ impl AntiWedgeDot<PointAtInfinity> for Translator {
         PointAtInfinity {
             groups: PointAtInfinityGroups {
                 g0: Simd32x3::from(self.group0()[3]) * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiWedgeDot<PointAtOrigin> for Translator {
+    type Output = FlatPoint;
+
+    fn anti_wedge_dot(self, other: PointAtOrigin) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: self.group0() * Simd32x4::from(other.group0()),
             },
         }
     }
@@ -12978,6 +13868,18 @@ impl GeometricAntiProduct<Dipole> for AntiScalar {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
                 g1: Simd32x3::from(self.group0()) * other.group1(),
                 g2: Simd32x4::from(self.group0()) * other.group2(),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<FlatPoint> for AntiScalar {
+    type Output = FlatPoint;
+
+    fn geometric_anti_product(self, other: FlatPoint) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: Simd32x4::from(self.group0()) * other.group0(),
             },
         }
     }
@@ -13140,18 +14042,6 @@ impl GeometricAntiProduct<PlaneAtOrigin> for AntiScalar {
     }
 }
 
-impl GeometricAntiProduct<Point> for AntiScalar {
-    type Output = Point;
-
-    fn geometric_anti_product(self, other: Point) -> Point {
-        Point {
-            groups: PointGroups {
-                g0: Simd32x4::from(self.group0()) * other.group0(),
-            },
-        }
-    }
-}
-
 impl GeometricAntiProduct<PointAtInfinity> for AntiScalar {
     type Output = PointAtInfinity;
 
@@ -13159,6 +14049,18 @@ impl GeometricAntiProduct<PointAtInfinity> for AntiScalar {
         PointAtInfinity {
             groups: PointAtInfinityGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<PointAtOrigin> for AntiScalar {
+    type Output = PointAtOrigin;
+
+    fn geometric_anti_product(self, other: PointAtOrigin) -> PointAtOrigin {
+        PointAtOrigin {
+            groups: PointAtOriginGroups {
+                g0: self.group0() * other.group0(),
             },
         }
     }
@@ -13372,6 +14274,45 @@ impl GeometricAntiProduct<Dipole> for Circle {
                     + Simd32x2::from(self.group2()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
                     + Simd32x2::from(self.group2()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
                     + Simd32x2::from(self.group2()[2]) * Simd32x2::from([0.0, -other.group1()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<FlatPoint> for Circle {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([-other.group0()[1], 0.0])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([-other.group0()[2], 0.0])
+                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([-other.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3]),
+                g4: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
+                    + swizzle!(self.group0(), 3, 3, 3, 2) * swizzle!(other.group0(), 0, 1, 2, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0])
+                    + Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group1()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0])
+                    + Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group2()[0]])
+                        * Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
+                    + self.group1() * Simd32x3::from(other.group0()[3]),
+                g10: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
             },
         }
     }
@@ -13816,17 +14757,17 @@ impl GeometricAntiProduct<Origin> for Circle {
     fn geometric_anti_product(self, other: Origin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([-other.group0(), 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g0: Simd32x2::from(0.0),
+                g1: self.group2() * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(self.group0()[3]) * Simd32x2::from([-other.group0(), 0.0]),
+                g3: Simd32x3::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group2()[0]])
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]])
                     * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
+                g7: self.group2() * Simd32x3::from(other.group0()),
                 g8: Simd32x3::from(0.0),
-                g9: self.group1() * Simd32x3::from(other.group0()),
+                g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
         }
@@ -13907,45 +14848,6 @@ impl GeometricAntiProduct<PlaneAtOrigin> for Circle {
     }
 }
 
-impl GeometricAntiProduct<Point> for Circle {
-    type Output = MultiVector;
-
-    fn geometric_anti_product(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([-other.group0()[1], 0.0])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([-other.group0()[2], 0.0])
-                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([-other.group0()[3], 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3]),
-                g4: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
-                    + swizzle!(self.group0(), 3, 3, 3, 2) * swizzle!(other.group0(), 0, 1, 2, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0])
-                    + Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group1()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0])
-                    + Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group2()[0]])
-                        * Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
-                    + self.group1() * Simd32x3::from(other.group0()[3]),
-                g10: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-            },
-        }
-    }
-}
-
 impl GeometricAntiProduct<PointAtInfinity> for Circle {
     type Output = MultiVector;
 
@@ -13976,6 +14878,29 @@ impl GeometricAntiProduct<PointAtInfinity> for Circle {
                 g10: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
                     + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
                     + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<PointAtOrigin> for Circle {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([-other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group2()[0]])
+                    * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: self.group1() * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -14297,6 +15222,44 @@ impl GeometricAntiProduct<Dipole> for Dipole {
                     + Simd32x3::from(self.group2()[1]) * Simd32x3::from([-other.group1()[2], -other.group2()[3], other.group1()[0]])
                     + Simd32x3::from(self.group2()[2]) * Simd32x3::from([other.group1()[1], -other.group1()[0], -other.group2()[3]])
                     + Simd32x3::from(self.group2()[3]) * Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<FlatPoint> for Dipole {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
+                    + Simd32x2::from(self.group2()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
+                g1: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
+                    + self.group1() * Simd32x3::from(other.group0()[3]),
+                g2: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, other.group0()[0]])
+                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, other.group0()[1]])
+                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, other.group0()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
+                g7: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
+                g8: Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group1()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group1()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    - Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]) * Simd32x3::from(other.group0()[3])
+                    + Simd32x3::from(self.group2()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -14750,18 +15713,17 @@ impl GeometricAntiProduct<Origin> for Dipole {
     fn geometric_anti_product(self, other: Origin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group2()[3]) * Simd32x2::from([0.0, -other.group0()]),
-                g1: self.group1() * Simd32x3::from(other.group0()),
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
+                g3: self.group1() * Simd32x3::from(other.group0()),
+                g4: Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]) * Simd32x3::from(other.group0()),
                 g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
-                    * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0) - Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]) * Simd32x3::from(other.group0()),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]) * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(self.group2()[3]) * Simd32x2::from([other.group0(), 0.0]),
             },
         }
     }
@@ -14844,44 +15806,6 @@ impl GeometricAntiProduct<PlaneAtOrigin> for Dipole {
     }
 }
 
-impl GeometricAntiProduct<Point> for Dipole {
-    type Output = MultiVector;
-
-    fn geometric_anti_product(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
-                    + Simd32x2::from(self.group2()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
-                g1: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
-                    + self.group1() * Simd32x3::from(other.group0()[3]),
-                g2: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, other.group0()[0]])
-                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, other.group0()[1]])
-                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, other.group0()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
-                g7: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
-                g8: Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group1()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group1()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    - Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]) * Simd32x3::from(other.group0()[3])
-                    + Simd32x3::from(self.group2()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl GeometricAntiProduct<PointAtInfinity> for Dipole {
     type Output = MultiVector;
 
@@ -14910,6 +15834,29 @@ impl GeometricAntiProduct<PointAtInfinity> for Dipole {
                     + Simd32x3::from(self.group1()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group1()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
                     + Simd32x3::from(self.group2()[3]) * other.group0(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<PointAtOrigin> for Dipole {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group2()[3]) * Simd32x2::from([0.0, -other.group0()]),
+                g1: self.group1() * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
+                    * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]) * Simd32x3::from(other.group0()),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -15090,6 +16037,505 @@ impl GeometricAntiProduct<Translator> for Dipole {
     }
 }
 
+impl GeometricAntiProduct<AntiScalar> for FlatPoint {
+    type Output = FlatPoint;
+
+    fn geometric_anti_product(self, other: AntiScalar) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: self.group0() * Simd32x4::from(other.group0()),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Circle> for FlatPoint {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Circle) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([-other.group0()[1], 0.0])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([-other.group0()[2], 0.0])
+                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([-other.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g4: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([-other.group0()[3], -other.group1()[2], other.group1()[1], other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[2], -other.group0()[3], -other.group1()[0], other.group0()[1]])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group1()[1], other.group1()[0], -other.group0()[3], other.group0()[2]])
+                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([-other.group2()[0], -other.group2()[1], -other.group2()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    + Simd32x3::from(self.group0()[3]) * other.group1(),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group1()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Dipole> for FlatPoint {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Dipole) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
+                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group2()[3]]),
+                g1: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    + Simd32x3::from(self.group0()[3]) * other.group1(),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group1()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group1()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group1()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]])
+                    + swizzle!(self.group0(), 3, 3, 3, 2) * Simd32x4::from([-other.group0()[0], -other.group0()[1], -other.group0()[2], other.group0()[2]]),
+                g7: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group2()[3], other.group1()[2], -other.group1()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group1()[2], -other.group2()[3], other.group1()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group1()[1], -other.group1()[0], -other.group2()[3]])
+                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<FlatPoint> for FlatPoint {
+    type Output = Translator;
+
+    fn geometric_anti_product(self, other: FlatPoint) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([-other.group0()[3], -other.group0()[3], -other.group0()[3], 0.0])
+                    + Simd32x4::from(self.group0()[3]) * other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Flector> for FlatPoint {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Flector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group1()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group1()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group1()[2]])
+                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, other.group1()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group0()[3], other.group1()[2], -other.group1()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group1()[2], -other.group0()[3], other.group1()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group1()[1], -other.group1()[0], -other.group0()[3]])
+                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Horizon> for FlatPoint {
+    type Output = Infinity;
+
+    fn geometric_anti_product(self, other: Horizon) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: self.group0()[3] * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Infinity> for FlatPoint {
+    type Output = Horizon;
+
+    fn geometric_anti_product(self, other: Infinity) -> Horizon {
+        Horizon {
+            groups: HorizonGroups {
+                g0: 0.0 - self.group0()[3] * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Line> for FlatPoint {
+    type Output = Flector;
+
+    fn geometric_anti_product(self, other: Line) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0])
+                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([-other.group1()[0], -other.group1()[1], -other.group1()[2], 0.0]),
+                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
+                    + swizzle!(self.group0(), 3, 3, 3, 2) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<LineAtInfinity> for FlatPoint {
+    type Output = PointAtInfinity;
+
+    fn geometric_anti_product(self, other: LineAtInfinity) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<LineAtOrigin> for FlatPoint {
+    type Output = Flector;
+
+    fn geometric_anti_product(self, other: LineAtOrigin) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0]),
+                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
+                    + swizzle!(self.group0(), 3, 3, 3, 2) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Magnitude> for FlatPoint {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Magnitude) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: self.group0() * Simd32x4::from(other.group0()[1]),
+                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[0]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Motor> for FlatPoint {
+    type Output = Flector;
+
+    fn geometric_anti_product(self, other: Motor) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], other.group0()[3], -other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], other.group0()[3], 0.0])
+                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([-other.group1()[0], -other.group1()[1], -other.group1()[2], other.group0()[3]]),
+                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
+                    + swizzle!(self.group0(), 3, 3, 3, 2) * swizzle!(other.group0(), 0, 1, 2, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<MultiVector> for FlatPoint {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group6()[0], other.group3()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([-other.group6()[1], other.group3()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([-other.group6()[2], other.group3()[2]])
+                    - Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group6()[3], other.group5()[3]]),
+                g1: Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group10()[0], other.group3()[2], -other.group3()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group3()[2], -other.group10()[0], other.group3()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group3()[1], -other.group3()[0], -other.group10()[0]])
+                    + Simd32x3::from(self.group0()[3]) * other.group4(),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group9()[0]])
+                    + Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group4()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group9()[1]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group4()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group9()[2]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group4()[2]])
+                    + Simd32x2::from(self.group0()[3]) * other.group10() * Simd32x2::from([-1.0, 1.0]),
+                g3: Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group6()[0], other.group6()[1], other.group6()[2]]),
+                g4: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group2()[0], -other.group6()[2], other.group6()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group6()[2], other.group2()[0], -other.group6()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group6()[1], other.group6()[0], other.group2()[0]])
+                    - Simd32x3::from(self.group0()[3]) * other.group1(),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([-other.group6()[3], -other.group7()[2], other.group7()[1], other.group6()[0]])
+                    + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[1], other.group1()[2], -other.group1()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group7()[2], -other.group6()[3], -other.group7()[0], other.group6()[1]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group1()[2], other.group0()[1], other.group1()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group7()[1], other.group7()[0], -other.group6()[3], other.group6()[2]])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[1], -other.group1()[0], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([-other.group8()[0], -other.group8()[1], -other.group8()[2], other.group0()[1]]),
+                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group3()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group3()[1]])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, 0.0, other.group3()[2]])
+                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([-other.group3()[0], -other.group3()[1], -other.group3()[2], other.group0()[0]]),
+                g7: Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group10()[0], other.group3()[2], -other.group3()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group3()[2], -other.group10()[0], other.group3()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group3()[1], -other.group3()[0], -other.group10()[0]])
+                    - Simd32x3::from(self.group0()[3]) * other.group9(),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group5()[3], other.group9()[2], -other.group9()[1]])
+                    + Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group0()[0], other.group4()[2], -other.group4()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group9()[2], -other.group5()[3], other.group9()[0]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group4()[2], -other.group0()[0], other.group4()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group9()[1], -other.group9()[0], -other.group5()[3]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group4()[1], -other.group4()[0], -other.group0()[0]])
+                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group5()[0], other.group5()[1], other.group5()[2]]),
+                g9: Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group2()[0], other.group6()[2], -other.group6()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group6()[2], -other.group2()[0], other.group6()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group6()[1], -other.group6()[0], -other.group2()[0]])
+                    + Simd32x3::from(self.group0()[3]) * other.group7(),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group7()[0]])
+                    + Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group1()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group7()[1]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group1()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group7()[2]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group1()[2]])
+                    + Simd32x2::from(self.group0()[3]) * other.group2() * Simd32x2::from([1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Origin> for FlatPoint {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0(), 0.0]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Plane> for FlatPoint {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Plane) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
+                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, other.group0()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<PlaneAtOrigin> for FlatPoint {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: PlaneAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group0(),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<PointAtInfinity> for FlatPoint {
+    type Output = LineAtInfinity;
+
+    fn geometric_anti_product(self, other: PointAtInfinity) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: Simd32x3::from(self.group0()[3]) * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<PointAtOrigin> for FlatPoint {
+    type Output = Translator;
+
+    fn geometric_anti_product(self, other: PointAtOrigin) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: Simd32x4::from(0.0) - self.group0() * Simd32x4::from(other.group0()),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Rotor> for FlatPoint {
+    type Output = Flector;
+
+    fn geometric_anti_product(self, other: Rotor) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], other.group0()[3], -other.group0()[0], 0.0])
+                    + swizzle!(self.group0(), 2, 2, 2, 3) * swizzle!(other.group0(), 1, 0, 3, 3) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]),
+                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
+                    + swizzle!(self.group0(), 3, 3, 3, 2) * swizzle!(other.group0(), 0, 1, 2, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<RoundPoint> for FlatPoint {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: RoundPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0]) - Simd32x3::from(self.group0()[3]) * other.group0(),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0]),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
+                    + Simd32x2::from(self.group0()[3]) * other.group1() * Simd32x2::from([1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Scalar> for FlatPoint {
+    type Output = Circle;
+
+    fn geometric_anti_product(self, other: Scalar) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Sphere> for FlatPoint {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Sphere) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0]),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
+                    + Simd32x2::from(self.group0()[3]) * other.group1() * Simd32x2::from([-1.0, 1.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0)
+                    - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0])
+                    - Simd32x3::from(self.group0()[3]) * other.group0(),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Translator> for FlatPoint {
+    type Output = FlatPoint;
+
+    fn geometric_anti_product(self, other: Translator) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], 0.0])
+                    + Simd32x4::from(self.group0()[3]) * other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            },
+        }
+    }
+}
+
 impl GeometricAntiProduct<AntiScalar> for Flector {
     type Output = Flector;
 
@@ -15202,6 +16648,35 @@ impl GeometricAntiProduct<Dipole> for Flector {
                     + Simd32x3::from(self.group1()[1]) * Simd32x3::from([other.group2()[2], 0.0, -other.group2()[0]])
                     + Simd32x3::from(self.group1()[2]) * Simd32x3::from([-other.group2()[1], other.group2()[0], 0.0])
                     - Simd32x3::from(self.group1()[3]) * other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<FlatPoint> for Flector {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + Simd32x2::from(self.group1()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()[3]),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3])
+                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
+                    + Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group1()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group1()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -15517,17 +16992,17 @@ impl GeometricAntiProduct<Origin> for Flector {
     fn geometric_anti_product(self, other: Origin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()]),
+                g0: Simd32x2::from(self.group1()[3]) * Simd32x2::from([other.group0(), 0.0]),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(self.group1()[3]) * Simd32x2::from([0.0, -other.group0()]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()),
+                g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from(self.group1()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
                 g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()),
-                g8: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0(), 0.0]),
             },
         }
     }
@@ -15599,35 +17074,6 @@ impl GeometricAntiProduct<PlaneAtOrigin> for Flector {
     }
 }
 
-impl GeometricAntiProduct<Point> for Flector {
-    type Output = MultiVector;
-
-    fn geometric_anti_product(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + Simd32x2::from(self.group1()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()[3]),
-                g8: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3])
-                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    + Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group1()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group1()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl GeometricAntiProduct<PointAtInfinity> for Flector {
     type Output = MultiVector;
 
@@ -15648,6 +17094,28 @@ impl GeometricAntiProduct<PointAtInfinity> for Flector {
                     + Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group1()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group1()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<PointAtOrigin> for Flector {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group1()[3]) * Simd32x2::from([0.0, -other.group0()]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -15848,6 +17316,18 @@ impl GeometricAntiProduct<Dipole> for Horizon {
     }
 }
 
+impl GeometricAntiProduct<FlatPoint> for Horizon {
+    type Output = Infinity;
+
+    fn geometric_anti_product(self, other: FlatPoint) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: 0.0 - self.group0() * other.group0()[3],
+            },
+        }
+    }
+}
+
 impl GeometricAntiProduct<Flector> for Horizon {
     type Output = MultiVector;
 
@@ -15953,12 +17433,22 @@ impl GeometricAntiProduct<MultiVector> for Horizon {
 }
 
 impl GeometricAntiProduct<Origin> for Horizon {
-    type Output = Infinity;
+    type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: Origin) -> Infinity {
-        Infinity {
-            groups: InfinityGroups {
-                g0: 0.0 - self.group0() * other.group0(),
+    fn geometric_anti_product(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -15988,13 +17478,13 @@ impl GeometricAntiProduct<PlaneAtOrigin> for Horizon {
     }
 }
 
-impl GeometricAntiProduct<Point> for Horizon {
+impl GeometricAntiProduct<PointAtOrigin> for Horizon {
     type Output = Infinity;
 
-    fn geometric_anti_product(self, other: Point) -> Infinity {
+    fn geometric_anti_product(self, other: PointAtOrigin) -> Infinity {
         Infinity {
             groups: InfinityGroups {
-                g0: 0.0 - self.group0() * other.group0()[3],
+                g0: 0.0 - self.group0() * other.group0(),
             },
         }
     }
@@ -16137,6 +17627,18 @@ impl GeometricAntiProduct<Dipole> for Infinity {
     }
 }
 
+impl GeometricAntiProduct<FlatPoint> for Infinity {
+    type Output = Horizon;
+
+    fn geometric_anti_product(self, other: FlatPoint) -> Horizon {
+        Horizon {
+            groups: HorizonGroups {
+                g0: self.group0() * other.group0()[3],
+            },
+        }
+    }
+}
+
 impl GeometricAntiProduct<Flector> for Infinity {
     type Output = Flector;
 
@@ -16242,12 +17744,22 @@ impl GeometricAntiProduct<MultiVector> for Infinity {
 }
 
 impl GeometricAntiProduct<Origin> for Infinity {
-    type Output = Horizon;
+    type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: Origin) -> Horizon {
-        Horizon {
-            groups: HorizonGroups {
-                g0: self.group0() * other.group0(),
+    fn geometric_anti_product(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -16277,13 +17789,13 @@ impl GeometricAntiProduct<PlaneAtOrigin> for Infinity {
     }
 }
 
-impl GeometricAntiProduct<Point> for Infinity {
+impl GeometricAntiProduct<PointAtOrigin> for Infinity {
     type Output = Horizon;
 
-    fn geometric_anti_product(self, other: Point) -> Horizon {
+    fn geometric_anti_product(self, other: PointAtOrigin) -> Horizon {
         Horizon {
             groups: HorizonGroups {
-                g0: self.group0() * other.group0()[3],
+                g0: self.group0() * other.group0(),
             },
         }
     }
@@ -16486,6 +17998,25 @@ impl GeometricAntiProduct<Dipole> for Line {
                     + Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
                     + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
                     + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group1()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<FlatPoint> for Line {
+    type Output = Flector;
+
+    fn geometric_anti_product(self, other: FlatPoint) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0])
+                    + Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]])
+                        * Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], 0.0]),
+                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
             },
         }
     }
@@ -16779,15 +18310,23 @@ impl GeometricAntiProduct<MultiVector> for Line {
 }
 
 impl GeometricAntiProduct<Origin> for Line {
-    type Output = Flector;
+    type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: Origin) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]])
+    fn geometric_anti_product(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: self.group1() * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
                     * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
-                g1: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
-                    * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g7: self.group1() * Simd32x3::from(other.group0()),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -16839,25 +18378,6 @@ impl GeometricAntiProduct<PlaneAtOrigin> for Line {
     }
 }
 
-impl GeometricAntiProduct<Point> for Line {
-    type Output = Flector;
-
-    fn geometric_anti_product(self, other: Point) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0])
-                    + Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]])
-                        * Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], 0.0]),
-                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
-            },
-        }
-    }
-}
-
 impl GeometricAntiProduct<PointAtInfinity> for Line {
     type Output = Flector;
 
@@ -16870,6 +18390,21 @@ impl GeometricAntiProduct<PointAtInfinity> for Line {
                 g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
                     + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
                     + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<PointAtOrigin> for Line {
+    type Output = Flector;
+
+    fn geometric_anti_product(self, other: PointAtOrigin) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]])
+                    * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g1: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
+                    * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
             },
         }
     }
@@ -17089,6 +18624,18 @@ impl GeometricAntiProduct<Dipole> for LineAtInfinity {
     }
 }
 
+impl GeometricAntiProduct<FlatPoint> for LineAtInfinity {
+    type Output = PointAtInfinity;
+
+    fn geometric_anti_product(self, other: FlatPoint) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: self.group0() * Simd32x3::from(other.group0()[3]),
+            },
+        }
+    }
+}
+
 impl GeometricAntiProduct<Flector> for LineAtInfinity {
     type Output = Flector;
 
@@ -17263,12 +18810,22 @@ impl GeometricAntiProduct<MultiVector> for LineAtInfinity {
 }
 
 impl GeometricAntiProduct<Origin> for LineAtInfinity {
-    type Output = PointAtInfinity;
+    type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: Origin) -> PointAtInfinity {
-        PointAtInfinity {
-            groups: PointAtInfinityGroups {
-                g0: self.group0() * Simd32x3::from(other.group0()),
+    fn geometric_anti_product(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: self.group0() * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: self.group0() * Simd32x3::from(other.group0()),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -17308,13 +18865,13 @@ impl GeometricAntiProduct<PlaneAtOrigin> for LineAtInfinity {
     }
 }
 
-impl GeometricAntiProduct<Point> for LineAtInfinity {
+impl GeometricAntiProduct<PointAtOrigin> for LineAtInfinity {
     type Output = PointAtInfinity;
 
-    fn geometric_anti_product(self, other: Point) -> PointAtInfinity {
+    fn geometric_anti_product(self, other: PointAtOrigin) -> PointAtInfinity {
         PointAtInfinity {
             groups: PointAtInfinityGroups {
-                g0: self.group0() * Simd32x3::from(other.group0()[3]),
+                g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
@@ -17495,6 +19052,23 @@ impl GeometricAntiProduct<Dipole> for LineAtOrigin {
                     - Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], other.group2()[0]])
                     - Simd32x2::from(self.group0()[1]) * Simd32x2::from([other.group0()[1], other.group2()[1]])
                     - Simd32x2::from(self.group0()[2]) * Simd32x2::from([other.group0()[2], other.group2()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<FlatPoint> for LineAtOrigin {
+    type Output = Flector;
+
+    fn geometric_anti_product(self, other: FlatPoint) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0]),
+                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
             },
         }
     }
@@ -17711,12 +19285,15 @@ impl GeometricAntiProduct<MultiVector> for LineAtOrigin {
 }
 
 impl GeometricAntiProduct<Origin> for LineAtOrigin {
-    type Output = PlaneAtOrigin;
+    type Output = Circle;
 
-    fn geometric_anti_product(self, other: Origin) -> PlaneAtOrigin {
-        PlaneAtOrigin {
-            groups: PlaneAtOriginGroups {
-                g0: self.group0() * Simd32x3::from(other.group0()),
+    fn geometric_anti_product(self, other: Origin) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
+                    * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
             },
         }
     }
@@ -17756,23 +19333,6 @@ impl GeometricAntiProduct<PlaneAtOrigin> for LineAtOrigin {
     }
 }
 
-impl GeometricAntiProduct<Point> for LineAtOrigin {
-    type Output = Flector;
-
-    fn geometric_anti_product(self, other: Point) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0]),
-                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
-            },
-        }
-    }
-}
-
 impl GeometricAntiProduct<PointAtInfinity> for LineAtOrigin {
     type Output = Flector;
 
@@ -17785,6 +19345,18 @@ impl GeometricAntiProduct<PointAtInfinity> for LineAtOrigin {
                 g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
                     + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
                     + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<PointAtOrigin> for LineAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn geometric_anti_product(self, other: PointAtOrigin) -> PlaneAtOrigin {
+        PlaneAtOrigin {
+            groups: PlaneAtOriginGroups {
+                g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
@@ -17945,6 +19517,28 @@ impl GeometricAntiProduct<Dipole> for Magnitude {
                 g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([-other.group0()[0], -other.group0()[1], -other.group0()[2], other.group2()[3]]),
                 g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[0]) * other.group1(),
                 g8: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<FlatPoint> for Magnitude {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(self.group0()[1]) * other.group0(),
+                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -18152,15 +19746,15 @@ impl GeometricAntiProduct<Origin> for Magnitude {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
+                g2: Simd32x2::from(self.group0()[1]) * Simd32x2::from([other.group0(), 0.0]),
                 g3: Simd32x3::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0(), 0.0]),
             },
         }
     }
@@ -18210,28 +19804,6 @@ impl GeometricAntiProduct<PlaneAtOrigin> for Magnitude {
     }
 }
 
-impl GeometricAntiProduct<Point> for Magnitude {
-    type Output = MultiVector;
-
-    fn geometric_anti_product(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(self.group0()[1]) * other.group0(),
-                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl GeometricAntiProduct<PointAtInfinity> for Magnitude {
     type Output = MultiVector;
 
@@ -18247,6 +19819,28 @@ impl GeometricAntiProduct<PointAtInfinity> for Magnitude {
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[0]) * other.group0(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<PointAtOrigin> for Magnitude {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -18467,6 +20061,26 @@ impl GeometricAntiProduct<Dipole> for Motor {
                     + Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
                     + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
                     + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group1()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<FlatPoint> for Motor {
+    type Output = Flector;
+
+    fn geometric_anti_product(self, other: FlatPoint) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0])
+                    + Simd32x4::from(self.group0()[3]) * other.group0()
+                    + Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]])
+                        * Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], 0.0]),
+                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
             },
         }
     }
@@ -18791,15 +20405,22 @@ impl GeometricAntiProduct<MultiVector> for Motor {
 }
 
 impl GeometricAntiProduct<Origin> for Motor {
-    type Output = Flector;
+    type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: Origin) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()])
-                    + Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]])
-                        * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
-                g1: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+    fn geometric_anti_product(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: self.group1() * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0(), 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g7: self.group1() * Simd32x3::from(other.group0()),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -18853,26 +20474,6 @@ impl GeometricAntiProduct<PlaneAtOrigin> for Motor {
     }
 }
 
-impl GeometricAntiProduct<Point> for Motor {
-    type Output = Flector;
-
-    fn geometric_anti_product(self, other: Point) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0])
-                    + Simd32x4::from(self.group0()[3]) * other.group0()
-                    + Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]])
-                        * Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], 0.0]),
-                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
-            },
-        }
-    }
-}
-
 impl GeometricAntiProduct<PointAtInfinity> for Motor {
     type Output = Flector;
 
@@ -18886,6 +20487,21 @@ impl GeometricAntiProduct<PointAtInfinity> for Motor {
                 g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
                     + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
                     + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<PointAtOrigin> for Motor {
+    type Output = Flector;
+
+    fn geometric_anti_product(self, other: PointAtOrigin) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()])
+                    + Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]])
+                        * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g1: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
             },
         }
     }
@@ -19382,6 +20998,85 @@ impl GeometricAntiProduct<Dipole> for MultiVector {
                     + Simd32x2::from(self.group8()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
                     + Simd32x2::from(self.group8()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
                     + Simd32x2::from(self.group8()[2]) * Simd32x2::from([0.0, -other.group1()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<FlatPoint> for MultiVector {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group3()[0]) * Simd32x2::from([0.0, other.group0()[0]])
+                    + Simd32x2::from(self.group3()[1]) * Simd32x2::from([0.0, other.group0()[1]])
+                    + Simd32x2::from(self.group3()[2]) * Simd32x2::from([0.0, other.group0()[2]])
+                    + Simd32x2::from(self.group5()[3]) * Simd32x2::from([0.0, -other.group0()[3]])
+                    + Simd32x2::from(self.group6()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
+                    + Simd32x2::from(self.group6()[1]) * Simd32x2::from([-other.group0()[1], 0.0])
+                    + Simd32x2::from(self.group6()[2]) * Simd32x2::from([-other.group0()[2], 0.0])
+                    + Simd32x2::from(self.group6()[3]) * Simd32x2::from([-other.group0()[3], 0.0]),
+                g1: Simd32x3::from(self.group3()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group3()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group3()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
+                    + self.group4() * Simd32x3::from(other.group0()[3])
+                    + Simd32x3::from(self.group10()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(self.group4()[0]) * Simd32x2::from([0.0, other.group0()[0]])
+                    + Simd32x2::from(self.group4()[1]) * Simd32x2::from([0.0, other.group0()[1]])
+                    + Simd32x2::from(self.group4()[2]) * Simd32x2::from([0.0, other.group0()[2]])
+                    + Simd32x2::from(self.group9()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group9()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group9()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + self.group10() * Simd32x2::from(other.group0()[3]),
+                g3: Simd32x3::from(0.0) - Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]) * Simd32x3::from(other.group0()[3]),
+                g4: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()[3])
+                    + Simd32x3::from(self.group2()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
+                    + Simd32x3::from(self.group6()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group6()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group6()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
+                g5: Simd32x4::from(self.group0()[1]) * other.group0()
+                    + Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group1()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0])
+                    + Simd32x4::from(self.group6()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
+                    + Simd32x4::from(self.group6()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
+                    + swizzle!(self.group6(), 3, 3, 3, 2) * swizzle!(other.group0(), 0, 1, 2, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0])
+                    + Simd32x4::from(self.group7()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group7()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group7()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0])
+                    + Simd32x4::from([self.group8()[0], self.group8()[1], self.group8()[2], self.group8()[0]])
+                        * Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], 0.0]),
+                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]])
+                    + Simd32x4::from(self.group3()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
+                    + Simd32x4::from(self.group3()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
+                    + Simd32x4::from(self.group3()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
+                g7: Simd32x3::from(self.group3()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group3()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group3()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    - self.group9() * Simd32x3::from(other.group0()[3])
+                    - Simd32x3::from(self.group10()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
+                    + Simd32x3::from(self.group4()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group4()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group4()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    - Simd32x3::from([self.group5()[0], self.group5()[1], self.group5()[2]]) * Simd32x3::from(other.group0()[3])
+                    + Simd32x3::from(self.group5()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
+                    + Simd32x3::from(self.group9()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group9()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group9()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
+                g9: Simd32x3::from(self.group2()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
+                    + Simd32x3::from(self.group6()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group6()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group6()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
+                    + self.group7() * Simd32x3::from(other.group0()[3]),
+                g10: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + self.group2() * Simd32x2::from(-other.group0()[3])
+                    + Simd32x2::from(self.group7()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group7()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group7()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
             },
         }
     }
@@ -20376,21 +22071,21 @@ impl GeometricAntiProduct<Origin> for MultiVector {
     fn geometric_anti_product(self, other: Origin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group5()[3]) * Simd32x2::from([0.0, -other.group0()]) + Simd32x2::from(self.group6()[3]) * Simd32x2::from([-other.group0(), 0.0]),
-                g1: self.group4() * Simd32x3::from(other.group0()),
-                g2: self.group10() * Simd32x2::from(other.group0()),
-                g3: Simd32x3::from(0.0) - Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]) * Simd32x3::from(other.group0()),
-                g4: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
-                g5: Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()])
-                    + Simd32x4::from([self.group8()[0], self.group8()[1], self.group8()[2], self.group8()[0]])
+                g0: Simd32x2::from(self.group2()[1]) * Simd32x2::from([0.0, other.group0()]) + Simd32x2::from(self.group10()[1]) * Simd32x2::from([other.group0(), 0.0]),
+                g1: self.group8() * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(self.group0()[1]) * Simd32x2::from([other.group0(), 0.0]) + Simd32x2::from(self.group6()[3]) * Simd32x2::from([-other.group0(), 0.0]),
+                g3: self.group4() * Simd32x3::from(other.group0()) + self.group9() * Simd32x3::from(other.group0()),
+                g4: Simd32x3::from([self.group5()[0], self.group5()[1], self.group5()[2]]) * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from(self.group10()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g6: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]])
+                    * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0])
+                    + Simd32x4::from(self.group2()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()])
+                    + Simd32x4::from([self.group7()[0], self.group7()[1], self.group7()[2], self.group7()[0]])
                         * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
-                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()])
-                    + Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group3()[0]])
-                        * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
-                g7: Simd32x3::from(0.0) - self.group9() * Simd32x3::from(other.group0()),
-                g8: Simd32x3::from(0.0) - Simd32x3::from([self.group5()[0], self.group5()[1], self.group5()[2]]) * Simd32x3::from(other.group0()),
-                g9: self.group7() * Simd32x3::from(other.group0()),
-                g10: self.group2() * Simd32x2::from(-other.group0()),
+                g7: self.group8() * Simd32x3::from(other.group0()),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - Simd32x3::from([self.group5()[0], self.group5()[1], self.group5()[2]]) * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0(), 0.0]) + Simd32x2::from(self.group5()[3]) * Simd32x2::from([other.group0(), 0.0]),
             },
         }
     }
@@ -20544,85 +22239,6 @@ impl GeometricAntiProduct<PlaneAtOrigin> for MultiVector {
     }
 }
 
-impl GeometricAntiProduct<Point> for MultiVector {
-    type Output = MultiVector;
-
-    fn geometric_anti_product(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group3()[0]) * Simd32x2::from([0.0, other.group0()[0]])
-                    + Simd32x2::from(self.group3()[1]) * Simd32x2::from([0.0, other.group0()[1]])
-                    + Simd32x2::from(self.group3()[2]) * Simd32x2::from([0.0, other.group0()[2]])
-                    + Simd32x2::from(self.group5()[3]) * Simd32x2::from([0.0, -other.group0()[3]])
-                    + Simd32x2::from(self.group6()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
-                    + Simd32x2::from(self.group6()[1]) * Simd32x2::from([-other.group0()[1], 0.0])
-                    + Simd32x2::from(self.group6()[2]) * Simd32x2::from([-other.group0()[2], 0.0])
-                    + Simd32x2::from(self.group6()[3]) * Simd32x2::from([-other.group0()[3], 0.0]),
-                g1: Simd32x3::from(self.group3()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group3()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group3()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
-                    + self.group4() * Simd32x3::from(other.group0()[3])
-                    + Simd32x3::from(self.group10()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g2: Simd32x2::from(self.group4()[0]) * Simd32x2::from([0.0, other.group0()[0]])
-                    + Simd32x2::from(self.group4()[1]) * Simd32x2::from([0.0, other.group0()[1]])
-                    + Simd32x2::from(self.group4()[2]) * Simd32x2::from([0.0, other.group0()[2]])
-                    + Simd32x2::from(self.group9()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group9()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group9()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + self.group10() * Simd32x2::from(other.group0()[3]),
-                g3: Simd32x3::from(0.0) - Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]) * Simd32x3::from(other.group0()[3]),
-                g4: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()[3])
-                    + Simd32x3::from(self.group2()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    + Simd32x3::from(self.group6()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group6()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group6()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
-                g5: Simd32x4::from(self.group0()[1]) * other.group0()
-                    + Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group1()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group1()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0])
-                    + Simd32x4::from(self.group6()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
-                    + Simd32x4::from(self.group6()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
-                    + swizzle!(self.group6(), 3, 3, 3, 2) * swizzle!(other.group0(), 0, 1, 2, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0])
-                    + Simd32x4::from(self.group7()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group7()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group7()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0])
-                    + Simd32x4::from([self.group8()[0], self.group8()[1], self.group8()[2], self.group8()[0]])
-                        * Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], 0.0]),
-                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]])
-                    + Simd32x4::from(self.group3()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
-                    + Simd32x4::from(self.group3()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
-                    + Simd32x4::from(self.group3()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
-                g7: Simd32x3::from(self.group3()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group3()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group3()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    - self.group9() * Simd32x3::from(other.group0()[3])
-                    - Simd32x3::from(self.group10()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    + Simd32x3::from(self.group4()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group4()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group4()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    - Simd32x3::from([self.group5()[0], self.group5()[1], self.group5()[2]]) * Simd32x3::from(other.group0()[3])
-                    + Simd32x3::from(self.group5()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    + Simd32x3::from(self.group9()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group9()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group9()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
-                g9: Simd32x3::from(self.group2()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    + Simd32x3::from(self.group6()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group6()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group6()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
-                    + self.group7() * Simd32x3::from(other.group0()[3]),
-                g10: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + self.group2() * Simd32x2::from(-other.group0()[3])
-                    + Simd32x2::from(self.group7()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group7()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group7()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-            },
-        }
-    }
-}
-
 impl GeometricAntiProduct<PointAtInfinity> for MultiVector {
     type Output = MultiVector;
 
@@ -20685,6 +22301,32 @@ impl GeometricAntiProduct<PointAtInfinity> for MultiVector {
                     + Simd32x2::from(self.group7()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
                     + Simd32x2::from(self.group7()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
                     + Simd32x2::from(self.group7()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<PointAtOrigin> for MultiVector {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group5()[3]) * Simd32x2::from([0.0, -other.group0()]) + Simd32x2::from(self.group6()[3]) * Simd32x2::from([-other.group0(), 0.0]),
+                g1: self.group4() * Simd32x3::from(other.group0()),
+                g2: self.group10() * Simd32x2::from(other.group0()),
+                g3: Simd32x3::from(0.0) - Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]) * Simd32x3::from(other.group0()),
+                g4: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()])
+                    + Simd32x4::from([self.group8()[0], self.group8()[1], self.group8()[2], self.group8()[0]])
+                        * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()])
+                    + Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group3()[0]])
+                        * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g7: Simd32x3::from(0.0) - self.group9() * Simd32x3::from(other.group0()),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([self.group5()[0], self.group5()[1], self.group5()[2]]) * Simd32x3::from(other.group0()),
+                g9: self.group7() * Simd32x3::from(other.group0()),
+                g10: self.group2() * Simd32x2::from(-other.group0()),
             },
         }
     }
@@ -21065,16 +22707,16 @@ impl GeometricAntiProduct<Circle> for Origin {
     fn geometric_anti_product(self, other: Circle) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group0()[3], 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group2(),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group2()[0], -other.group2()[1], -other.group2()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+                g7: Simd32x3::from(self.group0()) * other.group2(),
                 g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(self.group0()) * other.group1(),
+                g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
         }
@@ -21087,17 +22729,39 @@ impl GeometricAntiProduct<Dipole> for Origin {
     fn geometric_anti_product(self, other: Dipole) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group2()[3]]),
-                g1: Simd32x3::from(self.group0()) * other.group1(),
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(self.group0()) * other.group1(),
+                g4: Simd32x3::from(self.group0()) * Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()) * Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group2()[3], 0.0]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<FlatPoint> for Origin {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
                 g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
+                g4: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
                 g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group0()[0], -other.group0()[1], -other.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(self.group0()) * Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group0()[3], 0.0]),
             },
         }
     }
@@ -21109,15 +22773,37 @@ impl GeometricAntiProduct<Flector> for Origin {
     fn geometric_anti_product(self, other: Flector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group0()[3]]),
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group1()[3], 0.0]),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group1()[3]]),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g4: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group1()[3]]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group0()[3], 0.0]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Horizon> for Origin {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Horizon) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
                 g3: Simd32x3::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
                 g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g8: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -21125,62 +22811,81 @@ impl GeometricAntiProduct<Flector> for Origin {
     }
 }
 
-impl GeometricAntiProduct<Horizon> for Origin {
-    type Output = Infinity;
-
-    fn geometric_anti_product(self, other: Horizon) -> Infinity {
-        Infinity {
-            groups: InfinityGroups {
-                g0: self.group0() * other.group0(),
-            },
-        }
-    }
-}
-
 impl GeometricAntiProduct<Infinity> for Origin {
-    type Output = Horizon;
+    type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: Infinity) -> Horizon {
-        Horizon {
-            groups: HorizonGroups {
-                g0: 0.0 - self.group0() * other.group0(),
+    fn geometric_anti_product(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
 }
 
 impl GeometricAntiProduct<Line> for Origin {
-    type Output = Flector;
+    type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: Line) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group1()[0], -other.group1()[1], -other.group1()[2], 0.0]),
-                g1: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+    fn geometric_anti_product(self, other: Line) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group1(),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g7: Simd32x3::from(self.group0()) * other.group1(),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
 }
 
 impl GeometricAntiProduct<LineAtInfinity> for Origin {
-    type Output = PointAtInfinity;
+    type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: LineAtInfinity) -> PointAtInfinity {
-        PointAtInfinity {
-            groups: PointAtInfinityGroups {
-                g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+    fn geometric_anti_product(self, other: LineAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(self.group0()) * other.group0(),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
 }
 
 impl GeometricAntiProduct<LineAtOrigin> for Origin {
-    type Output = PlaneAtOrigin;
+    type Output = Circle;
 
-    fn geometric_anti_product(self, other: LineAtOrigin) -> PlaneAtOrigin {
-        PlaneAtOrigin {
-            groups: PlaneAtOriginGroups {
-                g0: Simd32x3::from(self.group0()) * other.group0(),
+    fn geometric_anti_product(self, other: LineAtOrigin) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
             },
         }
     }
@@ -21194,28 +22899,37 @@ impl GeometricAntiProduct<Magnitude> for Origin {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[1], 0.0]),
                 g3: Simd32x3::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]]),
-                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[0], 0.0]),
             },
         }
     }
 }
 
 impl GeometricAntiProduct<Motor> for Origin {
-    type Output = Flector;
+    type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: Motor) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group1()[0], -other.group1()[1], -other.group1()[2], other.group0()[3]]),
-                g1: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+    fn geometric_anti_product(self, other: Motor) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group1(),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g7: Simd32x3::from(self.group0()) * other.group1(),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -21227,29 +22941,18 @@ impl GeometricAntiProduct<MultiVector> for Origin {
     fn geometric_anti_product(self, other: MultiVector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from(self.group0()) * Simd32x2::from([other.group6()[3], other.group5()[3]]),
-                g1: Simd32x3::from(self.group0()) * other.group4(),
-                g2: Simd32x2::from(self.group0()) * other.group10() * Simd32x2::from([-1.0, 1.0]),
-                g3: Simd32x3::from(self.group0()) * Simd32x3::from([other.group6()[0], other.group6()[1], other.group6()[2]]),
-                g4: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group1(),
-                g5: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group8()[0], -other.group8()[1], -other.group8()[2], other.group0()[1]]),
-                g6: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group3()[0], -other.group3()[1], -other.group3()[2], other.group0()[0]]),
-                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group9(),
-                g8: Simd32x3::from(self.group0()) * Simd32x3::from([other.group5()[0], other.group5()[1], other.group5()[2]]),
-                g9: Simd32x3::from(self.group0()) * other.group7(),
-                g10: Simd32x2::from(self.group0()) * other.group2() * Simd32x2::from([1.0, -1.0]),
-            },
-        }
-    }
-}
-
-impl GeometricAntiProduct<Origin> for Origin {
-    type Output = AntiScalar;
-
-    fn geometric_anti_product(self, other: Origin) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: 0.0 - self.group0() * other.group0(),
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group10()[1], other.group2()[1]]),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group8(),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([other.group6()[3], 0.0]) + Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[1], 0.0]),
+                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group9() + Simd32x3::from(self.group0()) * other.group4(),
+                g4: Simd32x3::from(self.group0()) * Simd32x3::from([other.group5()[0], other.group5()[1], other.group5()[2]]),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group10()[1]]),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([other.group7()[0], other.group7()[1], other.group7()[2], -other.group2()[1]])
+                    + Simd32x4::from(self.group0()) * Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+                g7: Simd32x3::from(self.group0()) * other.group8(),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()) * Simd32x3::from([other.group5()[0], other.group5()[1], other.group5()[2]]),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group5()[3], 0.0]) + Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[0], 0.0]),
             },
         }
     }
@@ -21261,14 +22964,14 @@ impl GeometricAntiProduct<Plane> for Origin {
     fn geometric_anti_product(self, other: Plane) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[3], 0.0]),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()[3]]),
-                g3: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
                 g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
@@ -21278,49 +22981,71 @@ impl GeometricAntiProduct<Plane> for Origin {
 }
 
 impl GeometricAntiProduct<PlaneAtOrigin> for Origin {
-    type Output = LineAtOrigin;
+    type Output = Dipole;
 
-    fn geometric_anti_product(self, other: PlaneAtOrigin) -> LineAtOrigin {
-        LineAtOrigin {
-            groups: LineAtOriginGroups {
+    fn geometric_anti_product(self, other: PlaneAtOrigin) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
-            },
-        }
-    }
-}
-
-impl GeometricAntiProduct<Point> for Origin {
-    type Output = Translator;
-
-    fn geometric_anti_product(self, other: Point) -> Translator {
-        Translator {
-            groups: TranslatorGroups {
-                g0: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x4::from(0.0),
             },
         }
     }
 }
 
 impl GeometricAntiProduct<PointAtInfinity> for Origin {
-    type Output = LineAtInfinity;
+    type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: PointAtInfinity) -> LineAtInfinity {
-        LineAtInfinity {
-            groups: LineAtInfinityGroups {
-                g0: Simd32x3::from(self.group0()) * other.group0(),
+    fn geometric_anti_product(self, other: PointAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(self.group0()) * other.group0(),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()) * other.group0(),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<PointAtOrigin> for Origin {
+    type Output = Sphere;
+
+    fn geometric_anti_product(self, other: PointAtOrigin) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group0(), 0.0]),
             },
         }
     }
 }
 
 impl GeometricAntiProduct<Rotor> for Origin {
-    type Output = Flector;
+    type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: Rotor) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
-                g1: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+    fn geometric_anti_product(self, other: Rotor) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -21332,31 +23057,30 @@ impl GeometricAntiProduct<RoundPoint> for Origin {
     fn geometric_anti_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group1()[1]]),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
                 g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g4: Simd32x3::from(0.0),
                 g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], -other.group1()[1]]),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(self.group0()) * other.group1() * Simd32x2::from([1.0, -1.0]),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
 }
 
 impl GeometricAntiProduct<Scalar> for Origin {
-    type Output = Circle;
+    type Output = Sphere;
 
-    fn geometric_anti_product(self, other: Scalar) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from(0.0),
+    fn geometric_anti_product(self, other: Scalar) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0(), 0.0]),
             },
         }
     }
@@ -21368,14 +23092,14 @@ impl GeometricAntiProduct<Sphere> for Origin {
     fn geometric_anti_product(self, other: Sphere) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group1()[1], 0.0]),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(self.group0()) * other.group1() * Simd32x2::from([-1.0, 1.0]),
-                g3: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group1()[1]]),
                 g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
@@ -21385,12 +23109,22 @@ impl GeometricAntiProduct<Sphere> for Origin {
 }
 
 impl GeometricAntiProduct<Translator> for Origin {
-    type Output = Point;
+    type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: Translator) -> Point {
-        Point {
-            groups: PointGroups {
-                g0: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+    fn geometric_anti_product(self, other: Translator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -21470,6 +23204,33 @@ impl GeometricAntiProduct<Dipole> for Plane {
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group2()[2], 0.0, -other.group2()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group2()[1], other.group2()[0], 0.0])
                     - Simd32x3::from(self.group0()[3]) * other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<FlatPoint> for Plane {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3]),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -21690,14 +23451,14 @@ impl GeometricAntiProduct<Origin> for Plane {
     fn geometric_anti_product(self, other: Origin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
+                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0(), 0.0]),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()]),
-                g3: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
+                g5: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
                 g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
@@ -21737,33 +23498,6 @@ impl GeometricAntiProduct<PlaneAtOrigin> for Plane {
     }
 }
 
-impl GeometricAntiProduct<Point> for Plane {
-    type Output = MultiVector;
-
-    fn geometric_anti_product(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3]),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl GeometricAntiProduct<PointAtInfinity> for Plane {
     type Output = MultiVector;
 
@@ -21783,6 +23517,28 @@ impl GeometricAntiProduct<PointAtInfinity> for Plane {
                 g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<PointAtOrigin> for Plane {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -21958,6 +23714,32 @@ impl GeometricAntiProduct<Dipole> for PlaneAtOrigin {
                 g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group2()[2], other.group2()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group2()[2], 0.0, -other.group2()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group2()[1], other.group2()[0], 0.0]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<FlatPoint> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3]),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -22154,12 +23936,14 @@ impl GeometricAntiProduct<MultiVector> for PlaneAtOrigin {
 }
 
 impl GeometricAntiProduct<Origin> for PlaneAtOrigin {
-    type Output = LineAtOrigin;
+    type Output = Dipole;
 
-    fn geometric_anti_product(self, other: Origin) -> LineAtOrigin {
-        LineAtOrigin {
-            groups: LineAtOriginGroups {
-                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+    fn geometric_anti_product(self, other: Origin) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: self.group0() * Simd32x3::from(other.group0()),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x4::from(0.0),
             },
         }
     }
@@ -22194,32 +23978,6 @@ impl GeometricAntiProduct<PlaneAtOrigin> for PlaneAtOrigin {
     }
 }
 
-impl GeometricAntiProduct<Point> for PlaneAtOrigin {
-    type Output = MultiVector;
-
-    fn geometric_anti_product(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3]),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl GeometricAntiProduct<PointAtInfinity> for PlaneAtOrigin {
     type Output = MultiVector;
 
@@ -22241,6 +23999,18 @@ impl GeometricAntiProduct<PointAtInfinity> for PlaneAtOrigin {
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<PointAtOrigin> for PlaneAtOrigin {
+    type Output = LineAtOrigin;
+
+    fn geometric_anti_product(self, other: PointAtOrigin) -> LineAtOrigin {
+        LineAtOrigin {
+            groups: LineAtOriginGroups {
+                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
@@ -22347,483 +24117,6 @@ impl GeometricAntiProduct<Translator> for PlaneAtOrigin {
     }
 }
 
-impl GeometricAntiProduct<AntiScalar> for Point {
-    type Output = Point;
-
-    fn geometric_anti_product(self, other: AntiScalar) -> Point {
-        Point {
-            groups: PointGroups {
-                g0: self.group0() * Simd32x4::from(other.group0()),
-            },
-        }
-    }
-}
-
-impl GeometricAntiProduct<Circle> for Point {
-    type Output = MultiVector;
-
-    fn geometric_anti_product(self, other: Circle) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([-other.group0()[1], 0.0])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([-other.group0()[2], 0.0])
-                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([-other.group0()[3], 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g4: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([-other.group0()[3], -other.group1()[2], other.group1()[1], other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[2], -other.group0()[3], -other.group1()[0], other.group0()[1]])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group1()[1], other.group1()[0], -other.group0()[3], other.group0()[2]])
-                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([-other.group2()[0], -other.group2()[1], -other.group2()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    + Simd32x3::from(self.group0()[3]) * other.group1(),
-                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group1()[2]]),
-            },
-        }
-    }
-}
-
-impl GeometricAntiProduct<Dipole> for Point {
-    type Output = MultiVector;
-
-    fn geometric_anti_product(self, other: Dipole) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
-                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group2()[3]]),
-                g1: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    + Simd32x3::from(self.group0()[3]) * other.group1(),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group1()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group1()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group1()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]])
-                    + swizzle!(self.group0(), 3, 3, 3, 2) * Simd32x4::from([-other.group0()[0], -other.group0()[1], -other.group0()[2], other.group0()[2]]),
-                g7: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group2()[3], other.group1()[2], -other.group1()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group1()[2], -other.group2()[3], other.group1()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group1()[1], -other.group1()[0], -other.group2()[3]])
-                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl GeometricAntiProduct<Flector> for Point {
-    type Output = MultiVector;
-
-    fn geometric_anti_product(self, other: Flector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group1()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group1()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group1()[2]])
-                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, other.group1()[3]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group0()[3], other.group1()[2], -other.group1()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group1()[2], -other.group0()[3], other.group1()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group1()[1], -other.group1()[0], -other.group0()[3]])
-                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl GeometricAntiProduct<Horizon> for Point {
-    type Output = Infinity;
-
-    fn geometric_anti_product(self, other: Horizon) -> Infinity {
-        Infinity {
-            groups: InfinityGroups {
-                g0: self.group0()[3] * other.group0(),
-            },
-        }
-    }
-}
-
-impl GeometricAntiProduct<Infinity> for Point {
-    type Output = Horizon;
-
-    fn geometric_anti_product(self, other: Infinity) -> Horizon {
-        Horizon {
-            groups: HorizonGroups {
-                g0: 0.0 - self.group0()[3] * other.group0(),
-            },
-        }
-    }
-}
-
-impl GeometricAntiProduct<Line> for Point {
-    type Output = Flector;
-
-    fn geometric_anti_product(self, other: Line) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0])
-                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([-other.group1()[0], -other.group1()[1], -other.group1()[2], 0.0]),
-                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
-                    + swizzle!(self.group0(), 3, 3, 3, 2) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], -other.group0()[2]]),
-            },
-        }
-    }
-}
-
-impl GeometricAntiProduct<LineAtInfinity> for Point {
-    type Output = PointAtInfinity;
-
-    fn geometric_anti_product(self, other: LineAtInfinity) -> PointAtInfinity {
-        PointAtInfinity {
-            groups: PointAtInfinityGroups {
-                g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group0(),
-            },
-        }
-    }
-}
-
-impl GeometricAntiProduct<LineAtOrigin> for Point {
-    type Output = Flector;
-
-    fn geometric_anti_product(self, other: LineAtOrigin) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0]),
-                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
-                    + swizzle!(self.group0(), 3, 3, 3, 2) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], -other.group0()[2]]),
-            },
-        }
-    }
-}
-
-impl GeometricAntiProduct<Magnitude> for Point {
-    type Output = MultiVector;
-
-    fn geometric_anti_product(self, other: Magnitude) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: self.group0() * Simd32x4::from(other.group0()[1]),
-                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl GeometricAntiProduct<Motor> for Point {
-    type Output = Flector;
-
-    fn geometric_anti_product(self, other: Motor) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], other.group0()[3], -other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], other.group0()[3], 0.0])
-                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([-other.group1()[0], -other.group1()[1], -other.group1()[2], other.group0()[3]]),
-                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
-                    + swizzle!(self.group0(), 3, 3, 3, 2) * swizzle!(other.group0(), 0, 1, 2, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            },
-        }
-    }
-}
-
-impl GeometricAntiProduct<MultiVector> for Point {
-    type Output = MultiVector;
-
-    fn geometric_anti_product(self, other: MultiVector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group6()[0], other.group3()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([-other.group6()[1], other.group3()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([-other.group6()[2], other.group3()[2]])
-                    - Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group6()[3], other.group5()[3]]),
-                g1: Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group10()[0], other.group3()[2], -other.group3()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group3()[2], -other.group10()[0], other.group3()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group3()[1], -other.group3()[0], -other.group10()[0]])
-                    + Simd32x3::from(self.group0()[3]) * other.group4(),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group9()[0]])
-                    + Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group4()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group9()[1]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group4()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group9()[2]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group4()[2]])
-                    + Simd32x2::from(self.group0()[3]) * other.group10() * Simd32x2::from([-1.0, 1.0]),
-                g3: Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group6()[0], other.group6()[1], other.group6()[2]]),
-                g4: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group2()[0], -other.group6()[2], other.group6()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group6()[2], other.group2()[0], -other.group6()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group6()[1], other.group6()[0], other.group2()[0]])
-                    - Simd32x3::from(self.group0()[3]) * other.group1(),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([-other.group6()[3], -other.group7()[2], other.group7()[1], other.group6()[0]])
-                    + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[1], other.group1()[2], -other.group1()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group7()[2], -other.group6()[3], -other.group7()[0], other.group6()[1]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group1()[2], other.group0()[1], other.group1()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group7()[1], other.group7()[0], -other.group6()[3], other.group6()[2]])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[1], -other.group1()[0], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([-other.group8()[0], -other.group8()[1], -other.group8()[2], other.group0()[1]]),
-                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group3()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group3()[1]])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, 0.0, other.group3()[2]])
-                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([-other.group3()[0], -other.group3()[1], -other.group3()[2], other.group0()[0]]),
-                g7: Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group10()[0], other.group3()[2], -other.group3()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group3()[2], -other.group10()[0], other.group3()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group3()[1], -other.group3()[0], -other.group10()[0]])
-                    - Simd32x3::from(self.group0()[3]) * other.group9(),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group5()[3], other.group9()[2], -other.group9()[1]])
-                    + Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group0()[0], other.group4()[2], -other.group4()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group9()[2], -other.group5()[3], other.group9()[0]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group4()[2], -other.group0()[0], other.group4()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group9()[1], -other.group9()[0], -other.group5()[3]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group4()[1], -other.group4()[0], -other.group0()[0]])
-                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group5()[0], other.group5()[1], other.group5()[2]]),
-                g9: Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group2()[0], other.group6()[2], -other.group6()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group6()[2], -other.group2()[0], other.group6()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group6()[1], -other.group6()[0], -other.group2()[0]])
-                    + Simd32x3::from(self.group0()[3]) * other.group7(),
-                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group7()[0]])
-                    + Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group1()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group7()[1]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group1()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group7()[2]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group1()[2]])
-                    + Simd32x2::from(self.group0()[3]) * other.group2() * Simd32x2::from([1.0, -1.0]),
-            },
-        }
-    }
-}
-
-impl GeometricAntiProduct<Origin> for Point {
-    type Output = Translator;
-
-    fn geometric_anti_product(self, other: Origin) -> Translator {
-        Translator {
-            groups: TranslatorGroups {
-                g0: Simd32x4::from(0.0) - self.group0() * Simd32x4::from(other.group0()),
-            },
-        }
-    }
-}
-
-impl GeometricAntiProduct<Plane> for Point {
-    type Output = MultiVector;
-
-    fn geometric_anti_product(self, other: Plane) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
-                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, other.group0()[3]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl GeometricAntiProduct<PlaneAtOrigin> for Point {
-    type Output = MultiVector;
-
-    fn geometric_anti_product(self, other: PlaneAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group0(),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl GeometricAntiProduct<Point> for Point {
-    type Output = Translator;
-
-    fn geometric_anti_product(self, other: Point) -> Translator {
-        Translator {
-            groups: TranslatorGroups {
-                g0: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([-other.group0()[3], -other.group0()[3], -other.group0()[3], 0.0])
-                    + Simd32x4::from(self.group0()[3]) * other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            },
-        }
-    }
-}
-
-impl GeometricAntiProduct<PointAtInfinity> for Point {
-    type Output = LineAtInfinity;
-
-    fn geometric_anti_product(self, other: PointAtInfinity) -> LineAtInfinity {
-        LineAtInfinity {
-            groups: LineAtInfinityGroups {
-                g0: Simd32x3::from(self.group0()[3]) * other.group0(),
-            },
-        }
-    }
-}
-
-impl GeometricAntiProduct<Rotor> for Point {
-    type Output = Flector;
-
-    fn geometric_anti_product(self, other: Rotor) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], other.group0()[3], -other.group0()[0], 0.0])
-                    + swizzle!(self.group0(), 2, 2, 2, 3) * swizzle!(other.group0(), 1, 0, 3, 3) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]),
-                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
-                    + swizzle!(self.group0(), 3, 3, 3, 2) * swizzle!(other.group0(), 0, 1, 2, 2) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            },
-        }
-    }
-}
-
-impl GeometricAntiProduct<RoundPoint> for Point {
-    type Output = MultiVector;
-
-    fn geometric_anti_product(self, other: RoundPoint) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0]) - Simd32x3::from(self.group0()[3]) * other.group0(),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0]),
-                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
-                    + Simd32x2::from(self.group0()[3]) * other.group1() * Simd32x2::from([1.0, -1.0]),
-            },
-        }
-    }
-}
-
-impl GeometricAntiProduct<Scalar> for Point {
-    type Output = Circle;
-
-    fn geometric_anti_product(self, other: Scalar) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
-            },
-        }
-    }
-}
-
-impl GeometricAntiProduct<Sphere> for Point {
-    type Output = MultiVector;
-
-    fn geometric_anti_product(self, other: Sphere) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0]),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
-                    + Simd32x2::from(self.group0()[3]) * other.group1() * Simd32x2::from([-1.0, 1.0]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0)
-                    - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0])
-                    - Simd32x3::from(self.group0()[3]) * other.group0(),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl GeometricAntiProduct<Translator> for Point {
-    type Output = Point;
-
-    fn geometric_anti_product(self, other: Translator) -> Point {
-        Point {
-            groups: PointGroups {
-                g0: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], 0.0])
-                    + Simd32x4::from(self.group0()[3]) * other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            },
-        }
-    }
-}
-
 impl GeometricAntiProduct<AntiScalar> for PointAtInfinity {
     type Output = PointAtInfinity;
 
@@ -22897,6 +24190,18 @@ impl GeometricAntiProduct<Dipole> for PointAtInfinity {
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group1()[1], -other.group1()[0], -other.group2()[3]]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<FlatPoint> for PointAtInfinity {
+    type Output = LineAtInfinity;
+
+    fn geometric_anti_product(self, other: FlatPoint) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3]),
             },
         }
     }
@@ -23057,12 +24362,22 @@ impl GeometricAntiProduct<MultiVector> for PointAtInfinity {
 }
 
 impl GeometricAntiProduct<Origin> for PointAtInfinity {
-    type Output = LineAtInfinity;
+    type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: Origin) -> LineAtInfinity {
-        LineAtInfinity {
-            groups: LineAtInfinityGroups {
-                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+    fn geometric_anti_product(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0() * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -23120,13 +24435,13 @@ impl GeometricAntiProduct<PlaneAtOrigin> for PointAtInfinity {
     }
 }
 
-impl GeometricAntiProduct<Point> for PointAtInfinity {
+impl GeometricAntiProduct<PointAtOrigin> for PointAtInfinity {
     type Output = LineAtInfinity;
 
-    fn geometric_anti_product(self, other: Point) -> LineAtInfinity {
+    fn geometric_anti_product(self, other: PointAtOrigin) -> LineAtInfinity {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
-                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3]),
+                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
@@ -23225,6 +24540,368 @@ impl GeometricAntiProduct<Translator> for PointAtInfinity {
     }
 }
 
+impl GeometricAntiProduct<AntiScalar> for PointAtOrigin {
+    type Output = PointAtOrigin;
+
+    fn geometric_anti_product(self, other: AntiScalar) -> PointAtOrigin {
+        PointAtOrigin {
+            groups: PointAtOriginGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Circle> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Circle) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group2()[0], -other.group2()[1], -other.group2()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()) * other.group1(),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Dipole> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Dipole) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group2()[3]]),
+                g1: Simd32x3::from(self.group0()) * other.group1(),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group0()[0], -other.group0()[1], -other.group0()[2], 0.0]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(self.group0()) * Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<FlatPoint> for PointAtOrigin {
+    type Output = Translator;
+
+    fn geometric_anti_product(self, other: FlatPoint) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Flector> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Flector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group1()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g8: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Horizon> for PointAtOrigin {
+    type Output = Infinity;
+
+    fn geometric_anti_product(self, other: Horizon) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Infinity> for PointAtOrigin {
+    type Output = Horizon;
+
+    fn geometric_anti_product(self, other: Infinity) -> Horizon {
+        Horizon {
+            groups: HorizonGroups {
+                g0: 0.0 - self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Line> for PointAtOrigin {
+    type Output = Flector;
+
+    fn geometric_anti_product(self, other: Line) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group1()[0], -other.group1()[1], -other.group1()[2], 0.0]),
+                g1: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<LineAtInfinity> for PointAtOrigin {
+    type Output = PointAtInfinity;
+
+    fn geometric_anti_product(self, other: LineAtInfinity) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<LineAtOrigin> for PointAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn geometric_anti_product(self, other: LineAtOrigin) -> PlaneAtOrigin {
+        PlaneAtOrigin {
+            groups: PlaneAtOriginGroups {
+                g0: Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Magnitude> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Magnitude) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]]),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Motor> for PointAtOrigin {
+    type Output = Flector;
+
+    fn geometric_anti_product(self, other: Motor) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group1()[0], -other.group1()[1], -other.group1()[2], other.group0()[3]]),
+                g1: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<MultiVector> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from(self.group0()) * Simd32x2::from([other.group6()[3], other.group5()[3]]),
+                g1: Simd32x3::from(self.group0()) * other.group4(),
+                g2: Simd32x2::from(self.group0()) * other.group10() * Simd32x2::from([-1.0, 1.0]),
+                g3: Simd32x3::from(self.group0()) * Simd32x3::from([other.group6()[0], other.group6()[1], other.group6()[2]]),
+                g4: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group1(),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group8()[0], -other.group8()[1], -other.group8()[2], other.group0()[1]]),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group3()[0], -other.group3()[1], -other.group3()[2], other.group0()[0]]),
+                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group9(),
+                g8: Simd32x3::from(self.group0()) * Simd32x3::from([other.group5()[0], other.group5()[1], other.group5()[2]]),
+                g9: Simd32x3::from(self.group0()) * other.group7(),
+                g10: Simd32x2::from(self.group0()) * other.group2() * Simd32x2::from([1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Origin> for PointAtOrigin {
+    type Output = Sphere;
+
+    fn geometric_anti_product(self, other: Origin) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0(), 0.0]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Plane> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Plane) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<PlaneAtOrigin> for PointAtOrigin {
+    type Output = LineAtOrigin;
+
+    fn geometric_anti_product(self, other: PlaneAtOrigin) -> LineAtOrigin {
+        LineAtOrigin {
+            groups: LineAtOriginGroups {
+                g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<PointAtInfinity> for PointAtOrigin {
+    type Output = LineAtInfinity;
+
+    fn geometric_anti_product(self, other: PointAtInfinity) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<PointAtOrigin> for PointAtOrigin {
+    type Output = AntiScalar;
+
+    fn geometric_anti_product(self, other: PointAtOrigin) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Rotor> for PointAtOrigin {
+    type Output = Flector;
+
+    fn geometric_anti_product(self, other: Rotor) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+                g1: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<RoundPoint> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: RoundPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group0()) * other.group1() * Simd32x2::from([1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Scalar> for PointAtOrigin {
+    type Output = Circle;
+
+    fn geometric_anti_product(self, other: Scalar) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Sphere> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: Sphere) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()) * other.group1() * Simd32x2::from([-1.0, 1.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<Translator> for PointAtOrigin {
+    type Output = FlatPoint;
+
+    fn geometric_anti_product(self, other: Translator) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: Simd32x4::from(self.group0()) * other.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            },
+        }
+    }
+}
+
 impl GeometricAntiProduct<AntiScalar> for Rotor {
     type Output = Rotor;
 
@@ -23304,6 +24981,24 @@ impl GeometricAntiProduct<Dipole> for Rotor {
                     - Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], other.group2()[0]])
                     - Simd32x2::from(self.group0()[1]) * Simd32x2::from([other.group0()[1], other.group2()[1]])
                     - Simd32x2::from(self.group0()[2]) * Simd32x2::from([other.group0()[2], other.group2()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<FlatPoint> for Rotor {
+    type Output = Flector;
+
+    fn geometric_anti_product(self, other: FlatPoint) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0])
+                    + Simd32x4::from(self.group0()[3]) * other.group0(),
+                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
             },
         }
     }
@@ -23551,13 +25246,22 @@ impl GeometricAntiProduct<MultiVector> for Rotor {
 }
 
 impl GeometricAntiProduct<Origin> for Rotor {
-    type Output = Flector;
+    type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: Origin) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-                g1: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+    fn geometric_anti_product(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0(), 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -23599,24 +25303,6 @@ impl GeometricAntiProduct<PlaneAtOrigin> for Rotor {
     }
 }
 
-impl GeometricAntiProduct<Point> for Rotor {
-    type Output = Flector;
-
-    fn geometric_anti_product(self, other: Point) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0])
-                    + Simd32x4::from(self.group0()[3]) * other.group0(),
-                g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
-            },
-        }
-    }
-}
-
 impl GeometricAntiProduct<PointAtInfinity> for Rotor {
     type Output = Flector;
 
@@ -23630,6 +25316,19 @@ impl GeometricAntiProduct<PointAtInfinity> for Rotor {
                 g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
                     + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
                     + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<PointAtOrigin> for Rotor {
+    type Output = Flector;
+
+    fn geometric_anti_product(self, other: PointAtOrigin) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g1: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
             },
         }
     }
@@ -23835,6 +25534,34 @@ impl GeometricAntiProduct<Dipole> for RoundPoint {
                     + Simd32x2::from(self.group0()[1]) * Simd32x2::from([other.group0()[1], -other.group2()[1]])
                     + Simd32x2::from(self.group0()[2]) * Simd32x2::from([other.group0()[2], -other.group2()[2]])
                     + self.group1() * Simd32x2::from(-other.group2()[3]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<FlatPoint> for RoundPoint {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3])
+                    + Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + self.group1() * Simd32x2::from(-other.group0()[3]),
             },
         }
     }
@@ -24136,17 +25863,19 @@ impl GeometricAntiProduct<Origin> for RoundPoint {
     fn geometric_anti_product(self, other: Origin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
+                g0: Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, other.group0()]),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
                 g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+                g4: Simd32x3::from(0.0),
                 g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
+                g6: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
+                    * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0])
+                    + Simd32x4::from(self.group1()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
-                g10: self.group1() * Simd32x2::from(-other.group0()),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -24207,34 +25936,6 @@ impl GeometricAntiProduct<PlaneAtOrigin> for RoundPoint {
     }
 }
 
-impl GeometricAntiProduct<Point> for RoundPoint {
-    type Output = MultiVector;
-
-    fn geometric_anti_product(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3])
-                    + Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + self.group1() * Simd32x2::from(-other.group0()[3]),
-            },
-        }
-    }
-}
-
 impl GeometricAntiProduct<PointAtInfinity> for RoundPoint {
     type Output = MultiVector;
 
@@ -24256,6 +25957,28 @@ impl GeometricAntiProduct<PointAtInfinity> for RoundPoint {
                 g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
                     + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
                     + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<PointAtOrigin> for RoundPoint {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group1() * Simd32x2::from(-other.group0()),
             },
         }
     }
@@ -24431,6 +26154,20 @@ impl GeometricAntiProduct<Dipole> for Scalar {
     }
 }
 
+impl GeometricAntiProduct<FlatPoint> for Scalar {
+    type Output = Circle;
+
+    fn geometric_anti_product(self, other: FlatPoint) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+            },
+        }
+    }
+}
+
 impl GeometricAntiProduct<Flector> for Scalar {
     type Output = MultiVector;
 
@@ -24574,14 +26311,13 @@ impl GeometricAntiProduct<MultiVector> for Scalar {
 }
 
 impl GeometricAntiProduct<Origin> for Scalar {
-    type Output = Circle;
+    type Output = Sphere;
 
-    fn geometric_anti_product(self, other: Origin) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from(0.0),
+    fn geometric_anti_product(self, other: Origin) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0(), 0.0]),
             },
         }
     }
@@ -24613,20 +26349,6 @@ impl GeometricAntiProduct<PlaneAtOrigin> for Scalar {
     }
 }
 
-impl GeometricAntiProduct<Point> for Scalar {
-    type Output = Circle;
-
-    fn geometric_anti_product(self, other: Point) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-            },
-        }
-    }
-}
-
 impl GeometricAntiProduct<PointAtInfinity> for Scalar {
     type Output = LineAtInfinity;
 
@@ -24634,6 +26356,20 @@ impl GeometricAntiProduct<PointAtInfinity> for Scalar {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<PointAtOrigin> for Scalar {
+    type Output = Circle;
+
+    fn geometric_anti_product(self, other: PointAtOrigin) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
             },
         }
     }
@@ -24802,6 +26538,35 @@ impl GeometricAntiProduct<Dipole> for Sphere {
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group2()[2], 0.0, -other.group2()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group2()[1], other.group2()[0], 0.0])
                     - Simd32x3::from(self.group1()[1]) * other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<FlatPoint> for Sphere {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + self.group1() * Simd32x2::from(other.group0()[3]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0)
+                    - self.group0() * Simd32x3::from(other.group0()[3])
+                    - Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -25099,14 +26864,14 @@ impl GeometricAntiProduct<Origin> for Sphere {
     fn geometric_anti_product(self, other: Origin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
+                g0: Simd32x2::from(self.group1()[1]) * Simd32x2::from([other.group0(), 0.0]),
                 g1: Simd32x3::from(0.0),
-                g2: self.group1() * Simd32x2::from(other.group0()),
-                g3: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: self.group0() * Simd32x3::from(other.group0()),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
+                g5: Simd32x4::from(self.group1()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
                 g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+                g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
@@ -25169,35 +26934,6 @@ impl GeometricAntiProduct<PlaneAtOrigin> for Sphere {
     }
 }
 
-impl GeometricAntiProduct<Point> for Sphere {
-    type Output = MultiVector;
-
-    fn geometric_anti_product(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + self.group1() * Simd32x2::from(other.group0()[3]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0)
-                    - self.group0() * Simd32x3::from(other.group0()[3])
-                    - Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl GeometricAntiProduct<PointAtInfinity> for Sphere {
     type Output = MultiVector;
 
@@ -25217,6 +26953,28 @@ impl GeometricAntiProduct<PointAtInfinity> for Sphere {
                 g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<PointAtOrigin> for Sphere {
+    type Output = MultiVector;
+
+    fn geometric_anti_product(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: self.group1() * Simd32x2::from(other.group0()),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+                g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -25432,6 +27190,19 @@ impl GeometricAntiProduct<Dipole> for Translator {
                 g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
                     + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
                     + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group1()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<FlatPoint> for Translator {
+    type Output = FlatPoint;
+
+    fn geometric_anti_product(self, other: FlatPoint) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], 0.0])
+                    + Simd32x4::from(self.group0()[3]) * other.group0(),
             },
         }
     }
@@ -25660,12 +27431,22 @@ impl GeometricAntiProduct<MultiVector> for Translator {
 }
 
 impl GeometricAntiProduct<Origin> for Translator {
-    type Output = Point;
+    type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: Origin) -> Point {
-        Point {
-            groups: PointGroups {
-                g0: self.group0() * Simd32x4::from(other.group0()),
+    fn geometric_anti_product(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0(), 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -25706,19 +27487,6 @@ impl GeometricAntiProduct<PlaneAtOrigin> for Translator {
     }
 }
 
-impl GeometricAntiProduct<Point> for Translator {
-    type Output = Point;
-
-    fn geometric_anti_product(self, other: Point) -> Point {
-        Point {
-            groups: PointGroups {
-                g0: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([other.group0()[3], other.group0()[3], other.group0()[3], 0.0])
-                    + Simd32x4::from(self.group0()[3]) * other.group0(),
-            },
-        }
-    }
-}
-
 impl GeometricAntiProduct<PointAtInfinity> for Translator {
     type Output = PointAtInfinity;
 
@@ -25726,6 +27494,18 @@ impl GeometricAntiProduct<PointAtInfinity> for Translator {
         PointAtInfinity {
             groups: PointAtInfinityGroups {
                 g0: Simd32x3::from(self.group0()[3]) * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricAntiProduct<PointAtOrigin> for Translator {
+    type Output = FlatPoint;
+
+    fn geometric_anti_product(self, other: PointAtOrigin) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: self.group0() * Simd32x4::from(other.group0()),
             },
         }
     }
@@ -25887,6 +27667,20 @@ impl GeometricProduct<Dipole> for AntiScalar {
     }
 }
 
+impl GeometricProduct<FlatPoint> for AntiScalar {
+    type Output = Circle;
+
+    fn geometric_product(self, other: FlatPoint) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+            },
+        }
+    }
+}
+
 impl GeometricProduct<Flector> for AntiScalar {
     type Output = MultiVector;
 
@@ -26030,14 +27824,13 @@ impl GeometricProduct<MultiVector> for AntiScalar {
 }
 
 impl GeometricProduct<Origin> for AntiScalar {
-    type Output = Circle;
+    type Output = Sphere;
 
-    fn geometric_product(self, other: Origin) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from(0.0),
+    fn geometric_product(self, other: Origin) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group0(), 0.0]),
             },
         }
     }
@@ -26069,20 +27862,6 @@ impl GeometricProduct<PlaneAtOrigin> for AntiScalar {
     }
 }
 
-impl GeometricProduct<Point> for AntiScalar {
-    type Output = Circle;
-
-    fn geometric_product(self, other: Point) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-            },
-        }
-    }
-}
-
 impl GeometricProduct<PointAtInfinity> for AntiScalar {
     type Output = LineAtInfinity;
 
@@ -26090,6 +27869,20 @@ impl GeometricProduct<PointAtInfinity> for AntiScalar {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<PointAtOrigin> for AntiScalar {
+    type Output = Circle;
+
+    fn geometric_product(self, other: PointAtOrigin) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
             },
         }
     }
@@ -26323,6 +28116,44 @@ impl GeometricProduct<Dipole> for Circle {
                     + Simd32x3::from(self.group2()[0]) * Simd32x3::from([-other.group2()[3], other.group1()[2], -other.group1()[1]])
                     + Simd32x3::from(self.group2()[1]) * Simd32x3::from([-other.group1()[2], -other.group2()[3], other.group1()[0]])
                     + Simd32x3::from(self.group2()[2]) * Simd32x3::from([other.group1()[1], -other.group1()[0], -other.group2()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<FlatPoint> for Circle {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
+                g1: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    - self.group1() * Simd32x3::from(other.group0()[3]),
+                g2: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
+                g7: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
+                g8: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
+                    + Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group1()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group1()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    - self.group2() * Simd32x3::from(other.group0()[3]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -26772,17 +28603,17 @@ impl GeometricProduct<Origin> for Circle {
     fn geometric_product(self, other: Origin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()]),
-                g1: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
+                g3: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
+                g4: Simd32x3::from(0.0) - self.group2() * Simd32x3::from(other.group0()),
                 g5: Simd32x4::from(0.0),
-                g6: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0) - self.group2() * Simd32x3::from(other.group0()),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - self.group2() * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(self.group0()[3]) * Simd32x2::from([-other.group0(), 0.0]),
             },
         }
     }
@@ -26862,44 +28693,6 @@ impl GeometricProduct<PlaneAtOrigin> for Circle {
     }
 }
 
-impl GeometricProduct<Point> for Circle {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
-                g1: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    - self.group1() * Simd32x3::from(other.group0()[3]),
-                g2: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
-                g7: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
-                g8: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    + Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group1()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group1()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    - self.group2() * Simd32x3::from(other.group0()[3]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl GeometricProduct<PointAtInfinity> for Circle {
     type Output = MultiVector;
 
@@ -26928,6 +28721,28 @@ impl GeometricProduct<PointAtInfinity> for Circle {
                     + Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group1()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group1()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<PointAtOrigin> for Circle {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()]),
+                g1: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - self.group2() * Simd32x3::from(other.group0()),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -27256,6 +29071,45 @@ impl GeometricProduct<Dipole> for Dipole {
                     + Simd32x2::from(self.group2()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
                     + Simd32x2::from(self.group2()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
                     + Simd32x2::from(self.group2()[2]) * Simd32x2::from([0.0, -other.group1()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<FlatPoint> for Dipole {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([-other.group0()[1], 0.0])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([-other.group0()[2], 0.0])
+                    + Simd32x2::from(self.group2()[3]) * Simd32x2::from([other.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: self.group0() * Simd32x3::from(other.group0()[3]),
+                g4: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[2]])
+                    + Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group1()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0])
+                    + swizzle!(self.group2(), 0, 1, 2, 0) * Simd32x4::from([-other.group0()[3], -other.group0()[3], -other.group0()[3], 0.0])
+                    + Simd32x4::from(self.group2()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
+                    + self.group1() * Simd32x3::from(other.group0()[3]),
+                g10: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
             },
         }
     }
@@ -27702,16 +29556,17 @@ impl GeometricProduct<Origin> for Dipole {
     fn geometric_product(self, other: Origin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group2()[3]) * Simd32x2::from([other.group0(), 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: self.group0() * Simd32x3::from(other.group0()),
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]) * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(self.group2()[3]) * Simd32x2::from([-other.group0(), 0.0]),
+                g3: Simd32x3::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: swizzle!(self.group2(), 0, 1, 2, 0) * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]])
+                    * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g7: Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]) * Simd32x3::from(other.group0()),
                 g8: Simd32x3::from(0.0),
-                g9: self.group1() * Simd32x3::from(other.group0()),
+                g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
         }
@@ -27793,45 +29648,6 @@ impl GeometricProduct<PlaneAtOrigin> for Dipole {
     }
 }
 
-impl GeometricProduct<Point> for Dipole {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([-other.group0()[1], 0.0])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([-other.group0()[2], 0.0])
-                    + Simd32x2::from(self.group2()[3]) * Simd32x2::from([other.group0()[3], 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: self.group0() * Simd32x3::from(other.group0()[3]),
-                g4: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[2]])
-                    + Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group1()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0])
-                    + swizzle!(self.group2(), 0, 1, 2, 0) * Simd32x4::from([-other.group0()[3], -other.group0()[3], -other.group0()[3], 0.0])
-                    + Simd32x4::from(self.group2()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
-                    + self.group1() * Simd32x3::from(other.group0()[3]),
-                g10: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-            },
-        }
-    }
-}
-
 impl GeometricProduct<PointAtInfinity> for Dipole {
     type Output = MultiVector;
 
@@ -27863,6 +29679,28 @@ impl GeometricProduct<PointAtInfinity> for Dipole {
                 g10: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
                     + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
                     + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<PointAtOrigin> for Dipole {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group2()[3]) * Simd32x2::from([other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: self.group0() * Simd32x3::from(other.group0()),
+                g4: Simd32x3::from(0.0),
+                g5: swizzle!(self.group2(), 0, 1, 2, 0) * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: self.group1() * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -28039,6 +29877,562 @@ impl GeometricProduct<Translator> for Dipole {
     }
 }
 
+impl GeometricProduct<AntiScalar> for FlatPoint {
+    type Output = Circle;
+
+    fn geometric_product(self, other: AntiScalar) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Circle> for FlatPoint {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Circle) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
+                g1: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
+                    - Simd32x3::from(self.group0()[3]) * other.group1(),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group1()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]])
+                    + swizzle!(self.group0(), 3, 3, 3, 2) * swizzle!(other.group0(), 0, 1, 2, 2) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+                g7: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[3], other.group1()[2], -other.group1()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group1()[2], other.group0()[3], other.group1()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group1()[1], -other.group1()[0], other.group0()[3]])
+                    + Simd32x3::from(self.group0()[3]) * other.group2(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Dipole> for FlatPoint {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Dipole) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([-other.group0()[1], 0.0])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([-other.group0()[2], 0.0])
+                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group2()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group0(),
+                g4: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([-other.group2()[3], other.group1()[2], -other.group1()[1], -other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group1()[2], -other.group2()[3], other.group1()[0], -other.group0()[1]])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[1], -other.group1()[0], -other.group2()[3], -other.group0()[2]])
+                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    + Simd32x3::from(self.group0()[3]) * other.group1(),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group1()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<FlatPoint> for FlatPoint {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([-other.group0()[3], -other.group0()[3], -other.group0()[3], 0.0])
+                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Flector> for FlatPoint {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Flector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([-other.group0()[3], -other.group1()[2], other.group1()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[2], -other.group0()[3], -other.group1()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group1()[1], other.group1()[0], -other.group0()[3], 0.0])
+                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group1()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group1()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group1()[2]])
+                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, other.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Horizon> for FlatPoint {
+    type Output = Horizon;
+
+    fn geometric_product(self, other: Horizon) -> Horizon {
+        Horizon {
+            groups: HorizonGroups {
+                g0: self.group0()[3] * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Infinity> for FlatPoint {
+    type Output = Infinity;
+
+    fn geometric_product(self, other: Infinity) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: self.group0()[3] * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Line> for FlatPoint {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Line) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group0(),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    + Simd32x3::from(self.group0()[3]) * other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<LineAtInfinity> for FlatPoint {
+    type Output = LineAtInfinity;
+
+    fn geometric_product(self, other: LineAtInfinity) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: Simd32x3::from(self.group0()[3]) * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<LineAtOrigin> for FlatPoint {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: LineAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group0(),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Magnitude> for FlatPoint {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Magnitude) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: self.group0() * Simd32x4::from(other.group0()[0]),
+                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[1]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Motor> for FlatPoint {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Motor) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[3], other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], other.group0()[3], other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], other.group0()[3]])
+                    + Simd32x3::from(self.group0()[3]) * other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<MultiVector> for FlatPoint {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0)
+                    - Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group3()[0], other.group6()[0]])
+                    - Simd32x2::from(self.group0()[1]) * Simd32x2::from([other.group3()[1], other.group6()[1]])
+                    - Simd32x2::from(self.group0()[2]) * Simd32x2::from([other.group3()[2], other.group6()[2]])
+                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group5()[3], -other.group6()[3]]),
+                g1: Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group2()[0], -other.group6()[2], other.group6()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group6()[2], -other.group2()[0], -other.group6()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group6()[1], other.group6()[0], -other.group2()[0]])
+                    - Simd32x3::from(self.group0()[3]) * other.group7(),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group7()[0]])
+                    + Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group7()[1]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group7()[2]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group1()[2]])
+                    + Simd32x2::from(self.group0()[3]) * other.group2() * Simd32x2::from([-1.0, 1.0]),
+                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group3(),
+                g4: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group10()[0], other.group3()[2], -other.group3()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group3()[2], other.group10()[0], other.group3()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group3()[1], -other.group3()[0], other.group10()[0]])
+                    + Simd32x3::from(self.group0()[3]) * other.group9(),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([-other.group5()[3], -other.group9()[2], other.group9()[1], -other.group3()[0]])
+                    + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group4()[2], -other.group4()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group9()[2], -other.group5()[3], -other.group9()[0], -other.group3()[1]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group4()[2], other.group0()[0], other.group4()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group9()[1], other.group9()[0], -other.group5()[3], -other.group3()[2]])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group4()[1], -other.group4()[0], other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group5()[0], other.group5()[1], other.group5()[2], other.group0()[0]]),
+                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group6()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group6()[1]])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, 0.0, other.group6()[2]])
+                    - Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group6()[0], other.group6()[1], other.group6()[2], other.group0()[1]]),
+                g7: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group2()[0], other.group6()[2], -other.group6()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group6()[2], other.group2()[0], other.group6()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group6()[1], -other.group6()[0], other.group2()[0]])
+                    - Simd32x3::from(self.group0()[3]) * other.group1(),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group6()[3], other.group7()[2], -other.group7()[1]])
+                    + Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[1], other.group1()[2], -other.group1()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group7()[2], other.group6()[3], other.group7()[0]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group1()[2], other.group0()[1], other.group1()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group7()[1], -other.group7()[0], other.group6()[3]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group1()[1], -other.group1()[0], other.group0()[1]])
+                    + Simd32x3::from(self.group0()[3]) * other.group8(),
+                g9: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group10()[0], other.group3()[2], -other.group3()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group3()[2], other.group10()[0], other.group3()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group3()[1], -other.group3()[0], other.group10()[0]])
+                    + Simd32x3::from(self.group0()[3]) * other.group4(),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group9()[0]])
+                    + Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group4()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group9()[1]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group4()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group9()[2]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group4()[2]])
+                    + Simd32x2::from(self.group0()[3]) * other.group10() * Simd32x2::from([-1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Origin> for FlatPoint {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(self.group0()[3]) * Simd32x2::from([-other.group0(), 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Plane> for FlatPoint {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Plane) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
+                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<PlaneAtOrigin> for FlatPoint {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: PlaneAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(self.group0()[3]) * other.group0(),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<PointAtInfinity> for FlatPoint {
+    type Output = PointAtInfinity;
+
+    fn geometric_product(self, other: PointAtInfinity) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from(self.group0()[3]) * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<PointAtOrigin> for FlatPoint {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Rotor> for FlatPoint {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Rotor) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[3], other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], other.group0()[3], other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<RoundPoint> for FlatPoint {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: RoundPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0]),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + Simd32x2::from(self.group0()[3]) * other.group1() * Simd32x2::from([-1.0, 1.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0]) - Simd32x3::from(self.group0()[3]) * other.group0(),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Scalar> for FlatPoint {
+    type Output = FlatPoint;
+
+    fn geometric_product(self, other: Scalar) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: self.group0() * Simd32x4::from(other.group0()),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Sphere> for FlatPoint {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Sphere) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0]) + Simd32x3::from(self.group0()[3]) * other.group0(),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0]),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
+                    + Simd32x2::from(self.group0()[3]) * other.group1() * Simd32x2::from([-1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Translator> for FlatPoint {
+    type Output = Circle;
+
+    fn geometric_product(self, other: Translator) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3])
+                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+            },
+        }
+    }
+}
+
 impl GeometricProduct<AntiScalar> for Flector {
     type Output = MultiVector;
 
@@ -28162,6 +30556,35 @@ impl GeometricProduct<Dipole> for Flector {
                     + Simd32x2::from(self.group1()[1]) * Simd32x2::from([other.group0()[1], -other.group2()[1]])
                     + Simd32x2::from(self.group1()[2]) * Simd32x2::from([other.group0()[2], -other.group2()[2]])
                     + Simd32x2::from(self.group1()[3]) * Simd32x2::from([0.0, -other.group2()[3]]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<FlatPoint> for Flector {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()[3]),
+                g5: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([-other.group0()[3], -other.group0()[3], -other.group0()[3], 0.0])
+                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0])
+                    + Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group1()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + Simd32x2::from(self.group1()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
             },
         }
     }
@@ -28523,17 +30946,17 @@ impl GeometricProduct<Origin> for Flector {
     fn geometric_product(self, other: Origin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0(), 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
+                g0: Simd32x2::from(self.group1()[3]) * Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(self.group0()[3]) * Simd32x2::from([-other.group0(), 0.0]),
                 g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()),
-                g5: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - self.group1() * Simd32x4::from(other.group0()),
+                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(self.group1()[3]) * Simd32x2::from([0.0, -other.group0()]),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -28605,35 +31028,6 @@ impl GeometricProduct<PlaneAtOrigin> for Flector {
     }
 }
 
-impl GeometricProduct<Point> for Flector {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0()[3], 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()[3]),
-                g5: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([-other.group0()[3], -other.group0()[3], -other.group0()[3], 0.0])
-                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0])
-                    + Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group1()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + Simd32x2::from(self.group1()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
-            },
-        }
-    }
-}
-
 impl GeometricProduct<PointAtInfinity> for Flector {
     type Output = Flector;
 
@@ -28647,6 +31041,28 @@ impl GeometricProduct<PointAtInfinity> for Flector {
                 g1: Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
                     + Simd32x4::from(self.group1()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
                     + Simd32x4::from(self.group1()[2]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<PointAtOrigin> for Flector {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()),
+                g5: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group1()[3]) * Simd32x2::from([0.0, -other.group0()]),
             },
         }
     }
@@ -28855,6 +31271,18 @@ impl GeometricProduct<Dipole> for Horizon {
     }
 }
 
+impl GeometricProduct<FlatPoint> for Horizon {
+    type Output = Horizon;
+
+    fn geometric_product(self, other: FlatPoint) -> Horizon {
+        Horizon {
+            groups: HorizonGroups {
+                g0: 0.0 - self.group0() * other.group0()[3],
+            },
+        }
+    }
+}
+
 impl GeometricProduct<Flector> for Horizon {
     type Output = Flector;
 
@@ -28960,12 +31388,22 @@ impl GeometricProduct<MultiVector> for Horizon {
 }
 
 impl GeometricProduct<Origin> for Horizon {
-    type Output = Horizon;
+    type Output = MultiVector;
 
-    fn geometric_product(self, other: Origin) -> Horizon {
-        Horizon {
-            groups: HorizonGroups {
-                g0: 0.0 - self.group0() * other.group0(),
+    fn geometric_product(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -28995,13 +31433,13 @@ impl GeometricProduct<PlaneAtOrigin> for Horizon {
     }
 }
 
-impl GeometricProduct<Point> for Horizon {
+impl GeometricProduct<PointAtOrigin> for Horizon {
     type Output = Horizon;
 
-    fn geometric_product(self, other: Point) -> Horizon {
+    fn geometric_product(self, other: PointAtOrigin) -> Horizon {
         Horizon {
             groups: HorizonGroups {
-                g0: 0.0 - self.group0() * other.group0()[3],
+                g0: 0.0 - self.group0() * other.group0(),
             },
         }
     }
@@ -29153,6 +31591,18 @@ impl GeometricProduct<Dipole> for Infinity {
     }
 }
 
+impl GeometricProduct<FlatPoint> for Infinity {
+    type Output = Infinity;
+
+    fn geometric_product(self, other: FlatPoint) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: 0.0 - self.group0() * other.group0()[3],
+            },
+        }
+    }
+}
+
 impl GeometricProduct<Flector> for Infinity {
     type Output = MultiVector;
 
@@ -29258,12 +31708,22 @@ impl GeometricProduct<MultiVector> for Infinity {
 }
 
 impl GeometricProduct<Origin> for Infinity {
-    type Output = Infinity;
+    type Output = MultiVector;
 
-    fn geometric_product(self, other: Origin) -> Infinity {
-        Infinity {
-            groups: InfinityGroups {
-                g0: 0.0 - self.group0() * other.group0(),
+    fn geometric_product(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -29293,13 +31753,13 @@ impl GeometricProduct<PlaneAtOrigin> for Infinity {
     }
 }
 
-impl GeometricProduct<Point> for Infinity {
+impl GeometricProduct<PointAtOrigin> for Infinity {
     type Output = Infinity;
 
-    fn geometric_product(self, other: Point) -> Infinity {
+    fn geometric_product(self, other: PointAtOrigin) -> Infinity {
         Infinity {
             groups: InfinityGroups {
-                g0: 0.0 - self.group0() * other.group0()[3],
+                g0: 0.0 - self.group0() * other.group0(),
             },
         }
     }
@@ -29492,6 +31952,33 @@ impl GeometricProduct<Dipole> for Line {
                     + Simd32x3::from(self.group1()[0]) * Simd32x3::from([-other.group2()[3], other.group1()[2], -other.group1()[1]])
                     + Simd32x3::from(self.group1()[1]) * Simd32x3::from([-other.group1()[2], -other.group2()[3], other.group1()[0]])
                     + Simd32x3::from(self.group1()[2]) * Simd32x3::from([other.group1()[1], -other.group1()[0], -other.group2()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<FlatPoint> for Line {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3]),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    - self.group1() * Simd32x3::from(other.group0()[3]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -29795,15 +32282,15 @@ impl GeometricProduct<Origin> for Line {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+                g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
+                g3: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+                g4: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
                 g5: Simd32x4::from(0.0),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
-                g9: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
                 g10: Simd32x2::from(0.0),
             },
         }
@@ -29871,33 +32358,6 @@ impl GeometricProduct<PlaneAtOrigin> for Line {
     }
 }
 
-impl GeometricProduct<Point> for Line {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3]),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    - self.group1() * Simd32x3::from(other.group0()[3]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl GeometricProduct<PointAtInfinity> for Line {
     type Output = MultiVector;
 
@@ -29917,6 +32377,28 @@ impl GeometricProduct<PointAtInfinity> for Line {
                 g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<PointAtOrigin> for Line {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -30137,6 +32619,18 @@ impl GeometricProduct<Dipole> for LineAtInfinity {
     }
 }
 
+impl GeometricProduct<FlatPoint> for LineAtInfinity {
+    type Output = LineAtInfinity;
+
+    fn geometric_product(self, other: FlatPoint) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3]),
+            },
+        }
+    }
+}
+
 impl GeometricProduct<Flector> for LineAtInfinity {
     type Output = MultiVector;
 
@@ -30292,12 +32786,22 @@ impl GeometricProduct<MultiVector> for LineAtInfinity {
 }
 
 impl GeometricProduct<Origin> for LineAtInfinity {
-    type Output = LineAtInfinity;
+    type Output = MultiVector;
 
-    fn geometric_product(self, other: Origin) -> LineAtInfinity {
-        LineAtInfinity {
-            groups: LineAtInfinityGroups {
-                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+    fn geometric_product(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -30355,13 +32859,13 @@ impl GeometricProduct<PlaneAtOrigin> for LineAtInfinity {
     }
 }
 
-impl GeometricProduct<Point> for LineAtInfinity {
+impl GeometricProduct<PointAtOrigin> for LineAtInfinity {
     type Output = LineAtInfinity;
 
-    fn geometric_product(self, other: Point) -> LineAtInfinity {
+    fn geometric_product(self, other: PointAtOrigin) -> LineAtInfinity {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
-                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3]),
+                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
@@ -30532,6 +33036,32 @@ impl GeometricProduct<Dipole> for LineAtOrigin {
                 g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group2()[2], -other.group2()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group2()[2], 0.0, other.group2()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group2()[1], -other.group2()[0], 0.0]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<FlatPoint> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3]),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -30764,13 +33294,14 @@ impl GeometricProduct<MultiVector> for LineAtOrigin {
 }
 
 impl GeometricProduct<Origin> for LineAtOrigin {
-    type Output = RoundPoint;
+    type Output = Dipole;
 
-    fn geometric_product(self, other: Origin) -> RoundPoint {
-        RoundPoint {
-            groups: RoundPointGroups {
+    fn geometric_product(self, other: Origin) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
                 g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
-                g1: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x4::from(0.0),
             },
         }
     }
@@ -30828,32 +33359,6 @@ impl GeometricProduct<PlaneAtOrigin> for LineAtOrigin {
     }
 }
 
-impl GeometricProduct<Point> for LineAtOrigin {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3]),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl GeometricProduct<PointAtInfinity> for LineAtOrigin {
     type Output = MultiVector;
 
@@ -30875,6 +33380,19 @@ impl GeometricProduct<PointAtInfinity> for LineAtOrigin {
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<PointAtOrigin> for LineAtOrigin {
+    type Output = RoundPoint;
+
+    fn geometric_product(self, other: PointAtOrigin) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+                g1: Simd32x2::from(0.0),
             },
         }
     }
@@ -31045,6 +33563,28 @@ impl GeometricProduct<Dipole> for Magnitude {
                 g6: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], -other.group2()[3]]),
                 g7: Simd32x3::from(self.group0()[1]) * other.group1(),
                 g8: Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<FlatPoint> for Magnitude {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(self.group0()[0]) * other.group0(),
+                g6: Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -31252,15 +33792,15 @@ impl GeometricProduct<Origin> for Magnitude {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0(), 0.0]),
                 g3: Simd32x3::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-                g6: Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g10: Simd32x2::from(self.group0()[1]) * Simd32x2::from([-other.group0(), 0.0]),
             },
         }
     }
@@ -31310,28 +33850,6 @@ impl GeometricProduct<PlaneAtOrigin> for Magnitude {
     }
 }
 
-impl GeometricProduct<Point> for Magnitude {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(self.group0()[0]) * other.group0(),
-                g6: Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl GeometricProduct<PointAtInfinity> for Magnitude {
     type Output = MultiVector;
 
@@ -31347,6 +33865,28 @@ impl GeometricProduct<PointAtInfinity> for Magnitude {
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(self.group0()[1]) * other.group0(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<PointAtOrigin> for Magnitude {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g6: Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -31574,6 +34114,34 @@ impl GeometricProduct<Dipole> for Motor {
                     + Simd32x3::from(self.group1()[0]) * Simd32x3::from([-other.group2()[3], other.group1()[2], -other.group1()[1]])
                     + Simd32x3::from(self.group1()[1]) * Simd32x3::from([-other.group1()[2], -other.group2()[3], other.group1()[0]])
                     + Simd32x3::from(self.group1()[2]) * Simd32x3::from([other.group1()[1], -other.group1()[0], -other.group2()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<FlatPoint> for Motor {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3]),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
+                    - self.group1() * Simd32x3::from(other.group0()[3]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -31910,16 +34478,16 @@ impl GeometricProduct<Origin> for Motor {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
+                g3: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g4: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
                 g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(self.group0()[3]) * Simd32x2::from([-other.group0(), 0.0]),
             },
         }
     }
@@ -31989,34 +34557,6 @@ impl GeometricProduct<PlaneAtOrigin> for Motor {
     }
 }
 
-impl GeometricProduct<Point> for Motor {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3]),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    - self.group1() * Simd32x3::from(other.group0()[3]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl GeometricProduct<PointAtInfinity> for Motor {
     type Output = MultiVector;
 
@@ -32037,6 +34577,28 @@ impl GeometricProduct<PointAtInfinity> for Motor {
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
                     + Simd32x3::from(self.group0()[3]) * other.group0(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<PointAtOrigin> for Motor {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -32531,6 +35093,85 @@ impl GeometricProduct<Dipole> for MultiVector {
                     + Simd32x2::from(self.group9()[1]) * Simd32x2::from([other.group0()[1], -other.group2()[1]])
                     + Simd32x2::from(self.group9()[2]) * Simd32x2::from([other.group0()[2], -other.group2()[2]])
                     + self.group10() * Simd32x2::from(other.group2()[3]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<FlatPoint> for MultiVector {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group3()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
+                    + Simd32x2::from(self.group3()[1]) * Simd32x2::from([-other.group0()[1], 0.0])
+                    + Simd32x2::from(self.group3()[2]) * Simd32x2::from([-other.group0()[2], 0.0])
+                    + Simd32x2::from(self.group5()[3]) * Simd32x2::from([other.group0()[3], 0.0])
+                    + Simd32x2::from(self.group6()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group6()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group6()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + Simd32x2::from(self.group6()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
+                g1: Simd32x3::from(self.group2()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
+                    + Simd32x3::from(self.group6()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group6()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group6()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    - self.group7() * Simd32x3::from(other.group0()[3]),
+                g2: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, other.group0()[0]])
+                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, other.group0()[1]])
+                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, other.group0()[2]])
+                    + self.group2() * Simd32x2::from(other.group0()[3])
+                    + Simd32x2::from(self.group7()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group7()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group7()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+                g3: self.group3() * Simd32x3::from(other.group0()[3]),
+                g4: Simd32x3::from(self.group3()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group3()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group3()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    + self.group9() * Simd32x3::from(other.group0()[3])
+                    + Simd32x3::from(self.group10()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g5: Simd32x4::from(self.group0()[0]) * other.group0()
+                    + Simd32x4::from(self.group3()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
+                    + Simd32x4::from(self.group3()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]])
+                    + Simd32x4::from(self.group3()[2]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[2]])
+                    + Simd32x4::from(self.group4()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group4()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group4()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0])
+                    + swizzle!(self.group5(), 0, 1, 2, 0) * Simd32x4::from([-other.group0()[3], -other.group0()[3], -other.group0()[3], 0.0])
+                    + Simd32x4::from(self.group5()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0])
+                    + Simd32x4::from(self.group9()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group9()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group9()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0]),
+                g6: Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]])
+                    + Simd32x4::from(self.group6()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
+                    + Simd32x4::from(self.group6()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
+                    + Simd32x4::from(self.group6()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
+                g7: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()[3])
+                    + Simd32x3::from(self.group2()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
+                    + Simd32x3::from(self.group6()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group6()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group6()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
+                g8: Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
+                    + Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group1()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group1()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
+                    - Simd32x3::from(self.group6()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
+                    + Simd32x3::from(self.group7()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group7()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group7()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    - self.group8() * Simd32x3::from(other.group0()[3]),
+                g9: Simd32x3::from(self.group3()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group3()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group3()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
+                    + self.group4() * Simd32x3::from(other.group0()[3])
+                    - Simd32x3::from(self.group10()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g10: Simd32x2::from(self.group4()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group4()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group4()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + Simd32x2::from(self.group9()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group9()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group9()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + self.group10() * Simd32x2::from(other.group0()[3]),
             },
         }
     }
@@ -33520,19 +36161,21 @@ impl GeometricProduct<Origin> for MultiVector {
     fn geometric_product(self, other: Origin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group5()[3]) * Simd32x2::from([other.group0(), 0.0]) + Simd32x2::from(self.group6()[3]) * Simd32x2::from([0.0, -other.group0()]),
-                g1: Simd32x3::from(0.0) - self.group7() * Simd32x3::from(other.group0()),
-                g2: self.group2() * Simd32x2::from(other.group0()),
-                g3: self.group3() * Simd32x3::from(other.group0()),
-                g4: self.group9() * Simd32x3::from(other.group0()),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()])
-                    + swizzle!(self.group5(), 0, 1, 2, 0) * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0]),
-                g6: Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()])
-                    + swizzle!(self.group6(), 0, 1, 2, 0) * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
-                g7: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
-                g8: Simd32x3::from(0.0) - self.group8() * Simd32x3::from(other.group0()),
-                g9: self.group4() * Simd32x3::from(other.group0()),
-                g10: self.group10() * Simd32x2::from(other.group0()),
+                g0: Simd32x2::from(self.group2()[1]) * Simd32x2::from([-other.group0(), 0.0]) + Simd32x2::from(self.group10()[1]) * Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group5()[0], self.group5()[1], self.group5()[2]]) * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0(), 0.0]) + Simd32x2::from(self.group5()[3]) * Simd32x2::from([-other.group0(), 0.0]),
+                g3: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()) - self.group7() * Simd32x3::from(other.group0()),
+                g4: Simd32x3::from(0.0) - self.group8() * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from(self.group2()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g6: Simd32x4::from([self.group4()[0], self.group4()[1], self.group4()[2], self.group4()[0]])
+                    * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0])
+                    + Simd32x4::from([self.group9()[0], self.group9()[1], self.group9()[2], self.group9()[0]])
+                        * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0])
+                    + Simd32x4::from(self.group10()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g7: Simd32x3::from([self.group5()[0], self.group5()[1], self.group5()[2]]) * Simd32x3::from(other.group0()),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - self.group8() * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(self.group0()[1]) * Simd32x2::from([-other.group0(), 0.0]) + Simd32x2::from(self.group6()[3]) * Simd32x2::from([-other.group0(), 0.0]),
             },
         }
     }
@@ -33686,85 +36329,6 @@ impl GeometricProduct<PlaneAtOrigin> for MultiVector {
     }
 }
 
-impl GeometricProduct<Point> for MultiVector {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group3()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
-                    + Simd32x2::from(self.group3()[1]) * Simd32x2::from([-other.group0()[1], 0.0])
-                    + Simd32x2::from(self.group3()[2]) * Simd32x2::from([-other.group0()[2], 0.0])
-                    + Simd32x2::from(self.group5()[3]) * Simd32x2::from([other.group0()[3], 0.0])
-                    + Simd32x2::from(self.group6()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group6()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group6()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + Simd32x2::from(self.group6()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
-                g1: Simd32x3::from(self.group2()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    + Simd32x3::from(self.group6()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group6()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group6()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    - self.group7() * Simd32x3::from(other.group0()[3]),
-                g2: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, other.group0()[0]])
-                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, other.group0()[1]])
-                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, other.group0()[2]])
-                    + self.group2() * Simd32x2::from(other.group0()[3])
-                    + Simd32x2::from(self.group7()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group7()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group7()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-                g3: self.group3() * Simd32x3::from(other.group0()[3]),
-                g4: Simd32x3::from(self.group3()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group3()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group3()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    + self.group9() * Simd32x3::from(other.group0()[3])
-                    + Simd32x3::from(self.group10()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g5: Simd32x4::from(self.group0()[0]) * other.group0()
-                    + Simd32x4::from(self.group3()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
-                    + Simd32x4::from(self.group3()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]])
-                    + Simd32x4::from(self.group3()[2]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[2]])
-                    + Simd32x4::from(self.group4()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group4()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group4()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0])
-                    + swizzle!(self.group5(), 0, 1, 2, 0) * Simd32x4::from([-other.group0()[3], -other.group0()[3], -other.group0()[3], 0.0])
-                    + Simd32x4::from(self.group5()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0])
-                    + Simd32x4::from(self.group9()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group9()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group9()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0]),
-                g6: Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]])
-                    + Simd32x4::from(self.group6()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
-                    + Simd32x4::from(self.group6()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
-                    + Simd32x4::from(self.group6()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
-                g7: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()[3])
-                    + Simd32x3::from(self.group2()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    + Simd32x3::from(self.group6()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group6()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group6()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
-                g8: Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    + Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group1()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group1()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
-                    - Simd32x3::from(self.group6()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    + Simd32x3::from(self.group7()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group7()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group7()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    - self.group8() * Simd32x3::from(other.group0()[3]),
-                g9: Simd32x3::from(self.group3()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group3()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group3()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
-                    + self.group4() * Simd32x3::from(other.group0()[3])
-                    - Simd32x3::from(self.group10()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g10: Simd32x2::from(self.group4()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group4()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group4()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + Simd32x2::from(self.group9()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group9()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group9()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + self.group10() * Simd32x2::from(other.group0()[3]),
-            },
-        }
-    }
-}
-
 impl GeometricProduct<PointAtInfinity> for MultiVector {
     type Output = MultiVector;
 
@@ -33828,6 +36392,30 @@ impl GeometricProduct<PointAtInfinity> for MultiVector {
                     + Simd32x2::from(self.group9()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
                     + Simd32x2::from(self.group9()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
                     + Simd32x2::from(self.group9()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<PointAtOrigin> for MultiVector {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group5()[3]) * Simd32x2::from([other.group0(), 0.0]) + Simd32x2::from(self.group6()[3]) * Simd32x2::from([0.0, -other.group0()]),
+                g1: Simd32x3::from(0.0) - self.group7() * Simd32x3::from(other.group0()),
+                g2: self.group2() * Simd32x2::from(other.group0()),
+                g3: self.group3() * Simd32x3::from(other.group0()),
+                g4: self.group9() * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()])
+                    + swizzle!(self.group5(), 0, 1, 2, 0) * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0]),
+                g6: Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()])
+                    + swizzle!(self.group6(), 0, 1, 2, 0) * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g7: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
+                g8: Simd32x3::from(0.0) - self.group8() * Simd32x3::from(other.group0()),
+                g9: self.group4() * Simd32x3::from(other.group0()),
+                g10: self.group10() * Simd32x2::from(other.group0()),
             },
         }
     }
@@ -34190,14 +36778,13 @@ impl GeometricProduct<Translator> for MultiVector {
 }
 
 impl GeometricProduct<AntiScalar> for Origin {
-    type Output = Circle;
+    type Output = Sphere;
 
-    fn geometric_product(self, other: AntiScalar) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from(0.0),
+    fn geometric_product(self, other: AntiScalar) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group0(), 0.0]),
             },
         }
     }
@@ -34209,17 +36796,17 @@ impl GeometricProduct<Circle> for Origin {
     fn geometric_product(self, other: Circle) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group0()[3]]),
-                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group1(),
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
+                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group1(),
+                g4: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group2(),
                 g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group0()[0], -other.group0()[1], -other.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(self.group0()) * other.group2(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()) * other.group2(),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[3], 0.0]),
             },
         }
     }
@@ -34231,16 +36818,38 @@ impl GeometricProduct<Dipole> for Origin {
     fn geometric_product(self, other: Dipole) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group2()[3], 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(self.group0()) * Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([other.group2()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(self.group0()) * Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+                g7: Simd32x3::from(self.group0()) * Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
                 g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(self.group0()) * other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<FlatPoint> for Origin {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
         }
@@ -34253,41 +36862,61 @@ impl GeometricProduct<Flector> for Origin {
     fn geometric_product(self, other: Flector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[3], 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group1()[3]]),
+                g1: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[3], 0.0]),
                 g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(self.group0()) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g5: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * other.group1(),
+                g7: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group1()[3]]),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
 }
 
 impl GeometricProduct<Horizon> for Origin {
-    type Output = Horizon;
+    type Output = MultiVector;
 
-    fn geometric_product(self, other: Horizon) -> Horizon {
-        Horizon {
-            groups: HorizonGroups {
-                g0: self.group0() * other.group0(),
+    fn geometric_product(self, other: Horizon) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
 }
 
 impl GeometricProduct<Infinity> for Origin {
-    type Output = Infinity;
+    type Output = MultiVector;
 
-    fn geometric_product(self, other: Infinity) -> Infinity {
-        Infinity {
-            groups: InfinityGroups {
-                g0: self.group0() * other.group0(),
+    fn geometric_product(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -34300,15 +36929,15 @@ impl GeometricProduct<Line> for Origin {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
+                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g4: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group1(),
                 g5: Simd32x4::from(0.0),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(self.group0()) * other.group1(),
-                g9: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()) * other.group1(),
                 g10: Simd32x2::from(0.0),
             },
         }
@@ -34316,25 +36945,36 @@ impl GeometricProduct<Line> for Origin {
 }
 
 impl GeometricProduct<LineAtInfinity> for Origin {
-    type Output = LineAtInfinity;
+    type Output = MultiVector;
 
-    fn geometric_product(self, other: LineAtInfinity) -> LineAtInfinity {
-        LineAtInfinity {
-            groups: LineAtInfinityGroups {
-                g0: Simd32x3::from(self.group0()) * other.group0(),
+    fn geometric_product(self, other: LineAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()) * other.group0(),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
 }
 
 impl GeometricProduct<LineAtOrigin> for Origin {
-    type Output = RoundPoint;
+    type Output = Dipole;
 
-    fn geometric_product(self, other: LineAtOrigin) -> RoundPoint {
-        RoundPoint {
-            groups: RoundPointGroups {
+    fn geometric_product(self, other: LineAtOrigin) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
-                g1: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x4::from(0.0),
             },
         }
     }
@@ -34348,15 +36988,15 @@ impl GeometricProduct<Magnitude> for Origin {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[0], 0.0]),
                 g3: Simd32x3::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
-                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]]),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group0()[1], 0.0]),
             },
         }
     }
@@ -34369,16 +37009,16 @@ impl GeometricProduct<Motor> for Origin {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
+                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g4: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group1(),
                 g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
+                g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(self.group0()) * other.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()) * other.group1(),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group0()[3], 0.0]),
             },
         }
     }
@@ -34390,29 +37030,18 @@ impl GeometricProduct<MultiVector> for Origin {
     fn geometric_product(self, other: MultiVector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group5()[3], -other.group6()[3]]),
-                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group7(),
-                g2: Simd32x2::from(self.group0()) * other.group2() * Simd32x2::from([-1.0, 1.0]),
-                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group3(),
-                g4: Simd32x3::from(self.group0()) * other.group9(),
-                g5: Simd32x4::from(self.group0()) * Simd32x4::from([other.group5()[0], other.group5()[1], other.group5()[2], other.group0()[0]]),
-                g6: Simd32x4::from(0.0) - Simd32x4::from(self.group0()) * Simd32x4::from([other.group6()[0], other.group6()[1], other.group6()[2], other.group0()[1]]),
-                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group1(),
-                g8: Simd32x3::from(self.group0()) * other.group8(),
-                g9: Simd32x3::from(self.group0()) * other.group4(),
-                g10: Simd32x2::from(self.group0()) * other.group10() * Simd32x2::from([-1.0, 1.0]),
-            },
-        }
-    }
-}
-
-impl GeometricProduct<Origin> for Origin {
-    type Output = Scalar;
-
-    fn geometric_product(self, other: Origin) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: self.group0() * other.group0(),
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group2()[1], other.group10()[1]]),
+                g1: Simd32x3::from(self.group0()) * Simd32x3::from([other.group5()[0], other.group5()[1], other.group5()[2]]),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([other.group5()[3], 0.0]) + Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[0], 0.0]),
+                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group7() + Simd32x3::from(self.group0()) * other.group1(),
+                g4: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group8(),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group2()[1]]),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([other.group9()[0], other.group9()[1], other.group9()[2], other.group10()[1]])
+                    + Simd32x4::from(self.group0()) * Simd32x4::from([other.group4()[0], other.group4()[1], other.group4()[2], 0.0]),
+                g7: Simd32x3::from(self.group0()) * Simd32x3::from([other.group5()[0], other.group5()[1], other.group5()[2]]),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()) * other.group8(),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([other.group6()[3], 0.0]) + Simd32x2::from(self.group0()) * Simd32x2::from([-other.group0()[1], 0.0]),
             },
         }
     }
@@ -34424,49 +37053,13 @@ impl GeometricProduct<Plane> for Origin {
     fn geometric_product(self, other: Plane) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()[3]]),
-            },
-        }
-    }
-}
-
-impl GeometricProduct<PlaneAtOrigin> for Origin {
-    type Output = Dipole;
-
-    fn geometric_product(self, other: PlaneAtOrigin) -> Dipole {
-        Dipole {
-            groups: DipoleGroups {
-                g0: Simd32x3::from(0.0),
-                g1: Simd32x3::from(self.group0()) * other.group0(),
-                g2: Simd32x4::from(0.0),
-            },
-        }
-    }
-}
-
-impl GeometricProduct<Point> for Origin {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[3], 0.0]),
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()[3]]),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
                 g3: Simd32x3::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
@@ -34476,13 +37069,49 @@ impl GeometricProduct<Point> for Origin {
     }
 }
 
-impl GeometricProduct<PointAtInfinity> for Origin {
-    type Output = PointAtInfinity;
+impl GeometricProduct<PlaneAtOrigin> for Origin {
+    type Output = Circle;
 
-    fn geometric_product(self, other: PointAtInfinity) -> PointAtInfinity {
-        PointAtInfinity {
-            groups: PointAtInfinityGroups {
-                g0: Simd32x3::from(self.group0()) * other.group0(),
+    fn geometric_product(self, other: PlaneAtOrigin) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<PointAtInfinity> for Origin {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: PointAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(self.group0()) * other.group0(),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(self.group0()) * other.group0(),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<PointAtOrigin> for Origin {
+    type Output = Origin;
+
+    fn geometric_product(self, other: PointAtOrigin) -> Origin {
+        Origin {
+            groups: OriginGroups {
+                g0: self.group0() * other.group0(),
             },
         }
     }
@@ -34495,16 +37124,16 @@ impl GeometricProduct<Rotor> for Origin {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
+                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
                 g4: Simd32x3::from(0.0),
                 g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
+                g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group0()[3], 0.0]),
             },
         }
     }
@@ -34516,14 +37145,14 @@ impl GeometricProduct<RoundPoint> for Origin {
     fn geometric_product(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group1()[1], 0.0]),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(self.group0()) * other.group1() * Simd32x2::from([-1.0, 1.0]),
-                g3: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(self.group0()) * other.group0(),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group1()[1]]),
                 g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
@@ -34550,31 +37179,39 @@ impl GeometricProduct<Sphere> for Origin {
     fn geometric_product(self, other: Sphere) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group1()[1]]),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
                 g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(self.group0()) * other.group0(),
+                g4: Simd32x3::from(0.0),
                 g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[1]]),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(self.group0()) * other.group1() * Simd32x2::from([-1.0, 1.0]),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
 }
 
 impl GeometricProduct<Translator> for Origin {
-    type Output = Circle;
+    type Output = MultiVector;
 
-    fn geometric_product(self, other: Translator) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
+    fn geometric_product(self, other: Translator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group0()[3], 0.0]),
             },
         }
     }
@@ -34655,6 +37292,33 @@ impl GeometricProduct<Dipole> for Plane {
                     + Simd32x2::from(self.group0()[1]) * Simd32x2::from([other.group0()[1], -other.group2()[1]])
                     + Simd32x2::from(self.group0()[2]) * Simd32x2::from([other.group0()[2], -other.group2()[2]])
                     + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group2()[3]]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<FlatPoint> for Plane {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3]),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
             },
         }
     }
@@ -34917,17 +37581,17 @@ impl GeometricProduct<Origin> for Plane {
     fn geometric_product(self, other: Origin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
+                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, other.group0()]),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
                 g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g4: Simd32x3::from(0.0),
                 g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - self.group0() * Simd32x4::from(other.group0()),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()]),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -34986,33 +37650,6 @@ impl GeometricProduct<PlaneAtOrigin> for Plane {
     }
 }
 
-impl GeometricProduct<Point> for Plane {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3]),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
-            },
-        }
-    }
-}
-
 impl GeometricProduct<PointAtInfinity> for Plane {
     type Output = Flector;
 
@@ -35025,6 +37662,28 @@ impl GeometricProduct<PointAtInfinity> for Plane {
                 g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
                     + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
                     + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<PointAtOrigin> for Plane {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()]),
             },
         }
     }
@@ -35218,6 +37877,32 @@ impl GeometricProduct<Dipole> for PlaneAtOrigin {
                 g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], -other.group2()[0]])
                     + Simd32x2::from(self.group0()[1]) * Simd32x2::from([other.group0()[1], -other.group2()[1]])
                     + Simd32x2::from(self.group0()[2]) * Simd32x2::from([other.group0()[2], -other.group2()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<FlatPoint> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0() * Simd32x3::from(other.group0()[3]),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
             },
         }
     }
@@ -35456,14 +38141,15 @@ impl GeometricProduct<MultiVector> for PlaneAtOrigin {
 }
 
 impl GeometricProduct<Origin> for PlaneAtOrigin {
-    type Output = Dipole;
+    type Output = Circle;
 
-    fn geometric_product(self, other: Origin) -> Dipole {
-        Dipole {
-            groups: DipoleGroups {
-                g0: Simd32x3::from(0.0),
-                g1: self.group0() * Simd32x3::from(other.group0()),
-                g2: Simd32x4::from(0.0),
+    fn geometric_product(self, other: Origin) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
+                    * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
             },
         }
     }
@@ -35522,32 +38208,6 @@ impl GeometricProduct<PlaneAtOrigin> for PlaneAtOrigin {
     }
 }
 
-impl GeometricProduct<Point> for PlaneAtOrigin {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: self.group0() * Simd32x3::from(other.group0()[3]),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-            },
-        }
-    }
-}
-
 impl GeometricProduct<PointAtInfinity> for PlaneAtOrigin {
     type Output = Flector;
 
@@ -35560,6 +38220,20 @@ impl GeometricProduct<PointAtInfinity> for PlaneAtOrigin {
                 g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
                     + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
                     + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<PointAtOrigin> for PlaneAtOrigin {
+    type Output = Dipole;
+
+    fn geometric_product(self, other: PointAtOrigin) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: Simd32x3::from(0.0),
+                g1: self.group0() * Simd32x3::from(other.group0()),
+                g2: Simd32x4::from(0.0),
             },
         }
     }
@@ -35683,540 +38357,6 @@ impl GeometricProduct<Translator> for PlaneAtOrigin {
     }
 }
 
-impl GeometricProduct<AntiScalar> for Point {
-    type Output = Circle;
-
-    fn geometric_product(self, other: AntiScalar) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
-            },
-        }
-    }
-}
-
-impl GeometricProduct<Circle> for Point {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: Circle) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
-                g1: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
-                    - Simd32x3::from(self.group0()[3]) * other.group1(),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group1()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]])
-                    + swizzle!(self.group0(), 3, 3, 3, 2) * swizzle!(other.group0(), 0, 1, 2, 2) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-                g7: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[3], other.group1()[2], -other.group1()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group1()[2], other.group0()[3], other.group1()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group1()[1], -other.group1()[0], other.group0()[3]])
-                    + Simd32x3::from(self.group0()[3]) * other.group2(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl GeometricProduct<Dipole> for Point {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: Dipole) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([-other.group0()[1], 0.0])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([-other.group0()[2], 0.0])
-                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group2()[3], 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group0(),
-                g4: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([-other.group2()[3], other.group1()[2], -other.group1()[1], -other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group1()[2], -other.group2()[3], other.group1()[0], -other.group0()[1]])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[1], -other.group1()[0], -other.group2()[3], -other.group0()[2]])
-                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    + Simd32x3::from(self.group0()[3]) * other.group1(),
-                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group1()[2]]),
-            },
-        }
-    }
-}
-
-impl GeometricProduct<Flector> for Point {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: Flector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0()[3], 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([-other.group0()[3], -other.group1()[2], other.group1()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[2], -other.group0()[3], -other.group1()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group1()[1], other.group1()[0], -other.group0()[3], 0.0])
-                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group1()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group1()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group1()[2]])
-                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl GeometricProduct<Horizon> for Point {
-    type Output = Horizon;
-
-    fn geometric_product(self, other: Horizon) -> Horizon {
-        Horizon {
-            groups: HorizonGroups {
-                g0: self.group0()[3] * other.group0(),
-            },
-        }
-    }
-}
-
-impl GeometricProduct<Infinity> for Point {
-    type Output = Infinity;
-
-    fn geometric_product(self, other: Infinity) -> Infinity {
-        Infinity {
-            groups: InfinityGroups {
-                g0: self.group0()[3] * other.group0(),
-            },
-        }
-    }
-}
-
-impl GeometricProduct<Line> for Point {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: Line) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group0(),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    + Simd32x3::from(self.group0()[3]) * other.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl GeometricProduct<LineAtInfinity> for Point {
-    type Output = LineAtInfinity;
-
-    fn geometric_product(self, other: LineAtInfinity) -> LineAtInfinity {
-        LineAtInfinity {
-            groups: LineAtInfinityGroups {
-                g0: Simd32x3::from(self.group0()[3]) * other.group0(),
-            },
-        }
-    }
-}
-
-impl GeometricProduct<LineAtOrigin> for Point {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: LineAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group0(),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl GeometricProduct<Magnitude> for Point {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: Magnitude) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: self.group0() * Simd32x4::from(other.group0()[0]),
-                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]]),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[1]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl GeometricProduct<Motor> for Point {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: Motor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[3], other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], other.group0()[3], other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], other.group0()[3]])
-                    + Simd32x3::from(self.group0()[3]) * other.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl GeometricProduct<MultiVector> for Point {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: MultiVector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0)
-                    - Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group3()[0], other.group6()[0]])
-                    - Simd32x2::from(self.group0()[1]) * Simd32x2::from([other.group3()[1], other.group6()[1]])
-                    - Simd32x2::from(self.group0()[2]) * Simd32x2::from([other.group3()[2], other.group6()[2]])
-                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group5()[3], -other.group6()[3]]),
-                g1: Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group2()[0], -other.group6()[2], other.group6()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group6()[2], -other.group2()[0], -other.group6()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group6()[1], other.group6()[0], -other.group2()[0]])
-                    - Simd32x3::from(self.group0()[3]) * other.group7(),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group7()[0]])
-                    + Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group7()[1]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group7()[2]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group1()[2]])
-                    + Simd32x2::from(self.group0()[3]) * other.group2() * Simd32x2::from([-1.0, 1.0]),
-                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group3(),
-                g4: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group10()[0], other.group3()[2], -other.group3()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group3()[2], other.group10()[0], other.group3()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group3()[1], -other.group3()[0], other.group10()[0]])
-                    + Simd32x3::from(self.group0()[3]) * other.group9(),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([-other.group5()[3], -other.group9()[2], other.group9()[1], -other.group3()[0]])
-                    + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group4()[2], -other.group4()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group9()[2], -other.group5()[3], -other.group9()[0], -other.group3()[1]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group4()[2], other.group0()[0], other.group4()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group9()[1], other.group9()[0], -other.group5()[3], -other.group3()[2]])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group4()[1], -other.group4()[0], other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group5()[0], other.group5()[1], other.group5()[2], other.group0()[0]]),
-                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group6()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group6()[1]])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, 0.0, other.group6()[2]])
-                    - Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group6()[0], other.group6()[1], other.group6()[2], other.group0()[1]]),
-                g7: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group2()[0], other.group6()[2], -other.group6()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group6()[2], other.group2()[0], other.group6()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group6()[1], -other.group6()[0], other.group2()[0]])
-                    - Simd32x3::from(self.group0()[3]) * other.group1(),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group6()[3], other.group7()[2], -other.group7()[1]])
-                    + Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[1], other.group1()[2], -other.group1()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group7()[2], other.group6()[3], other.group7()[0]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group1()[2], other.group0()[1], other.group1()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group7()[1], -other.group7()[0], other.group6()[3]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group1()[1], -other.group1()[0], other.group0()[1]])
-                    + Simd32x3::from(self.group0()[3]) * other.group8(),
-                g9: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group10()[0], other.group3()[2], -other.group3()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group3()[2], other.group10()[0], other.group3()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group3()[1], -other.group3()[0], other.group10()[0]])
-                    + Simd32x3::from(self.group0()[3]) * other.group4(),
-                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group9()[0]])
-                    + Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group4()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group9()[1]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group4()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group9()[2]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group4()[2]])
-                    + Simd32x2::from(self.group0()[3]) * other.group10() * Simd32x2::from([-1.0, 1.0]),
-            },
-        }
-    }
-}
-
-impl GeometricProduct<Origin> for Point {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: Origin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0(), 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl GeometricProduct<Plane> for Point {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: Plane) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
-                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, other.group0()[3]]),
-            },
-        }
-    }
-}
-
-impl GeometricProduct<PlaneAtOrigin> for Point {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: PlaneAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(self.group0()[3]) * other.group0(),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]]),
-            },
-        }
-    }
-}
-
-impl GeometricProduct<Point> for Point {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0()[3], 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([-other.group0()[3], -other.group0()[3], -other.group0()[3], 0.0])
-                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl GeometricProduct<PointAtInfinity> for Point {
-    type Output = PointAtInfinity;
-
-    fn geometric_product(self, other: PointAtInfinity) -> PointAtInfinity {
-        PointAtInfinity {
-            groups: PointAtInfinityGroups {
-                g0: Simd32x3::from(self.group0()[3]) * other.group0(),
-            },
-        }
-    }
-}
-
-impl GeometricProduct<Rotor> for Point {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[3], other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], other.group0()[3], other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], other.group0()[3]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl GeometricProduct<RoundPoint> for Point {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: RoundPoint) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0]),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + Simd32x2::from(self.group0()[3]) * other.group1() * Simd32x2::from([-1.0, 1.0]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0]) - Simd32x3::from(self.group0()[3]) * other.group0(),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl GeometricProduct<Scalar> for Point {
-    type Output = Point;
-
-    fn geometric_product(self, other: Scalar) -> Point {
-        Point {
-            groups: PointGroups {
-                g0: self.group0() * Simd32x4::from(other.group0()),
-            },
-        }
-    }
-}
-
-impl GeometricProduct<Sphere> for Point {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: Sphere) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0]) + Simd32x3::from(self.group0()[3]) * other.group0(),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0]),
-                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
-                    + Simd32x2::from(self.group0()[3]) * other.group1() * Simd32x2::from([-1.0, 1.0]),
-            },
-        }
-    }
-}
-
-impl GeometricProduct<Translator> for Point {
-    type Output = Circle;
-
-    fn geometric_product(self, other: Translator) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3])
-                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-            },
-        }
-    }
-}
-
 impl GeometricProduct<AntiScalar> for PointAtInfinity {
     type Output = LineAtInfinity;
 
@@ -36290,6 +38430,18 @@ impl GeometricProduct<Dipole> for PointAtInfinity {
                 g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
                     + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
                     + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group1()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<FlatPoint> for PointAtInfinity {
+    type Output = PointAtInfinity;
+
+    fn geometric_product(self, other: FlatPoint) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3]),
             },
         }
     }
@@ -36469,12 +38621,22 @@ impl GeometricProduct<MultiVector> for PointAtInfinity {
 }
 
 impl GeometricProduct<Origin> for PointAtInfinity {
-    type Output = PointAtInfinity;
+    type Output = MultiVector;
 
-    fn geometric_product(self, other: Origin) -> PointAtInfinity {
-        PointAtInfinity {
-            groups: PointAtInfinityGroups {
-                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+    fn geometric_product(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: self.group0() * Simd32x3::from(other.group0()),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -36514,13 +38676,13 @@ impl GeometricProduct<PlaneAtOrigin> for PointAtInfinity {
     }
 }
 
-impl GeometricProduct<Point> for PointAtInfinity {
+impl GeometricProduct<PointAtOrigin> for PointAtInfinity {
     type Output = PointAtInfinity;
 
-    fn geometric_product(self, other: Point) -> PointAtInfinity {
+    fn geometric_product(self, other: PointAtOrigin) -> PointAtInfinity {
         PointAtInfinity {
             groups: PointAtInfinityGroups {
-                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3]),
+                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
@@ -36628,6 +38790,409 @@ impl GeometricProduct<Translator> for PointAtInfinity {
     }
 }
 
+impl GeometricProduct<AntiScalar> for PointAtOrigin {
+    type Output = Circle;
+
+    fn geometric_product(self, other: AntiScalar) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Circle> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Circle) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group0()[3]]),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group1(),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group0()[0], -other.group0()[1], -other.group0()[2], 0.0]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(self.group0()) * other.group2(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Dipole> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Dipole) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group2()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()) * other.group1(),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<FlatPoint> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Flector> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Flector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(self.group0()) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Horizon> for PointAtOrigin {
+    type Output = Horizon;
+
+    fn geometric_product(self, other: Horizon) -> Horizon {
+        Horizon {
+            groups: HorizonGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Infinity> for PointAtOrigin {
+    type Output = Infinity;
+
+    fn geometric_product(self, other: Infinity) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Line> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Line) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(self.group0()) * other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<LineAtInfinity> for PointAtOrigin {
+    type Output = LineAtInfinity;
+
+    fn geometric_product(self, other: LineAtInfinity) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<LineAtOrigin> for PointAtOrigin {
+    type Output = RoundPoint;
+
+    fn geometric_product(self, other: LineAtOrigin) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g1: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Magnitude> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Magnitude) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Motor> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Motor) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(self.group0()) * other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<MultiVector> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group5()[3], -other.group6()[3]]),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group7(),
+                g2: Simd32x2::from(self.group0()) * other.group2() * Simd32x2::from([-1.0, 1.0]),
+                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group3(),
+                g4: Simd32x3::from(self.group0()) * other.group9(),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([other.group5()[0], other.group5()[1], other.group5()[2], other.group0()[0]]),
+                g6: Simd32x4::from(0.0) - Simd32x4::from(self.group0()) * Simd32x4::from([other.group6()[0], other.group6()[1], other.group6()[2], other.group0()[1]]),
+                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group1(),
+                g8: Simd32x3::from(self.group0()) * other.group8(),
+                g9: Simd32x3::from(self.group0()) * other.group4(),
+                g10: Simd32x2::from(self.group0()) * other.group10() * Simd32x2::from([-1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Origin> for PointAtOrigin {
+    type Output = Origin;
+
+    fn geometric_product(self, other: Origin) -> Origin {
+        Origin {
+            groups: OriginGroups {
+                g0: 0.0 - self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Plane> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Plane) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<PlaneAtOrigin> for PointAtOrigin {
+    type Output = Dipole;
+
+    fn geometric_product(self, other: PlaneAtOrigin) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x3::from(self.group0()) * other.group0(),
+                g2: Simd32x4::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<PointAtInfinity> for PointAtOrigin {
+    type Output = PointAtInfinity;
+
+    fn geometric_product(self, other: PointAtInfinity) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<PointAtOrigin> for PointAtOrigin {
+    type Output = Scalar;
+
+    fn geometric_product(self, other: PointAtOrigin) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Rotor> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Rotor) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<RoundPoint> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: RoundPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()) * other.group1() * Simd32x2::from([-1.0, 1.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Scalar> for PointAtOrigin {
+    type Output = PointAtOrigin;
+
+    fn geometric_product(self, other: Scalar) -> PointAtOrigin {
+        PointAtOrigin {
+            groups: PointAtOriginGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Sphere> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: Sphere) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(self.group0()) * other.group0(),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group0()) * other.group1() * Simd32x2::from([-1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<Translator> for PointAtOrigin {
+    type Output = Circle;
+
+    fn geometric_product(self, other: Translator) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+            },
+        }
+    }
+}
+
 impl GeometricProduct<AntiScalar> for Rotor {
     type Output = MultiVector;
 
@@ -36714,6 +39279,33 @@ impl GeometricProduct<Dipole> for Rotor {
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group2()[2], 0.0, other.group2()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group2()[1], -other.group2()[0], 0.0])
                     + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<FlatPoint> for Rotor {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3]),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -36985,16 +39577,16 @@ impl GeometricProduct<Origin> for Rotor {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
+                g3: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
                 g4: Simd32x3::from(0.0),
                 g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g10: Simd32x2::from(self.group0()[3]) * Simd32x2::from([-other.group0(), 0.0]),
             },
         }
     }
@@ -37054,33 +39646,6 @@ impl GeometricProduct<PlaneAtOrigin> for Rotor {
     }
 }
 
-impl GeometricProduct<Point> for Rotor {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3]),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl GeometricProduct<PointAtInfinity> for Rotor {
     type Output = MultiVector;
 
@@ -37101,6 +39666,28 @@ impl GeometricProduct<PointAtInfinity> for Rotor {
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
                     + Simd32x3::from(self.group0()[3]) * other.group0(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<PointAtOrigin> for Rotor {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -37310,6 +39897,34 @@ impl GeometricProduct<Dipole> for RoundPoint {
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group2()[2], 0.0, -other.group2()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group2()[1], other.group2()[0], 0.0])
                     + Simd32x3::from(self.group1()[1]) * other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<FlatPoint> for RoundPoint {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
+                    + self.group1() * Simd32x2::from(other.group0()[3]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3])
+                    + Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -37607,14 +40222,14 @@ impl GeometricProduct<Origin> for RoundPoint {
     fn geometric_product(self, other: Origin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
+                g0: Simd32x2::from(self.group1()[1]) * Simd32x2::from([-other.group0(), 0.0]),
                 g1: Simd32x3::from(0.0),
-                g2: self.group1() * Simd32x2::from(other.group0()),
-                g3: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
+                g5: Simd32x4::from(self.group1()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
                 g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+                g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
@@ -37678,34 +40293,6 @@ impl GeometricProduct<PlaneAtOrigin> for RoundPoint {
     }
 }
 
-impl GeometricProduct<Point> for RoundPoint {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
-                    + self.group1() * Simd32x2::from(other.group0()[3]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3])
-                    + Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl GeometricProduct<PointAtInfinity> for RoundPoint {
     type Output = MultiVector;
 
@@ -37725,6 +40312,28 @@ impl GeometricProduct<PointAtInfinity> for RoundPoint {
                 g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<PointAtOrigin> for RoundPoint {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: self.group1() * Simd32x2::from(other.group0()),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+                g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -37902,6 +40511,18 @@ impl GeometricProduct<Dipole> for Scalar {
     }
 }
 
+impl GeometricProduct<FlatPoint> for Scalar {
+    type Output = FlatPoint;
+
+    fn geometric_product(self, other: FlatPoint) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: Simd32x4::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
 impl GeometricProduct<Flector> for Scalar {
     type Output = Flector;
 
@@ -38059,18 +40680,6 @@ impl GeometricProduct<PlaneAtOrigin> for Scalar {
     }
 }
 
-impl GeometricProduct<Point> for Scalar {
-    type Output = Point;
-
-    fn geometric_product(self, other: Point) -> Point {
-        Point {
-            groups: PointGroups {
-                g0: Simd32x4::from(self.group0()) * other.group0(),
-            },
-        }
-    }
-}
-
 impl GeometricProduct<PointAtInfinity> for Scalar {
     type Output = PointAtInfinity;
 
@@ -38078,6 +40687,18 @@ impl GeometricProduct<PointAtInfinity> for Scalar {
         PointAtInfinity {
             groups: PointAtInfinityGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<PointAtOrigin> for Scalar {
+    type Output = PointAtOrigin;
+
+    fn geometric_product(self, other: PointAtOrigin) -> PointAtOrigin {
+        PointAtOrigin {
+            groups: PointAtOriginGroups {
+                g0: self.group0() * other.group0(),
             },
         }
     }
@@ -38227,6 +40848,34 @@ impl GeometricProduct<Dipole> for Sphere {
                     + Simd32x2::from(self.group0()[1]) * Simd32x2::from([other.group0()[1], -other.group2()[1]])
                     + Simd32x2::from(self.group0()[2]) * Simd32x2::from([other.group0()[2], -other.group2()[2]])
                     + self.group1() * Simd32x2::from(other.group2()[3]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<FlatPoint> for Sphere {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0() * Simd32x3::from(other.group0()[3])
+                    + Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + self.group1() * Simd32x2::from(other.group0()[3]),
             },
         }
     }
@@ -38528,17 +41177,19 @@ impl GeometricProduct<Origin> for Sphere {
     fn geometric_product(self, other: Origin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
+                g0: Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, other.group0()]),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
                 g3: Simd32x3::from(0.0),
-                g4: self.group0() * Simd32x3::from(other.group0()),
+                g4: Simd32x3::from(0.0),
                 g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
+                g6: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
+                    * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0])
+                    + Simd32x4::from(self.group1()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
-                g10: self.group1() * Simd32x2::from(other.group0()),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -38599,34 +41250,6 @@ impl GeometricProduct<PlaneAtOrigin> for Sphere {
     }
 }
 
-impl GeometricProduct<Point> for Sphere {
-    type Output = MultiVector;
-
-    fn geometric_product(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: self.group0() * Simd32x3::from(other.group0()[3])
-                    + Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0) - Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + self.group1() * Simd32x2::from(other.group0()[3]),
-            },
-        }
-    }
-}
-
 impl GeometricProduct<PointAtInfinity> for Sphere {
     type Output = MultiVector;
 
@@ -38648,6 +41271,28 @@ impl GeometricProduct<PointAtInfinity> for Sphere {
                 g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
                     + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
                     + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<PointAtOrigin> for Sphere {
+    type Output = MultiVector;
+
+    fn geometric_product(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0() * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group1() * Simd32x2::from(other.group0()),
             },
         }
     }
@@ -38871,6 +41516,21 @@ impl GeometricProduct<Dipole> for Translator {
                     + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<FlatPoint> for Translator {
+    type Output = Circle;
+
+    fn geometric_product(self, other: FlatPoint) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3])
+                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
             },
         }
     }
@@ -39107,14 +41767,22 @@ impl GeometricProduct<MultiVector> for Translator {
 }
 
 impl GeometricProduct<Origin> for Translator {
-    type Output = Circle;
+    type Output = MultiVector;
 
-    fn geometric_product(self, other: Origin) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+    fn geometric_product(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(self.group0()[3]) * Simd32x2::from([-other.group0(), 0.0]),
             },
         }
     }
@@ -39173,21 +41841,6 @@ impl GeometricProduct<PlaneAtOrigin> for Translator {
     }
 }
 
-impl GeometricProduct<Point> for Translator {
-    type Output = Circle;
-
-    fn geometric_product(self, other: Point) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3])
-                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-            },
-        }
-    }
-}
-
 impl GeometricProduct<PointAtInfinity> for Translator {
     type Output = LineAtInfinity;
 
@@ -39195,6 +41848,20 @@ impl GeometricProduct<PointAtInfinity> for Translator {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: Simd32x3::from(self.group0()[3]) * other.group0(),
+            },
+        }
+    }
+}
+
+impl GeometricProduct<PointAtOrigin> for Translator {
+    type Output = Circle;
+
+    fn geometric_product(self, other: PointAtOrigin) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
             },
         }
     }
@@ -39358,6 +42025,20 @@ impl WedgeDot<Dipole> for AntiScalar {
     }
 }
 
+impl WedgeDot<FlatPoint> for AntiScalar {
+    type Output = Circle;
+
+    fn wedge_dot(self, other: FlatPoint) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+            },
+        }
+    }
+}
+
 impl WedgeDot<Flector> for AntiScalar {
     type Output = MultiVector;
 
@@ -39501,14 +42182,13 @@ impl WedgeDot<MultiVector> for AntiScalar {
 }
 
 impl WedgeDot<Origin> for AntiScalar {
-    type Output = Circle;
+    type Output = Sphere;
 
-    fn wedge_dot(self, other: Origin) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from(0.0),
+    fn wedge_dot(self, other: Origin) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group0(), 0.0]),
             },
         }
     }
@@ -39540,20 +42220,6 @@ impl WedgeDot<PlaneAtOrigin> for AntiScalar {
     }
 }
 
-impl WedgeDot<Point> for AntiScalar {
-    type Output = Circle;
-
-    fn wedge_dot(self, other: Point) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-            },
-        }
-    }
-}
-
 impl WedgeDot<PointAtInfinity> for AntiScalar {
     type Output = LineAtInfinity;
 
@@ -39561,6 +42227,20 @@ impl WedgeDot<PointAtInfinity> for AntiScalar {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl WedgeDot<PointAtOrigin> for AntiScalar {
+    type Output = Circle;
+
+    fn wedge_dot(self, other: PointAtOrigin) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
             },
         }
     }
@@ -39794,6 +42474,44 @@ impl WedgeDot<Dipole> for Circle {
                     + Simd32x3::from(self.group2()[0]) * Simd32x3::from([-other.group2()[3], other.group1()[2], -other.group1()[1]])
                     + Simd32x3::from(self.group2()[1]) * Simd32x3::from([-other.group1()[2], -other.group2()[3], other.group1()[0]])
                     + Simd32x3::from(self.group2()[2]) * Simd32x3::from([other.group1()[1], -other.group1()[0], -other.group2()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<FlatPoint> for Circle {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
+                g1: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    - self.group1() * Simd32x3::from(other.group0()[3]),
+                g2: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
+                g7: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
+                g8: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
+                    + Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group1()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group1()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    - self.group2() * Simd32x3::from(other.group0()[3]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -40243,17 +42961,17 @@ impl WedgeDot<Origin> for Circle {
     fn wedge_dot(self, other: Origin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()]),
-                g1: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
+                g3: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
+                g4: Simd32x3::from(0.0) - self.group2() * Simd32x3::from(other.group0()),
                 g5: Simd32x4::from(0.0),
-                g6: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0) - self.group2() * Simd32x3::from(other.group0()),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - self.group2() * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(self.group0()[3]) * Simd32x2::from([-other.group0(), 0.0]),
             },
         }
     }
@@ -40333,44 +43051,6 @@ impl WedgeDot<PlaneAtOrigin> for Circle {
     }
 }
 
-impl WedgeDot<Point> for Circle {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
-                g1: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    - self.group1() * Simd32x3::from(other.group0()[3]),
-                g2: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
-                g7: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
-                g8: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    + Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group1()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group1()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    - self.group2() * Simd32x3::from(other.group0()[3]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl WedgeDot<PointAtInfinity> for Circle {
     type Output = MultiVector;
 
@@ -40399,6 +43079,28 @@ impl WedgeDot<PointAtInfinity> for Circle {
                     + Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group1()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group1()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<PointAtOrigin> for Circle {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()]),
+                g1: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - self.group2() * Simd32x3::from(other.group0()),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -40727,6 +43429,45 @@ impl WedgeDot<Dipole> for Dipole {
                     + Simd32x2::from(self.group2()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
                     + Simd32x2::from(self.group2()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
                     + Simd32x2::from(self.group2()[2]) * Simd32x2::from([0.0, -other.group1()[2]]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<FlatPoint> for Dipole {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([-other.group0()[1], 0.0])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([-other.group0()[2], 0.0])
+                    + Simd32x2::from(self.group2()[3]) * Simd32x2::from([other.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: self.group0() * Simd32x3::from(other.group0()[3]),
+                g4: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[2]])
+                    + Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group1()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0])
+                    + swizzle!(self.group2(), 0, 1, 2, 0) * Simd32x4::from([-other.group0()[3], -other.group0()[3], -other.group0()[3], 0.0])
+                    + Simd32x4::from(self.group2()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
+                    + self.group1() * Simd32x3::from(other.group0()[3]),
+                g10: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
             },
         }
     }
@@ -41173,16 +43914,17 @@ impl WedgeDot<Origin> for Dipole {
     fn wedge_dot(self, other: Origin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group2()[3]) * Simd32x2::from([other.group0(), 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: self.group0() * Simd32x3::from(other.group0()),
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]) * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(self.group2()[3]) * Simd32x2::from([-other.group0(), 0.0]),
+                g3: Simd32x3::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: swizzle!(self.group2(), 0, 1, 2, 0) * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[0]])
+                    * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g7: Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]) * Simd32x3::from(other.group0()),
                 g8: Simd32x3::from(0.0),
-                g9: self.group1() * Simd32x3::from(other.group0()),
+                g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
         }
@@ -41264,45 +44006,6 @@ impl WedgeDot<PlaneAtOrigin> for Dipole {
     }
 }
 
-impl WedgeDot<Point> for Dipole {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([-other.group0()[1], 0.0])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([-other.group0()[2], 0.0])
-                    + Simd32x2::from(self.group2()[3]) * Simd32x2::from([other.group0()[3], 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: self.group0() * Simd32x3::from(other.group0()[3]),
-                g4: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[2]])
-                    + Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group1()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0])
-                    + swizzle!(self.group2(), 0, 1, 2, 0) * Simd32x4::from([-other.group0()[3], -other.group0()[3], -other.group0()[3], 0.0])
-                    + Simd32x4::from(self.group2()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
-                    + self.group1() * Simd32x3::from(other.group0()[3]),
-                g10: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-            },
-        }
-    }
-}
-
 impl WedgeDot<PointAtInfinity> for Dipole {
     type Output = MultiVector;
 
@@ -41334,6 +44037,28 @@ impl WedgeDot<PointAtInfinity> for Dipole {
                 g10: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
                     + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
                     + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<PointAtOrigin> for Dipole {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group2()[3]) * Simd32x2::from([other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: self.group0() * Simd32x3::from(other.group0()),
+                g4: Simd32x3::from(0.0),
+                g5: swizzle!(self.group2(), 0, 1, 2, 0) * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: self.group1() * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -41510,6 +44235,562 @@ impl WedgeDot<Translator> for Dipole {
     }
 }
 
+impl WedgeDot<AntiScalar> for FlatPoint {
+    type Output = Circle;
+
+    fn wedge_dot(self, other: AntiScalar) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Circle> for FlatPoint {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Circle) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
+                g1: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
+                    - Simd32x3::from(self.group0()[3]) * other.group1(),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group1()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]])
+                    + swizzle!(self.group0(), 3, 3, 3, 2) * swizzle!(other.group0(), 0, 1, 2, 2) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+                g7: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[3], other.group1()[2], -other.group1()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group1()[2], other.group0()[3], other.group1()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group1()[1], -other.group1()[0], other.group0()[3]])
+                    + Simd32x3::from(self.group0()[3]) * other.group2(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Dipole> for FlatPoint {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Dipole) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([-other.group0()[1], 0.0])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([-other.group0()[2], 0.0])
+                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group2()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group0(),
+                g4: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([-other.group2()[3], other.group1()[2], -other.group1()[1], -other.group0()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group1()[2], -other.group2()[3], other.group1()[0], -other.group0()[1]])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[1], -other.group1()[0], -other.group2()[3], -other.group0()[2]])
+                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    + Simd32x3::from(self.group0()[3]) * other.group1(),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group1()[2]]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<FlatPoint> for FlatPoint {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([-other.group0()[3], -other.group0()[3], -other.group0()[3], 0.0])
+                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Flector> for FlatPoint {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Flector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([-other.group0()[3], -other.group1()[2], other.group1()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[2], -other.group0()[3], -other.group1()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group1()[1], other.group1()[0], -other.group0()[3], 0.0])
+                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group1()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group1()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group1()[2]])
+                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, other.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Horizon> for FlatPoint {
+    type Output = Horizon;
+
+    fn wedge_dot(self, other: Horizon) -> Horizon {
+        Horizon {
+            groups: HorizonGroups {
+                g0: self.group0()[3] * other.group0(),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Infinity> for FlatPoint {
+    type Output = Infinity;
+
+    fn wedge_dot(self, other: Infinity) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: self.group0()[3] * other.group0(),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Line> for FlatPoint {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Line) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group0(),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    + Simd32x3::from(self.group0()[3]) * other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<LineAtInfinity> for FlatPoint {
+    type Output = LineAtInfinity;
+
+    fn wedge_dot(self, other: LineAtInfinity) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: Simd32x3::from(self.group0()[3]) * other.group0(),
+            },
+        }
+    }
+}
+
+impl WedgeDot<LineAtOrigin> for FlatPoint {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: LineAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group0(),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Magnitude> for FlatPoint {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Magnitude) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: self.group0() * Simd32x4::from(other.group0()[0]),
+                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[1]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Motor> for FlatPoint {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Motor) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[3], other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], other.group0()[3], other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], other.group0()[3]])
+                    + Simd32x3::from(self.group0()[3]) * other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<MultiVector> for FlatPoint {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0)
+                    - Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group3()[0], other.group6()[0]])
+                    - Simd32x2::from(self.group0()[1]) * Simd32x2::from([other.group3()[1], other.group6()[1]])
+                    - Simd32x2::from(self.group0()[2]) * Simd32x2::from([other.group3()[2], other.group6()[2]])
+                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group5()[3], -other.group6()[3]]),
+                g1: Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group2()[0], -other.group6()[2], other.group6()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group6()[2], -other.group2()[0], -other.group6()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group6()[1], other.group6()[0], -other.group2()[0]])
+                    - Simd32x3::from(self.group0()[3]) * other.group7(),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group7()[0]])
+                    + Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group7()[1]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group7()[2]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group1()[2]])
+                    + Simd32x2::from(self.group0()[3]) * other.group2() * Simd32x2::from([-1.0, 1.0]),
+                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group3(),
+                g4: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group10()[0], other.group3()[2], -other.group3()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group3()[2], other.group10()[0], other.group3()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group3()[1], -other.group3()[0], other.group10()[0]])
+                    + Simd32x3::from(self.group0()[3]) * other.group9(),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([-other.group5()[3], -other.group9()[2], other.group9()[1], -other.group3()[0]])
+                    + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group4()[2], -other.group4()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group9()[2], -other.group5()[3], -other.group9()[0], -other.group3()[1]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group4()[2], other.group0()[0], other.group4()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group9()[1], other.group9()[0], -other.group5()[3], -other.group3()[2]])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group4()[1], -other.group4()[0], other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group5()[0], other.group5()[1], other.group5()[2], other.group0()[0]]),
+                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group6()[0]])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group6()[1]])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, 0.0, other.group6()[2]])
+                    - Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group6()[0], other.group6()[1], other.group6()[2], other.group0()[1]]),
+                g7: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group2()[0], other.group6()[2], -other.group6()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group6()[2], other.group2()[0], other.group6()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group6()[1], -other.group6()[0], other.group2()[0]])
+                    - Simd32x3::from(self.group0()[3]) * other.group1(),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group6()[3], other.group7()[2], -other.group7()[1]])
+                    + Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[1], other.group1()[2], -other.group1()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group7()[2], other.group6()[3], other.group7()[0]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group1()[2], other.group0()[1], other.group1()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group7()[1], -other.group7()[0], other.group6()[3]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group1()[1], -other.group1()[0], other.group0()[1]])
+                    + Simd32x3::from(self.group0()[3]) * other.group8(),
+                g9: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group10()[0], other.group3()[2], -other.group3()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group3()[2], other.group10()[0], other.group3()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group3()[1], -other.group3()[0], other.group10()[0]])
+                    + Simd32x3::from(self.group0()[3]) * other.group4(),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group9()[0]])
+                    + Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group4()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group9()[1]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group4()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group9()[2]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group4()[2]])
+                    + Simd32x2::from(self.group0()[3]) * other.group10() * Simd32x2::from([-1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Origin> for FlatPoint {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(self.group0()[3]) * Simd32x2::from([-other.group0(), 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Plane> for FlatPoint {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Plane) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
+                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<PlaneAtOrigin> for FlatPoint {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: PlaneAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(self.group0()[3]) * other.group0(),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<PointAtInfinity> for FlatPoint {
+    type Output = PointAtInfinity;
+
+    fn wedge_dot(self, other: PointAtInfinity) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from(self.group0()[3]) * other.group0(),
+            },
+        }
+    }
+}
+
+impl WedgeDot<PointAtOrigin> for FlatPoint {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Rotor> for FlatPoint {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Rotor) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[3], other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], other.group0()[3], other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<RoundPoint> for FlatPoint {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: RoundPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0]),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + Simd32x2::from(self.group0()[3]) * other.group1() * Simd32x2::from([-1.0, 1.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0]) - Simd32x3::from(self.group0()[3]) * other.group0(),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Scalar> for FlatPoint {
+    type Output = FlatPoint;
+
+    fn wedge_dot(self, other: Scalar) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: self.group0() * Simd32x4::from(other.group0()),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Sphere> for FlatPoint {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Sphere) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0]) + Simd32x3::from(self.group0()[3]) * other.group0(),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0]),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
+                    + Simd32x2::from(self.group0()[3]) * other.group1() * Simd32x2::from([-1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Translator> for FlatPoint {
+    type Output = Circle;
+
+    fn wedge_dot(self, other: Translator) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3])
+                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+            },
+        }
+    }
+}
+
 impl WedgeDot<AntiScalar> for Flector {
     type Output = MultiVector;
 
@@ -41633,6 +44914,35 @@ impl WedgeDot<Dipole> for Flector {
                     + Simd32x2::from(self.group1()[1]) * Simd32x2::from([other.group0()[1], -other.group2()[1]])
                     + Simd32x2::from(self.group1()[2]) * Simd32x2::from([other.group0()[2], -other.group2()[2]])
                     + Simd32x2::from(self.group1()[3]) * Simd32x2::from([0.0, -other.group2()[3]]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<FlatPoint> for Flector {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()[3]),
+                g5: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([-other.group0()[3], -other.group0()[3], -other.group0()[3], 0.0])
+                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0])
+                    + Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group1()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + Simd32x2::from(self.group1()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
             },
         }
     }
@@ -41994,17 +45304,17 @@ impl WedgeDot<Origin> for Flector {
     fn wedge_dot(self, other: Origin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0(), 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
+                g0: Simd32x2::from(self.group1()[3]) * Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(self.group0()[3]) * Simd32x2::from([-other.group0(), 0.0]),
                 g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()),
-                g5: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - self.group1() * Simd32x4::from(other.group0()),
+                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(self.group1()[3]) * Simd32x2::from([0.0, -other.group0()]),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -42076,35 +45386,6 @@ impl WedgeDot<PlaneAtOrigin> for Flector {
     }
 }
 
-impl WedgeDot<Point> for Flector {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0()[3], 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()[3]),
-                g5: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([-other.group0()[3], -other.group0()[3], -other.group0()[3], 0.0])
-                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0])
-                    + Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group1()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group1()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + Simd32x2::from(self.group1()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
-            },
-        }
-    }
-}
-
 impl WedgeDot<PointAtInfinity> for Flector {
     type Output = Flector;
 
@@ -42118,6 +45399,28 @@ impl WedgeDot<PointAtInfinity> for Flector {
                 g1: Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
                     + Simd32x4::from(self.group1()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
                     + Simd32x4::from(self.group1()[2]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<PointAtOrigin> for Flector {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()),
+                g5: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group1()[3]) * Simd32x2::from([0.0, -other.group0()]),
             },
         }
     }
@@ -42326,6 +45629,18 @@ impl WedgeDot<Dipole> for Horizon {
     }
 }
 
+impl WedgeDot<FlatPoint> for Horizon {
+    type Output = Horizon;
+
+    fn wedge_dot(self, other: FlatPoint) -> Horizon {
+        Horizon {
+            groups: HorizonGroups {
+                g0: 0.0 - self.group0() * other.group0()[3],
+            },
+        }
+    }
+}
+
 impl WedgeDot<Flector> for Horizon {
     type Output = Flector;
 
@@ -42431,12 +45746,22 @@ impl WedgeDot<MultiVector> for Horizon {
 }
 
 impl WedgeDot<Origin> for Horizon {
-    type Output = Horizon;
+    type Output = MultiVector;
 
-    fn wedge_dot(self, other: Origin) -> Horizon {
-        Horizon {
-            groups: HorizonGroups {
-                g0: 0.0 - self.group0() * other.group0(),
+    fn wedge_dot(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -42466,13 +45791,13 @@ impl WedgeDot<PlaneAtOrigin> for Horizon {
     }
 }
 
-impl WedgeDot<Point> for Horizon {
+impl WedgeDot<PointAtOrigin> for Horizon {
     type Output = Horizon;
 
-    fn wedge_dot(self, other: Point) -> Horizon {
+    fn wedge_dot(self, other: PointAtOrigin) -> Horizon {
         Horizon {
             groups: HorizonGroups {
-                g0: 0.0 - self.group0() * other.group0()[3],
+                g0: 0.0 - self.group0() * other.group0(),
             },
         }
     }
@@ -42624,6 +45949,18 @@ impl WedgeDot<Dipole> for Infinity {
     }
 }
 
+impl WedgeDot<FlatPoint> for Infinity {
+    type Output = Infinity;
+
+    fn wedge_dot(self, other: FlatPoint) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: 0.0 - self.group0() * other.group0()[3],
+            },
+        }
+    }
+}
+
 impl WedgeDot<Flector> for Infinity {
     type Output = MultiVector;
 
@@ -42729,12 +46066,22 @@ impl WedgeDot<MultiVector> for Infinity {
 }
 
 impl WedgeDot<Origin> for Infinity {
-    type Output = Infinity;
+    type Output = MultiVector;
 
-    fn wedge_dot(self, other: Origin) -> Infinity {
-        Infinity {
-            groups: InfinityGroups {
-                g0: 0.0 - self.group0() * other.group0(),
+    fn wedge_dot(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -42764,13 +46111,13 @@ impl WedgeDot<PlaneAtOrigin> for Infinity {
     }
 }
 
-impl WedgeDot<Point> for Infinity {
+impl WedgeDot<PointAtOrigin> for Infinity {
     type Output = Infinity;
 
-    fn wedge_dot(self, other: Point) -> Infinity {
+    fn wedge_dot(self, other: PointAtOrigin) -> Infinity {
         Infinity {
             groups: InfinityGroups {
-                g0: 0.0 - self.group0() * other.group0()[3],
+                g0: 0.0 - self.group0() * other.group0(),
             },
         }
     }
@@ -42963,6 +46310,33 @@ impl WedgeDot<Dipole> for Line {
                     + Simd32x3::from(self.group1()[0]) * Simd32x3::from([-other.group2()[3], other.group1()[2], -other.group1()[1]])
                     + Simd32x3::from(self.group1()[1]) * Simd32x3::from([-other.group1()[2], -other.group2()[3], other.group1()[0]])
                     + Simd32x3::from(self.group1()[2]) * Simd32x3::from([other.group1()[1], -other.group1()[0], -other.group2()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<FlatPoint> for Line {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3]),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    - self.group1() * Simd32x3::from(other.group0()[3]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -43266,15 +46640,15 @@ impl WedgeDot<Origin> for Line {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+                g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
+                g3: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+                g4: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
                 g5: Simd32x4::from(0.0),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
-                g9: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
                 g10: Simd32x2::from(0.0),
             },
         }
@@ -43342,33 +46716,6 @@ impl WedgeDot<PlaneAtOrigin> for Line {
     }
 }
 
-impl WedgeDot<Point> for Line {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3]),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    - self.group1() * Simd32x3::from(other.group0()[3]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl WedgeDot<PointAtInfinity> for Line {
     type Output = MultiVector;
 
@@ -43388,6 +46735,28 @@ impl WedgeDot<PointAtInfinity> for Line {
                 g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<PointAtOrigin> for Line {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -43608,6 +46977,18 @@ impl WedgeDot<Dipole> for LineAtInfinity {
     }
 }
 
+impl WedgeDot<FlatPoint> for LineAtInfinity {
+    type Output = LineAtInfinity;
+
+    fn wedge_dot(self, other: FlatPoint) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3]),
+            },
+        }
+    }
+}
+
 impl WedgeDot<Flector> for LineAtInfinity {
     type Output = MultiVector;
 
@@ -43763,12 +47144,22 @@ impl WedgeDot<MultiVector> for LineAtInfinity {
 }
 
 impl WedgeDot<Origin> for LineAtInfinity {
-    type Output = LineAtInfinity;
+    type Output = MultiVector;
 
-    fn wedge_dot(self, other: Origin) -> LineAtInfinity {
-        LineAtInfinity {
-            groups: LineAtInfinityGroups {
-                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+    fn wedge_dot(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -43826,13 +47217,13 @@ impl WedgeDot<PlaneAtOrigin> for LineAtInfinity {
     }
 }
 
-impl WedgeDot<Point> for LineAtInfinity {
+impl WedgeDot<PointAtOrigin> for LineAtInfinity {
     type Output = LineAtInfinity;
 
-    fn wedge_dot(self, other: Point) -> LineAtInfinity {
+    fn wedge_dot(self, other: PointAtOrigin) -> LineAtInfinity {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
-                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3]),
+                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
@@ -44003,6 +47394,32 @@ impl WedgeDot<Dipole> for LineAtOrigin {
                 g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group2()[2], -other.group2()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group2()[2], 0.0, other.group2()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group2()[1], -other.group2()[0], 0.0]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<FlatPoint> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3]),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -44235,13 +47652,14 @@ impl WedgeDot<MultiVector> for LineAtOrigin {
 }
 
 impl WedgeDot<Origin> for LineAtOrigin {
-    type Output = RoundPoint;
+    type Output = Dipole;
 
-    fn wedge_dot(self, other: Origin) -> RoundPoint {
-        RoundPoint {
-            groups: RoundPointGroups {
+    fn wedge_dot(self, other: Origin) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
                 g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
-                g1: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x4::from(0.0),
             },
         }
     }
@@ -44299,32 +47717,6 @@ impl WedgeDot<PlaneAtOrigin> for LineAtOrigin {
     }
 }
 
-impl WedgeDot<Point> for LineAtOrigin {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3]),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl WedgeDot<PointAtInfinity> for LineAtOrigin {
     type Output = MultiVector;
 
@@ -44346,6 +47738,19 @@ impl WedgeDot<PointAtInfinity> for LineAtOrigin {
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<PointAtOrigin> for LineAtOrigin {
+    type Output = RoundPoint;
+
+    fn wedge_dot(self, other: PointAtOrigin) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+                g1: Simd32x2::from(0.0),
             },
         }
     }
@@ -44516,6 +47921,28 @@ impl WedgeDot<Dipole> for Magnitude {
                 g6: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], -other.group2()[3]]),
                 g7: Simd32x3::from(self.group0()[1]) * other.group1(),
                 g8: Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<FlatPoint> for Magnitude {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(self.group0()[0]) * other.group0(),
+                g6: Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -44723,15 +48150,15 @@ impl WedgeDot<Origin> for Magnitude {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0(), 0.0]),
                 g3: Simd32x3::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-                g6: Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g10: Simd32x2::from(self.group0()[1]) * Simd32x2::from([-other.group0(), 0.0]),
             },
         }
     }
@@ -44781,28 +48208,6 @@ impl WedgeDot<PlaneAtOrigin> for Magnitude {
     }
 }
 
-impl WedgeDot<Point> for Magnitude {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(self.group0()[0]) * other.group0(),
-                g6: Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl WedgeDot<PointAtInfinity> for Magnitude {
     type Output = MultiVector;
 
@@ -44818,6 +48223,28 @@ impl WedgeDot<PointAtInfinity> for Magnitude {
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(self.group0()[1]) * other.group0(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<PointAtOrigin> for Magnitude {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g6: Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -45045,6 +48472,34 @@ impl WedgeDot<Dipole> for Motor {
                     + Simd32x3::from(self.group1()[0]) * Simd32x3::from([-other.group2()[3], other.group1()[2], -other.group1()[1]])
                     + Simd32x3::from(self.group1()[1]) * Simd32x3::from([-other.group1()[2], -other.group2()[3], other.group1()[0]])
                     + Simd32x3::from(self.group1()[2]) * Simd32x3::from([other.group1()[1], -other.group1()[0], -other.group2()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<FlatPoint> for Motor {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3]),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
+                    - self.group1() * Simd32x3::from(other.group0()[3]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -45381,16 +48836,16 @@ impl WedgeDot<Origin> for Motor {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
+                g3: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g4: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
                 g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(self.group0()[3]) * Simd32x2::from([-other.group0(), 0.0]),
             },
         }
     }
@@ -45460,34 +48915,6 @@ impl WedgeDot<PlaneAtOrigin> for Motor {
     }
 }
 
-impl WedgeDot<Point> for Motor {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3]),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    - self.group1() * Simd32x3::from(other.group0()[3]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl WedgeDot<PointAtInfinity> for Motor {
     type Output = MultiVector;
 
@@ -45508,6 +48935,28 @@ impl WedgeDot<PointAtInfinity> for Motor {
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
                     + Simd32x3::from(self.group0()[3]) * other.group0(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<PointAtOrigin> for Motor {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -46002,6 +49451,85 @@ impl WedgeDot<Dipole> for MultiVector {
                     + Simd32x2::from(self.group9()[1]) * Simd32x2::from([other.group0()[1], -other.group2()[1]])
                     + Simd32x2::from(self.group9()[2]) * Simd32x2::from([other.group0()[2], -other.group2()[2]])
                     + self.group10() * Simd32x2::from(other.group2()[3]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<FlatPoint> for MultiVector {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group3()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
+                    + Simd32x2::from(self.group3()[1]) * Simd32x2::from([-other.group0()[1], 0.0])
+                    + Simd32x2::from(self.group3()[2]) * Simd32x2::from([-other.group0()[2], 0.0])
+                    + Simd32x2::from(self.group5()[3]) * Simd32x2::from([other.group0()[3], 0.0])
+                    + Simd32x2::from(self.group6()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group6()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group6()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + Simd32x2::from(self.group6()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
+                g1: Simd32x3::from(self.group2()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
+                    + Simd32x3::from(self.group6()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group6()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group6()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    - self.group7() * Simd32x3::from(other.group0()[3]),
+                g2: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, other.group0()[0]])
+                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, other.group0()[1]])
+                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, other.group0()[2]])
+                    + self.group2() * Simd32x2::from(other.group0()[3])
+                    + Simd32x2::from(self.group7()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group7()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group7()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+                g3: self.group3() * Simd32x3::from(other.group0()[3]),
+                g4: Simd32x3::from(self.group3()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group3()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group3()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    + self.group9() * Simd32x3::from(other.group0()[3])
+                    + Simd32x3::from(self.group10()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g5: Simd32x4::from(self.group0()[0]) * other.group0()
+                    + Simd32x4::from(self.group3()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
+                    + Simd32x4::from(self.group3()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]])
+                    + Simd32x4::from(self.group3()[2]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[2]])
+                    + Simd32x4::from(self.group4()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group4()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group4()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0])
+                    + swizzle!(self.group5(), 0, 1, 2, 0) * Simd32x4::from([-other.group0()[3], -other.group0()[3], -other.group0()[3], 0.0])
+                    + Simd32x4::from(self.group5()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0])
+                    + Simd32x4::from(self.group9()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group9()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group9()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0]),
+                g6: Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]])
+                    + Simd32x4::from(self.group6()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
+                    + Simd32x4::from(self.group6()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
+                    + Simd32x4::from(self.group6()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
+                g7: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()[3])
+                    + Simd32x3::from(self.group2()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
+                    + Simd32x3::from(self.group6()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group6()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group6()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
+                g8: Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
+                    + Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group1()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group1()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
+                    - Simd32x3::from(self.group6()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
+                    + Simd32x3::from(self.group7()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group7()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group7()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    - self.group8() * Simd32x3::from(other.group0()[3]),
+                g9: Simd32x3::from(self.group3()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group3()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group3()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
+                    + self.group4() * Simd32x3::from(other.group0()[3])
+                    - Simd32x3::from(self.group10()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g10: Simd32x2::from(self.group4()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group4()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group4()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + Simd32x2::from(self.group9()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group9()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group9()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + self.group10() * Simd32x2::from(other.group0()[3]),
             },
         }
     }
@@ -46991,19 +50519,21 @@ impl WedgeDot<Origin> for MultiVector {
     fn wedge_dot(self, other: Origin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group5()[3]) * Simd32x2::from([other.group0(), 0.0]) + Simd32x2::from(self.group6()[3]) * Simd32x2::from([0.0, -other.group0()]),
-                g1: Simd32x3::from(0.0) - self.group7() * Simd32x3::from(other.group0()),
-                g2: self.group2() * Simd32x2::from(other.group0()),
-                g3: self.group3() * Simd32x3::from(other.group0()),
-                g4: self.group9() * Simd32x3::from(other.group0()),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()])
-                    + swizzle!(self.group5(), 0, 1, 2, 0) * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0]),
-                g6: Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()])
-                    + swizzle!(self.group6(), 0, 1, 2, 0) * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
-                g7: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
-                g8: Simd32x3::from(0.0) - self.group8() * Simd32x3::from(other.group0()),
-                g9: self.group4() * Simd32x3::from(other.group0()),
-                g10: self.group10() * Simd32x2::from(other.group0()),
+                g0: Simd32x2::from(self.group2()[1]) * Simd32x2::from([-other.group0(), 0.0]) + Simd32x2::from(self.group10()[1]) * Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group5()[0], self.group5()[1], self.group5()[2]]) * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0(), 0.0]) + Simd32x2::from(self.group5()[3]) * Simd32x2::from([-other.group0(), 0.0]),
+                g3: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()) - self.group7() * Simd32x3::from(other.group0()),
+                g4: Simd32x3::from(0.0) - self.group8() * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from(self.group2()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g6: Simd32x4::from([self.group4()[0], self.group4()[1], self.group4()[2], self.group4()[0]])
+                    * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0])
+                    + Simd32x4::from([self.group9()[0], self.group9()[1], self.group9()[2], self.group9()[0]])
+                        * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0])
+                    + Simd32x4::from(self.group10()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g7: Simd32x3::from([self.group5()[0], self.group5()[1], self.group5()[2]]) * Simd32x3::from(other.group0()),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - self.group8() * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(self.group0()[1]) * Simd32x2::from([-other.group0(), 0.0]) + Simd32x2::from(self.group6()[3]) * Simd32x2::from([-other.group0(), 0.0]),
             },
         }
     }
@@ -47157,85 +50687,6 @@ impl WedgeDot<PlaneAtOrigin> for MultiVector {
     }
 }
 
-impl WedgeDot<Point> for MultiVector {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group3()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
-                    + Simd32x2::from(self.group3()[1]) * Simd32x2::from([-other.group0()[1], 0.0])
-                    + Simd32x2::from(self.group3()[2]) * Simd32x2::from([-other.group0()[2], 0.0])
-                    + Simd32x2::from(self.group5()[3]) * Simd32x2::from([other.group0()[3], 0.0])
-                    + Simd32x2::from(self.group6()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group6()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group6()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + Simd32x2::from(self.group6()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
-                g1: Simd32x3::from(self.group2()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    + Simd32x3::from(self.group6()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group6()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group6()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    - self.group7() * Simd32x3::from(other.group0()[3]),
-                g2: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, other.group0()[0]])
-                    + Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, other.group0()[1]])
-                    + Simd32x2::from(self.group1()[2]) * Simd32x2::from([0.0, other.group0()[2]])
-                    + self.group2() * Simd32x2::from(other.group0()[3])
-                    + Simd32x2::from(self.group7()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group7()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group7()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-                g3: self.group3() * Simd32x3::from(other.group0()[3]),
-                g4: Simd32x3::from(self.group3()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group3()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group3()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    + self.group9() * Simd32x3::from(other.group0()[3])
-                    + Simd32x3::from(self.group10()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g5: Simd32x4::from(self.group0()[0]) * other.group0()
-                    + Simd32x4::from(self.group3()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
-                    + Simd32x4::from(self.group3()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]])
-                    + Simd32x4::from(self.group3()[2]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[2]])
-                    + Simd32x4::from(self.group4()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group4()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group4()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0])
-                    + swizzle!(self.group5(), 0, 1, 2, 0) * Simd32x4::from([-other.group0()[3], -other.group0()[3], -other.group0()[3], 0.0])
-                    + Simd32x4::from(self.group5()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0])
-                    + Simd32x4::from(self.group9()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group9()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group9()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0]),
-                g6: Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]])
-                    + Simd32x4::from(self.group6()[0]) * Simd32x4::from([other.group0()[3], 0.0, 0.0, -other.group0()[0]])
-                    + Simd32x4::from(self.group6()[1]) * Simd32x4::from([0.0, other.group0()[3], 0.0, -other.group0()[1]])
-                    + Simd32x4::from(self.group6()[2]) * Simd32x4::from([0.0, 0.0, other.group0()[3], -other.group0()[2]]),
-                g7: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()[3])
-                    + Simd32x3::from(self.group2()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    + Simd32x3::from(self.group6()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group6()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group6()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
-                g8: Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    + Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group1()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group1()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
-                    - Simd32x3::from(self.group6()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    + Simd32x3::from(self.group7()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group7()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group7()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    - self.group8() * Simd32x3::from(other.group0()[3]),
-                g9: Simd32x3::from(self.group3()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group3()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group3()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
-                    + self.group4() * Simd32x3::from(other.group0()[3])
-                    - Simd32x3::from(self.group10()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g10: Simd32x2::from(self.group4()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group4()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group4()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + Simd32x2::from(self.group9()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group9()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group9()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + self.group10() * Simd32x2::from(other.group0()[3]),
-            },
-        }
-    }
-}
-
 impl WedgeDot<PointAtInfinity> for MultiVector {
     type Output = MultiVector;
 
@@ -47299,6 +50750,30 @@ impl WedgeDot<PointAtInfinity> for MultiVector {
                     + Simd32x2::from(self.group9()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
                     + Simd32x2::from(self.group9()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
                     + Simd32x2::from(self.group9()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<PointAtOrigin> for MultiVector {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group5()[3]) * Simd32x2::from([other.group0(), 0.0]) + Simd32x2::from(self.group6()[3]) * Simd32x2::from([0.0, -other.group0()]),
+                g1: Simd32x3::from(0.0) - self.group7() * Simd32x3::from(other.group0()),
+                g2: self.group2() * Simd32x2::from(other.group0()),
+                g3: self.group3() * Simd32x3::from(other.group0()),
+                g4: self.group9() * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()])
+                    + swizzle!(self.group5(), 0, 1, 2, 0) * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0]),
+                g6: Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()])
+                    + swizzle!(self.group6(), 0, 1, 2, 0) * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
+                g7: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
+                g8: Simd32x3::from(0.0) - self.group8() * Simd32x3::from(other.group0()),
+                g9: self.group4() * Simd32x3::from(other.group0()),
+                g10: self.group10() * Simd32x2::from(other.group0()),
             },
         }
     }
@@ -47661,14 +51136,13 @@ impl WedgeDot<Translator> for MultiVector {
 }
 
 impl WedgeDot<AntiScalar> for Origin {
-    type Output = Circle;
+    type Output = Sphere;
 
-    fn wedge_dot(self, other: AntiScalar) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from(0.0),
+    fn wedge_dot(self, other: AntiScalar) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group0(), 0.0]),
             },
         }
     }
@@ -47680,17 +51154,17 @@ impl WedgeDot<Circle> for Origin {
     fn wedge_dot(self, other: Circle) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group0()[3]]),
-                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group1(),
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
+                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group1(),
+                g4: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group2(),
                 g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group0()[0], -other.group0()[1], -other.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(self.group0()) * other.group2(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()) * other.group2(),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[3], 0.0]),
             },
         }
     }
@@ -47702,16 +51176,38 @@ impl WedgeDot<Dipole> for Origin {
     fn wedge_dot(self, other: Dipole) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group2()[3], 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(self.group0()) * Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([other.group2()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(self.group0()) * Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+                g7: Simd32x3::from(self.group0()) * Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
                 g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(self.group0()) * other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<FlatPoint> for Origin {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
         }
@@ -47724,41 +51220,61 @@ impl WedgeDot<Flector> for Origin {
     fn wedge_dot(self, other: Flector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[3], 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group1()[3]]),
+                g1: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[3], 0.0]),
                 g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(self.group0()) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g5: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * other.group1(),
+                g7: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group1()[3]]),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
 }
 
 impl WedgeDot<Horizon> for Origin {
-    type Output = Horizon;
+    type Output = MultiVector;
 
-    fn wedge_dot(self, other: Horizon) -> Horizon {
-        Horizon {
-            groups: HorizonGroups {
-                g0: self.group0() * other.group0(),
+    fn wedge_dot(self, other: Horizon) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
 }
 
 impl WedgeDot<Infinity> for Origin {
-    type Output = Infinity;
+    type Output = MultiVector;
 
-    fn wedge_dot(self, other: Infinity) -> Infinity {
-        Infinity {
-            groups: InfinityGroups {
-                g0: self.group0() * other.group0(),
+    fn wedge_dot(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -47771,15 +51287,15 @@ impl WedgeDot<Line> for Origin {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
+                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g4: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group1(),
                 g5: Simd32x4::from(0.0),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(self.group0()) * other.group1(),
-                g9: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()) * other.group1(),
                 g10: Simd32x2::from(0.0),
             },
         }
@@ -47787,25 +51303,36 @@ impl WedgeDot<Line> for Origin {
 }
 
 impl WedgeDot<LineAtInfinity> for Origin {
-    type Output = LineAtInfinity;
+    type Output = MultiVector;
 
-    fn wedge_dot(self, other: LineAtInfinity) -> LineAtInfinity {
-        LineAtInfinity {
-            groups: LineAtInfinityGroups {
-                g0: Simd32x3::from(self.group0()) * other.group0(),
+    fn wedge_dot(self, other: LineAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()) * other.group0(),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
 }
 
 impl WedgeDot<LineAtOrigin> for Origin {
-    type Output = RoundPoint;
+    type Output = Dipole;
 
-    fn wedge_dot(self, other: LineAtOrigin) -> RoundPoint {
-        RoundPoint {
-            groups: RoundPointGroups {
+    fn wedge_dot(self, other: LineAtOrigin) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
-                g1: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x4::from(0.0),
             },
         }
     }
@@ -47819,15 +51346,15 @@ impl WedgeDot<Magnitude> for Origin {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[0], 0.0]),
                 g3: Simd32x3::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
-                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]]),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group0()[1], 0.0]),
             },
         }
     }
@@ -47840,16 +51367,16 @@ impl WedgeDot<Motor> for Origin {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
+                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g4: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group1(),
                 g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
+                g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(self.group0()) * other.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()) * other.group1(),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group0()[3], 0.0]),
             },
         }
     }
@@ -47861,29 +51388,18 @@ impl WedgeDot<MultiVector> for Origin {
     fn wedge_dot(self, other: MultiVector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group5()[3], -other.group6()[3]]),
-                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group7(),
-                g2: Simd32x2::from(self.group0()) * other.group2() * Simd32x2::from([-1.0, 1.0]),
-                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group3(),
-                g4: Simd32x3::from(self.group0()) * other.group9(),
-                g5: Simd32x4::from(self.group0()) * Simd32x4::from([other.group5()[0], other.group5()[1], other.group5()[2], other.group0()[0]]),
-                g6: Simd32x4::from(0.0) - Simd32x4::from(self.group0()) * Simd32x4::from([other.group6()[0], other.group6()[1], other.group6()[2], other.group0()[1]]),
-                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group1(),
-                g8: Simd32x3::from(self.group0()) * other.group8(),
-                g9: Simd32x3::from(self.group0()) * other.group4(),
-                g10: Simd32x2::from(self.group0()) * other.group10() * Simd32x2::from([-1.0, 1.0]),
-            },
-        }
-    }
-}
-
-impl WedgeDot<Origin> for Origin {
-    type Output = Scalar;
-
-    fn wedge_dot(self, other: Origin) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: self.group0() * other.group0(),
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group2()[1], other.group10()[1]]),
+                g1: Simd32x3::from(self.group0()) * Simd32x3::from([other.group5()[0], other.group5()[1], other.group5()[2]]),
+                g2: Simd32x2::from(self.group0()) * Simd32x2::from([other.group5()[3], 0.0]) + Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[0], 0.0]),
+                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group7() + Simd32x3::from(self.group0()) * other.group1(),
+                g4: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group8(),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group2()[1]]),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([other.group9()[0], other.group9()[1], other.group9()[2], other.group10()[1]])
+                    + Simd32x4::from(self.group0()) * Simd32x4::from([other.group4()[0], other.group4()[1], other.group4()[2], 0.0]),
+                g7: Simd32x3::from(self.group0()) * Simd32x3::from([other.group5()[0], other.group5()[1], other.group5()[2]]),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()) * other.group8(),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([other.group6()[3], 0.0]) + Simd32x2::from(self.group0()) * Simd32x2::from([-other.group0()[1], 0.0]),
             },
         }
     }
@@ -47895,49 +51411,13 @@ impl WedgeDot<Plane> for Origin {
     fn wedge_dot(self, other: Plane) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()[3]]),
-            },
-        }
-    }
-}
-
-impl WedgeDot<PlaneAtOrigin> for Origin {
-    type Output = Dipole;
-
-    fn wedge_dot(self, other: PlaneAtOrigin) -> Dipole {
-        Dipole {
-            groups: DipoleGroups {
-                g0: Simd32x3::from(0.0),
-                g1: Simd32x3::from(self.group0()) * other.group0(),
-                g2: Simd32x4::from(0.0),
-            },
-        }
-    }
-}
-
-impl WedgeDot<Point> for Origin {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[3], 0.0]),
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()[3]]),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
                 g3: Simd32x3::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
@@ -47947,13 +51427,49 @@ impl WedgeDot<Point> for Origin {
     }
 }
 
-impl WedgeDot<PointAtInfinity> for Origin {
-    type Output = PointAtInfinity;
+impl WedgeDot<PlaneAtOrigin> for Origin {
+    type Output = Circle;
 
-    fn wedge_dot(self, other: PointAtInfinity) -> PointAtInfinity {
-        PointAtInfinity {
-            groups: PointAtInfinityGroups {
-                g0: Simd32x3::from(self.group0()) * other.group0(),
+    fn wedge_dot(self, other: PlaneAtOrigin) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<PointAtInfinity> for Origin {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: PointAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(self.group0()) * other.group0(),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(self.group0()) * other.group0(),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<PointAtOrigin> for Origin {
+    type Output = Origin;
+
+    fn wedge_dot(self, other: PointAtOrigin) -> Origin {
+        Origin {
+            groups: OriginGroups {
+                g0: self.group0() * other.group0(),
             },
         }
     }
@@ -47966,16 +51482,16 @@ impl WedgeDot<Rotor> for Origin {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
+                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
                 g4: Simd32x3::from(0.0),
                 g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
+                g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group0()[3], 0.0]),
             },
         }
     }
@@ -47987,14 +51503,14 @@ impl WedgeDot<RoundPoint> for Origin {
     fn wedge_dot(self, other: RoundPoint) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group1()[1], 0.0]),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(self.group0()) * other.group1() * Simd32x2::from([-1.0, 1.0]),
-                g3: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(self.group0()) * other.group0(),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group1()[1]]),
                 g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
@@ -48021,31 +51537,39 @@ impl WedgeDot<Sphere> for Origin {
     fn wedge_dot(self, other: Sphere) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group1()[1]]),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
                 g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(self.group0()) * other.group0(),
+                g4: Simd32x3::from(0.0),
                 g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[1]]),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(self.group0()) * other.group1() * Simd32x2::from([-1.0, 1.0]),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
 }
 
 impl WedgeDot<Translator> for Origin {
-    type Output = Circle;
+    type Output = MultiVector;
 
-    fn wedge_dot(self, other: Translator) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
+    fn wedge_dot(self, other: Translator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group0()[3], 0.0]),
             },
         }
     }
@@ -48126,6 +51650,33 @@ impl WedgeDot<Dipole> for Plane {
                     + Simd32x2::from(self.group0()[1]) * Simd32x2::from([other.group0()[1], -other.group2()[1]])
                     + Simd32x2::from(self.group0()[2]) * Simd32x2::from([other.group0()[2], -other.group2()[2]])
                     + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group2()[3]]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<FlatPoint> for Plane {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3]),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
             },
         }
     }
@@ -48388,17 +51939,17 @@ impl WedgeDot<Origin> for Plane {
     fn wedge_dot(self, other: Origin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
+                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, other.group0()]),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
                 g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g4: Simd32x3::from(0.0),
                 g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - self.group0() * Simd32x4::from(other.group0()),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()]),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -48457,33 +52008,6 @@ impl WedgeDot<PlaneAtOrigin> for Plane {
     }
 }
 
-impl WedgeDot<Point> for Plane {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3]),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
-            },
-        }
-    }
-}
-
 impl WedgeDot<PointAtInfinity> for Plane {
     type Output = Flector;
 
@@ -48496,6 +52020,28 @@ impl WedgeDot<PointAtInfinity> for Plane {
                 g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
                     + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
                     + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<PointAtOrigin> for Plane {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()]),
             },
         }
     }
@@ -48689,6 +52235,32 @@ impl WedgeDot<Dipole> for PlaneAtOrigin {
                 g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], -other.group2()[0]])
                     + Simd32x2::from(self.group0()[1]) * Simd32x2::from([other.group0()[1], -other.group2()[1]])
                     + Simd32x2::from(self.group0()[2]) * Simd32x2::from([other.group0()[2], -other.group2()[2]]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<FlatPoint> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0() * Simd32x3::from(other.group0()[3]),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
             },
         }
     }
@@ -48927,14 +52499,15 @@ impl WedgeDot<MultiVector> for PlaneAtOrigin {
 }
 
 impl WedgeDot<Origin> for PlaneAtOrigin {
-    type Output = Dipole;
+    type Output = Circle;
 
-    fn wedge_dot(self, other: Origin) -> Dipole {
-        Dipole {
-            groups: DipoleGroups {
-                g0: Simd32x3::from(0.0),
-                g1: self.group0() * Simd32x3::from(other.group0()),
-                g2: Simd32x4::from(0.0),
+    fn wedge_dot(self, other: Origin) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
+                    * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
             },
         }
     }
@@ -48993,32 +52566,6 @@ impl WedgeDot<PlaneAtOrigin> for PlaneAtOrigin {
     }
 }
 
-impl WedgeDot<Point> for PlaneAtOrigin {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: self.group0() * Simd32x3::from(other.group0()[3]),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-            },
-        }
-    }
-}
-
 impl WedgeDot<PointAtInfinity> for PlaneAtOrigin {
     type Output = Flector;
 
@@ -49031,6 +52578,20 @@ impl WedgeDot<PointAtInfinity> for PlaneAtOrigin {
                 g1: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
                     + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]])
                     + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<PointAtOrigin> for PlaneAtOrigin {
+    type Output = Dipole;
+
+    fn wedge_dot(self, other: PointAtOrigin) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: Simd32x3::from(0.0),
+                g1: self.group0() * Simd32x3::from(other.group0()),
+                g2: Simd32x4::from(0.0),
             },
         }
     }
@@ -49154,540 +52715,6 @@ impl WedgeDot<Translator> for PlaneAtOrigin {
     }
 }
 
-impl WedgeDot<AntiScalar> for Point {
-    type Output = Circle;
-
-    fn wedge_dot(self, other: AntiScalar) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
-            },
-        }
-    }
-}
-
-impl WedgeDot<Circle> for Point {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: Circle) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, -other.group0()[3]]),
-                g1: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0])
-                    - Simd32x3::from(self.group0()[3]) * other.group1(),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group1()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]])
-                    + swizzle!(self.group0(), 3, 3, 3, 2) * swizzle!(other.group0(), 0, 1, 2, 2) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-                g7: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[3], other.group1()[2], -other.group1()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group1()[2], other.group0()[3], other.group1()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group1()[1], -other.group1()[0], other.group0()[3]])
-                    + Simd32x3::from(self.group0()[3]) * other.group2(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl WedgeDot<Dipole> for Point {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: Dipole) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([-other.group0()[1], 0.0])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([-other.group0()[2], 0.0])
-                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group2()[3], 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group0(),
-                g4: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([-other.group2()[3], other.group1()[2], -other.group1()[1], -other.group0()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group1()[2], -other.group2()[3], other.group1()[0], -other.group0()[1]])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group1()[1], -other.group1()[0], -other.group2()[3], -other.group0()[2]])
-                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    + Simd32x3::from(self.group0()[3]) * other.group1(),
-                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group1()[2]]),
-            },
-        }
-    }
-}
-
-impl WedgeDot<Flector> for Point {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: Flector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0()[3], 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([-other.group0()[3], -other.group1()[2], other.group1()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group1()[2], -other.group0()[3], -other.group1()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group1()[1], other.group1()[0], -other.group0()[3], 0.0])
-                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group1()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group1()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group1()[2]])
-                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl WedgeDot<Horizon> for Point {
-    type Output = Horizon;
-
-    fn wedge_dot(self, other: Horizon) -> Horizon {
-        Horizon {
-            groups: HorizonGroups {
-                g0: self.group0()[3] * other.group0(),
-            },
-        }
-    }
-}
-
-impl WedgeDot<Infinity> for Point {
-    type Output = Infinity;
-
-    fn wedge_dot(self, other: Infinity) -> Infinity {
-        Infinity {
-            groups: InfinityGroups {
-                g0: self.group0()[3] * other.group0(),
-            },
-        }
-    }
-}
-
-impl WedgeDot<Line> for Point {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: Line) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group0(),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    + Simd32x3::from(self.group0()[3]) * other.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl WedgeDot<LineAtInfinity> for Point {
-    type Output = LineAtInfinity;
-
-    fn wedge_dot(self, other: LineAtInfinity) -> LineAtInfinity {
-        LineAtInfinity {
-            groups: LineAtInfinityGroups {
-                g0: Simd32x3::from(self.group0()[3]) * other.group0(),
-            },
-        }
-    }
-}
-
-impl WedgeDot<LineAtOrigin> for Point {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: LineAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group0(),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl WedgeDot<Magnitude> for Point {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: Magnitude) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: self.group0() * Simd32x4::from(other.group0()[0]),
-                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]]),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[1]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl WedgeDot<Motor> for Point {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: Motor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[3], other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], other.group0()[3], other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], other.group0()[3]])
-                    + Simd32x3::from(self.group0()[3]) * other.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl WedgeDot<MultiVector> for Point {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: MultiVector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0)
-                    - Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group3()[0], other.group6()[0]])
-                    - Simd32x2::from(self.group0()[1]) * Simd32x2::from([other.group3()[1], other.group6()[1]])
-                    - Simd32x2::from(self.group0()[2]) * Simd32x2::from([other.group3()[2], other.group6()[2]])
-                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group5()[3], -other.group6()[3]]),
-                g1: Simd32x3::from(self.group0()[0]) * Simd32x3::from([-other.group2()[0], -other.group6()[2], other.group6()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group6()[2], -other.group2()[0], -other.group6()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group6()[1], other.group6()[0], -other.group2()[0]])
-                    - Simd32x3::from(self.group0()[3]) * other.group7(),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group7()[0]])
-                    + Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group7()[1]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group7()[2]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group1()[2]])
-                    + Simd32x2::from(self.group0()[3]) * other.group2() * Simd32x2::from([-1.0, 1.0]),
-                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group3(),
-                g4: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group10()[0], other.group3()[2], -other.group3()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group3()[2], other.group10()[0], other.group3()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group3()[1], -other.group3()[0], other.group10()[0]])
-                    + Simd32x3::from(self.group0()[3]) * other.group9(),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([-other.group5()[3], -other.group9()[2], other.group9()[1], -other.group3()[0]])
-                    + Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group4()[2], -other.group4()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group9()[2], -other.group5()[3], -other.group9()[0], -other.group3()[1]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group4()[2], other.group0()[0], other.group4()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group9()[1], other.group9()[0], -other.group5()[3], -other.group3()[2]])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group4()[1], -other.group4()[0], other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group5()[0], other.group5()[1], other.group5()[2], other.group0()[0]]),
-                g6: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group6()[0]])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([0.0, 0.0, 0.0, other.group6()[1]])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([0.0, 0.0, 0.0, other.group6()[2]])
-                    - Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group6()[0], other.group6()[1], other.group6()[2], other.group0()[1]]),
-                g7: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group2()[0], other.group6()[2], -other.group6()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group6()[2], other.group2()[0], other.group6()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group6()[1], -other.group6()[0], other.group2()[0]])
-                    - Simd32x3::from(self.group0()[3]) * other.group1(),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group6()[3], other.group7()[2], -other.group7()[1]])
-                    + Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[1], other.group1()[2], -other.group1()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group7()[2], other.group6()[3], other.group7()[0]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group1()[2], other.group0()[1], other.group1()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group7()[1], -other.group7()[0], other.group6()[3]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group1()[1], -other.group1()[0], other.group0()[1]])
-                    + Simd32x3::from(self.group0()[3]) * other.group8(),
-                g9: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group10()[0], other.group3()[2], -other.group3()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group3()[2], other.group10()[0], other.group3()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group3()[1], -other.group3()[0], other.group10()[0]])
-                    + Simd32x3::from(self.group0()[3]) * other.group4(),
-                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group9()[0]])
-                    + Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group4()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group9()[1]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group4()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group9()[2]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group4()[2]])
-                    + Simd32x2::from(self.group0()[3]) * other.group10() * Simd32x2::from([-1.0, 1.0]),
-            },
-        }
-    }
-}
-
-impl WedgeDot<Origin> for Point {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: Origin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0(), 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl WedgeDot<Plane> for Point {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: Plane) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
-                    + Simd32x2::from(self.group0()[3]) * Simd32x2::from([0.0, other.group0()[3]]),
-            },
-        }
-    }
-}
-
-impl WedgeDot<PlaneAtOrigin> for Point {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: PlaneAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(self.group0()[3]) * other.group0(),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]]),
-            },
-        }
-    }
-}
-
-impl WedgeDot<Point> for Point {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([other.group0()[3], 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: swizzle!(self.group0(), 0, 1, 2, 0) * Simd32x4::from([-other.group0()[3], -other.group0()[3], -other.group0()[3], 0.0])
-                    + Simd32x4::from(self.group0()[3]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl WedgeDot<PointAtInfinity> for Point {
-    type Output = PointAtInfinity;
-
-    fn wedge_dot(self, other: PointAtInfinity) -> PointAtInfinity {
-        PointAtInfinity {
-            groups: PointAtInfinityGroups {
-                g0: Simd32x3::from(self.group0()[3]) * other.group0(),
-            },
-        }
-    }
-}
-
-impl WedgeDot<Rotor> for Point {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[3], other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], other.group0()[3], other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], other.group0()[3]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl WedgeDot<RoundPoint> for Point {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: RoundPoint) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0]),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + Simd32x2::from(self.group0()[3]) * other.group1() * Simd32x2::from([-1.0, 1.0]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0]) - Simd32x3::from(self.group0()[3]) * other.group0(),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl WedgeDot<Scalar> for Point {
-    type Output = Point;
-
-    fn wedge_dot(self, other: Scalar) -> Point {
-        Point {
-            groups: PointGroups {
-                g0: self.group0() * Simd32x4::from(other.group0()),
-            },
-        }
-    }
-}
-
-impl WedgeDot<Sphere> for Point {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: Sphere) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0]) + Simd32x3::from(self.group0()[3]) * other.group0(),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[2], 0.0, -other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([-other.group0()[1], other.group0()[0], 0.0, 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group1()[0]),
-                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
-                    + Simd32x2::from(self.group0()[3]) * other.group1() * Simd32x2::from([-1.0, 1.0]),
-            },
-        }
-    }
-}
-
-impl WedgeDot<Translator> for Point {
-    type Output = Circle;
-
-    fn wedge_dot(self, other: Translator) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3])
-                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-            },
-        }
-    }
-}
-
 impl WedgeDot<AntiScalar> for PointAtInfinity {
     type Output = LineAtInfinity;
 
@@ -49761,6 +52788,18 @@ impl WedgeDot<Dipole> for PointAtInfinity {
                 g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group1()[0]])
                     + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group1()[1]])
                     + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group1()[2]]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<FlatPoint> for PointAtInfinity {
+    type Output = PointAtInfinity;
+
+    fn wedge_dot(self, other: FlatPoint) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3]),
             },
         }
     }
@@ -49940,12 +52979,22 @@ impl WedgeDot<MultiVector> for PointAtInfinity {
 }
 
 impl WedgeDot<Origin> for PointAtInfinity {
-    type Output = PointAtInfinity;
+    type Output = MultiVector;
 
-    fn wedge_dot(self, other: Origin) -> PointAtInfinity {
-        PointAtInfinity {
-            groups: PointAtInfinityGroups {
-                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+    fn wedge_dot(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: self.group0() * Simd32x3::from(other.group0()),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -49985,13 +53034,13 @@ impl WedgeDot<PlaneAtOrigin> for PointAtInfinity {
     }
 }
 
-impl WedgeDot<Point> for PointAtInfinity {
+impl WedgeDot<PointAtOrigin> for PointAtInfinity {
     type Output = PointAtInfinity;
 
-    fn wedge_dot(self, other: Point) -> PointAtInfinity {
+    fn wedge_dot(self, other: PointAtOrigin) -> PointAtInfinity {
         PointAtInfinity {
             groups: PointAtInfinityGroups {
-                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3]),
+                g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
@@ -50099,6 +53148,409 @@ impl WedgeDot<Translator> for PointAtInfinity {
     }
 }
 
+impl WedgeDot<AntiScalar> for PointAtOrigin {
+    type Output = Circle;
+
+    fn wedge_dot(self, other: AntiScalar) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Circle> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Circle) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, -other.group0()[3]]),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group1(),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([-other.group0()[0], -other.group0()[1], -other.group0()[2], 0.0]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(self.group0()) * other.group2(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Dipole> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Dipole) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group2()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(self.group0()) * other.group1(),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<FlatPoint> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Flector> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Flector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group0()[3], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(self.group0()) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Horizon> for PointAtOrigin {
+    type Output = Horizon;
+
+    fn wedge_dot(self, other: Horizon) -> Horizon {
+        Horizon {
+            groups: HorizonGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Infinity> for PointAtOrigin {
+    type Output = Infinity;
+
+    fn wedge_dot(self, other: Infinity) -> Infinity {
+        Infinity {
+            groups: InfinityGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Line> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Line) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(self.group0()) * other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<LineAtInfinity> for PointAtOrigin {
+    type Output = LineAtInfinity;
+
+    fn wedge_dot(self, other: LineAtInfinity) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl WedgeDot<LineAtOrigin> for PointAtOrigin {
+    type Output = RoundPoint;
+
+    fn wedge_dot(self, other: LineAtOrigin) -> RoundPoint {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g1: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Magnitude> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Magnitude) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[1]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Motor> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Motor) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(self.group0()) * other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<MultiVector> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(self.group0()) * Simd32x2::from([other.group5()[3], -other.group6()[3]]),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group7(),
+                g2: Simd32x2::from(self.group0()) * other.group2() * Simd32x2::from([-1.0, 1.0]),
+                g3: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group3(),
+                g4: Simd32x3::from(self.group0()) * other.group9(),
+                g5: Simd32x4::from(self.group0()) * Simd32x4::from([other.group5()[0], other.group5()[1], other.group5()[2], other.group0()[0]]),
+                g6: Simd32x4::from(0.0) - Simd32x4::from(self.group0()) * Simd32x4::from([other.group6()[0], other.group6()[1], other.group6()[2], other.group0()[1]]),
+                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group1(),
+                g8: Simd32x3::from(self.group0()) * other.group8(),
+                g9: Simd32x3::from(self.group0()) * other.group4(),
+                g10: Simd32x2::from(self.group0()) * other.group10() * Simd32x2::from([-1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Origin> for PointAtOrigin {
+    type Output = Origin;
+
+    fn wedge_dot(self, other: Origin) -> Origin {
+        Origin {
+            groups: OriginGroups {
+                g0: 0.0 - self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Plane> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Plane) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group0()) * Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<PlaneAtOrigin> for PointAtOrigin {
+    type Output = Dipole;
+
+    fn wedge_dot(self, other: PlaneAtOrigin) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x3::from(self.group0()) * other.group0(),
+                g2: Simd32x4::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<PointAtInfinity> for PointAtOrigin {
+    type Output = PointAtInfinity;
+
+    fn wedge_dot(self, other: PointAtInfinity) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl WedgeDot<PointAtOrigin> for PointAtOrigin {
+    type Output = Scalar;
+
+    fn wedge_dot(self, other: PointAtOrigin) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Rotor> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Rotor) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<RoundPoint> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: RoundPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(self.group0()) * other.group1() * Simd32x2::from([-1.0, 1.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Scalar> for PointAtOrigin {
+    type Output = PointAtOrigin;
+
+    fn wedge_dot(self, other: Scalar) -> PointAtOrigin {
+        PointAtOrigin {
+            groups: PointAtOriginGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Sphere> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: Sphere) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(self.group0()) * other.group0(),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(self.group0()) * other.group1() * Simd32x2::from([-1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<Translator> for PointAtOrigin {
+    type Output = Circle;
+
+    fn wedge_dot(self, other: Translator) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+            },
+        }
+    }
+}
+
 impl WedgeDot<AntiScalar> for Rotor {
     type Output = MultiVector;
 
@@ -50185,6 +53637,33 @@ impl WedgeDot<Dipole> for Rotor {
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group2()[2], 0.0, other.group2()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group2()[1], -other.group2()[0], 0.0])
                     + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<FlatPoint> for Rotor {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3]),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
+                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -50456,16 +53935,16 @@ impl WedgeDot<Origin> for Rotor {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
+                g3: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
                 g4: Simd32x3::from(0.0),
                 g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g10: Simd32x2::from(self.group0()[3]) * Simd32x2::from([-other.group0(), 0.0]),
             },
         }
     }
@@ -50525,33 +54004,6 @@ impl WedgeDot<PlaneAtOrigin> for Rotor {
     }
 }
 
-impl WedgeDot<Point> for Rotor {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3]),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
-                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl WedgeDot<PointAtInfinity> for Rotor {
     type Output = MultiVector;
 
@@ -50572,6 +54024,28 @@ impl WedgeDot<PointAtInfinity> for Rotor {
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
                     + Simd32x3::from(self.group0()[3]) * other.group0(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<PointAtOrigin> for Rotor {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -50781,6 +54255,34 @@ impl WedgeDot<Dipole> for RoundPoint {
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group2()[2], 0.0, -other.group2()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group2()[1], other.group2()[0], 0.0])
                     + Simd32x3::from(self.group1()[1]) * other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<FlatPoint> for RoundPoint {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
+                    + self.group1() * Simd32x2::from(other.group0()[3]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3])
+                    + Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
+                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
+                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -51078,14 +54580,14 @@ impl WedgeDot<Origin> for RoundPoint {
     fn wedge_dot(self, other: Origin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
+                g0: Simd32x2::from(self.group1()[1]) * Simd32x2::from([-other.group0(), 0.0]),
                 g1: Simd32x3::from(0.0),
-                g2: self.group1() * Simd32x2::from(other.group0()),
-                g3: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
+                g5: Simd32x4::from(self.group1()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
                 g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+                g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
@@ -51149,34 +54651,6 @@ impl WedgeDot<PlaneAtOrigin> for RoundPoint {
     }
 }
 
-impl WedgeDot<Point> for RoundPoint {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g2: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, other.group0()[2]])
-                    + self.group1() * Simd32x2::from(other.group0()[3]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()[3])
-                    + Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
-                    + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
-                    + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl WedgeDot<PointAtInfinity> for RoundPoint {
     type Output = MultiVector;
 
@@ -51196,6 +54670,28 @@ impl WedgeDot<PointAtInfinity> for RoundPoint {
                 g8: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<PointAtOrigin> for RoundPoint {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: self.group1() * Simd32x2::from(other.group0()),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
+                g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -51373,6 +54869,18 @@ impl WedgeDot<Dipole> for Scalar {
     }
 }
 
+impl WedgeDot<FlatPoint> for Scalar {
+    type Output = FlatPoint;
+
+    fn wedge_dot(self, other: FlatPoint) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: Simd32x4::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
 impl WedgeDot<Flector> for Scalar {
     type Output = Flector;
 
@@ -51530,18 +55038,6 @@ impl WedgeDot<PlaneAtOrigin> for Scalar {
     }
 }
 
-impl WedgeDot<Point> for Scalar {
-    type Output = Point;
-
-    fn wedge_dot(self, other: Point) -> Point {
-        Point {
-            groups: PointGroups {
-                g0: Simd32x4::from(self.group0()) * other.group0(),
-            },
-        }
-    }
-}
-
 impl WedgeDot<PointAtInfinity> for Scalar {
     type Output = PointAtInfinity;
 
@@ -51549,6 +55045,18 @@ impl WedgeDot<PointAtInfinity> for Scalar {
         PointAtInfinity {
             groups: PointAtInfinityGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
+            },
+        }
+    }
+}
+
+impl WedgeDot<PointAtOrigin> for Scalar {
+    type Output = PointAtOrigin;
+
+    fn wedge_dot(self, other: PointAtOrigin) -> PointAtOrigin {
+        PointAtOrigin {
+            groups: PointAtOriginGroups {
+                g0: self.group0() * other.group0(),
             },
         }
     }
@@ -51698,6 +55206,34 @@ impl WedgeDot<Dipole> for Sphere {
                     + Simd32x2::from(self.group0()[1]) * Simd32x2::from([other.group0()[1], -other.group2()[1]])
                     + Simd32x2::from(self.group0()[2]) * Simd32x2::from([other.group0()[2], -other.group2()[2]])
                     + self.group1() * Simd32x2::from(other.group2()[3]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<FlatPoint> for Sphere {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0() * Simd32x3::from(other.group0()[3])
+                    + Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
+                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
+                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
+                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
+                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
+                    + self.group1() * Simd32x2::from(other.group0()[3]),
             },
         }
     }
@@ -51999,17 +55535,19 @@ impl WedgeDot<Origin> for Sphere {
     fn wedge_dot(self, other: Origin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
+                g0: Simd32x2::from(self.group1()[1]) * Simd32x2::from([0.0, other.group0()]),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
                 g3: Simd32x3::from(0.0),
-                g4: self.group0() * Simd32x3::from(other.group0()),
+                g4: Simd32x3::from(0.0),
                 g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
+                g6: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
+                    * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0])
+                    + Simd32x4::from(self.group1()[1]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
-                g10: self.group1() * Simd32x2::from(other.group0()),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -52070,34 +55608,6 @@ impl WedgeDot<PlaneAtOrigin> for Sphere {
     }
 }
 
-impl WedgeDot<Point> for Sphere {
-    type Output = MultiVector;
-
-    fn wedge_dot(self, other: Point) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: self.group0() * Simd32x3::from(other.group0()[3])
-                    + Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g5: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
-                    + Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group0()[2], 0.0, other.group0()[0], 0.0])
-                    + Simd32x4::from(self.group0()[2]) * Simd32x4::from([other.group0()[1], -other.group0()[0], 0.0, 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0) - Simd32x3::from(self.group1()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
-                    + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
-                    + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]])
-                    + self.group1() * Simd32x2::from(other.group0()[3]),
-            },
-        }
-    }
-}
-
 impl WedgeDot<PointAtInfinity> for Sphere {
     type Output = MultiVector;
 
@@ -52119,6 +55629,28 @@ impl WedgeDot<PointAtInfinity> for Sphere {
                 g10: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
                     + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
                     + Simd32x2::from(self.group0()[2]) * Simd32x2::from([0.0, -other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl WedgeDot<PointAtOrigin> for Sphere {
+    type Output = MultiVector;
+
+    fn wedge_dot(self, other: PointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0() * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group1() * Simd32x2::from(other.group0()),
             },
         }
     }
@@ -52342,6 +55874,21 @@ impl WedgeDot<Dipole> for Translator {
                     + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl WedgeDot<FlatPoint> for Translator {
+    type Output = Circle;
+
+    fn wedge_dot(self, other: FlatPoint) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3])
+                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
             },
         }
     }
@@ -52578,14 +56125,22 @@ impl WedgeDot<MultiVector> for Translator {
 }
 
 impl WedgeDot<Origin> for Translator {
-    type Output = Circle;
+    type Output = MultiVector;
 
-    fn wedge_dot(self, other: Origin) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+    fn wedge_dot(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
+                g10: Simd32x2::from(self.group0()[3]) * Simd32x2::from([-other.group0(), 0.0]),
             },
         }
     }
@@ -52644,21 +56199,6 @@ impl WedgeDot<PlaneAtOrigin> for Translator {
     }
 }
 
-impl WedgeDot<Point> for Translator {
-    type Output = Circle;
-
-    fn wedge_dot(self, other: Point) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[3])
-                    + Simd32x3::from(self.group0()[3]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-            },
-        }
-    }
-}
-
 impl WedgeDot<PointAtInfinity> for Translator {
     type Output = LineAtInfinity;
 
@@ -52666,6 +56206,20 @@ impl WedgeDot<PointAtInfinity> for Translator {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: Simd32x3::from(self.group0()[3]) * other.group0(),
+            },
+        }
+    }
+}
+
+impl WedgeDot<PointAtOrigin> for Translator {
+    type Output = Circle;
+
+    fn wedge_dot(self, other: PointAtOrigin) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
             },
         }
     }

@@ -61,6 +61,18 @@ impl Bulk for Dipole {
     }
 }
 
+impl Bulk for FlatPoint {
+    type Output = PointAtInfinity;
+
+    fn bulk(self) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            },
+        }
+    }
+}
+
 impl Bulk for Flector {
     type Output = Flector;
 
@@ -146,18 +158,6 @@ impl Bulk for Plane {
     fn bulk(self) -> Horizon {
         Horizon {
             groups: HorizonGroups { g0: self.group0()[3] },
-        }
-    }
-}
-
-impl Bulk for Point {
-    type Output = PointAtInfinity;
-
-    fn bulk(self) -> PointAtInfinity {
-        PointAtInfinity {
-            groups: PointAtInfinityGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-            },
         }
     }
 }
@@ -333,15 +333,20 @@ impl RoundWeight for MultiVector {
     }
 }
 
-impl RoundWeight for RoundPoint {
-    type Output = RoundPoint;
+impl RoundWeight for Origin {
+    type Output = Origin;
 
-    fn round_weight(self) -> RoundPoint {
-        RoundPoint {
-            groups: RoundPointGroups {
-                g0: Simd32x3::from(0.0),
-                g1: self.group1() * Simd32x2::from([1.0, 0.0]),
-            },
+    fn round_weight(self) -> Origin {
+        self
+    }
+}
+
+impl RoundWeight for RoundPoint {
+    type Output = Origin;
+
+    fn round_weight(self) -> Origin {
+        Origin {
+            groups: OriginGroups { g0: self.group1()[0] },
         }
     }
 }
@@ -378,11 +383,21 @@ impl Weight for Circle {
 }
 
 impl Weight for Dipole {
-    type Output = Origin;
+    type Output = PointAtOrigin;
 
-    fn weight(self) -> Origin {
-        Origin {
-            groups: OriginGroups { g0: self.group2()[3] },
+    fn weight(self) -> PointAtOrigin {
+        PointAtOrigin {
+            groups: PointAtOriginGroups { g0: self.group2()[3] },
+        }
+    }
+}
+
+impl Weight for FlatPoint {
+    type Output = PointAtOrigin;
+
+    fn weight(self) -> PointAtOrigin {
+        PointAtOrigin {
+            groups: PointAtOriginGroups { g0: self.group0()[3] },
         }
     }
 }
@@ -460,14 +475,6 @@ impl Weight for MultiVector {
     }
 }
 
-impl Weight for Origin {
-    type Output = Origin;
-
-    fn weight(self) -> Origin {
-        self
-    }
-}
-
 impl Weight for Plane {
     type Output = PlaneAtOrigin;
 
@@ -488,13 +495,11 @@ impl Weight for PlaneAtOrigin {
     }
 }
 
-impl Weight for Point {
-    type Output = Origin;
+impl Weight for PointAtOrigin {
+    type Output = PointAtOrigin;
 
-    fn weight(self) -> Origin {
-        Origin {
-            groups: OriginGroups { g0: self.group0()[3] },
-        }
+    fn weight(self) -> PointAtOrigin {
+        self
     }
 }
 

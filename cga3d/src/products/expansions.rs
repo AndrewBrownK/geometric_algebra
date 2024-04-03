@@ -119,6 +119,14 @@ impl BulkExpansion<Dipole> for Dipole {
     }
 }
 
+impl BulkExpansion<FlatPoint> for Dipole {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: FlatPoint) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkExpansion<Flector> for Dipole {
     type Output = MultiVector;
 
@@ -175,14 +183,6 @@ impl BulkExpansion<Plane> for Dipole {
     }
 }
 
-impl BulkExpansion<Point> for Dipole {
-    type Output = AntiScalar;
-
-    fn bulk_expansion(self, other: Point) -> AntiScalar {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
 impl BulkExpansion<PointAtInfinity> for Dipole {
     type Output = AntiScalar;
 
@@ -207,6 +207,110 @@ impl BulkExpansion<Translator> for Dipole {
     }
 }
 
+impl BulkExpansion<Circle> for FlatPoint {
+    type Output = Plane;
+
+    fn bulk_expansion(self, other: Circle) -> Plane {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Dipole> for FlatPoint {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: Dipole) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<FlatPoint> for FlatPoint {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: FlatPoint) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Flector> for FlatPoint {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: Flector) -> MultiVector {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Horizon> for FlatPoint {
+    type Output = LineAtOrigin;
+
+    fn bulk_expansion(self, other: Horizon) -> LineAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Line> for FlatPoint {
+    type Output = Plane;
+
+    fn bulk_expansion(self, other: Line) -> Plane {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<LineAtInfinity> for FlatPoint {
+    type Output = Plane;
+
+    fn bulk_expansion(self, other: LineAtInfinity) -> Plane {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Motor> for FlatPoint {
+    type Output = Plane;
+
+    fn bulk_expansion(self, other: Motor) -> Plane {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<MultiVector> for FlatPoint {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Plane> for FlatPoint {
+    type Output = LineAtOrigin;
+
+    fn bulk_expansion(self, other: Plane) -> LineAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<PointAtInfinity> for FlatPoint {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: PointAtInfinity) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Sphere> for FlatPoint {
+    type Output = LineAtOrigin;
+
+    fn bulk_expansion(self, other: Sphere) -> LineAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Translator> for FlatPoint {
+    type Output = Plane;
+
+    fn bulk_expansion(self, other: Translator) -> Plane {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkExpansion<Circle> for Flector {
     type Output = Plane;
 
@@ -223,6 +327,14 @@ impl BulkExpansion<Dipole> for Flector {
     }
 }
 
+impl BulkExpansion<FlatPoint> for Flector {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: FlatPoint) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkExpansion<Flector> for Flector {
     type Output = MultiVector;
 
@@ -232,9 +344,9 @@ impl BulkExpansion<Flector> for Flector {
 }
 
 impl BulkExpansion<Horizon> for Flector {
-    type Output = Motor;
+    type Output = Rotor;
 
-    fn bulk_expansion(self, other: Horizon) -> Motor {
+    fn bulk_expansion(self, other: Horizon) -> Rotor {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -272,17 +384,9 @@ impl BulkExpansion<MultiVector> for Flector {
 }
 
 impl BulkExpansion<Plane> for Flector {
-    type Output = Motor;
+    type Output = Rotor;
 
-    fn bulk_expansion(self, other: Plane) -> Motor {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Point> for Flector {
-    type Output = AntiScalar;
-
-    fn bulk_expansion(self, other: Point) -> AntiScalar {
+    fn bulk_expansion(self, other: Plane) -> Rotor {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -296,9 +400,9 @@ impl BulkExpansion<PointAtInfinity> for Flector {
 }
 
 impl BulkExpansion<Sphere> for Flector {
-    type Output = Motor;
+    type Output = Rotor;
 
-    fn bulk_expansion(self, other: Sphere) -> Motor {
+    fn bulk_expansion(self, other: Sphere) -> Rotor {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -367,6 +471,14 @@ impl BulkExpansion<Dipole> for Infinity {
     }
 }
 
+impl BulkExpansion<FlatPoint> for Infinity {
+    type Output = Plane;
+
+    fn bulk_expansion(self, other: FlatPoint) -> Plane {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkExpansion<Flector> for Infinity {
     type Output = MultiVector;
 
@@ -376,9 +488,9 @@ impl BulkExpansion<Flector> for Infinity {
 }
 
 impl BulkExpansion<Horizon> for Infinity {
-    type Output = Point;
+    type Output = PointAtOrigin;
 
-    fn bulk_expansion(self, other: Horizon) -> Point {
+    fn bulk_expansion(self, other: Horizon) -> PointAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -424,17 +536,9 @@ impl BulkExpansion<MultiVector> for Infinity {
 }
 
 impl BulkExpansion<Plane> for Infinity {
-    type Output = Point;
+    type Output = PointAtOrigin;
 
-    fn bulk_expansion(self, other: Plane) -> Point {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Point> for Infinity {
-    type Output = Plane;
-
-    fn bulk_expansion(self, other: Point) -> Plane {
+    fn bulk_expansion(self, other: Plane) -> PointAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -456,9 +560,9 @@ impl BulkExpansion<RoundPoint> for Infinity {
 }
 
 impl BulkExpansion<Sphere> for Infinity {
-    type Output = Point;
+    type Output = PointAtOrigin;
 
-    fn bulk_expansion(self, other: Sphere) -> Point {
+    fn bulk_expansion(self, other: Sphere) -> PointAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -488,9 +592,9 @@ impl BulkExpansion<Flector> for Line {
 }
 
 impl BulkExpansion<Horizon> for Line {
-    type Output = Plane;
+    type Output = PlaneAtOrigin;
 
-    fn bulk_expansion(self, other: Horizon) -> Plane {
+    fn bulk_expansion(self, other: Horizon) -> PlaneAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -528,17 +632,17 @@ impl BulkExpansion<MultiVector> for Line {
 }
 
 impl BulkExpansion<Plane> for Line {
-    type Output = Plane;
+    type Output = PlaneAtOrigin;
 
-    fn bulk_expansion(self, other: Plane) -> Plane {
+    fn bulk_expansion(self, other: Plane) -> PlaneAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
 
 impl BulkExpansion<Sphere> for Line {
-    type Output = Plane;
+    type Output = PlaneAtOrigin;
 
-    fn bulk_expansion(self, other: Sphere) -> Plane {
+    fn bulk_expansion(self, other: Sphere) -> PlaneAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -568,9 +672,9 @@ impl BulkExpansion<Flector> for LineAtInfinity {
 }
 
 impl BulkExpansion<Horizon> for LineAtInfinity {
-    type Output = Plane;
+    type Output = PlaneAtOrigin;
 
-    fn bulk_expansion(self, other: Horizon) -> Plane {
+    fn bulk_expansion(self, other: Horizon) -> PlaneAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -608,17 +712,17 @@ impl BulkExpansion<MultiVector> for LineAtInfinity {
 }
 
 impl BulkExpansion<Plane> for LineAtInfinity {
-    type Output = Plane;
+    type Output = PlaneAtOrigin;
 
-    fn bulk_expansion(self, other: Plane) -> Plane {
+    fn bulk_expansion(self, other: Plane) -> PlaneAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
 
 impl BulkExpansion<Sphere> for LineAtInfinity {
-    type Output = Plane;
+    type Output = PlaneAtOrigin;
 
-    fn bulk_expansion(self, other: Sphere) -> Plane {
+    fn bulk_expansion(self, other: Sphere) -> PlaneAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -643,14 +747,6 @@ impl BulkExpansion<Flector> for LineAtOrigin {
     type Output = MultiVector;
 
     fn bulk_expansion(self, other: Flector) -> MultiVector {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Horizon> for LineAtOrigin {
-    type Output = PlaneAtOrigin;
-
-    fn bulk_expansion(self, other: Horizon) -> PlaneAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -687,22 +783,6 @@ impl BulkExpansion<MultiVector> for LineAtOrigin {
     }
 }
 
-impl BulkExpansion<Plane> for LineAtOrigin {
-    type Output = PlaneAtOrigin;
-
-    fn bulk_expansion(self, other: Plane) -> PlaneAtOrigin {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Sphere> for LineAtOrigin {
-    type Output = PlaneAtOrigin;
-
-    fn bulk_expansion(self, other: Sphere) -> PlaneAtOrigin {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
 impl BulkExpansion<Translator> for LineAtOrigin {
     type Output = AntiScalar;
 
@@ -728,9 +808,9 @@ impl BulkExpansion<Flector> for Motor {
 }
 
 impl BulkExpansion<Horizon> for Motor {
-    type Output = Plane;
+    type Output = PlaneAtOrigin;
 
-    fn bulk_expansion(self, other: Horizon) -> Plane {
+    fn bulk_expansion(self, other: Horizon) -> PlaneAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -768,17 +848,17 @@ impl BulkExpansion<MultiVector> for Motor {
 }
 
 impl BulkExpansion<Plane> for Motor {
-    type Output = Plane;
+    type Output = PlaneAtOrigin;
 
-    fn bulk_expansion(self, other: Plane) -> Plane {
+    fn bulk_expansion(self, other: Plane) -> PlaneAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
 
 impl BulkExpansion<Sphere> for Motor {
-    type Output = Plane;
+    type Output = PlaneAtOrigin;
 
-    fn bulk_expansion(self, other: Sphere) -> Plane {
+    fn bulk_expansion(self, other: Sphere) -> PlaneAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -803,6 +883,14 @@ impl BulkExpansion<Dipole> for MultiVector {
     type Output = MultiVector;
 
     fn bulk_expansion(self, other: Dipole) -> MultiVector {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<FlatPoint> for MultiVector {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: FlatPoint) -> MultiVector {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -871,14 +959,6 @@ impl BulkExpansion<Plane> for MultiVector {
     }
 }
 
-impl BulkExpansion<Point> for MultiVector {
-    type Output = MultiVector;
-
-    fn bulk_expansion(self, other: Point) -> MultiVector {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
 impl BulkExpansion<PointAtInfinity> for MultiVector {
     type Output = MultiVector;
 
@@ -912,17 +992,25 @@ impl BulkExpansion<Translator> for MultiVector {
 }
 
 impl BulkExpansion<Circle> for Origin {
-    type Output = PlaneAtOrigin;
+    type Output = Circle;
 
-    fn bulk_expansion(self, other: Circle) -> PlaneAtOrigin {
+    fn bulk_expansion(self, other: Circle) -> Circle {
         self.wedge(other.right_bulk_dual())
     }
 }
 
 impl BulkExpansion<Dipole> for Origin {
-    type Output = AntiScalar;
+    type Output = Sphere;
 
-    fn bulk_expansion(self, other: Dipole) -> AntiScalar {
+    fn bulk_expansion(self, other: Dipole) -> Sphere {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<FlatPoint> for Origin {
+    type Output = Sphere;
+
+    fn bulk_expansion(self, other: FlatPoint) -> Sphere {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -935,34 +1023,34 @@ impl BulkExpansion<Flector> for Origin {
     }
 }
 
-impl BulkExpansion<Horizon> for Origin {
-    type Output = LineAtOrigin;
+impl BulkExpansion<Infinity> for Origin {
+    type Output = AntiScalar;
 
-    fn bulk_expansion(self, other: Horizon) -> LineAtOrigin {
+    fn bulk_expansion(self, other: Infinity) -> AntiScalar {
         self.wedge(other.right_bulk_dual())
     }
 }
 
 impl BulkExpansion<Line> for Origin {
-    type Output = PlaneAtOrigin;
+    type Output = Circle;
 
-    fn bulk_expansion(self, other: Line) -> PlaneAtOrigin {
+    fn bulk_expansion(self, other: Line) -> Circle {
         self.wedge(other.right_bulk_dual())
     }
 }
 
 impl BulkExpansion<LineAtInfinity> for Origin {
-    type Output = PlaneAtOrigin;
+    type Output = Circle;
 
-    fn bulk_expansion(self, other: LineAtInfinity) -> PlaneAtOrigin {
+    fn bulk_expansion(self, other: LineAtInfinity) -> Circle {
         self.wedge(other.right_bulk_dual())
     }
 }
 
 impl BulkExpansion<Motor> for Origin {
-    type Output = PlaneAtOrigin;
+    type Output = Circle;
 
-    fn bulk_expansion(self, other: Motor) -> PlaneAtOrigin {
+    fn bulk_expansion(self, other: Motor) -> Circle {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -975,42 +1063,26 @@ impl BulkExpansion<MultiVector> for Origin {
     }
 }
 
-impl BulkExpansion<Plane> for Origin {
-    type Output = LineAtOrigin;
-
-    fn bulk_expansion(self, other: Plane) -> LineAtOrigin {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Point> for Origin {
-    type Output = AntiScalar;
-
-    fn bulk_expansion(self, other: Point) -> AntiScalar {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
 impl BulkExpansion<PointAtInfinity> for Origin {
-    type Output = AntiScalar;
+    type Output = Sphere;
 
-    fn bulk_expansion(self, other: PointAtInfinity) -> AntiScalar {
+    fn bulk_expansion(self, other: PointAtInfinity) -> Sphere {
         self.wedge(other.right_bulk_dual())
     }
 }
 
-impl BulkExpansion<Sphere> for Origin {
-    type Output = LineAtOrigin;
+impl BulkExpansion<RoundPoint> for Origin {
+    type Output = AntiScalar;
 
-    fn bulk_expansion(self, other: Sphere) -> LineAtOrigin {
+    fn bulk_expansion(self, other: RoundPoint) -> AntiScalar {
         self.wedge(other.right_bulk_dual())
     }
 }
 
 impl BulkExpansion<Translator> for Origin {
-    type Output = PlaneAtOrigin;
+    type Output = Circle;
 
-    fn bulk_expansion(self, other: Translator) -> PlaneAtOrigin {
+    fn bulk_expansion(self, other: Translator) -> Circle {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -1063,138 +1135,10 @@ impl BulkExpansion<Flector> for PlaneAtOrigin {
     }
 }
 
-impl BulkExpansion<Horizon> for PlaneAtOrigin {
-    type Output = AntiScalar;
-
-    fn bulk_expansion(self, other: Horizon) -> AntiScalar {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
 impl BulkExpansion<MultiVector> for PlaneAtOrigin {
     type Output = MultiVector;
 
     fn bulk_expansion(self, other: MultiVector) -> MultiVector {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Plane> for PlaneAtOrigin {
-    type Output = AntiScalar;
-
-    fn bulk_expansion(self, other: Plane) -> AntiScalar {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Sphere> for PlaneAtOrigin {
-    type Output = AntiScalar;
-
-    fn bulk_expansion(self, other: Sphere) -> AntiScalar {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Circle> for Point {
-    type Output = Plane;
-
-    fn bulk_expansion(self, other: Circle) -> Plane {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Dipole> for Point {
-    type Output = AntiScalar;
-
-    fn bulk_expansion(self, other: Dipole) -> AntiScalar {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Flector> for Point {
-    type Output = MultiVector;
-
-    fn bulk_expansion(self, other: Flector) -> MultiVector {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Horizon> for Point {
-    type Output = Line;
-
-    fn bulk_expansion(self, other: Horizon) -> Line {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Line> for Point {
-    type Output = Plane;
-
-    fn bulk_expansion(self, other: Line) -> Plane {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<LineAtInfinity> for Point {
-    type Output = Plane;
-
-    fn bulk_expansion(self, other: LineAtInfinity) -> Plane {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Motor> for Point {
-    type Output = Plane;
-
-    fn bulk_expansion(self, other: Motor) -> Plane {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<MultiVector> for Point {
-    type Output = MultiVector;
-
-    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Plane> for Point {
-    type Output = Line;
-
-    fn bulk_expansion(self, other: Plane) -> Line {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Point> for Point {
-    type Output = AntiScalar;
-
-    fn bulk_expansion(self, other: Point) -> AntiScalar {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<PointAtInfinity> for Point {
-    type Output = AntiScalar;
-
-    fn bulk_expansion(self, other: PointAtInfinity) -> AntiScalar {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Sphere> for Point {
-    type Output = Line;
-
-    fn bulk_expansion(self, other: Sphere) -> Line {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Translator> for Point {
-    type Output = Plane;
-
-    fn bulk_expansion(self, other: Translator) -> Plane {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -1215,6 +1159,14 @@ impl BulkExpansion<Dipole> for PointAtInfinity {
     }
 }
 
+impl BulkExpansion<FlatPoint> for PointAtInfinity {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: FlatPoint) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkExpansion<Flector> for PointAtInfinity {
     type Output = MultiVector;
 
@@ -1224,9 +1176,9 @@ impl BulkExpansion<Flector> for PointAtInfinity {
 }
 
 impl BulkExpansion<Horizon> for PointAtInfinity {
-    type Output = Line;
+    type Output = LineAtOrigin;
 
-    fn bulk_expansion(self, other: Horizon) -> Line {
+    fn bulk_expansion(self, other: Horizon) -> LineAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -1264,17 +1216,9 @@ impl BulkExpansion<MultiVector> for PointAtInfinity {
 }
 
 impl BulkExpansion<Plane> for PointAtInfinity {
-    type Output = Line;
+    type Output = LineAtOrigin;
 
-    fn bulk_expansion(self, other: Plane) -> Line {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Point> for PointAtInfinity {
-    type Output = AntiScalar;
-
-    fn bulk_expansion(self, other: Point) -> AntiScalar {
+    fn bulk_expansion(self, other: Plane) -> LineAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -1288,9 +1232,9 @@ impl BulkExpansion<PointAtInfinity> for PointAtInfinity {
 }
 
 impl BulkExpansion<Sphere> for PointAtInfinity {
-    type Output = Line;
+    type Output = LineAtOrigin;
 
-    fn bulk_expansion(self, other: Sphere) -> Line {
+    fn bulk_expansion(self, other: Sphere) -> LineAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -1299,6 +1243,86 @@ impl BulkExpansion<Translator> for PointAtInfinity {
     type Output = Plane;
 
     fn bulk_expansion(self, other: Translator) -> Plane {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Circle> for PointAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn bulk_expansion(self, other: Circle) -> PlaneAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Dipole> for PointAtOrigin {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: Dipole) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<FlatPoint> for PointAtOrigin {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: FlatPoint) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Flector> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: Flector) -> MultiVector {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Line> for PointAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn bulk_expansion(self, other: Line) -> PlaneAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<LineAtInfinity> for PointAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn bulk_expansion(self, other: LineAtInfinity) -> PlaneAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Motor> for PointAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn bulk_expansion(self, other: Motor) -> PlaneAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<MultiVector> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<PointAtInfinity> for PointAtOrigin {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: PointAtInfinity) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Translator> for PointAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn bulk_expansion(self, other: Translator) -> PlaneAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -1315,14 +1339,6 @@ impl BulkExpansion<Flector> for Rotor {
     type Output = MultiVector;
 
     fn bulk_expansion(self, other: Flector) -> MultiVector {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Horizon> for Rotor {
-    type Output = PlaneAtOrigin;
-
-    fn bulk_expansion(self, other: Horizon) -> PlaneAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -1359,22 +1375,6 @@ impl BulkExpansion<MultiVector> for Rotor {
     }
 }
 
-impl BulkExpansion<Plane> for Rotor {
-    type Output = PlaneAtOrigin;
-
-    fn bulk_expansion(self, other: Plane) -> PlaneAtOrigin {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Sphere> for Rotor {
-    type Output = PlaneAtOrigin;
-
-    fn bulk_expansion(self, other: Sphere) -> PlaneAtOrigin {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
 impl BulkExpansion<Translator> for Rotor {
     type Output = AntiScalar;
 
@@ -1395,6 +1395,14 @@ impl BulkExpansion<Dipole> for RoundPoint {
     type Output = Sphere;
 
     fn bulk_expansion(self, other: Dipole) -> Sphere {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<FlatPoint> for RoundPoint {
+    type Output = Sphere;
+
+    fn bulk_expansion(self, other: FlatPoint) -> Sphere {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -1459,14 +1467,6 @@ impl BulkExpansion<Plane> for RoundPoint {
     type Output = Dipole;
 
     fn bulk_expansion(self, other: Plane) -> Dipole {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<Point> for RoundPoint {
-    type Output = Sphere;
-
-    fn bulk_expansion(self, other: Point) -> Sphere {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -1560,9 +1560,9 @@ impl BulkExpansion<Flector> for Translator {
 }
 
 impl BulkExpansion<Horizon> for Translator {
-    type Output = Plane;
+    type Output = PlaneAtOrigin;
 
-    fn bulk_expansion(self, other: Horizon) -> Plane {
+    fn bulk_expansion(self, other: Horizon) -> PlaneAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -1600,17 +1600,17 @@ impl BulkExpansion<MultiVector> for Translator {
 }
 
 impl BulkExpansion<Plane> for Translator {
-    type Output = Plane;
+    type Output = PlaneAtOrigin;
 
-    fn bulk_expansion(self, other: Plane) -> Plane {
+    fn bulk_expansion(self, other: Plane) -> PlaneAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
 
 impl BulkExpansion<Sphere> for Translator {
-    type Output = Plane;
+    type Output = PlaneAtOrigin;
 
-    fn bulk_expansion(self, other: Sphere) -> Plane {
+    fn bulk_expansion(self, other: Sphere) -> PlaneAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -1727,6 +1727,14 @@ impl WeightExpansion<Dipole> for Dipole {
     }
 }
 
+impl WeightExpansion<FlatPoint> for Dipole {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: FlatPoint) -> AntiScalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
 impl WeightExpansion<Flector> for Dipole {
     type Output = MultiVector;
 
@@ -1767,14 +1775,6 @@ impl WeightExpansion<MultiVector> for Dipole {
     }
 }
 
-impl WeightExpansion<Origin> for Dipole {
-    type Output = AntiScalar;
-
-    fn weight_expansion(self, other: Origin) -> AntiScalar {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
 impl WeightExpansion<Plane> for Dipole {
     type Output = Circle;
 
@@ -1791,10 +1791,10 @@ impl WeightExpansion<PlaneAtOrigin> for Dipole {
     }
 }
 
-impl WeightExpansion<Point> for Dipole {
+impl WeightExpansion<PointAtOrigin> for Dipole {
     type Output = AntiScalar;
 
-    fn weight_expansion(self, other: Point) -> AntiScalar {
+    fn weight_expansion(self, other: PointAtOrigin) -> AntiScalar {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -1823,6 +1823,118 @@ impl WeightExpansion<Translator> for Dipole {
     }
 }
 
+impl WeightExpansion<Circle> for FlatPoint {
+    type Output = Plane;
+
+    fn weight_expansion(self, other: Circle) -> Plane {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Dipole> for FlatPoint {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: Dipole) -> AntiScalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<FlatPoint> for FlatPoint {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: FlatPoint) -> AntiScalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Flector> for FlatPoint {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: Flector) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Line> for FlatPoint {
+    type Output = Plane;
+
+    fn weight_expansion(self, other: Line) -> Plane {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<LineAtOrigin> for FlatPoint {
+    type Output = Plane;
+
+    fn weight_expansion(self, other: LineAtOrigin) -> Plane {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Motor> for FlatPoint {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: Motor) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVector> for FlatPoint {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Plane> for FlatPoint {
+    type Output = Line;
+
+    fn weight_expansion(self, other: Plane) -> Line {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<PlaneAtOrigin> for FlatPoint {
+    type Output = Line;
+
+    fn weight_expansion(self, other: PlaneAtOrigin) -> Line {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<PointAtOrigin> for FlatPoint {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: PointAtOrigin) -> AntiScalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Rotor> for FlatPoint {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: Rotor) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Sphere> for FlatPoint {
+    type Output = Line;
+
+    fn weight_expansion(self, other: Sphere) -> Line {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Translator> for FlatPoint {
+    type Output = FlatPoint;
+
+    fn weight_expansion(self, other: Translator) -> FlatPoint {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
 impl WeightExpansion<Circle> for Flector {
     type Output = Plane;
 
@@ -1835,6 +1947,14 @@ impl WeightExpansion<Dipole> for Flector {
     type Output = AntiScalar;
 
     fn weight_expansion(self, other: Dipole) -> AntiScalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<FlatPoint> for Flector {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: FlatPoint) -> AntiScalar {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -1879,14 +1999,6 @@ impl WeightExpansion<MultiVector> for Flector {
     }
 }
 
-impl WeightExpansion<Origin> for Flector {
-    type Output = AntiScalar;
-
-    fn weight_expansion(self, other: Origin) -> AntiScalar {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
 impl WeightExpansion<Plane> for Flector {
     type Output = Motor;
 
@@ -1903,10 +2015,10 @@ impl WeightExpansion<PlaneAtOrigin> for Flector {
     }
 }
 
-impl WeightExpansion<Point> for Flector {
+impl WeightExpansion<PointAtOrigin> for Flector {
     type Output = AntiScalar;
 
-    fn weight_expansion(self, other: Point) -> AntiScalar {
+    fn weight_expansion(self, other: PointAtOrigin) -> AntiScalar {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -2015,6 +2127,14 @@ impl WeightExpansion<Dipole> for Infinity {
     }
 }
 
+impl WeightExpansion<FlatPoint> for Infinity {
+    type Output = Plane;
+
+    fn weight_expansion(self, other: FlatPoint) -> Plane {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
 impl WeightExpansion<Flector> for Infinity {
     type Output = MultiVector;
 
@@ -2055,34 +2175,26 @@ impl WeightExpansion<MultiVector> for Infinity {
     }
 }
 
-impl WeightExpansion<Origin> for Infinity {
-    type Output = Plane;
-
-    fn weight_expansion(self, other: Origin) -> Plane {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
 impl WeightExpansion<Plane> for Infinity {
-    type Output = Point;
+    type Output = FlatPoint;
 
-    fn weight_expansion(self, other: Plane) -> Point {
+    fn weight_expansion(self, other: Plane) -> FlatPoint {
         self.wedge(other.right_weight_dual())
     }
 }
 
 impl WeightExpansion<PlaneAtOrigin> for Infinity {
-    type Output = Point;
+    type Output = FlatPoint;
 
-    fn weight_expansion(self, other: PlaneAtOrigin) -> Point {
+    fn weight_expansion(self, other: PlaneAtOrigin) -> FlatPoint {
         self.wedge(other.right_weight_dual())
     }
 }
 
-impl WeightExpansion<Point> for Infinity {
+impl WeightExpansion<PointAtOrigin> for Infinity {
     type Output = Plane;
 
-    fn weight_expansion(self, other: Point) -> Plane {
+    fn weight_expansion(self, other: PointAtOrigin) -> Plane {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -2096,9 +2208,9 @@ impl WeightExpansion<Rotor> for Infinity {
 }
 
 impl WeightExpansion<Sphere> for Infinity {
-    type Output = Point;
+    type Output = FlatPoint;
 
-    fn weight_expansion(self, other: Sphere) -> Point {
+    fn weight_expansion(self, other: Sphere) -> FlatPoint {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -2479,6 +2591,14 @@ impl WeightExpansion<Dipole> for MultiVector {
     }
 }
 
+impl WeightExpansion<FlatPoint> for MultiVector {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: FlatPoint) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
 impl WeightExpansion<Flector> for MultiVector {
     type Output = MultiVector;
 
@@ -2519,14 +2639,6 @@ impl WeightExpansion<MultiVector> for MultiVector {
     }
 }
 
-impl WeightExpansion<Origin> for MultiVector {
-    type Output = MultiVector;
-
-    fn weight_expansion(self, other: Origin) -> MultiVector {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
 impl WeightExpansion<Plane> for MultiVector {
     type Output = MultiVector;
 
@@ -2543,10 +2655,10 @@ impl WeightExpansion<PlaneAtOrigin> for MultiVector {
     }
 }
 
-impl WeightExpansion<Point> for MultiVector {
+impl WeightExpansion<PointAtOrigin> for MultiVector {
     type Output = MultiVector;
 
-    fn weight_expansion(self, other: Point) -> MultiVector {
+    fn weight_expansion(self, other: PointAtOrigin) -> MultiVector {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -2576,17 +2688,25 @@ impl WeightExpansion<Translator> for MultiVector {
 }
 
 impl WeightExpansion<Circle> for Origin {
-    type Output = PlaneAtOrigin;
+    type Output = Circle;
 
-    fn weight_expansion(self, other: Circle) -> PlaneAtOrigin {
+    fn weight_expansion(self, other: Circle) -> Circle {
         self.wedge(other.right_weight_dual())
     }
 }
 
 impl WeightExpansion<Dipole> for Origin {
-    type Output = AntiScalar;
+    type Output = Sphere;
 
-    fn weight_expansion(self, other: Dipole) -> AntiScalar {
+    fn weight_expansion(self, other: Dipole) -> Sphere {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<FlatPoint> for Origin {
+    type Output = Sphere;
+
+    fn weight_expansion(self, other: FlatPoint) -> Sphere {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -2600,17 +2720,17 @@ impl WeightExpansion<Flector> for Origin {
 }
 
 impl WeightExpansion<Line> for Origin {
-    type Output = PlaneAtOrigin;
+    type Output = Circle;
 
-    fn weight_expansion(self, other: Line) -> PlaneAtOrigin {
+    fn weight_expansion(self, other: Line) -> Circle {
         self.wedge(other.right_weight_dual())
     }
 }
 
 impl WeightExpansion<LineAtOrigin> for Origin {
-    type Output = PlaneAtOrigin;
+    type Output = Circle;
 
-    fn weight_expansion(self, other: LineAtOrigin) -> PlaneAtOrigin {
+    fn weight_expansion(self, other: LineAtOrigin) -> Circle {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -2631,34 +2751,26 @@ impl WeightExpansion<MultiVector> for Origin {
     }
 }
 
-impl WeightExpansion<Origin> for Origin {
-    type Output = AntiScalar;
-
-    fn weight_expansion(self, other: Origin) -> AntiScalar {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
 impl WeightExpansion<Plane> for Origin {
-    type Output = LineAtOrigin;
+    type Output = Dipole;
 
-    fn weight_expansion(self, other: Plane) -> LineAtOrigin {
+    fn weight_expansion(self, other: Plane) -> Dipole {
         self.wedge(other.right_weight_dual())
     }
 }
 
 impl WeightExpansion<PlaneAtOrigin> for Origin {
-    type Output = LineAtOrigin;
+    type Output = Dipole;
 
-    fn weight_expansion(self, other: PlaneAtOrigin) -> LineAtOrigin {
+    fn weight_expansion(self, other: PlaneAtOrigin) -> Dipole {
         self.wedge(other.right_weight_dual())
     }
 }
 
-impl WeightExpansion<Point> for Origin {
-    type Output = AntiScalar;
+impl WeightExpansion<PointAtOrigin> for Origin {
+    type Output = Sphere;
 
-    fn weight_expansion(self, other: Point) -> AntiScalar {
+    fn weight_expansion(self, other: PointAtOrigin) -> Sphere {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -2672,9 +2784,9 @@ impl WeightExpansion<Rotor> for Origin {
 }
 
 impl WeightExpansion<Sphere> for Origin {
-    type Output = LineAtOrigin;
+    type Output = Dipole;
 
-    fn weight_expansion(self, other: Sphere) -> LineAtOrigin {
+    fn weight_expansion(self, other: Sphere) -> Dipole {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -2815,118 +2927,6 @@ impl WeightExpansion<Translator> for PlaneAtOrigin {
     }
 }
 
-impl WeightExpansion<Circle> for Point {
-    type Output = Plane;
-
-    fn weight_expansion(self, other: Circle) -> Plane {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Dipole> for Point {
-    type Output = AntiScalar;
-
-    fn weight_expansion(self, other: Dipole) -> AntiScalar {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Flector> for Point {
-    type Output = MultiVector;
-
-    fn weight_expansion(self, other: Flector) -> MultiVector {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Line> for Point {
-    type Output = Plane;
-
-    fn weight_expansion(self, other: Line) -> Plane {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<LineAtOrigin> for Point {
-    type Output = Plane;
-
-    fn weight_expansion(self, other: LineAtOrigin) -> Plane {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Motor> for Point {
-    type Output = MultiVector;
-
-    fn weight_expansion(self, other: Motor) -> MultiVector {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<MultiVector> for Point {
-    type Output = MultiVector;
-
-    fn weight_expansion(self, other: MultiVector) -> MultiVector {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Origin> for Point {
-    type Output = AntiScalar;
-
-    fn weight_expansion(self, other: Origin) -> AntiScalar {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Plane> for Point {
-    type Output = Line;
-
-    fn weight_expansion(self, other: Plane) -> Line {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<PlaneAtOrigin> for Point {
-    type Output = Line;
-
-    fn weight_expansion(self, other: PlaneAtOrigin) -> Line {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Point> for Point {
-    type Output = AntiScalar;
-
-    fn weight_expansion(self, other: Point) -> AntiScalar {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Rotor> for Point {
-    type Output = MultiVector;
-
-    fn weight_expansion(self, other: Rotor) -> MultiVector {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Sphere> for Point {
-    type Output = Line;
-
-    fn weight_expansion(self, other: Sphere) -> Line {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
-impl WeightExpansion<Translator> for Point {
-    type Output = Point;
-
-    fn weight_expansion(self, other: Translator) -> Point {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
 impl WeightExpansion<Circle> for PointAtInfinity {
     type Output = Plane;
 
@@ -2939,6 +2939,14 @@ impl WeightExpansion<Dipole> for PointAtInfinity {
     type Output = AntiScalar;
 
     fn weight_expansion(self, other: Dipole) -> AntiScalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<FlatPoint> for PointAtInfinity {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: FlatPoint) -> AntiScalar {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -2983,14 +2991,6 @@ impl WeightExpansion<MultiVector> for PointAtInfinity {
     }
 }
 
-impl WeightExpansion<Origin> for PointAtInfinity {
-    type Output = AntiScalar;
-
-    fn weight_expansion(self, other: Origin) -> AntiScalar {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
 impl WeightExpansion<Plane> for PointAtInfinity {
     type Output = Line;
 
@@ -3007,10 +3007,10 @@ impl WeightExpansion<PlaneAtOrigin> for PointAtInfinity {
     }
 }
 
-impl WeightExpansion<Point> for PointAtInfinity {
+impl WeightExpansion<PointAtOrigin> for PointAtInfinity {
     type Output = AntiScalar;
 
-    fn weight_expansion(self, other: Point) -> AntiScalar {
+    fn weight_expansion(self, other: PointAtOrigin) -> AntiScalar {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -3035,6 +3035,118 @@ impl WeightExpansion<Translator> for PointAtInfinity {
     type Output = PointAtInfinity;
 
     fn weight_expansion(self, other: Translator) -> PointAtInfinity {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Circle> for PointAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn weight_expansion(self, other: Circle) -> PlaneAtOrigin {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Dipole> for PointAtOrigin {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: Dipole) -> AntiScalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<FlatPoint> for PointAtOrigin {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: FlatPoint) -> AntiScalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Flector> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: Flector) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Line> for PointAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn weight_expansion(self, other: Line) -> PlaneAtOrigin {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<LineAtOrigin> for PointAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn weight_expansion(self, other: LineAtOrigin) -> PlaneAtOrigin {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Motor> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: Motor) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVector> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Plane> for PointAtOrigin {
+    type Output = LineAtOrigin;
+
+    fn weight_expansion(self, other: Plane) -> LineAtOrigin {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<PlaneAtOrigin> for PointAtOrigin {
+    type Output = LineAtOrigin;
+
+    fn weight_expansion(self, other: PlaneAtOrigin) -> LineAtOrigin {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<PointAtOrigin> for PointAtOrigin {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: PointAtOrigin) -> AntiScalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Rotor> for PointAtOrigin {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: Rotor) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Sphere> for PointAtOrigin {
+    type Output = LineAtOrigin;
+
+    fn weight_expansion(self, other: Sphere) -> LineAtOrigin {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Translator> for PointAtOrigin {
+    type Output = PointAtOrigin;
+
+    fn weight_expansion(self, other: Translator) -> PointAtOrigin {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -3143,6 +3255,14 @@ impl WeightExpansion<Dipole> for RoundPoint {
     }
 }
 
+impl WeightExpansion<FlatPoint> for RoundPoint {
+    type Output = Sphere;
+
+    fn weight_expansion(self, other: FlatPoint) -> Sphere {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
 impl WeightExpansion<Flector> for RoundPoint {
     type Output = MultiVector;
 
@@ -3183,14 +3303,6 @@ impl WeightExpansion<MultiVector> for RoundPoint {
     }
 }
 
-impl WeightExpansion<Origin> for RoundPoint {
-    type Output = Sphere;
-
-    fn weight_expansion(self, other: Origin) -> Sphere {
-        self.wedge(other.right_weight_dual())
-    }
-}
-
 impl WeightExpansion<Plane> for RoundPoint {
     type Output = Dipole;
 
@@ -3207,10 +3319,10 @@ impl WeightExpansion<PlaneAtOrigin> for RoundPoint {
     }
 }
 
-impl WeightExpansion<Point> for RoundPoint {
+impl WeightExpansion<PointAtOrigin> for RoundPoint {
     type Output = Sphere;
 
-    fn weight_expansion(self, other: Point) -> Sphere {
+    fn weight_expansion(self, other: PointAtOrigin) -> Sphere {
         self.wedge(other.right_weight_dual())
     }
 }

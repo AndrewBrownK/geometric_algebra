@@ -87,6 +87,14 @@ impl LeftBulkDual for Dipole {
     }
 }
 
+impl LeftBulkDual for FlatPoint {
+    type Output = Circle;
+
+    fn left_bulk_dual(self) -> Circle {
+        self.bulk().left_complement()
+    }
+}
+
 impl LeftBulkDual for Flector {
     type Output = MultiVector;
 
@@ -96,9 +104,9 @@ impl LeftBulkDual for Flector {
 }
 
 impl LeftBulkDual for Horizon {
-    type Output = RoundPoint;
+    type Output = Origin;
 
-    fn left_bulk_dual(self) -> RoundPoint {
+    fn left_bulk_dual(self) -> Origin {
         self.bulk().left_complement()
     }
 }
@@ -144,17 +152,9 @@ impl LeftBulkDual for MultiVector {
 }
 
 impl LeftBulkDual for Plane {
-    type Output = RoundPoint;
+    type Output = Origin;
 
-    fn left_bulk_dual(self) -> RoundPoint {
-        self.bulk().left_complement()
-    }
-}
-
-impl LeftBulkDual for Point {
-    type Output = Circle;
-
-    fn left_bulk_dual(self) -> Circle {
+    fn left_bulk_dual(self) -> Origin {
         self.bulk().left_complement()
     }
 }
@@ -176,9 +176,9 @@ impl LeftBulkDual for RoundPoint {
 }
 
 impl LeftBulkDual for Sphere {
-    type Output = RoundPoint;
+    type Output = Origin;
 
-    fn left_bulk_dual(self) -> RoundPoint {
+    fn left_bulk_dual(self) -> Origin {
         self.bulk().left_complement()
     }
 }
@@ -263,10 +263,18 @@ impl LeftRoundWeightDual for MultiVector {
     }
 }
 
-impl LeftRoundWeightDual for RoundPoint {
-    type Output = Sphere;
+impl LeftRoundWeightDual for Origin {
+    type Output = Horizon;
 
-    fn left_round_weight_dual(self) -> Sphere {
+    fn left_round_weight_dual(self) -> Horizon {
+        self.round_weight().left_complement()
+    }
+}
+
+impl LeftRoundWeightDual for RoundPoint {
+    type Output = Horizon;
+
+    fn left_round_weight_dual(self) -> Horizon {
         self.round_weight().left_complement()
     }
 }
@@ -296,6 +304,14 @@ impl LeftWeightDual for Circle {
 }
 
 impl LeftWeightDual for Dipole {
+    type Output = Circle;
+
+    fn left_weight_dual(self) -> Circle {
+        self.weight().left_complement()
+    }
+}
+
+impl LeftWeightDual for FlatPoint {
     type Output = Circle;
 
     fn left_weight_dual(self) -> Circle {
@@ -351,14 +367,6 @@ impl LeftWeightDual for MultiVector {
     }
 }
 
-impl LeftWeightDual for Origin {
-    type Output = Circle;
-
-    fn left_weight_dual(self) -> Circle {
-        self.weight().left_complement()
-    }
-}
-
 impl LeftWeightDual for Plane {
     type Output = RoundPoint;
 
@@ -375,7 +383,7 @@ impl LeftWeightDual for PlaneAtOrigin {
     }
 }
 
-impl LeftWeightDual for Point {
+impl LeftWeightDual for PointAtOrigin {
     type Output = Circle;
 
     fn left_weight_dual(self) -> Circle {
@@ -423,6 +431,14 @@ impl RightBulkDual for Dipole {
     }
 }
 
+impl RightBulkDual for FlatPoint {
+    type Output = Circle;
+
+    fn right_bulk_dual(self) -> Circle {
+        self.bulk().right_complement()
+    }
+}
+
 impl RightBulkDual for Flector {
     type Output = MultiVector;
 
@@ -432,9 +448,9 @@ impl RightBulkDual for Flector {
 }
 
 impl RightBulkDual for Horizon {
-    type Output = RoundPoint;
+    type Output = Origin;
 
-    fn right_bulk_dual(self) -> RoundPoint {
+    fn right_bulk_dual(self) -> Origin {
         self.bulk().right_complement()
     }
 }
@@ -480,17 +496,9 @@ impl RightBulkDual for MultiVector {
 }
 
 impl RightBulkDual for Plane {
-    type Output = RoundPoint;
+    type Output = Origin;
 
-    fn right_bulk_dual(self) -> RoundPoint {
-        self.bulk().right_complement()
-    }
-}
-
-impl RightBulkDual for Point {
-    type Output = Circle;
-
-    fn right_bulk_dual(self) -> Circle {
+    fn right_bulk_dual(self) -> Origin {
         self.bulk().right_complement()
     }
 }
@@ -512,9 +520,9 @@ impl RightBulkDual for RoundPoint {
 }
 
 impl RightBulkDual for Sphere {
-    type Output = RoundPoint;
+    type Output = Origin;
 
-    fn right_bulk_dual(self) -> RoundPoint {
+    fn right_bulk_dual(self) -> Origin {
         self.bulk().right_complement()
     }
 }
@@ -599,10 +607,18 @@ impl RightRoundWeightDual for MultiVector {
     }
 }
 
-impl RightRoundWeightDual for RoundPoint {
-    type Output = Sphere;
+impl RightRoundWeightDual for Origin {
+    type Output = Horizon;
 
-    fn right_round_weight_dual(self) -> Sphere {
+    fn right_round_weight_dual(self) -> Horizon {
+        self.round_weight().right_complement()
+    }
+}
+
+impl RightRoundWeightDual for RoundPoint {
+    type Output = Horizon;
+
+    fn right_round_weight_dual(self) -> Horizon {
         self.round_weight().right_complement()
     }
 }
@@ -632,6 +648,14 @@ impl RightWeightDual for Circle {
 }
 
 impl RightWeightDual for Dipole {
+    type Output = Circle;
+
+    fn right_weight_dual(self) -> Circle {
+        self.weight().right_complement()
+    }
+}
+
+impl RightWeightDual for FlatPoint {
     type Output = Circle;
 
     fn right_weight_dual(self) -> Circle {
@@ -687,14 +711,6 @@ impl RightWeightDual for MultiVector {
     }
 }
 
-impl RightWeightDual for Origin {
-    type Output = Circle;
-
-    fn right_weight_dual(self) -> Circle {
-        self.weight().right_complement()
-    }
-}
-
 impl RightWeightDual for Plane {
     type Output = RoundPoint;
 
@@ -711,7 +727,7 @@ impl RightWeightDual for PlaneAtOrigin {
     }
 }
 
-impl RightWeightDual for Point {
+impl RightWeightDual for PointAtOrigin {
     type Output = Circle;
 
     fn right_weight_dual(self) -> Circle {

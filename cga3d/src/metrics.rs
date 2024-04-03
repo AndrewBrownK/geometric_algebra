@@ -52,6 +52,14 @@ impl CosineAngle<Dipole> for Circle {
     }
 }
 
+impl CosineAngle<FlatPoint> for Circle {
+    type Output = f32;
+
+    fn cosine_angle(self, other: FlatPoint) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
 impl CosineAngle<Line> for Circle {
     type Output = f32;
 
@@ -68,18 +76,10 @@ impl CosineAngle<LineAtOrigin> for Circle {
     }
 }
 
-impl CosineAngle<Origin> for Circle {
+impl CosineAngle<PointAtOrigin> for Circle {
     type Output = f32;
 
-    fn cosine_angle(self, other: Origin) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
-    }
-}
-
-impl CosineAngle<Point> for Circle {
-    type Output = f32;
-
-    fn cosine_angle(self, other: Point) -> f32 {
+    fn cosine_angle(self, other: PointAtOrigin) -> f32 {
         self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
@@ -92,18 +92,42 @@ impl CosineAngle<Dipole> for Dipole {
     }
 }
 
-impl CosineAngle<Origin> for Dipole {
+impl CosineAngle<FlatPoint> for Dipole {
     type Output = f32;
 
-    fn cosine_angle(self, other: Origin) -> f32 {
+    fn cosine_angle(self, other: FlatPoint) -> f32 {
         self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
-impl CosineAngle<Point> for Dipole {
+impl CosineAngle<PointAtOrigin> for Dipole {
     type Output = f32;
 
-    fn cosine_angle(self, other: Point) -> f32 {
+    fn cosine_angle(self, other: PointAtOrigin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<Dipole> for FlatPoint {
+    type Output = f32;
+
+    fn cosine_angle(self, other: Dipole) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<FlatPoint> for FlatPoint {
+    type Output = f32;
+
+    fn cosine_angle(self, other: FlatPoint) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<PointAtOrigin> for FlatPoint {
+    type Output = f32;
+
+    fn cosine_angle(self, other: PointAtOrigin) -> f32 {
         self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
@@ -124,6 +148,14 @@ impl CosineAngle<Dipole> for Line {
     }
 }
 
+impl CosineAngle<FlatPoint> for Line {
+    type Output = f32;
+
+    fn cosine_angle(self, other: FlatPoint) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
 impl CosineAngle<Line> for Line {
     type Output = f32;
 
@@ -140,18 +172,10 @@ impl CosineAngle<LineAtOrigin> for Line {
     }
 }
 
-impl CosineAngle<Origin> for Line {
+impl CosineAngle<PointAtOrigin> for Line {
     type Output = f32;
 
-    fn cosine_angle(self, other: Origin) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
-    }
-}
-
-impl CosineAngle<Point> for Line {
-    type Output = f32;
-
-    fn cosine_angle(self, other: Point) -> f32 {
+    fn cosine_angle(self, other: PointAtOrigin) -> f32 {
         self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
@@ -172,6 +196,14 @@ impl CosineAngle<Dipole> for LineAtOrigin {
     }
 }
 
+impl CosineAngle<FlatPoint> for LineAtOrigin {
+    type Output = f32;
+
+    fn cosine_angle(self, other: FlatPoint) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
 impl CosineAngle<Line> for LineAtOrigin {
     type Output = f32;
 
@@ -188,43 +220,11 @@ impl CosineAngle<LineAtOrigin> for LineAtOrigin {
     }
 }
 
-impl CosineAngle<Origin> for LineAtOrigin {
+impl CosineAngle<PointAtOrigin> for LineAtOrigin {
     type Output = f32;
 
-    fn cosine_angle(self, other: Origin) -> f32 {
+    fn cosine_angle(self, other: PointAtOrigin) -> f32 {
         self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
-    }
-}
-
-impl CosineAngle<Point> for LineAtOrigin {
-    type Output = f32;
-
-    fn cosine_angle(self, other: Point) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
-    }
-}
-
-impl CosineAngle<Dipole> for Origin {
-    type Output = f32;
-
-    fn cosine_angle(self, other: Dipole) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).group0()
-    }
-}
-
-impl CosineAngle<Origin> for Origin {
-    type Output = f32;
-
-    fn cosine_angle(self, other: Origin) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).group0()
-    }
-}
-
-impl CosineAngle<Point> for Origin {
-    type Output = f32;
-
-    fn cosine_angle(self, other: Point) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
@@ -240,6 +240,14 @@ impl CosineAngle<Dipole> for Plane {
     type Output = f32;
 
     fn cosine_angle(self, other: Dipole) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<FlatPoint> for Plane {
+    type Output = f32;
+
+    fn cosine_angle(self, other: FlatPoint) -> f32 {
         self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
@@ -260,14 +268,6 @@ impl CosineAngle<LineAtOrigin> for Plane {
     }
 }
 
-impl CosineAngle<Origin> for Plane {
-    type Output = f32;
-
-    fn cosine_angle(self, other: Origin) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
-    }
-}
-
 impl CosineAngle<Plane> for Plane {
     type Output = f32;
 
@@ -284,10 +284,10 @@ impl CosineAngle<PlaneAtOrigin> for Plane {
     }
 }
 
-impl CosineAngle<Point> for Plane {
+impl CosineAngle<PointAtOrigin> for Plane {
     type Output = f32;
 
-    fn cosine_angle(self, other: Point) -> f32 {
+    fn cosine_angle(self, other: PointAtOrigin) -> f32 {
         self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
@@ -316,6 +316,14 @@ impl CosineAngle<Dipole> for PlaneAtOrigin {
     }
 }
 
+impl CosineAngle<FlatPoint> for PlaneAtOrigin {
+    type Output = f32;
+
+    fn cosine_angle(self, other: FlatPoint) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
 impl CosineAngle<Line> for PlaneAtOrigin {
     type Output = f32;
 
@@ -328,14 +336,6 @@ impl CosineAngle<LineAtOrigin> for PlaneAtOrigin {
     type Output = f32;
 
     fn cosine_angle(self, other: LineAtOrigin) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
-    }
-}
-
-impl CosineAngle<Origin> for PlaneAtOrigin {
-    type Output = f32;
-
-    fn cosine_angle(self, other: Origin) -> f32 {
         self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
@@ -356,10 +356,10 @@ impl CosineAngle<PlaneAtOrigin> for PlaneAtOrigin {
     }
 }
 
-impl CosineAngle<Point> for PlaneAtOrigin {
+impl CosineAngle<PointAtOrigin> for PlaneAtOrigin {
     type Output = f32;
 
-    fn cosine_angle(self, other: Point) -> f32 {
+    fn cosine_angle(self, other: PointAtOrigin) -> f32 {
         self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
@@ -372,7 +372,7 @@ impl CosineAngle<Sphere> for PlaneAtOrigin {
     }
 }
 
-impl CosineAngle<Dipole> for Point {
+impl CosineAngle<Dipole> for PointAtOrigin {
     type Output = f32;
 
     fn cosine_angle(self, other: Dipole) -> f32 {
@@ -380,18 +380,18 @@ impl CosineAngle<Dipole> for Point {
     }
 }
 
-impl CosineAngle<Origin> for Point {
+impl CosineAngle<FlatPoint> for PointAtOrigin {
     type Output = f32;
 
-    fn cosine_angle(self, other: Origin) -> f32 {
+    fn cosine_angle(self, other: FlatPoint) -> f32 {
         self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
 
-impl CosineAngle<Point> for Point {
+impl CosineAngle<PointAtOrigin> for PointAtOrigin {
     type Output = f32;
 
-    fn cosine_angle(self, other: Point) -> f32 {
+    fn cosine_angle(self, other: PointAtOrigin) -> f32 {
         self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
@@ -412,6 +412,14 @@ impl CosineAngle<Dipole> for Sphere {
     }
 }
 
+impl CosineAngle<FlatPoint> for Sphere {
+    type Output = f32;
+
+    fn cosine_angle(self, other: FlatPoint) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
 impl CosineAngle<Line> for Sphere {
     type Output = f32;
 
@@ -424,14 +432,6 @@ impl CosineAngle<LineAtOrigin> for Sphere {
     type Output = f32;
 
     fn cosine_angle(self, other: LineAtOrigin) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
-    }
-}
-
-impl CosineAngle<Origin> for Sphere {
-    type Output = f32;
-
-    fn cosine_angle(self, other: Origin) -> f32 {
         self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
@@ -452,10 +452,10 @@ impl CosineAngle<PlaneAtOrigin> for Sphere {
     }
 }
 
-impl CosineAngle<Point> for Sphere {
+impl CosineAngle<PointAtOrigin> for Sphere {
     type Output = f32;
 
-    fn cosine_angle(self, other: Point) -> f32 {
+    fn cosine_angle(self, other: PointAtOrigin) -> f32 {
         self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
@@ -472,6 +472,14 @@ impl Distance<MultiVector> for Circle {
     type Output = Magnitude;
 
     fn distance(self, other: MultiVector) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Origin> for Circle {
+    type Output = Magnitude;
+
+    fn distance(self, other: Origin) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -500,6 +508,14 @@ impl Distance<MultiVector> for Dipole {
     }
 }
 
+impl Distance<Origin> for Dipole {
+    type Output = Magnitude;
+
+    fn distance(self, other: Origin) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
 impl Distance<RoundPoint> for Dipole {
     type Output = Magnitude;
 
@@ -508,10 +524,26 @@ impl Distance<RoundPoint> for Dipole {
     }
 }
 
+impl Distance<MultiVector> for FlatPoint {
+    type Output = Magnitude;
+
+    fn distance(self, other: MultiVector) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
 impl Distance<MultiVector> for Flector {
     type Output = Magnitude;
 
     fn distance(self, other: MultiVector) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Origin> for Flector {
+    type Output = Magnitude;
+
+    fn distance(self, other: Origin) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -604,6 +636,14 @@ impl Distance<MultiVector> for Magnitude {
     }
 }
 
+impl Distance<Origin> for Magnitude {
+    type Output = Magnitude;
+
+    fn distance(self, other: Origin) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
 impl Distance<Rotor> for Magnitude {
     type Output = Magnitude;
 
@@ -648,6 +688,14 @@ impl Distance<Dipole> for MultiVector {
     type Output = Magnitude;
 
     fn distance(self, other: Dipole) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<FlatPoint> for MultiVector {
+    type Output = Magnitude;
+
+    fn distance(self, other: FlatPoint) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -724,10 +772,10 @@ impl Distance<PlaneAtOrigin> for MultiVector {
     }
 }
 
-impl Distance<Point> for MultiVector {
+impl Distance<PointAtOrigin> for MultiVector {
     type Output = Magnitude;
 
-    fn distance(self, other: Point) -> Magnitude {
+    fn distance(self, other: PointAtOrigin) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -764,6 +812,38 @@ impl Distance<Translator> for MultiVector {
     }
 }
 
+impl Distance<Circle> for Origin {
+    type Output = Magnitude;
+
+    fn distance(self, other: Circle) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Dipole> for Origin {
+    type Output = Magnitude;
+
+    fn distance(self, other: Dipole) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Flector> for Origin {
+    type Output = Magnitude;
+
+    fn distance(self, other: Flector) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Magnitude> for Origin {
+    type Output = Magnitude;
+
+    fn distance(self, other: Magnitude) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
 impl Distance<MultiVector> for Origin {
     type Output = Magnitude;
 
@@ -788,7 +868,7 @@ impl Distance<MultiVector> for PlaneAtOrigin {
     }
 }
 
-impl Distance<MultiVector> for Point {
+impl Distance<MultiVector> for PointAtInfinity {
     type Output = Magnitude;
 
     fn distance(self, other: MultiVector) -> Magnitude {
@@ -796,7 +876,7 @@ impl Distance<MultiVector> for Point {
     }
 }
 
-impl Distance<MultiVector> for PointAtInfinity {
+impl Distance<MultiVector> for PointAtOrigin {
     type Output = Magnitude;
 
     fn distance(self, other: MultiVector) -> Magnitude {
@@ -852,6 +932,14 @@ impl Distance<MultiVector> for RoundPoint {
     }
 }
 
+impl Distance<Origin> for RoundPoint {
+    type Output = Magnitude;
+
+    fn distance(self, other: Origin) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
 impl Distance<RoundPoint> for RoundPoint {
     type Output = Magnitude;
 
@@ -896,6 +984,14 @@ impl Distance<MultiVector> for Scalar {
     type Output = Magnitude;
 
     fn distance(self, other: MultiVector) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Origin> for Scalar {
+    type Output = Magnitude;
+
+    fn distance(self, other: Origin) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -962,6 +1058,17 @@ impl SineAngle<Dipole> for Circle {
     }
 }
 
+impl SineAngle<FlatPoint> for Circle {
+    type Output = f32;
+
+    fn sine_angle(self, other: FlatPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
 impl SineAngle<Line> for Circle {
     type Output = f32;
 
@@ -984,21 +1091,10 @@ impl SineAngle<LineAtOrigin> for Circle {
     }
 }
 
-impl SineAngle<Origin> for Circle {
+impl SineAngle<PointAtOrigin> for Circle {
     type Output = f32;
 
-    fn sine_angle(self, other: Origin) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
-        sub.sqrt()
-    }
-}
-
-impl SineAngle<Point> for Circle {
-    type Output = f32;
-
-    fn sine_angle(self, other: Point) -> f32 {
+    fn sine_angle(self, other: PointAtOrigin) -> f32 {
         let mut cos: f32 = self.cosine_angle(other);
         let mut cos_squared: f32 = cos * cos;
         let mut sub: f32 = 1.0 - cos_squared;
@@ -1017,10 +1113,10 @@ impl SineAngle<Dipole> for Dipole {
     }
 }
 
-impl SineAngle<Origin> for Dipole {
+impl SineAngle<FlatPoint> for Dipole {
     type Output = f32;
 
-    fn sine_angle(self, other: Origin) -> f32 {
+    fn sine_angle(self, other: FlatPoint) -> f32 {
         let mut cos: f32 = self.cosine_angle(other);
         let mut cos_squared: f32 = cos * cos;
         let mut sub: f32 = 1.0 - cos_squared;
@@ -1028,10 +1124,43 @@ impl SineAngle<Origin> for Dipole {
     }
 }
 
-impl SineAngle<Point> for Dipole {
+impl SineAngle<PointAtOrigin> for Dipole {
     type Output = f32;
 
-    fn sine_angle(self, other: Point) -> f32 {
+    fn sine_angle(self, other: PointAtOrigin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<Dipole> for FlatPoint {
+    type Output = f32;
+
+    fn sine_angle(self, other: Dipole) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<FlatPoint> for FlatPoint {
+    type Output = f32;
+
+    fn sine_angle(self, other: FlatPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<PointAtOrigin> for FlatPoint {
+    type Output = f32;
+
+    fn sine_angle(self, other: PointAtOrigin) -> f32 {
         let mut cos: f32 = self.cosine_angle(other);
         let mut cos_squared: f32 = cos * cos;
         let mut sub: f32 = 1.0 - cos_squared;
@@ -1061,6 +1190,17 @@ impl SineAngle<Dipole> for Line {
     }
 }
 
+impl SineAngle<FlatPoint> for Line {
+    type Output = f32;
+
+    fn sine_angle(self, other: FlatPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
 impl SineAngle<Line> for Line {
     type Output = f32;
 
@@ -1083,21 +1223,10 @@ impl SineAngle<LineAtOrigin> for Line {
     }
 }
 
-impl SineAngle<Origin> for Line {
+impl SineAngle<PointAtOrigin> for Line {
     type Output = f32;
 
-    fn sine_angle(self, other: Origin) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
-        sub.sqrt()
-    }
-}
-
-impl SineAngle<Point> for Line {
-    type Output = f32;
-
-    fn sine_angle(self, other: Point) -> f32 {
+    fn sine_angle(self, other: PointAtOrigin) -> f32 {
         let mut cos: f32 = self.cosine_angle(other);
         let mut cos_squared: f32 = cos * cos;
         let mut sub: f32 = 1.0 - cos_squared;
@@ -1127,6 +1256,17 @@ impl SineAngle<Dipole> for LineAtOrigin {
     }
 }
 
+impl SineAngle<FlatPoint> for LineAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: FlatPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
 impl SineAngle<Line> for LineAtOrigin {
     type Output = f32;
 
@@ -1149,54 +1289,10 @@ impl SineAngle<LineAtOrigin> for LineAtOrigin {
     }
 }
 
-impl SineAngle<Origin> for LineAtOrigin {
+impl SineAngle<PointAtOrigin> for LineAtOrigin {
     type Output = f32;
 
-    fn sine_angle(self, other: Origin) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
-        sub.sqrt()
-    }
-}
-
-impl SineAngle<Point> for LineAtOrigin {
-    type Output = f32;
-
-    fn sine_angle(self, other: Point) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
-        sub.sqrt()
-    }
-}
-
-impl SineAngle<Dipole> for Origin {
-    type Output = f32;
-
-    fn sine_angle(self, other: Dipole) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
-        sub.sqrt()
-    }
-}
-
-impl SineAngle<Origin> for Origin {
-    type Output = f32;
-
-    fn sine_angle(self, other: Origin) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
-        sub.sqrt()
-    }
-}
-
-impl SineAngle<Point> for Origin {
-    type Output = f32;
-
-    fn sine_angle(self, other: Point) -> f32 {
+    fn sine_angle(self, other: PointAtOrigin) -> f32 {
         let mut cos: f32 = self.cosine_angle(other);
         let mut cos_squared: f32 = cos * cos;
         let mut sub: f32 = 1.0 - cos_squared;
@@ -1226,6 +1322,17 @@ impl SineAngle<Dipole> for Plane {
     }
 }
 
+impl SineAngle<FlatPoint> for Plane {
+    type Output = f32;
+
+    fn sine_angle(self, other: FlatPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
 impl SineAngle<Line> for Plane {
     type Output = f32;
 
@@ -1241,17 +1348,6 @@ impl SineAngle<LineAtOrigin> for Plane {
     type Output = f32;
 
     fn sine_angle(self, other: LineAtOrigin) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
-        sub.sqrt()
-    }
-}
-
-impl SineAngle<Origin> for Plane {
-    type Output = f32;
-
-    fn sine_angle(self, other: Origin) -> f32 {
         let mut cos: f32 = self.cosine_angle(other);
         let mut cos_squared: f32 = cos * cos;
         let mut sub: f32 = 1.0 - cos_squared;
@@ -1281,10 +1377,10 @@ impl SineAngle<PlaneAtOrigin> for Plane {
     }
 }
 
-impl SineAngle<Point> for Plane {
+impl SineAngle<PointAtOrigin> for Plane {
     type Output = f32;
 
-    fn sine_angle(self, other: Point) -> f32 {
+    fn sine_angle(self, other: PointAtOrigin) -> f32 {
         let mut cos: f32 = self.cosine_angle(other);
         let mut cos_squared: f32 = cos * cos;
         let mut sub: f32 = 1.0 - cos_squared;
@@ -1325,6 +1421,17 @@ impl SineAngle<Dipole> for PlaneAtOrigin {
     }
 }
 
+impl SineAngle<FlatPoint> for PlaneAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: FlatPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
 impl SineAngle<Line> for PlaneAtOrigin {
     type Output = f32;
 
@@ -1340,17 +1447,6 @@ impl SineAngle<LineAtOrigin> for PlaneAtOrigin {
     type Output = f32;
 
     fn sine_angle(self, other: LineAtOrigin) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
-        sub.sqrt()
-    }
-}
-
-impl SineAngle<Origin> for PlaneAtOrigin {
-    type Output = f32;
-
-    fn sine_angle(self, other: Origin) -> f32 {
         let mut cos: f32 = self.cosine_angle(other);
         let mut cos_squared: f32 = cos * cos;
         let mut sub: f32 = 1.0 - cos_squared;
@@ -1380,10 +1476,10 @@ impl SineAngle<PlaneAtOrigin> for PlaneAtOrigin {
     }
 }
 
-impl SineAngle<Point> for PlaneAtOrigin {
+impl SineAngle<PointAtOrigin> for PlaneAtOrigin {
     type Output = f32;
 
-    fn sine_angle(self, other: Point) -> f32 {
+    fn sine_angle(self, other: PointAtOrigin) -> f32 {
         let mut cos: f32 = self.cosine_angle(other);
         let mut cos_squared: f32 = cos * cos;
         let mut sub: f32 = 1.0 - cos_squared;
@@ -1402,7 +1498,7 @@ impl SineAngle<Sphere> for PlaneAtOrigin {
     }
 }
 
-impl SineAngle<Dipole> for Point {
+impl SineAngle<Dipole> for PointAtOrigin {
     type Output = f32;
 
     fn sine_angle(self, other: Dipole) -> f32 {
@@ -1413,10 +1509,10 @@ impl SineAngle<Dipole> for Point {
     }
 }
 
-impl SineAngle<Origin> for Point {
+impl SineAngle<FlatPoint> for PointAtOrigin {
     type Output = f32;
 
-    fn sine_angle(self, other: Origin) -> f32 {
+    fn sine_angle(self, other: FlatPoint) -> f32 {
         let mut cos: f32 = self.cosine_angle(other);
         let mut cos_squared: f32 = cos * cos;
         let mut sub: f32 = 1.0 - cos_squared;
@@ -1424,10 +1520,10 @@ impl SineAngle<Origin> for Point {
     }
 }
 
-impl SineAngle<Point> for Point {
+impl SineAngle<PointAtOrigin> for PointAtOrigin {
     type Output = f32;
 
-    fn sine_angle(self, other: Point) -> f32 {
+    fn sine_angle(self, other: PointAtOrigin) -> f32 {
         let mut cos: f32 = self.cosine_angle(other);
         let mut cos_squared: f32 = cos * cos;
         let mut sub: f32 = 1.0 - cos_squared;
@@ -1457,6 +1553,17 @@ impl SineAngle<Dipole> for Sphere {
     }
 }
 
+impl SineAngle<FlatPoint> for Sphere {
+    type Output = f32;
+
+    fn sine_angle(self, other: FlatPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
 impl SineAngle<Line> for Sphere {
     type Output = f32;
 
@@ -1472,17 +1579,6 @@ impl SineAngle<LineAtOrigin> for Sphere {
     type Output = f32;
 
     fn sine_angle(self, other: LineAtOrigin) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
-        sub.sqrt()
-    }
-}
-
-impl SineAngle<Origin> for Sphere {
-    type Output = f32;
-
-    fn sine_angle(self, other: Origin) -> f32 {
         let mut cos: f32 = self.cosine_angle(other);
         let mut cos_squared: f32 = cos * cos;
         let mut sub: f32 = 1.0 - cos_squared;
@@ -1512,10 +1608,10 @@ impl SineAngle<PlaneAtOrigin> for Sphere {
     }
 }
 
-impl SineAngle<Point> for Sphere {
+impl SineAngle<PointAtOrigin> for Sphere {
     type Output = f32;
 
-    fn sine_angle(self, other: Point) -> f32 {
+    fn sine_angle(self, other: PointAtOrigin) -> f32 {
         let mut cos: f32 = self.cosine_angle(other);
         let mut cos_squared: f32 = cos * cos;
         let mut sub: f32 = 1.0 - cos_squared;

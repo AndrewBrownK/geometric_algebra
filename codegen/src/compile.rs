@@ -1882,6 +1882,8 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             // https://rigidgeometricalgebra.org/wiki/index.php?title=Inversion
             // The choice of what class should constitute a "Point" is somewhat contrived.
             // It will need extra consideration for CGA.
+
+            // TODO which point is used in CGA? Me thinks FlatPoint, but will need to see.
             if param_a.multi_vector_class().class_name != "Point" {
                 continue;
             }
@@ -2013,9 +2015,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         }
 
 
-        // TODO generated cga projections don't look extremely compelling yet.
-        //  Probably missing a few prerequisites, or have a few minor misplacements.
-        //  (e.g. more dual/complement mixups.)
+        // TODO it's hard to discern which projections are valid in CGA
 
 
         for (param_a, param_b) in registry.pair_parameters() {
@@ -2296,32 +2296,16 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
             // The object is round
 
-            let mut e5_candidates: Vec<_> = registry.classes.iter().filter_map(|it| {
-                if it.0.flat_basis().contains(&flat_basis) { Some(&it.0) } else { None }
-            }).collect();
-            e5_candidates.sort_by(|a, b| a.flat_basis().len().cmp(&b.flat_basis().len()));
-            let mut construct_infinity = None;
-            if let Some(mvc) = e5_candidates.first() {
-                let mut body = vec![];
-                for group in &mvc.grouped_basis {
-                    let mut elements = vec![];
-                    for element in group {
-                        let v = if *element == flat_basis { 1 } else { 0 };
-                        elements.push(v);
-                    }
-                    let e = Expression {
-                        size: group.len(),
-                        data_type_hint: None,
-                        content: ExpressionContent::Constant(DataType::SimdVector(group.len()), elements),
-                    };
-                    body.push((DataType::SimdVector(group.len()), e));
-                }
-                construct_infinity = Some(Expression {
-                    size: 1,
-                    data_type_hint: Some(DataType::MultiVector(mvc)),
-                    content: ExpressionContent::InvokeClassMethod(mvc, "Constructor", body),
-                });
-            }
+            let one_infinity: Option<Expression> = try {
+                let infinity = registry.classes.iter().map(|it| &it.0).find(|it| it.class_name == "Infinity")?;
+                let one_infinity = self.trait_impls.get_class_invocation("One", infinity)?;
+                one_infinity
+            };
+            let one_infinity = match one_infinity {
+                None => continue,
+                Some(it) => it
+            };
+
 
             // TODO a lot of these have "simpler" more direct implementations per object
             //  You can see on the tables on the wiki pages
@@ -2334,19 +2318,17 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
             let name = "Carrier";
             let _: Option<()> = try {
-                let construct = construct_infinity.clone()?;
                 let wedge_name = self.algebra.dialect().exterior_product.first()?;
-                let wedge = self.trait_impls.get_pair_invocation(wedge_name, variable(&param_a), construct)?;
+                let wedge = self.trait_impls.get_pair_invocation(wedge_name, variable(&param_a), one_infinity.clone())?;
                 let carrier = single_expression_single_trait_impl(name, &param_a, wedge);
                 self.trait_impls.add_single_impl(name, param_a.clone(), carrier)
             };
 
             let name = "CoCarrier";
             let _: Option<()> = try {
-                let construct = construct_infinity.clone()?;
                 let wedge_name = self.algebra.dialect().exterior_product.first()?;
-                let right_weight_dual = self.trait_impls.get_single_invocation("RightRoundWeightDual", variable(&param_a))?;
-                let wedge = self.trait_impls.get_pair_invocation(wedge_name, right_weight_dual, construct)?;
+                let anti_dual = self.trait_impls.get_single_invocation("AntiDual", variable(&param_a))?;
+                let wedge = self.trait_impls.get_pair_invocation(wedge_name, anti_dual, one_infinity.clone())?;
                 let carrier = single_expression_single_trait_impl(name, &param_a, wedge);
                 self.trait_impls.add_single_impl(name, param_a.clone(), carrier)
             };
@@ -2364,8 +2346,8 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let _: Option<()> = try {
                 let wedge_name = self.algebra.dialect().exterior_product.first()?;
                 let car = self.trait_impls.get_single_invocation("Carrier", variable(&param_a))?;
-                let weight_dual = self.trait_impls.get_single_invocation("RightWeightDual", car)?;
-                let anti_wedge = self.trait_impls.get_pair_invocation(wedge_name, variable(&param_a), weight_dual)?;
+                let anti_dual = self.trait_impls.get_single_invocation("AntiDual", car)?;
+                let anti_wedge = self.trait_impls.get_pair_invocation(wedge_name, variable(&param_a), anti_dual)?;
                 let container = single_expression_single_trait_impl(name, &param_a, anti_wedge);
                 self.trait_impls.add_single_impl(name, param_a.clone(), container)
             };
@@ -2402,7 +2384,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
         // Class Definitions
         for (class, _) in registry.classes.iter() {
-            if class.class_name == "Origin" {
+            if class.class_name == "Origin" && self.algebra.algebra_name().contains("rga") {
                 emitter.emit(&AstNode::TypeAlias("PointAtOrigin".to_string(), "Origin".to_string()))?;
             }
             if class.class_name == "Horizon" {
