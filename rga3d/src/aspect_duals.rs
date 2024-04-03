@@ -2,13 +2,13 @@
 // AUTO-GENERATED - DO NOT MODIFY
 //
 // To contribute to this file, see the adjacent codegen package.
-// https://github.com/AndrewBrownK/geometric_algebra/
+// https://github.com/AndrewBrownK/projective_ga/
 //
 
 use crate::aspects::{Bulk, Weight};
 use crate::involutions::*;
 use crate::*;
-use geometric_algebra::{simd::*, *};
+use projective_ga::{simd::*, *};
 use std::ops::{Add, Div, Mul, Neg, Sub};
 
 /// Right Bulk Dual

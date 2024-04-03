@@ -37,7 +37,7 @@ const CODEGEN_DISCLAIMER: &str = "\
 // AUTO-GENERATED - DO NOT MODIFY
 //
 // To contribute to this file, see the adjacent codegen package.
-// https://github.com/AndrewBrownK/geometric_algebra/
+// https://github.com/AndrewBrownK/projective_ga/
 //
 
 ";

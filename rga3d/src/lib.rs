@@ -2,10 +2,10 @@
 // AUTO-GENERATED - DO NOT MODIFY
 //
 // To contribute to this file, see the adjacent codegen package.
-// https://github.com/AndrewBrownK/geometric_algebra/
+// https://github.com/AndrewBrownK/projective_ga/
 //
 
-use geometric_algebra::{simd::*, *};
+use projective_ga::{simd::*, *};
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
 pub mod aspect_duals;

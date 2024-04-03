@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "geometric_algebra"
+name = "projective_ga"
 version = "0.2.1"

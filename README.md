@@ -3,7 +3,9 @@
 [![crates.io](https://img.shields.io/crates/v/geometric_algebra.svg)](https://crates.io/crates/geometric_algebra)
 
 ## About
-This repository allows you to describe [geometric algebras](https://en.wikipedia.org/wiki/Geometric_algebra) with 1 to 16 generator elements and generate SIMD-ready, dependency-less libraries for them. It also comes with a set of prebuilt projective geometric algebras in 1D, 2D and 3D which are elliptic, parabolic (euclidian) or hyperbolic.
+TODO still highly unstable fork of geometric_algebra
+
+This repository allows you to describe [geometric algebras](https://en.wikipedia.org/wiki/Geometric_algebra) with 1 to 16 generator elements and generate SIMD-ready, dependency-less libraries for them. It comes with a set of prebuilt [projective geometric algebras](https://projectivegeometricalgebra.org/).
 
 ## Architecture
 - [DSL](https://en.wikipedia.org/wiki/Domain-specific_language) Parser: See [examples](.github/workflows/actions.yaml)
@@ -14,6 +16,7 @@ This repository allows you to describe [geometric algebras](https://en.wikipedia
 - Emitter: Serializes the AST to source code
     - [Rust](https://www.rust-lang.org/)
     - [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL))
+    - [WGSL](https://www.w3.org/TR/WGSL/)
 
 ## Supported SIMD ISAs
 - x86, x86_64: sse2

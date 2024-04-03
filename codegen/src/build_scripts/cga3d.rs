@@ -114,7 +114,7 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
 
     emitter.emit_rust_preamble(
         "
-use geometric_algebra::{simd::*, *};
+use projective_ga::{simd::*, *};
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
 pub mod aspects;
@@ -168,7 +168,7 @@ use crate::products::geometric::GeometricProduct;",
     emitter.new_rust_collector(&file_path.join(Path::new("involutions")));
     emitter.emit_rust_preamble(
         "
-use geometric_algebra::{simd::*, *};
+use projective_ga::{simd::*, *};
 use crate::*;
 use std::ops::{Add, Div, Mul, Neg, Sub};",
     )?;
@@ -177,7 +177,7 @@ use std::ops::{Add, Div, Mul, Neg, Sub};",
     emitter.new_rust_collector(&file_path.join(Path::new("aspect_duals")));
     emitter.emit_rust_preamble(
         "
-use geometric_algebra::{simd::*, *};
+use projective_ga::{simd::*, *};
 use crate::*;
 use std::ops::{Add, Div, Mul, Neg, Sub};
 use crate::aspects::{Bulk, Weight, RoundBulk, RoundWeight};
