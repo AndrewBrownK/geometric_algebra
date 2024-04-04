@@ -99,9 +99,12 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
     code_gen.round_features(flat_basis, &registry);
     code_gen.fancy_norms(&registry);
     code_gen.attitude_and_dependencies("Horizon", &registry);
+    // TODO here
     // TODO dilation and any remaining stuff
     // TODO inverse, quotient, rejection (ala projection) see page 122 it actually seems useful
     // TODO see loads of DualNum operations on page 126
+    // TODO conjugates, page 204
+    // TODO impose constraints on page 235
 
     let mut file_path = Path::new("src/").to_path_buf();
     if !path_prefix.is_empty() {

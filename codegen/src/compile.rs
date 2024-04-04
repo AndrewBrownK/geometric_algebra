@@ -1253,6 +1253,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         }
 
         // Involutions
+        // TODO double check involutions, particularly reverses and anti-reverses for CGA
         let involutions = Involution::involutions(&self.algebra);
         for param_a in registry.single_parameters() {
             for (name, involution, _) in involutions.iter() {
@@ -1877,6 +1878,15 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
         }
 
+        // TODO similar to how "Invert" is a special type of sandwich using a point,
+        //  "Sphere Inversion" is a special type of sandwich using spheres (generalizing
+        //  reflection across planes, and/or motors). When the spheres are concentric, this
+        //  is called dilation. See pages 239 and 244
+        // TODO then there is "Circle rotation" which is like instead of rotating around a line
+        //  (or reflecting across 2 intersecting planes, rather) you can rotate around a circle
+        //  (or spherical invert across 2 intersecting spheres, rather) and get a magnetic coil
+        //  field looking transformation. (page 242, 243)
+        //
         for (param_a, param_b) in registry.pair_parameters() {
             // Invert (Inversion)
             // https://rigidgeometricalgebra.org/wiki/index.php?title=Inversion
@@ -1949,6 +1959,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         }
 
         // TODO get rid of left/right distinction in GA's that only have one complement
+        // TODO reflect the insights in this thread: https://twitter.com/EricLengyel/status/1775663934424654262
         let aspect_duals = [
             ("RightBulkDual", "Bulk", "RightComplement"),
             ("RightWeightDual", "Weight", "RightComplement"),
@@ -1993,6 +2004,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         // though, because maybe there is special effects on the weight when these happen, and
         // I shouldn't just assume that is useless/insignificant.
 
+        // TODO check CGA against expansions from page 217 onward
         let contraction_expansion_stuff = [
             ("BulkContraction", "RightBulkDual", "AntiWedge"),
             ("WeightContraction", "RightWeightDual", "AntiWedge"),

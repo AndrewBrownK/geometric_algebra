@@ -5,6 +5,8 @@
 ## About
 TODO still highly unstable fork of geometric_algebra
 
+TODO write a disclaimer quoting page 237 of the book
+
 This repository allows you to describe [geometric algebras](https://en.wikipedia.org/wiki/Geometric_algebra) with 1 to 16 generator elements and generate SIMD-ready, dependency-less libraries for them. It comes with a set of prebuilt [projective geometric algebras](https://projectivegeometricalgebra.org/).
 
 ## Architecture
