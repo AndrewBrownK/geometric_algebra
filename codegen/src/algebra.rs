@@ -440,8 +440,30 @@ impl MultiVectorClassRegistry {
         return Some(&matched.0);
     }
 
-    pub fn get(&self, signature: &[BasisElementIndex]) -> Option<&MultiVectorClass> {
+    pub fn get_exact(&self, signature: &[BasisElementIndex]) -> Option<&MultiVectorClass> {
         self.index_by_signature.get(signature).map(|index| &self.classes[*index].0)
+    }
+
+    pub fn get_at_least(&self, signature: &[BasisElementIndex]) -> Option<&MultiVectorClass> {
+        let mut result_class = self.get_exact(&signature);
+        if result_class.is_some() {
+            return result_class
+        }
+        if signature.is_empty() {
+            return None
+        }
+
+        let mut viable_classes: Vec<_> = self
+            .classes
+            .iter()
+            .filter(|it| {
+                let sig = it.0.signature();
+                signature.iter().all(|it| sig.contains(it))
+            })
+            .collect();
+        viable_classes.sort_by_key(|it| it.0.signature().len());
+        result_class = viable_classes.first().map(|it| &it.0);
+        return result_class
     }
 }
 

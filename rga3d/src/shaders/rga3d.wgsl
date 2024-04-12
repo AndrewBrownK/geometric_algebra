@@ -371,6 +371,18 @@ fn anti_scalar_anti_scalar_add(self_: AntiScalar, other: AntiScalar) -> AntiScal
     return AntiScalar(self_.g0 + other.g0);
 }
 
+fn anti_scalar_flector_add(self_: AntiScalar, other: Flector) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0), other.g0, vec3<f32>(0.0), vec3<f32>(0.0), other.g1);
+}
+
+fn anti_scalar_flector_at_infinity_add(self_: AntiScalar, other: FlectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0), vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, other.g0.w));
+}
+
+fn anti_scalar_horizon_add(self_: AntiScalar, other: Horizon) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, other.g0));
+}
+
 fn anti_scalar_line_add(self_: AntiScalar, other: Line) -> Motor {
     return Motor(vec4<f32>(0.0, 0.0, 0.0, self_.g0) + vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), other.g1);
 }
@@ -395,8 +407,32 @@ fn anti_scalar_multi_vector_add(self_: AntiScalar, other: MultiVector) -> MultiV
     return MultiVector(vec2<f32>(0.0, self_.g0) + other.g0, other.g1, other.g2, other.g3, other.g4);
 }
 
+fn anti_scalar_multi_vector_at_infinity_add(self_: AntiScalar, other: MultiVectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0) + vec2<f32>(other.g0.x, 0.0), vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), vec3<f32>(0.0), other.g2, vec4<f32>(0.0, 0.0, 0.0, other.g0.y));
+}
+
 fn anti_scalar_multi_vector_at_origin_add(self_: AntiScalar, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
     return MultiVectorAtOrigin(vec2<f32>(0.0, self_.g0) + other.g0, other.g1, other.g2);
+}
+
+fn anti_scalar_origin_add(self_: AntiScalar, other: Origin) -> MultiVectorAtOrigin {
+    return MultiVectorAtOrigin(vec2<f32>(0.0, self_.g0) + vec2<f32>(other.g0, 0.0), vec3<f32>(0.0), vec3<f32>(0.0));
+}
+
+fn anti_scalar_plane_add(self_: AntiScalar, other: Plane) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), other.g0);
+}
+
+fn anti_scalar_plane_at_origin_add(self_: AntiScalar, other: PlaneAtOrigin) -> MultiVectorAtOrigin {
+    return MultiVectorAtOrigin(vec2<f32>(0.0, self_.g0), vec3<f32>(0.0), other.g0);
+}
+
+fn anti_scalar_point_add(self_: AntiScalar, other: Point) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0), other.g0, vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn anti_scalar_point_at_infinity_add(self_: AntiScalar, other: PointAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0), vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0));
 }
 
 fn anti_scalar_rotor_add(self_: AntiScalar, other: Rotor) -> Rotor {
@@ -411,6 +447,10 @@ fn anti_scalar_translator_add(self_: AntiScalar, other: Translator) -> Translato
     return Translator(vec4<f32>(0.0, 0.0, 0.0, self_.g0) + other.g0);
 }
 
+fn flector_anti_scalar_add(self_: Flector, other: AntiScalar) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0), self_.g0, vec3<f32>(0.0), vec3<f32>(0.0), self_.g1);
+}
+
 fn flector_flector_add(self_: Flector, other: Flector) -> Flector {
     return Flector(self_.g0 + other.g0, self_.g1 + other.g1);
 }
@@ -423,8 +463,36 @@ fn flector_horizon_add(self_: Flector, other: Horizon) -> Flector {
     return Flector(self_.g0, self_.g1 + vec4<f32>(0.0, 0.0, 0.0, other.g0));
 }
 
+fn flector_line_add(self_: Flector, other: Line) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), self_.g0, other.g0, other.g1, self_.g1);
+}
+
+fn flector_line_at_infinity_add(self_: Flector, other: LineAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), self_.g0, vec3<f32>(0.0), other.g0, self_.g1);
+}
+
+fn flector_line_at_origin_add(self_: Flector, other: LineAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), self_.g0, other.g0, vec3<f32>(0.0), self_.g1);
+}
+
+fn flector_magnitude_add(self_: Flector, other: Magnitude) -> MultiVector {
+    return MultiVector(other.g0, self_.g0, vec3<f32>(0.0), vec3<f32>(0.0), self_.g1);
+}
+
+fn flector_motor_add(self_: Flector, other: Motor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.w), self_.g0, vec3<f32>(other.g0.x, other.g0.y, other.g0.z), other.g1, self_.g1);
+}
+
 fn flector_multi_vector_add(self_: Flector, other: MultiVector) -> MultiVector {
     return MultiVector(other.g0, self_.g0 + other.g1, other.g2, other.g3, self_.g1 + other.g4);
+}
+
+fn flector_multi_vector_at_infinity_add(self_: Flector, other: MultiVectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(other.g0.x, 0.0), self_.g0 + vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), vec3<f32>(0.0), other.g2, self_.g1 + vec4<f32>(0.0, 0.0, 0.0, other.g0.y));
+}
+
+fn flector_multi_vector_at_origin_add(self_: Flector, other: MultiVectorAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.y), self_.g0 + vec4<f32>(0.0, 0.0, 0.0, other.g0.x), other.g1, vec3<f32>(0.0), self_.g1 + vec4<f32>(other.g2.x, other.g2.y, other.g2.z, 0.0));
 }
 
 fn flector_origin_add(self_: Flector, other: Origin) -> Flector {
@@ -447,6 +515,22 @@ fn flector_point_at_infinity_add(self_: Flector, other: PointAtInfinity) -> Flec
     return Flector(self_.g0 + vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), self_.g1);
 }
 
+fn flector_rotor_add(self_: Flector, other: Rotor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.w), self_.g0, vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0), self_.g1);
+}
+
+fn flector_scalar_add(self_: Flector, other: Scalar) -> MultiVector {
+    return MultiVector(vec2<f32>(other.g0, 0.0), self_.g0, vec3<f32>(0.0), vec3<f32>(0.0), self_.g1);
+}
+
+fn flector_translator_add(self_: Flector, other: Translator) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.w), self_.g0, vec3<f32>(0.0), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), self_.g1);
+}
+
+fn flector_at_infinity_anti_scalar_add(self_: FlectorAtInfinity, other: AntiScalar) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0.w));
+}
+
 fn flector_at_infinity_flector_add(self_: FlectorAtInfinity, other: Flector) -> Flector {
     return Flector(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) + other.g0, vec4<f32>(0.0, 0.0, 0.0, self_.g0.w) + other.g1);
 }
@@ -459,6 +543,26 @@ fn flector_at_infinity_horizon_add(self_: FlectorAtInfinity, other: Horizon) -> 
     return FlectorAtInfinity(self_.g0 + vec4<f32>(0.0, 0.0, 0.0, other.g0));
 }
 
+fn flector_at_infinity_line_add(self_: FlectorAtInfinity, other: Line) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), other.g0, other.g1, vec4<f32>(0.0, 0.0, 0.0, self_.g0.w));
+}
+
+fn flector_at_infinity_line_at_infinity_add(self_: FlectorAtInfinity, other: LineAtInfinity) -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(0.0, self_.g0.w), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), other.g0);
+}
+
+fn flector_at_infinity_line_at_origin_add(self_: FlectorAtInfinity, other: LineAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), other.g0, vec3<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0.w));
+}
+
+fn flector_at_infinity_magnitude_add(self_: FlectorAtInfinity, other: Magnitude) -> MultiVector {
+    return MultiVector(other.g0, vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0.w));
+}
+
+fn flector_at_infinity_motor_add(self_: FlectorAtInfinity, other: Motor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.w), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), other.g1, vec4<f32>(0.0, 0.0, 0.0, self_.g0.w));
+}
+
 fn flector_at_infinity_multi_vector_add(self_: FlectorAtInfinity, other: MultiVector) -> MultiVector {
     return MultiVector(other.g0, vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) + other.g1, other.g2, other.g3, vec4<f32>(0.0, 0.0, 0.0, self_.g0.w) + other.g4);
 }
@@ -467,8 +571,44 @@ fn flector_at_infinity_multi_vector_at_infinity_add(self_: FlectorAtInfinity, ot
     return MultiVectorAtInfinity(vec2<f32>(0.0, self_.g0.w) + other.g0, vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) + other.g1, other.g2);
 }
 
+fn flector_at_infinity_multi_vector_at_origin_add(self_: FlectorAtInfinity, other: MultiVectorAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.y), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) + vec4<f32>(0.0, 0.0, 0.0, other.g0.x), other.g1, vec3<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0.w) + vec4<f32>(other.g2.x, other.g2.y, other.g2.z, 0.0));
+}
+
+fn flector_at_infinity_origin_add(self_: FlectorAtInfinity, other: Origin) -> Flector {
+    return Flector(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) + vec4<f32>(0.0, 0.0, 0.0, other.g0), vec4<f32>(0.0, 0.0, 0.0, self_.g0.w));
+}
+
+fn flector_at_infinity_plane_add(self_: FlectorAtInfinity, other: Plane) -> Flector {
+    return Flector(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0.w) + other.g0);
+}
+
+fn flector_at_infinity_plane_at_origin_add(self_: FlectorAtInfinity, other: PlaneAtOrigin) -> Flector {
+    return Flector(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0.w) + vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
+}
+
+fn flector_at_infinity_point_add(self_: FlectorAtInfinity, other: Point) -> Flector {
+    return Flector(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) + other.g0, vec4<f32>(0.0, 0.0, 0.0, self_.g0.w));
+}
+
 fn flector_at_infinity_point_at_infinity_add(self_: FlectorAtInfinity, other: PointAtInfinity) -> FlectorAtInfinity {
     return FlectorAtInfinity(self_.g0 + vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
+}
+
+fn flector_at_infinity_rotor_add(self_: FlectorAtInfinity, other: Rotor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.w), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0.w));
+}
+
+fn flector_at_infinity_scalar_add(self_: FlectorAtInfinity, other: Scalar) -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(0.0, self_.g0.w) + vec2<f32>(other.g0, 0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0));
+}
+
+fn flector_at_infinity_translator_add(self_: FlectorAtInfinity, other: Translator) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.w), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec3<f32>(0.0), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(0.0, 0.0, 0.0, self_.g0.w));
+}
+
+fn horizon_anti_scalar_add(self_: Horizon, other: AntiScalar) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0));
 }
 
 fn horizon_flector_add(self_: Horizon, other: Flector) -> Flector {
@@ -483,12 +623,40 @@ fn horizon_horizon_add(self_: Horizon, other: Horizon) -> Horizon {
     return Horizon(self_.g0 + other.g0);
 }
 
+fn horizon_line_add(self_: Horizon, other: Line) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0), other.g0, other.g1, vec4<f32>(0.0, 0.0, 0.0, self_.g0));
+}
+
+fn horizon_line_at_infinity_add(self_: Horizon, other: LineAtInfinity) -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(0.0, self_.g0), vec3<f32>(0.0), other.g0);
+}
+
+fn horizon_line_at_origin_add(self_: Horizon, other: LineAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0), other.g0, vec3<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0));
+}
+
+fn horizon_magnitude_add(self_: Horizon, other: Magnitude) -> MultiVector {
+    return MultiVector(other.g0, vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0));
+}
+
+fn horizon_motor_add(self_: Horizon, other: Motor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), other.g1, vec4<f32>(0.0, 0.0, 0.0, self_.g0));
+}
+
 fn horizon_multi_vector_add(self_: Horizon, other: MultiVector) -> MultiVector {
     return MultiVector(other.g0, other.g1, other.g2, other.g3, vec4<f32>(0.0, 0.0, 0.0, self_.g0) + other.g4);
 }
 
 fn horizon_multi_vector_at_infinity_add(self_: Horizon, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
     return MultiVectorAtInfinity(vec2<f32>(0.0, self_.g0) + other.g0, other.g1, other.g2);
+}
+
+fn horizon_multi_vector_at_origin_add(self_: Horizon, other: MultiVectorAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.y), vec4<f32>(0.0, 0.0, 0.0, other.g0.x), other.g1, vec3<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0) + vec4<f32>(other.g2.x, other.g2.y, other.g2.z, 0.0));
+}
+
+fn horizon_origin_add(self_: Horizon, other: Origin) -> Flector {
+    return Flector(vec4<f32>(0.0, 0.0, 0.0, other.g0), vec4<f32>(0.0, 0.0, 0.0, self_.g0));
 }
 
 fn horizon_plane_add(self_: Horizon, other: Plane) -> Plane {
@@ -499,12 +667,40 @@ fn horizon_plane_at_origin_add(self_: Horizon, other: PlaneAtOrigin) -> Plane {
     return Plane(vec4<f32>(0.0, 0.0, 0.0, self_.g0) + vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
 }
 
+fn horizon_point_add(self_: Horizon, other: Point) -> Flector {
+    return Flector(other.g0, vec4<f32>(0.0, 0.0, 0.0, self_.g0));
+}
+
 fn horizon_point_at_infinity_add(self_: Horizon, other: PointAtInfinity) -> FlectorAtInfinity {
     return FlectorAtInfinity(vec4<f32>(0.0, 0.0, 0.0, self_.g0) + vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
 }
 
+fn horizon_rotor_add(self_: Horizon, other: Rotor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0));
+}
+
+fn horizon_scalar_add(self_: Horizon, other: Scalar) -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(0.0, self_.g0) + vec2<f32>(other.g0, 0.0), vec3<f32>(0.0), vec3<f32>(0.0));
+}
+
+fn horizon_translator_add(self_: Horizon, other: Translator) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(0.0, 0.0, 0.0, self_.g0));
+}
+
 fn line_anti_scalar_add(self_: Line, other: AntiScalar) -> Motor {
     return Motor(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) + vec4<f32>(0.0, 0.0, 0.0, other.g0), self_.g1);
+}
+
+fn line_flector_add(self_: Line, other: Flector) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), other.g0, self_.g0, self_.g1, other.g1);
+}
+
+fn line_flector_at_infinity_add(self_: Line, other: FlectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), self_.g0, self_.g1, vec4<f32>(0.0, 0.0, 0.0, other.g0.w));
+}
+
+fn line_horizon_add(self_: Line, other: Horizon) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0), self_.g0, self_.g1, vec4<f32>(0.0, 0.0, 0.0, other.g0));
 }
 
 fn line_line_add(self_: Line, other: Line) -> Line {
@@ -519,6 +715,10 @@ fn line_line_at_origin_add(self_: Line, other: LineAtOrigin) -> Line {
     return Line(self_.g0 + other.g0, self_.g1);
 }
 
+fn line_magnitude_add(self_: Line, other: Magnitude) -> MultiVector {
+    return MultiVector(other.g0, vec4<f32>(0.0), self_.g0, self_.g1, vec4<f32>(0.0));
+}
+
 fn line_motor_add(self_: Line, other: Motor) -> Motor {
     return Motor(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) + other.g0, self_.g1 + other.g1);
 }
@@ -527,8 +727,40 @@ fn line_multi_vector_add(self_: Line, other: MultiVector) -> MultiVector {
     return MultiVector(other.g0, other.g1, self_.g0 + other.g2, self_.g1 + other.g3, other.g4);
 }
 
+fn line_multi_vector_at_infinity_add(self_: Line, other: MultiVectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(other.g0.x, 0.0), vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), self_.g0, self_.g1 + other.g2, vec4<f32>(0.0, 0.0, 0.0, other.g0.y));
+}
+
+fn line_multi_vector_at_origin_add(self_: Line, other: MultiVectorAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.y), vec4<f32>(0.0, 0.0, 0.0, other.g0.x), self_.g0 + other.g1, self_.g1, vec4<f32>(other.g2.x, other.g2.y, other.g2.z, 0.0));
+}
+
+fn line_origin_add(self_: Line, other: Origin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, other.g0), self_.g0, self_.g1, vec4<f32>(0.0));
+}
+
+fn line_plane_add(self_: Line, other: Plane) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0), self_.g0, self_.g1, other.g0);
+}
+
+fn line_plane_at_origin_add(self_: Line, other: PlaneAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0), self_.g0, self_.g1, vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
+}
+
+fn line_point_add(self_: Line, other: Point) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), other.g0, self_.g0, self_.g1, vec4<f32>(0.0));
+}
+
+fn line_point_at_infinity_add(self_: Line, other: PointAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), self_.g0, self_.g1, vec4<f32>(0.0));
+}
+
 fn line_rotor_add(self_: Line, other: Rotor) -> Motor {
     return Motor(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) + other.g0, self_.g1);
+}
+
+fn line_scalar_add(self_: Line, other: Scalar) -> MultiVector {
+    return MultiVector(vec2<f32>(other.g0, 0.0), vec4<f32>(0.0), self_.g0, self_.g1, vec4<f32>(0.0));
 }
 
 fn line_translator_add(self_: Line, other: Translator) -> Motor {
@@ -537,6 +769,18 @@ fn line_translator_add(self_: Line, other: Translator) -> Motor {
 
 fn line_at_infinity_anti_scalar_add(self_: LineAtInfinity, other: AntiScalar) -> Translator {
     return Translator(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) + vec4<f32>(0.0, 0.0, 0.0, other.g0));
+}
+
+fn line_at_infinity_flector_add(self_: LineAtInfinity, other: Flector) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), other.g0, vec3<f32>(0.0), self_.g0, other.g1);
+}
+
+fn line_at_infinity_flector_at_infinity_add(self_: LineAtInfinity, other: FlectorAtInfinity) -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(0.0, other.g0.w), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), self_.g0);
+}
+
+fn line_at_infinity_horizon_add(self_: LineAtInfinity, other: Horizon) -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(0.0, other.g0), vec3<f32>(0.0), self_.g0);
 }
 
 fn line_at_infinity_line_add(self_: LineAtInfinity, other: Line) -> Line {
@@ -551,6 +795,10 @@ fn line_at_infinity_line_at_origin_add(self_: LineAtInfinity, other: LineAtOrigi
     return Line(other.g0, self_.g0);
 }
 
+fn line_at_infinity_magnitude_add(self_: LineAtInfinity, other: Magnitude) -> MultiVector {
+    return MultiVector(other.g0, vec4<f32>(0.0), vec3<f32>(0.0), self_.g0, vec4<f32>(0.0));
+}
+
 fn line_at_infinity_motor_add(self_: LineAtInfinity, other: Motor) -> Motor {
     return Motor(other.g0, self_.g0 + other.g1);
 }
@@ -563,8 +811,36 @@ fn line_at_infinity_multi_vector_at_infinity_add(self_: LineAtInfinity, other: M
     return MultiVectorAtInfinity(other.g0, other.g1, self_.g0 + other.g2);
 }
 
+fn line_at_infinity_multi_vector_at_origin_add(self_: LineAtInfinity, other: MultiVectorAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.y), vec4<f32>(0.0, 0.0, 0.0, other.g0.x), other.g1, self_.g0, vec4<f32>(other.g2.x, other.g2.y, other.g2.z, 0.0));
+}
+
+fn line_at_infinity_origin_add(self_: LineAtInfinity, other: Origin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, other.g0), vec3<f32>(0.0), self_.g0, vec4<f32>(0.0));
+}
+
+fn line_at_infinity_plane_add(self_: LineAtInfinity, other: Plane) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), self_.g0, other.g0);
+}
+
+fn line_at_infinity_plane_at_origin_add(self_: LineAtInfinity, other: PlaneAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), self_.g0, vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
+}
+
+fn line_at_infinity_point_add(self_: LineAtInfinity, other: Point) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), other.g0, vec3<f32>(0.0), self_.g0, vec4<f32>(0.0));
+}
+
+fn line_at_infinity_point_at_infinity_add(self_: LineAtInfinity, other: PointAtInfinity) -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(0.0), other.g0, self_.g0);
+}
+
 fn line_at_infinity_rotor_add(self_: LineAtInfinity, other: Rotor) -> Motor {
     return Motor(other.g0, self_.g0);
+}
+
+fn line_at_infinity_scalar_add(self_: LineAtInfinity, other: Scalar) -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(other.g0, 0.0), vec3<f32>(0.0), self_.g0);
 }
 
 fn line_at_infinity_translator_add(self_: LineAtInfinity, other: Translator) -> Translator {
@@ -573,6 +849,18 @@ fn line_at_infinity_translator_add(self_: LineAtInfinity, other: Translator) -> 
 
 fn line_at_origin_anti_scalar_add(self_: LineAtOrigin, other: AntiScalar) -> Rotor {
     return Rotor(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) + vec4<f32>(0.0, 0.0, 0.0, other.g0));
+}
+
+fn line_at_origin_flector_add(self_: LineAtOrigin, other: Flector) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), other.g0, self_.g0, vec3<f32>(0.0), other.g1);
+}
+
+fn line_at_origin_flector_at_infinity_add(self_: LineAtOrigin, other: FlectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), self_.g0, vec3<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, other.g0.w));
+}
+
+fn line_at_origin_horizon_add(self_: LineAtOrigin, other: Horizon) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0), self_.g0, vec3<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, other.g0));
 }
 
 fn line_at_origin_line_add(self_: LineAtOrigin, other: Line) -> Line {
@@ -587,6 +875,10 @@ fn line_at_origin_line_at_origin_add(self_: LineAtOrigin, other: LineAtOrigin) -
     return LineAtOrigin(self_.g0 + other.g0);
 }
 
+fn line_at_origin_magnitude_add(self_: LineAtOrigin, other: Magnitude) -> MultiVector {
+    return MultiVector(other.g0, vec4<f32>(0.0), self_.g0, vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
 fn line_at_origin_motor_add(self_: LineAtOrigin, other: Motor) -> Motor {
     return Motor(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) + other.g0, other.g1);
 }
@@ -595,12 +887,40 @@ fn line_at_origin_multi_vector_add(self_: LineAtOrigin, other: MultiVector) -> M
     return MultiVector(other.g0, other.g1, self_.g0 + other.g2, other.g3, other.g4);
 }
 
+fn line_at_origin_multi_vector_at_infinity_add(self_: LineAtOrigin, other: MultiVectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(other.g0.x, 0.0), vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), self_.g0, other.g2, vec4<f32>(0.0, 0.0, 0.0, other.g0.y));
+}
+
 fn line_at_origin_multi_vector_at_origin_add(self_: LineAtOrigin, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
     return MultiVectorAtOrigin(other.g0, self_.g0 + other.g1, other.g2);
 }
 
+fn line_at_origin_origin_add(self_: LineAtOrigin, other: Origin) -> MultiVectorAtOrigin {
+    return MultiVectorAtOrigin(vec2<f32>(other.g0, 0.0), self_.g0, vec3<f32>(0.0));
+}
+
+fn line_at_origin_plane_add(self_: LineAtOrigin, other: Plane) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0), self_.g0, vec3<f32>(0.0), other.g0);
+}
+
+fn line_at_origin_plane_at_origin_add(self_: LineAtOrigin, other: PlaneAtOrigin) -> MultiVectorAtOrigin {
+    return MultiVectorAtOrigin(vec2<f32>(0.0), self_.g0, other.g0);
+}
+
+fn line_at_origin_point_add(self_: LineAtOrigin, other: Point) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), other.g0, self_.g0, vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn line_at_origin_point_at_infinity_add(self_: LineAtOrigin, other: PointAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), self_.g0, vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
 fn line_at_origin_rotor_add(self_: LineAtOrigin, other: Rotor) -> Rotor {
     return Rotor(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) + other.g0);
+}
+
+fn line_at_origin_scalar_add(self_: LineAtOrigin, other: Scalar) -> MultiVector {
+    return MultiVector(vec2<f32>(other.g0, 0.0), vec4<f32>(0.0), self_.g0, vec3<f32>(0.0), vec4<f32>(0.0));
 }
 
 fn line_at_origin_translator_add(self_: LineAtOrigin, other: Translator) -> Motor {
@@ -611,20 +931,96 @@ fn magnitude_anti_scalar_add(self_: Magnitude, other: AntiScalar) -> Magnitude {
     return Magnitude(self_.g0 + vec2<f32>(0.0, other.g0));
 }
 
+fn magnitude_flector_add(self_: Magnitude, other: Flector) -> MultiVector {
+    return MultiVector(self_.g0, other.g0, vec3<f32>(0.0), vec3<f32>(0.0), other.g1);
+}
+
+fn magnitude_flector_at_infinity_add(self_: Magnitude, other: FlectorAtInfinity) -> MultiVector {
+    return MultiVector(self_.g0, vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, other.g0.w));
+}
+
+fn magnitude_horizon_add(self_: Magnitude, other: Horizon) -> MultiVector {
+    return MultiVector(self_.g0, vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, other.g0));
+}
+
+fn magnitude_line_add(self_: Magnitude, other: Line) -> MultiVector {
+    return MultiVector(self_.g0, vec4<f32>(0.0), other.g0, other.g1, vec4<f32>(0.0));
+}
+
+fn magnitude_line_at_infinity_add(self_: Magnitude, other: LineAtInfinity) -> MultiVector {
+    return MultiVector(self_.g0, vec4<f32>(0.0), vec3<f32>(0.0), other.g0, vec4<f32>(0.0));
+}
+
+fn magnitude_line_at_origin_add(self_: Magnitude, other: LineAtOrigin) -> MultiVector {
+    return MultiVector(self_.g0, vec4<f32>(0.0), other.g0, vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
 fn magnitude_magnitude_add(self_: Magnitude, other: Magnitude) -> Magnitude {
     return Magnitude(self_.g0 + other.g0);
+}
+
+fn magnitude_motor_add(self_: Magnitude, other: Motor) -> MultiVector {
+    return MultiVector(self_.g0 + vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), other.g1, vec4<f32>(0.0));
 }
 
 fn magnitude_multi_vector_add(self_: Magnitude, other: MultiVector) -> MultiVector {
     return MultiVector(self_.g0 + other.g0, other.g1, other.g2, other.g3, other.g4);
 }
 
+fn magnitude_multi_vector_at_infinity_add(self_: Magnitude, other: MultiVectorAtInfinity) -> MultiVector {
+    return MultiVector(self_.g0 + vec2<f32>(other.g0.x, 0.0), vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), vec3<f32>(0.0), other.g2, vec4<f32>(0.0, 0.0, 0.0, other.g0.y));
+}
+
+fn magnitude_multi_vector_at_origin_add(self_: Magnitude, other: MultiVectorAtOrigin) -> MultiVector {
+    return MultiVector(self_.g0 + vec2<f32>(0.0, other.g0.y), vec4<f32>(0.0, 0.0, 0.0, other.g0.x), other.g1, vec3<f32>(0.0), vec4<f32>(other.g2.x, other.g2.y, other.g2.z, 0.0));
+}
+
+fn magnitude_origin_add(self_: Magnitude, other: Origin) -> MultiVector {
+    return MultiVector(self_.g0, vec4<f32>(0.0, 0.0, 0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn magnitude_plane_add(self_: Magnitude, other: Plane) -> MultiVector {
+    return MultiVector(self_.g0, vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), other.g0);
+}
+
+fn magnitude_plane_at_origin_add(self_: Magnitude, other: PlaneAtOrigin) -> MultiVector {
+    return MultiVector(self_.g0, vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
+}
+
+fn magnitude_point_add(self_: Magnitude, other: Point) -> MultiVector {
+    return MultiVector(self_.g0, other.g0, vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn magnitude_point_at_infinity_add(self_: Magnitude, other: PointAtInfinity) -> MultiVector {
+    return MultiVector(self_.g0, vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn magnitude_rotor_add(self_: Magnitude, other: Rotor) -> MultiVector {
+    return MultiVector(self_.g0 + vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
 fn magnitude_scalar_add(self_: Magnitude, other: Scalar) -> Magnitude {
     return Magnitude(self_.g0 + vec2<f32>(other.g0, 0.0));
 }
 
+fn magnitude_translator_add(self_: Magnitude, other: Translator) -> MultiVector {
+    return MultiVector(self_.g0 + vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(0.0));
+}
+
 fn motor_anti_scalar_add(self_: Motor, other: AntiScalar) -> Motor {
     return Motor(self_.g0 + vec4<f32>(0.0, 0.0, 0.0, other.g0), self_.g1);
+}
+
+fn motor_flector_add(self_: Motor, other: Flector) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), other.g0, vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), self_.g1, other.g1);
+}
+
+fn motor_flector_at_infinity_add(self_: Motor, other: FlectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), self_.g1, vec4<f32>(0.0, 0.0, 0.0, other.g0.w));
+}
+
+fn motor_horizon_add(self_: Motor, other: Horizon) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), self_.g1, vec4<f32>(0.0, 0.0, 0.0, other.g0));
 }
 
 fn motor_line_add(self_: Motor, other: Line) -> Motor {
@@ -639,6 +1035,10 @@ fn motor_line_at_origin_add(self_: Motor, other: LineAtOrigin) -> Motor {
     return Motor(self_.g0 + vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), self_.g1);
 }
 
+fn motor_magnitude_add(self_: Motor, other: Magnitude) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w) + other.g0, vec4<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), self_.g1, vec4<f32>(0.0));
+}
+
 fn motor_motor_add(self_: Motor, other: Motor) -> Motor {
     return Motor(self_.g0 + other.g0, self_.g1 + other.g1);
 }
@@ -647,8 +1047,40 @@ fn motor_multi_vector_add(self_: Motor, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(0.0, self_.g0.w) + other.g0, other.g1, vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) + other.g2, self_.g1 + other.g3, other.g4);
 }
 
+fn motor_multi_vector_at_infinity_add(self_: Motor, other: MultiVectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w) + vec2<f32>(other.g0.x, 0.0), vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), self_.g1 + other.g2, vec4<f32>(0.0, 0.0, 0.0, other.g0.y));
+}
+
+fn motor_multi_vector_at_origin_add(self_: Motor, other: MultiVectorAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w) + vec2<f32>(0.0, other.g0.y), vec4<f32>(0.0, 0.0, 0.0, other.g0.x), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) + other.g1, self_.g1, vec4<f32>(other.g2.x, other.g2.y, other.g2.z, 0.0));
+}
+
+fn motor_origin_add(self_: Motor, other: Origin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0, 0.0, 0.0, other.g0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), self_.g1, vec4<f32>(0.0));
+}
+
+fn motor_plane_add(self_: Motor, other: Plane) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), self_.g1, other.g0);
+}
+
+fn motor_plane_at_origin_add(self_: Motor, other: PlaneAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), self_.g1, vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
+}
+
+fn motor_point_add(self_: Motor, other: Point) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), other.g0, vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), self_.g1, vec4<f32>(0.0));
+}
+
+fn motor_point_at_infinity_add(self_: Motor, other: PointAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), self_.g1, vec4<f32>(0.0));
+}
+
 fn motor_rotor_add(self_: Motor, other: Rotor) -> Motor {
     return Motor(self_.g0 + other.g0, self_.g1);
+}
+
+fn motor_scalar_add(self_: Motor, other: Scalar) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w) + vec2<f32>(other.g0, 0.0), vec4<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), self_.g1, vec4<f32>(0.0));
 }
 
 fn motor_translator_add(self_: Motor, other: Translator) -> Motor {
@@ -735,6 +1167,14 @@ fn multi_vector_translator_add(self_: MultiVector, other: Translator) -> MultiVe
     return MultiVector(self_.g0 + vec2<f32>(0.0, other.g0.w), self_.g1, self_.g2, self_.g3 + vec3<f32>(other.g0.x, other.g0.y, other.g0.z), self_.g4);
 }
 
+fn multi_vector_at_infinity_anti_scalar_add(self_: MultiVectorAtInfinity, other: AntiScalar) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.x, 0.0) + vec2<f32>(0.0, other.g0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0), vec3<f32>(0.0), self_.g2, vec4<f32>(0.0, 0.0, 0.0, self_.g0.y));
+}
+
+fn multi_vector_at_infinity_flector_add(self_: MultiVectorAtInfinity, other: Flector) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.x, 0.0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0) + other.g0, vec3<f32>(0.0), self_.g2, vec4<f32>(0.0, 0.0, 0.0, self_.g0.y) + other.g1);
+}
+
 fn multi_vector_at_infinity_flector_at_infinity_add(self_: MultiVectorAtInfinity, other: FlectorAtInfinity) -> MultiVectorAtInfinity {
     return MultiVectorAtInfinity(self_.g0 + vec2<f32>(0.0, other.g0.w), self_.g1 + vec3<f32>(other.g0.x, other.g0.y, other.g0.z), self_.g2);
 }
@@ -743,8 +1183,24 @@ fn multi_vector_at_infinity_horizon_add(self_: MultiVectorAtInfinity, other: Hor
     return MultiVectorAtInfinity(self_.g0 + vec2<f32>(0.0, other.g0), self_.g1, self_.g2);
 }
 
+fn multi_vector_at_infinity_line_add(self_: MultiVectorAtInfinity, other: Line) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.x, 0.0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0), other.g0, self_.g2 + other.g1, vec4<f32>(0.0, 0.0, 0.0, self_.g0.y));
+}
+
 fn multi_vector_at_infinity_line_at_infinity_add(self_: MultiVectorAtInfinity, other: LineAtInfinity) -> MultiVectorAtInfinity {
     return MultiVectorAtInfinity(self_.g0, self_.g1, self_.g2 + other.g0);
+}
+
+fn multi_vector_at_infinity_line_at_origin_add(self_: MultiVectorAtInfinity, other: LineAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.x, 0.0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0), other.g0, self_.g2, vec4<f32>(0.0, 0.0, 0.0, self_.g0.y));
+}
+
+fn multi_vector_at_infinity_magnitude_add(self_: MultiVectorAtInfinity, other: Magnitude) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.x, 0.0) + other.g0, vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0), vec3<f32>(0.0), self_.g2, vec4<f32>(0.0, 0.0, 0.0, self_.g0.y));
+}
+
+fn multi_vector_at_infinity_motor_add(self_: MultiVectorAtInfinity, other: Motor) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.x, 0.0) + vec2<f32>(0.0, other.g0.w), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), self_.g2 + other.g1, vec4<f32>(0.0, 0.0, 0.0, self_.g0.y));
 }
 
 fn multi_vector_at_infinity_multi_vector_add(self_: MultiVectorAtInfinity, other: MultiVector) -> MultiVector {
@@ -759,20 +1215,72 @@ fn multi_vector_at_infinity_multi_vector_at_origin_add(self_: MultiVectorAtInfin
     return MultiVector(vec2<f32>(self_.g0.x, 0.0) + vec2<f32>(0.0, other.g0.y), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0) + vec4<f32>(0.0, 0.0, 0.0, other.g0.x), other.g1, self_.g2, vec4<f32>(0.0, 0.0, 0.0, self_.g0.y) + vec4<f32>(other.g2.x, other.g2.y, other.g2.z, 0.0));
 }
 
+fn multi_vector_at_infinity_origin_add(self_: MultiVectorAtInfinity, other: Origin) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.x, 0.0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0) + vec4<f32>(0.0, 0.0, 0.0, other.g0), vec3<f32>(0.0), self_.g2, vec4<f32>(0.0, 0.0, 0.0, self_.g0.y));
+}
+
+fn multi_vector_at_infinity_plane_add(self_: MultiVectorAtInfinity, other: Plane) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.x, 0.0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0), vec3<f32>(0.0), self_.g2, vec4<f32>(0.0, 0.0, 0.0, self_.g0.y) + other.g0);
+}
+
+fn multi_vector_at_infinity_plane_at_origin_add(self_: MultiVectorAtInfinity, other: PlaneAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.x, 0.0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0), vec3<f32>(0.0), self_.g2, vec4<f32>(0.0, 0.0, 0.0, self_.g0.y) + vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
+}
+
+fn multi_vector_at_infinity_point_add(self_: MultiVectorAtInfinity, other: Point) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.x, 0.0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0) + other.g0, vec3<f32>(0.0), self_.g2, vec4<f32>(0.0, 0.0, 0.0, self_.g0.y));
+}
+
 fn multi_vector_at_infinity_point_at_infinity_add(self_: MultiVectorAtInfinity, other: PointAtInfinity) -> MultiVectorAtInfinity {
     return MultiVectorAtInfinity(self_.g0, self_.g1 + other.g0, self_.g2);
+}
+
+fn multi_vector_at_infinity_rotor_add(self_: MultiVectorAtInfinity, other: Rotor) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.x, 0.0) + vec2<f32>(0.0, other.g0.w), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), self_.g2, vec4<f32>(0.0, 0.0, 0.0, self_.g0.y));
 }
 
 fn multi_vector_at_infinity_scalar_add(self_: MultiVectorAtInfinity, other: Scalar) -> MultiVectorAtInfinity {
     return MultiVectorAtInfinity(self_.g0 + vec2<f32>(other.g0, 0.0), self_.g1, self_.g2);
 }
 
+fn multi_vector_at_infinity_translator_add(self_: MultiVectorAtInfinity, other: Translator) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.x, 0.0) + vec2<f32>(0.0, other.g0.w), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0), vec3<f32>(0.0), self_.g2 + vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(0.0, 0.0, 0.0, self_.g0.y));
+}
+
 fn multi_vector_at_origin_anti_scalar_add(self_: MultiVectorAtOrigin, other: AntiScalar) -> MultiVectorAtOrigin {
     return MultiVectorAtOrigin(self_.g0 + vec2<f32>(0.0, other.g0), self_.g1, self_.g2);
 }
 
+fn multi_vector_at_origin_flector_add(self_: MultiVectorAtOrigin, other: Flector) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.y), vec4<f32>(0.0, 0.0, 0.0, self_.g0.x) + other.g0, self_.g1, vec3<f32>(0.0), vec4<f32>(self_.g2.x, self_.g2.y, self_.g2.z, 0.0) + other.g1);
+}
+
+fn multi_vector_at_origin_flector_at_infinity_add(self_: MultiVectorAtOrigin, other: FlectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.y), vec4<f32>(0.0, 0.0, 0.0, self_.g0.x) + vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), self_.g1, vec3<f32>(0.0), vec4<f32>(self_.g2.x, self_.g2.y, self_.g2.z, 0.0) + vec4<f32>(0.0, 0.0, 0.0, other.g0.w));
+}
+
+fn multi_vector_at_origin_horizon_add(self_: MultiVectorAtOrigin, other: Horizon) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.y), vec4<f32>(0.0, 0.0, 0.0, self_.g0.x), self_.g1, vec3<f32>(0.0), vec4<f32>(self_.g2.x, self_.g2.y, self_.g2.z, 0.0) + vec4<f32>(0.0, 0.0, 0.0, other.g0));
+}
+
+fn multi_vector_at_origin_line_add(self_: MultiVectorAtOrigin, other: Line) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.y), vec4<f32>(0.0, 0.0, 0.0, self_.g0.x), self_.g1 + other.g0, other.g1, vec4<f32>(self_.g2.x, self_.g2.y, self_.g2.z, 0.0));
+}
+
+fn multi_vector_at_origin_line_at_infinity_add(self_: MultiVectorAtOrigin, other: LineAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.y), vec4<f32>(0.0, 0.0, 0.0, self_.g0.x), self_.g1, other.g0, vec4<f32>(self_.g2.x, self_.g2.y, self_.g2.z, 0.0));
+}
+
 fn multi_vector_at_origin_line_at_origin_add(self_: MultiVectorAtOrigin, other: LineAtOrigin) -> MultiVectorAtOrigin {
     return MultiVectorAtOrigin(self_.g0, self_.g1 + other.g0, self_.g2);
+}
+
+fn multi_vector_at_origin_magnitude_add(self_: MultiVectorAtOrigin, other: Magnitude) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.y) + other.g0, vec4<f32>(0.0, 0.0, 0.0, self_.g0.x), self_.g1, vec3<f32>(0.0), vec4<f32>(self_.g2.x, self_.g2.y, self_.g2.z, 0.0));
+}
+
+fn multi_vector_at_origin_motor_add(self_: MultiVectorAtOrigin, other: Motor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.y) + vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0, 0.0, 0.0, self_.g0.x), self_.g1 + vec3<f32>(other.g0.x, other.g0.y, other.g0.z), other.g1, vec4<f32>(self_.g2.x, self_.g2.y, self_.g2.z, 0.0));
 }
 
 fn multi_vector_at_origin_multi_vector_add(self_: MultiVectorAtOrigin, other: MultiVector) -> MultiVector {
@@ -791,20 +1299,76 @@ fn multi_vector_at_origin_origin_add(self_: MultiVectorAtOrigin, other: Origin) 
     return MultiVectorAtOrigin(self_.g0 + vec2<f32>(other.g0, 0.0), self_.g1, self_.g2);
 }
 
+fn multi_vector_at_origin_plane_add(self_: MultiVectorAtOrigin, other: Plane) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.y), vec4<f32>(0.0, 0.0, 0.0, self_.g0.x), self_.g1, vec3<f32>(0.0), vec4<f32>(self_.g2.x, self_.g2.y, self_.g2.z, 0.0) + other.g0);
+}
+
 fn multi_vector_at_origin_plane_at_origin_add(self_: MultiVectorAtOrigin, other: PlaneAtOrigin) -> MultiVectorAtOrigin {
     return MultiVectorAtOrigin(self_.g0, self_.g1, self_.g2 + other.g0);
+}
+
+fn multi_vector_at_origin_point_add(self_: MultiVectorAtOrigin, other: Point) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.y), vec4<f32>(0.0, 0.0, 0.0, self_.g0.x) + other.g0, self_.g1, vec3<f32>(0.0), vec4<f32>(self_.g2.x, self_.g2.y, self_.g2.z, 0.0));
+}
+
+fn multi_vector_at_origin_point_at_infinity_add(self_: MultiVectorAtOrigin, other: PointAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.y), vec4<f32>(0.0, 0.0, 0.0, self_.g0.x) + vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), self_.g1, vec3<f32>(0.0), vec4<f32>(self_.g2.x, self_.g2.y, self_.g2.z, 0.0));
 }
 
 fn multi_vector_at_origin_rotor_add(self_: MultiVectorAtOrigin, other: Rotor) -> MultiVectorAtOrigin {
     return MultiVectorAtOrigin(self_.g0 + vec2<f32>(0.0, other.g0.w), self_.g1 + vec3<f32>(other.g0.x, other.g0.y, other.g0.z), self_.g2);
 }
 
+fn multi_vector_at_origin_scalar_add(self_: MultiVectorAtOrigin, other: Scalar) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.y) + vec2<f32>(other.g0, 0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0.x), self_.g1, vec3<f32>(0.0), vec4<f32>(self_.g2.x, self_.g2.y, self_.g2.z, 0.0));
+}
+
+fn multi_vector_at_origin_translator_add(self_: MultiVectorAtOrigin, other: Translator) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.y) + vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0, 0.0, 0.0, self_.g0.x), self_.g1, vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(self_.g2.x, self_.g2.y, self_.g2.z, 0.0));
+}
+
+fn origin_anti_scalar_add(self_: Origin, other: AntiScalar) -> MultiVectorAtOrigin {
+    return MultiVectorAtOrigin(vec2<f32>(self_.g0, 0.0) + vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0));
+}
+
 fn origin_flector_add(self_: Origin, other: Flector) -> Flector {
     return Flector(vec4<f32>(0.0, 0.0, 0.0, self_.g0) + other.g0, other.g1);
 }
 
+fn origin_flector_at_infinity_add(self_: Origin, other: FlectorAtInfinity) -> Flector {
+    return Flector(vec4<f32>(0.0, 0.0, 0.0, self_.g0) + vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4<f32>(0.0, 0.0, 0.0, other.g0.w));
+}
+
+fn origin_horizon_add(self_: Origin, other: Horizon) -> Flector {
+    return Flector(vec4<f32>(0.0, 0.0, 0.0, self_.g0), vec4<f32>(0.0, 0.0, 0.0, other.g0));
+}
+
+fn origin_line_add(self_: Origin, other: Line) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0), other.g0, other.g1, vec4<f32>(0.0));
+}
+
+fn origin_line_at_infinity_add(self_: Origin, other: LineAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0), vec3<f32>(0.0), other.g0, vec4<f32>(0.0));
+}
+
+fn origin_line_at_origin_add(self_: Origin, other: LineAtOrigin) -> MultiVectorAtOrigin {
+    return MultiVectorAtOrigin(vec2<f32>(self_.g0, 0.0), other.g0, vec3<f32>(0.0));
+}
+
+fn origin_magnitude_add(self_: Origin, other: Magnitude) -> MultiVector {
+    return MultiVector(other.g0, vec4<f32>(0.0, 0.0, 0.0, self_.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn origin_motor_add(self_: Origin, other: Motor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0, 0.0, 0.0, self_.g0), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), other.g1, vec4<f32>(0.0));
+}
+
 fn origin_multi_vector_add(self_: Origin, other: MultiVector) -> MultiVector {
     return MultiVector(other.g0, vec4<f32>(0.0, 0.0, 0.0, self_.g0) + other.g1, other.g2, other.g3, other.g4);
+}
+
+fn origin_multi_vector_at_infinity_add(self_: Origin, other: MultiVectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(other.g0.x, 0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0) + vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), vec3<f32>(0.0), other.g2, vec4<f32>(0.0, 0.0, 0.0, other.g0.y));
 }
 
 fn origin_multi_vector_at_origin_add(self_: Origin, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
@@ -815,6 +1379,14 @@ fn origin_origin_add(self_: Origin, other: Origin) -> Origin {
     return Origin(self_.g0 + other.g0);
 }
 
+fn origin_plane_add(self_: Origin, other: Plane) -> Flector {
+    return Flector(vec4<f32>(0.0, 0.0, 0.0, self_.g0), other.g0);
+}
+
+fn origin_plane_at_origin_add(self_: Origin, other: PlaneAtOrigin) -> Flector {
+    return Flector(vec4<f32>(0.0, 0.0, 0.0, self_.g0), vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
+}
+
 fn origin_point_add(self_: Origin, other: Point) -> Point {
     return Point(vec4<f32>(0.0, 0.0, 0.0, self_.g0) + other.g0);
 }
@@ -823,16 +1395,68 @@ fn origin_point_at_infinity_add(self_: Origin, other: PointAtInfinity) -> Point 
     return Point(vec4<f32>(0.0, 0.0, 0.0, self_.g0) + vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
 }
 
+fn origin_rotor_add(self_: Origin, other: Rotor) -> MultiVectorAtOrigin {
+    return MultiVectorAtOrigin(vec2<f32>(self_.g0, 0.0) + vec2<f32>(0.0, other.g0.w), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0));
+}
+
+fn origin_scalar_add(self_: Origin, other: Scalar) -> MultiVector {
+    return MultiVector(vec2<f32>(other.g0, 0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn origin_translator_add(self_: Origin, other: Translator) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0, 0.0, 0.0, self_.g0), vec3<f32>(0.0), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(0.0));
+}
+
+fn plane_anti_scalar_add(self_: Plane, other: AntiScalar) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), self_.g0);
+}
+
 fn plane_flector_add(self_: Plane, other: Flector) -> Flector {
     return Flector(other.g0, self_.g0 + other.g1);
+}
+
+fn plane_flector_at_infinity_add(self_: Plane, other: FlectorAtInfinity) -> Flector {
+    return Flector(vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), self_.g0 + vec4<f32>(0.0, 0.0, 0.0, other.g0.w));
 }
 
 fn plane_horizon_add(self_: Plane, other: Horizon) -> Plane {
     return Plane(self_.g0 + vec4<f32>(0.0, 0.0, 0.0, other.g0));
 }
 
+fn plane_line_add(self_: Plane, other: Line) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0), other.g0, other.g1, self_.g0);
+}
+
+fn plane_line_at_infinity_add(self_: Plane, other: LineAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), other.g0, self_.g0);
+}
+
+fn plane_line_at_origin_add(self_: Plane, other: LineAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0), other.g0, vec3<f32>(0.0), self_.g0);
+}
+
+fn plane_magnitude_add(self_: Plane, other: Magnitude) -> MultiVector {
+    return MultiVector(other.g0, vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), self_.g0);
+}
+
+fn plane_motor_add(self_: Plane, other: Motor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), other.g1, self_.g0);
+}
+
 fn plane_multi_vector_add(self_: Plane, other: MultiVector) -> MultiVector {
     return MultiVector(other.g0, other.g1, other.g2, other.g3, self_.g0 + other.g4);
+}
+
+fn plane_multi_vector_at_infinity_add(self_: Plane, other: MultiVectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(other.g0.x, 0.0), vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), vec3<f32>(0.0), other.g2, self_.g0 + vec4<f32>(0.0, 0.0, 0.0, other.g0.y));
+}
+
+fn plane_multi_vector_at_origin_add(self_: Plane, other: MultiVectorAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.y), vec4<f32>(0.0, 0.0, 0.0, other.g0.x), other.g1, vec3<f32>(0.0), self_.g0 + vec4<f32>(other.g2.x, other.g2.y, other.g2.z, 0.0));
+}
+
+fn plane_origin_add(self_: Plane, other: Origin) -> Flector {
+    return Flector(vec4<f32>(0.0, 0.0, 0.0, other.g0), self_.g0);
 }
 
 fn plane_plane_add(self_: Plane, other: Plane) -> Plane {
@@ -847,20 +1471,72 @@ fn plane_point_add(self_: Plane, other: Point) -> Flector {
     return Flector(other.g0, self_.g0);
 }
 
+fn plane_point_at_infinity_add(self_: Plane, other: PointAtInfinity) -> Flector {
+    return Flector(vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), self_.g0);
+}
+
+fn plane_rotor_add(self_: Plane, other: Rotor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0), self_.g0);
+}
+
+fn plane_scalar_add(self_: Plane, other: Scalar) -> MultiVector {
+    return MultiVector(vec2<f32>(other.g0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), self_.g0);
+}
+
+fn plane_translator_add(self_: Plane, other: Translator) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), self_.g0);
+}
+
+fn plane_at_origin_anti_scalar_add(self_: PlaneAtOrigin, other: AntiScalar) -> MultiVectorAtOrigin {
+    return MultiVectorAtOrigin(vec2<f32>(0.0, other.g0), vec3<f32>(0.0), self_.g0);
+}
+
 fn plane_at_origin_flector_add(self_: PlaneAtOrigin, other: Flector) -> Flector {
     return Flector(other.g0, vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) + other.g1);
+}
+
+fn plane_at_origin_flector_at_infinity_add(self_: PlaneAtOrigin, other: FlectorAtInfinity) -> Flector {
+    return Flector(vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) + vec4<f32>(0.0, 0.0, 0.0, other.g0.w));
 }
 
 fn plane_at_origin_horizon_add(self_: PlaneAtOrigin, other: Horizon) -> Plane {
     return Plane(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) + vec4<f32>(0.0, 0.0, 0.0, other.g0));
 }
 
+fn plane_at_origin_line_add(self_: PlaneAtOrigin, other: Line) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0), other.g0, other.g1, vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0));
+}
+
+fn plane_at_origin_line_at_infinity_add(self_: PlaneAtOrigin, other: LineAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), other.g0, vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0));
+}
+
+fn plane_at_origin_line_at_origin_add(self_: PlaneAtOrigin, other: LineAtOrigin) -> MultiVectorAtOrigin {
+    return MultiVectorAtOrigin(vec2<f32>(0.0), other.g0, self_.g0);
+}
+
+fn plane_at_origin_magnitude_add(self_: PlaneAtOrigin, other: Magnitude) -> MultiVector {
+    return MultiVector(other.g0, vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0));
+}
+
+fn plane_at_origin_motor_add(self_: PlaneAtOrigin, other: Motor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), other.g1, vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0));
+}
+
 fn plane_at_origin_multi_vector_add(self_: PlaneAtOrigin, other: MultiVector) -> MultiVector {
     return MultiVector(other.g0, other.g1, other.g2, other.g3, vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) + other.g4);
 }
 
+fn plane_at_origin_multi_vector_at_infinity_add(self_: PlaneAtOrigin, other: MultiVectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(other.g0.x, 0.0), vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), vec3<f32>(0.0), other.g2, vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) + vec4<f32>(0.0, 0.0, 0.0, other.g0.y));
+}
+
 fn plane_at_origin_multi_vector_at_origin_add(self_: PlaneAtOrigin, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
     return MultiVectorAtOrigin(other.g0, other.g1, self_.g0 + other.g2);
+}
+
+fn plane_at_origin_origin_add(self_: PlaneAtOrigin, other: Origin) -> Flector {
+    return Flector(vec4<f32>(0.0, 0.0, 0.0, other.g0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0));
 }
 
 fn plane_at_origin_plane_add(self_: PlaneAtOrigin, other: Plane) -> Plane {
@@ -871,12 +1547,72 @@ fn plane_at_origin_plane_at_origin_add(self_: PlaneAtOrigin, other: PlaneAtOrigi
     return PlaneAtOrigin(self_.g0 + other.g0);
 }
 
+fn plane_at_origin_point_add(self_: PlaneAtOrigin, other: Point) -> Flector {
+    return Flector(other.g0, vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0));
+}
+
+fn plane_at_origin_point_at_infinity_add(self_: PlaneAtOrigin, other: PointAtInfinity) -> Flector {
+    return Flector(vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0));
+}
+
+fn plane_at_origin_rotor_add(self_: PlaneAtOrigin, other: Rotor) -> MultiVectorAtOrigin {
+    return MultiVectorAtOrigin(vec2<f32>(0.0, other.g0.w), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), self_.g0);
+}
+
+fn plane_at_origin_scalar_add(self_: PlaneAtOrigin, other: Scalar) -> MultiVector {
+    return MultiVector(vec2<f32>(other.g0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0));
+}
+
+fn plane_at_origin_translator_add(self_: PlaneAtOrigin, other: Translator) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0));
+}
+
+fn point_anti_scalar_add(self_: Point, other: AntiScalar) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0), self_.g0, vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
 fn point_flector_add(self_: Point, other: Flector) -> Flector {
     return Flector(self_.g0 + other.g0, other.g1);
 }
 
+fn point_flector_at_infinity_add(self_: Point, other: FlectorAtInfinity) -> Flector {
+    return Flector(self_.g0 + vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4<f32>(0.0, 0.0, 0.0, other.g0.w));
+}
+
+fn point_horizon_add(self_: Point, other: Horizon) -> Flector {
+    return Flector(self_.g0, vec4<f32>(0.0, 0.0, 0.0, other.g0));
+}
+
+fn point_line_add(self_: Point, other: Line) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), self_.g0, other.g0, other.g1, vec4<f32>(0.0));
+}
+
+fn point_line_at_infinity_add(self_: Point, other: LineAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), self_.g0, vec3<f32>(0.0), other.g0, vec4<f32>(0.0));
+}
+
+fn point_line_at_origin_add(self_: Point, other: LineAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), self_.g0, other.g0, vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn point_magnitude_add(self_: Point, other: Magnitude) -> MultiVector {
+    return MultiVector(other.g0, self_.g0, vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn point_motor_add(self_: Point, other: Motor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.w), self_.g0, vec3<f32>(other.g0.x, other.g0.y, other.g0.z), other.g1, vec4<f32>(0.0));
+}
+
 fn point_multi_vector_add(self_: Point, other: MultiVector) -> MultiVector {
     return MultiVector(other.g0, self_.g0 + other.g1, other.g2, other.g3, other.g4);
+}
+
+fn point_multi_vector_at_infinity_add(self_: Point, other: MultiVectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(other.g0.x, 0.0), self_.g0 + vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), vec3<f32>(0.0), other.g2, vec4<f32>(0.0, 0.0, 0.0, other.g0.y));
+}
+
+fn point_multi_vector_at_origin_add(self_: Point, other: MultiVectorAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.y), self_.g0 + vec4<f32>(0.0, 0.0, 0.0, other.g0.x), other.g1, vec3<f32>(0.0), vec4<f32>(other.g2.x, other.g2.y, other.g2.z, 0.0));
 }
 
 fn point_origin_add(self_: Point, other: Origin) -> Point {
@@ -887,12 +1623,32 @@ fn point_plane_add(self_: Point, other: Plane) -> Flector {
     return Flector(self_.g0, other.g0);
 }
 
+fn point_plane_at_origin_add(self_: Point, other: PlaneAtOrigin) -> Flector {
+    return Flector(self_.g0, vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
+}
+
 fn point_point_add(self_: Point, other: Point) -> Point {
     return Point(self_.g0 + other.g0);
 }
 
 fn point_point_at_infinity_add(self_: Point, other: PointAtInfinity) -> Point {
     return Point(self_.g0 + vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
+}
+
+fn point_rotor_add(self_: Point, other: Rotor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.w), self_.g0, vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn point_scalar_add(self_: Point, other: Scalar) -> MultiVector {
+    return MultiVector(vec2<f32>(other.g0, 0.0), self_.g0, vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn point_translator_add(self_: Point, other: Translator) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.w), self_.g0, vec3<f32>(0.0), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(0.0));
+}
+
+fn point_at_infinity_anti_scalar_add(self_: PointAtInfinity, other: AntiScalar) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0));
 }
 
 fn point_at_infinity_flector_add(self_: PointAtInfinity, other: Flector) -> Flector {
@@ -907,6 +1663,26 @@ fn point_at_infinity_horizon_add(self_: PointAtInfinity, other: Horizon) -> Flec
     return FlectorAtInfinity(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) + vec4<f32>(0.0, 0.0, 0.0, other.g0));
 }
 
+fn point_at_infinity_line_add(self_: PointAtInfinity, other: Line) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), other.g0, other.g1, vec4<f32>(0.0));
+}
+
+fn point_at_infinity_line_at_infinity_add(self_: PointAtInfinity, other: LineAtInfinity) -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(0.0), self_.g0, other.g0);
+}
+
+fn point_at_infinity_line_at_origin_add(self_: PointAtInfinity, other: LineAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), other.g0, vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn point_at_infinity_magnitude_add(self_: PointAtInfinity, other: Magnitude) -> MultiVector {
+    return MultiVector(other.g0, vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn point_at_infinity_motor_add(self_: PointAtInfinity, other: Motor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.w), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), other.g1, vec4<f32>(0.0));
+}
+
 fn point_at_infinity_multi_vector_add(self_: PointAtInfinity, other: MultiVector) -> MultiVector {
     return MultiVector(other.g0, vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) + other.g1, other.g2, other.g3, other.g4);
 }
@@ -915,8 +1691,20 @@ fn point_at_infinity_multi_vector_at_infinity_add(self_: PointAtInfinity, other:
     return MultiVectorAtInfinity(other.g0, self_.g0 + other.g1, other.g2);
 }
 
+fn point_at_infinity_multi_vector_at_origin_add(self_: PointAtInfinity, other: MultiVectorAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.y), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) + vec4<f32>(0.0, 0.0, 0.0, other.g0.x), other.g1, vec3<f32>(0.0), vec4<f32>(other.g2.x, other.g2.y, other.g2.z, 0.0));
+}
+
 fn point_at_infinity_origin_add(self_: PointAtInfinity, other: Origin) -> Point {
     return Point(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) + vec4<f32>(0.0, 0.0, 0.0, other.g0));
+}
+
+fn point_at_infinity_plane_add(self_: PointAtInfinity, other: Plane) -> Flector {
+    return Flector(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), other.g0);
+}
+
+fn point_at_infinity_plane_at_origin_add(self_: PointAtInfinity, other: PlaneAtOrigin) -> Flector {
+    return Flector(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
 }
 
 fn point_at_infinity_point_add(self_: PointAtInfinity, other: Point) -> Point {
@@ -927,8 +1715,32 @@ fn point_at_infinity_point_at_infinity_add(self_: PointAtInfinity, other: PointA
     return PointAtInfinity(self_.g0 + other.g0);
 }
 
+fn point_at_infinity_rotor_add(self_: PointAtInfinity, other: Rotor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.w), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn point_at_infinity_scalar_add(self_: PointAtInfinity, other: Scalar) -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(other.g0, 0.0), self_.g0, vec3<f32>(0.0));
+}
+
+fn point_at_infinity_translator_add(self_: PointAtInfinity, other: Translator) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, other.g0.w), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec3<f32>(0.0), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(0.0));
+}
+
 fn rotor_anti_scalar_add(self_: Rotor, other: AntiScalar) -> Rotor {
     return Rotor(self_.g0 + vec4<f32>(0.0, 0.0, 0.0, other.g0));
+}
+
+fn rotor_flector_add(self_: Rotor, other: Flector) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), other.g0, vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0), other.g1);
+}
+
+fn rotor_flector_at_infinity_add(self_: Rotor, other: FlectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, other.g0.w));
+}
+
+fn rotor_horizon_add(self_: Rotor, other: Horizon) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, other.g0));
 }
 
 fn rotor_line_add(self_: Rotor, other: Line) -> Motor {
@@ -943,6 +1755,10 @@ fn rotor_line_at_origin_add(self_: Rotor, other: LineAtOrigin) -> Rotor {
     return Rotor(self_.g0 + vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
 }
 
+fn rotor_magnitude_add(self_: Rotor, other: Magnitude) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w) + other.g0, vec4<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
 fn rotor_motor_add(self_: Rotor, other: Motor) -> Motor {
     return Motor(self_.g0 + other.g0, other.g1);
 }
@@ -951,12 +1767,40 @@ fn rotor_multi_vector_add(self_: Rotor, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(0.0, self_.g0.w) + other.g0, other.g1, vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) + other.g2, other.g3, other.g4);
 }
 
+fn rotor_multi_vector_at_infinity_add(self_: Rotor, other: MultiVectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w) + vec2<f32>(other.g0.x, 0.0), vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), other.g2, vec4<f32>(0.0, 0.0, 0.0, other.g0.y));
+}
+
 fn rotor_multi_vector_at_origin_add(self_: Rotor, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
     return MultiVectorAtOrigin(vec2<f32>(0.0, self_.g0.w) + other.g0, vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) + other.g1, other.g2);
 }
 
+fn rotor_origin_add(self_: Rotor, other: Origin) -> MultiVectorAtOrigin {
+    return MultiVectorAtOrigin(vec2<f32>(0.0, self_.g0.w) + vec2<f32>(other.g0, 0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0));
+}
+
+fn rotor_plane_add(self_: Rotor, other: Plane) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0), other.g0);
+}
+
+fn rotor_plane_at_origin_add(self_: Rotor, other: PlaneAtOrigin) -> MultiVectorAtOrigin {
+    return MultiVectorAtOrigin(vec2<f32>(0.0, self_.g0.w), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), other.g0);
+}
+
+fn rotor_point_add(self_: Rotor, other: Point) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), other.g0, vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn rotor_point_at_infinity_add(self_: Rotor, other: PointAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
 fn rotor_rotor_add(self_: Rotor, other: Rotor) -> Rotor {
     return Rotor(self_.g0 + other.g0);
+}
+
+fn rotor_scalar_add(self_: Rotor, other: Scalar) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w) + vec2<f32>(other.g0, 0.0), vec4<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0), vec4<f32>(0.0));
 }
 
 fn rotor_translator_add(self_: Rotor, other: Translator) -> Motor {
@@ -967,8 +1811,36 @@ fn scalar_anti_scalar_add(self_: Scalar, other: AntiScalar) -> Magnitude {
     return Magnitude(vec2<f32>(self_.g0, 0.0) + vec2<f32>(0.0, other.g0));
 }
 
+fn scalar_flector_add(self_: Scalar, other: Flector) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0, 0.0), other.g0, vec3<f32>(0.0), vec3<f32>(0.0), other.g1);
+}
+
+fn scalar_flector_at_infinity_add(self_: Scalar, other: FlectorAtInfinity) -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(self_.g0, 0.0) + vec2<f32>(0.0, other.g0.w), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0));
+}
+
+fn scalar_horizon_add(self_: Scalar, other: Horizon) -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(self_.g0, 0.0) + vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0));
+}
+
+fn scalar_line_add(self_: Scalar, other: Line) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0, 0.0), vec4<f32>(0.0), other.g0, other.g1, vec4<f32>(0.0));
+}
+
+fn scalar_line_at_infinity_add(self_: Scalar, other: LineAtInfinity) -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(self_.g0, 0.0), vec3<f32>(0.0), other.g0);
+}
+
+fn scalar_line_at_origin_add(self_: Scalar, other: LineAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0, 0.0), vec4<f32>(0.0), other.g0, vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
 fn scalar_magnitude_add(self_: Scalar, other: Magnitude) -> Magnitude {
     return Magnitude(vec2<f32>(self_.g0, 0.0) + other.g0);
+}
+
+fn scalar_motor_add(self_: Scalar, other: Motor) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0, 0.0) + vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), other.g1, vec4<f32>(0.0));
 }
 
 fn scalar_multi_vector_add(self_: Scalar, other: MultiVector) -> MultiVector {
@@ -979,12 +1851,56 @@ fn scalar_multi_vector_at_infinity_add(self_: Scalar, other: MultiVectorAtInfini
     return MultiVectorAtInfinity(vec2<f32>(self_.g0, 0.0) + other.g0, other.g1, other.g2);
 }
 
+fn scalar_multi_vector_at_origin_add(self_: Scalar, other: MultiVectorAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0, 0.0) + vec2<f32>(0.0, other.g0.y), vec4<f32>(0.0, 0.0, 0.0, other.g0.x), other.g1, vec3<f32>(0.0), vec4<f32>(other.g2.x, other.g2.y, other.g2.z, 0.0));
+}
+
+fn scalar_origin_add(self_: Scalar, other: Origin) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0, 0.0), vec4<f32>(0.0, 0.0, 0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn scalar_plane_add(self_: Scalar, other: Plane) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), other.g0);
+}
+
+fn scalar_plane_at_origin_add(self_: Scalar, other: PlaneAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
+}
+
+fn scalar_point_add(self_: Scalar, other: Point) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0, 0.0), other.g0, vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn scalar_point_at_infinity_add(self_: Scalar, other: PointAtInfinity) -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(self_.g0, 0.0), other.g0, vec3<f32>(0.0));
+}
+
+fn scalar_rotor_add(self_: Scalar, other: Rotor) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0, 0.0) + vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
 fn scalar_scalar_add(self_: Scalar, other: Scalar) -> Scalar {
     return Scalar(self_.g0 + other.g0);
 }
 
+fn scalar_translator_add(self_: Scalar, other: Translator) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0, 0.0) + vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(0.0));
+}
+
 fn translator_anti_scalar_add(self_: Translator, other: AntiScalar) -> Translator {
     return Translator(self_.g0 + vec4<f32>(0.0, 0.0, 0.0, other.g0));
+}
+
+fn translator_flector_add(self_: Translator, other: Flector) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), other.g0, vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), other.g1);
+}
+
+fn translator_flector_at_infinity_add(self_: Translator, other: FlectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0, 0.0, 0.0, other.g0.w));
+}
+
+fn translator_horizon_add(self_: Translator, other: Horizon) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0, 0.0, 0.0, other.g0));
 }
 
 fn translator_line_add(self_: Translator, other: Line) -> Motor {
@@ -999,6 +1915,10 @@ fn translator_line_at_origin_add(self_: Translator, other: LineAtOrigin) -> Moto
     return Motor(vec4<f32>(0.0, 0.0, 0.0, self_.g0.w) + vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z));
 }
 
+fn translator_magnitude_add(self_: Translator, other: Magnitude) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w) + other.g0, vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0));
+}
+
 fn translator_motor_add(self_: Translator, other: Motor) -> Motor {
     return Motor(vec4<f32>(0.0, 0.0, 0.0, self_.g0.w) + other.g0, vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) + other.g1);
 }
@@ -1007,8 +1927,40 @@ fn translator_multi_vector_add(self_: Translator, other: MultiVector) -> MultiVe
     return MultiVector(vec2<f32>(0.0, self_.g0.w) + other.g0, other.g1, other.g2, vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) + other.g3, other.g4);
 }
 
+fn translator_multi_vector_at_infinity_add(self_: Translator, other: MultiVectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w) + vec2<f32>(other.g0.x, 0.0), vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) + other.g2, vec4<f32>(0.0, 0.0, 0.0, other.g0.y));
+}
+
+fn translator_multi_vector_at_origin_add(self_: Translator, other: MultiVectorAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w) + vec2<f32>(0.0, other.g0.y), vec4<f32>(0.0, 0.0, 0.0, other.g0.x), other.g1, vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(other.g2.x, other.g2.y, other.g2.z, 0.0));
+}
+
+fn translator_origin_add(self_: Translator, other: Origin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0, 0.0, 0.0, other.g0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0));
+}
+
+fn translator_plane_add(self_: Translator, other: Plane) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), other.g0);
+}
+
+fn translator_plane_at_origin_add(self_: Translator, other: PlaneAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
+}
+
+fn translator_point_add(self_: Translator, other: Point) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), other.g0, vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0));
+}
+
+fn translator_point_at_infinity_add(self_: Translator, other: PointAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0));
+}
+
 fn translator_rotor_add(self_: Translator, other: Rotor) -> Motor {
     return Motor(vec4<f32>(0.0, 0.0, 0.0, self_.g0.w) + other.g0, vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z));
+}
+
+fn translator_scalar_add(self_: Translator, other: Scalar) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w) + vec2<f32>(other.g0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0));
 }
 
 fn translator_translator_add(self_: Translator, other: Translator) -> Translator {
@@ -1403,6 +2355,18 @@ fn anti_scalar_anti_scalar_sub(self_: AntiScalar, other: AntiScalar) -> AntiScal
     return AntiScalar(self_.g0 - other.g0);
 }
 
+fn anti_scalar_flector_sub(self_: AntiScalar, other: Flector) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0), vec4<f32>(0.0) - other.g0, vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0) - other.g1);
+}
+
+fn anti_scalar_flector_at_infinity_sub(self_: AntiScalar, other: FlectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0), vec4<f32>(0.0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.w));
+}
+
+fn anti_scalar_horizon_sub(self_: AntiScalar, other: Horizon) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0));
+}
+
 fn anti_scalar_line_sub(self_: AntiScalar, other: Line) -> Motor {
     return Motor(vec4<f32>(0.0, 0.0, 0.0, self_.g0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(0.0) - other.g1);
 }
@@ -1427,8 +2391,32 @@ fn anti_scalar_multi_vector_sub(self_: AntiScalar, other: MultiVector) -> MultiV
     return MultiVector(vec2<f32>(0.0, self_.g0) - other.g0, vec4<f32>(0.0) - other.g1, vec3<f32>(0.0) - other.g2, vec3<f32>(0.0) - other.g3, vec4<f32>(0.0) - other.g4);
 }
 
+fn anti_scalar_multi_vector_at_infinity_sub(self_: AntiScalar, other: MultiVectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0) - vec2<f32>(other.g0.x, 0.0), vec4<f32>(0.0) - vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), vec3<f32>(0.0), vec3<f32>(0.0) - other.g2, vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.y));
+}
+
 fn anti_scalar_multi_vector_at_origin_sub(self_: AntiScalar, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
     return MultiVectorAtOrigin(vec2<f32>(0.0, self_.g0) - other.g0, vec3<f32>(0.0) - other.g1, vec3<f32>(0.0) - other.g2);
+}
+
+fn anti_scalar_origin_sub(self_: AntiScalar, other: Origin) -> MultiVectorAtOrigin {
+    return MultiVectorAtOrigin(vec2<f32>(0.0, self_.g0) - vec2<f32>(other.g0, 0.0), vec3<f32>(0.0), vec3<f32>(0.0));
+}
+
+fn anti_scalar_plane_sub(self_: AntiScalar, other: Plane) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0) - other.g0);
+}
+
+fn anti_scalar_plane_at_origin_sub(self_: AntiScalar, other: PlaneAtOrigin) -> MultiVectorAtOrigin {
+    return MultiVectorAtOrigin(vec2<f32>(0.0, self_.g0), vec3<f32>(0.0), vec3<f32>(0.0) - other.g0);
+}
+
+fn anti_scalar_point_sub(self_: AntiScalar, other: Point) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0), vec4<f32>(0.0) - other.g0, vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn anti_scalar_point_at_infinity_sub(self_: AntiScalar, other: PointAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0), vec4<f32>(0.0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0));
 }
 
 fn anti_scalar_rotor_sub(self_: AntiScalar, other: Rotor) -> Rotor {
@@ -1443,6 +2431,10 @@ fn anti_scalar_translator_sub(self_: AntiScalar, other: Translator) -> Translato
     return Translator(vec4<f32>(0.0, 0.0, 0.0, self_.g0) - other.g0);
 }
 
+fn flector_anti_scalar_sub(self_: Flector, other: AntiScalar) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0), self_.g0, vec3<f32>(0.0), vec3<f32>(0.0), self_.g1);
+}
+
 fn flector_flector_sub(self_: Flector, other: Flector) -> Flector {
     return Flector(self_.g0 - other.g0, self_.g1 - other.g1);
 }
@@ -1455,8 +2447,36 @@ fn flector_horizon_sub(self_: Flector, other: Horizon) -> Flector {
     return Flector(self_.g0, self_.g1 - vec4<f32>(0.0, 0.0, 0.0, other.g0));
 }
 
+fn flector_line_sub(self_: Flector, other: Line) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), self_.g0, vec3<f32>(0.0) - other.g0, vec3<f32>(0.0) - other.g1, self_.g1);
+}
+
+fn flector_line_at_infinity_sub(self_: Flector, other: LineAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), self_.g0, vec3<f32>(0.0), vec3<f32>(0.0) - other.g0, self_.g1);
+}
+
+fn flector_line_at_origin_sub(self_: Flector, other: LineAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), self_.g0, vec3<f32>(0.0) - other.g0, vec3<f32>(0.0), self_.g1);
+}
+
+fn flector_magnitude_sub(self_: Flector, other: Magnitude) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - other.g0, self_.g0, vec3<f32>(0.0), vec3<f32>(0.0), self_.g1);
+}
+
+fn flector_motor_sub(self_: Flector, other: Motor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.w), self_.g0, vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0) - other.g1, self_.g1);
+}
+
 fn flector_multi_vector_sub(self_: Flector, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(0.0) - other.g0, self_.g0 - other.g1, vec3<f32>(0.0) - other.g2, vec3<f32>(0.0) - other.g3, self_.g1 - other.g4);
+}
+
+fn flector_multi_vector_at_infinity_sub(self_: Flector, other: MultiVectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(other.g0.x, 0.0), self_.g0 - vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), vec3<f32>(0.0), vec3<f32>(0.0) - other.g2, self_.g1 - vec4<f32>(0.0, 0.0, 0.0, other.g0.y));
+}
+
+fn flector_multi_vector_at_origin_sub(self_: Flector, other: MultiVectorAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.y), self_.g0 - vec4<f32>(0.0, 0.0, 0.0, other.g0.x), vec3<f32>(0.0) - other.g1, vec3<f32>(0.0), self_.g1 - vec4<f32>(other.g2.x, other.g2.y, other.g2.z, 0.0));
 }
 
 fn flector_origin_sub(self_: Flector, other: Origin) -> Flector {
@@ -1479,6 +2499,22 @@ fn flector_point_at_infinity_sub(self_: Flector, other: PointAtInfinity) -> Flec
     return Flector(self_.g0 - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), self_.g1);
 }
 
+fn flector_rotor_sub(self_: Flector, other: Rotor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.w), self_.g0, vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0), self_.g1);
+}
+
+fn flector_scalar_sub(self_: Flector, other: Scalar) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(other.g0, 0.0), self_.g0, vec3<f32>(0.0), vec3<f32>(0.0), self_.g1);
+}
+
+fn flector_translator_sub(self_: Flector, other: Translator) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.w), self_.g0, vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), self_.g1);
+}
+
+fn flector_at_infinity_anti_scalar_sub(self_: FlectorAtInfinity, other: AntiScalar) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0.w));
+}
+
 fn flector_at_infinity_flector_sub(self_: FlectorAtInfinity, other: Flector) -> Flector {
     return Flector(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) - other.g0, vec4<f32>(0.0, 0.0, 0.0, self_.g0.w) - other.g1);
 }
@@ -1491,6 +2527,26 @@ fn flector_at_infinity_horizon_sub(self_: FlectorAtInfinity, other: Horizon) -> 
     return FlectorAtInfinity(self_.g0 - vec4<f32>(0.0, 0.0, 0.0, other.g0));
 }
 
+fn flector_at_infinity_line_sub(self_: FlectorAtInfinity, other: Line) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec3<f32>(0.0) - other.g0, vec3<f32>(0.0) - other.g1, vec4<f32>(0.0, 0.0, 0.0, self_.g0.w));
+}
+
+fn flector_at_infinity_line_at_infinity_sub(self_: FlectorAtInfinity, other: LineAtInfinity) -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(0.0, self_.g0.w), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0) - other.g0);
+}
+
+fn flector_at_infinity_line_at_origin_sub(self_: FlectorAtInfinity, other: LineAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec3<f32>(0.0) - other.g0, vec3<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0.w));
+}
+
+fn flector_at_infinity_magnitude_sub(self_: FlectorAtInfinity, other: Magnitude) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - other.g0, vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0.w));
+}
+
+fn flector_at_infinity_motor_sub(self_: FlectorAtInfinity, other: Motor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.w), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0) - other.g1, vec4<f32>(0.0, 0.0, 0.0, self_.g0.w));
+}
+
 fn flector_at_infinity_multi_vector_sub(self_: FlectorAtInfinity, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(0.0) - other.g0, vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) - other.g1, vec3<f32>(0.0) - other.g2, vec3<f32>(0.0) - other.g3, vec4<f32>(0.0, 0.0, 0.0, self_.g0.w) - other.g4);
 }
@@ -1499,8 +2555,44 @@ fn flector_at_infinity_multi_vector_at_infinity_sub(self_: FlectorAtInfinity, ot
     return MultiVectorAtInfinity(vec2<f32>(0.0, self_.g0.w) - other.g0, vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) - other.g1, vec3<f32>(0.0) - other.g2);
 }
 
+fn flector_at_infinity_multi_vector_at_origin_sub(self_: FlectorAtInfinity, other: MultiVectorAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.y), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.x), vec3<f32>(0.0) - other.g1, vec3<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0.w) - vec4<f32>(other.g2.x, other.g2.y, other.g2.z, 0.0));
+}
+
+fn flector_at_infinity_origin_sub(self_: FlectorAtInfinity, other: Origin) -> Flector {
+    return Flector(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0), vec4<f32>(0.0, 0.0, 0.0, self_.g0.w));
+}
+
+fn flector_at_infinity_plane_sub(self_: FlectorAtInfinity, other: Plane) -> Flector {
+    return Flector(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0.w) - other.g0);
+}
+
+fn flector_at_infinity_plane_at_origin_sub(self_: FlectorAtInfinity, other: PlaneAtOrigin) -> Flector {
+    return Flector(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0.w) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
+}
+
+fn flector_at_infinity_point_sub(self_: FlectorAtInfinity, other: Point) -> Flector {
+    return Flector(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) - other.g0, vec4<f32>(0.0, 0.0, 0.0, self_.g0.w));
+}
+
 fn flector_at_infinity_point_at_infinity_sub(self_: FlectorAtInfinity, other: PointAtInfinity) -> FlectorAtInfinity {
     return FlectorAtInfinity(self_.g0 - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
+}
+
+fn flector_at_infinity_rotor_sub(self_: FlectorAtInfinity, other: Rotor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.w), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0.w));
+}
+
+fn flector_at_infinity_scalar_sub(self_: FlectorAtInfinity, other: Scalar) -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(0.0, self_.g0.w) - vec2<f32>(other.g0, 0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0));
+}
+
+fn flector_at_infinity_translator_sub(self_: FlectorAtInfinity, other: Translator) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.w), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(0.0, 0.0, 0.0, self_.g0.w));
+}
+
+fn horizon_anti_scalar_sub(self_: Horizon, other: AntiScalar) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0));
 }
 
 fn horizon_flector_sub(self_: Horizon, other: Flector) -> Flector {
@@ -1515,12 +2607,40 @@ fn horizon_horizon_sub(self_: Horizon, other: Horizon) -> Horizon {
     return Horizon(self_.g0 - other.g0);
 }
 
+fn horizon_line_sub(self_: Horizon, other: Line) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0) - other.g0, vec3<f32>(0.0) - other.g1, vec4<f32>(0.0, 0.0, 0.0, self_.g0));
+}
+
+fn horizon_line_at_infinity_sub(self_: Horizon, other: LineAtInfinity) -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(0.0, self_.g0), vec3<f32>(0.0), vec3<f32>(0.0) - other.g0);
+}
+
+fn horizon_line_at_origin_sub(self_: Horizon, other: LineAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0) - other.g0, vec3<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0));
+}
+
+fn horizon_magnitude_sub(self_: Horizon, other: Magnitude) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - other.g0, vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0));
+}
+
+fn horizon_motor_sub(self_: Horizon, other: Motor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0) - other.g1, vec4<f32>(0.0, 0.0, 0.0, self_.g0));
+}
+
 fn horizon_multi_vector_sub(self_: Horizon, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(0.0) - other.g0, vec4<f32>(0.0) - other.g1, vec3<f32>(0.0) - other.g2, vec3<f32>(0.0) - other.g3, vec4<f32>(0.0, 0.0, 0.0, self_.g0) - other.g4);
 }
 
 fn horizon_multi_vector_at_infinity_sub(self_: Horizon, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
     return MultiVectorAtInfinity(vec2<f32>(0.0, self_.g0) - other.g0, vec3<f32>(0.0) - other.g1, vec3<f32>(0.0) - other.g2);
+}
+
+fn horizon_multi_vector_at_origin_sub(self_: Horizon, other: MultiVectorAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.y), vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.x), vec3<f32>(0.0) - other.g1, vec3<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0) - vec4<f32>(other.g2.x, other.g2.y, other.g2.z, 0.0));
+}
+
+fn horizon_origin_sub(self_: Horizon, other: Origin) -> Flector {
+    return Flector(vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0), vec4<f32>(0.0, 0.0, 0.0, self_.g0));
 }
 
 fn horizon_plane_sub(self_: Horizon, other: Plane) -> Plane {
@@ -1531,12 +2651,40 @@ fn horizon_plane_at_origin_sub(self_: Horizon, other: PlaneAtOrigin) -> Plane {
     return Plane(vec4<f32>(0.0, 0.0, 0.0, self_.g0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
 }
 
+fn horizon_point_sub(self_: Horizon, other: Point) -> Flector {
+    return Flector(vec4<f32>(0.0) - other.g0, vec4<f32>(0.0, 0.0, 0.0, self_.g0));
+}
+
 fn horizon_point_at_infinity_sub(self_: Horizon, other: PointAtInfinity) -> FlectorAtInfinity {
     return FlectorAtInfinity(vec4<f32>(0.0, 0.0, 0.0, self_.g0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
 }
 
+fn horizon_rotor_sub(self_: Horizon, other: Rotor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0));
+}
+
+fn horizon_scalar_sub(self_: Horizon, other: Scalar) -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(0.0, self_.g0) - vec2<f32>(other.g0, 0.0), vec3<f32>(0.0), vec3<f32>(0.0));
+}
+
+fn horizon_translator_sub(self_: Horizon, other: Translator) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(0.0, 0.0, 0.0, self_.g0));
+}
+
 fn line_anti_scalar_sub(self_: Line, other: AntiScalar) -> Motor {
     return Motor(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0), self_.g1);
+}
+
+fn line_flector_sub(self_: Line, other: Flector) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0) - other.g0, self_.g0, self_.g1, vec4<f32>(0.0) - other.g1);
+}
+
+fn line_flector_at_infinity_sub(self_: Line, other: FlectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), self_.g0, self_.g1, vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.w));
+}
+
+fn line_horizon_sub(self_: Line, other: Horizon) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0), self_.g0, self_.g1, vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0));
 }
 
 fn line_line_sub(self_: Line, other: Line) -> Line {
@@ -1551,6 +2699,10 @@ fn line_line_at_origin_sub(self_: Line, other: LineAtOrigin) -> Line {
     return Line(self_.g0 - other.g0, self_.g1);
 }
 
+fn line_magnitude_sub(self_: Line, other: Magnitude) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - other.g0, vec4<f32>(0.0), self_.g0, self_.g1, vec4<f32>(0.0));
+}
+
 fn line_motor_sub(self_: Line, other: Motor) -> Motor {
     return Motor(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) - other.g0, self_.g1 - other.g1);
 }
@@ -1559,8 +2711,40 @@ fn line_multi_vector_sub(self_: Line, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(0.0) - other.g0, vec4<f32>(0.0) - other.g1, self_.g0 - other.g2, self_.g1 - other.g3, vec4<f32>(0.0) - other.g4);
 }
 
+fn line_multi_vector_at_infinity_sub(self_: Line, other: MultiVectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(other.g0.x, 0.0), vec4<f32>(0.0) - vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), self_.g0, self_.g1 - other.g2, vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.y));
+}
+
+fn line_multi_vector_at_origin_sub(self_: Line, other: MultiVectorAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.y), vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.x), self_.g0 - other.g1, self_.g1, vec4<f32>(0.0) - vec4<f32>(other.g2.x, other.g2.y, other.g2.z, 0.0));
+}
+
+fn line_origin_sub(self_: Line, other: Origin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0), self_.g0, self_.g1, vec4<f32>(0.0));
+}
+
+fn line_plane_sub(self_: Line, other: Plane) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0), self_.g0, self_.g1, vec4<f32>(0.0) - other.g0);
+}
+
+fn line_plane_at_origin_sub(self_: Line, other: PlaneAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0), self_.g0, self_.g1, vec4<f32>(0.0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
+}
+
+fn line_point_sub(self_: Line, other: Point) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0) - other.g0, self_.g0, self_.g1, vec4<f32>(0.0));
+}
+
+fn line_point_at_infinity_sub(self_: Line, other: PointAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), self_.g0, self_.g1, vec4<f32>(0.0));
+}
+
 fn line_rotor_sub(self_: Line, other: Rotor) -> Motor {
     return Motor(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) - other.g0, self_.g1);
+}
+
+fn line_scalar_sub(self_: Line, other: Scalar) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(other.g0, 0.0), vec4<f32>(0.0), self_.g0, self_.g1, vec4<f32>(0.0));
 }
 
 fn line_translator_sub(self_: Line, other: Translator) -> Motor {
@@ -1569,6 +2753,18 @@ fn line_translator_sub(self_: Line, other: Translator) -> Motor {
 
 fn line_at_infinity_anti_scalar_sub(self_: LineAtInfinity, other: AntiScalar) -> Translator {
     return Translator(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0));
+}
+
+fn line_at_infinity_flector_sub(self_: LineAtInfinity, other: Flector) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0) - other.g0, vec3<f32>(0.0), self_.g0, vec4<f32>(0.0) - other.g1);
+}
+
+fn line_at_infinity_flector_at_infinity_sub(self_: LineAtInfinity, other: FlectorAtInfinity) -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.w), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), self_.g0);
+}
+
+fn line_at_infinity_horizon_sub(self_: LineAtInfinity, other: Horizon) -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0), vec3<f32>(0.0), self_.g0);
 }
 
 fn line_at_infinity_line_sub(self_: LineAtInfinity, other: Line) -> Line {
@@ -1583,6 +2779,10 @@ fn line_at_infinity_line_at_origin_sub(self_: LineAtInfinity, other: LineAtOrigi
     return Line(vec3<f32>(0.0) - other.g0, self_.g0);
 }
 
+fn line_at_infinity_magnitude_sub(self_: LineAtInfinity, other: Magnitude) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - other.g0, vec4<f32>(0.0), vec3<f32>(0.0), self_.g0, vec4<f32>(0.0));
+}
+
 fn line_at_infinity_motor_sub(self_: LineAtInfinity, other: Motor) -> Motor {
     return Motor(vec4<f32>(0.0) - other.g0, self_.g0 - other.g1);
 }
@@ -1595,8 +2795,36 @@ fn line_at_infinity_multi_vector_at_infinity_sub(self_: LineAtInfinity, other: M
     return MultiVectorAtInfinity(vec2<f32>(0.0) - other.g0, vec3<f32>(0.0) - other.g1, self_.g0 - other.g2);
 }
 
+fn line_at_infinity_multi_vector_at_origin_sub(self_: LineAtInfinity, other: MultiVectorAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.y), vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.x), vec3<f32>(0.0) - other.g1, self_.g0, vec4<f32>(0.0) - vec4<f32>(other.g2.x, other.g2.y, other.g2.z, 0.0));
+}
+
+fn line_at_infinity_origin_sub(self_: LineAtInfinity, other: Origin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0), vec3<f32>(0.0), self_.g0, vec4<f32>(0.0));
+}
+
+fn line_at_infinity_plane_sub(self_: LineAtInfinity, other: Plane) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), self_.g0, vec4<f32>(0.0) - other.g0);
+}
+
+fn line_at_infinity_plane_at_origin_sub(self_: LineAtInfinity, other: PlaneAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), self_.g0, vec4<f32>(0.0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
+}
+
+fn line_at_infinity_point_sub(self_: LineAtInfinity, other: Point) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0) - other.g0, vec3<f32>(0.0), self_.g0, vec4<f32>(0.0));
+}
+
+fn line_at_infinity_point_at_infinity_sub(self_: LineAtInfinity, other: PointAtInfinity) -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(0.0), vec3<f32>(0.0) - other.g0, self_.g0);
+}
+
 fn line_at_infinity_rotor_sub(self_: LineAtInfinity, other: Rotor) -> Motor {
     return Motor(vec4<f32>(0.0) - other.g0, self_.g0);
+}
+
+fn line_at_infinity_scalar_sub(self_: LineAtInfinity, other: Scalar) -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(0.0) - vec2<f32>(other.g0, 0.0), vec3<f32>(0.0), self_.g0);
 }
 
 fn line_at_infinity_translator_sub(self_: LineAtInfinity, other: Translator) -> Translator {
@@ -1605,6 +2833,18 @@ fn line_at_infinity_translator_sub(self_: LineAtInfinity, other: Translator) -> 
 
 fn line_at_origin_anti_scalar_sub(self_: LineAtOrigin, other: AntiScalar) -> Rotor {
     return Rotor(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0));
+}
+
+fn line_at_origin_flector_sub(self_: LineAtOrigin, other: Flector) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0) - other.g0, self_.g0, vec3<f32>(0.0), vec4<f32>(0.0) - other.g1);
+}
+
+fn line_at_origin_flector_at_infinity_sub(self_: LineAtOrigin, other: FlectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), self_.g0, vec3<f32>(0.0), vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.w));
+}
+
+fn line_at_origin_horizon_sub(self_: LineAtOrigin, other: Horizon) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0), self_.g0, vec3<f32>(0.0), vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0));
 }
 
 fn line_at_origin_line_sub(self_: LineAtOrigin, other: Line) -> Line {
@@ -1619,6 +2859,10 @@ fn line_at_origin_line_at_origin_sub(self_: LineAtOrigin, other: LineAtOrigin) -
     return LineAtOrigin(self_.g0 - other.g0);
 }
 
+fn line_at_origin_magnitude_sub(self_: LineAtOrigin, other: Magnitude) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - other.g0, vec4<f32>(0.0), self_.g0, vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
 fn line_at_origin_motor_sub(self_: LineAtOrigin, other: Motor) -> Motor {
     return Motor(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) - other.g0, vec3<f32>(0.0) - other.g1);
 }
@@ -1627,12 +2871,40 @@ fn line_at_origin_multi_vector_sub(self_: LineAtOrigin, other: MultiVector) -> M
     return MultiVector(vec2<f32>(0.0) - other.g0, vec4<f32>(0.0) - other.g1, self_.g0 - other.g2, vec3<f32>(0.0) - other.g3, vec4<f32>(0.0) - other.g4);
 }
 
+fn line_at_origin_multi_vector_at_infinity_sub(self_: LineAtOrigin, other: MultiVectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(other.g0.x, 0.0), vec4<f32>(0.0) - vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), self_.g0, vec3<f32>(0.0) - other.g2, vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.y));
+}
+
 fn line_at_origin_multi_vector_at_origin_sub(self_: LineAtOrigin, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
     return MultiVectorAtOrigin(vec2<f32>(0.0) - other.g0, self_.g0 - other.g1, vec3<f32>(0.0) - other.g2);
 }
 
+fn line_at_origin_origin_sub(self_: LineAtOrigin, other: Origin) -> MultiVectorAtOrigin {
+    return MultiVectorAtOrigin(vec2<f32>(0.0) - vec2<f32>(other.g0, 0.0), self_.g0, vec3<f32>(0.0));
+}
+
+fn line_at_origin_plane_sub(self_: LineAtOrigin, other: Plane) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0), self_.g0, vec3<f32>(0.0), vec4<f32>(0.0) - other.g0);
+}
+
+fn line_at_origin_plane_at_origin_sub(self_: LineAtOrigin, other: PlaneAtOrigin) -> MultiVectorAtOrigin {
+    return MultiVectorAtOrigin(vec2<f32>(0.0), self_.g0, vec3<f32>(0.0) - other.g0);
+}
+
+fn line_at_origin_point_sub(self_: LineAtOrigin, other: Point) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0) - other.g0, self_.g0, vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn line_at_origin_point_at_infinity_sub(self_: LineAtOrigin, other: PointAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), self_.g0, vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
 fn line_at_origin_rotor_sub(self_: LineAtOrigin, other: Rotor) -> Rotor {
     return Rotor(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) - other.g0);
+}
+
+fn line_at_origin_scalar_sub(self_: LineAtOrigin, other: Scalar) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(other.g0, 0.0), vec4<f32>(0.0), self_.g0, vec3<f32>(0.0), vec4<f32>(0.0));
 }
 
 fn line_at_origin_translator_sub(self_: LineAtOrigin, other: Translator) -> Motor {
@@ -1643,20 +2915,96 @@ fn magnitude_anti_scalar_sub(self_: Magnitude, other: AntiScalar) -> Magnitude {
     return Magnitude(self_.g0 - vec2<f32>(0.0, other.g0));
 }
 
+fn magnitude_flector_sub(self_: Magnitude, other: Flector) -> MultiVector {
+    return MultiVector(self_.g0, vec4<f32>(0.0) - other.g0, vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0) - other.g1);
+}
+
+fn magnitude_flector_at_infinity_sub(self_: Magnitude, other: FlectorAtInfinity) -> MultiVector {
+    return MultiVector(self_.g0, vec4<f32>(0.0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.w));
+}
+
+fn magnitude_horizon_sub(self_: Magnitude, other: Horizon) -> MultiVector {
+    return MultiVector(self_.g0, vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0));
+}
+
+fn magnitude_line_sub(self_: Magnitude, other: Line) -> MultiVector {
+    return MultiVector(self_.g0, vec4<f32>(0.0), vec3<f32>(0.0) - other.g0, vec3<f32>(0.0) - other.g1, vec4<f32>(0.0));
+}
+
+fn magnitude_line_at_infinity_sub(self_: Magnitude, other: LineAtInfinity) -> MultiVector {
+    return MultiVector(self_.g0, vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - other.g0, vec4<f32>(0.0));
+}
+
+fn magnitude_line_at_origin_sub(self_: Magnitude, other: LineAtOrigin) -> MultiVector {
+    return MultiVector(self_.g0, vec4<f32>(0.0), vec3<f32>(0.0) - other.g0, vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
 fn magnitude_magnitude_sub(self_: Magnitude, other: Magnitude) -> Magnitude {
     return Magnitude(self_.g0 - other.g0);
+}
+
+fn magnitude_motor_sub(self_: Magnitude, other: Motor) -> MultiVector {
+    return MultiVector(self_.g0 - vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0) - other.g1, vec4<f32>(0.0));
 }
 
 fn magnitude_multi_vector_sub(self_: Magnitude, other: MultiVector) -> MultiVector {
     return MultiVector(self_.g0 - other.g0, vec4<f32>(0.0) - other.g1, vec3<f32>(0.0) - other.g2, vec3<f32>(0.0) - other.g3, vec4<f32>(0.0) - other.g4);
 }
 
+fn magnitude_multi_vector_at_infinity_sub(self_: Magnitude, other: MultiVectorAtInfinity) -> MultiVector {
+    return MultiVector(self_.g0 - vec2<f32>(other.g0.x, 0.0), vec4<f32>(0.0) - vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), vec3<f32>(0.0), vec3<f32>(0.0) - other.g2, vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.y));
+}
+
+fn magnitude_multi_vector_at_origin_sub(self_: Magnitude, other: MultiVectorAtOrigin) -> MultiVector {
+    return MultiVector(self_.g0 - vec2<f32>(0.0, other.g0.y), vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.x), vec3<f32>(0.0) - other.g1, vec3<f32>(0.0), vec4<f32>(0.0) - vec4<f32>(other.g2.x, other.g2.y, other.g2.z, 0.0));
+}
+
+fn magnitude_origin_sub(self_: Magnitude, other: Origin) -> MultiVector {
+    return MultiVector(self_.g0, vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn magnitude_plane_sub(self_: Magnitude, other: Plane) -> MultiVector {
+    return MultiVector(self_.g0, vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0) - other.g0);
+}
+
+fn magnitude_plane_at_origin_sub(self_: Magnitude, other: PlaneAtOrigin) -> MultiVector {
+    return MultiVector(self_.g0, vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
+}
+
+fn magnitude_point_sub(self_: Magnitude, other: Point) -> MultiVector {
+    return MultiVector(self_.g0, vec4<f32>(0.0) - other.g0, vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn magnitude_point_at_infinity_sub(self_: Magnitude, other: PointAtInfinity) -> MultiVector {
+    return MultiVector(self_.g0, vec4<f32>(0.0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn magnitude_rotor_sub(self_: Magnitude, other: Rotor) -> MultiVector {
+    return MultiVector(self_.g0 - vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
 fn magnitude_scalar_sub(self_: Magnitude, other: Scalar) -> Magnitude {
     return Magnitude(self_.g0 - vec2<f32>(other.g0, 0.0));
 }
 
+fn magnitude_translator_sub(self_: Magnitude, other: Translator) -> MultiVector {
+    return MultiVector(self_.g0 - vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(0.0));
+}
+
 fn motor_anti_scalar_sub(self_: Motor, other: AntiScalar) -> Motor {
     return Motor(self_.g0 - vec4<f32>(0.0, 0.0, 0.0, other.g0), self_.g1);
+}
+
+fn motor_flector_sub(self_: Motor, other: Flector) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0) - other.g0, vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), self_.g1, vec4<f32>(0.0) - other.g1);
+}
+
+fn motor_flector_at_infinity_sub(self_: Motor, other: FlectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), self_.g1, vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.w));
+}
+
+fn motor_horizon_sub(self_: Motor, other: Horizon) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), self_.g1, vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0));
 }
 
 fn motor_line_sub(self_: Motor, other: Line) -> Motor {
@@ -1671,6 +3019,10 @@ fn motor_line_at_origin_sub(self_: Motor, other: LineAtOrigin) -> Motor {
     return Motor(self_.g0 - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), self_.g1);
 }
 
+fn motor_magnitude_sub(self_: Motor, other: Magnitude) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w) - other.g0, vec4<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), self_.g1, vec4<f32>(0.0));
+}
+
 fn motor_motor_sub(self_: Motor, other: Motor) -> Motor {
     return Motor(self_.g0 - other.g0, self_.g1 - other.g1);
 }
@@ -1679,8 +3031,40 @@ fn motor_multi_vector_sub(self_: Motor, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(0.0, self_.g0.w) - other.g0, vec4<f32>(0.0) - other.g1, vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) - other.g2, self_.g1 - other.g3, vec4<f32>(0.0) - other.g4);
 }
 
+fn motor_multi_vector_at_infinity_sub(self_: Motor, other: MultiVectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w) - vec2<f32>(other.g0.x, 0.0), vec4<f32>(0.0) - vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), self_.g1 - other.g2, vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.y));
+}
+
+fn motor_multi_vector_at_origin_sub(self_: Motor, other: MultiVectorAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w) - vec2<f32>(0.0, other.g0.y), vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.x), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) - other.g1, self_.g1, vec4<f32>(0.0) - vec4<f32>(other.g2.x, other.g2.y, other.g2.z, 0.0));
+}
+
+fn motor_origin_sub(self_: Motor, other: Origin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), self_.g1, vec4<f32>(0.0));
+}
+
+fn motor_plane_sub(self_: Motor, other: Plane) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), self_.g1, vec4<f32>(0.0) - other.g0);
+}
+
+fn motor_plane_at_origin_sub(self_: Motor, other: PlaneAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), self_.g1, vec4<f32>(0.0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
+}
+
+fn motor_point_sub(self_: Motor, other: Point) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0) - other.g0, vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), self_.g1, vec4<f32>(0.0));
+}
+
+fn motor_point_at_infinity_sub(self_: Motor, other: PointAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), self_.g1, vec4<f32>(0.0));
+}
+
 fn motor_rotor_sub(self_: Motor, other: Rotor) -> Motor {
     return Motor(self_.g0 - other.g0, self_.g1);
+}
+
+fn motor_scalar_sub(self_: Motor, other: Scalar) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w) - vec2<f32>(other.g0, 0.0), vec4<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), self_.g1, vec4<f32>(0.0));
 }
 
 fn motor_translator_sub(self_: Motor, other: Translator) -> Motor {
@@ -1767,6 +3151,14 @@ fn multi_vector_translator_sub(self_: MultiVector, other: Translator) -> MultiVe
     return MultiVector(self_.g0 - vec2<f32>(0.0, other.g0.w), self_.g1, self_.g2, self_.g3 - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), self_.g4);
 }
 
+fn multi_vector_at_infinity_anti_scalar_sub(self_: MultiVectorAtInfinity, other: AntiScalar) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.x, 0.0) - vec2<f32>(0.0, other.g0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0), vec3<f32>(0.0), self_.g2, vec4<f32>(0.0, 0.0, 0.0, self_.g0.y));
+}
+
+fn multi_vector_at_infinity_flector_sub(self_: MultiVectorAtInfinity, other: Flector) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.x, 0.0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0) - other.g0, vec3<f32>(0.0), self_.g2, vec4<f32>(0.0, 0.0, 0.0, self_.g0.y) - other.g1);
+}
+
 fn multi_vector_at_infinity_flector_at_infinity_sub(self_: MultiVectorAtInfinity, other: FlectorAtInfinity) -> MultiVectorAtInfinity {
     return MultiVectorAtInfinity(self_.g0 - vec2<f32>(0.0, other.g0.w), self_.g1 - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), self_.g2);
 }
@@ -1775,8 +3167,24 @@ fn multi_vector_at_infinity_horizon_sub(self_: MultiVectorAtInfinity, other: Hor
     return MultiVectorAtInfinity(self_.g0 - vec2<f32>(0.0, other.g0), self_.g1, self_.g2);
 }
 
+fn multi_vector_at_infinity_line_sub(self_: MultiVectorAtInfinity, other: Line) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.x, 0.0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0), vec3<f32>(0.0) - other.g0, self_.g2 - other.g1, vec4<f32>(0.0, 0.0, 0.0, self_.g0.y));
+}
+
 fn multi_vector_at_infinity_line_at_infinity_sub(self_: MultiVectorAtInfinity, other: LineAtInfinity) -> MultiVectorAtInfinity {
     return MultiVectorAtInfinity(self_.g0, self_.g1, self_.g2 - other.g0);
+}
+
+fn multi_vector_at_infinity_line_at_origin_sub(self_: MultiVectorAtInfinity, other: LineAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.x, 0.0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0), vec3<f32>(0.0) - other.g0, self_.g2, vec4<f32>(0.0, 0.0, 0.0, self_.g0.y));
+}
+
+fn multi_vector_at_infinity_magnitude_sub(self_: MultiVectorAtInfinity, other: Magnitude) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.x, 0.0) - other.g0, vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0), vec3<f32>(0.0), self_.g2, vec4<f32>(0.0, 0.0, 0.0, self_.g0.y));
+}
+
+fn multi_vector_at_infinity_motor_sub(self_: MultiVectorAtInfinity, other: Motor) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.x, 0.0) - vec2<f32>(0.0, other.g0.w), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), self_.g2 - other.g1, vec4<f32>(0.0, 0.0, 0.0, self_.g0.y));
 }
 
 fn multi_vector_at_infinity_multi_vector_sub(self_: MultiVectorAtInfinity, other: MultiVector) -> MultiVector {
@@ -1791,20 +3199,72 @@ fn multi_vector_at_infinity_multi_vector_at_origin_sub(self_: MultiVectorAtInfin
     return MultiVector(vec2<f32>(self_.g0.x, 0.0) - vec2<f32>(0.0, other.g0.y), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.x), vec3<f32>(0.0) - other.g1, self_.g2, vec4<f32>(0.0, 0.0, 0.0, self_.g0.y) - vec4<f32>(other.g2.x, other.g2.y, other.g2.z, 0.0));
 }
 
+fn multi_vector_at_infinity_origin_sub(self_: MultiVectorAtInfinity, other: Origin) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.x, 0.0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0), vec3<f32>(0.0), self_.g2, vec4<f32>(0.0, 0.0, 0.0, self_.g0.y));
+}
+
+fn multi_vector_at_infinity_plane_sub(self_: MultiVectorAtInfinity, other: Plane) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.x, 0.0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0), vec3<f32>(0.0), self_.g2, vec4<f32>(0.0, 0.0, 0.0, self_.g0.y) - other.g0);
+}
+
+fn multi_vector_at_infinity_plane_at_origin_sub(self_: MultiVectorAtInfinity, other: PlaneAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.x, 0.0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0), vec3<f32>(0.0), self_.g2, vec4<f32>(0.0, 0.0, 0.0, self_.g0.y) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
+}
+
+fn multi_vector_at_infinity_point_sub(self_: MultiVectorAtInfinity, other: Point) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.x, 0.0), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0) - other.g0, vec3<f32>(0.0), self_.g2, vec4<f32>(0.0, 0.0, 0.0, self_.g0.y));
+}
+
 fn multi_vector_at_infinity_point_at_infinity_sub(self_: MultiVectorAtInfinity, other: PointAtInfinity) -> MultiVectorAtInfinity {
     return MultiVectorAtInfinity(self_.g0, self_.g1 - other.g0, self_.g2);
+}
+
+fn multi_vector_at_infinity_rotor_sub(self_: MultiVectorAtInfinity, other: Rotor) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.x, 0.0) - vec2<f32>(0.0, other.g0.w), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), self_.g2, vec4<f32>(0.0, 0.0, 0.0, self_.g0.y));
 }
 
 fn multi_vector_at_infinity_scalar_sub(self_: MultiVectorAtInfinity, other: Scalar) -> MultiVectorAtInfinity {
     return MultiVectorAtInfinity(self_.g0 - vec2<f32>(other.g0, 0.0), self_.g1, self_.g2);
 }
 
+fn multi_vector_at_infinity_translator_sub(self_: MultiVectorAtInfinity, other: Translator) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0.x, 0.0) - vec2<f32>(0.0, other.g0.w), vec4<f32>(self_.g1.x, self_.g1.y, self_.g1.z, 0.0), vec3<f32>(0.0), self_.g2 - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(0.0, 0.0, 0.0, self_.g0.y));
+}
+
 fn multi_vector_at_origin_anti_scalar_sub(self_: MultiVectorAtOrigin, other: AntiScalar) -> MultiVectorAtOrigin {
     return MultiVectorAtOrigin(self_.g0 - vec2<f32>(0.0, other.g0), self_.g1, self_.g2);
 }
 
+fn multi_vector_at_origin_flector_sub(self_: MultiVectorAtOrigin, other: Flector) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.y), vec4<f32>(0.0, 0.0, 0.0, self_.g0.x) - other.g0, self_.g1, vec3<f32>(0.0), vec4<f32>(self_.g2.x, self_.g2.y, self_.g2.z, 0.0) - other.g1);
+}
+
+fn multi_vector_at_origin_flector_at_infinity_sub(self_: MultiVectorAtOrigin, other: FlectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.y), vec4<f32>(0.0, 0.0, 0.0, self_.g0.x) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), self_.g1, vec3<f32>(0.0), vec4<f32>(self_.g2.x, self_.g2.y, self_.g2.z, 0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.w));
+}
+
+fn multi_vector_at_origin_horizon_sub(self_: MultiVectorAtOrigin, other: Horizon) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.y), vec4<f32>(0.0, 0.0, 0.0, self_.g0.x), self_.g1, vec3<f32>(0.0), vec4<f32>(self_.g2.x, self_.g2.y, self_.g2.z, 0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0));
+}
+
+fn multi_vector_at_origin_line_sub(self_: MultiVectorAtOrigin, other: Line) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.y), vec4<f32>(0.0, 0.0, 0.0, self_.g0.x), self_.g1 - other.g0, vec3<f32>(0.0) - other.g1, vec4<f32>(self_.g2.x, self_.g2.y, self_.g2.z, 0.0));
+}
+
+fn multi_vector_at_origin_line_at_infinity_sub(self_: MultiVectorAtOrigin, other: LineAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.y), vec4<f32>(0.0, 0.0, 0.0, self_.g0.x), self_.g1, vec3<f32>(0.0) - other.g0, vec4<f32>(self_.g2.x, self_.g2.y, self_.g2.z, 0.0));
+}
+
 fn multi_vector_at_origin_line_at_origin_sub(self_: MultiVectorAtOrigin, other: LineAtOrigin) -> MultiVectorAtOrigin {
     return MultiVectorAtOrigin(self_.g0, self_.g1 - other.g0, self_.g2);
+}
+
+fn multi_vector_at_origin_magnitude_sub(self_: MultiVectorAtOrigin, other: Magnitude) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.y) - other.g0, vec4<f32>(0.0, 0.0, 0.0, self_.g0.x), self_.g1, vec3<f32>(0.0), vec4<f32>(self_.g2.x, self_.g2.y, self_.g2.z, 0.0));
+}
+
+fn multi_vector_at_origin_motor_sub(self_: MultiVectorAtOrigin, other: Motor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.y) - vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0, 0.0, 0.0, self_.g0.x), self_.g1 - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0) - other.g1, vec4<f32>(self_.g2.x, self_.g2.y, self_.g2.z, 0.0));
 }
 
 fn multi_vector_at_origin_multi_vector_sub(self_: MultiVectorAtOrigin, other: MultiVector) -> MultiVector {
@@ -1823,20 +3283,76 @@ fn multi_vector_at_origin_origin_sub(self_: MultiVectorAtOrigin, other: Origin) 
     return MultiVectorAtOrigin(self_.g0 - vec2<f32>(other.g0, 0.0), self_.g1, self_.g2);
 }
 
+fn multi_vector_at_origin_plane_sub(self_: MultiVectorAtOrigin, other: Plane) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.y), vec4<f32>(0.0, 0.0, 0.0, self_.g0.x), self_.g1, vec3<f32>(0.0), vec4<f32>(self_.g2.x, self_.g2.y, self_.g2.z, 0.0) - other.g0);
+}
+
 fn multi_vector_at_origin_plane_at_origin_sub(self_: MultiVectorAtOrigin, other: PlaneAtOrigin) -> MultiVectorAtOrigin {
     return MultiVectorAtOrigin(self_.g0, self_.g1, self_.g2 - other.g0);
+}
+
+fn multi_vector_at_origin_point_sub(self_: MultiVectorAtOrigin, other: Point) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.y), vec4<f32>(0.0, 0.0, 0.0, self_.g0.x) - other.g0, self_.g1, vec3<f32>(0.0), vec4<f32>(self_.g2.x, self_.g2.y, self_.g2.z, 0.0));
+}
+
+fn multi_vector_at_origin_point_at_infinity_sub(self_: MultiVectorAtOrigin, other: PointAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.y), vec4<f32>(0.0, 0.0, 0.0, self_.g0.x) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), self_.g1, vec3<f32>(0.0), vec4<f32>(self_.g2.x, self_.g2.y, self_.g2.z, 0.0));
 }
 
 fn multi_vector_at_origin_rotor_sub(self_: MultiVectorAtOrigin, other: Rotor) -> MultiVectorAtOrigin {
     return MultiVectorAtOrigin(self_.g0 - vec2<f32>(0.0, other.g0.w), self_.g1 - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), self_.g2);
 }
 
+fn multi_vector_at_origin_scalar_sub(self_: MultiVectorAtOrigin, other: Scalar) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.y) - vec2<f32>(other.g0, 0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0.x), self_.g1, vec3<f32>(0.0), vec4<f32>(self_.g2.x, self_.g2.y, self_.g2.z, 0.0));
+}
+
+fn multi_vector_at_origin_translator_sub(self_: MultiVectorAtOrigin, other: Translator) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.y) - vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0, 0.0, 0.0, self_.g0.x), self_.g1, vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(self_.g2.x, self_.g2.y, self_.g2.z, 0.0));
+}
+
+fn origin_anti_scalar_sub(self_: Origin, other: AntiScalar) -> MultiVectorAtOrigin {
+    return MultiVectorAtOrigin(vec2<f32>(self_.g0, 0.0) - vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0));
+}
+
 fn origin_flector_sub(self_: Origin, other: Flector) -> Flector {
     return Flector(vec4<f32>(0.0, 0.0, 0.0, self_.g0) - other.g0, vec4<f32>(0.0) - other.g1);
 }
 
+fn origin_flector_at_infinity_sub(self_: Origin, other: FlectorAtInfinity) -> Flector {
+    return Flector(vec4<f32>(0.0, 0.0, 0.0, self_.g0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.w));
+}
+
+fn origin_horizon_sub(self_: Origin, other: Horizon) -> Flector {
+    return Flector(vec4<f32>(0.0, 0.0, 0.0, self_.g0), vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0));
+}
+
+fn origin_line_sub(self_: Origin, other: Line) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0), vec3<f32>(0.0) - other.g0, vec3<f32>(0.0) - other.g1, vec4<f32>(0.0));
+}
+
+fn origin_line_at_infinity_sub(self_: Origin, other: LineAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0), vec3<f32>(0.0), vec3<f32>(0.0) - other.g0, vec4<f32>(0.0));
+}
+
+fn origin_line_at_origin_sub(self_: Origin, other: LineAtOrigin) -> MultiVectorAtOrigin {
+    return MultiVectorAtOrigin(vec2<f32>(self_.g0, 0.0), vec3<f32>(0.0) - other.g0, vec3<f32>(0.0));
+}
+
+fn origin_magnitude_sub(self_: Origin, other: Magnitude) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - other.g0, vec4<f32>(0.0, 0.0, 0.0, self_.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn origin_motor_sub(self_: Origin, other: Motor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0, 0.0, 0.0, self_.g0), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0) - other.g1, vec4<f32>(0.0));
+}
+
 fn origin_multi_vector_sub(self_: Origin, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(0.0) - other.g0, vec4<f32>(0.0, 0.0, 0.0, self_.g0) - other.g1, vec3<f32>(0.0) - other.g2, vec3<f32>(0.0) - other.g3, vec4<f32>(0.0) - other.g4);
+}
+
+fn origin_multi_vector_at_infinity_sub(self_: Origin, other: MultiVectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(other.g0.x, 0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0) - vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), vec3<f32>(0.0), vec3<f32>(0.0) - other.g2, vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.y));
 }
 
 fn origin_multi_vector_at_origin_sub(self_: Origin, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
@@ -1847,6 +3363,14 @@ fn origin_origin_sub(self_: Origin, other: Origin) -> Origin {
     return Origin(self_.g0 - other.g0);
 }
 
+fn origin_plane_sub(self_: Origin, other: Plane) -> Flector {
+    return Flector(vec4<f32>(0.0, 0.0, 0.0, self_.g0), vec4<f32>(0.0) - other.g0);
+}
+
+fn origin_plane_at_origin_sub(self_: Origin, other: PlaneAtOrigin) -> Flector {
+    return Flector(vec4<f32>(0.0, 0.0, 0.0, self_.g0), vec4<f32>(0.0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
+}
+
 fn origin_point_sub(self_: Origin, other: Point) -> Point {
     return Point(vec4<f32>(0.0, 0.0, 0.0, self_.g0) - other.g0);
 }
@@ -1855,16 +3379,68 @@ fn origin_point_at_infinity_sub(self_: Origin, other: PointAtInfinity) -> Point 
     return Point(vec4<f32>(0.0, 0.0, 0.0, self_.g0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
 }
 
+fn origin_rotor_sub(self_: Origin, other: Rotor) -> MultiVectorAtOrigin {
+    return MultiVectorAtOrigin(vec2<f32>(self_.g0, 0.0) - vec2<f32>(0.0, other.g0.w), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0));
+}
+
+fn origin_scalar_sub(self_: Origin, other: Scalar) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(other.g0, 0.0), vec4<f32>(0.0, 0.0, 0.0, self_.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn origin_translator_sub(self_: Origin, other: Translator) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0, 0.0, 0.0, self_.g0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(0.0));
+}
+
+fn plane_anti_scalar_sub(self_: Plane, other: AntiScalar) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), self_.g0);
+}
+
 fn plane_flector_sub(self_: Plane, other: Flector) -> Flector {
     return Flector(vec4<f32>(0.0) - other.g0, self_.g0 - other.g1);
+}
+
+fn plane_flector_at_infinity_sub(self_: Plane, other: FlectorAtInfinity) -> Flector {
+    return Flector(vec4<f32>(0.0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), self_.g0 - vec4<f32>(0.0, 0.0, 0.0, other.g0.w));
 }
 
 fn plane_horizon_sub(self_: Plane, other: Horizon) -> Plane {
     return Plane(self_.g0 - vec4<f32>(0.0, 0.0, 0.0, other.g0));
 }
 
+fn plane_line_sub(self_: Plane, other: Line) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0) - other.g0, vec3<f32>(0.0) - other.g1, self_.g0);
+}
+
+fn plane_line_at_infinity_sub(self_: Plane, other: LineAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - other.g0, self_.g0);
+}
+
+fn plane_line_at_origin_sub(self_: Plane, other: LineAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0) - other.g0, vec3<f32>(0.0), self_.g0);
+}
+
+fn plane_magnitude_sub(self_: Plane, other: Magnitude) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - other.g0, vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), self_.g0);
+}
+
+fn plane_motor_sub(self_: Plane, other: Motor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0) - other.g1, self_.g0);
+}
+
 fn plane_multi_vector_sub(self_: Plane, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(0.0) - other.g0, vec4<f32>(0.0) - other.g1, vec3<f32>(0.0) - other.g2, vec3<f32>(0.0) - other.g3, self_.g0 - other.g4);
+}
+
+fn plane_multi_vector_at_infinity_sub(self_: Plane, other: MultiVectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(other.g0.x, 0.0), vec4<f32>(0.0) - vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), vec3<f32>(0.0), vec3<f32>(0.0) - other.g2, self_.g0 - vec4<f32>(0.0, 0.0, 0.0, other.g0.y));
+}
+
+fn plane_multi_vector_at_origin_sub(self_: Plane, other: MultiVectorAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.y), vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.x), vec3<f32>(0.0) - other.g1, vec3<f32>(0.0), self_.g0 - vec4<f32>(other.g2.x, other.g2.y, other.g2.z, 0.0));
+}
+
+fn plane_origin_sub(self_: Plane, other: Origin) -> Flector {
+    return Flector(vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0), self_.g0);
 }
 
 fn plane_plane_sub(self_: Plane, other: Plane) -> Plane {
@@ -1879,20 +3455,72 @@ fn plane_point_sub(self_: Plane, other: Point) -> Flector {
     return Flector(vec4<f32>(0.0) - other.g0, self_.g0);
 }
 
+fn plane_point_at_infinity_sub(self_: Plane, other: PointAtInfinity) -> Flector {
+    return Flector(vec4<f32>(0.0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), self_.g0);
+}
+
+fn plane_rotor_sub(self_: Plane, other: Rotor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0), self_.g0);
+}
+
+fn plane_scalar_sub(self_: Plane, other: Scalar) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(other.g0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), self_.g0);
+}
+
+fn plane_translator_sub(self_: Plane, other: Translator) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), self_.g0);
+}
+
+fn plane_at_origin_anti_scalar_sub(self_: PlaneAtOrigin, other: AntiScalar) -> MultiVectorAtOrigin {
+    return MultiVectorAtOrigin(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0), vec3<f32>(0.0), self_.g0);
+}
+
 fn plane_at_origin_flector_sub(self_: PlaneAtOrigin, other: Flector) -> Flector {
     return Flector(vec4<f32>(0.0) - other.g0, vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) - other.g1);
+}
+
+fn plane_at_origin_flector_at_infinity_sub(self_: PlaneAtOrigin, other: FlectorAtInfinity) -> Flector {
+    return Flector(vec4<f32>(0.0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.w));
 }
 
 fn plane_at_origin_horizon_sub(self_: PlaneAtOrigin, other: Horizon) -> Plane {
     return Plane(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0));
 }
 
+fn plane_at_origin_line_sub(self_: PlaneAtOrigin, other: Line) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0) - other.g0, vec3<f32>(0.0) - other.g1, vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0));
+}
+
+fn plane_at_origin_line_at_infinity_sub(self_: PlaneAtOrigin, other: LineAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - other.g0, vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0));
+}
+
+fn plane_at_origin_line_at_origin_sub(self_: PlaneAtOrigin, other: LineAtOrigin) -> MultiVectorAtOrigin {
+    return MultiVectorAtOrigin(vec2<f32>(0.0), vec3<f32>(0.0) - other.g0, self_.g0);
+}
+
+fn plane_at_origin_magnitude_sub(self_: PlaneAtOrigin, other: Magnitude) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - other.g0, vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0));
+}
+
+fn plane_at_origin_motor_sub(self_: PlaneAtOrigin, other: Motor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0) - other.g1, vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0));
+}
+
 fn plane_at_origin_multi_vector_sub(self_: PlaneAtOrigin, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(0.0) - other.g0, vec4<f32>(0.0) - other.g1, vec3<f32>(0.0) - other.g2, vec3<f32>(0.0) - other.g3, vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) - other.g4);
 }
 
+fn plane_at_origin_multi_vector_at_infinity_sub(self_: PlaneAtOrigin, other: MultiVectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(other.g0.x, 0.0), vec4<f32>(0.0) - vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), vec3<f32>(0.0), vec3<f32>(0.0) - other.g2, vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.y));
+}
+
 fn plane_at_origin_multi_vector_at_origin_sub(self_: PlaneAtOrigin, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
     return MultiVectorAtOrigin(vec2<f32>(0.0) - other.g0, vec3<f32>(0.0) - other.g1, self_.g0 - other.g2);
+}
+
+fn plane_at_origin_origin_sub(self_: PlaneAtOrigin, other: Origin) -> Flector {
+    return Flector(vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0));
 }
 
 fn plane_at_origin_plane_sub(self_: PlaneAtOrigin, other: Plane) -> Plane {
@@ -1903,12 +3531,72 @@ fn plane_at_origin_plane_at_origin_sub(self_: PlaneAtOrigin, other: PlaneAtOrigi
     return PlaneAtOrigin(self_.g0 - other.g0);
 }
 
+fn plane_at_origin_point_sub(self_: PlaneAtOrigin, other: Point) -> Flector {
+    return Flector(vec4<f32>(0.0) - other.g0, vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0));
+}
+
+fn plane_at_origin_point_at_infinity_sub(self_: PlaneAtOrigin, other: PointAtInfinity) -> Flector {
+    return Flector(vec4<f32>(0.0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0));
+}
+
+fn plane_at_origin_rotor_sub(self_: PlaneAtOrigin, other: Rotor) -> MultiVectorAtOrigin {
+    return MultiVectorAtOrigin(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.w), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), self_.g0);
+}
+
+fn plane_at_origin_scalar_sub(self_: PlaneAtOrigin, other: Scalar) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(other.g0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0));
+}
+
+fn plane_at_origin_translator_sub(self_: PlaneAtOrigin, other: Translator) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0));
+}
+
+fn point_anti_scalar_sub(self_: Point, other: AntiScalar) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0), self_.g0, vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
 fn point_flector_sub(self_: Point, other: Flector) -> Flector {
     return Flector(self_.g0 - other.g0, vec4<f32>(0.0) - other.g1);
 }
 
+fn point_flector_at_infinity_sub(self_: Point, other: FlectorAtInfinity) -> Flector {
+    return Flector(self_.g0 - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.w));
+}
+
+fn point_horizon_sub(self_: Point, other: Horizon) -> Flector {
+    return Flector(self_.g0, vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0));
+}
+
+fn point_line_sub(self_: Point, other: Line) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), self_.g0, vec3<f32>(0.0) - other.g0, vec3<f32>(0.0) - other.g1, vec4<f32>(0.0));
+}
+
+fn point_line_at_infinity_sub(self_: Point, other: LineAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), self_.g0, vec3<f32>(0.0), vec3<f32>(0.0) - other.g0, vec4<f32>(0.0));
+}
+
+fn point_line_at_origin_sub(self_: Point, other: LineAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), self_.g0, vec3<f32>(0.0) - other.g0, vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn point_magnitude_sub(self_: Point, other: Magnitude) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - other.g0, self_.g0, vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn point_motor_sub(self_: Point, other: Motor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.w), self_.g0, vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0) - other.g1, vec4<f32>(0.0));
+}
+
 fn point_multi_vector_sub(self_: Point, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(0.0) - other.g0, self_.g0 - other.g1, vec3<f32>(0.0) - other.g2, vec3<f32>(0.0) - other.g3, vec4<f32>(0.0) - other.g4);
+}
+
+fn point_multi_vector_at_infinity_sub(self_: Point, other: MultiVectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(other.g0.x, 0.0), self_.g0 - vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), vec3<f32>(0.0), vec3<f32>(0.0) - other.g2, vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.y));
+}
+
+fn point_multi_vector_at_origin_sub(self_: Point, other: MultiVectorAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.y), self_.g0 - vec4<f32>(0.0, 0.0, 0.0, other.g0.x), vec3<f32>(0.0) - other.g1, vec3<f32>(0.0), vec4<f32>(0.0) - vec4<f32>(other.g2.x, other.g2.y, other.g2.z, 0.0));
 }
 
 fn point_origin_sub(self_: Point, other: Origin) -> Point {
@@ -1919,12 +3607,32 @@ fn point_plane_sub(self_: Point, other: Plane) -> Flector {
     return Flector(self_.g0, vec4<f32>(0.0) - other.g0);
 }
 
+fn point_plane_at_origin_sub(self_: Point, other: PlaneAtOrigin) -> Flector {
+    return Flector(self_.g0, vec4<f32>(0.0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
+}
+
 fn point_point_sub(self_: Point, other: Point) -> Point {
     return Point(self_.g0 - other.g0);
 }
 
 fn point_point_at_infinity_sub(self_: Point, other: PointAtInfinity) -> Point {
     return Point(self_.g0 - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
+}
+
+fn point_rotor_sub(self_: Point, other: Rotor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.w), self_.g0, vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn point_scalar_sub(self_: Point, other: Scalar) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(other.g0, 0.0), self_.g0, vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn point_translator_sub(self_: Point, other: Translator) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.w), self_.g0, vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(0.0));
+}
+
+fn point_at_infinity_anti_scalar_sub(self_: PointAtInfinity, other: AntiScalar) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0));
 }
 
 fn point_at_infinity_flector_sub(self_: PointAtInfinity, other: Flector) -> Flector {
@@ -1939,6 +3647,26 @@ fn point_at_infinity_horizon_sub(self_: PointAtInfinity, other: Horizon) -> Flec
     return FlectorAtInfinity(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0));
 }
 
+fn point_at_infinity_line_sub(self_: PointAtInfinity, other: Line) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec3<f32>(0.0) - other.g0, vec3<f32>(0.0) - other.g1, vec4<f32>(0.0));
+}
+
+fn point_at_infinity_line_at_infinity_sub(self_: PointAtInfinity, other: LineAtInfinity) -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(0.0), self_.g0, vec3<f32>(0.0) - other.g0);
+}
+
+fn point_at_infinity_line_at_origin_sub(self_: PointAtInfinity, other: LineAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec3<f32>(0.0) - other.g0, vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn point_at_infinity_magnitude_sub(self_: PointAtInfinity, other: Magnitude) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - other.g0, vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn point_at_infinity_motor_sub(self_: PointAtInfinity, other: Motor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.w), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0) - other.g1, vec4<f32>(0.0));
+}
+
 fn point_at_infinity_multi_vector_sub(self_: PointAtInfinity, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(0.0) - other.g0, vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) - other.g1, vec3<f32>(0.0) - other.g2, vec3<f32>(0.0) - other.g3, vec4<f32>(0.0) - other.g4);
 }
@@ -1947,8 +3675,20 @@ fn point_at_infinity_multi_vector_at_infinity_sub(self_: PointAtInfinity, other:
     return MultiVectorAtInfinity(vec2<f32>(0.0) - other.g0, self_.g0 - other.g1, vec3<f32>(0.0) - other.g2);
 }
 
+fn point_at_infinity_multi_vector_at_origin_sub(self_: PointAtInfinity, other: MultiVectorAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.y), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.x), vec3<f32>(0.0) - other.g1, vec3<f32>(0.0), vec4<f32>(0.0) - vec4<f32>(other.g2.x, other.g2.y, other.g2.z, 0.0));
+}
+
 fn point_at_infinity_origin_sub(self_: PointAtInfinity, other: Origin) -> Point {
     return Point(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0));
+}
+
+fn point_at_infinity_plane_sub(self_: PointAtInfinity, other: Plane) -> Flector {
+    return Flector(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec4<f32>(0.0) - other.g0);
+}
+
+fn point_at_infinity_plane_at_origin_sub(self_: PointAtInfinity, other: PlaneAtOrigin) -> Flector {
+    return Flector(vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec4<f32>(0.0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
 }
 
 fn point_at_infinity_point_sub(self_: PointAtInfinity, other: Point) -> Point {
@@ -1959,8 +3699,32 @@ fn point_at_infinity_point_at_infinity_sub(self_: PointAtInfinity, other: PointA
     return PointAtInfinity(self_.g0 - other.g0);
 }
 
+fn point_at_infinity_rotor_sub(self_: PointAtInfinity, other: Rotor) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.w), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn point_at_infinity_scalar_sub(self_: PointAtInfinity, other: Scalar) -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(0.0) - vec2<f32>(other.g0, 0.0), self_.g0, vec3<f32>(0.0));
+}
+
+fn point_at_infinity_translator_sub(self_: PointAtInfinity, other: Translator) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0) - vec2<f32>(0.0, other.g0.w), vec4<f32>(self_.g0.x, self_.g0.y, self_.g0.z, 0.0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(0.0));
+}
+
 fn rotor_anti_scalar_sub(self_: Rotor, other: AntiScalar) -> Rotor {
     return Rotor(self_.g0 - vec4<f32>(0.0, 0.0, 0.0, other.g0));
+}
+
+fn rotor_flector_sub(self_: Rotor, other: Flector) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0) - other.g0, vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0), vec4<f32>(0.0) - other.g1);
+}
+
+fn rotor_flector_at_infinity_sub(self_: Rotor, other: FlectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0), vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.w));
+}
+
+fn rotor_horizon_sub(self_: Rotor, other: Horizon) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0), vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0));
 }
 
 fn rotor_line_sub(self_: Rotor, other: Line) -> Motor {
@@ -1975,6 +3739,10 @@ fn rotor_line_at_origin_sub(self_: Rotor, other: LineAtOrigin) -> Rotor {
     return Rotor(self_.g0 - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
 }
 
+fn rotor_magnitude_sub(self_: Rotor, other: Magnitude) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w) - other.g0, vec4<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
 fn rotor_motor_sub(self_: Rotor, other: Motor) -> Motor {
     return Motor(self_.g0 - other.g0, vec3<f32>(0.0) - other.g1);
 }
@@ -1983,12 +3751,40 @@ fn rotor_multi_vector_sub(self_: Rotor, other: MultiVector) -> MultiVector {
     return MultiVector(vec2<f32>(0.0, self_.g0.w) - other.g0, vec4<f32>(0.0) - other.g1, vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) - other.g2, vec3<f32>(0.0) - other.g3, vec4<f32>(0.0) - other.g4);
 }
 
+fn rotor_multi_vector_at_infinity_sub(self_: Rotor, other: MultiVectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w) - vec2<f32>(other.g0.x, 0.0), vec4<f32>(0.0) - vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0) - other.g2, vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.y));
+}
+
 fn rotor_multi_vector_at_origin_sub(self_: Rotor, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
     return MultiVectorAtOrigin(vec2<f32>(0.0, self_.g0.w) - other.g0, vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) - other.g1, vec3<f32>(0.0) - other.g2);
 }
 
+fn rotor_origin_sub(self_: Rotor, other: Origin) -> MultiVectorAtOrigin {
+    return MultiVectorAtOrigin(vec2<f32>(0.0, self_.g0.w) - vec2<f32>(other.g0, 0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0));
+}
+
+fn rotor_plane_sub(self_: Rotor, other: Plane) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0), vec4<f32>(0.0) - other.g0);
+}
+
+fn rotor_plane_at_origin_sub(self_: Rotor, other: PlaneAtOrigin) -> MultiVectorAtOrigin {
+    return MultiVectorAtOrigin(vec2<f32>(0.0, self_.g0.w), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0) - other.g0);
+}
+
+fn rotor_point_sub(self_: Rotor, other: Point) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0) - other.g0, vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn rotor_point_at_infinity_sub(self_: Rotor, other: PointAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
 fn rotor_rotor_sub(self_: Rotor, other: Rotor) -> Rotor {
     return Rotor(self_.g0 - other.g0);
+}
+
+fn rotor_scalar_sub(self_: Rotor, other: Scalar) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w) - vec2<f32>(other.g0, 0.0), vec4<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec3<f32>(0.0), vec4<f32>(0.0));
 }
 
 fn rotor_translator_sub(self_: Rotor, other: Translator) -> Motor {
@@ -1999,8 +3795,36 @@ fn scalar_anti_scalar_sub(self_: Scalar, other: AntiScalar) -> Magnitude {
     return Magnitude(vec2<f32>(self_.g0, 0.0) - vec2<f32>(0.0, other.g0));
 }
 
+fn scalar_flector_sub(self_: Scalar, other: Flector) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0, 0.0), vec4<f32>(0.0) - other.g0, vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0) - other.g1);
+}
+
+fn scalar_flector_at_infinity_sub(self_: Scalar, other: FlectorAtInfinity) -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(self_.g0, 0.0) - vec2<f32>(0.0, other.g0.w), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0));
+}
+
+fn scalar_horizon_sub(self_: Scalar, other: Horizon) -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(self_.g0, 0.0) - vec2<f32>(0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0));
+}
+
+fn scalar_line_sub(self_: Scalar, other: Line) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0) - other.g0, vec3<f32>(0.0) - other.g1, vec4<f32>(0.0));
+}
+
+fn scalar_line_at_infinity_sub(self_: Scalar, other: LineAtInfinity) -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(self_.g0, 0.0), vec3<f32>(0.0), vec3<f32>(0.0) - other.g0);
+}
+
+fn scalar_line_at_origin_sub(self_: Scalar, other: LineAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0) - other.g0, vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
 fn scalar_magnitude_sub(self_: Scalar, other: Magnitude) -> Magnitude {
     return Magnitude(vec2<f32>(self_.g0, 0.0) - other.g0);
+}
+
+fn scalar_motor_sub(self_: Scalar, other: Motor) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0, 0.0) - vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0) - other.g1, vec4<f32>(0.0));
 }
 
 fn scalar_multi_vector_sub(self_: Scalar, other: MultiVector) -> MultiVector {
@@ -2011,12 +3835,56 @@ fn scalar_multi_vector_at_infinity_sub(self_: Scalar, other: MultiVectorAtInfini
     return MultiVectorAtInfinity(vec2<f32>(self_.g0, 0.0) - other.g0, vec3<f32>(0.0) - other.g1, vec3<f32>(0.0) - other.g2);
 }
 
+fn scalar_multi_vector_at_origin_sub(self_: Scalar, other: MultiVectorAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0, 0.0) - vec2<f32>(0.0, other.g0.y), vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.x), vec3<f32>(0.0) - other.g1, vec3<f32>(0.0), vec4<f32>(0.0) - vec4<f32>(other.g2.x, other.g2.y, other.g2.z, 0.0));
+}
+
+fn scalar_origin_sub(self_: Scalar, other: Origin) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0, 0.0), vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn scalar_plane_sub(self_: Scalar, other: Plane) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0) - other.g0);
+}
+
+fn scalar_plane_at_origin_sub(self_: Scalar, other: PlaneAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
+}
+
+fn scalar_point_sub(self_: Scalar, other: Point) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0, 0.0), vec4<f32>(0.0) - other.g0, vec3<f32>(0.0), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
+fn scalar_point_at_infinity_sub(self_: Scalar, other: PointAtInfinity) -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(self_.g0, 0.0), vec3<f32>(0.0) - other.g0, vec3<f32>(0.0));
+}
+
+fn scalar_rotor_sub(self_: Scalar, other: Rotor) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0, 0.0) - vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec3<f32>(0.0), vec4<f32>(0.0));
+}
+
 fn scalar_scalar_sub(self_: Scalar, other: Scalar) -> Scalar {
     return Scalar(self_.g0 - other.g0);
 }
 
+fn scalar_translator_sub(self_: Scalar, other: Translator) -> MultiVector {
+    return MultiVector(vec2<f32>(self_.g0, 0.0) - vec2<f32>(0.0, other.g0.w), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(0.0) - vec3<f32>(other.g0.x, other.g0.y, other.g0.z), vec4<f32>(0.0));
+}
+
 fn translator_anti_scalar_sub(self_: Translator, other: AntiScalar) -> Translator {
     return Translator(self_.g0 - vec4<f32>(0.0, 0.0, 0.0, other.g0));
+}
+
+fn translator_flector_sub(self_: Translator, other: Flector) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0) - other.g0, vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0) - other.g1);
+}
+
+fn translator_flector_at_infinity_sub(self_: Translator, other: FlectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.w));
+}
+
+fn translator_horizon_sub(self_: Translator, other: Horizon) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0));
 }
 
 fn translator_line_sub(self_: Translator, other: Line) -> Motor {
@@ -2031,6 +3899,10 @@ fn translator_line_at_origin_sub(self_: Translator, other: LineAtOrigin) -> Moto
     return Motor(vec4<f32>(0.0, 0.0, 0.0, self_.g0.w) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z));
 }
 
+fn translator_magnitude_sub(self_: Translator, other: Magnitude) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w) - other.g0, vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0));
+}
+
 fn translator_motor_sub(self_: Translator, other: Motor) -> Motor {
     return Motor(vec4<f32>(0.0, 0.0, 0.0, self_.g0.w) - other.g0, vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) - other.g1);
 }
@@ -2039,8 +3911,40 @@ fn translator_multi_vector_sub(self_: Translator, other: MultiVector) -> MultiVe
     return MultiVector(vec2<f32>(0.0, self_.g0.w) - other.g0, vec4<f32>(0.0) - other.g1, vec3<f32>(0.0) - other.g2, vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) - other.g3, vec4<f32>(0.0) - other.g4);
 }
 
+fn translator_multi_vector_at_infinity_sub(self_: Translator, other: MultiVectorAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w) - vec2<f32>(other.g0.x, 0.0), vec4<f32>(0.0) - vec4<f32>(other.g1.x, other.g1.y, other.g1.z, 0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z) - other.g2, vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.y));
+}
+
+fn translator_multi_vector_at_origin_sub(self_: Translator, other: MultiVectorAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w) - vec2<f32>(0.0, other.g0.y), vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0.x), vec3<f32>(0.0) - other.g1, vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0) - vec4<f32>(other.g2.x, other.g2.y, other.g2.z, 0.0));
+}
+
+fn translator_origin_sub(self_: Translator, other: Origin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0) - vec4<f32>(0.0, 0.0, 0.0, other.g0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0));
+}
+
+fn translator_plane_sub(self_: Translator, other: Plane) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0) - other.g0);
+}
+
+fn translator_plane_at_origin_sub(self_: Translator, other: PlaneAtOrigin) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0));
+}
+
+fn translator_point_sub(self_: Translator, other: Point) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0) - other.g0, vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0));
+}
+
+fn translator_point_at_infinity_sub(self_: Translator, other: PointAtInfinity) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w), vec4<f32>(0.0) - vec4<f32>(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0));
+}
+
 fn translator_rotor_sub(self_: Translator, other: Rotor) -> Motor {
     return Motor(vec4<f32>(0.0, 0.0, 0.0, self_.g0.w) - other.g0, vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z));
+}
+
+fn translator_scalar_sub(self_: Translator, other: Scalar) -> MultiVector {
+    return MultiVector(vec2<f32>(0.0, self_.g0.w) - vec2<f32>(other.g0, 0.0), vec4<f32>(0.0), vec3<f32>(0.0), vec3<f32>(self_.g0.x, self_.g0.y, self_.g0.z), vec4<f32>(0.0));
 }
 
 fn translator_translator_sub(self_: Translator, other: Translator) -> Translator {

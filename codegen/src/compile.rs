@@ -414,93 +414,95 @@ pub fn element_wise<'a>(name: &'static str, parameter_a: &Parameter<'a>, paramet
     let result_signature = a_flat_basis.iter().chain(b_flat_basis.iter()).cloned().collect::<std::collections::HashSet<_>>();
     let mut result_signature = result_signature.into_iter().map(|element| element.index).collect::<Vec<_>>();
     result_signature.sort_unstable();
-    if let Some(result_class) = registry.get(&result_signature) {
-        let parameters = [(parameter_a, &a_flat_basis), (parameter_b, &b_flat_basis)];
-        let mut body = Vec::new();
-        for result_group in result_class.grouped_basis.iter() {
-            let size = result_group.len();
-            let mut expressions = parameters.iter().map(|(parameter, flat_basis)| {
-                let mut parameter_group_index = None;
-                let terms: Vec<_> = result_group
-                    .iter()
-                    .map(|result_element| {
-                        if let Some(index_in_flat_basis) = flat_basis.iter().position(|element| element.index == result_element.index) {
-                            let index_pair = parameter.multi_vector_class().index_in_group(index_in_flat_basis);
-                            parameter_group_index = Some(index_pair.0);
-                            let group_size = parameter.multi_vector_class().grouped_basis[index_pair.0].len();
-                            let negate = false;
-                            let gd = GatherData::Usual(UsualGatherData {
-                                negate,
-                                group: index_pair.0,
-                                element: index_pair.1,
-                                group_size,
-                            });
-                            (result_element.coefficient * flat_basis[index_in_flat_basis].coefficient, gd)
-                        } else {
-                            (0, GatherData::RawZero)
-                        }
-                    })
-                    .collect();
-                Expression {
-                    size,
-                    content: ExpressionContent::Multiply(
-                        Box::new(Expression {
-                            size,
-                            content: ExpressionContent::Gather(
-                                Box::new(Expression {
-                                    size: if let Some(index) = parameter_group_index {
-                                        parameter.multi_vector_class().grouped_basis[index].len()
-                                    } else {
-                                        size
-                                    },
-                                    content: ExpressionContent::Variable(parameter.name),
-                                    data_type_hint: None,
-                                }),
-                                terms.iter().map(|(_, index_pair)| index_pair).cloned().collect(),
-                            ),
-                            data_type_hint: None,
-                        }),
-                        Box::new(Expression {
-                            size,
-                            content: ExpressionContent::Constant(DataType::SimdVector(size), terms.iter().map(|(factor, _index_pair)| *factor).collect::<Vec<_>>()),
-                            data_type_hint: Some(DataType::SimdVector(size)),
-                        }),
-                    ),
-                    data_type_hint: Some(DataType::SimdVector(size)),
-                }
-            });
-            body.push((
-                DataType::SimdVector(size),
-                *simplify_and_legalize(Box::new(Expression {
-                    size,
-                    content: match name {
-                        "Add" => ExpressionContent::Add(Box::new(expressions.next().unwrap()), Box::new(expressions.next().unwrap())),
-                        "Sub" => ExpressionContent::Subtract(Box::new(expressions.next().unwrap()), Box::new(expressions.next().unwrap())),
-                        "Mul" => ExpressionContent::Multiply(Box::new(expressions.next().unwrap()), Box::new(expressions.next().unwrap())),
-                        "Div" => ExpressionContent::Divide(Box::new(expressions.next().unwrap()), Box::new(expressions.next().unwrap())),
-                        _ => unreachable!(),
-                    },
-                    data_type_hint: Some(DataType::SimdVector(size)),
-                })),
-            ));
-        }
-        AstNode::TraitImplementation {
-            result: Parameter {
-                name,
-                data_type: DataType::MultiVector(result_class),
-            },
-            class: parameter_a.multi_vector_class(),
-            parameters: vec![parameter_a.clone(), parameter_b.clone()],
-            body: vec![AstNode::ReturnStatement {
-                expression: Box::new(Expression {
-                    size: 1,
-                    content: ExpressionContent::InvokeClassMethod(result_class, "Constructor", body),
-                    data_type_hint: Some(DataType::MultiVector(result_class)),
-                }),
-            }],
-        }
-    } else {
-        AstNode::None
+
+    let result_class = match registry.get_at_least(&result_signature) {
+        None => return AstNode::None,
+        Some(rc) => rc
+    };
+
+    let parameters = [(parameter_a, &a_flat_basis), (parameter_b, &b_flat_basis)];
+    let mut body = Vec::new();
+    for result_group in result_class.grouped_basis.iter() {
+        let size = result_group.len();
+        let mut expressions = parameters.iter().map(|(parameter, flat_basis)| {
+            let mut parameter_group_index = None;
+            let terms: Vec<_> = result_group
+                .iter()
+                .map(|result_element| {
+                    if let Some(index_in_flat_basis) = flat_basis.iter().position(|element| element.index == result_element.index) {
+                        let index_pair = parameter.multi_vector_class().index_in_group(index_in_flat_basis);
+                        parameter_group_index = Some(index_pair.0);
+                        let group_size = parameter.multi_vector_class().grouped_basis[index_pair.0].len();
+                        let negate = false;
+                        let gd = GatherData::Usual(UsualGatherData {
+                            negate,
+                            group: index_pair.0,
+                            element: index_pair.1,
+                            group_size,
+                        });
+                        (result_element.coefficient * flat_basis[index_in_flat_basis].coefficient, gd)
+                    } else {
+                        (0, GatherData::RawZero)
+                    }
+                })
+                .collect();
+            Expression {
+                size,
+                content: ExpressionContent::Multiply(
+                    Box::new(Expression {
+                        size,
+                        content: ExpressionContent::Gather(
+                            Box::new(Expression {
+                                size: if let Some(index) = parameter_group_index {
+                                    parameter.multi_vector_class().grouped_basis[index].len()
+                                } else {
+                                    size
+                                },
+                                content: ExpressionContent::Variable(parameter.name),
+                                data_type_hint: None,
+                            }),
+                            terms.iter().map(|(_, index_pair)| index_pair).cloned().collect(),
+                        ),
+                        data_type_hint: None,
+                    }),
+                    Box::new(Expression {
+                        size,
+                        content: ExpressionContent::Constant(DataType::SimdVector(size), terms.iter().map(|(factor, _index_pair)| *factor).collect::<Vec<_>>()),
+                        data_type_hint: Some(DataType::SimdVector(size)),
+                    }),
+                ),
+                data_type_hint: Some(DataType::SimdVector(size)),
+            }
+        });
+        body.push((
+            DataType::SimdVector(size),
+            *simplify_and_legalize(Box::new(Expression {
+                size,
+                content: match name {
+                    "Add" => ExpressionContent::Add(Box::new(expressions.next().unwrap()), Box::new(expressions.next().unwrap())),
+                    "Sub" => ExpressionContent::Subtract(Box::new(expressions.next().unwrap()), Box::new(expressions.next().unwrap())),
+                    "Mul" => ExpressionContent::Multiply(Box::new(expressions.next().unwrap()), Box::new(expressions.next().unwrap())),
+                    "Div" => ExpressionContent::Divide(Box::new(expressions.next().unwrap()), Box::new(expressions.next().unwrap())),
+                    _ => unreachable!(),
+                },
+                data_type_hint: Some(DataType::SimdVector(size)),
+            })),
+        ));
+    }
+    AstNode::TraitImplementation {
+        result: Parameter {
+            name,
+            data_type: DataType::MultiVector(result_class),
+        },
+        class: parameter_a.multi_vector_class(),
+        parameters: vec![parameter_a.clone(), parameter_b.clone()],
+        body: vec![AstNode::ReturnStatement {
+            expression: Box::new(Expression {
+                size: 1,
+                content: ExpressionContent::InvokeClassMethod(result_class, "Constructor", body),
+                data_type_hint: Some(DataType::MultiVector(result_class)),
+            }),
+        }],
     }
 }
 
@@ -525,20 +527,7 @@ pub fn derive_product<'a>(name: &'static str, product: &Product, parameter_a: &P
     // Needed (for example) in order to get geometric product on Motor x Line
     // without having to predefine every intermediate type of product
 
-    let mut result_class = registry.get(&result_signature);
-
-    if result_class.is_none() && !result_signature.is_empty() {
-        let mut viable_classes: Vec<_> = registry
-            .classes
-            .iter()
-            .filter(|it| {
-                let sig = it.0.signature();
-                result_signature.iter().all(|it| sig.contains(it))
-            })
-            .collect();
-        viable_classes.sort_by_key(|it| it.0.signature().len());
-        result_class = viable_classes.first().map(|it| &it.0);
-    }
+    let mut result_class = registry.get_at_least(&result_signature);
 
     let result_class = match result_class {
         Some(rc) => rc,
@@ -1058,21 +1047,7 @@ pub fn derive_bulk_or_weight<'a>(
     // If there is no exact match, we'll try to find the closest match.
     // If nothing else, the starting class should always suffice.
 
-    let mut result_class = registry.get(&result_signature);
-    if result_class.is_none() && !result_signature.is_empty() {
-        let mut viable_classes: Vec<_> = registry
-            .classes
-            .iter()
-            .filter(|it| {
-                let sig = it.0.signature();
-                result_signature.iter().all(|it| sig.contains(it)) &&
-                // Bulk of Line could be represented as Translator with zero anti-scalar, but that is weird
-                sig.iter().all(|it| param_a_signature.contains(it))
-            })
-            .collect();
-        viable_classes.sort_by_key(|it| it.0.signature().len());
-        result_class = viable_classes.first().map(|it| &it.0);
-    }
+    let mut result_class = registry.get_at_least(&result_signature);
     let result_class = result_class.unwrap_or_else(|| parameter_a.multi_vector_class());
 
     let result_flat_basis = result_class.flat_basis();
@@ -1315,6 +1290,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         }
 
         // Add, Subtract
+        // TODO missing FlectorAtInfinity + Plane = Flector
         for (param_a, param_b) in registry.pair_parameters() {
             for name in &["Add", "Sub"] {
                 let ast_node = element_wise(*name, &param_a, &param_b, registry);
