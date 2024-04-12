@@ -100,6 +100,18 @@ impl Unitize for MultiVector {
     }
 }
 
+impl Unitize for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn unitize(self) -> MultiVectorAtOrigin {
+        self.geometric_product(Scalar {
+            groups: ScalarGroups {
+                g0: 1.0 / self.weight_norm().group0(),
+            },
+        })
+    }
+}
+
 impl Unitize for Origin {
     type Output = Origin;
 

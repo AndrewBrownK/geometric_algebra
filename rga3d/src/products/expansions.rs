@@ -72,9 +72,17 @@ impl BulkExpansion<Motor> for Flector {
 }
 
 impl BulkExpansion<MultiVector> for Flector {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
+    fn bulk_expansion(self, other: MultiVector) -> MultiVectorAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<MultiVectorAtInfinity> for Flector {
+    type Output = MultiVectorAtOrigin;
+
+    fn bulk_expansion(self, other: MultiVectorAtInfinity) -> MultiVectorAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -160,9 +168,17 @@ impl BulkExpansion<Motor> for FlectorAtInfinity {
 }
 
 impl BulkExpansion<MultiVector> for FlectorAtInfinity {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
+    fn bulk_expansion(self, other: MultiVector) -> MultiVectorAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<MultiVectorAtInfinity> for FlectorAtInfinity {
+    type Output = MultiVectorAtOrigin;
+
+    fn bulk_expansion(self, other: MultiVectorAtInfinity) -> MultiVectorAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -224,9 +240,17 @@ impl BulkExpansion<Horizon> for Horizon {
 }
 
 impl BulkExpansion<MultiVector> for Horizon {
-    type Output = MultiVector;
+    type Output = AntiScalar;
 
-    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
+    fn bulk_expansion(self, other: MultiVector) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<MultiVectorAtInfinity> for Horizon {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: MultiVectorAtInfinity) -> AntiScalar {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -288,9 +312,17 @@ impl BulkExpansion<Motor> for Line {
 }
 
 impl BulkExpansion<MultiVector> for Line {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
+    fn bulk_expansion(self, other: MultiVector) -> MultiVectorAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<MultiVectorAtInfinity> for Line {
+    type Output = MultiVectorAtOrigin;
+
+    fn bulk_expansion(self, other: MultiVectorAtInfinity) -> MultiVectorAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -360,9 +392,17 @@ impl BulkExpansion<Motor> for LineAtInfinity {
 }
 
 impl BulkExpansion<MultiVector> for LineAtInfinity {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
+    fn bulk_expansion(self, other: MultiVector) -> MultiVectorAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<MultiVectorAtInfinity> for LineAtInfinity {
+    type Output = MultiVectorAtOrigin;
+
+    fn bulk_expansion(self, other: MultiVectorAtInfinity) -> MultiVectorAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -395,14 +435,6 @@ impl BulkExpansion<FlectorAtInfinity> for LineAtOrigin {
     type Output = PlaneAtOrigin;
 
     fn bulk_expansion(self, other: FlectorAtInfinity) -> PlaneAtOrigin {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<MultiVector> for LineAtOrigin {
-    type Output = MultiVector;
-
-    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -456,9 +488,17 @@ impl BulkExpansion<Motor> for Motor {
 }
 
 impl BulkExpansion<MultiVector> for Motor {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
+    fn bulk_expansion(self, other: MultiVector) -> MultiVectorAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<MultiVectorAtInfinity> for Motor {
+    type Output = MultiVectorAtOrigin;
+
+    fn bulk_expansion(self, other: MultiVectorAtInfinity) -> MultiVectorAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -496,73 +536,193 @@ impl BulkExpansion<FlectorAtInfinity> for MultiVector {
 }
 
 impl BulkExpansion<Horizon> for MultiVector {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn bulk_expansion(self, other: Horizon) -> MultiVector {
+    fn bulk_expansion(self, other: Horizon) -> MultiVectorAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
 
 impl BulkExpansion<Line> for MultiVector {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn bulk_expansion(self, other: Line) -> MultiVector {
+    fn bulk_expansion(self, other: Line) -> MultiVectorAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
 
 impl BulkExpansion<LineAtInfinity> for MultiVector {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn bulk_expansion(self, other: LineAtInfinity) -> MultiVector {
+    fn bulk_expansion(self, other: LineAtInfinity) -> MultiVectorAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
 
 impl BulkExpansion<Motor> for MultiVector {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn bulk_expansion(self, other: Motor) -> MultiVector {
+    fn bulk_expansion(self, other: Motor) -> MultiVectorAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
 
 impl BulkExpansion<MultiVector> for MultiVector {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
+    fn bulk_expansion(self, other: MultiVector) -> MultiVectorAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<MultiVectorAtInfinity> for MultiVector {
+    type Output = MultiVectorAtOrigin;
+
+    fn bulk_expansion(self, other: MultiVectorAtInfinity) -> MultiVectorAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
 
 impl BulkExpansion<Plane> for MultiVector {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn bulk_expansion(self, other: Plane) -> MultiVector {
+    fn bulk_expansion(self, other: Plane) -> MultiVectorAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
 
 impl BulkExpansion<Point> for MultiVector {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn bulk_expansion(self, other: Point) -> MultiVector {
+    fn bulk_expansion(self, other: Point) -> MultiVectorAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
 
 impl BulkExpansion<PointAtInfinity> for MultiVector {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn bulk_expansion(self, other: PointAtInfinity) -> MultiVector {
+    fn bulk_expansion(self, other: PointAtInfinity) -> MultiVectorAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
 
 impl BulkExpansion<Translator> for MultiVector {
+    type Output = MultiVectorAtOrigin;
+
+    fn bulk_expansion(self, other: Translator) -> MultiVectorAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Flector> for MultiVectorAtInfinity {
     type Output = MultiVector;
 
-    fn bulk_expansion(self, other: Translator) -> MultiVector {
+    fn bulk_expansion(self, other: Flector) -> MultiVector {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<FlectorAtInfinity> for MultiVectorAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: FlectorAtInfinity) -> MultiVector {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Horizon> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtOrigin;
+
+    fn bulk_expansion(self, other: Horizon) -> MultiVectorAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Line> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtOrigin;
+
+    fn bulk_expansion(self, other: Line) -> MultiVectorAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<LineAtInfinity> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtOrigin;
+
+    fn bulk_expansion(self, other: LineAtInfinity) -> MultiVectorAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Motor> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtOrigin;
+
+    fn bulk_expansion(self, other: Motor) -> MultiVectorAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<MultiVector> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtOrigin;
+
+    fn bulk_expansion(self, other: MultiVector) -> MultiVectorAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<MultiVectorAtInfinity> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtOrigin;
+
+    fn bulk_expansion(self, other: MultiVectorAtInfinity) -> MultiVectorAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Plane> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtOrigin;
+
+    fn bulk_expansion(self, other: Plane) -> MultiVectorAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Point> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtOrigin;
+
+    fn bulk_expansion(self, other: Point) -> MultiVectorAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<PointAtInfinity> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtOrigin;
+
+    fn bulk_expansion(self, other: PointAtInfinity) -> MultiVectorAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Translator> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtOrigin;
+
+    fn bulk_expansion(self, other: Translator) -> MultiVectorAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Flector> for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn bulk_expansion(self, other: Flector) -> MultiVectorAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<FlectorAtInfinity> for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn bulk_expansion(self, other: FlectorAtInfinity) -> MultiVectorAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -579,14 +739,6 @@ impl BulkExpansion<FlectorAtInfinity> for Origin {
     type Output = Rotor;
 
     fn bulk_expansion(self, other: FlectorAtInfinity) -> Rotor {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<MultiVector> for Origin {
-    type Output = MultiVector;
-
-    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -616,9 +768,17 @@ impl BulkExpansion<Horizon> for Plane {
 }
 
 impl BulkExpansion<MultiVector> for Plane {
-    type Output = MultiVector;
+    type Output = AntiScalar;
 
-    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
+    fn bulk_expansion(self, other: MultiVector) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<MultiVectorAtInfinity> for Plane {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: MultiVectorAtInfinity) -> AntiScalar {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -643,14 +803,6 @@ impl BulkExpansion<FlectorAtInfinity> for PlaneAtOrigin {
     type Output = AntiScalar;
 
     fn bulk_expansion(self, other: FlectorAtInfinity) -> AntiScalar {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<MultiVector> for PlaneAtOrigin {
-    type Output = MultiVector;
-
-    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -704,9 +856,17 @@ impl BulkExpansion<Motor> for Point {
 }
 
 impl BulkExpansion<MultiVector> for Point {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
+    fn bulk_expansion(self, other: MultiVector) -> MultiVectorAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<MultiVectorAtInfinity> for Point {
+    type Output = MultiVectorAtOrigin;
+
+    fn bulk_expansion(self, other: MultiVectorAtInfinity) -> MultiVectorAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -792,9 +952,17 @@ impl BulkExpansion<Motor> for PointAtInfinity {
 }
 
 impl BulkExpansion<MultiVector> for PointAtInfinity {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
+    fn bulk_expansion(self, other: MultiVector) -> MultiVectorAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<MultiVectorAtInfinity> for PointAtInfinity {
+    type Output = MultiVectorAtOrigin;
+
+    fn bulk_expansion(self, other: MultiVectorAtInfinity) -> MultiVectorAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -843,14 +1011,6 @@ impl BulkExpansion<FlectorAtInfinity> for Rotor {
     type Output = PlaneAtOrigin;
 
     fn bulk_expansion(self, other: FlectorAtInfinity) -> PlaneAtOrigin {
-        self.wedge(other.right_bulk_dual())
-    }
-}
-
-impl BulkExpansion<MultiVector> for Rotor {
-    type Output = MultiVector;
-
-    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -904,9 +1064,17 @@ impl BulkExpansion<Motor> for Translator {
 }
 
 impl BulkExpansion<MultiVector> for Translator {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
+    fn bulk_expansion(self, other: MultiVector) -> MultiVectorAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<MultiVectorAtInfinity> for Translator {
+    type Output = MultiVectorAtOrigin;
+
+    fn bulk_expansion(self, other: MultiVectorAtInfinity) -> MultiVectorAtOrigin {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -963,6 +1131,14 @@ impl WeightExpansion<MultiVector> for Flector {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVectorAtOrigin> for Flector {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: MultiVectorAtOrigin) -> MultiVector {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -1040,17 +1216,25 @@ impl WeightExpansion<LineAtOrigin> for FlectorAtInfinity {
 }
 
 impl WeightExpansion<Motor> for FlectorAtInfinity {
-    type Output = MultiVector;
+    type Output = MultiVectorAtInfinity;
 
-    fn weight_expansion(self, other: Motor) -> MultiVector {
+    fn weight_expansion(self, other: Motor) -> MultiVectorAtInfinity {
         self.wedge(other.right_weight_dual())
     }
 }
 
 impl WeightExpansion<MultiVector> for FlectorAtInfinity {
-    type Output = MultiVector;
+    type Output = MultiVectorAtInfinity;
 
-    fn weight_expansion(self, other: MultiVector) -> MultiVector {
+    fn weight_expansion(self, other: MultiVector) -> MultiVectorAtInfinity {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVectorAtOrigin> for FlectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn weight_expansion(self, other: MultiVectorAtOrigin) -> MultiVectorAtInfinity {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -1072,9 +1256,9 @@ impl WeightExpansion<PlaneAtOrigin> for FlectorAtInfinity {
 }
 
 impl WeightExpansion<Rotor> for FlectorAtInfinity {
-    type Output = MultiVector;
+    type Output = MultiVectorAtInfinity;
 
-    fn weight_expansion(self, other: Rotor) -> MultiVector {
+    fn weight_expansion(self, other: Rotor) -> MultiVectorAtInfinity {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -1096,25 +1280,33 @@ impl WeightExpansion<Flector> for Horizon {
 }
 
 impl WeightExpansion<Motor> for Horizon {
-    type Output = MultiVector;
+    type Output = Horizon;
 
-    fn weight_expansion(self, other: Motor) -> MultiVector {
+    fn weight_expansion(self, other: Motor) -> Horizon {
         self.wedge(other.right_weight_dual())
     }
 }
 
 impl WeightExpansion<MultiVector> for Horizon {
-    type Output = MultiVector;
+    type Output = Horizon;
 
-    fn weight_expansion(self, other: MultiVector) -> MultiVector {
+    fn weight_expansion(self, other: MultiVector) -> Horizon {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVectorAtOrigin> for Horizon {
+    type Output = Horizon;
+
+    fn weight_expansion(self, other: MultiVectorAtOrigin) -> Horizon {
         self.wedge(other.right_weight_dual())
     }
 }
 
 impl WeightExpansion<Rotor> for Horizon {
-    type Output = MultiVector;
+    type Output = Horizon;
 
-    fn weight_expansion(self, other: Rotor) -> MultiVector {
+    fn weight_expansion(self, other: Rotor) -> Horizon {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -1167,6 +1359,14 @@ impl WeightExpansion<MultiVector> for Line {
     }
 }
 
+impl WeightExpansion<MultiVectorAtOrigin> for Line {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: MultiVectorAtOrigin) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
 impl WeightExpansion<Plane> for Line {
     type Output = Plane;
 
@@ -1208,17 +1408,25 @@ impl WeightExpansion<Flector> for LineAtInfinity {
 }
 
 impl WeightExpansion<Motor> for LineAtInfinity {
-    type Output = MultiVector;
+    type Output = MultiVectorAtInfinity;
 
-    fn weight_expansion(self, other: Motor) -> MultiVector {
+    fn weight_expansion(self, other: Motor) -> MultiVectorAtInfinity {
         self.wedge(other.right_weight_dual())
     }
 }
 
 impl WeightExpansion<MultiVector> for LineAtInfinity {
-    type Output = MultiVector;
+    type Output = MultiVectorAtInfinity;
 
-    fn weight_expansion(self, other: MultiVector) -> MultiVector {
+    fn weight_expansion(self, other: MultiVector) -> MultiVectorAtInfinity {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVectorAtOrigin> for LineAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn weight_expansion(self, other: MultiVectorAtOrigin) -> MultiVectorAtInfinity {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -1240,9 +1448,9 @@ impl WeightExpansion<PlaneAtOrigin> for LineAtInfinity {
 }
 
 impl WeightExpansion<Rotor> for LineAtInfinity {
-    type Output = MultiVector;
+    type Output = MultiVectorAtInfinity;
 
-    fn weight_expansion(self, other: Rotor) -> MultiVector {
+    fn weight_expansion(self, other: Rotor) -> MultiVectorAtInfinity {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -1280,17 +1488,25 @@ impl WeightExpansion<LineAtOrigin> for LineAtOrigin {
 }
 
 impl WeightExpansion<Motor> for LineAtOrigin {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn weight_expansion(self, other: Motor) -> MultiVector {
+    fn weight_expansion(self, other: Motor) -> MultiVectorAtOrigin {
         self.wedge(other.right_weight_dual())
     }
 }
 
 impl WeightExpansion<MultiVector> for LineAtOrigin {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn weight_expansion(self, other: MultiVector) -> MultiVector {
+    fn weight_expansion(self, other: MultiVector) -> MultiVectorAtOrigin {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVectorAtOrigin> for LineAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn weight_expansion(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -1312,9 +1528,9 @@ impl WeightExpansion<PlaneAtOrigin> for LineAtOrigin {
 }
 
 impl WeightExpansion<Rotor> for LineAtOrigin {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn weight_expansion(self, other: Rotor) -> MultiVector {
+    fn weight_expansion(self, other: Rotor) -> MultiVectorAtOrigin {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -1363,6 +1579,14 @@ impl WeightExpansion<MultiVector> for Motor {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVectorAtOrigin> for Motor {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: MultiVectorAtOrigin) -> MultiVector {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -1439,6 +1663,14 @@ impl WeightExpansion<MultiVector> for MultiVector {
     }
 }
 
+impl WeightExpansion<MultiVectorAtOrigin> for MultiVector {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: MultiVectorAtOrigin) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
 impl WeightExpansion<Origin> for MultiVector {
     type Output = MultiVector;
 
@@ -1487,6 +1719,198 @@ impl WeightExpansion<Translator> for MultiVector {
     }
 }
 
+impl WeightExpansion<Flector> for MultiVectorAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: Flector) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Line> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn weight_expansion(self, other: Line) -> MultiVectorAtInfinity {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<LineAtOrigin> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn weight_expansion(self, other: LineAtOrigin) -> MultiVectorAtInfinity {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Motor> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn weight_expansion(self, other: Motor) -> MultiVectorAtInfinity {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVector> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn weight_expansion(self, other: MultiVector) -> MultiVectorAtInfinity {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVectorAtOrigin> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn weight_expansion(self, other: MultiVectorAtOrigin) -> MultiVectorAtInfinity {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Origin> for MultiVectorAtInfinity {
+    type Output = Horizon;
+
+    fn weight_expansion(self, other: Origin) -> Horizon {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Plane> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn weight_expansion(self, other: Plane) -> MultiVectorAtInfinity {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<PlaneAtOrigin> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn weight_expansion(self, other: PlaneAtOrigin) -> MultiVectorAtInfinity {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Point> for MultiVectorAtInfinity {
+    type Output = Horizon;
+
+    fn weight_expansion(self, other: Point) -> Horizon {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Rotor> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn weight_expansion(self, other: Rotor) -> MultiVectorAtInfinity {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Translator> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn weight_expansion(self, other: Translator) -> MultiVectorAtInfinity {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Flector> for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn weight_expansion(self, other: Flector) -> MultiVectorAtOrigin {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Line> for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn weight_expansion(self, other: Line) -> MultiVectorAtOrigin {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<LineAtOrigin> for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn weight_expansion(self, other: LineAtOrigin) -> MultiVectorAtOrigin {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Motor> for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn weight_expansion(self, other: Motor) -> MultiVectorAtOrigin {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVector> for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn weight_expansion(self, other: MultiVector) -> MultiVectorAtOrigin {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVectorAtOrigin> for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn weight_expansion(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Origin> for MultiVectorAtOrigin {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: Origin) -> AntiScalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Plane> for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn weight_expansion(self, other: Plane) -> MultiVectorAtOrigin {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<PlaneAtOrigin> for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn weight_expansion(self, other: PlaneAtOrigin) -> MultiVectorAtOrigin {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Point> for MultiVectorAtOrigin {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: Point) -> AntiScalar {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Rotor> for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn weight_expansion(self, other: Rotor) -> MultiVectorAtOrigin {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Translator> for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn weight_expansion(self, other: Translator) -> MultiVectorAtOrigin {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
 impl WeightExpansion<Flector> for Origin {
     type Output = Rotor;
 
@@ -1512,17 +1936,25 @@ impl WeightExpansion<LineAtOrigin> for Origin {
 }
 
 impl WeightExpansion<Motor> for Origin {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn weight_expansion(self, other: Motor) -> MultiVector {
+    fn weight_expansion(self, other: Motor) -> MultiVectorAtOrigin {
         self.wedge(other.right_weight_dual())
     }
 }
 
 impl WeightExpansion<MultiVector> for Origin {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn weight_expansion(self, other: MultiVector) -> MultiVector {
+    fn weight_expansion(self, other: MultiVector) -> MultiVectorAtOrigin {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVectorAtOrigin> for Origin {
+    type Output = MultiVectorAtOrigin;
+
+    fn weight_expansion(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -1560,9 +1992,9 @@ impl WeightExpansion<Point> for Origin {
 }
 
 impl WeightExpansion<Rotor> for Origin {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn weight_expansion(self, other: Rotor) -> MultiVector {
+    fn weight_expansion(self, other: Rotor) -> MultiVectorAtOrigin {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -1595,6 +2027,14 @@ impl WeightExpansion<MultiVector> for Plane {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVectorAtOrigin> for Plane {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: MultiVectorAtOrigin) -> MultiVector {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -1640,17 +2080,25 @@ impl WeightExpansion<Flector> for PlaneAtOrigin {
 }
 
 impl WeightExpansion<Motor> for PlaneAtOrigin {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn weight_expansion(self, other: Motor) -> MultiVector {
+    fn weight_expansion(self, other: Motor) -> MultiVectorAtOrigin {
         self.wedge(other.right_weight_dual())
     }
 }
 
 impl WeightExpansion<MultiVector> for PlaneAtOrigin {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn weight_expansion(self, other: MultiVector) -> MultiVector {
+    fn weight_expansion(self, other: MultiVector) -> MultiVectorAtOrigin {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVectorAtOrigin> for PlaneAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn weight_expansion(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -1672,9 +2120,9 @@ impl WeightExpansion<PlaneAtOrigin> for PlaneAtOrigin {
 }
 
 impl WeightExpansion<Rotor> for PlaneAtOrigin {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn weight_expansion(self, other: Rotor) -> MultiVector {
+    fn weight_expansion(self, other: Rotor) -> MultiVectorAtOrigin {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -1723,6 +2171,14 @@ impl WeightExpansion<MultiVector> for Point {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVectorAtOrigin> for Point {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: MultiVectorAtOrigin) -> MultiVector {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -1800,17 +2256,25 @@ impl WeightExpansion<LineAtOrigin> for PointAtInfinity {
 }
 
 impl WeightExpansion<Motor> for PointAtInfinity {
-    type Output = MultiVector;
+    type Output = MultiVectorAtInfinity;
 
-    fn weight_expansion(self, other: Motor) -> MultiVector {
+    fn weight_expansion(self, other: Motor) -> MultiVectorAtInfinity {
         self.wedge(other.right_weight_dual())
     }
 }
 
 impl WeightExpansion<MultiVector> for PointAtInfinity {
-    type Output = MultiVector;
+    type Output = MultiVectorAtInfinity;
 
-    fn weight_expansion(self, other: MultiVector) -> MultiVector {
+    fn weight_expansion(self, other: MultiVector) -> MultiVectorAtInfinity {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVectorAtOrigin> for PointAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn weight_expansion(self, other: MultiVectorAtOrigin) -> MultiVectorAtInfinity {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -1832,9 +2296,9 @@ impl WeightExpansion<PlaneAtOrigin> for PointAtInfinity {
 }
 
 impl WeightExpansion<Rotor> for PointAtInfinity {
-    type Output = MultiVector;
+    type Output = MultiVectorAtInfinity;
 
-    fn weight_expansion(self, other: Rotor) -> MultiVector {
+    fn weight_expansion(self, other: Rotor) -> MultiVectorAtInfinity {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -1872,17 +2336,25 @@ impl WeightExpansion<LineAtOrigin> for Rotor {
 }
 
 impl WeightExpansion<Motor> for Rotor {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn weight_expansion(self, other: Motor) -> MultiVector {
+    fn weight_expansion(self, other: Motor) -> MultiVectorAtOrigin {
         self.wedge(other.right_weight_dual())
     }
 }
 
 impl WeightExpansion<MultiVector> for Rotor {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn weight_expansion(self, other: MultiVector) -> MultiVector {
+    fn weight_expansion(self, other: MultiVector) -> MultiVectorAtOrigin {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVectorAtOrigin> for Rotor {
+    type Output = MultiVectorAtOrigin;
+
+    fn weight_expansion(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -1904,9 +2376,9 @@ impl WeightExpansion<PlaneAtOrigin> for Rotor {
 }
 
 impl WeightExpansion<Rotor> for Rotor {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn weight_expansion(self, other: Rotor) -> MultiVector {
+    fn weight_expansion(self, other: Rotor) -> MultiVectorAtOrigin {
         self.wedge(other.right_weight_dual())
     }
 }
@@ -1939,6 +2411,14 @@ impl WeightExpansion<MultiVector> for Translator {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVectorAtOrigin> for Translator {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: MultiVectorAtOrigin) -> MultiVector {
         self.wedge(other.right_weight_dual())
     }
 }

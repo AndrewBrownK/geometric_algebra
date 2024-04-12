@@ -96,9 +96,17 @@ impl LeftBulkDual for Motor {
 }
 
 impl LeftBulkDual for MultiVector {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn left_bulk_dual(self) -> MultiVector {
+    fn left_bulk_dual(self) -> MultiVectorAtOrigin {
+        self.bulk().left_complement()
+    }
+}
+
+impl LeftBulkDual for MultiVectorAtInfinity {
+    type Output = MultiVectorAtOrigin;
+
+    fn left_bulk_dual(self) -> MultiVectorAtOrigin {
         self.bulk().left_complement()
     }
 }
@@ -184,17 +192,25 @@ impl LeftWeightDual for Magnitude {
 }
 
 impl LeftWeightDual for Motor {
-    type Output = MultiVector;
+    type Output = MultiVectorAtInfinity;
 
-    fn left_weight_dual(self) -> MultiVector {
+    fn left_weight_dual(self) -> MultiVectorAtInfinity {
         self.weight().left_complement()
     }
 }
 
 impl LeftWeightDual for MultiVector {
-    type Output = MultiVector;
+    type Output = MultiVectorAtInfinity;
 
-    fn left_weight_dual(self) -> MultiVector {
+    fn left_weight_dual(self) -> MultiVectorAtInfinity {
+        self.weight().left_complement()
+    }
+}
+
+impl LeftWeightDual for MultiVectorAtOrigin {
+    type Output = MultiVectorAtInfinity;
+
+    fn left_weight_dual(self) -> MultiVectorAtInfinity {
         self.weight().left_complement()
     }
 }
@@ -232,9 +248,9 @@ impl LeftWeightDual for Point {
 }
 
 impl LeftWeightDual for Rotor {
-    type Output = MultiVector;
+    type Output = MultiVectorAtInfinity;
 
-    fn left_weight_dual(self) -> MultiVector {
+    fn left_weight_dual(self) -> MultiVectorAtInfinity {
         self.weight().left_complement()
     }
 }
@@ -304,9 +320,17 @@ impl RightBulkDual for Motor {
 }
 
 impl RightBulkDual for MultiVector {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn right_bulk_dual(self) -> MultiVector {
+    fn right_bulk_dual(self) -> MultiVectorAtOrigin {
+        self.bulk().right_complement()
+    }
+}
+
+impl RightBulkDual for MultiVectorAtInfinity {
+    type Output = MultiVectorAtOrigin;
+
+    fn right_bulk_dual(self) -> MultiVectorAtOrigin {
         self.bulk().right_complement()
     }
 }
@@ -392,17 +416,25 @@ impl RightWeightDual for Magnitude {
 }
 
 impl RightWeightDual for Motor {
-    type Output = MultiVector;
+    type Output = MultiVectorAtInfinity;
 
-    fn right_weight_dual(self) -> MultiVector {
+    fn right_weight_dual(self) -> MultiVectorAtInfinity {
         self.weight().right_complement()
     }
 }
 
 impl RightWeightDual for MultiVector {
-    type Output = MultiVector;
+    type Output = MultiVectorAtInfinity;
 
-    fn right_weight_dual(self) -> MultiVector {
+    fn right_weight_dual(self) -> MultiVectorAtInfinity {
+        self.weight().right_complement()
+    }
+}
+
+impl RightWeightDual for MultiVectorAtOrigin {
+    type Output = MultiVectorAtInfinity;
+
+    fn right_weight_dual(self) -> MultiVectorAtInfinity {
         self.weight().right_complement()
     }
 }
@@ -440,9 +472,9 @@ impl RightWeightDual for Point {
 }
 
 impl RightWeightDual for Rotor {
-    type Output = MultiVector;
+    type Output = MultiVectorAtInfinity;
 
-    fn right_weight_dual(self) -> MultiVector {
+    fn right_weight_dual(self) -> MultiVectorAtInfinity {
         self.weight().right_complement()
     }
 }

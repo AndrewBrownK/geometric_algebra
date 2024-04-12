@@ -201,6 +201,34 @@ impl AntiDual for MultiVector {
     }
 }
 
+impl AntiDual for MultiVectorAtInfinity {
+    type Output = MultiVectorAtOrigin;
+
+    fn anti_dual(self) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: swizzle!(self.group0(), 1, 0),
+                g1: self.group2() * Simd32x3::from(-1.0),
+                g2: self.group1() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl AntiDual for MultiVectorAtOrigin {
+    type Output = MultiVectorAtInfinity;
+
+    fn anti_dual(self) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: swizzle!(self.group0(), 1, 0) * Simd32x2::from([1.0, -1.0]),
+                g1: self.group2(),
+                g2: self.group1() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
 impl AntiDual for Origin {
     type Output = Horizon;
 
@@ -256,16 +284,14 @@ impl AntiDual for PointAtInfinity {
 }
 
 impl AntiDual for Rotor {
-    type Output = MultiVector;
+    type Output = MultiVectorAtInfinity;
 
-    fn anti_dual(self) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
+    fn anti_dual(self) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
                 g0: Simd32x2::from([self.group0()[3], 0.0]),
-                g1: Simd32x4::from(0.0),
-                g2: Simd32x3::from(0.0),
-                g3: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g4: Simd32x4::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
             },
         }
     }
@@ -413,6 +439,34 @@ impl AntiReversal for MultiVector {
                 g2: self.group2() * Simd32x3::from([-1.0, 1.0, -1.0]),
                 g3: self.group3() * Simd32x3::from(-1.0),
                 g4: self.group4() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl AntiReversal for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn anti_reversal(self) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: self.group0(),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: self.group2() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl AntiReversal for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn anti_reversal(self) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: self.group0() * Simd32x2::from([-1.0, 1.0]),
+                g1: self.group1() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g2: self.group2() * Simd32x3::from([-1.0, 1.0, -1.0]),
             },
         }
     }
@@ -629,6 +683,34 @@ impl Automorphism for MultiVector {
     }
 }
 
+impl Automorphism for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn automorphism(self) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: self.group0() * Simd32x2::from([1.0, -1.0]),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl Automorphism for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn automorphism(self) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: self.group0() * Simd32x2::from([-1.0, 1.0]),
+                g1: self.group1() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g2: self.group2() * Simd32x3::from([1.0, -1.0, 1.0]),
+            },
+        }
+    }
+}
+
 impl Automorphism for Origin {
     type Output = Origin;
 
@@ -840,6 +922,34 @@ impl Conjugation for MultiVector {
     }
 }
 
+impl Conjugation for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn conjugation(self) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: self.group0(),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: self.group2() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Conjugation for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn conjugation(self) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: self.group0() * Simd32x2::from([-1.0, 1.0]),
+                g1: self.group1() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g2: self.group2() * Simd32x3::from([-1.0, 1.0, -1.0]),
+            },
+        }
+    }
+}
+
 impl Conjugation for Origin {
     type Output = Origin;
 
@@ -1044,6 +1154,34 @@ impl DoubleComplement for MultiVector {
                 g2: self.group2(),
                 g3: self.group3(),
                 g4: self.group4() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl DoubleComplement for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn double_complement(self) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: self.group0() * Simd32x2::from([1.0, -1.0]),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl DoubleComplement for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn double_complement(self) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: self.group0() * Simd32x2::from([-1.0, 1.0]),
+                g1: self.group1(),
+                g2: self.group2() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -1264,6 +1402,34 @@ impl Dual for MultiVector {
     }
 }
 
+impl Dual for MultiVectorAtInfinity {
+    type Output = MultiVectorAtOrigin;
+
+    fn dual(self) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: swizzle!(self.group0(), 1, 0) * Simd32x2::from([-1.0, 1.0]),
+                g1: self.group2() * Simd32x3::from(-1.0),
+                g2: self.group1(),
+            },
+        }
+    }
+}
+
+impl Dual for MultiVectorAtOrigin {
+    type Output = MultiVectorAtInfinity;
+
+    fn dual(self) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: swizzle!(self.group0(), 1, 0),
+                g1: self.group2() * Simd32x3::from(-1.0),
+                g2: self.group1() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
 impl Dual for Origin {
     type Output = Horizon;
 
@@ -1319,16 +1485,14 @@ impl Dual for PointAtInfinity {
 }
 
 impl Dual for Rotor {
-    type Output = MultiVector;
+    type Output = MultiVectorAtInfinity;
 
-    fn dual(self) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
+    fn dual(self) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
                 g0: Simd32x2::from([self.group0()[3], 0.0]),
-                g1: Simd32x4::from(0.0),
-                g2: Simd32x3::from(0.0),
-                g3: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g4: Simd32x4::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
             },
         }
     }
@@ -1487,6 +1651,34 @@ impl LeftComplement for MultiVector {
     }
 }
 
+impl LeftComplement for MultiVectorAtInfinity {
+    type Output = MultiVectorAtOrigin;
+
+    fn left_complement(self) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: swizzle!(self.group0(), 1, 0) * Simd32x2::from([-1.0, 1.0]),
+                g1: self.group2() * Simd32x3::from(-1.0),
+                g2: self.group1(),
+            },
+        }
+    }
+}
+
+impl LeftComplement for MultiVectorAtOrigin {
+    type Output = MultiVectorAtInfinity;
+
+    fn left_complement(self) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: swizzle!(self.group0(), 1, 0),
+                g1: self.group2() * Simd32x3::from(-1.0),
+                g2: self.group1() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
 impl LeftComplement for Origin {
     type Output = Horizon;
 
@@ -1542,16 +1734,14 @@ impl LeftComplement for PointAtInfinity {
 }
 
 impl LeftComplement for Rotor {
-    type Output = MultiVector;
+    type Output = MultiVectorAtInfinity;
 
-    fn left_complement(self) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
+    fn left_complement(self) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
                 g0: Simd32x2::from([self.group0()[3], 0.0]),
-                g1: Simd32x4::from(0.0),
-                g2: Simd32x3::from(0.0),
-                g3: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g4: Simd32x4::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
             },
         }
     }
@@ -1699,6 +1889,34 @@ impl Reversal for MultiVector {
                 g2: self.group2() * Simd32x3::from([-1.0, 1.0, -1.0]),
                 g3: self.group3() * Simd32x3::from(-1.0),
                 g4: self.group4() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl Reversal for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn reversal(self) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: self.group0() * Simd32x2::from([1.0, -1.0]),
+                g1: self.group1(),
+                g2: self.group2() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Reversal for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn reversal(self) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: self.group0(),
+                g1: self.group1() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g2: self.group2() * Simd32x3::from([1.0, -1.0, 1.0]),
             },
         }
     }
@@ -1919,6 +2137,34 @@ impl RightComplement for MultiVector {
     }
 }
 
+impl RightComplement for MultiVectorAtInfinity {
+    type Output = MultiVectorAtOrigin;
+
+    fn right_complement(self) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: swizzle!(self.group0(), 1, 0) * Simd32x2::from([-1.0, 1.0]),
+                g1: self.group2() * Simd32x3::from(-1.0),
+                g2: self.group1(),
+            },
+        }
+    }
+}
+
+impl RightComplement for MultiVectorAtOrigin {
+    type Output = MultiVectorAtInfinity;
+
+    fn right_complement(self) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: swizzle!(self.group0(), 1, 0),
+                g1: self.group2() * Simd32x3::from(-1.0),
+                g2: self.group1() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
 impl RightComplement for Origin {
     type Output = Horizon;
 
@@ -1974,16 +2220,14 @@ impl RightComplement for PointAtInfinity {
 }
 
 impl RightComplement for Rotor {
-    type Output = MultiVector;
+    type Output = MultiVectorAtInfinity;
 
-    fn right_complement(self) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
+    fn right_complement(self) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
                 g0: Simd32x2::from([self.group0()[3], 0.0]),
-                g1: Simd32x4::from(0.0),
-                g2: Simd32x3::from(0.0),
-                g3: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g4: Simd32x4::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
             },
         }
     }

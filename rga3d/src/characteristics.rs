@@ -220,9 +220,9 @@ impl Attitude for AntiScalar {
 }
 
 impl Attitude for Flector {
-    type Output = MultiVector;
+    type Output = MultiVectorAtInfinity;
 
-    fn attitude(self) -> MultiVector {
+    fn attitude(self) -> MultiVectorAtInfinity {
         self.anti_wedge(Horizon::one())
     }
 }
@@ -260,9 +260,17 @@ impl Attitude for Motor {
 }
 
 impl Attitude for MultiVector {
-    type Output = MultiVector;
+    type Output = MultiVectorAtInfinity;
 
-    fn attitude(self) -> MultiVector {
+    fn attitude(self) -> MultiVectorAtInfinity {
+        self.anti_wedge(Horizon::one())
+    }
+}
+
+impl Attitude for MultiVectorAtOrigin {
+    type Output = MultiVectorAtInfinity;
+
+    fn attitude(self) -> MultiVectorAtInfinity {
         self.anti_wedge(Horizon::one())
     }
 }

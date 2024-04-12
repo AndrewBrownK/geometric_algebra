@@ -45,6 +45,8 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
             e1,e2,e3,e4|\
             e41,e42,e43|e23,e31,e12|\
             e423,e431,e412,e321",
+        "MultiVectorAtOrigin:e4,e1234|e41,e42,e43|e423,e431,e412",
+        "MultiVectorAtInfinity:1,e321|e1,e2,e3|e23,e31,e12"
     ];
 
     // On sandwich products, assume that the output

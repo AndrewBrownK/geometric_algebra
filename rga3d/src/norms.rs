@@ -122,6 +122,14 @@ impl BulkNormSquared for MultiVector {
     }
 }
 
+impl BulkNormSquared for MultiVectorAtInfinity {
+    type Output = Scalar;
+
+    fn bulk_norm_squared(self) -> Scalar {
+        self.dot(self)
+    }
+}
+
 impl BulkNormSquared for Plane {
     type Output = Scalar;
 
@@ -226,6 +234,14 @@ impl BulkNorm for MultiVector {
     }
 }
 
+impl BulkNorm for MultiVectorAtInfinity {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
+    }
+}
+
 impl BulkNorm for Plane {
     type Output = Scalar;
 
@@ -315,6 +331,14 @@ impl WeightNormSquared for Motor {
 }
 
 impl WeightNormSquared for MultiVector {
+    type Output = AntiScalar;
+
+    fn weight_norm_squared(self) -> AntiScalar {
+        self.anti_dot(self)
+    }
+}
+
+impl WeightNormSquared for MultiVectorAtOrigin {
     type Output = AntiScalar;
 
     fn weight_norm_squared(self) -> AntiScalar {
@@ -419,6 +443,14 @@ impl WeightNorm for Motor {
 }
 
 impl WeightNorm for MultiVector {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).sqrt()
+    }
+}
+
+impl WeightNorm for MultiVectorAtOrigin {
     type Output = AntiScalar;
 
     fn weight_norm(self) -> AntiScalar {

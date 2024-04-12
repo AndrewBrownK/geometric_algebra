@@ -1447,6 +1447,216 @@ impl std::fmt::Debug for MultiVector {
     }
 }
 
+#[derive(Clone, Copy)]
+struct MultiVectorAtOriginGroups {
+    /// e4, e1234
+    g0: Simd32x2,
+    /// -e14, -e24, -e34
+    g1: Simd32x3,
+    /// e234, -e134, e124
+    g2: Simd32x3,
+}
+
+#[derive(Clone, Copy)]
+pub union MultiVectorAtOrigin {
+    groups: MultiVectorAtOriginGroups,
+    /// e4, e1234, 0, 0, -e14, -e24, -e34, 0, e234, -e134, e124, 0
+    elements: [f32; 12],
+}
+
+impl MultiVectorAtOrigin {
+    #[allow(clippy::too_many_arguments)]
+    pub const fn new(e4: f32, e1234: f32, neg_e14: f32, neg_e24: f32, neg_e34: f32, e234: f32, neg_e134: f32, e124: f32) -> Self {
+        Self {
+            elements: [e4, e1234, 0.0, 0.0, neg_e14, neg_e24, neg_e34, 0.0, e234, neg_e134, e124, 0.0],
+        }
+    }
+    pub const fn from_groups(g0: Simd32x2, g1: Simd32x3, g2: Simd32x3) -> Self {
+        Self {
+            groups: MultiVectorAtOriginGroups { g0, g1, g2 },
+        }
+    }
+    #[inline(always)]
+    pub fn group0(&self) -> Simd32x2 {
+        unsafe { self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group0_mut(&mut self) -> &mut Simd32x2 {
+        unsafe { &mut self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group1(&self) -> Simd32x3 {
+        unsafe { self.groups.g1 }
+    }
+    #[inline(always)]
+    pub fn group1_mut(&mut self) -> &mut Simd32x3 {
+        unsafe { &mut self.groups.g1 }
+    }
+    #[inline(always)]
+    pub fn group2(&self) -> Simd32x3 {
+        unsafe { self.groups.g2 }
+    }
+    #[inline(always)]
+    pub fn group2_mut(&mut self) -> &mut Simd32x3 {
+        unsafe { &mut self.groups.g2 }
+    }
+}
+
+const MULTIVECTORATORIGIN_INDEX_REMAP: [usize; 8] = [0, 1, 4, 5, 6, 8, 9, 10];
+
+impl std::ops::Index<usize> for MultiVectorAtOrigin {
+    type Output = f32;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        unsafe { &self.elements[MULTIVECTORATORIGIN_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::ops::IndexMut<usize> for MultiVectorAtOrigin {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        unsafe { &mut self.elements[MULTIVECTORATORIGIN_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::convert::From<MultiVectorAtOrigin> for [f32; 8] {
+    fn from(vector: MultiVectorAtOrigin) -> Self {
+        unsafe {
+            [
+                vector.elements[0], vector.elements[1], vector.elements[4], vector.elements[5], vector.elements[6], vector.elements[8], vector.elements[9], vector.elements[10],
+            ]
+        }
+    }
+}
+
+impl std::convert::From<[f32; 8]> for MultiVectorAtOrigin {
+    fn from(array: [f32; 8]) -> Self {
+        Self {
+            elements: [array[0], array[1], 0.0, 0.0, array[2], array[3], array[4], 0.0, array[5], array[6], array[7], 0.0],
+        }
+    }
+}
+
+impl std::fmt::Debug for MultiVectorAtOrigin {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter
+            .debug_struct("MultiVectorAtOrigin")
+            .field("e4", &self[0])
+            .field("e1234", &self[1])
+            .field("-e14", &self[2])
+            .field("-e24", &self[3])
+            .field("-e34", &self[4])
+            .field("e234", &self[5])
+            .field("-e134", &self[6])
+            .field("e124", &self[7])
+            .finish()
+    }
+}
+
+#[derive(Clone, Copy)]
+struct MultiVectorAtInfinityGroups {
+    /// 1, -e123
+    g0: Simd32x2,
+    /// e1, e2, e3
+    g1: Simd32x3,
+    /// e23, -e13, e12
+    g2: Simd32x3,
+}
+
+#[derive(Clone, Copy)]
+pub union MultiVectorAtInfinity {
+    groups: MultiVectorAtInfinityGroups,
+    /// 1, -e123, 0, 0, e1, e2, e3, 0, e23, -e13, e12, 0
+    elements: [f32; 12],
+}
+
+impl MultiVectorAtInfinity {
+    #[allow(clippy::too_many_arguments)]
+    pub const fn new(scalar: f32, neg_e123: f32, e1: f32, e2: f32, e3: f32, e23: f32, neg_e13: f32, e12: f32) -> Self {
+        Self {
+            elements: [scalar, neg_e123, 0.0, 0.0, e1, e2, e3, 0.0, e23, neg_e13, e12, 0.0],
+        }
+    }
+    pub const fn from_groups(g0: Simd32x2, g1: Simd32x3, g2: Simd32x3) -> Self {
+        Self {
+            groups: MultiVectorAtInfinityGroups { g0, g1, g2 },
+        }
+    }
+    #[inline(always)]
+    pub fn group0(&self) -> Simd32x2 {
+        unsafe { self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group0_mut(&mut self) -> &mut Simd32x2 {
+        unsafe { &mut self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group1(&self) -> Simd32x3 {
+        unsafe { self.groups.g1 }
+    }
+    #[inline(always)]
+    pub fn group1_mut(&mut self) -> &mut Simd32x3 {
+        unsafe { &mut self.groups.g1 }
+    }
+    #[inline(always)]
+    pub fn group2(&self) -> Simd32x3 {
+        unsafe { self.groups.g2 }
+    }
+    #[inline(always)]
+    pub fn group2_mut(&mut self) -> &mut Simd32x3 {
+        unsafe { &mut self.groups.g2 }
+    }
+}
+
+const MULTIVECTORATINFINITY_INDEX_REMAP: [usize; 8] = [0, 1, 4, 5, 6, 8, 9, 10];
+
+impl std::ops::Index<usize> for MultiVectorAtInfinity {
+    type Output = f32;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        unsafe { &self.elements[MULTIVECTORATINFINITY_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::ops::IndexMut<usize> for MultiVectorAtInfinity {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        unsafe { &mut self.elements[MULTIVECTORATINFINITY_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::convert::From<MultiVectorAtInfinity> for [f32; 8] {
+    fn from(vector: MultiVectorAtInfinity) -> Self {
+        unsafe {
+            [
+                vector.elements[0], vector.elements[1], vector.elements[4], vector.elements[5], vector.elements[6], vector.elements[8], vector.elements[9], vector.elements[10],
+            ]
+        }
+    }
+}
+
+impl std::convert::From<[f32; 8]> for MultiVectorAtInfinity {
+    fn from(array: [f32; 8]) -> Self {
+        Self {
+            elements: [array[0], array[1], 0.0, 0.0, array[2], array[3], array[4], 0.0, array[5], array[6], array[7], 0.0],
+        }
+    }
+}
+
+impl std::fmt::Debug for MultiVectorAtInfinity {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter
+            .debug_struct("MultiVectorAtInfinity")
+            .field("1", &self[0])
+            .field("-e123", &self[1])
+            .field("e1", &self[2])
+            .field("e2", &self[3])
+            .field("e3", &self[4])
+            .field("e23", &self[5])
+            .field("-e13", &self[6])
+            .field("e12", &self[7])
+            .finish()
+    }
+}
+
 impl One for AntiScalar {
     fn one() -> Self {
         AntiScalar {
@@ -1537,6 +1747,30 @@ impl One for MultiVector {
                 g2: Simd32x3::from(0.0),
                 g3: Simd32x3::from(0.0),
                 g4: Simd32x4::from(0.0),
+            },
+        }
+    }
+}
+
+impl One for MultiVectorAtInfinity {
+    fn one() -> Self {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: Simd32x2::from([1.0, 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
+            },
+        }
+    }
+}
+
+impl One for MultiVectorAtOrigin {
+    fn one() -> Self {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
             },
         }
     }
@@ -1692,6 +1926,30 @@ impl Zero for MultiVector {
                 g2: Simd32x3::from(0.0),
                 g3: Simd32x3::from(0.0),
                 g4: Simd32x4::from(0.0),
+            },
+        }
+    }
+}
+
+impl Zero for MultiVectorAtInfinity {
+    fn zero() -> Self {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
+            },
+        }
+    }
+}
+
+impl Zero for MultiVectorAtOrigin {
+    fn zero() -> Self {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
             },
         }
     }
@@ -1880,6 +2138,34 @@ impl Neg for MultiVector {
     }
 }
 
+impl Neg for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn neg(self) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: self.group0() * Simd32x2::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: self.group2() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Neg for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn neg(self) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: self.group0() * Simd32x2::from(-1.0),
+                g1: self.group1() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g2: self.group2() * Simd32x3::from([1.0, -1.0, 1.0]),
+            },
+        }
+    }
+}
+
 impl Neg for Origin {
     type Output = Origin;
 
@@ -2063,6 +2349,20 @@ impl Add<MultiVector> for AntiScalar {
                 g2: other.group2(),
                 g3: other.group3(),
                 g4: other.group4(),
+            },
+        }
+    }
+}
+
+impl Add<MultiVectorAtOrigin> for AntiScalar {
+    type Output = MultiVectorAtOrigin;
+
+    fn add(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: Simd32x2::from([0.0, self.group0()]) + other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
             },
         }
     }
@@ -2337,6 +2637,20 @@ impl Add<MultiVector> for FlectorAtInfinity {
     }
 }
 
+impl Add<MultiVectorAtInfinity> for FlectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn add(self, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: Simd32x2::from([0.0, self.group0()[3]]) + other.group0(),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group1(),
+                g2: other.group2(),
+            },
+        }
+    }
+}
+
 impl Add<PointAtInfinity> for FlectorAtInfinity {
     type Output = FlectorAtInfinity;
 
@@ -2409,6 +2723,20 @@ impl Add<MultiVector> for Horizon {
                 g2: other.group2(),
                 g3: other.group3(),
                 g4: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group4(),
+            },
+        }
+    }
+}
+
+impl Add<MultiVectorAtInfinity> for Horizon {
+    type Output = MultiVectorAtInfinity;
+
+    fn add(self, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: Simd32x2::from([0.0, self.group0()]) + other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
             },
         }
     }
@@ -2660,6 +2988,20 @@ impl Add<MultiVector> for LineAtInfinity {
     }
 }
 
+impl Add<MultiVectorAtInfinity> for LineAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn add(self, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: other.group0(),
+                g1: other.group1(),
+                g2: self.group0() + other.group2(),
+            },
+        }
+    }
+}
+
 impl Add<Rotor> for LineAtInfinity {
     type Output = Motor;
 
@@ -2765,6 +3107,20 @@ impl Add<MultiVector> for LineAtOrigin {
                 g2: self.group0() + other.group2(),
                 g3: other.group3(),
                 g4: other.group4(),
+            },
+        }
+    }
+}
+
+impl Add<MultiVectorAtOrigin> for LineAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn add(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: other.group0(),
+                g1: self.group0() + other.group1(),
+                g2: other.group2(),
             },
         }
     }
@@ -3234,6 +3590,50 @@ impl AddAssign<MultiVector> for MultiVector {
     }
 }
 
+impl Add<MultiVectorAtInfinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVectorAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0() + Simd32x2::from([other.group0()[0], 0.0]),
+                g1: self.group1() + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+                g2: self.group2(),
+                g3: self.group3() + other.group2(),
+                g4: self.group4() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]]),
+            },
+        }
+    }
+}
+
+impl AddAssign<MultiVectorAtInfinity> for MultiVector {
+    fn add_assign(&mut self, other: MultiVectorAtInfinity) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<MultiVectorAtOrigin> for MultiVector {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVectorAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0() + Simd32x2::from([0.0, other.group0()[1]]),
+                g1: self.group1() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g2: self.group2() + other.group1(),
+                g3: self.group3(),
+                g4: self.group4() + Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl AddAssign<MultiVectorAtOrigin> for MultiVector {
+    fn add_assign(&mut self, other: MultiVectorAtOrigin) {
+        *self = (*self).add(other);
+    }
+}
+
 impl Add<Origin> for MultiVector {
     type Output = MultiVector;
 
@@ -3410,6 +3810,310 @@ impl AddAssign<Translator> for MultiVector {
     }
 }
 
+impl Add<FlectorAtInfinity> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn add(self, other: FlectorAtInfinity) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: self.group0() + Simd32x2::from([0.0, other.group0()[3]]),
+                g1: self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl AddAssign<FlectorAtInfinity> for MultiVectorAtInfinity {
+    fn add_assign(&mut self, other: FlectorAtInfinity) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<Horizon> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn add(self, other: Horizon) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: self.group0() + Simd32x2::from([0.0, other.group0()]),
+                g1: self.group1(),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl AddAssign<Horizon> for MultiVectorAtInfinity {
+    fn add_assign(&mut self, other: Horizon) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<LineAtInfinity> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn add(self, other: LineAtInfinity) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2() + other.group0(),
+            },
+        }
+    }
+}
+
+impl AddAssign<LineAtInfinity> for MultiVectorAtInfinity {
+    fn add_assign(&mut self, other: LineAtInfinity) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<MultiVector> for MultiVectorAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0()[0], 0.0]) + other.group0(),
+                g1: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + other.group1(),
+                g2: other.group2(),
+                g3: self.group2() + other.group3(),
+                g4: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]) + other.group4(),
+            },
+        }
+    }
+}
+
+impl Add<MultiVectorAtInfinity> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn add(self, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: self.group0() + other.group0(),
+                g1: self.group1() + other.group1(),
+                g2: self.group2() + other.group2(),
+            },
+        }
+    }
+}
+
+impl AddAssign<MultiVectorAtInfinity> for MultiVectorAtInfinity {
+    fn add_assign(&mut self, other: MultiVectorAtInfinity) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<MultiVectorAtOrigin> for MultiVectorAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVectorAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0()[0], 0.0]) + Simd32x2::from([0.0, other.group0()[1]]),
+                g1: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g2: other.group1(),
+                g3: self.group2(),
+                g4: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]) + Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl Add<PointAtInfinity> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn add(self, other: PointAtInfinity) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: self.group0(),
+                g1: self.group1() + other.group0(),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl AddAssign<PointAtInfinity> for MultiVectorAtInfinity {
+    fn add_assign(&mut self, other: PointAtInfinity) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<Scalar> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn add(self, other: Scalar) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: self.group0() + Simd32x2::from([other.group0(), 0.0]),
+                g1: self.group1(),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl AddAssign<Scalar> for MultiVectorAtInfinity {
+    fn add_assign(&mut self, other: Scalar) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<AntiScalar> for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn add(self, other: AntiScalar) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: self.group0() + Simd32x2::from([0.0, other.group0()]),
+                g1: self.group1(),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl AddAssign<AntiScalar> for MultiVectorAtOrigin {
+    fn add_assign(&mut self, other: AntiScalar) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<LineAtOrigin> for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn add(self, other: LineAtOrigin) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: self.group0(),
+                g1: self.group1() + other.group0(),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl AddAssign<LineAtOrigin> for MultiVectorAtOrigin {
+    fn add_assign(&mut self, other: LineAtOrigin) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<MultiVector> for MultiVectorAtOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()[1]]) + other.group0(),
+                g1: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]) + other.group1(),
+                g2: self.group1() + other.group2(),
+                g3: other.group3(),
+                g4: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]) + other.group4(),
+            },
+        }
+    }
+}
+
+impl Add<MultiVectorAtInfinity> for MultiVectorAtOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVectorAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()[1]]) + Simd32x2::from([other.group0()[0], 0.0]),
+                g1: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]) + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+                g2: self.group1(),
+                g3: other.group2(),
+                g4: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]) + Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]]),
+            },
+        }
+    }
+}
+
+impl Add<MultiVectorAtOrigin> for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn add(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: self.group0() + other.group0(),
+                g1: self.group1() + other.group1(),
+                g2: self.group2() + other.group2(),
+            },
+        }
+    }
+}
+
+impl AddAssign<MultiVectorAtOrigin> for MultiVectorAtOrigin {
+    fn add_assign(&mut self, other: MultiVectorAtOrigin) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<Origin> for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn add(self, other: Origin) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: self.group0() + Simd32x2::from([other.group0(), 0.0]),
+                g1: self.group1(),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl AddAssign<Origin> for MultiVectorAtOrigin {
+    fn add_assign(&mut self, other: Origin) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<PlaneAtOrigin> for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn add(self, other: PlaneAtOrigin) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2() + other.group0(),
+            },
+        }
+    }
+}
+
+impl AddAssign<PlaneAtOrigin> for MultiVectorAtOrigin {
+    fn add_assign(&mut self, other: PlaneAtOrigin) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<Rotor> for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn add(self, other: Rotor) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: self.group0() + Simd32x2::from([0.0, other.group0()[3]]),
+                g1: self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl AddAssign<Rotor> for MultiVectorAtOrigin {
+    fn add_assign(&mut self, other: Rotor) {
+        *self = (*self).add(other);
+    }
+}
+
 impl Add<Flector> for Origin {
     type Output = Flector;
 
@@ -3434,6 +4138,20 @@ impl Add<MultiVector> for Origin {
                 g2: other.group2(),
                 g3: other.group3(),
                 g4: other.group4(),
+            },
+        }
+    }
+}
+
+impl Add<MultiVectorAtOrigin> for Origin {
+    type Output = MultiVectorAtOrigin;
+
+    fn add(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: Simd32x2::from([self.group0(), 0.0]) + other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
             },
         }
     }
@@ -3618,6 +4336,20 @@ impl Add<MultiVector> for PlaneAtOrigin {
     }
 }
 
+impl Add<MultiVectorAtOrigin> for PlaneAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn add(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: other.group0(),
+                g1: other.group1(),
+                g2: self.group0() + other.group2(),
+            },
+        }
+    }
+}
+
 impl Add<Plane> for PlaneAtOrigin {
     type Output = Plane;
 
@@ -3797,6 +4529,20 @@ impl Add<MultiVector> for PointAtInfinity {
     }
 }
 
+impl Add<MultiVectorAtInfinity> for PointAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn add(self, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: other.group0(),
+                g1: self.group0() + other.group1(),
+                g2: other.group2(),
+            },
+        }
+    }
+}
+
 impl Add<Origin> for PointAtInfinity {
     type Output = Point;
 
@@ -3930,6 +4676,20 @@ impl Add<MultiVector> for Rotor {
     }
 }
 
+impl Add<MultiVectorAtOrigin> for Rotor {
+    type Output = MultiVectorAtOrigin;
+
+    fn add(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: Simd32x2::from([0.0, self.group0()[3]]) + other.group0(),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group1(),
+                g2: other.group2(),
+            },
+        }
+    }
+}
+
 impl Add<Rotor> for Rotor {
     type Output = Rotor;
 
@@ -3996,6 +4756,20 @@ impl Add<MultiVector> for Scalar {
                 g2: other.group2(),
                 g3: other.group3(),
                 g4: other.group4(),
+            },
+        }
+    }
+}
+
+impl Add<MultiVectorAtInfinity> for Scalar {
+    type Output = MultiVectorAtInfinity;
+
+    fn add(self, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: Simd32x2::from([self.group0(), 0.0]) + other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
             },
         }
     }
@@ -4352,6 +5126,56 @@ impl Div<MultiVector> for MultiVector {
 
 impl DivAssign<MultiVector> for MultiVector {
     fn div_assign(&mut self, other: MultiVector) {
+        *self = (*self).div(other);
+    }
+}
+
+impl Div<MultiVectorAtInfinity> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn div(self, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: Simd32x2::from([self.group0()[0], self.group0()[1]]) * Simd32x2::from([1.0, 1.0]) / Simd32x2::from([other.group0()[0], other.group0()[1]])
+                    * Simd32x2::from([1.0, 1.0]),
+                g1: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
+                    / Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])
+                    * Simd32x3::from([1.0, 1.0, 1.0]),
+                g2: Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
+                    / Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]])
+                    * Simd32x3::from([1.0, 1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl DivAssign<MultiVectorAtInfinity> for MultiVectorAtInfinity {
+    fn div_assign(&mut self, other: MultiVectorAtInfinity) {
+        *self = (*self).div(other);
+    }
+}
+
+impl Div<MultiVectorAtOrigin> for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn div(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: Simd32x2::from([self.group0()[0], self.group0()[1]]) * Simd32x2::from([1.0, 1.0]) / Simd32x2::from([other.group0()[0], other.group0()[1]])
+                    * Simd32x2::from([1.0, 1.0]),
+                g1: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
+                    / Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])
+                    * Simd32x3::from([1.0, 1.0, 1.0]),
+                g2: Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
+                    / Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]])
+                    * Simd32x3::from([1.0, 1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl DivAssign<MultiVectorAtOrigin> for MultiVectorAtOrigin {
+    fn div_assign(&mut self, other: MultiVectorAtOrigin) {
         *self = (*self).div(other);
     }
 }
@@ -4762,6 +5586,30 @@ impl Into<Motor> for MultiVector {
     }
 }
 
+impl Into<MultiVectorAtInfinity> for MultiVector {
+    fn into(self) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: Simd32x2::from([self.group0()[0], self.group4()[3]]),
+                g1: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g2: self.group3(),
+            },
+        }
+    }
+}
+
+impl Into<MultiVectorAtOrigin> for MultiVector {
+    fn into(self) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: Simd32x2::from([self.group1()[3], self.group0()[1]]),
+                g1: self.group2(),
+                g2: Simd32x3::from([self.group4()[0], self.group4()[1], self.group4()[2]]),
+            },
+        }
+    }
+}
+
 impl Into<Origin> for MultiVector {
     fn into(self) -> Origin {
         Origin {
@@ -4829,6 +5677,90 @@ impl Into<Translator> for MultiVector {
         Translator {
             groups: TranslatorGroups {
                 g0: Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group0()[1]]),
+            },
+        }
+    }
+}
+
+impl Into<FlectorAtInfinity> for MultiVectorAtInfinity {
+    fn into(self) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group0()[1]]),
+            },
+        }
+    }
+}
+
+impl Into<Horizon> for MultiVectorAtInfinity {
+    fn into(self) -> Horizon {
+        Horizon {
+            groups: HorizonGroups { g0: self.group0()[1] },
+        }
+    }
+}
+
+impl Into<LineAtInfinity> for MultiVectorAtInfinity {
+    fn into(self) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups { g0: self.group2() },
+        }
+    }
+}
+
+impl Into<PointAtInfinity> for MultiVectorAtInfinity {
+    fn into(self) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups { g0: self.group1() },
+        }
+    }
+}
+
+impl Into<Scalar> for MultiVectorAtInfinity {
+    fn into(self) -> Scalar {
+        Scalar {
+            groups: ScalarGroups { g0: self.group0()[0] },
+        }
+    }
+}
+
+impl Into<AntiScalar> for MultiVectorAtOrigin {
+    fn into(self) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups { g0: self.group0()[1] },
+        }
+    }
+}
+
+impl Into<LineAtOrigin> for MultiVectorAtOrigin {
+    fn into(self) -> LineAtOrigin {
+        LineAtOrigin {
+            groups: LineAtOriginGroups { g0: self.group1() },
+        }
+    }
+}
+
+impl Into<Origin> for MultiVectorAtOrigin {
+    fn into(self) -> Origin {
+        Origin {
+            groups: OriginGroups { g0: self.group0()[0] },
+        }
+    }
+}
+
+impl Into<PlaneAtOrigin> for MultiVectorAtOrigin {
+    fn into(self) -> PlaneAtOrigin {
+        PlaneAtOrigin {
+            groups: PlaneAtOriginGroups { g0: self.group2() },
+        }
+    }
+}
+
+impl Into<Rotor> for MultiVectorAtOrigin {
+    fn into(self) -> Rotor {
+        Rotor {
+            groups: RotorGroups {
+                g0: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group0()[1]]),
             },
         }
     }
@@ -5093,6 +6025,46 @@ impl MulAssign<MultiVector> for MultiVector {
     }
 }
 
+impl Mul<MultiVectorAtInfinity> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn mul(self, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: self.group0() * other.group0(),
+                g1: self.group1() * other.group1(),
+                g2: self.group2() * other.group2(),
+            },
+        }
+    }
+}
+
+impl MulAssign<MultiVectorAtInfinity> for MultiVectorAtInfinity {
+    fn mul_assign(&mut self, other: MultiVectorAtInfinity) {
+        *self = (*self).mul(other);
+    }
+}
+
+impl Mul<MultiVectorAtOrigin> for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn mul(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: self.group0() * other.group0(),
+                g1: self.group1() * other.group1(),
+                g2: self.group2() * other.group2(),
+            },
+        }
+    }
+}
+
+impl MulAssign<MultiVectorAtOrigin> for MultiVectorAtOrigin {
+    fn mul_assign(&mut self, other: MultiVectorAtOrigin) {
+        *self = (*self).mul(other);
+    }
+}
+
 impl Mul<Origin> for Origin {
     type Output = Origin;
 
@@ -5328,6 +6300,20 @@ impl Sub<MultiVector> for AntiScalar {
                 g2: Simd32x3::from(0.0) - other.group2(),
                 g3: Simd32x3::from(0.0) - other.group3(),
                 g4: Simd32x4::from(0.0) - other.group4(),
+            },
+        }
+    }
+}
+
+impl Sub<MultiVectorAtOrigin> for AntiScalar {
+    type Output = MultiVectorAtOrigin;
+
+    fn sub(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: Simd32x2::from([0.0, self.group0()]) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x3::from(0.0) - other.group2(),
             },
         }
     }
@@ -5602,6 +6588,20 @@ impl Sub<MultiVector> for FlectorAtInfinity {
     }
 }
 
+impl Sub<MultiVectorAtInfinity> for FlectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn sub(self, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: Simd32x2::from([0.0, self.group0()[3]]) - other.group0(),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group1(),
+                g2: Simd32x3::from(0.0) - other.group2(),
+            },
+        }
+    }
+}
+
 impl Sub<PointAtInfinity> for FlectorAtInfinity {
     type Output = FlectorAtInfinity;
 
@@ -5674,6 +6674,20 @@ impl Sub<MultiVector> for Horizon {
                 g2: Simd32x3::from(0.0) - other.group2(),
                 g3: Simd32x3::from(0.0) - other.group3(),
                 g4: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group4(),
+            },
+        }
+    }
+}
+
+impl Sub<MultiVectorAtInfinity> for Horizon {
+    type Output = MultiVectorAtInfinity;
+
+    fn sub(self, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: Simd32x2::from([0.0, self.group0()]) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x3::from(0.0) - other.group2(),
             },
         }
     }
@@ -5925,6 +6939,20 @@ impl Sub<MultiVector> for LineAtInfinity {
     }
 }
 
+impl Sub<MultiVectorAtInfinity> for LineAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn sub(self, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: Simd32x2::from(0.0) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: self.group0() - other.group2(),
+            },
+        }
+    }
+}
+
 impl Sub<Rotor> for LineAtInfinity {
     type Output = Motor;
 
@@ -6030,6 +7058,20 @@ impl Sub<MultiVector> for LineAtOrigin {
                 g2: self.group0() - other.group2(),
                 g3: Simd32x3::from(0.0) - other.group3(),
                 g4: Simd32x4::from(0.0) - other.group4(),
+            },
+        }
+    }
+}
+
+impl Sub<MultiVectorAtOrigin> for LineAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn sub(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: Simd32x2::from(0.0) - other.group0(),
+                g1: self.group0() - other.group1(),
+                g2: Simd32x3::from(0.0) - other.group2(),
             },
         }
     }
@@ -6499,6 +7541,50 @@ impl SubAssign<MultiVector> for MultiVector {
     }
 }
 
+impl Sub<MultiVectorAtInfinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVectorAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0() - Simd32x2::from([other.group0()[0], 0.0]),
+                g1: self.group1() - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+                g2: self.group2(),
+                g3: self.group3() - other.group2(),
+                g4: self.group4() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]]),
+            },
+        }
+    }
+}
+
+impl SubAssign<MultiVectorAtInfinity> for MultiVector {
+    fn sub_assign(&mut self, other: MultiVectorAtInfinity) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<MultiVectorAtOrigin> for MultiVector {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVectorAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0() - Simd32x2::from([0.0, other.group0()[1]]),
+                g1: self.group1() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g2: self.group2() - other.group1(),
+                g3: self.group3(),
+                g4: self.group4() - Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl SubAssign<MultiVectorAtOrigin> for MultiVector {
+    fn sub_assign(&mut self, other: MultiVectorAtOrigin) {
+        *self = (*self).sub(other);
+    }
+}
+
 impl Sub<Origin> for MultiVector {
     type Output = MultiVector;
 
@@ -6675,6 +7761,310 @@ impl SubAssign<Translator> for MultiVector {
     }
 }
 
+impl Sub<FlectorAtInfinity> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn sub(self, other: FlectorAtInfinity) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: self.group0() - Simd32x2::from([0.0, other.group0()[3]]),
+                g1: self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl SubAssign<FlectorAtInfinity> for MultiVectorAtInfinity {
+    fn sub_assign(&mut self, other: FlectorAtInfinity) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Horizon> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn sub(self, other: Horizon) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: self.group0() - Simd32x2::from([0.0, other.group0()]),
+                g1: self.group1(),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl SubAssign<Horizon> for MultiVectorAtInfinity {
+    fn sub_assign(&mut self, other: Horizon) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<LineAtInfinity> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn sub(self, other: LineAtInfinity) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2() - other.group0(),
+            },
+        }
+    }
+}
+
+impl SubAssign<LineAtInfinity> for MultiVectorAtInfinity {
+    fn sub_assign(&mut self, other: LineAtInfinity) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<MultiVector> for MultiVectorAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0()[0], 0.0]) - other.group0(),
+                g1: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - other.group1(),
+                g2: Simd32x3::from(0.0) - other.group2(),
+                g3: self.group2() - other.group3(),
+                g4: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]) - other.group4(),
+            },
+        }
+    }
+}
+
+impl Sub<MultiVectorAtInfinity> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn sub(self, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: self.group0() - other.group0(),
+                g1: self.group1() - other.group1(),
+                g2: self.group2() - other.group2(),
+            },
+        }
+    }
+}
+
+impl SubAssign<MultiVectorAtInfinity> for MultiVectorAtInfinity {
+    fn sub_assign(&mut self, other: MultiVectorAtInfinity) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<MultiVectorAtOrigin> for MultiVectorAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVectorAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0()[0], 0.0]) - Simd32x2::from([0.0, other.group0()[1]]),
+                g1: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g2: Simd32x3::from(0.0) - other.group1(),
+                g3: self.group2(),
+                g4: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[1]]) - Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl Sub<PointAtInfinity> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn sub(self, other: PointAtInfinity) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: self.group0(),
+                g1: self.group1() - other.group0(),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl SubAssign<PointAtInfinity> for MultiVectorAtInfinity {
+    fn sub_assign(&mut self, other: PointAtInfinity) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Scalar> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn sub(self, other: Scalar) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: self.group0() - Simd32x2::from([other.group0(), 0.0]),
+                g1: self.group1(),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl SubAssign<Scalar> for MultiVectorAtInfinity {
+    fn sub_assign(&mut self, other: Scalar) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<AntiScalar> for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn sub(self, other: AntiScalar) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: self.group0() - Simd32x2::from([0.0, other.group0()]),
+                g1: self.group1(),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl SubAssign<AntiScalar> for MultiVectorAtOrigin {
+    fn sub_assign(&mut self, other: AntiScalar) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<LineAtOrigin> for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn sub(self, other: LineAtOrigin) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: self.group0(),
+                g1: self.group1() - other.group0(),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl SubAssign<LineAtOrigin> for MultiVectorAtOrigin {
+    fn sub_assign(&mut self, other: LineAtOrigin) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<MultiVector> for MultiVectorAtOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()[1]]) - other.group0(),
+                g1: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]) - other.group1(),
+                g2: self.group1() - other.group2(),
+                g3: Simd32x3::from(0.0) - other.group3(),
+                g4: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]) - other.group4(),
+            },
+        }
+    }
+}
+
+impl Sub<MultiVectorAtInfinity> for MultiVectorAtOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVectorAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()[1]]) - Simd32x2::from([other.group0()[0], 0.0]),
+                g1: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+                g2: self.group1(),
+                g3: Simd32x3::from(0.0) - other.group2(),
+                g4: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[1]]),
+            },
+        }
+    }
+}
+
+impl Sub<MultiVectorAtOrigin> for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn sub(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: self.group0() - other.group0(),
+                g1: self.group1() - other.group1(),
+                g2: self.group2() - other.group2(),
+            },
+        }
+    }
+}
+
+impl SubAssign<MultiVectorAtOrigin> for MultiVectorAtOrigin {
+    fn sub_assign(&mut self, other: MultiVectorAtOrigin) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Origin> for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn sub(self, other: Origin) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: self.group0() - Simd32x2::from([other.group0(), 0.0]),
+                g1: self.group1(),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl SubAssign<Origin> for MultiVectorAtOrigin {
+    fn sub_assign(&mut self, other: Origin) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<PlaneAtOrigin> for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn sub(self, other: PlaneAtOrigin) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2() - other.group0(),
+            },
+        }
+    }
+}
+
+impl SubAssign<PlaneAtOrigin> for MultiVectorAtOrigin {
+    fn sub_assign(&mut self, other: PlaneAtOrigin) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Rotor> for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn sub(self, other: Rotor) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: self.group0() - Simd32x2::from([0.0, other.group0()[3]]),
+                g1: self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl SubAssign<Rotor> for MultiVectorAtOrigin {
+    fn sub_assign(&mut self, other: Rotor) {
+        *self = (*self).sub(other);
+    }
+}
+
 impl Sub<Flector> for Origin {
     type Output = Flector;
 
@@ -6699,6 +8089,20 @@ impl Sub<MultiVector> for Origin {
                 g2: Simd32x3::from(0.0) - other.group2(),
                 g3: Simd32x3::from(0.0) - other.group3(),
                 g4: Simd32x4::from(0.0) - other.group4(),
+            },
+        }
+    }
+}
+
+impl Sub<MultiVectorAtOrigin> for Origin {
+    type Output = MultiVectorAtOrigin;
+
+    fn sub(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: Simd32x2::from([self.group0(), 0.0]) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x3::from(0.0) - other.group2(),
             },
         }
     }
@@ -6883,6 +8287,20 @@ impl Sub<MultiVector> for PlaneAtOrigin {
     }
 }
 
+impl Sub<MultiVectorAtOrigin> for PlaneAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn sub(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: Simd32x2::from(0.0) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: self.group0() - other.group2(),
+            },
+        }
+    }
+}
+
 impl Sub<Plane> for PlaneAtOrigin {
     type Output = Plane;
 
@@ -7062,6 +8480,20 @@ impl Sub<MultiVector> for PointAtInfinity {
     }
 }
 
+impl Sub<MultiVectorAtInfinity> for PointAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn sub(self, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: Simd32x2::from(0.0) - other.group0(),
+                g1: self.group0() - other.group1(),
+                g2: Simd32x3::from(0.0) - other.group2(),
+            },
+        }
+    }
+}
+
 impl Sub<Origin> for PointAtInfinity {
     type Output = Point;
 
@@ -7195,6 +8627,20 @@ impl Sub<MultiVector> for Rotor {
     }
 }
 
+impl Sub<MultiVectorAtOrigin> for Rotor {
+    type Output = MultiVectorAtOrigin;
+
+    fn sub(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: Simd32x2::from([0.0, self.group0()[3]]) - other.group0(),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group1(),
+                g2: Simd32x3::from(0.0) - other.group2(),
+            },
+        }
+    }
+}
+
 impl Sub<Rotor> for Rotor {
     type Output = Rotor;
 
@@ -7261,6 +8707,20 @@ impl Sub<MultiVector> for Scalar {
                 g2: Simd32x3::from(0.0) - other.group2(),
                 g3: Simd32x3::from(0.0) - other.group3(),
                 g4: Simd32x4::from(0.0) - other.group4(),
+            },
+        }
+    }
+}
+
+impl Sub<MultiVectorAtInfinity> for Scalar {
+    type Output = MultiVectorAtInfinity;
+
+    fn sub(self, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: Simd32x2::from([self.group0(), 0.0]) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x3::from(0.0) - other.group2(),
             },
         }
     }

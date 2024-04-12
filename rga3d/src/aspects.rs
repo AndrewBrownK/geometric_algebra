@@ -92,18 +92,24 @@ impl Bulk for Motor {
 }
 
 impl Bulk for MultiVector {
-    type Output = MultiVector;
+    type Output = MultiVectorAtInfinity;
 
-    fn bulk(self) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: self.group0() * Simd32x2::from([1.0, 0.0]),
-                g1: self.group1() * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
-                g2: Simd32x3::from(0.0),
-                g3: self.group3(),
-                g4: self.group4() * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+    fn bulk(self) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: Simd32x2::from([self.group0()[0], self.group4()[3]]),
+                g1: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g2: self.group3(),
             },
         }
+    }
+}
+
+impl Bulk for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn bulk(self) -> MultiVectorAtInfinity {
+        self
     }
 }
 
@@ -217,18 +223,24 @@ impl Weight for Motor {
 }
 
 impl Weight for MultiVector {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn weight(self) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: self.group0() * Simd32x2::from([0.0, 1.0]),
-                g1: self.group1() * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
-                g2: self.group2(),
-                g3: Simd32x3::from(0.0),
-                g4: self.group4() * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+    fn weight(self) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: Simd32x2::from([self.group1()[3], self.group0()[1]]),
+                g1: self.group2(),
+                g2: Simd32x3::from([self.group4()[0], self.group4()[1], self.group4()[2]]),
             },
         }
+    }
+}
+
+impl Weight for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn weight(self) -> MultiVectorAtOrigin {
+        self
     }
 }
 
