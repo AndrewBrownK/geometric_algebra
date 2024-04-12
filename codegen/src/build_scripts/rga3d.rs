@@ -1,3 +1,4 @@
+use std::collections::BTreeMap;
 use std::io::Write;
 use std::path::Path;
 
@@ -38,12 +39,45 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         "Motor/Rotor:e41,e42,e43,e1234",
         "Motor/Translator:e23,e31,e12,e1234",
         "Flector:e1,e2,e3,e4|e423,e431,e412,e321",
+        "Flector/FlectorAtInfinity:e1,e2,e3,e321",
         "MultiVector:\
             1,e1234|\
             e1,e2,e3,e4|\
             e41,e42,e43|e23,e31,e12|\
             e423,e431,e412,e321",
     ];
+
+    // On sandwich products, assume that the output
+    // class is the same as the input class, unless it is
+    // in the following guide
+    let sandwich_outputs: BTreeMap<(&str, &str), &str> = [
+
+        // Rotations of objects at origin are still objects at origin
+        // But as you can see, the inputs and outputs are the same,
+        // so we do not need to add special guidance here. The input
+        // and output being the same is the default assumption.
+
+        // (("Rotor", "Origin"), "Origin"),
+        // (("Rotor", "LineAtOrigin"), "LineAtOrigin"),
+        // (("Rotor", "PlaneAtOrigin"), "PlaneAtOrigin"),
+
+        // In contrast to rotations, translations of objects at origin
+        // are not objects at origin. Therefore, we must add the special
+        // guidance on output types here.
+
+        (("Translator", "Origin"), "Point"),
+        (("Translator", "LineAtOrigin"), "Line"),
+        (("Translator", "PlaneAtOrigin"), "Plane"),
+        (("Translator", "Rotor"), "Motor"),
+
+        // And obviously motor outputs must be at least as general as translator outputs
+
+        (("Motor", "Origin"), "Point"),
+        (("Motor", "LineAtOrigin"), "Line"),
+        (("Motor", "PlaneAtOrigin"), "Plane"),
+        (("Motor", "Rotor"), "Motor"),
+
+    ].into_iter().collect();
 
     // Arbitrary personal preference for dialect
     let dialect = Dialect::default().also_wedge_dot().wedge().dot().also_meet_and_join();

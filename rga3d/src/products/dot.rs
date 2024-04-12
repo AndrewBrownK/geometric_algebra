@@ -988,6 +988,18 @@ impl Dot<Flector> for Flector {
     }
 }
 
+impl Dot<FlectorAtInfinity> for Flector {
+    type Output = Scalar;
+
+    fn dot(self, other: FlectorAtInfinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] - self.group1()[3] * other.group0()[3],
+            },
+        }
+    }
+}
+
 impl Dot<Horizon> for Flector {
     type Output = Scalar;
 
@@ -1048,6 +1060,90 @@ impl Dot<PointAtInfinity> for Flector {
     }
 }
 
+impl Dot<Flector> for FlectorAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: Flector) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] - self.group0()[3] * other.group1()[3],
+            },
+        }
+    }
+}
+
+impl Dot<FlectorAtInfinity> for FlectorAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: FlectorAtInfinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] - self.group0()[3] * other.group0()[3],
+            },
+        }
+    }
+}
+
+impl Dot<Horizon> for FlectorAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: Horizon) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[3] * other.group0(),
+            },
+        }
+    }
+}
+
+impl Dot<MultiVector> for FlectorAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: MultiVector) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2] - self.group0()[3] * other.group4()[3],
+            },
+        }
+    }
+}
+
+impl Dot<Plane> for FlectorAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: Plane) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[3] * other.group0()[3],
+            },
+        }
+    }
+}
+
+impl Dot<Point> for FlectorAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: Point) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<PointAtInfinity> for FlectorAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: PointAtInfinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
 impl Dot<Flector> for Horizon {
     type Output = Scalar;
 
@@ -1055,6 +1151,18 @@ impl Dot<Flector> for Horizon {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0() * other.group1()[3],
+            },
+        }
+    }
+}
+
+impl Dot<FlectorAtInfinity> for Horizon {
+    type Output = Scalar;
+
+    fn dot(self, other: FlectorAtInfinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0() * other.group0()[3],
             },
         }
     }
@@ -1324,6 +1432,18 @@ impl Dot<Flector> for MultiVector {
     }
 }
 
+impl Dot<FlectorAtInfinity> for MultiVector {
+    type Output = Scalar;
+
+    fn dot(self, other: FlectorAtInfinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2] - self.group4()[3] * other.group0()[3],
+            },
+        }
+    }
+}
+
 impl Dot<Horizon> for MultiVector {
     type Output = Scalar;
 
@@ -1472,6 +1592,18 @@ impl Dot<Flector> for Plane {
     }
 }
 
+impl Dot<FlectorAtInfinity> for Plane {
+    type Output = Scalar;
+
+    fn dot(self, other: FlectorAtInfinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[3] * other.group0()[3],
+            },
+        }
+    }
+}
+
 impl Dot<Horizon> for Plane {
     type Output = Scalar;
 
@@ -1520,6 +1652,18 @@ impl Dot<Flector> for Point {
     }
 }
 
+impl Dot<FlectorAtInfinity> for Point {
+    type Output = Scalar;
+
+    fn dot(self, other: FlectorAtInfinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
 impl Dot<MultiVector> for Point {
     type Output = Scalar;
 
@@ -1560,6 +1704,18 @@ impl Dot<Flector> for PointAtInfinity {
     type Output = Scalar;
 
     fn dot(self, other: Flector) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<FlectorAtInfinity> for PointAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: FlectorAtInfinity) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],

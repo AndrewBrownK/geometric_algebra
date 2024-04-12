@@ -836,34 +836,10 @@ impl Distance<MultiVector> for Flector {
     }
 }
 
-impl Distance<Origin> for Flector {
+impl Distance<MultiVector> for FlectorAtInfinity {
     type Output = Magnitude;
 
-    fn distance(self, other: Origin) -> Magnitude {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPoint> for Flector {
-    type Output = Magnitude;
-
-    fn distance(self, other: RoundPoint) -> Magnitude {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointAtOrigin> for Flector {
-    type Output = Magnitude;
-
-    fn distance(self, other: RoundPointAtOrigin) -> Magnitude {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointCarrierAspect> for Flector {
-    type Output = Magnitude;
-
-    fn distance(self, other: RoundPointCarrierAspect) -> Magnitude {
+    fn distance(self, other: MultiVector) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -964,14 +940,6 @@ impl Distance<Flector> for Magnitude {
     }
 }
 
-impl Distance<Motor> for Magnitude {
-    type Output = Magnitude;
-
-    fn distance(self, other: Motor) -> Magnitude {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
 impl Distance<MultiVector> for Magnitude {
     type Output = Magnitude;
 
@@ -984,14 +952,6 @@ impl Distance<Origin> for Magnitude {
     type Output = Magnitude;
 
     fn distance(self, other: Origin) -> Magnitude {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Rotor> for Magnitude {
-    type Output = Magnitude;
-
-    fn distance(self, other: Rotor) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -1252,14 +1212,6 @@ impl Distance<Dipole> for Origin {
     }
 }
 
-impl Distance<Flector> for Origin {
-    type Output = Magnitude;
-
-    fn distance(self, other: Flector) -> Magnitude {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
 impl Distance<Magnitude> for Origin {
     type Output = Magnitude;
 
@@ -1344,14 +1296,6 @@ impl Distance<DipoleWeight> for RoundPoint {
     type Output = Magnitude;
 
     fn distance(self, other: DipoleWeight) -> Magnitude {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Flector> for RoundPoint {
-    type Output = Magnitude;
-
-    fn distance(self, other: Flector) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -1452,14 +1396,6 @@ impl Distance<DipoleWeight> for RoundPointAtInfinity {
     }
 }
 
-impl Distance<Flector> for RoundPointAtInfinity {
-    type Output = Magnitude;
-
-    fn distance(self, other: Flector) -> Magnitude {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
 impl Distance<MultiVector> for RoundPointAtInfinity {
     type Output = Magnitude;
 
@@ -1528,14 +1464,6 @@ impl Distance<DipoleCarrierAspect> for RoundPointAtOrigin {
     type Output = Magnitude;
 
     fn distance(self, other: DipoleCarrierAspect) -> Magnitude {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Flector> for RoundPointAtOrigin {
-    type Output = Magnitude;
-
-    fn distance(self, other: Flector) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -1616,14 +1544,6 @@ impl Distance<DipoleWeight> for RoundPointBulk {
     type Output = Magnitude;
 
     fn distance(self, other: DipoleWeight) -> Magnitude {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Flector> for RoundPointBulk {
-    type Output = Magnitude;
-
-    fn distance(self, other: Flector) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -1712,14 +1632,6 @@ impl Distance<DipoleWeight> for RoundPointCarrierAspect {
     type Output = Magnitude;
 
     fn distance(self, other: DipoleWeight) -> Magnitude {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Flector> for RoundPointCarrierAspect {
-    type Output = Magnitude;
-
-    fn distance(self, other: Flector) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -1828,14 +1740,6 @@ impl Distance<Flector> for Scalar {
     }
 }
 
-impl Distance<Motor> for Scalar {
-    type Output = Magnitude;
-
-    fn distance(self, other: Motor) -> Magnitude {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
 impl Distance<MultiVector> for Scalar {
     type Output = Magnitude;
 
@@ -1848,14 +1752,6 @@ impl Distance<Origin> for Scalar {
     type Output = Magnitude;
 
     fn distance(self, other: Origin) -> Magnitude {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Rotor> for Scalar {
-    type Output = Magnitude;
-
-    fn distance(self, other: Rotor) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }

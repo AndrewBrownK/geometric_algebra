@@ -238,6 +238,28 @@ impl AntiDual for Flector {
     }
 }
 
+impl AntiDual for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_dual(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from([0.0, -self.group0()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl AntiDual for Horizon {
     type Output = Infinity;
 
@@ -680,6 +702,18 @@ impl AntiReversal for Flector {
     }
 }
 
+impl AntiReversal for FlectorAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn anti_reversal(self) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
 impl AntiReversal for Horizon {
     type Output = Horizon;
 
@@ -1071,6 +1105,18 @@ impl Automorphism for Flector {
             groups: FlectorGroups {
                 g0: self.group0(),
                 g1: self.group1() * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl Automorphism for FlectorAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn automorphism(self) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             },
         }
     }
@@ -1486,6 +1532,18 @@ impl Conjugation for Flector {
     }
 }
 
+impl Conjugation for FlectorAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn conjugation(self) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
 impl Conjugation for Horizon {
     type Output = Horizon;
 
@@ -1884,6 +1942,16 @@ impl DoubleComplement for Flector {
     }
 }
 
+impl DoubleComplement for FlectorAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn double_complement(self) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups { g0: self.group0() },
+        }
+    }
+}
+
 impl DoubleComplement for Horizon {
     type Output = Horizon;
 
@@ -2277,6 +2345,28 @@ impl Dual for Flector {
                 g4: Simd32x3::from(0.0),
                 g5: Simd32x4::from(0.0),
                 g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Dual for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn dual(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from([0.0, self.group0()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
                 g9: Simd32x3::from(0.0),
@@ -2733,6 +2823,28 @@ impl LeftComplement for Flector {
     }
 }
 
+impl LeftComplement for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn left_complement(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from([self.group0()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([-self.group0()[0], -self.group0()[1], -self.group0()[2], 0.0]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl LeftComplement for Horizon {
     type Output = Origin;
 
@@ -3168,6 +3280,18 @@ impl Reversal for Flector {
     }
 }
 
+impl Reversal for FlectorAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn reversal(self) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
 impl Reversal for Horizon {
     type Output = Horizon;
 
@@ -3572,6 +3696,28 @@ impl RightComplement for Flector {
                 g4: Simd32x3::from(0.0),
                 g5: Simd32x4::from(0.0),
                 g6: self.group0() * Simd32x4::from(-1.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl RightComplement for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn right_complement(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from([self.group0()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([-self.group0()[0], -self.group0()[1], -self.group0()[2], 0.0]),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),

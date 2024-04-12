@@ -1,3 +1,4 @@
+use std::collections::BTreeMap;
 use crate::algebra::conformal::ConformalGeometricAlgebra;
 use crate::algebra::dialect::Dialect;
 use crate::algebra::{GeometricAlgebraTrait, MultiVectorClassRegistry};
@@ -68,6 +69,7 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         "Motor/Rotor:e415,e425,e435,e12345",
         "Motor/Translator:e235,e315,e125,e12345",
         "Flector:e15,e25,e35,e45|e4235,e4315,e4125,e3215",
+        "Flector/FlectorAtInfinity:e15,e25,e35,e3215",
 
         "MultiVector:\
             1,e12345|\
@@ -76,6 +78,20 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
             e423,e431,e412,e321|e415,e425,e435|e235,e315,e125|\
             e4235,e4315,e4125|e1234,e3215",
     ];
+
+    let sandwich_outputs: BTreeMap<(&str, &str), &str> = [
+
+        (("Translator", "Origin"), "Point"),
+        (("Translator", "LineAtOrigin"), "Line"),
+        (("Translator", "PlaneAtOrigin"), "Plane"),
+        (("Translator", "Rotor"), "Motor"),
+
+        (("Motor", "Origin"), "Point"),
+        (("Motor", "LineAtOrigin"), "Line"),
+        (("Motor", "PlaneAtOrigin"), "Plane"),
+        (("Motor", "Rotor"), "Motor"),
+
+    ].into_iter().collect();
 
     // Arbitrary personal preference for dialect
     let dialect = Dialect::default().also_wedge_dot().wedge().dot().also_meet_and_join();

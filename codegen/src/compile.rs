@@ -1851,6 +1851,10 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
         }
 
+        // TODO reciprocal sandwiches (rotation, translation, reflection)
+        //  https://rigidgeometricalgebra.org/wiki/index.php?title=Reciprocal_rotation
+        //  https://rigidgeometricalgebra.org/wiki/index.php?title=Reciprocal_translation
+        //  https://rigidgeometricalgebra.org/wiki/index.php?title=Reciprocal_reflection
         // let allowed_to_sandwich = ["Motor", "Translator", "Rotor", "Flector", "Point", "Plane"];
         let disallowed_to_be_sandwiched = ["Scalar", "AntiScalar", "Magnitude"];
         for (param_a, param_b) in registry.pair_parameters() {

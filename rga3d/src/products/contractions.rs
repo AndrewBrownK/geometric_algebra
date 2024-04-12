@@ -31,6 +31,14 @@ impl BulkContraction<Flector> for Flector {
     }
 }
 
+impl BulkContraction<FlectorAtInfinity> for Flector {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkContraction<Horizon> for Flector {
     type Output = Scalar;
 
@@ -103,10 +111,106 @@ impl BulkContraction<Translator> for Flector {
     }
 }
 
+impl BulkContraction<Flector> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<FlectorAtInfinity> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Horizon> for FlectorAtInfinity {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: Horizon) -> Scalar {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Line> for FlectorAtInfinity {
+    type Output = PointAtInfinity;
+
+    fn bulk_contraction(self, other: Line) -> PointAtInfinity {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<LineAtInfinity> for FlectorAtInfinity {
+    type Output = PointAtInfinity;
+
+    fn bulk_contraction(self, other: LineAtInfinity) -> PointAtInfinity {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Motor> for FlectorAtInfinity {
+    type Output = PointAtInfinity;
+
+    fn bulk_contraction(self, other: Motor) -> PointAtInfinity {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<MultiVector> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Plane> for FlectorAtInfinity {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: Plane) -> Scalar {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Point> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: Point) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<PointAtInfinity> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: PointAtInfinity) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Translator> for FlectorAtInfinity {
+    type Output = PointAtInfinity;
+
+    fn bulk_contraction(self, other: Translator) -> PointAtInfinity {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkContraction<Flector> for Horizon {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<FlectorAtInfinity> for Horizon {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -191,6 +295,14 @@ impl BulkContraction<Flector> for Line {
     }
 }
 
+impl BulkContraction<FlectorAtInfinity> for Line {
+    type Output = Point;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> Point {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkContraction<Line> for Line {
     type Output = Scalar;
 
@@ -251,6 +363,14 @@ impl BulkContraction<Flector> for LineAtInfinity {
     type Output = PointAtInfinity;
 
     fn bulk_contraction(self, other: Flector) -> PointAtInfinity {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<FlectorAtInfinity> for LineAtInfinity {
+    type Output = PointAtInfinity;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> PointAtInfinity {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -319,6 +439,14 @@ impl BulkContraction<Flector> for LineAtOrigin {
     }
 }
 
+impl BulkContraction<FlectorAtInfinity> for LineAtOrigin {
+    type Output = Point;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> Point {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkContraction<MultiVector> for LineAtOrigin {
     type Output = MultiVector;
 
@@ -347,6 +475,14 @@ impl BulkContraction<Flector> for Motor {
     type Output = Flector;
 
     fn bulk_contraction(self, other: Flector) -> Flector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<FlectorAtInfinity> for Motor {
+    type Output = Flector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> Flector {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -431,6 +567,14 @@ impl BulkContraction<Flector> for MultiVector {
     }
 }
 
+impl BulkContraction<FlectorAtInfinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkContraction<Horizon> for MultiVector {
     type Output = MultiVector;
 
@@ -511,6 +655,14 @@ impl BulkContraction<Flector> for Origin {
     }
 }
 
+impl BulkContraction<FlectorAtInfinity> for Origin {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> Scalar {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkContraction<MultiVector> for Origin {
     type Output = MultiVector;
 
@@ -523,6 +675,14 @@ impl BulkContraction<Flector> for Plane {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<FlectorAtInfinity> for Plane {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -607,6 +767,14 @@ impl BulkContraction<Flector> for PlaneAtOrigin {
     }
 }
 
+impl BulkContraction<FlectorAtInfinity> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkContraction<Line> for PlaneAtOrigin {
     type Output = Origin;
 
@@ -671,6 +839,14 @@ impl BulkContraction<Flector> for Point {
     }
 }
 
+impl BulkContraction<FlectorAtInfinity> for Point {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> Scalar {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkContraction<MultiVector> for Point {
     type Output = MultiVector;
 
@@ -703,6 +879,14 @@ impl BulkContraction<Flector> for PointAtInfinity {
     }
 }
 
+impl BulkContraction<FlectorAtInfinity> for PointAtInfinity {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> Scalar {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkContraction<MultiVector> for PointAtInfinity {
     type Output = MultiVector;
 
@@ -731,6 +915,14 @@ impl BulkContraction<Flector> for Rotor {
     type Output = Flector;
 
     fn bulk_contraction(self, other: Flector) -> Flector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<FlectorAtInfinity> for Rotor {
+    type Output = Flector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> Flector {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -811,6 +1003,14 @@ impl BulkContraction<Flector> for Translator {
     type Output = Flector;
 
     fn bulk_contraction(self, other: Flector) -> Flector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<FlectorAtInfinity> for Translator {
+    type Output = Flector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> Flector {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -960,6 +1160,38 @@ impl WeightContraction<Point> for Flector {
 }
 
 impl WeightContraction<Rotor> for Flector {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Flector> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Motor> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Motor) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<MultiVector> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Rotor> for FlectorAtInfinity {
     type Output = MultiVector;
 
     fn weight_contraction(self, other: Rotor) -> MultiVector {
@@ -1200,9 +1432,9 @@ impl WeightContraction<MultiVector> for Motor {
 }
 
 impl WeightContraction<Origin> for Motor {
-    type Output = Flector;
+    type Output = FlectorAtInfinity;
 
-    fn weight_contraction(self, other: Origin) -> Flector {
+    fn weight_contraction(self, other: Origin) -> FlectorAtInfinity {
         self.anti_wedge(other.right_weight_dual())
     }
 }
@@ -1224,9 +1456,9 @@ impl WeightContraction<PlaneAtOrigin> for Motor {
 }
 
 impl WeightContraction<Point> for Motor {
-    type Output = Flector;
+    type Output = FlectorAtInfinity;
 
-    fn weight_contraction(self, other: Point) -> Flector {
+    fn weight_contraction(self, other: Point) -> FlectorAtInfinity {
         self.anti_wedge(other.right_weight_dual())
     }
 }
@@ -1664,9 +1896,9 @@ impl WeightContraction<MultiVector> for Rotor {
 }
 
 impl WeightContraction<Origin> for Rotor {
-    type Output = Flector;
+    type Output = FlectorAtInfinity;
 
-    fn weight_contraction(self, other: Origin) -> Flector {
+    fn weight_contraction(self, other: Origin) -> FlectorAtInfinity {
         self.anti_wedge(other.right_weight_dual())
     }
 }
@@ -1688,9 +1920,9 @@ impl WeightContraction<PlaneAtOrigin> for Rotor {
 }
 
 impl WeightContraction<Point> for Rotor {
-    type Output = Flector;
+    type Output = FlectorAtInfinity;
 
-    fn weight_contraction(self, other: Point) -> Flector {
+    fn weight_contraction(self, other: Point) -> FlectorAtInfinity {
         self.anti_wedge(other.right_weight_dual())
     }
 }

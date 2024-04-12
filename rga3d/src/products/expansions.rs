@@ -31,6 +31,14 @@ impl BulkExpansion<Flector> for Flector {
     }
 }
 
+impl BulkExpansion<FlectorAtInfinity> for Flector {
+    type Output = Motor;
+
+    fn bulk_expansion(self, other: FlectorAtInfinity) -> Motor {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkExpansion<Horizon> for Flector {
     type Output = Rotor;
 
@@ -103,10 +111,106 @@ impl BulkExpansion<Translator> for Flector {
     }
 }
 
+impl BulkExpansion<Flector> for FlectorAtInfinity {
+    type Output = Motor;
+
+    fn bulk_expansion(self, other: Flector) -> Motor {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<FlectorAtInfinity> for FlectorAtInfinity {
+    type Output = Motor;
+
+    fn bulk_expansion(self, other: FlectorAtInfinity) -> Motor {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Horizon> for FlectorAtInfinity {
+    type Output = Rotor;
+
+    fn bulk_expansion(self, other: Horizon) -> Rotor {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Line> for FlectorAtInfinity {
+    type Output = PlaneAtOrigin;
+
+    fn bulk_expansion(self, other: Line) -> PlaneAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<LineAtInfinity> for FlectorAtInfinity {
+    type Output = PlaneAtOrigin;
+
+    fn bulk_expansion(self, other: LineAtInfinity) -> PlaneAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Motor> for FlectorAtInfinity {
+    type Output = PlaneAtOrigin;
+
+    fn bulk_expansion(self, other: Motor) -> PlaneAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<MultiVector> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Plane> for FlectorAtInfinity {
+    type Output = Rotor;
+
+    fn bulk_expansion(self, other: Plane) -> Rotor {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Point> for FlectorAtInfinity {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: Point) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<PointAtInfinity> for FlectorAtInfinity {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: PointAtInfinity) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<Translator> for FlectorAtInfinity {
+    type Output = PlaneAtOrigin;
+
+    fn bulk_expansion(self, other: Translator) -> PlaneAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkExpansion<Flector> for Horizon {
     type Output = AntiScalar;
 
     fn bulk_expansion(self, other: Flector) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<FlectorAtInfinity> for Horizon {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: FlectorAtInfinity) -> AntiScalar {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -139,6 +243,14 @@ impl BulkExpansion<Flector> for Line {
     type Output = Plane;
 
     fn bulk_expansion(self, other: Flector) -> Plane {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<FlectorAtInfinity> for Line {
+    type Output = Plane;
+
+    fn bulk_expansion(self, other: FlectorAtInfinity) -> Plane {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -207,6 +319,14 @@ impl BulkExpansion<Flector> for LineAtInfinity {
     }
 }
 
+impl BulkExpansion<FlectorAtInfinity> for LineAtInfinity {
+    type Output = Plane;
+
+    fn bulk_expansion(self, other: FlectorAtInfinity) -> Plane {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkExpansion<Horizon> for LineAtInfinity {
     type Output = PlaneAtOrigin;
 
@@ -271,6 +391,14 @@ impl BulkExpansion<Flector> for LineAtOrigin {
     }
 }
 
+impl BulkExpansion<FlectorAtInfinity> for LineAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn bulk_expansion(self, other: FlectorAtInfinity) -> PlaneAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkExpansion<MultiVector> for LineAtOrigin {
     type Output = MultiVector;
 
@@ -283,6 +411,14 @@ impl BulkExpansion<Flector> for Motor {
     type Output = Plane;
 
     fn bulk_expansion(self, other: Flector) -> Plane {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<FlectorAtInfinity> for Motor {
+    type Output = Plane;
+
+    fn bulk_expansion(self, other: FlectorAtInfinity) -> Plane {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -347,6 +483,14 @@ impl BulkExpansion<Flector> for MultiVector {
     type Output = MultiVector;
 
     fn bulk_expansion(self, other: Flector) -> MultiVector {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<FlectorAtInfinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: FlectorAtInfinity) -> MultiVector {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -431,6 +575,14 @@ impl BulkExpansion<Flector> for Origin {
     }
 }
 
+impl BulkExpansion<FlectorAtInfinity> for Origin {
+    type Output = Rotor;
+
+    fn bulk_expansion(self, other: FlectorAtInfinity) -> Rotor {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkExpansion<MultiVector> for Origin {
     type Output = MultiVector;
 
@@ -443,6 +595,14 @@ impl BulkExpansion<Flector> for Plane {
     type Output = AntiScalar;
 
     fn bulk_expansion(self, other: Flector) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<FlectorAtInfinity> for Plane {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: FlectorAtInfinity) -> AntiScalar {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -479,6 +639,14 @@ impl BulkExpansion<Flector> for PlaneAtOrigin {
     }
 }
 
+impl BulkExpansion<FlectorAtInfinity> for PlaneAtOrigin {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: FlectorAtInfinity) -> AntiScalar {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkExpansion<MultiVector> for PlaneAtOrigin {
     type Output = MultiVector;
 
@@ -491,6 +659,14 @@ impl BulkExpansion<Flector> for Point {
     type Output = Motor;
 
     fn bulk_expansion(self, other: Flector) -> Motor {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<FlectorAtInfinity> for Point {
+    type Output = Motor;
+
+    fn bulk_expansion(self, other: FlectorAtInfinity) -> Motor {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -575,6 +751,14 @@ impl BulkExpansion<Flector> for PointAtInfinity {
     }
 }
 
+impl BulkExpansion<FlectorAtInfinity> for PointAtInfinity {
+    type Output = Motor;
+
+    fn bulk_expansion(self, other: FlectorAtInfinity) -> Motor {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkExpansion<Horizon> for PointAtInfinity {
     type Output = LineAtOrigin;
 
@@ -655,6 +839,14 @@ impl BulkExpansion<Flector> for Rotor {
     }
 }
 
+impl BulkExpansion<FlectorAtInfinity> for Rotor {
+    type Output = PlaneAtOrigin;
+
+    fn bulk_expansion(self, other: FlectorAtInfinity) -> PlaneAtOrigin {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkExpansion<MultiVector> for Rotor {
     type Output = MultiVector;
 
@@ -667,6 +859,14 @@ impl BulkExpansion<Flector> for Translator {
     type Output = Plane;
 
     fn bulk_expansion(self, other: Flector) -> Plane {
+        self.wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkExpansion<FlectorAtInfinity> for Translator {
+    type Output = Plane;
+
+    fn bulk_expansion(self, other: FlectorAtInfinity) -> Plane {
         self.wedge(other.right_bulk_dual())
     }
 }
@@ -811,6 +1011,78 @@ impl WeightExpansion<Translator> for Flector {
     type Output = Flector;
 
     fn weight_expansion(self, other: Translator) -> Flector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Flector> for FlectorAtInfinity {
+    type Output = Motor;
+
+    fn weight_expansion(self, other: Flector) -> Motor {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Line> for FlectorAtInfinity {
+    type Output = Horizon;
+
+    fn weight_expansion(self, other: Line) -> Horizon {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<LineAtOrigin> for FlectorAtInfinity {
+    type Output = Horizon;
+
+    fn weight_expansion(self, other: LineAtOrigin) -> Horizon {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Motor> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: Motor) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<MultiVector> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Plane> for FlectorAtInfinity {
+    type Output = LineAtInfinity;
+
+    fn weight_expansion(self, other: Plane) -> LineAtInfinity {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<PlaneAtOrigin> for FlectorAtInfinity {
+    type Output = LineAtInfinity;
+
+    fn weight_expansion(self, other: PlaneAtOrigin) -> LineAtInfinity {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Rotor> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: Rotor) -> MultiVector {
+        self.wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightExpansion<Translator> for FlectorAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn weight_expansion(self, other: Translator) -> FlectorAtInfinity {
         self.wedge(other.right_weight_dual())
     }
 }

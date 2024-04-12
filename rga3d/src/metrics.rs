@@ -332,6 +332,22 @@ impl Distance<Translator> for Flector {
     }
 }
 
+impl Distance<Flector> for FlectorAtInfinity {
+    type Output = Magnitude;
+
+    fn distance(self, other: Flector) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<MultiVector> for FlectorAtInfinity {
+    type Output = Magnitude;
+
+    fn distance(self, other: MultiVector) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
 impl Distance<Flector> for Horizon {
     type Output = Magnitude;
 
@@ -420,26 +436,10 @@ impl Distance<Flector> for LineAtInfinity {
     }
 }
 
-impl Distance<Motor> for LineAtInfinity {
-    type Output = Magnitude;
-
-    fn distance(self, other: Motor) -> Magnitude {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
 impl Distance<MultiVector> for LineAtInfinity {
     type Output = Magnitude;
 
     fn distance(self, other: MultiVector) -> Magnitude {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Rotor> for LineAtInfinity {
-    type Output = Magnitude;
-
-    fn distance(self, other: Rotor) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -492,14 +492,6 @@ impl Distance<Flector> for Magnitude {
     }
 }
 
-impl Distance<Motor> for Magnitude {
-    type Output = Magnitude;
-
-    fn distance(self, other: Motor) -> Magnitude {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
 impl Distance<MultiVector> for Magnitude {
     type Output = Magnitude;
 
@@ -520,14 +512,6 @@ impl Distance<Point> for Magnitude {
     type Output = Magnitude;
 
     fn distance(self, other: Point) -> Magnitude {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Rotor> for Magnitude {
-    type Output = Magnitude;
-
-    fn distance(self, other: Rotor) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -924,26 +908,10 @@ impl Distance<Flector> for PointAtInfinity {
     }
 }
 
-impl Distance<Motor> for PointAtInfinity {
-    type Output = Magnitude;
-
-    fn distance(self, other: Motor) -> Magnitude {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
 impl Distance<MultiVector> for PointAtInfinity {
     type Output = Magnitude;
 
     fn distance(self, other: MultiVector) -> Magnitude {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Rotor> for PointAtInfinity {
-    type Output = Magnitude;
-
-    fn distance(self, other: Rotor) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -996,14 +964,6 @@ impl Distance<Flector> for Scalar {
     }
 }
 
-impl Distance<Motor> for Scalar {
-    type Output = Magnitude;
-
-    fn distance(self, other: Motor) -> Magnitude {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
 impl Distance<MultiVector> for Scalar {
     type Output = Magnitude;
 
@@ -1012,26 +972,10 @@ impl Distance<MultiVector> for Scalar {
     }
 }
 
-impl Distance<Rotor> for Scalar {
-    type Output = Magnitude;
-
-    fn distance(self, other: Rotor) -> Magnitude {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
 impl Distance<Flector> for Translator {
     type Output = Magnitude;
 
     fn distance(self, other: Flector) -> Magnitude {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Motor> for Translator {
-    type Output = Magnitude;
-
-    fn distance(self, other: Motor) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -1056,14 +1000,6 @@ impl Distance<Point> for Translator {
     type Output = Magnitude;
 
     fn distance(self, other: Point) -> Magnitude {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Rotor> for Translator {
-    type Output = Magnitude;
-
-    fn distance(self, other: Rotor) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }

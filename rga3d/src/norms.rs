@@ -66,6 +66,14 @@ impl BulkNormSquared for Flector {
     }
 }
 
+impl BulkNormSquared for FlectorAtInfinity {
+    type Output = Scalar;
+
+    fn bulk_norm_squared(self) -> Scalar {
+        self.dot(self)
+    }
+}
+
 impl BulkNormSquared for Horizon {
     type Output = Scalar;
 
@@ -155,6 +163,14 @@ impl BulkNormSquared for Translator {
 }
 
 impl BulkNorm for Flector {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
+    }
+}
+
+impl BulkNorm for FlectorAtInfinity {
     type Output = Scalar;
 
     fn bulk_norm(self) -> Scalar {

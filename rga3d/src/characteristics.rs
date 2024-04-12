@@ -252,9 +252,9 @@ impl Attitude for Magnitude {
 }
 
 impl Attitude for Motor {
-    type Output = Flector;
+    type Output = FlectorAtInfinity;
 
-    fn attitude(self) -> Flector {
+    fn attitude(self) -> FlectorAtInfinity {
         self.anti_wedge(Horizon::one())
     }
 }
@@ -300,9 +300,9 @@ impl Attitude for Point {
 }
 
 impl Attitude for Rotor {
-    type Output = Flector;
+    type Output = FlectorAtInfinity;
 
-    fn attitude(self) -> Flector {
+    fn attitude(self) -> FlectorAtInfinity {
         self.anti_wedge(Horizon::one())
     }
 }

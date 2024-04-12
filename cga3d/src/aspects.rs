@@ -82,15 +82,22 @@ impl Bulk for FlatPointAtInfinity {
 }
 
 impl Bulk for Flector {
-    type Output = Flector;
+    type Output = FlectorAtInfinity;
 
-    fn bulk(self) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: self.group0() * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
-                g1: self.group1() * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+    fn bulk(self) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]),
             },
         }
+    }
+}
+
+impl Bulk for FlectorAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn bulk(self) -> FlectorAtInfinity {
+        self
     }
 }
 

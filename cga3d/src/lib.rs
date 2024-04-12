@@ -2548,6 +2548,83 @@ impl std::fmt::Debug for Flector {
 }
 
 #[derive(Clone, Copy)]
+struct FlectorAtInfinityGroups {
+    /// e15, e25, e35, -e1235
+    g0: Simd32x4,
+}
+
+#[derive(Clone, Copy)]
+pub union FlectorAtInfinity {
+    groups: FlectorAtInfinityGroups,
+    /// e15, e25, e35, -e1235
+    elements: [f32; 4],
+}
+
+impl FlectorAtInfinity {
+    #[allow(clippy::too_many_arguments)]
+    pub const fn new(e15: f32, e25: f32, e35: f32, neg_e1235: f32) -> Self {
+        Self {
+            elements: [e15, e25, e35, neg_e1235],
+        }
+    }
+    pub const fn from_groups(g0: Simd32x4) -> Self {
+        Self {
+            groups: FlectorAtInfinityGroups { g0 },
+        }
+    }
+    #[inline(always)]
+    pub fn group0(&self) -> Simd32x4 {
+        unsafe { self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group0_mut(&mut self) -> &mut Simd32x4 {
+        unsafe { &mut self.groups.g0 }
+    }
+}
+
+const FLECTORATINFINITY_INDEX_REMAP: [usize; 4] = [0, 1, 2, 3];
+
+impl std::ops::Index<usize> for FlectorAtInfinity {
+    type Output = f32;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        unsafe { &self.elements[FLECTORATINFINITY_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::ops::IndexMut<usize> for FlectorAtInfinity {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        unsafe { &mut self.elements[FLECTORATINFINITY_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::convert::From<FlectorAtInfinity> for [f32; 4] {
+    fn from(vector: FlectorAtInfinity) -> Self {
+        unsafe { [vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[3]] }
+    }
+}
+
+impl std::convert::From<[f32; 4]> for FlectorAtInfinity {
+    fn from(array: [f32; 4]) -> Self {
+        Self {
+            elements: [array[0], array[1], array[2], array[3]],
+        }
+    }
+}
+
+impl std::fmt::Debug for FlectorAtInfinity {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter
+            .debug_struct("FlectorAtInfinity")
+            .field("e15", &self[0])
+            .field("e25", &self[1])
+            .field("e35", &self[2])
+            .field("-e1235", &self[3])
+            .finish()
+    }
+}
+
+#[derive(Clone, Copy)]
 struct MultiVectorGroups {
     /// 1, e12345
     g0: Simd32x2,
@@ -2942,6 +3019,14 @@ impl One for Flector {
     }
 }
 
+impl One for FlectorAtInfinity {
+    fn one() -> Self {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups { g0: Simd32x4::from(0.0) },
+        }
+    }
+}
+
 impl One for Horizon {
     fn one() -> Self {
         Horizon {
@@ -3244,6 +3329,14 @@ impl Zero for Flector {
                 g0: Simd32x4::from(0.0),
                 g1: Simd32x4::from(0.0),
             },
+        }
+    }
+}
+
+impl Zero for FlectorAtInfinity {
+    fn zero() -> Self {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups { g0: Simd32x4::from(0.0) },
         }
     }
 }
@@ -3587,6 +3680,18 @@ impl Neg for Flector {
             groups: FlectorGroups {
                 g0: self.group0() * Simd32x4::from(-1.0),
                 g1: self.group1() * Simd32x4::from([1.0, -1.0, 1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl Neg for FlectorAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn neg(self) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             },
         }
     }
@@ -5036,6 +5141,30 @@ impl Add<Flector> for FlatPointAtInfinity {
     }
 }
 
+impl Add<FlectorAtInfinity> for FlatPointAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn add(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group0(),
+            },
+        }
+    }
+}
+
+impl Add<Horizon> for FlatPointAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn add(self, other: Horizon) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
 impl Add<MultiVector> for FlatPointAtInfinity {
     type Output = MultiVector;
 
@@ -5225,6 +5354,25 @@ impl AddAssign<Flector> for Flector {
     }
 }
 
+impl Add<FlectorAtInfinity> for Flector {
+    type Output = Flector;
+
+    fn add(self, other: FlectorAtInfinity) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g1: self.group1() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl AddAssign<FlectorAtInfinity> for Flector {
+    fn add_assign(&mut self, other: FlectorAtInfinity) {
+        *self = (*self).add(other);
+    }
+}
+
 impl Add<Horizon> for Flector {
     type Output = Flector;
 
@@ -5304,6 +5452,107 @@ impl AddAssign<PlaneAtOrigin> for Flector {
     }
 }
 
+impl Add<FlatPointAtInfinity> for FlectorAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn add(self, other: FlatPointAtInfinity) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: self.group0() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl AddAssign<FlatPointAtInfinity> for FlectorAtInfinity {
+    fn add_assign(&mut self, other: FlatPointAtInfinity) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<Flector> for FlectorAtInfinity {
+    type Output = Flector;
+
+    fn add(self, other: Flector) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group0(),
+                g1: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]) + other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<FlectorAtInfinity> for FlectorAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn add(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: self.group0() + other.group0(),
+            },
+        }
+    }
+}
+
+impl AddAssign<FlectorAtInfinity> for FlectorAtInfinity {
+    fn add_assign(&mut self, other: FlectorAtInfinity) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<Horizon> for FlectorAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn add(self, other: Horizon) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: self.group0() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl AddAssign<Horizon> for FlectorAtInfinity {
+    fn add_assign(&mut self, other: Horizon) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<MultiVector> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
+                g3: other.group3(),
+                g4: other.group4(),
+                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group5(),
+                g6: other.group6(),
+                g7: other.group7(),
+                g8: other.group8(),
+                g9: other.group9(),
+                g10: Simd32x2::from([0.0, self.group0()[3]]) + other.group10(),
+            },
+        }
+    }
+}
+
+impl Add<FlatPointAtInfinity> for Horizon {
+    type Output = FlectorAtInfinity;
+
+    fn add(self, other: FlatPointAtInfinity) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
 impl Add<Flector> for Horizon {
     type Output = Flector;
 
@@ -5312,6 +5561,18 @@ impl Add<Flector> for Horizon {
             groups: FlectorGroups {
                 g0: other.group0(),
                 g1: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<FlectorAtInfinity> for Horizon {
+    type Output = FlectorAtInfinity;
+
+    fn add(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group0(),
             },
         }
     }
@@ -6518,6 +6779,34 @@ impl Add<Flector> for MultiVector {
 
 impl AddAssign<Flector> for MultiVector {
     fn add_assign(&mut self, other: Flector) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<FlectorAtInfinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn add(self, other: FlectorAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10() + Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl AddAssign<FlectorAtInfinity> for MultiVector {
+    fn add_assign(&mut self, other: FlectorAtInfinity) {
         *self = (*self).add(other);
     }
 }
@@ -8870,6 +9159,26 @@ impl DivAssign<Flector> for Flector {
     }
 }
 
+impl Div<FlectorAtInfinity> for FlectorAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn div(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 1.0])
+                    / Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group0()[3]])
+                    * Simd32x4::from([1.0, 1.0, 1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl DivAssign<FlectorAtInfinity> for FlectorAtInfinity {
+    fn div_assign(&mut self, other: FlectorAtInfinity) {
+        *self = (*self).div(other);
+    }
+}
+
 impl Div<Horizon> for Horizon {
     type Output = Horizon;
 
@@ -9499,6 +9808,16 @@ impl Into<FlatPointAtOrigin> for Flector {
     }
 }
 
+impl Into<FlectorAtInfinity> for Flector {
+    fn into(self) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]),
+            },
+        }
+    }
+}
+
 impl Into<Horizon> for Flector {
     fn into(self) -> Horizon {
         Horizon {
@@ -9521,6 +9840,24 @@ impl Into<PlaneAtOrigin> for Flector {
             groups: PlaneAtOriginGroups {
                 g0: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
             },
+        }
+    }
+}
+
+impl Into<FlatPointAtInfinity> for FlectorAtInfinity {
+    fn into(self) -> FlatPointAtInfinity {
+        FlatPointAtInfinity {
+            groups: FlatPointAtInfinityGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl Into<Horizon> for FlectorAtInfinity {
+    fn into(self) -> Horizon {
+        Horizon {
+            groups: HorizonGroups { g0: self.group0()[3] },
         }
     }
 }
@@ -9729,6 +10066,16 @@ impl Into<Flector> for MultiVector {
             groups: FlectorGroups {
                 g0: self.group5(),
                 g1: Simd32x4::from([self.group9()[0], self.group9()[1], self.group9()[2], self.group10()[1]]),
+            },
+        }
+    }
+}
+
+impl Into<FlectorAtInfinity> for MultiVector {
+    fn into(self) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: Simd32x4::from([self.group5()[0], self.group5()[1], self.group5()[2], self.group10()[1]]),
             },
         }
     }
@@ -10344,6 +10691,24 @@ impl Mul<Flector> for Flector {
 
 impl MulAssign<Flector> for Flector {
     fn mul_assign(&mut self, other: Flector) {
+        *self = (*self).mul(other);
+    }
+}
+
+impl Mul<FlectorAtInfinity> for FlectorAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn mul(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl MulAssign<FlectorAtInfinity> for FlectorAtInfinity {
+    fn mul_assign(&mut self, other: FlectorAtInfinity) {
         *self = (*self).mul(other);
     }
 }
@@ -11928,6 +12293,30 @@ impl Sub<Flector> for FlatPointAtInfinity {
     }
 }
 
+impl Sub<FlectorAtInfinity> for FlatPointAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn sub(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<Horizon> for FlatPointAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn sub(self, other: Horizon) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
 impl Sub<MultiVector> for FlatPointAtInfinity {
     type Output = MultiVector;
 
@@ -12117,6 +12506,25 @@ impl SubAssign<Flector> for Flector {
     }
 }
 
+impl Sub<FlectorAtInfinity> for Flector {
+    type Output = Flector;
+
+    fn sub(self, other: FlectorAtInfinity) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group0() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g1: self.group1() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl SubAssign<FlectorAtInfinity> for Flector {
+    fn sub_assign(&mut self, other: FlectorAtInfinity) {
+        *self = (*self).sub(other);
+    }
+}
+
 impl Sub<Horizon> for Flector {
     type Output = Flector;
 
@@ -12196,6 +12604,107 @@ impl SubAssign<PlaneAtOrigin> for Flector {
     }
 }
 
+impl Sub<FlatPointAtInfinity> for FlectorAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn sub(self, other: FlatPointAtInfinity) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: self.group0() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl SubAssign<FlatPointAtInfinity> for FlectorAtInfinity {
+    fn sub_assign(&mut self, other: FlatPointAtInfinity) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Flector> for FlectorAtInfinity {
+    type Output = Flector;
+
+    fn sub(self, other: Flector) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group0(),
+                g1: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<FlectorAtInfinity> for FlectorAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn sub(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: self.group0() - other.group0(),
+            },
+        }
+    }
+}
+
+impl SubAssign<FlectorAtInfinity> for FlectorAtInfinity {
+    fn sub_assign(&mut self, other: FlectorAtInfinity) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Horizon> for FlectorAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn sub(self, other: Horizon) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: self.group0() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl SubAssign<Horizon> for FlectorAtInfinity {
+    fn sub_assign(&mut self, other: Horizon) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<MultiVector> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x2::from(0.0) - other.group2(),
+                g3: Simd32x3::from(0.0) - other.group3(),
+                g4: Simd32x3::from(0.0) - other.group4(),
+                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group5(),
+                g6: Simd32x4::from(0.0) - other.group6(),
+                g7: Simd32x3::from(0.0) - other.group7(),
+                g8: Simd32x3::from(0.0) - other.group8(),
+                g9: Simd32x3::from(0.0) - other.group9(),
+                g10: Simd32x2::from([0.0, self.group0()[3]]) - other.group10(),
+            },
+        }
+    }
+}
+
+impl Sub<FlatPointAtInfinity> for Horizon {
+    type Output = FlectorAtInfinity;
+
+    fn sub(self, other: FlatPointAtInfinity) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
 impl Sub<Flector> for Horizon {
     type Output = Flector;
 
@@ -12204,6 +12713,18 @@ impl Sub<Flector> for Horizon {
             groups: FlectorGroups {
                 g0: Simd32x4::from(0.0) - other.group0(),
                 g1: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<FlectorAtInfinity> for Horizon {
+    type Output = FlectorAtInfinity;
+
+    fn sub(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group0(),
             },
         }
     }
@@ -13410,6 +13931,34 @@ impl Sub<Flector> for MultiVector {
 
 impl SubAssign<Flector> for MultiVector {
     fn sub_assign(&mut self, other: Flector) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<FlectorAtInfinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn sub(self, other: FlectorAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10() - Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl SubAssign<FlectorAtInfinity> for MultiVector {
+    fn sub_assign(&mut self, other: FlectorAtInfinity) {
         *self = (*self).sub(other);
     }
 }

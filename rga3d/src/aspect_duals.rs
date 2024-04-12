@@ -47,6 +47,14 @@ impl LeftBulkDual for Flector {
     }
 }
 
+impl LeftBulkDual for FlectorAtInfinity {
+    type Output = Flector;
+
+    fn left_bulk_dual(self) -> Flector {
+        self.bulk().left_complement()
+    }
+}
+
 impl LeftBulkDual for Horizon {
     type Output = Origin;
 
@@ -240,6 +248,14 @@ impl LeftWeightDual for Translator {
 }
 
 impl RightBulkDual for Flector {
+    type Output = Flector;
+
+    fn right_bulk_dual(self) -> Flector {
+        self.bulk().right_complement()
+    }
+}
+
+impl RightBulkDual for FlectorAtInfinity {
     type Output = Flector;
 
     fn right_bulk_dual(self) -> Flector {

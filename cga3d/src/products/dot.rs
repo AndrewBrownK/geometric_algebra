@@ -575,6 +575,18 @@ impl AntiDot<Flector> for Dipole {
     }
 }
 
+impl AntiDot<FlectorAtInfinity> for Dipole {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: FlectorAtInfinity) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
 impl AntiDot<MultiVector> for Dipole {
     type Output = AntiScalar;
 
@@ -721,6 +733,18 @@ impl AntiDot<Flector> for DipoleCarrierAspect {
     }
 }
 
+impl AntiDot<FlectorAtInfinity> for DipoleCarrierAspect {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: FlectorAtInfinity) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
 impl AntiDot<MultiVector> for DipoleCarrierAspect {
     type Output = AntiScalar;
 
@@ -778,6 +802,18 @@ impl AntiDot<Flector> for DipoleWeight {
     type Output = AntiScalar;
 
     fn anti_dot(self, other: Flector) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<FlectorAtInfinity> for DipoleWeight {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: FlectorAtInfinity) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
@@ -1121,6 +1157,78 @@ impl AntiDot<SphereWeight> for Flector {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group1()[3] * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiDot<Dipole> for FlectorAtInfinity {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Dipole) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<DipoleCarrierAspect> for FlectorAtInfinity {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: DipoleCarrierAspect) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<DipoleWeight> for FlectorAtInfinity {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: DipoleWeight) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<MultiVector> for FlectorAtInfinity {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: MultiVector) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group3()[0] + self.group0()[1] * other.group3()[1] + self.group0()[2] * other.group3()[2] - self.group0()[3] * other.group10()[0],
+            },
+        }
+    }
+}
+
+impl AntiDot<Sphere> for FlectorAtInfinity {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Sphere) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0()[3] * other.group1()[0],
+            },
+        }
+    }
+}
+
+impl AntiDot<SphereWeight> for FlectorAtInfinity {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: SphereWeight) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0()[3] * other.group0(),
             },
         }
     }
@@ -1850,6 +1958,18 @@ impl AntiDot<Flector> for MultiVector {
                     + self.group9()[1] * other.group1()[1]
                     + self.group9()[2] * other.group1()[2]
                     - self.group10()[0] * other.group1()[3],
+            },
+        }
+    }
+}
+
+impl AntiDot<FlectorAtInfinity> for MultiVector {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: FlectorAtInfinity) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group3()[0] * other.group0()[0] + self.group3()[1] * other.group0()[1] + self.group3()[2] * other.group0()[2] - self.group10()[0] * other.group0()[3],
             },
         }
     }
@@ -2913,6 +3033,18 @@ impl AntiDot<Flector> for Sphere {
     }
 }
 
+impl AntiDot<FlectorAtInfinity> for Sphere {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: FlectorAtInfinity) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group1()[0] * other.group0()[3],
+            },
+        }
+    }
+}
+
 impl AntiDot<Horizon> for Sphere {
     type Output = AntiScalar;
 
@@ -2996,6 +3128,18 @@ impl AntiDot<Flector> for SphereWeight {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0() * other.group1()[3],
+            },
+        }
+    }
+}
+
+impl AntiDot<FlectorAtInfinity> for SphereWeight {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: FlectorAtInfinity) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0() * other.group0()[3],
             },
         }
     }
@@ -3711,6 +3855,18 @@ impl Dot<Flector> for Dipole {
     }
 }
 
+impl Dot<FlectorAtInfinity> for Dipole {
+    type Output = Scalar;
+
+    fn dot(self, other: FlectorAtInfinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
 impl Dot<MultiVector> for Dipole {
     type Output = Scalar;
 
@@ -3859,6 +4015,18 @@ impl Dot<Flector> for DipoleCarrierAspect {
     }
 }
 
+impl Dot<FlectorAtInfinity> for DipoleCarrierAspect {
+    type Output = Scalar;
+
+    fn dot(self, other: FlectorAtInfinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
 impl Dot<MultiVector> for DipoleCarrierAspect {
     type Output = Scalar;
 
@@ -3917,6 +4085,18 @@ impl Dot<Flector> for DipoleWeight {
     type Output = Scalar;
 
     fn dot(self, other: Flector) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<FlectorAtInfinity> for DipoleWeight {
+    type Output = Scalar;
+
+    fn dot(self, other: FlectorAtInfinity) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -4260,6 +4440,79 @@ impl Dot<SphereWeight> for Flector {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group1()[3] * other.group0(),
+            },
+        }
+    }
+}
+
+impl Dot<Dipole> for FlectorAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: Dipole) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<DipoleCarrierAspect> for FlectorAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: DipoleCarrierAspect) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<DipoleWeight> for FlectorAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: DipoleWeight) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<MultiVector> for FlectorAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: MultiVector) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group3()[0] - self.group0()[1] * other.group3()[1] - self.group0()[2] * other.group3()[2]
+                    + self.group0()[3] * other.group10()[0],
+            },
+        }
+    }
+}
+
+impl Dot<Sphere> for FlectorAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: Sphere) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[3] * other.group1()[0],
+            },
+        }
+    }
+}
+
+impl Dot<SphereWeight> for FlectorAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: SphereWeight) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[3] * other.group0(),
             },
         }
     }
@@ -4988,6 +5241,19 @@ impl Dot<Flector> for MultiVector {
                     - self.group9()[1] * other.group1()[1]
                     - self.group9()[2] * other.group1()[2]
                     + self.group10()[0] * other.group1()[3],
+            },
+        }
+    }
+}
+
+impl Dot<FlectorAtInfinity> for MultiVector {
+    type Output = Scalar;
+
+    fn dot(self, other: FlectorAtInfinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group3()[0] * other.group0()[0] - self.group3()[1] * other.group0()[1] - self.group3()[2] * other.group0()[2]
+                    + self.group10()[0] * other.group0()[3],
             },
         }
     }
@@ -6052,6 +6318,18 @@ impl Dot<Flector> for Sphere {
     }
 }
 
+impl Dot<FlectorAtInfinity> for Sphere {
+    type Output = Scalar;
+
+    fn dot(self, other: FlectorAtInfinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group1()[0] * other.group0()[3],
+            },
+        }
+    }
+}
+
 impl Dot<Horizon> for Sphere {
     type Output = Scalar;
 
@@ -6135,6 +6413,18 @@ impl Dot<Flector> for SphereWeight {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0() * other.group1()[3],
+            },
+        }
+    }
+}
+
+impl Dot<FlectorAtInfinity> for SphereWeight {
+    type Output = Scalar;
+
+    fn dot(self, other: FlectorAtInfinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0() * other.group0()[3],
             },
         }
     }

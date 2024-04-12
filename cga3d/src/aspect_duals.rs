@@ -111,6 +111,14 @@ impl LeftBulkDual for Flector {
     }
 }
 
+impl LeftBulkDual for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn left_bulk_dual(self) -> MultiVector {
+        self.bulk().left_complement()
+    }
+}
+
 impl LeftBulkDual for Horizon {
     type Output = Origin;
 
@@ -576,6 +584,14 @@ impl RightBulkDual for FlatPointAtInfinity {
 }
 
 impl RightBulkDual for Flector {
+    type Output = MultiVector;
+
+    fn right_bulk_dual(self) -> MultiVector {
+        self.bulk().right_complement()
+    }
+}
+
+impl RightBulkDual for FlectorAtInfinity {
     type Output = MultiVector;
 
     fn right_bulk_dual(self) -> MultiVector {

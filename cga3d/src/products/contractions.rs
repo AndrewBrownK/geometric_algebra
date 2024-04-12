@@ -63,6 +63,14 @@ impl BulkContraction<Flector> for Circle {
     }
 }
 
+impl BulkContraction<FlectorAtInfinity> for Circle {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkContraction<Infinity> for Circle {
     type Output = DipoleCarrierAspect;
 
@@ -143,6 +151,14 @@ impl BulkContraction<Flector> for CircleBulk {
     }
 }
 
+impl BulkContraction<FlectorAtInfinity> for CircleBulk {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkContraction<MultiVector> for CircleBulk {
     type Output = MultiVector;
 
@@ -159,6 +175,14 @@ impl BulkContraction<Flector> for CircleCarrierAspect {
     }
 }
 
+impl BulkContraction<FlectorAtInfinity> for CircleCarrierAspect {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkContraction<MultiVector> for CircleCarrierAspect {
     type Output = MultiVector;
 
@@ -171,6 +195,14 @@ impl BulkContraction<Flector> for CircleWeight {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<FlectorAtInfinity> for CircleWeight {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -211,6 +243,14 @@ impl BulkContraction<Flector> for Dipole {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<FlectorAtInfinity> for Dipole {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -263,6 +303,14 @@ impl BulkContraction<Flector> for DipoleBulk {
     }
 }
 
+impl BulkContraction<FlectorAtInfinity> for DipoleBulk {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkContraction<MultiVector> for DipoleBulk {
     type Output = MultiVector;
 
@@ -279,6 +327,14 @@ impl BulkContraction<Flector> for DipoleCarrierAspect {
     }
 }
 
+impl BulkContraction<FlectorAtInfinity> for DipoleCarrierAspect {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkContraction<MultiVector> for DipoleCarrierAspect {
     type Output = MultiVector;
 
@@ -291,6 +347,14 @@ impl BulkContraction<Flector> for DipoleWeight {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<FlectorAtInfinity> for DipoleWeight {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -331,6 +395,14 @@ impl BulkContraction<Flector> for FlatPoint {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<FlectorAtInfinity> for FlatPoint {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -407,6 +479,14 @@ impl BulkContraction<Flector> for FlatPointAtInfinity {
     }
 }
 
+impl BulkContraction<FlectorAtInfinity> for FlatPointAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkContraction<Infinity> for FlatPointAtInfinity {
     type Output = RoundPointBulk;
 
@@ -451,6 +531,14 @@ impl BulkContraction<Flector> for FlatPointAtOrigin {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<FlectorAtInfinity> for FlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -531,6 +619,14 @@ impl BulkContraction<Flector> for Flector {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<FlectorAtInfinity> for Flector {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -631,6 +727,150 @@ impl BulkContraction<Translator> for Flector {
     }
 }
 
+impl BulkContraction<Circle> for FlectorAtInfinity {
+    type Output = RoundPointBulk;
+
+    fn bulk_contraction(self, other: Circle) -> RoundPointBulk {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Dipole> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: Dipole) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<FlatPoint> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlatPoint) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<FlatPointAtInfinity> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlatPointAtInfinity) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Flector> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<FlectorAtInfinity> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Horizon> for FlectorAtInfinity {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: Horizon) -> Scalar {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Infinity> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: Infinity) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Line> for FlectorAtInfinity {
+    type Output = RoundPointBulk;
+
+    fn bulk_contraction(self, other: Line) -> RoundPointBulk {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<LineAtInfinity> for FlectorAtInfinity {
+    type Output = RoundPointBulk;
+
+    fn bulk_contraction(self, other: LineAtInfinity) -> RoundPointBulk {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Motor> for FlectorAtInfinity {
+    type Output = RoundPointBulk;
+
+    fn bulk_contraction(self, other: Motor) -> RoundPointBulk {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<MultiVector> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Plane> for FlectorAtInfinity {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: Plane) -> Scalar {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<RoundPoint> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: RoundPoint) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<RoundPointAtInfinity> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: RoundPointAtInfinity) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<RoundPointAtOrigin> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: RoundPointAtOrigin) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Sphere> for FlectorAtInfinity {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: Sphere) -> Scalar {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<Translator> for FlectorAtInfinity {
+    type Output = RoundPointBulk;
+
+    fn bulk_contraction(self, other: Translator) -> RoundPointBulk {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkContraction<Circle> for Horizon {
     type Output = RoundPointBulk;
 
@@ -667,6 +907,14 @@ impl BulkContraction<Flector> for Horizon {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<FlectorAtInfinity> for Horizon {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -775,6 +1023,14 @@ impl BulkContraction<Flector> for Infinity {
     }
 }
 
+impl BulkContraction<FlectorAtInfinity> for Infinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkContraction<Infinity> for Infinity {
     type Output = Scalar;
 
@@ -851,6 +1107,14 @@ impl BulkContraction<Flector> for Line {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<FlectorAtInfinity> for Line {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -967,6 +1231,14 @@ impl BulkContraction<Flector> for LineAtInfinity {
     }
 }
 
+impl BulkContraction<FlectorAtInfinity> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkContraction<Infinity> for LineAtInfinity {
     type Output = DipoleBulk;
 
@@ -1071,6 +1343,14 @@ impl BulkContraction<Flector> for LineAtOrigin {
     }
 }
 
+impl BulkContraction<FlectorAtInfinity> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkContraction<Infinity> for LineAtOrigin {
     type Output = DipoleWeight;
 
@@ -1147,6 +1427,14 @@ impl BulkContraction<Flector> for Motor {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<FlectorAtInfinity> for Motor {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -1287,6 +1575,14 @@ impl BulkContraction<Flector> for MultiVector {
     }
 }
 
+impl BulkContraction<FlectorAtInfinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkContraction<Horizon> for MultiVector {
     type Output = MultiVector;
 
@@ -1391,6 +1687,14 @@ impl BulkContraction<Flector> for Origin {
     }
 }
 
+impl BulkContraction<FlectorAtInfinity> for Origin {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkContraction<MultiVector> for Origin {
     type Output = MultiVector;
 
@@ -1435,6 +1739,14 @@ impl BulkContraction<Flector> for Plane {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<FlectorAtInfinity> for Plane {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -1575,6 +1887,14 @@ impl BulkContraction<Flector> for PlaneAtOrigin {
     }
 }
 
+impl BulkContraction<FlectorAtInfinity> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkContraction<Infinity> for PlaneAtOrigin {
     type Output = CircleWeight;
 
@@ -1687,6 +2007,14 @@ impl BulkContraction<Flector> for Rotor {
     }
 }
 
+impl BulkContraction<FlectorAtInfinity> for Rotor {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkContraction<Horizon> for Rotor {
     type Output = Origin;
 
@@ -1791,6 +2119,14 @@ impl BulkContraction<Flector> for RoundPoint {
     }
 }
 
+impl BulkContraction<FlectorAtInfinity> for RoundPoint {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkContraction<Infinity> for RoundPoint {
     type Output = Scalar;
 
@@ -1835,6 +2171,14 @@ impl BulkContraction<Flector> for RoundPointAtInfinity {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<FlectorAtInfinity> for RoundPointAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -1887,6 +2231,14 @@ impl BulkContraction<Flector> for RoundPointAtOrigin {
     }
 }
 
+impl BulkContraction<FlectorAtInfinity> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkContraction<Infinity> for RoundPointAtOrigin {
     type Output = Scalar;
 
@@ -1935,6 +2287,14 @@ impl BulkContraction<Flector> for RoundPointBulk {
     }
 }
 
+impl BulkContraction<FlectorAtInfinity> for RoundPointBulk {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkContraction<MultiVector> for RoundPointBulk {
     type Output = MultiVector;
 
@@ -1947,6 +2307,14 @@ impl BulkContraction<Flector> for RoundPointCarrierAspect {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<FlectorAtInfinity> for RoundPointCarrierAspect {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -1995,6 +2363,14 @@ impl BulkContraction<Flector> for Sphere {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<FlectorAtInfinity> for Sphere {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -2103,6 +2479,14 @@ impl BulkContraction<Flector> for SphereWeight {
     }
 }
 
+impl BulkContraction<FlectorAtInfinity> for SphereWeight {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
 impl BulkContraction<MultiVector> for SphereWeight {
     type Output = MultiVector;
 
@@ -2147,6 +2531,14 @@ impl BulkContraction<Flector> for Translator {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.right_bulk_dual())
+    }
+}
+
+impl BulkContraction<FlectorAtInfinity> for Translator {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
         self.anti_wedge(other.right_bulk_dual())
     }
 }
@@ -2819,6 +3211,38 @@ impl WeightContraction<Sphere> for Flector {
     type Output = Scalar;
 
     fn weight_contraction(self, other: Sphere) -> Scalar {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Flector> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Motor> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Motor) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<MultiVector> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.right_weight_dual())
+    }
+}
+
+impl WeightContraction<Rotor> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Rotor) -> MultiVector {
         self.anti_wedge(other.right_weight_dual())
     }
 }

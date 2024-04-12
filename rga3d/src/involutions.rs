@@ -97,6 +97,19 @@ impl AntiDual for Flector {
     }
 }
 
+impl AntiDual for FlectorAtInfinity {
+    type Output = Flector;
+
+    fn anti_dual(self) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
+                g1: Simd32x4::from([-self.group0()[0], -self.group0()[1], -self.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
 impl AntiDual for Horizon {
     type Output = Origin;
 
@@ -307,6 +320,18 @@ impl AntiReversal for Flector {
     }
 }
 
+impl AntiReversal for FlectorAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn anti_reversal(self) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            },
+        }
+    }
+}
+
 impl AntiReversal for Horizon {
     type Output = Horizon;
 
@@ -508,6 +533,18 @@ impl Automorphism for Flector {
     }
 }
 
+impl Automorphism for FlectorAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn automorphism(self) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
 impl Automorphism for Horizon {
     type Output = Horizon;
 
@@ -700,6 +737,18 @@ impl Conjugation for Flector {
             groups: FlectorGroups {
                 g0: self.group0() * Simd32x4::from(-1.0),
                 g1: self.group1() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl Conjugation for FlectorAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn conjugation(self) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             },
         }
     }
@@ -906,6 +955,18 @@ impl DoubleComplement for Flector {
     }
 }
 
+impl DoubleComplement for FlectorAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn double_complement(self) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
 impl DoubleComplement for Horizon {
     type Output = Horizon;
 
@@ -1094,6 +1155,19 @@ impl Dual for Flector {
             groups: FlectorGroups {
                 g0: self.group1() * Simd32x4::from(-1.0),
                 g1: self.group0(),
+            },
+        }
+    }
+}
+
+impl Dual for FlectorAtInfinity {
+    type Output = Flector;
+
+    fn dual(self) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, -self.group0()[3]]),
+                g1: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
             },
         }
     }
@@ -1309,6 +1383,19 @@ impl LeftComplement for Flector {
     }
 }
 
+impl LeftComplement for FlectorAtInfinity {
+    type Output = Flector;
+
+    fn left_complement(self) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, -self.group0()[3]]),
+                g1: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
 impl LeftComplement for Horizon {
     type Output = Origin;
 
@@ -1519,6 +1606,18 @@ impl Reversal for Flector {
     }
 }
 
+impl Reversal for FlectorAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn reversal(self) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            },
+        }
+    }
+}
+
 impl Reversal for Horizon {
     type Output = Horizon;
 
@@ -1711,6 +1810,19 @@ impl RightComplement for Flector {
             groups: FlectorGroups {
                 g0: self.group1() * Simd32x4::from(-1.0),
                 g1: self.group0(),
+            },
+        }
+    }
+}
+
+impl RightComplement for FlectorAtInfinity {
+    type Output = Flector;
+
+    fn right_complement(self) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, -self.group0()[3]]),
+                g1: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
             },
         }
     }
