@@ -115,9 +115,7 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
     code_gen.round_features(flat_basis, &registry);
     code_gen.fancy_norms(&registry);
     code_gen.attitude_and_dependencies("Horizon", &registry);
-    // TODO here here
-    // TODO dilation and any remaining stuff
-    // TODO inverse, quotient, rejection (ala projection) see page 122 it actually seems useful
+    // TODO rejection (ala projection) see page 122 it actually seems useful
     // TODO see loads of DualNum operations on page 126
     // TODO conjugates, page 204
     // TODO impose constraints on page 235
@@ -151,6 +149,7 @@ pub mod products {
     pub mod projections;
     pub mod dot;
     pub mod isometries;
+    pub mod quotients;
 }",
     )?;
     code_gen.emit_datatypes_and_external_traits(&registry, &mut emitter)?;
@@ -247,6 +246,17 @@ use crate::involutions::AntiReversal;
 use crate::products::geometric::GeometricAntiProduct;",
     )?;
     code_gen.emit_isometries(&mut emitter)?;
+
+    emitter.new_rust_collector(&file_path.join(Path::new("products/quotients")));
+    emitter.emit_rust_preamble(
+        "
+use crate::*;
+use crate::characteristics::Inverse;
+use crate::characteristics::AntiInverse;
+use crate::products::geometric::GeometricAntiProduct;
+use crate::products::geometric::GeometricProduct;",
+    )?;
+    code_gen.emit_quotients(&mut emitter)?;
 
     emitter.new_rust_collector(&file_path.join(Path::new("products/contractions")));
     emitter.emit_rust_preamble(

@@ -134,6 +134,7 @@ pub mod products {
     pub mod projections;
     pub mod dot;
     pub mod isometries;
+    pub mod quotients;
 }",
     )?;
     code_gen.emit_datatypes_and_external_traits(&registry, &mut emitter)?;
@@ -227,6 +228,17 @@ use crate::involutions::AntiReversal;
 use crate::products::geometric::GeometricAntiProduct;",
     )?;
     code_gen.emit_isometries(&mut emitter)?;
+
+    emitter.new_rust_collector(&file_path.join(Path::new("products/quotients")));
+    emitter.emit_rust_preamble(
+        "
+use crate::*;
+use crate::characteristics::Inverse;
+use crate::characteristics::AntiInverse;
+use crate::products::geometric::GeometricAntiProduct;
+use crate::products::geometric::GeometricProduct;",
+    )?;
+    code_gen.emit_quotients(&mut emitter)?;
 
     emitter.new_rust_collector(&file_path.join(Path::new("products/contractions")));
     emitter.emit_rust_preamble(

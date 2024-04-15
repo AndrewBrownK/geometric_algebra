@@ -23,6 +23,7 @@ pub mod products {
     pub mod geometric;
     pub mod isometries;
     pub mod projections;
+    pub mod quotients;
 }
 
 #[derive(Clone, Copy)]

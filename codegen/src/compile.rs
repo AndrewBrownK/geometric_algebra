@@ -1355,6 +1355,29 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
         }
 
+        // TODO study the output types of quotients more closely,
+        //  I'm seeing a lot of non-specific "MultiVector" outputs.
+        for (param_a, param_b) in registry.pair_parameters() {
+            let name = "GeometricQuotient";
+            let _: Option<()> = try {
+                let inverse_b = self.trait_impls.get_single_invocation("Inverse", variable(&param_b))?;
+                let product = self.algebra.dialect().geometric_product.first()?;
+                let product = self.trait_impls.get_pair_invocation(product, variable(&param_a), inverse_b)?;
+                let the_impl = single_expression_pair_trait_impl(name, &param_a, &param_b, product);
+                self.trait_impls.add_pair_impl(name, param_a, param_b, the_impl);
+            };
+        }
+
+        for (param_a, param_b) in registry.pair_parameters() {
+            let name = "GeometricAntiQuotient";
+            let _: Option<()> = try {
+                let inverse_b = self.trait_impls.get_single_invocation("AntiInverse", variable(&param_b))?;
+                let product = self.algebra.dialect().geometric_anti_product.first()?;
+                let product = self.trait_impls.get_pair_invocation(product, variable(&param_a), inverse_b)?;
+                let the_impl = single_expression_pair_trait_impl(name, &param_a, &param_b, product);
+                self.trait_impls.add_pair_impl(name, param_a, param_b, the_impl);
+            };
+        }
 
         Ok(())
     }
@@ -3026,6 +3049,32 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
         let trait_names = ["Distance", "CosineAngle", "SineAngle"];
         self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
+        Ok(())
+    }
+
+    pub fn emit_quotients(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "GeometricQuotient".to_string(),
+            params: 2,
+            docs: "
+            The Geometric Quotient between `a` and `b` is the geometric product between `a` and `b^-1` (the inverse of `b`).
+            See also \"Inverse\".
+        "
+                .to_string(),
+        })?;
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "GeometricAntiQuotient".to_string(),
+            params: 2,
+            docs: "
+            The Geometric AntiQuotient between `a` and `b` is the geometric anti-product between `a` and the anti-inverse of `b`.
+            See also \"AntiInverse\".
+        "
+                .to_string(),
+        })?;
+
+        let trait_names = ["GeometricQuotient", "GeometricAntiQuotient"];
+        self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
+
         Ok(())
     }
 

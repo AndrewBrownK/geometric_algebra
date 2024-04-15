@@ -18335,6 +18335,2246 @@ fn plane_translator_reflect(self_: Plane, other: Translator) -> Motor {
     return plane_translator_sandwich(plane_unitize(self_), other);
 }
 
+fn anti_scalar_anti_scalar_geometric_anti_quotient(self_: AntiScalar, other: AntiScalar) -> AntiScalar {
+    return anti_scalar_anti_scalar_geometric_anti_product(self_, anti_scalar_anti_inverse(other));
+}
+
+fn anti_scalar_flector_geometric_anti_quotient(self_: AntiScalar, other: Flector) -> Flector {
+    return anti_scalar_flector_geometric_anti_product(self_, flector_anti_inverse(other));
+}
+
+fn anti_scalar_line_geometric_anti_quotient(self_: AntiScalar, other: Line) -> Line {
+    return anti_scalar_line_geometric_anti_product(self_, line_anti_inverse(other));
+}
+
+fn anti_scalar_line_at_origin_geometric_anti_quotient(self_: AntiScalar, other: LineAtOrigin) -> LineAtOrigin {
+    return anti_scalar_line_at_origin_geometric_anti_product(self_, line_at_origin_anti_inverse(other));
+}
+
+fn anti_scalar_magnitude_geometric_anti_quotient(self_: AntiScalar, other: Magnitude) -> Magnitude {
+    return anti_scalar_magnitude_geometric_anti_product(self_, magnitude_anti_inverse(other));
+}
+
+fn anti_scalar_motor_geometric_anti_quotient(self_: AntiScalar, other: Motor) -> Motor {
+    return anti_scalar_motor_geometric_anti_product(self_, motor_anti_inverse(other));
+}
+
+fn anti_scalar_multi_vector_geometric_anti_quotient(self_: AntiScalar, other: MultiVector) -> MultiVector {
+    return anti_scalar_multi_vector_geometric_anti_product(self_, multi_vector_anti_inverse(other));
+}
+
+fn anti_scalar_multi_vector_at_origin_geometric_anti_quotient(self_: AntiScalar, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
+    return anti_scalar_multi_vector_at_origin_geometric_anti_product(self_, multi_vector_at_origin_anti_inverse(other));
+}
+
+fn anti_scalar_origin_geometric_anti_quotient(self_: AntiScalar, other: Origin) -> Origin {
+    return anti_scalar_origin_geometric_anti_product(self_, origin_anti_inverse(other));
+}
+
+fn anti_scalar_plane_geometric_anti_quotient(self_: AntiScalar, other: Plane) -> Plane {
+    return anti_scalar_plane_geometric_anti_product(self_, plane_anti_inverse(other));
+}
+
+fn anti_scalar_plane_at_origin_geometric_anti_quotient(self_: AntiScalar, other: PlaneAtOrigin) -> PlaneAtOrigin {
+    return anti_scalar_plane_at_origin_geometric_anti_product(self_, plane_at_origin_anti_inverse(other));
+}
+
+fn anti_scalar_point_geometric_anti_quotient(self_: AntiScalar, other: Point) -> Point {
+    return anti_scalar_point_geometric_anti_product(self_, point_anti_inverse(other));
+}
+
+fn anti_scalar_rotor_geometric_anti_quotient(self_: AntiScalar, other: Rotor) -> Rotor {
+    return anti_scalar_rotor_geometric_anti_product(self_, rotor_anti_inverse(other));
+}
+
+fn anti_scalar_translator_geometric_anti_quotient(self_: AntiScalar, other: Translator) -> Translator {
+    return anti_scalar_translator_geometric_anti_product(self_, translator_anti_inverse(other));
+}
+
+fn flector_anti_scalar_geometric_anti_quotient(self_: Flector, other: AntiScalar) -> Flector {
+    return flector_anti_scalar_geometric_anti_product(self_, anti_scalar_anti_inverse(other));
+}
+
+fn flector_flector_geometric_anti_quotient(self_: Flector, other: Flector) -> MultiVector {
+    return flector_flector_geometric_anti_product(self_, flector_anti_inverse(other));
+}
+
+fn flector_line_geometric_anti_quotient(self_: Flector, other: Line) -> Flector {
+    return flector_line_geometric_anti_product(self_, line_anti_inverse(other));
+}
+
+fn flector_line_at_origin_geometric_anti_quotient(self_: Flector, other: LineAtOrigin) -> Flector {
+    return flector_line_at_origin_geometric_anti_product(self_, line_at_origin_anti_inverse(other));
+}
+
+fn flector_magnitude_geometric_anti_quotient(self_: Flector, other: Magnitude) -> Flector {
+    return flector_magnitude_geometric_anti_product(self_, magnitude_anti_inverse(other));
+}
+
+fn flector_motor_geometric_anti_quotient(self_: Flector, other: Motor) -> Flector {
+    return flector_motor_geometric_anti_product(self_, motor_anti_inverse(other));
+}
+
+fn flector_multi_vector_geometric_anti_quotient(self_: Flector, other: MultiVector) -> MultiVector {
+    return flector_multi_vector_geometric_anti_product(self_, multi_vector_anti_inverse(other));
+}
+
+fn flector_multi_vector_at_origin_geometric_anti_quotient(self_: Flector, other: MultiVectorAtOrigin) -> MultiVector {
+    return flector_multi_vector_at_origin_geometric_anti_product(self_, multi_vector_at_origin_anti_inverse(other));
+}
+
+fn flector_origin_geometric_anti_quotient(self_: Flector, other: Origin) -> MultiVector {
+    return flector_origin_geometric_anti_product(self_, origin_anti_inverse(other));
+}
+
+fn flector_plane_geometric_anti_quotient(self_: Flector, other: Plane) -> MultiVector {
+    return flector_plane_geometric_anti_product(self_, plane_anti_inverse(other));
+}
+
+fn flector_plane_at_origin_geometric_anti_quotient(self_: Flector, other: PlaneAtOrigin) -> MultiVector {
+    return flector_plane_at_origin_geometric_anti_product(self_, plane_at_origin_anti_inverse(other));
+}
+
+fn flector_point_geometric_anti_quotient(self_: Flector, other: Point) -> MultiVector {
+    return flector_point_geometric_anti_product(self_, point_anti_inverse(other));
+}
+
+fn flector_rotor_geometric_anti_quotient(self_: Flector, other: Rotor) -> Flector {
+    return flector_rotor_geometric_anti_product(self_, rotor_anti_inverse(other));
+}
+
+fn flector_translator_geometric_anti_quotient(self_: Flector, other: Translator) -> Flector {
+    return flector_translator_geometric_anti_product(self_, translator_anti_inverse(other));
+}
+
+fn flector_at_infinity_anti_scalar_geometric_anti_quotient(self_: FlectorAtInfinity, other: AntiScalar) -> FlectorAtInfinity {
+    return flector_at_infinity_anti_scalar_geometric_anti_product(self_, anti_scalar_anti_inverse(other));
+}
+
+fn flector_at_infinity_flector_geometric_anti_quotient(self_: FlectorAtInfinity, other: Flector) -> MultiVectorAtInfinity {
+    return flector_at_infinity_flector_geometric_anti_product(self_, flector_anti_inverse(other));
+}
+
+fn flector_at_infinity_line_geometric_anti_quotient(self_: FlectorAtInfinity, other: Line) -> FlectorAtInfinity {
+    return flector_at_infinity_line_geometric_anti_product(self_, line_anti_inverse(other));
+}
+
+fn flector_at_infinity_line_at_origin_geometric_anti_quotient(self_: FlectorAtInfinity, other: LineAtOrigin) -> FlectorAtInfinity {
+    return flector_at_infinity_line_at_origin_geometric_anti_product(self_, line_at_origin_anti_inverse(other));
+}
+
+fn flector_at_infinity_magnitude_geometric_anti_quotient(self_: FlectorAtInfinity, other: Magnitude) -> FlectorAtInfinity {
+    return flector_at_infinity_magnitude_geometric_anti_product(self_, magnitude_anti_inverse(other));
+}
+
+fn flector_at_infinity_motor_geometric_anti_quotient(self_: FlectorAtInfinity, other: Motor) -> FlectorAtInfinity {
+    return flector_at_infinity_motor_geometric_anti_product(self_, motor_anti_inverse(other));
+}
+
+fn flector_at_infinity_multi_vector_geometric_anti_quotient(self_: FlectorAtInfinity, other: MultiVector) -> MultiVectorAtInfinity {
+    return flector_at_infinity_multi_vector_geometric_anti_product(self_, multi_vector_anti_inverse(other));
+}
+
+fn flector_at_infinity_multi_vector_at_origin_geometric_anti_quotient(self_: FlectorAtInfinity, other: MultiVectorAtOrigin) -> MultiVectorAtInfinity {
+    return flector_at_infinity_multi_vector_at_origin_geometric_anti_product(self_, multi_vector_at_origin_anti_inverse(other));
+}
+
+fn flector_at_infinity_origin_geometric_anti_quotient(self_: FlectorAtInfinity, other: Origin) -> MultiVectorAtInfinity {
+    return flector_at_infinity_origin_geometric_anti_product(self_, origin_anti_inverse(other));
+}
+
+fn flector_at_infinity_plane_geometric_anti_quotient(self_: FlectorAtInfinity, other: Plane) -> MultiVectorAtInfinity {
+    return flector_at_infinity_plane_geometric_anti_product(self_, plane_anti_inverse(other));
+}
+
+fn flector_at_infinity_plane_at_origin_geometric_anti_quotient(self_: FlectorAtInfinity, other: PlaneAtOrigin) -> MultiVectorAtInfinity {
+    return flector_at_infinity_plane_at_origin_geometric_anti_product(self_, plane_at_origin_anti_inverse(other));
+}
+
+fn flector_at_infinity_point_geometric_anti_quotient(self_: FlectorAtInfinity, other: Point) -> MultiVectorAtInfinity {
+    return flector_at_infinity_point_geometric_anti_product(self_, point_anti_inverse(other));
+}
+
+fn flector_at_infinity_rotor_geometric_anti_quotient(self_: FlectorAtInfinity, other: Rotor) -> FlectorAtInfinity {
+    return flector_at_infinity_rotor_geometric_anti_product(self_, rotor_anti_inverse(other));
+}
+
+fn flector_at_infinity_translator_geometric_anti_quotient(self_: FlectorAtInfinity, other: Translator) -> FlectorAtInfinity {
+    return flector_at_infinity_translator_geometric_anti_product(self_, translator_anti_inverse(other));
+}
+
+fn horizon_anti_scalar_geometric_anti_quotient(self_: Horizon, other: AntiScalar) -> Horizon {
+    return horizon_anti_scalar_geometric_anti_product(self_, anti_scalar_anti_inverse(other));
+}
+
+fn horizon_flector_geometric_anti_quotient(self_: Horizon, other: Flector) -> MultiVectorAtInfinity {
+    return horizon_flector_geometric_anti_product(self_, flector_anti_inverse(other));
+}
+
+fn horizon_line_geometric_anti_quotient(self_: Horizon, other: Line) -> PointAtInfinity {
+    return horizon_line_geometric_anti_product(self_, line_anti_inverse(other));
+}
+
+fn horizon_line_at_origin_geometric_anti_quotient(self_: Horizon, other: LineAtOrigin) -> PointAtInfinity {
+    return horizon_line_at_origin_geometric_anti_product(self_, line_at_origin_anti_inverse(other));
+}
+
+fn horizon_magnitude_geometric_anti_quotient(self_: Horizon, other: Magnitude) -> Horizon {
+    return horizon_magnitude_geometric_anti_product(self_, magnitude_anti_inverse(other));
+}
+
+fn horizon_motor_geometric_anti_quotient(self_: Horizon, other: Motor) -> FlectorAtInfinity {
+    return horizon_motor_geometric_anti_product(self_, motor_anti_inverse(other));
+}
+
+fn horizon_multi_vector_geometric_anti_quotient(self_: Horizon, other: MultiVector) -> MultiVectorAtInfinity {
+    return horizon_multi_vector_geometric_anti_product(self_, multi_vector_anti_inverse(other));
+}
+
+fn horizon_multi_vector_at_origin_geometric_anti_quotient(self_: Horizon, other: MultiVectorAtOrigin) -> MultiVectorAtInfinity {
+    return horizon_multi_vector_at_origin_geometric_anti_product(self_, multi_vector_at_origin_anti_inverse(other));
+}
+
+fn horizon_origin_geometric_anti_quotient(self_: Horizon, other: Origin) -> Scalar {
+    return horizon_origin_geometric_anti_product(self_, origin_anti_inverse(other));
+}
+
+fn horizon_plane_geometric_anti_quotient(self_: Horizon, other: Plane) -> LineAtInfinity {
+    return horizon_plane_geometric_anti_product(self_, plane_anti_inverse(other));
+}
+
+fn horizon_plane_at_origin_geometric_anti_quotient(self_: Horizon, other: PlaneAtOrigin) -> LineAtInfinity {
+    return horizon_plane_at_origin_geometric_anti_product(self_, plane_at_origin_anti_inverse(other));
+}
+
+fn horizon_point_geometric_anti_quotient(self_: Horizon, other: Point) -> Scalar {
+    return horizon_point_geometric_anti_product(self_, point_anti_inverse(other));
+}
+
+fn horizon_rotor_geometric_anti_quotient(self_: Horizon, other: Rotor) -> FlectorAtInfinity {
+    return horizon_rotor_geometric_anti_product(self_, rotor_anti_inverse(other));
+}
+
+fn horizon_translator_geometric_anti_quotient(self_: Horizon, other: Translator) -> Horizon {
+    return horizon_translator_geometric_anti_product(self_, translator_anti_inverse(other));
+}
+
+fn line_anti_scalar_geometric_anti_quotient(self_: Line, other: AntiScalar) -> Line {
+    return line_anti_scalar_geometric_anti_product(self_, anti_scalar_anti_inverse(other));
+}
+
+fn line_flector_geometric_anti_quotient(self_: Line, other: Flector) -> Flector {
+    return line_flector_geometric_anti_product(self_, flector_anti_inverse(other));
+}
+
+fn line_line_geometric_anti_quotient(self_: Line, other: Line) -> MultiVector {
+    return line_line_geometric_anti_product(self_, line_anti_inverse(other));
+}
+
+fn line_line_at_origin_geometric_anti_quotient(self_: Line, other: LineAtOrigin) -> MultiVector {
+    return line_line_at_origin_geometric_anti_product(self_, line_at_origin_anti_inverse(other));
+}
+
+fn line_magnitude_geometric_anti_quotient(self_: Line, other: Magnitude) -> Line {
+    return line_magnitude_geometric_anti_product(self_, magnitude_anti_inverse(other));
+}
+
+fn line_motor_geometric_anti_quotient(self_: Line, other: Motor) -> MultiVector {
+    return line_motor_geometric_anti_product(self_, motor_anti_inverse(other));
+}
+
+fn line_multi_vector_geometric_anti_quotient(self_: Line, other: MultiVector) -> MultiVector {
+    return line_multi_vector_geometric_anti_product(self_, multi_vector_anti_inverse(other));
+}
+
+fn line_multi_vector_at_origin_geometric_anti_quotient(self_: Line, other: MultiVectorAtOrigin) -> MultiVector {
+    return line_multi_vector_at_origin_geometric_anti_product(self_, multi_vector_at_origin_anti_inverse(other));
+}
+
+fn line_origin_geometric_anti_quotient(self_: Line, other: Origin) -> Flector {
+    return line_origin_geometric_anti_product(self_, origin_anti_inverse(other));
+}
+
+fn line_plane_geometric_anti_quotient(self_: Line, other: Plane) -> Flector {
+    return line_plane_geometric_anti_product(self_, plane_anti_inverse(other));
+}
+
+fn line_plane_at_origin_geometric_anti_quotient(self_: Line, other: PlaneAtOrigin) -> Flector {
+    return line_plane_at_origin_geometric_anti_product(self_, plane_at_origin_anti_inverse(other));
+}
+
+fn line_point_geometric_anti_quotient(self_: Line, other: Point) -> Flector {
+    return line_point_geometric_anti_product(self_, point_anti_inverse(other));
+}
+
+fn line_rotor_geometric_anti_quotient(self_: Line, other: Rotor) -> MultiVector {
+    return line_rotor_geometric_anti_product(self_, rotor_anti_inverse(other));
+}
+
+fn line_translator_geometric_anti_quotient(self_: Line, other: Translator) -> MultiVector {
+    return line_translator_geometric_anti_product(self_, translator_anti_inverse(other));
+}
+
+fn line_at_infinity_anti_scalar_geometric_anti_quotient(self_: LineAtInfinity, other: AntiScalar) -> LineAtInfinity {
+    return line_at_infinity_anti_scalar_geometric_anti_product(self_, anti_scalar_anti_inverse(other));
+}
+
+fn line_at_infinity_flector_geometric_anti_quotient(self_: LineAtInfinity, other: Flector) -> FlectorAtInfinity {
+    return line_at_infinity_flector_geometric_anti_product(self_, flector_anti_inverse(other));
+}
+
+fn line_at_infinity_line_geometric_anti_quotient(self_: LineAtInfinity, other: Line) -> MultiVectorAtInfinity {
+    return line_at_infinity_line_geometric_anti_product(self_, line_anti_inverse(other));
+}
+
+fn line_at_infinity_line_at_origin_geometric_anti_quotient(self_: LineAtInfinity, other: LineAtOrigin) -> MultiVectorAtInfinity {
+    return line_at_infinity_line_at_origin_geometric_anti_product(self_, line_at_origin_anti_inverse(other));
+}
+
+fn line_at_infinity_magnitude_geometric_anti_quotient(self_: LineAtInfinity, other: Magnitude) -> LineAtInfinity {
+    return line_at_infinity_magnitude_geometric_anti_product(self_, magnitude_anti_inverse(other));
+}
+
+fn line_at_infinity_motor_geometric_anti_quotient(self_: LineAtInfinity, other: Motor) -> MultiVectorAtInfinity {
+    return line_at_infinity_motor_geometric_anti_product(self_, motor_anti_inverse(other));
+}
+
+fn line_at_infinity_multi_vector_geometric_anti_quotient(self_: LineAtInfinity, other: MultiVector) -> MultiVectorAtInfinity {
+    return line_at_infinity_multi_vector_geometric_anti_product(self_, multi_vector_anti_inverse(other));
+}
+
+fn line_at_infinity_multi_vector_at_origin_geometric_anti_quotient(self_: LineAtInfinity, other: MultiVectorAtOrigin) -> MultiVectorAtInfinity {
+    return line_at_infinity_multi_vector_at_origin_geometric_anti_product(self_, multi_vector_at_origin_anti_inverse(other));
+}
+
+fn line_at_infinity_origin_geometric_anti_quotient(self_: LineAtInfinity, other: Origin) -> PointAtInfinity {
+    return line_at_infinity_origin_geometric_anti_product(self_, origin_anti_inverse(other));
+}
+
+fn line_at_infinity_plane_geometric_anti_quotient(self_: LineAtInfinity, other: Plane) -> FlectorAtInfinity {
+    return line_at_infinity_plane_geometric_anti_product(self_, plane_anti_inverse(other));
+}
+
+fn line_at_infinity_plane_at_origin_geometric_anti_quotient(self_: LineAtInfinity, other: PlaneAtOrigin) -> FlectorAtInfinity {
+    return line_at_infinity_plane_at_origin_geometric_anti_product(self_, plane_at_origin_anti_inverse(other));
+}
+
+fn line_at_infinity_point_geometric_anti_quotient(self_: LineAtInfinity, other: Point) -> PointAtInfinity {
+    return line_at_infinity_point_geometric_anti_product(self_, point_anti_inverse(other));
+}
+
+fn line_at_infinity_rotor_geometric_anti_quotient(self_: LineAtInfinity, other: Rotor) -> MultiVectorAtInfinity {
+    return line_at_infinity_rotor_geometric_anti_product(self_, rotor_anti_inverse(other));
+}
+
+fn line_at_infinity_translator_geometric_anti_quotient(self_: LineAtInfinity, other: Translator) -> LineAtInfinity {
+    return line_at_infinity_translator_geometric_anti_product(self_, translator_anti_inverse(other));
+}
+
+fn line_at_origin_anti_scalar_geometric_anti_quotient(self_: LineAtOrigin, other: AntiScalar) -> LineAtOrigin {
+    return line_at_origin_anti_scalar_geometric_anti_product(self_, anti_scalar_anti_inverse(other));
+}
+
+fn line_at_origin_flector_geometric_anti_quotient(self_: LineAtOrigin, other: Flector) -> Flector {
+    return line_at_origin_flector_geometric_anti_product(self_, flector_anti_inverse(other));
+}
+
+fn line_at_origin_line_geometric_anti_quotient(self_: LineAtOrigin, other: Line) -> MultiVector {
+    return line_at_origin_line_geometric_anti_product(self_, line_anti_inverse(other));
+}
+
+fn line_at_origin_line_at_origin_geometric_anti_quotient(self_: LineAtOrigin, other: LineAtOrigin) -> Rotor {
+    return line_at_origin_line_at_origin_geometric_anti_product(self_, line_at_origin_anti_inverse(other));
+}
+
+fn line_at_origin_magnitude_geometric_anti_quotient(self_: LineAtOrigin, other: Magnitude) -> Line {
+    return line_at_origin_magnitude_geometric_anti_product(self_, magnitude_anti_inverse(other));
+}
+
+fn line_at_origin_motor_geometric_anti_quotient(self_: LineAtOrigin, other: Motor) -> MultiVector {
+    return line_at_origin_motor_geometric_anti_product(self_, motor_anti_inverse(other));
+}
+
+fn line_at_origin_multi_vector_geometric_anti_quotient(self_: LineAtOrigin, other: MultiVector) -> MultiVector {
+    return line_at_origin_multi_vector_geometric_anti_product(self_, multi_vector_anti_inverse(other));
+}
+
+fn line_at_origin_multi_vector_at_origin_geometric_anti_quotient(self_: LineAtOrigin, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
+    return line_at_origin_multi_vector_at_origin_geometric_anti_product(self_, multi_vector_at_origin_anti_inverse(other));
+}
+
+fn line_at_origin_origin_geometric_anti_quotient(self_: LineAtOrigin, other: Origin) -> PlaneAtOrigin {
+    return line_at_origin_origin_geometric_anti_product(self_, origin_anti_inverse(other));
+}
+
+fn line_at_origin_plane_geometric_anti_quotient(self_: LineAtOrigin, other: Plane) -> Flector {
+    return line_at_origin_plane_geometric_anti_product(self_, plane_anti_inverse(other));
+}
+
+fn line_at_origin_plane_at_origin_geometric_anti_quotient(self_: LineAtOrigin, other: PlaneAtOrigin) -> Flector {
+    return line_at_origin_plane_at_origin_geometric_anti_product(self_, plane_at_origin_anti_inverse(other));
+}
+
+fn line_at_origin_point_geometric_anti_quotient(self_: LineAtOrigin, other: Point) -> Flector {
+    return line_at_origin_point_geometric_anti_product(self_, point_anti_inverse(other));
+}
+
+fn line_at_origin_rotor_geometric_anti_quotient(self_: LineAtOrigin, other: Rotor) -> Rotor {
+    return line_at_origin_rotor_geometric_anti_product(self_, rotor_anti_inverse(other));
+}
+
+fn line_at_origin_translator_geometric_anti_quotient(self_: LineAtOrigin, other: Translator) -> MultiVector {
+    return line_at_origin_translator_geometric_anti_product(self_, translator_anti_inverse(other));
+}
+
+fn magnitude_anti_scalar_geometric_anti_quotient(self_: Magnitude, other: AntiScalar) -> Magnitude {
+    return magnitude_anti_scalar_geometric_anti_product(self_, anti_scalar_anti_inverse(other));
+}
+
+fn magnitude_flector_geometric_anti_quotient(self_: Magnitude, other: Flector) -> Flector {
+    return magnitude_flector_geometric_anti_product(self_, flector_anti_inverse(other));
+}
+
+fn magnitude_line_geometric_anti_quotient(self_: Magnitude, other: Line) -> Line {
+    return magnitude_line_geometric_anti_product(self_, line_anti_inverse(other));
+}
+
+fn magnitude_line_at_origin_geometric_anti_quotient(self_: Magnitude, other: LineAtOrigin) -> Line {
+    return magnitude_line_at_origin_geometric_anti_product(self_, line_at_origin_anti_inverse(other));
+}
+
+fn magnitude_magnitude_geometric_anti_quotient(self_: Magnitude, other: Magnitude) -> Magnitude {
+    return magnitude_magnitude_geometric_anti_product(self_, magnitude_anti_inverse(other));
+}
+
+fn magnitude_motor_geometric_anti_quotient(self_: Magnitude, other: Motor) -> MultiVector {
+    return magnitude_motor_geometric_anti_product(self_, motor_anti_inverse(other));
+}
+
+fn magnitude_multi_vector_geometric_anti_quotient(self_: Magnitude, other: MultiVector) -> MultiVector {
+    return magnitude_multi_vector_geometric_anti_product(self_, multi_vector_anti_inverse(other));
+}
+
+fn magnitude_multi_vector_at_origin_geometric_anti_quotient(self_: Magnitude, other: MultiVectorAtOrigin) -> MultiVector {
+    return magnitude_multi_vector_at_origin_geometric_anti_product(self_, multi_vector_at_origin_anti_inverse(other));
+}
+
+fn magnitude_origin_geometric_anti_quotient(self_: Magnitude, other: Origin) -> Flector {
+    return magnitude_origin_geometric_anti_product(self_, origin_anti_inverse(other));
+}
+
+fn magnitude_plane_geometric_anti_quotient(self_: Magnitude, other: Plane) -> Flector {
+    return magnitude_plane_geometric_anti_product(self_, plane_anti_inverse(other));
+}
+
+fn magnitude_plane_at_origin_geometric_anti_quotient(self_: Magnitude, other: PlaneAtOrigin) -> Flector {
+    return magnitude_plane_at_origin_geometric_anti_product(self_, plane_at_origin_anti_inverse(other));
+}
+
+fn magnitude_point_geometric_anti_quotient(self_: Magnitude, other: Point) -> Flector {
+    return magnitude_point_geometric_anti_product(self_, point_anti_inverse(other));
+}
+
+fn magnitude_rotor_geometric_anti_quotient(self_: Magnitude, other: Rotor) -> MultiVector {
+    return magnitude_rotor_geometric_anti_product(self_, rotor_anti_inverse(other));
+}
+
+fn magnitude_translator_geometric_anti_quotient(self_: Magnitude, other: Translator) -> MultiVector {
+    return magnitude_translator_geometric_anti_product(self_, translator_anti_inverse(other));
+}
+
+fn motor_anti_scalar_geometric_anti_quotient(self_: Motor, other: AntiScalar) -> Motor {
+    return motor_anti_scalar_geometric_anti_product(self_, anti_scalar_anti_inverse(other));
+}
+
+fn motor_flector_geometric_anti_quotient(self_: Motor, other: Flector) -> Flector {
+    return motor_flector_geometric_anti_product(self_, flector_anti_inverse(other));
+}
+
+fn motor_line_geometric_anti_quotient(self_: Motor, other: Line) -> MultiVector {
+    return motor_line_geometric_anti_product(self_, line_anti_inverse(other));
+}
+
+fn motor_line_at_origin_geometric_anti_quotient(self_: Motor, other: LineAtOrigin) -> MultiVector {
+    return motor_line_at_origin_geometric_anti_product(self_, line_at_origin_anti_inverse(other));
+}
+
+fn motor_magnitude_geometric_anti_quotient(self_: Motor, other: Magnitude) -> MultiVector {
+    return motor_magnitude_geometric_anti_product(self_, magnitude_anti_inverse(other));
+}
+
+fn motor_motor_geometric_anti_quotient(self_: Motor, other: Motor) -> MultiVector {
+    return motor_motor_geometric_anti_product(self_, motor_anti_inverse(other));
+}
+
+fn motor_multi_vector_geometric_anti_quotient(self_: Motor, other: MultiVector) -> MultiVector {
+    return motor_multi_vector_geometric_anti_product(self_, multi_vector_anti_inverse(other));
+}
+
+fn motor_multi_vector_at_origin_geometric_anti_quotient(self_: Motor, other: MultiVectorAtOrigin) -> MultiVector {
+    return motor_multi_vector_at_origin_geometric_anti_product(self_, multi_vector_at_origin_anti_inverse(other));
+}
+
+fn motor_origin_geometric_anti_quotient(self_: Motor, other: Origin) -> Flector {
+    return motor_origin_geometric_anti_product(self_, origin_anti_inverse(other));
+}
+
+fn motor_plane_geometric_anti_quotient(self_: Motor, other: Plane) -> Flector {
+    return motor_plane_geometric_anti_product(self_, plane_anti_inverse(other));
+}
+
+fn motor_plane_at_origin_geometric_anti_quotient(self_: Motor, other: PlaneAtOrigin) -> Flector {
+    return motor_plane_at_origin_geometric_anti_product(self_, plane_at_origin_anti_inverse(other));
+}
+
+fn motor_point_geometric_anti_quotient(self_: Motor, other: Point) -> Flector {
+    return motor_point_geometric_anti_product(self_, point_anti_inverse(other));
+}
+
+fn motor_rotor_geometric_anti_quotient(self_: Motor, other: Rotor) -> MultiVector {
+    return motor_rotor_geometric_anti_product(self_, rotor_anti_inverse(other));
+}
+
+fn motor_translator_geometric_anti_quotient(self_: Motor, other: Translator) -> MultiVector {
+    return motor_translator_geometric_anti_product(self_, translator_anti_inverse(other));
+}
+
+fn multi_vector_anti_scalar_geometric_anti_quotient(self_: MultiVector, other: AntiScalar) -> MultiVector {
+    return multi_vector_anti_scalar_geometric_anti_product(self_, anti_scalar_anti_inverse(other));
+}
+
+fn multi_vector_flector_geometric_anti_quotient(self_: MultiVector, other: Flector) -> MultiVector {
+    return multi_vector_flector_geometric_anti_product(self_, flector_anti_inverse(other));
+}
+
+fn multi_vector_line_geometric_anti_quotient(self_: MultiVector, other: Line) -> MultiVector {
+    return multi_vector_line_geometric_anti_product(self_, line_anti_inverse(other));
+}
+
+fn multi_vector_line_at_origin_geometric_anti_quotient(self_: MultiVector, other: LineAtOrigin) -> MultiVector {
+    return multi_vector_line_at_origin_geometric_anti_product(self_, line_at_origin_anti_inverse(other));
+}
+
+fn multi_vector_magnitude_geometric_anti_quotient(self_: MultiVector, other: Magnitude) -> MultiVector {
+    return multi_vector_magnitude_geometric_anti_product(self_, magnitude_anti_inverse(other));
+}
+
+fn multi_vector_motor_geometric_anti_quotient(self_: MultiVector, other: Motor) -> MultiVector {
+    return multi_vector_motor_geometric_anti_product(self_, motor_anti_inverse(other));
+}
+
+fn multi_vector_multi_vector_geometric_anti_quotient(self_: MultiVector, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_geometric_anti_product(self_, multi_vector_anti_inverse(other));
+}
+
+fn multi_vector_multi_vector_at_origin_geometric_anti_quotient(self_: MultiVector, other: MultiVectorAtOrigin) -> MultiVector {
+    return multi_vector_multi_vector_at_origin_geometric_anti_product(self_, multi_vector_at_origin_anti_inverse(other));
+}
+
+fn multi_vector_origin_geometric_anti_quotient(self_: MultiVector, other: Origin) -> MultiVector {
+    return multi_vector_origin_geometric_anti_product(self_, origin_anti_inverse(other));
+}
+
+fn multi_vector_plane_geometric_anti_quotient(self_: MultiVector, other: Plane) -> MultiVector {
+    return multi_vector_plane_geometric_anti_product(self_, plane_anti_inverse(other));
+}
+
+fn multi_vector_plane_at_origin_geometric_anti_quotient(self_: MultiVector, other: PlaneAtOrigin) -> MultiVector {
+    return multi_vector_plane_at_origin_geometric_anti_product(self_, plane_at_origin_anti_inverse(other));
+}
+
+fn multi_vector_point_geometric_anti_quotient(self_: MultiVector, other: Point) -> MultiVector {
+    return multi_vector_point_geometric_anti_product(self_, point_anti_inverse(other));
+}
+
+fn multi_vector_rotor_geometric_anti_quotient(self_: MultiVector, other: Rotor) -> MultiVector {
+    return multi_vector_rotor_geometric_anti_product(self_, rotor_anti_inverse(other));
+}
+
+fn multi_vector_translator_geometric_anti_quotient(self_: MultiVector, other: Translator) -> MultiVector {
+    return multi_vector_translator_geometric_anti_product(self_, translator_anti_inverse(other));
+}
+
+fn multi_vector_at_infinity_anti_scalar_geometric_anti_quotient(self_: MultiVectorAtInfinity, other: AntiScalar) -> MultiVectorAtInfinity {
+    return multi_vector_at_infinity_anti_scalar_geometric_anti_product(self_, anti_scalar_anti_inverse(other));
+}
+
+fn multi_vector_at_infinity_flector_geometric_anti_quotient(self_: MultiVectorAtInfinity, other: Flector) -> MultiVectorAtInfinity {
+    return multi_vector_at_infinity_flector_geometric_anti_product(self_, flector_anti_inverse(other));
+}
+
+fn multi_vector_at_infinity_line_geometric_anti_quotient(self_: MultiVectorAtInfinity, other: Line) -> MultiVectorAtInfinity {
+    return multi_vector_at_infinity_line_geometric_anti_product(self_, line_anti_inverse(other));
+}
+
+fn multi_vector_at_infinity_line_at_origin_geometric_anti_quotient(self_: MultiVectorAtInfinity, other: LineAtOrigin) -> MultiVectorAtInfinity {
+    return multi_vector_at_infinity_line_at_origin_geometric_anti_product(self_, line_at_origin_anti_inverse(other));
+}
+
+fn multi_vector_at_infinity_magnitude_geometric_anti_quotient(self_: MultiVectorAtInfinity, other: Magnitude) -> MultiVectorAtInfinity {
+    return multi_vector_at_infinity_magnitude_geometric_anti_product(self_, magnitude_anti_inverse(other));
+}
+
+fn multi_vector_at_infinity_motor_geometric_anti_quotient(self_: MultiVectorAtInfinity, other: Motor) -> MultiVectorAtInfinity {
+    return multi_vector_at_infinity_motor_geometric_anti_product(self_, motor_anti_inverse(other));
+}
+
+fn multi_vector_at_infinity_multi_vector_geometric_anti_quotient(self_: MultiVectorAtInfinity, other: MultiVector) -> MultiVectorAtInfinity {
+    return multi_vector_at_infinity_multi_vector_geometric_anti_product(self_, multi_vector_anti_inverse(other));
+}
+
+fn multi_vector_at_infinity_multi_vector_at_origin_geometric_anti_quotient(self_: MultiVectorAtInfinity, other: MultiVectorAtOrigin) -> MultiVectorAtInfinity {
+    return multi_vector_at_infinity_multi_vector_at_origin_geometric_anti_product(self_, multi_vector_at_origin_anti_inverse(other));
+}
+
+fn multi_vector_at_infinity_origin_geometric_anti_quotient(self_: MultiVectorAtInfinity, other: Origin) -> MultiVectorAtInfinity {
+    return multi_vector_at_infinity_origin_geometric_anti_product(self_, origin_anti_inverse(other));
+}
+
+fn multi_vector_at_infinity_plane_geometric_anti_quotient(self_: MultiVectorAtInfinity, other: Plane) -> MultiVectorAtInfinity {
+    return multi_vector_at_infinity_plane_geometric_anti_product(self_, plane_anti_inverse(other));
+}
+
+fn multi_vector_at_infinity_plane_at_origin_geometric_anti_quotient(self_: MultiVectorAtInfinity, other: PlaneAtOrigin) -> MultiVectorAtInfinity {
+    return multi_vector_at_infinity_plane_at_origin_geometric_anti_product(self_, plane_at_origin_anti_inverse(other));
+}
+
+fn multi_vector_at_infinity_point_geometric_anti_quotient(self_: MultiVectorAtInfinity, other: Point) -> MultiVectorAtInfinity {
+    return multi_vector_at_infinity_point_geometric_anti_product(self_, point_anti_inverse(other));
+}
+
+fn multi_vector_at_infinity_rotor_geometric_anti_quotient(self_: MultiVectorAtInfinity, other: Rotor) -> MultiVectorAtInfinity {
+    return multi_vector_at_infinity_rotor_geometric_anti_product(self_, rotor_anti_inverse(other));
+}
+
+fn multi_vector_at_infinity_translator_geometric_anti_quotient(self_: MultiVectorAtInfinity, other: Translator) -> MultiVectorAtInfinity {
+    return multi_vector_at_infinity_translator_geometric_anti_product(self_, translator_anti_inverse(other));
+}
+
+fn multi_vector_at_origin_anti_scalar_geometric_anti_quotient(self_: MultiVectorAtOrigin, other: AntiScalar) -> MultiVectorAtOrigin {
+    return multi_vector_at_origin_anti_scalar_geometric_anti_product(self_, anti_scalar_anti_inverse(other));
+}
+
+fn multi_vector_at_origin_flector_geometric_anti_quotient(self_: MultiVectorAtOrigin, other: Flector) -> MultiVector {
+    return multi_vector_at_origin_flector_geometric_anti_product(self_, flector_anti_inverse(other));
+}
+
+fn multi_vector_at_origin_line_geometric_anti_quotient(self_: MultiVectorAtOrigin, other: Line) -> MultiVector {
+    return multi_vector_at_origin_line_geometric_anti_product(self_, line_anti_inverse(other));
+}
+
+fn multi_vector_at_origin_line_at_origin_geometric_anti_quotient(self_: MultiVectorAtOrigin, other: LineAtOrigin) -> MultiVectorAtOrigin {
+    return multi_vector_at_origin_line_at_origin_geometric_anti_product(self_, line_at_origin_anti_inverse(other));
+}
+
+fn multi_vector_at_origin_magnitude_geometric_anti_quotient(self_: MultiVectorAtOrigin, other: Magnitude) -> MultiVector {
+    return multi_vector_at_origin_magnitude_geometric_anti_product(self_, magnitude_anti_inverse(other));
+}
+
+fn multi_vector_at_origin_motor_geometric_anti_quotient(self_: MultiVectorAtOrigin, other: Motor) -> MultiVector {
+    return multi_vector_at_origin_motor_geometric_anti_product(self_, motor_anti_inverse(other));
+}
+
+fn multi_vector_at_origin_multi_vector_geometric_anti_quotient(self_: MultiVectorAtOrigin, other: MultiVector) -> MultiVector {
+    return multi_vector_at_origin_multi_vector_geometric_anti_product(self_, multi_vector_anti_inverse(other));
+}
+
+fn multi_vector_at_origin_multi_vector_at_origin_geometric_anti_quotient(self_: MultiVectorAtOrigin, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
+    return multi_vector_at_origin_multi_vector_at_origin_geometric_anti_product(self_, multi_vector_at_origin_anti_inverse(other));
+}
+
+fn multi_vector_at_origin_origin_geometric_anti_quotient(self_: MultiVectorAtOrigin, other: Origin) -> MultiVectorAtOrigin {
+    return multi_vector_at_origin_origin_geometric_anti_product(self_, origin_anti_inverse(other));
+}
+
+fn multi_vector_at_origin_plane_geometric_anti_quotient(self_: MultiVectorAtOrigin, other: Plane) -> MultiVector {
+    return multi_vector_at_origin_plane_geometric_anti_product(self_, plane_anti_inverse(other));
+}
+
+fn multi_vector_at_origin_plane_at_origin_geometric_anti_quotient(self_: MultiVectorAtOrigin, other: PlaneAtOrigin) -> MultiVectorAtOrigin {
+    return multi_vector_at_origin_plane_at_origin_geometric_anti_product(self_, plane_at_origin_anti_inverse(other));
+}
+
+fn multi_vector_at_origin_point_geometric_anti_quotient(self_: MultiVectorAtOrigin, other: Point) -> MultiVector {
+    return multi_vector_at_origin_point_geometric_anti_product(self_, point_anti_inverse(other));
+}
+
+fn multi_vector_at_origin_rotor_geometric_anti_quotient(self_: MultiVectorAtOrigin, other: Rotor) -> MultiVectorAtOrigin {
+    return multi_vector_at_origin_rotor_geometric_anti_product(self_, rotor_anti_inverse(other));
+}
+
+fn multi_vector_at_origin_translator_geometric_anti_quotient(self_: MultiVectorAtOrigin, other: Translator) -> MultiVector {
+    return multi_vector_at_origin_translator_geometric_anti_product(self_, translator_anti_inverse(other));
+}
+
+fn origin_anti_scalar_geometric_anti_quotient(self_: Origin, other: AntiScalar) -> Origin {
+    return origin_anti_scalar_geometric_anti_product(self_, anti_scalar_anti_inverse(other));
+}
+
+fn origin_flector_geometric_anti_quotient(self_: Origin, other: Flector) -> MultiVector {
+    return origin_flector_geometric_anti_product(self_, flector_anti_inverse(other));
+}
+
+fn origin_line_geometric_anti_quotient(self_: Origin, other: Line) -> Flector {
+    return origin_line_geometric_anti_product(self_, line_anti_inverse(other));
+}
+
+fn origin_line_at_origin_geometric_anti_quotient(self_: Origin, other: LineAtOrigin) -> PlaneAtOrigin {
+    return origin_line_at_origin_geometric_anti_product(self_, line_at_origin_anti_inverse(other));
+}
+
+fn origin_magnitude_geometric_anti_quotient(self_: Origin, other: Magnitude) -> Flector {
+    return origin_magnitude_geometric_anti_product(self_, magnitude_anti_inverse(other));
+}
+
+fn origin_motor_geometric_anti_quotient(self_: Origin, other: Motor) -> Flector {
+    return origin_motor_geometric_anti_product(self_, motor_anti_inverse(other));
+}
+
+fn origin_multi_vector_geometric_anti_quotient(self_: Origin, other: MultiVector) -> MultiVector {
+    return origin_multi_vector_geometric_anti_product(self_, multi_vector_anti_inverse(other));
+}
+
+fn origin_multi_vector_at_origin_geometric_anti_quotient(self_: Origin, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
+    return origin_multi_vector_at_origin_geometric_anti_product(self_, multi_vector_at_origin_anti_inverse(other));
+}
+
+fn origin_origin_geometric_anti_quotient(self_: Origin, other: Origin) -> AntiScalar {
+    return origin_origin_geometric_anti_product(self_, origin_anti_inverse(other));
+}
+
+fn origin_plane_geometric_anti_quotient(self_: Origin, other: Plane) -> MultiVector {
+    return origin_plane_geometric_anti_product(self_, plane_anti_inverse(other));
+}
+
+fn origin_plane_at_origin_geometric_anti_quotient(self_: Origin, other: PlaneAtOrigin) -> LineAtOrigin {
+    return origin_plane_at_origin_geometric_anti_product(self_, plane_at_origin_anti_inverse(other));
+}
+
+fn origin_point_geometric_anti_quotient(self_: Origin, other: Point) -> Translator {
+    return origin_point_geometric_anti_product(self_, point_anti_inverse(other));
+}
+
+fn origin_rotor_geometric_anti_quotient(self_: Origin, other: Rotor) -> Flector {
+    return origin_rotor_geometric_anti_product(self_, rotor_anti_inverse(other));
+}
+
+fn origin_translator_geometric_anti_quotient(self_: Origin, other: Translator) -> Point {
+    return origin_translator_geometric_anti_product(self_, translator_anti_inverse(other));
+}
+
+fn plane_anti_scalar_geometric_anti_quotient(self_: Plane, other: AntiScalar) -> Plane {
+    return plane_anti_scalar_geometric_anti_product(self_, anti_scalar_anti_inverse(other));
+}
+
+fn plane_flector_geometric_anti_quotient(self_: Plane, other: Flector) -> MultiVector {
+    return plane_flector_geometric_anti_product(self_, flector_anti_inverse(other));
+}
+
+fn plane_line_geometric_anti_quotient(self_: Plane, other: Line) -> Flector {
+    return plane_line_geometric_anti_product(self_, line_anti_inverse(other));
+}
+
+fn plane_line_at_origin_geometric_anti_quotient(self_: Plane, other: LineAtOrigin) -> Flector {
+    return plane_line_at_origin_geometric_anti_product(self_, line_at_origin_anti_inverse(other));
+}
+
+fn plane_magnitude_geometric_anti_quotient(self_: Plane, other: Magnitude) -> Flector {
+    return plane_magnitude_geometric_anti_product(self_, magnitude_anti_inverse(other));
+}
+
+fn plane_motor_geometric_anti_quotient(self_: Plane, other: Motor) -> Flector {
+    return plane_motor_geometric_anti_product(self_, motor_anti_inverse(other));
+}
+
+fn plane_multi_vector_geometric_anti_quotient(self_: Plane, other: MultiVector) -> MultiVector {
+    return plane_multi_vector_geometric_anti_product(self_, multi_vector_anti_inverse(other));
+}
+
+fn plane_multi_vector_at_origin_geometric_anti_quotient(self_: Plane, other: MultiVectorAtOrigin) -> MultiVector {
+    return plane_multi_vector_at_origin_geometric_anti_product(self_, multi_vector_at_origin_anti_inverse(other));
+}
+
+fn plane_origin_geometric_anti_quotient(self_: Plane, other: Origin) -> MultiVector {
+    return plane_origin_geometric_anti_product(self_, origin_anti_inverse(other));
+}
+
+fn plane_plane_geometric_anti_quotient(self_: Plane, other: Plane) -> Motor {
+    return plane_plane_geometric_anti_product(self_, plane_anti_inverse(other));
+}
+
+fn plane_plane_at_origin_geometric_anti_quotient(self_: Plane, other: PlaneAtOrigin) -> Motor {
+    return plane_plane_at_origin_geometric_anti_product(self_, plane_at_origin_anti_inverse(other));
+}
+
+fn plane_point_geometric_anti_quotient(self_: Plane, other: Point) -> MultiVector {
+    return plane_point_geometric_anti_product(self_, point_anti_inverse(other));
+}
+
+fn plane_rotor_geometric_anti_quotient(self_: Plane, other: Rotor) -> Flector {
+    return plane_rotor_geometric_anti_product(self_, rotor_anti_inverse(other));
+}
+
+fn plane_translator_geometric_anti_quotient(self_: Plane, other: Translator) -> Flector {
+    return plane_translator_geometric_anti_product(self_, translator_anti_inverse(other));
+}
+
+fn plane_at_origin_anti_scalar_geometric_anti_quotient(self_: PlaneAtOrigin, other: AntiScalar) -> PlaneAtOrigin {
+    return plane_at_origin_anti_scalar_geometric_anti_product(self_, anti_scalar_anti_inverse(other));
+}
+
+fn plane_at_origin_flector_geometric_anti_quotient(self_: PlaneAtOrigin, other: Flector) -> MultiVector {
+    return plane_at_origin_flector_geometric_anti_product(self_, flector_anti_inverse(other));
+}
+
+fn plane_at_origin_line_geometric_anti_quotient(self_: PlaneAtOrigin, other: Line) -> Flector {
+    return plane_at_origin_line_geometric_anti_product(self_, line_anti_inverse(other));
+}
+
+fn plane_at_origin_line_at_origin_geometric_anti_quotient(self_: PlaneAtOrigin, other: LineAtOrigin) -> Flector {
+    return plane_at_origin_line_at_origin_geometric_anti_product(self_, line_at_origin_anti_inverse(other));
+}
+
+fn plane_at_origin_magnitude_geometric_anti_quotient(self_: PlaneAtOrigin, other: Magnitude) -> Flector {
+    return plane_at_origin_magnitude_geometric_anti_product(self_, magnitude_anti_inverse(other));
+}
+
+fn plane_at_origin_motor_geometric_anti_quotient(self_: PlaneAtOrigin, other: Motor) -> Flector {
+    return plane_at_origin_motor_geometric_anti_product(self_, motor_anti_inverse(other));
+}
+
+fn plane_at_origin_multi_vector_geometric_anti_quotient(self_: PlaneAtOrigin, other: MultiVector) -> MultiVector {
+    return plane_at_origin_multi_vector_geometric_anti_product(self_, multi_vector_anti_inverse(other));
+}
+
+fn plane_at_origin_multi_vector_at_origin_geometric_anti_quotient(self_: PlaneAtOrigin, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
+    return plane_at_origin_multi_vector_at_origin_geometric_anti_product(self_, multi_vector_at_origin_anti_inverse(other));
+}
+
+fn plane_at_origin_origin_geometric_anti_quotient(self_: PlaneAtOrigin, other: Origin) -> LineAtOrigin {
+    return plane_at_origin_origin_geometric_anti_product(self_, origin_anti_inverse(other));
+}
+
+fn plane_at_origin_plane_geometric_anti_quotient(self_: PlaneAtOrigin, other: Plane) -> Motor {
+    return plane_at_origin_plane_geometric_anti_product(self_, plane_anti_inverse(other));
+}
+
+fn plane_at_origin_plane_at_origin_geometric_anti_quotient(self_: PlaneAtOrigin, other: PlaneAtOrigin) -> Rotor {
+    return plane_at_origin_plane_at_origin_geometric_anti_product(self_, plane_at_origin_anti_inverse(other));
+}
+
+fn plane_at_origin_point_geometric_anti_quotient(self_: PlaneAtOrigin, other: Point) -> MultiVector {
+    return plane_at_origin_point_geometric_anti_product(self_, point_anti_inverse(other));
+}
+
+fn plane_at_origin_rotor_geometric_anti_quotient(self_: PlaneAtOrigin, other: Rotor) -> Flector {
+    return plane_at_origin_rotor_geometric_anti_product(self_, rotor_anti_inverse(other));
+}
+
+fn plane_at_origin_translator_geometric_anti_quotient(self_: PlaneAtOrigin, other: Translator) -> Flector {
+    return plane_at_origin_translator_geometric_anti_product(self_, translator_anti_inverse(other));
+}
+
+fn point_anti_scalar_geometric_anti_quotient(self_: Point, other: AntiScalar) -> Point {
+    return point_anti_scalar_geometric_anti_product(self_, anti_scalar_anti_inverse(other));
+}
+
+fn point_flector_geometric_anti_quotient(self_: Point, other: Flector) -> MultiVector {
+    return point_flector_geometric_anti_product(self_, flector_anti_inverse(other));
+}
+
+fn point_line_geometric_anti_quotient(self_: Point, other: Line) -> Flector {
+    return point_line_geometric_anti_product(self_, line_anti_inverse(other));
+}
+
+fn point_line_at_origin_geometric_anti_quotient(self_: Point, other: LineAtOrigin) -> Flector {
+    return point_line_at_origin_geometric_anti_product(self_, line_at_origin_anti_inverse(other));
+}
+
+fn point_magnitude_geometric_anti_quotient(self_: Point, other: Magnitude) -> Flector {
+    return point_magnitude_geometric_anti_product(self_, magnitude_anti_inverse(other));
+}
+
+fn point_motor_geometric_anti_quotient(self_: Point, other: Motor) -> Flector {
+    return point_motor_geometric_anti_product(self_, motor_anti_inverse(other));
+}
+
+fn point_multi_vector_geometric_anti_quotient(self_: Point, other: MultiVector) -> MultiVector {
+    return point_multi_vector_geometric_anti_product(self_, multi_vector_anti_inverse(other));
+}
+
+fn point_multi_vector_at_origin_geometric_anti_quotient(self_: Point, other: MultiVectorAtOrigin) -> MultiVector {
+    return point_multi_vector_at_origin_geometric_anti_product(self_, multi_vector_at_origin_anti_inverse(other));
+}
+
+fn point_origin_geometric_anti_quotient(self_: Point, other: Origin) -> Translator {
+    return point_origin_geometric_anti_product(self_, origin_anti_inverse(other));
+}
+
+fn point_plane_geometric_anti_quotient(self_: Point, other: Plane) -> MultiVector {
+    return point_plane_geometric_anti_product(self_, plane_anti_inverse(other));
+}
+
+fn point_plane_at_origin_geometric_anti_quotient(self_: Point, other: PlaneAtOrigin) -> MultiVector {
+    return point_plane_at_origin_geometric_anti_product(self_, plane_at_origin_anti_inverse(other));
+}
+
+fn point_point_geometric_anti_quotient(self_: Point, other: Point) -> Translator {
+    return point_point_geometric_anti_product(self_, point_anti_inverse(other));
+}
+
+fn point_rotor_geometric_anti_quotient(self_: Point, other: Rotor) -> Flector {
+    return point_rotor_geometric_anti_product(self_, rotor_anti_inverse(other));
+}
+
+fn point_translator_geometric_anti_quotient(self_: Point, other: Translator) -> Point {
+    return point_translator_geometric_anti_product(self_, translator_anti_inverse(other));
+}
+
+fn point_at_infinity_anti_scalar_geometric_anti_quotient(self_: PointAtInfinity, other: AntiScalar) -> PointAtInfinity {
+    return point_at_infinity_anti_scalar_geometric_anti_product(self_, anti_scalar_anti_inverse(other));
+}
+
+fn point_at_infinity_flector_geometric_anti_quotient(self_: PointAtInfinity, other: Flector) -> MultiVectorAtInfinity {
+    return point_at_infinity_flector_geometric_anti_product(self_, flector_anti_inverse(other));
+}
+
+fn point_at_infinity_line_geometric_anti_quotient(self_: PointAtInfinity, other: Line) -> FlectorAtInfinity {
+    return point_at_infinity_line_geometric_anti_product(self_, line_anti_inverse(other));
+}
+
+fn point_at_infinity_line_at_origin_geometric_anti_quotient(self_: PointAtInfinity, other: LineAtOrigin) -> FlectorAtInfinity {
+    return point_at_infinity_line_at_origin_geometric_anti_product(self_, line_at_origin_anti_inverse(other));
+}
+
+fn point_at_infinity_magnitude_geometric_anti_quotient(self_: PointAtInfinity, other: Magnitude) -> PointAtInfinity {
+    return point_at_infinity_magnitude_geometric_anti_product(self_, magnitude_anti_inverse(other));
+}
+
+fn point_at_infinity_motor_geometric_anti_quotient(self_: PointAtInfinity, other: Motor) -> FlectorAtInfinity {
+    return point_at_infinity_motor_geometric_anti_product(self_, motor_anti_inverse(other));
+}
+
+fn point_at_infinity_multi_vector_geometric_anti_quotient(self_: PointAtInfinity, other: MultiVector) -> MultiVectorAtInfinity {
+    return point_at_infinity_multi_vector_geometric_anti_product(self_, multi_vector_anti_inverse(other));
+}
+
+fn point_at_infinity_multi_vector_at_origin_geometric_anti_quotient(self_: PointAtInfinity, other: MultiVectorAtOrigin) -> MultiVectorAtInfinity {
+    return point_at_infinity_multi_vector_at_origin_geometric_anti_product(self_, multi_vector_at_origin_anti_inverse(other));
+}
+
+fn point_at_infinity_origin_geometric_anti_quotient(self_: PointAtInfinity, other: Origin) -> LineAtInfinity {
+    return point_at_infinity_origin_geometric_anti_product(self_, origin_anti_inverse(other));
+}
+
+fn point_at_infinity_plane_geometric_anti_quotient(self_: PointAtInfinity, other: Plane) -> MultiVectorAtInfinity {
+    return point_at_infinity_plane_geometric_anti_product(self_, plane_anti_inverse(other));
+}
+
+fn point_at_infinity_plane_at_origin_geometric_anti_quotient(self_: PointAtInfinity, other: PlaneAtOrigin) -> MultiVectorAtInfinity {
+    return point_at_infinity_plane_at_origin_geometric_anti_product(self_, plane_at_origin_anti_inverse(other));
+}
+
+fn point_at_infinity_point_geometric_anti_quotient(self_: PointAtInfinity, other: Point) -> LineAtInfinity {
+    return point_at_infinity_point_geometric_anti_product(self_, point_anti_inverse(other));
+}
+
+fn point_at_infinity_rotor_geometric_anti_quotient(self_: PointAtInfinity, other: Rotor) -> FlectorAtInfinity {
+    return point_at_infinity_rotor_geometric_anti_product(self_, rotor_anti_inverse(other));
+}
+
+fn point_at_infinity_translator_geometric_anti_quotient(self_: PointAtInfinity, other: Translator) -> PointAtInfinity {
+    return point_at_infinity_translator_geometric_anti_product(self_, translator_anti_inverse(other));
+}
+
+fn rotor_anti_scalar_geometric_anti_quotient(self_: Rotor, other: AntiScalar) -> Rotor {
+    return rotor_anti_scalar_geometric_anti_product(self_, anti_scalar_anti_inverse(other));
+}
+
+fn rotor_flector_geometric_anti_quotient(self_: Rotor, other: Flector) -> Flector {
+    return rotor_flector_geometric_anti_product(self_, flector_anti_inverse(other));
+}
+
+fn rotor_line_geometric_anti_quotient(self_: Rotor, other: Line) -> MultiVector {
+    return rotor_line_geometric_anti_product(self_, line_anti_inverse(other));
+}
+
+fn rotor_line_at_origin_geometric_anti_quotient(self_: Rotor, other: LineAtOrigin) -> Rotor {
+    return rotor_line_at_origin_geometric_anti_product(self_, line_at_origin_anti_inverse(other));
+}
+
+fn rotor_magnitude_geometric_anti_quotient(self_: Rotor, other: Magnitude) -> MultiVector {
+    return rotor_magnitude_geometric_anti_product(self_, magnitude_anti_inverse(other));
+}
+
+fn rotor_motor_geometric_anti_quotient(self_: Rotor, other: Motor) -> MultiVector {
+    return rotor_motor_geometric_anti_product(self_, motor_anti_inverse(other));
+}
+
+fn rotor_multi_vector_geometric_anti_quotient(self_: Rotor, other: MultiVector) -> MultiVector {
+    return rotor_multi_vector_geometric_anti_product(self_, multi_vector_anti_inverse(other));
+}
+
+fn rotor_multi_vector_at_origin_geometric_anti_quotient(self_: Rotor, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
+    return rotor_multi_vector_at_origin_geometric_anti_product(self_, multi_vector_at_origin_anti_inverse(other));
+}
+
+fn rotor_origin_geometric_anti_quotient(self_: Rotor, other: Origin) -> Flector {
+    return rotor_origin_geometric_anti_product(self_, origin_anti_inverse(other));
+}
+
+fn rotor_plane_geometric_anti_quotient(self_: Rotor, other: Plane) -> Flector {
+    return rotor_plane_geometric_anti_product(self_, plane_anti_inverse(other));
+}
+
+fn rotor_plane_at_origin_geometric_anti_quotient(self_: Rotor, other: PlaneAtOrigin) -> Flector {
+    return rotor_plane_at_origin_geometric_anti_product(self_, plane_at_origin_anti_inverse(other));
+}
+
+fn rotor_point_geometric_anti_quotient(self_: Rotor, other: Point) -> Flector {
+    return rotor_point_geometric_anti_product(self_, point_anti_inverse(other));
+}
+
+fn rotor_rotor_geometric_anti_quotient(self_: Rotor, other: Rotor) -> Rotor {
+    return rotor_rotor_geometric_anti_product(self_, rotor_anti_inverse(other));
+}
+
+fn rotor_translator_geometric_anti_quotient(self_: Rotor, other: Translator) -> MultiVector {
+    return rotor_translator_geometric_anti_product(self_, translator_anti_inverse(other));
+}
+
+fn scalar_anti_scalar_geometric_anti_quotient(self_: Scalar, other: AntiScalar) -> Scalar {
+    return scalar_anti_scalar_geometric_anti_product(self_, anti_scalar_anti_inverse(other));
+}
+
+fn scalar_flector_geometric_anti_quotient(self_: Scalar, other: Flector) -> FlectorAtInfinity {
+    return scalar_flector_geometric_anti_product(self_, flector_anti_inverse(other));
+}
+
+fn scalar_line_geometric_anti_quotient(self_: Scalar, other: Line) -> LineAtInfinity {
+    return scalar_line_geometric_anti_product(self_, line_anti_inverse(other));
+}
+
+fn scalar_line_at_origin_geometric_anti_quotient(self_: Scalar, other: LineAtOrigin) -> LineAtInfinity {
+    return scalar_line_at_origin_geometric_anti_product(self_, line_at_origin_anti_inverse(other));
+}
+
+fn scalar_magnitude_geometric_anti_quotient(self_: Scalar, other: Magnitude) -> Scalar {
+    return scalar_magnitude_geometric_anti_product(self_, magnitude_anti_inverse(other));
+}
+
+fn scalar_motor_geometric_anti_quotient(self_: Scalar, other: Motor) -> MultiVectorAtInfinity {
+    return scalar_motor_geometric_anti_product(self_, motor_anti_inverse(other));
+}
+
+fn scalar_multi_vector_geometric_anti_quotient(self_: Scalar, other: MultiVector) -> MultiVectorAtInfinity {
+    return scalar_multi_vector_geometric_anti_product(self_, multi_vector_anti_inverse(other));
+}
+
+fn scalar_multi_vector_at_origin_geometric_anti_quotient(self_: Scalar, other: MultiVectorAtOrigin) -> MultiVectorAtInfinity {
+    return scalar_multi_vector_at_origin_geometric_anti_product(self_, multi_vector_at_origin_anti_inverse(other));
+}
+
+fn scalar_origin_geometric_anti_quotient(self_: Scalar, other: Origin) -> Horizon {
+    return scalar_origin_geometric_anti_product(self_, origin_anti_inverse(other));
+}
+
+fn scalar_plane_geometric_anti_quotient(self_: Scalar, other: Plane) -> PointAtInfinity {
+    return scalar_plane_geometric_anti_product(self_, plane_anti_inverse(other));
+}
+
+fn scalar_plane_at_origin_geometric_anti_quotient(self_: Scalar, other: PlaneAtOrigin) -> PointAtInfinity {
+    return scalar_plane_at_origin_geometric_anti_product(self_, plane_at_origin_anti_inverse(other));
+}
+
+fn scalar_point_geometric_anti_quotient(self_: Scalar, other: Point) -> Horizon {
+    return scalar_point_geometric_anti_product(self_, point_anti_inverse(other));
+}
+
+fn scalar_rotor_geometric_anti_quotient(self_: Scalar, other: Rotor) -> MultiVectorAtInfinity {
+    return scalar_rotor_geometric_anti_product(self_, rotor_anti_inverse(other));
+}
+
+fn scalar_translator_geometric_anti_quotient(self_: Scalar, other: Translator) -> Scalar {
+    return scalar_translator_geometric_anti_product(self_, translator_anti_inverse(other));
+}
+
+fn translator_anti_scalar_geometric_anti_quotient(self_: Translator, other: AntiScalar) -> Translator {
+    return translator_anti_scalar_geometric_anti_product(self_, anti_scalar_anti_inverse(other));
+}
+
+fn translator_flector_geometric_anti_quotient(self_: Translator, other: Flector) -> Flector {
+    return translator_flector_geometric_anti_product(self_, flector_anti_inverse(other));
+}
+
+fn translator_line_geometric_anti_quotient(self_: Translator, other: Line) -> MultiVector {
+    return translator_line_geometric_anti_product(self_, line_anti_inverse(other));
+}
+
+fn translator_line_at_origin_geometric_anti_quotient(self_: Translator, other: LineAtOrigin) -> MultiVector {
+    return translator_line_at_origin_geometric_anti_product(self_, line_at_origin_anti_inverse(other));
+}
+
+fn translator_magnitude_geometric_anti_quotient(self_: Translator, other: Magnitude) -> MultiVector {
+    return translator_magnitude_geometric_anti_product(self_, magnitude_anti_inverse(other));
+}
+
+fn translator_motor_geometric_anti_quotient(self_: Translator, other: Motor) -> MultiVector {
+    return translator_motor_geometric_anti_product(self_, motor_anti_inverse(other));
+}
+
+fn translator_multi_vector_geometric_anti_quotient(self_: Translator, other: MultiVector) -> MultiVector {
+    return translator_multi_vector_geometric_anti_product(self_, multi_vector_anti_inverse(other));
+}
+
+fn translator_multi_vector_at_origin_geometric_anti_quotient(self_: Translator, other: MultiVectorAtOrigin) -> MultiVector {
+    return translator_multi_vector_at_origin_geometric_anti_product(self_, multi_vector_at_origin_anti_inverse(other));
+}
+
+fn translator_origin_geometric_anti_quotient(self_: Translator, other: Origin) -> Point {
+    return translator_origin_geometric_anti_product(self_, origin_anti_inverse(other));
+}
+
+fn translator_plane_geometric_anti_quotient(self_: Translator, other: Plane) -> Flector {
+    return translator_plane_geometric_anti_product(self_, plane_anti_inverse(other));
+}
+
+fn translator_plane_at_origin_geometric_anti_quotient(self_: Translator, other: PlaneAtOrigin) -> Flector {
+    return translator_plane_at_origin_geometric_anti_product(self_, plane_at_origin_anti_inverse(other));
+}
+
+fn translator_point_geometric_anti_quotient(self_: Translator, other: Point) -> Point {
+    return translator_point_geometric_anti_product(self_, point_anti_inverse(other));
+}
+
+fn translator_rotor_geometric_anti_quotient(self_: Translator, other: Rotor) -> MultiVector {
+    return translator_rotor_geometric_anti_product(self_, rotor_anti_inverse(other));
+}
+
+fn translator_translator_geometric_anti_quotient(self_: Translator, other: Translator) -> Translator {
+    return translator_translator_geometric_anti_product(self_, translator_anti_inverse(other));
+}
+
+fn anti_scalar_flector_geometric_quotient(self_: AntiScalar, other: Flector) -> Flector {
+    return anti_scalar_flector_geometric_product(self_, flector_inverse(other));
+}
+
+fn anti_scalar_flector_at_infinity_geometric_quotient(self_: AntiScalar, other: FlectorAtInfinity) -> Flector {
+    return anti_scalar_flector_at_infinity_geometric_product(self_, flector_at_infinity_inverse(other));
+}
+
+fn anti_scalar_horizon_geometric_quotient(self_: AntiScalar, other: Horizon) -> Origin {
+    return anti_scalar_horizon_geometric_product(self_, horizon_inverse(other));
+}
+
+fn anti_scalar_line_geometric_quotient(self_: AntiScalar, other: Line) -> LineAtOrigin {
+    return anti_scalar_line_geometric_product(self_, line_inverse(other));
+}
+
+fn anti_scalar_line_at_infinity_geometric_quotient(self_: AntiScalar, other: LineAtInfinity) -> LineAtOrigin {
+    return anti_scalar_line_at_infinity_geometric_product(self_, line_at_infinity_inverse(other));
+}
+
+fn anti_scalar_magnitude_geometric_quotient(self_: AntiScalar, other: Magnitude) -> AntiScalar {
+    return anti_scalar_magnitude_geometric_product(self_, magnitude_inverse(other));
+}
+
+fn anti_scalar_motor_geometric_quotient(self_: AntiScalar, other: Motor) -> LineAtOrigin {
+    return anti_scalar_motor_geometric_product(self_, motor_inverse(other));
+}
+
+fn anti_scalar_multi_vector_geometric_quotient(self_: AntiScalar, other: MultiVector) -> MultiVectorAtOrigin {
+    return anti_scalar_multi_vector_geometric_product(self_, multi_vector_inverse(other));
+}
+
+fn anti_scalar_multi_vector_at_infinity_geometric_quotient(self_: AntiScalar, other: MultiVectorAtInfinity) -> MultiVectorAtOrigin {
+    return anti_scalar_multi_vector_at_infinity_geometric_product(self_, multi_vector_at_infinity_inverse(other));
+}
+
+fn anti_scalar_plane_geometric_quotient(self_: AntiScalar, other: Plane) -> Origin {
+    return anti_scalar_plane_geometric_product(self_, plane_inverse(other));
+}
+
+fn anti_scalar_point_geometric_quotient(self_: AntiScalar, other: Point) -> PlaneAtOrigin {
+    return anti_scalar_point_geometric_product(self_, point_inverse(other));
+}
+
+fn anti_scalar_point_at_infinity_geometric_quotient(self_: AntiScalar, other: PointAtInfinity) -> PlaneAtOrigin {
+    return anti_scalar_point_at_infinity_geometric_product(self_, point_at_infinity_inverse(other));
+}
+
+fn anti_scalar_scalar_geometric_quotient(self_: AntiScalar, other: Scalar) -> AntiScalar {
+    return anti_scalar_scalar_geometric_product(self_, scalar_inverse(other));
+}
+
+fn anti_scalar_translator_geometric_quotient(self_: AntiScalar, other: Translator) -> LineAtOrigin {
+    return anti_scalar_translator_geometric_product(self_, translator_inverse(other));
+}
+
+fn flector_flector_geometric_quotient(self_: Flector, other: Flector) -> MultiVector {
+    return flector_flector_geometric_product(self_, flector_inverse(other));
+}
+
+fn flector_flector_at_infinity_geometric_quotient(self_: Flector, other: FlectorAtInfinity) -> MultiVector {
+    return flector_flector_at_infinity_geometric_product(self_, flector_at_infinity_inverse(other));
+}
+
+fn flector_horizon_geometric_quotient(self_: Flector, other: Horizon) -> MultiVector {
+    return flector_horizon_geometric_product(self_, horizon_inverse(other));
+}
+
+fn flector_line_geometric_quotient(self_: Flector, other: Line) -> Flector {
+    return flector_line_geometric_product(self_, line_inverse(other));
+}
+
+fn flector_line_at_infinity_geometric_quotient(self_: Flector, other: LineAtInfinity) -> Flector {
+    return flector_line_at_infinity_geometric_product(self_, line_at_infinity_inverse(other));
+}
+
+fn flector_magnitude_geometric_quotient(self_: Flector, other: Magnitude) -> Flector {
+    return flector_magnitude_geometric_product(self_, magnitude_inverse(other));
+}
+
+fn flector_motor_geometric_quotient(self_: Flector, other: Motor) -> Flector {
+    return flector_motor_geometric_product(self_, motor_inverse(other));
+}
+
+fn flector_multi_vector_geometric_quotient(self_: Flector, other: MultiVector) -> MultiVector {
+    return flector_multi_vector_geometric_product(self_, multi_vector_inverse(other));
+}
+
+fn flector_multi_vector_at_infinity_geometric_quotient(self_: Flector, other: MultiVectorAtInfinity) -> MultiVector {
+    return flector_multi_vector_at_infinity_geometric_product(self_, multi_vector_at_infinity_inverse(other));
+}
+
+fn flector_plane_geometric_quotient(self_: Flector, other: Plane) -> MultiVector {
+    return flector_plane_geometric_product(self_, plane_inverse(other));
+}
+
+fn flector_point_geometric_quotient(self_: Flector, other: Point) -> MultiVector {
+    return flector_point_geometric_product(self_, point_inverse(other));
+}
+
+fn flector_point_at_infinity_geometric_quotient(self_: Flector, other: PointAtInfinity) -> MultiVector {
+    return flector_point_at_infinity_geometric_product(self_, point_at_infinity_inverse(other));
+}
+
+fn flector_scalar_geometric_quotient(self_: Flector, other: Scalar) -> Flector {
+    return flector_scalar_geometric_product(self_, scalar_inverse(other));
+}
+
+fn flector_translator_geometric_quotient(self_: Flector, other: Translator) -> Flector {
+    return flector_translator_geometric_product(self_, translator_inverse(other));
+}
+
+fn flector_at_infinity_flector_geometric_quotient(self_: FlectorAtInfinity, other: Flector) -> MultiVector {
+    return flector_at_infinity_flector_geometric_product(self_, flector_inverse(other));
+}
+
+fn flector_at_infinity_flector_at_infinity_geometric_quotient(self_: FlectorAtInfinity, other: FlectorAtInfinity) -> MultiVectorAtInfinity {
+    return flector_at_infinity_flector_at_infinity_geometric_product(self_, flector_at_infinity_inverse(other));
+}
+
+fn flector_at_infinity_horizon_geometric_quotient(self_: FlectorAtInfinity, other: Horizon) -> MultiVectorAtInfinity {
+    return flector_at_infinity_horizon_geometric_product(self_, horizon_inverse(other));
+}
+
+fn flector_at_infinity_line_geometric_quotient(self_: FlectorAtInfinity, other: Line) -> Flector {
+    return flector_at_infinity_line_geometric_product(self_, line_inverse(other));
+}
+
+fn flector_at_infinity_line_at_infinity_geometric_quotient(self_: FlectorAtInfinity, other: LineAtInfinity) -> FlectorAtInfinity {
+    return flector_at_infinity_line_at_infinity_geometric_product(self_, line_at_infinity_inverse(other));
+}
+
+fn flector_at_infinity_magnitude_geometric_quotient(self_: FlectorAtInfinity, other: Magnitude) -> Flector {
+    return flector_at_infinity_magnitude_geometric_product(self_, magnitude_inverse(other));
+}
+
+fn flector_at_infinity_motor_geometric_quotient(self_: FlectorAtInfinity, other: Motor) -> Flector {
+    return flector_at_infinity_motor_geometric_product(self_, motor_inverse(other));
+}
+
+fn flector_at_infinity_multi_vector_geometric_quotient(self_: FlectorAtInfinity, other: MultiVector) -> MultiVector {
+    return flector_at_infinity_multi_vector_geometric_product(self_, multi_vector_inverse(other));
+}
+
+fn flector_at_infinity_multi_vector_at_infinity_geometric_quotient(self_: FlectorAtInfinity, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
+    return flector_at_infinity_multi_vector_at_infinity_geometric_product(self_, multi_vector_at_infinity_inverse(other));
+}
+
+fn flector_at_infinity_plane_geometric_quotient(self_: FlectorAtInfinity, other: Plane) -> MultiVector {
+    return flector_at_infinity_plane_geometric_product(self_, plane_inverse(other));
+}
+
+fn flector_at_infinity_point_geometric_quotient(self_: FlectorAtInfinity, other: Point) -> MultiVector {
+    return flector_at_infinity_point_geometric_product(self_, point_inverse(other));
+}
+
+fn flector_at_infinity_point_at_infinity_geometric_quotient(self_: FlectorAtInfinity, other: PointAtInfinity) -> MultiVectorAtInfinity {
+    return flector_at_infinity_point_at_infinity_geometric_product(self_, point_at_infinity_inverse(other));
+}
+
+fn flector_at_infinity_scalar_geometric_quotient(self_: FlectorAtInfinity, other: Scalar) -> FlectorAtInfinity {
+    return flector_at_infinity_scalar_geometric_product(self_, scalar_inverse(other));
+}
+
+fn flector_at_infinity_translator_geometric_quotient(self_: FlectorAtInfinity, other: Translator) -> Flector {
+    return flector_at_infinity_translator_geometric_product(self_, translator_inverse(other));
+}
+
+fn horizon_flector_geometric_quotient(self_: Horizon, other: Flector) -> MultiVector {
+    return horizon_flector_geometric_product(self_, flector_inverse(other));
+}
+
+fn horizon_flector_at_infinity_geometric_quotient(self_: Horizon, other: FlectorAtInfinity) -> MultiVectorAtInfinity {
+    return horizon_flector_at_infinity_geometric_product(self_, flector_at_infinity_inverse(other));
+}
+
+fn horizon_horizon_geometric_quotient(self_: Horizon, other: Horizon) -> Scalar {
+    return horizon_horizon_geometric_product(self_, horizon_inverse(other));
+}
+
+fn horizon_line_geometric_quotient(self_: Horizon, other: Line) -> Flector {
+    return horizon_line_geometric_product(self_, line_inverse(other));
+}
+
+fn horizon_line_at_infinity_geometric_quotient(self_: Horizon, other: LineAtInfinity) -> PointAtInfinity {
+    return horizon_line_at_infinity_geometric_product(self_, line_at_infinity_inverse(other));
+}
+
+fn horizon_magnitude_geometric_quotient(self_: Horizon, other: Magnitude) -> Flector {
+    return horizon_magnitude_geometric_product(self_, magnitude_inverse(other));
+}
+
+fn horizon_motor_geometric_quotient(self_: Horizon, other: Motor) -> Flector {
+    return horizon_motor_geometric_product(self_, motor_inverse(other));
+}
+
+fn horizon_multi_vector_geometric_quotient(self_: Horizon, other: MultiVector) -> MultiVector {
+    return horizon_multi_vector_geometric_product(self_, multi_vector_inverse(other));
+}
+
+fn horizon_multi_vector_at_infinity_geometric_quotient(self_: Horizon, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
+    return horizon_multi_vector_at_infinity_geometric_product(self_, multi_vector_at_infinity_inverse(other));
+}
+
+fn horizon_plane_geometric_quotient(self_: Horizon, other: Plane) -> MultiVector {
+    return horizon_plane_geometric_product(self_, plane_inverse(other));
+}
+
+fn horizon_point_geometric_quotient(self_: Horizon, other: Point) -> Translator {
+    return horizon_point_geometric_product(self_, point_inverse(other));
+}
+
+fn horizon_point_at_infinity_geometric_quotient(self_: Horizon, other: PointAtInfinity) -> LineAtInfinity {
+    return horizon_point_at_infinity_geometric_product(self_, point_at_infinity_inverse(other));
+}
+
+fn horizon_scalar_geometric_quotient(self_: Horizon, other: Scalar) -> Horizon {
+    return horizon_scalar_geometric_product(self_, scalar_inverse(other));
+}
+
+fn horizon_translator_geometric_quotient(self_: Horizon, other: Translator) -> Point {
+    return horizon_translator_geometric_product(self_, translator_inverse(other));
+}
+
+fn line_flector_geometric_quotient(self_: Line, other: Flector) -> Flector {
+    return line_flector_geometric_product(self_, flector_inverse(other));
+}
+
+fn line_flector_at_infinity_geometric_quotient(self_: Line, other: FlectorAtInfinity) -> Flector {
+    return line_flector_at_infinity_geometric_product(self_, flector_at_infinity_inverse(other));
+}
+
+fn line_horizon_geometric_quotient(self_: Line, other: Horizon) -> Flector {
+    return line_horizon_geometric_product(self_, horizon_inverse(other));
+}
+
+fn line_line_geometric_quotient(self_: Line, other: Line) -> MultiVector {
+    return line_line_geometric_product(self_, line_inverse(other));
+}
+
+fn line_line_at_infinity_geometric_quotient(self_: Line, other: LineAtInfinity) -> MultiVector {
+    return line_line_at_infinity_geometric_product(self_, line_at_infinity_inverse(other));
+}
+
+fn line_magnitude_geometric_quotient(self_: Line, other: Magnitude) -> Line {
+    return line_magnitude_geometric_product(self_, magnitude_inverse(other));
+}
+
+fn line_motor_geometric_quotient(self_: Line, other: Motor) -> MultiVector {
+    return line_motor_geometric_product(self_, motor_inverse(other));
+}
+
+fn line_multi_vector_geometric_quotient(self_: Line, other: MultiVector) -> MultiVector {
+    return line_multi_vector_geometric_product(self_, multi_vector_inverse(other));
+}
+
+fn line_multi_vector_at_infinity_geometric_quotient(self_: Line, other: MultiVectorAtInfinity) -> MultiVector {
+    return line_multi_vector_at_infinity_geometric_product(self_, multi_vector_at_infinity_inverse(other));
+}
+
+fn line_plane_geometric_quotient(self_: Line, other: Plane) -> Flector {
+    return line_plane_geometric_product(self_, plane_inverse(other));
+}
+
+fn line_point_geometric_quotient(self_: Line, other: Point) -> Flector {
+    return line_point_geometric_product(self_, point_inverse(other));
+}
+
+fn line_point_at_infinity_geometric_quotient(self_: Line, other: PointAtInfinity) -> Flector {
+    return line_point_at_infinity_geometric_product(self_, point_at_infinity_inverse(other));
+}
+
+fn line_scalar_geometric_quotient(self_: Line, other: Scalar) -> Line {
+    return line_scalar_geometric_product(self_, scalar_inverse(other));
+}
+
+fn line_translator_geometric_quotient(self_: Line, other: Translator) -> MultiVector {
+    return line_translator_geometric_product(self_, translator_inverse(other));
+}
+
+fn line_at_infinity_flector_geometric_quotient(self_: LineAtInfinity, other: Flector) -> Flector {
+    return line_at_infinity_flector_geometric_product(self_, flector_inverse(other));
+}
+
+fn line_at_infinity_flector_at_infinity_geometric_quotient(self_: LineAtInfinity, other: FlectorAtInfinity) -> FlectorAtInfinity {
+    return line_at_infinity_flector_at_infinity_geometric_product(self_, flector_at_infinity_inverse(other));
+}
+
+fn line_at_infinity_horizon_geometric_quotient(self_: LineAtInfinity, other: Horizon) -> PointAtInfinity {
+    return line_at_infinity_horizon_geometric_product(self_, horizon_inverse(other));
+}
+
+fn line_at_infinity_line_geometric_quotient(self_: LineAtInfinity, other: Line) -> MultiVector {
+    return line_at_infinity_line_geometric_product(self_, line_inverse(other));
+}
+
+fn line_at_infinity_line_at_infinity_geometric_quotient(self_: LineAtInfinity, other: LineAtInfinity) -> MultiVectorAtInfinity {
+    return line_at_infinity_line_at_infinity_geometric_product(self_, line_at_infinity_inverse(other));
+}
+
+fn line_at_infinity_magnitude_geometric_quotient(self_: LineAtInfinity, other: Magnitude) -> Line {
+    return line_at_infinity_magnitude_geometric_product(self_, magnitude_inverse(other));
+}
+
+fn line_at_infinity_motor_geometric_quotient(self_: LineAtInfinity, other: Motor) -> MultiVector {
+    return line_at_infinity_motor_geometric_product(self_, motor_inverse(other));
+}
+
+fn line_at_infinity_multi_vector_geometric_quotient(self_: LineAtInfinity, other: MultiVector) -> MultiVector {
+    return line_at_infinity_multi_vector_geometric_product(self_, multi_vector_inverse(other));
+}
+
+fn line_at_infinity_multi_vector_at_infinity_geometric_quotient(self_: LineAtInfinity, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
+    return line_at_infinity_multi_vector_at_infinity_geometric_product(self_, multi_vector_at_infinity_inverse(other));
+}
+
+fn line_at_infinity_plane_geometric_quotient(self_: LineAtInfinity, other: Plane) -> Flector {
+    return line_at_infinity_plane_geometric_product(self_, plane_inverse(other));
+}
+
+fn line_at_infinity_point_geometric_quotient(self_: LineAtInfinity, other: Point) -> Flector {
+    return line_at_infinity_point_geometric_product(self_, point_inverse(other));
+}
+
+fn line_at_infinity_point_at_infinity_geometric_quotient(self_: LineAtInfinity, other: PointAtInfinity) -> FlectorAtInfinity {
+    return line_at_infinity_point_at_infinity_geometric_product(self_, point_at_infinity_inverse(other));
+}
+
+fn line_at_infinity_scalar_geometric_quotient(self_: LineAtInfinity, other: Scalar) -> LineAtInfinity {
+    return line_at_infinity_scalar_geometric_product(self_, scalar_inverse(other));
+}
+
+fn line_at_infinity_translator_geometric_quotient(self_: LineAtInfinity, other: Translator) -> MultiVector {
+    return line_at_infinity_translator_geometric_product(self_, translator_inverse(other));
+}
+
+fn line_at_origin_flector_geometric_quotient(self_: LineAtOrigin, other: Flector) -> Flector {
+    return line_at_origin_flector_geometric_product(self_, flector_inverse(other));
+}
+
+fn line_at_origin_flector_at_infinity_geometric_quotient(self_: LineAtOrigin, other: FlectorAtInfinity) -> Flector {
+    return line_at_origin_flector_at_infinity_geometric_product(self_, flector_at_infinity_inverse(other));
+}
+
+fn line_at_origin_horizon_geometric_quotient(self_: LineAtOrigin, other: Horizon) -> PlaneAtOrigin {
+    return line_at_origin_horizon_geometric_product(self_, horizon_inverse(other));
+}
+
+fn line_at_origin_line_geometric_quotient(self_: LineAtOrigin, other: Line) -> Rotor {
+    return line_at_origin_line_geometric_product(self_, line_inverse(other));
+}
+
+fn line_at_origin_line_at_infinity_geometric_quotient(self_: LineAtOrigin, other: LineAtInfinity) -> Rotor {
+    return line_at_origin_line_at_infinity_geometric_product(self_, line_at_infinity_inverse(other));
+}
+
+fn line_at_origin_magnitude_geometric_quotient(self_: LineAtOrigin, other: Magnitude) -> LineAtOrigin {
+    return line_at_origin_magnitude_geometric_product(self_, magnitude_inverse(other));
+}
+
+fn line_at_origin_motor_geometric_quotient(self_: LineAtOrigin, other: Motor) -> Rotor {
+    return line_at_origin_motor_geometric_product(self_, motor_inverse(other));
+}
+
+fn line_at_origin_multi_vector_geometric_quotient(self_: LineAtOrigin, other: MultiVector) -> MultiVectorAtOrigin {
+    return line_at_origin_multi_vector_geometric_product(self_, multi_vector_inverse(other));
+}
+
+fn line_at_origin_multi_vector_at_infinity_geometric_quotient(self_: LineAtOrigin, other: MultiVectorAtInfinity) -> MultiVectorAtOrigin {
+    return line_at_origin_multi_vector_at_infinity_geometric_product(self_, multi_vector_at_infinity_inverse(other));
+}
+
+fn line_at_origin_plane_geometric_quotient(self_: LineAtOrigin, other: Plane) -> PlaneAtOrigin {
+    return line_at_origin_plane_geometric_product(self_, plane_inverse(other));
+}
+
+fn line_at_origin_point_geometric_quotient(self_: LineAtOrigin, other: Point) -> Flector {
+    return line_at_origin_point_geometric_product(self_, point_inverse(other));
+}
+
+fn line_at_origin_point_at_infinity_geometric_quotient(self_: LineAtOrigin, other: PointAtInfinity) -> Flector {
+    return line_at_origin_point_at_infinity_geometric_product(self_, point_at_infinity_inverse(other));
+}
+
+fn line_at_origin_scalar_geometric_quotient(self_: LineAtOrigin, other: Scalar) -> LineAtOrigin {
+    return line_at_origin_scalar_geometric_product(self_, scalar_inverse(other));
+}
+
+fn line_at_origin_translator_geometric_quotient(self_: LineAtOrigin, other: Translator) -> Rotor {
+    return line_at_origin_translator_geometric_product(self_, translator_inverse(other));
+}
+
+fn magnitude_flector_geometric_quotient(self_: Magnitude, other: Flector) -> Flector {
+    return magnitude_flector_geometric_product(self_, flector_inverse(other));
+}
+
+fn magnitude_flector_at_infinity_geometric_quotient(self_: Magnitude, other: FlectorAtInfinity) -> Flector {
+    return magnitude_flector_at_infinity_geometric_product(self_, flector_at_infinity_inverse(other));
+}
+
+fn magnitude_horizon_geometric_quotient(self_: Magnitude, other: Horizon) -> Flector {
+    return magnitude_horizon_geometric_product(self_, horizon_inverse(other));
+}
+
+fn magnitude_line_geometric_quotient(self_: Magnitude, other: Line) -> Line {
+    return magnitude_line_geometric_product(self_, line_inverse(other));
+}
+
+fn magnitude_line_at_infinity_geometric_quotient(self_: Magnitude, other: LineAtInfinity) -> Line {
+    return magnitude_line_at_infinity_geometric_product(self_, line_at_infinity_inverse(other));
+}
+
+fn magnitude_magnitude_geometric_quotient(self_: Magnitude, other: Magnitude) -> Magnitude {
+    return magnitude_magnitude_geometric_product(self_, magnitude_inverse(other));
+}
+
+fn magnitude_motor_geometric_quotient(self_: Magnitude, other: Motor) -> Motor {
+    return magnitude_motor_geometric_product(self_, motor_inverse(other));
+}
+
+fn magnitude_multi_vector_geometric_quotient(self_: Magnitude, other: MultiVector) -> MultiVector {
+    return magnitude_multi_vector_geometric_product(self_, multi_vector_inverse(other));
+}
+
+fn magnitude_multi_vector_at_infinity_geometric_quotient(self_: Magnitude, other: MultiVectorAtInfinity) -> MultiVector {
+    return magnitude_multi_vector_at_infinity_geometric_product(self_, multi_vector_at_infinity_inverse(other));
+}
+
+fn magnitude_plane_geometric_quotient(self_: Magnitude, other: Plane) -> Flector {
+    return magnitude_plane_geometric_product(self_, plane_inverse(other));
+}
+
+fn magnitude_point_geometric_quotient(self_: Magnitude, other: Point) -> Flector {
+    return magnitude_point_geometric_product(self_, point_inverse(other));
+}
+
+fn magnitude_point_at_infinity_geometric_quotient(self_: Magnitude, other: PointAtInfinity) -> Flector {
+    return magnitude_point_at_infinity_geometric_product(self_, point_at_infinity_inverse(other));
+}
+
+fn magnitude_scalar_geometric_quotient(self_: Magnitude, other: Scalar) -> Magnitude {
+    return magnitude_scalar_geometric_product(self_, scalar_inverse(other));
+}
+
+fn magnitude_translator_geometric_quotient(self_: Magnitude, other: Translator) -> Motor {
+    return magnitude_translator_geometric_product(self_, translator_inverse(other));
+}
+
+fn motor_flector_geometric_quotient(self_: Motor, other: Flector) -> Flector {
+    return motor_flector_geometric_product(self_, flector_inverse(other));
+}
+
+fn motor_flector_at_infinity_geometric_quotient(self_: Motor, other: FlectorAtInfinity) -> Flector {
+    return motor_flector_at_infinity_geometric_product(self_, flector_at_infinity_inverse(other));
+}
+
+fn motor_horizon_geometric_quotient(self_: Motor, other: Horizon) -> Flector {
+    return motor_horizon_geometric_product(self_, horizon_inverse(other));
+}
+
+fn motor_line_geometric_quotient(self_: Motor, other: Line) -> MultiVector {
+    return motor_line_geometric_product(self_, line_inverse(other));
+}
+
+fn motor_line_at_infinity_geometric_quotient(self_: Motor, other: LineAtInfinity) -> MultiVector {
+    return motor_line_at_infinity_geometric_product(self_, line_at_infinity_inverse(other));
+}
+
+fn motor_magnitude_geometric_quotient(self_: Motor, other: Magnitude) -> Motor {
+    return motor_magnitude_geometric_product(self_, magnitude_inverse(other));
+}
+
+fn motor_motor_geometric_quotient(self_: Motor, other: Motor) -> MultiVector {
+    return motor_motor_geometric_product(self_, motor_inverse(other));
+}
+
+fn motor_multi_vector_geometric_quotient(self_: Motor, other: MultiVector) -> MultiVector {
+    return motor_multi_vector_geometric_product(self_, multi_vector_inverse(other));
+}
+
+fn motor_multi_vector_at_infinity_geometric_quotient(self_: Motor, other: MultiVectorAtInfinity) -> MultiVector {
+    return motor_multi_vector_at_infinity_geometric_product(self_, multi_vector_at_infinity_inverse(other));
+}
+
+fn motor_plane_geometric_quotient(self_: Motor, other: Plane) -> Flector {
+    return motor_plane_geometric_product(self_, plane_inverse(other));
+}
+
+fn motor_point_geometric_quotient(self_: Motor, other: Point) -> Flector {
+    return motor_point_geometric_product(self_, point_inverse(other));
+}
+
+fn motor_point_at_infinity_geometric_quotient(self_: Motor, other: PointAtInfinity) -> Flector {
+    return motor_point_at_infinity_geometric_product(self_, point_at_infinity_inverse(other));
+}
+
+fn motor_scalar_geometric_quotient(self_: Motor, other: Scalar) -> Motor {
+    return motor_scalar_geometric_product(self_, scalar_inverse(other));
+}
+
+fn motor_translator_geometric_quotient(self_: Motor, other: Translator) -> MultiVector {
+    return motor_translator_geometric_product(self_, translator_inverse(other));
+}
+
+fn multi_vector_flector_geometric_quotient(self_: MultiVector, other: Flector) -> MultiVector {
+    return multi_vector_flector_geometric_product(self_, flector_inverse(other));
+}
+
+fn multi_vector_flector_at_infinity_geometric_quotient(self_: MultiVector, other: FlectorAtInfinity) -> MultiVector {
+    return multi_vector_flector_at_infinity_geometric_product(self_, flector_at_infinity_inverse(other));
+}
+
+fn multi_vector_horizon_geometric_quotient(self_: MultiVector, other: Horizon) -> MultiVector {
+    return multi_vector_horizon_geometric_product(self_, horizon_inverse(other));
+}
+
+fn multi_vector_line_geometric_quotient(self_: MultiVector, other: Line) -> MultiVector {
+    return multi_vector_line_geometric_product(self_, line_inverse(other));
+}
+
+fn multi_vector_line_at_infinity_geometric_quotient(self_: MultiVector, other: LineAtInfinity) -> MultiVector {
+    return multi_vector_line_at_infinity_geometric_product(self_, line_at_infinity_inverse(other));
+}
+
+fn multi_vector_magnitude_geometric_quotient(self_: MultiVector, other: Magnitude) -> MultiVector {
+    return multi_vector_magnitude_geometric_product(self_, magnitude_inverse(other));
+}
+
+fn multi_vector_motor_geometric_quotient(self_: MultiVector, other: Motor) -> MultiVector {
+    return multi_vector_motor_geometric_product(self_, motor_inverse(other));
+}
+
+fn multi_vector_multi_vector_geometric_quotient(self_: MultiVector, other: MultiVector) -> MultiVector {
+    return multi_vector_multi_vector_geometric_product(self_, multi_vector_inverse(other));
+}
+
+fn multi_vector_multi_vector_at_infinity_geometric_quotient(self_: MultiVector, other: MultiVectorAtInfinity) -> MultiVector {
+    return multi_vector_multi_vector_at_infinity_geometric_product(self_, multi_vector_at_infinity_inverse(other));
+}
+
+fn multi_vector_plane_geometric_quotient(self_: MultiVector, other: Plane) -> MultiVector {
+    return multi_vector_plane_geometric_product(self_, plane_inverse(other));
+}
+
+fn multi_vector_point_geometric_quotient(self_: MultiVector, other: Point) -> MultiVector {
+    return multi_vector_point_geometric_product(self_, point_inverse(other));
+}
+
+fn multi_vector_point_at_infinity_geometric_quotient(self_: MultiVector, other: PointAtInfinity) -> MultiVector {
+    return multi_vector_point_at_infinity_geometric_product(self_, point_at_infinity_inverse(other));
+}
+
+fn multi_vector_scalar_geometric_quotient(self_: MultiVector, other: Scalar) -> MultiVector {
+    return multi_vector_scalar_geometric_product(self_, scalar_inverse(other));
+}
+
+fn multi_vector_translator_geometric_quotient(self_: MultiVector, other: Translator) -> MultiVector {
+    return multi_vector_translator_geometric_product(self_, translator_inverse(other));
+}
+
+fn multi_vector_at_infinity_flector_geometric_quotient(self_: MultiVectorAtInfinity, other: Flector) -> MultiVector {
+    return multi_vector_at_infinity_flector_geometric_product(self_, flector_inverse(other));
+}
+
+fn multi_vector_at_infinity_flector_at_infinity_geometric_quotient(self_: MultiVectorAtInfinity, other: FlectorAtInfinity) -> MultiVectorAtInfinity {
+    return multi_vector_at_infinity_flector_at_infinity_geometric_product(self_, flector_at_infinity_inverse(other));
+}
+
+fn multi_vector_at_infinity_horizon_geometric_quotient(self_: MultiVectorAtInfinity, other: Horizon) -> MultiVectorAtInfinity {
+    return multi_vector_at_infinity_horizon_geometric_product(self_, horizon_inverse(other));
+}
+
+fn multi_vector_at_infinity_line_geometric_quotient(self_: MultiVectorAtInfinity, other: Line) -> MultiVector {
+    return multi_vector_at_infinity_line_geometric_product(self_, line_inverse(other));
+}
+
+fn multi_vector_at_infinity_line_at_infinity_geometric_quotient(self_: MultiVectorAtInfinity, other: LineAtInfinity) -> MultiVectorAtInfinity {
+    return multi_vector_at_infinity_line_at_infinity_geometric_product(self_, line_at_infinity_inverse(other));
+}
+
+fn multi_vector_at_infinity_magnitude_geometric_quotient(self_: MultiVectorAtInfinity, other: Magnitude) -> MultiVector {
+    return multi_vector_at_infinity_magnitude_geometric_product(self_, magnitude_inverse(other));
+}
+
+fn multi_vector_at_infinity_motor_geometric_quotient(self_: MultiVectorAtInfinity, other: Motor) -> MultiVector {
+    return multi_vector_at_infinity_motor_geometric_product(self_, motor_inverse(other));
+}
+
+fn multi_vector_at_infinity_multi_vector_geometric_quotient(self_: MultiVectorAtInfinity, other: MultiVector) -> MultiVector {
+    return multi_vector_at_infinity_multi_vector_geometric_product(self_, multi_vector_inverse(other));
+}
+
+fn multi_vector_at_infinity_multi_vector_at_infinity_geometric_quotient(self_: MultiVectorAtInfinity, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
+    return multi_vector_at_infinity_multi_vector_at_infinity_geometric_product(self_, multi_vector_at_infinity_inverse(other));
+}
+
+fn multi_vector_at_infinity_plane_geometric_quotient(self_: MultiVectorAtInfinity, other: Plane) -> MultiVector {
+    return multi_vector_at_infinity_plane_geometric_product(self_, plane_inverse(other));
+}
+
+fn multi_vector_at_infinity_point_geometric_quotient(self_: MultiVectorAtInfinity, other: Point) -> MultiVector {
+    return multi_vector_at_infinity_point_geometric_product(self_, point_inverse(other));
+}
+
+fn multi_vector_at_infinity_point_at_infinity_geometric_quotient(self_: MultiVectorAtInfinity, other: PointAtInfinity) -> MultiVectorAtInfinity {
+    return multi_vector_at_infinity_point_at_infinity_geometric_product(self_, point_at_infinity_inverse(other));
+}
+
+fn multi_vector_at_infinity_scalar_geometric_quotient(self_: MultiVectorAtInfinity, other: Scalar) -> MultiVectorAtInfinity {
+    return multi_vector_at_infinity_scalar_geometric_product(self_, scalar_inverse(other));
+}
+
+fn multi_vector_at_infinity_translator_geometric_quotient(self_: MultiVectorAtInfinity, other: Translator) -> MultiVector {
+    return multi_vector_at_infinity_translator_geometric_product(self_, translator_inverse(other));
+}
+
+fn multi_vector_at_origin_flector_geometric_quotient(self_: MultiVectorAtOrigin, other: Flector) -> MultiVectorAtOrigin {
+    return multi_vector_at_origin_flector_geometric_product(self_, flector_inverse(other));
+}
+
+fn multi_vector_at_origin_flector_at_infinity_geometric_quotient(self_: MultiVectorAtOrigin, other: FlectorAtInfinity) -> MultiVectorAtOrigin {
+    return multi_vector_at_origin_flector_at_infinity_geometric_product(self_, flector_at_infinity_inverse(other));
+}
+
+fn multi_vector_at_origin_horizon_geometric_quotient(self_: MultiVectorAtOrigin, other: Horizon) -> MultiVectorAtOrigin {
+    return multi_vector_at_origin_horizon_geometric_product(self_, horizon_inverse(other));
+}
+
+fn multi_vector_at_origin_line_geometric_quotient(self_: MultiVectorAtOrigin, other: Line) -> MultiVectorAtOrigin {
+    return multi_vector_at_origin_line_geometric_product(self_, line_inverse(other));
+}
+
+fn multi_vector_at_origin_line_at_infinity_geometric_quotient(self_: MultiVectorAtOrigin, other: LineAtInfinity) -> MultiVectorAtOrigin {
+    return multi_vector_at_origin_line_at_infinity_geometric_product(self_, line_at_infinity_inverse(other));
+}
+
+fn multi_vector_at_origin_magnitude_geometric_quotient(self_: MultiVectorAtOrigin, other: Magnitude) -> MultiVectorAtOrigin {
+    return multi_vector_at_origin_magnitude_geometric_product(self_, magnitude_inverse(other));
+}
+
+fn multi_vector_at_origin_motor_geometric_quotient(self_: MultiVectorAtOrigin, other: Motor) -> MultiVectorAtOrigin {
+    return multi_vector_at_origin_motor_geometric_product(self_, motor_inverse(other));
+}
+
+fn multi_vector_at_origin_multi_vector_geometric_quotient(self_: MultiVectorAtOrigin, other: MultiVector) -> MultiVectorAtOrigin {
+    return multi_vector_at_origin_multi_vector_geometric_product(self_, multi_vector_inverse(other));
+}
+
+fn multi_vector_at_origin_multi_vector_at_infinity_geometric_quotient(self_: MultiVectorAtOrigin, other: MultiVectorAtInfinity) -> MultiVectorAtOrigin {
+    return multi_vector_at_origin_multi_vector_at_infinity_geometric_product(self_, multi_vector_at_infinity_inverse(other));
+}
+
+fn multi_vector_at_origin_plane_geometric_quotient(self_: MultiVectorAtOrigin, other: Plane) -> MultiVectorAtOrigin {
+    return multi_vector_at_origin_plane_geometric_product(self_, plane_inverse(other));
+}
+
+fn multi_vector_at_origin_point_geometric_quotient(self_: MultiVectorAtOrigin, other: Point) -> MultiVectorAtOrigin {
+    return multi_vector_at_origin_point_geometric_product(self_, point_inverse(other));
+}
+
+fn multi_vector_at_origin_point_at_infinity_geometric_quotient(self_: MultiVectorAtOrigin, other: PointAtInfinity) -> MultiVectorAtOrigin {
+    return multi_vector_at_origin_point_at_infinity_geometric_product(self_, point_at_infinity_inverse(other));
+}
+
+fn multi_vector_at_origin_scalar_geometric_quotient(self_: MultiVectorAtOrigin, other: Scalar) -> MultiVectorAtOrigin {
+    return multi_vector_at_origin_scalar_geometric_product(self_, scalar_inverse(other));
+}
+
+fn multi_vector_at_origin_translator_geometric_quotient(self_: MultiVectorAtOrigin, other: Translator) -> MultiVectorAtOrigin {
+    return multi_vector_at_origin_translator_geometric_product(self_, translator_inverse(other));
+}
+
+fn origin_flector_geometric_quotient(self_: Origin, other: Flector) -> Rotor {
+    return origin_flector_geometric_product(self_, flector_inverse(other));
+}
+
+fn origin_flector_at_infinity_geometric_quotient(self_: Origin, other: FlectorAtInfinity) -> Rotor {
+    return origin_flector_at_infinity_geometric_product(self_, flector_at_infinity_inverse(other));
+}
+
+fn origin_horizon_geometric_quotient(self_: Origin, other: Horizon) -> AntiScalar {
+    return origin_horizon_geometric_product(self_, horizon_inverse(other));
+}
+
+fn origin_line_geometric_quotient(self_: Origin, other: Line) -> PlaneAtOrigin {
+    return origin_line_geometric_product(self_, line_inverse(other));
+}
+
+fn origin_line_at_infinity_geometric_quotient(self_: Origin, other: LineAtInfinity) -> PlaneAtOrigin {
+    return origin_line_at_infinity_geometric_product(self_, line_at_infinity_inverse(other));
+}
+
+fn origin_magnitude_geometric_quotient(self_: Origin, other: Magnitude) -> Origin {
+    return origin_magnitude_geometric_product(self_, magnitude_inverse(other));
+}
+
+fn origin_motor_geometric_quotient(self_: Origin, other: Motor) -> PlaneAtOrigin {
+    return origin_motor_geometric_product(self_, motor_inverse(other));
+}
+
+fn origin_multi_vector_geometric_quotient(self_: Origin, other: MultiVector) -> MultiVectorAtOrigin {
+    return origin_multi_vector_geometric_product(self_, multi_vector_inverse(other));
+}
+
+fn origin_multi_vector_at_infinity_geometric_quotient(self_: Origin, other: MultiVectorAtInfinity) -> MultiVectorAtOrigin {
+    return origin_multi_vector_at_infinity_geometric_product(self_, multi_vector_at_infinity_inverse(other));
+}
+
+fn origin_plane_geometric_quotient(self_: Origin, other: Plane) -> AntiScalar {
+    return origin_plane_geometric_product(self_, plane_inverse(other));
+}
+
+fn origin_point_geometric_quotient(self_: Origin, other: Point) -> LineAtOrigin {
+    return origin_point_geometric_product(self_, point_inverse(other));
+}
+
+fn origin_point_at_infinity_geometric_quotient(self_: Origin, other: PointAtInfinity) -> LineAtOrigin {
+    return origin_point_at_infinity_geometric_product(self_, point_at_infinity_inverse(other));
+}
+
+fn origin_scalar_geometric_quotient(self_: Origin, other: Scalar) -> Origin {
+    return origin_scalar_geometric_product(self_, scalar_inverse(other));
+}
+
+fn origin_translator_geometric_quotient(self_: Origin, other: Translator) -> PlaneAtOrigin {
+    return origin_translator_geometric_product(self_, translator_inverse(other));
+}
+
+fn plane_flector_geometric_quotient(self_: Plane, other: Flector) -> MultiVector {
+    return plane_flector_geometric_product(self_, flector_inverse(other));
+}
+
+fn plane_flector_at_infinity_geometric_quotient(self_: Plane, other: FlectorAtInfinity) -> MultiVector {
+    return plane_flector_at_infinity_geometric_product(self_, flector_at_infinity_inverse(other));
+}
+
+fn plane_horizon_geometric_quotient(self_: Plane, other: Horizon) -> MultiVector {
+    return plane_horizon_geometric_product(self_, horizon_inverse(other));
+}
+
+fn plane_line_geometric_quotient(self_: Plane, other: Line) -> Flector {
+    return plane_line_geometric_product(self_, line_inverse(other));
+}
+
+fn plane_line_at_infinity_geometric_quotient(self_: Plane, other: LineAtInfinity) -> Flector {
+    return plane_line_at_infinity_geometric_product(self_, line_at_infinity_inverse(other));
+}
+
+fn plane_magnitude_geometric_quotient(self_: Plane, other: Magnitude) -> Flector {
+    return plane_magnitude_geometric_product(self_, magnitude_inverse(other));
+}
+
+fn plane_motor_geometric_quotient(self_: Plane, other: Motor) -> Flector {
+    return plane_motor_geometric_product(self_, motor_inverse(other));
+}
+
+fn plane_multi_vector_geometric_quotient(self_: Plane, other: MultiVector) -> MultiVector {
+    return plane_multi_vector_geometric_product(self_, multi_vector_inverse(other));
+}
+
+fn plane_multi_vector_at_infinity_geometric_quotient(self_: Plane, other: MultiVectorAtInfinity) -> MultiVector {
+    return plane_multi_vector_at_infinity_geometric_product(self_, multi_vector_at_infinity_inverse(other));
+}
+
+fn plane_plane_geometric_quotient(self_: Plane, other: Plane) -> MultiVector {
+    return plane_plane_geometric_product(self_, plane_inverse(other));
+}
+
+fn plane_point_geometric_quotient(self_: Plane, other: Point) -> Motor {
+    return plane_point_geometric_product(self_, point_inverse(other));
+}
+
+fn plane_point_at_infinity_geometric_quotient(self_: Plane, other: PointAtInfinity) -> Motor {
+    return plane_point_at_infinity_geometric_product(self_, point_at_infinity_inverse(other));
+}
+
+fn plane_scalar_geometric_quotient(self_: Plane, other: Scalar) -> Plane {
+    return plane_scalar_geometric_product(self_, scalar_inverse(other));
+}
+
+fn plane_translator_geometric_quotient(self_: Plane, other: Translator) -> Flector {
+    return plane_translator_geometric_product(self_, translator_inverse(other));
+}
+
+fn plane_at_origin_flector_geometric_quotient(self_: PlaneAtOrigin, other: Flector) -> Rotor {
+    return plane_at_origin_flector_geometric_product(self_, flector_inverse(other));
+}
+
+fn plane_at_origin_flector_at_infinity_geometric_quotient(self_: PlaneAtOrigin, other: FlectorAtInfinity) -> Rotor {
+    return plane_at_origin_flector_at_infinity_geometric_product(self_, flector_at_infinity_inverse(other));
+}
+
+fn plane_at_origin_horizon_geometric_quotient(self_: PlaneAtOrigin, other: Horizon) -> LineAtOrigin {
+    return plane_at_origin_horizon_geometric_product(self_, horizon_inverse(other));
+}
+
+fn plane_at_origin_line_geometric_quotient(self_: PlaneAtOrigin, other: Line) -> Flector {
+    return plane_at_origin_line_geometric_product(self_, line_inverse(other));
+}
+
+fn plane_at_origin_line_at_infinity_geometric_quotient(self_: PlaneAtOrigin, other: LineAtInfinity) -> Flector {
+    return plane_at_origin_line_at_infinity_geometric_product(self_, line_at_infinity_inverse(other));
+}
+
+fn plane_at_origin_magnitude_geometric_quotient(self_: PlaneAtOrigin, other: Magnitude) -> PlaneAtOrigin {
+    return plane_at_origin_magnitude_geometric_product(self_, magnitude_inverse(other));
+}
+
+fn plane_at_origin_motor_geometric_quotient(self_: PlaneAtOrigin, other: Motor) -> Flector {
+    return plane_at_origin_motor_geometric_product(self_, motor_inverse(other));
+}
+
+fn plane_at_origin_multi_vector_geometric_quotient(self_: PlaneAtOrigin, other: MultiVector) -> MultiVectorAtOrigin {
+    return plane_at_origin_multi_vector_geometric_product(self_, multi_vector_inverse(other));
+}
+
+fn plane_at_origin_multi_vector_at_infinity_geometric_quotient(self_: PlaneAtOrigin, other: MultiVectorAtInfinity) -> MultiVectorAtOrigin {
+    return plane_at_origin_multi_vector_at_infinity_geometric_product(self_, multi_vector_at_infinity_inverse(other));
+}
+
+fn plane_at_origin_plane_geometric_quotient(self_: PlaneAtOrigin, other: Plane) -> LineAtOrigin {
+    return plane_at_origin_plane_geometric_product(self_, plane_inverse(other));
+}
+
+fn plane_at_origin_point_geometric_quotient(self_: PlaneAtOrigin, other: Point) -> Rotor {
+    return plane_at_origin_point_geometric_product(self_, point_inverse(other));
+}
+
+fn plane_at_origin_point_at_infinity_geometric_quotient(self_: PlaneAtOrigin, other: PointAtInfinity) -> Rotor {
+    return plane_at_origin_point_at_infinity_geometric_product(self_, point_at_infinity_inverse(other));
+}
+
+fn plane_at_origin_scalar_geometric_quotient(self_: PlaneAtOrigin, other: Scalar) -> PlaneAtOrigin {
+    return plane_at_origin_scalar_geometric_product(self_, scalar_inverse(other));
+}
+
+fn plane_at_origin_translator_geometric_quotient(self_: PlaneAtOrigin, other: Translator) -> Flector {
+    return plane_at_origin_translator_geometric_product(self_, translator_inverse(other));
+}
+
+fn point_flector_geometric_quotient(self_: Point, other: Flector) -> MultiVector {
+    return point_flector_geometric_product(self_, flector_inverse(other));
+}
+
+fn point_flector_at_infinity_geometric_quotient(self_: Point, other: FlectorAtInfinity) -> MultiVector {
+    return point_flector_at_infinity_geometric_product(self_, flector_at_infinity_inverse(other));
+}
+
+fn point_horizon_geometric_quotient(self_: Point, other: Horizon) -> Translator {
+    return point_horizon_geometric_product(self_, horizon_inverse(other));
+}
+
+fn point_line_geometric_quotient(self_: Point, other: Line) -> Flector {
+    return point_line_geometric_product(self_, line_inverse(other));
+}
+
+fn point_line_at_infinity_geometric_quotient(self_: Point, other: LineAtInfinity) -> Flector {
+    return point_line_at_infinity_geometric_product(self_, line_at_infinity_inverse(other));
+}
+
+fn point_magnitude_geometric_quotient(self_: Point, other: Magnitude) -> Flector {
+    return point_magnitude_geometric_product(self_, magnitude_inverse(other));
+}
+
+fn point_motor_geometric_quotient(self_: Point, other: Motor) -> Flector {
+    return point_motor_geometric_product(self_, motor_inverse(other));
+}
+
+fn point_multi_vector_geometric_quotient(self_: Point, other: MultiVector) -> MultiVector {
+    return point_multi_vector_geometric_product(self_, multi_vector_inverse(other));
+}
+
+fn point_multi_vector_at_infinity_geometric_quotient(self_: Point, other: MultiVectorAtInfinity) -> MultiVector {
+    return point_multi_vector_at_infinity_geometric_product(self_, multi_vector_at_infinity_inverse(other));
+}
+
+fn point_plane_geometric_quotient(self_: Point, other: Plane) -> Motor {
+    return point_plane_geometric_product(self_, plane_inverse(other));
+}
+
+fn point_point_geometric_quotient(self_: Point, other: Point) -> MultiVector {
+    return point_point_geometric_product(self_, point_inverse(other));
+}
+
+fn point_point_at_infinity_geometric_quotient(self_: Point, other: PointAtInfinity) -> MultiVector {
+    return point_point_at_infinity_geometric_product(self_, point_at_infinity_inverse(other));
+}
+
+fn point_scalar_geometric_quotient(self_: Point, other: Scalar) -> Point {
+    return point_scalar_geometric_product(self_, scalar_inverse(other));
+}
+
+fn point_translator_geometric_quotient(self_: Point, other: Translator) -> Flector {
+    return point_translator_geometric_product(self_, translator_inverse(other));
+}
+
+fn point_at_infinity_flector_geometric_quotient(self_: PointAtInfinity, other: Flector) -> MultiVector {
+    return point_at_infinity_flector_geometric_product(self_, flector_inverse(other));
+}
+
+fn point_at_infinity_flector_at_infinity_geometric_quotient(self_: PointAtInfinity, other: FlectorAtInfinity) -> MultiVectorAtInfinity {
+    return point_at_infinity_flector_at_infinity_geometric_product(self_, flector_at_infinity_inverse(other));
+}
+
+fn point_at_infinity_horizon_geometric_quotient(self_: PointAtInfinity, other: Horizon) -> LineAtInfinity {
+    return point_at_infinity_horizon_geometric_product(self_, horizon_inverse(other));
+}
+
+fn point_at_infinity_line_geometric_quotient(self_: PointAtInfinity, other: Line) -> Flector {
+    return point_at_infinity_line_geometric_product(self_, line_inverse(other));
+}
+
+fn point_at_infinity_line_at_infinity_geometric_quotient(self_: PointAtInfinity, other: LineAtInfinity) -> FlectorAtInfinity {
+    return point_at_infinity_line_at_infinity_geometric_product(self_, line_at_infinity_inverse(other));
+}
+
+fn point_at_infinity_magnitude_geometric_quotient(self_: PointAtInfinity, other: Magnitude) -> Flector {
+    return point_at_infinity_magnitude_geometric_product(self_, magnitude_inverse(other));
+}
+
+fn point_at_infinity_motor_geometric_quotient(self_: PointAtInfinity, other: Motor) -> Flector {
+    return point_at_infinity_motor_geometric_product(self_, motor_inverse(other));
+}
+
+fn point_at_infinity_multi_vector_geometric_quotient(self_: PointAtInfinity, other: MultiVector) -> MultiVector {
+    return point_at_infinity_multi_vector_geometric_product(self_, multi_vector_inverse(other));
+}
+
+fn point_at_infinity_multi_vector_at_infinity_geometric_quotient(self_: PointAtInfinity, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
+    return point_at_infinity_multi_vector_at_infinity_geometric_product(self_, multi_vector_at_infinity_inverse(other));
+}
+
+fn point_at_infinity_plane_geometric_quotient(self_: PointAtInfinity, other: Plane) -> Motor {
+    return point_at_infinity_plane_geometric_product(self_, plane_inverse(other));
+}
+
+fn point_at_infinity_point_geometric_quotient(self_: PointAtInfinity, other: Point) -> MultiVector {
+    return point_at_infinity_point_geometric_product(self_, point_inverse(other));
+}
+
+fn point_at_infinity_point_at_infinity_geometric_quotient(self_: PointAtInfinity, other: PointAtInfinity) -> MultiVectorAtInfinity {
+    return point_at_infinity_point_at_infinity_geometric_product(self_, point_at_infinity_inverse(other));
+}
+
+fn point_at_infinity_scalar_geometric_quotient(self_: PointAtInfinity, other: Scalar) -> PointAtInfinity {
+    return point_at_infinity_scalar_geometric_product(self_, scalar_inverse(other));
+}
+
+fn point_at_infinity_translator_geometric_quotient(self_: PointAtInfinity, other: Translator) -> Flector {
+    return point_at_infinity_translator_geometric_product(self_, translator_inverse(other));
+}
+
+fn rotor_flector_geometric_quotient(self_: Rotor, other: Flector) -> Flector {
+    return rotor_flector_geometric_product(self_, flector_inverse(other));
+}
+
+fn rotor_flector_at_infinity_geometric_quotient(self_: Rotor, other: FlectorAtInfinity) -> Flector {
+    return rotor_flector_at_infinity_geometric_product(self_, flector_at_infinity_inverse(other));
+}
+
+fn rotor_horizon_geometric_quotient(self_: Rotor, other: Horizon) -> Flector {
+    return rotor_horizon_geometric_product(self_, horizon_inverse(other));
+}
+
+fn rotor_line_geometric_quotient(self_: Rotor, other: Line) -> Rotor {
+    return rotor_line_geometric_product(self_, line_inverse(other));
+}
+
+fn rotor_line_at_infinity_geometric_quotient(self_: Rotor, other: LineAtInfinity) -> Rotor {
+    return rotor_line_at_infinity_geometric_product(self_, line_at_infinity_inverse(other));
+}
+
+fn rotor_magnitude_geometric_quotient(self_: Rotor, other: Magnitude) -> Rotor {
+    return rotor_magnitude_geometric_product(self_, magnitude_inverse(other));
+}
+
+fn rotor_motor_geometric_quotient(self_: Rotor, other: Motor) -> Rotor {
+    return rotor_motor_geometric_product(self_, motor_inverse(other));
+}
+
+fn rotor_multi_vector_geometric_quotient(self_: Rotor, other: MultiVector) -> MultiVectorAtOrigin {
+    return rotor_multi_vector_geometric_product(self_, multi_vector_inverse(other));
+}
+
+fn rotor_multi_vector_at_infinity_geometric_quotient(self_: Rotor, other: MultiVectorAtInfinity) -> MultiVectorAtOrigin {
+    return rotor_multi_vector_at_infinity_geometric_product(self_, multi_vector_at_infinity_inverse(other));
+}
+
+fn rotor_plane_geometric_quotient(self_: Rotor, other: Plane) -> Flector {
+    return rotor_plane_geometric_product(self_, plane_inverse(other));
+}
+
+fn rotor_point_geometric_quotient(self_: Rotor, other: Point) -> Flector {
+    return rotor_point_geometric_product(self_, point_inverse(other));
+}
+
+fn rotor_point_at_infinity_geometric_quotient(self_: Rotor, other: PointAtInfinity) -> Flector {
+    return rotor_point_at_infinity_geometric_product(self_, point_at_infinity_inverse(other));
+}
+
+fn rotor_scalar_geometric_quotient(self_: Rotor, other: Scalar) -> Rotor {
+    return rotor_scalar_geometric_product(self_, scalar_inverse(other));
+}
+
+fn rotor_translator_geometric_quotient(self_: Rotor, other: Translator) -> Rotor {
+    return rotor_translator_geometric_product(self_, translator_inverse(other));
+}
+
+fn scalar_flector_geometric_quotient(self_: Scalar, other: Flector) -> Flector {
+    return scalar_flector_geometric_product(self_, flector_inverse(other));
+}
+
+fn scalar_flector_at_infinity_geometric_quotient(self_: Scalar, other: FlectorAtInfinity) -> FlectorAtInfinity {
+    return scalar_flector_at_infinity_geometric_product(self_, flector_at_infinity_inverse(other));
+}
+
+fn scalar_horizon_geometric_quotient(self_: Scalar, other: Horizon) -> Horizon {
+    return scalar_horizon_geometric_product(self_, horizon_inverse(other));
+}
+
+fn scalar_line_geometric_quotient(self_: Scalar, other: Line) -> Line {
+    return scalar_line_geometric_product(self_, line_inverse(other));
+}
+
+fn scalar_line_at_infinity_geometric_quotient(self_: Scalar, other: LineAtInfinity) -> LineAtInfinity {
+    return scalar_line_at_infinity_geometric_product(self_, line_at_infinity_inverse(other));
+}
+
+fn scalar_magnitude_geometric_quotient(self_: Scalar, other: Magnitude) -> Magnitude {
+    return scalar_magnitude_geometric_product(self_, magnitude_inverse(other));
+}
+
+fn scalar_motor_geometric_quotient(self_: Scalar, other: Motor) -> Motor {
+    return scalar_motor_geometric_product(self_, motor_inverse(other));
+}
+
+fn scalar_multi_vector_geometric_quotient(self_: Scalar, other: MultiVector) -> MultiVector {
+    return scalar_multi_vector_geometric_product(self_, multi_vector_inverse(other));
+}
+
+fn scalar_multi_vector_at_infinity_geometric_quotient(self_: Scalar, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
+    return scalar_multi_vector_at_infinity_geometric_product(self_, multi_vector_at_infinity_inverse(other));
+}
+
+fn scalar_plane_geometric_quotient(self_: Scalar, other: Plane) -> Plane {
+    return scalar_plane_geometric_product(self_, plane_inverse(other));
+}
+
+fn scalar_point_geometric_quotient(self_: Scalar, other: Point) -> Point {
+    return scalar_point_geometric_product(self_, point_inverse(other));
+}
+
+fn scalar_point_at_infinity_geometric_quotient(self_: Scalar, other: PointAtInfinity) -> PointAtInfinity {
+    return scalar_point_at_infinity_geometric_product(self_, point_at_infinity_inverse(other));
+}
+
+fn scalar_scalar_geometric_quotient(self_: Scalar, other: Scalar) -> Scalar {
+    return scalar_scalar_geometric_product(self_, scalar_inverse(other));
+}
+
+fn scalar_translator_geometric_quotient(self_: Scalar, other: Translator) -> Translator {
+    return scalar_translator_geometric_product(self_, translator_inverse(other));
+}
+
+fn translator_flector_geometric_quotient(self_: Translator, other: Flector) -> Flector {
+    return translator_flector_geometric_product(self_, flector_inverse(other));
+}
+
+fn translator_flector_at_infinity_geometric_quotient(self_: Translator, other: FlectorAtInfinity) -> Flector {
+    return translator_flector_at_infinity_geometric_product(self_, flector_at_infinity_inverse(other));
+}
+
+fn translator_horizon_geometric_quotient(self_: Translator, other: Horizon) -> Point {
+    return translator_horizon_geometric_product(self_, horizon_inverse(other));
+}
+
+fn translator_line_geometric_quotient(self_: Translator, other: Line) -> MultiVector {
+    return translator_line_geometric_product(self_, line_inverse(other));
+}
+
+fn translator_line_at_infinity_geometric_quotient(self_: Translator, other: LineAtInfinity) -> MultiVector {
+    return translator_line_at_infinity_geometric_product(self_, line_at_infinity_inverse(other));
+}
+
+fn translator_magnitude_geometric_quotient(self_: Translator, other: Magnitude) -> Motor {
+    return translator_magnitude_geometric_product(self_, magnitude_inverse(other));
+}
+
+fn translator_motor_geometric_quotient(self_: Translator, other: Motor) -> MultiVector {
+    return translator_motor_geometric_product(self_, motor_inverse(other));
+}
+
+fn translator_multi_vector_geometric_quotient(self_: Translator, other: MultiVector) -> MultiVector {
+    return translator_multi_vector_geometric_product(self_, multi_vector_inverse(other));
+}
+
+fn translator_multi_vector_at_infinity_geometric_quotient(self_: Translator, other: MultiVectorAtInfinity) -> MultiVector {
+    return translator_multi_vector_at_infinity_geometric_product(self_, multi_vector_at_infinity_inverse(other));
+}
+
+fn translator_plane_geometric_quotient(self_: Translator, other: Plane) -> Flector {
+    return translator_plane_geometric_product(self_, plane_inverse(other));
+}
+
+fn translator_point_geometric_quotient(self_: Translator, other: Point) -> Flector {
+    return translator_point_geometric_product(self_, point_inverse(other));
+}
+
+fn translator_point_at_infinity_geometric_quotient(self_: Translator, other: PointAtInfinity) -> Flector {
+    return translator_point_at_infinity_geometric_product(self_, point_at_infinity_inverse(other));
+}
+
+fn translator_scalar_geometric_quotient(self_: Translator, other: Scalar) -> Translator {
+    return translator_scalar_geometric_product(self_, scalar_inverse(other));
+}
+
+fn translator_translator_geometric_quotient(self_: Translator, other: Translator) -> MultiVector {
+    return translator_translator_geometric_product(self_, translator_inverse(other));
+}
+
 fn flector_flector_bulk_contraction(self_: Flector, other: Flector) -> MultiVector {
     return flector_flector_anti_wedge(self_, flector_right_bulk_dual(other));
 }
