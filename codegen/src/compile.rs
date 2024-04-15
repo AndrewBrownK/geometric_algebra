@@ -1290,7 +1290,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         }
 
         // Add, Subtract
-        // TODO missing FlectorAtInfinity + Plane = Flector
         for (param_a, param_b) in registry.pair_parameters() {
             for name in &["Add", "Sub"] {
                 let ast_node = element_wise(*name, &param_a, &param_b, registry);
@@ -1323,6 +1322,39 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 }
             }
         }
+
+        // Inverse
+        for param_a in registry.single_parameters() {
+            let name = "Inverse";
+            let _: Option<()> = try {
+                let dot = self.algebra.dialect().dot_product.first()?;
+                let dot = self.trait_impls.get_pair_invocation(dot, variable(&param_a), variable(&param_a))?;
+                let scalar_type = registry.classes.iter().map(|it| &it.0).find(|it| it.class_name == "Scalar")?;
+                let one = self.trait_impls.get_class_invocation("One", scalar_type)?;
+                let inverse_norm_squared = self.trait_impls.get_pair_invocation("Div", one, dot)?;
+                let product = self.algebra.dialect().geometric_product.first()?;
+                let expr = self.trait_impls.get_pair_invocation(product, variable(&param_a), inverse_norm_squared)?;
+                let the_impl = single_expression_single_trait_impl(name, &param_a, expr);
+                self.trait_impls.add_single_impl(name, param_a, the_impl);
+            };
+        }
+
+        // Anti-Inverse
+        for param_a in registry.single_parameters() {
+            let name = "AntiInverse";
+            let _: Option<()> = try {
+                let dot = self.algebra.dialect().anti_dot_product.first()?;
+                let dot = self.trait_impls.get_pair_invocation(dot, variable(&param_a), variable(&param_a))?;
+                let scalar_type = registry.classes.iter().map(|it| &it.0).find(|it| it.class_name == "AntiScalar")?;
+                let one = self.trait_impls.get_class_invocation("One", scalar_type)?;
+                let inverse_norm_squared = self.trait_impls.get_pair_invocation("Div", one, dot)?;
+                let product = self.algebra.dialect().geometric_anti_product.first()?;
+                let expr = self.trait_impls.get_pair_invocation(product, variable(&param_a), inverse_norm_squared)?;
+                let the_impl = single_expression_single_trait_impl(name, &param_a, expr);
+                self.trait_impls.add_single_impl(name, param_a, the_impl);
+            };
+        }
+
 
         Ok(())
     }
@@ -1858,7 +1890,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
         }
 
-        // TODO similar to how "Invert" is a special type of sandwich using a point,
+        // TODO similar to how "PointInversion" is a special type of sandwich using a point,
         //  "Sphere Inversion" is a special type of sandwich using spheres (generalizing
         //  reflection across planes, and/or motors). When the spheres are concentric, this
         //  is called dilation. See pages 239 and 244
@@ -1868,7 +1900,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         //  field looking transformation. (page 242, 243)
         //
         for (param_a, param_b) in registry.pair_parameters() {
-            // Invert (Inversion)
+            // Point Inversion
             // https://rigidgeometricalgebra.org/wiki/index.php?title=Inversion
             // The choice of what class should constitute a "Point" is somewhat contrived.
             // It will need extra consideration for CGA.
@@ -1877,7 +1909,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             if param_a.multi_vector_class().class_name != "Point" {
                 continue;
             }
-            let name = "Invert";
+            let name = "PointInversion";
             let _: Option<()> = try {
                 let unitize = self.trait_impls.get_single_invocation("Unitize", variable(&param_a))?;
                 let sandwich = self.trait_impls.get_pair_invocation("Sandwich", unitize, variable(&param_b))?;
@@ -2375,6 +2407,8 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         // Preamble
         // emitter.emit(&AstNode::Preamble)?;
 
+        // TODO give each class it's own module because shit's getting crazy at a 56k line lib.rs for cga
+
         // Class Definitions
         for (class, _) in registry.classes.iter() {
             if class.class_name == "Origin" && self.algebra.algebra_name().contains("rga") {
@@ -2551,10 +2585,10 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         })?;
 
         emitter.emit(&AstNode::TraitDefinition {
-            name: "Invert".to_string(),
+            name: "PointInversion".to_string(),
             params: 2,
             docs: "
-            Invert (Inversion)
+            Point Inversion
             An improper isometry that performs an inversion through a point.
             Be careful not to confuse with `Inverse`, which raises a number to the power of `-1.0`.
             https://rigidgeometricalgebra.org/wiki/index.php?title=Inversion
@@ -2573,7 +2607,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         })?;
 
         self.emit_exact_name_match_trait_impls(&["Sandwich"], emitter)?;
-        self.emit_exact_name_match_trait_impls(&["Invert", "Reflect"], emitter)?;
+        self.emit_exact_name_match_trait_impls(&["PointInversion", "Reflect"], emitter)?;
         Ok(())
     }
 
@@ -2788,7 +2822,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     }
 
     pub fn emit_characteristic_features(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
-        // Sqrt, Grade, AntiGrade, Attitude, Carrier, CoCarrier, Container, Center, Partner
+        // Sqrt, Grade, AntiGrade, Attitude, Carrier, CoCarrier, Container, Center, Partner, Inverse, AntiInverse
 
         emitter.emit(&AstNode::TraitDefinition {
             name: "Sqrt".to_string(),
@@ -2822,6 +2856,26 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             docs: "
             Attitude
             https://rigidgeometricalgebra.org/wiki/index.php?title=Attitude
+            ".to_string(),
+        })?;
+
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "Inverse".to_string(),
+            params: 1,
+            docs: "
+            Inverse, as in `x^-1` (with respect to geometric product).
+            Useful to define the geometric quotient.
+            Not to be confused with the \"Point Inversion\" or \"Sphere Inversion\" operations.
+            ".to_string(),
+        })?;
+
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "AntiInverse".to_string(),
+            params: 1,
+            docs: "
+            Inverse, as in `x^-1` (with respect to geometric anti-product).
+            Useful to define the geometric anti-quotient.
+            Not to be confused with the \"Point Inversion\" or \"Sphere Inversion\" operations.
             ".to_string(),
         })?;
 
@@ -2884,6 +2938,8 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         let trait_names = ["Container", "Center"];
         self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
         let trait_names = ["Partner"];
+        self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
+        let trait_names = ["Inverse", "AntiInverse"];
         self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
         Ok(())
     }

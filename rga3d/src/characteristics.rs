@@ -5,7 +5,11 @@
 // https://github.com/AndrewBrownK/projective_ga/
 //
 
+use crate::products::dot::AntiDot;
+use crate::products::dot::Dot;
 use crate::products::exterior::AntiWedge;
+use crate::products::geometric::GeometricAntiProduct;
+use crate::products::geometric::GeometricProduct;
 use crate::*;
 
 /// Square Root
@@ -33,6 +37,22 @@ pub trait AntiGrade {
 pub trait Attitude {
     type Output;
     fn attitude(self) -> Self::Output;
+}
+
+/// Inverse, as in `x^-1` (with respect to geometric product).
+/// Useful to define the geometric quotient.
+/// Not to be confused with the "Point Inversion" or "Sphere Inversion" operations.
+pub trait Inverse {
+    type Output;
+    fn inverse(self) -> Self::Output;
+}
+
+/// Inverse, as in `x^-1` (with respect to geometric anti-product).
+/// Useful to define the geometric anti-quotient.
+/// Not to be confused with the "Point Inversion" or "Sphere Inversion" operations.
+pub trait AntiInverse {
+    type Output;
+    fn anti_inverse(self) -> Self::Output;
 }
 
 impl AntiGrade for AntiScalar {
@@ -340,5 +360,229 @@ impl Sqrt for Scalar {
         Scalar {
             groups: ScalarGroups { g0: self.group0().sqrt() },
         }
+    }
+}
+
+impl AntiInverse for AntiScalar {
+    type Output = AntiScalar;
+
+    fn anti_inverse(self) -> AntiScalar {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for Flector {
+    type Output = Flector;
+
+    fn anti_inverse(self) -> Flector {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for Line {
+    type Output = Line;
+
+    fn anti_inverse(self) -> Line {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for LineAtOrigin {
+    type Output = LineAtOrigin;
+
+    fn anti_inverse(self) -> LineAtOrigin {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for Magnitude {
+    type Output = Magnitude;
+
+    fn anti_inverse(self) -> Magnitude {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for Motor {
+    type Output = Motor;
+
+    fn anti_inverse(self) -> Motor {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_inverse(self) -> MultiVector {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn anti_inverse(self) -> MultiVectorAtOrigin {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for Origin {
+    type Output = Origin;
+
+    fn anti_inverse(self) -> Origin {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for Plane {
+    type Output = Plane;
+
+    fn anti_inverse(self) -> Plane {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for PlaneAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn anti_inverse(self) -> PlaneAtOrigin {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for Point {
+    type Output = Point;
+
+    fn anti_inverse(self) -> Point {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for Rotor {
+    type Output = Rotor;
+
+    fn anti_inverse(self) -> Rotor {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for Translator {
+    type Output = Translator;
+
+    fn anti_inverse(self) -> Translator {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl Inverse for Flector {
+    type Output = Flector;
+
+    fn inverse(self) -> Flector {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for FlectorAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn inverse(self) -> FlectorAtInfinity {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for Horizon {
+    type Output = Horizon;
+
+    fn inverse(self) -> Horizon {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for Line {
+    type Output = Line;
+
+    fn inverse(self) -> Line {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for LineAtInfinity {
+    type Output = LineAtInfinity;
+
+    fn inverse(self) -> LineAtInfinity {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for Magnitude {
+    type Output = Magnitude;
+
+    fn inverse(self) -> Magnitude {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for Motor {
+    type Output = Motor;
+
+    fn inverse(self) -> Motor {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for MultiVector {
+    type Output = MultiVector;
+
+    fn inverse(self) -> MultiVector {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn inverse(self) -> MultiVectorAtInfinity {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for Plane {
+    type Output = Plane;
+
+    fn inverse(self) -> Plane {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for Point {
+    type Output = Point;
+
+    fn inverse(self) -> Point {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for PointAtInfinity {
+    type Output = PointAtInfinity;
+
+    fn inverse(self) -> PointAtInfinity {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for Scalar {
+    type Output = Scalar;
+
+    fn inverse(self) -> Scalar {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for Translator {
+    type Output = Translator;
+
+    fn inverse(self) -> Translator {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
     }
 }

@@ -16759,6 +16759,118 @@ Scalar scalar_sqrt(Scalar self) {
     return Scalar(sqrt(self.g0));
 }
 
+AntiScalar anti_scalar_anti_inverse(AntiScalar self) {
+    return anti_scalar_anti_scalar_geometric_anti_product(self, anti_scalar_anti_scalar_div(anti_scalar_one(), anti_scalar_anti_scalar_anti_dot(self, self)));
+}
+
+Flector flector_anti_inverse(Flector self) {
+    return flector_anti_scalar_geometric_anti_product(self, anti_scalar_anti_scalar_div(anti_scalar_one(), flector_flector_anti_dot(self, self)));
+}
+
+Line line_anti_inverse(Line self) {
+    return line_anti_scalar_geometric_anti_product(self, anti_scalar_anti_scalar_div(anti_scalar_one(), line_line_anti_dot(self, self)));
+}
+
+LineAtOrigin line_at_origin_anti_inverse(LineAtOrigin self) {
+    return line_at_origin_anti_scalar_geometric_anti_product(self, anti_scalar_anti_scalar_div(anti_scalar_one(), line_at_origin_line_at_origin_anti_dot(self, self)));
+}
+
+Magnitude magnitude_anti_inverse(Magnitude self) {
+    return magnitude_anti_scalar_geometric_anti_product(self, anti_scalar_anti_scalar_div(anti_scalar_one(), magnitude_magnitude_anti_dot(self, self)));
+}
+
+Motor motor_anti_inverse(Motor self) {
+    return motor_anti_scalar_geometric_anti_product(self, anti_scalar_anti_scalar_div(anti_scalar_one(), motor_motor_anti_dot(self, self)));
+}
+
+MultiVector multi_vector_anti_inverse(MultiVector self) {
+    return multi_vector_anti_scalar_geometric_anti_product(self, anti_scalar_anti_scalar_div(anti_scalar_one(), multi_vector_multi_vector_anti_dot(self, self)));
+}
+
+MultiVectorAtOrigin multi_vector_at_origin_anti_inverse(MultiVectorAtOrigin self) {
+    return multi_vector_at_origin_anti_scalar_geometric_anti_product(self, anti_scalar_anti_scalar_div(anti_scalar_one(), multi_vector_at_origin_multi_vector_at_origin_anti_dot(self, self)));
+}
+
+Origin origin_anti_inverse(Origin self) {
+    return origin_anti_scalar_geometric_anti_product(self, anti_scalar_anti_scalar_div(anti_scalar_one(), origin_origin_anti_dot(self, self)));
+}
+
+Plane plane_anti_inverse(Plane self) {
+    return plane_anti_scalar_geometric_anti_product(self, anti_scalar_anti_scalar_div(anti_scalar_one(), plane_plane_anti_dot(self, self)));
+}
+
+PlaneAtOrigin plane_at_origin_anti_inverse(PlaneAtOrigin self) {
+    return plane_at_origin_anti_scalar_geometric_anti_product(self, anti_scalar_anti_scalar_div(anti_scalar_one(), plane_at_origin_plane_at_origin_anti_dot(self, self)));
+}
+
+Point point_anti_inverse(Point self) {
+    return point_anti_scalar_geometric_anti_product(self, anti_scalar_anti_scalar_div(anti_scalar_one(), point_point_anti_dot(self, self)));
+}
+
+Rotor rotor_anti_inverse(Rotor self) {
+    return rotor_anti_scalar_geometric_anti_product(self, anti_scalar_anti_scalar_div(anti_scalar_one(), rotor_rotor_anti_dot(self, self)));
+}
+
+Translator translator_anti_inverse(Translator self) {
+    return translator_anti_scalar_geometric_anti_product(self, anti_scalar_anti_scalar_div(anti_scalar_one(), translator_translator_anti_dot(self, self)));
+}
+
+Flector flector_inverse(Flector self) {
+    return flector_scalar_geometric_product(self, scalar_scalar_div(scalar_one(), flector_flector_dot(self, self)));
+}
+
+FlectorAtInfinity flector_at_infinity_inverse(FlectorAtInfinity self) {
+    return flector_at_infinity_scalar_geometric_product(self, scalar_scalar_div(scalar_one(), flector_at_infinity_flector_at_infinity_dot(self, self)));
+}
+
+Horizon horizon_inverse(Horizon self) {
+    return horizon_scalar_geometric_product(self, scalar_scalar_div(scalar_one(), horizon_horizon_dot(self, self)));
+}
+
+Line line_inverse(Line self) {
+    return line_scalar_geometric_product(self, scalar_scalar_div(scalar_one(), line_line_dot(self, self)));
+}
+
+LineAtInfinity line_at_infinity_inverse(LineAtInfinity self) {
+    return line_at_infinity_scalar_geometric_product(self, scalar_scalar_div(scalar_one(), line_at_infinity_line_at_infinity_dot(self, self)));
+}
+
+Magnitude magnitude_inverse(Magnitude self) {
+    return magnitude_scalar_geometric_product(self, scalar_scalar_div(scalar_one(), magnitude_magnitude_dot(self, self)));
+}
+
+Motor motor_inverse(Motor self) {
+    return motor_scalar_geometric_product(self, scalar_scalar_div(scalar_one(), motor_motor_dot(self, self)));
+}
+
+MultiVector multi_vector_inverse(MultiVector self) {
+    return multi_vector_scalar_geometric_product(self, scalar_scalar_div(scalar_one(), multi_vector_multi_vector_dot(self, self)));
+}
+
+MultiVectorAtInfinity multi_vector_at_infinity_inverse(MultiVectorAtInfinity self) {
+    return multi_vector_at_infinity_scalar_geometric_product(self, scalar_scalar_div(scalar_one(), multi_vector_at_infinity_multi_vector_at_infinity_dot(self, self)));
+}
+
+Plane plane_inverse(Plane self) {
+    return plane_scalar_geometric_product(self, scalar_scalar_div(scalar_one(), plane_plane_dot(self, self)));
+}
+
+Point point_inverse(Point self) {
+    return point_scalar_geometric_product(self, scalar_scalar_div(scalar_one(), point_point_dot(self, self)));
+}
+
+PointAtInfinity point_at_infinity_inverse(PointAtInfinity self) {
+    return point_at_infinity_scalar_geometric_product(self, scalar_scalar_div(scalar_one(), point_at_infinity_point_at_infinity_dot(self, self)));
+}
+
+Scalar scalar_inverse(Scalar self) {
+    return scalar_scalar_geometric_product(self, scalar_scalar_div(scalar_one(), scalar_scalar_dot(self, self)));
+}
+
+Translator translator_inverse(Translator self) {
+    return translator_scalar_geometric_product(self, scalar_scalar_div(scalar_one(), translator_translator_dot(self, self)));
+}
+
 Scalar flector_bulk_norm_squared(Flector self) {
     return flector_flector_dot(self, self);
 }
@@ -18087,71 +18199,71 @@ Translator translator_translator_sandwich(Translator self, Translator other) {
     return translator_translator_geometric_anti_product(translator_translator_geometric_anti_product(self, other), translator_anti_reversal(self));
 }
 
-Flector point_flector_invert(Point self, Flector other) {
+Flector point_flector_point_inversion(Point self, Flector other) {
     return point_flector_sandwich(point_unitize(self), other);
 }
 
-MultiVectorAtInfinity point_flector_at_infinity_invert(Point self, FlectorAtInfinity other) {
+MultiVectorAtInfinity point_flector_at_infinity_point_inversion(Point self, FlectorAtInfinity other) {
     return point_flector_at_infinity_sandwich(point_unitize(self), other);
 }
 
-Horizon point_horizon_invert(Point self, Horizon other) {
+Horizon point_horizon_point_inversion(Point self, Horizon other) {
     return point_horizon_sandwich(point_unitize(self), other);
 }
 
-Line point_line_invert(Point self, Line other) {
+Line point_line_point_inversion(Point self, Line other) {
     return point_line_sandwich(point_unitize(self), other);
 }
 
-LineAtInfinity point_line_at_infinity_invert(Point self, LineAtInfinity other) {
+LineAtInfinity point_line_at_infinity_point_inversion(Point self, LineAtInfinity other) {
     return point_line_at_infinity_sandwich(point_unitize(self), other);
 }
 
-Line point_line_at_origin_invert(Point self, LineAtOrigin other) {
+Line point_line_at_origin_point_inversion(Point self, LineAtOrigin other) {
     return point_line_at_origin_sandwich(point_unitize(self), other);
 }
 
-Motor point_motor_invert(Point self, Motor other) {
+Motor point_motor_point_inversion(Point self, Motor other) {
     return point_motor_sandwich(point_unitize(self), other);
 }
 
-MultiVector point_multi_vector_invert(Point self, MultiVector other) {
+MultiVector point_multi_vector_point_inversion(Point self, MultiVector other) {
     return point_multi_vector_sandwich(point_unitize(self), other);
 }
 
-MultiVectorAtInfinity point_multi_vector_at_infinity_invert(Point self, MultiVectorAtInfinity other) {
+MultiVectorAtInfinity point_multi_vector_at_infinity_point_inversion(Point self, MultiVectorAtInfinity other) {
     return point_multi_vector_at_infinity_sandwich(point_unitize(self), other);
 }
 
-MultiVectorAtOrigin point_multi_vector_at_origin_invert(Point self, MultiVectorAtOrigin other) {
+MultiVectorAtOrigin point_multi_vector_at_origin_point_inversion(Point self, MultiVectorAtOrigin other) {
     return point_multi_vector_at_origin_sandwich(point_unitize(self), other);
 }
 
-Point point_origin_invert(Point self, Origin other) {
+Point point_origin_point_inversion(Point self, Origin other) {
     return point_origin_sandwich(point_unitize(self), other);
 }
 
-Plane point_plane_invert(Point self, Plane other) {
+Plane point_plane_point_inversion(Point self, Plane other) {
     return point_plane_sandwich(point_unitize(self), other);
 }
 
-Plane point_plane_at_origin_invert(Point self, PlaneAtOrigin other) {
+Plane point_plane_at_origin_point_inversion(Point self, PlaneAtOrigin other) {
     return point_plane_at_origin_sandwich(point_unitize(self), other);
 }
 
-Point point_point_invert(Point self, Point other) {
+Point point_point_point_inversion(Point self, Point other) {
     return point_point_sandwich(point_unitize(self), other);
 }
 
-PointAtInfinity point_point_at_infinity_invert(Point self, PointAtInfinity other) {
+PointAtInfinity point_point_at_infinity_point_inversion(Point self, PointAtInfinity other) {
     return point_point_at_infinity_sandwich(point_unitize(self), other);
 }
 
-Motor point_rotor_invert(Point self, Rotor other) {
+Motor point_rotor_point_inversion(Point self, Rotor other) {
     return point_rotor_sandwich(point_unitize(self), other);
 }
 
-Translator point_translator_invert(Point self, Translator other) {
+Translator point_translator_point_inversion(Point self, Translator other) {
     return point_translator_sandwich(point_unitize(self), other);
 }
 

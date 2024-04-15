@@ -19,13 +19,13 @@ pub trait Sandwich<T> {
     fn sandwich(self, other: T) -> Self::Output;
 }
 
-/// Invert (Inversion)
+/// Point Inversion
 /// An improper isometry that performs an inversion through a point.
 /// Be careful not to confuse with `Inverse`, which raises a number to the power of `-1.0`.
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Inversion
-pub trait Invert<T> {
+pub trait PointInversion<T> {
     type Output;
-    fn invert(self, other: T) -> Self::Output;
+    fn point_inversion(self, other: T) -> Self::Output;
 }
 
 /// Reflection
@@ -1939,138 +1939,138 @@ impl Sandwich<Translator> for Translator {
     }
 }
 
-impl Invert<Flector> for Point {
+impl PointInversion<Flector> for Point {
     type Output = Flector;
 
-    fn invert(self, other: Flector) -> Flector {
+    fn point_inversion(self, other: Flector) -> Flector {
         self.unitize().sandwich(other)
     }
 }
 
-impl Invert<FlectorAtInfinity> for Point {
+impl PointInversion<FlectorAtInfinity> for Point {
     type Output = MultiVectorAtInfinity;
 
-    fn invert(self, other: FlectorAtInfinity) -> MultiVectorAtInfinity {
+    fn point_inversion(self, other: FlectorAtInfinity) -> MultiVectorAtInfinity {
         self.unitize().sandwich(other)
     }
 }
 
-impl Invert<Horizon> for Point {
+impl PointInversion<Horizon> for Point {
     type Output = Horizon;
 
-    fn invert(self, other: Horizon) -> Horizon {
+    fn point_inversion(self, other: Horizon) -> Horizon {
         self.unitize().sandwich(other)
     }
 }
 
-impl Invert<Line> for Point {
+impl PointInversion<Line> for Point {
     type Output = Line;
 
-    fn invert(self, other: Line) -> Line {
+    fn point_inversion(self, other: Line) -> Line {
         self.unitize().sandwich(other)
     }
 }
 
-impl Invert<LineAtInfinity> for Point {
+impl PointInversion<LineAtInfinity> for Point {
     type Output = LineAtInfinity;
 
-    fn invert(self, other: LineAtInfinity) -> LineAtInfinity {
+    fn point_inversion(self, other: LineAtInfinity) -> LineAtInfinity {
         self.unitize().sandwich(other)
     }
 }
 
-impl Invert<LineAtOrigin> for Point {
+impl PointInversion<LineAtOrigin> for Point {
     type Output = Line;
 
-    fn invert(self, other: LineAtOrigin) -> Line {
+    fn point_inversion(self, other: LineAtOrigin) -> Line {
         self.unitize().sandwich(other)
     }
 }
 
-impl Invert<Motor> for Point {
+impl PointInversion<Motor> for Point {
     type Output = Motor;
 
-    fn invert(self, other: Motor) -> Motor {
+    fn point_inversion(self, other: Motor) -> Motor {
         self.unitize().sandwich(other)
     }
 }
 
-impl Invert<MultiVector> for Point {
+impl PointInversion<MultiVector> for Point {
     type Output = MultiVector;
 
-    fn invert(self, other: MultiVector) -> MultiVector {
+    fn point_inversion(self, other: MultiVector) -> MultiVector {
         self.unitize().sandwich(other)
     }
 }
 
-impl Invert<MultiVectorAtInfinity> for Point {
+impl PointInversion<MultiVectorAtInfinity> for Point {
     type Output = MultiVectorAtInfinity;
 
-    fn invert(self, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
+    fn point_inversion(self, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
         self.unitize().sandwich(other)
     }
 }
 
-impl Invert<MultiVectorAtOrigin> for Point {
+impl PointInversion<MultiVectorAtOrigin> for Point {
     type Output = MultiVectorAtOrigin;
 
-    fn invert(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
+    fn point_inversion(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
         self.unitize().sandwich(other)
     }
 }
 
-impl Invert<Origin> for Point {
+impl PointInversion<Origin> for Point {
     type Output = Point;
 
-    fn invert(self, other: Origin) -> Point {
+    fn point_inversion(self, other: Origin) -> Point {
         self.unitize().sandwich(other)
     }
 }
 
-impl Invert<Plane> for Point {
+impl PointInversion<Plane> for Point {
     type Output = Plane;
 
-    fn invert(self, other: Plane) -> Plane {
+    fn point_inversion(self, other: Plane) -> Plane {
         self.unitize().sandwich(other)
     }
 }
 
-impl Invert<PlaneAtOrigin> for Point {
+impl PointInversion<PlaneAtOrigin> for Point {
     type Output = Plane;
 
-    fn invert(self, other: PlaneAtOrigin) -> Plane {
+    fn point_inversion(self, other: PlaneAtOrigin) -> Plane {
         self.unitize().sandwich(other)
     }
 }
 
-impl Invert<Point> for Point {
+impl PointInversion<Point> for Point {
     type Output = Point;
 
-    fn invert(self, other: Point) -> Point {
+    fn point_inversion(self, other: Point) -> Point {
         self.unitize().sandwich(other)
     }
 }
 
-impl Invert<PointAtInfinity> for Point {
+impl PointInversion<PointAtInfinity> for Point {
     type Output = PointAtInfinity;
 
-    fn invert(self, other: PointAtInfinity) -> PointAtInfinity {
+    fn point_inversion(self, other: PointAtInfinity) -> PointAtInfinity {
         self.unitize().sandwich(other)
     }
 }
 
-impl Invert<Rotor> for Point {
+impl PointInversion<Rotor> for Point {
     type Output = Motor;
 
-    fn invert(self, other: Rotor) -> Motor {
+    fn point_inversion(self, other: Rotor) -> Motor {
         self.unitize().sandwich(other)
     }
 }
 
-impl Invert<Translator> for Point {
+impl PointInversion<Translator> for Point {
     type Output = Translator;
 
-    fn invert(self, other: Translator) -> Translator {
+    fn point_inversion(self, other: Translator) -> Translator {
         self.unitize().sandwich(other)
     }
 }

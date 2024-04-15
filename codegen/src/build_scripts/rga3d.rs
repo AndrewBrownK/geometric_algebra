@@ -192,7 +192,11 @@ use crate::involutions::*;",
     emitter.emit_rust_preamble(
         "
 use crate::*;
-use crate::products::exterior::AntiWedge;",
+use crate::products::exterior::AntiWedge;
+use crate::products::dot::Dot;
+use crate::products::dot::AntiDot;
+use crate::products::geometric::GeometricProduct;
+use crate::products::geometric::GeometricAntiProduct;",
     )?;
     code_gen.emit_characteristic_features(&mut emitter)?;
 

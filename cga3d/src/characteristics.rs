@@ -7,8 +7,12 @@
 
 use crate::aspect_duals::*;
 use crate::involutions::*;
+use crate::products::dot::AntiDot;
+use crate::products::dot::Dot;
 use crate::products::exterior::AntiWedge;
 use crate::products::exterior::Wedge;
+use crate::products::geometric::GeometricAntiProduct;
+use crate::products::geometric::GeometricProduct;
 use crate::*;
 
 /// Square Root
@@ -36,6 +40,22 @@ pub trait AntiGrade {
 pub trait Attitude {
     type Output;
     fn attitude(self) -> Self::Output;
+}
+
+/// Inverse, as in `x^-1` (with respect to geometric product).
+/// Useful to define the geometric quotient.
+/// Not to be confused with the "Point Inversion" or "Sphere Inversion" operations.
+pub trait Inverse {
+    type Output;
+    fn inverse(self) -> Self::Output;
+}
+
+/// Inverse, as in `x^-1` (with respect to geometric anti-product).
+/// Useful to define the geometric anti-quotient.
+/// Not to be confused with the "Point Inversion" or "Sphere Inversion" operations.
+pub trait AntiInverse {
+    type Output;
+    fn anti_inverse(self) -> Self::Output;
 }
 
 /// Carrier
@@ -1329,5 +1349,421 @@ impl Partner for Sphere {
 
     fn partner(self) -> SphereWeight {
         self.right_bulk_dual().container().neg().anti_wedge(self.carrier())
+    }
+}
+
+impl AntiInverse for AntiScalar {
+    type Output = AntiScalar;
+
+    fn anti_inverse(self) -> AntiScalar {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for Circle {
+    type Output = Circle;
+
+    fn anti_inverse(self) -> Circle {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for CircleBulk {
+    type Output = CircleBulk;
+
+    fn anti_inverse(self) -> CircleBulk {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for CircleCarrierAspect {
+    type Output = CircleCarrierAspect;
+
+    fn anti_inverse(self) -> CircleCarrierAspect {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for Dipole {
+    type Output = Dipole;
+
+    fn anti_inverse(self) -> Dipole {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for DipoleBulk {
+    type Output = DipoleBulk;
+
+    fn anti_inverse(self) -> DipoleBulk {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for DipoleCarrierAspect {
+    type Output = DipoleCarrierAspect;
+
+    fn anti_inverse(self) -> DipoleCarrierAspect {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for FlatPoint {
+    type Output = FlatPoint;
+
+    fn anti_inverse(self) -> FlatPoint {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for FlatPointAtOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn anti_inverse(self) -> FlatPointAtOrigin {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for Flector {
+    type Output = Flector;
+
+    fn anti_inverse(self) -> Flector {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for Line {
+    type Output = Line;
+
+    fn anti_inverse(self) -> Line {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for LineAtOrigin {
+    type Output = LineAtOrigin;
+
+    fn anti_inverse(self) -> LineAtOrigin {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for Magnitude {
+    type Output = Magnitude;
+
+    fn anti_inverse(self) -> Magnitude {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for Motor {
+    type Output = Motor;
+
+    fn anti_inverse(self) -> Motor {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_inverse(self) -> MultiVector {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for Plane {
+    type Output = Plane;
+
+    fn anti_inverse(self) -> Plane {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for PlaneAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn anti_inverse(self) -> PlaneAtOrigin {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for Rotor {
+    type Output = Rotor;
+
+    fn anti_inverse(self) -> Rotor {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for RoundPoint {
+    type Output = RoundPoint;
+
+    fn anti_inverse(self) -> RoundPoint {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for RoundPointAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn anti_inverse(self) -> RoundPointAtInfinity {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for RoundPointAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn anti_inverse(self) -> RoundPointAtOrigin {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for RoundPointBulk {
+    type Output = RoundPointBulk;
+
+    fn anti_inverse(self) -> RoundPointBulk {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for RoundPointCarrierAspect {
+    type Output = RoundPointCarrierAspect;
+
+    fn anti_inverse(self) -> RoundPointCarrierAspect {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for Scalar {
+    type Output = Scalar;
+
+    fn anti_inverse(self) -> Scalar {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for Sphere {
+    type Output = Sphere;
+
+    fn anti_inverse(self) -> Sphere {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for Translator {
+    type Output = Translator;
+
+    fn anti_inverse(self) -> Translator {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
+impl Inverse for AntiScalar {
+    type Output = AntiScalar;
+
+    fn inverse(self) -> AntiScalar {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for Circle {
+    type Output = Circle;
+
+    fn inverse(self) -> Circle {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for CircleBulk {
+    type Output = CircleBulk;
+
+    fn inverse(self) -> CircleBulk {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for CircleCarrierAspect {
+    type Output = CircleCarrierAspect;
+
+    fn inverse(self) -> CircleCarrierAspect {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for Dipole {
+    type Output = Dipole;
+
+    fn inverse(self) -> Dipole {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for DipoleBulk {
+    type Output = DipoleBulk;
+
+    fn inverse(self) -> DipoleBulk {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for DipoleCarrierAspect {
+    type Output = DipoleCarrierAspect;
+
+    fn inverse(self) -> DipoleCarrierAspect {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for FlatPoint {
+    type Output = FlatPoint;
+
+    fn inverse(self) -> FlatPoint {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for FlatPointAtOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn inverse(self) -> FlatPointAtOrigin {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for Flector {
+    type Output = Flector;
+
+    fn inverse(self) -> Flector {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for Line {
+    type Output = Line;
+
+    fn inverse(self) -> Line {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for LineAtOrigin {
+    type Output = LineAtOrigin;
+
+    fn inverse(self) -> LineAtOrigin {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for Magnitude {
+    type Output = Magnitude;
+
+    fn inverse(self) -> Magnitude {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for Motor {
+    type Output = Motor;
+
+    fn inverse(self) -> Motor {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for MultiVector {
+    type Output = MultiVector;
+
+    fn inverse(self) -> MultiVector {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for Plane {
+    type Output = Plane;
+
+    fn inverse(self) -> Plane {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for PlaneAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn inverse(self) -> PlaneAtOrigin {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for Rotor {
+    type Output = Rotor;
+
+    fn inverse(self) -> Rotor {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for RoundPoint {
+    type Output = RoundPoint;
+
+    fn inverse(self) -> RoundPoint {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for RoundPointAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn inverse(self) -> RoundPointAtInfinity {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for RoundPointAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn inverse(self) -> RoundPointAtOrigin {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for RoundPointBulk {
+    type Output = RoundPointBulk;
+
+    fn inverse(self) -> RoundPointBulk {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for RoundPointCarrierAspect {
+    type Output = RoundPointCarrierAspect;
+
+    fn inverse(self) -> RoundPointCarrierAspect {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for Scalar {
+    type Output = Scalar;
+
+    fn inverse(self) -> Scalar {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for Sphere {
+    type Output = Sphere;
+
+    fn inverse(self) -> Sphere {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for Translator {
+    type Output = Translator;
+
+    fn inverse(self) -> Translator {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
     }
 }

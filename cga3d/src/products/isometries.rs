@@ -19,13 +19,13 @@ pub trait Sandwich<T> {
     fn sandwich(self, other: T) -> Self::Output;
 }
 
-/// Invert (Inversion)
+/// Point Inversion
 /// An improper isometry that performs an inversion through a point.
 /// Be careful not to confuse with `Inverse`, which raises a number to the power of `-1.0`.
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Inversion
-pub trait Invert<T> {
+pub trait PointInversion<T> {
     type Output;
-    fn invert(self, other: T) -> Self::Output;
+    fn point_inversion(self, other: T) -> Self::Output;
 }
 
 /// Reflection

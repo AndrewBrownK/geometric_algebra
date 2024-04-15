@@ -115,7 +115,7 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
     code_gen.round_features(flat_basis, &registry);
     code_gen.fancy_norms(&registry);
     code_gen.attitude_and_dependencies("Horizon", &registry);
-    // TODO here
+    // TODO here here
     // TODO dilation and any remaining stuff
     // TODO inverse, quotient, rejection (ala projection) see page 122 it actually seems useful
     // TODO see loads of DualNum operations on page 126
@@ -210,6 +210,10 @@ use crate::involutions::*;",
 use crate::*;
 use crate::products::exterior::AntiWedge;
 use crate::products::exterior::Wedge;
+use crate::products::dot::Dot;
+use crate::products::dot::AntiDot;
+use crate::products::geometric::GeometricProduct;
+use crate::products::geometric::GeometricAntiProduct;
 use crate::involutions::*;
 use crate::aspect_duals::*;",
     )?;
