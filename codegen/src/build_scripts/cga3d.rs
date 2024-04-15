@@ -27,49 +27,45 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         "Magnitude:1,e12345",
 
         "FlatPoint:e15,e25,e35,e45",
-        "FlatPoint/FlatPointAtOrigin:e45",
-        "FlatPoint/FlatPointAtInfinity:e15,e25,e35",
+        "FlatPointAtOrigin:e45",
+        "FlatPointAtInfinity:e15,e25,e35",
 
         "Line:e415,e425,e435|e235,e315,e125",
-        "Line/LineAtOrigin:e415,e425,e435",
-        "Line/LineAtInfinity:e235,e315,e125",
+        "LineAtOrigin:e415,e425,e435",
+        "LineAtInfinity:e235,e315,e125",
 
         "Plane:e4235,e4315,e4125,e3215",
-        "Plane/PlaneAtOrigin:e4235,e4315,e4125",
-        "Plane/Horizon:e3215",
+        "PlaneAtOrigin:e4235,e4315,e4125",
+        "Horizon:e3215",
 
-        // TODO not yet sure on what kinds of "superclassing" I want with round objects
-        //  it partly depends on how the sandwich operators (are supposed to) turn out
-        //  Maybe the flat objects should be subclassed to these round objects,
-        //  or maybe there are yet other round variants of objects subclassed here
         "RoundPoint:e1,e2,e3|e4,e5",
         "Dipole:e41,e42,e43|e23,e31,e12|e15,e25,e35,e45",
         "Circle:e423,e431,e412,e321|e415,e425,e435|e235,e315,e125",
         "Sphere:e4235,e4315,e4125|e1234,e3215",
 
-        "RoundPoint/Infinity:e5",
-        "RoundPoint/Origin:e4",
-        "RoundPoint/RoundPointAtOrigin:e4,e5",
-        "RoundPoint/RoundPointAtInfinity:e1,e2,e3,e5",
+        "Infinity:e5",
+        "Origin:e4",
+        "RoundPointAtOrigin:e4,e5",
+        "RoundPointAtInfinity:e1,e2,e3,e5",
 
         // TODO can I get more interesting/intuitive names for these?
-        "RoundPoint/RoundPointBulk:e1,e2,e3",
-        "RoundPoint/RoundPointCarrierAspect:e1,e2,e3,e4",
-        "Dipole/DipoleBulk:e23,e31,e12",
-        "Dipole/DipoleWeight:e41,e42,e43",
-        "Dipole/DipoleCarrierAspect:e41,e42,e43|e23,e31,e12",
-        "Circle/CircleBulk:e321",
-        "Circle/CircleWeight:e423,e431,e412",
-        "Circle/CircleCarrierAspect:e423,e431,e412,e321",
-        "Sphere/SphereWeight:e1234",
+        "RoundPointBulk:e1,e2,e3",
+        "RoundPointCarrierAspect:e1,e2,e3,e4",
+        "DipoleBulk:e23,e31,e12",
+        "DipoleWeight:e41,e42,e43",
+        "DipoleCarrierAspect:e41,e42,e43|e23,e31,e12",
+        "CircleBulk:e321",
+        "CircleWeight:e423,e431,e412",
+        "CircleCarrierAspect:e423,e431,e412,e321",
+        "SphereWeight:e1234",
 
 
         // Operator Objects
         "Motor:e415,e425,e435,e12345|e235,e315,e125",
-        "Motor/Rotor:e415,e425,e435,e12345",
-        "Motor/Translator:e235,e315,e125,e12345",
+        "Rotor:e415,e425,e435,e12345",
+        "Translator:e235,e315,e125,e12345",
         "Flector:e15,e25,e35,e45|e4235,e4315,e4125,e3215",
-        "Flector/FlectorAtInfinity:e15,e25,e35,e3215",
+        "FlectorAtInfinity:e15,e25,e35,e3215",
 
         "MultiVector:\
             1,e12345|\
@@ -79,6 +75,7 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
             e4235,e4315,e4125|e1234,e3215",
     ];
 
+    // TODO add more of these if/where applicable to CGA
     let sandwich_outputs: BTreeMap<(&str, &str), &str> = [
 
         (("Translator", "Origin"), "Point"),
@@ -91,6 +88,16 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         (("Motor", "PlaneAtOrigin"), "Plane"),
         (("Motor", "Rotor"), "Motor"),
 
+        (("Flector", "Origin"), "Point"),
+        (("Flector", "LineAtOrigin"), "Line"),
+        (("Flector", "PlaneAtOrigin"), "Plane"),
+        (("Flector", "Rotor"), "Motor"),
+
+        (("FlectorAtInfinity", "Origin"), "Point"),
+        (("FlectorAtInfinity", "LineAtOrigin"), "Line"),
+        (("FlectorAtInfinity", "PlaneAtOrigin"), "Plane"),
+        (("FlectorAtInfinity", "Rotor"), "Motor"),
+
     ].into_iter().collect();
 
     // Arbitrary personal preference for dialect
@@ -100,18 +107,13 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
 
     let mut registry = MultiVectorClassRegistry::default();
     for multi_vector_descriptor in mv_iter {
-        let (mv, sc) = read_multi_vector_from_str(multi_vector_descriptor, &cga3d);
-        if let Some(sc) = sc {
-            registry.register_with_superclass(mv, sc);
-        } else {
-            registry.register(mv);
-        }
+        registry.register(read_multi_vector_from_str(multi_vector_descriptor, &cga3d));
     }
     let flat_basis = cga3d.parse("e5");
     let mut code_gen = CodeGenerator::new(cga3d);
     code_gen.preamble_and_universal_traits(&registry).unwrap();
     code_gen.basic_norms(&registry);
-    code_gen.post_norm_universal_stuff(&registry);
+    code_gen.post_norm_universal_stuff(&registry, &sandwich_outputs);
     code_gen.round_features(flat_basis, &registry);
     code_gen.fancy_norms(&registry);
     code_gen.attitude_and_dependencies("Horizon", &registry);

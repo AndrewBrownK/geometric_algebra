@@ -180,18 +180,18 @@ impl Sandwich<Flector> for Flector {
 }
 
 impl Sandwich<FlectorAtInfinity> for Flector {
-    type Output = MultiVectorAtInfinity;
+    type Output = FlectorAtInfinity;
 
-    fn sandwich(self, other: FlectorAtInfinity) -> MultiVectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
 impl Sandwich<Horizon> for Flector {
-    type Output = MultiVectorAtInfinity;
+    type Output = Horizon;
 
-    fn sandwich(self, other: Horizon) -> MultiVectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: Horizon) -> Horizon {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -204,10 +204,10 @@ impl Sandwich<Line> for Flector {
 }
 
 impl Sandwich<LineAtInfinity> for Flector {
-    type Output = MultiVectorAtInfinity;
+    type Output = LineAtInfinity;
 
-    fn sandwich(self, other: LineAtInfinity) -> MultiVectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -284,10 +284,10 @@ impl Sandwich<Point> for Flector {
 }
 
 impl Sandwich<PointAtInfinity> for Flector {
-    type Output = MultiVectorAtInfinity;
+    type Output = PointAtInfinity;
 
-    fn sandwich(self, other: PointAtInfinity) -> MultiVectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: PointAtInfinity) -> PointAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -300,9 +300,9 @@ impl Sandwich<Rotor> for Flector {
 }
 
 impl Sandwich<Translator> for Flector {
-    type Output = Motor;
+    type Output = Translator;
 
-    fn sandwich(self, other: Translator) -> Motor {
+    fn sandwich(self, other: Translator) -> Translator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -324,10 +324,10 @@ impl Sandwich<FlectorAtInfinity> for Line {
 }
 
 impl Sandwich<Horizon> for Line {
-    type Output = FlectorAtInfinity;
+    type Output = Horizon;
 
-    fn sandwich(self, other: Horizon) -> FlectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: Horizon) -> Horizon {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -340,17 +340,17 @@ impl Sandwich<Line> for Line {
 }
 
 impl Sandwich<LineAtInfinity> for Line {
-    type Output = MultiVectorAtInfinity;
+    type Output = LineAtInfinity;
 
-    fn sandwich(self, other: LineAtInfinity) -> MultiVectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
 impl Sandwich<LineAtOrigin> for Line {
-    type Output = Line;
+    type Output = LineAtOrigin;
 
-    fn sandwich(self, other: LineAtOrigin) -> Line {
+    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -388,9 +388,9 @@ impl Sandwich<MultiVectorAtOrigin> for Line {
 }
 
 impl Sandwich<Origin> for Line {
-    type Output = Point;
+    type Output = Origin;
 
-    fn sandwich(self, other: Origin) -> Point {
+    fn sandwich(self, other: Origin) -> Origin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -404,9 +404,9 @@ impl Sandwich<Plane> for Line {
 }
 
 impl Sandwich<PlaneAtOrigin> for Line {
-    type Output = Plane;
+    type Output = PlaneAtOrigin;
 
-    fn sandwich(self, other: PlaneAtOrigin) -> Plane {
+    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -420,25 +420,25 @@ impl Sandwich<Point> for Line {
 }
 
 impl Sandwich<PointAtInfinity> for Line {
-    type Output = FlectorAtInfinity;
+    type Output = PointAtInfinity;
 
-    fn sandwich(self, other: PointAtInfinity) -> FlectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: PointAtInfinity) -> PointAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
 impl Sandwich<Rotor> for Line {
-    type Output = Motor;
+    type Output = Rotor;
 
-    fn sandwich(self, other: Rotor) -> Motor {
+    fn sandwich(self, other: Rotor) -> Rotor {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
 impl Sandwich<Translator> for Line {
-    type Output = Motor;
+    type Output = Translator;
 
-    fn sandwich(self, other: Translator) -> Motor {
+    fn sandwich(self, other: Translator) -> Translator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -460,10 +460,10 @@ impl Sandwich<FlectorAtInfinity> for LineAtOrigin {
 }
 
 impl Sandwich<Horizon> for LineAtOrigin {
-    type Output = FlectorAtInfinity;
+    type Output = Horizon;
 
-    fn sandwich(self, other: Horizon) -> FlectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: Horizon) -> Horizon {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -476,18 +476,18 @@ impl Sandwich<Line> for LineAtOrigin {
 }
 
 impl Sandwich<LineAtInfinity> for LineAtOrigin {
-    type Output = MultiVectorAtInfinity;
+    type Output = LineAtInfinity;
 
-    fn sandwich(self, other: LineAtInfinity) -> MultiVectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
 impl Sandwich<LineAtOrigin> for LineAtOrigin {
-    type Output = Rotor;
+    type Output = LineAtOrigin;
 
-    fn sandwich(self, other: LineAtOrigin) -> Rotor {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -524,9 +524,9 @@ impl Sandwich<MultiVectorAtOrigin> for LineAtOrigin {
 }
 
 impl Sandwich<Origin> for LineAtOrigin {
-    type Output = Point;
+    type Output = Origin;
 
-    fn sandwich(self, other: Origin) -> Point {
+    fn sandwich(self, other: Origin) -> Origin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -540,9 +540,9 @@ impl Sandwich<Plane> for LineAtOrigin {
 }
 
 impl Sandwich<PlaneAtOrigin> for LineAtOrigin {
-    type Output = Plane;
+    type Output = PlaneAtOrigin;
 
-    fn sandwich(self, other: PlaneAtOrigin) -> Plane {
+    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -556,10 +556,10 @@ impl Sandwich<Point> for LineAtOrigin {
 }
 
 impl Sandwich<PointAtInfinity> for LineAtOrigin {
-    type Output = FlectorAtInfinity;
+    type Output = PointAtInfinity;
 
-    fn sandwich(self, other: PointAtInfinity) -> FlectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: PointAtInfinity) -> PointAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -572,9 +572,9 @@ impl Sandwich<Rotor> for LineAtOrigin {
 }
 
 impl Sandwich<Translator> for LineAtOrigin {
-    type Output = Motor;
+    type Output = Translator;
 
-    fn sandwich(self, other: Translator) -> Motor {
+    fn sandwich(self, other: Translator) -> Translator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -620,10 +620,10 @@ impl Sandwich<LineAtInfinity> for Magnitude {
 }
 
 impl Sandwich<LineAtOrigin> for Magnitude {
-    type Output = Line;
+    type Output = LineAtOrigin;
 
-    fn sandwich(self, other: LineAtOrigin) -> Line {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -660,9 +660,9 @@ impl Sandwich<MultiVectorAtOrigin> for Magnitude {
 }
 
 impl Sandwich<Origin> for Magnitude {
-    type Output = Point;
+    type Output = Origin;
 
-    fn sandwich(self, other: Origin) -> Point {
+    fn sandwich(self, other: Origin) -> Origin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -676,9 +676,9 @@ impl Sandwich<Plane> for Magnitude {
 }
 
 impl Sandwich<PlaneAtOrigin> for Magnitude {
-    type Output = Plane;
+    type Output = PlaneAtOrigin;
 
-    fn sandwich(self, other: PlaneAtOrigin) -> Plane {
+    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -700,17 +700,17 @@ impl Sandwich<PointAtInfinity> for Magnitude {
 }
 
 impl Sandwich<Rotor> for Magnitude {
-    type Output = Motor;
+    type Output = Rotor;
 
-    fn sandwich(self, other: Rotor) -> Motor {
+    fn sandwich(self, other: Rotor) -> Rotor {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
 impl Sandwich<Translator> for Magnitude {
-    type Output = Motor;
+    type Output = Translator;
 
-    fn sandwich(self, other: Translator) -> Motor {
+    fn sandwich(self, other: Translator) -> Translator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -732,10 +732,10 @@ impl Sandwich<FlectorAtInfinity> for Motor {
 }
 
 impl Sandwich<Horizon> for Motor {
-    type Output = FlectorAtInfinity;
+    type Output = Horizon;
 
-    fn sandwich(self, other: Horizon) -> FlectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: Horizon) -> Horizon {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -748,10 +748,10 @@ impl Sandwich<Line> for Motor {
 }
 
 impl Sandwich<LineAtInfinity> for Motor {
-    type Output = MultiVectorAtInfinity;
+    type Output = LineAtInfinity;
 
-    fn sandwich(self, other: LineAtInfinity) -> MultiVectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -828,10 +828,10 @@ impl Sandwich<Point> for Motor {
 }
 
 impl Sandwich<PointAtInfinity> for Motor {
-    type Output = FlectorAtInfinity;
+    type Output = PointAtInfinity;
 
-    fn sandwich(self, other: PointAtInfinity) -> FlectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: PointAtInfinity) -> PointAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -844,9 +844,9 @@ impl Sandwich<Rotor> for Motor {
 }
 
 impl Sandwich<Translator> for Motor {
-    type Output = Motor;
+    type Output = Translator;
 
-    fn sandwich(self, other: Translator) -> Motor {
+    fn sandwich(self, other: Translator) -> Translator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -860,18 +860,18 @@ impl Sandwich<Flector> for MultiVector {
 }
 
 impl Sandwich<FlectorAtInfinity> for MultiVector {
-    type Output = MultiVectorAtInfinity;
+    type Output = FlectorAtInfinity;
 
-    fn sandwich(self, other: FlectorAtInfinity) -> MultiVectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
 impl Sandwich<Horizon> for MultiVector {
-    type Output = MultiVectorAtInfinity;
+    type Output = Horizon;
 
-    fn sandwich(self, other: Horizon) -> MultiVectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: Horizon) -> Horizon {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -884,17 +884,17 @@ impl Sandwich<Line> for MultiVector {
 }
 
 impl Sandwich<LineAtInfinity> for MultiVector {
-    type Output = MultiVectorAtInfinity;
+    type Output = LineAtInfinity;
 
-    fn sandwich(self, other: LineAtInfinity) -> MultiVectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
 impl Sandwich<LineAtOrigin> for MultiVector {
-    type Output = Line;
+    type Output = LineAtOrigin;
 
-    fn sandwich(self, other: LineAtOrigin) -> Line {
+    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -932,9 +932,9 @@ impl Sandwich<MultiVectorAtOrigin> for MultiVector {
 }
 
 impl Sandwich<Origin> for MultiVector {
-    type Output = Point;
+    type Output = Origin;
 
-    fn sandwich(self, other: Origin) -> Point {
+    fn sandwich(self, other: Origin) -> Origin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -948,9 +948,9 @@ impl Sandwich<Plane> for MultiVector {
 }
 
 impl Sandwich<PlaneAtOrigin> for MultiVector {
-    type Output = Plane;
+    type Output = PlaneAtOrigin;
 
-    fn sandwich(self, other: PlaneAtOrigin) -> Plane {
+    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -964,25 +964,25 @@ impl Sandwich<Point> for MultiVector {
 }
 
 impl Sandwich<PointAtInfinity> for MultiVector {
-    type Output = MultiVectorAtInfinity;
+    type Output = PointAtInfinity;
 
-    fn sandwich(self, other: PointAtInfinity) -> MultiVectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: PointAtInfinity) -> PointAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
 impl Sandwich<Rotor> for MultiVector {
-    type Output = Motor;
+    type Output = Rotor;
 
-    fn sandwich(self, other: Rotor) -> Motor {
+    fn sandwich(self, other: Rotor) -> Rotor {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
 impl Sandwich<Translator> for MultiVector {
-    type Output = Motor;
+    type Output = Translator;
 
-    fn sandwich(self, other: Translator) -> Motor {
+    fn sandwich(self, other: Translator) -> Translator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -996,18 +996,18 @@ impl Sandwich<Flector> for MultiVectorAtOrigin {
 }
 
 impl Sandwich<FlectorAtInfinity> for MultiVectorAtOrigin {
-    type Output = MultiVectorAtInfinity;
+    type Output = FlectorAtInfinity;
 
-    fn sandwich(self, other: FlectorAtInfinity) -> MultiVectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
 impl Sandwich<Horizon> for MultiVectorAtOrigin {
-    type Output = MultiVectorAtInfinity;
+    type Output = Horizon;
 
-    fn sandwich(self, other: Horizon) -> MultiVectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: Horizon) -> Horizon {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -1020,18 +1020,18 @@ impl Sandwich<Line> for MultiVectorAtOrigin {
 }
 
 impl Sandwich<LineAtInfinity> for MultiVectorAtOrigin {
-    type Output = MultiVectorAtInfinity;
+    type Output = LineAtInfinity;
 
-    fn sandwich(self, other: LineAtInfinity) -> MultiVectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
 impl Sandwich<LineAtOrigin> for MultiVectorAtOrigin {
-    type Output = MultiVectorAtOrigin;
+    type Output = LineAtOrigin;
 
-    fn sandwich(self, other: LineAtOrigin) -> MultiVectorAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -1068,10 +1068,10 @@ impl Sandwich<MultiVectorAtOrigin> for MultiVectorAtOrigin {
 }
 
 impl Sandwich<Origin> for MultiVectorAtOrigin {
-    type Output = MultiVectorAtOrigin;
+    type Output = Origin;
 
-    fn sandwich(self, other: Origin) -> MultiVectorAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: Origin) -> Origin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -1084,10 +1084,10 @@ impl Sandwich<Plane> for MultiVectorAtOrigin {
 }
 
 impl Sandwich<PlaneAtOrigin> for MultiVectorAtOrigin {
-    type Output = MultiVectorAtOrigin;
+    type Output = PlaneAtOrigin;
 
-    fn sandwich(self, other: PlaneAtOrigin) -> MultiVectorAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -1100,25 +1100,25 @@ impl Sandwich<Point> for MultiVectorAtOrigin {
 }
 
 impl Sandwich<PointAtInfinity> for MultiVectorAtOrigin {
-    type Output = MultiVectorAtInfinity;
+    type Output = PointAtInfinity;
 
-    fn sandwich(self, other: PointAtInfinity) -> MultiVectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: PointAtInfinity) -> PointAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
 impl Sandwich<Rotor> for MultiVectorAtOrigin {
-    type Output = MultiVectorAtOrigin;
+    type Output = Rotor;
 
-    fn sandwich(self, other: Rotor) -> MultiVectorAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: Rotor) -> Rotor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
 impl Sandwich<Translator> for MultiVectorAtOrigin {
-    type Output = Motor;
+    type Output = Translator;
 
-    fn sandwich(self, other: Translator) -> Motor {
+    fn sandwich(self, other: Translator) -> Translator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1132,10 +1132,10 @@ impl Sandwich<Flector> for Origin {
 }
 
 impl Sandwich<FlectorAtInfinity> for Origin {
-    type Output = MultiVectorAtInfinity;
+    type Output = FlectorAtInfinity;
 
-    fn sandwich(self, other: FlectorAtInfinity) -> MultiVectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -1244,9 +1244,9 @@ impl Sandwich<PointAtInfinity> for Origin {
 }
 
 impl Sandwich<Rotor> for Origin {
-    type Output = Motor;
+    type Output = Rotor;
 
-    fn sandwich(self, other: Rotor) -> Motor {
+    fn sandwich(self, other: Rotor) -> Rotor {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1268,18 +1268,18 @@ impl Sandwich<Flector> for Plane {
 }
 
 impl Sandwich<FlectorAtInfinity> for Plane {
-    type Output = MultiVectorAtInfinity;
+    type Output = FlectorAtInfinity;
 
-    fn sandwich(self, other: FlectorAtInfinity) -> MultiVectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
 impl Sandwich<Horizon> for Plane {
-    type Output = FlectorAtInfinity;
+    type Output = Horizon;
 
-    fn sandwich(self, other: Horizon) -> FlectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: Horizon) -> Horizon {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -1292,17 +1292,17 @@ impl Sandwich<Line> for Plane {
 }
 
 impl Sandwich<LineAtInfinity> for Plane {
-    type Output = MultiVectorAtInfinity;
+    type Output = LineAtInfinity;
 
-    fn sandwich(self, other: LineAtInfinity) -> MultiVectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
 impl Sandwich<LineAtOrigin> for Plane {
-    type Output = Line;
+    type Output = LineAtOrigin;
 
-    fn sandwich(self, other: LineAtOrigin) -> Line {
+    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1340,9 +1340,9 @@ impl Sandwich<MultiVectorAtOrigin> for Plane {
 }
 
 impl Sandwich<Origin> for Plane {
-    type Output = Point;
+    type Output = Origin;
 
-    fn sandwich(self, other: Origin) -> Point {
+    fn sandwich(self, other: Origin) -> Origin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1356,9 +1356,9 @@ impl Sandwich<Plane> for Plane {
 }
 
 impl Sandwich<PlaneAtOrigin> for Plane {
-    type Output = Plane;
+    type Output = PlaneAtOrigin;
 
-    fn sandwich(self, other: PlaneAtOrigin) -> Plane {
+    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1372,25 +1372,25 @@ impl Sandwich<Point> for Plane {
 }
 
 impl Sandwich<PointAtInfinity> for Plane {
-    type Output = MultiVectorAtInfinity;
+    type Output = PointAtInfinity;
 
-    fn sandwich(self, other: PointAtInfinity) -> MultiVectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: PointAtInfinity) -> PointAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
 impl Sandwich<Rotor> for Plane {
-    type Output = Motor;
+    type Output = Rotor;
 
-    fn sandwich(self, other: Rotor) -> Motor {
+    fn sandwich(self, other: Rotor) -> Rotor {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
 impl Sandwich<Translator> for Plane {
-    type Output = Motor;
+    type Output = Translator;
 
-    fn sandwich(self, other: Translator) -> Motor {
+    fn sandwich(self, other: Translator) -> Translator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1404,18 +1404,18 @@ impl Sandwich<Flector> for PlaneAtOrigin {
 }
 
 impl Sandwich<FlectorAtInfinity> for PlaneAtOrigin {
-    type Output = MultiVectorAtInfinity;
+    type Output = FlectorAtInfinity;
 
-    fn sandwich(self, other: FlectorAtInfinity) -> MultiVectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
 impl Sandwich<Horizon> for PlaneAtOrigin {
-    type Output = FlectorAtInfinity;
+    type Output = Horizon;
 
-    fn sandwich(self, other: Horizon) -> FlectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: Horizon) -> Horizon {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -1428,17 +1428,17 @@ impl Sandwich<Line> for PlaneAtOrigin {
 }
 
 impl Sandwich<LineAtInfinity> for PlaneAtOrigin {
-    type Output = MultiVectorAtInfinity;
+    type Output = LineAtInfinity;
 
-    fn sandwich(self, other: LineAtInfinity) -> MultiVectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
 impl Sandwich<LineAtOrigin> for PlaneAtOrigin {
-    type Output = Line;
+    type Output = LineAtOrigin;
 
-    fn sandwich(self, other: LineAtOrigin) -> Line {
+    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1476,9 +1476,9 @@ impl Sandwich<MultiVectorAtOrigin> for PlaneAtOrigin {
 }
 
 impl Sandwich<Origin> for PlaneAtOrigin {
-    type Output = Point;
+    type Output = Origin;
 
-    fn sandwich(self, other: Origin) -> Point {
+    fn sandwich(self, other: Origin) -> Origin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1492,9 +1492,9 @@ impl Sandwich<Plane> for PlaneAtOrigin {
 }
 
 impl Sandwich<PlaneAtOrigin> for PlaneAtOrigin {
-    type Output = Plane;
+    type Output = PlaneAtOrigin;
 
-    fn sandwich(self, other: PlaneAtOrigin) -> Plane {
+    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1508,25 +1508,25 @@ impl Sandwich<Point> for PlaneAtOrigin {
 }
 
 impl Sandwich<PointAtInfinity> for PlaneAtOrigin {
-    type Output = MultiVectorAtInfinity;
+    type Output = PointAtInfinity;
 
-    fn sandwich(self, other: PointAtInfinity) -> MultiVectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: PointAtInfinity) -> PointAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
 impl Sandwich<Rotor> for PlaneAtOrigin {
-    type Output = Motor;
+    type Output = Rotor;
 
-    fn sandwich(self, other: Rotor) -> Motor {
+    fn sandwich(self, other: Rotor) -> Rotor {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
 impl Sandwich<Translator> for PlaneAtOrigin {
-    type Output = Motor;
+    type Output = Translator;
 
-    fn sandwich(self, other: Translator) -> Motor {
+    fn sandwich(self, other: Translator) -> Translator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1540,10 +1540,10 @@ impl Sandwich<Flector> for Point {
 }
 
 impl Sandwich<FlectorAtInfinity> for Point {
-    type Output = MultiVectorAtInfinity;
+    type Output = FlectorAtInfinity;
 
-    fn sandwich(self, other: FlectorAtInfinity) -> MultiVectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -1572,9 +1572,9 @@ impl Sandwich<LineAtInfinity> for Point {
 }
 
 impl Sandwich<LineAtOrigin> for Point {
-    type Output = Line;
+    type Output = LineAtOrigin;
 
-    fn sandwich(self, other: LineAtOrigin) -> Line {
+    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1612,10 +1612,10 @@ impl Sandwich<MultiVectorAtOrigin> for Point {
 }
 
 impl Sandwich<Origin> for Point {
-    type Output = Point;
+    type Output = Origin;
 
-    fn sandwich(self, other: Origin) -> Point {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: Origin) -> Origin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -1628,9 +1628,9 @@ impl Sandwich<Plane> for Point {
 }
 
 impl Sandwich<PlaneAtOrigin> for Point {
-    type Output = Plane;
+    type Output = PlaneAtOrigin;
 
-    fn sandwich(self, other: PlaneAtOrigin) -> Plane {
+    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1652,9 +1652,9 @@ impl Sandwich<PointAtInfinity> for Point {
 }
 
 impl Sandwich<Rotor> for Point {
-    type Output = Motor;
+    type Output = Rotor;
 
-    fn sandwich(self, other: Rotor) -> Motor {
+    fn sandwich(self, other: Rotor) -> Rotor {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1684,10 +1684,10 @@ impl Sandwich<FlectorAtInfinity> for Rotor {
 }
 
 impl Sandwich<Horizon> for Rotor {
-    type Output = FlectorAtInfinity;
+    type Output = Horizon;
 
-    fn sandwich(self, other: Horizon) -> FlectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: Horizon) -> Horizon {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -1700,18 +1700,18 @@ impl Sandwich<Line> for Rotor {
 }
 
 impl Sandwich<LineAtInfinity> for Rotor {
-    type Output = MultiVectorAtInfinity;
+    type Output = LineAtInfinity;
 
-    fn sandwich(self, other: LineAtInfinity) -> MultiVectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
 impl Sandwich<LineAtOrigin> for Rotor {
-    type Output = Rotor;
+    type Output = LineAtOrigin;
 
-    fn sandwich(self, other: LineAtOrigin) -> Rotor {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -1748,9 +1748,9 @@ impl Sandwich<MultiVectorAtOrigin> for Rotor {
 }
 
 impl Sandwich<Origin> for Rotor {
-    type Output = Point;
+    type Output = Origin;
 
-    fn sandwich(self, other: Origin) -> Point {
+    fn sandwich(self, other: Origin) -> Origin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1764,9 +1764,9 @@ impl Sandwich<Plane> for Rotor {
 }
 
 impl Sandwich<PlaneAtOrigin> for Rotor {
-    type Output = Plane;
+    type Output = PlaneAtOrigin;
 
-    fn sandwich(self, other: PlaneAtOrigin) -> Plane {
+    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1780,10 +1780,10 @@ impl Sandwich<Point> for Rotor {
 }
 
 impl Sandwich<PointAtInfinity> for Rotor {
-    type Output = FlectorAtInfinity;
+    type Output = PointAtInfinity;
 
-    fn sandwich(self, other: PointAtInfinity) -> FlectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: PointAtInfinity) -> PointAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -1796,9 +1796,9 @@ impl Sandwich<Rotor> for Rotor {
 }
 
 impl Sandwich<Translator> for Rotor {
-    type Output = Motor;
+    type Output = Translator;
 
-    fn sandwich(self, other: Translator) -> Motor {
+    fn sandwich(self, other: Translator) -> Translator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1948,9 +1948,9 @@ impl PointInversion<Flector> for Point {
 }
 
 impl PointInversion<FlectorAtInfinity> for Point {
-    type Output = MultiVectorAtInfinity;
+    type Output = FlectorAtInfinity;
 
-    fn point_inversion(self, other: FlectorAtInfinity) -> MultiVectorAtInfinity {
+    fn point_inversion(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
         self.unitize().sandwich(other)
     }
 }
@@ -1980,9 +1980,9 @@ impl PointInversion<LineAtInfinity> for Point {
 }
 
 impl PointInversion<LineAtOrigin> for Point {
-    type Output = Line;
+    type Output = LineAtOrigin;
 
-    fn point_inversion(self, other: LineAtOrigin) -> Line {
+    fn point_inversion(self, other: LineAtOrigin) -> LineAtOrigin {
         self.unitize().sandwich(other)
     }
 }
@@ -2020,9 +2020,9 @@ impl PointInversion<MultiVectorAtOrigin> for Point {
 }
 
 impl PointInversion<Origin> for Point {
-    type Output = Point;
+    type Output = Origin;
 
-    fn point_inversion(self, other: Origin) -> Point {
+    fn point_inversion(self, other: Origin) -> Origin {
         self.unitize().sandwich(other)
     }
 }
@@ -2036,9 +2036,9 @@ impl PointInversion<Plane> for Point {
 }
 
 impl PointInversion<PlaneAtOrigin> for Point {
-    type Output = Plane;
+    type Output = PlaneAtOrigin;
 
-    fn point_inversion(self, other: PlaneAtOrigin) -> Plane {
+    fn point_inversion(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
         self.unitize().sandwich(other)
     }
 }
@@ -2060,9 +2060,9 @@ impl PointInversion<PointAtInfinity> for Point {
 }
 
 impl PointInversion<Rotor> for Point {
-    type Output = Motor;
+    type Output = Rotor;
 
-    fn point_inversion(self, other: Rotor) -> Motor {
+    fn point_inversion(self, other: Rotor) -> Rotor {
         self.unitize().sandwich(other)
     }
 }
@@ -2084,17 +2084,17 @@ impl Reflect<Flector> for Plane {
 }
 
 impl Reflect<FlectorAtInfinity> for Plane {
-    type Output = MultiVectorAtInfinity;
+    type Output = FlectorAtInfinity;
 
-    fn reflect(self, other: FlectorAtInfinity) -> MultiVectorAtInfinity {
+    fn reflect(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
         self.unitize().sandwich(other)
     }
 }
 
 impl Reflect<Horizon> for Plane {
-    type Output = FlectorAtInfinity;
+    type Output = Horizon;
 
-    fn reflect(self, other: Horizon) -> FlectorAtInfinity {
+    fn reflect(self, other: Horizon) -> Horizon {
         self.unitize().sandwich(other)
     }
 }
@@ -2108,17 +2108,17 @@ impl Reflect<Line> for Plane {
 }
 
 impl Reflect<LineAtInfinity> for Plane {
-    type Output = MultiVectorAtInfinity;
+    type Output = LineAtInfinity;
 
-    fn reflect(self, other: LineAtInfinity) -> MultiVectorAtInfinity {
+    fn reflect(self, other: LineAtInfinity) -> LineAtInfinity {
         self.unitize().sandwich(other)
     }
 }
 
 impl Reflect<LineAtOrigin> for Plane {
-    type Output = Line;
+    type Output = LineAtOrigin;
 
-    fn reflect(self, other: LineAtOrigin) -> Line {
+    fn reflect(self, other: LineAtOrigin) -> LineAtOrigin {
         self.unitize().sandwich(other)
     }
 }
@@ -2156,9 +2156,9 @@ impl Reflect<MultiVectorAtOrigin> for Plane {
 }
 
 impl Reflect<Origin> for Plane {
-    type Output = Point;
+    type Output = Origin;
 
-    fn reflect(self, other: Origin) -> Point {
+    fn reflect(self, other: Origin) -> Origin {
         self.unitize().sandwich(other)
     }
 }
@@ -2172,9 +2172,9 @@ impl Reflect<Plane> for Plane {
 }
 
 impl Reflect<PlaneAtOrigin> for Plane {
-    type Output = Plane;
+    type Output = PlaneAtOrigin;
 
-    fn reflect(self, other: PlaneAtOrigin) -> Plane {
+    fn reflect(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
         self.unitize().sandwich(other)
     }
 }
@@ -2188,25 +2188,25 @@ impl Reflect<Point> for Plane {
 }
 
 impl Reflect<PointAtInfinity> for Plane {
-    type Output = MultiVectorAtInfinity;
+    type Output = PointAtInfinity;
 
-    fn reflect(self, other: PointAtInfinity) -> MultiVectorAtInfinity {
+    fn reflect(self, other: PointAtInfinity) -> PointAtInfinity {
         self.unitize().sandwich(other)
     }
 }
 
 impl Reflect<Rotor> for Plane {
-    type Output = Motor;
+    type Output = Rotor;
 
-    fn reflect(self, other: Rotor) -> Motor {
+    fn reflect(self, other: Rotor) -> Rotor {
         self.unitize().sandwich(other)
     }
 }
 
 impl Reflect<Translator> for Plane {
-    type Output = Motor;
+    type Output = Translator;
 
-    fn reflect(self, other: Translator) -> Motor {
+    fn reflect(self, other: Translator) -> Translator {
         self.unitize().sandwich(other)
     }
 }

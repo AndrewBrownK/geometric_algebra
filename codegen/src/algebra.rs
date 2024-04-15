@@ -384,13 +384,13 @@ impl Display for Product {
 
 #[derive(Default)]
 pub struct MultiVectorClassRegistry {
-    pub classes: Vec<(MultiVectorClass, Option<String>)>,
+    pub classes: Vec<MultiVectorClass>,
     index_by_signature: std::collections::HashMap<Vec<BasisElementIndex>, usize>,
 }
 
 impl MultiVectorClassRegistry {
     pub fn single_parameters<'r>(&'r self) -> impl Iterator<Item = Parameter<'r>> {
-        self.classes.iter().map(|(class_a, _)| Parameter {
+        self.classes.iter().map(|class_a| Parameter {
             name: "self",
             data_type: DataType::MultiVector(class_a),
         })
@@ -398,12 +398,12 @@ impl MultiVectorClassRegistry {
     pub fn pair_parameters(&self) -> impl Iterator<Item = (Parameter, Parameter)> {
         self.classes
             .iter()
-            .map(|(class_a, _)| {
+            .map(|class_a| {
                 let param_a = Parameter {
                     name: "self",
                     data_type: DataType::MultiVector(class_a),
                 };
-                self.classes.iter().map(move |(class_b, _)| {
+                self.classes.iter().map(move |class_b| {
                     let param_b = Parameter {
                         name: "other",
                         data_type: DataType::MultiVector(class_b),
@@ -418,30 +418,11 @@ impl MultiVectorClassRegistry {
 impl MultiVectorClassRegistry {
     pub fn register(&mut self, class: MultiVectorClass) {
         self.index_by_signature.insert(class.signature(), self.classes.len());
-        self.classes.push((class, None));
-    }
-
-    pub fn register_with_superclass(&mut self, class: MultiVectorClass, superclass: String) {
-        self.index_by_signature.insert(class.signature(), self.classes.len());
-        self.classes.push((class, Some(superclass)));
-    }
-
-    // TODO currently this superclass concept is working decently well, it is intended for Sandwich product
-    //  isometries where an object might start at the origin or horizon, but not end there. However maybe you
-    //  Rotor sandwich LineAtOrigin and that should still be LineAtOrigin, or Translator sandwich Horizon and
-    //  that should still be Horizon. So I think this could still use some refinement, and/or a totally different
-    //  approach.
-    pub fn get_preferring_superclass(&self, signature: &[BasisElementIndex]) -> Option<&MultiVectorClass> {
-        let index = self.index_by_signature.get(signature)?;
-        let matched = &self.classes[*index];
-        if let Some(superclass) = &matched.1 {
-            return self.classes.iter().find(|it| it.0.class_name == *superclass).map(|it| &it.0);
-        }
-        return Some(&matched.0);
+        self.classes.push(class);
     }
 
     pub fn get_exact(&self, signature: &[BasisElementIndex]) -> Option<&MultiVectorClass> {
-        self.index_by_signature.get(signature).map(|index| &self.classes[*index].0)
+        self.index_by_signature.get(signature).map(|index| &self.classes[*index])
     }
 
     pub fn get_at_least(&self, signature: &[BasisElementIndex]) -> Option<&MultiVectorClass> {
@@ -457,12 +438,12 @@ impl MultiVectorClassRegistry {
             .classes
             .iter()
             .filter(|it| {
-                let sig = it.0.signature();
+                let sig = it.signature();
                 signature.iter().all(|it| sig.contains(it))
             })
             .collect();
-        viable_classes.sort_by_key(|it| it.0.signature().len());
-        result_class = viable_classes.first().map(|it| &it.0);
+        viable_classes.sort_by_key(|it| it.signature().len());
+        result_class = viable_classes.first().map(|it| *it);
         return result_class
     }
 }
@@ -473,15 +454,9 @@ pub struct MultiVectorClass {
     pub grouped_basis: Vec<Vec<BasisElement>>,
 }
 
-pub fn read_multi_vector_from_str<GA: GeometricAlgebraTrait>(multi_vector_descriptor: &str, algebra: &GA) -> (MultiVectorClass, Option<String>) {
+pub fn read_multi_vector_from_str<GA: GeometricAlgebraTrait>(multi_vector_descriptor: &str, algebra: &GA) -> MultiVectorClass {
     let mut multi_vector_descriptor_iter = multi_vector_descriptor.split(':');
     let mut class_name = multi_vector_descriptor_iter.next().unwrap().to_owned();
-    let mut superclass_name = None;
-    if class_name.contains('/') {
-        let mut split = class_name.split('/').map(|it| it.to_string());
-        superclass_name = split.next();
-        class_name = split.next().unwrap();
-    }
     let mvc = MultiVectorClass {
         class_name,
         grouped_basis: multi_vector_descriptor_iter
@@ -491,5 +466,5 @@ pub fn read_multi_vector_from_str<GA: GeometricAlgebraTrait>(multi_vector_descri
             .map(|group_descriptor| group_descriptor.split(',').map(|element_name| algebra.parse(element_name)).collect::<Vec<_>>())
             .collect::<Vec<_>>(),
     };
-    (mvc, superclass_name)
+    mvc
 }

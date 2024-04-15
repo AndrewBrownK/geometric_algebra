@@ -320,8 +320,8 @@ pub fn derive_involution<'a>(name: &'static str, involution: &Involution, parame
     }
     result_signature.sort_unstable();
     let mut result_candidates: Vec<_> = registry.classes.iter().filter_map(|it| {
-        let rc_fb: Vec<_> = it.0.flat_basis().iter().map(|it| it.index).collect();
-        if result_signature.iter().all(|it| rc_fb.contains(&it)) { Some(&it.0) } else { None }
+        let rc_fb: Vec<_> = it.flat_basis().iter().map(|it| it.index).collect();
+        if result_signature.iter().all(|it| rc_fb.contains(&it)) { Some(it) } else { None }
     }).collect();
     result_candidates.sort_by(|a, b| a.flat_basis().len().cmp(&b.flat_basis().len()));
 
@@ -1329,7 +1329,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let _: Option<()> = try {
                 let dot = self.algebra.dialect().dot_product.first()?;
                 let dot = self.trait_impls.get_pair_invocation(dot, variable(&param_a), variable(&param_a))?;
-                let scalar_type = registry.classes.iter().map(|it| &it.0).find(|it| it.class_name == "Scalar")?;
+                let scalar_type = registry.classes.iter().find(|it| it.class_name == "Scalar")?;
                 let one = self.trait_impls.get_class_invocation("One", scalar_type)?;
                 let inverse_norm_squared = self.trait_impls.get_pair_invocation("Div", one, dot)?;
                 let product = self.algebra.dialect().geometric_product.first()?;
@@ -1345,7 +1345,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let _: Option<()> = try {
                 let dot = self.algebra.dialect().anti_dot_product.first()?;
                 let dot = self.trait_impls.get_pair_invocation(dot, variable(&param_a), variable(&param_a))?;
-                let scalar_type = registry.classes.iter().map(|it| &it.0).find(|it| it.class_name == "AntiScalar")?;
+                let scalar_type = registry.classes.iter().find(|it| it.class_name == "AntiScalar")?;
                 let one = self.trait_impls.get_class_invocation("One", scalar_type)?;
                 let inverse_norm_squared = self.trait_impls.get_pair_invocation("Div", one, dot)?;
                 let product = self.algebra.dialect().geometric_anti_product.first()?;
@@ -1865,7 +1865,10 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     }
 
     /// Step 4: Create some more stuff that depends on norms
-    pub fn post_norm_universal_stuff<'s>(&'s mut self, registry: &'r MultiVectorClassRegistry) {
+    pub fn post_norm_universal_stuff<'s>(
+        &'s mut self, registry: &'r MultiVectorClassRegistry,
+        sandwich_outputs: &BTreeMap<(&str, &str), &str>,
+    ) {
 
         // Unitize
         for (param_a, param_b) in registry.pair_parameters() {
@@ -1892,7 +1895,11 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             // if !allowed_to_sandwich.contains(&param_a.multi_vector_class().class_name.as_str()) {
             //     continue
             // }
-            if disallowed_to_be_sandwiched.contains(&param_b.multi_vector_class().class_name.as_str()) {
+            let class_a = param_a.multi_vector_class();
+            let class_b = param_b.multi_vector_class();
+            let class_b_name = class_b.class_name.as_str();
+            let class_a_name = class_a.class_name.as_str();
+            if disallowed_to_be_sandwiched.contains(&class_b_name) {
                 continue;
             }
             let _: Option<()> = try {
@@ -1901,7 +1908,10 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let (reversal, reversal_r) = self.trait_impls.get_single_impl_and_result("AntiReversal", &param_a)?;
                 let (gp2, gp2_r) = self.trait_impls.get_pair_impl_and_result(gap, &gp_r, &reversal_r)?;
 
-                let result_class = registry.get_preferring_superclass(param_b.multi_vector_class().signature().as_slice()).unwrap();
+                let result_class = match sandwich_outputs.get(&(class_a_name, class_b_name)) {
+                    Some(rc) => registry.classes.iter().find(|it| it.class_name.as_str() == *rc).unwrap_or_else(|| class_b),
+                    None => class_b,
+                };
                 let result_param = Parameter {
                     name: "other",
                     data_type: DataType::MultiVector(result_class),
@@ -2305,7 +2315,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         for param_a in registry.single_parameters() {
             let name = "Attitude";
             let _: Option<()> = try {
-                let horizon = &registry.classes.iter().find(|it| it.0.class_name == horizon_class_name)?.0;
+                let horizon = registry.classes.iter().find(|it| it.class_name == horizon_class_name)?;
                 let one = self.trait_impls.get_class_invocation("One", horizon)?;
                 let anti_wedge = self.algebra.dialect().exterior_anti_product.first()?;
                 let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_a), one)?;
@@ -2345,7 +2355,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             // The object is round
 
             let one_infinity: Option<Expression> = try {
-                let infinity = registry.classes.iter().map(|it| &it.0).find(|it| it.class_name == "Infinity")?;
+                let infinity = registry.classes.iter().find(|it| it.class_name == "Infinity")?;
                 let one_infinity = self.trait_impls.get_class_invocation("One", infinity)?;
                 one_infinity
             };
@@ -2433,7 +2443,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         // TODO give each class it's own module because shit's getting crazy at a 56k line lib.rs for cga
 
         // Class Definitions
-        for (class, _) in registry.classes.iter() {
+        for class in registry.classes.iter() {
             if class.class_name == "Origin" && self.algebra.algebra_name().contains("rga") {
                 emitter.emit(&AstNode::TypeAlias("PointAtOrigin".to_string(), "Origin".to_string()))?;
             }

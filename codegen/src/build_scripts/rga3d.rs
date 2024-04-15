@@ -27,19 +27,19 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         "AntiScalar:e1234",
         "Magnitude:1,e1234",
         "Point:e1,e2,e3,e4",
-        "Point/Origin:e4",
-        "Point/PointAtInfinity:e1,e2,e3",
+        "Origin:e4",
+        "PointAtInfinity:e1,e2,e3",
         "Line:e41,e42,e43|e23,e31,e12",
-        "Line/LineAtOrigin:e41,e42,e43",
-        "Line/LineAtInfinity:e23,e31,e12",
+        "LineAtOrigin:e41,e42,e43",
+        "LineAtInfinity:e23,e31,e12",
         "Plane:e423,e431,e412,e321",
-        "Plane/PlaneAtOrigin:e423,e431,e412",
-        "Plane/Horizon:e321",
+        "PlaneAtOrigin:e423,e431,e412",
+        "Horizon:e321",
         "Motor:e41,e42,e43,e1234|e23,e31,e12",
-        "Motor/Rotor:e41,e42,e43,e1234",
-        "Motor/Translator:e23,e31,e12,e1234",
+        "Rotor:e41,e42,e43,e1234",
+        "Translator:e23,e31,e12,e1234",
         "Flector:e1,e2,e3,e4|e423,e431,e412,e321",
-        "Flector/FlectorAtInfinity:e1,e2,e3,e321",
+        "FlectorAtInfinity:e1,e2,e3,e321",
         "MultiVector:\
             1,e1234|\
             e1,e2,e3,e4|\
@@ -52,6 +52,7 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
     // On sandwich products, assume that the output
     // class is the same as the input class, unless it is
     // in the following guide
+    // TODO add more of these if necessary
     let sandwich_outputs: BTreeMap<(&str, &str), &str> = [
 
         // Rotations of objects at origin are still objects at origin
@@ -79,6 +80,19 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         (("Motor", "PlaneAtOrigin"), "Plane"),
         (("Motor", "Rotor"), "Motor"),
 
+        // Flectors move stuff too
+
+        (("Flector", "Origin"), "Point"),
+        (("Flector", "LineAtOrigin"), "Line"),
+        (("Flector", "PlaneAtOrigin"), "Plane"),
+        (("Flector", "Rotor"), "Motor"),
+
+        (("FlectorAtInfinity", "Origin"), "Point"),
+        (("FlectorAtInfinity", "LineAtOrigin"), "Line"),
+        (("FlectorAtInfinity", "PlaneAtOrigin"), "Plane"),
+        (("FlectorAtInfinity", "Rotor"), "Motor"),
+
+
     ].into_iter().collect();
 
     // Arbitrary personal preference for dialect
@@ -92,18 +106,13 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
 
     let mut registry = MultiVectorClassRegistry::default();
     for multi_vector_descriptor in mv_iter {
-        let (mv, sc) = read_multi_vector_from_str(multi_vector_descriptor, &rga3d);
-        if let Some(sc) = sc {
-            registry.register_with_superclass(mv, sc);
-        } else {
-            registry.register(mv);
-        }
+        registry.register(read_multi_vector_from_str(multi_vector_descriptor, &rga3d));
     }
 
     let mut code_gen = CodeGenerator::new(rga3d);
     code_gen.preamble_and_universal_traits(&registry).unwrap();
     code_gen.basic_norms(&registry);
-    code_gen.post_norm_universal_stuff(&registry);
+    code_gen.post_norm_universal_stuff(&registry, &sandwich_outputs);
     code_gen.attitude_and_dependencies("Horizon", &registry);
 
     let mut file_path = Path::new("src/").to_path_buf();
