@@ -225,6 +225,14 @@ impl GeometricAntiQuotient<Sphere> for AntiScalar {
     }
 }
 
+impl GeometricAntiQuotient<TransFlector> for AntiScalar {
+    type Output = TransFlector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> TransFlector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Translator> for AntiScalar {
     type Output = Translator;
 
@@ -429,6 +437,14 @@ impl GeometricAntiQuotient<Sphere> for Circle {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<TransFlector> for Circle {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -641,6 +657,14 @@ impl GeometricAntiQuotient<Sphere> for CircleBulk {
     }
 }
 
+impl GeometricAntiQuotient<TransFlector> for CircleBulk {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Translator> for CircleBulk {
     type Output = Circle;
 
@@ -845,6 +869,14 @@ impl GeometricAntiQuotient<Sphere> for CircleCarrierAspect {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<TransFlector> for CircleCarrierAspect {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -1057,6 +1089,14 @@ impl GeometricAntiQuotient<Sphere> for CircleWeight {
     }
 }
 
+impl GeometricAntiQuotient<TransFlector> for CircleWeight {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Translator> for CircleWeight {
     type Output = MultiVector;
 
@@ -1261,6 +1301,14 @@ impl GeometricAntiQuotient<Sphere> for Dipole {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<TransFlector> for Dipole {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -1473,6 +1521,14 @@ impl GeometricAntiQuotient<Sphere> for DipoleBulk {
     }
 }
 
+impl GeometricAntiQuotient<TransFlector> for DipoleBulk {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Translator> for DipoleBulk {
     type Output = MultiVector;
 
@@ -1677,6 +1733,14 @@ impl GeometricAntiQuotient<Sphere> for DipoleCarrierAspect {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<TransFlector> for DipoleCarrierAspect {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -1889,6 +1953,14 @@ impl GeometricAntiQuotient<Sphere> for DipoleWeight {
     }
 }
 
+impl GeometricAntiQuotient<TransFlector> for DipoleWeight {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Translator> for DipoleWeight {
     type Output = MultiVector;
 
@@ -1978,17 +2050,17 @@ impl GeometricAntiQuotient<Flector> for FlatPoint {
 }
 
 impl GeometricAntiQuotient<Line> for FlatPoint {
-    type Output = Flector;
+    type Output = TransFlector;
 
-    fn geometric_anti_quotient(self, other: Line) -> Flector {
+    fn geometric_anti_quotient(self, other: Line) -> TransFlector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
 
 impl GeometricAntiQuotient<LineAtOrigin> for FlatPoint {
-    type Output = Flector;
+    type Output = TransFlector;
 
-    fn geometric_anti_quotient(self, other: LineAtOrigin) -> Flector {
+    fn geometric_anti_quotient(self, other: LineAtOrigin) -> TransFlector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -2093,6 +2165,14 @@ impl GeometricAntiQuotient<Sphere> for FlatPoint {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<TransFlector> for FlatPoint {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -2305,6 +2385,14 @@ impl GeometricAntiQuotient<Sphere> for FlatPointAtInfinity {
     }
 }
 
+impl GeometricAntiQuotient<TransFlector> for FlatPointAtInfinity {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Translator> for FlatPointAtInfinity {
     type Output = FlatPointAtInfinity;
 
@@ -2394,9 +2482,9 @@ impl GeometricAntiQuotient<Flector> for FlatPointAtOrigin {
 }
 
 impl GeometricAntiQuotient<Line> for FlatPointAtOrigin {
-    type Output = Flector;
+    type Output = TransFlector;
 
-    fn geometric_anti_quotient(self, other: Line) -> Flector {
+    fn geometric_anti_quotient(self, other: Line) -> TransFlector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -2509,6 +2597,14 @@ impl GeometricAntiQuotient<Sphere> for FlatPointAtOrigin {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<TransFlector> for FlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -2721,6 +2817,14 @@ impl GeometricAntiQuotient<Sphere> for Flector {
     }
 }
 
+impl GeometricAntiQuotient<TransFlector> for Flector {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Translator> for Flector {
     type Output = Flector;
 
@@ -2925,6 +3029,14 @@ impl GeometricAntiQuotient<Sphere> for FlectorAtInfinity {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<TransFlector> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -3137,6 +3249,14 @@ impl GeometricAntiQuotient<Sphere> for Horizon {
     }
 }
 
+impl GeometricAntiQuotient<TransFlector> for Horizon {
+    type Output = LineAtInfinity;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> LineAtInfinity {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Translator> for Horizon {
     type Output = Horizon;
 
@@ -3345,6 +3465,14 @@ impl GeometricAntiQuotient<Sphere> for Infinity {
     }
 }
 
+impl GeometricAntiQuotient<TransFlector> for Infinity {
+    type Output = FlatPointAtInfinity;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> FlatPointAtInfinity {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Translator> for Infinity {
     type Output = Infinity;
 
@@ -3410,17 +3538,17 @@ impl GeometricAntiQuotient<DipoleCarrierAspect> for Line {
 }
 
 impl GeometricAntiQuotient<FlatPoint> for Line {
-    type Output = Flector;
+    type Output = TransFlector;
 
-    fn geometric_anti_quotient(self, other: FlatPoint) -> Flector {
+    fn geometric_anti_quotient(self, other: FlatPoint) -> TransFlector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
 
 impl GeometricAntiQuotient<FlatPointAtOrigin> for Line {
-    type Output = Flector;
+    type Output = TransFlector;
 
-    fn geometric_anti_quotient(self, other: FlatPointAtOrigin) -> Flector {
+    fn geometric_anti_quotient(self, other: FlatPointAtOrigin) -> TransFlector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -3549,6 +3677,14 @@ impl GeometricAntiQuotient<Sphere> for Line {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<TransFlector> for Line {
+    type Output = Flector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> Flector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -3761,6 +3897,14 @@ impl GeometricAntiQuotient<Sphere> for LineAtInfinity {
     }
 }
 
+impl GeometricAntiQuotient<TransFlector> for LineAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> FlectorAtInfinity {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Translator> for LineAtInfinity {
     type Output = LineAtInfinity;
 
@@ -3826,9 +3970,9 @@ impl GeometricAntiQuotient<DipoleCarrierAspect> for LineAtOrigin {
 }
 
 impl GeometricAntiQuotient<FlatPoint> for LineAtOrigin {
-    type Output = Flector;
+    type Output = TransFlector;
 
-    fn geometric_anti_quotient(self, other: FlatPoint) -> Flector {
+    fn geometric_anti_quotient(self, other: FlatPoint) -> TransFlector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -3965,6 +4109,14 @@ impl GeometricAntiQuotient<Sphere> for LineAtOrigin {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<TransFlector> for LineAtOrigin {
+    type Output = Flector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> Flector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -4177,6 +4329,14 @@ impl GeometricAntiQuotient<Sphere> for Magnitude {
     }
 }
 
+impl GeometricAntiQuotient<TransFlector> for Magnitude {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Translator> for Magnitude {
     type Output = MultiVector;
 
@@ -4381,6 +4541,14 @@ impl GeometricAntiQuotient<Sphere> for Motor {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<TransFlector> for Motor {
+    type Output = Flector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> Flector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -4593,6 +4761,14 @@ impl GeometricAntiQuotient<Sphere> for MultiVector {
     }
 }
 
+impl GeometricAntiQuotient<TransFlector> for MultiVector {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Translator> for MultiVector {
     type Output = MultiVector;
 
@@ -4797,6 +4973,14 @@ impl GeometricAntiQuotient<Sphere> for Origin {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<TransFlector> for Origin {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -5009,10 +5193,18 @@ impl GeometricAntiQuotient<Sphere> for Plane {
     }
 }
 
-impl GeometricAntiQuotient<Translator> for Plane {
-    type Output = Flector;
+impl GeometricAntiQuotient<TransFlector> for Plane {
+    type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: Translator) -> Flector {
+    fn geometric_anti_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<Translator> for Plane {
+    type Output = TransFlector;
+
+    fn geometric_anti_quotient(self, other: Translator) -> TransFlector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -5217,10 +5409,18 @@ impl GeometricAntiQuotient<Sphere> for PlaneAtOrigin {
     }
 }
 
-impl GeometricAntiQuotient<Translator> for PlaneAtOrigin {
-    type Output = Flector;
+impl GeometricAntiQuotient<TransFlector> for PlaneAtOrigin {
+    type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: Translator) -> Flector {
+    fn geometric_anti_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<Translator> for PlaneAtOrigin {
+    type Output = TransFlector;
+
+    fn geometric_anti_quotient(self, other: Translator) -> TransFlector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -5421,6 +5621,14 @@ impl GeometricAntiQuotient<Sphere> for Rotor {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<TransFlector> for Rotor {
+    type Output = Flector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> Flector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -5633,6 +5841,14 @@ impl GeometricAntiQuotient<Sphere> for RoundPoint {
     }
 }
 
+impl GeometricAntiQuotient<TransFlector> for RoundPoint {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Translator> for RoundPoint {
     type Output = MultiVector;
 
@@ -5837,6 +6053,14 @@ impl GeometricAntiQuotient<Sphere> for RoundPointAtInfinity {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<TransFlector> for RoundPointAtInfinity {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -6049,6 +6273,14 @@ impl GeometricAntiQuotient<Sphere> for RoundPointAtOrigin {
     }
 }
 
+impl GeometricAntiQuotient<TransFlector> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Translator> for RoundPointAtOrigin {
     type Output = MultiVector;
 
@@ -6253,6 +6485,14 @@ impl GeometricAntiQuotient<Sphere> for RoundPointBulk {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<TransFlector> for RoundPointBulk {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -6465,6 +6705,14 @@ impl GeometricAntiQuotient<Sphere> for RoundPointCarrierAspect {
     }
 }
 
+impl GeometricAntiQuotient<TransFlector> for RoundPointCarrierAspect {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Translator> for RoundPointCarrierAspect {
     type Output = MultiVector;
 
@@ -6669,6 +6917,14 @@ impl GeometricAntiQuotient<Sphere> for Scalar {
     type Output = RoundPoint;
 
     fn geometric_anti_quotient(self, other: Sphere) -> RoundPoint {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<TransFlector> for Scalar {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -6881,6 +7137,14 @@ impl GeometricAntiQuotient<Sphere> for Sphere {
     }
 }
 
+impl GeometricAntiQuotient<TransFlector> for Sphere {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Translator> for Sphere {
     type Output = MultiVector;
 
@@ -7089,10 +7353,234 @@ impl GeometricAntiQuotient<Sphere> for SphereWeight {
     }
 }
 
+impl GeometricAntiQuotient<TransFlector> for SphereWeight {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Translator> for SphereWeight {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Translator) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<AntiScalar> for TransFlector {
+    type Output = TransFlector;
+
+    fn geometric_anti_quotient(self, other: AntiScalar) -> TransFlector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<Circle> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: Circle) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<CircleBulk> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: CircleBulk) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<CircleCarrierAspect> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: CircleCarrierAspect) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<Dipole> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: Dipole) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<DipoleBulk> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: DipoleBulk) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<DipoleCarrierAspect> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: DipoleCarrierAspect) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<FlatPoint> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: FlatPoint) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<FlatPointAtOrigin> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: FlatPointAtOrigin) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<Flector> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: Flector) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<Line> for TransFlector {
+    type Output = Flector;
+
+    fn geometric_anti_quotient(self, other: Line) -> Flector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<LineAtOrigin> for TransFlector {
+    type Output = Flector;
+
+    fn geometric_anti_quotient(self, other: LineAtOrigin) -> Flector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<Magnitude> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: Magnitude) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<Motor> for TransFlector {
+    type Output = Flector;
+
+    fn geometric_anti_quotient(self, other: Motor) -> Flector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<MultiVector> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<Plane> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: Plane) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<PlaneAtOrigin> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: PlaneAtOrigin) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<Rotor> for TransFlector {
+    type Output = Flector;
+
+    fn geometric_anti_quotient(self, other: Rotor) -> Flector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<RoundPoint> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: RoundPoint) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<RoundPointAtInfinity> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: RoundPointAtInfinity) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<RoundPointAtOrigin> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: RoundPointAtOrigin) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<RoundPointBulk> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: RoundPointBulk) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<RoundPointCarrierAspect> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<Scalar> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: Scalar) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<Sphere> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<TransFlector> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<Translator> for TransFlector {
+    type Output = TransFlector;
+
+    fn geometric_anti_quotient(self, other: Translator) -> TransFlector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -7218,17 +7706,17 @@ impl GeometricAntiQuotient<MultiVector> for Translator {
 }
 
 impl GeometricAntiQuotient<Plane> for Translator {
-    type Output = Flector;
+    type Output = TransFlector;
 
-    fn geometric_anti_quotient(self, other: Plane) -> Flector {
+    fn geometric_anti_quotient(self, other: Plane) -> TransFlector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
 
 impl GeometricAntiQuotient<PlaneAtOrigin> for Translator {
-    type Output = Flector;
+    type Output = TransFlector;
 
-    fn geometric_anti_quotient(self, other: PlaneAtOrigin) -> Flector {
+    fn geometric_anti_quotient(self, other: PlaneAtOrigin) -> TransFlector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -7293,6 +7781,14 @@ impl GeometricAntiQuotient<Sphere> for Translator {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<TransFlector> for Translator {
+    type Output = TransFlector;
+
+    fn geometric_anti_quotient(self, other: TransFlector) -> TransFlector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -7505,6 +8001,14 @@ impl GeometricQuotient<Sphere> for AntiScalar {
     }
 }
 
+impl GeometricQuotient<TransFlector> for AntiScalar {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Translator> for AntiScalar {
     type Output = MultiVector;
 
@@ -7713,6 +8217,14 @@ impl GeometricQuotient<Sphere> for Circle {
     }
 }
 
+impl GeometricQuotient<TransFlector> for Circle {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Translator> for Circle {
     type Output = MultiVector;
 
@@ -7802,9 +8314,9 @@ impl GeometricQuotient<Flector> for CircleBulk {
 }
 
 impl GeometricQuotient<Line> for CircleBulk {
-    type Output = Flector;
+    type Output = TransFlector;
 
-    fn geometric_quotient(self, other: Line) -> Flector {
+    fn geometric_quotient(self, other: Line) -> TransFlector {
         self.geometric_product(other.inverse())
     }
 }
@@ -7917,6 +8429,14 @@ impl GeometricQuotient<Sphere> for CircleBulk {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<TransFlector> for CircleBulk {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -8129,6 +8649,14 @@ impl GeometricQuotient<Sphere> for CircleCarrierAspect {
     }
 }
 
+impl GeometricQuotient<TransFlector> for CircleCarrierAspect {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Translator> for CircleCarrierAspect {
     type Output = MultiVector;
 
@@ -8333,6 +8861,14 @@ impl GeometricQuotient<Sphere> for CircleWeight {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<TransFlector> for CircleWeight {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -8545,6 +9081,14 @@ impl GeometricQuotient<Sphere> for Dipole {
     }
 }
 
+impl GeometricQuotient<TransFlector> for Dipole {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Translator> for Dipole {
     type Output = MultiVector;
 
@@ -8610,9 +9154,9 @@ impl GeometricQuotient<DipoleCarrierAspect> for DipoleBulk {
 }
 
 impl GeometricQuotient<FlatPoint> for DipoleBulk {
-    type Output = Flector;
+    type Output = TransFlector;
 
-    fn geometric_quotient(self, other: FlatPoint) -> Flector {
+    fn geometric_quotient(self, other: FlatPoint) -> TransFlector {
         self.geometric_product(other.inverse())
     }
 }
@@ -8749,6 +9293,14 @@ impl GeometricQuotient<Sphere> for DipoleBulk {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<TransFlector> for DipoleBulk {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: TransFlector) -> Flector {
         self.geometric_product(other.inverse())
     }
 }
@@ -8961,6 +9513,14 @@ impl GeometricQuotient<Sphere> for DipoleCarrierAspect {
     }
 }
 
+impl GeometricQuotient<TransFlector> for DipoleCarrierAspect {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Translator> for DipoleCarrierAspect {
     type Output = MultiVector;
 
@@ -9169,6 +9729,14 @@ impl GeometricQuotient<Sphere> for DipoleWeight {
     }
 }
 
+impl GeometricQuotient<TransFlector> for DipoleWeight {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Translator> for DipoleWeight {
     type Output = MultiVector;
 
@@ -9218,9 +9786,9 @@ impl GeometricQuotient<Dipole> for FlatPoint {
 }
 
 impl GeometricQuotient<DipoleBulk> for FlatPoint {
-    type Output = Flector;
+    type Output = TransFlector;
 
-    fn geometric_quotient(self, other: DipoleBulk) -> Flector {
+    fn geometric_quotient(self, other: DipoleBulk) -> TransFlector {
         self.geometric_product(other.inverse())
     }
 }
@@ -9373,6 +9941,14 @@ impl GeometricQuotient<Sphere> for FlatPoint {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<TransFlector> for FlatPoint {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -9585,6 +10161,14 @@ impl GeometricQuotient<Sphere> for FlatPointAtInfinity {
     }
 }
 
+impl GeometricQuotient<TransFlector> for FlatPointAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn geometric_quotient(self, other: TransFlector) -> FlectorAtInfinity {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Translator> for FlatPointAtInfinity {
     type Output = LineAtInfinity;
 
@@ -9789,6 +10373,14 @@ impl GeometricQuotient<Sphere> for FlatPointAtOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<TransFlector> for FlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -10001,6 +10593,14 @@ impl GeometricQuotient<Sphere> for Flector {
     }
 }
 
+impl GeometricQuotient<TransFlector> for Flector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Translator> for Flector {
     type Output = MultiVector;
 
@@ -10205,6 +10805,14 @@ impl GeometricQuotient<Sphere> for FlectorAtInfinity {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<TransFlector> for FlectorAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn geometric_quotient(self, other: TransFlector) -> FlectorAtInfinity {
         self.geometric_product(other.inverse())
     }
 }
@@ -10417,6 +11025,14 @@ impl GeometricQuotient<Sphere> for Horizon {
     }
 }
 
+impl GeometricQuotient<TransFlector> for Horizon {
+    type Output = FlatPointAtInfinity;
+
+    fn geometric_quotient(self, other: TransFlector) -> FlatPointAtInfinity {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Translator> for Horizon {
     type Output = Infinity;
 
@@ -10625,6 +11241,14 @@ impl GeometricQuotient<Sphere> for Infinity {
     }
 }
 
+impl GeometricQuotient<TransFlector> for Infinity {
+    type Output = LineAtInfinity;
+
+    fn geometric_quotient(self, other: TransFlector) -> LineAtInfinity {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Translator> for Infinity {
     type Output = Horizon;
 
@@ -10650,9 +11274,9 @@ impl GeometricQuotient<Circle> for Line {
 }
 
 impl GeometricQuotient<CircleBulk> for Line {
-    type Output = Flector;
+    type Output = TransFlector;
 
-    fn geometric_quotient(self, other: CircleBulk) -> Flector {
+    fn geometric_quotient(self, other: CircleBulk) -> TransFlector {
         self.geometric_product(other.inverse())
     }
 }
@@ -10829,6 +11453,14 @@ impl GeometricQuotient<Sphere> for Line {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<TransFlector> for Line {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -11041,6 +11673,14 @@ impl GeometricQuotient<Sphere> for LineAtInfinity {
     }
 }
 
+impl GeometricQuotient<TransFlector> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Translator> for LineAtInfinity {
     type Output = FlatPointAtInfinity;
 
@@ -11245,6 +11885,14 @@ impl GeometricQuotient<Sphere> for LineAtOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<TransFlector> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -11457,6 +12105,14 @@ impl GeometricQuotient<Sphere> for Magnitude {
     }
 }
 
+impl GeometricQuotient<TransFlector> for Magnitude {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Translator> for Magnitude {
     type Output = MultiVector;
 
@@ -11661,6 +12317,14 @@ impl GeometricQuotient<Sphere> for Motor {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<TransFlector> for Motor {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -11873,6 +12537,14 @@ impl GeometricQuotient<Sphere> for MultiVector {
     }
 }
 
+impl GeometricQuotient<TransFlector> for MultiVector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Translator> for MultiVector {
     type Output = MultiVector;
 
@@ -12077,6 +12749,14 @@ impl GeometricQuotient<Sphere> for Origin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<TransFlector> for Origin {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -12289,6 +12969,14 @@ impl GeometricQuotient<Sphere> for Plane {
     }
 }
 
+impl GeometricQuotient<TransFlector> for Plane {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Translator> for Plane {
     type Output = MultiVector;
 
@@ -12493,6 +13181,14 @@ impl GeometricQuotient<Sphere> for PlaneAtOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<TransFlector> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -12705,6 +13401,14 @@ impl GeometricQuotient<Sphere> for Rotor {
     }
 }
 
+impl GeometricQuotient<TransFlector> for Rotor {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Translator> for Rotor {
     type Output = MultiVector;
 
@@ -12909,6 +13613,14 @@ impl GeometricQuotient<Sphere> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<TransFlector> for RoundPoint {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -13121,10 +13833,18 @@ impl GeometricQuotient<Sphere> for RoundPointAtInfinity {
     }
 }
 
-impl GeometricQuotient<Translator> for RoundPointAtInfinity {
-    type Output = Flector;
+impl GeometricQuotient<TransFlector> for RoundPointAtInfinity {
+    type Output = MultiVector;
 
-    fn geometric_quotient(self, other: Translator) -> Flector {
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Translator> for RoundPointAtInfinity {
+    type Output = TransFlector;
+
+    fn geometric_quotient(self, other: Translator) -> TransFlector {
         self.geometric_product(other.inverse())
     }
 }
@@ -13325,6 +14045,14 @@ impl GeometricQuotient<Sphere> for RoundPointAtOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<TransFlector> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -13537,10 +14265,18 @@ impl GeometricQuotient<Sphere> for RoundPointBulk {
     }
 }
 
-impl GeometricQuotient<Translator> for RoundPointBulk {
-    type Output = Flector;
+impl GeometricQuotient<TransFlector> for RoundPointBulk {
+    type Output = MultiVector;
 
-    fn geometric_quotient(self, other: Translator) -> Flector {
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Translator> for RoundPointBulk {
+    type Output = TransFlector;
+
+    fn geometric_quotient(self, other: Translator) -> TransFlector {
         self.geometric_product(other.inverse())
     }
 }
@@ -13741,6 +14477,14 @@ impl GeometricQuotient<Sphere> for RoundPointCarrierAspect {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<TransFlector> for RoundPointCarrierAspect {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -13953,6 +14697,14 @@ impl GeometricQuotient<Sphere> for Scalar {
     }
 }
 
+impl GeometricQuotient<TransFlector> for Scalar {
+    type Output = TransFlector;
+
+    fn geometric_quotient(self, other: TransFlector) -> TransFlector {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Translator> for Scalar {
     type Output = Translator;
 
@@ -14157,6 +14909,14 @@ impl GeometricQuotient<Sphere> for Sphere {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<TransFlector> for Sphere {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -14369,7 +15129,231 @@ impl GeometricQuotient<Sphere> for SphereWeight {
     }
 }
 
+impl GeometricQuotient<TransFlector> for SphereWeight {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Translator> for SphereWeight {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: Translator) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<AntiScalar> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: AntiScalar) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Circle> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: Circle) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<CircleBulk> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: CircleBulk) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<CircleCarrierAspect> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: CircleCarrierAspect) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Dipole> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: Dipole) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<DipoleBulk> for TransFlector {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: DipoleBulk) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<DipoleCarrierAspect> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: DipoleCarrierAspect) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<FlatPoint> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: FlatPoint) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<FlatPointAtOrigin> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: FlatPointAtOrigin) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Flector> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: Flector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Line> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: Line) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<LineAtOrigin> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: LineAtOrigin) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Magnitude> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: Magnitude) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Motor> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: Motor) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<MultiVector> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: MultiVector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Plane> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: Plane) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<PlaneAtOrigin> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: PlaneAtOrigin) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Rotor> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: Rotor) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<RoundPoint> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: RoundPoint) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<RoundPointAtInfinity> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: RoundPointAtInfinity) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<RoundPointAtOrigin> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: RoundPointAtOrigin) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<RoundPointBulk> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: RoundPointBulk) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<RoundPointCarrierAspect> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Scalar> for TransFlector {
+    type Output = TransFlector;
+
+    fn geometric_quotient(self, other: Scalar) -> TransFlector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Sphere> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<TransFlector> for TransFlector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Translator> for TransFlector {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Translator) -> MultiVector {
@@ -14530,9 +15514,9 @@ impl GeometricQuotient<RoundPoint> for Translator {
 }
 
 impl GeometricQuotient<RoundPointAtInfinity> for Translator {
-    type Output = Flector;
+    type Output = TransFlector;
 
-    fn geometric_quotient(self, other: RoundPointAtInfinity) -> Flector {
+    fn geometric_quotient(self, other: RoundPointAtInfinity) -> TransFlector {
         self.geometric_product(other.inverse())
     }
 }
@@ -14546,9 +15530,9 @@ impl GeometricQuotient<RoundPointAtOrigin> for Translator {
 }
 
 impl GeometricQuotient<RoundPointBulk> for Translator {
-    type Output = Flector;
+    type Output = TransFlector;
 
-    fn geometric_quotient(self, other: RoundPointBulk) -> Flector {
+    fn geometric_quotient(self, other: RoundPointBulk) -> TransFlector {
         self.geometric_product(other.inverse())
     }
 }
@@ -14573,6 +15557,14 @@ impl GeometricQuotient<Sphere> for Translator {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Sphere) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<TransFlector> for Translator {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: TransFlector) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }

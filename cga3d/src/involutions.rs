@@ -524,6 +524,28 @@ impl AntiDual for SphereWeight {
     }
 }
 
+impl AntiDual for TransFlector {
+    type Output = MultiVector;
+
+    fn anti_dual(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g2: Simd32x2::from([0.0, -self.group1()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: self.group0(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl AntiDual for Translator {
     type Output = MultiVector;
 
@@ -950,6 +972,19 @@ impl AntiReversal for SphereWeight {
     }
 }
 
+impl AntiReversal for TransFlector {
+    type Output = TransFlector;
+
+    fn anti_reversal(self) -> TransFlector {
+        TransFlector {
+            groups: TransFlectorGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]),
+            },
+        }
+    }
+}
+
 impl AntiReversal for Translator {
     type Output = Translator;
 
@@ -1360,6 +1395,19 @@ impl Automorphism for SphereWeight {
     fn automorphism(self) -> SphereWeight {
         SphereWeight {
             groups: SphereWeightGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Automorphism for TransFlector {
+    type Output = TransFlector;
+
+    fn automorphism(self) -> TransFlector {
+        TransFlector {
+            groups: TransFlectorGroups {
+                g0: self.group0(),
+                g1: self.group1() * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]),
+            },
         }
     }
 }
@@ -1786,6 +1834,19 @@ impl Conjugation for SphereWeight {
     }
 }
 
+impl Conjugation for TransFlector {
+    type Output = TransFlector;
+
+    fn conjugation(self) -> TransFlector {
+        TransFlector {
+            groups: TransFlectorGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]),
+            },
+        }
+    }
+}
+
 impl Conjugation for Translator {
     type Output = Translator;
 
@@ -2172,6 +2233,19 @@ impl DoubleComplement for SphereWeight {
     fn double_complement(self) -> SphereWeight {
         SphereWeight {
             groups: SphereWeightGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl DoubleComplement for TransFlector {
+    type Output = TransFlector;
+
+    fn double_complement(self) -> TransFlector {
+        TransFlector {
+            groups: TransFlectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+            },
         }
     }
 }
@@ -2632,6 +2706,28 @@ impl Dual for SphereWeight {
     fn dual(self) -> Origin {
         Origin {
             groups: OriginGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Dual for TransFlector {
+    type Output = MultiVector;
+
+    fn dual(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from([-self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g2: Simd32x2::from([0.0, self.group1()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: self.group0() * Simd32x3::from(-1.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
         }
     }
 }
@@ -3102,6 +3198,28 @@ impl LeftComplement for SphereWeight {
     }
 }
 
+impl LeftComplement for TransFlector {
+    type Output = MultiVector;
+
+    fn left_complement(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g2: Simd32x2::from([self.group1()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([-self.group0()[0], -self.group0()[1], -self.group0()[2], 0.0]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl LeftComplement for Translator {
     type Output = MultiVector;
 
@@ -3524,6 +3642,19 @@ impl Reversal for SphereWeight {
     fn reversal(self) -> SphereWeight {
         SphereWeight {
             groups: SphereWeightGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Reversal for TransFlector {
+    type Output = TransFlector;
+
+    fn reversal(self) -> TransFlector {
+        TransFlector {
+            groups: TransFlectorGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]),
+            },
         }
     }
 }
@@ -3980,6 +4111,28 @@ impl RightComplement for SphereWeight {
     fn right_complement(self) -> Infinity {
         Infinity {
             groups: InfinityGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl RightComplement for TransFlector {
+    type Output = MultiVector;
+
+    fn right_complement(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g2: Simd32x2::from([self.group1()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([-self.group0()[0], -self.group0()[1], -self.group0()[2], 0.0]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
         }
     }
 }

@@ -21,18 +21,48 @@ pub trait Sandwich<T> {
 
 /// Point Inversion
 /// An improper isometry that performs an inversion through a point.
-/// Be careful not to confuse with `Inverse`, which raises a number to the power of `-1.0`.
+/// Points may pass as specialized as Flectors, so in other words, this is a specialized Flector sandwich.
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Inversion
+/// Be careful not to confuse with `Inverse`, which raises a number to the power of `-1.0`.
 pub trait PointInversion<T> {
     type Output;
     fn point_inversion(self, other: T) -> Self::Output;
 }
 
 /// Reflection
+/// An improper isometry that performs reflection across a plane.
+/// Planes may pass as specialized Flectors, so in other words, this is a specialized Flector sandwich.
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Reflection
 pub trait Reflect<T> {
     type Output;
     fn reflect(self, other: T) -> Self::Output;
+}
+
+/// Transflection
+/// An improper isometry that performs a reflection and translation.
+/// Transflectors are specialized Flectors, so in other words, this is a specialized Flector sandwich.
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Transflection
+pub trait Transflect<T> {
+    type Output;
+    fn transflect(self, other: T) -> Self::Output;
+}
+
+/// Translate
+/// A proper isometry that performs translation.
+/// Translators are specialized Motors, so in other words, this is a specialized Motor sandwich.
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Translation
+pub trait Translate<T> {
+    type Output;
+    fn translate(self, other: T) -> Self::Output;
+}
+
+/// Rotate
+/// A proper isometry that performs rotation.
+/// Rotors are specialized Motors, so in other words, this is a specialized Motor sandwich.
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Rotation
+pub trait Rotate<T> {
+    type Output;
+    fn rotate(self, other: T) -> Self::Output;
 }
 
 impl Sandwich<Circle> for AntiScalar {
@@ -279,6 +309,14 @@ impl Sandwich<SphereWeight> for AntiScalar {
     type Output = SphereWeight;
 
     fn sandwich(self, other: SphereWeight) -> SphereWeight {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<TransFlector> for AntiScalar {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
@@ -539,6 +577,14 @@ impl Sandwich<SphereWeight> for Circle {
     }
 }
 
+impl Sandwich<TransFlector> for Circle {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Translator> for Circle {
     type Output = Translator;
 
@@ -792,6 +838,14 @@ impl Sandwich<SphereWeight> for CircleBulk {
 
     fn sandwich(self, other: SphereWeight) -> SphereWeight {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<TransFlector> for CircleBulk {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -1051,6 +1105,14 @@ impl Sandwich<SphereWeight> for CircleCarrierAspect {
     }
 }
 
+impl Sandwich<TransFlector> for CircleCarrierAspect {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Translator> for CircleCarrierAspect {
     type Output = Translator;
 
@@ -1247,6 +1309,14 @@ impl Sandwich<Sphere> for CircleWeight {
     type Output = Sphere;
 
     fn sandwich(self, other: Sphere) -> Sphere {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<TransFlector> for CircleWeight {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1507,6 +1577,14 @@ impl Sandwich<SphereWeight> for Dipole {
     }
 }
 
+impl Sandwich<TransFlector> for Dipole {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Translator> for Dipole {
     type Output = Translator;
 
@@ -1759,6 +1837,14 @@ impl Sandwich<SphereWeight> for DipoleBulk {
     type Output = SphereWeight;
 
     fn sandwich(self, other: SphereWeight) -> SphereWeight {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<TransFlector> for DipoleBulk {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -2019,6 +2105,14 @@ impl Sandwich<SphereWeight> for DipoleCarrierAspect {
     }
 }
 
+impl Sandwich<TransFlector> for DipoleCarrierAspect {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Translator> for DipoleCarrierAspect {
     type Output = Translator;
 
@@ -2215,6 +2309,14 @@ impl Sandwich<Sphere> for DipoleWeight {
     type Output = Sphere;
 
     fn sandwich(self, other: Sphere) -> Sphere {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<TransFlector> for DipoleWeight {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -2475,6 +2577,14 @@ impl Sandwich<SphereWeight> for FlatPoint {
     }
 }
 
+impl Sandwich<TransFlector> for FlatPoint {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Translator> for FlatPoint {
     type Output = Translator;
 
@@ -2615,6 +2725,14 @@ impl Sandwich<SphereWeight> for FlatPointAtInfinity {
     type Output = SphereWeight;
 
     fn sandwich(self, other: SphereWeight) -> SphereWeight {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<TransFlector> for FlatPointAtInfinity {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -2864,6 +2982,14 @@ impl Sandwich<SphereWeight> for FlatPointAtOrigin {
 
     fn sandwich(self, other: SphereWeight) -> SphereWeight {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<TransFlector> for FlatPointAtOrigin {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -3123,6 +3249,14 @@ impl Sandwich<SphereWeight> for Flector {
     }
 }
 
+impl Sandwich<TransFlector> for Flector {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Translator> for Flector {
     type Output = Translator;
 
@@ -3279,6 +3413,14 @@ impl Sandwich<SphereWeight> for FlectorAtInfinity {
     type Output = SphereWeight;
 
     fn sandwich(self, other: SphereWeight) -> SphereWeight {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<TransFlector> for FlectorAtInfinity {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -3763,6 +3905,14 @@ impl Sandwich<SphereWeight> for Line {
     }
 }
 
+impl Sandwich<TransFlector> for Line {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Translator> for Line {
     type Output = Translator;
 
@@ -4171,6 +4321,14 @@ impl Sandwich<SphereWeight> for LineAtOrigin {
     }
 }
 
+impl Sandwich<TransFlector> for LineAtOrigin {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Translator> for LineAtOrigin {
     type Output = Translator;
 
@@ -4423,6 +4581,14 @@ impl Sandwich<SphereWeight> for Magnitude {
     type Output = SphereWeight;
 
     fn sandwich(self, other: SphereWeight) -> SphereWeight {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<TransFlector> for Magnitude {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -4683,6 +4849,14 @@ impl Sandwich<SphereWeight> for Motor {
     }
 }
 
+impl Sandwich<TransFlector> for Motor {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Translator> for Motor {
     type Output = Translator;
 
@@ -4939,6 +5113,14 @@ impl Sandwich<SphereWeight> for MultiVector {
     }
 }
 
+impl Sandwich<TransFlector> for MultiVector {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Translator> for MultiVector {
     type Output = Translator;
 
@@ -5087,6 +5269,14 @@ impl Sandwich<Sphere> for Origin {
     type Output = Sphere;
 
     fn sandwich(self, other: Sphere) -> Sphere {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<TransFlector> for Origin {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -5347,6 +5537,14 @@ impl Sandwich<SphereWeight> for Plane {
     }
 }
 
+impl Sandwich<TransFlector> for Plane {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Translator> for Plane {
     type Output = Translator;
 
@@ -5599,6 +5797,14 @@ impl Sandwich<SphereWeight> for PlaneAtOrigin {
     type Output = SphereWeight;
 
     fn sandwich(self, other: SphereWeight) -> SphereWeight {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<TransFlector> for PlaneAtOrigin {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -5859,6 +6065,14 @@ impl Sandwich<SphereWeight> for Rotor {
     }
 }
 
+impl Sandwich<TransFlector> for Rotor {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Translator> for Rotor {
     type Output = Translator;
 
@@ -6111,6 +6325,14 @@ impl Sandwich<SphereWeight> for RoundPoint {
     type Output = SphereWeight;
 
     fn sandwich(self, other: SphereWeight) -> SphereWeight {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<TransFlector> for RoundPoint {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -6371,6 +6593,14 @@ impl Sandwich<SphereWeight> for RoundPointAtInfinity {
     }
 }
 
+impl Sandwich<TransFlector> for RoundPointAtInfinity {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Translator> for RoundPointAtInfinity {
     type Output = Translator;
 
@@ -6623,6 +6853,14 @@ impl Sandwich<SphereWeight> for RoundPointAtOrigin {
     type Output = SphereWeight;
 
     fn sandwich(self, other: SphereWeight) -> SphereWeight {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<TransFlector> for RoundPointAtOrigin {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -6883,6 +7121,14 @@ impl Sandwich<SphereWeight> for RoundPointBulk {
     }
 }
 
+impl Sandwich<TransFlector> for RoundPointBulk {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Translator> for RoundPointBulk {
     type Output = Translator;
 
@@ -7135,6 +7381,14 @@ impl Sandwich<SphereWeight> for RoundPointCarrierAspect {
     type Output = SphereWeight;
 
     fn sandwich(self, other: SphereWeight) -> SphereWeight {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<TransFlector> for RoundPointCarrierAspect {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -7395,6 +7649,14 @@ impl Sandwich<SphereWeight> for Scalar {
     }
 }
 
+impl Sandwich<TransFlector> for Scalar {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Translator> for Scalar {
     type Output = Translator;
 
@@ -7651,6 +7913,14 @@ impl Sandwich<SphereWeight> for Sphere {
     }
 }
 
+impl Sandwich<TransFlector> for Sphere {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Translator> for Sphere {
     type Output = Translator;
 
@@ -7803,7 +8073,279 @@ impl Sandwich<Sphere> for SphereWeight {
     }
 }
 
+impl Sandwich<TransFlector> for SphereWeight {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Translator> for SphereWeight {
+    type Output = Translator;
+
+    fn sandwich(self, other: Translator) -> Translator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Circle> for TransFlector {
+    type Output = Circle;
+
+    fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleBulk> for TransFlector {
+    type Output = CircleBulk;
+
+    fn sandwich(self, other: CircleBulk) -> CircleBulk {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleCarrierAspect> for TransFlector {
+    type Output = CircleCarrierAspect;
+
+    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleWeight> for TransFlector {
+    type Output = CircleWeight;
+
+    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dipole> for TransFlector {
+    type Output = Dipole;
+
+    fn sandwich(self, other: Dipole) -> Dipole {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleBulk> for TransFlector {
+    type Output = DipoleBulk;
+
+    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleCarrierAspect> for TransFlector {
+    type Output = DipoleCarrierAspect;
+
+    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleWeight> for TransFlector {
+    type Output = DipoleWeight;
+
+    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPoint> for TransFlector {
+    type Output = FlatPoint;
+
+    fn sandwich(self, other: FlatPoint) -> FlatPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPointAtInfinity> for TransFlector {
+    type Output = FlatPointAtInfinity;
+
+    fn sandwich(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPointAtOrigin> for TransFlector {
+    type Output = FlatPointAtOrigin;
+
+    fn sandwich(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Flector> for TransFlector {
+    type Output = Flector;
+
+    fn sandwich(self, other: Flector) -> Flector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlectorAtInfinity> for TransFlector {
+    type Output = FlectorAtInfinity;
+
+    fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Horizon> for TransFlector {
+    type Output = Horizon;
+
+    fn sandwich(self, other: Horizon) -> Horizon {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Infinity> for TransFlector {
+    type Output = Infinity;
+
+    fn sandwich(self, other: Infinity) -> Infinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Line> for TransFlector {
+    type Output = Line;
+
+    fn sandwich(self, other: Line) -> Line {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtInfinity> for TransFlector {
+    type Output = LineAtInfinity;
+
+    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtOrigin> for TransFlector {
+    type Output = LineAtOrigin;
+
+    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Motor> for TransFlector {
+    type Output = Motor;
+
+    fn sandwich(self, other: Motor) -> Motor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<MultiVector> for TransFlector {
+    type Output = MultiVector;
+
+    fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Origin> for TransFlector {
+    type Output = Origin;
+
+    fn sandwich(self, other: Origin) -> Origin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Plane> for TransFlector {
+    type Output = Plane;
+
+    fn sandwich(self, other: Plane) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<PlaneAtOrigin> for TransFlector {
+    type Output = PlaneAtOrigin;
+
+    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Rotor> for TransFlector {
+    type Output = Rotor;
+
+    fn sandwich(self, other: Rotor) -> Rotor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPoint> for TransFlector {
+    type Output = RoundPoint;
+
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPointAtInfinity> for TransFlector {
+    type Output = RoundPointAtInfinity;
+
+    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPointAtOrigin> for TransFlector {
+    type Output = RoundPointAtOrigin;
+
+    fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPointBulk> for TransFlector {
+    type Output = RoundPointBulk;
+
+    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPointCarrierAspect> for TransFlector {
+    type Output = RoundPointCarrierAspect;
+
+    fn sandwich(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Sphere> for TransFlector {
+    type Output = Sphere;
+
+    fn sandwich(self, other: Sphere) -> Sphere {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereWeight> for TransFlector {
+    type Output = SphereWeight;
+
+    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<TransFlector> for TransFlector {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Translator> for TransFlector {
     type Output = Translator;
 
     fn sandwich(self, other: Translator) -> Translator {
@@ -8059,11 +8601,283 @@ impl Sandwich<SphereWeight> for Translator {
     }
 }
 
+impl Sandwich<TransFlector> for Translator {
+    type Output = TransFlector;
+
+    fn sandwich(self, other: TransFlector) -> TransFlector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
 impl Sandwich<Translator> for Translator {
     type Output = Translator;
 
     fn sandwich(self, other: Translator) -> Translator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl PointInversion<Circle> for FlatPoint {
+    type Output = Circle;
+
+    fn point_inversion(self, other: Circle) -> Circle {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<CircleBulk> for FlatPoint {
+    type Output = CircleBulk;
+
+    fn point_inversion(self, other: CircleBulk) -> CircleBulk {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<CircleCarrierAspect> for FlatPoint {
+    type Output = CircleCarrierAspect;
+
+    fn point_inversion(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<CircleWeight> for FlatPoint {
+    type Output = CircleWeight;
+
+    fn point_inversion(self, other: CircleWeight) -> CircleWeight {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Dipole> for FlatPoint {
+    type Output = Dipole;
+
+    fn point_inversion(self, other: Dipole) -> Dipole {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<DipoleBulk> for FlatPoint {
+    type Output = DipoleBulk;
+
+    fn point_inversion(self, other: DipoleBulk) -> DipoleBulk {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<DipoleCarrierAspect> for FlatPoint {
+    type Output = DipoleCarrierAspect;
+
+    fn point_inversion(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<DipoleWeight> for FlatPoint {
+    type Output = DipoleWeight;
+
+    fn point_inversion(self, other: DipoleWeight) -> DipoleWeight {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<FlatPoint> for FlatPoint {
+    type Output = FlatPoint;
+
+    fn point_inversion(self, other: FlatPoint) -> FlatPoint {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<FlatPointAtInfinity> for FlatPoint {
+    type Output = FlatPointAtInfinity;
+
+    fn point_inversion(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<FlatPointAtOrigin> for FlatPoint {
+    type Output = FlatPointAtOrigin;
+
+    fn point_inversion(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Flector> for FlatPoint {
+    type Output = Flector;
+
+    fn point_inversion(self, other: Flector) -> Flector {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<FlectorAtInfinity> for FlatPoint {
+    type Output = FlectorAtInfinity;
+
+    fn point_inversion(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Horizon> for FlatPoint {
+    type Output = Horizon;
+
+    fn point_inversion(self, other: Horizon) -> Horizon {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Infinity> for FlatPoint {
+    type Output = Infinity;
+
+    fn point_inversion(self, other: Infinity) -> Infinity {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Line> for FlatPoint {
+    type Output = Line;
+
+    fn point_inversion(self, other: Line) -> Line {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<LineAtInfinity> for FlatPoint {
+    type Output = LineAtInfinity;
+
+    fn point_inversion(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<LineAtOrigin> for FlatPoint {
+    type Output = LineAtOrigin;
+
+    fn point_inversion(self, other: LineAtOrigin) -> LineAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Motor> for FlatPoint {
+    type Output = Motor;
+
+    fn point_inversion(self, other: Motor) -> Motor {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<MultiVector> for FlatPoint {
+    type Output = MultiVector;
+
+    fn point_inversion(self, other: MultiVector) -> MultiVector {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Origin> for FlatPoint {
+    type Output = Origin;
+
+    fn point_inversion(self, other: Origin) -> Origin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Plane> for FlatPoint {
+    type Output = Plane;
+
+    fn point_inversion(self, other: Plane) -> Plane {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<PlaneAtOrigin> for FlatPoint {
+    type Output = PlaneAtOrigin;
+
+    fn point_inversion(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Rotor> for FlatPoint {
+    type Output = Rotor;
+
+    fn point_inversion(self, other: Rotor) -> Rotor {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<RoundPoint> for FlatPoint {
+    type Output = RoundPoint;
+
+    fn point_inversion(self, other: RoundPoint) -> RoundPoint {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<RoundPointAtInfinity> for FlatPoint {
+    type Output = RoundPointAtInfinity;
+
+    fn point_inversion(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<RoundPointAtOrigin> for FlatPoint {
+    type Output = RoundPointAtOrigin;
+
+    fn point_inversion(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<RoundPointBulk> for FlatPoint {
+    type Output = RoundPointBulk;
+
+    fn point_inversion(self, other: RoundPointBulk) -> RoundPointBulk {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<RoundPointCarrierAspect> for FlatPoint {
+    type Output = RoundPointCarrierAspect;
+
+    fn point_inversion(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Sphere> for FlatPoint {
+    type Output = Sphere;
+
+    fn point_inversion(self, other: Sphere) -> Sphere {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<SphereWeight> for FlatPoint {
+    type Output = SphereWeight;
+
+    fn point_inversion(self, other: SphereWeight) -> SphereWeight {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<TransFlector> for FlatPoint {
+    type Output = TransFlector;
+
+    fn point_inversion(self, other: TransFlector) -> TransFlector {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Translator> for FlatPoint {
+    type Output = Translator;
+
+    fn point_inversion(self, other: Translator) -> Translator {
+        self.unitize().sandwich(other)
     }
 }
 
@@ -8315,10 +9129,810 @@ impl Reflect<SphereWeight> for Plane {
     }
 }
 
+impl Reflect<TransFlector> for Plane {
+    type Output = TransFlector;
+
+    fn reflect(self, other: TransFlector) -> TransFlector {
+        self.unitize().sandwich(other)
+    }
+}
+
 impl Reflect<Translator> for Plane {
     type Output = Translator;
 
     fn reflect(self, other: Translator) -> Translator {
         self.unitize().sandwich(other)
+    }
+}
+
+impl Rotate<Circle> for Rotor {
+    type Output = Circle;
+
+    fn rotate(self, other: Circle) -> Circle {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<CircleBulk> for Rotor {
+    type Output = CircleBulk;
+
+    fn rotate(self, other: CircleBulk) -> CircleBulk {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<CircleCarrierAspect> for Rotor {
+    type Output = CircleCarrierAspect;
+
+    fn rotate(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<CircleWeight> for Rotor {
+    type Output = CircleWeight;
+
+    fn rotate(self, other: CircleWeight) -> CircleWeight {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<Dipole> for Rotor {
+    type Output = Dipole;
+
+    fn rotate(self, other: Dipole) -> Dipole {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<DipoleBulk> for Rotor {
+    type Output = DipoleBulk;
+
+    fn rotate(self, other: DipoleBulk) -> DipoleBulk {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<DipoleCarrierAspect> for Rotor {
+    type Output = DipoleCarrierAspect;
+
+    fn rotate(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<DipoleWeight> for Rotor {
+    type Output = DipoleWeight;
+
+    fn rotate(self, other: DipoleWeight) -> DipoleWeight {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<FlatPoint> for Rotor {
+    type Output = FlatPoint;
+
+    fn rotate(self, other: FlatPoint) -> FlatPoint {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<FlatPointAtInfinity> for Rotor {
+    type Output = FlatPointAtInfinity;
+
+    fn rotate(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<FlatPointAtOrigin> for Rotor {
+    type Output = FlatPointAtOrigin;
+
+    fn rotate(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<Flector> for Rotor {
+    type Output = Flector;
+
+    fn rotate(self, other: Flector) -> Flector {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<FlectorAtInfinity> for Rotor {
+    type Output = FlectorAtInfinity;
+
+    fn rotate(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<Horizon> for Rotor {
+    type Output = Horizon;
+
+    fn rotate(self, other: Horizon) -> Horizon {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<Infinity> for Rotor {
+    type Output = Infinity;
+
+    fn rotate(self, other: Infinity) -> Infinity {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<Line> for Rotor {
+    type Output = Line;
+
+    fn rotate(self, other: Line) -> Line {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<LineAtInfinity> for Rotor {
+    type Output = LineAtInfinity;
+
+    fn rotate(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<LineAtOrigin> for Rotor {
+    type Output = LineAtOrigin;
+
+    fn rotate(self, other: LineAtOrigin) -> LineAtOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<Motor> for Rotor {
+    type Output = Motor;
+
+    fn rotate(self, other: Motor) -> Motor {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<MultiVector> for Rotor {
+    type Output = MultiVector;
+
+    fn rotate(self, other: MultiVector) -> MultiVector {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<Origin> for Rotor {
+    type Output = Origin;
+
+    fn rotate(self, other: Origin) -> Origin {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<Plane> for Rotor {
+    type Output = Plane;
+
+    fn rotate(self, other: Plane) -> Plane {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<PlaneAtOrigin> for Rotor {
+    type Output = PlaneAtOrigin;
+
+    fn rotate(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<Rotor> for Rotor {
+    type Output = Rotor;
+
+    fn rotate(self, other: Rotor) -> Rotor {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<RoundPoint> for Rotor {
+    type Output = RoundPoint;
+
+    fn rotate(self, other: RoundPoint) -> RoundPoint {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<RoundPointAtInfinity> for Rotor {
+    type Output = RoundPointAtInfinity;
+
+    fn rotate(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<RoundPointAtOrigin> for Rotor {
+    type Output = RoundPointAtOrigin;
+
+    fn rotate(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<RoundPointBulk> for Rotor {
+    type Output = RoundPointBulk;
+
+    fn rotate(self, other: RoundPointBulk) -> RoundPointBulk {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<RoundPointCarrierAspect> for Rotor {
+    type Output = RoundPointCarrierAspect;
+
+    fn rotate(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<Sphere> for Rotor {
+    type Output = Sphere;
+
+    fn rotate(self, other: Sphere) -> Sphere {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<SphereWeight> for Rotor {
+    type Output = SphereWeight;
+
+    fn rotate(self, other: SphereWeight) -> SphereWeight {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<TransFlector> for Rotor {
+    type Output = TransFlector;
+
+    fn rotate(self, other: TransFlector) -> TransFlector {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<Translator> for Rotor {
+    type Output = Translator;
+
+    fn rotate(self, other: Translator) -> Translator {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<Circle> for TransFlector {
+    type Output = Circle;
+
+    fn transflect(self, other: Circle) -> Circle {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<CircleBulk> for TransFlector {
+    type Output = CircleBulk;
+
+    fn transflect(self, other: CircleBulk) -> CircleBulk {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<CircleCarrierAspect> for TransFlector {
+    type Output = CircleCarrierAspect;
+
+    fn transflect(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<CircleWeight> for TransFlector {
+    type Output = CircleWeight;
+
+    fn transflect(self, other: CircleWeight) -> CircleWeight {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<Dipole> for TransFlector {
+    type Output = Dipole;
+
+    fn transflect(self, other: Dipole) -> Dipole {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<DipoleBulk> for TransFlector {
+    type Output = DipoleBulk;
+
+    fn transflect(self, other: DipoleBulk) -> DipoleBulk {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<DipoleCarrierAspect> for TransFlector {
+    type Output = DipoleCarrierAspect;
+
+    fn transflect(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<DipoleWeight> for TransFlector {
+    type Output = DipoleWeight;
+
+    fn transflect(self, other: DipoleWeight) -> DipoleWeight {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<FlatPoint> for TransFlector {
+    type Output = FlatPoint;
+
+    fn transflect(self, other: FlatPoint) -> FlatPoint {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<FlatPointAtInfinity> for TransFlector {
+    type Output = FlatPointAtInfinity;
+
+    fn transflect(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<FlatPointAtOrigin> for TransFlector {
+    type Output = FlatPointAtOrigin;
+
+    fn transflect(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<Flector> for TransFlector {
+    type Output = Flector;
+
+    fn transflect(self, other: Flector) -> Flector {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<FlectorAtInfinity> for TransFlector {
+    type Output = FlectorAtInfinity;
+
+    fn transflect(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<Horizon> for TransFlector {
+    type Output = Horizon;
+
+    fn transflect(self, other: Horizon) -> Horizon {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<Infinity> for TransFlector {
+    type Output = Infinity;
+
+    fn transflect(self, other: Infinity) -> Infinity {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<Line> for TransFlector {
+    type Output = Line;
+
+    fn transflect(self, other: Line) -> Line {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<LineAtInfinity> for TransFlector {
+    type Output = LineAtInfinity;
+
+    fn transflect(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<LineAtOrigin> for TransFlector {
+    type Output = LineAtOrigin;
+
+    fn transflect(self, other: LineAtOrigin) -> LineAtOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<Motor> for TransFlector {
+    type Output = Motor;
+
+    fn transflect(self, other: Motor) -> Motor {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<MultiVector> for TransFlector {
+    type Output = MultiVector;
+
+    fn transflect(self, other: MultiVector) -> MultiVector {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<Origin> for TransFlector {
+    type Output = Origin;
+
+    fn transflect(self, other: Origin) -> Origin {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<Plane> for TransFlector {
+    type Output = Plane;
+
+    fn transflect(self, other: Plane) -> Plane {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<PlaneAtOrigin> for TransFlector {
+    type Output = PlaneAtOrigin;
+
+    fn transflect(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<Rotor> for TransFlector {
+    type Output = Rotor;
+
+    fn transflect(self, other: Rotor) -> Rotor {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<RoundPoint> for TransFlector {
+    type Output = RoundPoint;
+
+    fn transflect(self, other: RoundPoint) -> RoundPoint {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<RoundPointAtInfinity> for TransFlector {
+    type Output = RoundPointAtInfinity;
+
+    fn transflect(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<RoundPointAtOrigin> for TransFlector {
+    type Output = RoundPointAtOrigin;
+
+    fn transflect(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<RoundPointBulk> for TransFlector {
+    type Output = RoundPointBulk;
+
+    fn transflect(self, other: RoundPointBulk) -> RoundPointBulk {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<RoundPointCarrierAspect> for TransFlector {
+    type Output = RoundPointCarrierAspect;
+
+    fn transflect(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<Sphere> for TransFlector {
+    type Output = Sphere;
+
+    fn transflect(self, other: Sphere) -> Sphere {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<SphereWeight> for TransFlector {
+    type Output = SphereWeight;
+
+    fn transflect(self, other: SphereWeight) -> SphereWeight {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<TransFlector> for TransFlector {
+    type Output = TransFlector;
+
+    fn transflect(self, other: TransFlector) -> TransFlector {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<Translator> for TransFlector {
+    type Output = Translator;
+
+    fn transflect(self, other: Translator) -> Translator {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<Circle> for Translator {
+    type Output = Circle;
+
+    fn translate(self, other: Circle) -> Circle {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<CircleBulk> for Translator {
+    type Output = CircleBulk;
+
+    fn translate(self, other: CircleBulk) -> CircleBulk {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<CircleCarrierAspect> for Translator {
+    type Output = CircleCarrierAspect;
+
+    fn translate(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<CircleWeight> for Translator {
+    type Output = CircleWeight;
+
+    fn translate(self, other: CircleWeight) -> CircleWeight {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<Dipole> for Translator {
+    type Output = Dipole;
+
+    fn translate(self, other: Dipole) -> Dipole {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<DipoleBulk> for Translator {
+    type Output = DipoleBulk;
+
+    fn translate(self, other: DipoleBulk) -> DipoleBulk {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<DipoleCarrierAspect> for Translator {
+    type Output = DipoleCarrierAspect;
+
+    fn translate(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<DipoleWeight> for Translator {
+    type Output = DipoleWeight;
+
+    fn translate(self, other: DipoleWeight) -> DipoleWeight {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<FlatPoint> for Translator {
+    type Output = FlatPoint;
+
+    fn translate(self, other: FlatPoint) -> FlatPoint {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<FlatPointAtInfinity> for Translator {
+    type Output = FlatPointAtInfinity;
+
+    fn translate(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<FlatPointAtOrigin> for Translator {
+    type Output = FlatPointAtOrigin;
+
+    fn translate(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<Flector> for Translator {
+    type Output = Flector;
+
+    fn translate(self, other: Flector) -> Flector {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<FlectorAtInfinity> for Translator {
+    type Output = FlectorAtInfinity;
+
+    fn translate(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<Horizon> for Translator {
+    type Output = Horizon;
+
+    fn translate(self, other: Horizon) -> Horizon {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<Infinity> for Translator {
+    type Output = Infinity;
+
+    fn translate(self, other: Infinity) -> Infinity {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<Line> for Translator {
+    type Output = Line;
+
+    fn translate(self, other: Line) -> Line {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<LineAtInfinity> for Translator {
+    type Output = LineAtInfinity;
+
+    fn translate(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<LineAtOrigin> for Translator {
+    type Output = Line;
+
+    fn translate(self, other: LineAtOrigin) -> Line {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<Motor> for Translator {
+    type Output = Motor;
+
+    fn translate(self, other: Motor) -> Motor {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<MultiVector> for Translator {
+    type Output = MultiVector;
+
+    fn translate(self, other: MultiVector) -> MultiVector {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<Origin> for Translator {
+    type Output = Origin;
+
+    fn translate(self, other: Origin) -> Origin {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<Plane> for Translator {
+    type Output = Plane;
+
+    fn translate(self, other: Plane) -> Plane {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<PlaneAtOrigin> for Translator {
+    type Output = Plane;
+
+    fn translate(self, other: PlaneAtOrigin) -> Plane {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<Rotor> for Translator {
+    type Output = Motor;
+
+    fn translate(self, other: Rotor) -> Motor {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<RoundPoint> for Translator {
+    type Output = RoundPoint;
+
+    fn translate(self, other: RoundPoint) -> RoundPoint {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<RoundPointAtInfinity> for Translator {
+    type Output = RoundPointAtInfinity;
+
+    fn translate(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<RoundPointAtOrigin> for Translator {
+    type Output = RoundPointAtOrigin;
+
+    fn translate(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<RoundPointBulk> for Translator {
+    type Output = RoundPointBulk;
+
+    fn translate(self, other: RoundPointBulk) -> RoundPointBulk {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<RoundPointCarrierAspect> for Translator {
+    type Output = RoundPointCarrierAspect;
+
+    fn translate(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<Sphere> for Translator {
+    type Output = Sphere;
+
+    fn translate(self, other: Sphere) -> Sphere {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<SphereWeight> for Translator {
+    type Output = SphereWeight;
+
+    fn translate(self, other: SphereWeight) -> SphereWeight {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<TransFlector> for Translator {
+    type Output = TransFlector;
+
+    fn translate(self, other: TransFlector) -> TransFlector {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<Translator> for Translator {
+    type Output = Translator;
+
+    fn translate(self, other: Translator) -> Translator {
+        self.sandwich(other)
     }
 }

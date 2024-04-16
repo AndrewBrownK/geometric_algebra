@@ -39,6 +39,7 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         "Rotor:e41,e42,e43,e1234",
         "Translator:e23,e31,e12,e1234",
         "Flector:e1,e2,e3,e4|e423,e431,e412,e321",
+        "TransFlector:e1,e2,e3|e423,e431,e412,e321",
         "FlectorAtInfinity:e1,e2,e3,e321",
         "MultiVector:\
             1,e1234|\

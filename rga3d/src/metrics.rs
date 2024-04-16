@@ -332,6 +332,14 @@ impl Distance<Rotor> for Flector {
     }
 }
 
+impl Distance<TransFlector> for Flector {
+    type Output = Magnitude;
+
+    fn distance(self, other: TransFlector) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
 impl Distance<Translator> for Flector {
     type Output = Magnitude;
 
@@ -412,6 +420,14 @@ impl Distance<Rotor> for Line {
     }
 }
 
+impl Distance<TransFlector> for Line {
+    type Output = Magnitude;
+
+    fn distance(self, other: TransFlector) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
 impl Distance<Flector> for LineAtOrigin {
     type Output = Magnitude;
 
@@ -448,6 +464,14 @@ impl Distance<Point> for LineAtOrigin {
     type Output = Magnitude;
 
     fn distance(self, other: Point) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<TransFlector> for LineAtOrigin {
+    type Output = Magnitude;
+
+    fn distance(self, other: TransFlector) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -564,6 +588,14 @@ impl Distance<Rotor> for Motor {
     }
 }
 
+impl Distance<TransFlector> for Motor {
+    type Output = Magnitude;
+
+    fn distance(self, other: TransFlector) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
 impl Distance<AntiScalar> for MultiVector {
     type Output = Magnitude;
 
@@ -668,6 +700,14 @@ impl Distance<Rotor> for MultiVector {
     }
 }
 
+impl Distance<TransFlector> for MultiVector {
+    type Output = Magnitude;
+
+    fn distance(self, other: TransFlector) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
 impl Distance<Translator> for MultiVector {
     type Output = Magnitude;
 
@@ -732,6 +772,14 @@ impl Distance<Point> for MultiVectorAtOrigin {
     }
 }
 
+impl Distance<TransFlector> for MultiVectorAtOrigin {
+    type Output = Magnitude;
+
+    fn distance(self, other: TransFlector) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
 impl Distance<Translator> for MultiVectorAtOrigin {
     type Output = Magnitude;
 
@@ -792,6 +840,14 @@ impl Distance<Point> for Origin {
     type Output = Magnitude;
 
     fn distance(self, other: Point) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<TransFlector> for Origin {
+    type Output = Magnitude;
+
+    fn distance(self, other: TransFlector) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -964,6 +1020,14 @@ impl Distance<Rotor> for Point {
     }
 }
 
+impl Distance<TransFlector> for Point {
+    type Output = Magnitude;
+
+    fn distance(self, other: TransFlector) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
 impl Distance<Translator> for Point {
     type Output = Magnitude;
 
@@ -1008,6 +1072,86 @@ impl Distance<Point> for Rotor {
     type Output = Magnitude;
 
     fn distance(self, other: Point) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<TransFlector> for Rotor {
+    type Output = Magnitude;
+
+    fn distance(self, other: TransFlector) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Flector> for TransFlector {
+    type Output = Magnitude;
+
+    fn distance(self, other: Flector) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Line> for TransFlector {
+    type Output = Magnitude;
+
+    fn distance(self, other: Line) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<LineAtOrigin> for TransFlector {
+    type Output = Magnitude;
+
+    fn distance(self, other: LineAtOrigin) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Motor> for TransFlector {
+    type Output = Magnitude;
+
+    fn distance(self, other: Motor) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<MultiVector> for TransFlector {
+    type Output = Magnitude;
+
+    fn distance(self, other: MultiVector) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<MultiVectorAtOrigin> for TransFlector {
+    type Output = Magnitude;
+
+    fn distance(self, other: MultiVectorAtOrigin) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Origin> for TransFlector {
+    type Output = Magnitude;
+
+    fn distance(self, other: Origin) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Point> for TransFlector {
+    type Output = Magnitude;
+
+    fn distance(self, other: Point) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Rotor> for TransFlector {
+    type Output = Magnitude;
+
+    fn distance(self, other: Rotor) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }

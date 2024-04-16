@@ -1923,6 +1923,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
         }
 
+        // TODO here
         // TODO similar to how "PointInversion" is a special type of sandwich using a point,
         //  "Sphere Inversion" is a special type of sandwich using spheres (generalizing
         //  reflection across planes, and/or motors). When the spheres are concentric, this
@@ -1938,8 +1939,8 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             // The choice of what class should constitute a "Point" is somewhat contrived.
             // It will need extra consideration for CGA.
 
-            // TODO which point is used in CGA? Me thinks FlatPoint, but will need to see.
-            if param_a.multi_vector_class().class_name != "Point" {
+            let n = param_a.multi_vector_class().class_name.as_str();
+            if n != "Point" && n != "FlatPoint" {
                 continue;
             }
             let name = "PointInversion";
@@ -1954,8 +1955,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         for (param_a, param_b) in registry.pair_parameters() {
             // Reflect (Reflection)
             // https://rigidgeometricalgebra.org/wiki/index.php?title=Reflection
-            // The choice of what class should constitute a "Plane" is somewhat contrived.
-            // It will need extra consideration for CGA.
             if param_a.multi_vector_class().class_name != "Plane" {
                 continue;
             }
@@ -1963,6 +1962,48 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let _: Option<()> = try {
                 let unitize = self.trait_impls.get_single_invocation("Unitize", variable(&param_a))?;
                 let sandwich = self.trait_impls.get_pair_invocation("Sandwich", unitize, variable(&param_b))?;
+                let i = single_expression_pair_trait_impl(name, &param_a, &param_b, sandwich);
+                self.trait_impls.add_pair_impl(name, param_a, param_b, i);
+            };
+        }
+
+        for (param_a, param_b) in registry.pair_parameters() {
+            // Transflection
+            // https://rigidgeometricalgebra.org/wiki/index.php?title=Transflection
+            if param_a.multi_vector_class().class_name != "TransFlector" {
+                continue;
+            }
+            let name = "Transflect";
+            let _: Option<()> = try {
+                let sandwich = self.trait_impls.get_pair_invocation("Sandwich", variable(&param_a), variable(&param_b))?;
+                let i = single_expression_pair_trait_impl(name, &param_a, &param_b, sandwich);
+                self.trait_impls.add_pair_impl(name, param_a, param_b, i);
+            };
+        }
+
+        for (param_a, param_b) in registry.pair_parameters() {
+            // Translation
+            // https://rigidgeometricalgebra.org/wiki/index.php?title=Translation
+            if param_a.multi_vector_class().class_name != "Translator" {
+                continue;
+            }
+            let name = "Translate";
+            let _: Option<()> = try {
+                let sandwich = self.trait_impls.get_pair_invocation("Sandwich", variable(&param_a), variable(&param_b))?;
+                let i = single_expression_pair_trait_impl(name, &param_a, &param_b, sandwich);
+                self.trait_impls.add_pair_impl(name, param_a, param_b, i);
+            };
+        }
+
+        for (param_a, param_b) in registry.pair_parameters() {
+            // Rotation
+            // https://rigidgeometricalgebra.org/wiki/index.php?title=Rotation
+            if param_a.multi_vector_class().class_name != "Rotor" {
+                continue;
+            }
+            let name = "Rotate";
+            let _: Option<()> = try {
+                let sandwich = self.trait_impls.get_pair_invocation("Sandwich", variable(&param_a), variable(&param_b))?;
                 let i = single_expression_pair_trait_impl(name, &param_a, &param_b, sandwich);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, i);
             };
@@ -2623,8 +2664,10 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             docs: "
             Point Inversion
             An improper isometry that performs an inversion through a point.
-            Be careful not to confuse with `Inverse`, which raises a number to the power of `-1.0`.
+            Points may pass as specialized as Flectors, so in other words, this is a specialized Flector sandwich.
             https://rigidgeometricalgebra.org/wiki/index.php?title=Inversion
+
+            Be careful not to confuse with `Inverse`, which raises a number to the power of `-1.0`.
         "
             .to_string(),
         })?;
@@ -2634,13 +2677,51 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             params: 2,
             docs: "
             Reflection
+            An improper isometry that performs reflection across a plane.
+            Planes may pass as specialized Flectors, so in other words, this is a specialized Flector sandwich.
             https://rigidgeometricalgebra.org/wiki/index.php?title=Reflection
         "
             .to_string(),
         })?;
 
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "Transflect".to_string(),
+            params: 2,
+            docs: "
+            Transflection
+            An improper isometry that performs a reflection and translation.
+            Transflectors are specialized Flectors, so in other words, this is a specialized Flector sandwich.
+            https://rigidgeometricalgebra.org/wiki/index.php?title=Transflection
+        "
+                .to_string(),
+        })?;
+
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "Translate".to_string(),
+            params: 2,
+            docs: "
+            Translate
+            A proper isometry that performs translation.
+            Translators are specialized Motors, so in other words, this is a specialized Motor sandwich.
+            https://rigidgeometricalgebra.org/wiki/index.php?title=Translation
+        "
+                .to_string(),
+        })?;
+
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "Rotate".to_string(),
+            params: 2,
+            docs: "
+            Rotate
+            A proper isometry that performs rotation.
+            Rotors are specialized Motors, so in other words, this is a specialized Motor sandwich.
+            https://rigidgeometricalgebra.org/wiki/index.php?title=Rotation
+        "
+                .to_string(),
+        })?;
+
         self.emit_exact_name_match_trait_impls(&["Sandwich"], emitter)?;
-        self.emit_exact_name_match_trait_impls(&["PointInversion", "Reflect"], emitter)?;
+        self.emit_exact_name_match_trait_impls(&["PointInversion", "Reflect", "Transflect", "Translate", "Rotate"], emitter)?;
         Ok(())
     }
 

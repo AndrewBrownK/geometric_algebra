@@ -1188,6 +1188,14 @@ impl Distance<SphereWeight> for MultiVector {
     }
 }
 
+impl Distance<TransFlector> for MultiVector {
+    type Output = Magnitude;
+
+    fn distance(self, other: TransFlector) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
 impl Distance<Translator> for MultiVector {
     type Output = Magnitude;
 
@@ -1805,6 +1813,14 @@ impl Distance<MultiVector> for Sphere {
 }
 
 impl Distance<MultiVector> for SphereWeight {
+    type Output = Magnitude;
+
+    fn distance(self, other: MultiVector) -> Magnitude {
+        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<MultiVector> for TransFlector {
     type Output = Magnitude;
 
     fn distance(self, other: MultiVector) -> Magnitude {

@@ -307,6 +307,19 @@ impl AntiDual for Scalar {
     }
 }
 
+impl AntiDual for TransFlector {
+    type Output = Flector;
+
+    fn anti_dual(self) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group1(),
+                g1: Simd32x4::from([-self.group0()[0], -self.group0()[1], -self.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
 impl AntiDual for Translator {
     type Output = MultiVector;
 
@@ -552,6 +565,19 @@ impl AntiReversal for Scalar {
     }
 }
 
+impl AntiReversal for TransFlector {
+    type Output = TransFlector;
+
+    fn anti_reversal(self) -> TransFlector {
+        TransFlector {
+            groups: TransFlectorGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
+            },
+        }
+    }
+}
+
 impl AntiReversal for Translator {
     type Output = Translator;
 
@@ -787,6 +813,19 @@ impl Automorphism for Scalar {
     fn automorphism(self) -> Scalar {
         Scalar {
             groups: ScalarGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Automorphism for TransFlector {
+    type Output = TransFlector;
+
+    fn automorphism(self) -> TransFlector {
+        TransFlector {
+            groups: TransFlectorGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+            },
         }
     }
 }
@@ -1030,6 +1069,19 @@ impl Conjugation for Scalar {
     }
 }
 
+impl Conjugation for TransFlector {
+    type Output = TransFlector;
+
+    fn conjugation(self) -> TransFlector {
+        TransFlector {
+            groups: TransFlectorGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
+            },
+        }
+    }
+}
+
 impl Conjugation for Translator {
     type Output = Translator;
 
@@ -1261,6 +1313,19 @@ impl DoubleComplement for Scalar {
     fn double_complement(self) -> Scalar {
         Scalar {
             groups: ScalarGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl DoubleComplement for TransFlector {
+    type Output = TransFlector;
+
+    fn double_complement(self) -> TransFlector {
+        TransFlector {
+            groups: TransFlectorGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x4::from(-1.0),
+            },
         }
     }
 }
@@ -1504,6 +1569,19 @@ impl Dual for Scalar {
     fn dual(self) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Dual for TransFlector {
+    type Output = Flector;
+
+    fn dual(self) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group1() * Simd32x4::from(-1.0),
+                g1: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+            },
         }
     }
 }
@@ -1757,6 +1835,19 @@ impl LeftComplement for Scalar {
     }
 }
 
+impl LeftComplement for TransFlector {
+    type Output = Flector;
+
+    fn left_complement(self) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group1() * Simd32x4::from(-1.0),
+                g1: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
 impl LeftComplement for Translator {
     type Output = MultiVector;
 
@@ -1994,6 +2085,19 @@ impl Reversal for Scalar {
     fn reversal(self) -> Scalar {
         Scalar {
             groups: ScalarGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Reversal for TransFlector {
+    type Output = TransFlector;
+
+    fn reversal(self) -> TransFlector {
+        TransFlector {
+            groups: TransFlectorGroups {
+                g0: self.group0(),
+                g1: self.group1() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+            },
         }
     }
 }
@@ -2239,6 +2343,19 @@ impl RightComplement for Scalar {
     fn right_complement(self) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl RightComplement for TransFlector {
+    type Output = Flector;
+
+    fn right_complement(self) -> Flector {
+        Flector {
+            groups: FlectorGroups {
+                g0: self.group1() * Simd32x4::from(-1.0),
+                g1: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+            },
         }
     }
 }

@@ -151,6 +151,18 @@ impl Bulk for Scalar {
     }
 }
 
+impl Bulk for TransFlector {
+    type Output = FlectorAtInfinity;
+
+    fn bulk(self) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]),
+            },
+        }
+    }
+}
+
 impl Bulk for Translator {
     type Output = LineAtInfinity;
 
@@ -287,6 +299,18 @@ impl Weight for Rotor {
 
     fn weight(self) -> Rotor {
         self
+    }
+}
+
+impl Weight for TransFlector {
+    type Output = PlaneAtOrigin;
+
+    fn weight(self) -> PlaneAtOrigin {
+        PlaneAtOrigin {
+            groups: PlaneAtOriginGroups {
+                g0: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+            },
+        }
     }
 }
 

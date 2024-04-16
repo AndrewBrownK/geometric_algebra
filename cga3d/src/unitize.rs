@@ -316,6 +316,18 @@ impl Unitize for Sphere {
     }
 }
 
+impl Unitize for TransFlector {
+    type Output = TransFlector;
+
+    fn unitize(self) -> TransFlector {
+        self.geometric_product(Scalar {
+            groups: ScalarGroups {
+                g0: 1.0 / self.weight_norm().group0(),
+            },
+        })
+    }
+}
+
 impl Unitize for Translator {
     type Output = Translator;
 

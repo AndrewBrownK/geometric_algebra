@@ -143,6 +143,14 @@ impl LeftBulkDual for Scalar {
     }
 }
 
+impl LeftBulkDual for TransFlector {
+    type Output = Flector;
+
+    fn left_bulk_dual(self) -> Flector {
+        self.bulk().left_complement()
+    }
+}
+
 impl LeftBulkDual for Translator {
     type Output = LineAtOrigin;
 
@@ -251,6 +259,14 @@ impl LeftWeightDual for Rotor {
     type Output = MultiVectorAtInfinity;
 
     fn left_weight_dual(self) -> MultiVectorAtInfinity {
+        self.weight().left_complement()
+    }
+}
+
+impl LeftWeightDual for TransFlector {
+    type Output = PointAtInfinity;
+
+    fn left_weight_dual(self) -> PointAtInfinity {
         self.weight().left_complement()
     }
 }
@@ -367,6 +383,14 @@ impl RightBulkDual for Scalar {
     }
 }
 
+impl RightBulkDual for TransFlector {
+    type Output = Flector;
+
+    fn right_bulk_dual(self) -> Flector {
+        self.bulk().right_complement()
+    }
+}
+
 impl RightBulkDual for Translator {
     type Output = LineAtOrigin;
 
@@ -475,6 +499,14 @@ impl RightWeightDual for Rotor {
     type Output = MultiVectorAtInfinity;
 
     fn right_weight_dual(self) -> MultiVectorAtInfinity {
+        self.weight().right_complement()
+    }
+}
+
+impl RightWeightDual for TransFlector {
+    type Output = PointAtInfinity;
+
+    fn right_weight_dual(self) -> PointAtInfinity {
         self.weight().right_complement()
     }
 }

@@ -740,6 +740,14 @@ impl Attitude for SphereWeight {
     }
 }
 
+impl Attitude for TransFlector {
+    type Output = LineAtInfinity;
+
+    fn attitude(self) -> LineAtInfinity {
+        self.anti_wedge(Horizon::one())
+    }
+}
+
 impl Attitude for Translator {
     type Output = Horizon;
 
@@ -1552,6 +1560,14 @@ impl AntiInverse for Sphere {
     }
 }
 
+impl AntiInverse for TransFlector {
+    type Output = TransFlector;
+
+    fn anti_inverse(self) -> TransFlector {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
 impl AntiInverse for Translator {
     type Output = Translator;
 
@@ -1756,6 +1772,14 @@ impl Inverse for Sphere {
     type Output = Sphere;
 
     fn inverse(self) -> Sphere {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl Inverse for TransFlector {
+    type Output = TransFlector;
+
+    fn inverse(self) -> TransFlector {
         self.geometric_product(Scalar::one().div(self.dot(self)))
     }
 }

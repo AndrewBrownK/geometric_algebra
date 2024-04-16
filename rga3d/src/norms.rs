@@ -162,6 +162,14 @@ impl BulkNormSquared for Scalar {
     }
 }
 
+impl BulkNormSquared for TransFlector {
+    type Output = Scalar;
+
+    fn bulk_norm_squared(self) -> Scalar {
+        self.dot(self)
+    }
+}
+
 impl BulkNormSquared for Translator {
     type Output = Scalar;
 
@@ -267,6 +275,14 @@ impl BulkNorm for PointAtInfinity {
 }
 
 impl BulkNorm for Scalar {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
+    }
+}
+
+impl BulkNorm for TransFlector {
     type Output = Scalar;
 
     fn bulk_norm(self) -> Scalar {
@@ -386,6 +402,14 @@ impl WeightNormSquared for Rotor {
     }
 }
 
+impl WeightNormSquared for TransFlector {
+    type Output = AntiScalar;
+
+    fn weight_norm_squared(self) -> AntiScalar {
+        self.anti_dot(self)
+    }
+}
+
 impl WeightNormSquared for Translator {
     type Output = AntiScalar;
 
@@ -498,6 +522,14 @@ impl WeightNorm for Rotor {
     }
 }
 
+impl WeightNorm for TransFlector {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).sqrt()
+    }
+}
+
 impl WeightNorm for Translator {
     type Output = AntiScalar;
 
@@ -555,6 +587,14 @@ impl GeometricNorm for Plane {
 }
 
 impl GeometricNorm for Point {
+    type Output = Magnitude;
+
+    fn geometric_norm(self) -> Magnitude {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for TransFlector {
     type Output = Magnitude;
 
     fn geometric_norm(self) -> Magnitude {
@@ -626,6 +666,14 @@ impl UnitizedNormSquared for Point {
     }
 }
 
+impl UnitizedNormSquared for TransFlector {
+    type Output = f32;
+
+    fn unitized_norm_squared(self) -> f32 {
+        self.bulk_norm_squared().group0() / self.weight_norm_squared().group0()
+    }
+}
+
 impl UnitizedNormSquared for Translator {
     type Output = f32;
 
@@ -683,6 +731,14 @@ impl UnitizedNorm for Plane {
 }
 
 impl UnitizedNorm for Point {
+    type Output = f32;
+
+    fn unitized_norm(self) -> f32 {
+        self.unitized_norm_squared().sqrt()
+    }
+}
+
+impl UnitizedNorm for TransFlector {
     type Output = f32;
 
     fn unitized_norm(self) -> f32 {

@@ -608,6 +608,18 @@ impl AntiDot<MultiVector> for Dipole {
     }
 }
 
+impl AntiDot<TransFlector> for Dipole {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: TransFlector) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
 impl AntiDot<Dipole> for DipoleBulk {
     type Output = AntiScalar;
 
@@ -762,6 +774,18 @@ impl AntiDot<MultiVector> for DipoleCarrierAspect {
     }
 }
 
+impl AntiDot<TransFlector> for DipoleCarrierAspect {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: TransFlector) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
 impl AntiDot<Dipole> for DipoleWeight {
     type Output = AntiScalar;
 
@@ -829,6 +853,18 @@ impl AntiDot<MultiVector> for DipoleWeight {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0()[0] * other.group5()[0] + self.group0()[1] * other.group5()[1] + self.group0()[2] * other.group5()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<TransFlector> for DipoleWeight {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: TransFlector) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -1157,6 +1193,18 @@ impl AntiDot<SphereWeight> for Flector {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group1()[3] * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiDot<TransFlector> for Flector {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: TransFlector) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group1()[0] * other.group1()[0] + self.group1()[1] * other.group1()[1] + self.group1()[2] * other.group1()[2],
             },
         }
     }
@@ -2261,6 +2309,24 @@ impl AntiDot<SphereWeight> for MultiVector {
     }
 }
 
+impl AntiDot<TransFlector> for MultiVector {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: TransFlector) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group3()[0] * other.group0()[0]
+                    + self.group3()[1] * other.group0()[1]
+                    + self.group3()[2] * other.group0()[2]
+                    + self.group9()[0] * other.group1()[0]
+                    + self.group9()[1] * other.group1()[1]
+                    + self.group9()[2] * other.group1()[2]
+                    - self.group10()[0] * other.group1()[3],
+            },
+        }
+    }
+}
+
 impl AntiDot<Translator> for MultiVector {
     type Output = AntiScalar;
 
@@ -2405,6 +2471,18 @@ impl AntiDot<SphereWeight> for Plane {
     }
 }
 
+impl AntiDot<TransFlector> for Plane {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: TransFlector) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2],
+            },
+        }
+    }
+}
+
 impl AntiDot<Flector> for PlaneAtOrigin {
     type Output = AntiScalar;
 
@@ -2460,6 +2538,18 @@ impl AntiDot<Sphere> for PlaneAtOrigin {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<TransFlector> for PlaneAtOrigin {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: TransFlector) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2],
             },
         }
     }
@@ -3121,6 +3211,18 @@ impl AntiDot<SphereWeight> for Sphere {
     }
 }
 
+impl AntiDot<TransFlector> for Sphere {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: TransFlector) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2] - self.group1()[0] * other.group1()[3],
+            },
+        }
+    }
+}
+
 impl AntiDot<Flector> for SphereWeight {
     type Output = AntiScalar;
 
@@ -3188,6 +3290,144 @@ impl AntiDot<Sphere> for SphereWeight {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0() * other.group1()[1],
+            },
+        }
+    }
+}
+
+impl AntiDot<TransFlector> for SphereWeight {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: TransFlector) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0() * other.group1()[3],
+            },
+        }
+    }
+}
+
+impl AntiDot<Dipole> for TransFlector {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Dipole) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<DipoleCarrierAspect> for TransFlector {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: DipoleCarrierAspect) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<DipoleWeight> for TransFlector {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: DipoleWeight) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<Flector> for TransFlector {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Flector) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group1()[0] * other.group1()[0] + self.group1()[1] * other.group1()[1] + self.group1()[2] * other.group1()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<MultiVector> for TransFlector {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: MultiVector) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group3()[0]
+                    + self.group0()[1] * other.group3()[1]
+                    + self.group0()[2] * other.group3()[2]
+                    + self.group1()[0] * other.group9()[0]
+                    + self.group1()[1] * other.group9()[1]
+                    + self.group1()[2] * other.group9()[2]
+                    - self.group1()[3] * other.group10()[0],
+            },
+        }
+    }
+}
+
+impl AntiDot<Plane> for TransFlector {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Plane) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<PlaneAtOrigin> for TransFlector {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: PlaneAtOrigin) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<Sphere> for TransFlector {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Sphere) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2] - self.group1()[3] * other.group1()[0],
+            },
+        }
+    }
+}
+
+impl AntiDot<SphereWeight> for TransFlector {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: SphereWeight) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group1()[3] * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiDot<TransFlector> for TransFlector {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: TransFlector) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group1()[0] * other.group1()[0] + self.group1()[1] * other.group1()[1] + self.group1()[2] * other.group1()[2],
             },
         }
     }
@@ -3889,6 +4129,18 @@ impl Dot<MultiVector> for Dipole {
     }
 }
 
+impl Dot<TransFlector> for Dipole {
+    type Output = Scalar;
+
+    fn dot(self, other: TransFlector) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
 impl Dot<Dipole> for DipoleBulk {
     type Output = Scalar;
 
@@ -4045,6 +4297,18 @@ impl Dot<MultiVector> for DipoleCarrierAspect {
     }
 }
 
+impl Dot<TransFlector> for DipoleCarrierAspect {
+    type Output = Scalar;
+
+    fn dot(self, other: TransFlector) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
 impl Dot<Dipole> for DipoleWeight {
     type Output = Scalar;
 
@@ -4112,6 +4376,18 @@ impl Dot<MultiVector> for DipoleWeight {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group5()[0] - self.group0()[1] * other.group5()[1] - self.group0()[2] * other.group5()[2],
+            },
+        }
+    }
+}
+
+impl Dot<TransFlector> for DipoleWeight {
+    type Output = Scalar;
+
+    fn dot(self, other: TransFlector) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -4440,6 +4716,18 @@ impl Dot<SphereWeight> for Flector {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group1()[3] * other.group0(),
+            },
+        }
+    }
+}
+
+impl Dot<TransFlector> for Flector {
+    type Output = Scalar;
+
+    fn dot(self, other: TransFlector) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group1()[0] * other.group1()[0] - self.group1()[1] * other.group1()[1] - self.group1()[2] * other.group1()[2],
             },
         }
     }
@@ -5545,6 +5833,25 @@ impl Dot<SphereWeight> for MultiVector {
     }
 }
 
+impl Dot<TransFlector> for MultiVector {
+    type Output = Scalar;
+
+    fn dot(self, other: TransFlector) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0
+                    - self.group3()[0] * other.group0()[0]
+                    - self.group3()[1] * other.group0()[1]
+                    - self.group3()[2] * other.group0()[2]
+                    - self.group9()[0] * other.group1()[0]
+                    - self.group9()[1] * other.group1()[1]
+                    - self.group9()[2] * other.group1()[2]
+                    + self.group10()[0] * other.group1()[3],
+            },
+        }
+    }
+}
+
 impl Dot<Translator> for MultiVector {
     type Output = Scalar;
 
@@ -5690,6 +5997,18 @@ impl Dot<SphereWeight> for Plane {
     }
 }
 
+impl Dot<TransFlector> for Plane {
+    type Output = Scalar;
+
+    fn dot(self, other: TransFlector) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2],
+            },
+        }
+    }
+}
+
 impl Dot<Flector> for PlaneAtOrigin {
     type Output = Scalar;
 
@@ -5745,6 +6064,18 @@ impl Dot<Sphere> for PlaneAtOrigin {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<TransFlector> for PlaneAtOrigin {
+    type Output = Scalar;
+
+    fn dot(self, other: TransFlector) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2],
             },
         }
     }
@@ -6406,6 +6737,18 @@ impl Dot<SphereWeight> for Sphere {
     }
 }
 
+impl Dot<TransFlector> for Sphere {
+    type Output = Scalar;
+
+    fn dot(self, other: TransFlector) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2] + self.group1()[0] * other.group1()[3],
+            },
+        }
+    }
+}
+
 impl Dot<Flector> for SphereWeight {
     type Output = Scalar;
 
@@ -6473,6 +6816,145 @@ impl Dot<Sphere> for SphereWeight {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0() * other.group1()[1],
+            },
+        }
+    }
+}
+
+impl Dot<TransFlector> for SphereWeight {
+    type Output = Scalar;
+
+    fn dot(self, other: TransFlector) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0() * other.group1()[3],
+            },
+        }
+    }
+}
+
+impl Dot<Dipole> for TransFlector {
+    type Output = Scalar;
+
+    fn dot(self, other: Dipole) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<DipoleCarrierAspect> for TransFlector {
+    type Output = Scalar;
+
+    fn dot(self, other: DipoleCarrierAspect) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<DipoleWeight> for TransFlector {
+    type Output = Scalar;
+
+    fn dot(self, other: DipoleWeight) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<Flector> for TransFlector {
+    type Output = Scalar;
+
+    fn dot(self, other: Flector) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group1()[0] * other.group1()[0] - self.group1()[1] * other.group1()[1] - self.group1()[2] * other.group1()[2],
+            },
+        }
+    }
+}
+
+impl Dot<MultiVector> for TransFlector {
+    type Output = Scalar;
+
+    fn dot(self, other: MultiVector) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0
+                    - self.group0()[0] * other.group3()[0]
+                    - self.group0()[1] * other.group3()[1]
+                    - self.group0()[2] * other.group3()[2]
+                    - self.group1()[0] * other.group9()[0]
+                    - self.group1()[1] * other.group9()[1]
+                    - self.group1()[2] * other.group9()[2]
+                    + self.group1()[3] * other.group10()[0],
+            },
+        }
+    }
+}
+
+impl Dot<Plane> for TransFlector {
+    type Output = Scalar;
+
+    fn dot(self, other: Plane) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<PlaneAtOrigin> for TransFlector {
+    type Output = Scalar;
+
+    fn dot(self, other: PlaneAtOrigin) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<Sphere> for TransFlector {
+    type Output = Scalar;
+
+    fn dot(self, other: Sphere) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2] + self.group1()[3] * other.group1()[0],
+            },
+        }
+    }
+}
+
+impl Dot<SphereWeight> for TransFlector {
+    type Output = Scalar;
+
+    fn dot(self, other: SphereWeight) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group1()[3] * other.group0(),
+            },
+        }
+    }
+}
+
+impl Dot<TransFlector> for TransFlector {
+    type Output = Scalar;
+
+    fn dot(self, other: TransFlector) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group1()[0] * other.group1()[0] - self.group1()[1] * other.group1()[1] - self.group1()[2] * other.group1()[2],
             },
         }
     }

@@ -207,6 +207,14 @@ impl LeftBulkDual for Sphere {
     }
 }
 
+impl LeftBulkDual for TransFlector {
+    type Output = MultiVector;
+
+    fn left_bulk_dual(self) -> MultiVector {
+        self.bulk().left_complement()
+    }
+}
+
 impl LeftBulkDual for Translator {
     type Output = DipoleWeight;
 
@@ -543,6 +551,14 @@ impl LeftWeightDual for Sphere {
     }
 }
 
+impl LeftWeightDual for TransFlector {
+    type Output = RoundPointBulk;
+
+    fn left_weight_dual(self) -> RoundPointBulk {
+        self.weight().left_complement()
+    }
+}
+
 impl LeftWeightDual for Translator {
     type Output = Scalar;
 
@@ -683,6 +699,14 @@ impl RightBulkDual for Sphere {
     type Output = Origin;
 
     fn right_bulk_dual(self) -> Origin {
+        self.bulk().right_complement()
+    }
+}
+
+impl RightBulkDual for TransFlector {
+    type Output = MultiVector;
+
+    fn right_bulk_dual(self) -> MultiVector {
         self.bulk().right_complement()
     }
 }
@@ -1016,6 +1040,14 @@ impl RightWeightDual for Rotor {
 }
 
 impl RightWeightDual for Sphere {
+    type Output = RoundPointBulk;
+
+    fn right_weight_dual(self) -> RoundPointBulk {
+        self.weight().right_complement()
+    }
+}
+
+impl RightWeightDual for TransFlector {
     type Output = RoundPointBulk;
 
     fn right_weight_dual(self) -> RoundPointBulk {
