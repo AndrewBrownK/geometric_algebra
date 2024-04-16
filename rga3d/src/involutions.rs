@@ -9,7 +9,6 @@ use crate::*;
 use projective_ga::{simd::*, *};
 use std::ops::{Add, Div, Mul, Neg, Sub};
 
-///
 /// Negates elements with `grade % 2 == 1`
 ///
 /// Also called main involution
@@ -18,14 +17,12 @@ pub trait Automorphism {
     fn automorphism(self) -> Self::Output;
 }
 
-///
 /// Negates elements with `(grade + 3) % 4 < 2`
 pub trait Conjugation {
     type Output;
     fn conjugation(self) -> Self::Output;
 }
 
-///
 /// Negates elements with `grade % 4 >= 2`
 ///
 /// Also called transpose
@@ -35,7 +32,6 @@ pub trait Reversal {
     fn reversal(self) -> Self::Output;
 }
 
-///
 /// Negates elements with `grade % 4 >= 2`
 ///
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Reverses
@@ -44,7 +40,6 @@ pub trait AntiReversal {
     fn anti_reversal(self) -> Self::Output;
 }
 
-///
 /// Element order reversed
 /// Also known as Right Complement
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Complements
@@ -53,7 +48,6 @@ pub trait Dual {
     fn dual(self) -> Self::Output;
 }
 
-///
 /// AntiDuals are a special kind a Dual.
 /// https://conformalgeometricalgebra.org/wiki/index.php?title=Duals
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Complements
@@ -62,7 +56,6 @@ pub trait AntiDual {
     fn anti_dual(self) -> Self::Output;
 }
 
-///
 /// Double Complement
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Complements
 pub trait DoubleComplement {
@@ -70,7 +63,6 @@ pub trait DoubleComplement {
     fn double_complement(self) -> Self::Output;
 }
 
-///
 /// Right Complement
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Complements
 pub trait RightComplement {
@@ -78,7 +70,6 @@ pub trait RightComplement {
     fn right_complement(self) -> Self::Output;
 }
 
-///
 /// Left Complement
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Complements
 pub trait LeftComplement {

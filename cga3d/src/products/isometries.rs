@@ -10,70 +10,58 @@ use crate::products::geometric::GeometricAntiProduct;
 use crate::unitize::Unitize;
 use crate::*;
 
-///
 /// self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
 ///
 /// Also called sandwich product
 /// See article "Projective Geometric Algebra Done Right"
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Projective_Geometric_Algebra_Done_Right
-///
 pub trait Sandwich<T> {
     type Output;
     fn sandwich(self, other: T) -> Self::Output;
 }
 
-///
 /// Point Inversion
 /// An improper isometry that performs an inversion through a point.
 /// Points may pass as specialized as Flectors, so in other words, this is a specialized Flector sandwich.
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Inversion
 ///
 /// Be careful not to confuse with `Inverse`, which raises a number to the power of `-1.0`.
-///
 pub trait PointInversion<T> {
     type Output;
     fn point_inversion(self, other: T) -> Self::Output;
 }
 
-///
 /// Reflection
 /// An improper isometry that performs reflection across a plane.
 /// Planes may pass as specialized Flectors, so in other words, this is a specialized Flector sandwich.
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Reflection
-///
 pub trait Reflect<T> {
     type Output;
     fn reflect(self, other: T) -> Self::Output;
 }
 
-///
 /// Transflection
 /// An improper isometry that performs a reflection and translation.
 /// Transflectors are specialized Flectors, so in other words, this is a specialized Flector sandwich.
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Transflection
-///
 pub trait Transflect<T> {
     type Output;
     fn transflect(self, other: T) -> Self::Output;
 }
 
-///
 /// Translate
 /// A proper isometry that performs translation.
 /// Translators are specialized Motors, so in other words, this is a specialized Motor sandwich.
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Translation
-///
 pub trait Translate<T> {
     type Output;
     fn translate(self, other: T) -> Self::Output;
 }
 
-///
 /// Rotate
 /// A proper isometry that performs rotation.
 /// Rotors are specialized Motors, so in other words, this is a specialized Motor sandwich.
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Rotation
-///
 pub trait Rotate<T> {
     type Output;
     fn rotate(self, other: T) -> Self::Output;

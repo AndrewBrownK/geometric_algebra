@@ -7,21 +7,17 @@
 
 use crate::*;
 
-///
 /// Dot Product
 ///
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Dot_products
-///
 pub trait Dot<T> {
     type Output;
     fn dot(self, other: T) -> Self::Output;
 }
 
-///
 /// Anti-Dot Product
 ///
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Dot_products
-///
 pub trait AntiDot<T> {
     type Output;
     fn anti_dot(self, other: T) -> Self::Output;

@@ -7,41 +7,33 @@
 
 use crate::*;
 
-///
 /// Geometric Product
 /// Synonyms included: GeometricProduct, WedgeDot
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_products
-///
 pub trait GeometricProduct<T> {
     type Output;
     fn geometric_product(self, other: T) -> Self::Output;
 }
 
-///
 /// Geometric Product
 /// Synonyms included: GeometricProduct, WedgeDot
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_products
-///
 pub trait WedgeDot<T> {
     type Output;
     fn wedge_dot(self, other: T) -> Self::Output;
 }
 
-///
 /// Geometric Anti-Product
 /// Synonyms included: GeometricAntiProduct, AntiWedgeDot
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_products
-///
 pub trait GeometricAntiProduct<T> {
     type Output;
     fn geometric_anti_product(self, other: T) -> Self::Output;
 }
 
-///
 /// Geometric Anti-Product
 /// Synonyms included: GeometricAntiProduct, AntiWedgeDot
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_products
-///
 pub trait AntiWedgeDot<T> {
     type Output;
     fn anti_wedge_dot(self, other: T) -> Self::Output;

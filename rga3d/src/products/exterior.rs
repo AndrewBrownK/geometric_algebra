@@ -7,41 +7,33 @@
 
 use crate::*;
 
-///
 /// Exterior Product
 /// Synonyms included: Wedge, Join
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Exterior_products
-///
 pub trait Wedge<T> {
     type Output;
     fn wedge(self, other: T) -> Self::Output;
 }
 
-///
 /// Exterior Product
 /// Synonyms included: Wedge, Join
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Exterior_products
-///
 pub trait Join<T> {
     type Output;
     fn join(self, other: T) -> Self::Output;
 }
 
-///
 /// Geometric Anti-Product
 /// Synonyms included: AntiWedge, Meet
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Exterior_products
-///
 pub trait AntiWedge<T> {
     type Output;
     fn anti_wedge(self, other: T) -> Self::Output;
 }
 
-///
 /// Geometric Anti-Product
 /// Synonyms included: AntiWedge, Meet
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Exterior_products
-///
 pub trait Meet<T> {
     type Output;
     fn meet(self, other: T) -> Self::Output;

@@ -9,10 +9,8 @@ use crate::norms::WeightNorm;
 use crate::products::geometric::GeometricProduct;
 use crate::*;
 
-///
 /// Unitization
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Unitization
-///
 pub trait Unitize {
     type Output;
     fn unitize(self) -> Self::Output;

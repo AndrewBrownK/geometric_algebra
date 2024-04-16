@@ -216,13 +216,20 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
         AstNode::TraitDefinition { name, params, docs } => {
             if !docs.trim().is_empty() {
                 collector.write_all(b"\n")?;
-                for line in docs.split("\n") {
-                    let line = line.trim();
+                let mut docs_iter = docs.split("\n").map(|it| it.trim()).skip_while(|it| it.is_empty()).peekable();
+                while let Some(line) = docs_iter.next() {
                     if line.is_empty() {
-                        collector.write_all(b"///\n")?;
-                        continue;
+                        match docs_iter.peek() {
+                            None => {},
+                            Some(next_line) => {
+                                if !next_line.is_empty() {
+                                    collector.write_all(b"///\n")?;
+                                }
+                            }
+                        }
+                    } else {
+                        collector.write_fmt(format_args!("/// {}\n", line))?;
                     }
-                    collector.write_fmt(format_args!("/// {}\n", line))?;
                 }
             }
             collector.write_fmt(format_args!("pub trait {}", name))?;

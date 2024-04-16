@@ -11,19 +11,15 @@ use crate::products::geometric::GeometricAntiProduct;
 use crate::products::geometric::GeometricProduct;
 use crate::*;
 
-///
 /// The Geometric Quotient between `a` and `b` is the geometric product between `a` and `b^-1` (the inverse of `b`).
 /// See also "Inverse".
-///
 pub trait GeometricQuotient<T> {
     type Output;
     fn geometric_quotient(self, other: T) -> Self::Output;
 }
 
-///
 /// The Geometric AntiQuotient between `a` and `b` is the geometric anti-product between `a` and the anti-inverse of `b`.
 /// See also "AntiInverse".
-///
 pub trait GeometricAntiQuotient<T> {
     type Output;
     fn geometric_anti_quotient(self, other: T) -> Self::Output;

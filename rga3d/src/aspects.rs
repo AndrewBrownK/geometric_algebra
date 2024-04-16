@@ -8,22 +8,18 @@
 use crate::products::geometric::GeometricProduct;
 use crate::*;
 
-///
 /// The Bulk of an object usually describes the object's relationship with the origin.
 /// An object with a Bulk of zero contains the origin.
 /// http://rigidgeometricalgebra.org/wiki/index.php?title=Bulk_and_weight
-///
 pub trait Bulk {
     type Output;
     fn bulk(self) -> Self::Output;
 }
 
-///
 /// The Weight of an object usually describes the object's attitude and orientation.
 /// An object with zero weight is contained by the horizon.
 /// Also known as the attitude operator.
 /// http://rigidgeometricalgebra.org/wiki/index.php?title=Bulk_and_weight
-///
 pub trait Weight {
     type Output;
     fn weight(self) -> Self::Output;

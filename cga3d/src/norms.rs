@@ -10,82 +10,64 @@ use crate::characteristics::*;
 use crate::products::dot::{AntiDot, Dot};
 use crate::*;
 
-///
 /// BulkNorm
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
-///
 pub trait BulkNorm {
     type Output;
     fn bulk_norm(self) -> Self::Output;
 }
 
-///
 /// BulkNormSquared
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
-///
 pub trait BulkNormSquared {
     type Output;
     fn bulk_norm_squared(self) -> Self::Output;
 }
 
-///
 /// CenterBulkNorm
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
-///
 pub trait CenterBulkNorm {
     type Output;
     fn center_bulk_norm(self) -> Self::Output;
 }
 
-///
 /// CenterBulkNormSquared
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
-///
 pub trait CenterBulkNormSquared {
     type Output;
     fn center_bulk_norm_squared(self) -> Self::Output;
 }
 
-///
 /// GeometricNorm
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
-///
 pub trait GeometricNorm {
     type Output;
     fn geometric_norm(self) -> Self::Output;
 }
 
-///
 /// UnitizedNorm
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
-///
 pub trait UnitizedNorm {
     type Output;
     fn unitized_norm(self) -> Self::Output;
 }
 
-///
 /// UnitizedNormSquared
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
-///
 pub trait UnitizedNormSquared {
     type Output;
     fn unitized_norm_squared(self) -> Self::Output;
 }
 
-///
 /// WeightNorm
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
-///
 pub trait WeightNorm {
     type Output;
     fn weight_norm(self) -> Self::Output;
 }
 
-///
 /// WeightNormSquared
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
-///
 pub trait WeightNormSquared {
     type Output;
     fn weight_norm_squared(self) -> Self::Output;

@@ -14,108 +14,86 @@ use crate::products::geometric::GeometricAntiProduct;
 use crate::products::geometric::GeometricProduct;
 use crate::*;
 
-///
 /// Square Root
-///
 pub trait Sqrt {
     type Output;
     fn sqrt(self) -> Self::Output;
 }
 
-///
 /// Grade
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Grade_and_antigrade
-///
 pub trait Grade {
     type Output;
     fn grade() -> Self::Output;
 }
 
-///
 /// Anti-Grade
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Grade_and_antigrade
-///
 pub trait AntiGrade {
     type Output;
     fn anti_grade() -> Self::Output;
 }
 
-///
 /// Attitude
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Attitude
-///
 pub trait Attitude {
     type Output;
     fn attitude(self) -> Self::Output;
 }
 
-///
 /// Inverse, as in `x^-1` (with respect to geometric product).
 /// Useful to define the geometric quotient.
 /// Not to be confused with the "Point Inversion" or "Sphere Inversion" operations.
-///
 pub trait Inverse {
     type Output;
     fn inverse(self) -> Self::Output;
 }
 
-///
 /// Inverse, as in `x^-1` (with respect to geometric anti-product).
 /// Useful to define the geometric anti-quotient.
 /// Not to be confused with the "Point Inversion" or "Sphere Inversion" operations.
-///
 pub trait AntiInverse {
     type Output;
     fn anti_inverse(self) -> Self::Output;
 }
 
-///
 /// Carrier
 /// The Carrier of a round object is the lowest dimensional flat object that contains it.
 /// https://conformalgeometricalgebra.org/wiki/index.php?title=Carriers
-///
 pub trait Carrier {
     type Output;
     fn carrier(self) -> Self::Output;
 }
 
-///
 /// CoCarrier
 /// The CoCarrier of a round object is the Carrier of its antidual.
 /// https://conformalgeometricalgebra.org/wiki/index.php?title=Carriers
-///
 pub trait CoCarrier {
     type Output;
     fn co_carrier(self) -> Self::Output;
 }
 
-///
 /// Container
 /// The Container of a round object is the smallest Sphere that contains it.
 /// https://conformalgeometricalgebra.org/wiki/index.php?title=Containers
-///
 pub trait Container {
     type Output;
     fn container(self) -> Self::Output;
 }
 
-///
 /// Center
 /// The Center of a round object is the RoundPoint having the same center and radius.
 /// https://conformalgeometricalgebra.org/wiki/index.php?title=Centers
-///
 pub trait Center {
     type Output;
     fn center(self) -> Self::Output;
 }
 
-///
 /// Partner
 /// The Partner of a round object is the round object having the same center, same carrier,
 /// and same absolute size, but having a squared radius of the opposite sign.
 /// The dot product between a round object and its partner is always zero. They are orthogonal.
 /// https://conformalgeometricalgebra.org/wiki/index.php?title=Partners
-///
 pub trait Partner {
     type Output;
     fn partner(self) -> Self::Output;
